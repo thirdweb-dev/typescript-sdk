@@ -2,8 +2,15 @@ import { ProviderOrSigner } from "../core";
 import { SDKOptions } from "../core";
 import { SubSDK } from "../core/sub-sdk";
 import { ProtocolControl, ProtocolControl__factory } from "../types";
-import { ModuleType } from "../module";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
+
+export enum ModuleType {
+  Coin = 0,
+  NFT = 1,
+  Pack = 2,
+  Market = 3,
+  Other = 4,
+}
 
 export interface ControlContract {
   address: string;

@@ -3,6 +3,13 @@ import { SDKOptions } from "../core";
 import { SubSDK } from "../core/sub-sdk";
 import { ProtocolControl } from "../types";
 import { ContractMetadata } from "../common/contract";
+export declare enum ModuleType {
+    Coin = 0,
+    NFT = 1,
+    Pack = 2,
+    Market = 3,
+    Other = 4
+}
 export interface ControlContract {
     address: string;
     metadata?: ContractMetadata;
