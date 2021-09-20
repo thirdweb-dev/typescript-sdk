@@ -10,7 +10,7 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
+        internalType: "address payable",
         name: "_controlCenter",
         type: "address",
       },

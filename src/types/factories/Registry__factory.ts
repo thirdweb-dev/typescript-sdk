@@ -76,6 +76,25 @@ const _abi = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "prevAdmin",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newAdmin",
+        type: "address",
+      },
+    ],
+    name: "UpdatedNftlabsAdmin",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -165,7 +184,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "nftlabsTreasury",
+    name: "nftlabsAdminSigner",
     outputs: [
       {
         internalType: "address",
@@ -192,6 +211,19 @@ const _abi = [
   {
     inputs: [],
     name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_newAdminSigner",
+        type: "address",
+      },
+    ],
+    name: "setNftlabsAdmin",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

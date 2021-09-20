@@ -98,6 +98,19 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "address",
+        name: "_nftlabsTreasury",
+        type: "address",
+      },
+    ],
+    name: "NFTLabsTreasury",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: "bytes32",
         name: "role",
@@ -455,7 +468,7 @@ const _abi = [
         type: "bool",
       },
     ],
-    name: "pausePackProtocol",
+    name: "pauseProtocol",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -607,6 +620,10 @@ const _abi = [
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
   },
 ];
 

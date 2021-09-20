@@ -2,11 +2,11 @@ import type { ProviderOrSigner } from "../core";
 import { BigNumber } from "@ethersproject/bignumber";
 import { SDKOptions } from "../core";
 import { SubSDK } from "../core/sub-sdk";
-import { NFT, NFT__factory } from "../types";
+import { NFTCollection, NFTCollection__factory } from "../types";
 import { NFTMetadata, getMetadata } from "../common/nft";
 
 export class NFTSDK extends SubSDK {
-  public readonly contract: NFT;
+  public readonly contract: NFTCollection;
 
   constructor(
     providerOrSigner: ProviderOrSigner,
@@ -15,7 +15,10 @@ export class NFTSDK extends SubSDK {
   ) {
     super(providerOrSigner, address, opts);
 
-    this.contract = NFT__factory.connect(this.address, this.providerOrSigner);
+    this.contract = NFTCollection__factory.connect(
+      this.address,
+      this.providerOrSigner,
+    );
   }
 
   public async get(tokenId: string): Promise<NFTMetadata> {

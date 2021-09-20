@@ -37,7 +37,7 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     "modules(bytes32)": FunctionFragment;
     "nftlabsTreasury()": FunctionFragment;
     "numOfModuleType(uint256)": FunctionFragment;
-    "pausePackProtocol(bool)": FunctionFragment;
+    "pauseProtocol(bool)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
@@ -105,7 +105,7 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "pausePackProtocol",
+    functionFragment: "pauseProtocol",
     values: [boolean]
   ): string;
   encodeFunctionData(
@@ -189,7 +189,7 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "pausePackProtocol",
+    functionFragment: "pauseProtocol",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -230,6 +230,7 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     "FundsTransferred(address,address,uint256)": EventFragment;
     "MarketFeeBps(uint256)": EventFragment;
     "ModuleUpdated(bytes32,address,uint256)": EventFragment;
+    "NFTLabsTreasury(address)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
@@ -239,6 +240,7 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "FundsTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MarketFeeBps"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ModuleUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NFTLabsTreasury"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
@@ -259,6 +261,10 @@ export type ModuleUpdatedEvent = TypedEvent<
     module: string;
     moduleType: BigNumber;
   }
+>;
+
+export type NFTLabsTreasuryEvent = TypedEvent<
+  [string] & { _nftlabsTreasury: string }
 >;
 
 export type RoleAdminChangedEvent = TypedEvent<
@@ -373,7 +379,7 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    pausePackProtocol(
+    pauseProtocol(
       _toPause: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -476,7 +482,7 @@ export class ProtocolControl extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  pausePackProtocol(
+  pauseProtocol(
     _toPause: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -579,10 +585,7 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    pausePackProtocol(
-      _toPause: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    pauseProtocol(_toPause: boolean, overrides?: CallOverrides): Promise<void>;
 
     renounceRole(
       role: BytesLike,
@@ -673,6 +676,14 @@ export class ProtocolControl extends BaseContract {
       [string, string, BigNumber],
       { moduleId: string; module: string; moduleType: BigNumber }
     >;
+
+    "NFTLabsTreasury(address)"(
+      _nftlabsTreasury?: null
+    ): TypedEventFilter<[string], { _nftlabsTreasury: string }>;
+
+    NFTLabsTreasury(
+      _nftlabsTreasury?: null
+    ): TypedEventFilter<[string], { _nftlabsTreasury: string }>;
 
     "RoleAdminChanged(bytes32,bytes32,bytes32)"(
       role?: BytesLike | null,
@@ -791,7 +802,7 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    pausePackProtocol(
+    pauseProtocol(
       _toPause: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -906,7 +917,7 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    pausePackProtocol(
+    pauseProtocol(
       _toPause: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

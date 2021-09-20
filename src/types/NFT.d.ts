@@ -25,16 +25,11 @@ interface NFTInterface extends ethers.utils.Interface {
     "MINTER_ROLE()": FunctionFragment;
     "PAUSER_ROLE()": FunctionFragment;
     "_contractURI()": FunctionFragment;
-    "balanceOf(address,uint256)": FunctionFragment;
-    "balanceOfBatch(address[],uint256[])": FunctionFragment;
-    "burn(address,uint256,uint256)": FunctionFragment;
-    "burnBatch(address,uint256[],uint256[])": FunctionFragment;
+    "approve(address,uint256)": FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
+    "burn(uint256)": FunctionFragment;
     "contractURI()": FunctionFragment;
-    "createNativeNfts(string[],uint256[])": FunctionFragment;
-    "createPackAtomic(address,string[],uint256[],string,uint256,uint256,uint256)": FunctionFragment;
-    "creator(uint256)": FunctionFragment;
-    "erc20WrappedNfts(uint256)": FunctionFragment;
-    "erc721WrappedNfts(uint256)": FunctionFragment;
+    "getApproved(uint256)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "getRoleMember(bytes32,uint256)": FunctionFragment;
     "getRoleMemberCount(bytes32)": FunctionFragment;
@@ -42,29 +37,27 @@ interface NFTInterface extends ethers.utils.Interface {
     "hasRole(bytes32,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
-    "mint(address,uint256,uint256,bytes)": FunctionFragment;
-    "mintBatch(address,uint256[],uint256[],bytes)": FunctionFragment;
+    "mint(address)": FunctionFragment;
+    "mintNFT(address,string)": FunctionFragment;
+    "name()": FunctionFragment;
     "nextTokenId()": FunctionFragment;
-    "nftInfo(uint256)": FunctionFragment;
-    "nftRoyaltyBps()": FunctionFragment;
+    "nftURI(uint256)": FunctionFragment;
+    "ownerOf(uint256)": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
-    "redeemERC20(uint256,uint256)": FunctionFragment;
-    "redeemERC721(uint256)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
-    "royaltyInfo(uint256,uint256)": FunctionFragment;
-    "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
-    "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
-    "setNftRoyaltyBps(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "symbol()": FunctionFragment;
+    "tokenByIndex(uint256)": FunctionFragment;
+    "tokenOfOwnerByIndex(address,uint256)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
+    "totalSupply()": FunctionFragment;
+    "transferFrom(address,address,uint256)": FunctionFragment;
     "unpause()": FunctionFragment;
-    "uri(uint256)": FunctionFragment;
-    "wrapERC20(address,uint256,uint256,string)": FunctionFragment;
-    "wrapERC721(address,uint256,string)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -84,51 +77,17 @@ interface NFTInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "balanceOf",
+    functionFragment: "approve",
     values: [string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "balanceOfBatch",
-    values: [string[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "burn",
-    values: [string, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "burnBatch",
-    values: [string, BigNumberish[], BigNumberish[]]
-  ): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: "contractURI",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "createNativeNfts",
-    values: [string[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "createPackAtomic",
-    values: [
-      string,
-      string[],
-      BigNumberish[],
-      string,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "creator",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "erc20WrappedNfts",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "erc721WrappedNfts",
+    functionFragment: "getApproved",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -159,36 +118,26 @@ interface NFTInterface extends ethers.utils.Interface {
     functionFragment: "isTrustedForwarder",
     values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "mint", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "mint",
-    values: [string, BigNumberish, BigNumberish, BytesLike]
+    functionFragment: "mintNFT",
+    values: [string, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "mintBatch",
-    values: [string, BigNumberish[], BigNumberish[], BytesLike]
-  ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "nextTokenId",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "nftInfo",
+    functionFragment: "nftURI",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "nftRoyaltyBps",
-    values?: undefined
+    functionFragment: "ownerOf",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "redeemERC20",
-    values: [BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "redeemERC721",
-    values: [BigNumberish]
-  ): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
     values: [BytesLike, string]
@@ -198,16 +147,8 @@ interface NFTInterface extends ethers.utils.Interface {
     values: [BytesLike, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "royaltyInfo",
-    values: [BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "safeBatchTransferFrom",
-    values: [string, string, BigNumberish[], BigNumberish[], BytesLike]
-  ): string;
-  encodeFunctionData(
     functionFragment: "safeTransferFrom",
-    values: [string, string, BigNumberish, BigNumberish, BytesLike]
+    values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setApprovalForAll",
@@ -218,27 +159,31 @@ interface NFTInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "setNftRoyaltyBps",
+    functionFragment: "supportsInterface",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "tokenByIndex",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "supportsInterface",
-    values: [BytesLike]
+    functionFragment: "tokenOfOwnerByIndex",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "tokenURI",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "totalSupply",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferFrom",
+    values: [string, string, BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
-  encodeFunctionData(
-    functionFragment: "wrapERC20",
-    values: [string, BigNumberish, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "wrapERC721",
-    values: [string, BigNumberish, string]
-  ): string;
 
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
@@ -256,32 +201,15 @@ interface NFTInterface extends ethers.utils.Interface {
     functionFragment: "_contractURI",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "balanceOfBatch",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "burnBatch", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "contractURI",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "createNativeNfts",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "createPackAtomic",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "creator", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "erc20WrappedNfts",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "erc721WrappedNfts",
+    functionFragment: "getApproved",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -307,39 +235,21 @@ interface NFTInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "mintBatch", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mintNFT", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "nextTokenId",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "nftInfo", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "nftRoyaltyBps",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "nftURI", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "redeemERC20",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "redeemERC721",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "royaltyInfo",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "safeBatchTransferFrom",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom",
     data: BytesLike
@@ -353,111 +263,74 @@ interface NFTInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setNftRoyaltyBps",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenByIndex",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenOfOwnerByIndex",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "totalSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "wrapERC20", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "wrapERC721", data: BytesLike): Result;
 
   events: {
+    "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
-    "ERC20Redeemed(address,address,uint256,uint256)": EventFragment;
-    "ERC20WrappedNfts(address,address,uint256,uint256,string)": EventFragment;
-    "ERC721Redeemed(address,address,uint256,uint256)": EventFragment;
-    "ERC721WrappedNft(address,address,uint256,uint256,string)": EventFragment;
-    "NativeNfts(address,uint256[],string[],uint256[])": EventFragment;
-    "NftRoyaltyUpdated(uint256)": EventFragment;
+    "Minted(address,uint256,string)": EventFragment;
     "Paused(address)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
-    "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
-    "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
-    "URI(string,uint256)": EventFragment;
+    "Transfer(address,address,uint256)": EventFragment;
     "Unpaused(address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ERC20Redeemed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ERC20WrappedNfts"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ERC721Redeemed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ERC721WrappedNft"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NativeNfts"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NftRoyaltyUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Minted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
 
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    owner: string;
+    approved: string;
+    tokenId: BigNumber;
+  }
+>;
+
 export type ApprovalForAllEvent = TypedEvent<
   [string, string, boolean] & {
-    account: string;
+    owner: string;
     operator: string;
     approved: boolean;
   }
 >;
 
-export type ERC20RedeemedEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber] & {
-    redeemer: string;
-    tokenContract: string;
-    tokenAmountReceived: BigNumber;
-    nftAmountRedeemed: BigNumber;
+export type MintedEvent = TypedEvent<
+  [string, BigNumber, string] & {
+    to: string;
+    tokenId: BigNumber;
+    tokenURI: string;
   }
->;
-
-export type ERC20WrappedNftsEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber, string] & {
-    creator: string;
-    tokenContract: string;
-    tokenAmount: BigNumber;
-    nftsMinted: BigNumber;
-    nftURI: string;
-  }
->;
-
-export type ERC721RedeemedEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber] & {
-    redeemer: string;
-    nftContract: string;
-    nftTokenId: BigNumber;
-    nativeNftTokenId: BigNumber;
-  }
->;
-
-export type ERC721WrappedNftEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber, string] & {
-    creator: string;
-    nftContract: string;
-    nftTokenId: BigNumber;
-    nativeNftTokenId: BigNumber;
-    nativeNftURI: string;
-  }
->;
-
-export type NativeNftsEvent = TypedEvent<
-  [string, BigNumber[], string[], BigNumber[]] & {
-    creator: string;
-    nftIds: BigNumber[];
-    nftURIs: string[];
-    nftSupplies: BigNumber[];
-  }
->;
-
-export type NftRoyaltyUpdatedEvent = TypedEvent<
-  [BigNumber] & { royaltyBps: BigNumber }
 >;
 
 export type PausedEvent = TypedEvent<[string] & { account: string }>;
@@ -478,28 +351,8 @@ export type RoleRevokedEvent = TypedEvent<
   [string, string, string] & { role: string; account: string; sender: string }
 >;
 
-export type TransferBatchEvent = TypedEvent<
-  [string, string, string, BigNumber[], BigNumber[]] & {
-    operator: string;
-    from: string;
-    to: string;
-    ids: BigNumber[];
-    values: BigNumber[];
-  }
->;
-
-export type TransferSingleEvent = TypedEvent<
-  [string, string, string, BigNumber, BigNumber] & {
-    operator: string;
-    from: string;
-    to: string;
-    id: BigNumber;
-    value: BigNumber;
-  }
->;
-
-export type URIEvent = TypedEvent<
-  [string, BigNumber] & { value: string; id: BigNumber }
+export type TransferEvent = TypedEvent<
+  [string, string, BigNumber] & { from: string; to: string; tokenId: BigNumber }
 >;
 
 export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
@@ -556,70 +409,25 @@ export class NFT extends BaseContract {
 
     _contractURI(overrides?: CallOverrides): Promise<[string]>;
 
-    balanceOf(
-      account: string,
-      id: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
-
-    burn(
-      account: string,
-      id: BigNumberish,
-      value: BigNumberish,
+    approve(
+      to: string,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    burnBatch(
-      account: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    burn(
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     contractURI(overrides?: CallOverrides): Promise<[string]>;
 
-    createNativeNfts(
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    createPackAtomic(
-      _pack: string,
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    creator(_nftId: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
-
-    erc20WrappedNfts(
-      arg0: BigNumberish,
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber, BigNumber] & {
-        tokenContract: string;
-        shares: BigNumber;
-        underlyingTokenAmount: BigNumber;
-      }
-    >;
-
-    erc721WrappedNfts(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber] & { nftContract: string; nftTokenId: BigNumber }
-    >;
+    ): Promise<[string]>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
@@ -647,7 +455,7 @@ export class NFT extends BaseContract {
     ): Promise<[boolean]>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
@@ -657,54 +465,30 @@ export class NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    mint(
-      to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+    mint(arg0: string, overrides?: CallOverrides): Promise<[void]>;
+
+    mintNFT(
+      _to: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    mintBatch(
-      to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    name(overrides?: CallOverrides): Promise<[string]>;
 
     nextTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    nftInfo(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, BigNumber, number] & {
-        creator: string;
-        uri: string;
-        supply: BigNumber;
-        underlyingType: number;
-      }
-    >;
+    nftURI(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
+    ownerOf(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     paused(overrides?: CallOverrides): Promise<[boolean]>;
-
-    redeemERC20(
-      _nftId: BigNumberish,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    redeemERC721(
-      _nftId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     renounceRole(
       role: BytesLike,
@@ -718,29 +502,18 @@ export class NFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    royaltyInfo(
-      tokenId: BigNumberish,
-      salePrice: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
-    >;
-
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -755,39 +528,39 @@ export class NFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setNftRoyaltyBps(
-      _royaltyBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    symbol(overrides?: CallOverrides): Promise<[string]>;
+
+    tokenByIndex(
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    tokenOfOwnerByIndex(
+      owner: string,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     tokenURI(
-      _nftId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     unpause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    uri(_nftId: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
-
-    wrapERC20(
-      _tokenContract: string,
-      _tokenAmount: BigNumberish,
-      _numOfNftsToMint: BigNumberish,
-      _nftURI: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    wrapERC721(
-      _nftContract: string,
-      _tokenId: BigNumberish,
-      _nftURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -800,70 +573,25 @@ export class NFT extends BaseContract {
 
   _contractURI(overrides?: CallOverrides): Promise<string>;
 
-  balanceOf(
-    account: string,
-    id: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  balanceOfBatch(
-    accounts: string[],
-    ids: BigNumberish[],
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
-  burn(
-    account: string,
-    id: BigNumberish,
-    value: BigNumberish,
+  approve(
+    to: string,
+    tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  burnBatch(
-    account: string,
-    ids: BigNumberish[],
-    values: BigNumberish[],
+  balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  burn(
+    tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   contractURI(overrides?: CallOverrides): Promise<string>;
 
-  createNativeNfts(
-    _nftURIs: string[],
-    _nftSupplies: BigNumberish[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  createPackAtomic(
-    _pack: string,
-    _nftURIs: string[],
-    _nftSupplies: BigNumberish[],
-    _packURI: string,
-    _secondsUntilOpenStart: BigNumberish,
-    _secondsUntilOpenEnd: BigNumberish,
-    _nftsPerOpen: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  creator(_nftId: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-  erc20WrappedNfts(
-    arg0: BigNumberish,
+  getApproved(
+    tokenId: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<
-    [string, BigNumber, BigNumber] & {
-      tokenContract: string;
-      shares: BigNumber;
-      underlyingTokenAmount: BigNumber;
-    }
-  >;
-
-  erc721WrappedNfts(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, BigNumber] & { nftContract: string; nftTokenId: BigNumber }
-  >;
+  ): Promise<string>;
 
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -891,7 +619,7 @@ export class NFT extends BaseContract {
   ): Promise<boolean>;
 
   isApprovedForAll(
-    account: string,
+    owner: string,
     operator: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
@@ -901,54 +629,27 @@ export class NFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  mint(
-    to: string,
-    id: BigNumberish,
-    amount: BigNumberish,
-    data: BytesLike,
+  mint(arg0: string, overrides?: CallOverrides): Promise<void>;
+
+  mintNFT(
+    _to: string,
+    _uri: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  mintBatch(
-    to: string,
-    ids: BigNumberish[],
-    amounts: BigNumberish[],
-    data: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  name(overrides?: CallOverrides): Promise<string>;
 
   nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-  nftInfo(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, string, BigNumber, number] & {
-      creator: string;
-      uri: string;
-      supply: BigNumber;
-      underlyingType: number;
-    }
-  >;
+  nftURI(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  nftRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
+  ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   pause(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   paused(overrides?: CallOverrides): Promise<boolean>;
-
-  redeemERC20(
-    _nftId: BigNumberish,
-    _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  redeemERC721(
-    _nftId: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   renounceRole(
     role: BytesLike,
@@ -962,29 +663,18 @@ export class NFT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  royaltyInfo(
-    tokenId: BigNumberish,
-    salePrice: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
-  >;
-
-  safeBatchTransferFrom(
+  "safeTransferFrom(address,address,uint256)"(
     from: string,
     to: string,
-    ids: BigNumberish[],
-    amounts: BigNumberish[],
-    data: BytesLike,
+    tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  safeTransferFrom(
+  "safeTransferFrom(address,address,uint256,bytes)"(
     from: string,
     to: string,
-    id: BigNumberish,
-    amount: BigNumberish,
-    data: BytesLike,
+    tokenId: BigNumberish,
+    _data: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -999,36 +689,36 @@ export class NFT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setNftRoyaltyBps(
-    _royaltyBps: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   supportsInterface(
     interfaceId: BytesLike,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  tokenURI(_nftId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+  symbol(overrides?: CallOverrides): Promise<string>;
+
+  tokenByIndex(
+    index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  tokenOfOwnerByIndex(
+    owner: string,
+    index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  transferFrom(
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   unpause(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  uri(_nftId: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-  wrapERC20(
-    _tokenContract: string,
-    _tokenAmount: BigNumberish,
-    _numOfNftsToMint: BigNumberish,
-    _nftURI: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  wrapERC721(
-    _nftContract: string,
-    _tokenId: BigNumberish,
-    _nftURI: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1041,70 +731,22 @@ export class NFT extends BaseContract {
 
     _contractURI(overrides?: CallOverrides): Promise<string>;
 
-    balanceOf(
-      account: string,
-      id: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
-    burn(
-      account: string,
-      id: BigNumberish,
-      value: BigNumberish,
+    approve(
+      to: string,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    burnBatch(
-      account: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<void>;
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    burn(tokenId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     contractURI(overrides?: CallOverrides): Promise<string>;
 
-    createNativeNfts(
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
-    createPackAtomic(
-      _pack: string,
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    creator(_nftId: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-    erc20WrappedNfts(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber, BigNumber] & {
-        tokenContract: string;
-        shares: BigNumber;
-        underlyingTokenAmount: BigNumber;
-      }
-    >;
-
-    erc721WrappedNfts(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber] & { nftContract: string; nftTokenId: BigNumber }
-    >;
+    ): Promise<string>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -1132,7 +774,7 @@ export class NFT extends BaseContract {
     ): Promise<boolean>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -1142,52 +784,25 @@ export class NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    mint(
-      to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+    mint(arg0: string, overrides?: CallOverrides): Promise<void>;
+
+    mintNFT(
+      _to: string,
+      _uri: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    mintBatch(
-      to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    name(overrides?: CallOverrides): Promise<string>;
 
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    nftInfo(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, BigNumber, number] & {
-        creator: string;
-        uri: string;
-        supply: BigNumber;
-        underlyingType: number;
-      }
-    >;
+    nftURI(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
+    ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     pause(overrides?: CallOverrides): Promise<void>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
-
-    redeemERC20(
-      _nftId: BigNumberish,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    redeemERC721(
-      _nftId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     renounceRole(
       role: BytesLike,
@@ -1201,29 +816,18 @@ export class NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    royaltyInfo(
-      tokenId: BigNumberish,
-      salePrice: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
-    >;
-
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1235,222 +839,92 @@ export class NFT extends BaseContract {
 
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
 
-    setNftRoyaltyBps(
-      _royaltyBps: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    tokenURI(_nftId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+    symbol(overrides?: CallOverrides): Promise<string>;
+
+    tokenByIndex(
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenOfOwnerByIndex(
+      owner: string,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     unpause(overrides?: CallOverrides): Promise<void>;
-
-    uri(_nftId: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-    wrapERC20(
-      _tokenContract: string,
-      _tokenAmount: BigNumberish,
-      _numOfNftsToMint: BigNumberish,
-      _nftURI: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    wrapERC721(
-      _nftContract: string,
-      _tokenId: BigNumberish,
-      _nftURI: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
   };
 
   filters: {
+    "Approval(address,address,uint256)"(
+      owner?: string | null,
+      approved?: string | null,
+      tokenId?: BigNumberish | null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; approved: string; tokenId: BigNumber }
+    >;
+
+    Approval(
+      owner?: string | null,
+      approved?: string | null,
+      tokenId?: BigNumberish | null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; approved: string; tokenId: BigNumber }
+    >;
+
     "ApprovalForAll(address,address,bool)"(
-      account?: string | null,
+      owner?: string | null,
       operator?: string | null,
       approved?: null
     ): TypedEventFilter<
       [string, string, boolean],
-      { account: string; operator: string; approved: boolean }
+      { owner: string; operator: string; approved: boolean }
     >;
 
     ApprovalForAll(
-      account?: string | null,
+      owner?: string | null,
       operator?: string | null,
       approved?: null
     ): TypedEventFilter<
       [string, string, boolean],
-      { account: string; operator: string; approved: boolean }
+      { owner: string; operator: string; approved: boolean }
     >;
 
-    "ERC20Redeemed(address,address,uint256,uint256)"(
-      redeemer?: string | null,
-      tokenContract?: string | null,
-      tokenAmountReceived?: null,
-      nftAmountRedeemed?: null
+    "Minted(address,uint256,string)"(
+      to?: string | null,
+      tokenId?: null,
+      tokenURI?: null
     ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber],
-      {
-        redeemer: string;
-        tokenContract: string;
-        tokenAmountReceived: BigNumber;
-        nftAmountRedeemed: BigNumber;
-      }
+      [string, BigNumber, string],
+      { to: string; tokenId: BigNumber; tokenURI: string }
     >;
 
-    ERC20Redeemed(
-      redeemer?: string | null,
-      tokenContract?: string | null,
-      tokenAmountReceived?: null,
-      nftAmountRedeemed?: null
+    Minted(
+      to?: string | null,
+      tokenId?: null,
+      tokenURI?: null
     ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber],
-      {
-        redeemer: string;
-        tokenContract: string;
-        tokenAmountReceived: BigNumber;
-        nftAmountRedeemed: BigNumber;
-      }
+      [string, BigNumber, string],
+      { to: string; tokenId: BigNumber; tokenURI: string }
     >;
-
-    "ERC20WrappedNfts(address,address,uint256,uint256,string)"(
-      creator?: string | null,
-      tokenContract?: string | null,
-      tokenAmount?: null,
-      nftsMinted?: null,
-      nftURI?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber, string],
-      {
-        creator: string;
-        tokenContract: string;
-        tokenAmount: BigNumber;
-        nftsMinted: BigNumber;
-        nftURI: string;
-      }
-    >;
-
-    ERC20WrappedNfts(
-      creator?: string | null,
-      tokenContract?: string | null,
-      tokenAmount?: null,
-      nftsMinted?: null,
-      nftURI?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber, string],
-      {
-        creator: string;
-        tokenContract: string;
-        tokenAmount: BigNumber;
-        nftsMinted: BigNumber;
-        nftURI: string;
-      }
-    >;
-
-    "ERC721Redeemed(address,address,uint256,uint256)"(
-      redeemer?: string | null,
-      nftContract?: string | null,
-      nftTokenId?: null,
-      nativeNftTokenId?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber],
-      {
-        redeemer: string;
-        nftContract: string;
-        nftTokenId: BigNumber;
-        nativeNftTokenId: BigNumber;
-      }
-    >;
-
-    ERC721Redeemed(
-      redeemer?: string | null,
-      nftContract?: string | null,
-      nftTokenId?: null,
-      nativeNftTokenId?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber],
-      {
-        redeemer: string;
-        nftContract: string;
-        nftTokenId: BigNumber;
-        nativeNftTokenId: BigNumber;
-      }
-    >;
-
-    "ERC721WrappedNft(address,address,uint256,uint256,string)"(
-      creator?: string | null,
-      nftContract?: string | null,
-      nftTokenId?: null,
-      nativeNftTokenId?: null,
-      nativeNftURI?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber, string],
-      {
-        creator: string;
-        nftContract: string;
-        nftTokenId: BigNumber;
-        nativeNftTokenId: BigNumber;
-        nativeNftURI: string;
-      }
-    >;
-
-    ERC721WrappedNft(
-      creator?: string | null,
-      nftContract?: string | null,
-      nftTokenId?: null,
-      nativeNftTokenId?: null,
-      nativeNftURI?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber, BigNumber, string],
-      {
-        creator: string;
-        nftContract: string;
-        nftTokenId: BigNumber;
-        nativeNftTokenId: BigNumber;
-        nativeNftURI: string;
-      }
-    >;
-
-    "NativeNfts(address,uint256[],string[],uint256[])"(
-      creator?: string | null,
-      nftIds?: null,
-      nftURIs?: null,
-      nftSupplies?: null
-    ): TypedEventFilter<
-      [string, BigNumber[], string[], BigNumber[]],
-      {
-        creator: string;
-        nftIds: BigNumber[];
-        nftURIs: string[];
-        nftSupplies: BigNumber[];
-      }
-    >;
-
-    NativeNfts(
-      creator?: string | null,
-      nftIds?: null,
-      nftURIs?: null,
-      nftSupplies?: null
-    ): TypedEventFilter<
-      [string, BigNumber[], string[], BigNumber[]],
-      {
-        creator: string;
-        nftIds: BigNumber[];
-        nftURIs: string[];
-        nftSupplies: BigNumber[];
-      }
-    >;
-
-    "NftRoyaltyUpdated(uint256)"(
-      royaltyBps?: null
-    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
-
-    NftRoyaltyUpdated(
-      royaltyBps?: null
-    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
 
     "Paused(address)"(
       account?: null
@@ -1512,83 +986,23 @@ export class NFT extends BaseContract {
       { role: string; account: string; sender: string }
     >;
 
-    "TransferBatch(address,address,address,uint256[],uint256[])"(
-      operator?: string | null,
+    "Transfer(address,address,uint256)"(
       from?: string | null,
       to?: string | null,
-      ids?: null,
-      values?: null
+      tokenId?: BigNumberish | null
     ): TypedEventFilter<
-      [string, string, string, BigNumber[], BigNumber[]],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        ids: BigNumber[];
-        values: BigNumber[];
-      }
+      [string, string, BigNumber],
+      { from: string; to: string; tokenId: BigNumber }
     >;
 
-    TransferBatch(
-      operator?: string | null,
+    Transfer(
       from?: string | null,
       to?: string | null,
-      ids?: null,
-      values?: null
+      tokenId?: BigNumberish | null
     ): TypedEventFilter<
-      [string, string, string, BigNumber[], BigNumber[]],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        ids: BigNumber[];
-        values: BigNumber[];
-      }
+      [string, string, BigNumber],
+      { from: string; to: string; tokenId: BigNumber }
     >;
-
-    "TransferSingle(address,address,address,uint256,uint256)"(
-      operator?: string | null,
-      from?: string | null,
-      to?: string | null,
-      id?: null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        id: BigNumber;
-        value: BigNumber;
-      }
-    >;
-
-    TransferSingle(
-      operator?: string | null,
-      from?: string | null,
-      to?: string | null,
-      id?: null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        id: BigNumber;
-        value: BigNumber;
-      }
-    >;
-
-    "URI(string,uint256)"(
-      value?: null,
-      id?: BigNumberish | null
-    ): TypedEventFilter<[string, BigNumber], { value: string; id: BigNumber }>;
-
-    URI(
-      value?: null,
-      id?: BigNumberish | null
-    ): TypedEventFilter<[string, BigNumber], { value: string; id: BigNumber }>;
 
     "Unpaused(address)"(
       account?: null
@@ -1606,63 +1020,23 @@ export class NFT extends BaseContract {
 
     _contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
-    balanceOf(
-      account: string,
-      id: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    burn(
-      account: string,
-      id: BigNumberish,
-      value: BigNumberish,
+    approve(
+      to: string,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    burnBatch(
-      account: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    burn(
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
-    createNativeNfts(
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    createPackAtomic(
-      _pack: string,
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    creator(
-      _nftId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    erc20WrappedNfts(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    erc721WrappedNfts(
-      arg0: BigNumberish,
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1695,7 +1069,7 @@ export class NFT extends BaseContract {
     ): Promise<BigNumber>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1705,44 +1079,30 @@ export class NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    mint(
-      to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+    mint(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    mintNFT(
+      _to: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    mintBatch(
-      to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    name(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    nftInfo(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+    nftURI(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
+    ownerOf(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     paused(overrides?: CallOverrides): Promise<BigNumber>;
-
-    redeemERC20(
-      _nftId: BigNumberish,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    redeemERC721(
-      _nftId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
 
     renounceRole(
       role: BytesLike,
@@ -1756,27 +1116,18 @@ export class NFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    royaltyInfo(
-      tokenId: BigNumberish,
-      salePrice: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1791,39 +1142,39 @@ export class NFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setNftRoyaltyBps(
-      _royaltyBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    tokenURI(
-      _nftId: BigNumberish,
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenByIndex(
+      index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    tokenOfOwnerByIndex(
+      owner: string,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     unpause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    uri(_nftId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-    wrapERC20(
-      _tokenContract: string,
-      _tokenAmount: BigNumberish,
-      _numOfNftsToMint: BigNumberish,
-      _nftURI: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    wrapERC721(
-      _nftContract: string,
-      _tokenId: BigNumberish,
-      _nftURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -1839,63 +1190,26 @@ export class NFT extends BaseContract {
 
     _contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    balanceOf(
-      account: string,
-      id: BigNumberish,
-      overrides?: CallOverrides
+    approve(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
+    balanceOf(
+      owner: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     burn(
-      account: string,
-      id: BigNumberish,
-      value: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    burnBatch(
-      account: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    createNativeNfts(
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    createPackAtomic(
-      _pack: string,
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    creator(
-      _nftId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    erc20WrappedNfts(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    erc721WrappedNfts(
-      arg0: BigNumberish,
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1928,7 +1242,7 @@ export class NFT extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1939,46 +1253,35 @@ export class NFT extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mint(
-      to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    mintNFT(
+      _to: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    mintBatch(
-      to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nextTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    nftInfo(
+    nftURI(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    ownerOf(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    redeemERC20(
-      _nftId: BigNumberish,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    redeemERC721(
-      _nftId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
 
     renounceRole(
       role: BytesLike,
@@ -1992,27 +1295,18 @@ export class NFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    royaltyInfo(
-      tokenId: BigNumberish,
-      salePrice: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2027,42 +1321,39 @@ export class NFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setNftRoyaltyBps(
-      _royaltyBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    tokenURI(
-      _nftId: BigNumberish,
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenByIndex(
+      index: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenOfOwnerByIndex(
+      owner: string,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenURI(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     unpause(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    uri(
-      _nftId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    wrapERC20(
-      _tokenContract: string,
-      _tokenAmount: BigNumberish,
-      _numOfNftsToMint: BigNumberish,
-      _nftURI: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    wrapERC721(
-      _nftContract: string,
-      _tokenId: BigNumberish,
-      _nftURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

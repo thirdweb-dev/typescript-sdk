@@ -1,7 +1,7 @@
 import { Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { ProtocolControl, ProtocolControlInterface } from "../ProtocolControl";
-export declare class ProtocolControl__factory {
+import type { NFTCollection, NFTCollectionInterface } from "../NFTCollection";
+export declare class NFTCollection__factory {
     static readonly abi: ({
         inputs: {
             internalType: string;
@@ -40,14 +40,7 @@ export declare class ProtocolControl__factory {
         stateMutability: string;
         type: string;
         anonymous?: undefined;
-    } | {
-        stateMutability: string;
-        type: string;
-        inputs?: undefined;
-        anonymous?: undefined;
-        name?: undefined;
-        outputs?: undefined;
     })[];
-    static createInterface(): ProtocolControlInterface;
-    static connect(address: string, signerOrProvider: Signer | Provider): ProtocolControl;
+    static createInterface(): NFTCollectionInterface;
+    static connect(address: string, signerOrProvider: Signer | Provider): NFTCollection;
 }
