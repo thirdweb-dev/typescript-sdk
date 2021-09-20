@@ -1,7 +1,10 @@
 {
   "name": "@nftlabs/sdk",
   "version": "0.0.1",
-  "repository": "https://github.com/nftlabs/nftlabs-sdk-ts.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nftlabs/nftlabs-sdk-ts.git"
+  },
   "license": "MIT",
   "type": "module",
   "source": "src/index.ts",
@@ -28,5 +31,11 @@
   "dependencies": {
     "isomorphic-fetch": "^3.0.0",
     "ts-invariant": "^0.9.3"
-  }
+  },
+  "description": "",
+  "bugs": {
+    "url": "https://github.com/nftlabs/nftlabs-sdk-ts/issues"
+  },
+  "homepage": "https://github.com/nftlabs/nftlabs-sdk-ts#readme",
+  "author": "NFTLabs"
 }
