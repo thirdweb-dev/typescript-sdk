@@ -1,0 +1,32 @@
+{
+  "name": "@nftlabs/sdk",
+  "version": "0.0.1",
+  "repository": "https://github.com/nftlabs/nftlabs-sdk-ts.git",
+  "license": "MIT",
+  "type": "module",
+  "source": "src/index.ts",
+  "exports": "./dist/nftlabs-sdk.modern.js",
+  "main": "./dist/nftlabs-sdk.cjs",
+  "module": "./dist/nftlabs-sdk.module.js",
+  "unpkg": "./dist/nftlabs-sdk.umd.js",
+  "scripts": {
+    "build": "microbundle",
+    "dev": "microbundle watch",
+    "generate-types": "typechain --target=ethers-v5 --out-dir=src/types 'src/abi/*.json'",
+    "format": "prettier src/ --write"
+  },
+  "devDependencies": {
+    "@typechain/ethers-v5": "^7.1.0",
+    "ethers": "^5.4.7",
+    "microbundle": "^0.13.3",
+    "prettier": "^2.4.1",
+    "typechain": "^5.1.2"
+  },
+  "peerDependencies": {
+    "ethers": "^5.4.6"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "^3.0.0",
+    "ts-invariant": "^0.9.3"
+  }
+}
