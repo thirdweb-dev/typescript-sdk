@@ -2,22 +2,22 @@ import type { SDKOptions, ProviderOrSigner } from "../core";
 import { NFTMetadata, getMetadata } from "../common/nft";
 import { BigNumber } from "@ethersproject/bignumber";
 import { SubSDK } from "../core/sub-sdk";
-import { Pack, Pack__factory } from "../types";
+import { Pack as PackContract, Pack__factory } from "../types";
 import { NotFoundError } from "../common/error";
 
-export interface PackEntity extends NFTMetadata {
+export interface Pack extends NFTMetadata {
   creator: string;
   currentSupply: BigNumber;
   openStart?: Date;
   openEnd?: Date;
 }
 
-export interface RewardEntity extends NFTMetadata {
+export interface PackNFT extends NFTMetadata {
   supply: BigNumber;
 }
 
 export class PackSDK extends SubSDK {
-  public readonly contract: Pack;
+  public readonly contract: PackContract;
 
   constructor(
     providerOrSigner: ProviderOrSigner,
@@ -60,7 +60,7 @@ export class PackSDK extends SubSDK {
     );
   }
 
-  public async get(packId: string): Promise<PackEntity> {
+  public async get(packId: string): Promise<Pack> {
     const [meta, state] = await Promise.all([
       await getMetadata(
         this.providerOrSigner,
@@ -70,7 +70,7 @@ export class PackSDK extends SubSDK {
       ),
       this.contract.getPack(packId),
     ]);
-    const entity: PackEntity = {
+    const entity: Pack = {
       ...meta,
       creator: state.creator,
       currentSupply: state.currentSupply,
@@ -84,14 +84,14 @@ export class PackSDK extends SubSDK {
     return entity;
   }
 
-  public async getAll(): Promise<NFTMetadata[]> {
+  public async getAll(): Promise<Pack[]> {
     const maxId = (await this.contract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
   }
 
-  public async getRewards(packId: string): Promise<RewardEntity[]> {
+  public async getNFTs(packId: string): Promise<PackNFT[]> {
     const packReward = await this.contract.getPackWithRewards(packId);
     if (!packReward.source) {
       throw new NotFoundError();

@@ -9,7 +9,7 @@
   "type": "module",
   "source": "src/index.ts",
   "main": "dist/nftlabs-sdk.cjs",
-  "types": "dist/nftlabs-sdk.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch",
