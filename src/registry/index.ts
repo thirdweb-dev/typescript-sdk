@@ -30,8 +30,8 @@ export class RegistrySDK extends SubSDK {
     const maxVersion = await this.contract.getLatestVersion(deployer);
     const versions = Array.from(Array(maxVersion.toNumber()).keys()).reverse();
     const addresses = await Promise.all(
-      versions.map((i) =>
-        this.contract.getProtocolControl(deployer, i.toString()),
+      versions.map((v) =>
+        this.contract.getProtocolControl(deployer, v.toString()),
       ),
     );
     const metadatas = await Promise.all(
