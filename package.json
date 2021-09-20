@@ -8,10 +8,14 @@
   "license": "MIT",
   "type": "module",
   "source": "src/index.ts",
-  "exports": "./dist/nftlabs-sdk.modern.js",
-  "main": "./dist/nftlabs-sdk.cjs",
-  "module": "./dist/nftlabs-sdk.module.js",
-  "unpkg": "./dist/nftlabs-sdk.umd.js",
+  "main": "dist/nftlabs-sdk.cjs",
+  "module": "dist/nftlabs-sdk.module.js",
+  "unpkg": "dist/nftlabs-sdk.umd.js",
+  "exports": {
+    "require": "./dist/nftlabs-sdk.cjs",
+    "import": "./dist/nftlabs-sdk.modern.js",
+    "default": "./dist/nftlabs-sdk.modern.js"
+  },
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch",
@@ -29,7 +33,6 @@
     "ethers": "^5.4.6"
   },
   "dependencies": {
-    "isomorphic-fetch": "^3.0.0",
     "ts-invariant": "^0.9.3"
   },
   "description": "",

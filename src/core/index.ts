@@ -1,4 +1,3 @@
-require("isomorphic-fetch");
 import { Signer } from "@ethersproject/abstract-signer";
 import { Network, Provider } from "@ethersproject/providers";
 import { ethers } from "ethers";
