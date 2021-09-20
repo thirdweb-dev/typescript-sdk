@@ -9,13 +9,7 @@
   "type": "module",
   "source": "src/index.ts",
   "main": "dist/nftlabs-sdk.cjs",
-  "module": "dist/nftlabs-sdk.module.js",
-  "unpkg": "dist/nftlabs-sdk.umd.js",
-  "exports": {
-    "require": "./dist/nftlabs-sdk.cjs",
-    "import": "./dist/nftlabs-sdk.modern.js",
-    "default": "./dist/nftlabs-sdk.modern.js"
-  },
+  "types": "types/index.d.ts",
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch",
