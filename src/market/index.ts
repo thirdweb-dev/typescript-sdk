@@ -3,7 +3,7 @@ import { formatUnits } from "@ethersproject/units";
 import { ProviderOrSigner } from "../core";
 import { SDKOptions } from "../core";
 import { SubSDK } from "../core/sub-sdk";
-import { CurrencyValue, getCurrencyWithPrice } from "../common/currency";
+import { CurrencyValue, getCurrencyValue } from "../common/currency";
 import { NFTMetadata, getMetadata } from "../common/nft";
 import {
   Market,
@@ -52,7 +52,7 @@ export class MarketSDK extends SubSDK {
     let currency: CurrencyValue | null = null;
 
     try {
-      currency = await getCurrencyWithPrice(
+      currency = await getCurrencyValue(
         this.providerOrSigner,
         listing.currency,
         listing.pricePerToken,

@@ -7,6 +7,7 @@ import { PackSDK } from "../pack";
 import { MarketSDK } from "../market";
 import { CoinSDK } from "../coin";
 import { NFTSDK } from "../nft";
+import { RegistrySDK } from "../registry";
 
 export type ProviderOrSigner = Provider | Signer;
 
@@ -68,15 +69,21 @@ export class CoreSDK {
     );
   }
 
-  public getCoinSDK(address: string) {
+  public getCoinSDK(address: string): CoinSDK {
     return this.getOrCreateSDK(
       new CoinSDK(this.providerOrSigner, address, this.opts),
     );
   }
 
-  public getMarketSDK(address: string) {
+  public getMarketSDK(address: string): MarketSDK {
     return this.getOrCreateSDK(
       new MarketSDK(this.providerOrSigner, address, this.opts),
+    );
+  }
+
+  public getRegistrySDK(address: string): RegistrySDK {
+    return this.getOrCreateSDK(
+      new RegistrySDK(this.providerOrSigner, address, this.opts),
     );
   }
 

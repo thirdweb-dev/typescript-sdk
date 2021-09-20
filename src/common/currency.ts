@@ -41,7 +41,7 @@ export async function getCurrencyMetadata(
   };
 }
 
-export async function getCurrencyWithPrice(
+export async function getCurrencyValue(
   providerOrSigner: ProviderOrSigner,
   asset: string,
   price: BigNumber,

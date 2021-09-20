@@ -10,4 +10,4 @@ export interface CurrencyValue extends Currency {
     displayValue: string;
 }
 export declare function getCurrencyMetadata(providerOrSigner: ProviderOrSigner, asset: string): Promise<Currency>;
-export declare function getCurrencyWithPrice(providerOrSigner: ProviderOrSigner, asset: string, price: BigNumber): Promise<CurrencyValue>;
+export declare function getCurrencyValue(providerOrSigner: ProviderOrSigner, asset: string, price: BigNumber): Promise<CurrencyValue>;
