@@ -27,7 +27,7 @@ export class RegistrySDK extends SubSDK {
 
   public async getProtocolContracts(): Promise<RegistryControl[]> {
     const deployer = await this.getSignerAddress();
-    const maxVersion = this.contract.getLatestVersion(deployer);
+    const maxVersion = await this.contract.getLatestVersion(deployer);
     const versions = Array.from(Array(maxVersion).keys()).reverse();
     const addresses = await Promise.all(
       versions.map((i) =>
