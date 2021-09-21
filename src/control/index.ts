@@ -6,10 +6,13 @@ import { ContractMetadata, getContractMetadata } from "../common/contract";
 
 export enum ModuleType {
   Coin = 0,
-  NFT = 1,
-  Pack = 2,
-  Market = 3,
-  Other = 4,
+  NFTCollection = 1,
+  NFT = 2,
+  DynamicNFT = 3,
+  AccessNFT = 4,
+  Pack = 5,
+  Market = 6,
+  Other = 7,
 }
 
 export interface ControlContract {
