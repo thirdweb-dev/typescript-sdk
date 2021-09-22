@@ -18,7 +18,7 @@
     "dev": "microbundle watch",
     "generate-types": "typechain --target=ethers-v5 --out-dir=src/types 'src/abi/*.json'",
     "format": "prettier src/ --write",
-    "prepublish": "rm -rf dist && yarn build"
+    "prepublishOnly": "rm -rf dist && yarn build"
   },
   "devDependencies": {
     "@typechain/ethers-v5": "^7.1.0",
@@ -33,6 +33,9 @@
   "dependencies": {
     "ts-invariant": "^0.9.3",
     "ts-toolbelt": "^9.6.0"
+  },
+  "resolutions": {
+    "ansi-regex": "^6.0.1"
   },
   "description": "",
   "bugs": {
