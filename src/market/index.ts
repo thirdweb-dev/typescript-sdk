@@ -1,15 +1,12 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { formatUnits } from "@ethersproject/units";
-import { ProviderOrSigner } from "../core";
-import { SDKOptions } from "../core";
-import { SubSDK } from "../core/sub-sdk";
 import { CurrencyValue, getCurrencyValue } from "../common/currency";
-import { NFTMetadata, getMetadata } from "../common/nft";
+import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
+import { Module } from "../core/module";
 import {
-  Market,
-  Market__factory,
   ERC1155__factory,
   ERC20__factory,
+  Market,
+  Market__factory,
 } from "../types";
 
 export interface ListingFilter {
@@ -32,20 +29,20 @@ export interface Listing {
   saleEnd: Date | null;
 }
 
-export class MarketSDK extends SubSDK {
-  public readonly contract: Market;
+export class MarketSDK extends Module {
+  private _contract: Market | null = null;
+  public get contract(): Market {
+    return this._contract || this.connectContract();
+  }
+  private set contract(value: Market) {
+    this._contract = value;
+  }
 
-  constructor(
-    providerOrSigner: ProviderOrSigner,
-    address: string,
-    opts: SDKOptions,
-  ) {
-    super(providerOrSigner, address, opts);
-
-    this.contract = Market__factory.connect(
+  protected connectContract(): Market {
+    return (this.contract = Market__factory.connect(
       this.address,
       this.providerOrSigner,
-    );
+    ));
   }
 
   private async transformResultToListing(listing: any): Promise<Listing> {
@@ -61,13 +58,13 @@ export class MarketSDK extends SubSDK {
       throw e;
     }
 
-    let metadata: NFTMetadata | null = null;
+    let metadata: NFTMetadata | undefined = undefined;
     try {
-      metadata = await getMetadata(
+      metadata = await getMetadataWithoutContract(
         this.providerOrSigner,
         listing.assetContract,
         listing.tokenId.toString(),
-        this.opts.ipfsGatewayUrl,
+        this.ipfsGatewayUrl,
       );
     } catch (e) {}
 
@@ -189,9 +186,9 @@ export class MarketSDK extends SubSDK {
       secondsUntilEnd,
     );
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === "NewListing");
-    const listingId = event.args.listingId.toString();
-    const listing = event.args.listing;
+    const event = receipt?.events?.find((e) => e.event === "NewListing");
+    // const listingId = event?.args?.listingId.toString();
+    const listing = event?.args?.listing;
     return await this.transformResultToListing(listing);
   }
 
@@ -224,7 +221,7 @@ export class MarketSDK extends SubSDK {
     }
     const tx = await this.contract.buy(listingId, quantity);
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === "NewSale");
-    return await this.transformResultToListing(event.args.listing);
+    const event = receipt?.events?.find((e) => e.event === "NewSale");
+    return await this.transformResultToListing(event?.args?.listing);
   }
 }

@@ -1,6 +1,6 @@
-import { ProviderOrSigner } from "../core";
-import { replaceIpfsWithGateway } from "../common/ipfs";
 import { Contract } from "@ethersproject/contracts";
+import { replaceIpfsWithGateway } from "../common/ipfs";
+import { ProviderOrSigner } from "../core";
 
 export interface ContractMetadata {
   uri: string;

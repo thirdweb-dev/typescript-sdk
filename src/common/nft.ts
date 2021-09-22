@@ -1,7 +1,8 @@
-import { ProviderOrSigner } from "../core";
-import { NotFoundError } from "./error";
-import { replaceIpfsWithGateway } from "../common/ipfs";
 import { Contract } from "@ethersproject/contracts";
+import { replaceIpfsWithGateway } from "../common/ipfs";
+import { ProviderOrSigner } from "../core";
+import { NFTCollection } from "../types";
+import { NotFoundError } from "./error";
 
 // support erc721 and erc1155
 const tokenUriABI = [
@@ -54,13 +55,39 @@ export interface NFTMetadata {
   attributes?: Record<string, any>;
 }
 
-export async function getMetadata(
+export async function getMetadataWithoutContract(
   provider: ProviderOrSigner,
   contractAddress: string,
   tokenId: string,
   ipfsGatewayUrl: string,
 ): Promise<NFTMetadata> {
-  const uri = await getMetadataUri(provider, contractAddress, tokenId); // contract.uri(tokenId);
+  const contract = new Contract(
+    contractAddress,
+    tokenUriABI,
+    provider,
+  ) as NFTCollection;
+  const uri = await getMetadataUri(contract, tokenId); // contract.uri(tokenId);
+  if (!uri) {
+    throw new NotFoundError();
+  }
+  const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
+  const meta = await fetch(gatewayUrl);
+  const metadata = await meta.json();
+  const entity: NFTMetadata = {
+    ...metadata,
+    id: tokenId,
+    uri: uri,
+    image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
+  };
+  return entity;
+}
+
+export async function getMetadata(
+  contract: NFTCollection,
+  tokenId: string,
+  ipfsGatewayUrl: string,
+): Promise<NFTMetadata> {
+  const uri = await getMetadataUri(contract, tokenId); // contract.uri(tokenId);
   if (!uri) {
     throw new NotFoundError();
   }
@@ -77,12 +104,9 @@ export async function getMetadata(
 }
 
 export async function getMetadataUri(
-  provider: ProviderOrSigner,
-  contractAddress: string,
+  contract: NFTCollection,
   tokenId: string,
 ): Promise<string> {
-  const contract = new Contract(contractAddress, tokenUriABI, provider);
-
   let uri = "";
   try {
     uri = await contract.tokenURI(tokenId);

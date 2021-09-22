@@ -1,33 +1,26 @@
-import type { ProviderOrSigner } from "../core";
 import { BigNumber } from "@ethersproject/bignumber";
-import { SDKOptions } from "../core";
-import { SubSDK } from "../core/sub-sdk";
+import { getMetadata, NFTMetadata } from "../common/nft";
+import { Module } from "../core/module";
 import { NFTCollection, NFTCollection__factory } from "../types";
-import { NFTMetadata, getMetadata } from "../common/nft";
 
-export class NFTSDK extends SubSDK {
-  public readonly contract: NFTCollection;
+export class NFTSDK extends Module {
+  private _contract: NFTCollection | null = null;
+  public get contract(): NFTCollection {
+    return this._contract || this.connectContract();
+  }
+  private set contract(value: NFTCollection) {
+    this._contract = value;
+  }
 
-  constructor(
-    providerOrSigner: ProviderOrSigner,
-    address: string,
-    opts: SDKOptions,
-  ) {
-    super(providerOrSigner, address, opts);
-
-    this.contract = NFTCollection__factory.connect(
+  protected connectContract(): NFTCollection {
+    return (this.contract = NFTCollection__factory.connect(
       this.address,
       this.providerOrSigner,
-    );
+    ));
   }
 
   public async get(tokenId: string): Promise<NFTMetadata> {
-    return getMetadata(
-      this.providerOrSigner,
-      this.address,
-      tokenId,
-      this.opts.ipfsGatewayUrl,
-    );
+    return await getMetadata(this.contract, tokenId, this.ipfsGatewayUrl);
   }
 
   public async getAll(): Promise<NFTMetadata[]> {

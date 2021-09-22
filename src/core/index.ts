@@ -1,12 +1,12 @@
 import { Signer } from "@ethersproject/abstract-signer";
 import { Network, Provider } from "@ethersproject/providers";
 import { ethers } from "ethers";
-import { SubSDK } from "./sub-sdk";
-import { ControlSDK } from "../control";
-import { PackSDK } from "../pack";
-import { MarketSDK } from "../market";
+import { C } from "ts-toolbelt";
 import { CoinSDK } from "../coin";
+import { ControlSDK } from "../control";
+import { MarketSDK } from "../market";
 import { NFTSDK } from "../nft";
+import { PackSDK } from "../pack";
 import { RegistrySDK } from "../registry";
 
 export type ProviderOrSigner = Provider | Signer;
@@ -17,15 +17,31 @@ export interface SDKOptions {
   ipfsGatewayUrl: string;
 }
 
-export class CoreSDK {
-  private providerOrSigner: ProviderOrSigner | null = null;
-  private opts: SDKOptions;
-  private modules: Record<string, SubSDK> = {};
+type AnyContract =
+  | typeof ControlSDK
+  | typeof NFTSDK
+  | typeof CoinSDK
+  | typeof MarketSDK
+  | typeof PackSDK
+  | typeof RegistrySDK;
+
+export class NFTLabsSDK {
+  private ipfsGatewayUrl: string = "https://cloudflare-ipfs.com/ipfs/";
+  private modules = new Map<string, C.Instance<AnyContract>>();
+  private providerOrSigner: ProviderOrSigner;
+  private signer: Signer | null = null;
 
   constructor(
     providerOrNetwork: ValidProviderInput,
     opts?: Partial<SDKOptions>,
   ) {
+    this.providerOrSigner = this.setProviderOrSigner(providerOrNetwork);
+    if (opts?.ipfsGatewayUrl) {
+      this.ipfsGatewayUrl = opts.ipfsGatewayUrl;
+    }
+  }
+
+  setProviderOrSigner(providerOrNetwork: ValidProviderInput) {
     if (
       Provider.isProvider(providerOrNetwork) ||
       Signer.isSigner(providerOrNetwork)
@@ -36,76 +52,66 @@ export class CoreSDK {
       // sdk instantiated with a network name / network url
       this.providerOrSigner = ethers.getDefaultProvider(providerOrNetwork);
     }
-
-    this.opts = {
-      ipfsGatewayUrl:
-        opts?.ipfsGatewayUrl || "https://cloudflare-ipfs.com/ipfs/",
-    };
+    //if we're setting a signer then also update that
+    if (Signer.isSigner(providerOrNetwork)) {
+      this.signer = providerOrNetwork;
+    } else {
+      this.signer = null;
+    }
+    this.updateModuleSigners();
+    return this.providerOrSigner;
   }
 
-  private getOrCreateSDK<T extends SubSDK>(sdk: SubSDK): T {
-    const address = sdk.address;
-    if (!this.modules[address]) {
-      this.modules[address] = sdk;
+  private updateModuleSigners() {
+    for (let [, _module] of this.modules) {
+      if (this.isReadOnly()) {
+        _module.clearSigner();
+      }
+      _module.setProviderOrSigner(this.providerOrSigner);
     }
-    return this.modules[address] as T;
+  }
+
+  private getOrCreateModule<T extends AnyContract>(
+    address: string,
+    _Module: T,
+  ): C.Instance<T> {
+    if (this.modules.has(address)) {
+      return this.modules.get(address) as C.Instance<T>;
+    }
+    const _newModule = new _Module(
+      this.providerOrSigner,
+      address,
+      this.ipfsGatewayUrl,
+    );
+    this.modules.set(address, _newModule);
+    return _newModule as C.Instance<T>;
+  }
+
+  public isReadOnly(): boolean {
+    return !Signer.isSigner(this.signer);
   }
 
   public getControlSDK(address: string): ControlSDK {
-    return this.getOrCreateSDK(
-      new ControlSDK(this.providerOrSigner, address, this.opts),
-    );
-  }
-
-  public getPackSDK(address: string): PackSDK {
-    return this.getOrCreateSDK(
-      new PackSDK(this.providerOrSigner, address, this.opts),
-    );
+    return this.getOrCreateModule(address, ControlSDK);
   }
 
   public getNFTSDK(address: string): NFTSDK {
-    return this.getOrCreateSDK(
-      new NFTSDK(this.providerOrSigner, address, this.opts),
-    );
+    return this.getOrCreateModule(address, NFTSDK);
+  }
+
+  public getPackSDK(address: string): PackSDK {
+    return this.getOrCreateModule(address, PackSDK);
   }
 
   public getCoinSDK(address: string): CoinSDK {
-    return this.getOrCreateSDK(
-      new CoinSDK(this.providerOrSigner, address, this.opts),
-    );
+    return this.getOrCreateModule(address, CoinSDK);
   }
 
   public getMarketSDK(address: string): MarketSDK {
-    return this.getOrCreateSDK(
-      new MarketSDK(this.providerOrSigner, address, this.opts),
-    );
+    return this.getOrCreateModule(address, MarketSDK);
   }
 
   public getRegistrySDK(address: string): RegistrySDK {
-    return this.getOrCreateSDK(
-      new RegistrySDK(this.providerOrSigner, address, this.opts),
-    );
-  }
-
-  public async getSignerAddress(): Promise<string> {
-    if (Signer.isSigner(this.providerOrSigner)) {
-      return this.providerOrSigner.getAddress();
-    }
-    return "";
-  }
-
-  public setSigner(providerOrSigner?: ValidProviderInput): ProviderOrSigner {
-    if (!Signer.isSigner(providerOrSigner)) {
-      throw new Error("Not a valid signer");
-    }
-
-    // sdk instantiated with a provider / signer
-    this.providerOrSigner = providerOrSigner;
-
-    for (const name in this.modules) {
-      this.modules[name].providerOrSigner = this.providerOrSigner;
-    }
-
-    return this.providerOrSigner;
+    return this.getOrCreateModule(address, RegistrySDK);
   }
 }

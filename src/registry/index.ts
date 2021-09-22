@@ -1,7 +1,6 @@
-import { SDKOptions, ProviderOrSigner } from "../core";
-import { SubSDK } from "../core/sub-sdk";
-import { Registry, Registry__factory } from "../types";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
+import { Module } from "../core/module";
+import { Registry, Registry__factory } from "../types";
 
 export interface RegistryControl {
   address: string;
@@ -9,20 +8,20 @@ export interface RegistryControl {
   metadata?: ContractMetadata;
 }
 
-export class RegistrySDK extends SubSDK {
-  public readonly contract: Registry;
+export class RegistrySDK extends Module {
+  private _contract: Registry | null = null;
+  public get contract(): Registry {
+    return this._contract || this.connectContract();
+  }
+  private set contract(value: Registry) {
+    this._contract = value;
+  }
 
-  constructor(
-    providerOrSigner: ProviderOrSigner,
-    address: string,
-    opts: SDKOptions,
-  ) {
-    super(providerOrSigner, address, opts);
-
-    this.contract = Registry__factory.connect(
+  protected connectContract(): Registry {
+    return (this.contract = Registry__factory.connect(
       this.address,
       this.providerOrSigner,
-    );
+    ));
   }
 
   public async getProtocolContracts(): Promise<RegistryControl[]> {
@@ -39,8 +38,8 @@ export class RegistrySDK extends SubSDK {
         getContractMetadata(
           this.providerOrSigner,
           address,
-          this.opts.ipfsGatewayUrl,
-        ).catch(() => null),
+          this.ipfsGatewayUrl,
+        ).catch(() => undefined),
       ),
     );
     return versions.map((v, i) => {
