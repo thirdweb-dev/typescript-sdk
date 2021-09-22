@@ -1,26 +1,26 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import type { ProviderOrSigner } from "../core";
-import { SDKOptions } from "../core";
-import { SubSDK } from "../core/sub-sdk";
-import { Coin, Coin__factory } from "../types";
 import {
   Currency,
   CurrencyValue,
   getCurrencyMetadata,
   getCurrencyValue,
 } from "../common/currency";
+import { Module } from "../core/module";
+import { Coin, Coin__factory } from "../types";
 
-export class CoinSDK extends SubSDK {
-  public contract: Coin;
-
-  constructor(
-    providerOrSigner: ProviderOrSigner,
-    address: string,
-    opts: SDKOptions,
-  ) {
-    super(providerOrSigner, address, opts);
-
-    this.contract = Coin__factory.connect(this.address, this.providerOrSigner);
+export class CoinSDK extends Module {
+  private _contract: Coin | null = null;
+  public get contract(): Coin {
+    return this._contract || this.connectContract();
+  }
+  private set contract(value: Coin) {
+    this._contract = value;
+  }
+  protected connectContract(): Coin {
+    return (this.contract = Coin__factory.connect(
+      this.address,
+      this.providerOrSigner,
+    ));
   }
 
   public async get(): Promise<Currency> {

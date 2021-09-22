@@ -1,4 +1,5 @@
 import { ProviderOrSigner } from "../core";
+import { NFTCollection } from "../types";
 export interface NFTMetadata {
     id: string;
     uri: string;
@@ -7,5 +8,6 @@ export interface NFTMetadata {
     image?: string;
     attributes?: Record<string, any>;
 }
-export declare function getMetadata(provider: ProviderOrSigner, contractAddress: string, tokenId: string, ipfsGatewayUrl: string): Promise<NFTMetadata>;
-export declare function getMetadataUri(provider: ProviderOrSigner, contractAddress: string, tokenId: string): Promise<string>;
+export declare function getMetadataWithoutContract(provider: ProviderOrSigner, contractAddress: string, tokenId: string, ipfsGatewayUrl: string): Promise<NFTMetadata>;
+export declare function getMetadata(contract: NFTCollection, tokenId: string, ipfsGatewayUrl: string): Promise<NFTMetadata>;
+export declare function getMetadataUri(contract: NFTCollection, tokenId: string): Promise<string>;

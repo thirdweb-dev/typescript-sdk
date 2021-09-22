@@ -1,8 +1,6 @@
-import { ProviderOrSigner } from "../core";
-import { SDKOptions } from "../core";
-import { SubSDK } from "../core/sub-sdk";
-import { ProtocolControl } from "../types";
 import { ContractMetadata } from "../common/contract";
+import { Module } from "../core/module";
+import { ProtocolControl } from "../types";
 export declare enum ModuleType {
     Coin = 0,
     NFTCollection = 1,
@@ -17,9 +15,11 @@ export interface ControlContract {
     address: string;
     metadata?: ContractMetadata;
 }
-export declare class ControlSDK extends SubSDK {
-    readonly contract: ProtocolControl;
-    constructor(providerOrSigner: ProviderOrSigner, address: string, opts: SDKOptions);
+export declare class ControlSDK extends Module {
+    private _contract;
+    get contract(): ProtocolControl;
+    private set contract(value);
+    protected connectContract(): ProtocolControl;
     private getModuleAddress;
     getAllContractMetadata(addresses: string[]): Promise<ControlContract[]>;
     getPackAddress(): Promise<string[]>;

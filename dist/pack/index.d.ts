@@ -1,7 +1,6 @@
-import type { SDKOptions, ProviderOrSigner } from "../core";
-import { NFTMetadata } from "../common/nft";
 import { BigNumber } from "@ethersproject/bignumber";
-import { SubSDK } from "../core/sub-sdk";
+import { NFTMetadata } from "../common/nft";
+import { Module } from "../core/module";
 import { Pack as PackContract } from "../types";
 export interface Pack extends NFTMetadata {
     creator: string;
@@ -12,9 +11,11 @@ export interface Pack extends NFTMetadata {
 export interface PackNFT extends NFTMetadata {
     supply: BigNumber;
 }
-export declare class PackSDK extends SubSDK {
-    readonly contract: PackContract;
-    constructor(providerOrSigner: ProviderOrSigner, address: string, opts: SDKOptions);
+export declare class PackSDK extends Module {
+    private _contract;
+    get contract(): PackContract;
+    private set contract(value);
+    protected connectContract(): PackContract;
     open(packId: string): Promise<NFTMetadata[]>;
     get(packId: string): Promise<Pack>;
     getAll(): Promise<Pack[]>;

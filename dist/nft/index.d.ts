@@ -1,12 +1,12 @@
-import type { ProviderOrSigner } from "../core";
 import { BigNumber } from "@ethersproject/bignumber";
-import { SDKOptions } from "../core";
-import { SubSDK } from "../core/sub-sdk";
-import { NFTCollection } from "../types";
 import { NFTMetadata } from "../common/nft";
-export declare class NFTSDK extends SubSDK {
-    readonly contract: NFTCollection;
-    constructor(providerOrSigner: ProviderOrSigner, address: string, opts: SDKOptions);
+import { Module } from "../core/module";
+import { NFTCollection } from "../types";
+export declare class NFTSDK extends Module {
+    private _contract;
+    get contract(): NFTCollection;
+    private set contract(value);
+    protected connectContract(): NFTCollection;
     get(tokenId: string): Promise<NFTMetadata>;
     getAll(): Promise<NFTMetadata[]>;
     balanceOf: (address: string, tokenId: string) => Promise<BigNumber>;

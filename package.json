@@ -10,11 +10,15 @@
   "source": "src/index.ts",
   "main": "dist/nftlabs-sdk.cjs",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch",
     "generate-types": "typechain --target=ethers-v5 --out-dir=src/types 'src/abi/*.json'",
-    "format": "prettier src/ --write"
+    "format": "prettier src/ --write",
+    "prepublish": "rm -rf dist && yarn build"
   },
   "devDependencies": {
     "@typechain/ethers-v5": "^7.1.0",
@@ -27,7 +31,8 @@
     "ethers": "^5.4.6"
   },
   "dependencies": {
-    "ts-invariant": "^0.9.3"
+    "ts-invariant": "^0.9.3",
+    "ts-toolbelt": "^9.6.0"
   },
   "description": "",
   "bugs": {

@@ -1,8 +1,6 @@
-import { ProviderOrSigner } from "../core";
-import { SDKOptions } from "../core";
-import { SubSDK } from "../core/sub-sdk";
-import { ProtocolControl, ProtocolControl__factory } from "../types";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
+import { Module } from "../core/module";
+import { ProtocolControl, ProtocolControl__factory } from "../types";
 
 export enum ModuleType {
   Coin = 0,
@@ -20,20 +18,20 @@ export interface ControlContract {
   metadata?: ContractMetadata;
 }
 
-export class ControlSDK extends SubSDK {
-  public readonly contract: ProtocolControl;
+export class ControlSDK extends Module {
+  private _contract: ProtocolControl | null = null;
+  public get contract(): ProtocolControl {
+    return this._contract || this.connectContract();
+  }
+  private set contract(value: ProtocolControl) {
+    this._contract = value;
+  }
 
-  constructor(
-    providerOrSigner: ProviderOrSigner,
-    address: string,
-    opts: SDKOptions,
-  ) {
-    super(providerOrSigner, address, opts);
-
-    this.contract = ProtocolControl__factory.connect(
+  protected connectContract(): ProtocolControl {
+    return (this.contract = ProtocolControl__factory.connect(
       this.address,
       this.providerOrSigner,
-    );
+    ));
   }
 
   private async getModuleAddress(moduleType: ModuleType): Promise<string[]> {
@@ -48,16 +46,18 @@ export class ControlSDK extends SubSDK {
         getContractMetadata(
           this.providerOrSigner,
           address,
-          this.opts.ipfsGatewayUrl,
-        ).catch(() => null),
+          this.ipfsGatewayUrl,
+        ).catch(() => undefined),
       ),
     );
-    return addresses.map((address, i) => {
-      return {
-        address,
-        metadata: metadatas[i],
-      };
-    });
+    return addresses
+      .filter((d) => d)
+      .map((address, i) => {
+        return {
+          address,
+          metadata: metadatas[i],
+        };
+      });
   }
 
   public async getPackAddress(): Promise<string[]> {

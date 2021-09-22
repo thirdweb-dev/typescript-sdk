@@ -1,9 +1,8 @@
-import type { SDKOptions, ProviderOrSigner } from "../core";
-import { NFTMetadata, getMetadata } from "../common/nft";
 import { BigNumber } from "@ethersproject/bignumber";
-import { SubSDK } from "../core/sub-sdk";
-import { Pack as PackContract, Pack__factory } from "../types";
 import { NotFoundError } from "../common/error";
+import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
+import { Module } from "../core/module";
+import { Pack as PackContract, Pack__factory } from "../types";
 
 export interface Pack extends NFTMetadata {
   creator: string;
@@ -16,26 +15,30 @@ export interface PackNFT extends NFTMetadata {
   supply: BigNumber;
 }
 
-export class PackSDK extends SubSDK {
-  public readonly contract: PackContract;
+export class PackSDK extends Module {
+  private _contract: PackContract | null = null;
+  public get contract(): PackContract {
+    return this._contract || this.connectContract();
+  }
+  private set contract(value: PackContract) {
+    this._contract = value;
+  }
 
-  constructor(
-    providerOrSigner: ProviderOrSigner,
-    address: string,
-    opts: SDKOptions,
-  ) {
-    super(providerOrSigner, address, opts);
-
-    this.contract = Pack__factory.connect(this.address, this.providerOrSigner);
+  protected connectContract(): PackContract {
+    return (this.contract = Pack__factory.connect(
+      this.address,
+      this.providerOrSigner,
+    ));
   }
 
   public async open(packId: string): Promise<NFTMetadata[]> {
     const tx = await this.contract.openPack(packId);
     const receipt = await tx.wait();
 
-    const {
-      args: { requestId, opener },
-    } = receipt.events.find((event) => event.event === "PackOpenRequest");
+    const event = receipt?.events?.find(
+      (event) => event.event === "PackOpenRequest",
+    );
+    const { requestId, opener } = (event?.args || {}) as any;
 
     const fulfillEvent: any = await new Promise((resolve) => {
       this.contract.once(
@@ -50,11 +53,11 @@ export class PackSDK extends SubSDK {
     const { rewardIds } = fulfillEvent;
     return await Promise.all(
       rewardIds.map((rewardId: BigNumber) =>
-        getMetadata(
+        getMetadataWithoutContract(
           this.providerOrSigner,
           this.address,
           rewardId.toString(),
-          this.opts.ipfsGatewayUrl,
+          this.ipfsGatewayUrl,
         ),
       ),
     );
@@ -62,11 +65,11 @@ export class PackSDK extends SubSDK {
 
   public async get(packId: string): Promise<Pack> {
     const [meta, state] = await Promise.all([
-      await getMetadata(
+      await getMetadataWithoutContract(
         this.providerOrSigner,
         this.address,
         packId,
-        this.opts.ipfsGatewayUrl,
+        this.ipfsGatewayUrl,
       ),
       this.contract.getPack(packId),
     ]);
@@ -76,10 +79,10 @@ export class PackSDK extends SubSDK {
       currentSupply: state.currentSupply,
       openStart: state.openStart.gt(0)
         ? new Date(state.openStart.toNumber() * 1000)
-        : null,
+        : undefined,
       openEnd: state.openEnd.lte(Number.MAX_SAFE_INTEGER - 1)
         ? new Date(state.openEnd.toNumber() * 1000)
-        : null,
+        : undefined,
     };
     return entity;
   }
@@ -98,11 +101,11 @@ export class PackSDK extends SubSDK {
     }
     const rewards = await Promise.all(
       packReward.tokenIds.map((tokenId) =>
-        getMetadata(
+        getMetadataWithoutContract(
           this.providerOrSigner,
           this.address,
           tokenId.toString(),
-          this.opts.ipfsGatewayUrl,
+          this.ipfsGatewayUrl,
         ),
       ),
     );

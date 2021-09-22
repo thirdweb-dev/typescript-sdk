@@ -1,9 +1,7 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { ProviderOrSigner } from "../core";
-import { SDKOptions } from "../core";
-import { SubSDK } from "../core/sub-sdk";
 import { CurrencyValue } from "../common/currency";
 import { NFTMetadata } from "../common/nft";
+import { Module } from "../core/module";
 import { Market } from "../types";
 export interface ListingFilter {
     seller?: string;
@@ -23,9 +21,11 @@ export interface Listing {
     saleStart: Date | null;
     saleEnd: Date | null;
 }
-export declare class MarketSDK extends SubSDK {
-    readonly contract: Market;
-    constructor(providerOrSigner: ProviderOrSigner, address: string, opts: SDKOptions);
+export declare class MarketSDK extends Module {
+    private _contract;
+    get contract(): Market;
+    private set contract(value);
+    protected connectContract(): Market;
     private transformResultToListing;
     get(listingId: string): Promise<Listing>;
     getAll(filter?: ListingFilter): Promise<Listing[]>;

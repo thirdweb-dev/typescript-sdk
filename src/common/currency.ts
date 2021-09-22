@@ -1,8 +1,8 @@
-import { AddressZero } from "@ethersproject/constants";
 import { BigNumber } from "@ethersproject/bignumber";
+import { AddressZero } from "@ethersproject/constants";
 import { formatUnits } from "@ethersproject/units";
-import { ERC20__factory } from "../types";
 import { ProviderOrSigner } from "../core";
+import { ERC20__factory } from "../types";
 
 export interface Currency {
   name: string;
