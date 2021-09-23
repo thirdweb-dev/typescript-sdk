@@ -8,7 +8,7 @@ import {
 import { Module } from "../core/module";
 import { Coin, Coin__factory } from "../types";
 
-export class CoinSDK extends Module {
+export class CurrencySDK extends Module {
   private _contract: Coin | null = null;
   public get contract(): Coin {
     return this._contract || this.connectContract();
@@ -44,6 +44,39 @@ export class CoinSDK extends Module {
 
   public transfer = async (to: string, amount: BigNumber) => {
     const tx = await this.contract.transfer(to, amount);
+    await tx.wait();
+  };
+
+  public allowance = async (spender: string): Promise<BigNumber> =>
+    this.contract.allowance(await this.getSignerAddress(), spender);
+
+  public setAllowance = async (spender: string, amount: BigNumber) => {
+    const tx = await this.contract.approve(spender, amount);
+    await tx.wait();
+  };
+
+  // owner functions
+  public mint = async (to: string, amount: BigNumberish) => {
+    const tx = await this.contract.mint(to, amount);
+    await tx.wait();
+  };
+
+  public burn = async (amount: BigNumberish) => {
+    const tx = await this.contract.burn(amount);
+    await tx.wait();
+  };
+
+  public burnFrom = async (to: string, amount: BigNumberish) => {
+    const tx = await this.contract.burnFrom(to, amount);
+    await tx.wait();
+  };
+
+  public transferFrom = async (
+    from: string,
+    to: string,
+    amount: BigNumberish,
+  ) => {
+    const tx = await this.contract.transferFrom(from, to, amount);
     await tx.wait();
   };
 }

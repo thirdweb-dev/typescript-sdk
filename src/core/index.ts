@@ -1,11 +1,13 @@
 import { Signer } from "@ethersproject/abstract-signer";
+import { AddressZero } from "@ethersproject/constants";
 import { Network, Provider } from "@ethersproject/providers";
 import { ethers } from "ethers";
 import { C } from "ts-toolbelt";
-import { CoinSDK } from "../coin";
+import { CurrencySDK } from "../currency";
 import { ControlSDK } from "../control";
 import { MarketSDK } from "../market";
 import { NFTSDK } from "../nft";
+import { CollectionSDK } from "../collection";
 import { PackSDK } from "../pack";
 import { RegistrySDK } from "../registry";
 
@@ -19,8 +21,9 @@ export interface SDKOptions {
 
 type AnyContract =
   | typeof ControlSDK
+  | typeof CollectionSDK
   | typeof NFTSDK
-  | typeof CoinSDK
+  | typeof CurrencySDK
   | typeof MarketSDK
   | typeof PackSDK
   | typeof RegistrySDK;
@@ -41,7 +44,7 @@ export class NFTLabsSDK {
     }
   }
 
-  setProviderOrSigner(providerOrNetwork: ValidProviderInput) {
+  public setProviderOrSigner(providerOrNetwork: ValidProviderInput) {
     if (
       Provider.isProvider(providerOrNetwork) ||
       Signer.isSigner(providerOrNetwork)
@@ -91,6 +94,18 @@ export class NFTLabsSDK {
     return !Signer.isSigner(this.signer);
   }
 
+  public getSigner(): Signer | null {
+    if (Signer.isSigner(this.signer)) {
+      return this.signer;
+    }
+    return null;
+  }
+
+  public async getSignerAddress(): Promise<string> {
+    const signer = this.getSigner();
+    return (await signer?.getAddress()) ?? "";
+  }
+
   public getControlSDK(address: string): ControlSDK {
     return this.getOrCreateModule(address, ControlSDK);
   }
@@ -99,12 +114,16 @@ export class NFTLabsSDK {
     return this.getOrCreateModule(address, NFTSDK);
   }
 
+  public getCollectionSDK(address: string): CollectionSDK {
+    return this.getOrCreateModule(address, CollectionSDK);
+  }
+
   public getPackSDK(address: string): PackSDK {
     return this.getOrCreateModule(address, PackSDK);
   }
 
-  public getCoinSDK(address: string): CoinSDK {
-    return this.getOrCreateModule(address, CoinSDK);
+  public getCurrencySDK(address: string): CurrencySDK {
+    return this.getOrCreateModule(address, CurrencySDK);
   }
 
   public getMarketSDK(address: string): MarketSDK {
