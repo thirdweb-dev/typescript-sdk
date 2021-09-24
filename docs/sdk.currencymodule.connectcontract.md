@@ -11,5 +11,5 @@ protected connectContract(): Coin;
 ```
 <b>Returns:</b>
 
-Coin
+[Coin](./sdk.coin.md)
 

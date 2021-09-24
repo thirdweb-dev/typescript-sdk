@@ -2,10 +2,22 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [Pack](./sdk.pack.md) &gt; [creator](./sdk.pack.creator.md)
 
-## Pack.creator property
+## Pack.creator() method
 
 <b>Signature:</b>
 
 ```typescript
-creator: string;
+creator(_packId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  \_packId | BigNumberish |  |
+|  overrides | CallOverrides |  |
+
+<b>Returns:</b>
+
+Promise&lt;string&gt;
+

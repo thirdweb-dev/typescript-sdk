@@ -11,5 +11,5 @@ protected connectContract(): Market;
 ```
 <b>Returns:</b>
 
-Market
+[Market](./sdk.market.md)
 

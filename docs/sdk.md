@@ -9,12 +9,34 @@
 |  Class | Description |
 |  --- | --- |
 |  [AppModule](./sdk.appmodule.md) | The AppModule. This should always be created via <code>getAppModule()</code> on the main SDK. |
+|  [Coin\_\_factory](./sdk.coin__factory.md) |  |
+|  [Coin](./sdk.coin.md) |  |
 |  [CurrencyModule](./sdk.currencymodule.md) | The CurrencyModule. This should always be created via <code>getCurrencyModule()</code> on the main SDK. |
+|  [ERC1155\_\_factory](./sdk.erc1155__factory.md) |  |
+|  [ERC1155](./sdk.erc1155.md) |  |
+|  [ERC165\_\_factory](./sdk.erc165__factory.md) |  |
+|  [ERC165](./sdk.erc165.md) |  |
+|  [ERC20\_\_factory](./sdk.erc20__factory.md) |  |
+|  [ERC20](./sdk.erc20.md) |  |
+|  [ERC721\_\_factory](./sdk.erc721__factory.md) |  |
+|  [ERC721](./sdk.erc721.md) |  |
+|  [Market\_\_factory](./sdk.market__factory.md) |  |
+|  [Market](./sdk.market.md) |  |
 |  [MarketModule](./sdk.marketmodule.md) | The MarketModule. This should always be created via <code>getMarketModule()</code> on the main SDK. |
+|  [NFT\_\_factory](./sdk.nft__factory.md) |  |
+|  [NFT](./sdk.nft.md) |  |
+|  [NFTCollection\_\_factory](./sdk.nftcollection__factory.md) |  |
+|  [NFTCollection](./sdk.nftcollection.md) |  |
 |  [NFTLabsSDK](./sdk.nftlabssdk.md) | The entrypoint to the NFTLabsSDK. |
 |  [NFTModule](./sdk.nftmodule.md) | The MarketModule. This should always be created via <code>getMarketModule()</code> on the main SDK. |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
+|  [Pack\_\_factory](./sdk.pack__factory.md) |  |
+|  [Pack](./sdk.pack.md) |  |
 |  [PackModule](./sdk.packmodule.md) | The PackModule. This should always be created via <code>getPackModule()</code> on the main SDK. |
+|  [ProtocolControl\_\_factory](./sdk.protocolcontrol__factory.md) |  |
+|  [ProtocolControl](./sdk.protocolcontrol.md) |  |
+|  [Registry\_\_factory](./sdk.registry__factory.md) |  |
+|  [Registry](./sdk.registry.md) |  |
 |  [RegistryModule](./sdk.registrymodule.md) | The RegistryModule. This should always be created via <code>getRegistryModule()</code> on the main SDK. |
 
 ## Interfaces
@@ -29,7 +51,7 @@
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
-|  [Pack](./sdk.pack.md) |  |
+|  [PackMetadata](./sdk.packmetadata.md) |  |
 |  [PackNFT](./sdk.packnft.md) |  |
 |  [RegistryControl](./sdk.registrycontrol.md) |  |
 

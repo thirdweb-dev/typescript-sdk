@@ -12,7 +12,7 @@ import {
 /**
  * @public
  */
-export interface Pack {
+export interface PackMetadata {
   id: string;
   creator: string;
   currentSupply: BigNumber;
@@ -111,7 +111,7 @@ export class PackModule extends Module {
     );
   }
 
-  public async get(packId: string): Promise<Pack> {
+  public async get(packId: string): Promise<PackMetadata> {
     const [meta, state] = await Promise.all([
       await getMetadataWithoutContract(
         this.providerOrSigner,
@@ -121,7 +121,7 @@ export class PackModule extends Module {
       ),
       this.contract.getPack(packId),
     ]);
-    const entity: Pack = {
+    const entity: PackMetadata = {
       id: packId,
       metadata: meta,
       creator: state.creator,
@@ -136,7 +136,7 @@ export class PackModule extends Module {
     return entity;
   }
 
-  public async getAll(): Promise<Pack[]> {
+  public async getAll(): Promise<PackMetadata[]> {
     const maxId = (await this.contract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
@@ -191,7 +191,7 @@ export class PackModule extends Module {
   };
 
   // owner functions
-  public createPack = async (args: IPackCreateArgs): Promise<Pack> => {
+  public createPack = async (args: IPackCreateArgs): Promise<PackMetadata> => {
     const asset = ERC1155__factory.connect(
       args.assetContract,
       this.providerOrSigner,

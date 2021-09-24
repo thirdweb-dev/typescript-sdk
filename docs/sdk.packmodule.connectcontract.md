@@ -11,5 +11,5 @@ protected connectContract(): PackContract;
 ```
 <b>Returns:</b>
 
-PackContract
+[PackContract](./sdk.pack.md)
 

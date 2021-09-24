@@ -11,5 +11,5 @@ protected connectContract(): NFT;
 ```
 <b>Returns:</b>
 
-NFT
+[NFT](./sdk.nft.md)
 

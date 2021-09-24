@@ -11,5 +11,5 @@ protected connectContract(): ProtocolControl;
 ```
 <b>Returns:</b>
 
-ProtocolControl
+[ProtocolControl](./sdk.protocolcontrol.md)
 

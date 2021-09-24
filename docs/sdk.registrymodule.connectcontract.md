@@ -11,5 +11,5 @@ protected connectContract(): Registry;
 ```
 <b>Returns:</b>
 
-Registry
+[Registry](./sdk.registry.md)
 

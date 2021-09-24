@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-createPack: (args: IPackCreateArgs) => Promise<Pack>;
+createPack: (args: IPackCreateArgs) => Promise<PackMetadata>;
 ```

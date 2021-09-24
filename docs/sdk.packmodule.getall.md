@@ -7,9 +7,9 @@
 <b>Signature:</b>
 
 ```typescript
-getAll(): Promise<Pack[]>;
+getAll(): Promise<PackMetadata[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[Pack](./sdk.pack.md)<!-- -->\[\]&gt;
+Promise&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->\[\]&gt;
 
