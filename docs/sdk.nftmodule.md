@@ -24,6 +24,7 @@ export declare class NFTModule extends Module
 |  [isApproved](./sdk.nftmodule.isapproved.md) |  | (address: string, operator: string) =&gt; Promise&lt;boolean&gt; |  |
 |  [mint](./sdk.nftmodule.mint.md) |  | (to: string, metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->&gt; |  |
 |  [mintBatch](./sdk.nftmodule.mintbatch.md) |  | (to: string, metadatas: (string \| Record&lt;string, any&gt;)\[\]) =&gt; Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->\[\]&gt; |  |
+|  [moduleType](./sdk.nftmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
 |  [setApproval](./sdk.nftmodule.setapproval.md) |  | (operator: string, approved?: boolean) =&gt; Promise&lt;void&gt; |  |
 |  [setContractURI](./sdk.nftmodule.setcontracturi.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
 |  [setRoyaltyBps](./sdk.nftmodule.setroyaltybps.md) |  | (amount: number) =&gt; Promise&lt;void&gt; |  |

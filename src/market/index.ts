@@ -1,5 +1,6 @@
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish } from "ethers";
+import { ModuleType } from "../common";
 import { InterfaceId_IERC721 } from "../common/contract";
 import { CurrencyValue, getCurrencyValue } from "../common/currency";
 import { uploadMetadata } from "../common/ipfs";
@@ -39,6 +40,8 @@ interface Listing {
  * @public
  */
 export class MarketModule extends Module {
+  public static moduleType: ModuleType = ModuleType.Market;
+
   private __contract: Market | null = null;
   /**
    * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.

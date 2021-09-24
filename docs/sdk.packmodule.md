@@ -22,6 +22,7 @@ export declare class PackModule extends Module
 |  [contract](./sdk.packmodule.contract.md) |  | [PackContract](./sdk.pack.md) |  |
 |  [createPack](./sdk.packmodule.createpack.md) |  | (args: [IPackCreateArgs](./sdk.ipackcreateargs.md)<!-- -->) =&gt; Promise&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->&gt; |  |
 |  [isApproved](./sdk.packmodule.isapproved.md) |  | (address: string, operator: string) =&gt; Promise&lt;boolean&gt; |  |
+|  [moduleType](./sdk.packmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
 |  [setApproval](./sdk.packmodule.setapproval.md) |  | (operator: string, approved?: boolean) =&gt; Promise&lt;void&gt; |  |
 |  [setContractURI](./sdk.packmodule.setcontracturi.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
 |  [setRoyaltyBps](./sdk.packmodule.setroyaltybps.md) |  | (amount: number) =&gt; Promise&lt;void&gt; |  |

@@ -1,4 +1,5 @@
 import { BigNumberish } from "ethers";
+import { ModuleType } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
@@ -9,6 +10,8 @@ import { NFT, NFT__factory } from "../types";
  * @public
  */
 export class NFTModule extends Module {
+  public static moduleType: ModuleType = ModuleType.NFT;
+
   private _contract: NFT | null = null;
   /**
    * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.

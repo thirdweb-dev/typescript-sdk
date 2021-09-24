@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish } from "ethers";
+import { ModuleType } from "../common";
 import {
   Currency,
   CurrencyValue,
@@ -14,6 +15,8 @@ import { Coin, Coin__factory } from "../types";
  * @public
  */
 export class CurrencyModule extends Module {
+  public static moduleType: ModuleType = ModuleType.Currency;
+
   private __contract: Coin | null = null;
   /**
    * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.

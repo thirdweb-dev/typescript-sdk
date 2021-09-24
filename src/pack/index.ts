@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { ModuleType } from "../common";
 import { NotFoundError } from "../common/error";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
@@ -57,6 +58,8 @@ export interface IPackBatchArgs {
  * @public
  */
 export class PackModule extends Module {
+  public static moduleType: ModuleType = ModuleType.Pack;
+
   private __contract: PackContract | null = null;
   /**
    * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.

@@ -39,6 +39,19 @@
 |  [Registry](./sdk.registry.md) |  |
 |  [RegistryModule](./sdk.registrymodule.md) | The RegistryModule. This should always be created via <code>getRegistryModule()</code> on the main SDK. |
 
+## Enumerations
+
+|  Enumeration | Description |
+|  --- | --- |
+|  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
+
+## Functions
+
+|  Function | Description |
+|  --- | --- |
+|  [convertModuleTypeToName(moduleType)](./sdk.convertmoduletypetoname.md) |  |
+|  [convertNameToModuleType(moduleName)](./sdk.convertnametomoduletype.md) |  |
+
 ## Interfaces
 
 |  Interface | Description |

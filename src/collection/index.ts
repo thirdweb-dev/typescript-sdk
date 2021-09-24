@@ -1,5 +1,6 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { BytesLike } from "ethers";
+import { ModuleType } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
@@ -37,6 +38,8 @@ export interface INFTCollectionBatchArgs {
  * @public
  */
 export class CollectionModule extends Module {
+  public static moduleType: ModuleType = ModuleType.Collection;
+
   private _contract: NFTCollectionContract | null = null;
   /**
    * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.

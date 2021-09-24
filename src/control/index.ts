@@ -1,19 +1,7 @@
+import { ModuleType } from "../common";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { Module } from "../core/module";
 import { ProtocolControl, ProtocolControl__factory } from "../types";
-
-// this used to be public but does not have to be (as in it used to be exported)
-enum ModuleType {
-  Coin = 0,
-  NFTCollection = 1,
-  NFT = 2,
-  DynamicNFT = 3,
-  AccessNFT = 4,
-  Pack = 5,
-  Market = 6,
-  Other = 7,
-}
-
 /**
  * A Module with metadata.
  * @public
@@ -82,11 +70,11 @@ export class AppModule extends Module {
   }
 
   private async getCollectionAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.NFTCollection);
+    return this.getModuleAddress(ModuleType.Collection);
   }
 
   private async getCurrencyAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.Coin);
+    return this.getModuleAddress(ModuleType.Currency);
   }
 
   private async getMarketAddress(): Promise<string[]> {
