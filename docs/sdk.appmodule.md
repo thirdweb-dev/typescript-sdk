@@ -13,17 +13,10 @@ export declare class AppModule extends Module
 ```
 <b>Extends:</b> Module
 
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [contract](./sdk.appmodule.contract.md) |  | [ProtocolControl](./sdk.protocolcontrol.md) |  |
-
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [connectContract()](./sdk.appmodule.connectcontract.md) |  |  |
 |  [getAllContractMetadata(addresses)](./sdk.appmodule.getallcontractmetadata.md) |  |  |
 |  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get all Collection modules. |
 |  [getCurrencyModules()](./sdk.appmodule.getcurrencymodules.md) |  | Method to get all Currency modules. |

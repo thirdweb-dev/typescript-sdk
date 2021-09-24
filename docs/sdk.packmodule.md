@@ -19,7 +19,6 @@ export declare class PackModule extends Module
 |  --- | --- | --- | --- |
 |  [balance](./sdk.packmodule.balance.md) |  | (tokenId: string) =&gt; Promise&lt;BigNumber&gt; |  |
 |  [balanceOf](./sdk.packmodule.balanceof.md) |  | (address: string, tokenId: string) =&gt; Promise&lt;BigNumber&gt; |  |
-|  [contract](./sdk.packmodule.contract.md) |  | [PackContract](./sdk.pack.md) |  |
 |  [createPack](./sdk.packmodule.createpack.md) |  | (args: [IPackCreateArgs](./sdk.ipackcreateargs.md)<!-- -->) =&gt; Promise&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->&gt; |  |
 |  [isApproved](./sdk.packmodule.isapproved.md) |  | (address: string, operator: string) =&gt; Promise&lt;boolean&gt; |  |
 |  [moduleType](./sdk.packmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
@@ -35,7 +34,6 @@ export declare class PackModule extends Module
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [connectContract()](./sdk.packmodule.connectcontract.md) |  |  |
 |  [get(packId)](./sdk.packmodule.get.md) |  |  |
 |  [getAll()](./sdk.packmodule.getall.md) |  |  |
 |  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  |  |

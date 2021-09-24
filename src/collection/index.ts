@@ -42,7 +42,7 @@ export class CollectionModule extends Module {
 
   private _contract: NFTCollectionContract | null = null;
   /**
-   * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
+   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
    */
   public get contract(): NFTCollectionContract {
     return this._contract || this.connectContract();
@@ -51,6 +51,9 @@ export class CollectionModule extends Module {
     this._contract = value;
   }
 
+  /**
+   * @internal
+   */
   protected connectContract(): NFTCollectionContract {
     return (this.contract = NFTCollection__factory.connect(
       this.address,

@@ -44,7 +44,7 @@ export class MarketModule extends Module {
 
   private __contract: Market | null = null;
   /**
-   * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
+   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
    */
   public get contract(): Market {
     return this.__contract || this.connectContract();
@@ -53,6 +53,9 @@ export class MarketModule extends Module {
     this.__contract = value;
   }
 
+  /**
+   * @internal
+   */
   protected connectContract(): Market {
     return (this.contract = Market__factory.connect(
       this.address,

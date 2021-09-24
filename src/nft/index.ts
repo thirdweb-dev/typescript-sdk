@@ -14,7 +14,7 @@ export class NFTModule extends Module {
 
   private _contract: NFT | null = null;
   /**
-   * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
+   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
    */
   public get contract(): NFT {
     return this._contract || this.connectContract();
@@ -23,6 +23,9 @@ export class NFTModule extends Module {
     this._contract = value;
   }
 
+  /**
+   * @internal
+   */
   protected connectContract(): NFT {
     return (this.contract = NFT__factory.connect(
       this.address,

@@ -62,7 +62,7 @@ export class PackModule extends Module {
 
   private __contract: PackContract | null = null;
   /**
-   * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
+   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
    */
   public get contract(): PackContract {
     return this.__contract || this.connectContract();
@@ -71,6 +71,9 @@ export class PackModule extends Module {
     this.__contract = value;
   }
 
+  /**
+   * @internal
+   */
   protected connectContract(): PackContract {
     return (this.contract = Pack__factory.connect(
       this.address,

@@ -17,7 +17,6 @@ export declare class MarketModule extends Module
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [contract](./sdk.marketmodule.contract.md) |  | [Market](./sdk.market.md) |  |
 |  [moduleType](./sdk.marketmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
 
 ## Methods
@@ -25,7 +24,6 @@ export declare class MarketModule extends Module
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [buy(listingId, quantity)](./sdk.marketmodule.buy.md) |  |  |
-|  [connectContract()](./sdk.marketmodule.connectcontract.md) |  |  |
 |  [get(listingId)](./sdk.marketmodule.get.md) |  |  |
 |  [getAll(filter)](./sdk.marketmodule.getall.md) |  |  |
 |  [list(assetContract, tokenId, currencyContract, price, quantity, secondsUntilStart, secondsUntilEnd)](./sdk.marketmodule.list.md) |  |  |

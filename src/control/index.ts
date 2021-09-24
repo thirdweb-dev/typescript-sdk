@@ -18,7 +18,7 @@ export interface ControlContract {
 export class AppModule extends Module {
   private __contract: ProtocolControl | null = null;
   /**
-   * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
+   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
    */
   public get contract(): ProtocolControl {
     return this.__contract || this.connectContract();
@@ -27,6 +27,9 @@ export class AppModule extends Module {
     this.__contract = value;
   }
 
+  /**
+   * @internal
+   */
   protected connectContract(): ProtocolControl {
     return (this.contract = ProtocolControl__factory.connect(
       this.address,

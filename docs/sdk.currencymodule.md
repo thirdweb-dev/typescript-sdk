@@ -22,7 +22,6 @@ export declare class CurrencyModule extends Module
 |  [balanceOf](./sdk.currencymodule.balanceof.md) |  | (address: string) =&gt; Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)<!-- -->&gt; |  |
 |  [burn](./sdk.currencymodule.burn.md) |  | (amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 |  [burnFrom](./sdk.currencymodule.burnfrom.md) |  | (to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
-|  [contract](./sdk.currencymodule.contract.md) |  | [Coin](./sdk.coin.md) |  |
 |  [mint](./sdk.currencymodule.mint.md) |  | (to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 |  [moduleType](./sdk.currencymodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
 |  [setAllowance](./sdk.currencymodule.setallowance.md) |  | (spender: string, amount: BigNumber) =&gt; Promise&lt;void&gt; |  |
@@ -34,7 +33,6 @@ export declare class CurrencyModule extends Module
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [connectContract()](./sdk.currencymodule.connectcontract.md) |  |  |
 |  [get()](./sdk.currencymodule.get.md) |  |  |
 |  [getValue(value)](./sdk.currencymodule.getvalue.md) |  |  |
 
