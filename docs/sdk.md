@@ -8,20 +8,14 @@
 
 |  Class | Description |
 |  --- | --- |
-|  [ControlSDK](./sdk.controlsdk.md) |  |
-|  [CurrencySDK](./sdk.currencysdk.md) |  |
-|  [MarketSDK](./sdk.marketsdk.md) |  |
+|  [AppModule](./sdk.appmodule.md) |  |
+|  [CurrencyModule](./sdk.currencymodule.md) |  |
+|  [MarketModule](./sdk.marketmodule.md) |  |
 |  [NFTLabsSDK](./sdk.nftlabssdk.md) | The entrypoint to the NFTLabsSDK. |
-|  [NFTSDK](./sdk.nftsdk.md) |  |
+|  [NFTModule](./sdk.nftmodule.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) |  |
-|  [PackSDK](./sdk.packsdk.md) |  |
-|  [RegistrySDK](./sdk.registrysdk.md) |  |
-
-## Enumerations
-
-|  Enumeration | Description |
-|  --- | --- |
-|  [ModuleType](./sdk.moduletype.md) |  |
+|  [PackModule](./sdk.packmodule.md) |  |
+|  [RegistryModule](./sdk.registrymodule.md) |  |
 
 ## Functions
 
@@ -41,7 +35,6 @@
 |  Interface | Description |
 |  --- | --- |
 |  [ContractMetadata](./sdk.contractmetadata.md) |  |
-|  [ControlContract](./sdk.controlcontract.md) |  |
 |  [Currency](./sdk.currency.md) |  |
 |  [CurrencyValue](./sdk.currencyvalue.md) |  |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
@@ -56,6 +49,6 @@
 
 |  Type Alias | Description |
 |  --- | --- |
-|  [ProviderOrSigner](./sdk.providerorsigner.md) |  |
-|  [ValidProviderInput](./sdk.validproviderinput.md) |  |
+|  [ProviderOrSigner](./sdk.providerorsigner.md) | A valid "ethers" Provider or Signer. |
+|  [ValidProviderInput](./sdk.validproviderinput.md) | A valid "ethers" Provider, Signer or a Network object or url address to create a Provider with. |
 

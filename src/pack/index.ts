@@ -17,7 +17,10 @@ export interface PackNFT {
   metadata: NFTMetadata;
 }
 
-export class PackSDK extends Module {
+/**
+ * @public
+ */
+export class PackModule extends Module {
   private __contract: PackContract | null = null;
   private get contract(): PackContract {
     return this.__contract || this.connectContract();

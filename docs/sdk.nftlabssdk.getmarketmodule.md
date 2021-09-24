@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-getMarketModule(address: string): MarketSDK;
+getMarketModule(address: string): MarketModule;
 ```
 
 ## Parameters
@@ -18,7 +18,7 @@ getMarketModule(address: string): MarketSDK;
 
 <b>Returns:</b>
 
-[MarketSDK](./sdk.marketsdk.md)
+[MarketModule](./sdk.marketmodule.md)
 
 The Market Module.
 

@@ -4,6 +4,8 @@
 
 ## ValidProviderInput type
 
+A valid "ethers" Provider, Signer or a Network object or url address to create a Provider with.
+
 <b>Signature:</b>
 
 ```typescript

@@ -29,7 +29,10 @@ export interface Listing {
   saleEnd: Date | null;
 }
 
-export class MarketSDK extends Module {
+/**
+ * @public
+ */
+export class MarketModule extends Module {
   private __contract: Market | null = null;
   private get contract(): Market {
     return this.__contract || this.connectContract();

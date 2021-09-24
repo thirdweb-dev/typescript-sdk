@@ -8,7 +8,10 @@ import {
 import { Module } from "../core/module";
 import { Coin, Coin__factory } from "../types";
 
-export class CurrencySDK extends Module {
+/**
+ * @public
+ */
+export class CurrencyModule extends Module {
   private __contract: Coin | null = null;
   private get contract(): Coin {
     return this.__contract || this.connectContract();

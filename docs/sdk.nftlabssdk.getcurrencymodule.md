@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-getCurrencyModule(address: string): CurrencySDK;
+getCurrencyModule(address: string): CurrencyModule;
 ```
 
 ## Parameters
@@ -18,7 +18,7 @@ getCurrencyModule(address: string): CurrencySDK;
 
 <b>Returns:</b>
 
-[CurrencySDK](./sdk.currencysdk.md)
+[CurrencyModule](./sdk.currencymodule.md)
 
 The Currency Module.
 

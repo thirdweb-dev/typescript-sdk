@@ -3,8 +3,10 @@ import invariant from "ts-invariant";
 import type { ProviderOrSigner } from "./types";
 
 /**
- * @internal
+ *
  * The root Module class to be extended and not used directly!
+ * @internal
+ *
  */
 export class Module {
   public readonly address: string;

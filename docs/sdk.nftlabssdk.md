@@ -27,7 +27,7 @@ export declare class NFTLabsSDK
 |  [getMarketModule(address)](./sdk.nftlabssdk.getmarketmodule.md) |  |  |
 |  [getNFTModule(address)](./sdk.nftlabssdk.getnftmodule.md) |  |  |
 |  [getPackModule(address)](./sdk.nftlabssdk.getpackmodule.md) |  |  |
-|  [getRegistrySDK(address)](./sdk.nftlabssdk.getregistrysdk.md) |  |  |
+|  [getRegistryModule(address)](./sdk.nftlabssdk.getregistrymodule.md) |  |  |
 |  [isReadOnly()](./sdk.nftlabssdk.isreadonly.md) |  |  |
 |  [setProviderOrSigner(providerOrSignerOrNetwork)](./sdk.nftlabssdk.setproviderorsigner.md) |  |  |
 

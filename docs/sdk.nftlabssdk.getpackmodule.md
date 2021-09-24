@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-getPackModule(address: string): PackSDK;
+getPackModule(address: string): PackModule;
 ```
 
 ## Parameters
@@ -18,7 +18,7 @@ getPackModule(address: string): PackSDK;
 
 <b>Returns:</b>
 
-[PackSDK](./sdk.packsdk.md)
+[PackModule](./sdk.packmodule.md)
 
 The Pack Module.
 

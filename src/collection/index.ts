@@ -7,24 +7,32 @@ import {
   NFTCollection__factory,
 } from "../types";
 
-export interface NFTCollection {
+/**
+ * @public
+ */
+export interface INFTCollection {
   creatorAddress: string;
   supply: BigNumber;
   metadata?: NFTMetadata;
 }
 
-interface CreateArgs {
+/**
+ * @public
+ */
+export interface INFTCollectionCreateArgs {
   uri?: string;
   metadata?: Record<string, any>;
   supply: BigNumberish;
 }
 
-interface BatchActionArgs {
+interface IBatchActionArgs {
   tokenId: BigNumberish;
   amount: BigNumberish;
 }
-
-export class CollectionSDK extends Module {
+/**
+ * @public
+ */
+export class CollectionModule extends Module {
   private _contract: NFTCollectionContract | null = null;
   public get contract(): NFTCollectionContract {
     return this._contract || this.connectContract();
@@ -40,7 +48,13 @@ export class CollectionSDK extends Module {
     ));
   }
 
-  public async get(tokenId: string): Promise<NFTCollection> {
+  /**
+   *
+   * Get a signle collection item by tokenId.
+   * @param tokenId - TODO description of tokenId
+   * @returns A promise that resolves to a `INFTCollection`.
+   */
+  public async get(tokenId: string): Promise<INFTCollection> {
     const info = await this.contract.nftInfo(tokenId);
     const metadata = await getMetadata(
       this.contract,
@@ -54,7 +68,11 @@ export class CollectionSDK extends Module {
     };
   }
 
-  public async getAll(): Promise<NFTCollection[]> {
+  /**
+   * Return all items in the collection.
+   * @returns An array of `INFTCollection`.
+   */
+  public async getAll(): Promise<INFTCollection[]> {
     const maxId = (await this.contract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
@@ -71,7 +89,7 @@ export class CollectionSDK extends Module {
   public isApproved = async (address: string, operator: string) =>
     this.contract.isApprovedForAll(address, operator);
 
-  public setApproval = async (operator: string, approved: boolean = true) => {
+  public setApproval = async (operator: string, approved = true) => {
     const tx = await this.contract.setApprovalForAll(operator, approved);
     await tx.wait();
   };
@@ -92,14 +110,14 @@ export class CollectionSDK extends Module {
   };
 
   // owner functions
-  public create = async (args: CreateArgs[]) => {
+  public create = async (args: INFTCollectionCreateArgs[]) => {
     // TODO
     // args.map(... uploadToIpfs...)
   };
 
   public mint = async (
     to: string,
-    args: BatchActionArgs,
+    args: IBatchActionArgs,
     data: BytesLike = [0],
   ) => {
     const tx = await this.contract.mint(to, args.tokenId, args.amount, data);
@@ -108,7 +126,7 @@ export class CollectionSDK extends Module {
 
   public mintBatch = async (
     to: string,
-    args: BatchActionArgs[],
+    args: IBatchActionArgs[],
     data: BytesLike = [0],
   ) => {
     const ids = args.map((a) => a.tokenId);
@@ -117,12 +135,12 @@ export class CollectionSDK extends Module {
     await tx.wait();
   };
 
-  public burn = async (account: string, args: BatchActionArgs) => {
+  public burn = async (account: string, args: IBatchActionArgs) => {
     const tx = await this.contract.burn(account, args.tokenId, args.amount);
     await tx.wait();
   };
 
-  public burnBatch = async (account: string, args: BatchActionArgs[]) => {
+  public burnBatch = async (account: string, args: IBatchActionArgs[]) => {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
     const tx = await this.contract.burnBatch(account, ids, amounts);
@@ -132,7 +150,7 @@ export class CollectionSDK extends Module {
   public transferFrom = async (
     from: string,
     to: string,
-    args: BatchActionArgs,
+    args: IBatchActionArgs,
     data: BytesLike = [0],
   ) => {
     const tx = await this.contract.safeTransferFrom(
@@ -148,7 +166,7 @@ export class CollectionSDK extends Module {
   public transferBatchFrom = async (
     from: string,
     to: string,
-    args: BatchActionArgs[],
+    args: IBatchActionArgs[],
     data: BytesLike = [0],
   ) => {
     const ids = args.map((a) => a.tokenId);

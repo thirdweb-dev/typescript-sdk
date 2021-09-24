@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-getAppModule(address: string): ControlSDK;
+getAppModule(address: string): AppModule;
 ```
 
 ## Parameters
@@ -18,7 +18,7 @@ getAppModule(address: string): ControlSDK;
 
 <b>Returns:</b>
 
-[ControlSDK](./sdk.controlsdk.md)
+[AppModule](./sdk.appmodule.md)
 
 The App Module.
 

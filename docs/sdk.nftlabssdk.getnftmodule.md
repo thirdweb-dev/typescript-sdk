@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-getNFTModule(address: string): NFTSDK;
+getNFTModule(address: string): NFTModule;
 ```
 
 ## Parameters
@@ -18,7 +18,7 @@ getNFTModule(address: string): NFTSDK;
 
 <b>Returns:</b>
 
-[NFTSDK](./sdk.nftsdk.md)
+[NFTModule](./sdk.nftmodule.md)
 
 The NFT Module.
 

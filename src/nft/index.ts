@@ -8,7 +8,10 @@ interface CreateArgs {
   metadata?: Record<string, any>;
 }
 
-export class NFTSDK extends Module {
+/**
+ * @public
+ */
+export class NFTModule extends Module {
   private _contract: NFT | null = null;
   private get contract(): NFT {
     return this._contract || this.connectContract();

@@ -2,7 +2,8 @@ import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { Module } from "../core/module";
 import { ProtocolControl, ProtocolControl__factory } from "../types";
 
-export enum ModuleType {
+// this used to be public but does not have to be (as in it used to be exported)
+enum ModuleType {
   Coin = 0,
   NFTCollection = 1,
   NFT = 2,
@@ -13,12 +14,16 @@ export enum ModuleType {
   Other = 7,
 }
 
-export interface ControlContract {
+// this used to be public but does not have to be (as in it used to be exported)
+interface ControlContract {
   address: string;
   metadata?: ContractMetadata;
 }
 
-export class ControlSDK extends Module {
+/**
+ * @public
+ */
+export class AppModule extends Module {
   private __contract: ProtocolControl | null = null;
   private get contract(): ProtocolControl {
     return this.__contract || this.connectContract();
@@ -60,43 +65,64 @@ export class ControlSDK extends Module {
       });
   }
 
-  public async getPackAddress(): Promise<string[]> {
+  // these used to be public but there really is no reason they need to be
+  private async getPackAddress(): Promise<string[]> {
     return this.getModuleAddress(ModuleType.Pack);
   }
 
-  public async getPackContracts(): Promise<ControlContract[]> {
-    return await this.getAllContractMetadata(await this.getPackAddress());
-  }
-
-  public async getNFTAddress(): Promise<string[]> {
+  private async getNFTAddress(): Promise<string[]> {
     return this.getModuleAddress(ModuleType.NFT);
   }
 
-  public async getNFTContracts(): Promise<ControlContract[]> {
-    return await this.getAllContractMetadata(await this.getNFTAddress());
-  }
-
-  public async getCollectionAddress(): Promise<string[]> {
+  private async getCollectionAddress(): Promise<string[]> {
     return this.getModuleAddress(ModuleType.NFTCollection);
   }
 
-  public async getCollectionContracts(): Promise<ControlContract[]> {
-    return await this.getAllContractMetadata(await this.getCollectionAddress());
-  }
-
-  public async getCurrencyAddress(): Promise<string[]> {
+  private async getCurrencyAddress(): Promise<string[]> {
     return this.getModuleAddress(ModuleType.Coin);
   }
 
-  public async getCurrencyContracts(): Promise<ControlContract[]> {
-    return await this.getAllContractMetadata(await this.getCurrencyAddress());
-  }
-
-  public async getMarketAddress(): Promise<string[]> {
+  private async getMarketAddress(): Promise<string[]> {
     return this.getModuleAddress(ModuleType.Market);
   }
 
-  public async getMarketContracts(): Promise<ControlContract[]> {
+  /**
+   * Method to get all pack modules.
+   * @returns A promise of an array of Pack modules.
+   */
+  public async getPackModules(): Promise<ControlContract[]> {
+    return await this.getAllContractMetadata(await this.getPackAddress());
+  }
+
+  /**
+   * Method to get all NFT modules.
+   * @returns A promise of an array of NFT modules.
+   */
+  public async getNFTModules(): Promise<ControlContract[]> {
+    return await this.getAllContractMetadata(await this.getNFTAddress());
+  }
+
+  /**
+   * Method to get all Collection modules.
+   * @returns A promise of an array of Collection modules.
+   */
+  public async getCollectionModules(): Promise<ControlContract[]> {
+    return await this.getAllContractMetadata(await this.getCollectionAddress());
+  }
+
+  /**
+   * Method to get all Currency modules.
+   * @returns A promise of an array of Currency modules.
+   */
+  public async getCurrencyModules(): Promise<ControlContract[]> {
+    return await this.getAllContractMetadata(await this.getCurrencyAddress());
+  }
+
+  /**
+   * Method to get all Market modules.
+   * @returns A promise of an array of Market modules.
+   */
+  public async getMarketModules(): Promise<ControlContract[]> {
     return await this.getAllContractMetadata(await this.getMarketAddress());
   }
 }

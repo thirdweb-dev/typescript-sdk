@@ -8,7 +8,7 @@ export interface RegistryControl {
   metadata?: ContractMetadata;
 }
 
-export class RegistrySDK extends Module {
+export class RegistryModule extends Module {
   private __contract: Registry | null = null;
   private get contract(): Registry {
     return this.__contract || this.connectContract();

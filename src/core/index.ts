@@ -1,13 +1,13 @@
 import { Provider } from "@ethersproject/providers";
 import { ethers, Signer } from "ethers";
 import type { C } from "ts-toolbelt";
-import { CollectionSDK } from "../collection";
-import { ControlSDK } from "../control";
-import { CurrencySDK } from "../currency";
-import { MarketSDK } from "../market";
-import { NFTSDK } from "../nft";
-import { PackSDK } from "../pack";
-import { RegistrySDK } from "../registry";
+import { CollectionModule } from "../collection";
+import { AppModule } from "../control";
+import { CurrencyModule } from "../currency";
+import { MarketModule } from "../market";
+import { NFTModule } from "../nft";
+import { PackModule } from "../pack";
+import { RegistryModule } from "../registry";
 import { ProviderOrSigner, ValidProviderInput } from "./types";
 
 /**
@@ -21,17 +21,17 @@ export interface ISDKOptions {
 }
 
 type AnyContract =
-  | typeof ControlSDK
-  | typeof CollectionSDK
-  | typeof NFTSDK
-  | typeof CurrencySDK
-  | typeof MarketSDK
-  | typeof PackSDK
-  | typeof RegistrySDK;
+  | typeof AppModule
+  | typeof CollectionModule
+  | typeof NFTModule
+  | typeof CurrencyModule
+  | typeof MarketModule
+  | typeof PackModule
+  | typeof RegistryModule;
 
 /**
- * @public
  * The entrypoint to the NFTLabsSDK.
+ * @public
  */
 export class NFTLabsSDK {
   private ipfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/";
@@ -113,8 +113,8 @@ export class NFTLabsSDK {
    * @param address - The contract address of the given App module.
    * @returns The App Module.
    */
-  public getAppModule(address: string): ControlSDK {
-    return this.getOrCreateModule(address, ControlSDK);
+  public getAppModule(address: string): AppModule {
+    return this.getOrCreateModule(address, AppModule);
   }
 
   /**
@@ -122,8 +122,8 @@ export class NFTLabsSDK {
    * @param address - The contract address of the given NFT module.
    * @returns The NFT Module.
    */
-  public getNFTModule(address: string): NFTSDK {
-    return this.getOrCreateModule(address, NFTSDK);
+  public getNFTModule(address: string): NFTModule {
+    return this.getOrCreateModule(address, NFTModule);
   }
 
   /**
@@ -131,8 +131,8 @@ export class NFTLabsSDK {
    * @param address - The contract address of the given Pack module.
    * @returns The Pack Module.
    */
-  public getPackModule(address: string): PackSDK {
-    return this.getOrCreateModule(address, PackSDK);
+  public getPackModule(address: string): PackModule {
+    return this.getOrCreateModule(address, PackModule);
   }
 
   /**
@@ -140,8 +140,8 @@ export class NFTLabsSDK {
    * @param address - The contract address of the given Currency module.
    * @returns The Currency Module.
    */
-  public getCurrencyModule(address: string): CurrencySDK {
-    return this.getOrCreateModule(address, CurrencySDK);
+  public getCurrencyModule(address: string): CurrencyModule {
+    return this.getOrCreateModule(address, CurrencyModule);
   }
 
   /**
@@ -149,8 +149,8 @@ export class NFTLabsSDK {
    * @param address - The contract address of the given Market module.
    * @returns The Market Module.
    */
-  public getMarketModule(address: string): MarketSDK {
-    return this.getOrCreateModule(address, MarketSDK);
+  public getMarketModule(address: string): MarketModule {
+    return this.getOrCreateModule(address, MarketModule);
   }
 
   /**
@@ -158,7 +158,7 @@ export class NFTLabsSDK {
    * @param address - The contract address of the given Registry module.
    * @returns The Registry Module.
    */
-  public getRegistrySDK(address: string): RegistrySDK {
-    return this.getOrCreateModule(address, RegistrySDK);
+  public getRegistryModule(address: string): RegistryModule {
+    return this.getOrCreateModule(address, RegistryModule);
   }
 }

@@ -4,6 +4,8 @@
 
 ## ProviderOrSigner type
 
+A valid "ethers" Provider or Signer.
+
 <b>Signature:</b>
 
 ```typescript
