@@ -24,7 +24,10 @@ export enum ModuleType {
 export function convertNameToModuleType(
   moduleName?: string,
 ): ModuleType | undefined {
-  return $enum(ModuleType).getValueOrDefault(moduleName, undefined);
+  return $enum(ModuleType).getValueOrDefault(
+    moduleName?.toUpperCase(),
+    undefined,
+  );
 }
 
 /**
