@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
+import { BigNumber, BigNumberish } from "ethers";
 import {
   Currency,
   CurrencyValue,
@@ -9,13 +9,14 @@ import { Module } from "../core/module";
 import { Coin, Coin__factory } from "../types";
 
 export class CoinSDK extends Module {
-  private _contract: Coin | null = null;
-  public get contract(): Coin {
-    return this._contract || this.connectContract();
+  private __contract: Coin | null = null;
+  private get contract(): Coin {
+    return this.__contract || this.connectContract();
   }
   private set contract(value: Coin) {
-    this._contract = value;
+    this.__contract = value;
   }
+
   protected connectContract(): Coin {
     return (this.contract = Coin__factory.connect(
       this.address,

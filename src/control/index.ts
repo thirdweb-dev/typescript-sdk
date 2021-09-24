@@ -19,12 +19,12 @@ export interface ControlContract {
 }
 
 export class ControlSDK extends Module {
-  private _contract: ProtocolControl | null = null;
-  public get contract(): ProtocolControl {
-    return this._contract || this.connectContract();
+  private __contract: ProtocolControl | null = null;
+  private get contract(): ProtocolControl {
+    return this.__contract || this.connectContract();
   }
   private set contract(value: ProtocolControl) {
-    this._contract = value;
+    this.__contract = value;
   }
 
   protected connectContract(): ProtocolControl {

@@ -1,15 +1,15 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from "ethers";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 import { NFTCollection, NFTCollection__factory } from "../types";
 
 export class NFTSDK extends Module {
-  private _contract: NFTCollection | null = null;
-  public get contract(): NFTCollection {
-    return this._contract || this.connectContract();
+  private __contract: NFTCollection | null = null;
+  private get contract(): NFTCollection {
+    return this.__contract || this.connectContract();
   }
   private set contract(value: NFTCollection) {
-    this._contract = value;
+    this.__contract = value;
   }
 
   protected connectContract(): NFTCollection {
