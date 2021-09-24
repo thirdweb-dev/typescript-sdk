@@ -15,7 +15,7 @@ import { Coin, Coin__factory } from "../types";
  * @public
  */
 export class CurrencyModule extends Module {
-  public static moduleType: ModuleType = ModuleType.Currency;
+  public static moduleType: ModuleType = ModuleType.CURRENCY;
 
   private __contract: Coin | null = null;
   /**

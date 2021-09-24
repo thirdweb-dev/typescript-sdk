@@ -61,24 +61,24 @@ export class AppModule extends Module {
   }
 
   // these used to be public but there really is no reason they need to be
-  private async getPackAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.Pack);
-  }
-
   private async getNFTAddress(): Promise<string[]> {
     return this.getModuleAddress(ModuleType.NFT);
   }
 
   private async getCollectionAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.Collection);
+    return this.getModuleAddress(ModuleType.COLLECTION);
+  }
+
+  private async getPackAddress(): Promise<string[]> {
+    return this.getModuleAddress(ModuleType.PACK);
   }
 
   private async getCurrencyAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.Currency);
+    return this.getModuleAddress(ModuleType.CURRENCY);
   }
 
   private async getMarketAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.Market);
+    return this.getModuleAddress(ModuleType.MARKET);
   }
 
   /**

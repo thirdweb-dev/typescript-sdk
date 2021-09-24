@@ -16,12 +16,12 @@ export declare enum ModuleType
 
 |  Member | Value | Description |
 |  --- | --- | --- |
-|  AccessNFT | <code>4</code> |  |
-|  Collection | <code>1</code> |  |
-|  Currency | <code>0</code> |  |
-|  DynamicNFT | <code>3</code> |  |
-|  Market | <code>6</code> |  |
+|  ACCESS\_NFT | <code>4</code> |  |
+|  COLLECTION | <code>1</code> |  |
+|  CURRENCY | <code>0</code> |  |
+|  DYNAMIC\_NFT | <code>3</code> |  |
+|  MARKET | <code>6</code> |  |
 |  NFT | <code>2</code> |  |
-|  Other | <code>7</code> |  |
-|  Pack | <code>5</code> |  |
+|  OTHER | <code>7</code> |  |
+|  PACK | <code>5</code> |  |
 

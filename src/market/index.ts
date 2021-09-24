@@ -40,7 +40,7 @@ interface Listing {
  * @public
  */
 export class MarketModule extends Module {
-  public static moduleType: ModuleType = ModuleType.Market;
+  public static moduleType: ModuleType = ModuleType.MARKET;
 
   private __contract: Market | null = null;
   /**

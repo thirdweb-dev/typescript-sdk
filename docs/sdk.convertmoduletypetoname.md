@@ -20,5 +20,5 @@ export declare function convertModuleTypeToName(moduleType: ModuleType): keyof t
 
 keyof typeof [ModuleType](./sdk.moduletype.md) \| undefined
 
-The name of the given [ModuleType](./sdk.moduletype.md)
+The name of the given [ModuleType](./sdk.moduletype.md) or undefined
 

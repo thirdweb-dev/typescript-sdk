@@ -58,7 +58,7 @@ export interface IPackBatchArgs {
  * @public
  */
 export class PackModule extends Module {
-  public static moduleType: ModuleType = ModuleType.Pack;
+  public static moduleType: ModuleType = ModuleType.PACK;
 
   private __contract: PackContract | null = null;
   /**

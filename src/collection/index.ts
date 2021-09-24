@@ -38,7 +38,7 @@ export interface INFTCollectionBatchArgs {
  * @public
  */
 export class CollectionModule extends Module {
-  public static moduleType: ModuleType = ModuleType.Collection;
+  public static moduleType: ModuleType = ModuleType.COLLECTION;
 
   private _contract: NFTCollectionContract | null = null;
   /**

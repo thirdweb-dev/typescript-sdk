@@ -1,6 +1,6 @@
 {
   "name": "@nftlabs/sdk",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "The main NFTLabs SDK.",
   "repository": {
     "type": "git",
@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "node-fetch": "^3.0.0",
+    "ts-enum-util": "^4.0.2",
     "ts-invariant": "^0.9.3"
   },
   "resolutions": {

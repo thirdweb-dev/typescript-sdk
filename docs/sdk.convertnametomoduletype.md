@@ -7,18 +7,18 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function convertNameToModuleType(moduleName: keyof typeof ModuleType): ModuleType;
+export declare function convertNameToModuleType(moduleName?: string): ModuleType | undefined;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  moduleName | keyof typeof [ModuleType](./sdk.moduletype.md) | a supported module name |
+|  moduleName | string | a supported module name |
 
 <b>Returns:</b>
 
-[ModuleType](./sdk.moduletype.md)
+[ModuleType](./sdk.moduletype.md) \| undefined
 
-The [ModuleType](./sdk.moduletype.md)
+The [ModuleType](./sdk.moduletype.md) or undefined
 

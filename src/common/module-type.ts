@@ -1,40 +1,40 @@
+import { $enum } from "ts-enum-util";
+
 /**
  * The type of Modules that are available.
  * @public
  */
 export enum ModuleType {
-  Currency = 0,
-  Collection = 1,
+  CURRENCY = 0,
+  COLLECTION = 1,
   NFT = 2,
-  DynamicNFT = 3,
-  AccessNFT = 4,
-  Pack = 5,
-  Market = 6,
-  Other = 7,
+  DYNAMIC_NFT = 3,
+  ACCESS_NFT = 4,
+  PACK = 5,
+  MARKET = 6,
+  OTHER = 7,
 }
 /**
  *
  * @param moduleName - a supported module name
- * @returns The {@link ModuleType}
+ * @returns The {@link ModuleType} or undefined
  * @public
  */
 
 export function convertNameToModuleType(
-  moduleName: keyof typeof ModuleType,
-): ModuleType {
-  return ModuleType[moduleName];
+  moduleName?: string,
+): ModuleType | undefined {
+  return $enum(ModuleType).getValueOrDefault(moduleName, undefined);
 }
 
 /**
  *
  * @param moduleType - A {@link ModuleType}
- * @returns The name of the given {@link ModuleType}
+ * @returns The name of the given {@link ModuleType} or undefined
  * @public
  */
 export function convertModuleTypeToName(
   moduleType: ModuleType,
 ): keyof typeof ModuleType | undefined {
-  return (Object.keys(ModuleType) as (keyof typeof ModuleType)[]).find(
-    (key) => ModuleType[key] === moduleType,
-  );
+  return $enum(ModuleType).getKeyOrDefault(moduleType, undefined);
 }
