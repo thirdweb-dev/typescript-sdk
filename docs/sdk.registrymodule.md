@@ -13,6 +13,12 @@ export declare class RegistryModule extends Module
 ```
 <b>Extends:</b> Module
 
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [contract](./sdk.registrymodule.contract.md) |  | [Registry](./sdk.registry.md) |  |
+
 ## Methods
 
 |  Method | Modifiers | Description |

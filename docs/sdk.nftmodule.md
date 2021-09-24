@@ -20,6 +20,7 @@ export declare class NFTModule extends Module
 |  [balance](./sdk.nftmodule.balance.md) |  | () =&gt; Promise&lt;import("ethers").BigNumber&gt; |  |
 |  [balanceOf](./sdk.nftmodule.balanceof.md) |  | (address: string) =&gt; Promise&lt;import("ethers").BigNumber&gt; |  |
 |  [burn](./sdk.nftmodule.burn.md) |  | (tokenId: BigNumberish) =&gt; Promise&lt;void&gt; |  |
+|  [contract](./sdk.nftmodule.contract.md) |  | [NFT](./sdk.nft.md) |  |
 |  [isApproved](./sdk.nftmodule.isapproved.md) |  | (address: string, operator: string) =&gt; Promise&lt;boolean&gt; |  |
 |  [mint](./sdk.nftmodule.mint.md) |  | (to: string, metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->&gt; |  |
 |  [mintBatch](./sdk.nftmodule.mintbatch.md) |  | (to: string, metadatas: (string \| Record&lt;string, any&gt;)\[\]) =&gt; Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->\[\]&gt; |  |

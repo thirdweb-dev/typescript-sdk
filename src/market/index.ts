@@ -40,7 +40,10 @@ interface Listing {
  */
 export class MarketModule extends Module {
   private __contract: Market | null = null;
-  private get contract(): Market {
+  /**
+   * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
+   */
+  public get contract(): Market {
     return this.__contract || this.connectContract();
   }
   private set contract(value: Market) {

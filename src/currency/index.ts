@@ -1,11 +1,11 @@
 import { BigNumber, BigNumberish } from "ethers";
-import { uploadMetadata } from "../common/ipfs";
 import {
   Currency,
   CurrencyValue,
   getCurrencyMetadata,
   getCurrencyValue,
 } from "../common/currency";
+import { uploadMetadata } from "../common/ipfs";
 import { Module } from "../core/module";
 import { Coin, Coin__factory } from "../types";
 
@@ -15,7 +15,10 @@ import { Coin, Coin__factory } from "../types";
  */
 export class CurrencyModule extends Module {
   private __contract: Coin | null = null;
-  private get contract(): Coin {
+  /**
+   * @deprecated - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
+   */
+  public get contract(): Coin {
     return this.__contract || this.connectContract();
   }
   private set contract(value: Coin) {

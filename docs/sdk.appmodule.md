@@ -13,6 +13,12 @@ export declare class AppModule extends Module
 ```
 <b>Extends:</b> Module
 
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [contract](./sdk.appmodule.contract.md) |  | [ProtocolControl](./sdk.protocolcontrol.md) |  |
+
 ## Methods
 
 |  Method | Modifiers | Description |

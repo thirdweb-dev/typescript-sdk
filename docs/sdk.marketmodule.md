@@ -13,6 +13,12 @@ export declare class MarketModule extends Module
 ```
 <b>Extends:</b> Module
 
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [contract](./sdk.marketmodule.contract.md) |  | [Market](./sdk.market.md) |  |
+
 ## Methods
 
 |  Method | Modifiers | Description |
