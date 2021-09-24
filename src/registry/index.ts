@@ -2,7 +2,10 @@ import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { Module } from "../core/module";
 import { Registry, Registry__factory } from "../types";
 
-export interface RegistryControl {
+/**
+ * @public
+ */
+export interface IAppModule {
   address: string;
   version: number;
   metadata?: ContractMetadata;
@@ -34,7 +37,7 @@ export class RegistryModule extends Module {
     ));
   }
 
-  public async getProtocolContracts(): Promise<RegistryControl[]> {
+  public async getProtocolContracts(): Promise<IAppModule[]> {
     const deployer = await this.getSignerAddress();
     const maxVersion = await this.contract.getLatestVersion(deployer);
     const versions = Array.from(Array(maxVersion.toNumber()).keys()).reverse();

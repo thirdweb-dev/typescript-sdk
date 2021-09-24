@@ -21,7 +21,7 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
  * @internal
  */
 export async function uploadMetadata(
-  metadata: string | JSONValue,
+  metadata: string | Record<string, JSONValue>,
   contractAddress?: string,
   signerAddress?: string,
 ): Promise<string> {

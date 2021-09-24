@@ -15,7 +15,7 @@ import { CurrencyModule } from "../currency";
 import { MarketModule } from "../market";
 import { NFTModule } from "../nft";
 import { PackModule } from "../pack";
-import { RegistryControl, RegistryModule } from "../registry";
+import { IAppModule, RegistryModule } from "../registry";
 import { JSONValue, ProviderOrSigner, ValidProviderInput } from "./types";
 
 /**
@@ -122,7 +122,7 @@ export class NFTLabsSDK {
    * Call this to get the current apps.
    * @returns All currently registered apps for the connected wallet
    */
-  public async getApps(): Promise<RegistryControl[]> {
+  public async getApps(): Promise<IAppModule[]> {
     return (await this.registry).getProtocolContracts();
   }
 
@@ -132,7 +132,7 @@ export class NFTLabsSDK {
    * @returns The transaction receipt
    */
   public async createApp(
-    metadata: string | JSONValue,
+    metadata: string | Record<string, JSONValue>,
   ): Promise<ContractReceipt> {
     const registryContract = (await this.registry).contract;
     const gasPrice = await this.getGasPrice();

@@ -9,11 +9,11 @@ Call this to get the current apps.
 <b>Signature:</b>
 
 ```typescript
-getApps(): Promise<RegistryControl[]>;
+getApps(): Promise<IAppModule[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;RegistryControl\[\]&gt;
+Promise&lt;[IAppModule](./sdk.iappmodule.md)<!-- -->\[\]&gt;
 
 All currently registered apps for the connected wallet
 
