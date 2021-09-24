@@ -1,13 +1,18 @@
 import { BigNumber, BigNumberish } from "ethers";
+import { AddressZero } from "@ethersproject/constants";
 import { CurrencyValue, getCurrencyValue } from "../common/currency";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
+import { InterfaceId_IERC721 } from "../common/contract";
 import { Module } from "../core/module";
 import {
+  ERC165__factory,
   ERC1155__factory,
   ERC20__factory,
   Market,
   Market__factory,
+  ERC721__factory,
 } from "../types";
+import { arrayify } from "@ethersproject/bytes";
 
 interface ListingFilter {
   seller?: string;
@@ -169,15 +174,41 @@ export class MarketModule extends Module {
     secondsUntilEnd = 0,
   ): Promise<Listing> {
     const from = await this.getSignerAddress();
-    const asset = ERC1155__factory.connect(
+    const erc165 = ERC165__factory.connect(
       assetContract,
       this.providerOrSigner,
     );
 
-    const approved = await asset.isApprovedForAll(from, this.address);
-    if (!approved) {
-      const tx = await asset.setApprovalForAll(this.address, true);
-      await tx.wait();
+    // check for token approval
+    const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
+    if (isERC721) {
+      const asset = ERC721__factory.connect(
+        assetContract,
+        this.providerOrSigner,
+      );
+
+      const approved = await asset.isApprovedForAll(from, this.address);
+      if (!approved) {
+        const isTokenApproved =
+          (await asset.getApproved(tokenId)).toLowerCase() ===
+          this.address.toLowerCase();
+
+        if (!isTokenApproved) {
+          const tx = await asset.setApprovalForAll(this.address, true);
+          await tx.wait();
+        }
+      }
+    } else {
+      const asset = ERC1155__factory.connect(
+        assetContract,
+        this.providerOrSigner,
+      );
+
+      const approved = await asset.isApprovedForAll(from, this.address);
+      if (!approved) {
+        const tx = await asset.setApprovalForAll(this.address, true);
+        await tx.wait();
+      }
     }
 
     const tx = await this.contract.list(
@@ -213,14 +244,16 @@ export class MarketModule extends Module {
     const owner = await this.getSignerAddress();
     const spender = this.address;
     const totalPrice = listing.price.mul(BigNumber.from(quantity));
-    const erc20 = ERC20__factory.connect(
-      listing.currencyContract,
-      this.providerOrSigner,
-    );
-    const allowance = await erc20.allowance(owner, spender);
-    if (allowance.lte(totalPrice)) {
-      const tx = await erc20.increaseAllowance(spender, totalPrice);
-      await tx.wait();
+    if (listing.currencyContract && listing.currencyContract !== AddressZero) {
+      const erc20 = ERC20__factory.connect(
+        listing.currencyContract,
+        this.providerOrSigner,
+      );
+      const allowance = await erc20.allowance(owner, spender);
+      if (allowance.lte(totalPrice)) {
+        const tx = await erc20.increaseAllowance(spender, totalPrice);
+        await tx.wait();
+      }
     }
     const tx = await this.contract.buy(listingId, quantity);
     const receipt = await tx.wait();

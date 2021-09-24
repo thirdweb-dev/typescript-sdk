@@ -3,6 +3,7 @@
 /* eslint-disable */
 export type { Coin } from "./Coin";
 export type { ERC1155 } from "./ERC1155";
+export type { ERC165 } from "./ERC165";
 export type { ERC20 } from "./ERC20";
 export type { ERC721 } from "./ERC721";
 export type { Market } from "./Market";
@@ -14,6 +15,7 @@ export type { Registry } from "./Registry";
 
 export { Coin__factory } from "./factories/Coin__factory";
 export { ERC1155__factory } from "./factories/ERC1155__factory";
+export { ERC165__factory } from "./factories/ERC165__factory";
 export { ERC20__factory } from "./factories/ERC20__factory";
 export { ERC721__factory } from "./factories/ERC721__factory";
 export { Market__factory } from "./factories/Market__factory";

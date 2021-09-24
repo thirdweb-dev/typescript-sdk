@@ -15,10 +15,31 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
   return ipfsUrl.replace("ipfs://", gatewayUrl);
 }
 
-// TODO implement
 /**
  * @internal
  */
-export function uploadJson() {
-  throw new Error("implement me");
+export async function uploadMetadata(
+  metadata: string | Record<string, any>,
+  contractAddress?: string,
+  signerAddress?: string,
+): Promise<string> {
+  if (typeof metadata === "string") {
+    return metadata;
+  }
+
+  const headers = {
+    "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
+    "X-Public-Address": signerAddress || "",
+  };
+
+  const formData = new FormData();
+  formData.append("file", JSON.stringify(metadata));
+  const res = await fetch("https://upload.nftlabs.co/upload", {
+    method: "POST",
+    body: formData,
+    headers,
+  });
+
+  const body = await res.json();
+  return body.IpfsUri;
 }

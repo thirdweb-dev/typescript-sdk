@@ -1,3 +1,4 @@
+import { arrayify } from "@ethersproject/bytes";
 import { Contract } from "@ethersproject/contracts";
 import { ProviderOrSigner } from "../core/types";
 import { replaceIpfsWithGateway } from "./ipfs";
@@ -11,6 +12,9 @@ export interface ContractMetadata {
   seller_fee_basis_points?: number;
   fee_recipient?: string;
 }
+
+export const InterfaceId_IERC721 = arrayify("0x80ac58cd");
+export const InterfaceId_IERC1155 = arrayify("0xd9b67a26");
 
 const contractUriABI = [
   {

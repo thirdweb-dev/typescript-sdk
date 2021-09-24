@@ -1,12 +1,8 @@
 import { BigNumberish } from "ethers";
+import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 import { NFT, NFT__factory } from "../types";
-
-interface CreateArgs {
-  uri?: string;
-  metadata?: Record<string, any>;
-}
 
 /**
  * The MarketModule. This should always be created via `getMarketModule()` on the main SDK.
@@ -79,12 +75,30 @@ export class NFTModule extends Module {
   };
 
   // owner functions
-  public mint = async (to: string, args: CreateArgs) => {
-    // TODO
+  public mint = async (
+    to: string,
+    metadata: string | Record<string, any>,
+  ): Promise<NFTMetadata> => {
+    const uri = await uploadMetadata(metadata);
+    const tx = await this.contract.mintNFT(to, uri);
+    const receipt = await tx.wait();
+    const event = receipt?.events?.find((e) => e.event === "Minted");
+    const tokenId = event?.args?.tokenId;
+    return await this.get(tokenId);
   };
 
-  public mintBatch = async (to: string, args: CreateArgs[]) => {
-    // TODO
+  public mintBatch = async (
+    to: string,
+    metadatas: (string | Record<string, any>)[],
+  ): Promise<NFTMetadata[]> => {
+    // TODO: update new abi
+    //const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
+    //const tx = await this.contract.mintNFTBatch(to, uris);
+    //const receipt = await tx.wait();
+    //const event = receipt?.events?.find((e) => e.event === "MintedBatch");
+    //const tokenIds = event?.args?.tokenIds;
+    //return await Promise.all(tokenIds.map((tokenId) => this.get(tokenId)));
+    return [];
   };
 
   public burn = async (tokenId: BigNumberish) => {

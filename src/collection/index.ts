@@ -1,5 +1,6 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { BytesLike } from "ethers";
+import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 import {
@@ -11,7 +12,7 @@ import {
  * @public
  */
 export interface INFTCollection {
-  creatorAddress: string;
+  creator: string;
   supply: BigNumber;
   metadata?: NFTMetadata;
 }
@@ -20,12 +21,14 @@ export interface INFTCollection {
  * @public
  */
 export interface INFTCollectionCreateArgs {
-  uri?: string;
-  metadata?: Record<string, any>;
+  metadata: string | Record<string, any>;
   supply: BigNumberish;
 }
 
-interface IBatchActionArgs {
+/**
+ * @public
+ */
+export interface INFTCollectionBatchArgs {
   tokenId: BigNumberish;
   amount: BigNumberish;
 }
@@ -63,7 +66,7 @@ export class CollectionModule extends Module {
       this.ipfsGatewayUrl,
     );
     return {
-      creatorAddress: info.creator,
+      creator: info.creator,
       supply: info.supply,
       metadata,
     };
@@ -112,13 +115,17 @@ export class CollectionModule extends Module {
 
   // owner functions
   public create = async (args: INFTCollectionCreateArgs[]) => {
-    // TODO
-    // args.map(... uploadToIpfs...)
+    const uris = await Promise.all(
+      args.map((a) => a.metadata).map((a) => uploadMetadata(a)),
+    );
+    const supplies = args.map((a) => a.supply);
+    const tx = await this.contract.createNativeNfts(uris, supplies);
+    const receipt = await tx.wait();
   };
 
   public mint = async (
     to: string,
-    args: IBatchActionArgs,
+    args: INFTCollectionBatchArgs,
     data: BytesLike = [0],
   ) => {
     const tx = await this.contract.mint(to, args.tokenId, args.amount, data);
@@ -127,7 +134,7 @@ export class CollectionModule extends Module {
 
   public mintBatch = async (
     to: string,
-    args: IBatchActionArgs[],
+    args: INFTCollectionBatchArgs[],
     data: BytesLike = [0],
   ) => {
     const ids = args.map((a) => a.tokenId);
@@ -136,12 +143,15 @@ export class CollectionModule extends Module {
     await tx.wait();
   };
 
-  public burn = async (account: string, args: IBatchActionArgs) => {
+  public burn = async (account: string, args: INFTCollectionBatchArgs) => {
     const tx = await this.contract.burn(account, args.tokenId, args.amount);
     await tx.wait();
   };
 
-  public burnBatch = async (account: string, args: IBatchActionArgs[]) => {
+  public burnBatch = async (
+    account: string,
+    args: INFTCollectionBatchArgs[],
+  ) => {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
     const tx = await this.contract.burnBatch(account, ids, amounts);
@@ -151,7 +161,7 @@ export class CollectionModule extends Module {
   public transferFrom = async (
     from: string,
     to: string,
-    args: IBatchActionArgs,
+    args: INFTCollectionBatchArgs,
     data: BytesLike = [0],
   ) => {
     const tx = await this.contract.safeTransferFrom(
@@ -167,7 +177,7 @@ export class CollectionModule extends Module {
   public transferBatchFrom = async (
     from: string,
     to: string,
-    args: IBatchActionArgs[],
+    args: INFTCollectionBatchArgs[],
     data: BytesLike = [0],
   ) => {
     const ids = args.map((a) => a.tokenId);
