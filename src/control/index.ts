@@ -14,8 +14,11 @@ enum ModuleType {
   Other = 7,
 }
 
-// this used to be public but does not have to be (as in it used to be exported)
-interface ControlContract {
+/**
+ * A Module with metadata.
+ * @public
+ */
+export interface ControlContract {
   address: string;
   metadata?: ContractMetadata;
 }

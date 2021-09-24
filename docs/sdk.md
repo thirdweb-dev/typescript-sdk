@@ -22,6 +22,7 @@
 |  Interface | Description |
 |  --- | --- |
 |  [ContractMetadata](./sdk.contractmetadata.md) |  |
+|  [ControlContract](./sdk.controlcontract.md) | A Module with metadata. |
 |  [Currency](./sdk.currency.md) |  |
 |  [CurrencyValue](./sdk.currencyvalue.md) |  |
 |  [IPackBatchArgs](./sdk.ipackbatchargs.md) |  |

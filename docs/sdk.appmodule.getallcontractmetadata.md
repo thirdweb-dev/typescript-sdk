@@ -18,5 +18,5 @@ getAllContractMetadata(addresses: string[]): Promise<ControlContract[]>;
 
 <b>Returns:</b>
 
-Promise&lt;ControlContract\[\]&gt;
+Promise&lt;[ControlContract](./sdk.controlcontract.md)<!-- -->\[\]&gt;
 

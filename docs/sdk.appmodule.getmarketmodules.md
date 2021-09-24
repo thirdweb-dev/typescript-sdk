@@ -13,7 +13,7 @@ getMarketModules(): Promise<ControlContract[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;ControlContract\[\]&gt;
+Promise&lt;[ControlContract](./sdk.controlcontract.md)<!-- -->\[\]&gt;
 
 A promise of an array of Market modules.
 
