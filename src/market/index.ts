@@ -12,7 +12,7 @@ import {
   Market__factory,
   ERC721__factory,
 } from "../types";
-import { arrayify } from "@ethersproject/bytes";
+import { uploadMetadata } from "../common/ipfs";
 
 interface ListingFilter {
   seller?: string;
@@ -259,5 +259,12 @@ export class MarketModule extends Module {
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "NewSale");
     return await this.transformResultToListing(event?.args?.listing);
+  }
+
+  // owner functions
+  public async setContractURI(metadata: string | Record<string, any>) {
+    const uri = await uploadMetadata(metadata);
+    const tx = await this.contract.setContractURI(uri);
+    await tx.wait();
   }
 }

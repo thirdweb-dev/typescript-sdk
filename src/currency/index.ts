@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish } from "ethers";
+import { uploadMetadata } from "../common/ipfs";
 import {
   Currency,
   CurrencyValue,
@@ -82,6 +83,12 @@ export class CurrencyModule extends Module {
     amount: BigNumberish,
   ) => {
     const tx = await this.contract.transferFrom(from, to, amount);
+    await tx.wait();
+  };
+
+  public setContractURI = async (metadata: string | Record<string, any>) => {
+    const uri = await uploadMetadata(metadata);
+    const tx = await this.contract.setContractURI(uri);
     await tx.wait();
   };
 }

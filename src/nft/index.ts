@@ -114,4 +114,20 @@ export class NFTModule extends Module {
     const tx = await this.contract.transferFrom(from, to, tokenId);
     await tx.wait();
   };
+
+  public setRoyaltyBps = async (amount: number) => {
+    //const tx = await this.contract.setRoyaltyBps(amount);
+    //await tx.wait();
+  };
+
+  public setRoyaltyReceiver = async (receiver: string) => {
+    //const tx = await this.contract.setRoyaltyReceiver(receiver);
+    //await tx.wait();
+  };
+
+  public setContractURI = async (metadata: string | Record<string, any>) => {
+    const uri = await uploadMetadata(metadata);
+    const tx = await this.contract.setContractURI(uri);
+    await tx.wait();
+  };
 }
