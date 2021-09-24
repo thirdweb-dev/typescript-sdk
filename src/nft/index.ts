@@ -1,12 +1,12 @@
-import { BigNumberish } from "ethers";
-import { ModuleType } from "../common";
+import { BigNumber, BigNumberish } from "ethers";
+import { getRoleHash, ModuleType, Role } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 import { NFT, NFT__factory } from "../types";
 
 /**
- * The MarketModule. This should always be created via `getMarketModule()` on the main SDK.
+ * The NFTModule. This should always be created via `getNFTModule()` on the main SDK.
  * @public
  */
 export class NFTModule extends Module {
@@ -93,21 +93,21 @@ export class NFTModule extends Module {
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "Minted");
     const tokenId = event?.args?.tokenId;
-    return await this.get(tokenId);
+    return await this.get(tokenId.toString());
   };
 
   public mintBatch = async (
     to: string,
     metadatas: (string | Record<string, any>)[],
   ): Promise<NFTMetadata[]> => {
-    // TODO: update new abi
-    // const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
-    // const tx = await this.contract.mintNFTBatch(to, uris);
-    // const receipt = await tx.wait();
-    // const event = receipt?.events?.find((e) => e.event === "MintedBatch");
-    // const tokenIds = event?.args?.tokenIds;
-    // return await Promise.all(tokenIds.map((tokenId) => this.get(tokenId)));
-    return [];
+    const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
+    const tx = await this.contract.mintNFTBatch(to, uris);
+    const receipt = await tx.wait();
+    const event = receipt?.events?.find((e) => e.event === "MintedBatch");
+    const tokenIds = event?.args?.tokenIds;
+    return await Promise.all(
+      tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),
+    );
   };
 
   public burn = async (tokenId: BigNumberish) => {
@@ -124,19 +124,25 @@ export class NFTModule extends Module {
     await tx.wait();
   };
 
+  // owner functions
   public setRoyaltyBps = async (amount: number) => {
-    // const tx = await this.contract.setRoyaltyBps(amount);
-    // await tx.wait();
+    const tx = await this.contract.setRoyaltyBps(amount);
+    await tx.wait();
   };
 
-  public setRoyaltyReceiver = async (receiver: string) => {
-    // const tx = await this.contract.setRoyaltyReceiver(receiver);
-    // await tx.wait();
-  };
-
-  public setContractURI = async (metadata: string | Record<string, any>) => {
+  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();
   };
+
+  public async grantRole(role: Role, address: string) {
+    const tx = await this.contract.grantRole(getRoleHash(role), address);
+    await tx.wait();
+  }
+
+  public async revokeRole(role: Role, address: string) {
+    const tx = await this.contract.revokeRole(getRoleHash(role), address);
+    await tx.wait();
+  }
 }

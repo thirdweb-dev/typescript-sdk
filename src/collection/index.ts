@@ -8,6 +8,7 @@ import {
   NFTCollection as NFTCollectionContract,
   NFTCollection__factory,
 } from "../types";
+import { Role, getRoleHash } from "../common/role";
 
 /**
  * @public
@@ -123,13 +124,20 @@ export class CollectionModule extends Module {
   };
 
   // owner functions
-  public create = async (args: INFTCollectionCreateArgs[]) => {
+  public create = async (
+    args: INFTCollectionCreateArgs[],
+  ): Promise<INFTCollection[]> => {
     const uris = await Promise.all(
       args.map((a) => a.metadata).map((a) => uploadMetadata(a)),
     );
     const supplies = args.map((a) => a.supply);
     const tx = await this.contract.createNativeNfts(uris, supplies);
     const receipt = await tx.wait();
+    const event = receipt?.events?.find((e) => e.event === "NativeNfts");
+    const tokenIds = event?.args?.nftIds;
+    return await Promise.all(
+      tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),
+    );
   };
 
   public mint = async (
@@ -202,13 +210,23 @@ export class CollectionModule extends Module {
   };
 
   public setRoyaltyBps = async (amount: number) => {
-    // const tx = await this.contract.setRoyaltyBps(amount);
-    // await tx.wait();
+    const tx = await this.contract.setRoyaltyBps(amount);
+    await tx.wait();
   };
 
-  public setContractURI = async (metadata: string | Record<string, any>) => {
+  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();
   };
+
+  public async grantRole(role: Role, address: string) {
+    const tx = await this.contract.grantRole(getRoleHash(role), address);
+    await tx.wait();
+  }
+
+  public async revokeRole(role: Role, address: string) {
+    const tx = await this.contract.revokeRole(getRoleHash(role), address);
+    await tx.wait();
+  }
 }

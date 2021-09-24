@@ -47,7 +47,6 @@ interface PackInterface extends ethers.utils.Interface {
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
     "openPack(uint256)": FunctionFragment;
-    "packRoyaltyBps()": FunctionFragment;
     "packs(uint256)": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
@@ -56,13 +55,14 @@ interface PackInterface extends ethers.utils.Interface {
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "rewards(uint256)": FunctionFragment;
+    "royaltyBps()": FunctionFragment;
     "royaltyInfo(uint256,uint256)": FunctionFragment;
     "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setChainlinkFees(uint256)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
-    "setPackRoyaltyBps(uint256)": FunctionFragment;
+    "setRoyaltyBps(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
     "transferLink(address,uint256)": FunctionFragment;
@@ -176,10 +176,6 @@ interface PackInterface extends ethers.utils.Interface {
     functionFragment: "openPack",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "packRoyaltyBps",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "packs", values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
@@ -202,6 +198,10 @@ interface PackInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "rewards",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "royaltyBps",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "royaltyInfo",
@@ -228,7 +228,7 @@ interface PackInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "setPackRoyaltyBps",
+    functionFragment: "setRoyaltyBps",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -325,10 +325,6 @@ interface PackInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "openPack", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "packRoyaltyBps",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "packs", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
@@ -346,6 +342,7 @@ interface PackInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "rewards", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "royaltyBps", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "royaltyInfo",
     data: BytesLike
@@ -371,7 +368,7 @@ interface PackInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setPackRoyaltyBps",
+    functionFragment: "setRoyaltyBps",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -393,11 +390,11 @@ interface PackInterface extends ethers.utils.Interface {
     "PackCreated(uint256,address,address,tuple,tuple)": EventFragment;
     "PackOpenFulfilled(uint256,address,bytes32,address,uint256[])": EventFragment;
     "PackOpenRequest(uint256,address,bytes32)": EventFragment;
-    "PackRoyaltyUpdated(uint256)": EventFragment;
     "Paused(address)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
+    "RoyaltyUpdated(uint256)": EventFragment;
     "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
     "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
     "URI(string,uint256)": EventFragment;
@@ -408,11 +405,11 @@ interface PackInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "PackCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PackOpenFulfilled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PackOpenRequest"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PackRoyaltyUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoyaltyUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
@@ -483,10 +480,6 @@ export type PackOpenRequestEvent = TypedEvent<
   }
 >;
 
-export type PackRoyaltyUpdatedEvent = TypedEvent<
-  [BigNumber] & { royaltyBps: BigNumber }
->;
-
 export type PausedEvent = TypedEvent<[string] & { account: string }>;
 
 export type RoleAdminChangedEvent = TypedEvent<
@@ -503,6 +496,10 @@ export type RoleGrantedEvent = TypedEvent<
 
 export type RoleRevokedEvent = TypedEvent<
   [string, string, string] & { role: string; account: string; sender: string }
+>;
+
+export type RoyaltyUpdatedEvent = TypedEvent<
+  [BigNumber] & { royaltyBps: BigNumber }
 >;
 
 export type TransferBatchEvent = TypedEvent<
@@ -751,8 +748,6 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    packRoyaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     packs(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -802,6 +797,8 @@ export class Pack extends BaseContract {
       [string, BigNumber] & { source: string; rewardsPerOpen: BigNumber }
     >;
 
+    royaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     royaltyInfo(
       tokenId: BigNumberish,
       salePrice: BigNumberish,
@@ -844,7 +841,7 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setPackRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -1036,8 +1033,6 @@ export class Pack extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  packRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
-
   packs(
     arg0: BigNumberish,
     overrides?: CallOverrides
@@ -1087,6 +1082,8 @@ export class Pack extends BaseContract {
     [string, BigNumber] & { source: string; rewardsPerOpen: BigNumber }
   >;
 
+  royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
+
   royaltyInfo(
     tokenId: BigNumberish,
     salePrice: BigNumberish,
@@ -1129,7 +1126,7 @@ export class Pack extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setPackRoyaltyBps(
+  setRoyaltyBps(
     _royaltyBps: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -1318,8 +1315,6 @@ export class Pack extends BaseContract {
 
     openPack(_packId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    packRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     packs(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -1367,6 +1362,8 @@ export class Pack extends BaseContract {
       [string, BigNumber] & { source: string; rewardsPerOpen: BigNumber }
     >;
 
+    royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
+
     royaltyInfo(
       tokenId: BigNumberish,
       salePrice: BigNumberish,
@@ -1406,7 +1403,7 @@ export class Pack extends BaseContract {
 
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
 
-    setPackRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1594,14 +1591,6 @@ export class Pack extends BaseContract {
       { packId: BigNumber; opener: string; requestId: string }
     >;
 
-    "PackRoyaltyUpdated(uint256)"(
-      royaltyBps?: null
-    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
-
-    PackRoyaltyUpdated(
-      royaltyBps?: null
-    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
-
     "Paused(address)"(
       account?: null
     ): TypedEventFilter<[string], { account: string }>;
@@ -1661,6 +1650,14 @@ export class Pack extends BaseContract {
       [string, string, string],
       { role: string; account: string; sender: string }
     >;
+
+    "RoyaltyUpdated(uint256)"(
+      royaltyBps?: null
+    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
+
+    RoyaltyUpdated(
+      royaltyBps?: null
+    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
 
     "TransferBatch(address,address,address,uint256[],uint256[])"(
       operator?: string | null,
@@ -1885,8 +1882,6 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    packRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     packs(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     pause(
@@ -1919,6 +1914,8 @@ export class Pack extends BaseContract {
     ): Promise<BigNumber>;
 
     rewards(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -1960,7 +1957,7 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setPackRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -2129,8 +2126,6 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    packRoyaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     packs(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -2169,6 +2164,8 @@ export class Pack extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -2210,7 +2207,7 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setPackRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

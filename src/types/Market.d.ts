@@ -33,10 +33,12 @@ interface MarketInterface extends ethers.utils.Interface {
     "isTrustedForwarder(address)": FunctionFragment;
     "list(address,uint256,address,uint256,uint256,uint256,uint256)": FunctionFragment;
     "listings(uint256)": FunctionFragment;
+    "marketFeeBps()": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
     "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
+    "setMarketFeeBps(uint128)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "totalListings()": FunctionFragment;
     "unlist(uint256,uint256)": FunctionFragment;
@@ -100,6 +102,10 @@ interface MarketInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "marketFeeBps",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "onERC1155BatchReceived",
     values: [string, string, BigNumberish[], BigNumberish[], BytesLike]
   ): string;
@@ -114,6 +120,10 @@ interface MarketInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "setContractURI",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMarketFeeBps",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
@@ -169,6 +179,10 @@ interface MarketInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "list", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "listings", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "marketFeeBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "onERC1155BatchReceived",
     data: BytesLike
   ): Result;
@@ -182,6 +196,10 @@ interface MarketInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setContractURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMarketFeeBps",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -200,13 +218,13 @@ interface MarketInterface extends ethers.utils.Interface {
 
   events: {
     "ListingUpdate(address,uint256,tuple)": EventFragment;
-    "MarketFeesUpdated(uint256,uint256)": EventFragment;
+    "MarketFeeUpdate(uint128)": EventFragment;
     "NewListing(address,address,uint256,tuple)": EventFragment;
     "NewSale(address,address,uint256,address,uint256,tuple)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "ListingUpdate"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "MarketFeesUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MarketFeeUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewListing"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewSale"): EventFragment;
 }
@@ -267,11 +285,8 @@ export type ListingUpdateEvent = TypedEvent<
   }
 >;
 
-export type MarketFeesUpdatedEvent = TypedEvent<
-  [BigNumber, BigNumber] & {
-    protocolFeeBps: BigNumber;
-    creatorFeeBps: BigNumber;
-  }
+export type MarketFeeUpdateEvent = TypedEvent<
+  [BigNumber] & { newFee: BigNumber }
 >;
 
 export type NewListingEvent = TypedEvent<
@@ -367,7 +382,7 @@ export type NewSaleEvent = TypedEvent<
     seller: string;
     listingId: BigNumber;
     buyer: string;
-    quanitytBought: BigNumber;
+    quantity: BigNumber;
     listing: [
       BigNumber,
       string,
@@ -774,6 +789,8 @@ export class Market extends BaseContract {
       }
     >;
 
+    marketFeeBps(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -802,6 +819,11 @@ export class Market extends BaseContract {
 
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setMarketFeeBps(
+      feeBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -1034,6 +1056,8 @@ export class Market extends BaseContract {
     }
   >;
 
+  marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
   onERC1155BatchReceived(
     arg0: string,
     arg1: string,
@@ -1062,6 +1086,11 @@ export class Market extends BaseContract {
 
   setContractURI(
     _URI: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setMarketFeeBps(
+    feeBps: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1294,6 +1323,8 @@ export class Market extends BaseContract {
       }
     >;
 
+    marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -1321,6 +1352,11 @@ export class Market extends BaseContract {
     ): Promise<string>;
 
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
+
+    setMarketFeeBps(
+      feeBps: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     supportsInterface(
       interfaceId: BytesLike,
@@ -1468,21 +1504,13 @@ export class Market extends BaseContract {
       }
     >;
 
-    "MarketFeesUpdated(uint256,uint256)"(
-      protocolFeeBps?: null,
-      creatorFeeBps?: null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber],
-      { protocolFeeBps: BigNumber; creatorFeeBps: BigNumber }
-    >;
+    "MarketFeeUpdate(uint128)"(
+      newFee?: null
+    ): TypedEventFilter<[BigNumber], { newFee: BigNumber }>;
 
-    MarketFeesUpdated(
-      protocolFeeBps?: null,
-      creatorFeeBps?: null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber],
-      { protocolFeeBps: BigNumber; creatorFeeBps: BigNumber }
-    >;
+    MarketFeeUpdate(
+      newFee?: null
+    ): TypedEventFilter<[BigNumber], { newFee: BigNumber }>;
 
     "NewListing(address,address,uint256,tuple)"(
       assetContract?: string | null,
@@ -1617,7 +1645,7 @@ export class Market extends BaseContract {
       seller?: string | null,
       listingId?: BigNumberish | null,
       buyer?: null,
-      quanitytBought?: null,
+      quantity?: null,
       listing?: null
     ): TypedEventFilter<
       [
@@ -1655,7 +1683,7 @@ export class Market extends BaseContract {
         seller: string;
         listingId: BigNumber;
         buyer: string;
-        quanitytBought: BigNumber;
+        quantity: BigNumber;
         listing: [
           BigNumber,
           string,
@@ -1687,7 +1715,7 @@ export class Market extends BaseContract {
       seller?: string | null,
       listingId?: BigNumberish | null,
       buyer?: null,
-      quanitytBought?: null,
+      quantity?: null,
       listing?: null
     ): TypedEventFilter<
       [
@@ -1725,7 +1753,7 @@ export class Market extends BaseContract {
         seller: string;
         listingId: BigNumber;
         buyer: string;
-        quanitytBought: BigNumber;
+        quantity: BigNumber;
         listing: [
           BigNumber,
           string,
@@ -1811,6 +1839,8 @@ export class Market extends BaseContract {
 
     listings(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
+    marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -1839,6 +1869,11 @@ export class Market extends BaseContract {
 
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setMarketFeeBps(
+      feeBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1926,6 +1961,8 @@ export class Market extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    marketFeeBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -1954,6 +1991,11 @@ export class Market extends BaseContract {
 
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMarketFeeBps(
+      feeBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

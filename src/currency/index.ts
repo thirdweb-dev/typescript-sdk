@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish } from "ethers";
-import { ModuleType } from "../common";
+import { getRoleHash, ModuleType, Role } from "../common";
 import {
   Currency,
   CurrencyValue,
@@ -95,9 +95,20 @@ export class CurrencyModule extends Module {
     await tx.wait();
   };
 
-  public setContractURI = async (metadata: string | Record<string, any>) => {
+  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();
   };
+
+  // owner role functions
+  public async grantRole(role: Role, address: string) {
+    const tx = await this.contract.grantRole(getRoleHash(role), address);
+    await tx.wait();
+  }
+
+  public async revokeRole(role: Role, address: string) {
+    const tx = await this.contract.revokeRole(getRoleHash(role), address);
+    await tx.wait();
+  }
 }

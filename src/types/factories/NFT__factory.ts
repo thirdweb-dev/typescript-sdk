@@ -94,6 +94,12 @@ const _abi = [
       {
         indexed: true,
         internalType: "address",
+        name: "creator",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
         name: "to",
         type: "address",
       },
@@ -111,6 +117,37 @@ const _abi = [
       },
     ],
     name: "Minted",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "creator",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256[]",
+        name: "tokenIds",
+        type: "uint256[]",
+      },
+      {
+        indexed: false,
+        internalType: "string[]",
+        name: "tokenURI",
+        type: "string[]",
+      },
+    ],
+    name: "MintedBatch",
     type: "event",
   },
   {
@@ -199,6 +236,19 @@ const _abi = [
       },
     ],
     name: "RoleRevoked",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "royaltyBps",
+        type: "uint256",
+      },
+    ],
+    name: "RoyaltyUpdated",
     type: "event",
   },
   {
@@ -552,6 +602,24 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_to",
+        type: "address",
+      },
+      {
+        internalType: "string[]",
+        name: "_uris",
+        type: "string[]",
+      },
+    ],
+    name: "mintNFTBatch",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "name",
     outputs: [
@@ -572,6 +640,25 @@ const _abi = [
         internalType: "uint256",
         name: "",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "nftCreator",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -672,6 +759,48 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "royaltyBps",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "salePrice",
+        type: "uint256",
+      },
+    ],
+    name: "royaltyInfo",
+    outputs: [
+      {
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "royaltyAmount",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -749,6 +878,19 @@ const _abi = [
       },
     ],
     name: "setContractURI",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_royaltyBps",
+        type: "uint256",
+      },
+    ],
+    name: "setRoyaltyBps",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

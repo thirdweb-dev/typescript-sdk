@@ -19,7 +19,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "_nftlabs",
+        name: "_provider",
         type: "address",
       },
       {
@@ -60,19 +60,6 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "marketFeeBps",
-        type: "uint256",
-      },
-    ],
-    name: "MarketFeeBps",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         indexed: true,
         internalType: "bytes32",
         name: "moduleId",
@@ -100,11 +87,37 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "_nftlabsTreasury",
+        name: "_providerTreasury",
         type: "address",
       },
     ],
-    name: "NFTLabsTreasury",
+    name: "OwnerTreasuryUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "providerFeeBps",
+        type: "uint256",
+      },
+    ],
+    name: "ProviderFeeBpsUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_providerTreasury",
+        type: "address",
+      },
+    ],
+    name: "ProviderTreasuryUpdated",
     type: "event",
   },
   {
@@ -223,7 +236,20 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "NFTLABS",
+    name: "MAX_PROVIDER_FEE_BPS",
+    outputs: [
+      {
+        internalType: "uint128",
+        name: "",
+        type: "uint128",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "PROTOCOL_ADMIN",
     outputs: [
       {
         internalType: "bytes32",
@@ -236,7 +262,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "PROTOCOL_ADMIN",
+    name: "PROTOCOL_PROVIDER",
     outputs: [
       {
         internalType: "bytes32",
@@ -378,19 +404,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "marketFeeBps",
-    outputs: [
-      {
-        internalType: "uint128",
-        name: "",
-        type: "uint128",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "bytes32",
@@ -429,19 +442,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "nftlabsTreasury",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
@@ -461,6 +461,19 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "ownerTreasury",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "bool",
@@ -471,6 +484,32 @@ const _abi = [
     name: "pauseProtocol",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "providerFeeBps",
+    outputs: [
+      {
+        internalType: "uint128",
+        name: "",
+        type: "uint128",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "providerTreasury",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -580,19 +619,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "uint128",
-        name: "_newFeeBps",
-        type: "uint128",
-      },
-    ],
-    name: "updateMarketFeeBps",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "bytes32",
         name: "_moduleId",
         type: "bytes32",
@@ -616,7 +642,33 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "updateNftlabsTreasury",
+    name: "updateOwnerTreasury",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint128",
+        name: "_newFeeBps",
+        type: "uint128",
+      },
+    ],
+    name: "updateProviderFeeBps",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_newTreasury",
+        type: "address",
+      },
+    ],
+    name: "updateProviderTreasury",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

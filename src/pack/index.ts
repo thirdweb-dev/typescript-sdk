@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
-import { ModuleType } from "../common";
+import { getRoleHash, ModuleType, Role } from "../common";
 import { NotFoundError } from "../common/error";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
@@ -268,19 +268,30 @@ export class PackModule extends Module {
     await tx.wait();
   };
 
+  // owner functions
   public transferLink = async (to: string, amount: BigNumberish) => {
     const tx = await this.contract.transferLink(to, amount);
     await tx.wait();
   };
 
   public setRoyaltyBps = async (amount: number) => {
-    // const tx = await this.contract.setRoyaltyBps(amount);
-    // await tx.wait();
+    const tx = await this.contract.setRoyaltyBps(amount);
+    await tx.wait();
   };
 
-  public setContractURI = async (metadata: string | Record<string, any>) => {
+  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();
   };
+
+  public async grantRole(role: Role, address: string) {
+    const tx = await this.contract.grantRole(getRoleHash(role), address);
+    await tx.wait();
+  }
+
+  public async revokeRole(role: Role, address: string) {
+    const tx = await this.contract.revokeRole(getRoleHash(role), address);
+    await tx.wait();
+  }
 }

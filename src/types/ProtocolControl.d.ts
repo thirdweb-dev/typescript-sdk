@@ -23,8 +23,9 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "MAX_BPS()": FunctionFragment;
-    "NFTLABS()": FunctionFragment;
+    "MAX_PROVIDER_FEE_BPS()": FunctionFragment;
     "PROTOCOL_ADMIN()": FunctionFragment;
+    "PROTOCOL_PROVIDER()": FunctionFragment;
     "_contractURI()": FunctionFragment;
     "addModule(address,uint8)": FunctionFragment;
     "contractURI()": FunctionFragment;
@@ -32,21 +33,23 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     "getRoleAdmin(bytes32)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
-    "marketFeeBps()": FunctionFragment;
     "moduleType(bytes32)": FunctionFragment;
     "modules(bytes32)": FunctionFragment;
-    "nftlabsTreasury()": FunctionFragment;
     "numOfModuleType(uint256)": FunctionFragment;
+    "ownerTreasury()": FunctionFragment;
     "pauseProtocol(bool)": FunctionFragment;
+    "providerFeeBps()": FunctionFragment;
+    "providerTreasury()": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "systemPaused()": FunctionFragment;
     "transferProtocolFunds(address,address,uint256)": FunctionFragment;
-    "updateMarketFeeBps(uint128)": FunctionFragment;
     "updateModule(bytes32,address)": FunctionFragment;
-    "updateNftlabsTreasury(address)": FunctionFragment;
+    "updateOwnerTreasury(address)": FunctionFragment;
+    "updateProviderFeeBps(uint128)": FunctionFragment;
+    "updateProviderTreasury(address)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -54,9 +57,16 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "MAX_BPS", values?: undefined): string;
-  encodeFunctionData(functionFragment: "NFTLABS", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "MAX_PROVIDER_FEE_BPS",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "PROTOCOL_ADMIN",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "PROTOCOL_PROVIDER",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -88,25 +98,29 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     values: [BytesLike, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "marketFeeBps",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "moduleType",
     values: [BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "modules", values: [BytesLike]): string;
   encodeFunctionData(
-    functionFragment: "nftlabsTreasury",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "numOfModuleType",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "ownerTreasury",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "pauseProtocol",
     values: [boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "providerFeeBps",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "providerTreasury",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
@@ -133,15 +147,19 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "updateMarketFeeBps",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "updateModule",
     values: [BytesLike, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "updateNftlabsTreasury",
+    functionFragment: "updateOwnerTreasury",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateProviderFeeBps",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateProviderTreasury",
     values: [string]
   ): string;
 
@@ -150,9 +168,16 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "MAX_BPS", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "NFTLABS", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "MAX_PROVIDER_FEE_BPS",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "PROTOCOL_ADMIN",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "PROTOCOL_PROVIDER",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -174,22 +199,26 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "marketFeeBps",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "moduleType", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "modules", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "nftlabsTreasury",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "numOfModuleType",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "ownerTreasury",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "pauseProtocol",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "providerFeeBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "providerTreasury",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -214,23 +243,28 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateMarketFeeBps",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "updateModule",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateNftlabsTreasury",
+    functionFragment: "updateOwnerTreasury",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateProviderFeeBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateProviderTreasury",
     data: BytesLike
   ): Result;
 
   events: {
     "FundsTransferred(address,address,uint256)": EventFragment;
-    "MarketFeeBps(uint256)": EventFragment;
     "ModuleUpdated(bytes32,address,uint256)": EventFragment;
-    "NFTLabsTreasury(address)": EventFragment;
+    "OwnerTreasuryUpdated(address)": EventFragment;
+    "ProviderFeeBpsUpdated(uint256)": EventFragment;
+    "ProviderTreasuryUpdated(address)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
@@ -238,9 +272,10 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
   };
 
   getEvent(nameOrSignatureOrTopic: "FundsTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "MarketFeeBps"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ModuleUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NFTLabsTreasury"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnerTreasuryUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ProviderFeeBpsUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ProviderTreasuryUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
@@ -251,10 +286,6 @@ export type FundsTransferredEvent = TypedEvent<
   [string, string, BigNumber] & { asset: string; to: string; amount: BigNumber }
 >;
 
-export type MarketFeeBpsEvent = TypedEvent<
-  [BigNumber] & { marketFeeBps: BigNumber }
->;
-
 export type ModuleUpdatedEvent = TypedEvent<
   [string, string, BigNumber] & {
     moduleId: string;
@@ -263,8 +294,16 @@ export type ModuleUpdatedEvent = TypedEvent<
   }
 >;
 
-export type NFTLabsTreasuryEvent = TypedEvent<
-  [string] & { _nftlabsTreasury: string }
+export type OwnerTreasuryUpdatedEvent = TypedEvent<
+  [string] & { _providerTreasury: string }
+>;
+
+export type ProviderFeeBpsUpdatedEvent = TypedEvent<
+  [BigNumber] & { providerFeeBps: BigNumber }
+>;
+
+export type ProviderTreasuryUpdatedEvent = TypedEvent<
+  [string] & { _providerTreasury: string }
 >;
 
 export type RoleAdminChangedEvent = TypedEvent<
@@ -333,9 +372,11 @@ export class ProtocolControl extends BaseContract {
 
     MAX_BPS(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    NFTLABS(overrides?: CallOverrides): Promise<[string]>;
+    MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<[string]>;
+
+    PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<[string]>;
 
     _contractURI(overrides?: CallOverrides): Promise<[string]>;
 
@@ -366,23 +407,25 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    marketFeeBps(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<[number]>;
 
     modules(arg0: BytesLike, overrides?: CallOverrides): Promise<[string]>;
-
-    nftlabsTreasury(overrides?: CallOverrides): Promise<[string]>;
 
     numOfModuleType(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    ownerTreasury(overrides?: CallOverrides): Promise<[string]>;
+
     pauseProtocol(
       _toPause: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    providerFeeBps(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    providerTreasury(overrides?: CallOverrides): Promise<[string]>;
 
     renounceRole(
       role: BytesLike,
@@ -415,18 +458,23 @@ export class ProtocolControl extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    updateMarketFeeBps(
-      _newFeeBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    updateNftlabsTreasury(
+    updateOwnerTreasury(
+      _newTreasury: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    updateProviderFeeBps(
+      _newFeeBps: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    updateProviderTreasury(
       _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -436,9 +484,11 @@ export class ProtocolControl extends BaseContract {
 
   MAX_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
-  NFTLABS(overrides?: CallOverrides): Promise<string>;
+  MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
   PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<string>;
+
+  PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<string>;
 
   _contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -469,23 +519,25 @@ export class ProtocolControl extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
-
   moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<number>;
 
   modules(arg0: BytesLike, overrides?: CallOverrides): Promise<string>;
-
-  nftlabsTreasury(overrides?: CallOverrides): Promise<string>;
 
   numOfModuleType(
     arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  ownerTreasury(overrides?: CallOverrides): Promise<string>;
+
   pauseProtocol(
     _toPause: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  providerFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
+  providerTreasury(overrides?: CallOverrides): Promise<string>;
 
   renounceRole(
     role: BytesLike,
@@ -518,18 +570,23 @@ export class ProtocolControl extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  updateMarketFeeBps(
-    _newFeeBps: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   updateModule(
     _moduleId: BytesLike,
     _newModuleAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  updateNftlabsTreasury(
+  updateOwnerTreasury(
+    _newTreasury: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  updateProviderFeeBps(
+    _newFeeBps: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  updateProviderTreasury(
     _newTreasury: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -539,9 +596,11 @@ export class ProtocolControl extends BaseContract {
 
     MAX_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
-    NFTLABS(overrides?: CallOverrides): Promise<string>;
+    MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
     PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<string>;
+
+    PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<string>;
 
     _contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -572,20 +631,22 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<number>;
 
     modules(arg0: BytesLike, overrides?: CallOverrides): Promise<string>;
-
-    nftlabsTreasury(overrides?: CallOverrides): Promise<string>;
 
     numOfModuleType(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    ownerTreasury(overrides?: CallOverrides): Promise<string>;
+
     pauseProtocol(_toPause: boolean, overrides?: CallOverrides): Promise<void>;
+
+    providerFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
+    providerTreasury(overrides?: CallOverrides): Promise<string>;
 
     renounceRole(
       role: BytesLike,
@@ -615,18 +676,23 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    updateMarketFeeBps(
-      _newFeeBps: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    updateNftlabsTreasury(
+    updateOwnerTreasury(
+      _newTreasury: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updateProviderFeeBps(
+      _newFeeBps: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updateProviderTreasury(
       _newTreasury: string,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -651,14 +717,6 @@ export class ProtocolControl extends BaseContract {
       { asset: string; to: string; amount: BigNumber }
     >;
 
-    "MarketFeeBps(uint256)"(
-      marketFeeBps?: null
-    ): TypedEventFilter<[BigNumber], { marketFeeBps: BigNumber }>;
-
-    MarketFeeBps(
-      marketFeeBps?: null
-    ): TypedEventFilter<[BigNumber], { marketFeeBps: BigNumber }>;
-
     "ModuleUpdated(bytes32,address,uint256)"(
       moduleId?: BytesLike | null,
       module?: string | null,
@@ -677,13 +735,29 @@ export class ProtocolControl extends BaseContract {
       { moduleId: string; module: string; moduleType: BigNumber }
     >;
 
-    "NFTLabsTreasury(address)"(
-      _nftlabsTreasury?: null
-    ): TypedEventFilter<[string], { _nftlabsTreasury: string }>;
+    "OwnerTreasuryUpdated(address)"(
+      _providerTreasury?: null
+    ): TypedEventFilter<[string], { _providerTreasury: string }>;
 
-    NFTLabsTreasury(
-      _nftlabsTreasury?: null
-    ): TypedEventFilter<[string], { _nftlabsTreasury: string }>;
+    OwnerTreasuryUpdated(
+      _providerTreasury?: null
+    ): TypedEventFilter<[string], { _providerTreasury: string }>;
+
+    "ProviderFeeBpsUpdated(uint256)"(
+      providerFeeBps?: null
+    ): TypedEventFilter<[BigNumber], { providerFeeBps: BigNumber }>;
+
+    ProviderFeeBpsUpdated(
+      providerFeeBps?: null
+    ): TypedEventFilter<[BigNumber], { providerFeeBps: BigNumber }>;
+
+    "ProviderTreasuryUpdated(address)"(
+      _providerTreasury?: null
+    ): TypedEventFilter<[string], { _providerTreasury: string }>;
+
+    ProviderTreasuryUpdated(
+      _providerTreasury?: null
+    ): TypedEventFilter<[string], { _providerTreasury: string }>;
 
     "RoleAdminChanged(bytes32,bytes32,bytes32)"(
       role?: BytesLike | null,
@@ -753,9 +827,11 @@ export class ProtocolControl extends BaseContract {
 
     MAX_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
-    NFTLABS(overrides?: CallOverrides): Promise<BigNumber>;
+    MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
     PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<BigNumber>;
+
+    PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<BigNumber>;
 
     _contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -789,23 +865,25 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     modules(arg0: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
-
-    nftlabsTreasury(overrides?: CallOverrides): Promise<BigNumber>;
 
     numOfModuleType(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    ownerTreasury(overrides?: CallOverrides): Promise<BigNumber>;
+
     pauseProtocol(
       _toPause: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    providerFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
+    providerTreasury(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceRole(
       role: BytesLike,
@@ -838,18 +916,23 @@ export class ProtocolControl extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    updateMarketFeeBps(
-      _newFeeBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    updateNftlabsTreasury(
+    updateOwnerTreasury(
+      _newTreasury: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updateProviderFeeBps(
+      _newFeeBps: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updateProviderTreasury(
       _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -862,9 +945,13 @@ export class ProtocolControl extends BaseContract {
 
     MAX_BPS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    NFTLABS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    MAX_PROVIDER_FEE_BPS(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     _contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -898,8 +985,6 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    marketFeeBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     moduleType(
       arg0: BytesLike,
       overrides?: CallOverrides
@@ -910,17 +995,21 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    nftlabsTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     numOfModuleType(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    ownerTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     pauseProtocol(
       _toPause: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    providerFeeBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    providerTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceRole(
       role: BytesLike,
@@ -953,18 +1042,23 @@ export class ProtocolControl extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    updateMarketFeeBps(
-      _newFeeBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    updateNftlabsTreasury(
+    updateOwnerTreasury(
+      _newTreasury: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateProviderFeeBps(
+      _newFeeBps: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateProviderTreasury(
       _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

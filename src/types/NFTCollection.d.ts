@@ -46,19 +46,19 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
     "mintBatch(address,uint256[],uint256[],bytes)": FunctionFragment;
     "nextTokenId()": FunctionFragment;
     "nftInfo(uint256)": FunctionFragment;
-    "nftRoyaltyBps()": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "redeemERC20(uint256,uint256)": FunctionFragment;
     "redeemERC721(uint256)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
+    "royaltyBps()": FunctionFragment;
     "royaltyInfo(uint256,uint256)": FunctionFragment;
     "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
-    "setNftRoyaltyBps(uint256)": FunctionFragment;
+    "setRoyaltyBps(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
     "unpause()": FunctionFragment;
@@ -175,10 +175,6 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
     functionFragment: "nftInfo",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "nftRoyaltyBps",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
@@ -196,6 +192,10 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "revokeRole",
     values: [BytesLike, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "royaltyBps",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "royaltyInfo",
@@ -218,7 +218,7 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "setNftRoyaltyBps",
+    functionFragment: "setRoyaltyBps",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -313,10 +313,6 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "nftInfo", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "nftRoyaltyBps",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
@@ -332,6 +328,7 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "royaltyBps", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "royaltyInfo",
     data: BytesLike
@@ -353,7 +350,7 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setNftRoyaltyBps",
+    functionFragment: "setRoyaltyBps",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -373,11 +370,11 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
     "ERC721Redeemed(address,address,uint256,uint256)": EventFragment;
     "ERC721WrappedNft(address,address,uint256,uint256,string)": EventFragment;
     "NativeNfts(address,uint256[],string[],uint256[])": EventFragment;
-    "NftRoyaltyUpdated(uint256)": EventFragment;
     "Paused(address)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
+    "RoyaltyUpdated(uint256)": EventFragment;
     "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
     "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
     "URI(string,uint256)": EventFragment;
@@ -390,11 +387,11 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ERC721Redeemed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ERC721WrappedNft"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NativeNfts"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NftRoyaltyUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoyaltyUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
@@ -456,10 +453,6 @@ export type NativeNftsEvent = TypedEvent<
   }
 >;
 
-export type NftRoyaltyUpdatedEvent = TypedEvent<
-  [BigNumber] & { royaltyBps: BigNumber }
->;
-
 export type PausedEvent = TypedEvent<[string] & { account: string }>;
 
 export type RoleAdminChangedEvent = TypedEvent<
@@ -476,6 +469,10 @@ export type RoleGrantedEvent = TypedEvent<
 
 export type RoleRevokedEvent = TypedEvent<
   [string, string, string] & { role: string; account: string; sender: string }
+>;
+
+export type RoyaltyUpdatedEvent = TypedEvent<
+  [BigNumber] & { royaltyBps: BigNumber }
 >;
 
 export type TransferBatchEvent = TypedEvent<
@@ -687,8 +684,6 @@ export class NFTCollection extends BaseContract {
       }
     >;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -717,6 +712,8 @@ export class NFTCollection extends BaseContract {
       account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -755,7 +752,7 @@ export class NFTCollection extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setNftRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -931,8 +928,6 @@ export class NFTCollection extends BaseContract {
     }
   >;
 
-  nftRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
-
   pause(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -961,6 +956,8 @@ export class NFTCollection extends BaseContract {
     account: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
   royaltyInfo(
     tokenId: BigNumberish,
@@ -999,7 +996,7 @@ export class NFTCollection extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setNftRoyaltyBps(
+  setRoyaltyBps(
     _royaltyBps: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -1172,8 +1169,6 @@ export class NFTCollection extends BaseContract {
       }
     >;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     pause(overrides?: CallOverrides): Promise<void>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
@@ -1200,6 +1195,8 @@ export class NFTCollection extends BaseContract {
       account: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -1235,7 +1232,7 @@ export class NFTCollection extends BaseContract {
 
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
 
-    setNftRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1444,14 +1441,6 @@ export class NFTCollection extends BaseContract {
       }
     >;
 
-    "NftRoyaltyUpdated(uint256)"(
-      royaltyBps?: null
-    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
-
-    NftRoyaltyUpdated(
-      royaltyBps?: null
-    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
-
     "Paused(address)"(
       account?: null
     ): TypedEventFilter<[string], { account: string }>;
@@ -1511,6 +1500,14 @@ export class NFTCollection extends BaseContract {
       [string, string, string],
       { role: string; account: string; sender: string }
     >;
+
+    "RoyaltyUpdated(uint256)"(
+      royaltyBps?: null
+    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
+
+    RoyaltyUpdated(
+      royaltyBps?: null
+    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
 
     "TransferBatch(address,address,address,uint256[],uint256[])"(
       operator?: string | null,
@@ -1725,8 +1722,6 @@ export class NFTCollection extends BaseContract {
 
     nftInfo(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1755,6 +1750,8 @@ export class NFTCollection extends BaseContract {
       account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -1791,7 +1788,7 @@ export class NFTCollection extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setNftRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1961,8 +1958,6 @@ export class NFTCollection extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -1991,6 +1986,8 @@ export class NFTCollection extends BaseContract {
       account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -2027,7 +2024,7 @@ export class NFTCollection extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setNftRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

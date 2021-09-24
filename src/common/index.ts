@@ -4,3 +4,4 @@ export * from "./error";
 export * from "./ipfs";
 export * from "./module-type";
 export * from "./nft";
+export * from "./role";

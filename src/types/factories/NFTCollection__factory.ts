@@ -225,19 +225,6 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint256",
-        name: "royaltyBps",
-        type: "uint256",
-      },
-    ],
-    name: "NftRoyaltyUpdated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
         internalType: "address",
         name: "account",
         type: "address",
@@ -319,6 +306,19 @@ const _abi = [
       },
     ],
     name: "RoleRevoked",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "royaltyBps",
+        type: "uint256",
+      },
+    ],
+    name: "RoyaltyUpdated",
     type: "event",
   },
   {
@@ -977,19 +977,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "nftRoyaltyBps",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "pause",
     outputs: [],
     stateMutability: "nonpayable",
@@ -1073,6 +1060,19 @@ const _abi = [
     name: "revokeRole",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "royaltyBps",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -1209,7 +1209,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "setNftRoyaltyBps",
+    name: "setRoyaltyBps",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

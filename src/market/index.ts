@@ -107,12 +107,12 @@ export class MarketModule extends Module {
     };
   }
 
-  public async get(listingId: string): Promise<Listing> {
+  public async getListing(listingId: string): Promise<Listing> {
     const listing = await this.contract.listings(listingId);
     return await this.transformResultToListing(listing);
   }
 
-  public async getAll(filter?: ListingFilter): Promise<Listing[]> {
+  public async getAllListings(filter?: ListingFilter): Promise<Listing[]> {
     let listings: any[] = [];
 
     if (!filter) {
@@ -236,7 +236,7 @@ export class MarketModule extends Module {
   }
 
   public async unlistAll(listingId: string) {
-    const maxQuantity = (await this.get(listingId)).quantity;
+    const maxQuantity = (await this.getListing(listingId)).quantity;
     await this.unlist(listingId, maxQuantity);
   }
 
@@ -249,7 +249,7 @@ export class MarketModule extends Module {
     listingId: string,
     quantity: BigNumberish,
   ): Promise<Listing> {
-    const listing = await this.get(listingId);
+    const listing = await this.getListing(listingId);
     const owner = await this.getSignerAddress();
     const spender = this.address;
     const totalPrice = listing.price.mul(BigNumber.from(quantity));
@@ -270,10 +270,18 @@ export class MarketModule extends Module {
     return await this.transformResultToListing(event?.args?.listing);
   }
 
+  // passthrough
+  public getMarketFeeBps = async () => this.contract.marketFeeBps();
+
   // owner functions
-  public async setContractURI(metadata: string | Record<string, any>) {
+  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
+    await tx.wait();
+  };
+
+  public async setMarketFeeBps(fee: number) {
+    const tx = await this.contract.setMarketFeeBps(fee);
     await tx.wait();
   }
 }

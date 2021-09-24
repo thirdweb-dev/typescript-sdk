@@ -110,18 +110,12 @@ const _abi = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint256",
-        name: "protocolFeeBps",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "creatorFeeBps",
-        type: "uint256",
+        internalType: "uint128",
+        name: "newFee",
+        type: "uint128",
       },
     ],
-    name: "MarketFeesUpdated",
+    name: "MarketFeeUpdate",
     type: "event",
   },
   {
@@ -237,7 +231,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "quanitytBought",
+        name: "quantity",
         type: "uint256",
       },
       {
@@ -845,6 +839,19 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "marketFeeBps",
+    outputs: [
+      {
+        internalType: "uint128",
+        name: "",
+        type: "uint128",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -965,6 +972,19 @@ const _abi = [
       },
     ],
     name: "setContractURI",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint128",
+        name: "feeBps",
+        type: "uint128",
+      },
+    ],
+    name: "setMarketFeeBps",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

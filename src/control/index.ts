@@ -1,4 +1,4 @@
-import { ModuleType } from "../common";
+import { ModuleType, uploadMetadata } from "../common";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { Module } from "../core/module";
 import { ProtocolControl, ProtocolControl__factory } from "../types";
@@ -123,4 +123,10 @@ export class AppModule extends Module {
   public async getMarketModules(): Promise<ControlContract[]> {
     return await this.getAllContractMetadata(await this.getMarketAddress());
   }
+
+  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
+    const uri = await uploadMetadata(metadata);
+    const tx = await this.contract.setContractURI(uri);
+    await tx.wait();
+  };
 }
