@@ -13,5 +13,5 @@ jobs:
     steps:
     - uses: OrlovM/Wiki-Action@v1
       with:
-        path: 'wiki'
+        path: 'docs'
         token: ${{ secrets.GITHUB_TOKEN }}
