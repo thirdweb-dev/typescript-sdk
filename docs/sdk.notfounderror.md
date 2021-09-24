@@ -4,6 +4,8 @@
 
 ## NotFoundError class
 
+Error that may get thrown if IPFS returns nothing for a given uri.
+
 <b>Signature:</b>
 
 ```typescript

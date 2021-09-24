@@ -13,22 +13,9 @@
 |  [MarketModule](./sdk.marketmodule.md) |  |
 |  [NFTLabsSDK](./sdk.nftlabssdk.md) | The entrypoint to the NFTLabsSDK. |
 |  [NFTModule](./sdk.nftmodule.md) |  |
-|  [NotFoundError](./sdk.notfounderror.md) |  |
+|  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [PackModule](./sdk.packmodule.md) |  |
 |  [RegistryModule](./sdk.registrymodule.md) |  |
-
-## Functions
-
-|  Function | Description |
-|  --- | --- |
-|  [getContractMetadata(provider, address, ipfsGatewayUrl)](./sdk.getcontractmetadata.md) |  |
-|  [getCurrencyMetadata(providerOrSigner, asset)](./sdk.getcurrencymetadata.md) |  |
-|  [getCurrencyValue(providerOrSigner, asset, price)](./sdk.getcurrencyvalue.md) |  |
-|  [getMetadata(contract, tokenId, ipfsGatewayUrl)](./sdk.getmetadata.md) |  |
-|  [getMetadataUri(contract, tokenId)](./sdk.getmetadatauri.md) |  |
-|  [getMetadataWithoutContract(provider, contractAddress, tokenId, ipfsGatewayUrl)](./sdk.getmetadatawithoutcontract.md) |  |
-|  [replaceIpfsWithGateway(ipfsUrl, gatewayUrl)](./sdk.replaceipfswithgateway.md) |  |
-|  [uploadJson()](./sdk.uploadjson.md) |  |
 
 ## Interfaces
 

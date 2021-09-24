@@ -15,6 +15,9 @@ export interface CurrencyValue extends Currency {
   displayValue: string;
 }
 
+/**
+ * @internal
+ */
 export async function getCurrencyMetadata(
   providerOrSigner: ProviderOrSigner,
   asset: string,
@@ -42,6 +45,9 @@ export async function getCurrencyMetadata(
   };
 }
 
+/**
+ * @internal
+ */
 export async function getCurrencyValue(
   providerOrSigner: ProviderOrSigner,
   asset: string,

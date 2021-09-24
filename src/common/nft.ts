@@ -55,6 +55,9 @@ export interface NFTMetadata {
   attributes?: Record<string, any>;
 }
 
+/**
+/* @internal
+ */
 export async function getMetadataWithoutContract(
   provider: ProviderOrSigner,
   contractAddress: string,
@@ -83,6 +86,9 @@ export async function getMetadataWithoutContract(
   return entity;
 }
 
+/**
+/* @internal
+ */
 export async function getMetadata(
   contract: NFT | NFTCollection,
   tokenId: string,
@@ -105,6 +111,9 @@ export async function getMetadata(
   return entity;
 }
 
+/**
+/* @internal
+ */
 export async function getMetadataUri(
   contract: NFT | NFTCollection,
   tokenId: string,

@@ -28,6 +28,9 @@ const contractUriABI = [
   },
 ];
 
+/**
+ * @internal
+ */
 export async function getContractMetadata(
   provider: ProviderOrSigner,
   address: string,

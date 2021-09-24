@@ -1,3 +1,10 @@
+/**
+ *
+ * @param ipfsUrl - the ipfs:// uri
+ * @param gatewayUrl - the gateway url
+ * @returns the fully formed IPFS url
+ * @internal
+ */
 export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
   if (!ipfsUrl) {
     return "";
@@ -8,4 +15,10 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
   return ipfsUrl.replace("ipfs://", gatewayUrl);
 }
 
-export function uploadJson() {}
+// TODO implement
+/**
+ * @internal
+ */
+export function uploadJson() {
+  throw new Error("implement me");
+}

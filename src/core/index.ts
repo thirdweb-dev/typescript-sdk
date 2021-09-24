@@ -12,6 +12,7 @@ import { ProviderOrSigner, ValidProviderInput } from "./types";
 
 /**
  * The optional options that can be passed to the SDK.
+ * @public
  */
 export interface ISDKOptions {
   /**
