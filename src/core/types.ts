@@ -12,3 +12,13 @@ export type ProviderOrSigner = Provider | Signer;
  * @public
  */
 export type ValidProviderInput = ProviderOrSigner | Network | string;
+
+/**
+ * @internal
+ */
+export type JSONValue =
+  | string
+  | number
+  | boolean
+  | (JSONValue | null)[]
+  | { [key: string]: JSONValue | null };

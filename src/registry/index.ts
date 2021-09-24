@@ -10,7 +10,7 @@ export interface RegistryControl {
 
 /**
  * The RegistryModule. This should always be created via `getRegistryModule()` on the main SDK.
- * @public
+ * @internal
  */
 export class RegistryModule extends Module {
   private __contract: Registry | null = null;

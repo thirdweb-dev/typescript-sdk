@@ -37,7 +37,6 @@
 |  [ProtocolControl](./sdk.protocolcontrol.md) |  |
 |  [Registry\_\_factory](./sdk.registry__factory.md) |  |
 |  [Registry](./sdk.registry.md) |  |
-|  [RegistryModule](./sdk.registrymodule.md) | The RegistryModule. This should always be created via <code>getRegistryModule()</code> on the main SDK. |
 
 ## Enumerations
 
@@ -66,7 +65,6 @@
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) |  |
 |  [PackNFT](./sdk.packnft.md) |  |
-|  [RegistryControl](./sdk.registrycontrol.md) |  |
 
 ## Variables
 

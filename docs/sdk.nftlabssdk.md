@@ -18,17 +18,25 @@ export declare class NFTLabsSDK
 |  --- | --- | --- |
 |  [(constructor)(providerOrNetwork, opts)](./sdk.nftlabssdk._constructor_.md) |  | Constructs a new instance of the <code>NFTLabsSDK</code> class |
 
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [registry](./sdk.nftlabssdk.registry.md) |  | RegistryModule \| Promise&lt;RegistryModule&gt; |  |
+
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [createApp(metadata)](./sdk.nftlabssdk.createapp.md) |  | Call this to create a new app |
 |  [getAppModule(address)](./sdk.nftlabssdk.getappmodule.md) |  |  |
+|  [getApps()](./sdk.nftlabssdk.getapps.md) |  | Call this to get the current apps. |
 |  [getCollectionModule(address)](./sdk.nftlabssdk.getcollectionmodule.md) |  |  |
 |  [getCurrencyModule(address)](./sdk.nftlabssdk.getcurrencymodule.md) |  |  |
+|  [getGasPrice(speed, maxGas)](./sdk.nftlabssdk.getgasprice.md) |  |  |
 |  [getMarketModule(address)](./sdk.nftlabssdk.getmarketmodule.md) |  |  |
 |  [getNFTModule(address)](./sdk.nftlabssdk.getnftmodule.md) |  |  |
 |  [getPackModule(address)](./sdk.nftlabssdk.getpackmodule.md) |  |  |
-|  [getRegistryModule(address)](./sdk.nftlabssdk.getregistrymodule.md) |  |  |
 |  [isReadOnly()](./sdk.nftlabssdk.isreadonly.md) |  |  |
 |  [setProviderOrSigner(providerOrSignerOrNetwork)](./sdk.nftlabssdk.setproviderorsigner.md) |  |  |
 

@@ -8,7 +8,6 @@ export * from "./currency";
 export * from "./market";
 export * from "./nft";
 export * from "./pack";
-export * from "./registry";
 export * from "./types";
 
 if (!globalThis.fetch) {

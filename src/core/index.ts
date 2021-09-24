@@ -1,14 +1,22 @@
 import { Provider } from "@ethersproject/providers";
-import { ethers, Signer } from "ethers";
+import { parseUnits } from "@ethersproject/units";
+import { ContractReceipt, ethers, Signer } from "ethers";
+import invariant from "ts-invariant";
 import type { C } from "ts-toolbelt";
 import { CollectionModule } from "../collection";
+import { uploadMetadata } from "../common";
+import { getGasPriceForChain } from "../common/gas-price";
+import {
+  getContractAddressByChainId,
+  SUPPORTED_CHAIN_ID,
+} from "../common/registry-address";
 import { AppModule } from "../control";
 import { CurrencyModule } from "../currency";
 import { MarketModule } from "../market";
 import { NFTModule } from "../nft";
 import { PackModule } from "../pack";
-import { RegistryModule } from "../registry";
-import { ProviderOrSigner, ValidProviderInput } from "./types";
+import { RegistryControl, RegistryModule } from "../registry";
+import { JSONValue, ProviderOrSigner, ValidProviderInput } from "./types";
 
 /**
  * The optional options that can be passed to the SDK.
@@ -40,6 +48,13 @@ export class NFTLabsSDK {
   private providerOrSigner: ProviderOrSigner;
   private signer: Signer | null = null;
 
+  private _registry: RegistryModule | Promise<RegistryModule> | null = null;
+  public get registry(): RegistryModule | Promise<RegistryModule> {
+    return this._registry || this.getRegistryModule();
+  }
+  private set registry(value: RegistryModule | Promise<RegistryModule>) {
+    this._registry = value;
+  }
   constructor(
     providerOrNetwork: ValidProviderInput,
     opts?: Partial<ISDKOptions>,
@@ -49,13 +64,42 @@ export class NFTLabsSDK {
       this.ipfsGatewayUrl = opts.ipfsGatewayUrl;
     }
   }
-  private updateModuleSigners() {
+  private async updateModuleSigners() {
     for (const [, _module] of this.modules) {
       if (this.isReadOnly()) {
         _module.clearSigner();
       }
       _module.setProviderOrSigner(this.providerOrSigner);
     }
+    this.registry = await this.getRegistryModule();
+  }
+
+  private async getChainID(): Promise<number> {
+    const provider = Provider.isProvider(this.providerOrSigner)
+      ? this.providerOrSigner
+      : this.providerOrSigner.provider;
+    invariant(provider, "getRegistryAddress() -- No Provider");
+
+    const { chainId } = await provider.getNetwork();
+    return chainId;
+  }
+
+  private async getRegistryAddress(): Promise<string | undefined> {
+    return getContractAddressByChainId(
+      (await this.getChainID()) as SUPPORTED_CHAIN_ID,
+    );
+  }
+
+  /**
+   *
+   * @param address - The contract address of the given Registry module.
+   * @returns The Registry Module.
+   * @internal
+   */
+  private async getRegistryModule(): Promise<RegistryModule> {
+    const address = await this.getRegistryAddress();
+    invariant(address, "getRegistryModule() -- No Address");
+    return this.getOrCreateModule(address, RegistryModule);
   }
 
   private getOrCreateModule<T extends AnyContract>(
@@ -73,6 +117,51 @@ export class NFTLabsSDK {
     this.modules.set(address, _newModule);
     return _newModule as C.Instance<T>;
   }
+
+  /**
+   * Call this to get the current apps.
+   * @returns All currently registered apps for the connected wallet
+   */
+  public async getApps(): Promise<RegistryControl[]> {
+    return (await this.registry).getProtocolContracts();
+  }
+
+  /**
+   * Call this to create a new app
+   * @param metadata - metadata URI or a JSON object
+   * @returns The transaction receipt
+   */
+  public async createApp(
+    metadata: string | JSONValue,
+  ): Promise<ContractReceipt> {
+    const registryContract = (await this.registry).contract;
+    const gasPrice = await this.getGasPrice();
+    const txOpts: Record<string, any> = {};
+    // could technically be `0` so simple falsy check does not suffice
+    if (typeof gasPrice === "number") {
+      txOpts.gasPrice = parseUnits(gasPrice.toString(), "gwei");
+    }
+
+    const uri = await uploadMetadata(
+      metadata,
+      registryContract.address,
+      (await this.signer?.getAddress()) || undefined,
+    );
+    const txn = await registryContract.deployProtocol(uri, txOpts);
+
+    return await txn.wait();
+  }
+
+  /**
+   *
+   * @param speed - what speed to prefer, default: "fastest"
+   * @param maxGas - how much gas to use at most, default: 100
+   * @returns the optiomal gas price
+   */
+  public async getGasPrice(speed = "fastest", maxGas = 100): Promise<number> {
+    return await getGasPriceForChain(await this.getChainID(), speed, maxGas);
+  }
+
   /**
    *
    * @param providerOrSignerOrNetwork - A valid "ethers" Provider, Signer or a Network address to create a Provider with.
@@ -161,14 +250,5 @@ export class NFTLabsSDK {
    */
   public getMarketModule(address: string): MarketModule {
     return this.getOrCreateModule(address, MarketModule);
-  }
-
-  /**
-   *
-   * @param address - The contract address of the given Registry module.
-   * @returns The Registry Module.
-   */
-  public getRegistryModule(address: string): RegistryModule {
-    return this.getOrCreateModule(address, RegistryModule);
   }
 }

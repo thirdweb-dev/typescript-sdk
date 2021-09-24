@@ -1,3 +1,5 @@
+import { JSONValue } from "../core/types";
+
 /**
  *
  * @param ipfsUrl - the ipfs:// uri
@@ -19,7 +21,7 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
  * @internal
  */
 export async function uploadMetadata(
-  metadata: string | Record<string, any>,
+  metadata: string | JSONValue,
   contractAddress?: string,
   signerAddress?: string,
 ): Promise<string> {
