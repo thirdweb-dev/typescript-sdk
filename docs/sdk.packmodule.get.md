@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-get(packId: string): Promise<PackMetadata>;
+get(packId: string): Promise<Pack>;
 ```
 
 ## Parameters
@@ -18,5 +18,5 @@ get(packId: string): Promise<PackMetadata>;
 
 <b>Returns:</b>
 
-Promise&lt;PackMetadata&gt;
+Promise&lt;[Pack](./sdk.pack.md)<!-- -->&gt;
 

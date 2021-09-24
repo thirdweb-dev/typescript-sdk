@@ -1,12 +1,12 @@
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
-import { uploadMetadata } from "../common/ipfs";
 import { NotFoundError } from "../common/error";
+import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 import {
+  ERC1155__factory,
   Pack as PackContract,
   Pack__factory,
-  ERC1155__factory,
 } from "../types";
 
 /**
@@ -265,8 +265,8 @@ export class PackModule extends Module {
   };
 
   public setRoyaltyBps = async (amount: number) => {
-    //const tx = await this.contract.setRoyaltyBps(amount);
-    //await tx.wait();
+    // const tx = await this.contract.setRoyaltyBps(amount);
+    // await tx.wait();
   };
 
   public setContractURI = async (metadata: string | Record<string, any>) => {

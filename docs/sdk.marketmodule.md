@@ -22,6 +22,7 @@ export declare class MarketModule extends Module
 |  [get(listingId)](./sdk.marketmodule.get.md) |  |  |
 |  [getAll(filter)](./sdk.marketmodule.getall.md) |  |  |
 |  [list(assetContract, tokenId, currencyContract, price, quantity, secondsUntilStart, secondsUntilEnd)](./sdk.marketmodule.list.md) |  |  |
+|  [setContractURI(metadata)](./sdk.marketmodule.setcontracturi.md) |  |  |
 |  [unlist(listingId, quantity)](./sdk.marketmodule.unlist.md) |  |  |
 |  [unlistAll(listingId)](./sdk.marketmodule.unlistall.md) |  |  |
 

@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-mint: (to: string, args: CreateArgs) => Promise<void>;
+mint: (to: string, metadata: string | Record<string, any>) => Promise<NFTMetadata>;
 ```

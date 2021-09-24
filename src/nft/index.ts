@@ -92,12 +92,12 @@ export class NFTModule extends Module {
     metadatas: (string | Record<string, any>)[],
   ): Promise<NFTMetadata[]> => {
     // TODO: update new abi
-    //const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
-    //const tx = await this.contract.mintNFTBatch(to, uris);
-    //const receipt = await tx.wait();
-    //const event = receipt?.events?.find((e) => e.event === "MintedBatch");
-    //const tokenIds = event?.args?.tokenIds;
-    //return await Promise.all(tokenIds.map((tokenId) => this.get(tokenId)));
+    // const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
+    // const tx = await this.contract.mintNFTBatch(to, uris);
+    // const receipt = await tx.wait();
+    // const event = receipt?.events?.find((e) => e.event === "MintedBatch");
+    // const tokenIds = event?.args?.tokenIds;
+    // return await Promise.all(tokenIds.map((tokenId) => this.get(tokenId)));
     return [];
   };
 
@@ -116,13 +116,13 @@ export class NFTModule extends Module {
   };
 
   public setRoyaltyBps = async (amount: number) => {
-    //const tx = await this.contract.setRoyaltyBps(amount);
-    //await tx.wait();
+    // const tx = await this.contract.setRoyaltyBps(amount);
+    // await tx.wait();
   };
 
   public setRoyaltyReceiver = async (receiver: string) => {
-    //const tx = await this.contract.setRoyaltyReceiver(receiver);
-    //await tx.wait();
+    // const tx = await this.contract.setRoyaltyReceiver(receiver);
+    // await tx.wait();
   };
 
   public setContractURI = async (metadata: string | Record<string, any>) => {

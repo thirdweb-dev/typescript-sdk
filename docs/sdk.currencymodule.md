@@ -24,6 +24,7 @@ export declare class CurrencyModule extends Module
 |  [burnFrom](./sdk.currencymodule.burnfrom.md) |  | (to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 |  [mint](./sdk.currencymodule.mint.md) |  | (to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 |  [setAllowance](./sdk.currencymodule.setallowance.md) |  | (spender: string, amount: BigNumber) =&gt; Promise&lt;void&gt; |  |
+|  [setContractURI](./sdk.currencymodule.setcontracturi.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
 |  [transfer](./sdk.currencymodule.transfer.md) |  | (to: string, amount: BigNumber) =&gt; Promise&lt;void&gt; |  |
 |  [transferFrom](./sdk.currencymodule.transferfrom.md) |  | (from: string, to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 

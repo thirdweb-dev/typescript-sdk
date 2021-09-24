@@ -19,7 +19,15 @@ export declare class PackModule extends Module
 |  --- | --- | --- | --- |
 |  [balance](./sdk.packmodule.balance.md) |  | (tokenId: string) =&gt; Promise&lt;BigNumber&gt; |  |
 |  [balanceOf](./sdk.packmodule.balanceof.md) |  | (address: string, tokenId: string) =&gt; Promise&lt;BigNumber&gt; |  |
+|  [createPack](./sdk.packmodule.createpack.md) |  | (args: [IPackCreateArgs](./sdk.ipackcreateargs.md)<!-- -->) =&gt; Promise&lt;[Pack](./sdk.pack.md)<!-- -->&gt; |  |
+|  [isApproved](./sdk.packmodule.isapproved.md) |  | (address: string, operator: string) =&gt; Promise&lt;boolean&gt; |  |
+|  [setApproval](./sdk.packmodule.setapproval.md) |  | (operator: string, approved?: boolean) =&gt; Promise&lt;void&gt; |  |
+|  [setContractURI](./sdk.packmodule.setcontracturi.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
+|  [setRoyaltyBps](./sdk.packmodule.setroyaltybps.md) |  | (amount: number) =&gt; Promise&lt;void&gt; |  |
 |  [transfer](./sdk.packmodule.transfer.md) |  | (to: string, tokenId: string, amount: BigNumber) =&gt; Promise&lt;void&gt; |  |
+|  [transferBatchFrom](./sdk.packmodule.transferbatchfrom.md) |  | (from: string, to: string, args: [IPackBatchArgs](./sdk.ipackbatchargs.md)<!-- -->\[\], data?: BytesLike) =&gt; Promise&lt;void&gt; |  |
+|  [transferFrom](./sdk.packmodule.transferfrom.md) |  | (from: string, to: string, args: [IPackBatchArgs](./sdk.ipackbatchargs.md)<!-- -->, data?: BytesLike) =&gt; Promise&lt;void&gt; |  |
+|  [transferLink](./sdk.packmodule.transferlink.md) |  | (to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 
 ## Methods
 

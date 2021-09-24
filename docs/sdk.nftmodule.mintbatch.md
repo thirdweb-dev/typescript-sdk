@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-mintBatch: (to: string, args: CreateArgs[]) => Promise<void>;
+mintBatch: (to: string, metadatas: (string | Record<string, any>)[]) => Promise<NFTMetadata[]>;
 ```

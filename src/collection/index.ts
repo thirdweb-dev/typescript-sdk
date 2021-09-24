@@ -193,8 +193,8 @@ export class CollectionModule extends Module {
   };
 
   public setRoyaltyBps = async (amount: number) => {
-    //const tx = await this.contract.setRoyaltyBps(amount);
-    //await tx.wait();
+    // const tx = await this.contract.setRoyaltyBps(amount);
+    // await tx.wait();
   };
 
   public setContractURI = async (metadata: string | Record<string, any>) => {

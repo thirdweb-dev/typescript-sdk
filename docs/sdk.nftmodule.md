@@ -21,9 +21,12 @@ export declare class NFTModule extends Module
 |  [balanceOf](./sdk.nftmodule.balanceof.md) |  | (address: string) =&gt; Promise&lt;import("ethers").BigNumber&gt; |  |
 |  [burn](./sdk.nftmodule.burn.md) |  | (tokenId: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 |  [isApproved](./sdk.nftmodule.isapproved.md) |  | (address: string, operator: string) =&gt; Promise&lt;boolean&gt; |  |
-|  [mint](./sdk.nftmodule.mint.md) |  | (to: string, args: CreateArgs) =&gt; Promise&lt;void&gt; |  |
-|  [mintBatch](./sdk.nftmodule.mintbatch.md) |  | (to: string, args: CreateArgs\[\]) =&gt; Promise&lt;void&gt; |  |
+|  [mint](./sdk.nftmodule.mint.md) |  | (to: string, metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->&gt; |  |
+|  [mintBatch](./sdk.nftmodule.mintbatch.md) |  | (to: string, metadatas: (string \| Record&lt;string, any&gt;)\[\]) =&gt; Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->\[\]&gt; |  |
 |  [setApproval](./sdk.nftmodule.setapproval.md) |  | (operator: string, approved?: boolean) =&gt; Promise&lt;void&gt; |  |
+|  [setContractURI](./sdk.nftmodule.setcontracturi.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
+|  [setRoyaltyBps](./sdk.nftmodule.setroyaltybps.md) |  | (amount: number) =&gt; Promise&lt;void&gt; |  |
+|  [setRoyaltyReceiver](./sdk.nftmodule.setroyaltyreceiver.md) |  | (receiver: string) =&gt; Promise&lt;void&gt; |  |
 |  [totalSupply](./sdk.nftmodule.totalsupply.md) |  | () =&gt; Promise&lt;import("ethers").BigNumber&gt; |  |
 |  [transfer](./sdk.nftmodule.transfer.md) |  | (to: string, tokenId: string) =&gt; Promise&lt;void&gt; |  |
 |  [transferFrom](./sdk.nftmodule.transferfrom.md) |  | (from: string, to: string, tokenId: BigNumberish) =&gt; Promise&lt;void&gt; |  |

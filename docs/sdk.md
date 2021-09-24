@@ -24,9 +24,20 @@
 |  [ContractMetadata](./sdk.contractmetadata.md) |  |
 |  [Currency](./sdk.currency.md) |  |
 |  [CurrencyValue](./sdk.currencyvalue.md) |  |
+|  [IPackBatchArgs](./sdk.ipackbatchargs.md) |  |
+|  [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
+|  [Pack](./sdk.pack.md) |  |
+|  [PackNFT](./sdk.packnft.md) |  |
 |  [RegistryControl](./sdk.registrycontrol.md) |  |
+
+## Variables
+
+|  Variable | Description |
+|  --- | --- |
+|  [InterfaceId\_IERC1155](./sdk.interfaceid_ierc1155.md) |  |
+|  [InterfaceId\_IERC721](./sdk.interfaceid_ierc721.md) |  |
 
 ## Type Aliases
 
