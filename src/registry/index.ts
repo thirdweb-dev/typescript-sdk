@@ -8,6 +8,10 @@ export interface RegistryControl {
   metadata?: ContractMetadata;
 }
 
+/**
+ * The RegistryModule. This should always be created via `getRegistryModule()` on the main SDK.
+ * @public
+ */
 export class RegistryModule extends Module {
   private __contract: Registry | null = null;
   private get contract(): Registry {

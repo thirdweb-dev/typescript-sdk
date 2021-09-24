@@ -18,5 +18,5 @@ get(listingId: string): Promise<Listing>;
 
 <b>Returns:</b>
 
-Promise&lt;[Listing](./sdk.listing.md)<!-- -->&gt;
+Promise&lt;Listing&gt;
 

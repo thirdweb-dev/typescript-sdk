@@ -19,5 +19,5 @@ buy(listingId: string, quantity: BigNumberish): Promise<Listing>;
 
 <b>Returns:</b>
 
-Promise&lt;[Listing](./sdk.listing.md)<!-- -->&gt;
+Promise&lt;Listing&gt;
 

@@ -24,5 +24,5 @@ list(assetContract: string, tokenId: string, currencyContract: string, price: Bi
 
 <b>Returns:</b>
 
-Promise&lt;[Listing](./sdk.listing.md)<!-- -->&gt;
+Promise&lt;Listing&gt;
 

@@ -4,6 +4,7 @@
 
 ## CurrencyModule class
 
+The CurrencyModule. This should always be created via `getCurrencyModule()` on the main SDK.
 
 <b>Signature:</b>
 

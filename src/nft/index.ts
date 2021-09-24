@@ -9,6 +9,7 @@ interface CreateArgs {
 }
 
 /**
+ * The MarketModule. This should always be created via `getMarketModule()` on the main SDK.
  * @public
  */
 export class NFTModule extends Module {

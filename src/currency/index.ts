@@ -9,6 +9,7 @@ import { Module } from "../core/module";
 import { Coin, Coin__factory } from "../types";
 
 /**
+ * The CurrencyModule. This should always be created via `getCurrencyModule()` on the main SDK.
  * @public
  */
 export class CurrencyModule extends Module {

@@ -4,7 +4,7 @@ import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 import { Pack as PackContract, Pack__factory } from "../types";
 
-export interface PackMetadata {
+interface PackMetadata {
   creator: string;
   currentSupply: BigNumber;
   openStart: Date | null;
@@ -12,12 +12,13 @@ export interface PackMetadata {
   metadata: NFTMetadata;
 }
 
-export interface PackNFT {
+interface PackNFT {
   supply: BigNumber;
   metadata: NFTMetadata;
 }
 
 /**
+ * The PackModule. This should always be created via `getPackModule()` on the main SDK.
  * @public
  */
 export class PackModule extends Module {

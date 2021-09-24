@@ -18,5 +18,5 @@ getNFTs(packId: string): Promise<PackNFT[]>;
 
 <b>Returns:</b>
 
-Promise&lt;[PackNFT](./sdk.packnft.md)<!-- -->\[\]&gt;
+Promise&lt;PackNFT\[\]&gt;
 

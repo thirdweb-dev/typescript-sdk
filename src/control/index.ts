@@ -21,6 +21,7 @@ interface ControlContract {
 }
 
 /**
+ * The AppModule. This should always be created via `getAppModule()` on the main SDK.
  * @public
  */
 export class AppModule extends Module {

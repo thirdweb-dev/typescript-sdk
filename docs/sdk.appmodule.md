@@ -4,6 +4,7 @@
 
 ## AppModule class
 
+The AppModule. This should always be created via `getAppModule()` on the main SDK.
 
 <b>Signature:</b>
 

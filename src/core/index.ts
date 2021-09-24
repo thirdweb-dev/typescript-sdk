@@ -129,6 +129,15 @@ export class NFTLabsSDK {
 
   /**
    *
+   * @param address - The contract address of the given Collection module.
+   * @returns The Collection Module.
+   */
+  public getCollectionModule(address: string): CollectionModule {
+    return this.getOrCreateModule(address, CollectionModule);
+  }
+
+  /**
+   *
    * @param address - The contract address of the given Pack module.
    * @returns The Pack Module.
    */

@@ -14,9 +14,9 @@ getAll(filter?: ListingFilter): Promise<Listing[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  filter | [ListingFilter](./sdk.listingfilter.md) |  |
+|  filter | ListingFilter |  |
 
 <b>Returns:</b>
 
-Promise&lt;[Listing](./sdk.listing.md)<!-- -->\[\]&gt;
+Promise&lt;Listing\[\]&gt;
 

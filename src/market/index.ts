@@ -9,13 +9,13 @@ import {
   Market__factory,
 } from "../types";
 
-export interface ListingFilter {
+interface ListingFilter {
   seller?: string;
   tokenContract?: string;
   tokenId?: string;
 }
 
-export interface Listing {
+interface Listing {
   id: string;
   seller: string;
   tokenContract: string;
@@ -30,6 +30,7 @@ export interface Listing {
 }
 
 /**
+ * The MarketModule. This should always be created via `getMarketModule()` on the main SDK.
  * @public
  */
 export class MarketModule extends Module {

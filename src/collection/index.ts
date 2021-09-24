@@ -30,6 +30,7 @@ interface IBatchActionArgs {
   amount: BigNumberish;
 }
 /**
+ * The CollectionModule. This should always be created via `getCollectionModule()` on the main SDK.
  * @public
  */
 export class CollectionModule extends Module {

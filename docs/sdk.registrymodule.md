@@ -4,6 +4,8 @@
 
 ## RegistryModule class
 
+The RegistryModule. This should always be created via `getRegistryModule()` on the main SDK.
+
 <b>Signature:</b>
 
 ```typescript

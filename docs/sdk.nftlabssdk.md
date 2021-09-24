@@ -23,6 +23,7 @@ export declare class NFTLabsSDK
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [getAppModule(address)](./sdk.nftlabssdk.getappmodule.md) |  |  |
+|  [getCollectionModule(address)](./sdk.nftlabssdk.getcollectionmodule.md) |  |  |
 |  [getCurrencyModule(address)](./sdk.nftlabssdk.getcurrencymodule.md) |  |  |
 |  [getMarketModule(address)](./sdk.nftlabssdk.getmarketmodule.md) |  |  |
 |  [getNFTModule(address)](./sdk.nftlabssdk.getnftmodule.md) |  |  |

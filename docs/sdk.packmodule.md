@@ -4,6 +4,7 @@
 
 ## PackModule class
 
+The PackModule. This should always be created via `getPackModule()` on the main SDK.
 
 <b>Signature:</b>
 

@@ -4,6 +4,7 @@
 
 ## NFTModule class
 
+The MarketModule. This should always be created via `getMarketModule()` on the main SDK.
 
 <b>Signature:</b>
 
