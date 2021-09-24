@@ -1,22 +1,23 @@
-import { Signer } from "@ethersproject/abstract-signer";
-import { AddressZero } from "@ethersproject/constants";
-import { Network, Provider } from "@ethersproject/providers";
-import { ethers } from "ethers";
-import { C } from "ts-toolbelt";
-import { CurrencySDK } from "../currency";
+import { Provider } from "@ethersproject/providers";
+import { ethers, Signer } from "ethers";
+import type { C } from "ts-toolbelt";
+import { CollectionSDK } from "../collection";
 import { ControlSDK } from "../control";
+import { CurrencySDK } from "../currency";
 import { MarketSDK } from "../market";
 import { NFTSDK } from "../nft";
-import { CollectionSDK } from "../collection";
 import { PackSDK } from "../pack";
 import { RegistrySDK } from "../registry";
+import { ProviderOrSigner, ValidProviderInput } from "./types";
 
-export type ProviderOrSigner = Provider | Signer;
-
-export type ValidProviderInput = ProviderOrSigner | Network | string;
-
-export interface SDKOptions {
-  ipfsGatewayUrl: string;
+/**
+ * The optional options that can be passed to the SDK.
+ */
+export interface ISDKOptions {
+  /**
+   * An optional IPFS Gateway. (Default: `https://cloudflare-ipfs.com/ipfs/`).
+   */
+  ipfsGatewayUrl?: string;
 }
 
 type AnyContract =
@@ -28,45 +29,27 @@ type AnyContract =
   | typeof PackSDK
   | typeof RegistrySDK;
 
+/**
+ * @public
+ * The entrypoint to the NFTLabsSDK.
+ */
 export class NFTLabsSDK {
-  private ipfsGatewayUrl: string = "https://cloudflare-ipfs.com/ipfs/";
+  private ipfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/";
   private modules = new Map<string, C.Instance<AnyContract>>();
   private providerOrSigner: ProviderOrSigner;
   private signer: Signer | null = null;
 
   constructor(
     providerOrNetwork: ValidProviderInput,
-    opts?: Partial<SDKOptions>,
+    opts?: Partial<ISDKOptions>,
   ) {
     this.providerOrSigner = this.setProviderOrSigner(providerOrNetwork);
     if (opts?.ipfsGatewayUrl) {
       this.ipfsGatewayUrl = opts.ipfsGatewayUrl;
     }
   }
-
-  public setProviderOrSigner(providerOrNetwork: ValidProviderInput) {
-    if (
-      Provider.isProvider(providerOrNetwork) ||
-      Signer.isSigner(providerOrNetwork)
-    ) {
-      // sdk instantiated with a provider / signer
-      this.providerOrSigner = providerOrNetwork;
-    } else {
-      // sdk instantiated with a network name / network url
-      this.providerOrSigner = ethers.getDefaultProvider(providerOrNetwork);
-    }
-    //if we're setting a signer then also update that
-    if (Signer.isSigner(providerOrNetwork)) {
-      this.signer = providerOrNetwork;
-    } else {
-      this.signer = null;
-    }
-    this.updateModuleSigners();
-    return this.providerOrSigner;
-  }
-
   private updateModuleSigners() {
-    for (let [, _module] of this.modules) {
+    for (const [, _module] of this.modules) {
       if (this.isReadOnly()) {
         _module.clearSigner();
       }
@@ -89,47 +72,92 @@ export class NFTLabsSDK {
     this.modules.set(address, _newModule);
     return _newModule as C.Instance<T>;
   }
+  /**
+   *
+   * @param providerOrSignerOrNetwork - A valid "ethers" Provider, Signer or a Network address to create a Provider with.
+   * @returns The Provider / Signer that was passed in, or a default ethers provider constructed with the passed Network.
+   */
+  public setProviderOrSigner(providerOrSignerOrNetwork: ValidProviderInput) {
+    if (
+      Provider.isProvider(providerOrSignerOrNetwork) ||
+      Signer.isSigner(providerOrSignerOrNetwork)
+    ) {
+      // sdk instantiated with a provider / signer
+      this.providerOrSigner = providerOrSignerOrNetwork;
+    } else {
+      // sdk instantiated with a network name / network url
+      this.providerOrSigner = ethers.getDefaultProvider(
+        providerOrSignerOrNetwork,
+      );
+    }
+    // if we're setting a signer then also update that
+    if (Signer.isSigner(providerOrSignerOrNetwork)) {
+      this.signer = providerOrSignerOrNetwork;
+    } else {
+      this.signer = null;
+    }
+    this.updateModuleSigners();
+    return this.providerOrSigner;
+  }
 
+  /**
+   *
+   * @returns Whether the SDK is in read-only mode. (Meaning it has not been passed a valid "Signer.")
+   */
   public isReadOnly(): boolean {
     return !Signer.isSigner(this.signer);
   }
 
-  public getSigner(): Signer | null {
-    if (Signer.isSigner(this.signer)) {
-      return this.signer;
-    }
-    return null;
-  }
-
-  public async getSignerAddress(): Promise<string> {
-    const signer = this.getSigner();
-    return (await signer?.getAddress()) ?? "";
-  }
-
-  public getControlSDK(address: string): ControlSDK {
+  /**
+   *
+   * @param address - The contract address of the given App module.
+   * @returns The App Module.
+   */
+  public getAppModule(address: string): ControlSDK {
     return this.getOrCreateModule(address, ControlSDK);
   }
 
-  public getNFTSDK(address: string): NFTSDK {
+  /**
+   *
+   * @param address - The contract address of the given NFT module.
+   * @returns The NFT Module.
+   */
+  public getNFTModule(address: string): NFTSDK {
     return this.getOrCreateModule(address, NFTSDK);
   }
 
-  public getCollectionSDK(address: string): CollectionSDK {
-    return this.getOrCreateModule(address, CollectionSDK);
-  }
-
-  public getPackSDK(address: string): PackSDK {
+  /**
+   *
+   * @param address - The contract address of the given Pack module.
+   * @returns The Pack Module.
+   */
+  public getPackModule(address: string): PackSDK {
     return this.getOrCreateModule(address, PackSDK);
   }
 
-  public getCurrencySDK(address: string): CurrencySDK {
+  /**
+   *
+   * @param address - The contract address of the given Currency module.
+   * @returns The Currency Module.
+   */
+  public getCurrencyModule(address: string): CurrencySDK {
     return this.getOrCreateModule(address, CurrencySDK);
   }
 
-  public getMarketSDK(address: string): MarketSDK {
+  /**
+   *
+   * @param address - The contract address of the given Market module.
+   * @returns The Market Module.
+   */
+  public getMarketModule(address: string): MarketSDK {
     return this.getOrCreateModule(address, MarketSDK);
   }
 
+  /**
+   *
+   * @param address - The contract address of the given Registry module.
+   * @returns The Registry Module.
+   */
   public getRegistrySDK(address: string): RegistrySDK {
     return this.getOrCreateModule(address, RegistrySDK);
   }

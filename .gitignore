@@ -1,3 +1,6 @@
 node_modules/
-dist/
+lib/
+temp/
+etc/
 bin/
+dist/

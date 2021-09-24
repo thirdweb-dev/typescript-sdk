@@ -1,6 +1,6 @@
 import { Contract } from "@ethersproject/contracts";
-import { replaceIpfsWithGateway } from "../common/ipfs";
-import { ProviderOrSigner } from "../core";
+import { ProviderOrSigner } from "../core/types";
+import { replaceIpfsWithGateway } from "./ipfs";
 
 export interface ContractMetadata {
   uri: string;
@@ -40,7 +40,7 @@ export async function getContractMetadata(
   const metadata = await meta.json();
   const entity: ContractMetadata = {
     ...metadata,
-    uri: uri,
+    uri,
     image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
   };
   return entity;

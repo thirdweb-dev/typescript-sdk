@@ -1,4 +1,4 @@
-import { BigNumberish } from "@ethersproject/bignumber";
+import { BigNumberish } from "ethers";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 import { NFT, NFT__factory } from "../types";
@@ -10,7 +10,7 @@ interface CreateArgs {
 
 export class NFTSDK extends Module {
   private _contract: NFT | null = null;
-  public get contract(): NFT {
+  private get contract(): NFT {
     return this._contract || this.connectContract();
   }
   private set contract(value: NFT) {
@@ -59,7 +59,7 @@ export class NFTSDK extends Module {
   public isApproved = async (address: string, operator: string) =>
     this.contract.isApprovedForAll(address, operator);
 
-  public setApproval = async (operator: string, approved: boolean = true) => {
+  public setApproval = async (operator: string, approved = true) => {
     const tx = await this.contract.setApprovalForAll(operator, approved);
     await tx.wait();
   };

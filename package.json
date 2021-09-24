@@ -6,38 +6,64 @@
     "url": "git+https://github.com/nftlabs/nftlabs-sdk-ts.git"
   },
   "license": "MIT",
-  "type": "module",
   "source": "src/index.ts",
-  "main": "dist/nftlabs-sdk.cjs",
-  "types": "dist/index.d.ts",
+  "main": "lib/sdk.js",
+  "types": "lib/sdk.d.ts",
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
   "files": [
-    "dist/"
+    "lib/"
   ],
   "scripts": {
-    "build": "microbundle",
+    "build": "microbundle --no-generateTypes --tsconfig tsconfig-microbundle.json",
     "dev": "microbundle watch",
-    "generate-types": "typechain --target=ethers-v5 --out-dir=src/types 'src/abi/*.json'",
     "format": "prettier src/ --write",
-    "prepublishOnly": "rm -rf dist && yarn build"
+    "prepublishOnly": "yarn full-build",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "generate-types": "tsc --emitDeclarationOnly",
+    "generate-abi-types": "typechain --target=ethers-v5 --out-dir=src/types 'src/abi/*.json'",
+    "extract-api": "api-extractor run --local",
+    "copy-dts": "copyfiles -u 1 \"src/types/*.d.ts\" temp/types/",
+    "full-build": "rm -rf lib && rm -rf temp && yarn generate-abi-types && yarn build && yarn generate-types && yarn copy-dts && yarn extract-api",
+    "generate-md-docs": "yarn api-documenter markdown -i ./temp -o ./docs ",
+    "generate-docs": "rm -rf docs && yarn full-build && yarn generate-md-docs"
   },
   "devDependencies": {
+    "@ethersproject/abi": "^5.4.1",
+    "@ethersproject/bytes": "^5.4.0",
+    "@ethersproject/providers": "^5.4.5",
+    "@microsoft/api-documenter": "^7.13.53",
+    "@microsoft/api-extractor": "^7.18.10",
     "@typechain/ethers-v5": "^7.1.0",
+    "@typescript-eslint/eslint-plugin": "^4.30.0",
+    "@typescript-eslint/parser": "^4.31.2",
+    "copyfiles": "^2.4.1",
+    "eslint": "7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-inclusive-language": "^2.1.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-tsdoc": "^0.2.14",
     "@types/node-fetch": "^3.0.3",
     "ethers": "^5.4.7",
     "microbundle": "^0.13.3",
     "prettier": "^2.4.1",
-    "typechain": "^5.1.2"
+    "ts-toolbelt": "^9.6.0",
+    "typechain": "^5.1.2",
+    "typescript": "^4.4.3"
   },
   "peerDependencies": {
     "ethers": "^5.4.6"
   },
   "dependencies": {
     "node-fetch": "^3.0.0",
-    "ts-invariant": "^0.9.3",
-    "ts-toolbelt": "^9.6.0"
+    "ts-invariant": "^0.9.3"
   },
   "resolutions": {
-    "ansi-regex": "^6.0.1"
+    "ansi-regex": "^5.0.0",
+    "strip-ansi": "^5.0.0"
   },
   "description": "",
   "bugs": {

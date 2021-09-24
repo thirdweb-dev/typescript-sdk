@@ -1,17 +1,20 @@
 {
+  "$schema": "http://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "strict": true,
-    "module": "ESNext",
+    "module": "ES2020",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "temp/types",
     "baseUrl": ".",
+    "declaration": true,
+    "declarationMap": true,
     "paths": {
       "*": ["node_modules/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*.ts"]
 }

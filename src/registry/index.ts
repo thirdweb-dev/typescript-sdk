@@ -9,12 +9,12 @@ export interface RegistryControl {
 }
 
 export class RegistrySDK extends Module {
-  private _contract: Registry | null = null;
-  public get contract(): Registry {
-    return this._contract || this.connectContract();
+  private __contract: Registry | null = null;
+  private get contract(): Registry {
+    return this.__contract || this.connectContract();
   }
   private set contract(value: Registry) {
-    this._contract = value;
+    this.__contract = value;
   }
 
   protected connectContract(): Registry {

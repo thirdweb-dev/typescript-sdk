@@ -1,8 +1,8 @@
 import { Contract } from "@ethersproject/contracts";
-import { replaceIpfsWithGateway } from "../common/ipfs";
-import { ProviderOrSigner } from "../core";
+import { ProviderOrSigner } from "../core/types";
 import { NFT, NFTCollection } from "../types";
 import { NotFoundError } from "./error";
+import { replaceIpfsWithGateway } from "./ipfs";
 
 // support erc721 and erc1155
 const tokenUriABI = [
@@ -66,7 +66,8 @@ export async function getMetadataWithoutContract(
     tokenUriABI,
     provider,
   ) as NFTCollection;
-  const uri = await getMetadataUri(contract, tokenId); // contract.uri(tokenId);
+  // contract.uri(tokenId);
+  const uri = await getMetadataUri(contract, tokenId);
   if (!uri) {
     throw new NotFoundError();
   }
@@ -76,7 +77,7 @@ export async function getMetadataWithoutContract(
   const entity: NFTMetadata = {
     ...metadata,
     id: tokenId,
-    uri: uri,
+    uri,
     image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
   };
   return entity;
@@ -87,7 +88,8 @@ export async function getMetadata(
   tokenId: string,
   ipfsGatewayUrl: string,
 ): Promise<NFTMetadata> {
-  const uri = await getMetadataUri(contract, tokenId); // contract.uri(tokenId);
+  // contract.uri(tokenId);
+  const uri = await getMetadataUri(contract, tokenId);
   if (!uri) {
     throw new NotFoundError();
   }
@@ -97,7 +99,7 @@ export async function getMetadata(
   const entity: NFTMetadata = {
     ...metadata,
     id: tokenId,
-    uri: uri,
+    uri,
     image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
   };
   return entity;
@@ -110,11 +112,13 @@ export async function getMetadataUri(
   let uri = "";
   try {
     uri = await contract.tokenURI(tokenId);
+    // eslint-disable-next-line no-empty
   } catch (e) {}
 
   if (!uri) {
     try {
       uri = await (contract as NFTCollection).uri(tokenId);
+      // eslint-disable-next-line no-empty
     } catch (e) {}
   }
 
