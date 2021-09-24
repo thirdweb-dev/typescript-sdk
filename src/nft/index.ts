@@ -1,19 +1,24 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumberish } from "ethers";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
-import { NFTCollection, NFTCollection__factory } from "../types";
+import { NFT, NFT__factory } from "../types";
+
+interface CreateArgs {
+  uri?: string;
+  metadata?: Record<string, any>;
+}
 
 export class NFTSDK extends Module {
-  private _contract: NFTCollection | null = null;
-  public get contract(): NFTCollection {
+  private _contract: NFT | null = null;
+  private get contract(): NFT {
     return this._contract || this.connectContract();
   }
-  private set contract(value: NFTCollection) {
+  private set contract(value: NFT) {
     this._contract = value;
   }
 
-  protected connectContract(): NFTCollection {
-    return (this.contract = NFTCollection__factory.connect(
+  protected connectContract(): NFT {
+    return (this.contract = NFT__factory.connect(
       this.address,
       this.providerOrSigner,
     ));
@@ -30,21 +35,65 @@ export class NFTSDK extends Module {
     );
   }
 
+  public async getOwned(_address?: string): Promise<NFTMetadata[]> {
+    const address = _address ? _address : await this.getSignerAddress();
+    const balance = await this.contract.balanceOf(address);
+    const indices = Array.from(Array(balance).keys());
+    const tokenIds = await Promise.all(
+      indices.map((i) => this.contract.tokenOfOwnerByIndex(address, i)),
+    );
+    return await Promise.all(
+      tokenIds.map((tokenId) => this.get(tokenId.toString())),
+    );
+  }
+
   // passthrough to the contract
-  public balanceOf = async (address: string, tokenId: string) =>
-    this.contract.balanceOf(address, tokenId);
+  public totalSupply = async () => this.contract.totalSupply();
 
-  public balance = async (tokenId: string) =>
-    this.contract.balanceOf(await this.getSignerAddress(), tokenId);
+  public balanceOf = async (address: string) =>
+    this.contract.balanceOf(address);
 
-  public transfer = async (to: string, tokenId: string, amount: BigNumber) => {
-    const tx = await this.contract.safeTransferFrom(
-      await this.getSignerAddress(),
+  public balance = async () =>
+    this.contract.balanceOf(await this.getSignerAddress());
+
+  public isApproved = async (address: string, operator: string) =>
+    this.contract.isApprovedForAll(address, operator);
+
+  public setApproval = async (operator: string, approved = true) => {
+    const tx = await this.contract.setApprovalForAll(operator, approved);
+    await tx.wait();
+  };
+
+  public transfer = async (to: string, tokenId: string) => {
+    const from = await this.getSignerAddress();
+    const tx = await this.contract["safeTransferFrom(address,address,uint256)"](
+      from,
       to,
       tokenId,
-      amount,
-      [0],
     );
+    await tx.wait();
+  };
+
+  // owner functions
+  public mint = async (to: string, args: CreateArgs) => {
+    // TODO
+  };
+
+  public mintBatch = async (to: string, args: CreateArgs[]) => {
+    // TODO
+  };
+
+  public burn = async (tokenId: BigNumberish) => {
+    const tx = await this.contract.burn(tokenId);
+    await tx.wait();
+  };
+
+  public transferFrom = async (
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
+  ) => {
+    const tx = await this.contract.transferFrom(from, to, tokenId);
     await tx.wait();
   };
 }

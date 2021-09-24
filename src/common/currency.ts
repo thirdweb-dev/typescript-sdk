@@ -1,7 +1,7 @@
-import { BigNumber } from "@ethersproject/bignumber";
 import { AddressZero } from "@ethersproject/constants";
 import { formatUnits } from "@ethersproject/units";
-import { ProviderOrSigner } from "../core";
+import { BigNumber } from "ethers";
+import { ProviderOrSigner } from "../core/types";
 import { ERC20__factory } from "../types";
 
 export interface Currency {
@@ -20,7 +20,7 @@ export async function getCurrencyMetadata(
   asset: string,
 ): Promise<Currency> {
   try {
-    if (asset.toLowerCase() != AddressZero) {
+    if (asset.toLowerCase() !== AddressZero) {
       const erc20 = ERC20__factory.connect(asset, providerOrSigner);
       const [name, symbol, decimals] = await Promise.all([
         erc20.name(),
@@ -28,11 +28,12 @@ export async function getCurrencyMetadata(
         erc20.decimals(),
       ]);
       return {
-        name: name,
-        symbol: symbol,
-        decimals: decimals,
+        name,
+        symbol,
+        decimals,
       };
     }
+    // eslint-disable-next-line no-empty
   } catch (e) {}
   return {
     name: "",

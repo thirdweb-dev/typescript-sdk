@@ -19,12 +19,12 @@ export interface ControlContract {
 }
 
 export class ControlSDK extends Module {
-  private _contract: ProtocolControl | null = null;
-  public get contract(): ProtocolControl {
-    return this._contract || this.connectContract();
+  private __contract: ProtocolControl | null = null;
+  private get contract(): ProtocolControl {
+    return this.__contract || this.connectContract();
   }
   private set contract(value: ProtocolControl) {
-    this._contract = value;
+    this.__contract = value;
   }
 
   protected connectContract(): ProtocolControl {
@@ -76,12 +76,20 @@ export class ControlSDK extends Module {
     return await this.getAllContractMetadata(await this.getNFTAddress());
   }
 
-  public async getCoinAddress(): Promise<string[]> {
+  public async getCollectionAddress(): Promise<string[]> {
+    return this.getModuleAddress(ModuleType.NFTCollection);
+  }
+
+  public async getCollectionContracts(): Promise<ControlContract[]> {
+    return await this.getAllContractMetadata(await this.getCollectionAddress());
+  }
+
+  public async getCurrencyAddress(): Promise<string[]> {
     return this.getModuleAddress(ModuleType.Coin);
   }
 
-  public async getCoinContracts(): Promise<ControlContract[]> {
-    return await this.getAllContractMetadata(await this.getCoinAddress());
+  public async getCurrencyContracts(): Promise<ControlContract[]> {
+    return await this.getAllContractMetadata(await this.getCurrencyAddress());
   }
 
   public async getMarketAddress(): Promise<string[]> {

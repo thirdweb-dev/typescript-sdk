@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
+import { BigNumber, BigNumberish } from "ethers";
 import { CurrencyValue, getCurrencyValue } from "../common/currency";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
@@ -23,19 +23,19 @@ export interface Listing {
   tokenMetadata?: NFTMetadata;
   quantity: BigNumber;
   currencyContract: string;
-  currencyMetadata?: CurrencyValue;
+  currencyMetadata: CurrencyValue | null;
   price: BigNumber;
   saleStart: Date | null;
   saleEnd: Date | null;
 }
 
 export class MarketSDK extends Module {
-  private _contract: Market | null = null;
-  public get contract(): Market {
-    return this._contract || this.connectContract();
+  private __contract: Market | null = null;
+  private get contract(): Market {
+    return this.__contract || this.connectContract();
   }
   private set contract(value: Market) {
-    this._contract = value;
+    this.__contract = value;
   }
 
   protected connectContract(): Market {
@@ -54,9 +54,8 @@ export class MarketSDK extends Module {
         listing.currency,
         listing.pricePerToken,
       );
-    } catch (e) {
-      throw e;
-    }
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
 
     let metadata: NFTMetadata | undefined = undefined;
     try {
@@ -66,6 +65,7 @@ export class MarketSDK extends Module {
         listing.tokenId.toString(),
         this.ipfsGatewayUrl,
       );
+      // eslint-disable-next-line no-empty
     } catch (e) {}
 
     return {
@@ -161,8 +161,8 @@ export class MarketSDK extends Module {
     currencyContract: string,
     price: BigNumber,
     quantity: BigNumber,
-    secondsUntilStart: number = 0,
-    secondsUntilEnd: number = 0,
+    secondsUntilStart = 0,
+    secondsUntilEnd = 0,
   ): Promise<Listing> {
     const from = await this.getSignerAddress();
     const asset = ERC1155__factory.connect(
@@ -187,7 +187,6 @@ export class MarketSDK extends Module {
     );
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "NewListing");
-    // const listingId = event?.args?.listingId.toString();
     const listing = event?.args?.listing;
     return await this.transformResultToListing(listing);
   }

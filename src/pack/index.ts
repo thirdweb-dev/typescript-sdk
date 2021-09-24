@@ -1,27 +1,29 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from "ethers";
 import { NotFoundError } from "../common/error";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 import { Pack as PackContract, Pack__factory } from "../types";
 
-export interface Pack extends NFTMetadata {
+export interface PackMetadata {
   creator: string;
   currentSupply: BigNumber;
-  openStart?: Date;
-  openEnd?: Date;
+  openStart: Date | null;
+  openEnd: Date | null;
+  metadata: NFTMetadata;
 }
 
-export interface PackNFT extends NFTMetadata {
+export interface PackNFT {
   supply: BigNumber;
+  metadata: NFTMetadata;
 }
 
 export class PackSDK extends Module {
-  private _contract: PackContract | null = null;
-  public get contract(): PackContract {
-    return this._contract || this.connectContract();
+  private __contract: PackContract | null = null;
+  private get contract(): PackContract {
+    return this.__contract || this.connectContract();
   }
   private set contract(value: PackContract) {
-    this._contract = value;
+    this.__contract = value;
   }
 
   protected connectContract(): PackContract {
@@ -35,17 +37,25 @@ export class PackSDK extends Module {
     const tx = await this.contract.openPack(packId);
     const receipt = await tx.wait();
 
-    const event = receipt?.events?.find(
-      (event) => event.event === "PackOpenRequest",
-    );
-    const { requestId, opener } = (event?.args || {}) as any;
+    const event = receipt?.events?.find((e) => e.event === "PackOpenRequest");
+    const args = event?.args;
+    const requestId = args?.requestId as string;
+    const opener = args?.opener as string;
+    // const { requestId, opener } = (event?.args || {});
 
     const fulfillEvent: any = await new Promise((resolve) => {
       this.contract.once(
+        // eslint-disable-next-line new-cap
         this.contract.filters.PackOpenFulfilled(null, opener),
-        (packId, opener, _requestId, rewardContract, rewardIds) => {
+        (_packId, _opener, _requestId, rewardContract, rewardIds) => {
           if (requestId === _requestId) {
-            resolve({ packId, opener, requestId, rewardContract, rewardIds });
+            resolve({
+              packId: _packId,
+              opener: _opener,
+              requestId,
+              rewardContract,
+              rewardIds,
+            });
           }
         },
       );
@@ -63,7 +73,7 @@ export class PackSDK extends Module {
     );
   }
 
-  public async get(packId: string): Promise<Pack> {
+  public async get(packId: string): Promise<PackMetadata> {
     const [meta, state] = await Promise.all([
       await getMetadataWithoutContract(
         this.providerOrSigner,
@@ -73,21 +83,21 @@ export class PackSDK extends Module {
       ),
       this.contract.getPack(packId),
     ]);
-    const entity: Pack = {
-      ...meta,
+    const entity: PackMetadata = {
+      metadata: meta,
       creator: state.creator,
       currentSupply: state.currentSupply,
       openStart: state.openStart.gt(0)
         ? new Date(state.openStart.toNumber() * 1000)
-        : undefined,
+        : null,
       openEnd: state.openEnd.lte(Number.MAX_SAFE_INTEGER - 1)
         ? new Date(state.openEnd.toNumber() * 1000)
-        : undefined,
+        : null,
     };
     return entity;
   }
 
-  public async getAll(): Promise<Pack[]> {
+  public async getAll(): Promise<PackMetadata[]> {
     const maxId = (await this.contract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
@@ -110,8 +120,8 @@ export class PackSDK extends Module {
       ),
     );
     return rewards.map((reward, i) => ({
-      ...reward,
       supply: packReward.amountsPacked[i],
+      metadata: reward,
     }));
   }
 

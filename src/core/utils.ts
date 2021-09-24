@@ -1,7 +1,7 @@
 import { Provider } from "@ethersproject/providers";
 import invariant from "ts-invariant";
-import type { ProviderOrSigner } from ".";
 import { SupportedChainId } from "./constants";
+import type { ProviderOrSigner } from "./types";
 
 export async function getChainIdByProviderOrSigner(
   providerOrSigner: ProviderOrSigner,
