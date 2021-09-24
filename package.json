@@ -20,7 +20,7 @@
     "build": "microbundle --no-generateTypes --tsconfig tsconfig-microbundle.json",
     "dev": "microbundle watch",
     "format": "prettier src/ --write",
-    "prepublishOnly": "yarn lint && yarn full-build",
+    "prepublishOnly": "yarn lint && yarn generate-docs",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "generate-types": "tsc --emitDeclarationOnly",
