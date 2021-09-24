@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-openStart?: Date;
+openStart: Date | null;
 ```

@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-balance: (tokenId: string) => Promise<BigNumber>;
+balance: () => Promise<import("ethers").BigNumber>;
 ```

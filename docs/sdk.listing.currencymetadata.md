@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-currencyMetadata?: CurrencyValue;
+currencyMetadata: CurrencyValue | null;
 ```

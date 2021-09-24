@@ -7,13 +7,13 @@
 <b>Signature:</b>
 
 ```typescript
-export interface PackNFT extends NFTMetadata 
+export interface PackNFT 
 ```
-<b>Extends:</b> [NFTMetadata](./sdk.nftmetadata.md)
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
+|  [metadata](./sdk.packnft.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [supply](./sdk.packnft.supply.md) | BigNumber |  |
 

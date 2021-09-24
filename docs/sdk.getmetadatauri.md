@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function getMetadataUri(contract: NFTCollection, tokenId: string): Promise<string>;
+export declare function getMetadataUri(contract: NFT | NFTCollection, tokenId: string): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  contract | NFTCollection |  |
+|  contract | NFT \| NFTCollection |  |
 |  tokenId | string |  |
 
 <b>Returns:</b>

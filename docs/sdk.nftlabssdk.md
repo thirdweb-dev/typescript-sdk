@@ -4,7 +4,7 @@
 
 ## NFTLabsSDK class
 
-The entrypoint to the NFTLabsSDK
+The entrypoint to the NFTLabsSDK.
 
 <b>Signature:</b>
 
@@ -23,7 +23,7 @@ export declare class NFTLabsSDK
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [getAppModule(address)](./sdk.nftlabssdk.getappmodule.md) |  |  |
-|  [getCoinModule(address)](./sdk.nftlabssdk.getcoinmodule.md) |  |  |
+|  [getCurrencyModule(address)](./sdk.nftlabssdk.getcurrencymodule.md) |  |  |
 |  [getMarketModule(address)](./sdk.nftlabssdk.getmarketmodule.md) |  |  |
 |  [getNFTModule(address)](./sdk.nftlabssdk.getnftmodule.md) |  |  |
 |  [getPackModule(address)](./sdk.nftlabssdk.getpackmodule.md) |  |  |

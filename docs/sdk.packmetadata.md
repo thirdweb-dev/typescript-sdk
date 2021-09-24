@@ -7,9 +7,8 @@
 <b>Signature:</b>
 
 ```typescript
-export interface PackMetadata extends NFTMetadata 
+export interface PackMetadata 
 ```
-<b>Extends:</b> [NFTMetadata](./sdk.nftmetadata.md)
 
 ## Properties
 
@@ -17,6 +16,7 @@ export interface PackMetadata extends NFTMetadata
 |  --- | --- | --- |
 |  [creator](./sdk.packmetadata.creator.md) | string |  |
 |  [currentSupply](./sdk.packmetadata.currentsupply.md) | BigNumber |  |
-|  [openEnd?](./sdk.packmetadata.openend.md) | Date | <i>(Optional)</i> |
-|  [openStart?](./sdk.packmetadata.openstart.md) | Date | <i>(Optional)</i> |
+|  [metadata](./sdk.packmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) |  |
+|  [openEnd](./sdk.packmetadata.openend.md) | Date \| null |  |
+|  [openStart](./sdk.packmetadata.openstart.md) | Date \| null |  |
 

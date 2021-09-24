@@ -15,9 +15,16 @@ export declare class NFTSDK extends Module
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [balance](./sdk.nftsdk.balance.md) |  | (tokenId: string) =&gt; Promise&lt;BigNumber&gt; |  |
-|  [balanceOf](./sdk.nftsdk.balanceof.md) |  | (address: string, tokenId: string) =&gt; Promise&lt;BigNumber&gt; |  |
-|  [transfer](./sdk.nftsdk.transfer.md) |  | (to: string, tokenId: string, amount: BigNumber) =&gt; Promise&lt;void&gt; |  |
+|  [balance](./sdk.nftsdk.balance.md) |  | () =&gt; Promise&lt;import("ethers").BigNumber&gt; |  |
+|  [balanceOf](./sdk.nftsdk.balanceof.md) |  | (address: string) =&gt; Promise&lt;import("ethers").BigNumber&gt; |  |
+|  [burn](./sdk.nftsdk.burn.md) |  | (tokenId: BigNumberish) =&gt; Promise&lt;void&gt; |  |
+|  [isApproved](./sdk.nftsdk.isapproved.md) |  | (address: string, operator: string) =&gt; Promise&lt;boolean&gt; |  |
+|  [mint](./sdk.nftsdk.mint.md) |  | (to: string, args: CreateArgs) =&gt; Promise&lt;void&gt; |  |
+|  [mintBatch](./sdk.nftsdk.mintbatch.md) |  | (to: string, args: CreateArgs\[\]) =&gt; Promise&lt;void&gt; |  |
+|  [setApproval](./sdk.nftsdk.setapproval.md) |  | (operator: string, approved?: boolean) =&gt; Promise&lt;void&gt; |  |
+|  [totalSupply](./sdk.nftsdk.totalsupply.md) |  | () =&gt; Promise&lt;import("ethers").BigNumber&gt; |  |
+|  [transfer](./sdk.nftsdk.transfer.md) |  | (to: string, tokenId: string) =&gt; Promise&lt;void&gt; |  |
+|  [transferFrom](./sdk.nftsdk.transferfrom.md) |  | (from: string, to: string, tokenId: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 
 ## Methods
 
@@ -26,4 +33,5 @@ export declare class NFTSDK extends Module
 |  [connectContract()](./sdk.nftsdk.connectcontract.md) |  |  |
 |  [get(tokenId)](./sdk.nftsdk.get.md) |  |  |
 |  [getAll()](./sdk.nftsdk.getall.md) |  |  |
+|  [getOwned(\_address)](./sdk.nftsdk.getowned.md) |  |  |
 

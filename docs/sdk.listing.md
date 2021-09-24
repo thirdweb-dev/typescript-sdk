@@ -15,7 +15,7 @@ export interface Listing
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [currencyContract](./sdk.listing.currencycontract.md) | string |  |
-|  [currencyMetadata?](./sdk.listing.currencymetadata.md) | [CurrencyValue](./sdk.currencyvalue.md) | <i>(Optional)</i> |
+|  [currencyMetadata](./sdk.listing.currencymetadata.md) | [CurrencyValue](./sdk.currencyvalue.md) \| null |  |
 |  [id](./sdk.listing.id.md) | string |  |
 |  [price](./sdk.listing.price.md) | BigNumber |  |
 |  [quantity](./sdk.listing.quantity.md) | BigNumber |  |

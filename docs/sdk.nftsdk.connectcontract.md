@@ -7,9 +7,9 @@
 <b>Signature:</b>
 
 ```typescript
-protected connectContract(): NFTCollection;
+protected connectContract(): NFT;
 ```
 <b>Returns:</b>
 
-NFTCollection
+NFT
 

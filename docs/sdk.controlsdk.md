@@ -17,8 +17,10 @@ export declare class ControlSDK extends Module
 |  --- | --- | --- |
 |  [connectContract()](./sdk.controlsdk.connectcontract.md) |  |  |
 |  [getAllContractMetadata(addresses)](./sdk.controlsdk.getallcontractmetadata.md) |  |  |
-|  [getCoinAddress()](./sdk.controlsdk.getcoinaddress.md) |  |  |
-|  [getCoinContracts()](./sdk.controlsdk.getcoincontracts.md) |  |  |
+|  [getCollectionAddress()](./sdk.controlsdk.getcollectionaddress.md) |  |  |
+|  [getCollectionContracts()](./sdk.controlsdk.getcollectioncontracts.md) |  |  |
+|  [getCurrencyAddress()](./sdk.controlsdk.getcurrencyaddress.md) |  |  |
+|  [getCurrencyContracts()](./sdk.controlsdk.getcurrencycontracts.md) |  |  |
 |  [getMarketAddress()](./sdk.controlsdk.getmarketaddress.md) |  |  |
 |  [getMarketContracts()](./sdk.controlsdk.getmarketcontracts.md) |  |  |
 |  [getNFTAddress()](./sdk.controlsdk.getnftaddress.md) |  |  |

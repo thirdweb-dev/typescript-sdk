@@ -8,10 +8,10 @@
 
 |  Class | Description |
 |  --- | --- |
-|  [CoinSDK](./sdk.coinsdk.md) |  |
 |  [ControlSDK](./sdk.controlsdk.md) |  |
+|  [CurrencySDK](./sdk.currencysdk.md) |  |
 |  [MarketSDK](./sdk.marketsdk.md) |  |
-|  [NFTLabsSDK](./sdk.nftlabssdk.md) | The entrypoint to the NFTLabsSDK |
+|  [NFTLabsSDK](./sdk.nftlabssdk.md) | The entrypoint to the NFTLabsSDK. |
 |  [NFTSDK](./sdk.nftsdk.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) |  |
 |  [PackSDK](./sdk.packsdk.md) |  |
@@ -34,6 +34,7 @@
 |  [getMetadataUri(contract, tokenId)](./sdk.getmetadatauri.md) |  |
 |  [getMetadataWithoutContract(provider, contractAddress, tokenId, ipfsGatewayUrl)](./sdk.getmetadatawithoutcontract.md) |  |
 |  [replaceIpfsWithGateway(ipfsUrl, gatewayUrl)](./sdk.replaceipfswithgateway.md) |  |
+|  [uploadJson()](./sdk.uploadjson.md) |  |
 
 ## Interfaces
 

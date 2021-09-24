@@ -31,7 +31,7 @@ type AnyContract =
 
 /**
  * @public
- * The entrypoint to the NFTLabsSDK
+ * The entrypoint to the NFTLabsSDK.
  */
 export class NFTLabsSDK {
   private ipfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/";

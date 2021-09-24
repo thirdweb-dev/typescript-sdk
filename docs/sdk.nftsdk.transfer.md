@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-transfer: (to: string, tokenId: string, amount: BigNumber) => Promise<void>;
+transfer: (to: string, tokenId: string) => Promise<void>;
 ```
