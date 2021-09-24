@@ -1,8 +1,9 @@
 import { Provider } from "@ethersproject/providers";
 import { ethers, Signer } from "ethers";
 import type { C } from "ts-toolbelt";
-import { CoinSDK } from "../coin";
+import { CollectionSDK } from "../collection";
 import { ControlSDK } from "../control";
+import { CurrencySDK } from "../currency";
 import { MarketSDK } from "../market";
 import { NFTSDK } from "../nft";
 import { PackSDK } from "../pack";
@@ -21,8 +22,9 @@ export interface ISDKOptions {
 
 type AnyContract =
   | typeof ControlSDK
+  | typeof CollectionSDK
   | typeof NFTSDK
-  | typeof CoinSDK
+  | typeof CurrencySDK
   | typeof MarketSDK
   | typeof PackSDK
   | typeof RegistrySDK;
@@ -135,11 +137,11 @@ export class NFTLabsSDK {
 
   /**
    *
-   * @param address - The contract address of the given Coin module.
-   * @returns The Coin Module.
+   * @param address - The contract address of the given Currency module.
+   * @returns The Currency Module.
    */
-  public getCoinModule(address: string): CoinSDK {
-    return this.getOrCreateModule(address, CoinSDK);
+  public getCurrencyModule(address: string): CurrencySDK {
+    return this.getOrCreateModule(address, CurrencySDK);
   }
 
   /**

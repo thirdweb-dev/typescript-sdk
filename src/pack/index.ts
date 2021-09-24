@@ -4,15 +4,17 @@ import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 import { Pack as PackContract, Pack__factory } from "../types";
 
-export interface PackMetadata extends NFTMetadata {
+export interface PackMetadata {
   creator: string;
   currentSupply: BigNumber;
-  openStart?: Date;
-  openEnd?: Date;
+  openStart: Date | null;
+  openEnd: Date | null;
+  metadata: NFTMetadata;
 }
 
-export interface PackNFT extends NFTMetadata {
+export interface PackNFT {
   supply: BigNumber;
+  metadata: NFTMetadata;
 }
 
 export class PackSDK extends Module {
@@ -82,15 +84,15 @@ export class PackSDK extends Module {
       this.contract.getPack(packId),
     ]);
     const entity: PackMetadata = {
-      ...meta,
+      metadata: meta,
       creator: state.creator,
       currentSupply: state.currentSupply,
       openStart: state.openStart.gt(0)
         ? new Date(state.openStart.toNumber() * 1000)
-        : undefined,
+        : null,
       openEnd: state.openEnd.lte(Number.MAX_SAFE_INTEGER - 1)
         ? new Date(state.openEnd.toNumber() * 1000)
-        : undefined,
+        : null,
     };
     return entity;
   }
@@ -118,8 +120,8 @@ export class PackSDK extends Module {
       ),
     );
     return rewards.map((reward, i) => ({
-      ...reward,
       supply: packReward.amountsPacked[i],
+      metadata: reward,
     }));
   }
 

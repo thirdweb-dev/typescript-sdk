@@ -46,6 +46,7 @@
     "eslint-plugin-inclusive-language": "^2.1.1",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-tsdoc": "^0.2.14",
+    "@types/node-fetch": "^3.0.3",
     "ethers": "^5.4.7",
     "microbundle": "^0.13.3",
     "prettier": "^2.4.1",
@@ -57,6 +58,7 @@
     "ethers": "^5.4.6"
   },
   "dependencies": {
+    "node-fetch": "^3.0.0",
     "ts-invariant": "^0.9.3"
   },
   "resolutions": {

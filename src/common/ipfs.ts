@@ -7,3 +7,5 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
   }
   return ipfsUrl.replace("ipfs://", gatewayUrl);
 }
+
+export function uploadJson() {}

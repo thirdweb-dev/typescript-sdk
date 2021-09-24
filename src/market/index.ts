@@ -23,7 +23,7 @@ export interface Listing {
   tokenMetadata?: NFTMetadata;
   quantity: BigNumber;
   currencyContract: string;
-  currencyMetadata?: CurrencyValue;
+  currencyMetadata: CurrencyValue | null;
   price: BigNumber;
   saleStart: Date | null;
   saleEnd: Date | null;
@@ -48,11 +48,14 @@ export class MarketSDK extends Module {
   private async transformResultToListing(listing: any): Promise<Listing> {
     let currency: CurrencyValue | null = null;
 
-    currency = await getCurrencyValue(
-      this.providerOrSigner,
-      listing.currency,
-      listing.pricePerToken,
-    );
+    try {
+      currency = await getCurrencyValue(
+        this.providerOrSigner,
+        listing.currency,
+        listing.pricePerToken,
+      );
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
 
     let metadata: NFTMetadata | undefined = undefined;
     try {
@@ -184,7 +187,6 @@ export class MarketSDK extends Module {
     );
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "NewListing");
-    // const listingId = event?.args?.listingId.toString();
     const listing = event?.args?.listing;
     return await this.transformResultToListing(listing);
   }
