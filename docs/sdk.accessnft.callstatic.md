@@ -16,17 +16,6 @@ callStatic: {
 
     _contractURI(overrides?: CallOverrides): Promise<string>;
 
-    accessNftInfo(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, BigNumber] & {
-        creator: string;
-        uri: string;
-        supply: BigNumber;
-      }
-    >;
-
     balanceOf(
       account: string,
       id: BigNumberish,
@@ -105,6 +94,11 @@ callStatic: {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    isRedeemed(
+      _nftId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -132,14 +126,33 @@ callStatic: {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, BigNumber, number] & {
+      [string, string, BigNumber, boolean, BigNumber, number] & {
         creator: string;
         uri: string;
         supply: BigNumber;
+        isAccess: boolean;
         accessNftId: BigNumber;
         underlyingType: number;
       }
     >;
+
+    onERC1155BatchReceived(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish[],
+      arg3: BigNumberish[],
+      arg4: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    onERC1155Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BigNumberish,
+      arg4: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     pause(overrides?: CallOverrides): Promise<void>;
 

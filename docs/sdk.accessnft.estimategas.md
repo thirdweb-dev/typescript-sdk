@@ -16,11 +16,6 @@ estimateGas: {
 
     _contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
-    accessNftInfo(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     balanceOf(
       account: string,
       id: BigNumberish,
@@ -102,6 +97,11 @@ estimateGas: {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    isRedeemed(
+      _nftId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -126,6 +126,24 @@ estimateGas: {
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
     nftInfo(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    onERC1155BatchReceived(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish[],
+      arg3: BigNumberish[],
+      arg4: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    onERC1155Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BigNumberish,
+      arg4: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }

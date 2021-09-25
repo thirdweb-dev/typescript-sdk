@@ -26,10 +26,10 @@ export const CONTRACT_ADDRESSES: Record<
   Record<"registry", string>
 > = {
   [ChainId.Polygon]: {
-    registry: "0x06aD00C173012AAd5Eea4Ec5b3737fB6a6dFDDf6",
+    registry: "0xf40Ab69F97AC674060D2506424E234D9e094E693",
   },
   [ChainId.Mumbai]: {
-    registry: "0x2e494c9dD341C2C5AA182145175fa666341F8B7f",
+    registry: "0xAaf23C2043e5BFEb1092ed3411cc11f51039E996",
   },
 };
 

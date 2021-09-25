@@ -27,6 +27,11 @@ export interface ISDKOptions {
    * An optional IPFS Gateway. (Default: `https://cloudflare-ipfs.com/ipfs/`).
    */
   ipfsGatewayUrl?: string;
+
+  /**
+   * Optional Contract Address
+   */
+  registryContractAddress?: string;
 }
 
 type AnyContract =
@@ -44,6 +49,7 @@ type AnyContract =
  */
 export class NFTLabsSDK {
   private ipfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/";
+  private registryContractAddress = "";
   private modules = new Map<string, C.Instance<AnyContract>>();
   private providerOrSigner: ProviderOrSigner;
   private signer: Signer | null = null;
@@ -62,6 +68,9 @@ export class NFTLabsSDK {
     this.providerOrSigner = this.setProviderOrSigner(providerOrNetwork);
     if (opts?.ipfsGatewayUrl) {
       this.ipfsGatewayUrl = opts.ipfsGatewayUrl;
+    }
+    if (opts?.registryContractAddress) {
+      this.registryContractAddress = opts.registryContractAddress;
     }
   }
   private async updateModuleSigners() {
@@ -85,6 +94,9 @@ export class NFTLabsSDK {
   }
 
   private async getRegistryAddress(): Promise<string | undefined> {
+    if (this.registryContractAddress) {
+      return this.registryContractAddress;
+    }
     return getContractAddressByChainId(
       (await this.getChainID()) as SUPPORTED_CHAIN_ID,
     );

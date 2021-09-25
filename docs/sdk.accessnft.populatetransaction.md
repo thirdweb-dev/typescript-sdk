@@ -18,11 +18,6 @@ populateTransaction: {
 
     _contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    accessNftInfo(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     balanceOf(
       account: string,
       id: BigNumberish,
@@ -104,6 +99,11 @@ populateTransaction: {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    isRedeemed(
+      _nftId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -130,6 +130,24 @@ populateTransaction: {
     nftInfo(
       arg0: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    onERC1155BatchReceived(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish[],
+      arg3: BigNumberish[],
+      arg4: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    onERC1155Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BigNumberish,
+      arg4: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     pause(

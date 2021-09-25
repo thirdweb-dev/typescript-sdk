@@ -18,6 +18,7 @@ export declare class AppModule extends Module
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [setModuleMetadata](./sdk.appmodule.setmodulemetadata.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
+|  [setOwnerTreasury](./sdk.appmodule.setownertreasury.md) |  | (treasury: string) =&gt; Promise&lt;void&gt; |  |
 
 ## Methods
 

@@ -17,4 +17,5 @@ export interface ISDKOptions
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [ipfsGatewayUrl?](./sdk.isdkoptions.ipfsgatewayurl.md) | string | <i>(Optional)</i> An optional IPFS Gateway. (Default: <code>https://cloudflare-ipfs.com/ipfs/</code>). |
+|  [registryContractAddress?](./sdk.isdkoptions.registrycontractaddress.md) | string | <i>(Optional)</i> Optional Contract Address |
 

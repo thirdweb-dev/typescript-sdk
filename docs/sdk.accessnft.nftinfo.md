@@ -11,10 +11,11 @@ nftInfo(
     arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, BigNumber, BigNumber, number] & {
+    [string, string, BigNumber, boolean, BigNumber, number] & {
       creator: string;
       uri: string;
       supply: BigNumber;
+      isAccess: boolean;
       accessNftId: BigNumber;
       underlyingType: number;
     }
@@ -30,5 +31,5 @@ nftInfo(
 
 <b>Returns:</b>
 
-Promise&lt; \[string, string, BigNumber, BigNumber, number\] &amp; { creator: string; uri: string; supply: BigNumber; accessNftId: BigNumber; underlyingType: number; } &gt;
+Promise&lt; \[string, string, BigNumber, boolean, BigNumber, number\] &amp; { creator: string; uri: string; supply: BigNumber; isAccess: boolean; accessNftId: BigNumber; underlyingType: number; } &gt;
 
