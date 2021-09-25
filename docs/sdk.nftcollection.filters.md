@@ -184,14 +184,6 @@ filters: {
       }
     >;
 
-    "NftRoyaltyUpdated(uint256)"(
-      royaltyBps?: null
-    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
-
-    NftRoyaltyUpdated(
-      royaltyBps?: null
-    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
-
     "Paused(address)"(
       account?: null
     ): TypedEventFilter<[string], { account: string }>;
@@ -251,6 +243,14 @@ filters: {
       [string, string, string],
       { role: string; account: string; sender: string }
     >;
+
+    "RoyaltyUpdated(uint256)"(
+      royaltyBps?: null
+    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
+
+    RoyaltyUpdated(
+      royaltyBps?: null
+    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
 
     "TransferBatch(address,address,address,uint256[],uint256[])"(
       operator?: string | null,

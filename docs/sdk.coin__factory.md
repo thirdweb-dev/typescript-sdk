@@ -7,19 +7,31 @@
 <b>Signature:</b>
 
 ```typescript
-export declare class Coin__factory 
+export declare class Coin__factory extends ContractFactory 
 ```
+<b>Extends:</b> ContractFactory
+
+## Constructors
+
+|  Constructor | Modifiers | Description |
+|  --- | --- | --- |
+|  [(constructor)(signer)](./sdk.coin__factory._constructor_.md) |  | Constructs a new instance of the <code>Coin__factory</code> class |
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [abi](./sdk.coin__factory.abi.md) | <code>static</code> | ({ inputs: { internalType: string; name: string; type: string; }\[\]; stateMutability: string; type: string; anonymous?: undefined; name?: undefined; outputs?: undefined; } \| { anonymous: boolean; inputs: { indexed: boolean; internalType: string; name: string; type: string; }\[\]; name: string; type: string; stateMutability?: undefined; outputs?: undefined; } \| { inputs: { internalType: string; name: string; type: string; }\[\]; name: string; outputs: { internalType: string; name: string; type: string; }\[\]; stateMutability: string; type: string; anonymous?: undefined; })\[\] |  |
+|  [bytecode](./sdk.coin__factory.bytecode.md) | <code>static</code> | (not declared) |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [attach(address)](./sdk.coin__factory.attach.md) |  |  |
+|  [connect(signer)](./sdk.coin__factory.connect.md) |  |  |
 |  [connect(address, signerOrProvider)](./sdk.coin__factory.connect.md) | <code>static</code> |  |
 |  [createInterface()](./sdk.coin__factory.createinterface.md) | <code>static</code> |  |
+|  [deploy(\_controlCenter, \_name, \_symbol, \_trustedForwarder, \_uri, overrides)](./sdk.coin__factory.deploy.md) |  |  |
+|  [getDeployTransaction(\_controlCenter, \_name, \_symbol, \_trustedForwarder, \_uri, overrides)](./sdk.coin__factory.getdeploytransaction.md) |  |  |
 

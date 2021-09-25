@@ -80,9 +80,20 @@ functions: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    mintNFTBatch(
+      _to: string,
+      _uris: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     name(overrides?: CallOverrides): Promise<[string]>;
 
     nextTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    nftCreator(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     nftURI(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
@@ -109,6 +120,16 @@ functions: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    royaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    royaltyInfo(
+      tokenId: BigNumberish,
+      salePrice: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
+    >;
+
     "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
@@ -132,6 +153,11 @@ functions: {
 
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setRoyaltyBps(
+      _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 

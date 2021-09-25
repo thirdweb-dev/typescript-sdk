@@ -147,8 +147,6 @@ callStatic: {
       }
     >;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     pause(overrides?: CallOverrides): Promise<void>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
@@ -175,6 +173,8 @@ callStatic: {
       account: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -210,7 +210,7 @@ callStatic: {
 
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
 
-    setNftRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;

@@ -83,9 +83,20 @@ estimateGas: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    mintNFTBatch(
+      _to: string,
+      _uris: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nftCreator(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     nftURI(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -112,6 +123,14 @@ estimateGas: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
+
+    royaltyInfo(
+      tokenId: BigNumberish,
+      salePrice: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
@@ -135,6 +154,11 @@ estimateGas: {
 
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setRoyaltyBps(
+      _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 

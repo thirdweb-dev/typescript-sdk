@@ -65,6 +65,8 @@ estimateGas: {
 
     listings(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
+    marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -93,6 +95,11 @@ estimateGas: {
 
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setMarketFeeBps(
+      feeBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 

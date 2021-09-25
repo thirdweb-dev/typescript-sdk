@@ -12,9 +12,11 @@ callStatic: {
 
     MAX_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
-    NFTLABS(overrides?: CallOverrides): Promise<string>;
+    MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
     PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<string>;
+
+    PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<string>;
 
     _contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -45,20 +47,22 @@ callStatic: {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<number>;
 
     modules(arg0: BytesLike, overrides?: CallOverrides): Promise<string>;
-
-    nftlabsTreasury(overrides?: CallOverrides): Promise<string>;
 
     numOfModuleType(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    ownerTreasury(overrides?: CallOverrides): Promise<string>;
+
     pauseProtocol(_toPause: boolean, overrides?: CallOverrides): Promise<void>;
+
+    providerFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
+    providerTreasury(overrides?: CallOverrides): Promise<string>;
 
     renounceRole(
       role: BytesLike,
@@ -88,18 +92,23 @@ callStatic: {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    updateMarketFeeBps(
-      _newFeeBps: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    updateNftlabsTreasury(
+    updateOwnerTreasury(
+      _newTreasury: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updateProviderFeeBps(
+      _newFeeBps: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updateProviderTreasury(
       _newTreasury: string,
       overrides?: CallOverrides
     ): Promise<void>;

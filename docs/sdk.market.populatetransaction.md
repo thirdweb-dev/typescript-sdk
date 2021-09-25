@@ -68,6 +68,8 @@ populateTransaction: {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    marketFeeBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -96,6 +98,11 @@ populateTransaction: {
 
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMarketFeeBps(
+      feeBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

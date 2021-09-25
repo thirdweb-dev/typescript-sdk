@@ -23,7 +23,7 @@ export declare class PackModule extends Module
 |  [isApproved](./sdk.packmodule.isapproved.md) |  | (address: string, operator: string) =&gt; Promise&lt;boolean&gt; |  |
 |  [moduleType](./sdk.packmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
 |  [setApproval](./sdk.packmodule.setapproval.md) |  | (operator: string, approved?: boolean) =&gt; Promise&lt;void&gt; |  |
-|  [setContractURI](./sdk.packmodule.setcontracturi.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
+|  [setModuleMetadata](./sdk.packmodule.setmodulemetadata.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
 |  [setRoyaltyBps](./sdk.packmodule.setroyaltybps.md) |  | (amount: number) =&gt; Promise&lt;void&gt; |  |
 |  [transfer](./sdk.packmodule.transfer.md) |  | (to: string, tokenId: string, amount: BigNumber) =&gt; Promise&lt;void&gt; |  |
 |  [transferBatchFrom](./sdk.packmodule.transferbatchfrom.md) |  | (from: string, to: string, args: [IPackBatchArgs](./sdk.ipackbatchargs.md)<!-- -->\[\], data?: BytesLike) =&gt; Promise&lt;void&gt; |  |
@@ -37,5 +37,7 @@ export declare class PackModule extends Module
 |  [get(packId)](./sdk.packmodule.get.md) |  |  |
 |  [getAll()](./sdk.packmodule.getall.md) |  |  |
 |  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  |  |
+|  [grantRole(role, address)](./sdk.packmodule.grantrole.md) |  |  |
 |  [open(packId)](./sdk.packmodule.open.md) |  |  |
+|  [revokeRole(role, address)](./sdk.packmodule.revokerole.md) |  |  |
 

@@ -130,21 +130,13 @@ filters: {
       }
     >;
 
-    "MarketFeesUpdated(uint256,uint256)"(
-      protocolFeeBps?: null,
-      creatorFeeBps?: null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber],
-      { protocolFeeBps: BigNumber; creatorFeeBps: BigNumber }
-    >;
+    "MarketFeeUpdate(uint128)"(
+      newFee?: null
+    ): TypedEventFilter<[BigNumber], { newFee: BigNumber }>;
 
-    MarketFeesUpdated(
-      protocolFeeBps?: null,
-      creatorFeeBps?: null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber],
-      { protocolFeeBps: BigNumber; creatorFeeBps: BigNumber }
-    >;
+    MarketFeeUpdate(
+      newFee?: null
+    ): TypedEventFilter<[BigNumber], { newFee: BigNumber }>;
 
     "NewListing(address,address,uint256,tuple)"(
       assetContract?: string | null,
@@ -279,7 +271,7 @@ filters: {
       seller?: string | null,
       listingId?: BigNumberish | null,
       buyer?: null,
-      quanitytBought?: null,
+      quantity?: null,
       listing?: null
     ): TypedEventFilter<
       [
@@ -317,7 +309,7 @@ filters: {
         seller: string;
         listingId: BigNumber;
         buyer: string;
-        quanitytBought: BigNumber;
+        quantity: BigNumber;
         listing: [
           BigNumber,
           string,
@@ -349,7 +341,7 @@ filters: {
       seller?: string | null,
       listingId?: BigNumberish | null,
       buyer?: null,
-      quanitytBought?: null,
+      quantity?: null,
       listing?: null
     ): TypedEventFilter<
       [
@@ -387,7 +379,7 @@ filters: {
         seller: string;
         listingId: BigNumber;
         buyer: string;
-        quanitytBought: BigNumber;
+        quantity: BigNumber;
         listing: [
           BigNumber,
           string,

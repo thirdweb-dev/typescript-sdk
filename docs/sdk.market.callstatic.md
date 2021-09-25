@@ -214,6 +214,8 @@ callStatic: {
       }
     >;
 
+    marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -241,6 +243,11 @@ callStatic: {
     ): Promise<string>;
 
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
+
+    setMarketFeeBps(
+      feeBps: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     supportsInterface(
       interfaceId: BytesLike,

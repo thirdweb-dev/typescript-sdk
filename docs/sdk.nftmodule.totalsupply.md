@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-totalSupply: () => Promise<import("ethers").BigNumber>;
+totalSupply: () => Promise<BigNumber>;
 ```

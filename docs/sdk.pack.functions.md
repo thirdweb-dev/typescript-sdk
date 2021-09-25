@@ -184,8 +184,6 @@ functions: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    packRoyaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     packs(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -235,6 +233,8 @@ functions: {
       [string, BigNumber] & { source: string; rewardsPerOpen: BigNumber }
     >;
 
+    royaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     royaltyInfo(
       tokenId: BigNumberish,
       salePrice: BigNumberish,
@@ -277,7 +277,7 @@ functions: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setPackRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;

@@ -135,8 +135,6 @@ estimateGas: {
 
     nftInfo(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -165,6 +163,8 @@ estimateGas: {
       account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -201,7 +201,7 @@ estimateGas: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setNftRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;

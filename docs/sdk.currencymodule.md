@@ -25,7 +25,7 @@ export declare class CurrencyModule extends Module
 |  [mint](./sdk.currencymodule.mint.md) |  | (to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 |  [moduleType](./sdk.currencymodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
 |  [setAllowance](./sdk.currencymodule.setallowance.md) |  | (spender: string, amount: BigNumber) =&gt; Promise&lt;void&gt; |  |
-|  [setContractURI](./sdk.currencymodule.setcontracturi.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
+|  [setModuleMetadata](./sdk.currencymodule.setmodulemetadata.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
 |  [transfer](./sdk.currencymodule.transfer.md) |  | (to: string, amount: BigNumber) =&gt; Promise&lt;void&gt; |  |
 |  [transferFrom](./sdk.currencymodule.transferfrom.md) |  | (from: string, to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 
@@ -35,4 +35,6 @@ export declare class CurrencyModule extends Module
 |  --- | --- | --- |
 |  [get()](./sdk.currencymodule.get.md) |  |  |
 |  [getValue(value)](./sdk.currencymodule.getvalue.md) |  |  |
+|  [grantRole(role, address)](./sdk.currencymodule.grantrole.md) |  |  |
+|  [revokeRole(role, address)](./sdk.currencymodule.revokerole.md) |  |  |
 

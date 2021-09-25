@@ -147,8 +147,6 @@ functions: {
       }
     >;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -177,6 +175,8 @@ functions: {
       account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -215,7 +215,7 @@ functions: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setNftRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;

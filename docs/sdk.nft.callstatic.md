@@ -77,9 +77,17 @@ callStatic: {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    mintNFTBatch(
+      _to: string,
+      _uris: string[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     name(overrides?: CallOverrides): Promise<string>;
 
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nftCreator(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     nftURI(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -100,6 +108,16 @@ callStatic: {
       account: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
+
+    royaltyInfo(
+      tokenId: BigNumberish,
+      salePrice: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
+    >;
 
     "safeTransferFrom(address,address,uint256)"(
       from: string,
@@ -123,6 +141,11 @@ callStatic: {
     ): Promise<void>;
 
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
+
+    setRoyaltyBps(
+      _royaltyBps: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     supportsInterface(
       interfaceId: BytesLike,

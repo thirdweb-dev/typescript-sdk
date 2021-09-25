@@ -147,8 +147,6 @@ populateTransaction: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    packRoyaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     packs(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -187,6 +185,8 @@ populateTransaction: {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -228,7 +228,7 @@ populateTransaction: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setPackRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

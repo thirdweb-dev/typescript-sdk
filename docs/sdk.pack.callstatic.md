@@ -168,8 +168,6 @@ callStatic: {
 
     openPack(_packId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    packRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     packs(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -217,6 +215,8 @@ callStatic: {
       [string, BigNumber] & { source: string; rewardsPerOpen: BigNumber }
     >;
 
+    royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
+
     royaltyInfo(
       tokenId: BigNumberish,
       salePrice: BigNumberish,
@@ -256,7 +256,7 @@ callStatic: {
 
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
 
-    setPackRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;

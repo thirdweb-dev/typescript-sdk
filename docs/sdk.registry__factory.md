@@ -7,19 +7,31 @@
 <b>Signature:</b>
 
 ```typescript
-export declare class Registry__factory 
+export declare class Registry__factory extends ContractFactory 
 ```
+<b>Extends:</b> ContractFactory
+
+## Constructors
+
+|  Constructor | Modifiers | Description |
+|  --- | --- | --- |
+|  [(constructor)(signer)](./sdk.registry__factory._constructor_.md) |  | Constructs a new instance of the <code>Registry__factory</code> class |
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [abi](./sdk.registry__factory.abi.md) | <code>static</code> | ({ inputs: { internalType: string; name: string; type: string; }\[\]; stateMutability: string; type: string; anonymous?: undefined; name?: undefined; outputs?: undefined; } \| { anonymous: boolean; inputs: { indexed: boolean; internalType: string; name: string; type: string; }\[\]; name: string; type: string; stateMutability?: undefined; outputs?: undefined; } \| { inputs: { internalType: string; name: string; type: string; }\[\]; name: string; outputs: { internalType: string; name: string; type: string; }\[\]; stateMutability: string; type: string; anonymous?: undefined; })\[\] |  |
+|  [bytecode](./sdk.registry__factory.bytecode.md) | <code>static</code> | (not declared) |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [attach(address)](./sdk.registry__factory.attach.md) |  |  |
+|  [connect(signer)](./sdk.registry__factory.connect.md) |  |  |
 |  [connect(address, signerOrProvider)](./sdk.registry__factory.connect.md) | <code>static</code> |  |
 |  [createInterface()](./sdk.registry__factory.createinterface.md) | <code>static</code> |  |
+|  [deploy(\_nftlabs, overrides)](./sdk.registry__factory.deploy.md) |  |  |
+|  [getDeployTransaction(\_nftlabs, overrides)](./sdk.registry__factory.getdeploytransaction.md) |  |  |
 

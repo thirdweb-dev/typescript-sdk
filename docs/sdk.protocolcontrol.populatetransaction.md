@@ -14,9 +14,13 @@ populateTransaction: {
 
     MAX_BPS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    NFTLABS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    MAX_PROVIDER_FEE_BPS(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     _contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -50,8 +54,6 @@ populateTransaction: {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    marketFeeBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     moduleType(
       arg0: BytesLike,
       overrides?: CallOverrides
@@ -62,17 +64,21 @@ populateTransaction: {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    nftlabsTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     numOfModuleType(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    ownerTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     pauseProtocol(
       _toPause: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    providerFeeBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    providerTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceRole(
       role: BytesLike,
@@ -105,18 +111,23 @@ populateTransaction: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    updateMarketFeeBps(
-      _newFeeBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    updateNftlabsTreasury(
+    updateOwnerTreasury(
+      _newTreasury: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateProviderFeeBps(
+      _newFeeBps: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateProviderTreasury(
       _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

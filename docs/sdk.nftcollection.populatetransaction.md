@@ -140,8 +140,6 @@ populateTransaction: {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    nftRoyaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -170,6 +168,8 @@ populateTransaction: {
       account: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -206,7 +206,7 @@ populateTransaction: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setNftRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

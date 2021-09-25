@@ -12,9 +12,11 @@ estimateGas: {
 
     MAX_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
-    NFTLABS(overrides?: CallOverrides): Promise<BigNumber>;
+    MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
     PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<BigNumber>;
+
+    PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<BigNumber>;
 
     _contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -48,23 +50,25 @@ estimateGas: {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     modules(arg0: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
-
-    nftlabsTreasury(overrides?: CallOverrides): Promise<BigNumber>;
 
     numOfModuleType(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    ownerTreasury(overrides?: CallOverrides): Promise<BigNumber>;
+
     pauseProtocol(
       _toPause: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    providerFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
+    providerTreasury(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceRole(
       role: BytesLike,
@@ -97,18 +101,23 @@ estimateGas: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    updateMarketFeeBps(
-      _newFeeBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    updateNftlabsTreasury(
+    updateOwnerTreasury(
+      _newTreasury: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updateProviderFeeBps(
+      _newFeeBps: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updateProviderTreasury(
       _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;

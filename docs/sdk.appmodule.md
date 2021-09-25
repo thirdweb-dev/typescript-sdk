@@ -13,6 +13,12 @@ export declare class AppModule extends Module
 ```
 <b>Extends:</b> Module
 
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [setModuleMetadata](./sdk.appmodule.setmodulemetadata.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
+
 ## Methods
 
 |  Method | Modifiers | Description |

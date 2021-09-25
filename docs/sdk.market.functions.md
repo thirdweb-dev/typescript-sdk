@@ -344,6 +344,8 @@ functions: {
       }
     >;
 
+    marketFeeBps(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -372,6 +374,11 @@ functions: {
 
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setMarketFeeBps(
+      feeBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 

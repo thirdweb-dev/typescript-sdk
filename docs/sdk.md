@@ -8,6 +8,8 @@
 
 |  Class | Description |
 |  --- | --- |
+|  [AccessNFT\_\_factory](./sdk.accessnft__factory.md) |  |
+|  [AccessNFT](./sdk.accessnft.md) |  |
 |  [AppModule](./sdk.appmodule.md) | The AppModule. This should always be created via <code>getAppModule()</code> on the main SDK. |
 |  [Coin\_\_factory](./sdk.coin__factory.md) |  |
 |  [Coin](./sdk.coin.md) |  |
@@ -28,7 +30,7 @@
 |  [NFTCollection\_\_factory](./sdk.nftcollection__factory.md) |  |
 |  [NFTCollection](./sdk.nftcollection.md) |  |
 |  [NFTLabsSDK](./sdk.nftlabssdk.md) | The entrypoint to the NFTLabsSDK. |
-|  [NFTModule](./sdk.nftmodule.md) | The MarketModule. This should always be created via <code>getMarketModule()</code> on the main SDK. |
+|  [NFTModule](./sdk.nftmodule.md) | The NFTModule. This should always be created via <code>getNFTModule()</code> on the main SDK. |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [Pack\_\_factory](./sdk.pack__factory.md) |  |
 |  [Pack](./sdk.pack.md) |  |
@@ -50,6 +52,7 @@
 |  --- | --- |
 |  [convertModuleTypeToName(moduleType)](./sdk.convertmoduletypetoname.md) |  |
 |  [convertNameToModuleType(moduleName)](./sdk.convertnametomoduletype.md) |  |
+|  [getRoleHash(role)](./sdk.getrolehash.md) |  |
 
 ## Interfaces
 
@@ -80,5 +83,6 @@
 |  --- | --- |
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |
 |  [ProviderOrSigner](./sdk.providerorsigner.md) | A valid "ethers" Provider or Signer. |
+|  [Role](./sdk.role.md) |  |
 |  [ValidProviderInput](./sdk.validproviderinput.md) | A valid "ethers" Provider, Signer or a Network object or url address to create a Provider with. |
 

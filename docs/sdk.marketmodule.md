@@ -17,17 +17,19 @@ export declare class MarketModule extends Module
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
+|  [getMarketFeeBps](./sdk.marketmodule.getmarketfeebps.md) |  | () =&gt; Promise&lt;BigNumber&gt; |  |
 |  [moduleType](./sdk.marketmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [setModuleMetadata](./sdk.marketmodule.setmodulemetadata.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [buy(listingId, quantity)](./sdk.marketmodule.buy.md) |  |  |
-|  [get(listingId)](./sdk.marketmodule.get.md) |  |  |
-|  [getAll(filter)](./sdk.marketmodule.getall.md) |  |  |
+|  [getAllListings(filter)](./sdk.marketmodule.getalllistings.md) |  |  |
+|  [getListing(listingId)](./sdk.marketmodule.getlisting.md) |  |  |
 |  [list(assetContract, tokenId, currencyContract, price, quantity, secondsUntilStart, secondsUntilEnd)](./sdk.marketmodule.list.md) |  |  |
-|  [setContractURI(metadata)](./sdk.marketmodule.setcontracturi.md) |  |  |
+|  [setMarketFeeBps(fee)](./sdk.marketmodule.setmarketfeebps.md) |  |  |
 |  [unlist(listingId, quantity)](./sdk.marketmodule.unlist.md) |  |  |
 |  [unlistAll(listingId)](./sdk.marketmodule.unlistall.md) |  |  |
 

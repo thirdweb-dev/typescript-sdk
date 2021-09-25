@@ -44,22 +44,44 @@ filters: {
       { owner: string; operator: string; approved: boolean }
     >;
 
-    "Minted(address,uint256,string)"(
+    "Minted(address,address,uint256,string)"(
+      creator?: string | null,
       to?: string | null,
       tokenId?: null,
       tokenURI?: null
     ): TypedEventFilter<
-      [string, BigNumber, string],
-      { to: string; tokenId: BigNumber; tokenURI: string }
+      [string, string, BigNumber, string],
+      { creator: string; to: string; tokenId: BigNumber; tokenURI: string }
     >;
 
     Minted(
+      creator?: string | null,
       to?: string | null,
       tokenId?: null,
       tokenURI?: null
     ): TypedEventFilter<
-      [string, BigNumber, string],
-      { to: string; tokenId: BigNumber; tokenURI: string }
+      [string, string, BigNumber, string],
+      { creator: string; to: string; tokenId: BigNumber; tokenURI: string }
+    >;
+
+    "MintedBatch(address,address,uint256[],string[])"(
+      creator?: string | null,
+      to?: string | null,
+      tokenIds?: null,
+      tokenURI?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber[], string[]],
+      { creator: string; to: string; tokenIds: BigNumber[]; tokenURI: string[] }
+    >;
+
+    MintedBatch(
+      creator?: string | null,
+      to?: string | null,
+      tokenIds?: null,
+      tokenURI?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber[], string[]],
+      { creator: string; to: string; tokenIds: BigNumber[]; tokenURI: string[] }
     >;
 
     "Paused(address)"(
@@ -121,6 +143,14 @@ filters: {
       [string, string, string],
       { role: string; account: string; sender: string }
     >;
+
+    "RoyaltyUpdated(uint256)"(
+      royaltyBps?: null
+    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
+
+    RoyaltyUpdated(
+      royaltyBps?: null
+    ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
 
     "Transfer(address,address,uint256)"(
       from?: string | null,

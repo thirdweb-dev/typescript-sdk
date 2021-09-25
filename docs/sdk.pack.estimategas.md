@@ -145,8 +145,6 @@ estimateGas: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    packRoyaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
-
     packs(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     pause(
@@ -179,6 +177,8 @@ estimateGas: {
     ): Promise<BigNumber>;
 
     rewards(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
       tokenId: BigNumberish,
@@ -220,7 +220,7 @@ estimateGas: {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setPackRoyaltyBps(
+    setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;

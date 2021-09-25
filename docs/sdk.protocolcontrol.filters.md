@@ -26,14 +26,6 @@ filters: {
       { asset: string; to: string; amount: BigNumber }
     >;
 
-    "MarketFeeBps(uint256)"(
-      marketFeeBps?: null
-    ): TypedEventFilter<[BigNumber], { marketFeeBps: BigNumber }>;
-
-    MarketFeeBps(
-      marketFeeBps?: null
-    ): TypedEventFilter<[BigNumber], { marketFeeBps: BigNumber }>;
-
     "ModuleUpdated(bytes32,address,uint256)"(
       moduleId?: BytesLike | null,
       module?: string | null,
@@ -52,13 +44,29 @@ filters: {
       { moduleId: string; module: string; moduleType: BigNumber }
     >;
 
-    "NFTLabsTreasury(address)"(
-      _nftlabsTreasury?: null
-    ): TypedEventFilter<[string], { _nftlabsTreasury: string }>;
+    "OwnerTreasuryUpdated(address)"(
+      _providerTreasury?: null
+    ): TypedEventFilter<[string], { _providerTreasury: string }>;
 
-    NFTLabsTreasury(
-      _nftlabsTreasury?: null
-    ): TypedEventFilter<[string], { _nftlabsTreasury: string }>;
+    OwnerTreasuryUpdated(
+      _providerTreasury?: null
+    ): TypedEventFilter<[string], { _providerTreasury: string }>;
+
+    "ProviderFeeBpsUpdated(uint256)"(
+      providerFeeBps?: null
+    ): TypedEventFilter<[BigNumber], { providerFeeBps: BigNumber }>;
+
+    ProviderFeeBpsUpdated(
+      providerFeeBps?: null
+    ): TypedEventFilter<[BigNumber], { providerFeeBps: BigNumber }>;
+
+    "ProviderTreasuryUpdated(address)"(
+      _providerTreasury?: null
+    ): TypedEventFilter<[string], { _providerTreasury: string }>;
+
+    ProviderTreasuryUpdated(
+      _providerTreasury?: null
+    ): TypedEventFilter<[string], { _providerTreasury: string }>;
 
     "RoleAdminChanged(bytes32,bytes32,bytes32)"(
       role?: BytesLike | null,
