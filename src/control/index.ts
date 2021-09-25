@@ -124,9 +124,15 @@ export class AppModule extends Module {
     return await this.getAllContractMetadata(await this.getMarketAddress());
   }
 
+  // owner functions
   public setModuleMetadata = async (metadata: string | Record<string, any>) => {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
+    await tx.wait();
+  };
+
+  public setOwnerTreasury = async (treasury: string) => {
+    const tx = await this.contract.updateOwnerTreasury(treasury);
     await tx.wait();
   };
 }
