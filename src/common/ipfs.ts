@@ -1,4 +1,3 @@
-import { File } from "@web-std/file";
 import { JSONValue } from "../core/types";
 
 /**
@@ -9,7 +8,7 @@ import { JSONValue } from "../core/types";
  * @internal
  */
 export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
-  if (!ipfsUrl) {
+  if (!ipfsUrl || typeof ipfsUrl !== "string") {
     return "";
   }
   if (!gatewayUrl.endsWith("/")) {
@@ -21,7 +20,7 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
 /**
  * @internal
  */
-async function uploadData(
+export async function uploadData(
   data: string | File,
   contractAddress?: string,
   signerAddress?: string,
@@ -58,9 +57,13 @@ export async function uploadMetadata(
 
   for (const key of keys) {
     const item = metadata[key];
-    if (item instanceof File) {
+    if (item && Object.prototype.toString.call(item) === "[object File]") {
       // if the element is a File type => upload it and return set the resulting uri on the same key
-      metadata[key] = await uploadData(item, contractAddress, signerAddress);
+      metadata[key] = await uploadData(
+        item as File,
+        contractAddress,
+        signerAddress,
+      );
     }
   }
 
