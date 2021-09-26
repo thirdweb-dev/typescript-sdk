@@ -1,6 +1,6 @@
+import { Registry, Registry__factory } from "../../contract-interfaces";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { Module } from "../core/module";
-import { Registry, Registry__factory } from "../types";
 
 /**
  * @public

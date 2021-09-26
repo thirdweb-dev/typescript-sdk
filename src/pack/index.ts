@@ -1,14 +1,14 @@
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import {
+  ERC1155__factory,
+  Pack as PackContract,
+  Pack__factory,
+} from "../../contract-interfaces";
 import { getRoleHash, ModuleType, Role } from "../common";
 import { NotFoundError } from "../common/error";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
-import {
-  ERC1155__factory,
-  Pack as PackContract,
-  Pack__factory,
-} from "../types";
 
 /**
  * @public

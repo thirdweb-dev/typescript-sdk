@@ -1,7 +1,10 @@
+import {
+  ProtocolControl,
+  ProtocolControl__factory,
+} from "../../contract-interfaces";
 import { ModuleType, uploadMetadata } from "../common";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { Module } from "../core/module";
-import { ProtocolControl, ProtocolControl__factory } from "../types";
 /**
  * A Module with metadata.
  * @public

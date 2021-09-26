@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish } from "ethers";
+import { Coin, Coin__factory } from "../../contract-interfaces";
 import { getRoleHash, ModuleType, Role } from "../common";
 import {
   Currency,
@@ -8,7 +9,6 @@ import {
 } from "../common/currency";
 import { uploadMetadata } from "../common/ipfs";
 import { Module } from "../core/module";
-import { Coin, Coin__factory } from "../types";
 
 /**
  * The CurrencyModule. This should always be created via `getCurrencyModule()` on the main SDK.

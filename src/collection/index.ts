@@ -1,14 +1,14 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { BytesLike } from "ethers";
-import { ModuleType } from "../common";
-import { uploadMetadata } from "../common/ipfs";
-import { getMetadata, NFTMetadata } from "../common/nft";
-import { Module } from "../core/module";
 import {
   NFTCollection as NFTCollectionContract,
   NFTCollection__factory,
-} from "../types";
-import { Role, getRoleHash } from "../common/role";
+} from "../../contract-interfaces";
+import { ModuleType } from "../common";
+import { uploadMetadata } from "../common/ipfs";
+import { getMetadata, NFTMetadata } from "../common/nft";
+import { getRoleHash, Role } from "../common/role";
+import { Module } from "../core/module";
 
 /**
  * @public

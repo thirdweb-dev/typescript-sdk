@@ -1,9 +1,9 @@
 import { BigNumber, BigNumberish } from "ethers";
+import { NFT, NFT__factory } from "../../contract-interfaces";
 import { getRoleHash, ModuleType, Role } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
-import { NFT, NFT__factory } from "../types";
 
 /**
  * The NFTModule. This should always be created via `getNFTModule()` on the main SDK.

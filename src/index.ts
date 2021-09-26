@@ -9,7 +9,6 @@ export * from "./market";
 export * from "./nft";
 export * from "./pack";
 export type { IAppModule } from "./registry";
-export * from "./types";
 
 if (!globalThis.fetch) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

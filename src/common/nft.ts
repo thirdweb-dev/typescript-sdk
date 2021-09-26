@@ -1,6 +1,6 @@
 import { Contract } from "@ethersproject/contracts";
+import { NFT, NFTCollection } from "../../contract-interfaces";
 import { ProviderOrSigner } from "../core/types";
-import { NFT, NFTCollection } from "../types";
 import { NotFoundError } from "./error";
 import { replaceIpfsWithGateway } from "./ipfs";
 

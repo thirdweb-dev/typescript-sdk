@@ -1,11 +1,5 @@
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish } from "ethers";
-import { ModuleType } from "../common";
-import { InterfaceId_IERC721 } from "../common/contract";
-import { CurrencyValue, getCurrencyValue } from "../common/currency";
-import { uploadMetadata } from "../common/ipfs";
-import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
-import { Module } from "../core/module";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -13,7 +7,13 @@ import {
   ERC721__factory,
   Market,
   Market__factory,
-} from "../types";
+} from "../../contract-interfaces";
+import { ModuleType } from "../common";
+import { InterfaceId_IERC721 } from "../common/contract";
+import { CurrencyValue, getCurrencyValue } from "../common/currency";
+import { uploadMetadata } from "../common/ipfs";
+import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
+import { Module } from "../core/module";
 
 interface ListingFilter {
   seller?: string;
