@@ -2,10 +2,21 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [PackModule](./sdk.packmodule.md) &gt; [balance](./sdk.packmodule.balance.md)
 
-## PackModule.balance property
+## PackModule.balance() method
 
 <b>Signature:</b>
 
 ```typescript
-balance: (tokenId: string) => Promise<BigNumber>;
+balance(tokenId: string): Promise<BigNumber>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  tokenId | string |  |
+
+<b>Returns:</b>
+
+Promise&lt;BigNumber&gt;
+

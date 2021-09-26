@@ -17,27 +17,29 @@ export declare class PackModule extends Module
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [balance](./sdk.packmodule.balance.md) |  | (tokenId: string) =&gt; Promise&lt;BigNumber&gt; |  |
-|  [balanceOf](./sdk.packmodule.balanceof.md) |  | (address: string, tokenId: string) =&gt; Promise&lt;BigNumber&gt; |  |
-|  [createPack](./sdk.packmodule.createpack.md) |  | (args: [IPackCreateArgs](./sdk.ipackcreateargs.md)<!-- -->) =&gt; Promise&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->&gt; |  |
-|  [isApproved](./sdk.packmodule.isapproved.md) |  | (address: string, operator: string) =&gt; Promise&lt;boolean&gt; |  |
 |  [moduleType](./sdk.packmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [setApproval](./sdk.packmodule.setapproval.md) |  | (operator: string, approved?: boolean) =&gt; Promise&lt;void&gt; |  |
-|  [setModuleMetadata](./sdk.packmodule.setmodulemetadata.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
-|  [setRoyaltyBps](./sdk.packmodule.setroyaltybps.md) |  | (amount: number) =&gt; Promise&lt;void&gt; |  |
-|  [transfer](./sdk.packmodule.transfer.md) |  | (to: string, tokenId: string, amount: BigNumber) =&gt; Promise&lt;void&gt; |  |
-|  [transferBatchFrom](./sdk.packmodule.transferbatchfrom.md) |  | (from: string, to: string, args: [IPackBatchArgs](./sdk.ipackbatchargs.md)<!-- -->\[\], data?: BytesLike) =&gt; Promise&lt;void&gt; |  |
-|  [transferFrom](./sdk.packmodule.transferfrom.md) |  | (from: string, to: string, args: [IPackBatchArgs](./sdk.ipackbatchargs.md)<!-- -->, data?: BytesLike) =&gt; Promise&lt;void&gt; |  |
-|  [transferLink](./sdk.packmodule.transferlink.md) |  | (to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [balance(tokenId)](./sdk.packmodule.balance.md) |  |  |
+|  [balanceOf(address, tokenId)](./sdk.packmodule.balanceof.md) |  |  |
+|  [createPack(args)](./sdk.packmodule.createpack.md) |  |  |
+|  [depositLink(amount)](./sdk.packmodule.depositlink.md) |  |  |
 |  [get(packId)](./sdk.packmodule.get.md) |  |  |
 |  [getAll()](./sdk.packmodule.getall.md) |  |  |
+|  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  |  |
 |  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  |  |
 |  [grantRole(role, address)](./sdk.packmodule.grantrole.md) |  |  |
+|  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  |  |
 |  [open(packId)](./sdk.packmodule.open.md) |  |  |
 |  [revokeRole(role, address)](./sdk.packmodule.revokerole.md) |  |  |
+|  [setApproval(operator, approved)](./sdk.packmodule.setapproval.md) |  |  |
+|  [setModuleMetadata(metadata)](./sdk.packmodule.setmodulemetadata.md) |  |  |
+|  [setRoyaltyBps(amount)](./sdk.packmodule.setroyaltybps.md) |  |  |
+|  [transfer(to, tokenId, amount)](./sdk.packmodule.transfer.md) |  |  |
+|  [transferBatchFrom(from, to, args, data)](./sdk.packmodule.transferbatchfrom.md) |  |  |
+|  [transferFrom(from, to, args, data)](./sdk.packmodule.transferfrom.md) |  |  |
+|  [withdrawLink(to, amount)](./sdk.packmodule.withdrawlink.md) |  |  |
 

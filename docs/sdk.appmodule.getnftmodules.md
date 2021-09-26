@@ -9,11 +9,11 @@ Method to get all NFT modules.
 <b>Signature:</b>
 
 ```typescript
-getNFTModules(): Promise<ControlContract[]>;
+getNFTModules(): Promise<ModuleMetadata[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[ControlContract](./sdk.controlcontract.md)<!-- -->\[\]&gt;
+Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->\[\]&gt;
 
 A promise of an array of NFT modules.
 

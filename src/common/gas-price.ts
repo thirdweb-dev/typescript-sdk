@@ -1,4 +1,4 @@
-import { ChainId } from "./registry-address";
+import { ChainId } from "./chain";
 
 /**
  *

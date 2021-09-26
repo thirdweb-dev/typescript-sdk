@@ -57,23 +57,28 @@ export class NFTModule extends Module {
   }
 
   // passthrough to the contract
-  public totalSupply = async () => this.contract.totalSupply();
+  public async totalSupply(): Promise<BigNumber> {
+    return await this.contract.totalSupply();
+  }
 
-  public balanceOf = async (address: string) =>
-    this.contract.balanceOf(address);
+  public async balanceOf(address: string): Promise<BigNumber> {
+    return await this.contract.balanceOf(address);
+  }
 
-  public balance = async () =>
-    this.contract.balanceOf(await this.getSignerAddress());
+  public async balance(): Promise<BigNumber> {
+    return await this.balanceOf(await this.getSignerAddress());
+  }
 
-  public isApproved = async (address: string, operator: string) =>
-    this.contract.isApprovedForAll(address, operator);
+  public async isApproved(address: string, operator: string) {
+    return await this.contract.isApprovedForAll(address, operator);
+  }
 
-  public setApproval = async (operator: string, approved = true) => {
+  public async setApproval(operator: string, approved = true) {
     const tx = await this.contract.setApprovalForAll(operator, approved);
     await tx.wait();
-  };
+  }
 
-  public transfer = async (to: string, tokenId: string) => {
+  public async transfer(to: string, tokenId: string) {
     const from = await this.getSignerAddress();
     const tx = await this.contract["safeTransferFrom(address,address,uint256)"](
       from,
@@ -81,26 +86,37 @@ export class NFTModule extends Module {
       tokenId,
     );
     await tx.wait();
-  };
+  }
 
   // owner functions
   public async mint(
+    metadata: string | Record<string, any>,
+  ): Promise<NFTMetadata> {
+    return await this.mintTo(await this.getSignerAddress(), metadata);
+  }
+
+  public async mintTo(
     to: string,
     metadata: string | Record<string, any>,
-    txOptions: Overrides = {},
   ): Promise<NFTMetadata> {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.mintNFT(to, uri, txOptions);
+    const tx = await this.contract.mintNFT(to, uri);
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "Minted");
     const tokenId = event?.args?.tokenId;
     return await this.get(tokenId.toString());
   }
 
-  public mintBatch = async (
+  public async mintBatch(
+    metadatas: (string | Record<string, any>)[],
+  ): Promise<NFTMetadata[]> {
+    return await this.mintBatchTo(await this.getSignerAddress(), metadatas);
+  }
+
+  public async mintBatchTo(
     to: string,
     metadatas: (string | Record<string, any>)[],
-  ): Promise<NFTMetadata[]> => {
+  ): Promise<NFTMetadata[]> {
     const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
     const tx = await this.contract.mintNFTBatch(to, uris);
     const receipt = await tx.wait();
@@ -109,33 +125,29 @@ export class NFTModule extends Module {
     return await Promise.all(
       tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),
     );
-  };
+  }
 
-  public burn = async (tokenId: BigNumberish) => {
+  public async burn(tokenId: BigNumberish) {
     const tx = await this.contract.burn(tokenId);
     await tx.wait();
-  };
+  }
 
-  public transferFrom = async (
-    from: string,
-    to: string,
-    tokenId: BigNumberish,
-  ) => {
+  public async transferFrom(from: string, to: string, tokenId: BigNumberish) {
     const tx = await this.contract.transferFrom(from, to, tokenId);
     await tx.wait();
-  };
+  }
 
   // owner functions
-  public setRoyaltyBps = async (amount: number) => {
+  public async setRoyaltyBps(amount: number) {
     const tx = await this.contract.setRoyaltyBps(amount);
     await tx.wait();
-  };
+  }
 
-  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
+  public async setModuleMetadata(metadata: string | Record<string, any>) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();
-  };
+  }
 
   public async grantRole(role: Role, address: string) {
     const tx = await this.contract.grantRole(getRoleHash(role), address);

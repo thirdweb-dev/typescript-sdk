@@ -2,10 +2,22 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [NFTModule](./sdk.nftmodule.md) &gt; [transfer](./sdk.nftmodule.transfer.md)
 
-## NFTModule.transfer property
+## NFTModule.transfer() method
 
 <b>Signature:</b>
 
 ```typescript
-transfer: (to: string, tokenId: string) => Promise<void>;
+transfer(to: string, tokenId: string): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  to | string |  |
+|  tokenId | string |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

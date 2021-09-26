@@ -51,55 +51,62 @@ export class CurrencyModule extends Module {
   }
 
   // passthrough to the contract
-  public balanceOf = async (address: string): Promise<CurrencyValue> =>
-    this.getValue(await this.contract.balanceOf(address));
+  public async balanceOf(address: string): Promise<CurrencyValue> {
+    return await this.getValue(await this.contract.balanceOf(address));
+  }
 
-  public balance = async (): Promise<CurrencyValue> =>
-    this.balanceOf(await this.getSignerAddress());
+  public async balance(): Promise<CurrencyValue> {
+    return await this.balanceOf(await this.getSignerAddress());
+  }
 
-  public transfer = async (to: string, amount: BigNumber) => {
+  public async transfer(to: string, amount: BigNumber) {
     const tx = await this.contract.transfer(to, amount);
     await tx.wait();
-  };
+  }
 
-  public allowance = async (spender: string): Promise<BigNumber> =>
-    this.contract.allowance(await this.getSignerAddress(), spender);
+  public async allowance(spender: string): Promise<BigNumber> {
+    return await this.contract.allowance(
+      await this.getSignerAddress(),
+      spender,
+    );
+  }
 
-  public setAllowance = async (spender: string, amount: BigNumber) => {
+  public async setAllowance(spender: string, amount: BigNumber) {
     const tx = await this.contract.approve(spender, amount);
     await tx.wait();
-  };
+  }
 
   // owner functions
-  public mint = async (to: string, amount: BigNumberish) => {
+  public async mintTo(to: string, amount: BigNumberish) {
     const tx = await this.contract.mint(to, amount);
     await tx.wait();
-  };
+  }
 
-  public burn = async (amount: BigNumberish) => {
+  public async mint(amount: BigNumberish) {
+    const tx = await this.contract.mint(await this.getSignerAddress(), amount);
+    await tx.wait();
+  }
+
+  public async burn(amount: BigNumberish) {
     const tx = await this.contract.burn(amount);
     await tx.wait();
-  };
+  }
 
-  public burnFrom = async (to: string, amount: BigNumberish) => {
-    const tx = await this.contract.burnFrom(to, amount);
+  public async burnFrom(from: string, amount: BigNumberish) {
+    const tx = await this.contract.burnFrom(from, amount);
     await tx.wait();
-  };
+  }
 
-  public transferFrom = async (
-    from: string,
-    to: string,
-    amount: BigNumberish,
-  ) => {
+  public async transferFrom(from: string, to: string, amount: BigNumberish) {
     const tx = await this.contract.transferFrom(from, to, amount);
     await tx.wait();
-  };
+  }
 
-  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
+  public async setModuleMetadata(metadata: string | Record<string, any>) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();
-  };
+  }
 
   // owner role functions
   public async grantRole(role: Role, address: string) {

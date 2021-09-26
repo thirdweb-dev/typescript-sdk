@@ -9,11 +9,11 @@ Method to get all pack modules.
 <b>Signature:</b>
 
 ```typescript
-getPackModules(): Promise<ControlContract[]>;
+getPackModules(): Promise<ModuleMetadata[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[ControlContract](./sdk.controlcontract.md)<!-- -->\[\]&gt;
+Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->\[\]&gt;
 
 A promise of an array of Pack modules.
 

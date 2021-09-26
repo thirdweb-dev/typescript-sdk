@@ -13,7 +13,7 @@ import { Module } from "../core/module";
 /**
  * @public
  */
-export interface INFTCollection {
+export interface CollectionMetadata {
   creator: string;
   supply: BigNumber;
   metadata?: NFTMetadata;
@@ -66,9 +66,9 @@ export class CollectionModule extends Module {
    *
    * Get a signle collection item by tokenId.
    * @param tokenId - TODO description of tokenId
-   * @returns A promise that resolves to a `INFTCollection`.
+   * @returns A promise that resolves to a `CollectionMetadata`.
    */
-  public async get(tokenId: string): Promise<INFTCollection> {
+  public async get(tokenId: string): Promise<CollectionMetadata> {
     const info = await this.contract.nftInfo(tokenId);
     const metadata = await getMetadata(
       this.contract,
@@ -86,7 +86,7 @@ export class CollectionModule extends Module {
    * Return all items in the collection.
    * @returns An array of `INFTCollection`.
    */
-  public async getAll(): Promise<INFTCollection[]> {
+  public async getAll(): Promise<CollectionMetadata[]> {
     const maxId = (await this.contract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
@@ -94,25 +94,24 @@ export class CollectionModule extends Module {
   }
 
   // passthrough to the contract
-  public balanceOf = async (address: string, tokenId: string) =>
-    this.contract.balanceOf(address, tokenId);
+  public async balanceOf(address: string, tokenId: string) {
+    return this.contract.balanceOf(address, tokenId);
+  }
 
-  public balance = async (tokenId: string) =>
-    this.contract.balanceOf(await this.getSignerAddress(), tokenId);
+  public async balance(tokenId: string) {
+    return this.contract.balanceOf(await this.getSignerAddress(), tokenId);
+  }
 
-  public isApproved = async (address: string, operator: string) =>
-    this.contract.isApprovedForAll(address, operator);
+  public async isApproved(address: string, operator: string) {
+    return this.contract.isApprovedForAll(address, operator);
+  }
 
-  public setApproval = async (operator: string, approved = true) => {
+  public async setApproval(operator: string, approved = true) {
     const tx = await this.contract.setApprovalForAll(operator, approved);
     await tx.wait();
-  };
+  }
 
-  public transfer = async (
-    to: string,
-    tokenId: string,
-    amount: BigNumberish,
-  ) => {
+  public async transfer(to: string, tokenId: string, amount: BigNumberish) {
     const tx = await this.contract.safeTransferFrom(
       await this.getSignerAddress(),
       to,
@@ -121,12 +120,12 @@ export class CollectionModule extends Module {
       [0],
     );
     await tx.wait();
-  };
+  }
 
   // owner functions
-  public create = async (
+  public async create(
     args: INFTCollectionCreateArgs[],
-  ): Promise<INFTCollection[]> => {
+  ): Promise<CollectionMetadata[]> {
     const uris = await Promise.all(
       args.map((a) => a.metadata).map((a) => uploadMetadata(a)),
     );
@@ -138,49 +137,87 @@ export class CollectionModule extends Module {
     return await Promise.all(
       tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),
     );
-  };
+  }
 
-  public mint = async (
+  public async createWithERC20(
+    tokenContract: string,
+    tokenAmount: BigNumberish,
+    args: INFTCollectionCreateArgs,
+  ) {
+    const uri = await uploadMetadata(args.metadata);
+    const tx = await this.contract.wrapERC20(
+      tokenContract,
+      tokenAmount,
+      args.supply,
+      uri,
+    );
+    await tx.wait();
+  }
+
+  public async createWithERC721(
+    tokenContract: string,
+    tokenId: BigNumberish,
+    metadata: string | Record<string, any>,
+  ) {
+    const uri = await uploadMetadata(metadata);
+    const tx = await this.contract.wrapERC721(tokenContract, tokenId, uri);
+    await tx.wait();
+  }
+
+  public async mint(args: INFTCollectionBatchArgs) {
+    await this.mintTo(await this.getSignerAddress(), args);
+  }
+
+  public async mintTo(
     to: string,
     args: INFTCollectionBatchArgs,
     data: BytesLike = [0],
-  ) => {
+  ) {
     const tx = await this.contract.mint(to, args.tokenId, args.amount, data);
     await tx.wait();
-  };
+  }
 
-  public mintBatch = async (
+  public async mintBatch(args: INFTCollectionBatchArgs[]) {
+    await this.mintBatchTo(await this.getSignerAddress(), args);
+  }
+
+  public async mintBatchTo(
     to: string,
     args: INFTCollectionBatchArgs[],
     data: BytesLike = [0],
-  ) => {
+  ) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
     const tx = await this.contract.mintBatch(to, ids, amounts, data);
     await tx.wait();
-  };
+  }
 
-  public burn = async (account: string, args: INFTCollectionBatchArgs) => {
+  public async burn(args: INFTCollectionBatchArgs) {
+    await this.burnFrom(await this.getSignerAddress(), args);
+  }
+
+  public async burnBatch(args: INFTCollectionBatchArgs[]) {
+    await this.burnBatchFrom(await this.getSignerAddress(), args);
+  }
+
+  public async burnFrom(account: string, args: INFTCollectionBatchArgs) {
     const tx = await this.contract.burn(account, args.tokenId, args.amount);
     await tx.wait();
-  };
+  }
 
-  public burnBatch = async (
-    account: string,
-    args: INFTCollectionBatchArgs[],
-  ) => {
+  public async burnBatchFrom(account: string, args: INFTCollectionBatchArgs[]) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
     const tx = await this.contract.burnBatch(account, ids, amounts);
     await tx.wait();
-  };
+  }
 
-  public transferFrom = async (
+  public async transferFrom(
     from: string,
     to: string,
     args: INFTCollectionBatchArgs,
     data: BytesLike = [0],
-  ) => {
+  ) {
     const tx = await this.contract.safeTransferFrom(
       from,
       to,
@@ -189,14 +226,14 @@ export class CollectionModule extends Module {
       data,
     );
     await tx.wait();
-  };
+  }
 
-  public transferBatchFrom = async (
+  public async transferBatchFrom(
     from: string,
     to: string,
     args: INFTCollectionBatchArgs[],
     data: BytesLike = [0],
-  ) => {
+  ) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
     const tx = await this.contract.safeBatchTransferFrom(
@@ -207,18 +244,18 @@ export class CollectionModule extends Module {
       data,
     );
     await tx.wait();
-  };
+  }
 
-  public setRoyaltyBps = async (amount: number) => {
+  public async setRoyaltyBps(amount: number) {
     const tx = await this.contract.setRoyaltyBps(amount);
     await tx.wait();
-  };
+  }
 
-  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
+  public async setModuleMetadata(metadata: string | Record<string, any>) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();
-  };
+  }
 
   public async grantRole(role: Role, address: string) {
     const tx = await this.contract.grantRole(getRoleHash(role), address);

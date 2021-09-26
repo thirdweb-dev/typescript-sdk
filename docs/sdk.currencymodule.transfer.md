@@ -2,10 +2,22 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [CurrencyModule](./sdk.currencymodule.md) &gt; [transfer](./sdk.currencymodule.transfer.md)
 
-## CurrencyModule.transfer property
+## CurrencyModule.transfer() method
 
 <b>Signature:</b>
 
 ```typescript
-transfer: (to: string, amount: BigNumber) => Promise<void>;
+transfer(to: string, amount: BigNumber): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  to | string |  |
+|  amount | BigNumber |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

@@ -2,10 +2,21 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [PackModule](./sdk.packmodule.md) &gt; [setModuleMetadata](./sdk.packmodule.setmodulemetadata.md)
 
-## PackModule.setModuleMetadata property
+## PackModule.setModuleMetadata() method
 
 <b>Signature:</b>
 
 ```typescript
-setModuleMetadata: (metadata: string | Record<string, any>) => Promise<void>;
+setModuleMetadata(metadata: string | Record<string, any>): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  metadata | string \| Record&lt;string, any&gt; |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

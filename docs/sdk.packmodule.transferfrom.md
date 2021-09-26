@@ -2,10 +2,24 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [PackModule](./sdk.packmodule.md) &gt; [transferFrom](./sdk.packmodule.transferfrom.md)
 
-## PackModule.transferFrom property
+## PackModule.transferFrom() method
 
 <b>Signature:</b>
 
 ```typescript
-transferFrom: (from: string, to: string, args: IPackBatchArgs, data?: BytesLike) => Promise<void>;
+transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  from | string |  |
+|  to | string |  |
+|  args | [IPackBatchArgs](./sdk.ipackbatchargs.md) |  |
+|  data | BytesLike |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

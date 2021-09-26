@@ -2,10 +2,21 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [CurrencyModule](./sdk.currencymodule.md) &gt; [mint](./sdk.currencymodule.mint.md)
 
-## CurrencyModule.mint property
+## CurrencyModule.mint() method
 
 <b>Signature:</b>
 
 ```typescript
-mint: (to: string, amount: BigNumberish) => Promise<void>;
+mint(amount: BigNumberish): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  amount | BigNumberish |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

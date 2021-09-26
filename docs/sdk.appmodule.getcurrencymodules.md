@@ -9,11 +9,11 @@ Method to get all Currency modules.
 <b>Signature:</b>
 
 ```typescript
-getCurrencyModules(): Promise<ControlContract[]>;
+getCurrencyModules(): Promise<ModuleMetadata[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[ControlContract](./sdk.controlcontract.md)<!-- -->\[\]&gt;
+Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->\[\]&gt;
 
 A promise of an array of Currency modules.
 

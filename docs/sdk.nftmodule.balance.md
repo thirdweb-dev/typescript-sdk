@@ -2,10 +2,14 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [NFTModule](./sdk.nftmodule.md) &gt; [balance](./sdk.nftmodule.balance.md)
 
-## NFTModule.balance property
+## NFTModule.balance() method
 
 <b>Signature:</b>
 
 ```typescript
-balance: () => Promise<BigNumber>;
+balance(): Promise<BigNumber>;
 ```
+<b>Returns:</b>
+
+Promise&lt;BigNumber&gt;
+

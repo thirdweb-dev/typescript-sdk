@@ -1,3 +1,4 @@
+import { Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
 import invariant from "ts-invariant";
 import type { ProviderOrSigner } from "./types";
@@ -67,6 +68,15 @@ export class Module {
     const signer = this.getSigner();
     invariant(signer, "Cannot get signer address without valid signer");
     return await signer.getAddress();
+  }
+
+  protected async getChainID(): Promise<number> {
+    const provider = Provider.isProvider(this.providerOrSigner)
+      ? this.providerOrSigner
+      : this.providerOrSigner.provider;
+    invariant(provider, "getRegistryAddress() -- No Provider");
+    const { chainId } = await provider.getNetwork();
+    return chainId;
   }
 
   protected connectContract() {

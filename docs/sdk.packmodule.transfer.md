@@ -2,10 +2,23 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [PackModule](./sdk.packmodule.md) &gt; [transfer](./sdk.packmodule.transfer.md)
 
-## PackModule.transfer property
+## PackModule.transfer() method
 
 <b>Signature:</b>
 
 ```typescript
-transfer: (to: string, tokenId: string, amount: BigNumber) => Promise<void>;
+transfer(to: string, tokenId: string, amount: BigNumber): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  to | string |  |
+|  tokenId | string |  |
+|  amount | BigNumber |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

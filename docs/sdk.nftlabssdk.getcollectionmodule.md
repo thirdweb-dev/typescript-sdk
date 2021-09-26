@@ -18,7 +18,7 @@ getCollectionModule(address: string): CollectionModule;
 
 <b>Returns:</b>
 
-CollectionModule
+[CollectionModule](./sdk.collectionmodule.md)
 
 The Collection Module.
 

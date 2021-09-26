@@ -2,10 +2,22 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [CurrencyModule](./sdk.currencymodule.md) &gt; [setAllowance](./sdk.currencymodule.setallowance.md)
 
-## CurrencyModule.setAllowance property
+## CurrencyModule.setAllowance() method
 
 <b>Signature:</b>
 
 ```typescript
-setAllowance: (spender: string, amount: BigNumber) => Promise<void>;
+setAllowance(spender: string, amount: BigNumber): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  spender | string |  |
+|  amount | BigNumber |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

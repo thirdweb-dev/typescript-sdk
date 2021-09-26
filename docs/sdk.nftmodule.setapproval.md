@@ -2,10 +2,22 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [NFTModule](./sdk.nftmodule.md) &gt; [setApproval](./sdk.nftmodule.setapproval.md)
 
-## NFTModule.setApproval property
+## NFTModule.setApproval() method
 
 <b>Signature:</b>
 
 ```typescript
-setApproval: (operator: string, approved?: boolean) => Promise<void>;
+setApproval(operator: string, approved?: boolean): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  operator | string |  |
+|  approved | boolean |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

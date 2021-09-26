@@ -13,13 +13,6 @@ export declare class AppModule extends Module
 ```
 <b>Extends:</b> Module
 
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [setModuleMetadata](./sdk.appmodule.setmodulemetadata.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
-|  [setOwnerTreasury](./sdk.appmodule.setownertreasury.md) |  | (treasury: string) =&gt; Promise&lt;void&gt; |  |
-
 ## Methods
 
 |  Method | Modifiers | Description |
@@ -30,4 +23,6 @@ export declare class AppModule extends Module
 |  [getMarketModules()](./sdk.appmodule.getmarketmodules.md) |  | Method to get all Market modules. |
 |  [getNFTModules()](./sdk.appmodule.getnftmodules.md) |  | Method to get all NFT modules. |
 |  [getPackModules()](./sdk.appmodule.getpackmodules.md) |  | Method to get all pack modules. |
+|  [setModuleMetadata(metadata)](./sdk.appmodule.setmodulemetadata.md) |  |  |
+|  [setOwnerTreasury(treasury)](./sdk.appmodule.setownertreasury.md) |  |  |
 

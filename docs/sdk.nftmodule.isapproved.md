@@ -2,10 +2,22 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [NFTModule](./sdk.nftmodule.md) &gt; [isApproved](./sdk.nftmodule.isapproved.md)
 
-## NFTModule.isApproved property
+## NFTModule.isApproved() method
 
 <b>Signature:</b>
 
 ```typescript
-isApproved: (address: string, operator: string) => Promise<boolean>;
+isApproved(address: string, operator: string): Promise<boolean>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  address | string |  |
+|  operator | string |  |
+
+<b>Returns:</b>
+
+Promise&lt;boolean&gt;
+

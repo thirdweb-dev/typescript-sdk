@@ -2,10 +2,14 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [MarketModule](./sdk.marketmodule.md) &gt; [getMarketFeeBps](./sdk.marketmodule.getmarketfeebps.md)
 
-## MarketModule.getMarketFeeBps property
+## MarketModule.getMarketFeeBps() method
 
 <b>Signature:</b>
 
 ```typescript
-getMarketFeeBps: () => Promise<BigNumber>;
+getMarketFeeBps(): Promise<BigNumber>;
 ```
+<b>Returns:</b>
+
+Promise&lt;BigNumber&gt;
+

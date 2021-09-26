@@ -7,16 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-mint(to: string, metadata: string | Record<string, any>, txOptions?: Overrides): Promise<NFTMetadata>;
+mint(metadata: string | Record<string, any>): Promise<NFTMetadata>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  to | string |  |
 |  metadata | string \| Record&lt;string, any&gt; |  |
-|  txOptions | Overrides |  |
 
 <b>Returns:</b>
 

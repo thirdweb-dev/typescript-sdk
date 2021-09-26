@@ -2,10 +2,21 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [CurrencyModule](./sdk.currencymodule.md) &gt; [burn](./sdk.currencymodule.burn.md)
 
-## CurrencyModule.burn property
+## CurrencyModule.burn() method
 
 <b>Signature:</b>
 
 ```typescript
-burn: (amount: BigNumberish) => Promise<void>;
+burn(amount: BigNumberish): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  amount | BigNumberish |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

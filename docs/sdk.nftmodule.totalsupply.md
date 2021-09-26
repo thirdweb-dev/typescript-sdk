@@ -2,10 +2,14 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [NFTModule](./sdk.nftmodule.md) &gt; [totalSupply](./sdk.nftmodule.totalsupply.md)
 
-## NFTModule.totalSupply property
+## NFTModule.totalSupply() method
 
 <b>Signature:</b>
 
 ```typescript
-totalSupply: () => Promise<BigNumber>;
+totalSupply(): Promise<BigNumber>;
 ```
+<b>Returns:</b>
+
+Promise&lt;BigNumber&gt;
+

@@ -9,7 +9,7 @@ import { Module } from "../core/module";
  * A Module with metadata.
  * @public
  */
-export interface ControlContract {
+export interface ModuleMetadata {
   address: string;
   metadata?: ContractMetadata;
 }
@@ -46,7 +46,7 @@ export class AppModule extends Module {
 
   public async getAllContractMetadata(
     addresses: string[],
-  ): Promise<ControlContract[]> {
+  ): Promise<ModuleMetadata[]> {
     const metadatas = await Promise.all(
       addresses.map((address) =>
         getContractMetadata(
@@ -91,7 +91,7 @@ export class AppModule extends Module {
    * Method to get all pack modules.
    * @returns A promise of an array of Pack modules.
    */
-  public async getPackModules(): Promise<ControlContract[]> {
+  public async getPackModules(): Promise<ModuleMetadata[]> {
     return await this.getAllContractMetadata(await this.getPackAddress());
   }
 
@@ -99,7 +99,7 @@ export class AppModule extends Module {
    * Method to get all NFT modules.
    * @returns A promise of an array of NFT modules.
    */
-  public async getNFTModules(): Promise<ControlContract[]> {
+  public async getNFTModules(): Promise<ModuleMetadata[]> {
     return await this.getAllContractMetadata(await this.getNFTAddress());
   }
 
@@ -107,7 +107,7 @@ export class AppModule extends Module {
    * Method to get all Collection modules.
    * @returns A promise of an array of Collection modules.
    */
-  public async getCollectionModules(): Promise<ControlContract[]> {
+  public async getCollectionModules(): Promise<ModuleMetadata[]> {
     return await this.getAllContractMetadata(await this.getCollectionAddress());
   }
 
@@ -115,7 +115,7 @@ export class AppModule extends Module {
    * Method to get all Currency modules.
    * @returns A promise of an array of Currency modules.
    */
-  public async getCurrencyModules(): Promise<ControlContract[]> {
+  public async getCurrencyModules(): Promise<ModuleMetadata[]> {
     return await this.getAllContractMetadata(await this.getCurrencyAddress());
   }
 
@@ -123,19 +123,19 @@ export class AppModule extends Module {
    * Method to get all Market modules.
    * @returns A promise of an array of Market modules.
    */
-  public async getMarketModules(): Promise<ControlContract[]> {
+  public async getMarketModules(): Promise<ModuleMetadata[]> {
     return await this.getAllContractMetadata(await this.getMarketAddress());
   }
 
   // owner functions
-  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
+  public async setModuleMetadata(metadata: string | Record<string, any>) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();
-  };
+  }
 
-  public setOwnerTreasury = async (treasury: string) => {
+  public async setOwnerTreasury(treasury: string) {
     const tx = await this.contract.updateOwnerTreasury(treasury);
     await tx.wait();
-  };
+  }
 }

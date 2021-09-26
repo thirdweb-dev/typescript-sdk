@@ -17,24 +17,25 @@ export declare class CurrencyModule extends Module
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [allowance](./sdk.currencymodule.allowance.md) |  | (spender: string) =&gt; Promise&lt;BigNumber&gt; |  |
-|  [balance](./sdk.currencymodule.balance.md) |  | () =&gt; Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)<!-- -->&gt; |  |
-|  [balanceOf](./sdk.currencymodule.balanceof.md) |  | (address: string) =&gt; Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)<!-- -->&gt; |  |
-|  [burn](./sdk.currencymodule.burn.md) |  | (amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
-|  [burnFrom](./sdk.currencymodule.burnfrom.md) |  | (to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
-|  [mint](./sdk.currencymodule.mint.md) |  | (to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 |  [moduleType](./sdk.currencymodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [setAllowance](./sdk.currencymodule.setallowance.md) |  | (spender: string, amount: BigNumber) =&gt; Promise&lt;void&gt; |  |
-|  [setModuleMetadata](./sdk.currencymodule.setmodulemetadata.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
-|  [transfer](./sdk.currencymodule.transfer.md) |  | (to: string, amount: BigNumber) =&gt; Promise&lt;void&gt; |  |
-|  [transferFrom](./sdk.currencymodule.transferfrom.md) |  | (from: string, to: string, amount: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [allowance(spender)](./sdk.currencymodule.allowance.md) |  |  |
+|  [balance()](./sdk.currencymodule.balance.md) |  |  |
+|  [balanceOf(address)](./sdk.currencymodule.balanceof.md) |  |  |
+|  [burn(amount)](./sdk.currencymodule.burn.md) |  |  |
+|  [burnFrom(from, amount)](./sdk.currencymodule.burnfrom.md) |  |  |
 |  [get()](./sdk.currencymodule.get.md) |  |  |
 |  [getValue(value)](./sdk.currencymodule.getvalue.md) |  |  |
 |  [grantRole(role, address)](./sdk.currencymodule.grantrole.md) |  |  |
+|  [mint(amount)](./sdk.currencymodule.mint.md) |  |  |
+|  [mintTo(to, amount)](./sdk.currencymodule.mintto.md) |  |  |
 |  [revokeRole(role, address)](./sdk.currencymodule.revokerole.md) |  |  |
+|  [setAllowance(spender, amount)](./sdk.currencymodule.setallowance.md) |  |  |
+|  [setModuleMetadata(metadata)](./sdk.currencymodule.setmodulemetadata.md) |  |  |
+|  [transfer(to, amount)](./sdk.currencymodule.transfer.md) |  |  |
+|  [transferFrom(from, to, amount)](./sdk.currencymodule.transferfrom.md) |  |  |
 

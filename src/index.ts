@@ -7,6 +7,7 @@ export * from "./core/types";
 export * from "./currency";
 export * from "./market";
 export * from "./nft";
+export * from "./collection";
 export * from "./pack";
 export type { IAppModule } from "./registry";
 

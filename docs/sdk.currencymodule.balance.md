@@ -2,10 +2,14 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [CurrencyModule](./sdk.currencymodule.md) &gt; [balance](./sdk.currencymodule.balance.md)
 
-## CurrencyModule.balance property
+## CurrencyModule.balance() method
 
 <b>Signature:</b>
 
 ```typescript
-balance: () => Promise<CurrencyValue>;
+balance(): Promise<CurrencyValue>;
 ```
+<b>Returns:</b>
+
+Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)<!-- -->&gt;
+

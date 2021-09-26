@@ -271,14 +271,16 @@ export class MarketModule extends Module {
   }
 
   // passthrough
-  public getMarketFeeBps = async () => this.contract.marketFeeBps();
+  public async getMarketFeeBps(): Promise<BigNumber> {
+    return await this.contract.marketFeeBps();
+  }
 
   // owner functions
-  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
+  public async setModuleMetadata(metadata: string | Record<string, any>) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();
-  };
+  }
 
   public async setMarketFeeBps(fee: number) {
     const tx = await this.contract.setMarketFeeBps(fee);

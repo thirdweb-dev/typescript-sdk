@@ -2,10 +2,21 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [AppModule](./sdk.appmodule.md) &gt; [setOwnerTreasury](./sdk.appmodule.setownertreasury.md)
 
-## AppModule.setOwnerTreasury property
+## AppModule.setOwnerTreasury() method
 
 <b>Signature:</b>
 
 ```typescript
-setOwnerTreasury: (treasury: string) => Promise<void>;
+setOwnerTreasury(treasury: string): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  treasury | string |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

@@ -2,10 +2,21 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [NFTModule](./sdk.nftmodule.md) &gt; [mintBatch](./sdk.nftmodule.mintbatch.md)
 
-## NFTModule.mintBatch property
+## NFTModule.mintBatch() method
 
 <b>Signature:</b>
 
 ```typescript
-mintBatch: (to: string, metadatas: (string | Record<string, any>)[]) => Promise<NFTMetadata[]>;
+mintBatch(metadatas: (string | Record<string, any>)[]): Promise<NFTMetadata[]>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  metadatas | (string \| Record&lt;string, any&gt;)\[\] |  |
+
+<b>Returns:</b>
+
+Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->\[\]&gt;
+

@@ -2,10 +2,23 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [NFTModule](./sdk.nftmodule.md) &gt; [transferFrom](./sdk.nftmodule.transferfrom.md)
 
-## NFTModule.transferFrom property
+## NFTModule.transferFrom() method
 
 <b>Signature:</b>
 
 ```typescript
-transferFrom: (from: string, to: string, tokenId: BigNumberish) => Promise<void>;
+transferFrom(from: string, to: string, tokenId: BigNumberish): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  from | string |  |
+|  to | string |  |
+|  tokenId | BigNumberish |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

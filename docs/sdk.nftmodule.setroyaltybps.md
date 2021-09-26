@@ -2,10 +2,21 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [NFTModule](./sdk.nftmodule.md) &gt; [setRoyaltyBps](./sdk.nftmodule.setroyaltybps.md)
 
-## NFTModule.setRoyaltyBps property
+## NFTModule.setRoyaltyBps() method
 
 <b>Signature:</b>
 
 ```typescript
-setRoyaltyBps: (amount: number) => Promise<void>;
+setRoyaltyBps(amount: number): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  amount | number |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

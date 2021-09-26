@@ -3,13 +3,11 @@ import { parseUnits } from "@ethersproject/units";
 import { ContractReceipt, ethers, Signer } from "ethers";
 import invariant from "ts-invariant";
 import type { C } from "ts-toolbelt";
+import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { CollectionModule } from "../collection";
 import { uploadMetadata } from "../common";
 import { getGasPriceForChain } from "../common/gas-price";
-import {
-  getContractAddressByChainId,
-  SUPPORTED_CHAIN_ID,
-} from "../common/registry-address";
+import { getContractAddressByChainId } from "../common/registry-address";
 import { AppModule } from "../control";
 import { CurrencyModule } from "../currency";
 import { MarketModule } from "../market";

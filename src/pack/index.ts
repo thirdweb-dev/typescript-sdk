@@ -1,10 +1,18 @@
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { ChainlinkVrf } from "../common/chainlink";
 import {
   ERC1155__factory,
+  ERC20__factory,
   Pack as PackContract,
   Pack__factory,
 } from "../../contract-interfaces";
-import { getRoleHash, ModuleType, Role } from "../common";
+import {
+  CurrencyValue,
+  getCurrencyValue,
+  getRoleHash,
+  ModuleType,
+  Role,
+} from "../common";
 import { NotFoundError } from "../common/error";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
@@ -174,21 +182,24 @@ export class PackModule extends Module {
   }
 
   // passthrough to the contract
-  public balanceOf = async (address: string, tokenId: string) =>
-    this.contract.balanceOf(address, tokenId);
+  public async balanceOf(address: string, tokenId: string): Promise<BigNumber> {
+    return await this.contract.balanceOf(address, tokenId);
+  }
 
-  public balance = async (tokenId: string) =>
-    this.contract.balanceOf(await this.getSignerAddress(), tokenId);
+  public async balance(tokenId: string): Promise<BigNumber> {
+    return await this.balanceOf(await this.getSignerAddress(), tokenId);
+  }
 
-  public isApproved = async (address: string, operator: string) =>
-    this.contract.isApprovedForAll(address, operator);
+  public async isApproved(address: string, operator: string): Promise<boolean> {
+    return await this.contract.isApprovedForAll(address, operator);
+  }
 
-  public setApproval = async (operator: string, approved = true) => {
+  public async setApproval(operator: string, approved = true) {
     const tx = await this.contract.setApprovalForAll(operator, approved);
     await tx.wait();
-  };
+  }
 
-  public transfer = async (to: string, tokenId: string, amount: BigNumber) => {
+  public async transfer(to: string, tokenId: string, amount: BigNumber) {
     const tx = await this.contract.safeTransferFrom(
       await this.getSignerAddress(),
       to,
@@ -197,10 +208,10 @@ export class PackModule extends Module {
       [0],
     );
     await tx.wait();
-  };
+  }
 
   // owner functions
-  public createPack = async (args: IPackCreateArgs): Promise<PackMetadata> => {
+  public async createPack(args: IPackCreateArgs): Promise<PackMetadata> {
     const asset = ERC1155__factory.connect(
       args.assetContract,
       this.providerOrSigner,
@@ -232,14 +243,14 @@ export class PackModule extends Module {
     const event = receipt?.events?.find((e) => e.event === "PackCreated");
     const packId = event?.args?.packId;
     return await this.get(packId);
-  };
+  }
 
-  public transferFrom = async (
+  public async transferFrom(
     from: string,
     to: string,
     args: IPackBatchArgs,
     data: BytesLike = [0],
-  ) => {
+  ) {
     const tx = await this.contract.safeTransferFrom(
       from,
       to,
@@ -248,14 +259,14 @@ export class PackModule extends Module {
       data,
     );
     await tx.wait();
-  };
+  }
 
-  public transferBatchFrom = async (
+  public async transferBatchFrom(
     from: string,
     to: string,
     args: IPackBatchArgs[],
     data: BytesLike = [0],
-  ) => {
+  ) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
     const tx = await this.contract.safeBatchTransferFrom(
@@ -266,24 +277,49 @@ export class PackModule extends Module {
       data,
     );
     await tx.wait();
-  };
+  }
 
   // owner functions
-  public transferLink = async (to: string, amount: BigNumberish) => {
+  public async getLinkBalance(): Promise<CurrencyValue> {
+    const chainId = await this.getChainID();
+    const chainlink = ChainlinkVrf[chainId];
+    const erc20 = ERC20__factory.connect(
+      chainlink.linkTokenAddress,
+      this.providerOrSigner,
+    );
+    return await getCurrencyValue(
+      this.providerOrSigner,
+      chainlink.linkTokenAddress,
+      await erc20.balanceOf(this.address),
+    );
+  }
+
+  public async depositLink(amount: BigNumberish) {
+    const chainId = await this.getChainID();
+    const chainlink = ChainlinkVrf[chainId];
+    const erc20 = ERC20__factory.connect(
+      chainlink.linkTokenAddress,
+      this.providerOrSigner,
+    );
+    const tx = await erc20.transfer(this.address, amount);
+    await tx.wait();
+  }
+
+  public async withdrawLink(to: string, amount: BigNumberish) {
     const tx = await this.contract.transferLink(to, amount);
     await tx.wait();
-  };
+  }
 
-  public setRoyaltyBps = async (amount: number) => {
+  public async setRoyaltyBps(amount: number) {
     const tx = await this.contract.setRoyaltyBps(amount);
     await tx.wait();
-  };
+  }
 
-  public setModuleMetadata = async (metadata: string | Record<string, any>) => {
+  public async setModuleMetadata(metadata: string | Record<string, any>) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();
-  };
+  }
 
   public async grantRole(role: Role, address: string) {
     const tx = await this.contract.grantRole(getRoleHash(role), address);

@@ -2,10 +2,23 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [CurrencyModule](./sdk.currencymodule.md) &gt; [transferFrom](./sdk.currencymodule.transferfrom.md)
 
-## CurrencyModule.transferFrom property
+## CurrencyModule.transferFrom() method
 
 <b>Signature:</b>
 
 ```typescript
-transferFrom: (from: string, to: string, amount: BigNumberish) => Promise<void>;
+transferFrom(from: string, to: string, amount: BigNumberish): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  from | string |  |
+|  to | string |  |
+|  amount | BigNumberish |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

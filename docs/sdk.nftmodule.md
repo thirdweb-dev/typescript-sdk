@@ -17,27 +17,29 @@ export declare class NFTModule extends Module
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [balance](./sdk.nftmodule.balance.md) |  | () =&gt; Promise&lt;BigNumber&gt; |  |
-|  [balanceOf](./sdk.nftmodule.balanceof.md) |  | (address: string) =&gt; Promise&lt;BigNumber&gt; |  |
-|  [burn](./sdk.nftmodule.burn.md) |  | (tokenId: BigNumberish) =&gt; Promise&lt;void&gt; |  |
-|  [isApproved](./sdk.nftmodule.isapproved.md) |  | (address: string, operator: string) =&gt; Promise&lt;boolean&gt; |  |
-|  [mintBatch](./sdk.nftmodule.mintbatch.md) |  | (to: string, metadatas: (string \| Record&lt;string, any&gt;)\[\]) =&gt; Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->\[\]&gt; |  |
 |  [moduleType](./sdk.nftmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [setApproval](./sdk.nftmodule.setapproval.md) |  | (operator: string, approved?: boolean) =&gt; Promise&lt;void&gt; |  |
-|  [setModuleMetadata](./sdk.nftmodule.setmodulemetadata.md) |  | (metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;void&gt; |  |
-|  [setRoyaltyBps](./sdk.nftmodule.setroyaltybps.md) |  | (amount: number) =&gt; Promise&lt;void&gt; |  |
-|  [totalSupply](./sdk.nftmodule.totalsupply.md) |  | () =&gt; Promise&lt;BigNumber&gt; |  |
-|  [transfer](./sdk.nftmodule.transfer.md) |  | (to: string, tokenId: string) =&gt; Promise&lt;void&gt; |  |
-|  [transferFrom](./sdk.nftmodule.transferfrom.md) |  | (from: string, to: string, tokenId: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [balance()](./sdk.nftmodule.balance.md) |  |  |
+|  [balanceOf(address)](./sdk.nftmodule.balanceof.md) |  |  |
+|  [burn(tokenId)](./sdk.nftmodule.burn.md) |  |  |
 |  [get(tokenId)](./sdk.nftmodule.get.md) |  |  |
 |  [getAll()](./sdk.nftmodule.getall.md) |  |  |
 |  [getOwned(\_address)](./sdk.nftmodule.getowned.md) |  |  |
 |  [grantRole(role, address)](./sdk.nftmodule.grantrole.md) |  |  |
-|  [mint(to, metadata, txOptions)](./sdk.nftmodule.mint.md) |  |  |
+|  [isApproved(address, operator)](./sdk.nftmodule.isapproved.md) |  |  |
+|  [mint(metadata)](./sdk.nftmodule.mint.md) |  |  |
+|  [mintBatch(metadatas)](./sdk.nftmodule.mintbatch.md) |  |  |
+|  [mintBatchTo(to, metadatas)](./sdk.nftmodule.mintbatchto.md) |  |  |
+|  [mintTo(to, metadata)](./sdk.nftmodule.mintto.md) |  |  |
 |  [revokeRole(role, address)](./sdk.nftmodule.revokerole.md) |  |  |
+|  [setApproval(operator, approved)](./sdk.nftmodule.setapproval.md) |  |  |
+|  [setModuleMetadata(metadata)](./sdk.nftmodule.setmodulemetadata.md) |  |  |
+|  [setRoyaltyBps(amount)](./sdk.nftmodule.setroyaltybps.md) |  |  |
+|  [totalSupply()](./sdk.nftmodule.totalsupply.md) |  |  |
+|  [transfer(to, tokenId)](./sdk.nftmodule.transfer.md) |  |  |
+|  [transferFrom(from, to, tokenId)](./sdk.nftmodule.transferfrom.md) |  |  |
 

@@ -9,11 +9,11 @@ Method to get all Market modules.
 <b>Signature:</b>
 
 ```typescript
-getMarketModules(): Promise<ControlContract[]>;
+getMarketModules(): Promise<ModuleMetadata[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[ControlContract](./sdk.controlcontract.md)<!-- -->\[\]&gt;
+Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->\[\]&gt;
 
 A promise of an array of Market modules.
 

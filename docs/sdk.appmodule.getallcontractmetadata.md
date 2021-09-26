@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-getAllContractMetadata(addresses: string[]): Promise<ControlContract[]>;
+getAllContractMetadata(addresses: string[]): Promise<ModuleMetadata[]>;
 ```
 
 ## Parameters
@@ -18,5 +18,5 @@ getAllContractMetadata(addresses: string[]): Promise<ControlContract[]>;
 
 <b>Returns:</b>
 
-Promise&lt;[ControlContract](./sdk.controlcontract.md)<!-- -->\[\]&gt;
+Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->\[\]&gt;
 

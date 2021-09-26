@@ -9,6 +9,7 @@
 |  Class | Description |
 |  --- | --- |
 |  [AppModule](./sdk.appmodule.md) | The AppModule. This should always be created via <code>getAppModule()</code> on the main SDK. |
+|  [CollectionModule](./sdk.collectionmodule.md) | The CollectionModule. This should always be created via <code>getCollectionModule()</code> on the main SDK. |
 |  [CurrencyModule](./sdk.currencymodule.md) | The CurrencyModule. This should always be created via <code>getCurrencyModule()</code> on the main SDK. |
 |  [MarketModule](./sdk.marketmodule.md) | The MarketModule. This should always be created via <code>getMarketModule()</code> on the main SDK. |
 |  [NFTLabsSDK](./sdk.nftlabssdk.md) | The entrypoint to the NFTLabsSDK. |
@@ -35,14 +36,17 @@
 
 |  Interface | Description |
 |  --- | --- |
+|  [CollectionMetadata](./sdk.collectionmetadata.md) |  |
 |  [ContractMetadata](./sdk.contractmetadata.md) |  |
-|  [ControlContract](./sdk.controlcontract.md) | A Module with metadata. |
 |  [Currency](./sdk.currency.md) |  |
 |  [CurrencyValue](./sdk.currencyvalue.md) |  |
 |  [IAppModule](./sdk.iappmodule.md) |  |
+|  [INFTCollectionBatchArgs](./sdk.inftcollectionbatchargs.md) |  |
+|  [INFTCollectionCreateArgs](./sdk.inftcollectioncreateargs.md) |  |
 |  [IPackBatchArgs](./sdk.ipackbatchargs.md) |  |
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
+|  [ModuleMetadata](./sdk.modulemetadata.md) | A Module with metadata. |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) |  |
 |  [PackNFT](./sdk.packnft.md) |  |

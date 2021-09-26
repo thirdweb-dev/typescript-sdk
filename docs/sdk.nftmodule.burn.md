@@ -2,10 +2,21 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [NFTModule](./sdk.nftmodule.md) &gt; [burn](./sdk.nftmodule.burn.md)
 
-## NFTModule.burn property
+## NFTModule.burn() method
 
 <b>Signature:</b>
 
 ```typescript
-burn: (tokenId: BigNumberish) => Promise<void>;
+burn(tokenId: BigNumberish): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  tokenId | BigNumberish |  |
+
+<b>Returns:</b>
+
+Promise&lt;void&gt;
+

@@ -2,10 +2,21 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [PackModule](./sdk.packmodule.md) &gt; [createPack](./sdk.packmodule.createpack.md)
 
-## PackModule.createPack property
+## PackModule.createPack() method
 
 <b>Signature:</b>
 
 ```typescript
-createPack: (args: IPackCreateArgs) => Promise<PackMetadata>;
+createPack(args: IPackCreateArgs): Promise<PackMetadata>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  args | [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
+
+<b>Returns:</b>
+
+Promise&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->&gt;
+
