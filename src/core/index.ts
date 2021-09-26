@@ -52,7 +52,18 @@ export class NFTLabsSDK {
   private registryContractAddress = "";
   private modules = new Map<string, C.Instance<AnyContract>>();
   private providerOrSigner: ProviderOrSigner;
-  private signer: Signer | null = null;
+
+  private _signer: Signer | null = null;
+  /**
+   * The active Signer, you should not need to access this unless you are deploying new modules.
+   * @internal
+   */
+  public get signer(): Signer | null {
+    return this._signer;
+  }
+  private set signer(value: Signer | null) {
+    this._signer = value;
+  }
 
   private _registry: RegistryModule | null = null;
   private get registry(): RegistryModule | null {
