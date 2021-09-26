@@ -18,9 +18,14 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
 }
 
 /**
- * @internal
+ * A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri.
+ * @param data - stringified JSON || File
+ * @param contractAddress - (Optional) the contract address to associate the data with
+ * @param signerAddress - (Optional) the wallet address of the actor that is uploading the file
+ * @returns The `ipfs://<hash>` uri of the uploaded file
+ * @public
  */
-export async function uploadData(
+export async function uploadToIPFS(
   data: string | File,
   contractAddress?: string,
   signerAddress?: string,
@@ -46,28 +51,15 @@ export async function uploadData(
  * @internal
  */
 export async function uploadMetadata(
-  metadata: string | Record<string, JSONValue | File>,
+  metadata: string | Record<string, JSONValue>,
   contractAddress?: string,
   signerAddress?: string,
 ): Promise<string> {
   if (typeof metadata === "string") {
     return metadata;
   }
-  const keys = Object.keys(uploadData);
 
-  for (const key of keys) {
-    const item = metadata[key];
-    if (item && Object.prototype.toString.call(item) === "[object File]") {
-      // if the element is a File type => upload it and return set the resulting uri on the same key
-      metadata[key] = await uploadData(
-        item as File,
-        contractAddress,
-        signerAddress,
-      );
-    }
-  }
-
-  return await uploadData(
+  return await uploadToIPFS(
     JSON.stringify(metadata),
     contractAddress,
     signerAddress,
