@@ -1,4 +1,5 @@
 import { JSONValue } from "../core/types";
+import FormData from "form-data";
 
 /**
  *
@@ -39,7 +40,7 @@ export async function uploadToIPFS(
   formData.append("file", data);
   const res = await fetch("https://upload.nftlabs.co/upload", {
     method: "POST",
-    body: formData,
+    body: formData as any,
     headers,
   });
 
