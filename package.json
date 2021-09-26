@@ -1,6 +1,6 @@
 {
   "name": "@nftlabs/sdk",
-  "version": "0.8.3-dev",
+  "version": "0.8.4-dev",
   "description": "The main NFTLabs SDK.",
   "repository": {
     "type": "git",
@@ -38,7 +38,7 @@
     "@microsoft/api-documenter": "^7.13.53",
     "@microsoft/api-extractor": "^7.18.10",
     "@typechain/ethers-v5": "^7.1.0",
-    "@types/node-fetch": "^3.0.3",
+    "@types/node-fetch": "^2.6.2",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "@typescript-eslint/parser": "^4.31.2",
     "copyfiles": "^2.4.1",
@@ -59,13 +59,14 @@
     "ethers": "^5.4.6"
   },
   "dependencies": {
-    "node-fetch": "^3.0.0",
+    "node-fetch": "^2.6.2",
     "ts-enum-util": "^4.0.2",
     "ts-invariant": "^0.9.3"
   },
   "resolutions": {
     "ansi-regex": "^5.0.0",
-    "strip-ansi": "^5.0.0"
+    "strip-ansi": "^5.0.0",
+    "node-fetch": "^2.6.2"
   },
   "bugs": {
     "url": "https://github.com/nftlabs/nftlabs-sdk-ts/issues"
