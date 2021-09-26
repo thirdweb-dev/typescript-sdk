@@ -21,7 +21,6 @@ export declare class NFTModule extends Module
 |  [balanceOf](./sdk.nftmodule.balanceof.md) |  | (address: string) =&gt; Promise&lt;BigNumber&gt; |  |
 |  [burn](./sdk.nftmodule.burn.md) |  | (tokenId: BigNumberish) =&gt; Promise&lt;void&gt; |  |
 |  [isApproved](./sdk.nftmodule.isapproved.md) |  | (address: string, operator: string) =&gt; Promise&lt;boolean&gt; |  |
-|  [mint](./sdk.nftmodule.mint.md) |  | (to: string, metadata: string \| Record&lt;string, any&gt;) =&gt; Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->&gt; |  |
 |  [mintBatch](./sdk.nftmodule.mintbatch.md) |  | (to: string, metadatas: (string \| Record&lt;string, any&gt;)\[\]) =&gt; Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->\[\]&gt; |  |
 |  [moduleType](./sdk.nftmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
 |  [setApproval](./sdk.nftmodule.setapproval.md) |  | (operator: string, approved?: boolean) =&gt; Promise&lt;void&gt; |  |
@@ -39,5 +38,6 @@ export declare class NFTModule extends Module
 |  [getAll()](./sdk.nftmodule.getall.md) |  |  |
 |  [getOwned(\_address)](./sdk.nftmodule.getowned.md) |  |  |
 |  [grantRole(role, address)](./sdk.nftmodule.grantrole.md) |  |  |
+|  [mint(to, metadata, txOptions)](./sdk.nftmodule.mint.md) |  |  |
 |  [revokeRole(role, address)](./sdk.nftmodule.revokerole.md) |  |  |
 

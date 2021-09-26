@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, Overrides } from "ethers";
 import { NFT, NFT__factory } from "../../contract-interfaces";
 import { getRoleHash, ModuleType, Role } from "../common";
 import { uploadMetadata } from "../common/ipfs";
@@ -84,17 +84,18 @@ export class NFTModule extends Module {
   };
 
   // owner functions
-  public mint = async (
+  public async mint(
     to: string,
     metadata: string | Record<string, any>,
-  ): Promise<NFTMetadata> => {
+    txOptions: Overrides = {},
+  ): Promise<NFTMetadata> {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.mintNFT(to, uri);
+    const tx = await this.contract.mintNFT(to, uri, txOptions);
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "Minted");
     const tokenId = event?.args?.tokenId;
     return await this.get(tokenId.toString());
-  };
+  }
 
   public mintBatch = async (
     to: string,

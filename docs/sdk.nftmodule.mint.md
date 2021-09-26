@@ -2,10 +2,23 @@
 
 [Home](./index.md) &gt; [@nftlabs/sdk](./sdk.md) &gt; [NFTModule](./sdk.nftmodule.md) &gt; [mint](./sdk.nftmodule.mint.md)
 
-## NFTModule.mint property
+## NFTModule.mint() method
 
 <b>Signature:</b>
 
 ```typescript
-mint: (to: string, metadata: string | Record<string, any>) => Promise<NFTMetadata>;
+mint(to: string, metadata: string | Record<string, any>, txOptions?: Overrides): Promise<NFTMetadata>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  to | string |  |
+|  metadata | string \| Record&lt;string, any&gt; |  |
+|  txOptions | Overrides |  |
+
+<b>Returns:</b>
+
+Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->&gt;
+
