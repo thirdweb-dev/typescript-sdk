@@ -18,12 +18,6 @@ export declare class NFTLabsSDK
 |  --- | --- | --- |
 |  [(constructor)(providerOrNetwork, opts)](./sdk.nftlabssdk._constructor_.md) |  | Constructs a new instance of the <code>NFTLabsSDK</code> class |
 
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [registry](./sdk.nftlabssdk.registry.md) |  | RegistryModule \| Promise&lt;RegistryModule&gt; |  |
-
 ## Methods
 
 |  Method | Modifiers | Description |

@@ -54,11 +54,11 @@ export class NFTLabsSDK {
   private providerOrSigner: ProviderOrSigner;
   private signer: Signer | null = null;
 
-  private _registry: RegistryModule | Promise<RegistryModule> | null = null;
-  public get registry(): RegistryModule | Promise<RegistryModule> {
-    return this._registry || this.getRegistryModule();
+  private _registry: RegistryModule | null = null;
+  private get registry(): RegistryModule | null {
+    return this._registry;
   }
-  private set registry(value: RegistryModule | Promise<RegistryModule>) {
+  private set registry(value: RegistryModule | null) {
     this._registry = value;
   }
   constructor(
@@ -73,14 +73,13 @@ export class NFTLabsSDK {
       this.registryContractAddress = opts.registryContractAddress;
     }
   }
-  private async updateModuleSigners() {
+  private updateModuleSigners() {
     for (const [, _module] of this.modules) {
       if (this.isReadOnly()) {
         _module.clearSigner();
       }
       _module.setProviderOrSigner(this.providerOrSigner);
     }
-    this.registry = await this.getRegistryModule();
   }
 
   private async getChainID(): Promise<number> {
@@ -101,7 +100,6 @@ export class NFTLabsSDK {
       (await this.getChainID()) as SUPPORTED_CHAIN_ID,
     );
   }
-
   /**
    *
    * @param address - The contract address of the given Registry module.
@@ -111,7 +109,7 @@ export class NFTLabsSDK {
   private async getRegistryModule(): Promise<RegistryModule> {
     const address = await this.getRegistryAddress();
     invariant(address, "getRegistryModule() -- No Address");
-    return this.getOrCreateModule(address, RegistryModule);
+    return (this.registry = this.getOrCreateModule(address, RegistryModule));
   }
 
   private getOrCreateModule<T extends AnyContract>(
@@ -131,11 +129,24 @@ export class NFTLabsSDK {
   }
 
   /**
+   * you should not need this unless you are creating new modules
+   * @returns the active registry module forwarder address
+   * @internal
+   */
+  public async getForwarderAddress(): Promise<string> {
+    return await (
+      this.registry || (await this.getRegistryModule())
+    ).contract.forwarder();
+  }
+
+  /**
    * Call this to get the current apps.
    * @returns All currently registered apps for the connected wallet
    */
   public async getApps(): Promise<IAppModule[]> {
-    return (await this.registry).getProtocolContracts();
+    return (
+      this.registry || (await this.getRegistryModule())
+    ).getProtocolContracts();
   }
 
   /**
@@ -146,7 +157,8 @@ export class NFTLabsSDK {
   public async createApp(
     metadata: string | Record<string, JSONValue>,
   ): Promise<ContractReceipt> {
-    const registryContract = (await this.registry).contract;
+    const registryContract = (this.registry || (await this.getRegistryModule()))
+      .contract;
     const gasPrice = await this.getGasPrice();
     const txOpts: Record<string, any> = {};
     // could technically be `0` so simple falsy check does not suffice
