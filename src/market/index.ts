@@ -177,8 +177,8 @@ export class MarketModule extends Module {
     assetContract: string,
     tokenId: string,
     currencyContract: string,
-    price: BigNumber,
-    quantity: BigNumber,
+    price: BigNumberish,
+    quantity: BigNumberish,
     secondsUntilStart = 0,
     secondsUntilEnd = 0,
   ): Promise<Listing> {
