@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-getListing(listingId: string): Promise<Listing>;
+getListing(listingId: string): Promise<ListingMetadata>;
 ```
 
 ## Parameters
@@ -18,5 +18,5 @@ getListing(listingId: string): Promise<Listing>;
 
 <b>Returns:</b>
 
-Promise&lt;Listing&gt;
+Promise&lt;[ListingMetadata](./sdk.listingmetadata.md)<!-- -->&gt;
 

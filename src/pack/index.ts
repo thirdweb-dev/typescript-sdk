@@ -33,7 +33,7 @@ export interface PackMetadata {
 /**
  * @public
  */
-export interface PackNFT {
+export interface PackNFTMetadata {
   supply: BigNumber;
   metadata: NFTMetadata;
 }
@@ -160,7 +160,7 @@ export class PackModule extends Module {
     );
   }
 
-  public async getNFTs(packId: string): Promise<PackNFT[]> {
+  public async getNFTs(packId: string): Promise<PackNFTMetadata[]> {
     const packReward = await this.contract.getPackWithRewards(packId);
     if (!packReward.source) {
       throw new NotFoundError();

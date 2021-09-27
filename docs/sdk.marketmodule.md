@@ -24,6 +24,8 @@ export declare class MarketModule extends Module
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [buy(listingId, quantity)](./sdk.marketmodule.buy.md) |  |  |
+|  [get(listingId)](./sdk.marketmodule.get.md) |  |  |
+|  [getAll(filter)](./sdk.marketmodule.getall.md) |  |  |
 |  [getAllListings(filter)](./sdk.marketmodule.getalllistings.md) |  |  |
 |  [getListing(listingId)](./sdk.marketmodule.getlisting.md) |  |  |
 |  [getMarketFeeBps()](./sdk.marketmodule.getmarketfeebps.md) |  |  |

@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-list(assetContract: string, tokenId: string, currencyContract: string, price: BigNumberish, quantity: BigNumberish, secondsUntilStart?: number, secondsUntilEnd?: number): Promise<Listing>;
+list(assetContract: string, tokenId: string, currencyContract: string, price: BigNumberish, quantity: BigNumberish, secondsUntilStart?: number, secondsUntilEnd?: number): Promise<ListingMetadata>;
 ```
 
 ## Parameters
@@ -24,5 +24,5 @@ list(assetContract: string, tokenId: string, currencyContract: string, price: Bi
 
 <b>Returns:</b>
 
-Promise&lt;Listing&gt;
+Promise&lt;[ListingMetadata](./sdk.listingmetadata.md)<!-- -->&gt;
 

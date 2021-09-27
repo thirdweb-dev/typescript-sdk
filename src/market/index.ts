@@ -15,13 +15,13 @@ import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 
-interface ListingFilter {
+export interface ListingFilter {
   seller?: string;
   tokenContract?: string;
   tokenId?: string;
 }
 
-interface Listing {
+export interface ListingMetadata {
   id: string;
   seller: string;
   tokenContract: string;
@@ -63,7 +63,9 @@ export class MarketModule extends Module {
     ));
   }
 
-  private async transformResultToListing(listing: any): Promise<Listing> {
+  private async transformResultToListing(
+    listing: any,
+  ): Promise<ListingMetadata> {
     let currency: CurrencyValue | null = null;
 
     try {
@@ -107,12 +109,22 @@ export class MarketModule extends Module {
     };
   }
 
-  public async getListing(listingId: string): Promise<Listing> {
+  public async get(listingId: string): Promise<ListingMetadata> {
+    return await this.getListing(listingId);
+  }
+
+  public async getAll(filter?: ListingFilter): Promise<ListingMetadata[]> {
+    return await this.getAllListings(filter);
+  }
+
+  public async getListing(listingId: string): Promise<ListingMetadata> {
     const listing = await this.contract.listings(listingId);
     return await this.transformResultToListing(listing);
   }
 
-  public async getAllListings(filter?: ListingFilter): Promise<Listing[]> {
+  public async getAllListings(
+    filter?: ListingFilter,
+  ): Promise<ListingMetadata[]> {
     let listings: any[] = [];
 
     if (!filter) {
@@ -181,7 +193,7 @@ export class MarketModule extends Module {
     quantity: BigNumberish,
     secondsUntilStart = 0,
     secondsUntilEnd = 0,
-  ): Promise<Listing> {
+  ): Promise<ListingMetadata> {
     const from = await this.getSignerAddress();
     const erc165 = ERC165__factory.connect(
       assetContract,
@@ -248,7 +260,7 @@ export class MarketModule extends Module {
   public async buy(
     listingId: string,
     quantity: BigNumberish,
-  ): Promise<Listing> {
+  ): Promise<ListingMetadata> {
     const listing = await this.getListing(listingId);
     const owner = await this.getSignerAddress();
     const spender = this.address;

@@ -46,10 +46,12 @@
 |  [IPackBatchArgs](./sdk.ipackbatchargs.md) |  |
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
+|  [ListingFilter](./sdk.listingfilter.md) |  |
+|  [ListingMetadata](./sdk.listingmetadata.md) |  |
 |  [ModuleMetadata](./sdk.modulemetadata.md) | A Module with metadata. |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) |  |
-|  [PackNFT](./sdk.packnft.md) |  |
+|  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 
 ## Variables
 

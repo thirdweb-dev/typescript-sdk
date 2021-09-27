@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-getNFTs(packId: string): Promise<PackNFT[]>;
+getNFTs(packId: string): Promise<PackNFTMetadata[]>;
 ```
 
 ## Parameters
@@ -18,5 +18,5 @@ getNFTs(packId: string): Promise<PackNFT[]>;
 
 <b>Returns:</b>
 
-Promise&lt;[PackNFT](./sdk.packnft.md)<!-- -->\[\]&gt;
+Promise&lt;[PackNFTMetadata](./sdk.packnftmetadata.md)<!-- -->\[\]&gt;
 
