@@ -212,7 +212,7 @@ export class PackModule extends Module {
   }
 
   // owner functions
-  public async createPack(args: IPackCreateArgs): Promise<PackMetadata> {
+  public async create(args: IPackCreateArgs): Promise<PackMetadata> {
     const asset = ERC1155__factory.connect(
       args.assetContract,
       this.providerOrSigner,

@@ -25,7 +25,7 @@ export declare class PackModule extends Module
 |  --- | --- | --- |
 |  [balance(tokenId)](./sdk.packmodule.balance.md) |  |  |
 |  [balanceOf(address, tokenId)](./sdk.packmodule.balanceof.md) |  |  |
-|  [createPack(args)](./sdk.packmodule.createpack.md) |  |  |
+|  [create(args)](./sdk.packmodule.create.md) |  |  |
 |  [depositLink(amount)](./sdk.packmodule.depositlink.md) |  |  |
 |  [get(packId)](./sdk.packmodule.get.md) |  |  |
 |  [getAll()](./sdk.packmodule.getall.md) |  |  |
