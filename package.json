@@ -1,6 +1,6 @@
 {
   "name": "@nftlabs/sdk",
-  "version": "0.11.1-dev",
+  "version": "0.11.2-dev",
   "description": "The main NFTLabs SDK.",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
     "contract-interfaces/"
   ],
   "scripts": {
-    "build": "microbundle --no-generateTypes --tsconfig tsconfig-microbundle.json",
+    "build": "microbundle --no-generateTypes --tsconfig tsconfig-microbundle.json --no-compress",
     "dev": "microbundle watch",
     "format": "prettier src/ --write",
     "prepublishOnly": "yarn lint",
@@ -60,7 +60,6 @@
     "ethers": "^5.4.6"
   },
   "dependencies": {
-    "@web-std/file": "^1.1.3",
     "form-data": "^4.0.0",
     "node-fetch": "^2.6.2",
     "ts-enum-util": "^4.0.2",

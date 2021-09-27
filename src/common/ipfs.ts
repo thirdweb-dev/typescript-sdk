@@ -1,5 +1,5 @@
-import { JSONValue } from "../core/types";
 import FormData from "form-data";
+import { JSONValue } from "../core/types";
 
 /**
  *
