@@ -1,6 +1,6 @@
 {
   "name": "@nftlabs/sdk",
-  "version": "0.11.3-dev",
+  "version": "0.12.0-dev",
   "description": "The main NFTLabs SDK.",
   "repository": {
     "type": "git",
