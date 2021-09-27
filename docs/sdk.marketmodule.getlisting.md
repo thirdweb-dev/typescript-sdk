@@ -4,6 +4,11 @@
 
 ## MarketModule.getListing() method
 
+> Warning: This API is now obsolete.
+> 
+> Use [MarketModule.get()](./sdk.marketmodule.get.md) instead.
+> 
+
 <b>Signature:</b>
 
 ```typescript

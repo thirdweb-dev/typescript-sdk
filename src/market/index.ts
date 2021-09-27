@@ -117,11 +117,17 @@ export class MarketModule extends Module {
     return await this.getAllListings(filter);
   }
 
+  /**
+   * @deprecated Use {@link MarketModule.get} instead.
+   */
   public async getListing(listingId: string): Promise<ListingMetadata> {
     const listing = await this.contract.listings(listingId);
     return await this.transformResultToListing(listing);
   }
 
+  /**
+   * @deprecated Use {@link MarketModule.getAll} instead.
+   */
   public async getAllListings(
     filter?: ListingFilter,
   ): Promise<ListingMetadata[]> {
