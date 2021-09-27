@@ -53,13 +53,6 @@
 |  [PackMetadata](./sdk.packmetadata.md) |  |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 
-## Variables
-
-|  Variable | Description |
-|  --- | --- |
-|  [InterfaceId\_IERC1155](./sdk.interfaceid_ierc1155.md) |  |
-|  [InterfaceId\_IERC721](./sdk.interfaceid_ierc721.md) |  |
-
 ## Type Aliases
 
 |  Type Alias | Description |
