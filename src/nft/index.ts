@@ -1,4 +1,5 @@
-import { BigNumber, BigNumberish, Overrides } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
+import { MetadataURIOrObject } from "../core/types";
 import { NFT, NFT__factory } from "../../contract-interfaces";
 import { getRoleHash, ModuleType, Role } from "../common";
 import { uploadMetadata } from "../common/ipfs";
@@ -89,15 +90,13 @@ export class NFTModule extends Module {
   }
 
   // owner functions
-  public async mint(
-    metadata: string | Record<string, any>,
-  ): Promise<NFTMetadata> {
+  public async mint(metadata: MetadataURIOrObject): Promise<NFTMetadata> {
     return await this.mintTo(await this.getSignerAddress(), metadata);
   }
 
   public async mintTo(
     to: string,
-    metadata: string | Record<string, any>,
+    metadata: MetadataURIOrObject,
   ): Promise<NFTMetadata> {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.mintNFT(to, uri);
@@ -108,14 +107,14 @@ export class NFTModule extends Module {
   }
 
   public async mintBatch(
-    metadatas: (string | Record<string, any>)[],
+    metadatas: MetadataURIOrObject[],
   ): Promise<NFTMetadata[]> {
     return await this.mintBatchTo(await this.getSignerAddress(), metadatas);
   }
 
   public async mintBatchTo(
     to: string,
-    metadatas: (string | Record<string, any>)[],
+    metadatas: MetadataURIOrObject[],
   ): Promise<NFTMetadata[]> {
     const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
     const tx = await this.contract.mintNFTBatch(to, uris);
@@ -143,7 +142,7 @@ export class NFTModule extends Module {
     await tx.wait();
   }
 
-  public async setModuleMetadata(metadata: string | Record<string, any>) {
+  public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();

@@ -14,7 +14,12 @@ import { MarketModule } from "../market";
 import { NFTModule } from "../nft";
 import { PackModule } from "../pack";
 import { IAppModule, RegistryModule } from "../registry";
-import { JSONValue, ProviderOrSigner, ValidProviderInput } from "./types";
+import {
+  JSONValue,
+  MetadataURIOrObject,
+  ProviderOrSigner,
+  ValidProviderInput,
+} from "./types";
 
 /**
  * The optional options that can be passed to the SDK.
@@ -164,7 +169,7 @@ export class NFTLabsSDK {
    * @returns The transaction receipt
    */
   public async createApp(
-    metadata: string | Record<string, JSONValue>,
+    metadata: MetadataURIOrObject,
   ): Promise<ContractReceipt> {
     const registryContract = (this.registry || (await this.getRegistryModule()))
       .contract;

@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-attributes?: Record<string, any>;
+attributes?: Record<string, JSONValue>;
 ```

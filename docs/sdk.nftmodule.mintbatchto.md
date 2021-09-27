@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-mintBatchTo(to: string, metadatas: (string | Record<string, any>)[]): Promise<NFTMetadata[]>;
+mintBatchTo(to: string, metadatas: MetadataURIOrObject[]): Promise<NFTMetadata[]>;
 ```
 
 ## Parameters
@@ -15,7 +15,7 @@ mintBatchTo(to: string, metadatas: (string | Record<string, any>)[]): Promise<NF
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  to | string |  |
-|  metadatas | (string \| Record&lt;string, any&gt;)\[\] |  |
+|  metadatas | [MetadataURIOrObject](./sdk.metadatauriorobject.md)<!-- -->\[\] |  |
 
 <b>Returns:</b>
 

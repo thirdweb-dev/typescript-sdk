@@ -9,14 +9,14 @@ Call this to create a new app
 <b>Signature:</b>
 
 ```typescript
-createApp(metadata: string | Record<string, JSONValue>): Promise<ContractReceipt>;
+createApp(metadata: MetadataURIOrObject): Promise<ContractReceipt>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | string \| Record&lt;string, [JSONValue](./sdk.jsonvalue.md)<!-- -->&gt; | metadata URI or a JSON object |
+|  metadata | [MetadataURIOrObject](./sdk.metadatauriorobject.md) | metadata URI or a JSON object |
 
 <b>Returns:</b>
 

@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-createWithERC721(tokenContract: string, tokenId: BigNumberish, metadata: string | Record<string, any>): Promise<void>;
+createWithERC721(tokenContract: string, tokenId: BigNumberish, metadata: MetadataURIOrObject): Promise<void>;
 ```
 
 ## Parameters
@@ -16,7 +16,7 @@ createWithERC721(tokenContract: string, tokenId: BigNumberish, metadata: string 
 |  --- | --- | --- |
 |  tokenContract | string |  |
 |  tokenId | BigNumberish |  |
-|  metadata | string \| Record&lt;string, any&gt; |  |
+|  metadata | [MetadataURIOrObject](./sdk.metadatauriorobject.md) |  |
 
 <b>Returns:</b>
 

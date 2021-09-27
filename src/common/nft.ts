@@ -1,6 +1,6 @@
 import { Contract } from "@ethersproject/contracts";
 import { NFT, NFTCollection } from "../../contract-interfaces";
-import { ProviderOrSigner } from "../core/types";
+import { JSONValue, ProviderOrSigner } from "../core/types";
 import { NotFoundError } from "./error";
 import { replaceIpfsWithGateway } from "./ipfs";
 
@@ -52,7 +52,7 @@ export interface NFTMetadata {
   name?: string;
   description?: string;
   image?: string;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, JSONValue>;
 }
 
 /**

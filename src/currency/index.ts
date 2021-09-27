@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish } from "ethers";
+import { MetadataURIOrObject } from "../core/types";
 import { Coin, Coin__factory } from "../../contract-interfaces";
 import { getRoleHash, ModuleType, Role } from "../common";
 import {
@@ -102,7 +103,7 @@ export class CurrencyModule extends Module {
     await tx.wait();
   }
 
-  public async setModuleMetadata(metadata: string | Record<string, any>) {
+  public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();

@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-mint(metadata: string | Record<string, any>): Promise<NFTMetadata>;
+mint(metadata: MetadataURIOrObject): Promise<NFTMetadata>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | string \| Record&lt;string, any&gt; |  |
+|  metadata | [MetadataURIOrObject](./sdk.metadatauriorobject.md) |  |
 
 <b>Returns:</b>
 

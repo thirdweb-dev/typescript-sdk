@@ -1,5 +1,6 @@
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish } from "ethers";
+import { MetadataURIOrObject } from "../core/types";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -294,7 +295,7 @@ export class MarketModule extends Module {
   }
 
   // owner functions
-  public async setModuleMetadata(metadata: string | Record<string, any>) {
+  public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();

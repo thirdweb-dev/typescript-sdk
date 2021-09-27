@@ -1,3 +1,4 @@
+import { MetadataURIOrObject } from "../core/types";
 import {
   ProtocolControl,
   ProtocolControl__factory,
@@ -128,7 +129,7 @@ export class AppModule extends Module {
   }
 
   // owner functions
-  public async setModuleMetadata(metadata: string | Record<string, any>) {
+  public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();

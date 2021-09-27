@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-mintTo(to: string, metadata: string | Record<string, any>): Promise<NFTMetadata>;
+mintTo(to: string, metadata: MetadataURIOrObject): Promise<NFTMetadata>;
 ```
 
 ## Parameters
@@ -15,7 +15,7 @@ mintTo(to: string, metadata: string | Record<string, any>): Promise<NFTMetadata>
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  to | string |  |
-|  metadata | string \| Record&lt;string, any&gt; |  |
+|  metadata | [MetadataURIOrObject](./sdk.metadatauriorobject.md) |  |
 
 <b>Returns:</b>
 

@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-metadata: string | Record<string, any>;
+metadata: MetadataURIOrObject;
 ```

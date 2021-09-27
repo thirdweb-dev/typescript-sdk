@@ -17,6 +17,7 @@ import { NotFoundError } from "../common/error";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
+import { MetadataURIOrObject } from "../core/types";
 
 /**
  * @public
@@ -43,7 +44,7 @@ export interface PackNFTMetadata {
  */
 export interface IPackCreateArgs {
   assetContract: string;
-  metadata: string | Record<string, any>;
+  metadata: MetadataURIOrObject;
   assets: {
     tokenId: BigNumberish;
     amount: BigNumberish;
@@ -315,7 +316,7 @@ export class PackModule extends Module {
     await tx.wait();
   }
 
-  public async setModuleMetadata(metadata: string | Record<string, any>) {
+  public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();

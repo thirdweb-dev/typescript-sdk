@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-setModuleMetadata(metadata: string | Record<string, any>): Promise<void>;
+setModuleMetadata(metadata: MetadataURIOrObject): Promise<void>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | string \| Record&lt;string, any&gt; |  |
+|  metadata | [MetadataURIOrObject](./sdk.metadatauriorobject.md) |  |
 
 <b>Returns:</b>
 

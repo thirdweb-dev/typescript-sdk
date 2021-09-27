@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-mintBatch(metadatas: (string | Record<string, any>)[]): Promise<NFTMetadata[]>;
+mintBatch(metadatas: MetadataURIOrObject[]): Promise<NFTMetadata[]>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadatas | (string \| Record&lt;string, any&gt;)\[\] |  |
+|  metadatas | [MetadataURIOrObject](./sdk.metadatauriorobject.md)<!-- -->\[\] |  |
 
 <b>Returns:</b>
 

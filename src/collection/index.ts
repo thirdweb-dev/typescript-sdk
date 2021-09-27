@@ -1,5 +1,6 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { BytesLike } from "ethers";
+import { MetadataURIOrObject } from "../core/types";
 import {
   NFTCollection as NFTCollectionContract,
   NFTCollection__factory,
@@ -23,7 +24,7 @@ export interface CollectionMetadata {
  * @public
  */
 export interface INFTCollectionCreateArgs {
-  metadata: string | Record<string, any>;
+  metadata: MetadataURIOrObject;
   supply: BigNumberish;
 }
 
@@ -157,7 +158,7 @@ export class CollectionModule extends Module {
   public async createWithERC721(
     tokenContract: string,
     tokenId: BigNumberish,
-    metadata: string | Record<string, any>,
+    metadata: MetadataURIOrObject,
   ) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.wrapERC721(tokenContract, tokenId, uri);
@@ -251,7 +252,7 @@ export class CollectionModule extends Module {
     await tx.wait();
   }
 
-  public async setModuleMetadata(metadata: string | Record<string, any>) {
+  public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
     const tx = await this.contract.setContractURI(uri);
     await tx.wait();

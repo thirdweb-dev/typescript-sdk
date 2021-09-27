@@ -24,3 +24,9 @@ export type JSONValue =
   | boolean
   | JSONValue[]
   | { [key: string]: JSONValue };
+
+/**
+ * A valid URI string or metadata object
+ * @public
+ */
+export type MetadataURIOrObject = string | Record<string, JSONValue>;

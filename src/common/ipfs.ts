@@ -1,5 +1,5 @@
 import FormData from "form-data";
-import { JSONValue } from "../core/types";
+import { JSONValue, MetadataURIOrObject } from "../core/types";
 
 /**
  *
@@ -52,7 +52,7 @@ export async function uploadToIPFS(
  * @internal
  */
 export async function uploadMetadata(
-  metadata: string | Record<string, JSONValue>,
+  metadata: MetadataURIOrObject,
   contractAddress?: string,
   signerAddress?: string,
 ): Promise<string> {
