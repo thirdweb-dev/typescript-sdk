@@ -37,7 +37,10 @@ export class Module {
     this.setProviderOrSigner(providerOrSigner);
   }
 
-  setProviderOrSigner(providerOrSigner: ProviderOrSigner) {
+  /*
+   * @internal
+   */
+  public setProviderOrSigner(providerOrSigner: ProviderOrSigner) {
     this.providerOrSigner = providerOrSigner;
     if (Signer.isSigner(providerOrSigner)) {
       this.signer = providerOrSigner;
@@ -45,7 +48,10 @@ export class Module {
     this.connectContract();
   }
 
-  clearSigner(): void {
+  /*
+   * @internal
+   */
+  public clearSigner(): void {
     this.signer = null;
   }
 
@@ -71,10 +77,12 @@ export class Module {
   }
 
   protected async getChainID(): Promise<number> {
-    const provider = Provider.isProvider(this.providerOrSigner)
-      ? this.providerOrSigner
-      : this.providerOrSigner.provider;
-    invariant(provider, "getRegistryAddress() -- No Provider");
+    const provider: Provider | undefined = Signer.isSigner(
+      this.getProviderOrSigner(),
+    )
+      ? (this.providerOrSigner as Signer).provider
+      : (this.providerOrSigner as Provider);
+    invariant(provider, "getChainID() -- No Provider");
     const { chainId } = await provider.getNetwork();
     return chainId;
   }
