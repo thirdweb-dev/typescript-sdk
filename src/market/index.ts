@@ -110,20 +110,11 @@ export class MarketModule extends Module {
     };
   }
 
-  public async get(listingId: string): Promise<ListingMetadata> {
-    return await this.getListing(listingId);
-  }
-
-  public async getAll(filter?: ListingFilter): Promise<ListingMetadata[]> {
-    return await this.getAllListings(filter);
-  }
-
   /**
    * @deprecated Use {@link MarketModule.get} instead.
    */
   public async getListing(listingId: string): Promise<ListingMetadata> {
-    const listing = await this.contract.listings(listingId);
-    return await this.transformResultToListing(listing);
+    return await this.get(listingId);
   }
 
   /**
@@ -132,6 +123,15 @@ export class MarketModule extends Module {
   public async getAllListings(
     filter?: ListingFilter,
   ): Promise<ListingMetadata[]> {
+    return await this.getAll(filter);
+  }
+
+  public async get(listingId: string): Promise<ListingMetadata> {
+    const listing = await this.contract.listings(listingId);
+    return await this.transformResultToListing(listing);
+  }
+
+  public async getAll(filter?: ListingFilter): Promise<ListingMetadata[]> {
     let listings: any[] = [];
 
     if (!filter) {
@@ -255,7 +255,7 @@ export class MarketModule extends Module {
   }
 
   public async unlistAll(listingId: string) {
-    const maxQuantity = (await this.getListing(listingId)).quantity;
+    const maxQuantity = (await this.get(listingId)).quantity;
     await this.unlist(listingId, maxQuantity);
   }
 
@@ -268,7 +268,7 @@ export class MarketModule extends Module {
     listingId: string,
     quantity: BigNumberish,
   ): Promise<ListingMetadata> {
-    const listing = await this.getListing(listingId);
+    const listing = await this.get(listingId);
     const owner = await this.getSignerAddress();
     const spender = this.address;
     const totalPrice = listing.price.mul(BigNumber.from(quantity));

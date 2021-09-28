@@ -48,7 +48,7 @@ export class NFTModule extends Module {
   public async getOwned(_address?: string): Promise<NFTMetadata[]> {
     const address = _address ? _address : await this.getSignerAddress();
     const balance = await this.contract.balanceOf(address);
-    const indices = Array.from(Array(balance).keys());
+    const indices = Array.from(Array(balance.toNumber()).keys());
     const tokenIds = await Promise.all(
       indices.map((i) => this.contract.tokenOfOwnerByIndex(address, i)),
     );
