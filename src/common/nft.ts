@@ -69,7 +69,6 @@ export async function getMetadataWithoutContract(
     tokenUriABI,
     provider,
   ) as NFTCollection;
-  // contract.uri(tokenId);
   const uri = await getMetadataUri(contract, tokenId);
   if (!uri) {
     throw new NotFoundError();

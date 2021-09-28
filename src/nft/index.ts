@@ -70,7 +70,7 @@ export class NFTModule extends Module {
     return await this.balanceOf(await this.getSignerAddress());
   }
 
-  public async isApproved(address: string, operator: string) {
+  public async isApproved(address: string, operator: string): Promise<boolean> {
     return await this.contract.isApprovedForAll(address, operator);
   }
 

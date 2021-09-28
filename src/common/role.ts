@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 
-export type Role = "admin" | "minter" | "pauser" | "provider";
+export type Role = "admin" | "minter" | "pauser" | "transfer" | "provider";
 
 /**
  *
@@ -9,6 +9,7 @@ export type Role = "admin" | "minter" | "pauser" | "provider";
 const _role: Record<Role, string> = {
   provider: "PROTOCOL_PROVIDER",
   admin: "PROTOCOL_ADMIN",
+  transfer: "TRANSFER_ROLE",
   minter: "MINTER_ROLE",
   pauser: "PAUSER_ROLE",
 };

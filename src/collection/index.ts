@@ -95,16 +95,19 @@ export class CollectionModule extends Module {
   }
 
   // passthrough to the contract
-  public async balanceOf(address: string, tokenId: string) {
-    return this.contract.balanceOf(address, tokenId);
+  public async balanceOf(address: string, tokenId: string): Promise<BigNumber> {
+    return await this.contract.balanceOf(address, tokenId);
   }
 
-  public async balance(tokenId: string) {
-    return this.contract.balanceOf(await this.getSignerAddress(), tokenId);
+  public async balance(tokenId: string): Promise<BigNumber> {
+    return await this.contract.balanceOf(
+      await this.getSignerAddress(),
+      tokenId,
+    );
   }
 
-  public async isApproved(address: string, operator: string) {
-    return this.contract.isApprovedForAll(address, operator);
+  public async isApproved(address: string, operator: string): Promise<boolean> {
+    return await this.contract.isApprovedForAll(address, operator);
   }
 
   public async setApproval(operator: string, approved = true) {
