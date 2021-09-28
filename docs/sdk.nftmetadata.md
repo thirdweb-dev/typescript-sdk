@@ -14,10 +14,10 @@ export interface NFTMetadata
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [attributes?](./sdk.nftmetadata.attributes.md) | Record&lt;string, [JSONValue](./sdk.jsonvalue.md)<!-- -->&gt; | <i>(Optional)</i> |
 |  [description?](./sdk.nftmetadata.description.md) | string | <i>(Optional)</i> |
 |  [id](./sdk.nftmetadata.id.md) | string |  |
 |  [image?](./sdk.nftmetadata.image.md) | string | <i>(Optional)</i> |
 |  [name?](./sdk.nftmetadata.name.md) | string | <i>(Optional)</i> |
+|  [properties?](./sdk.nftmetadata.properties.md) | Record&lt;string, [JSONValue](./sdk.jsonvalue.md)<!-- -->&gt; | <i>(Optional)</i> |
 |  [uri](./sdk.nftmetadata.uri.md) | string |  |
 

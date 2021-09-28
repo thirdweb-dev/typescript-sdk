@@ -52,7 +52,7 @@ export interface NFTMetadata {
   name?: string;
   description?: string;
   image?: string;
-  attributes?: Record<string, JSONValue>;
+  properties?: Record<string, JSONValue>;
 }
 
 /**
