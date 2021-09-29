@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-list(assetContract: string, tokenId: string, currencyContract: string, price: BigNumberish, quantity: BigNumberish, secondsUntilStart?: number, secondsUntilEnd?: number): Promise<ListingMetadata>;
+list(assetContract: string, tokenId: string, currencyContract: string, price: BigNumberish, quantity: BigNumberish, tokensPerBuyer?: BigNumberish, secondsUntilStart?: BigNumberish, secondsUntilEnd?: BigNumberish): Promise<ListingMetadata>;
 ```
 
 ## Parameters
@@ -19,8 +19,9 @@ list(assetContract: string, tokenId: string, currencyContract: string, price: Bi
 |  currencyContract | string |  |
 |  price | BigNumberish |  |
 |  quantity | BigNumberish |  |
-|  secondsUntilStart | number |  |
-|  secondsUntilEnd | number |  |
+|  tokensPerBuyer | BigNumberish |  |
+|  secondsUntilStart | BigNumberish |  |
+|  secondsUntilEnd | BigNumberish |  |
 
 <b>Returns:</b>
 

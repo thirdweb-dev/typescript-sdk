@@ -61,7 +61,11 @@ export class CurrencyModule extends Module {
   }
 
   public async transfer(to: string, amount: BigNumber) {
-    const tx = await this.contract.transfer(to, amount);
+    const tx = await this.contract.transfer(
+      to,
+      amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
@@ -73,50 +77,82 @@ export class CurrencyModule extends Module {
   }
 
   public async setAllowance(spender: string, amount: BigNumber) {
-    const tx = await this.contract.approve(spender, amount);
+    const tx = await this.contract.approve(
+      spender,
+      amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   // owner functions
   public async mintTo(to: string, amount: BigNumberish) {
-    const tx = await this.contract.mint(to, amount);
+    const tx = await this.contract.mint(
+      to,
+      amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async mint(amount: BigNumberish) {
-    const tx = await this.contract.mint(await this.getSignerAddress(), amount);
+    const tx = await this.contract.mint(
+      await this.getSignerAddress(),
+      amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async burn(amount: BigNumberish) {
-    const tx = await this.contract.burn(amount);
+    const tx = await this.contract.burn(amount, await this.getCallOverrides());
     await tx.wait();
   }
 
   public async burnFrom(from: string, amount: BigNumberish) {
-    const tx = await this.contract.burnFrom(from, amount);
+    const tx = await this.contract.burnFrom(
+      from,
+      amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async transferFrom(from: string, to: string, amount: BigNumberish) {
-    const tx = await this.contract.transferFrom(from, to, amount);
+    const tx = await this.contract.transferFrom(
+      from,
+      to,
+      amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(uri);
+    const tx = await this.contract.setContractURI(
+      uri,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   // owner role functions
   public async grantRole(role: Role, address: string) {
-    const tx = await this.contract.grantRole(getRoleHash(role), address);
+    const tx = await this.contract.grantRole(
+      getRoleHash(role),
+      address,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async revokeRole(role: Role, address: string) {
-    const tx = await this.contract.revokeRole(getRoleHash(role), address);
+    const tx = await this.contract.revokeRole(
+      getRoleHash(role),
+      address,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 }

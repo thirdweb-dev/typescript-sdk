@@ -75,7 +75,11 @@ export class NFTModule extends Module {
   }
 
   public async setApproval(operator: string, approved = true) {
-    const tx = await this.contract.setApprovalForAll(operator, approved);
+    const tx = await this.contract.setApprovalForAll(
+      operator,
+      approved,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
@@ -85,6 +89,7 @@ export class NFTModule extends Module {
       from,
       to,
       tokenId,
+      await this.getCallOverrides(),
     );
     await tx.wait();
   }
@@ -99,7 +104,11 @@ export class NFTModule extends Module {
     metadata: MetadataURIOrObject,
   ): Promise<NFTMetadata> {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.mintNFT(to, uri);
+    const tx = await this.contract.mintNFT(
+      to,
+      uri,
+      await this.getCallOverrides(),
+    );
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "Minted");
     const tokenId = event?.args?.tokenId;
@@ -117,7 +126,11 @@ export class NFTModule extends Module {
     metadatas: MetadataURIOrObject[],
   ): Promise<NFTMetadata[]> {
     const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
-    const tx = await this.contract.mintNFTBatch(to, uris);
+    const tx = await this.contract.mintNFTBatch(
+      to,
+      uris,
+      await this.getCallOverrides(),
+    );
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "MintedBatch");
     const tokenIds = event?.args?.tokenIds;
@@ -127,34 +140,53 @@ export class NFTModule extends Module {
   }
 
   public async burn(tokenId: BigNumberish) {
-    const tx = await this.contract.burn(tokenId);
+    const tx = await this.contract.burn(tokenId, await this.getCallOverrides());
     await tx.wait();
   }
 
   public async transferFrom(from: string, to: string, tokenId: BigNumberish) {
-    const tx = await this.contract.transferFrom(from, to, tokenId);
+    const tx = await this.contract.transferFrom(
+      from,
+      to,
+      tokenId,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   // owner functions
   public async setRoyaltyBps(amount: number) {
-    const tx = await this.contract.setRoyaltyBps(amount);
+    const tx = await this.contract.setRoyaltyBps(
+      amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(uri);
+    const tx = await this.contract.setContractURI(
+      uri,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async grantRole(role: Role, address: string) {
-    const tx = await this.contract.grantRole(getRoleHash(role), address);
+    const tx = await this.contract.grantRole(
+      getRoleHash(role),
+      address,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async revokeRole(role: Role, address: string) {
-    const tx = await this.contract.revokeRole(getRoleHash(role), address);
+    const tx = await this.contract.revokeRole(
+      getRoleHash(role),
+      address,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 }

@@ -4,11 +4,14 @@ export const CONTRACT_ADDRESSES: Record<
   SUPPORTED_CHAIN_ID,
   Record<"registry", string>
 > = {
+  [ChainId.Rinkeby]: {
+    registry: "0x82576C6E5FC862f6341965EC2216098C199629fB",
+  },
   [ChainId.Polygon]: {
-    registry: "0xf40Ab69F97AC674060D2506424E234D9e094E693",
+    registry: "0x8e189fbC1BAbbCd5bb5c960967B34Be73867e742",
   },
   [ChainId.Mumbai]: {
-    registry: "0xAaf23C2043e5BFEb1092ed3411cc11f51039E996",
+    registry: "0x8e189fbC1BAbbCd5bb5c960967B34Be73867e742",
   },
 };
 

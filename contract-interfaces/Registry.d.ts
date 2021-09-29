@@ -26,10 +26,12 @@ interface RegistryInterface extends ethers.utils.Interface {
     "forwarder()": FunctionFragment;
     "getLatestVersion(address)": FunctionFragment;
     "getProtocolControl(address,uint256)": FunctionFragment;
-    "nftlabsAdminSigner()": FunctionFragment;
     "owner()": FunctionFragment;
+    "providerAdmin()": FunctionFragment;
+    "providerTreasury()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "setNftlabsAdmin(address)": FunctionFragment;
+    "setProviderAdmin(address)": FunctionFragment;
+    "setProviderTreasury(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
 
@@ -50,17 +52,25 @@ interface RegistryInterface extends ethers.utils.Interface {
     functionFragment: "getProtocolControl",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "nftlabsAdminSigner",
+    functionFragment: "providerAdmin",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "providerTreasury",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setNftlabsAdmin",
+    functionFragment: "setProviderAdmin",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setProviderTreasury",
     values: [string]
   ): string;
   encodeFunctionData(
@@ -85,17 +95,25 @@ interface RegistryInterface extends ethers.utils.Interface {
     functionFragment: "getProtocolControl",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "nftlabsAdminSigner",
+    functionFragment: "providerAdmin",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "providerTreasury",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setNftlabsAdmin",
+    functionFragment: "setProviderAdmin",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setProviderTreasury",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -107,13 +125,15 @@ interface RegistryInterface extends ethers.utils.Interface {
     "DeployedForwarder(address)": EventFragment;
     "DeployedProtocol(address,address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "UpdatedNftlabsAdmin(address,address)": EventFragment;
+    "UpdatedProviderAdmin(address,address)": EventFragment;
+    "UpdatedProviderTreasury(address,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "DeployedForwarder"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "DeployedProtocol"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UpdatedNftlabsAdmin"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UpdatedProviderAdmin"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UpdatedProviderTreasury"): EventFragment;
 }
 
 export type DeployedForwarderEvent = TypedEvent<
@@ -132,8 +152,12 @@ export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
-export type UpdatedNftlabsAdminEvent = TypedEvent<
+export type UpdatedProviderAdminEvent = TypedEvent<
   [string, string] & { prevAdmin: string; newAdmin: string }
+>;
+
+export type UpdatedProviderTreasuryEvent = TypedEvent<
+  [string, string] & { prevTreasury: string; newTreasury: string }
 >;
 
 export class Registry extends BaseContract {
@@ -203,16 +227,23 @@ export class Registry extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    nftlabsAdminSigner(overrides?: CallOverrides): Promise<[string]>;
-
     owner(overrides?: CallOverrides): Promise<[string]>;
+
+    providerAdmin(overrides?: CallOverrides): Promise<[string]>;
+
+    providerTreasury(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setNftlabsAdmin(
+    setProviderAdmin(
       _newAdminSigner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setProviderTreasury(
+      _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -242,16 +273,23 @@ export class Registry extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  nftlabsAdminSigner(overrides?: CallOverrides): Promise<string>;
-
   owner(overrides?: CallOverrides): Promise<string>;
+
+  providerAdmin(overrides?: CallOverrides): Promise<string>;
+
+  providerTreasury(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setNftlabsAdmin(
+  setProviderAdmin(
     _newAdminSigner: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setProviderTreasury(
+    _newTreasury: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -281,14 +319,21 @@ export class Registry extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    nftlabsAdminSigner(overrides?: CallOverrides): Promise<string>;
-
     owner(overrides?: CallOverrides): Promise<string>;
+
+    providerAdmin(overrides?: CallOverrides): Promise<string>;
+
+    providerTreasury(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    setNftlabsAdmin(
+    setProviderAdmin(
       _newAdminSigner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setProviderTreasury(
+      _newTreasury: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -341,7 +386,7 @@ export class Registry extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
-    "UpdatedNftlabsAdmin(address,address)"(
+    "UpdatedProviderAdmin(address,address)"(
       prevAdmin?: null,
       newAdmin?: null
     ): TypedEventFilter<
@@ -349,12 +394,28 @@ export class Registry extends BaseContract {
       { prevAdmin: string; newAdmin: string }
     >;
 
-    UpdatedNftlabsAdmin(
+    UpdatedProviderAdmin(
       prevAdmin?: null,
       newAdmin?: null
     ): TypedEventFilter<
       [string, string],
       { prevAdmin: string; newAdmin: string }
+    >;
+
+    "UpdatedProviderTreasury(address,address)"(
+      prevTreasury?: null,
+      newTreasury?: null
+    ): TypedEventFilter<
+      [string, string],
+      { prevTreasury: string; newTreasury: string }
+    >;
+
+    UpdatedProviderTreasury(
+      prevTreasury?: null,
+      newTreasury?: null
+    ): TypedEventFilter<
+      [string, string],
+      { prevTreasury: string; newTreasury: string }
     >;
   };
 
@@ -379,16 +440,23 @@ export class Registry extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    nftlabsAdminSigner(overrides?: CallOverrides): Promise<BigNumber>;
-
     owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    providerAdmin(overrides?: CallOverrides): Promise<BigNumber>;
+
+    providerTreasury(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setNftlabsAdmin(
+    setProviderAdmin(
       _newAdminSigner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setProviderTreasury(
+      _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -422,18 +490,23 @@ export class Registry extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    nftlabsAdminSigner(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    providerAdmin(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    providerTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setNftlabsAdmin(
+    setProviderAdmin(
       _newAdminSigner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setProviderTreasury(
+      _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

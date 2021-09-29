@@ -23,6 +23,7 @@ interface MarketInterface extends ethers.utils.Interface {
   functions: {
     "_contractURI()": FunctionFragment;
     "addToListing(uint256,uint256)": FunctionFragment;
+    "boughtFromListing(uint256,address)": FunctionFragment;
     "buy(uint256,uint256)": FunctionFragment;
     "contractURI()": FunctionFragment;
     "getAllListings()": FunctionFragment;
@@ -31,7 +32,7 @@ interface MarketInterface extends ethers.utils.Interface {
     "getListingsByAssetContract(address)": FunctionFragment;
     "getListingsBySeller(address)": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
-    "list(address,uint256,address,uint256,uint256,uint256,uint256)": FunctionFragment;
+    "list(address,uint256,address,uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "listings(uint256)": FunctionFragment;
     "marketFeeBps()": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
@@ -42,7 +43,7 @@ interface MarketInterface extends ethers.utils.Interface {
     "supportsInterface(bytes4)": FunctionFragment;
     "totalListings()": FunctionFragment;
     "unlist(uint256,uint256)": FunctionFragment;
-    "updateListingParams(uint256,uint256,address,uint256,uint256)": FunctionFragment;
+    "updateListingParams(uint256,uint256,address,uint256,uint256,uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -52,6 +53,10 @@ interface MarketInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "addToListing",
     values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "boughtFromListing",
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "buy",
@@ -91,6 +96,7 @@ interface MarketInterface extends ethers.utils.Interface {
       string,
       BigNumberish,
       string,
+      BigNumberish,
       BigNumberish,
       BigNumberish,
       BigNumberish,
@@ -139,7 +145,14 @@ interface MarketInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "updateListingParams",
-    values: [BigNumberish, BigNumberish, string, BigNumberish, BigNumberish]
+    values: [
+      BigNumberish,
+      BigNumberish,
+      string,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
   ): string;
 
   decodeFunctionResult(
@@ -148,6 +161,10 @@ interface MarketInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "addToListing",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "boughtFromListing",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "buy", data: BytesLike): Result;
@@ -243,6 +260,7 @@ export type ListingUpdateEvent = TypedEvent<
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -254,6 +272,7 @@ export type ListingUpdateEvent = TypedEvent<
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     }
   ] & {
@@ -269,6 +288,7 @@ export type ListingUpdateEvent = TypedEvent<
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -280,6 +300,7 @@ export type ListingUpdateEvent = TypedEvent<
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     };
   }
@@ -304,6 +325,7 @@ export type NewListingEvent = TypedEvent<
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -315,6 +337,7 @@ export type NewListingEvent = TypedEvent<
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     }
   ] & {
@@ -331,6 +354,7 @@ export type NewListingEvent = TypedEvent<
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -342,6 +366,7 @@ export type NewListingEvent = TypedEvent<
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     };
   }
@@ -364,6 +389,7 @@ export type NewSaleEvent = TypedEvent<
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -375,6 +401,7 @@ export type NewSaleEvent = TypedEvent<
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     }
   ] & {
@@ -393,6 +420,7 @@ export type NewSaleEvent = TypedEvent<
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -404,6 +432,7 @@ export type NewSaleEvent = TypedEvent<
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     };
   }
@@ -461,6 +490,12 @@ export class Market extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    boughtFromListing(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     buy(
       _listingId: BigNumberish,
       _quantity: BigNumberish,
@@ -483,6 +518,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -494,6 +530,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         })[]
       ] & {
@@ -507,6 +544,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -518,6 +556,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         })[];
       }
@@ -538,6 +577,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -549,6 +589,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         }
       ] & {
@@ -562,6 +603,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -573,6 +615,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         };
       }
@@ -594,6 +637,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -605,6 +649,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         })[]
       ] & {
@@ -618,6 +663,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -629,6 +675,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         })[];
       }
@@ -649,6 +696,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -660,6 +708,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         })[]
       ] & {
@@ -673,6 +722,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -684,6 +734,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         })[];
       }
@@ -704,6 +755,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -715,6 +767,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         })[]
       ] & {
@@ -728,6 +781,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -739,6 +793,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         })[];
       }
@@ -755,6 +810,7 @@ export class Market extends BaseContract {
       _currency: string,
       _pricePerToken: BigNumberish,
       _quantity: BigNumberish,
+      _tokensPerBuyer: BigNumberish,
       _secondsUntilStart: BigNumberish,
       _secondsUntilEnd: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -774,6 +830,7 @@ export class Market extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
+        BigNumber,
         number
       ] & {
         listingId: BigNumber;
@@ -785,6 +842,7 @@ export class Market extends BaseContract {
         pricePerToken: BigNumber;
         saleStart: BigNumber;
         saleEnd: BigNumber;
+        tokensPerBuyer: BigNumber;
         tokenType: number;
       }
     >;
@@ -844,6 +902,7 @@ export class Market extends BaseContract {
       _listingId: BigNumberish,
       _pricePerToken: BigNumberish,
       _currency: string,
+      _tokensPerBuyer: BigNumberish,
       _secondsUntilStart: BigNumberish,
       _secondsUntilEnd: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -857,6 +916,12 @@ export class Market extends BaseContract {
     _quantity: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  boughtFromListing(
+    arg0: BigNumberish,
+    arg1: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   buy(
     _listingId: BigNumberish,
@@ -879,6 +944,7 @@ export class Market extends BaseContract {
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -890,6 +956,7 @@ export class Market extends BaseContract {
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     })[]
   >;
@@ -908,6 +975,7 @@ export class Market extends BaseContract {
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -919,6 +987,7 @@ export class Market extends BaseContract {
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     }
   >;
@@ -938,6 +1007,7 @@ export class Market extends BaseContract {
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -949,6 +1019,7 @@ export class Market extends BaseContract {
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     })[]
   >;
@@ -967,6 +1038,7 @@ export class Market extends BaseContract {
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -978,6 +1050,7 @@ export class Market extends BaseContract {
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     })[]
   >;
@@ -996,6 +1069,7 @@ export class Market extends BaseContract {
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -1007,6 +1081,7 @@ export class Market extends BaseContract {
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     })[]
   >;
@@ -1022,6 +1097,7 @@ export class Market extends BaseContract {
     _currency: string,
     _pricePerToken: BigNumberish,
     _quantity: BigNumberish,
+    _tokensPerBuyer: BigNumberish,
     _secondsUntilStart: BigNumberish,
     _secondsUntilEnd: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -1041,6 +1117,7 @@ export class Market extends BaseContract {
       BigNumber,
       BigNumber,
       BigNumber,
+      BigNumber,
       number
     ] & {
       listingId: BigNumber;
@@ -1052,6 +1129,7 @@ export class Market extends BaseContract {
       pricePerToken: BigNumber;
       saleStart: BigNumber;
       saleEnd: BigNumber;
+      tokensPerBuyer: BigNumber;
       tokenType: number;
     }
   >;
@@ -1111,6 +1189,7 @@ export class Market extends BaseContract {
     _listingId: BigNumberish,
     _pricePerToken: BigNumberish,
     _currency: string,
+    _tokensPerBuyer: BigNumberish,
     _secondsUntilStart: BigNumberish,
     _secondsUntilEnd: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -1124,6 +1203,12 @@ export class Market extends BaseContract {
       _quantity: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    boughtFromListing(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     buy(
       _listingId: BigNumberish,
@@ -1146,6 +1231,7 @@ export class Market extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
+        BigNumber,
         number
       ] & {
         listingId: BigNumber;
@@ -1157,6 +1243,7 @@ export class Market extends BaseContract {
         pricePerToken: BigNumber;
         saleStart: BigNumber;
         saleEnd: BigNumber;
+        tokensPerBuyer: BigNumber;
         tokenType: number;
       })[]
     >;
@@ -1175,6 +1262,7 @@ export class Market extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
+        BigNumber,
         number
       ] & {
         listingId: BigNumber;
@@ -1186,6 +1274,7 @@ export class Market extends BaseContract {
         pricePerToken: BigNumber;
         saleStart: BigNumber;
         saleEnd: BigNumber;
+        tokensPerBuyer: BigNumber;
         tokenType: number;
       }
     >;
@@ -1205,6 +1294,7 @@ export class Market extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
+        BigNumber,
         number
       ] & {
         listingId: BigNumber;
@@ -1216,6 +1306,7 @@ export class Market extends BaseContract {
         pricePerToken: BigNumber;
         saleStart: BigNumber;
         saleEnd: BigNumber;
+        tokensPerBuyer: BigNumber;
         tokenType: number;
       })[]
     >;
@@ -1234,6 +1325,7 @@ export class Market extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
+        BigNumber,
         number
       ] & {
         listingId: BigNumber;
@@ -1245,6 +1337,7 @@ export class Market extends BaseContract {
         pricePerToken: BigNumber;
         saleStart: BigNumber;
         saleEnd: BigNumber;
+        tokensPerBuyer: BigNumber;
         tokenType: number;
       })[]
     >;
@@ -1263,6 +1356,7 @@ export class Market extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
+        BigNumber,
         number
       ] & {
         listingId: BigNumber;
@@ -1274,6 +1368,7 @@ export class Market extends BaseContract {
         pricePerToken: BigNumber;
         saleStart: BigNumber;
         saleEnd: BigNumber;
+        tokensPerBuyer: BigNumber;
         tokenType: number;
       })[]
     >;
@@ -1289,6 +1384,7 @@ export class Market extends BaseContract {
       _currency: string,
       _pricePerToken: BigNumberish,
       _quantity: BigNumberish,
+      _tokensPerBuyer: BigNumberish,
       _secondsUntilStart: BigNumberish,
       _secondsUntilEnd: BigNumberish,
       overrides?: CallOverrides
@@ -1308,6 +1404,7 @@ export class Market extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
+        BigNumber,
         number
       ] & {
         listingId: BigNumber;
@@ -1319,6 +1416,7 @@ export class Market extends BaseContract {
         pricePerToken: BigNumber;
         saleStart: BigNumber;
         saleEnd: BigNumber;
+        tokensPerBuyer: BigNumber;
         tokenType: number;
       }
     >;
@@ -1375,6 +1473,7 @@ export class Market extends BaseContract {
       _listingId: BigNumberish,
       _pricePerToken: BigNumberish,
       _currency: string,
+      _tokensPerBuyer: BigNumberish,
       _secondsUntilStart: BigNumberish,
       _secondsUntilEnd: BigNumberish,
       overrides?: CallOverrides
@@ -1400,6 +1499,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1411,6 +1511,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         }
       ],
@@ -1427,6 +1528,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1438,6 +1540,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         };
       }
@@ -1461,6 +1564,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1472,6 +1576,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         }
       ],
@@ -1488,6 +1593,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1499,6 +1605,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         };
       }
@@ -1532,6 +1639,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1543,6 +1651,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         }
       ],
@@ -1560,6 +1669,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1571,6 +1681,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         };
       }
@@ -1596,6 +1707,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1607,6 +1719,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         }
       ],
@@ -1624,6 +1737,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1635,6 +1749,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         };
       }
@@ -1664,6 +1779,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1675,6 +1791,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         }
       ],
@@ -1694,6 +1811,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1705,6 +1823,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         };
       }
@@ -1734,6 +1853,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1745,6 +1865,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         }
       ],
@@ -1764,6 +1885,7 @@ export class Market extends BaseContract {
           BigNumber,
           BigNumber,
           BigNumber,
+          BigNumber,
           number
         ] & {
           listingId: BigNumber;
@@ -1775,6 +1897,7 @@ export class Market extends BaseContract {
           pricePerToken: BigNumber;
           saleStart: BigNumber;
           saleEnd: BigNumber;
+          tokensPerBuyer: BigNumber;
           tokenType: number;
         };
       }
@@ -1788,6 +1911,12 @@ export class Market extends BaseContract {
       _listingId: BigNumberish,
       _quantity: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    boughtFromListing(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     buy(
@@ -1832,6 +1961,7 @@ export class Market extends BaseContract {
       _currency: string,
       _pricePerToken: BigNumberish,
       _quantity: BigNumberish,
+      _tokensPerBuyer: BigNumberish,
       _secondsUntilStart: BigNumberish,
       _secondsUntilEnd: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1894,6 +2024,7 @@ export class Market extends BaseContract {
       _listingId: BigNumberish,
       _pricePerToken: BigNumberish,
       _currency: string,
+      _tokensPerBuyer: BigNumberish,
       _secondsUntilStart: BigNumberish,
       _secondsUntilEnd: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1907,6 +2038,12 @@ export class Market extends BaseContract {
       _listingId: BigNumberish,
       _quantity: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    boughtFromListing(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     buy(
@@ -1951,6 +2088,7 @@ export class Market extends BaseContract {
       _currency: string,
       _pricePerToken: BigNumberish,
       _quantity: BigNumberish,
+      _tokensPerBuyer: BigNumberish,
       _secondsUntilStart: BigNumberish,
       _secondsUntilEnd: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -2016,6 +2154,7 @@ export class Market extends BaseContract {
       _listingId: BigNumberish,
       _pricePerToken: BigNumberish,
       _currency: string,
+      _tokensPerBuyer: BigNumberish,
       _secondsUntilStart: BigNumberish,
       _secondsUntilEnd: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }

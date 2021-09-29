@@ -29,12 +29,22 @@ export interface ISDKOptions {
   /**
    * An optional IPFS Gateway. (Default: `https://cloudflare-ipfs.com/ipfs/`).
    */
-  ipfsGatewayUrl?: string;
+  ipfsGatewayUrl: string;
 
   /**
    * Optional Contract Address
    */
-  registryContractAddress?: string;
+  registryContractAddress: string;
+
+  /**
+   * maxGasPrice for transactions
+   */
+  maxGasPriceInGwei: number;
+
+  /**
+   * Optional default speed setting for transactions
+   */
+  gasSpeed: string;
 }
 
 type AnyContract =
@@ -51,8 +61,12 @@ type AnyContract =
  * @public
  */
 export class NFTLabsSDK {
-  private ipfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/";
-  private registryContractAddress = "";
+  private options: ISDKOptions = {
+    ipfsGatewayUrl: "https://cloudflare-ipfs.com/ipfs/",
+    registryContractAddress: "",
+    maxGasPriceInGwei: 100,
+    gasSpeed: "fastest",
+  };
   private modules = new Map<string, C.Instance<AnyContract>>();
   private providerOrSigner: ProviderOrSigner;
 
@@ -81,10 +95,16 @@ export class NFTLabsSDK {
   ) {
     this.providerOrSigner = this.setProviderOrSigner(providerOrNetwork);
     if (opts?.ipfsGatewayUrl) {
-      this.ipfsGatewayUrl = opts.ipfsGatewayUrl;
+      this.options.ipfsGatewayUrl = opts.ipfsGatewayUrl;
     }
     if (opts?.registryContractAddress) {
-      this.registryContractAddress = opts.registryContractAddress;
+      this.options.registryContractAddress = opts.registryContractAddress;
+    }
+    if (opts?.maxGasPriceInGwei) {
+      this.options.maxGasPriceInGwei = opts.maxGasPriceInGwei;
+    }
+    if (opts?.gasSpeed) {
+      this.options.gasSpeed = opts.gasSpeed;
     }
   }
   private updateModuleSigners() {
@@ -107,8 +127,8 @@ export class NFTLabsSDK {
   }
 
   private async getRegistryAddress(): Promise<string | undefined> {
-    if (this.registryContractAddress) {
-      return this.registryContractAddress;
+    if (this.options.registryContractAddress) {
+      return this.options.registryContractAddress;
     }
     return getContractAddressByChainId(
       (await this.getChainID()) as SUPPORTED_CHAIN_ID,
@@ -136,7 +156,7 @@ export class NFTLabsSDK {
     const _newModule = new _Module(
       this.providerOrSigner,
       address,
-      this.ipfsGatewayUrl,
+      this.options,
     );
     this.modules.set(address, _newModule);
     return _newModule as C.Instance<T>;
@@ -196,8 +216,13 @@ export class NFTLabsSDK {
    * @param maxGas - how much gas to use at most, default: 100
    * @returns the optiomal gas price
    */
-  public async getGasPrice(speed = "fastest", maxGas = 100): Promise<number> {
-    return await getGasPriceForChain(await this.getChainID(), speed, maxGas);
+  public async getGasPrice(
+    speed?: string,
+    maxGasGwei?: number,
+  ): Promise<number | null> {
+    const _speed = speed ? speed : this.options.gasSpeed;
+    const _maxGas = maxGasGwei ? maxGasGwei : this.options.maxGasPriceInGwei;
+    return await getGasPriceForChain(await this.getChainID(), _speed, _maxGas);
   }
 
   /**

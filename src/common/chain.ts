@@ -14,9 +14,13 @@ export enum ChainId {
   Hardhat = 31337,
 }
 
-export type SUPPORTED_CHAIN_ID = ChainId.Mumbai | ChainId.Polygon;
+export type SUPPORTED_CHAIN_ID =
+  | ChainId.Rinkeby
+  | ChainId.Mumbai
+  | ChainId.Polygon;
 
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
+  ChainId.Rinkeby,
   ChainId.Polygon,
   ChainId.Mumbai,
 ];

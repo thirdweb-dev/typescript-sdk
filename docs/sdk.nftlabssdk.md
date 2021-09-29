@@ -27,7 +27,7 @@ export declare class NFTLabsSDK
 |  [getApps()](./sdk.nftlabssdk.getapps.md) |  | Call this to get the current apps. |
 |  [getCollectionModule(address)](./sdk.nftlabssdk.getcollectionmodule.md) |  |  |
 |  [getCurrencyModule(address)](./sdk.nftlabssdk.getcurrencymodule.md) |  |  |
-|  [getGasPrice(speed, maxGas)](./sdk.nftlabssdk.getgasprice.md) |  |  |
+|  [getGasPrice(speed, maxGasGwei)](./sdk.nftlabssdk.getgasprice.md) |  |  |
 |  [getMarketModule(address)](./sdk.nftlabssdk.getmarketmodule.md) |  |  |
 |  [getNFTModule(address)](./sdk.nftlabssdk.getnftmodule.md) |  |  |
 |  [getPackModule(address)](./sdk.nftlabssdk.getpackmodule.md) |  |  |

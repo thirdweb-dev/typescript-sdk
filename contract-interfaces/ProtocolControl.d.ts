@@ -33,6 +33,7 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     "getRoleAdmin(bytes32)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
+    "moduleIds(address)": FunctionFragment;
     "moduleType(bytes32)": FunctionFragment;
     "modules(bytes32)": FunctionFragment;
     "numOfModuleType(uint256)": FunctionFragment;
@@ -97,6 +98,7 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     functionFragment: "hasRole",
     values: [BytesLike, string]
   ): string;
+  encodeFunctionData(functionFragment: "moduleIds", values: [string]): string;
   encodeFunctionData(
     functionFragment: "moduleType",
     values: [BytesLike]
@@ -199,6 +201,7 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "moduleIds", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "moduleType", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "modules", data: BytesLike): Result;
   decodeFunctionResult(
@@ -269,6 +272,7 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
     "SystemPaused(bool)": EventFragment;
+    "TransferRestricted(bytes32,address,bool)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "FundsTransferred"): EventFragment;
@@ -280,6 +284,7 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "SystemPaused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TransferRestricted"): EventFragment;
 }
 
 export type FundsTransferredEvent = TypedEvent<
@@ -323,6 +328,14 @@ export type RoleRevokedEvent = TypedEvent<
 >;
 
 export type SystemPausedEvent = TypedEvent<[boolean] & { isPaused: boolean }>;
+
+export type TransferRestrictedEvent = TypedEvent<
+  [string, string, boolean] & {
+    moduleId: string;
+    moduleAddress: string;
+    restriction: boolean;
+  }
+>;
 
 export class ProtocolControl extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -406,6 +419,8 @@ export class ProtocolControl extends BaseContract {
       account: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    moduleIds(arg0: string, overrides?: CallOverrides): Promise<[string]>;
 
     moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<[number]>;
 
@@ -519,6 +534,8 @@ export class ProtocolControl extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  moduleIds(arg0: string, overrides?: CallOverrides): Promise<string>;
+
   moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<number>;
 
   modules(arg0: BytesLike, overrides?: CallOverrides): Promise<string>;
@@ -630,6 +647,8 @@ export class ProtocolControl extends BaseContract {
       account: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    moduleIds(arg0: string, overrides?: CallOverrides): Promise<string>;
 
     moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<number>;
 
@@ -820,6 +839,24 @@ export class ProtocolControl extends BaseContract {
     SystemPaused(
       isPaused?: null
     ): TypedEventFilter<[boolean], { isPaused: boolean }>;
+
+    "TransferRestricted(bytes32,address,bool)"(
+      moduleId?: null,
+      moduleAddress?: null,
+      restriction?: null
+    ): TypedEventFilter<
+      [string, string, boolean],
+      { moduleId: string; moduleAddress: string; restriction: boolean }
+    >;
+
+    TransferRestricted(
+      moduleId?: null,
+      moduleAddress?: null,
+      restriction?: null
+    ): TypedEventFilter<
+      [string, string, boolean],
+      { moduleId: string; moduleAddress: string; restriction: boolean }
+    >;
   };
 
   estimateGas: {
@@ -864,6 +901,8 @@ export class ProtocolControl extends BaseContract {
       account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    moduleIds(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -982,6 +1021,11 @@ export class ProtocolControl extends BaseContract {
     hasRole(
       role: BytesLike,
       account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    moduleIds(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

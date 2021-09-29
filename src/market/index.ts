@@ -198,8 +198,9 @@ export class MarketModule extends Module {
     currencyContract: string,
     price: BigNumberish,
     quantity: BigNumberish,
-    secondsUntilStart = 0,
-    secondsUntilEnd = 0,
+    tokensPerBuyer: BigNumberish = 0,
+    secondsUntilStart: BigNumberish = 0,
+    secondsUntilEnd: BigNumberish = 0,
   ): Promise<ListingMetadata> {
     const from = await this.getSignerAddress();
     const erc165 = ERC165__factory.connect(
@@ -222,7 +223,11 @@ export class MarketModule extends Module {
           this.address.toLowerCase();
 
         if (!isTokenApproved) {
-          const tx = await asset.setApprovalForAll(this.address, true);
+          const tx = await asset.setApprovalForAll(
+            this.address,
+            true,
+            await this.getCallOverrides(),
+          );
           await tx.wait();
         }
       }
@@ -234,7 +239,11 @@ export class MarketModule extends Module {
 
       const approved = await asset.isApprovedForAll(from, this.address);
       if (!approved) {
-        const tx = await asset.setApprovalForAll(this.address, true);
+        const tx = await asset.setApprovalForAll(
+          this.address,
+          true,
+          await this.getCallOverrides(),
+        );
         await tx.wait();
       }
     }
@@ -245,8 +254,10 @@ export class MarketModule extends Module {
       currencyContract,
       price,
       quantity,
+      tokensPerBuyer,
       secondsUntilStart,
       secondsUntilEnd,
+      await this.getCallOverrides(),
     );
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "NewListing");
@@ -260,7 +271,11 @@ export class MarketModule extends Module {
   }
 
   public async unlist(listingId: string, quantity: BigNumberish) {
-    const tx = await this.contract.unlist(listingId, quantity);
+    const tx = await this.contract.unlist(
+      listingId,
+      quantity,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
@@ -279,11 +294,19 @@ export class MarketModule extends Module {
       );
       const allowance = await erc20.allowance(owner, spender);
       if (allowance.lte(totalPrice)) {
-        const tx = await erc20.increaseAllowance(spender, totalPrice);
+        const tx = await erc20.increaseAllowance(
+          spender,
+          totalPrice,
+          await this.getCallOverrides(),
+        );
         await tx.wait();
       }
     }
-    const tx = await this.contract.buy(listingId, quantity);
+    const tx = await this.contract.buy(
+      listingId,
+      quantity,
+      await this.getCallOverrides(),
+    );
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "NewSale");
     return await this.transformResultToListing(event?.args?.listing);
@@ -297,12 +320,18 @@ export class MarketModule extends Module {
   // owner functions
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(uri);
+    const tx = await this.contract.setContractURI(
+      uri,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async setMarketFeeBps(fee: number) {
-    const tx = await this.contract.setMarketFeeBps(fee);
+    const tx = await this.contract.setMarketFeeBps(
+      fee,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 }

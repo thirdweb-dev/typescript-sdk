@@ -1,7 +1,9 @@
 import { Provider } from "@ethersproject/providers";
-import { Signer } from "ethers";
+import { CallOverrides, Signer } from "ethers";
 import invariant from "ts-invariant";
 import type { ProviderOrSigner } from "./types";
+import type { ISDKOptions } from ".";
+import { getTransactionCallOverrides } from "../common/transaction";
 
 /**
  *
@@ -12,6 +14,8 @@ import type { ProviderOrSigner } from "./types";
 export class Module {
   public readonly address: string;
   protected readonly ipfsGatewayUrl: string;
+  protected readonly options: ISDKOptions;
+
   private _providerOrSigner: ProviderOrSigner | null = null;
   protected get providerOrSigner(): ProviderOrSigner {
     return this.signer || this._providerOrSigner || this.getProviderOrSigner();
@@ -19,6 +23,7 @@ export class Module {
   private set providerOrSigner(value: ProviderOrSigner) {
     this._providerOrSigner = value;
   }
+
   private _signer: Signer | null = null;
   protected get signer(): Signer | null {
     return this._signer;
@@ -30,10 +35,11 @@ export class Module {
   constructor(
     providerOrSigner: ProviderOrSigner,
     address: string,
-    ipfsGatewayUrl: string,
+    options: ISDKOptions,
   ) {
     this.address = address;
-    this.ipfsGatewayUrl = ipfsGatewayUrl;
+    this.options = options;
+    this.ipfsGatewayUrl = options.ipfsGatewayUrl;
     this.setProviderOrSigner(providerOrSigner);
   }
 
@@ -89,5 +95,13 @@ export class Module {
 
   protected connectContract() {
     throw new Error("connectContract has to be implemented");
+  }
+
+  protected async getCallOverrides(): Promise<CallOverrides | undefined> {
+    return await getTransactionCallOverrides(
+      await this.getChainID(),
+      this.options.gasSpeed,
+      this.options.maxGasPriceInGwei,
+    );
   }
 }

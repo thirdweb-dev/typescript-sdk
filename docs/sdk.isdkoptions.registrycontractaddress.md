@@ -9,5 +9,5 @@ Optional Contract Address
 <b>Signature:</b>
 
 ```typescript
-registryContractAddress?: string;
+registryContractAddress: string;
 ```

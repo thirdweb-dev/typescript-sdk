@@ -91,7 +91,10 @@ export class PackModule extends Module {
   }
 
   public async open(packId: string): Promise<NFTMetadata[]> {
-    const tx = await this.contract.openPack(packId);
+    const tx = await this.contract.openPack(
+      packId,
+      await this.getCallOverrides(),
+    );
     const receipt = await tx.wait();
 
     const event = receipt?.events?.find((e) => e.event === "PackOpenRequest");
@@ -196,7 +199,11 @@ export class PackModule extends Module {
   }
 
   public async setApproval(operator: string, approved = true) {
-    const tx = await this.contract.setApprovalForAll(operator, approved);
+    const tx = await this.contract.setApprovalForAll(
+      operator,
+      approved,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
@@ -207,6 +214,7 @@ export class PackModule extends Module {
       tokenId,
       amount,
       [0],
+      await this.getCallOverrides(),
     );
     await tx.wait();
   }
@@ -239,6 +247,7 @@ export class PackModule extends Module {
       ids,
       amounts,
       packParams,
+      await this.getCallOverrides(),
     );
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "PackCreated");
@@ -258,6 +267,7 @@ export class PackModule extends Module {
       args.tokenId,
       args.amount,
       data,
+      await this.getCallOverrides(),
     );
     await tx.wait();
   }
@@ -276,6 +286,7 @@ export class PackModule extends Module {
       ids,
       amounts,
       data,
+      await this.getCallOverrides(),
     );
     await tx.wait();
   }
@@ -302,33 +313,55 @@ export class PackModule extends Module {
       chainlink.linkTokenAddress,
       this.providerOrSigner,
     );
-    const tx = await erc20.transfer(this.address, amount);
+    const tx = await erc20.transfer(
+      this.address,
+      amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async withdrawLink(to: string, amount: BigNumberish) {
-    const tx = await this.contract.transferLink(to, amount);
+    const tx = await this.contract.transferLink(
+      to,
+      amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async setRoyaltyBps(amount: number) {
-    const tx = await this.contract.setRoyaltyBps(amount);
+    const tx = await this.contract.setRoyaltyBps(
+      amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(uri);
+    const tx = await this.contract.setContractURI(
+      uri,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async grantRole(role: Role, address: string) {
-    const tx = await this.contract.grantRole(getRoleHash(role), address);
+    const tx = await this.contract.grantRole(
+      getRoleHash(role),
+      address,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async revokeRole(role: Role, address: string) {
-    const tx = await this.contract.revokeRole(getRoleHash(role), address);
+    const tx = await this.contract.revokeRole(
+      getRoleHash(role),
+      address,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 }

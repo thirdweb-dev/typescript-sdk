@@ -24,6 +24,7 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "MINTER_ROLE()": FunctionFragment;
     "PAUSER_ROLE()": FunctionFragment;
+    "TRANSFER_ROLE()": FunctionFragment;
     "_contractURI()": FunctionFragment;
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
@@ -39,6 +40,7 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     "hasRole(bytes32,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isRedeemed(uint256)": FunctionFragment;
+    "isRestrictedTransfer()": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
     "mint(address,uint256,uint256,bytes)": FunctionFragment;
     "mintBatch(address,uint256[],uint256[],bytes)": FunctionFragment;
@@ -57,6 +59,7 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
+    "setRestrictedTransfer(bool)": FunctionFragment;
     "setRoyaltyBps(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
@@ -74,6 +77,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "PAUSER_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "TRANSFER_ROLE",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -146,6 +153,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "isRestrictedTransfer",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "isTrustedForwarder",
     values: [string]
   ): string;
@@ -212,6 +223,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "setRestrictedTransfer",
+    values: [boolean]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setRoyaltyBps",
     values: [BigNumberish]
   ): string;
@@ -236,6 +251,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "PAUSER_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "TRANSFER_ROLE",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -280,6 +299,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isRedeemed", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isRestrictedTransfer",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "isTrustedForwarder",
     data: BytesLike
@@ -329,6 +352,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setContractURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setRestrictedTransfer",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -498,6 +525,8 @@ export class AccessNFT extends BaseContract {
 
     PAUSER_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
+    TRANSFER_ROLE(overrides?: CallOverrides): Promise<[string]>;
+
     _contractURI(overrides?: CallOverrides): Promise<[string]>;
 
     balanceOf(
@@ -582,6 +611,8 @@ export class AccessNFT extends BaseContract {
       _nftId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    isRestrictedTransfer(overrides?: CallOverrides): Promise<[boolean]>;
 
     isTrustedForwarder(
       forwarder: string,
@@ -701,6 +732,11 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setRestrictedTransfer(
+      _restrictedTransfer: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -728,6 +764,8 @@ export class AccessNFT extends BaseContract {
   MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
 
   PAUSER_ROLE(overrides?: CallOverrides): Promise<string>;
+
+  TRANSFER_ROLE(overrides?: CallOverrides): Promise<string>;
 
   _contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -810,6 +848,8 @@ export class AccessNFT extends BaseContract {
   ): Promise<boolean>;
 
   isRedeemed(_nftId: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
+
+  isRestrictedTransfer(overrides?: CallOverrides): Promise<boolean>;
 
   isTrustedForwarder(
     forwarder: string,
@@ -929,6 +969,11 @@ export class AccessNFT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setRestrictedTransfer(
+    _restrictedTransfer: boolean,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setRoyaltyBps(
     _royaltyBps: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -953,6 +998,8 @@ export class AccessNFT extends BaseContract {
     MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
 
     PAUSER_ROLE(overrides?: CallOverrides): Promise<string>;
+
+    TRANSFER_ROLE(overrides?: CallOverrides): Promise<string>;
 
     _contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -1038,6 +1085,8 @@ export class AccessNFT extends BaseContract {
       _nftId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    isRestrictedTransfer(overrides?: CallOverrides): Promise<boolean>;
 
     isTrustedForwarder(
       forwarder: string,
@@ -1151,6 +1200,11 @@ export class AccessNFT extends BaseContract {
     ): Promise<void>;
 
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
+
+    setRestrictedTransfer(
+      _restrictedTransfer: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setRoyaltyBps(
       _royaltyBps: BigNumberish,
@@ -1416,6 +1470,8 @@ export class AccessNFT extends BaseContract {
 
     PAUSER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    TRANSFER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
+
     _contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     balanceOf(
@@ -1503,6 +1559,8 @@ export class AccessNFT extends BaseContract {
       _nftId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    isRestrictedTransfer(overrides?: CallOverrides): Promise<BigNumber>;
 
     isTrustedForwarder(
       forwarder: string,
@@ -1608,6 +1666,11 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setRestrictedTransfer(
+      _restrictedTransfer: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setRoyaltyBps(
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1638,6 +1701,8 @@ export class AccessNFT extends BaseContract {
     MINTER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     PAUSER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    TRANSFER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     _contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1724,6 +1789,10 @@ export class AccessNFT extends BaseContract {
 
     isRedeemed(
       _nftId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isRestrictedTransfer(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1831,6 +1900,11 @@ export class AccessNFT extends BaseContract {
 
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setRestrictedTransfer(
+      _restrictedTransfer: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

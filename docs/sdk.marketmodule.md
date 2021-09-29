@@ -29,7 +29,7 @@ export declare class MarketModule extends Module
 |  [getAllListings(filter)](./sdk.marketmodule.getalllistings.md) |  |  |
 |  [getListing(listingId)](./sdk.marketmodule.getlisting.md) |  |  |
 |  [getMarketFeeBps()](./sdk.marketmodule.getmarketfeebps.md) |  |  |
-|  [list(assetContract, tokenId, currencyContract, price, quantity, secondsUntilStart, secondsUntilEnd)](./sdk.marketmodule.list.md) |  |  |
+|  [list(assetContract, tokenId, currencyContract, price, quantity, tokensPerBuyer, secondsUntilStart, secondsUntilEnd)](./sdk.marketmodule.list.md) |  |  |
 |  [setMarketFeeBps(fee)](./sdk.marketmodule.setmarketfeebps.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.marketmodule.setmodulemetadata.md) |  |  |
 |  [unlist(listingId, quantity)](./sdk.marketmodule.unlist.md) |  |  |

@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-getGasPrice(speed?: string, maxGas?: number): Promise<number>;
+getGasPrice(speed?: string, maxGasGwei?: number): Promise<number | null>;
 ```
 
 ## Parameters
@@ -15,11 +15,11 @@ getGasPrice(speed?: string, maxGas?: number): Promise<number>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  speed | string | what speed to prefer, default: "fastest" |
-|  maxGas | number | how much gas to use at most, default: 100 |
+|  maxGasGwei | number |  |
 
 <b>Returns:</b>
 
-Promise&lt;number&gt;
+Promise&lt;number \| null&gt;
 
 the optiomal gas price
 

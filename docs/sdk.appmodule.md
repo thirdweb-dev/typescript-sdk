@@ -22,7 +22,10 @@ export declare class AppModule extends Module
 |  [getCurrencyModules()](./sdk.appmodule.getcurrencymodules.md) |  | Method to get all Currency modules. |
 |  [getMarketModules()](./sdk.appmodule.getmarketmodules.md) |  | Method to get all Market modules. |
 |  [getNFTModules()](./sdk.appmodule.getnftmodules.md) |  | Method to get all NFT modules. |
+|  [getOwnerTreasury()](./sdk.appmodule.getownertreasury.md) |  |  |
 |  [getPackModules()](./sdk.appmodule.getpackmodules.md) |  | Method to get all pack modules. |
+|  [getProviderFeeBps()](./sdk.appmodule.getproviderfeebps.md) |  |  |
+|  [getProviderTreasury()](./sdk.appmodule.getprovidertreasury.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.appmodule.setmodulemetadata.md) |  |  |
 |  [setOwnerTreasury(treasury)](./sdk.appmodule.setownertreasury.md) |  |  |
 

@@ -111,7 +111,11 @@ export class CollectionModule extends Module {
   }
 
   public async setApproval(operator: string, approved = true) {
-    const tx = await this.contract.setApprovalForAll(operator, approved);
+    const tx = await this.contract.setApprovalForAll(
+      operator,
+      approved,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
@@ -122,6 +126,7 @@ export class CollectionModule extends Module {
       tokenId,
       amount,
       [0],
+      await this.getCallOverrides(),
     );
     await tx.wait();
   }
@@ -134,7 +139,11 @@ export class CollectionModule extends Module {
       args.map((a) => a.metadata).map((a) => uploadMetadata(a)),
     );
     const supplies = args.map((a) => a.supply);
-    const tx = await this.contract.createNativeNfts(uris, supplies);
+    const tx = await this.contract.createNativeNfts(
+      uris,
+      supplies,
+      await this.getCallOverrides(),
+    );
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "NativeNfts");
     const tokenIds = event?.args?.nftIds;
@@ -154,6 +163,7 @@ export class CollectionModule extends Module {
       tokenAmount,
       args.supply,
       uri,
+      await this.getCallOverrides(),
     );
     await tx.wait();
   }
@@ -164,7 +174,12 @@ export class CollectionModule extends Module {
     metadata: MetadataURIOrObject,
   ) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.wrapERC721(tokenContract, tokenId, uri);
+    const tx = await this.contract.wrapERC721(
+      tokenContract,
+      tokenId,
+      uri,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
@@ -177,7 +192,13 @@ export class CollectionModule extends Module {
     args: INFTCollectionBatchArgs,
     data: BytesLike = [0],
   ) {
-    const tx = await this.contract.mint(to, args.tokenId, args.amount, data);
+    const tx = await this.contract.mint(
+      to,
+      args.tokenId,
+      args.amount,
+      data,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
@@ -192,7 +213,13 @@ export class CollectionModule extends Module {
   ) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
-    const tx = await this.contract.mintBatch(to, ids, amounts, data);
+    const tx = await this.contract.mintBatch(
+      to,
+      ids,
+      amounts,
+      data,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
@@ -205,14 +232,24 @@ export class CollectionModule extends Module {
   }
 
   public async burnFrom(account: string, args: INFTCollectionBatchArgs) {
-    const tx = await this.contract.burn(account, args.tokenId, args.amount);
+    const tx = await this.contract.burn(
+      account,
+      args.tokenId,
+      args.amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async burnBatchFrom(account: string, args: INFTCollectionBatchArgs[]) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
-    const tx = await this.contract.burnBatch(account, ids, amounts);
+    const tx = await this.contract.burnBatch(
+      account,
+      ids,
+      amounts,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
@@ -228,6 +265,7 @@ export class CollectionModule extends Module {
       args.tokenId,
       args.amount,
       data,
+      await this.getCallOverrides(),
     );
     await tx.wait();
   }
@@ -246,28 +284,43 @@ export class CollectionModule extends Module {
       ids,
       amounts,
       data,
+      await this.getCallOverrides(),
     );
     await tx.wait();
   }
 
   public async setRoyaltyBps(amount: number) {
-    const tx = await this.contract.setRoyaltyBps(amount);
+    const tx = await this.contract.setRoyaltyBps(
+      amount,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(uri);
+    const tx = await this.contract.setContractURI(
+      uri,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async grantRole(role: Role, address: string) {
-    const tx = await this.contract.grantRole(getRoleHash(role), address);
+    const tx = await this.contract.grantRole(
+      getRoleHash(role),
+      address,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 
   public async revokeRole(role: Role, address: string) {
-    const tx = await this.contract.revokeRole(getRoleHash(role), address);
+    const tx = await this.contract.revokeRole(
+      getRoleHash(role),
+      address,
+      await this.getCallOverrides(),
+    );
     await tx.wait();
   }
 }

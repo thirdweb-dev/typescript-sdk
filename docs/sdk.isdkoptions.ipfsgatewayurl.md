@@ -9,5 +9,5 @@ An optional IPFS Gateway. (Default: `https://cloudflare-ipfs.com/ipfs/`<!-- -->)
 <b>Signature:</b>
 
 ```typescript
-ipfsGatewayUrl?: string;
+ipfsGatewayUrl: string;
 ```
