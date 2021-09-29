@@ -51,6 +51,10 @@ export class CurrencyModule extends Module {
     );
   }
 
+  public async totalSupply(): Promise<BigNumber> {
+    return await this.contract.totalSupply();
+  }
+
   // passthrough to the contract
   public async balanceOf(address: string): Promise<CurrencyValue> {
     return await this.getValue(await this.contract.balanceOf(address));
