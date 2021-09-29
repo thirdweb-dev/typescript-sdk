@@ -65,12 +65,17 @@ export class CurrencyModule extends Module {
   }
 
   public async transfer(to: string, amount: BigNumber) {
+    const tx = await this.transferWithoutWaiting(to, amount);
+    await tx.wait();
+  }
+
+  public async transferWithoutWaiting(to: string, amount: BigNumber) {
     const tx = await this.contract.transfer(
       to,
       amount,
       await this.getCallOverrides(),
     );
-    await tx.wait();
+    return tx;
   }
 
   public async allowance(spender: string): Promise<BigNumber> {
