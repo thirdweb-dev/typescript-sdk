@@ -12,15 +12,27 @@ export enum ChainId {
   Harmony = 1666600000,
   Localhost = 1337,
   Hardhat = 31337,
+  Fantom = 250,
+  FantomTestnet = 4002,
+  Avalanche = 43114,
+  AvalancheFujiTestnet = 43113,
 }
 
 export type SUPPORTED_CHAIN_ID =
   | ChainId.Rinkeby
   | ChainId.Mumbai
-  | ChainId.Polygon;
+  | ChainId.Polygon
+  | ChainId.Fantom
+  | ChainId.FantomTestnet
+  | ChainId.Avalanche
+  | ChainId.AvalancheFujiTestnet;
 
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   ChainId.Rinkeby,
   ChainId.Polygon,
   ChainId.Mumbai,
+  ChainId.Fantom,
+  ChainId.FantomTestnet,
+  ChainId.Avalanche,
+  ChainId.AvalancheFujiTestnet,
 ];

@@ -13,6 +13,18 @@ export const CONTRACT_ADDRESSES: Record<
   [ChainId.Mumbai]: {
     registry: "0x8e189fbC1BAbbCd5bb5c960967B34Be73867e742",
   },
+  [ChainId.Avalanche]: {
+    registry: "0x8e189fbc1babbcd5bb5c960967b34be73867e742",
+  },
+  [ChainId.AvalancheFujiTestnet]: {
+    registry: "0x8e189fbc1babbcd5bb5c960967b34be73867e742",
+  },
+  [ChainId.Fantom]: {
+    registry: "0x8e189fbc1babbcd5bb5c960967b34be73867e742",
+  },
+  [ChainId.FantomTestnet]: {
+    registry: "0x8e189fbc1babbcd5bb5c960967b34be73867e742",
+  },
 };
 
 export function getContractAddressByChainId(
