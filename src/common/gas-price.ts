@@ -11,8 +11,6 @@ function getGasStationUrl(chainId?: number): string | null {
 
   if (chainId === ChainId.Polygon) {
     return "https://gasstation-mainnet.matic.network";
-  } else if (chainId === ChainId.Mumbai) {
-    return "https://gasstation-mumbai.matic.today";
   }
 
   return null;
