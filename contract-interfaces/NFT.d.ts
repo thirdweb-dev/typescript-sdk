@@ -604,7 +604,7 @@ export class NFT extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
@@ -797,7 +797,7 @@ export class NFT extends BaseContract {
   royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
   royaltyInfo(
-    tokenId: BigNumberish,
+    arg0: BigNumberish,
     salePrice: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
@@ -982,7 +982,7 @@ export class NFT extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
@@ -1347,7 +1347,7 @@ export class NFT extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1561,7 +1561,7 @@ export class NFT extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

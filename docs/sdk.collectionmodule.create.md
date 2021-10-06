@@ -7,16 +7,16 @@
 <b>Signature:</b>
 
 ```typescript
-create(args: INFTCollectionCreateArgs[]): Promise<CollectionMetadata[]>;
+create(metadata: MetadataURIOrObject): Promise<CollectionMetadata>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | [INFTCollectionCreateArgs](./sdk.inftcollectioncreateargs.md)<!-- -->\[\] |  |
+|  metadata | [MetadataURIOrObject](./sdk.metadatauriorobject.md) |  |
 
 <b>Returns:</b>
 
-Promise&lt;[CollectionMetadata](./sdk.collectionmetadata.md)<!-- -->\[\]&gt;
+Promise&lt;[CollectionMetadata](./sdk.collectionmetadata.md)<!-- -->&gt;
 

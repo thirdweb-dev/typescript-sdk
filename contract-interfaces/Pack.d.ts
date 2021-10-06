@@ -41,13 +41,13 @@ interface PackInterface extends ethers.utils.Interface {
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "isRestrictedTransfer()": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
     "mint(address,uint256,uint256,bytes)": FunctionFragment;
     "mintBatch(address,uint256[],uint256[],bytes)": FunctionFragment;
     "nextTokenId()": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
     "openPack(uint256)": FunctionFragment;
     "packs(uint256)": FunctionFragment;
     "pause()": FunctionFragment;
@@ -68,7 +68,9 @@ interface PackInterface extends ethers.utils.Interface {
     "setRoyaltyBps(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
+    "totalSupply(uint256)": FunctionFragment;
     "transferLink(address,uint256)": FunctionFragment;
+    "transfersRestricted()": FunctionFragment;
     "unpause()": FunctionFragment;
     "uri(uint256)": FunctionFragment;
     "vrfFees()": FunctionFragment;
@@ -156,10 +158,6 @@ interface PackInterface extends ethers.utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "isRestrictedTransfer",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "isTrustedForwarder",
     values: [string]
   ): string;
@@ -182,6 +180,10 @@ interface PackInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "onERC1155Received",
     values: [string, string, BigNumberish, BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "onERC721Received",
+    values: [string, string, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "openPack",
@@ -255,8 +257,16 @@ interface PackInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "totalSupply",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferLink",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transfersRestricted",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
@@ -326,10 +336,6 @@ interface PackInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "isRestrictedTransfer",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "isTrustedForwarder",
     data: BytesLike
   ): Result;
@@ -345,6 +351,10 @@ interface PackInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "onERC1155Received",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "onERC721Received",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "openPack", data: BytesLike): Result;
@@ -404,7 +414,15 @@ interface PackInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "totalSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "transferLink",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transfersRestricted",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
@@ -456,10 +474,9 @@ export type PackCreatedEvent = TypedEvent<
     BigNumber,
     string,
     string,
-    [string, string, BigNumber, BigNumber, BigNumber] & {
+    [string, string, BigNumber, BigNumber] & {
       uri: string;
       creator: string;
-      currentSupply: BigNumber;
       openStart: BigNumber;
       openEnd: BigNumber;
     },
@@ -473,10 +490,9 @@ export type PackCreatedEvent = TypedEvent<
     packId: BigNumber;
     rewardContract: string;
     creator: string;
-    packState: [string, string, BigNumber, BigNumber, BigNumber] & {
+    packState: [string, string, BigNumber, BigNumber] & {
       uri: string;
       creator: string;
-      currentSupply: BigNumber;
       openStart: BigNumber;
       openEnd: BigNumber;
     };
@@ -653,18 +669,16 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        [string, string, BigNumber, BigNumber, BigNumber] & {
+        [string, string, BigNumber, BigNumber] & {
           uri: string;
           creator: string;
-          currentSupply: BigNumber;
           openStart: BigNumber;
           openEnd: BigNumber;
         }
       ] & {
-        pack: [string, string, BigNumber, BigNumber, BigNumber] & {
+        pack: [string, string, BigNumber, BigNumber] & {
           uri: string;
           creator: string;
-          currentSupply: BigNumber;
           openStart: BigNumber;
           openEnd: BigNumber;
         };
@@ -676,10 +690,9 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        [string, string, BigNumber, BigNumber, BigNumber] & {
+        [string, string, BigNumber, BigNumber] & {
           uri: string;
           creator: string;
-          currentSupply: BigNumber;
           openStart: BigNumber;
           openEnd: BigNumber;
         },
@@ -687,10 +700,9 @@ export class Pack extends BaseContract {
         BigNumber[],
         BigNumber[]
       ] & {
-        pack: [string, string, BigNumber, BigNumber, BigNumber] & {
+        pack: [string, string, BigNumber, BigNumber] & {
           uri: string;
           creator: string;
-          currentSupply: BigNumber;
           openStart: BigNumber;
           openEnd: BigNumber;
         };
@@ -731,26 +743,24 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<[boolean]>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     mint(
-      to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      arg0: string,
+      arg1: BigNumberish,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     mintBatch(
-      to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      arg0: string,
+      arg1: BigNumberish[],
+      arg2: BigNumberish[],
+      arg3: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -774,6 +784,14 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     openPack(
       _packId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -783,10 +801,9 @@ export class Pack extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, BigNumber, BigNumber] & {
+      [string, string, BigNumber, BigNumber] & {
         uri: string;
         creator: string;
-        currentSupply: BigNumber;
         openStart: BigNumber;
         openEnd: BigNumber;
       }
@@ -831,7 +848,7 @@ export class Pack extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
@@ -889,11 +906,18 @@ export class Pack extends BaseContract {
 
     tokenURI(_id: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
+    totalSupply(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     transferLink(
       _to: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    transfersRestricted(overrides?: CallOverrides): Promise<[boolean]>;
 
     unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -956,10 +980,9 @@ export class Pack extends BaseContract {
     _packId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, BigNumber, BigNumber, BigNumber] & {
+    [string, string, BigNumber, BigNumber] & {
       uri: string;
       creator: string;
-      currentSupply: BigNumber;
       openStart: BigNumber;
       openEnd: BigNumber;
     }
@@ -970,10 +993,9 @@ export class Pack extends BaseContract {
     overrides?: CallOverrides
   ): Promise<
     [
-      [string, string, BigNumber, BigNumber, BigNumber] & {
+      [string, string, BigNumber, BigNumber] & {
         uri: string;
         creator: string;
-        currentSupply: BigNumber;
         openStart: BigNumber;
         openEnd: BigNumber;
       },
@@ -981,10 +1003,9 @@ export class Pack extends BaseContract {
       BigNumber[],
       BigNumber[]
     ] & {
-      pack: [string, string, BigNumber, BigNumber, BigNumber] & {
+      pack: [string, string, BigNumber, BigNumber] & {
         uri: string;
         creator: string;
-        currentSupply: BigNumber;
         openStart: BigNumber;
         openEnd: BigNumber;
       };
@@ -1025,26 +1046,24 @@ export class Pack extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  isRestrictedTransfer(overrides?: CallOverrides): Promise<boolean>;
-
   isTrustedForwarder(
     forwarder: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   mint(
-    to: string,
-    id: BigNumberish,
-    amount: BigNumberish,
-    data: BytesLike,
+    arg0: string,
+    arg1: BigNumberish,
+    arg2: BigNumberish,
+    arg3: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   mintBatch(
-    to: string,
-    ids: BigNumberish[],
-    amounts: BigNumberish[],
-    data: BytesLike,
+    arg0: string,
+    arg1: BigNumberish[],
+    arg2: BigNumberish[],
+    arg3: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1068,6 +1087,14 @@ export class Pack extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  onERC721Received(
+    arg0: string,
+    arg1: string,
+    arg2: BigNumberish,
+    arg3: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   openPack(
     _packId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -1077,10 +1104,9 @@ export class Pack extends BaseContract {
     arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, BigNumber, BigNumber, BigNumber] & {
+    [string, string, BigNumber, BigNumber] & {
       uri: string;
       creator: string;
-      currentSupply: BigNumber;
       openStart: BigNumber;
       openEnd: BigNumber;
     }
@@ -1125,7 +1151,7 @@ export class Pack extends BaseContract {
   royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
   royaltyInfo(
-    tokenId: BigNumberish,
+    arg0: BigNumberish,
     salePrice: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
@@ -1183,11 +1209,15 @@ export class Pack extends BaseContract {
 
   tokenURI(_id: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
+  totalSupply(id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
   transferLink(
     _to: string,
     _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  transfersRestricted(overrides?: CallOverrides): Promise<boolean>;
 
   unpause(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -1250,10 +1280,9 @@ export class Pack extends BaseContract {
       _packId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, BigNumber, BigNumber] & {
+      [string, string, BigNumber, BigNumber] & {
         uri: string;
         creator: string;
-        currentSupply: BigNumber;
         openStart: BigNumber;
         openEnd: BigNumber;
       }
@@ -1264,10 +1293,9 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        [string, string, BigNumber, BigNumber, BigNumber] & {
+        [string, string, BigNumber, BigNumber] & {
           uri: string;
           creator: string;
-          currentSupply: BigNumber;
           openStart: BigNumber;
           openEnd: BigNumber;
         },
@@ -1275,10 +1303,9 @@ export class Pack extends BaseContract {
         BigNumber[],
         BigNumber[]
       ] & {
-        pack: [string, string, BigNumber, BigNumber, BigNumber] & {
+        pack: [string, string, BigNumber, BigNumber] & {
           uri: string;
           creator: string;
-          currentSupply: BigNumber;
           openStart: BigNumber;
           openEnd: BigNumber;
         };
@@ -1319,26 +1346,24 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<boolean>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     mint(
-      to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      arg0: string,
+      arg1: BigNumberish,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
     mintBatch(
-      to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      arg0: string,
+      arg1: BigNumberish[],
+      arg2: BigNumberish[],
+      arg3: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1362,16 +1387,23 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     openPack(_packId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     packs(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, BigNumber, BigNumber] & {
+      [string, string, BigNumber, BigNumber] & {
         uri: string;
         creator: string;
-        currentSupply: BigNumber;
         openStart: BigNumber;
         openEnd: BigNumber;
       }
@@ -1414,7 +1446,7 @@ export class Pack extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
@@ -1469,11 +1501,18 @@ export class Pack extends BaseContract {
 
     tokenURI(_id: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
+    totalSupply(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     transferLink(
       _to: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    transfersRestricted(overrides?: CallOverrides): Promise<boolean>;
 
     unpause(overrides?: CallOverrides): Promise<void>;
 
@@ -1514,10 +1553,9 @@ export class Pack extends BaseContract {
         BigNumber,
         string,
         string,
-        [string, string, BigNumber, BigNumber, BigNumber] & {
+        [string, string, BigNumber, BigNumber] & {
           uri: string;
           creator: string;
-          currentSupply: BigNumber;
           openStart: BigNumber;
           openEnd: BigNumber;
         },
@@ -1532,10 +1570,9 @@ export class Pack extends BaseContract {
         packId: BigNumber;
         rewardContract: string;
         creator: string;
-        packState: [string, string, BigNumber, BigNumber, BigNumber] & {
+        packState: [string, string, BigNumber, BigNumber] & {
           uri: string;
           creator: string;
-          currentSupply: BigNumber;
           openStart: BigNumber;
           openEnd: BigNumber;
         };
@@ -1559,10 +1596,9 @@ export class Pack extends BaseContract {
         BigNumber,
         string,
         string,
-        [string, string, BigNumber, BigNumber, BigNumber] & {
+        [string, string, BigNumber, BigNumber] & {
           uri: string;
           creator: string;
-          currentSupply: BigNumber;
           openStart: BigNumber;
           openEnd: BigNumber;
         },
@@ -1577,10 +1613,9 @@ export class Pack extends BaseContract {
         packId: BigNumber;
         rewardContract: string;
         creator: string;
-        packState: [string, string, BigNumber, BigNumber, BigNumber] & {
+        packState: [string, string, BigNumber, BigNumber] & {
           uri: string;
           creator: string;
-          currentSupply: BigNumber;
           openStart: BigNumber;
           openEnd: BigNumber;
         };
@@ -1892,26 +1927,24 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     mint(
-      to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      arg0: string,
+      arg1: BigNumberish,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     mintBatch(
-      to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      arg0: string,
+      arg1: BigNumberish[],
+      arg2: BigNumberish[],
+      arg3: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1932,6 +1965,14 @@ export class Pack extends BaseContract {
       arg2: BigNumberish,
       arg3: BigNumberish,
       arg4: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1976,7 +2017,7 @@ export class Pack extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -2032,11 +2073,18 @@ export class Pack extends BaseContract {
 
     tokenURI(_id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
+    totalSupply(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     transferLink(
       _to: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    transfersRestricted(overrides?: CallOverrides): Promise<BigNumber>;
 
     unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -2145,28 +2193,24 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    isRestrictedTransfer(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     mint(
-      to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      arg0: string,
+      arg1: BigNumberish,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     mintBatch(
-      to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      arg0: string,
+      arg1: BigNumberish[],
+      arg2: BigNumberish[],
+      arg3: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2187,6 +2231,14 @@ export class Pack extends BaseContract {
       arg2: BigNumberish,
       arg3: BigNumberish,
       arg4: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2237,7 +2289,7 @@ export class Pack extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -2296,10 +2348,19 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    totalSupply(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     transferLink(
       _to: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transfersRestricted(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     unpause(

@@ -133,20 +133,21 @@ export class PackModule extends Module {
   }
 
   public async get(packId: string): Promise<PackMetadata> {
-    const [meta, state] = await Promise.all([
-      await getMetadataWithoutContract(
+    const [meta, state, supply] = await Promise.all([
+      getMetadataWithoutContract(
         this.providerOrSigner,
         this.address,
         packId,
         this.ipfsGatewayUrl,
       ),
       this.contract.getPack(packId),
+      this.contract.totalSupply(packId),
     ]);
     const entity: PackMetadata = {
       id: packId,
       metadata: meta,
       creator: state.creator,
-      currentSupply: state.currentSupply,
+      currentSupply: supply,
       openStart: state.openStart.gt(0)
         ? new Date(state.openStart.toNumber() * 1000)
         : null,

@@ -26,6 +26,7 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     "PAUSER_ROLE()": FunctionFragment;
     "TRANSFER_ROLE()": FunctionFragment;
     "_contractURI()": FunctionFragment;
+    "accessNftIsTransferable()": FunctionFragment;
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
     "burn(address,uint256,uint256)": FunctionFragment;
@@ -40,14 +41,14 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     "hasRole(bytes32,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isRedeemed(uint256)": FunctionFragment;
-    "isRestrictedTransfer()": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
+    "lastTimeToRedeem(uint256)": FunctionFragment;
     "mint(address,uint256,uint256,bytes)": FunctionFragment;
     "mintBatch(address,uint256[],uint256[],bytes)": FunctionFragment;
     "nextTokenId()": FunctionFragment;
-    "nftInfo(uint256)": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "redeemAccess(uint256,uint256)": FunctionFragment;
@@ -59,10 +60,15 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
+    "setLastTimeToRedeem(uint256,uint256)": FunctionFragment;
     "setRestrictedTransfer(bool)": FunctionFragment;
     "setRoyaltyBps(uint256)": FunctionFragment;
+    "setTransferability(bool)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "tokenState(uint256)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
+    "totalSupply(uint256)": FunctionFragment;
+    "transfersRestricted()": FunctionFragment;
     "unpause()": FunctionFragment;
     "uri(uint256)": FunctionFragment;
   };
@@ -85,6 +91,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "_contractURI",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "accessNftIsTransferable",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -153,12 +163,12 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "isRestrictedTransfer",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "isTrustedForwarder",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lastTimeToRedeem",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "mint",
@@ -173,16 +183,16 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "nftInfo",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "onERC1155BatchReceived",
     values: [string, string, BigNumberish[], BigNumberish[], BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "onERC1155Received",
     values: [string, string, BigNumberish, BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "onERC721Received",
+    values: [string, string, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
@@ -223,6 +233,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "setLastTimeToRedeem",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setRestrictedTransfer",
     values: [boolean]
   ): string;
@@ -231,12 +245,28 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "setTransferability",
+    values: [boolean]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "tokenState",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "tokenURI",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "totalSupply",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transfersRestricted",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
@@ -259,6 +289,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "_contractURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "accessNftIsTransferable",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -300,11 +334,11 @@ interface AccessNFTInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "isRedeemed", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "isRestrictedTransfer",
+    functionFragment: "isTrustedForwarder",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "isTrustedForwarder",
+    functionFragment: "lastTimeToRedeem",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
@@ -313,13 +347,16 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     functionFragment: "nextTokenId",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "nftInfo", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "onERC1155BatchReceived",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "onERC1155Received",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "onERC721Received",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
@@ -355,6 +392,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setLastTimeToRedeem",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setRestrictedTransfer",
     data: BytesLike
   ): Result;
@@ -363,17 +404,32 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setTransferability",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "tokenState", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "totalSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transfersRestricted",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
 
   events: {
     "AccessNFTRedeemed(address,uint256,uint256,uint256)": EventFragment;
     "AccessNFTsCreated(address,uint256[],string[],uint256[],string[],uint256[])": EventFragment;
+    "AccessTransferabilityUpdated(bool)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
+    "LastRedeemTimeUpdated(uint256,address,uint256)": EventFragment;
     "Paused(address)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
@@ -387,7 +443,11 @@ interface AccessNFTInterface extends ethers.utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "AccessNFTRedeemed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "AccessNFTsCreated"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "AccessTransferabilityUpdated"
+  ): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "LastRedeemTimeUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
@@ -419,11 +479,23 @@ export type AccessNFTsCreatedEvent = TypedEvent<
   }
 >;
 
+export type AccessTransferabilityUpdatedEvent = TypedEvent<
+  [boolean] & { isTransferable: boolean }
+>;
+
 export type ApprovalForAllEvent = TypedEvent<
   [string, string, boolean] & {
     account: string;
     operator: string;
     approved: boolean;
+  }
+>;
+
+export type LastRedeemTimeUpdatedEvent = TypedEvent<
+  [BigNumber, string, BigNumber] & {
+    accessNftId: BigNumber;
+    creator: string;
+    lastTimeToRedeem: BigNumber;
   }
 >;
 
@@ -529,6 +601,8 @@ export class AccessNFT extends BaseContract {
 
     _contractURI(overrides?: CallOverrides): Promise<[string]>;
 
+    accessNftIsTransferable(overrides?: CallOverrides): Promise<[boolean]>;
+
     balanceOf(
       account: string,
       id: BigNumberish,
@@ -612,12 +686,15 @@ export class AccessNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<[boolean]>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    lastTimeToRedeem(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     mint(
       to: string,
@@ -637,20 +714,6 @@ export class AccessNFT extends BaseContract {
 
     nextTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    nftInfo(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, BigNumber, boolean, BigNumber, number] & {
-        creator: string;
-        uri: string;
-        supply: BigNumber;
-        isAccess: boolean;
-        accessNftId: BigNumber;
-        underlyingType: number;
-      }
-    >;
-
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -666,6 +729,14 @@ export class AccessNFT extends BaseContract {
       arg2: BigNumberish,
       arg3: BigNumberish,
       arg4: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -696,7 +767,7 @@ export class AccessNFT extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
@@ -732,6 +803,12 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setLastTimeToRedeem(
+      _tokenId: BigNumberish,
+      _secondsUntilRedeem: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setRestrictedTransfer(
       _restrictedTransfer: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -742,15 +819,40 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setTransferability(
+      _isTransferable: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    tokenState(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, boolean, BigNumber, number] & {
+        creator: string;
+        uri: string;
+        isAccess: boolean;
+        accessNftId: BigNumber;
+        underlyingType: number;
+      }
+    >;
+
     tokenURI(
       _nftId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    totalSupply(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    transfersRestricted(overrides?: CallOverrides): Promise<[boolean]>;
 
     unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -768,6 +870,8 @@ export class AccessNFT extends BaseContract {
   TRANSFER_ROLE(overrides?: CallOverrides): Promise<string>;
 
   _contractURI(overrides?: CallOverrides): Promise<string>;
+
+  accessNftIsTransferable(overrides?: CallOverrides): Promise<boolean>;
 
   balanceOf(
     account: string,
@@ -849,12 +953,15 @@ export class AccessNFT extends BaseContract {
 
   isRedeemed(_nftId: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
-  isRestrictedTransfer(overrides?: CallOverrides): Promise<boolean>;
-
   isTrustedForwarder(
     forwarder: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
+
+  lastTimeToRedeem(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   mint(
     to: string,
@@ -874,20 +981,6 @@ export class AccessNFT extends BaseContract {
 
   nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-  nftInfo(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, string, BigNumber, boolean, BigNumber, number] & {
-      creator: string;
-      uri: string;
-      supply: BigNumber;
-      isAccess: boolean;
-      accessNftId: BigNumber;
-      underlyingType: number;
-    }
-  >;
-
   onERC1155BatchReceived(
     arg0: string,
     arg1: string,
@@ -903,6 +996,14 @@ export class AccessNFT extends BaseContract {
     arg2: BigNumberish,
     arg3: BigNumberish,
     arg4: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  onERC721Received(
+    arg0: string,
+    arg1: string,
+    arg2: BigNumberish,
+    arg3: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -933,7 +1034,7 @@ export class AccessNFT extends BaseContract {
   royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
   royaltyInfo(
-    tokenId: BigNumberish,
+    arg0: BigNumberish,
     salePrice: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
@@ -969,6 +1070,12 @@ export class AccessNFT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setLastTimeToRedeem(
+    _tokenId: BigNumberish,
+    _secondsUntilRedeem: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setRestrictedTransfer(
     _restrictedTransfer: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -979,12 +1086,34 @@ export class AccessNFT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setTransferability(
+    _isTransferable: boolean,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   supportsInterface(
     interfaceId: BytesLike,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  tokenState(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, string, boolean, BigNumber, number] & {
+      creator: string;
+      uri: string;
+      isAccess: boolean;
+      accessNftId: BigNumber;
+      underlyingType: number;
+    }
+  >;
+
   tokenURI(_nftId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  totalSupply(id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+  transfersRestricted(overrides?: CallOverrides): Promise<boolean>;
 
   unpause(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -1002,6 +1131,8 @@ export class AccessNFT extends BaseContract {
     TRANSFER_ROLE(overrides?: CallOverrides): Promise<string>;
 
     _contractURI(overrides?: CallOverrides): Promise<string>;
+
+    accessNftIsTransferable(overrides?: CallOverrides): Promise<boolean>;
 
     balanceOf(
       account: string,
@@ -1086,12 +1217,15 @@ export class AccessNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<boolean>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    lastTimeToRedeem(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     mint(
       to: string,
@@ -1111,20 +1245,6 @@ export class AccessNFT extends BaseContract {
 
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    nftInfo(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, BigNumber, boolean, BigNumber, number] & {
-        creator: string;
-        uri: string;
-        supply: BigNumber;
-        isAccess: boolean;
-        accessNftId: BigNumber;
-        underlyingType: number;
-      }
-    >;
-
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -1140,6 +1260,14 @@ export class AccessNFT extends BaseContract {
       arg2: BigNumberish,
       arg3: BigNumberish,
       arg4: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -1168,7 +1296,7 @@ export class AccessNFT extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
@@ -1201,6 +1329,12 @@ export class AccessNFT extends BaseContract {
 
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
 
+    setLastTimeToRedeem(
+      _tokenId: BigNumberish,
+      _secondsUntilRedeem: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setRestrictedTransfer(
       _restrictedTransfer: boolean,
       overrides?: CallOverrides
@@ -1211,12 +1345,37 @@ export class AccessNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setTransferability(
+      _isTransferable: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    tokenState(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, boolean, BigNumber, number] & {
+        creator: string;
+        uri: string;
+        isAccess: boolean;
+        accessNftId: BigNumber;
+        underlyingType: number;
+      }
+    >;
+
     tokenURI(_nftId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    totalSupply(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    transfersRestricted(overrides?: CallOverrides): Promise<boolean>;
 
     unpause(overrides?: CallOverrides): Promise<void>;
 
@@ -1292,6 +1451,14 @@ export class AccessNFT extends BaseContract {
       }
     >;
 
+    "AccessTransferabilityUpdated(bool)"(
+      isTransferable?: null
+    ): TypedEventFilter<[boolean], { isTransferable: boolean }>;
+
+    AccessTransferabilityUpdated(
+      isTransferable?: null
+    ): TypedEventFilter<[boolean], { isTransferable: boolean }>;
+
     "ApprovalForAll(address,address,bool)"(
       account?: string | null,
       operator?: string | null,
@@ -1308,6 +1475,24 @@ export class AccessNFT extends BaseContract {
     ): TypedEventFilter<
       [string, string, boolean],
       { account: string; operator: string; approved: boolean }
+    >;
+
+    "LastRedeemTimeUpdated(uint256,address,uint256)"(
+      accessNftId?: null,
+      creator?: null,
+      lastTimeToRedeem?: null
+    ): TypedEventFilter<
+      [BigNumber, string, BigNumber],
+      { accessNftId: BigNumber; creator: string; lastTimeToRedeem: BigNumber }
+    >;
+
+    LastRedeemTimeUpdated(
+      accessNftId?: null,
+      creator?: null,
+      lastTimeToRedeem?: null
+    ): TypedEventFilter<
+      [BigNumber, string, BigNumber],
+      { accessNftId: BigNumber; creator: string; lastTimeToRedeem: BigNumber }
     >;
 
     "Paused(address)"(
@@ -1474,6 +1659,8 @@ export class AccessNFT extends BaseContract {
 
     _contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
+    accessNftIsTransferable(overrides?: CallOverrides): Promise<BigNumber>;
+
     balanceOf(
       account: string,
       id: BigNumberish,
@@ -1560,10 +1747,13 @@ export class AccessNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
     isTrustedForwarder(
       forwarder: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    lastTimeToRedeem(
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1585,8 +1775,6 @@ export class AccessNFT extends BaseContract {
 
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    nftInfo(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -1602,6 +1790,14 @@ export class AccessNFT extends BaseContract {
       arg2: BigNumberish,
       arg3: BigNumberish,
       arg4: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1632,7 +1828,7 @@ export class AccessNFT extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1666,6 +1862,12 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setLastTimeToRedeem(
+      _tokenId: BigNumberish,
+      _secondsUntilRedeem: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setRestrictedTransfer(
       _restrictedTransfer: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1676,8 +1878,18 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setTransferability(
+      _isTransferable: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     supportsInterface(
       interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenState(
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1685,6 +1897,13 @@ export class AccessNFT extends BaseContract {
       _nftId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    totalSupply(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    transfersRestricted(overrides?: CallOverrides): Promise<BigNumber>;
 
     unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1705,6 +1924,10 @@ export class AccessNFT extends BaseContract {
     TRANSFER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     _contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    accessNftIsTransferable(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     balanceOf(
       account: string,
@@ -1792,12 +2015,13 @@ export class AccessNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    isRestrictedTransfer(
+    isTrustedForwarder(
+      forwarder: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    isTrustedForwarder(
-      forwarder: string,
+    lastTimeToRedeem(
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1819,11 +2043,6 @@ export class AccessNFT extends BaseContract {
 
     nextTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    nftInfo(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -1839,6 +2058,14 @@ export class AccessNFT extends BaseContract {
       arg2: BigNumberish,
       arg3: BigNumberish,
       arg4: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    onERC721Received(
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1869,7 +2096,7 @@ export class AccessNFT extends BaseContract {
     royaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     royaltyInfo(
-      tokenId: BigNumberish,
+      arg0: BigNumberish,
       salePrice: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1903,6 +2130,12 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setLastTimeToRedeem(
+      _tokenId: BigNumberish,
+      _secondsUntilRedeem: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     setRestrictedTransfer(
       _restrictedTransfer: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1913,13 +2146,32 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setTransferability(
+      _isTransferable: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    tokenState(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     tokenURI(
       _nftId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    totalSupply(
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    transfersRestricted(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

@@ -66,19 +66,18 @@ export class CollectionModule extends Module {
   /**
    *
    * Get a signle collection item by tokenId.
-   * @param tokenId - TODO description of tokenId
+   * @param tokenId - the unique token id of the nft
    * @returns A promise that resolves to a `CollectionMetadata`.
    */
   public async get(tokenId: string): Promise<CollectionMetadata> {
-    const info = await this.contract.nftInfo(tokenId);
-    const metadata = await getMetadata(
-      this.contract,
-      tokenId,
-      this.ipfsGatewayUrl,
-    );
+    const [creator, metadata, supply] = await Promise.all([
+      this.contract.creator(tokenId),
+      getMetadata(this.contract, tokenId, this.ipfsGatewayUrl),
+      this.contract.totalSupply(tokenId),
+    ]);
     return {
-      creator: info.creator,
-      supply: info.supply,
+      creator,
+      supply,
       metadata,
     };
   }
@@ -133,13 +132,29 @@ export class CollectionModule extends Module {
 
   // owner functions
   public async create(
-    args: INFTCollectionCreateArgs[],
+    metadata: MetadataURIOrObject,
+  ): Promise<CollectionMetadata> {
+    return (await this.createBatch([metadata]))[0];
+  }
+
+  public async createBatch(
+    metadata: MetadataURIOrObject[],
+  ): Promise<CollectionMetadata[]> {
+    const metadataWithSupply = metadata.map((m) => ({
+      metadata: m,
+      supply: 0,
+    }));
+    return this.createAndMint(metadataWithSupply);
+  }
+
+  public async createAndMint(
+    metadataWithSupply: INFTCollectionCreateArgs[],
   ): Promise<CollectionMetadata[]> {
     const uris = await Promise.all(
-      args.map((a) => a.metadata).map((a) => uploadMetadata(a)),
+      metadataWithSupply.map((a) => a.metadata).map((a) => uploadMetadata(a)),
     );
-    const supplies = args.map((a) => a.supply);
-    const tx = await this.contract.createNativeNfts(
+    const supplies = metadataWithSupply.map((a) => a.supply);
+    const tx = await this.contract.createNativeTokens(
       uris,
       supplies,
       await this.getCallOverrides(),

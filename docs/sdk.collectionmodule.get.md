@@ -16,7 +16,7 @@ get(tokenId: string): Promise<CollectionMetadata>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  tokenId | string | TODO description of tokenId |
+|  tokenId | string | the unique token id of the nft |
 
 <b>Returns:</b>
 
