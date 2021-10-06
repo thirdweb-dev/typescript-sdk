@@ -70,10 +70,10 @@ export class CollectionModule extends Module {
    * @returns A promise that resolves to a `CollectionMetadata`.
    */
   public async get(tokenId: string): Promise<CollectionMetadata> {
-    const [creator, metadata, supply] = await Promise.all([
-      this.contract.creator(tokenId),
+    const [metadata, creator, supply] = await Promise.all([
       getMetadata(this.contract, tokenId, this.ipfsGatewayUrl),
-      this.contract.totalSupply(tokenId),
+      this.contract.creator(tokenId),
+      this.contract.totalSupply(tokenId).catch(() => BigNumber.from("0")),
     ]);
     return {
       creator,

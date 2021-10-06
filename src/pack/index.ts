@@ -141,7 +141,7 @@ export class PackModule extends Module {
         this.ipfsGatewayUrl,
       ),
       this.contract.getPack(packId),
-      this.contract.totalSupply(packId),
+      this.contract.totalSupply(packId).catch(() => BigNumber.from("0")),
     ]);
     const entity: PackMetadata = {
       id: packId,
