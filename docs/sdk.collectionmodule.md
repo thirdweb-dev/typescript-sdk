@@ -31,7 +31,8 @@ export declare class CollectionModule extends Module
 |  [burnFrom(account, args)](./sdk.collectionmodule.burnfrom.md) |  |  |
 |  [create(metadata)](./sdk.collectionmodule.create.md) |  |  |
 |  [createAndMint(metadataWithSupply)](./sdk.collectionmodule.createandmint.md) |  |  |
-|  [createBatch(metadata)](./sdk.collectionmodule.createbatch.md) |  |  |
+|  [createAndMintBatch(metadataWithSupply)](./sdk.collectionmodule.createandmintbatch.md) |  |  |
+|  [createBatch(metadatas)](./sdk.collectionmodule.createbatch.md) |  |  |
 |  [createWithERC20(tokenContract, tokenAmount, args)](./sdk.collectionmodule.createwitherc20.md) |  |  |
 |  [createWithERC721(tokenContract, tokenId, metadata)](./sdk.collectionmodule.createwitherc721.md) |  |  |
 |  [get(tokenId)](./sdk.collectionmodule.get.md) |  | Get a signle collection item by tokenId. |

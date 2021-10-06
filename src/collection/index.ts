@@ -138,16 +138,22 @@ export class CollectionModule extends Module {
   }
 
   public async createBatch(
-    metadata: MetadataURIOrObject[],
+    metadatas: MetadataURIOrObject[],
   ): Promise<CollectionMetadata[]> {
-    const metadataWithSupply = metadata.map((m) => ({
+    const metadataWithSupply = metadatas.map((m) => ({
       metadata: m,
       supply: 0,
     }));
-    return this.createAndMint(metadataWithSupply);
+    return this.createAndMintBatch(metadataWithSupply);
   }
 
   public async createAndMint(
+    metadataWithSupply: INFTCollectionCreateArgs,
+  ): Promise<CollectionMetadata> {
+    return (await this.createAndMintBatch([metadataWithSupply]))[0];
+  }
+
+  public async createAndMintBatch(
     metadataWithSupply: INFTCollectionCreateArgs[],
   ): Promise<CollectionMetadata[]> {
     const uris = await Promise.all(
@@ -160,8 +166,8 @@ export class CollectionModule extends Module {
       await this.getCallOverrides(),
     );
     const receipt = await tx.wait();
-    const event = receipt?.events?.find((e) => e.event === "NativeNfts");
-    const tokenIds = event?.args?.nftIds;
+    const event = receipt?.events?.find((e) => e.event === "NativeTokens");
+    const tokenIds = event?.args?.tokenIds;
     return await Promise.all(
       tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),
     );

@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-createBatch(metadata: MetadataURIOrObject[]): Promise<CollectionMetadata[]>;
+createBatch(metadatas: MetadataURIOrObject[]): Promise<CollectionMetadata[]>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | [MetadataURIOrObject](./sdk.metadatauriorobject.md)<!-- -->\[\] |  |
+|  metadatas | [MetadataURIOrObject](./sdk.metadatauriorobject.md)<!-- -->\[\] |  |
 
 <b>Returns:</b>
 

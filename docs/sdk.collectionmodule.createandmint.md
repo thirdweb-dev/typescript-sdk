@@ -7,16 +7,16 @@
 <b>Signature:</b>
 
 ```typescript
-createAndMint(metadataWithSupply: INFTCollectionCreateArgs[]): Promise<CollectionMetadata[]>;
+createAndMint(metadataWithSupply: INFTCollectionCreateArgs): Promise<CollectionMetadata>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadataWithSupply | [INFTCollectionCreateArgs](./sdk.inftcollectioncreateargs.md)<!-- -->\[\] |  |
+|  metadataWithSupply | [INFTCollectionCreateArgs](./sdk.inftcollectioncreateargs.md) |  |
 
 <b>Returns:</b>
 
-Promise&lt;[CollectionMetadata](./sdk.collectionmetadata.md)<!-- -->\[\]&gt;
+Promise&lt;[CollectionMetadata](./sdk.collectionmetadata.md)<!-- -->&gt;
 
