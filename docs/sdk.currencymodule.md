@@ -29,6 +29,8 @@ export declare class CurrencyModule extends Module
 |  [burn(amount)](./sdk.currencymodule.burn.md) |  |  |
 |  [burnFrom(from, amount)](./sdk.currencymodule.burnfrom.md) |  |  |
 |  [get()](./sdk.currencymodule.get.md) |  |  |
+|  [getAllRoleMembers()](./sdk.currencymodule.getallrolemembers.md) |  |  |
+|  [getRoleMembers(role)](./sdk.currencymodule.getrolemembers.md) |  |  |
 |  [getValue(value)](./sdk.currencymodule.getvalue.md) |  |  |
 |  [grantRole(role, address)](./sdk.currencymodule.grantrole.md) |  |  |
 |  [mint(amount)](./sdk.currencymodule.mint.md) |  |  |

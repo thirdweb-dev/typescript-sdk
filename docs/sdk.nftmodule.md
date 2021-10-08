@@ -28,7 +28,9 @@ export declare class NFTModule extends Module
 |  [burn(tokenId)](./sdk.nftmodule.burn.md) |  |  |
 |  [get(tokenId)](./sdk.nftmodule.get.md) |  |  |
 |  [getAll()](./sdk.nftmodule.getall.md) |  |  |
+|  [getAllRoleMembers()](./sdk.nftmodule.getallrolemembers.md) |  |  |
 |  [getOwned(\_address)](./sdk.nftmodule.getowned.md) |  |  |
+|  [getRoleMembers(role)](./sdk.nftmodule.getrolemembers.md) |  |  |
 |  [grantRole(role, address)](./sdk.nftmodule.grantrole.md) |  |  |
 |  [isApproved(address, operator)](./sdk.nftmodule.isapproved.md) |  |  |
 |  [mint(metadata)](./sdk.nftmodule.mint.md) |  |  |

@@ -29,8 +29,10 @@ export declare class PackModule extends Module
 |  [depositLink(amount)](./sdk.packmodule.depositlink.md) |  |  |
 |  [get(packId)](./sdk.packmodule.get.md) |  |  |
 |  [getAll()](./sdk.packmodule.getall.md) |  |  |
+|  [getAllRoleMembers()](./sdk.packmodule.getallrolemembers.md) |  |  |
 |  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  |  |
 |  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  |  |
+|  [getRoleMembers(role)](./sdk.packmodule.getrolemembers.md) |  |  |
 |  [grantRole(role, address)](./sdk.packmodule.grantrole.md) |  |  |
 |  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  |  |
 |  [open(packId)](./sdk.packmodule.open.md) |  |  |

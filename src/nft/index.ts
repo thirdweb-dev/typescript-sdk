@@ -182,11 +182,46 @@ export class NFTModule extends Module {
   }
 
   public async revokeRole(role: Role, address: string) {
-    const tx = await this.contract.revokeRole(
-      getRoleHash(role),
-      address,
-      await this.getCallOverrides(),
+    const signerAddress = await this.getSignerAddress();
+    if (signerAddress.toLowerCase() === address.toLowerCase()) {
+      const tx = await this.contract.renounceRole(
+        getRoleHash(role),
+        address,
+        await this.getCallOverrides(),
+      );
+      await tx.wait();
+    } else {
+      const tx = await this.contract.revokeRole(
+        getRoleHash(role),
+        address,
+        await this.getCallOverrides(),
+      );
+      await tx.wait();
+    }
+  }
+
+  public async getRoleMembers(role: Role): Promise<string[]> {
+    const roleHash = getRoleHash(role);
+    const count = (await this.contract.getRoleMemberCount(roleHash)).toNumber();
+    return await Promise.all(
+      Array.from(Array(count).keys()).map((i) =>
+        this.contract.getRoleMember(roleHash, i),
+      ),
     );
-    await tx.wait();
+  }
+
+  public async getAllRoleMembers(): Promise<Record<Role, string[]>> {
+    const [admin, transfer, minter, pauser] = await Promise.all([
+      this.getRoleMembers("admin"),
+      this.getRoleMembers("transfer"),
+      this.getRoleMembers("minter"),
+      this.getRoleMembers("pauser"),
+    ]);
+    return {
+      admin,
+      transfer,
+      minter,
+      pauser,
+    };
   }
 }

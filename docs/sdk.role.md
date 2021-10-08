@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type Role = "admin" | "minter" | "pauser" | "transfer" | "provider";
+export declare type Role = "admin" | "minter" | "pauser" | "transfer";
 ```
