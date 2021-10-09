@@ -6,7 +6,7 @@ import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 
-interface NFTMetadataOwner {
+export interface NFTMetadataOwner {
   owner: string;
   metadata: NFTMetadata;
 }

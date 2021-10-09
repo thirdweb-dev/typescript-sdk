@@ -50,6 +50,7 @@
 |  [ListingMetadata](./sdk.listingmetadata.md) |  |
 |  [ModuleMetadata](./sdk.modulemetadata.md) | A Module with metadata. |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
+|  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) |  |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 

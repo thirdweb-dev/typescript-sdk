@@ -18,5 +18,5 @@ getWithOwner(tokenId: string): Promise<NFTMetadataOwner>;
 
 <b>Returns:</b>
 
-Promise&lt;NFTMetadataOwner&gt;
+Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;
 
