@@ -29,14 +29,17 @@ export declare class NFTModule extends Module
 |  [get(tokenId)](./sdk.nftmodule.get.md) |  |  |
 |  [getAll()](./sdk.nftmodule.getall.md) |  |  |
 |  [getAllRoleMembers()](./sdk.nftmodule.getallrolemembers.md) |  |  |
+|  [getAllWithOwner()](./sdk.nftmodule.getallwithowner.md) |  |  |
 |  [getOwned(\_address)](./sdk.nftmodule.getowned.md) |  |  |
 |  [getRoleMembers(role)](./sdk.nftmodule.getrolemembers.md) |  |  |
+|  [getWithOwner(tokenId)](./sdk.nftmodule.getwithowner.md) |  |  |
 |  [grantRole(role, address)](./sdk.nftmodule.grantrole.md) |  |  |
 |  [isApproved(address, operator)](./sdk.nftmodule.isapproved.md) |  |  |
 |  [mint(metadata)](./sdk.nftmodule.mint.md) |  |  |
 |  [mintBatch(metadatas)](./sdk.nftmodule.mintbatch.md) |  |  |
 |  [mintBatchTo(to, metadatas)](./sdk.nftmodule.mintbatchto.md) |  |  |
 |  [mintTo(to, metadata)](./sdk.nftmodule.mintto.md) |  |  |
+|  [ownerOf(tokenId)](./sdk.nftmodule.ownerof.md) |  |  |
 |  [revokeRole(role, address)](./sdk.nftmodule.revokerole.md) |  |  |
 |  [setApproval(operator, approved)](./sdk.nftmodule.setapproval.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.nftmodule.setmodulemetadata.md) |  |  |

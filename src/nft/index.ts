@@ -6,6 +6,11 @@ import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
 
+interface NFTMetadataOwner {
+  owner: string;
+  metadata: NFTMetadata;
+}
+
 /**
  * The NFTModule. This should always be created via `getNFTModule()` on the main SDK.
  * @public
@@ -43,6 +48,28 @@ export class NFTModule extends Module {
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
+  }
+
+  public async getWithOwner(tokenId: string): Promise<NFTMetadataOwner> {
+    const [owner, metadata] = await Promise.all([
+      this.ownerOf(tokenId),
+      getMetadata(this.contract, tokenId, this.ipfsGatewayUrl),
+    ]);
+
+    return { owner, metadata };
+  }
+
+  public async getAllWithOwner(): Promise<NFTMetadataOwner[]> {
+    const maxId = (await this.contract.nextTokenId()).toNumber();
+    return await Promise.all(
+      Array.from(Array(maxId).keys()).map((i) =>
+        this.getWithOwner(i.toString()),
+      ),
+    );
+  }
+
+  public async ownerOf(tokenId: string): Promise<string> {
+    return await this.contract.ownerOf(tokenId);
   }
 
   public async getOwned(_address?: string): Promise<NFTMetadata[]> {
