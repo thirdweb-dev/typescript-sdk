@@ -24,6 +24,7 @@ export declare class CurrencyModule extends Module
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [allowance(spender)](./sdk.currencymodule.allowance.md) |  |  |
+|  [allowanceOf(owner, spender)](./sdk.currencymodule.allowanceof.md) |  |  |
 |  [balance()](./sdk.currencymodule.balance.md) |  |  |
 |  [balanceOf(address)](./sdk.currencymodule.balanceof.md) |  |  |
 |  [burn(amount)](./sdk.currencymodule.burn.md) |  |  |

@@ -74,10 +74,11 @@ export class CurrencyModule extends Module {
   }
 
   public async allowance(spender: string): Promise<BigNumber> {
-    return await this.contract.allowance(
-      await this.getSignerAddress(),
-      spender,
-    );
+    return await this.allowanceOf(await this.getSignerAddress(), spender);
+  }
+
+  public async allowanceOf(owner: string, spender: string): Promise<BigNumber> {
+    return await this.contract.allowance(owner, spender);
   }
 
   public async setAllowance(spender: string, amount: BigNumber) {
