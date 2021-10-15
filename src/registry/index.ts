@@ -39,7 +39,7 @@ export class RegistryModule extends Module {
 
   public async getProtocolContracts(): Promise<IAppModule[]> {
     const deployer = await this.getSignerAddress();
-    const maxVersion = await this.contract.getLatestVersion(deployer);
+    const maxVersion = await this.contract.getProtocolControlCount(deployer);
     const versions = Array.from(Array(maxVersion.toNumber()).keys()).reverse();
     const addresses = await Promise.all(
       versions.map((v) =>

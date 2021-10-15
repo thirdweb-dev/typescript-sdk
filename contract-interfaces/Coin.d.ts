@@ -41,7 +41,6 @@ interface CoinInterface extends ethers.utils.Interface {
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "isRestrictedTransfer()": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
     "mint(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
@@ -58,6 +57,7 @@ interface CoinInterface extends ethers.utils.Interface {
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "transfersRestricted()": FunctionFragment;
     "unpause()": FunctionFragment;
   };
 
@@ -133,10 +133,6 @@ interface CoinInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "isRestrictedTransfer",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "isTrustedForwarder",
     values: [string]
   ): string;
@@ -192,6 +188,10 @@ interface CoinInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transfersRestricted",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
@@ -252,10 +252,6 @@ interface CoinInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "isRestrictedTransfer",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "isTrustedForwarder",
     data: BytesLike
   ): Result;
@@ -290,6 +286,10 @@ interface CoinInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transfersRestricted",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
@@ -467,8 +467,6 @@ export class Coin extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<[boolean]>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -544,6 +542,8 @@ export class Coin extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    transfersRestricted(overrides?: CallOverrides): Promise<[boolean]>;
 
     unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -628,8 +628,6 @@ export class Coin extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  isRestrictedTransfer(overrides?: CallOverrides): Promise<boolean>;
-
   isTrustedForwarder(
     forwarder: string,
     overrides?: CallOverrides
@@ -705,6 +703,8 @@ export class Coin extends BaseContract {
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  transfersRestricted(overrides?: CallOverrides): Promise<boolean>;
 
   unpause(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -786,8 +786,6 @@ export class Coin extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<boolean>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -858,6 +856,8 @@ export class Coin extends BaseContract {
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    transfersRestricted(overrides?: CallOverrides): Promise<boolean>;
 
     unpause(overrides?: CallOverrides): Promise<void>;
   };
@@ -1048,8 +1048,6 @@ export class Coin extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -1125,6 +1123,8 @@ export class Coin extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    transfersRestricted(overrides?: CallOverrides): Promise<BigNumber>;
 
     unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1218,10 +1218,6 @@ export class Coin extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    isRestrictedTransfer(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -1299,6 +1295,10 @@ export class Coin extends BaseContract {
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transfersRestricted(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     unpause(

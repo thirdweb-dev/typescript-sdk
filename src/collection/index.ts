@@ -160,9 +160,12 @@ export class CollectionModule extends Module {
       metadataWithSupply.map((a) => a.metadata).map((a) => uploadMetadata(a)),
     );
     const supplies = metadataWithSupply.map((a) => a.supply);
+    const to = await this.getSignerAddress();
     const tx = await this.contract.createNativeTokens(
+      to,
       uris,
       supplies,
+      [0],
       await this.getCallOverrides(),
     );
     const receipt = await tx.wait();

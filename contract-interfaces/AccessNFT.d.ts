@@ -32,15 +32,14 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     "burn(address,uint256,uint256)": FunctionFragment;
     "burnBatch(address,uint256[],uint256[])": FunctionFragment;
     "contractURI()": FunctionFragment;
-    "createAccessNfts(string[],string[],uint256[])": FunctionFragment;
-    "createAccessPack(address,string[],string[],uint256[],string,uint256,uint256,uint256)": FunctionFragment;
+    "createAccessTokens(address,string[],string[],uint256[],bytes)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "getRoleMember(bytes32,uint256)": FunctionFragment;
     "getRoleMemberCount(bytes32)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "isRedeemed(uint256)": FunctionFragment;
+    "isRedeemable(uint256)": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
     "lastTimeToRedeem(uint256)": FunctionFragment;
     "mint(address,uint256,uint256,bytes)": FunctionFragment;
@@ -51,19 +50,19 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
-    "redeemAccess(uint256,uint256)": FunctionFragment;
+    "redeemToken(uint256,uint256)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "royaltyBps()": FunctionFragment;
     "royaltyInfo(uint256,uint256)": FunctionFragment;
     "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "setAccessNftTransferability(bool)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
     "setLastTimeToRedeem(uint256,uint256)": FunctionFragment;
     "setRestrictedTransfer(bool)": FunctionFragment;
     "setRoyaltyBps(uint256)": FunctionFragment;
-    "setTransferability(bool)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "tokenState(uint256)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
@@ -118,21 +117,8 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "createAccessNfts",
-    values: [string[], string[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "createAccessPack",
-    values: [
-      string,
-      string[],
-      string[],
-      BigNumberish[],
-      string,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish
-    ]
+    functionFragment: "createAccessTokens",
+    values: [string, string[], string[], BigNumberish[], BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
@@ -159,7 +145,7 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "isRedeemed",
+    functionFragment: "isRedeemable",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -197,7 +183,7 @@ interface AccessNFTInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "redeemAccess",
+    functionFragment: "redeemToken",
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
@@ -225,6 +211,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     values: [string, string, BigNumberish, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "setAccessNftTransferability",
+    values: [boolean]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setApprovalForAll",
     values: [string, boolean]
   ): string;
@@ -243,10 +233,6 @@ interface AccessNFTInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "setRoyaltyBps",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setTransferability",
-    values: [boolean]
   ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
@@ -307,11 +293,7 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "createAccessNfts",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "createAccessPack",
+    functionFragment: "createAccessTokens",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -332,7 +314,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "isRedeemed", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isRedeemable",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "isTrustedForwarder",
     data: BytesLike
@@ -362,7 +347,7 @@ interface AccessNFTInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "redeemAccess",
+    functionFragment: "redeemToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -384,6 +369,10 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setAccessNftTransferability",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setApprovalForAll",
     data: BytesLike
   ): Result;
@@ -401,10 +390,6 @@ interface AccessNFTInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setRoyaltyBps",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setTransferability",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -631,22 +616,12 @@ export class AccessNFT extends BaseContract {
 
     contractURI(overrides?: CallOverrides): Promise<[string]>;
 
-    createAccessNfts(
+    createAccessTokens(
+      to: string,
       _nftURIs: string[],
       _accessNftURIs: string[],
       _nftSupplies: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    createAccessPack(
-      _pack: string,
-      _nftURIs: string[],
-      _accessNftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -681,7 +656,7 @@ export class AccessNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    isRedeemed(
+    isRedeemable(
       _nftId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
@@ -746,7 +721,7 @@ export class AccessNFT extends BaseContract {
 
     paused(overrides?: CallOverrides): Promise<[boolean]>;
 
-    redeemAccess(
+    redeemToken(
       _tokenId: BigNumberish,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -792,6 +767,11 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setAccessNftTransferability(
+      _isTransferable: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setApprovalForAll(
       operator: string,
       approved: boolean,
@@ -799,7 +779,7 @@ export class AccessNFT extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setContractURI(
-      _URI: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -819,11 +799,6 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setTransferability(
-      _isTransferable: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
@@ -836,7 +811,7 @@ export class AccessNFT extends BaseContract {
       [string, string, boolean, BigNumber, number] & {
         creator: string;
         uri: string;
-        isAccess: boolean;
+        isRedeemable: boolean;
         accessNftId: BigNumber;
         underlyingType: number;
       }
@@ -901,22 +876,12 @@ export class AccessNFT extends BaseContract {
 
   contractURI(overrides?: CallOverrides): Promise<string>;
 
-  createAccessNfts(
+  createAccessTokens(
+    to: string,
     _nftURIs: string[],
     _accessNftURIs: string[],
     _nftSupplies: BigNumberish[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  createAccessPack(
-    _pack: string,
-    _nftURIs: string[],
-    _accessNftURIs: string[],
-    _nftSupplies: BigNumberish[],
-    _packURI: string,
-    _secondsUntilOpenStart: BigNumberish,
-    _secondsUntilOpenEnd: BigNumberish,
-    _nftsPerOpen: BigNumberish,
+    data: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -951,7 +916,10 @@ export class AccessNFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  isRedeemed(_nftId: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
+  isRedeemable(
+    _nftId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   isTrustedForwarder(
     forwarder: string,
@@ -1013,7 +981,7 @@ export class AccessNFT extends BaseContract {
 
   paused(overrides?: CallOverrides): Promise<boolean>;
 
-  redeemAccess(
+  redeemToken(
     _tokenId: BigNumberish,
     _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -1059,6 +1027,11 @@ export class AccessNFT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setAccessNftTransferability(
+    _isTransferable: boolean,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setApprovalForAll(
     operator: string,
     approved: boolean,
@@ -1066,7 +1039,7 @@ export class AccessNFT extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setContractURI(
-    _URI: string,
+    _uri: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1086,11 +1059,6 @@ export class AccessNFT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setTransferability(
-    _isTransferable: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   supportsInterface(
     interfaceId: BytesLike,
     overrides?: CallOverrides
@@ -1103,7 +1071,7 @@ export class AccessNFT extends BaseContract {
     [string, string, boolean, BigNumber, number] & {
       creator: string;
       uri: string;
-      isAccess: boolean;
+      isRedeemable: boolean;
       accessNftId: BigNumber;
       underlyingType: number;
     }
@@ -1162,22 +1130,12 @@ export class AccessNFT extends BaseContract {
 
     contractURI(overrides?: CallOverrides): Promise<string>;
 
-    createAccessNfts(
+    createAccessTokens(
+      to: string,
       _nftURIs: string[],
       _accessNftURIs: string[],
       _nftSupplies: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
-    createAccessPack(
-      _pack: string,
-      _nftURIs: string[],
-      _accessNftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1212,7 +1170,7 @@ export class AccessNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    isRedeemed(
+    isRedeemable(
       _nftId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -1275,7 +1233,7 @@ export class AccessNFT extends BaseContract {
 
     paused(overrides?: CallOverrides): Promise<boolean>;
 
-    redeemAccess(
+    redeemToken(
       _tokenId: BigNumberish,
       _amount: BigNumberish,
       overrides?: CallOverrides
@@ -1321,13 +1279,18 @@ export class AccessNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setAccessNftTransferability(
+      _isTransferable: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setApprovalForAll(
       operator: string,
       approved: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
+    setContractURI(_uri: string, overrides?: CallOverrides): Promise<void>;
 
     setLastTimeToRedeem(
       _tokenId: BigNumberish,
@@ -1345,11 +1308,6 @@ export class AccessNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setTransferability(
-      _isTransferable: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
@@ -1362,7 +1320,7 @@ export class AccessNFT extends BaseContract {
       [string, string, boolean, BigNumber, number] & {
         creator: string;
         uri: string;
-        isAccess: boolean;
+        isRedeemable: boolean;
         accessNftId: BigNumber;
         underlyingType: number;
       }
@@ -1689,22 +1647,12 @@ export class AccessNFT extends BaseContract {
 
     contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
-    createAccessNfts(
+    createAccessTokens(
+      to: string,
       _nftURIs: string[],
       _accessNftURIs: string[],
       _nftSupplies: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    createAccessPack(
-      _pack: string,
-      _nftURIs: string[],
-      _accessNftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1742,7 +1690,7 @@ export class AccessNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    isRedeemed(
+    isRedeemable(
       _nftId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1807,7 +1755,7 @@ export class AccessNFT extends BaseContract {
 
     paused(overrides?: CallOverrides): Promise<BigNumber>;
 
-    redeemAccess(
+    redeemToken(
       _tokenId: BigNumberish,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1851,6 +1799,11 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setAccessNftTransferability(
+      _isTransferable: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setApprovalForAll(
       operator: string,
       approved: boolean,
@@ -1858,7 +1811,7 @@ export class AccessNFT extends BaseContract {
     ): Promise<BigNumber>;
 
     setContractURI(
-      _URI: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1875,11 +1828,6 @@ export class AccessNFT extends BaseContract {
 
     setRoyaltyBps(
       _royaltyBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    setTransferability(
-      _isTransferable: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1957,22 +1905,12 @@ export class AccessNFT extends BaseContract {
 
     contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    createAccessNfts(
+    createAccessTokens(
+      to: string,
       _nftURIs: string[],
       _accessNftURIs: string[],
       _nftSupplies: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    createAccessPack(
-      _pack: string,
-      _nftURIs: string[],
-      _accessNftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2010,7 +1948,7 @@ export class AccessNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    isRedeemed(
+    isRedeemable(
       _nftId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -2075,7 +2013,7 @@ export class AccessNFT extends BaseContract {
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    redeemAccess(
+    redeemToken(
       _tokenId: BigNumberish,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -2119,6 +2057,11 @@ export class AccessNFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setAccessNftTransferability(
+      _isTransferable: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     setApprovalForAll(
       operator: string,
       approved: boolean,
@@ -2126,7 +2069,7 @@ export class AccessNFT extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setContractURI(
-      _URI: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2143,11 +2086,6 @@ export class AccessNFT extends BaseContract {
 
     setRoyaltyBps(
       _royaltyBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setTransferability(
-      _isTransferable: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -27,7 +27,6 @@ export interface PackMetadata {
   creator: string;
   currentSupply: BigNumber;
   openStart: Date | null;
-  openEnd: Date | null;
   metadata: NFTMetadata;
 }
 
@@ -150,9 +149,6 @@ export class PackModule extends Module {
       currentSupply: supply,
       openStart: state.openStart.gt(0)
         ? new Date(state.openStart.toNumber() * 1000)
-        : null,
-      openEnd: state.openEnd.lte(Number.MAX_SAFE_INTEGER - 1)
-        ? new Date(state.openEnd.toNumber() * 1000)
         : null,
     };
     return entity;

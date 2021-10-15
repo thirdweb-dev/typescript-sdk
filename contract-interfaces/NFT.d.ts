@@ -30,6 +30,7 @@ interface NFTInterface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "burn(uint256)": FunctionFragment;
     "contractURI()": FunctionFragment;
+    "creator(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "getRoleMember(bytes32,uint256)": FunctionFragment;
@@ -37,14 +38,12 @@ interface NFTInterface extends ethers.utils.Interface {
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "isRestrictedTransfer()": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
     "mint(address)": FunctionFragment;
     "mintNFT(address,string)": FunctionFragment;
     "mintNFTBatch(address,string[])": FunctionFragment;
     "name()": FunctionFragment;
     "nextTokenId()": FunctionFragment;
-    "nftCreator(uint256)": FunctionFragment;
     "nftURI(uint256)": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "pause()": FunctionFragment;
@@ -65,6 +64,7 @@ interface NFTInterface extends ethers.utils.Interface {
     "tokenURI(uint256)": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "transfersRestricted()": FunctionFragment;
     "unpause()": FunctionFragment;
   };
 
@@ -99,6 +99,10 @@ interface NFTInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "creator",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getApproved",
     values: [BigNumberish]
   ): string;
@@ -127,10 +131,6 @@ interface NFTInterface extends ethers.utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "isRestrictedTransfer",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "isTrustedForwarder",
     values: [string]
   ): string;
@@ -147,10 +147,6 @@ interface NFTInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "nextTokenId",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "nftCreator",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "nftURI",
@@ -223,6 +219,10 @@ interface NFTInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "transfersRestricted",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
   decodeFunctionResult(
@@ -252,6 +252,7 @@ interface NFTInterface extends ethers.utils.Interface {
     functionFragment: "contractURI",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "creator", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
@@ -275,10 +276,6 @@ interface NFTInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "isRestrictedTransfer",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "isTrustedForwarder",
     data: BytesLike
   ): Result;
@@ -293,7 +290,6 @@ interface NFTInterface extends ethers.utils.Interface {
     functionFragment: "nextTokenId",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "nftCreator", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nftURI", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
@@ -348,6 +344,10 @@ interface NFTInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transfersRestricted",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
@@ -510,6 +510,8 @@ export class NFT extends BaseContract {
 
     contractURI(overrides?: CallOverrides): Promise<[string]>;
 
+    creator(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
+
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -546,8 +548,6 @@ export class NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<[boolean]>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -570,11 +570,6 @@ export class NFT extends BaseContract {
     name(overrides?: CallOverrides): Promise<[string]>;
 
     nextTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    nftCreator(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
 
     nftURI(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
@@ -679,6 +674,8 @@ export class NFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    transfersRestricted(overrides?: CallOverrides): Promise<[boolean]>;
+
     unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -708,6 +705,8 @@ export class NFT extends BaseContract {
   ): Promise<ContractTransaction>;
 
   contractURI(overrides?: CallOverrides): Promise<string>;
+
+  creator(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   getApproved(
     tokenId: BigNumberish,
@@ -745,8 +744,6 @@ export class NFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  isRestrictedTransfer(overrides?: CallOverrides): Promise<boolean>;
-
   isTrustedForwarder(
     forwarder: string,
     overrides?: CallOverrides
@@ -769,8 +766,6 @@ export class NFT extends BaseContract {
   name(overrides?: CallOverrides): Promise<string>;
 
   nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
-
-  nftCreator(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   nftURI(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -869,6 +864,8 @@ export class NFT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  transfersRestricted(overrides?: CallOverrides): Promise<boolean>;
+
   unpause(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -895,6 +892,8 @@ export class NFT extends BaseContract {
     burn(tokenId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     contractURI(overrides?: CallOverrides): Promise<string>;
+
+    creator(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     getApproved(
       tokenId: BigNumberish,
@@ -932,8 +931,6 @@ export class NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<boolean>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -956,8 +953,6 @@ export class NFT extends BaseContract {
     name(overrides?: CallOverrides): Promise<string>;
 
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nftCreator(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     nftURI(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -1050,6 +1045,8 @@ export class NFT extends BaseContract {
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    transfersRestricted(overrides?: CallOverrides): Promise<boolean>;
 
     unpause(overrides?: CallOverrides): Promise<void>;
   };
@@ -1250,6 +1247,8 @@ export class NFT extends BaseContract {
 
     contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
+    creator(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -1289,8 +1288,6 @@ export class NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    isRestrictedTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -1313,11 +1310,6 @@ export class NFT extends BaseContract {
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nftCreator(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     nftURI(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1420,6 +1412,8 @@ export class NFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    transfersRestricted(overrides?: CallOverrides): Promise<BigNumber>;
+
     unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1455,6 +1449,11 @@ export class NFT extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    creator(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     getApproved(
       tokenId: BigNumberish,
@@ -1495,10 +1494,6 @@ export class NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    isRestrictedTransfer(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -1524,11 +1519,6 @@ export class NFT extends BaseContract {
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nextTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    nftCreator(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     nftURI(
       arg0: BigNumberish,
@@ -1632,6 +1622,10 @@ export class NFT extends BaseContract {
       to: string,
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transfersRestricted(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     unpause(

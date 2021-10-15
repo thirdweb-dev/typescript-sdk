@@ -432,7 +432,7 @@ interface PackInterface extends ethers.utils.Interface {
 
   events: {
     "ApprovalForAll(address,address,bool)": EventFragment;
-    "PackCreated(uint256,address,address,tuple,tuple)": EventFragment;
+    "PackCreated(uint256,address,address,uint256,tuple,tuple)": EventFragment;
     "PackOpenFulfilled(uint256,address,bytes32,address,uint256[])": EventFragment;
     "PackOpenRequest(uint256,address,bytes32)": EventFragment;
     "Paused(address)": EventFragment;
@@ -474,11 +474,11 @@ export type PackCreatedEvent = TypedEvent<
     BigNumber,
     string,
     string,
-    [string, string, BigNumber, BigNumber] & {
+    BigNumber,
+    [string, string, BigNumber] & {
       uri: string;
       creator: string;
       openStart: BigNumber;
-      openEnd: BigNumber;
     },
     [string, BigNumber[], BigNumber[], BigNumber] & {
       source: string;
@@ -490,11 +490,11 @@ export type PackCreatedEvent = TypedEvent<
     packId: BigNumber;
     rewardContract: string;
     creator: string;
-    packState: [string, string, BigNumber, BigNumber] & {
+    packTotalSupply: BigNumber;
+    packState: [string, string, BigNumber] & {
       uri: string;
       creator: string;
       openStart: BigNumber;
-      openEnd: BigNumber;
     };
     rewards: [string, BigNumber[], BigNumber[], BigNumber] & {
       source: string;
@@ -669,18 +669,16 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        [string, string, BigNumber, BigNumber] & {
+        [string, string, BigNumber] & {
           uri: string;
           creator: string;
           openStart: BigNumber;
-          openEnd: BigNumber;
         }
       ] & {
-        pack: [string, string, BigNumber, BigNumber] & {
+        pack: [string, string, BigNumber] & {
           uri: string;
           creator: string;
           openStart: BigNumber;
-          openEnd: BigNumber;
         };
       }
     >;
@@ -690,22 +688,22 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        [string, string, BigNumber, BigNumber] & {
+        [string, string, BigNumber] & {
           uri: string;
           creator: string;
           openStart: BigNumber;
-          openEnd: BigNumber;
         },
+        BigNumber,
         string,
         BigNumber[],
         BigNumber[]
       ] & {
-        pack: [string, string, BigNumber, BigNumber] & {
+        pack: [string, string, BigNumber] & {
           uri: string;
           creator: string;
           openStart: BigNumber;
-          openEnd: BigNumber;
         };
+        packTotalSupply: BigNumber;
         source: string;
         tokenIds: BigNumber[];
         amountsPacked: BigNumber[];
@@ -767,8 +765,8 @@ export class Pack extends BaseContract {
     nextTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     onERC1155BatchReceived(
-      arg0: string,
-      _from: string,
+      _operator: string,
+      arg1: string,
       _ids: BigNumberish[],
       _values: BigNumberish[],
       _data: BytesLike,
@@ -801,11 +799,10 @@ export class Pack extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, BigNumber] & {
+      [string, string, BigNumber] & {
         uri: string;
         creator: string;
         openStart: BigNumber;
-        openEnd: BigNumber;
       }
     >;
 
@@ -885,7 +882,7 @@ export class Pack extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setContractURI(
-      _URI: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -980,11 +977,10 @@ export class Pack extends BaseContract {
     _packId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, BigNumber, BigNumber] & {
+    [string, string, BigNumber] & {
       uri: string;
       creator: string;
       openStart: BigNumber;
-      openEnd: BigNumber;
     }
   >;
 
@@ -993,22 +989,22 @@ export class Pack extends BaseContract {
     overrides?: CallOverrides
   ): Promise<
     [
-      [string, string, BigNumber, BigNumber] & {
+      [string, string, BigNumber] & {
         uri: string;
         creator: string;
         openStart: BigNumber;
-        openEnd: BigNumber;
       },
+      BigNumber,
       string,
       BigNumber[],
       BigNumber[]
     ] & {
-      pack: [string, string, BigNumber, BigNumber] & {
+      pack: [string, string, BigNumber] & {
         uri: string;
         creator: string;
         openStart: BigNumber;
-        openEnd: BigNumber;
       };
+      packTotalSupply: BigNumber;
       source: string;
       tokenIds: BigNumber[];
       amountsPacked: BigNumber[];
@@ -1070,8 +1066,8 @@ export class Pack extends BaseContract {
   nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
   onERC1155BatchReceived(
-    arg0: string,
-    _from: string,
+    _operator: string,
+    arg1: string,
     _ids: BigNumberish[],
     _values: BigNumberish[],
     _data: BytesLike,
@@ -1104,11 +1100,10 @@ export class Pack extends BaseContract {
     arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, BigNumber, BigNumber] & {
+    [string, string, BigNumber] & {
       uri: string;
       creator: string;
       openStart: BigNumber;
-      openEnd: BigNumber;
     }
   >;
 
@@ -1188,7 +1183,7 @@ export class Pack extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setContractURI(
-    _URI: string,
+    _uri: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1280,11 +1275,10 @@ export class Pack extends BaseContract {
       _packId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, BigNumber] & {
+      [string, string, BigNumber] & {
         uri: string;
         creator: string;
         openStart: BigNumber;
-        openEnd: BigNumber;
       }
     >;
 
@@ -1293,22 +1287,22 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        [string, string, BigNumber, BigNumber] & {
+        [string, string, BigNumber] & {
           uri: string;
           creator: string;
           openStart: BigNumber;
-          openEnd: BigNumber;
         },
+        BigNumber,
         string,
         BigNumber[],
         BigNumber[]
       ] & {
-        pack: [string, string, BigNumber, BigNumber] & {
+        pack: [string, string, BigNumber] & {
           uri: string;
           creator: string;
           openStart: BigNumber;
-          openEnd: BigNumber;
         };
+        packTotalSupply: BigNumber;
         source: string;
         tokenIds: BigNumber[];
         amountsPacked: BigNumber[];
@@ -1370,8 +1364,8 @@ export class Pack extends BaseContract {
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
     onERC1155BatchReceived(
-      arg0: string,
-      _from: string,
+      _operator: string,
+      arg1: string,
       _ids: BigNumberish[],
       _values: BigNumberish[],
       _data: BytesLike,
@@ -1401,11 +1395,10 @@ export class Pack extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, BigNumber] & {
+      [string, string, BigNumber] & {
         uri: string;
         creator: string;
         openStart: BigNumber;
-        openEnd: BigNumber;
       }
     >;
 
@@ -1482,7 +1475,7 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
+    setContractURI(_uri: string, overrides?: CallOverrides): Promise<void>;
 
     setRestrictedTransfer(
       _restrictedTransfer: boolean,
@@ -1542,10 +1535,11 @@ export class Pack extends BaseContract {
       { account: string; operator: string; approved: boolean }
     >;
 
-    "PackCreated(uint256,address,address,tuple,tuple)"(
+    "PackCreated(uint256,address,address,uint256,tuple,tuple)"(
       packId?: BigNumberish | null,
       rewardContract?: string | null,
       creator?: string | null,
+      packTotalSupply?: null,
       packState?: null,
       rewards?: null
     ): TypedEventFilter<
@@ -1553,11 +1547,11 @@ export class Pack extends BaseContract {
         BigNumber,
         string,
         string,
-        [string, string, BigNumber, BigNumber] & {
+        BigNumber,
+        [string, string, BigNumber] & {
           uri: string;
           creator: string;
           openStart: BigNumber;
-          openEnd: BigNumber;
         },
         [string, BigNumber[], BigNumber[], BigNumber] & {
           source: string;
@@ -1570,11 +1564,11 @@ export class Pack extends BaseContract {
         packId: BigNumber;
         rewardContract: string;
         creator: string;
-        packState: [string, string, BigNumber, BigNumber] & {
+        packTotalSupply: BigNumber;
+        packState: [string, string, BigNumber] & {
           uri: string;
           creator: string;
           openStart: BigNumber;
-          openEnd: BigNumber;
         };
         rewards: [string, BigNumber[], BigNumber[], BigNumber] & {
           source: string;
@@ -1589,6 +1583,7 @@ export class Pack extends BaseContract {
       packId?: BigNumberish | null,
       rewardContract?: string | null,
       creator?: string | null,
+      packTotalSupply?: null,
       packState?: null,
       rewards?: null
     ): TypedEventFilter<
@@ -1596,11 +1591,11 @@ export class Pack extends BaseContract {
         BigNumber,
         string,
         string,
-        [string, string, BigNumber, BigNumber] & {
+        BigNumber,
+        [string, string, BigNumber] & {
           uri: string;
           creator: string;
           openStart: BigNumber;
-          openEnd: BigNumber;
         },
         [string, BigNumber[], BigNumber[], BigNumber] & {
           source: string;
@@ -1613,11 +1608,11 @@ export class Pack extends BaseContract {
         packId: BigNumber;
         rewardContract: string;
         creator: string;
-        packState: [string, string, BigNumber, BigNumber] & {
+        packTotalSupply: BigNumber;
+        packState: [string, string, BigNumber] & {
           uri: string;
           creator: string;
           openStart: BigNumber;
-          openEnd: BigNumber;
         };
         rewards: [string, BigNumber[], BigNumber[], BigNumber] & {
           source: string;
@@ -1951,8 +1946,8 @@ export class Pack extends BaseContract {
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
     onERC1155BatchReceived(
-      arg0: string,
-      _from: string,
+      _operator: string,
+      arg1: string,
       _ids: BigNumberish[],
       _values: BigNumberish[],
       _data: BytesLike,
@@ -2052,7 +2047,7 @@ export class Pack extends BaseContract {
     ): Promise<BigNumber>;
 
     setContractURI(
-      _URI: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -2217,8 +2212,8 @@ export class Pack extends BaseContract {
     nextTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     onERC1155BatchReceived(
-      arg0: string,
-      _from: string,
+      _operator: string,
+      arg1: string,
       _ids: BigNumberish[],
       _values: BigNumberish[],
       _data: BytesLike,
@@ -2324,7 +2319,7 @@ export class Pack extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setContractURI(
-      _URI: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

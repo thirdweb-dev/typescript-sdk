@@ -23,34 +23,30 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "MAX_BPS()": FunctionFragment;
-    "MAX_PROVIDER_FEE_BPS()": FunctionFragment;
-    "PROTOCOL_ADMIN()": FunctionFragment;
-    "PROTOCOL_PROVIDER()": FunctionFragment;
-    "_contractURI()": FunctionFragment;
-    "addModule(address,uint8)": FunctionFragment;
+    "addModule(address,uint256)": FunctionFragment;
     "contractURI()": FunctionFragment;
     "getAllModulesOfType(uint256)": FunctionFragment;
+    "getForwarder()": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
+    "getRoleMember(bytes32,uint256)": FunctionFragment;
+    "getRoleMemberCount(bytes32)": FunctionFragment;
+    "getRoyaltyTreasury(address)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
-    "moduleIds(address)": FunctionFragment;
-    "moduleType(bytes32)": FunctionFragment;
     "modules(bytes32)": FunctionFragment;
     "numOfModuleType(uint256)": FunctionFragment;
-    "ownerTreasury()": FunctionFragment;
     "pauseProtocol(bool)": FunctionFragment;
-    "providerFeeBps()": FunctionFragment;
-    "providerTreasury()": FunctionFragment;
+    "registry()": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
+    "royaltyTreasury()": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
+    "setForwarder(address)": FunctionFragment;
+    "setModuleRoyaltyTreasury(address,address)": FunctionFragment;
+    "setRoyaltyTreasury(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "systemPaused()": FunctionFragment;
-    "transferProtocolFunds(address,address,uint256)": FunctionFragment;
     "updateModule(bytes32,address)": FunctionFragment;
-    "updateOwnerTreasury(address)": FunctionFragment;
-    "updateProviderFeeBps(uint128)": FunctionFragment;
-    "updateProviderTreasury(address)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -58,22 +54,6 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "MAX_BPS", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "MAX_PROVIDER_FEE_BPS",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "PROTOCOL_ADMIN",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "PROTOCOL_PROVIDER",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "_contractURI",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "addModule",
     values: [string, BigNumberish]
@@ -87,8 +67,24 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getForwarder",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "getRoleAdmin",
     values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRoleMember",
+    values: [BytesLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRoleMemberCount",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRoyaltyTreasury",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "grantRole",
@@ -98,32 +94,16 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     functionFragment: "hasRole",
     values: [BytesLike, string]
   ): string;
-  encodeFunctionData(functionFragment: "moduleIds", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "moduleType",
-    values: [BytesLike]
-  ): string;
   encodeFunctionData(functionFragment: "modules", values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: "numOfModuleType",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "ownerTreasury",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "pauseProtocol",
     values: [boolean]
   ): string;
-  encodeFunctionData(
-    functionFragment: "providerFeeBps",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "providerTreasury",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: "registry", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
     values: [BytesLike, string]
@@ -133,7 +113,23 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     values: [BytesLike, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "royaltyTreasury",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "setContractURI",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setForwarder",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setModuleRoyaltyTreasury",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setRoyaltyTreasury",
     values: [string]
   ): string;
   encodeFunctionData(
@@ -145,24 +141,8 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "transferProtocolFunds",
-    values: [string, string, BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "updateModule",
     values: [BytesLike, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateOwnerTreasury",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateProviderFeeBps",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateProviderTreasury",
-    values: [string]
   ): string;
 
   decodeFunctionResult(
@@ -170,22 +150,6 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "MAX_BPS", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "MAX_PROVIDER_FEE_BPS",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "PROTOCOL_ADMIN",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "PROTOCOL_PROVIDER",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "_contractURI",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "addModule", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "contractURI",
@@ -196,41 +160,60 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getForwarder",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getRoleAdmin",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRoleMember",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRoleMemberCount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRoyaltyTreasury",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "moduleIds", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "moduleType", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "modules", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "numOfModuleType",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "ownerTreasury",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "pauseProtocol",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "providerFeeBps",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "providerTreasury",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "royaltyTreasury",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setContractURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setForwarder",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setModuleRoyaltyTreasury",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setRoyaltyTreasury",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -242,73 +225,35 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferProtocolFunds",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "updateModule",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateOwnerTreasury",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateProviderFeeBps",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateProviderTreasury",
     data: BytesLike
   ): Result;
 
   events: {
-    "FundsTransferred(address,address,uint256)": EventFragment;
-    "ModuleUpdated(bytes32,address,uint256)": EventFragment;
-    "OwnerTreasuryUpdated(address)": EventFragment;
-    "ProviderFeeBpsUpdated(uint256)": EventFragment;
-    "ProviderTreasuryUpdated(address)": EventFragment;
+    "ForwarderUpdated(address)": EventFragment;
+    "ModuleUpdated(bytes32,address)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
     "SystemPaused(bool)": EventFragment;
-    "TransferRestricted(bytes32,address,bool)": EventFragment;
+    "TreasuryUpdated(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "FundsTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ForwarderUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ModuleUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnerTreasuryUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ProviderFeeBpsUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ProviderTreasuryUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "SystemPaused"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TransferRestricted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TreasuryUpdated"): EventFragment;
 }
 
-export type FundsTransferredEvent = TypedEvent<
-  [string, string, BigNumber] & { asset: string; to: string; amount: BigNumber }
+export type ForwarderUpdatedEvent = TypedEvent<
+  [string] & { _newForwarder: string }
 >;
 
 export type ModuleUpdatedEvent = TypedEvent<
-  [string, string, BigNumber] & {
-    moduleId: string;
-    module: string;
-    moduleType: BigNumber;
-  }
->;
-
-export type OwnerTreasuryUpdatedEvent = TypedEvent<
-  [string] & { _providerTreasury: string }
->;
-
-export type ProviderFeeBpsUpdatedEvent = TypedEvent<
-  [BigNumber] & { providerFeeBps: BigNumber }
->;
-
-export type ProviderTreasuryUpdatedEvent = TypedEvent<
-  [string] & { _providerTreasury: string }
+  [string, string] & { moduleId: string; module: string }
 >;
 
 export type RoleAdminChangedEvent = TypedEvent<
@@ -329,12 +274,8 @@ export type RoleRevokedEvent = TypedEvent<
 
 export type SystemPausedEvent = TypedEvent<[boolean] & { isPaused: boolean }>;
 
-export type TransferRestrictedEvent = TypedEvent<
-  [string, string, boolean] & {
-    moduleId: string;
-    moduleAddress: string;
-    restriction: boolean;
-  }
+export type TreasuryUpdatedEvent = TypedEvent<
+  [string] & { _newTreasury: string }
 >;
 
 export class ProtocolControl extends BaseContract {
@@ -385,14 +326,6 @@ export class ProtocolControl extends BaseContract {
 
     MAX_BPS(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<[string]>;
-
-    PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<[string]>;
-
-    _contractURI(overrides?: CallOverrides): Promise<[string]>;
-
     addModule(
       _newModuleAddress: string,
       _moduleType: BigNumberish,
@@ -406,7 +339,25 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string[]] & { allModules: string[] }>;
 
+    getForwarder(overrides?: CallOverrides): Promise<[string]>;
+
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    getRoyaltyTreasury(
+      moduleAddress: string,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     grantRole(
       role: BytesLike,
@@ -420,10 +371,6 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    moduleIds(arg0: string, overrides?: CallOverrides): Promise<[string]>;
-
-    moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<[number]>;
-
     modules(arg0: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
     numOfModuleType(
@@ -431,16 +378,12 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    ownerTreasury(overrides?: CallOverrides): Promise<[string]>;
-
     pauseProtocol(
       _toPause: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    providerFeeBps(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    providerTreasury(overrides?: CallOverrides): Promise<[string]>;
+    registry(overrides?: CallOverrides): Promise<[string]>;
 
     renounceRole(
       role: BytesLike,
@@ -454,8 +397,26 @@ export class ProtocolControl extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    royaltyTreasury(overrides?: CallOverrides): Promise<[string]>;
+
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setForwarder(
+      forwarder: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setModuleRoyaltyTreasury(
+      moduleAddress: string,
+      _treasury: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setRoyaltyTreasury(
+      _treasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -466,31 +427,9 @@ export class ProtocolControl extends BaseContract {
 
     systemPaused(overrides?: CallOverrides): Promise<[boolean]>;
 
-    transferProtocolFunds(
-      _asset: string,
-      _to: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    updateOwnerTreasury(
-      _newTreasury: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    updateProviderFeeBps(
-      _newFeeBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    updateProviderTreasury(
-      _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -498,14 +437,6 @@ export class ProtocolControl extends BaseContract {
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
   MAX_BPS(overrides?: CallOverrides): Promise<BigNumber>;
-
-  MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
-
-  PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<string>;
-
-  PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<string>;
-
-  _contractURI(overrides?: CallOverrides): Promise<string>;
 
   addModule(
     _newModuleAddress: string,
@@ -520,7 +451,25 @@ export class ProtocolControl extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string[]>;
 
+  getForwarder(overrides?: CallOverrides): Promise<string>;
+
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+
+  getRoleMember(
+    role: BytesLike,
+    index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getRoleMemberCount(
+    role: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getRoyaltyTreasury(
+    moduleAddress: string,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   grantRole(
     role: BytesLike,
@@ -534,10 +483,6 @@ export class ProtocolControl extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  moduleIds(arg0: string, overrides?: CallOverrides): Promise<string>;
-
-  moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<number>;
-
   modules(arg0: BytesLike, overrides?: CallOverrides): Promise<string>;
 
   numOfModuleType(
@@ -545,16 +490,12 @@ export class ProtocolControl extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  ownerTreasury(overrides?: CallOverrides): Promise<string>;
-
   pauseProtocol(
     _toPause: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  providerFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
-
-  providerTreasury(overrides?: CallOverrides): Promise<string>;
+  registry(overrides?: CallOverrides): Promise<string>;
 
   renounceRole(
     role: BytesLike,
@@ -568,8 +509,26 @@ export class ProtocolControl extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  royaltyTreasury(overrides?: CallOverrides): Promise<string>;
+
   setContractURI(
     _URI: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setForwarder(
+    forwarder: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setModuleRoyaltyTreasury(
+    moduleAddress: string,
+    _treasury: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setRoyaltyTreasury(
+    _treasury: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -580,31 +539,9 @@ export class ProtocolControl extends BaseContract {
 
   systemPaused(overrides?: CallOverrides): Promise<boolean>;
 
-  transferProtocolFunds(
-    _asset: string,
-    _to: string,
-    _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   updateModule(
     _moduleId: BytesLike,
     _newModuleAddress: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  updateOwnerTreasury(
-    _newTreasury: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  updateProviderFeeBps(
-    _newFeeBps: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  updateProviderTreasury(
-    _newTreasury: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -612,14 +549,6 @@ export class ProtocolControl extends BaseContract {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
     MAX_BPS(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
-
-    PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<string>;
-
-    PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<string>;
-
-    _contractURI(overrides?: CallOverrides): Promise<string>;
 
     addModule(
       _newModuleAddress: string,
@@ -634,7 +563,25 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string[]>;
 
+    getForwarder(overrides?: CallOverrides): Promise<string>;
+
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRoyaltyTreasury(
+      moduleAddress: string,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     grantRole(
       role: BytesLike,
@@ -648,10 +595,6 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    moduleIds(arg0: string, overrides?: CallOverrides): Promise<string>;
-
-    moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<number>;
-
     modules(arg0: BytesLike, overrides?: CallOverrides): Promise<string>;
 
     numOfModuleType(
@@ -659,13 +602,9 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    ownerTreasury(overrides?: CallOverrides): Promise<string>;
-
     pauseProtocol(_toPause: boolean, overrides?: CallOverrides): Promise<void>;
 
-    providerFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
-
-    providerTreasury(overrides?: CallOverrides): Promise<string>;
+    registry(overrides?: CallOverrides): Promise<string>;
 
     renounceRole(
       role: BytesLike,
@@ -679,7 +618,22 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    royaltyTreasury(overrides?: CallOverrides): Promise<string>;
+
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
+
+    setForwarder(forwarder: string, overrides?: CallOverrides): Promise<void>;
+
+    setModuleRoyaltyTreasury(
+      moduleAddress: string,
+      _treasury: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setRoyaltyTreasury(
+      _treasury: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     supportsInterface(
       interfaceId: BytesLike,
@@ -688,95 +642,31 @@ export class ProtocolControl extends BaseContract {
 
     systemPaused(overrides?: CallOverrides): Promise<boolean>;
 
-    transferProtocolFunds(
-      _asset: string,
-      _to: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    updateOwnerTreasury(
-      _newTreasury: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    updateProviderFeeBps(
-      _newFeeBps: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    updateProviderTreasury(
-      _newTreasury: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
   };
 
   filters: {
-    "FundsTransferred(address,address,uint256)"(
-      asset?: null,
-      to?: null,
-      amount?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { asset: string; to: string; amount: BigNumber }
-    >;
+    "ForwarderUpdated(address)"(
+      _newForwarder?: null
+    ): TypedEventFilter<[string], { _newForwarder: string }>;
 
-    FundsTransferred(
-      asset?: null,
-      to?: null,
-      amount?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { asset: string; to: string; amount: BigNumber }
-    >;
+    ForwarderUpdated(
+      _newForwarder?: null
+    ): TypedEventFilter<[string], { _newForwarder: string }>;
 
-    "ModuleUpdated(bytes32,address,uint256)"(
+    "ModuleUpdated(bytes32,address)"(
       moduleId?: BytesLike | null,
-      module?: string | null,
-      moduleType?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { moduleId: string; module: string; moduleType: BigNumber }
-    >;
+      module?: string | null
+    ): TypedEventFilter<[string, string], { moduleId: string; module: string }>;
 
     ModuleUpdated(
       moduleId?: BytesLike | null,
-      module?: string | null,
-      moduleType?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { moduleId: string; module: string; moduleType: BigNumber }
-    >;
-
-    "OwnerTreasuryUpdated(address)"(
-      _providerTreasury?: null
-    ): TypedEventFilter<[string], { _providerTreasury: string }>;
-
-    OwnerTreasuryUpdated(
-      _providerTreasury?: null
-    ): TypedEventFilter<[string], { _providerTreasury: string }>;
-
-    "ProviderFeeBpsUpdated(uint256)"(
-      providerFeeBps?: null
-    ): TypedEventFilter<[BigNumber], { providerFeeBps: BigNumber }>;
-
-    ProviderFeeBpsUpdated(
-      providerFeeBps?: null
-    ): TypedEventFilter<[BigNumber], { providerFeeBps: BigNumber }>;
-
-    "ProviderTreasuryUpdated(address)"(
-      _providerTreasury?: null
-    ): TypedEventFilter<[string], { _providerTreasury: string }>;
-
-    ProviderTreasuryUpdated(
-      _providerTreasury?: null
-    ): TypedEventFilter<[string], { _providerTreasury: string }>;
+      module?: string | null
+    ): TypedEventFilter<[string, string], { moduleId: string; module: string }>;
 
     "RoleAdminChanged(bytes32,bytes32,bytes32)"(
       role?: BytesLike | null,
@@ -840,37 +730,19 @@ export class ProtocolControl extends BaseContract {
       isPaused?: null
     ): TypedEventFilter<[boolean], { isPaused: boolean }>;
 
-    "TransferRestricted(bytes32,address,bool)"(
-      moduleId?: null,
-      moduleAddress?: null,
-      restriction?: null
-    ): TypedEventFilter<
-      [string, string, boolean],
-      { moduleId: string; moduleAddress: string; restriction: boolean }
-    >;
+    "TreasuryUpdated(address)"(
+      _newTreasury?: null
+    ): TypedEventFilter<[string], { _newTreasury: string }>;
 
-    TransferRestricted(
-      moduleId?: null,
-      moduleAddress?: null,
-      restriction?: null
-    ): TypedEventFilter<
-      [string, string, boolean],
-      { moduleId: string; moduleAddress: string; restriction: boolean }
-    >;
+    TreasuryUpdated(
+      _newTreasury?: null
+    ): TypedEventFilter<[string], { _newTreasury: string }>;
   };
 
   estimateGas: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_BPS(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
-
-    PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<BigNumber>;
-
-    PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     addModule(
       _newModuleAddress: string,
@@ -885,8 +757,26 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getForwarder(overrides?: CallOverrides): Promise<BigNumber>;
+
     getRoleAdmin(
       role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRoyaltyTreasury(
+      moduleAddress: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -902,10 +792,6 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    moduleIds(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    moduleType(arg0: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
-
     modules(arg0: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
 
     numOfModuleType(
@@ -913,16 +799,12 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    ownerTreasury(overrides?: CallOverrides): Promise<BigNumber>;
-
     pauseProtocol(
       _toPause: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    providerFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
-
-    providerTreasury(overrides?: CallOverrides): Promise<BigNumber>;
+    registry(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceRole(
       role: BytesLike,
@@ -936,8 +818,26 @@ export class ProtocolControl extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    royaltyTreasury(overrides?: CallOverrides): Promise<BigNumber>;
+
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setForwarder(
+      forwarder: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setModuleRoyaltyTreasury(
+      moduleAddress: string,
+      _treasury: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setRoyaltyTreasury(
+      _treasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -948,31 +848,9 @@ export class ProtocolControl extends BaseContract {
 
     systemPaused(overrides?: CallOverrides): Promise<BigNumber>;
 
-    transferProtocolFunds(
-      _asset: string,
-      _to: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    updateOwnerTreasury(
-      _newTreasury: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    updateProviderFeeBps(
-      _newFeeBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    updateProviderTreasury(
-      _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -983,16 +861,6 @@ export class ProtocolControl extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     MAX_BPS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    MAX_PROVIDER_FEE_BPS(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    PROTOCOL_ADMIN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    PROTOCOL_PROVIDER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    _contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     addModule(
       _newModuleAddress: string,
@@ -1007,8 +875,26 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getForwarder(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getRoleAdmin(
       role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRoyaltyTreasury(
+      moduleAddress: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1024,16 +910,6 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    moduleIds(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    moduleType(
-      arg0: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     modules(
       arg0: BytesLike,
       overrides?: CallOverrides
@@ -1044,16 +920,12 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    ownerTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     pauseProtocol(
       _toPause: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    providerFeeBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    providerTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    registry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceRole(
       role: BytesLike,
@@ -1067,8 +939,26 @@ export class ProtocolControl extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    royaltyTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     setContractURI(
       _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setForwarder(
+      forwarder: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setModuleRoyaltyTreasury(
+      moduleAddress: string,
+      _treasury: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setRoyaltyTreasury(
+      _treasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1079,31 +969,9 @@ export class ProtocolControl extends BaseContract {
 
     systemPaused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    transferProtocolFunds(
-      _asset: string,
-      _to: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    updateOwnerTreasury(
-      _newTreasury: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    updateProviderFeeBps(
-      _newFeeBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    updateProviderTreasury(
-      _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

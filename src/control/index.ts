@@ -6,7 +6,6 @@ import {
 import { ModuleType, uploadMetadata } from "../common";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { Module } from "../core/module";
-import { BigNumber } from "ethers";
 /**
  * A Module with metadata.
  * @public
@@ -89,16 +88,8 @@ export class AppModule extends Module {
     return this.getModuleAddress(ModuleType.MARKET);
   }
 
-  public async getOwnerTreasury(): Promise<string> {
-    return await this.contract.ownerTreasury();
-  }
-
-  public async getProviderTreasury(): Promise<string> {
-    return await this.contract.providerTreasury();
-  }
-
-  public async getProviderFeeBps(): Promise<BigNumber> {
-    return await this.contract.providerFeeBps();
+  public async getRoyaltyTreasury(address?: string): Promise<string> {
+    return await this.contract.getRoyaltyTreasury(address || "");
   }
 
   /**
@@ -151,8 +142,20 @@ export class AppModule extends Module {
     await tx.wait();
   }
 
-  public async setOwnerTreasury(treasury: string) {
-    const tx = await this.contract.updateOwnerTreasury(
+  public async setRoyaltyTreasury(treasury: string) {
+    const tx = await this.contract.setRoyaltyTreasury(
+      treasury,
+      await this.getCallOverrides(),
+    );
+    await tx.wait();
+  }
+
+  public async setModuleRoyaltyTreasury(
+    moduleAddress: string,
+    treasury: string,
+  ) {
+    const tx = await this.contract.setModuleRoyaltyTreasury(
+      moduleAddress,
       treasury,
       await this.getCallOverrides(),
     );

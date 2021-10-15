@@ -5,25 +5,25 @@ export const CONTRACT_ADDRESSES: Record<
   Record<"registry", string>
 > = {
   [ChainId.Rinkeby]: {
-    registry: "0x8e189fbc1babbcd5bb5c960967b34be73867e742",
+    registry: "0x3C8F6678b36291DDca275352D7413487C3Db2e20",
   },
   [ChainId.Polygon]: {
-    registry: "0x8e189fbC1BAbbCd5bb5c960967B34Be73867e742",
+    registry: "0x3C8F6678b36291DDca275352D7413487C3Db2e20",
   },
   [ChainId.Mumbai]: {
-    registry: "0x8e189fbC1BAbbCd5bb5c960967B34Be73867e742",
+    registry: "0x3C8F6678b36291DDca275352D7413487C3Db2e20",
   },
   [ChainId.Avalanche]: {
-    registry: "0x8e189fbc1babbcd5bb5c960967b34be73867e742",
+    registry: "0x3C8F6678b36291DDca275352D7413487C3Db2e20",
   },
   [ChainId.AvalancheFujiTestnet]: {
-    registry: "0x8e189fbc1babbcd5bb5c960967b34be73867e742",
+    registry: "0x3C8F6678b36291DDca275352D7413487C3Db2e20",
   },
   [ChainId.Fantom]: {
-    registry: "0x8e189fbc1babbcd5bb5c960967b34be73867e742",
+    registry: "0x3C8F6678b36291DDca275352D7413487C3Db2e20",
   },
   [ChainId.FantomTestnet]: {
-    registry: "0x8e189fbc1babbcd5bb5c960967b34be73867e742",
+    registry: "0x3C8F6678b36291DDca275352D7413487C3Db2e20",
   },
 };
 

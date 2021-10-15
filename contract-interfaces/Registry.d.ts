@@ -21,130 +21,151 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface RegistryInterface extends ethers.utils.Interface {
   functions: {
-    "controlCenters(address)": FunctionFragment;
+    "MAX_PROVIDER_FEE_BPS()": FunctionFragment;
+    "defaultFeeBps()": FunctionFragment;
     "deployProtocol(string)": FunctionFragment;
+    "deployer()": FunctionFragment;
     "forwarder()": FunctionFragment;
-    "getLatestVersion(address)": FunctionFragment;
+    "getFeeBps(address)": FunctionFragment;
     "getProtocolControl(address,uint256)": FunctionFragment;
+    "getProtocolControlCount(address)": FunctionFragment;
     "owner()": FunctionFragment;
-    "providerAdmin()": FunctionFragment;
-    "providerTreasury()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "setProviderAdmin(address)": FunctionFragment;
-    "setProviderTreasury(address)": FunctionFragment;
+    "setDefaultFeeBps(uint256)": FunctionFragment;
+    "setDeployer(address)": FunctionFragment;
+    "setProtocolControlFeeBps(address,uint256)": FunctionFragment;
+    "setTreasury(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "treasury()": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "controlCenters",
-    values: [string]
+    functionFragment: "MAX_PROVIDER_FEE_BPS",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "defaultFeeBps",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "deployProtocol",
     values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "deployer", values?: undefined): string;
   encodeFunctionData(functionFragment: "forwarder", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "getLatestVersion",
-    values: [string]
-  ): string;
+  encodeFunctionData(functionFragment: "getFeeBps", values: [string]): string;
   encodeFunctionData(
     functionFragment: "getProtocolControl",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "getProtocolControlCount",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "providerAdmin",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "providerTreasury",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setProviderAdmin",
-    values: [string]
+    functionFragment: "setDefaultFeeBps",
+    values: [BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "setDeployer", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "setProviderTreasury",
-    values: [string]
+    functionFragment: "setProtocolControlFeeBps",
+    values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "setTreasury", values: [string]): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "treasury", values?: undefined): string;
 
   decodeFunctionResult(
-    functionFragment: "controlCenters",
+    functionFragment: "MAX_PROVIDER_FEE_BPS",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "defaultFeeBps",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "deployProtocol",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "deployer", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "forwarder", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getLatestVersion",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "getFeeBps", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getProtocolControl",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getProtocolControlCount",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "providerAdmin",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "providerTreasury",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setProviderAdmin",
+    functionFragment: "setDefaultFeeBps",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setProviderTreasury",
+    functionFragment: "setDeployer",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setProtocolControlFeeBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setTreasury",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "treasury", data: BytesLike): Result;
 
   events: {
-    "DeployedForwarder(address)": EventFragment;
-    "DeployedProtocol(address,address,uint256)": EventFragment;
+    "DefaultFeeBpsUpdated(uint256)": EventFragment;
+    "DeployerUpdated(address)": EventFragment;
+    "NewProtocolControl(address,uint256,address,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "UpdatedProviderAdmin(address,address)": EventFragment;
-    "UpdatedProviderTreasury(address,address)": EventFragment;
+    "ProtocolControlFeeBpsUpdated(address,uint256)": EventFragment;
+    "TreasuryUpdated(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "DeployedForwarder"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "DeployedProtocol"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DefaultFeeBpsUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DeployerUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NewProtocolControl"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UpdatedProviderAdmin"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UpdatedProviderTreasury"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "ProtocolControlFeeBpsUpdated"
+  ): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TreasuryUpdated"): EventFragment;
 }
 
-export type DeployedForwarderEvent = TypedEvent<
-  [string] & { forwarder: string }
+export type DefaultFeeBpsUpdatedEvent = TypedEvent<
+  [BigNumber] & { defaultFeeBps: BigNumber }
 >;
 
-export type DeployedProtocolEvent = TypedEvent<
-  [string, string, BigNumber] & {
+export type DeployerUpdatedEvent = TypedEvent<
+  [string] & { newDeployer: string }
+>;
+
+export type NewProtocolControlEvent = TypedEvent<
+  [string, BigNumber, string, string] & {
     deployer: string;
-    protocolControl: string;
     version: BigNumber;
+    controlAddress: string;
+    controlDeployer: string;
   }
 >;
 
@@ -152,12 +173,12 @@ export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
-export type UpdatedProviderAdminEvent = TypedEvent<
-  [string, string] & { prevAdmin: string; newAdmin: string }
+export type ProtocolControlFeeBpsUpdatedEvent = TypedEvent<
+  [string, BigNumber] & { control: string; feeBps: BigNumber }
 >;
 
-export type UpdatedProviderTreasuryEvent = TypedEvent<
-  [string, string] & { prevTreasury: string; newTreasury: string }
+export type TreasuryUpdatedEvent = TypedEvent<
+  [string] & { newTreasury: string }
 >;
 
 export class Registry extends BaseContract {
@@ -204,45 +225,58 @@ export class Registry extends BaseContract {
   interface: RegistryInterface;
 
   functions: {
-    controlCenters(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { latestVersion: BigNumber }>;
+    MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    defaultFeeBps(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     deployProtocol(
-      _protocolControlURI: string,
+      uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    deployer(overrides?: CallOverrides): Promise<[string]>;
+
     forwarder(overrides?: CallOverrides): Promise<[string]>;
 
-    getLatestVersion(
-      _protocolDeployer: string,
+    getFeeBps(
+      protocolControl: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     getProtocolControl(
-      _protocolDeployer: string,
-      _version: BigNumberish,
+      _deployer: string,
+      index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    getProtocolControlCount(
+      _deployer: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
-
-    providerAdmin(overrides?: CallOverrides): Promise<[string]>;
-
-    providerTreasury(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setProviderAdmin(
-      _newAdminSigner: string,
+    setDefaultFeeBps(
+      _newFeeBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setProviderTreasury(
+    setDeployer(
+      _newDeployer: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setProtocolControlFeeBps(
+      protocolControl: string,
+      _newFeeBps: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setTreasury(
       _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -251,44 +285,62 @@ export class Registry extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    treasury(overrides?: CallOverrides): Promise<[string]>;
   };
 
-  controlCenters(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
+
+  defaultFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
 
   deployProtocol(
-    _protocolControlURI: string,
+    uri: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  deployer(overrides?: CallOverrides): Promise<string>;
+
   forwarder(overrides?: CallOverrides): Promise<string>;
 
-  getLatestVersion(
-    _protocolDeployer: string,
+  getFeeBps(
+    protocolControl: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   getProtocolControl(
-    _protocolDeployer: string,
-    _version: BigNumberish,
+    _deployer: string,
+    index: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getProtocolControlCount(
+    _deployer: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   owner(overrides?: CallOverrides): Promise<string>;
-
-  providerAdmin(overrides?: CallOverrides): Promise<string>;
-
-  providerTreasury(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setProviderAdmin(
-    _newAdminSigner: string,
+  setDefaultFeeBps(
+    _newFeeBps: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setProviderTreasury(
+  setDeployer(
+    _newDeployer: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setProtocolControlFeeBps(
+    protocolControl: string,
+    _newFeeBps: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setTreasury(
     _newTreasury: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -298,76 +350,107 @@ export class Registry extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  callStatic: {
-    controlCenters(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  treasury(overrides?: CallOverrides): Promise<string>;
 
-    deployProtocol(
-      _protocolControlURI: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+  callStatic: {
+    MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
+
+    defaultFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
+    deployProtocol(uri: string, overrides?: CallOverrides): Promise<void>;
+
+    deployer(overrides?: CallOverrides): Promise<string>;
 
     forwarder(overrides?: CallOverrides): Promise<string>;
 
-    getLatestVersion(
-      _protocolDeployer: string,
+    getFeeBps(
+      protocolControl: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getProtocolControl(
-      _protocolDeployer: string,
-      _version: BigNumberish,
+      _deployer: string,
+      index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
+    getProtocolControlCount(
+      _deployer: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<string>;
-
-    providerAdmin(overrides?: CallOverrides): Promise<string>;
-
-    providerTreasury(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    setProviderAdmin(
-      _newAdminSigner: string,
+    setDefaultFeeBps(
+      _newFeeBps: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setProviderTreasury(
-      _newTreasury: string,
+    setDeployer(_newDeployer: string, overrides?: CallOverrides): Promise<void>;
+
+    setProtocolControlFeeBps(
+      protocolControl: string,
+      _newFeeBps: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    setTreasury(_newTreasury: string, overrides?: CallOverrides): Promise<void>;
 
     transferOwnership(
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    treasury(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
-    "DeployedForwarder(address)"(
-      forwarder?: null
-    ): TypedEventFilter<[string], { forwarder: string }>;
+    "DefaultFeeBpsUpdated(uint256)"(
+      defaultFeeBps?: null
+    ): TypedEventFilter<[BigNumber], { defaultFeeBps: BigNumber }>;
 
-    DeployedForwarder(
-      forwarder?: null
-    ): TypedEventFilter<[string], { forwarder: string }>;
+    DefaultFeeBpsUpdated(
+      defaultFeeBps?: null
+    ): TypedEventFilter<[BigNumber], { defaultFeeBps: BigNumber }>;
 
-    "DeployedProtocol(address,address,uint256)"(
+    "DeployerUpdated(address)"(
+      newDeployer?: null
+    ): TypedEventFilter<[string], { newDeployer: string }>;
+
+    DeployerUpdated(
+      newDeployer?: null
+    ): TypedEventFilter<[string], { newDeployer: string }>;
+
+    "NewProtocolControl(address,uint256,address,address)"(
       deployer?: string | null,
-      protocolControl?: string | null,
-      version?: null
+      version?: BigNumberish | null,
+      controlAddress?: string | null,
+      controlDeployer?: null
     ): TypedEventFilter<
-      [string, string, BigNumber],
-      { deployer: string; protocolControl: string; version: BigNumber }
+      [string, BigNumber, string, string],
+      {
+        deployer: string;
+        version: BigNumber;
+        controlAddress: string;
+        controlDeployer: string;
+      }
     >;
 
-    DeployedProtocol(
+    NewProtocolControl(
       deployer?: string | null,
-      protocolControl?: string | null,
-      version?: null
+      version?: BigNumberish | null,
+      controlAddress?: string | null,
+      controlDeployer?: null
     ): TypedEventFilter<
-      [string, string, BigNumber],
-      { deployer: string; protocolControl: string; version: BigNumber }
+      [string, BigNumber, string, string],
+      {
+        deployer: string;
+        version: BigNumber;
+        controlAddress: string;
+        controlDeployer: string;
+      }
     >;
 
     "OwnershipTransferred(address,address)"(
@@ -386,76 +469,84 @@ export class Registry extends BaseContract {
       { previousOwner: string; newOwner: string }
     >;
 
-    "UpdatedProviderAdmin(address,address)"(
-      prevAdmin?: null,
-      newAdmin?: null
+    "ProtocolControlFeeBpsUpdated(address,uint256)"(
+      control?: string | null,
+      feeBps?: null
     ): TypedEventFilter<
-      [string, string],
-      { prevAdmin: string; newAdmin: string }
+      [string, BigNumber],
+      { control: string; feeBps: BigNumber }
     >;
 
-    UpdatedProviderAdmin(
-      prevAdmin?: null,
-      newAdmin?: null
+    ProtocolControlFeeBpsUpdated(
+      control?: string | null,
+      feeBps?: null
     ): TypedEventFilter<
-      [string, string],
-      { prevAdmin: string; newAdmin: string }
+      [string, BigNumber],
+      { control: string; feeBps: BigNumber }
     >;
 
-    "UpdatedProviderTreasury(address,address)"(
-      prevTreasury?: null,
+    "TreasuryUpdated(address)"(
       newTreasury?: null
-    ): TypedEventFilter<
-      [string, string],
-      { prevTreasury: string; newTreasury: string }
-    >;
+    ): TypedEventFilter<[string], { newTreasury: string }>;
 
-    UpdatedProviderTreasury(
-      prevTreasury?: null,
+    TreasuryUpdated(
       newTreasury?: null
-    ): TypedEventFilter<
-      [string, string],
-      { prevTreasury: string; newTreasury: string }
-    >;
+    ): TypedEventFilter<[string], { newTreasury: string }>;
   };
 
   estimateGas: {
-    controlCenters(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
+
+    defaultFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     deployProtocol(
-      _protocolControlURI: string,
+      uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    deployer(overrides?: CallOverrides): Promise<BigNumber>;
+
     forwarder(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getLatestVersion(
-      _protocolDeployer: string,
+    getFeeBps(
+      protocolControl: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getProtocolControl(
-      _protocolDeployer: string,
-      _version: BigNumberish,
+      _deployer: string,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getProtocolControlCount(
+      _deployer: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    providerAdmin(overrides?: CallOverrides): Promise<BigNumber>;
-
-    providerTreasury(overrides?: CallOverrides): Promise<BigNumber>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setProviderAdmin(
-      _newAdminSigner: string,
+    setDefaultFeeBps(
+      _newFeeBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setProviderTreasury(
+    setDeployer(
+      _newDeployer: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setProtocolControlFeeBps(
+      protocolControl: string,
+      _newFeeBps: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setTreasury(
       _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -464,48 +555,65 @@ export class Registry extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    treasury(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    controlCenters(
-      arg0: string,
+    MAX_PROVIDER_FEE_BPS(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    defaultFeeBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     deployProtocol(
-      _protocolControlURI: string,
+      uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    deployer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     forwarder(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getLatestVersion(
-      _protocolDeployer: string,
+    getFeeBps(
+      protocolControl: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getProtocolControl(
-      _protocolDeployer: string,
-      _version: BigNumberish,
+      _deployer: string,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getProtocolControlCount(
+      _deployer: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    providerAdmin(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    providerTreasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setProviderAdmin(
-      _newAdminSigner: string,
+    setDefaultFeeBps(
+      _newFeeBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setProviderTreasury(
+    setDeployer(
+      _newDeployer: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setProtocolControlFeeBps(
+      protocolControl: string,
+      _newFeeBps: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setTreasury(
       _newTreasury: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -514,5 +622,7 @@ export class Registry extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    treasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

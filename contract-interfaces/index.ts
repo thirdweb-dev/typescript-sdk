@@ -13,6 +13,7 @@ export type { NFTCollection } from "./NFTCollection";
 export type { Pack } from "./Pack";
 export type { ProtocolControl } from "./ProtocolControl";
 export type { Registry } from "./Registry";
+export type { Royalty } from "./Royalty";
 
 export { AccessNFT__factory } from "./factories/AccessNFT__factory";
 export { Coin__factory } from "./factories/Coin__factory";
@@ -26,3 +27,4 @@ export { NFTCollection__factory } from "./factories/NFTCollection__factory";
 export { Pack__factory } from "./factories/Pack__factory";
 export { ProtocolControl__factory } from "./factories/ProtocolControl__factory";
 export { Registry__factory } from "./factories/Registry__factory";
+export { Royalty__factory } from "./factories/Royalty__factory";

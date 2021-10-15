@@ -31,8 +31,7 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
     "burn(address,uint256,uint256)": FunctionFragment;
     "burnBatch(address,uint256[],uint256[])": FunctionFragment;
     "contractURI()": FunctionFragment;
-    "createNativeTokens(string[],uint256[])": FunctionFragment;
-    "createPackAtomic(address,string[],uint256[],string,uint256,uint256,uint256)": FunctionFragment;
+    "createNativeTokens(address,string[],uint256[],bytes)": FunctionFragment;
     "creator(uint256)": FunctionFragment;
     "erc20WrappedTokens(uint256)": FunctionFragment;
     "erc721WrappedTokens(uint256)": FunctionFragment;
@@ -116,19 +115,7 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createNativeTokens",
-    values: [string[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "createPackAtomic",
-    values: [
-      string,
-      string[],
-      BigNumberish[],
-      string,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish
-    ]
+    values: [string, string[], BigNumberish[], BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "creator",
@@ -308,10 +295,6 @@ interface NFTCollectionInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "createNativeTokens",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "createPackAtomic",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "creator", data: BytesLike): Result;
@@ -649,19 +632,10 @@ export class NFTCollection extends BaseContract {
     contractURI(overrides?: CallOverrides): Promise<[string]>;
 
     createNativeTokens(
+      to: string,
       _nftURIs: string[],
       _nftSupplies: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    createPackAtomic(
-      _pack: string,
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -930,19 +904,10 @@ export class NFTCollection extends BaseContract {
   contractURI(overrides?: CallOverrides): Promise<string>;
 
   createNativeTokens(
+    to: string,
     _nftURIs: string[],
     _nftSupplies: BigNumberish[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  createPackAtomic(
-    _pack: string,
-    _nftURIs: string[],
-    _nftSupplies: BigNumberish[],
-    _packURI: string,
-    _secondsUntilOpenStart: BigNumberish,
-    _secondsUntilOpenEnd: BigNumberish,
-    _nftsPerOpen: BigNumberish,
+    data: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1205,21 +1170,12 @@ export class NFTCollection extends BaseContract {
     contractURI(overrides?: CallOverrides): Promise<string>;
 
     createNativeTokens(
+      to: string,
       _nftURIs: string[],
       _nftSupplies: BigNumberish[],
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
-
-    createPackAtomic(
-      _pack: string,
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     creator(_nftId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -1815,19 +1771,10 @@ export class NFTCollection extends BaseContract {
     contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     createNativeTokens(
+      to: string,
       _nftURIs: string[],
       _nftSupplies: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    createPackAtomic(
-      _pack: string,
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -2091,19 +2038,10 @@ export class NFTCollection extends BaseContract {
     contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     createNativeTokens(
+      to: string,
       _nftURIs: string[],
       _nftSupplies: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    createPackAtomic(
-      _pack: string,
-      _nftURIs: string[],
-      _nftSupplies: BigNumberish[],
-      _packURI: string,
-      _secondsUntilOpenStart: BigNumberish,
-      _secondsUntilOpenEnd: BigNumberish,
-      _nftsPerOpen: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
