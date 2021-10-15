@@ -44,6 +44,7 @@ interface PackInterface extends ethers.utils.Interface {
     "isTrustedForwarder(address)": FunctionFragment;
     "mint(address,uint256,uint256,bytes)": FunctionFragment;
     "mintBatch(address,uint256[],uint256[],bytes)": FunctionFragment;
+    "multicall(bytes[])": FunctionFragment;
     "nextTokenId()": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
@@ -168,6 +169,10 @@ interface PackInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "mintBatch",
     values: [string, BigNumberish[], BigNumberish[], BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "multicall",
+    values: [BytesLike[]]
   ): string;
   encodeFunctionData(
     functionFragment: "nextTokenId",
@@ -341,6 +346,7 @@ interface PackInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintBatch", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "multicall", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "nextTokenId",
     data: BytesLike
@@ -762,6 +768,11 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    multicall(
+      data: BytesLike[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     nextTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     onERC1155BatchReceived(
@@ -1063,6 +1074,11 @@ export class Pack extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  multicall(
+    data: BytesLike[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
   onERC1155BatchReceived(
@@ -1360,6 +1376,8 @@ export class Pack extends BaseContract {
       arg3: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
 
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1943,6 +1961,11 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    multicall(
+      data: BytesLike[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
     onERC1155BatchReceived(
@@ -2206,6 +2229,11 @@ export class Pack extends BaseContract {
       arg1: BigNumberish[],
       arg2: BigNumberish[],
       arg3: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    multicall(
+      data: BytesLike[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

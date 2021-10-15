@@ -35,6 +35,7 @@ interface MarketInterface extends ethers.utils.Interface {
     "list(address,uint256,address,uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "listings(uint256)": FunctionFragment;
     "marketFeeBps()": FunctionFragment;
+    "multicall(bytes[])": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
     "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
@@ -110,6 +111,10 @@ interface MarketInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "marketFeeBps",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "multicall",
+    values: [BytesLike[]]
   ): string;
   encodeFunctionData(
     functionFragment: "onERC1155BatchReceived",
@@ -199,6 +204,7 @@ interface MarketInterface extends ethers.utils.Interface {
     functionFragment: "marketFeeBps",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "multicall", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "onERC1155BatchReceived",
     data: BytesLike
@@ -849,6 +855,11 @@ export class Market extends BaseContract {
 
     marketFeeBps(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    multicall(
+      data: BytesLike[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -1136,6 +1147,11 @@ export class Market extends BaseContract {
 
   marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
 
+  multicall(
+    data: BytesLike[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   onERC1155BatchReceived(
     arg0: string,
     arg1: string,
@@ -1422,6 +1438,8 @@ export class Market extends BaseContract {
     >;
 
     marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
+
+    multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
 
     onERC1155BatchReceived(
       arg0: string,
@@ -1971,6 +1989,11 @@ export class Market extends BaseContract {
 
     marketFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
 
+    multicall(
+      data: BytesLike[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -2100,6 +2123,11 @@ export class Market extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     marketFeeBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    multicall(
+      data: BytesLike[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     onERC1155BatchReceived(
       arg0: string,

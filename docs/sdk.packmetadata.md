@@ -19,6 +19,5 @@ export interface PackMetadata
 |  [currentSupply](./sdk.packmetadata.currentsupply.md) | BigNumber |  |
 |  [id](./sdk.packmetadata.id.md) | string |  |
 |  [metadata](./sdk.packmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) |  |
-|  [openEnd](./sdk.packmetadata.openend.md) | Date \| null |  |
 |  [openStart](./sdk.packmetadata.openstart.md) | Date \| null |  |
 

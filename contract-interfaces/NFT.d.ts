@@ -42,6 +42,7 @@ interface NFTInterface extends ethers.utils.Interface {
     "mint(address)": FunctionFragment;
     "mintNFT(address,string)": FunctionFragment;
     "mintNFTBatch(address,string[])": FunctionFragment;
+    "multicall(bytes[])": FunctionFragment;
     "name()": FunctionFragment;
     "nextTokenId()": FunctionFragment;
     "nftURI(uint256)": FunctionFragment;
@@ -142,6 +143,10 @@ interface NFTInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "mintNFTBatch",
     values: [string, string[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "multicall",
+    values: [BytesLike[]]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -285,6 +290,7 @@ interface NFTInterface extends ethers.utils.Interface {
     functionFragment: "mintNFTBatch",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "multicall", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "nextTokenId",
@@ -567,6 +573,11 @@ export class NFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    multicall(
+      data: BytesLike[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     name(overrides?: CallOverrides): Promise<[string]>;
 
     nextTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -763,6 +774,11 @@ export class NFT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  multicall(
+    data: BytesLike[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   name(overrides?: CallOverrides): Promise<string>;
 
   nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
@@ -949,6 +965,8 @@ export class NFT extends BaseContract {
       _uris: string[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -1307,6 +1325,11 @@ export class NFT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    multicall(
+      data: BytesLike[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1513,6 +1536,11 @@ export class NFT extends BaseContract {
     mintNFTBatch(
       _to: string,
       _uris: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    multicall(
+      data: BytesLike[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
