@@ -21,6 +21,9 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface MarketInterface extends ethers.utils.Interface {
   functions: {
+    "DEFAULT_ADMIN_ROLE()": FunctionFragment;
+    "LISTER_ROLE()": FunctionFragment;
+    "PAUSER_ROLE()": FunctionFragment;
     "_contractURI()": FunctionFragment;
     "addToListing(uint256,uint256)": FunctionFragment;
     "boughtFromListing(uint256,address)": FunctionFragment;
@@ -31,6 +34,11 @@ interface MarketInterface extends ethers.utils.Interface {
     "getListingsByAsset(address,uint256)": FunctionFragment;
     "getListingsByAssetContract(address)": FunctionFragment;
     "getListingsBySeller(address)": FunctionFragment;
+    "getRoleAdmin(bytes32)": FunctionFragment;
+    "getRoleMember(bytes32,uint256)": FunctionFragment;
+    "getRoleMemberCount(bytes32)": FunctionFragment;
+    "grantRole(bytes32,address)": FunctionFragment;
+    "hasRole(bytes32,address)": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
     "list(address,uint256,address,uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "listings(uint256)": FunctionFragment;
@@ -39,14 +47,31 @@ interface MarketInterface extends ethers.utils.Interface {
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
     "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
+    "paused()": FunctionFragment;
+    "renounceRole(bytes32,address)": FunctionFragment;
+    "restrictedListerRoleOnly()": FunctionFragment;
+    "revokeRole(bytes32,address)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
     "setMarketFeeBps(uint128)": FunctionFragment;
+    "setRestrictedListerRoleOnly(bool)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "totalListings()": FunctionFragment;
     "unlist(uint256,uint256)": FunctionFragment;
     "updateListingParams(uint256,uint256,address,uint256,uint256,uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "DEFAULT_ADMIN_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "LISTER_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "PAUSER_ROLE",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "_contractURI",
     values?: undefined
@@ -86,6 +111,26 @@ interface MarketInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "getListingsBySeller",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRoleAdmin",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRoleMember",
+    values: [BytesLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRoleMemberCount",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "grantRole",
+    values: [BytesLike, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasRole",
+    values: [BytesLike, string]
   ): string;
   encodeFunctionData(
     functionFragment: "isTrustedForwarder",
@@ -128,6 +173,19 @@ interface MarketInterface extends ethers.utils.Interface {
     functionFragment: "onERC721Received",
     values: [string, string, BigNumberish, BytesLike]
   ): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "renounceRole",
+    values: [BytesLike, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "restrictedListerRoleOnly",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "revokeRole",
+    values: [BytesLike, string]
+  ): string;
   encodeFunctionData(
     functionFragment: "setContractURI",
     values: [string]
@@ -135,6 +193,10 @@ interface MarketInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "setMarketFeeBps",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setRestrictedListerRoleOnly",
+    values: [boolean]
   ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
@@ -160,6 +222,18 @@ interface MarketInterface extends ethers.utils.Interface {
     ]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "DEFAULT_ADMIN_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "LISTER_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "PAUSER_ROLE",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "_contractURI",
     data: BytesLike
@@ -195,6 +269,20 @@ interface MarketInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getRoleAdmin",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRoleMember",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRoleMemberCount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
+  decodeFunctionResult(
     functionFragment: "isTrustedForwarder",
     data: BytesLike
   ): Result;
@@ -217,12 +305,26 @@ interface MarketInterface extends ethers.utils.Interface {
     functionFragment: "onERC721Received",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceRole",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "restrictedListerRoleOnly",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setContractURI",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "setMarketFeeBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setRestrictedListerRoleOnly",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -244,12 +346,26 @@ interface MarketInterface extends ethers.utils.Interface {
     "MarketFeeUpdate(uint128)": EventFragment;
     "NewListing(address,address,uint256,tuple)": EventFragment;
     "NewSale(address,address,uint256,address,uint256,tuple)": EventFragment;
+    "Paused(address)": EventFragment;
+    "RestrictedListerRoleUpdated(bool)": EventFragment;
+    "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
+    "RoleGranted(bytes32,address,address)": EventFragment;
+    "RoleRevoked(bytes32,address,address)": EventFragment;
+    "Unpaused(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "ListingUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MarketFeeUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewListing"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewSale"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "RestrictedListerRoleUpdated"
+  ): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
 
 export type ListingUpdateEvent = TypedEvent<
@@ -444,6 +560,30 @@ export type NewSaleEvent = TypedEvent<
   }
 >;
 
+export type PausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type RestrictedListerRoleUpdatedEvent = TypedEvent<
+  [boolean] & { restricted: boolean }
+>;
+
+export type RoleAdminChangedEvent = TypedEvent<
+  [string, string, string] & {
+    role: string;
+    previousAdminRole: string;
+    newAdminRole: string;
+  }
+>;
+
+export type RoleGrantedEvent = TypedEvent<
+  [string, string, string] & { role: string; account: string; sender: string }
+>;
+
+export type RoleRevokedEvent = TypedEvent<
+  [string, string, string] & { role: string; account: string; sender: string }
+>;
+
+export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
+
 export class Market extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
@@ -488,6 +628,12 @@ export class Market extends BaseContract {
   interface: MarketInterface;
 
   functions: {
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
+
+    LISTER_ROLE(overrides?: CallOverrides): Promise<[string]>;
+
+    PAUSER_ROLE(overrides?: CallOverrides): Promise<[string]>;
+
     _contractURI(overrides?: CallOverrides): Promise<[string]>;
 
     addToListing(
@@ -805,6 +951,31 @@ export class Market extends BaseContract {
       }
     >;
 
+    getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -886,6 +1057,22 @@ export class Market extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
+
+    renounceRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    restrictedListerRoleOnly(overrides?: CallOverrides): Promise<[boolean]>;
+
+    revokeRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setContractURI(
       _URI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -893,6 +1080,11 @@ export class Market extends BaseContract {
 
     setMarketFeeBps(
       feeBps: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setRestrictedListerRoleOnly(
+      restricted: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -919,6 +1111,12 @@ export class Market extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
+
+  DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
+
+  LISTER_ROLE(overrides?: CallOverrides): Promise<string>;
+
+  PAUSER_ROLE(overrides?: CallOverrides): Promise<string>;
 
   _contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -1097,6 +1295,31 @@ export class Market extends BaseContract {
     })[]
   >;
 
+  getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+
+  getRoleMember(
+    role: BytesLike,
+    index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getRoleMemberCount(
+    role: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  grantRole(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  hasRole(
+    role: BytesLike,
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   isTrustedForwarder(
     forwarder: string,
     overrides?: CallOverrides
@@ -1178,6 +1401,22 @@ export class Market extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  paused(overrides?: CallOverrides): Promise<boolean>;
+
+  renounceRole(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  restrictedListerRoleOnly(overrides?: CallOverrides): Promise<boolean>;
+
+  revokeRole(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setContractURI(
     _URI: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -1185,6 +1424,11 @@ export class Market extends BaseContract {
 
   setMarketFeeBps(
     feeBps: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setRestrictedListerRoleOnly(
+    restricted: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1212,6 +1456,12 @@ export class Market extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
+
+    LISTER_ROLE(overrides?: CallOverrides): Promise<string>;
+
+    PAUSER_ROLE(overrides?: CallOverrides): Promise<string>;
+
     _contractURI(overrides?: CallOverrides): Promise<string>;
 
     addToListing(
@@ -1389,6 +1639,31 @@ export class Market extends BaseContract {
       })[]
     >;
 
+    getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     isTrustedForwarder(
       forwarder: string,
       overrides?: CallOverrides
@@ -1467,10 +1742,31 @@ export class Market extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    paused(overrides?: CallOverrides): Promise<boolean>;
+
+    renounceRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    restrictedListerRoleOnly(overrides?: CallOverrides): Promise<boolean>;
+
+    revokeRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
 
     setMarketFeeBps(
       feeBps: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setRestrictedListerRoleOnly(
+      restricted: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1920,9 +2216,89 @@ export class Market extends BaseContract {
         };
       }
     >;
+
+    "Paused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Paused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    "RestrictedListerRoleUpdated(bool)"(
+      restricted?: null
+    ): TypedEventFilter<[boolean], { restricted: boolean }>;
+
+    RestrictedListerRoleUpdated(
+      restricted?: null
+    ): TypedEventFilter<[boolean], { restricted: boolean }>;
+
+    "RoleAdminChanged(bytes32,bytes32,bytes32)"(
+      role?: BytesLike | null,
+      previousAdminRole?: BytesLike | null,
+      newAdminRole?: BytesLike | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; previousAdminRole: string; newAdminRole: string }
+    >;
+
+    RoleAdminChanged(
+      role?: BytesLike | null,
+      previousAdminRole?: BytesLike | null,
+      newAdminRole?: BytesLike | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; previousAdminRole: string; newAdminRole: string }
+    >;
+
+    "RoleGranted(bytes32,address,address)"(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; account: string; sender: string }
+    >;
+
+    RoleGranted(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; account: string; sender: string }
+    >;
+
+    "RoleRevoked(bytes32,address,address)"(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; account: string; sender: string }
+    >;
+
+    RoleRevoked(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; account: string; sender: string }
+    >;
+
+    "Unpaused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
   };
 
   estimateGas: {
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    LISTER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    PAUSER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
+
     _contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     addToListing(
@@ -1965,6 +2341,34 @@ export class Market extends BaseContract {
 
     getListingsBySeller(
       _seller: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -2020,6 +2424,22 @@ export class Market extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
+
+    renounceRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    restrictedListerRoleOnly(overrides?: CallOverrides): Promise<BigNumber>;
+
+    revokeRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setContractURI(
       _URI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -2027,6 +2447,11 @@ export class Market extends BaseContract {
 
     setMarketFeeBps(
       feeBps: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setRestrictedListerRoleOnly(
+      restricted: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -2055,6 +2480,14 @@ export class Market extends BaseContract {
   };
 
   populateTransaction: {
+    DEFAULT_ADMIN_ROLE(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    LISTER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    PAUSER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     _contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     addToListing(
@@ -2097,6 +2530,34 @@ export class Market extends BaseContract {
 
     getListingsBySeller(
       _seller: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2155,6 +2616,24 @@ export class Market extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    renounceRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    restrictedListerRoleOnly(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    revokeRole(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     setContractURI(
       _URI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -2162,6 +2641,11 @@ export class Market extends BaseContract {
 
     setMarketFeeBps(
       feeBps: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setRestrictedListerRoleOnly(
+      restricted: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

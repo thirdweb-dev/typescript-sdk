@@ -12,6 +12,7 @@ import {
   BaseContract,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -19,22 +20,19 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface PackInterface extends ethers.utils.Interface {
+interface LazyNFTInterface extends ethers.utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "MINTER_ROLE()": FunctionFragment;
     "PAUSER_ROLE()": FunctionFragment;
     "TRANSFER_ROLE()": FunctionFragment;
-    "_contractURI()": FunctionFragment;
-    "balanceOf(address,uint256)": FunctionFragment;
-    "balanceOfBatch(address[],uint256[])": FunctionFragment;
-    "burn(address,uint256,uint256)": FunctionFragment;
-    "burnBatch(address,uint256[],uint256[])": FunctionFragment;
+    "approve(address,uint256)": FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
+    "burn(uint256)": FunctionFragment;
+    "claim(uint256,bytes32[])": FunctionFragment;
     "contractURI()": FunctionFragment;
-    "creator(uint256)": FunctionFragment;
-    "currentRequestId(uint256,address)": FunctionFragment;
-    "getPack(uint256)": FunctionFragment;
-    "getPackWithRewards(uint256)": FunctionFragment;
+    "getApproved(uint256)": FunctionFragment;
+    "getLastStartedMintConditionIndex()": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "getRoleMember(bytes32,uint256)": FunctionFragment;
     "getRoleMemberCount(bytes32)": FunctionFragment;
@@ -42,40 +40,42 @@ interface PackInterface extends ethers.utils.Interface {
     "hasRole(bytes32,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
-    "mint(address,uint256,uint256,bytes)": FunctionFragment;
-    "mintBatch(address,uint256[],uint256[],bytes)": FunctionFragment;
+    "lazyMint(string)": FunctionFragment;
+    "lazyMintAmount(uint256)": FunctionFragment;
+    "lazyMintBatch(string[])": FunctionFragment;
+    "maxTotalSupply()": FunctionFragment;
+    "mint(address)": FunctionFragment;
+    "mintConditions(uint256)": FunctionFragment;
     "multicall(bytes[])": FunctionFragment;
+    "name()": FunctionFragment;
+    "nextMintTokenId()": FunctionFragment;
     "nextTokenId()": FunctionFragment;
-    "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
-    "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
-    "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
-    "openPack(uint256)": FunctionFragment;
-    "packs(uint256)": FunctionFragment;
+    "ownerOf(uint256)": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
-    "randomnessRequests(bytes32)": FunctionFragment;
-    "rawFulfillRandomness(bytes32,uint256)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
-    "rewards(uint256)": FunctionFragment;
     "royaltyBps()": FunctionFragment;
     "royaltyInfo(uint256,uint256)": FunctionFragment;
-    "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
-    "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
-    "setChainlinkFees(uint256)": FunctionFragment;
+    "setBaseTokenURI(string)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
+    "setMaxTotalSupply(uint256)": FunctionFragment;
+    "setPublicMintConditions(tuple[])": FunctionFragment;
     "setRestrictedTransfer(bool)": FunctionFragment;
     "setRoyaltyBps(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "symbol()": FunctionFragment;
+    "tokenByIndex(uint256)": FunctionFragment;
+    "tokenOfOwnerByIndex(address,uint256)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
-    "totalSupply(uint256)": FunctionFragment;
-    "transferLink(address,uint256)": FunctionFragment;
+    "totalSupply()": FunctionFragment;
+    "transferFrom(address,address,uint256)": FunctionFragment;
     "transfersRestricted()": FunctionFragment;
     "unpause()": FunctionFragment;
     "uri(uint256)": FunctionFragment;
-    "vrfFees()": FunctionFragment;
-    "vrfKeyHash()": FunctionFragment;
+    "withdrawFunds()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -95,44 +95,26 @@ interface PackInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "_contractURI",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balanceOf",
+    functionFragment: "approve",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
   encodeFunctionData(
-    functionFragment: "balanceOfBatch",
-    values: [string[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "burn",
-    values: [string, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "burnBatch",
-    values: [string, BigNumberish[], BigNumberish[]]
+    functionFragment: "claim",
+    values: [BigNumberish, BytesLike[]]
   ): string;
   encodeFunctionData(
     functionFragment: "contractURI",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "creator",
+    functionFragment: "getApproved",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "currentRequestId",
-    values: [BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getPack",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getPackWithRewards",
-    values: [BigNumberish]
+    functionFragment: "getLastStartedMintConditionIndex",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
@@ -162,49 +144,43 @@ interface PackInterface extends ethers.utils.Interface {
     functionFragment: "isTrustedForwarder",
     values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "lazyMint", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "mint",
-    values: [string, BigNumberish, BigNumberish, BytesLike]
+    functionFragment: "lazyMintAmount",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "mintBatch",
-    values: [string, BigNumberish[], BigNumberish[], BytesLike]
+    functionFragment: "lazyMintBatch",
+    values: [string[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "maxTotalSupply",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "mint", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "mintConditions",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "multicall",
     values: [BytesLike[]]
+  ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "nextMintTokenId",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "nextTokenId",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "onERC1155BatchReceived",
-    values: [string, string, BigNumberish[], BigNumberish[], BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "onERC1155Received",
-    values: [string, string, BigNumberish, BigNumberish, BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "onERC721Received",
-    values: [string, string, BigNumberish, BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "openPack",
+    functionFragment: "ownerOf",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "packs", values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "randomnessRequests",
-    values: [BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rawFulfillRandomness",
-    values: [BytesLike, BigNumberish]
-  ): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
     values: [BytesLike, string]
@@ -212,10 +188,6 @@ interface PackInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "revokeRole",
     values: [BytesLike, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rewards",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "royaltyBps",
@@ -226,24 +198,39 @@ interface PackInterface extends ethers.utils.Interface {
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "safeBatchTransferFrom",
-    values: [string, string, BigNumberish[], BigNumberish[], BytesLike]
-  ): string;
-  encodeFunctionData(
     functionFragment: "safeTransferFrom",
-    values: [string, string, BigNumberish, BigNumberish, BytesLike]
+    values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setApprovalForAll",
     values: [string, boolean]
   ): string;
   encodeFunctionData(
-    functionFragment: "setChainlinkFees",
-    values: [BigNumberish]
+    functionFragment: "setBaseTokenURI",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "setContractURI",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMaxTotalSupply",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setPublicMintConditions",
+    values: [
+      {
+        startTimestamp: BigNumberish;
+        maxMintSupply: BigNumberish;
+        currentMintSupply: BigNumberish;
+        quantityLimitPerTransaction: BigNumberish;
+        waitTimestampLimitPerTransaction: BigNumberish;
+        pricePerToken: BigNumberish;
+        currency: string;
+        merkleRoot: BytesLike;
+      }[]
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "setRestrictedTransfer",
@@ -257,17 +244,26 @@ interface PackInterface extends ethers.utils.Interface {
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "tokenByIndex",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenOfOwnerByIndex",
+    values: [string, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "tokenURI",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
-    values: [BigNumberish]
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "transferLink",
-    values: [string, BigNumberish]
+    functionFragment: "transferFrom",
+    values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "transfersRestricted",
@@ -275,9 +271,8 @@ interface PackInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
-  encodeFunctionData(functionFragment: "vrfFees", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "vrfKeyHash",
+    functionFragment: "withdrawFunds",
     values?: undefined
   ): string;
 
@@ -297,29 +292,20 @@ interface PackInterface extends ethers.utils.Interface {
     functionFragment: "TRANSFER_ROLE",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "_contractURI",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "balanceOfBatch",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "burnBatch", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "contractURI",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "creator", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "currentRequestId",
+    functionFragment: "getApproved",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "getPack", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getPackWithRewards",
+    functionFragment: "getLastStartedMintConditionIndex",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -344,50 +330,45 @@ interface PackInterface extends ethers.utils.Interface {
     functionFragment: "isTrustedForwarder",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "lazyMint", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "lazyMintAmount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "lazyMintBatch",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "maxTotalSupply",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "mintBatch", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "mintConditions",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "multicall", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "nextMintTokenId",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "nextTokenId",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "onERC1155BatchReceived",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "onERC1155Received",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "onERC721Received",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "openPack", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "packs", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "randomnessRequests",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "rawFulfillRandomness",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "rewards", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "royaltyBps", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "royaltyInfo",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "safeBatchTransferFrom",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -399,11 +380,19 @@ interface PackInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setChainlinkFees",
+    functionFragment: "setBaseTokenURI",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "setContractURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMaxTotalSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setPublicMintConditions",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -418,13 +407,22 @@ interface PackInterface extends ethers.utils.Interface {
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenByIndex",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenOfOwnerByIndex",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferLink",
+    functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -433,105 +431,122 @@ interface PackInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "vrfFees", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "vrfKeyHash", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawFunds",
+    data: BytesLike
+  ): Result;
 
   events: {
+    "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
-    "PackCreated(uint256,address,address,uint256,tuple,tuple)": EventFragment;
-    "PackOpenFulfilled(uint256,address,bytes32,address,uint256[])": EventFragment;
-    "PackOpenRequest(uint256,address,bytes32)": EventFragment;
+    "BaseTokenURIUpdated(string)": EventFragment;
+    "Claimed(address,uint256,uint256,uint256)": EventFragment;
+    "FundsWithdrawn(address,uint256)": EventFragment;
     "Paused(address)": EventFragment;
+    "PublicMintConditionUpdated(tuple[])": EventFragment;
     "RestrictedTransferUpdated(bool)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
     "RoyaltyUpdated(uint256)": EventFragment;
-    "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
-    "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
-    "URI(string,uint256)": EventFragment;
+    "TotalSupplyUpdated(uint256)": EventFragment;
+    "Transfer(address,address,uint256)": EventFragment;
     "Unpaused(address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PackCreated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PackOpenFulfilled"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PackOpenRequest"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "BaseTokenURIUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Claimed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "FundsWithdrawn"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PublicMintConditionUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RestrictedTransferUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoyaltyUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TotalSupplyUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
 
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    owner: string;
+    approved: string;
+    tokenId: BigNumber;
+  }
+>;
+
 export type ApprovalForAllEvent = TypedEvent<
   [string, string, boolean] & {
-    account: string;
+    owner: string;
     operator: string;
     approved: boolean;
   }
 >;
 
-export type PackCreatedEvent = TypedEvent<
-  [
-    BigNumber,
-    string,
-    string,
-    BigNumber,
-    [string, string, BigNumber] & {
-      uri: string;
-      creator: string;
-      openStart: BigNumber;
-    },
-    [string, BigNumber[], BigNumber[], BigNumber] & {
-      source: string;
-      tokenIds: BigNumber[];
-      amountsPacked: BigNumber[];
-      rewardsPerOpen: BigNumber;
-    }
-  ] & {
-    packId: BigNumber;
-    rewardContract: string;
-    creator: string;
-    packTotalSupply: BigNumber;
-    packState: [string, string, BigNumber] & {
-      uri: string;
-      creator: string;
-      openStart: BigNumber;
-    };
-    rewards: [string, BigNumber[], BigNumber[], BigNumber] & {
-      source: string;
-      tokenIds: BigNumber[];
-      amountsPacked: BigNumber[];
-      rewardsPerOpen: BigNumber;
-    };
+export type BaseTokenURIUpdatedEvent = TypedEvent<[string] & { uri: string }>;
+
+export type ClaimedEvent = TypedEvent<
+  [string, BigNumber, BigNumber, BigNumber] & {
+    to: string;
+    startTokenId: BigNumber;
+    quantity: BigNumber;
+    mintConditionIndex: BigNumber;
   }
 >;
 
-export type PackOpenFulfilledEvent = TypedEvent<
-  [BigNumber, string, string, string, BigNumber[]] & {
-    packId: BigNumber;
-    opener: string;
-    requestId: string;
-    rewardContract: string;
-    rewardIds: BigNumber[];
-  }
->;
-
-export type PackOpenRequestEvent = TypedEvent<
-  [BigNumber, string, string] & {
-    packId: BigNumber;
-    opener: string;
-    requestId: string;
-  }
+export type FundsWithdrawnEvent = TypedEvent<
+  [string, BigNumber] & { to: string; amount: BigNumber }
 >;
 
 export type PausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type PublicMintConditionUpdatedEvent = TypedEvent<
+  [
+    ([
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      string,
+      string
+    ] & {
+      startTimestamp: BigNumber;
+      maxMintSupply: BigNumber;
+      currentMintSupply: BigNumber;
+      quantityLimitPerTransaction: BigNumber;
+      waitTimestampLimitPerTransaction: BigNumber;
+      pricePerToken: BigNumber;
+      currency: string;
+      merkleRoot: string;
+    })[]
+  ] & {
+    mintConditions: ([
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      string,
+      string
+    ] & {
+      startTimestamp: BigNumber;
+      maxMintSupply: BigNumber;
+      currentMintSupply: BigNumber;
+      quantityLimitPerTransaction: BigNumber;
+      waitTimestampLimitPerTransaction: BigNumber;
+      pricePerToken: BigNumber;
+      currency: string;
+      merkleRoot: string;
+    })[];
+  }
+>;
 
 export type RestrictedTransferUpdatedEvent = TypedEvent<
   [boolean] & { transferable: boolean }
@@ -557,33 +572,17 @@ export type RoyaltyUpdatedEvent = TypedEvent<
   [BigNumber] & { royaltyBps: BigNumber }
 >;
 
-export type TransferBatchEvent = TypedEvent<
-  [string, string, string, BigNumber[], BigNumber[]] & {
-    operator: string;
-    from: string;
-    to: string;
-    ids: BigNumber[];
-    values: BigNumber[];
-  }
+export type TotalSupplyUpdatedEvent = TypedEvent<
+  [BigNumber] & { supply: BigNumber }
 >;
 
-export type TransferSingleEvent = TypedEvent<
-  [string, string, string, BigNumber, BigNumber] & {
-    operator: string;
-    from: string;
-    to: string;
-    id: BigNumber;
-    value: BigNumber;
-  }
->;
-
-export type URIEvent = TypedEvent<
-  [string, BigNumber] & { value: string; id: BigNumber }
+export type TransferEvent = TypedEvent<
+  [string, string, BigNumber] & { from: string; to: string; tokenId: BigNumber }
 >;
 
 export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
-export class Pack extends BaseContract {
+export class LazyNFT extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -624,7 +623,7 @@ export class Pack extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: PackInterface;
+  interface: LazyNFTInterface;
 
   functions: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
@@ -635,92 +634,35 @@ export class Pack extends BaseContract {
 
     TRANSFER_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
-    _contractURI(overrides?: CallOverrides): Promise<[string]>;
-
-    balanceOf(
-      account: string,
-      id: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
-
-    burn(
-      account: string,
-      id: BigNumberish,
-      value: BigNumberish,
+    approve(
+      to: string,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    burnBatch(
-      account: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    burn(
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    claim(
+      quantity: BigNumberish,
+      proofs: BytesLike[],
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     contractURI(overrides?: CallOverrides): Promise<[string]>;
 
-    creator(
-      _packId: BigNumberish,
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    currentRequestId(
-      arg0: BigNumberish,
-      arg1: string,
+    getLastStartedMintConditionIndex(
       overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    getPack(
-      _packId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [string, string, BigNumber] & {
-          uri: string;
-          creator: string;
-          openStart: BigNumber;
-        }
-      ] & {
-        pack: [string, string, BigNumber] & {
-          uri: string;
-          creator: string;
-          openStart: BigNumber;
-        };
-      }
-    >;
-
-    getPackWithRewards(
-      _packId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [string, string, BigNumber] & {
-          uri: string;
-          creator: string;
-          openStart: BigNumber;
-        },
-        BigNumber,
-        string,
-        BigNumber[],
-        BigNumber[]
-      ] & {
-        pack: [string, string, BigNumber] & {
-          uri: string;
-          creator: string;
-          openStart: BigNumber;
-        };
-        packTotalSupply: BigNumber;
-        source: string;
-        tokenIds: BigNumber[];
-        amountsPacked: BigNumber[];
-      }
-    >;
+    ): Promise<[BigNumber]>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
@@ -748,7 +690,7 @@ export class Pack extends BaseContract {
     ): Promise<[boolean]>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
@@ -758,87 +700,71 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    mint(
-      arg0: string,
-      arg1: BigNumberish,
-      arg2: BigNumberish,
-      arg3: BytesLike,
+    lazyMint(
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    mintBatch(
-      arg0: string,
-      arg1: BigNumberish[],
-      arg2: BigNumberish[],
-      arg3: BytesLike,
+    lazyMintAmount(
+      amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    lazyMintBatch(
+      _uris: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    maxTotalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    mint(arg0: string, overrides?: CallOverrides): Promise<[void]>;
+
+    mintConditions(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        string,
+        string
+      ] & {
+        startTimestamp: BigNumber;
+        maxMintSupply: BigNumber;
+        currentMintSupply: BigNumber;
+        quantityLimitPerTransaction: BigNumber;
+        waitTimestampLimitPerTransaction: BigNumber;
+        pricePerToken: BigNumber;
+        currency: string;
+        merkleRoot: string;
+      }
+    >;
 
     multicall(
       data: BytesLike[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    name(overrides?: CallOverrides): Promise<[string]>;
+
+    nextMintTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     nextTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    onERC1155BatchReceived(
-      _operator: string,
-      arg1: string,
-      _ids: BigNumberish[],
-      _values: BigNumberish[],
-      _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    onERC1155Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    onERC721Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    openPack(
-      _packId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    packs(
-      arg0: BigNumberish,
+    ownerOf(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [string, string, BigNumber] & {
-        uri: string;
-        creator: string;
-        openStart: BigNumber;
-      }
-    >;
+    ): Promise<[string]>;
 
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     paused(overrides?: CallOverrides): Promise<[boolean]>;
-
-    randomnessRequests(
-      arg0: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, string] & { packId: BigNumber; opener: string }>;
-
-    rawFulfillRandomness(
-      requestId: BytesLike,
-      randomness: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     renounceRole(
       role: BytesLike,
@@ -852,13 +778,6 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    rewards(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber] & { source: string; rewardsPerOpen: BigNumber }
-    >;
-
     royaltyBps(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     royaltyInfo(
@@ -869,21 +788,18 @@ export class Pack extends BaseContract {
       [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
     >;
 
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -893,13 +809,32 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    setChainlinkFees(
-      _newFees: BigNumberish,
+    setBaseTokenURI(
+      uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     setContractURI(
-      _uri: string,
+      _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setMaxTotalSupply(
+      maxSupply: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setPublicMintConditions(
+      conditions: {
+        startTimestamp: BigNumberish;
+        maxMintSupply: BigNumberish;
+        currentMintSupply: BigNumberish;
+        quantityLimitPerTransaction: BigNumberish;
+        waitTimestampLimitPerTransaction: BigNumberish;
+        pricePerToken: BigNumberish;
+        currency: string;
+        merkleRoot: BytesLike;
+      }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -918,16 +853,30 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    tokenURI(_id: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
+    symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    totalSupply(
-      id: BigNumberish,
+    tokenByIndex(
+      index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    transferLink(
-      _to: string,
-      _amount: BigNumberish,
+    tokenOfOwnerByIndex(
+      owner: string,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    tokenURI(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -937,11 +886,11 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    uri(_id: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
+    uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
-    vrfFees(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    vrfKeyHash(overrides?: CallOverrides): Promise<[string]>;
+    withdrawFunds(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
@@ -952,81 +901,35 @@ export class Pack extends BaseContract {
 
   TRANSFER_ROLE(overrides?: CallOverrides): Promise<string>;
 
-  _contractURI(overrides?: CallOverrides): Promise<string>;
-
-  balanceOf(
-    account: string,
-    id: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  balanceOfBatch(
-    accounts: string[],
-    ids: BigNumberish[],
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
-  burn(
-    account: string,
-    id: BigNumberish,
-    value: BigNumberish,
+  approve(
+    to: string,
+    tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  burnBatch(
-    account: string,
-    ids: BigNumberish[],
-    values: BigNumberish[],
+  balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  burn(
+    tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  claim(
+    quantity: BigNumberish,
+    proofs: BytesLike[],
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   contractURI(overrides?: CallOverrides): Promise<string>;
 
-  creator(_packId: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-  currentRequestId(
-    arg0: BigNumberish,
-    arg1: string,
+  getApproved(
+    tokenId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
-  getPack(
-    _packId: BigNumberish,
+  getLastStartedMintConditionIndex(
     overrides?: CallOverrides
-  ): Promise<
-    [string, string, BigNumber] & {
-      uri: string;
-      creator: string;
-      openStart: BigNumber;
-    }
-  >;
-
-  getPackWithRewards(
-    _packId: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      [string, string, BigNumber] & {
-        uri: string;
-        creator: string;
-        openStart: BigNumber;
-      },
-      BigNumber,
-      string,
-      BigNumber[],
-      BigNumber[]
-    ] & {
-      pack: [string, string, BigNumber] & {
-        uri: string;
-        creator: string;
-        openStart: BigNumber;
-      };
-      packTotalSupply: BigNumber;
-      source: string;
-      tokenIds: BigNumber[];
-      amountsPacked: BigNumber[];
-    }
-  >;
+  ): Promise<BigNumber>;
 
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -1054,7 +957,7 @@ export class Pack extends BaseContract {
   ): Promise<boolean>;
 
   isApprovedForAll(
-    account: string,
+    owner: string,
     operator: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
@@ -1064,87 +967,68 @@ export class Pack extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  mint(
-    arg0: string,
-    arg1: BigNumberish,
-    arg2: BigNumberish,
-    arg3: BytesLike,
+  lazyMint(
+    _uri: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  mintBatch(
-    arg0: string,
-    arg1: BigNumberish[],
-    arg2: BigNumberish[],
-    arg3: BytesLike,
+  lazyMintAmount(
+    amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  lazyMintBatch(
+    _uris: string[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  maxTotalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  mint(arg0: string, overrides?: CallOverrides): Promise<void>;
+
+  mintConditions(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      string,
+      string
+    ] & {
+      startTimestamp: BigNumber;
+      maxMintSupply: BigNumber;
+      currentMintSupply: BigNumber;
+      quantityLimitPerTransaction: BigNumber;
+      waitTimestampLimitPerTransaction: BigNumber;
+      pricePerToken: BigNumber;
+      currency: string;
+      merkleRoot: string;
+    }
+  >;
 
   multicall(
     data: BytesLike[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  name(overrides?: CallOverrides): Promise<string>;
+
+  nextMintTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
   nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-  onERC1155BatchReceived(
-    _operator: string,
-    arg1: string,
-    _ids: BigNumberish[],
-    _values: BigNumberish[],
-    _data: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  onERC1155Received(
-    arg0: string,
-    arg1: string,
-    arg2: BigNumberish,
-    arg3: BigNumberish,
-    arg4: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  onERC721Received(
-    arg0: string,
-    arg1: string,
-    arg2: BigNumberish,
-    arg3: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  openPack(
-    _packId: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  packs(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, string, BigNumber] & {
-      uri: string;
-      creator: string;
-      openStart: BigNumber;
-    }
-  >;
+  ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   pause(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   paused(overrides?: CallOverrides): Promise<boolean>;
-
-  randomnessRequests(
-    arg0: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, string] & { packId: BigNumber; opener: string }>;
-
-  rawFulfillRandomness(
-    requestId: BytesLike,
-    randomness: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   renounceRole(
     role: BytesLike,
@@ -1158,13 +1042,6 @@ export class Pack extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  rewards(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, BigNumber] & { source: string; rewardsPerOpen: BigNumber }
-  >;
-
   royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
   royaltyInfo(
@@ -1175,21 +1052,18 @@ export class Pack extends BaseContract {
     [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
   >;
 
-  safeBatchTransferFrom(
+  "safeTransferFrom(address,address,uint256)"(
     from: string,
     to: string,
-    ids: BigNumberish[],
-    amounts: BigNumberish[],
-    data: BytesLike,
+    tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  safeTransferFrom(
+  "safeTransferFrom(address,address,uint256,bytes)"(
     from: string,
     to: string,
-    id: BigNumberish,
-    amount: BigNumberish,
-    data: BytesLike,
+    tokenId: BigNumberish,
+    _data: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1199,13 +1073,32 @@ export class Pack extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  setChainlinkFees(
-    _newFees: BigNumberish,
+  setBaseTokenURI(
+    uri: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   setContractURI(
-    _uri: string,
+    _URI: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setMaxTotalSupply(
+    maxSupply: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setPublicMintConditions(
+    conditions: {
+      startTimestamp: BigNumberish;
+      maxMintSupply: BigNumberish;
+      currentMintSupply: BigNumberish;
+      quantityLimitPerTransaction: BigNumberish;
+      waitTimestampLimitPerTransaction: BigNumberish;
+      pricePerToken: BigNumberish;
+      currency: string;
+      merkleRoot: BytesLike;
+    }[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1224,13 +1117,27 @@ export class Pack extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  tokenURI(_id: BigNumberish, overrides?: CallOverrides): Promise<string>;
+  symbol(overrides?: CallOverrides): Promise<string>;
 
-  totalSupply(id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+  tokenByIndex(
+    index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
-  transferLink(
-    _to: string,
-    _amount: BigNumberish,
+  tokenOfOwnerByIndex(
+    owner: string,
+    index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  transferFrom(
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1240,11 +1147,11 @@ export class Pack extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  uri(_id: BigNumberish, overrides?: CallOverrides): Promise<string>;
+  uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  vrfFees(overrides?: CallOverrides): Promise<BigNumber>;
-
-  vrfKeyHash(overrides?: CallOverrides): Promise<string>;
+  withdrawFunds(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
@@ -1255,81 +1162,32 @@ export class Pack extends BaseContract {
 
     TRANSFER_ROLE(overrides?: CallOverrides): Promise<string>;
 
-    _contractURI(overrides?: CallOverrides): Promise<string>;
-
-    balanceOf(
-      account: string,
-      id: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
-    burn(
-      account: string,
-      id: BigNumberish,
-      value: BigNumberish,
+    approve(
+      to: string,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    burnBatch(
-      account: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    burn(tokenId: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    claim(
+      quantity: BigNumberish,
+      proofs: BytesLike[],
       overrides?: CallOverrides
     ): Promise<void>;
 
     contractURI(overrides?: CallOverrides): Promise<string>;
 
-    creator(_packId: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-    currentRequestId(
-      arg0: BigNumberish,
-      arg1: string,
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    getPack(
-      _packId: BigNumberish,
+    getLastStartedMintConditionIndex(
       overrides?: CallOverrides
-    ): Promise<
-      [string, string, BigNumber] & {
-        uri: string;
-        creator: string;
-        openStart: BigNumber;
-      }
-    >;
-
-    getPackWithRewards(
-      _packId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [string, string, BigNumber] & {
-          uri: string;
-          creator: string;
-          openStart: BigNumber;
-        },
-        BigNumber,
-        string,
-        BigNumber[],
-        BigNumber[]
-      ] & {
-        pack: [string, string, BigNumber] & {
-          uri: string;
-          creator: string;
-          openStart: BigNumber;
-        };
-        packTotalSupply: BigNumber;
-        source: string;
-        tokenIds: BigNumber[];
-        amountsPacked: BigNumber[];
-      }
-    >;
+    ): Promise<BigNumber>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -1357,7 +1215,7 @@ export class Pack extends BaseContract {
     ): Promise<boolean>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -1367,79 +1225,57 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    mint(
-      arg0: string,
-      arg1: BigNumberish,
-      arg2: BigNumberish,
-      arg3: BytesLike,
+    lazyMint(_uri: string, overrides?: CallOverrides): Promise<void>;
+
+    lazyMintAmount(
+      amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    mintBatch(
-      arg0: string,
-      arg1: BigNumberish[],
-      arg2: BigNumberish[],
-      arg3: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    lazyMintBatch(_uris: string[], overrides?: CallOverrides): Promise<void>;
 
-    multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
+    maxTotalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+    mint(arg0: string, overrides?: CallOverrides): Promise<void>;
 
-    onERC1155BatchReceived(
-      _operator: string,
-      arg1: string,
-      _ids: BigNumberish[],
-      _values: BigNumberish[],
-      _data: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    onERC1155Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    onERC721Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    openPack(_packId: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    packs(
+    mintConditions(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber] & {
-        uri: string;
-        creator: string;
-        openStart: BigNumber;
+      [
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        string,
+        string
+      ] & {
+        startTimestamp: BigNumber;
+        maxMintSupply: BigNumber;
+        currentMintSupply: BigNumber;
+        quantityLimitPerTransaction: BigNumber;
+        waitTimestampLimitPerTransaction: BigNumber;
+        pricePerToken: BigNumber;
+        currency: string;
+        merkleRoot: string;
       }
     >;
+
+    multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
+
+    name(overrides?: CallOverrides): Promise<string>;
+
+    nextMintTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     pause(overrides?: CallOverrides): Promise<void>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
-
-    randomnessRequests(
-      arg0: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, string] & { packId: BigNumber; opener: string }>;
-
-    rawFulfillRandomness(
-      requestId: BytesLike,
-      randomness: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     renounceRole(
       role: BytesLike,
@@ -1453,13 +1289,6 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    rewards(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber] & { source: string; rewardsPerOpen: BigNumber }
-    >;
-
     royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
@@ -1470,21 +1299,18 @@ export class Pack extends BaseContract {
       [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
     >;
 
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1494,12 +1320,28 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setChainlinkFees(
-      _newFees: BigNumberish,
+    setBaseTokenURI(uri: string, overrides?: CallOverrides): Promise<void>;
+
+    setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
+
+    setMaxTotalSupply(
+      maxSupply: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setContractURI(_uri: string, overrides?: CallOverrides): Promise<void>;
+    setPublicMintConditions(
+      conditions: {
+        startTimestamp: BigNumberish;
+        maxMintSupply: BigNumberish;
+        currentMintSupply: BigNumberish;
+        quantityLimitPerTransaction: BigNumberish;
+        waitTimestampLimitPerTransaction: BigNumberish;
+        pricePerToken: BigNumberish;
+        currency: string;
+        merkleRoot: BytesLike;
+      }[],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setRestrictedTransfer(
       _restrictedTransfer: boolean,
@@ -1516,16 +1358,27 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    tokenURI(_id: BigNumberish, overrides?: CallOverrides): Promise<string>;
+    symbol(overrides?: CallOverrides): Promise<string>;
 
-    totalSupply(
-      id: BigNumberish,
+    tokenByIndex(
+      index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    transferLink(
-      _to: string,
-      _amount: BigNumberish,
+    tokenOfOwnerByIndex(
+      owner: string,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1533,177 +1386,195 @@ export class Pack extends BaseContract {
 
     unpause(overrides?: CallOverrides): Promise<void>;
 
-    uri(_id: BigNumberish, overrides?: CallOverrides): Promise<string>;
+    uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    vrfFees(overrides?: CallOverrides): Promise<BigNumber>;
-
-    vrfKeyHash(overrides?: CallOverrides): Promise<string>;
+    withdrawFunds(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
+    "Approval(address,address,uint256)"(
+      owner?: string | null,
+      approved?: string | null,
+      tokenId?: BigNumberish | null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; approved: string; tokenId: BigNumber }
+    >;
+
+    Approval(
+      owner?: string | null,
+      approved?: string | null,
+      tokenId?: BigNumberish | null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; approved: string; tokenId: BigNumber }
+    >;
+
     "ApprovalForAll(address,address,bool)"(
-      account?: string | null,
+      owner?: string | null,
       operator?: string | null,
       approved?: null
     ): TypedEventFilter<
       [string, string, boolean],
-      { account: string; operator: string; approved: boolean }
+      { owner: string; operator: string; approved: boolean }
     >;
 
     ApprovalForAll(
-      account?: string | null,
+      owner?: string | null,
       operator?: string | null,
       approved?: null
     ): TypedEventFilter<
       [string, string, boolean],
-      { account: string; operator: string; approved: boolean }
+      { owner: string; operator: string; approved: boolean }
     >;
 
-    "PackCreated(uint256,address,address,uint256,tuple,tuple)"(
-      packId?: BigNumberish | null,
-      rewardContract?: string | null,
-      creator?: string | null,
-      packTotalSupply?: null,
-      packState?: null,
-      rewards?: null
+    "BaseTokenURIUpdated(string)"(
+      uri?: null
+    ): TypedEventFilter<[string], { uri: string }>;
+
+    BaseTokenURIUpdated(
+      uri?: null
+    ): TypedEventFilter<[string], { uri: string }>;
+
+    "Claimed(address,uint256,uint256,uint256)"(
+      to?: string | null,
+      startTokenId?: null,
+      quantity?: null,
+      mintConditionIndex?: null
     ): TypedEventFilter<
-      [
-        BigNumber,
-        string,
-        string,
-        BigNumber,
-        [string, string, BigNumber] & {
-          uri: string;
-          creator: string;
-          openStart: BigNumber;
-        },
-        [string, BigNumber[], BigNumber[], BigNumber] & {
-          source: string;
-          tokenIds: BigNumber[];
-          amountsPacked: BigNumber[];
-          rewardsPerOpen: BigNumber;
-        }
-      ],
+      [string, BigNumber, BigNumber, BigNumber],
       {
-        packId: BigNumber;
-        rewardContract: string;
-        creator: string;
-        packTotalSupply: BigNumber;
-        packState: [string, string, BigNumber] & {
-          uri: string;
-          creator: string;
-          openStart: BigNumber;
-        };
-        rewards: [string, BigNumber[], BigNumber[], BigNumber] & {
-          source: string;
-          tokenIds: BigNumber[];
-          amountsPacked: BigNumber[];
-          rewardsPerOpen: BigNumber;
-        };
+        to: string;
+        startTokenId: BigNumber;
+        quantity: BigNumber;
+        mintConditionIndex: BigNumber;
       }
     >;
 
-    PackCreated(
-      packId?: BigNumberish | null,
-      rewardContract?: string | null,
-      creator?: string | null,
-      packTotalSupply?: null,
-      packState?: null,
-      rewards?: null
+    Claimed(
+      to?: string | null,
+      startTokenId?: null,
+      quantity?: null,
+      mintConditionIndex?: null
     ): TypedEventFilter<
-      [
-        BigNumber,
-        string,
-        string,
-        BigNumber,
-        [string, string, BigNumber] & {
-          uri: string;
-          creator: string;
-          openStart: BigNumber;
-        },
-        [string, BigNumber[], BigNumber[], BigNumber] & {
-          source: string;
-          tokenIds: BigNumber[];
-          amountsPacked: BigNumber[];
-          rewardsPerOpen: BigNumber;
-        }
-      ],
+      [string, BigNumber, BigNumber, BigNumber],
       {
-        packId: BigNumber;
-        rewardContract: string;
-        creator: string;
-        packTotalSupply: BigNumber;
-        packState: [string, string, BigNumber] & {
-          uri: string;
-          creator: string;
-          openStart: BigNumber;
-        };
-        rewards: [string, BigNumber[], BigNumber[], BigNumber] & {
-          source: string;
-          tokenIds: BigNumber[];
-          amountsPacked: BigNumber[];
-          rewardsPerOpen: BigNumber;
-        };
+        to: string;
+        startTokenId: BigNumber;
+        quantity: BigNumber;
+        mintConditionIndex: BigNumber;
       }
     >;
 
-    "PackOpenFulfilled(uint256,address,bytes32,address,uint256[])"(
-      packId?: BigNumberish | null,
-      opener?: string | null,
-      requestId?: null,
-      rewardContract?: string | null,
-      rewardIds?: null
-    ): TypedEventFilter<
-      [BigNumber, string, string, string, BigNumber[]],
-      {
-        packId: BigNumber;
-        opener: string;
-        requestId: string;
-        rewardContract: string;
-        rewardIds: BigNumber[];
-      }
-    >;
+    "FundsWithdrawn(address,uint256)"(
+      to?: string | null,
+      amount?: null
+    ): TypedEventFilter<[string, BigNumber], { to: string; amount: BigNumber }>;
 
-    PackOpenFulfilled(
-      packId?: BigNumberish | null,
-      opener?: string | null,
-      requestId?: null,
-      rewardContract?: string | null,
-      rewardIds?: null
-    ): TypedEventFilter<
-      [BigNumber, string, string, string, BigNumber[]],
-      {
-        packId: BigNumber;
-        opener: string;
-        requestId: string;
-        rewardContract: string;
-        rewardIds: BigNumber[];
-      }
-    >;
-
-    "PackOpenRequest(uint256,address,bytes32)"(
-      packId?: BigNumberish | null,
-      opener?: string | null,
-      requestId?: null
-    ): TypedEventFilter<
-      [BigNumber, string, string],
-      { packId: BigNumber; opener: string; requestId: string }
-    >;
-
-    PackOpenRequest(
-      packId?: BigNumberish | null,
-      opener?: string | null,
-      requestId?: null
-    ): TypedEventFilter<
-      [BigNumber, string, string],
-      { packId: BigNumber; opener: string; requestId: string }
-    >;
+    FundsWithdrawn(
+      to?: string | null,
+      amount?: null
+    ): TypedEventFilter<[string, BigNumber], { to: string; amount: BigNumber }>;
 
     "Paused(address)"(
       account?: null
     ): TypedEventFilter<[string], { account: string }>;
 
     Paused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    "PublicMintConditionUpdated(tuple[])"(
+      mintConditions?: null
+    ): TypedEventFilter<
+      [
+        ([
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          string,
+          string
+        ] & {
+          startTimestamp: BigNumber;
+          maxMintSupply: BigNumber;
+          currentMintSupply: BigNumber;
+          quantityLimitPerTransaction: BigNumber;
+          waitTimestampLimitPerTransaction: BigNumber;
+          pricePerToken: BigNumber;
+          currency: string;
+          merkleRoot: string;
+        })[]
+      ],
+      {
+        mintConditions: ([
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          string,
+          string
+        ] & {
+          startTimestamp: BigNumber;
+          maxMintSupply: BigNumber;
+          currentMintSupply: BigNumber;
+          quantityLimitPerTransaction: BigNumber;
+          waitTimestampLimitPerTransaction: BigNumber;
+          pricePerToken: BigNumber;
+          currency: string;
+          merkleRoot: string;
+        })[];
+      }
+    >;
+
+    PublicMintConditionUpdated(
+      mintConditions?: null
+    ): TypedEventFilter<
+      [
+        ([
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          string,
+          string
+        ] & {
+          startTimestamp: BigNumber;
+          maxMintSupply: BigNumber;
+          currentMintSupply: BigNumber;
+          quantityLimitPerTransaction: BigNumber;
+          waitTimestampLimitPerTransaction: BigNumber;
+          pricePerToken: BigNumber;
+          currency: string;
+          merkleRoot: string;
+        })[]
+      ],
+      {
+        mintConditions: ([
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          string,
+          string
+        ] & {
+          startTimestamp: BigNumber;
+          maxMintSupply: BigNumber;
+          currentMintSupply: BigNumber;
+          quantityLimitPerTransaction: BigNumber;
+          waitTimestampLimitPerTransaction: BigNumber;
+          pricePerToken: BigNumber;
+          currency: string;
+          merkleRoot: string;
+        })[];
+      }
+    >;
 
     "RestrictedTransferUpdated(bool)"(
       transferable?: null
@@ -1775,83 +1646,31 @@ export class Pack extends BaseContract {
       royaltyBps?: null
     ): TypedEventFilter<[BigNumber], { royaltyBps: BigNumber }>;
 
-    "TransferBatch(address,address,address,uint256[],uint256[])"(
-      operator?: string | null,
+    "TotalSupplyUpdated(uint256)"(
+      supply?: null
+    ): TypedEventFilter<[BigNumber], { supply: BigNumber }>;
+
+    TotalSupplyUpdated(
+      supply?: null
+    ): TypedEventFilter<[BigNumber], { supply: BigNumber }>;
+
+    "Transfer(address,address,uint256)"(
       from?: string | null,
       to?: string | null,
-      ids?: null,
-      values?: null
+      tokenId?: BigNumberish | null
     ): TypedEventFilter<
-      [string, string, string, BigNumber[], BigNumber[]],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        ids: BigNumber[];
-        values: BigNumber[];
-      }
+      [string, string, BigNumber],
+      { from: string; to: string; tokenId: BigNumber }
     >;
 
-    TransferBatch(
-      operator?: string | null,
+    Transfer(
       from?: string | null,
       to?: string | null,
-      ids?: null,
-      values?: null
+      tokenId?: BigNumberish | null
     ): TypedEventFilter<
-      [string, string, string, BigNumber[], BigNumber[]],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        ids: BigNumber[];
-        values: BigNumber[];
-      }
+      [string, string, BigNumber],
+      { from: string; to: string; tokenId: BigNumber }
     >;
-
-    "TransferSingle(address,address,address,uint256,uint256)"(
-      operator?: string | null,
-      from?: string | null,
-      to?: string | null,
-      id?: null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        id: BigNumber;
-        value: BigNumber;
-      }
-    >;
-
-    TransferSingle(
-      operator?: string | null,
-      from?: string | null,
-      to?: string | null,
-      id?: null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        id: BigNumber;
-        value: BigNumber;
-      }
-    >;
-
-    "URI(string,uint256)"(
-      value?: null,
-      id?: BigNumberish | null
-    ): TypedEventFilter<[string, BigNumber], { value: string; id: BigNumber }>;
-
-    URI(
-      value?: null,
-      id?: BigNumberish | null
-    ): TypedEventFilter<[string, BigNumber], { value: string; id: BigNumber }>;
 
     "Unpaused(address)"(
       account?: null
@@ -1869,54 +1688,33 @@ export class Pack extends BaseContract {
 
     TRANSFER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    _contractURI(overrides?: CallOverrides): Promise<BigNumber>;
-
-    balanceOf(
-      account: string,
-      id: BigNumberish,
-      overrides?: CallOverrides
+    approve(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     burn(
-      account: string,
-      id: BigNumberish,
-      value: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    burnBatch(
-      account: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+    claim(
+      quantity: BigNumberish,
+      proofs: BytesLike[],
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
-    creator(
-      _packId: BigNumberish,
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    currentRequestId(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getPack(
-      _packId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getPackWithRewards(
-      _packId: BigNumberish,
+    getLastStartedMintConditionIndex(
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1949,7 +1747,7 @@ export class Pack extends BaseContract {
     ): Promise<BigNumber>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1959,20 +1757,28 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    mint(
-      arg0: string,
-      arg1: BigNumberish,
-      arg2: BigNumberish,
-      arg3: BytesLike,
+    lazyMint(
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    mintBatch(
-      arg0: string,
-      arg1: BigNumberish[],
-      arg2: BigNumberish[],
-      arg3: BytesLike,
+    lazyMintAmount(
+      amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    lazyMintBatch(
+      _uris: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    maxTotalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    mint(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    mintConditions(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     multicall(
@@ -1980,57 +1786,22 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nextMintTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    onERC1155BatchReceived(
-      _operator: string,
-      arg1: string,
-      _ids: BigNumberish[],
-      _values: BigNumberish[],
-      _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    ownerOf(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    onERC1155Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    onERC721Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    openPack(
-      _packId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    packs(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     pause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     paused(overrides?: CallOverrides): Promise<BigNumber>;
-
-    randomnessRequests(
-      arg0: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    rawFulfillRandomness(
-      requestId: BytesLike,
-      randomness: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
 
     renounceRole(
       role: BytesLike,
@@ -2044,8 +1815,6 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    rewards(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
     royaltyBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     royaltyInfo(
@@ -2054,21 +1823,18 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -2078,13 +1844,32 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    setChainlinkFees(
-      _newFees: BigNumberish,
+    setBaseTokenURI(
+      uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     setContractURI(
-      _uri: string,
+      _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setMaxTotalSupply(
+      maxSupply: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setPublicMintConditions(
+      conditions: {
+        startTimestamp: BigNumberish;
+        maxMintSupply: BigNumberish;
+        currentMintSupply: BigNumberish;
+        quantityLimitPerTransaction: BigNumberish;
+        waitTimestampLimitPerTransaction: BigNumberish;
+        pricePerToken: BigNumberish;
+        currency: string;
+        merkleRoot: BytesLike;
+      }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -2103,16 +1888,30 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    tokenURI(_id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
-    totalSupply(
-      id: BigNumberish,
+    tokenByIndex(
+      index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    transferLink(
-      _to: string,
-      _amount: BigNumberish,
+    tokenOfOwnerByIndex(
+      owner: string,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -2122,11 +1921,11 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    uri(_id: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+    uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    vrfFees(overrides?: CallOverrides): Promise<BigNumber>;
-
-    vrfKeyHash(overrides?: CallOverrides): Promise<BigNumber>;
+    withdrawFunds(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -2140,54 +1939,36 @@ export class Pack extends BaseContract {
 
     TRANSFER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    _contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    balanceOf(
-      account: string,
-      id: BigNumberish,
-      overrides?: CallOverrides
+    approve(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    balanceOfBatch(
-      accounts: string[],
-      ids: BigNumberish[],
+    balanceOf(
+      owner: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     burn(
-      account: string,
-      id: BigNumberish,
-      value: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    burnBatch(
-      account: string,
-      ids: BigNumberish[],
-      values: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+    claim(
+      quantity: BigNumberish,
+      proofs: BytesLike[],
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    creator(
-      _packId: BigNumberish,
+    getApproved(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    currentRequestId(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getPack(
-      _packId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getPackWithRewards(
-      _packId: BigNumberish,
+    getLastStartedMintConditionIndex(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2220,7 +2001,7 @@ export class Pack extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
-      account: string,
+      owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -2230,20 +2011,31 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    mint(
-      arg0: string,
-      arg1: BigNumberish,
-      arg2: BigNumberish,
-      arg3: BytesLike,
+    lazyMint(
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    mintBatch(
-      arg0: string,
-      arg1: BigNumberish[],
-      arg2: BigNumberish[],
-      arg3: BytesLike,
+    lazyMintAmount(
+      amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    lazyMintBatch(
+      _uris: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    maxTotalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    mint(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    mintConditions(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     multicall(
@@ -2251,41 +2043,14 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    nextMintTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     nextTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    onERC1155BatchReceived(
-      _operator: string,
-      arg1: string,
-      _ids: BigNumberish[],
-      _values: BigNumberish[],
-      _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    onERC1155Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BigNumberish,
-      arg4: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    onERC721Received(
-      arg0: string,
-      arg1: string,
-      arg2: BigNumberish,
-      arg3: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    openPack(
-      _packId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    packs(
-      arg0: BigNumberish,
+    ownerOf(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2294,17 +2059,6 @@ export class Pack extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    randomnessRequests(
-      arg0: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    rawFulfillRandomness(
-      requestId: BytesLike,
-      randomness: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
 
     renounceRole(
       role: BytesLike,
@@ -2318,11 +2072,6 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    rewards(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     royaltyBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     royaltyInfo(
@@ -2331,21 +2080,18 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    safeBatchTransferFrom(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
-      ids: BigNumberish[],
-      amounts: BigNumberish[],
-      data: BytesLike,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    safeTransferFrom(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
-      id: BigNumberish,
-      amount: BigNumberish,
-      data: BytesLike,
+      tokenId: BigNumberish,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2355,13 +2101,32 @@ export class Pack extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    setChainlinkFees(
-      _newFees: BigNumberish,
+    setBaseTokenURI(
+      uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     setContractURI(
-      _uri: string,
+      _URI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMaxTotalSupply(
+      maxSupply: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setPublicMintConditions(
+      conditions: {
+        startTimestamp: BigNumberish;
+        maxMintSupply: BigNumberish;
+        currentMintSupply: BigNumberish;
+        quantityLimitPerTransaction: BigNumberish;
+        waitTimestampLimitPerTransaction: BigNumberish;
+        pricePerToken: BigNumberish;
+        currency: string;
+        merkleRoot: BytesLike;
+      }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2380,19 +2145,30 @@ export class Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenByIndex(
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenOfOwnerByIndex(
+      owner: string,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     tokenURI(
-      _id: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    totalSupply(
-      id: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    transferLink(
-      _to: string,
-      _amount: BigNumberish,
+    transferFrom(
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2405,12 +2181,12 @@ export class Pack extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     uri(
-      _id: BigNumberish,
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    vrfFees(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    vrfKeyHash(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    withdrawFunds(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
   };
 }

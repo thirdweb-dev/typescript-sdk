@@ -422,6 +422,7 @@ interface AccessNFTInterface extends ethers.utils.Interface {
     "ApprovalForAll(address,address,bool)": EventFragment;
     "LastRedeemTimeUpdated(uint256,address,uint256)": EventFragment;
     "Paused(address)": EventFragment;
+    "RestrictedTransferUpdated(bool)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
@@ -440,6 +441,7 @@ interface AccessNFTInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "LastRedeemTimeUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RestrictedTransferUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
@@ -491,6 +493,10 @@ export type LastRedeemTimeUpdatedEvent = TypedEvent<
 >;
 
 export type PausedEvent = TypedEvent<[string] & { account: string }>;
+
+export type RestrictedTransferUpdatedEvent = TypedEvent<
+  [boolean] & { transferable: boolean }
+>;
 
 export type RoleAdminChangedEvent = TypedEvent<
   [string, string, string] & {
@@ -1476,6 +1482,14 @@ export class AccessNFT extends BaseContract {
     ): TypedEventFilter<[string], { account: string }>;
 
     Paused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    "RestrictedTransferUpdated(bool)"(
+      transferable?: null
+    ): TypedEventFilter<[boolean], { transferable: boolean }>;
+
+    RestrictedTransferUpdated(
+      transferable?: null
+    ): TypedEventFilter<[boolean], { transferable: boolean }>;
 
     "RoleAdminChanged(bytes32,bytes32,bytes32)"(
       role?: BytesLike | null,
