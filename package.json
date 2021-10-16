@@ -10,9 +10,6 @@
   "source": "src/index.ts",
   "main": "lib/sdk.js",
   "types": "lib/sdk.d.ts",
-  "engines": {
-    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
-  },
   "files": [
     "lib/",
     "contract-interfaces/"
