@@ -43,7 +43,7 @@ export class RegistryModule extends Module {
     const versions = Array.from(Array(maxVersion.toNumber()).keys()).reverse();
     const addresses = await Promise.all(
       versions.map((v) =>
-        this.contract.getProtocolControl(deployer, v.toString()),
+        this.contract.getProtocolControl(deployer, (v + 1).toString()),
       ),
     );
     const metadatas = await Promise.all(
