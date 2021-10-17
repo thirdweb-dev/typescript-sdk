@@ -13,6 +13,7 @@ import { CurrencyModule } from "../currency";
 import { MarketModule } from "../market";
 import { NFTModule } from "../nft";
 import { PackModule } from "../pack";
+import { LazyNFTModule } from "../lazynft";
 import { IAppModule, RegistryModule } from "../registry";
 import {
   JSONValue,
@@ -32,7 +33,7 @@ export interface ISDKOptions {
   ipfsGatewayUrl: string;
 
   /**
-   * Optional Contract Address
+   * Optional Registry Contract Address
    */
   registryContractAddress: string;
 
@@ -54,7 +55,8 @@ type AnyContract =
   | typeof CurrencyModule
   | typeof MarketModule
   | typeof PackModule
-  | typeof RegistryModule;
+  | typeof RegistryModule
+  | typeof LazyNFTModule;
 
 /**
  * The entrypoint to the NFTLabsSDK.
@@ -313,5 +315,14 @@ export class NFTLabsSDK {
    */
   public getMarketModule(address: string): MarketModule {
     return this.getOrCreateModule(address, MarketModule);
+  }
+
+  /**
+   *
+   * @param address - The contract address of the given Market module.
+   * @returns The Market Module.
+   */
+  public getLazyNFTModule(address: string): LazyNFTModule {
+    return this.getOrCreateModule(address, LazyNFTModule);
   }
 }

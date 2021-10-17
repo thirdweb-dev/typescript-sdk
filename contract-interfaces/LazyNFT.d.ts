@@ -48,6 +48,7 @@ interface LazyNFTInterface extends ethers.utils.Interface {
     "mintConditions(uint256)": FunctionFragment;
     "multicall(bytes[])": FunctionFragment;
     "name()": FunctionFragment;
+    "nextMintTimestampByCondition(address,uint256)": FunctionFragment;
     "nextMintTokenId()": FunctionFragment;
     "nextTokenId()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
@@ -74,7 +75,6 @@ interface LazyNFTInterface extends ethers.utils.Interface {
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transfersRestricted()": FunctionFragment;
     "unpause()": FunctionFragment;
-    "uri(uint256)": FunctionFragment;
     "withdrawFunds()": FunctionFragment;
   };
 
@@ -168,6 +168,10 @@ interface LazyNFTInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "nextMintTimestampByCondition",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "nextMintTokenId",
     values?: undefined
   ): string;
@@ -225,7 +229,7 @@ interface LazyNFTInterface extends ethers.utils.Interface {
         maxMintSupply: BigNumberish;
         currentMintSupply: BigNumberish;
         quantityLimitPerTransaction: BigNumberish;
-        waitTimestampLimitPerTransaction: BigNumberish;
+        waitTimeSecondsLimitPerTransaction: BigNumberish;
         pricePerToken: BigNumberish;
         currency: string;
         merkleRoot: BytesLike;
@@ -270,7 +274,6 @@ interface LazyNFTInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: "withdrawFunds",
     values?: undefined
@@ -351,6 +354,10 @@ interface LazyNFTInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "multicall", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "nextMintTimestampByCondition",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "nextMintTokenId",
     data: BytesLike
   ): Result;
@@ -430,7 +437,6 @@ interface LazyNFTInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "withdrawFunds",
     data: BytesLike
@@ -520,7 +526,7 @@ export type PublicMintConditionUpdatedEvent = TypedEvent<
       maxMintSupply: BigNumber;
       currentMintSupply: BigNumber;
       quantityLimitPerTransaction: BigNumber;
-      waitTimestampLimitPerTransaction: BigNumber;
+      waitTimeSecondsLimitPerTransaction: BigNumber;
       pricePerToken: BigNumber;
       currency: string;
       merkleRoot: string;
@@ -540,7 +546,7 @@ export type PublicMintConditionUpdatedEvent = TypedEvent<
       maxMintSupply: BigNumber;
       currentMintSupply: BigNumber;
       quantityLimitPerTransaction: BigNumber;
-      waitTimestampLimitPerTransaction: BigNumber;
+      waitTimeSecondsLimitPerTransaction: BigNumber;
       pricePerToken: BigNumber;
       currency: string;
       merkleRoot: string;
@@ -737,7 +743,7 @@ export class LazyNFT extends BaseContract {
         maxMintSupply: BigNumber;
         currentMintSupply: BigNumber;
         quantityLimitPerTransaction: BigNumber;
-        waitTimestampLimitPerTransaction: BigNumber;
+        waitTimeSecondsLimitPerTransaction: BigNumber;
         pricePerToken: BigNumber;
         currency: string;
         merkleRoot: string;
@@ -750,6 +756,12 @@ export class LazyNFT extends BaseContract {
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
+
+    nextMintTimestampByCondition(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     nextMintTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -810,7 +822,7 @@ export class LazyNFT extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setBaseTokenURI(
-      uri: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -830,7 +842,7 @@ export class LazyNFT extends BaseContract {
         maxMintSupply: BigNumberish;
         currentMintSupply: BigNumberish;
         quantityLimitPerTransaction: BigNumberish;
-        waitTimestampLimitPerTransaction: BigNumberish;
+        waitTimeSecondsLimitPerTransaction: BigNumberish;
         pricePerToken: BigNumberish;
         currency: string;
         merkleRoot: BytesLike;
@@ -885,8 +897,6 @@ export class LazyNFT extends BaseContract {
     unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
     withdrawFunds(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1004,7 +1014,7 @@ export class LazyNFT extends BaseContract {
       maxMintSupply: BigNumber;
       currentMintSupply: BigNumber;
       quantityLimitPerTransaction: BigNumber;
-      waitTimestampLimitPerTransaction: BigNumber;
+      waitTimeSecondsLimitPerTransaction: BigNumber;
       pricePerToken: BigNumber;
       currency: string;
       merkleRoot: string;
@@ -1017,6 +1027,12 @@ export class LazyNFT extends BaseContract {
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
+
+  nextMintTimestampByCondition(
+    arg0: string,
+    arg1: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   nextMintTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1074,7 +1090,7 @@ export class LazyNFT extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setBaseTokenURI(
-    uri: string,
+    _uri: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1094,7 +1110,7 @@ export class LazyNFT extends BaseContract {
       maxMintSupply: BigNumberish;
       currentMintSupply: BigNumberish;
       quantityLimitPerTransaction: BigNumberish;
-      waitTimestampLimitPerTransaction: BigNumberish;
+      waitTimeSecondsLimitPerTransaction: BigNumberish;
       pricePerToken: BigNumberish;
       currency: string;
       merkleRoot: BytesLike;
@@ -1146,8 +1162,6 @@ export class LazyNFT extends BaseContract {
   unpause(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   withdrawFunds(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -1256,7 +1270,7 @@ export class LazyNFT extends BaseContract {
         maxMintSupply: BigNumber;
         currentMintSupply: BigNumber;
         quantityLimitPerTransaction: BigNumber;
-        waitTimestampLimitPerTransaction: BigNumber;
+        waitTimeSecondsLimitPerTransaction: BigNumber;
         pricePerToken: BigNumber;
         currency: string;
         merkleRoot: string;
@@ -1266,6 +1280,12 @@ export class LazyNFT extends BaseContract {
     multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
 
     name(overrides?: CallOverrides): Promise<string>;
+
+    nextMintTimestampByCondition(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     nextMintTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1320,7 +1340,7 @@ export class LazyNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setBaseTokenURI(uri: string, overrides?: CallOverrides): Promise<void>;
+    setBaseTokenURI(_uri: string, overrides?: CallOverrides): Promise<void>;
 
     setContractURI(_URI: string, overrides?: CallOverrides): Promise<void>;
 
@@ -1335,7 +1355,7 @@ export class LazyNFT extends BaseContract {
         maxMintSupply: BigNumberish;
         currentMintSupply: BigNumberish;
         quantityLimitPerTransaction: BigNumberish;
-        waitTimestampLimitPerTransaction: BigNumberish;
+        waitTimeSecondsLimitPerTransaction: BigNumberish;
         pricePerToken: BigNumberish;
         currency: string;
         merkleRoot: BytesLike;
@@ -1385,8 +1405,6 @@ export class LazyNFT extends BaseContract {
     transfersRestricted(overrides?: CallOverrides): Promise<boolean>;
 
     unpause(overrides?: CallOverrides): Promise<void>;
-
-    uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     withdrawFunds(overrides?: CallOverrides): Promise<void>;
   };
@@ -1500,7 +1518,7 @@ export class LazyNFT extends BaseContract {
           maxMintSupply: BigNumber;
           currentMintSupply: BigNumber;
           quantityLimitPerTransaction: BigNumber;
-          waitTimestampLimitPerTransaction: BigNumber;
+          waitTimeSecondsLimitPerTransaction: BigNumber;
           pricePerToken: BigNumber;
           currency: string;
           merkleRoot: string;
@@ -1521,7 +1539,7 @@ export class LazyNFT extends BaseContract {
           maxMintSupply: BigNumber;
           currentMintSupply: BigNumber;
           quantityLimitPerTransaction: BigNumber;
-          waitTimestampLimitPerTransaction: BigNumber;
+          waitTimeSecondsLimitPerTransaction: BigNumber;
           pricePerToken: BigNumber;
           currency: string;
           merkleRoot: string;
@@ -1547,7 +1565,7 @@ export class LazyNFT extends BaseContract {
           maxMintSupply: BigNumber;
           currentMintSupply: BigNumber;
           quantityLimitPerTransaction: BigNumber;
-          waitTimestampLimitPerTransaction: BigNumber;
+          waitTimeSecondsLimitPerTransaction: BigNumber;
           pricePerToken: BigNumber;
           currency: string;
           merkleRoot: string;
@@ -1568,7 +1586,7 @@ export class LazyNFT extends BaseContract {
           maxMintSupply: BigNumber;
           currentMintSupply: BigNumber;
           quantityLimitPerTransaction: BigNumber;
-          waitTimestampLimitPerTransaction: BigNumber;
+          waitTimeSecondsLimitPerTransaction: BigNumber;
           pricePerToken: BigNumber;
           currency: string;
           merkleRoot: string;
@@ -1788,6 +1806,12 @@ export class LazyNFT extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    nextMintTimestampByCondition(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     nextMintTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1845,7 +1869,7 @@ export class LazyNFT extends BaseContract {
     ): Promise<BigNumber>;
 
     setBaseTokenURI(
-      uri: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1865,7 +1889,7 @@ export class LazyNFT extends BaseContract {
         maxMintSupply: BigNumberish;
         currentMintSupply: BigNumberish;
         quantityLimitPerTransaction: BigNumberish;
-        waitTimestampLimitPerTransaction: BigNumberish;
+        waitTimeSecondsLimitPerTransaction: BigNumberish;
         pricePerToken: BigNumberish;
         currency: string;
         merkleRoot: BytesLike;
@@ -1920,8 +1944,6 @@ export class LazyNFT extends BaseContract {
     unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     withdrawFunds(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -2045,6 +2067,12 @@ export class LazyNFT extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    nextMintTimestampByCondition(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     nextMintTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nextTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -2102,7 +2130,7 @@ export class LazyNFT extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setBaseTokenURI(
-      uri: string,
+      _uri: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2122,7 +2150,7 @@ export class LazyNFT extends BaseContract {
         maxMintSupply: BigNumberish;
         currentMintSupply: BigNumberish;
         quantityLimitPerTransaction: BigNumberish;
-        waitTimestampLimitPerTransaction: BigNumberish;
+        waitTimeSecondsLimitPerTransaction: BigNumberish;
         pricePerToken: BigNumberish;
         currency: string;
         merkleRoot: BytesLike;
@@ -2178,11 +2206,6 @@ export class LazyNFT extends BaseContract {
 
     unpause(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    uri(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdrawFunds(

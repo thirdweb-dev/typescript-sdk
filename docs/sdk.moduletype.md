@@ -20,8 +20,8 @@ export declare enum ModuleType
 |  COLLECTION | <code>1</code> |  |
 |  CURRENCY | <code>0</code> |  |
 |  DYNAMIC\_NFT | <code>3</code> |  |
+|  LAZY\_NFT | <code>7</code> |  |
 |  MARKET | <code>6</code> |  |
 |  NFT | <code>2</code> |  |
-|  OTHER | <code>7</code> |  |
 |  PACK | <code>5</code> |  |
 

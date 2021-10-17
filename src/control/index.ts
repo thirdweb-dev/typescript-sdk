@@ -88,6 +88,10 @@ export class AppModule extends Module {
     return this.getModuleAddress(ModuleType.MARKET);
   }
 
+  private async getLazyNFTAddress(): Promise<string[]> {
+    return this.getModuleAddress(ModuleType.LAZY_NFT);
+  }
+
   public async getRoyaltyTreasury(address?: string): Promise<string> {
     return await this.contract.getRoyaltyTreasury(address || "");
   }
@@ -130,6 +134,14 @@ export class AppModule extends Module {
    */
   public async getMarketModules(): Promise<ModuleMetadata[]> {
     return await this.getAllContractMetadata(await this.getMarketAddress());
+  }
+
+  /**
+   * Method to get all Market modules.
+   * @returns A promise of an array of Market modules.
+   */
+  public async getLazyNFTModules(): Promise<ModuleMetadata[]> {
+    return await this.getAllContractMetadata(await this.getLazyNFTAddress());
   }
 
   // owner functions

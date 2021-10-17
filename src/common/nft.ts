@@ -1,5 +1,5 @@
 import { Contract } from "@ethersproject/contracts";
-import { NFT, NFTCollection } from "../../contract-interfaces";
+import { LazyNFT, NFT, NFTCollection } from "../../contract-interfaces";
 import { JSONValue, ProviderOrSigner } from "../core/types";
 import { NotFoundError } from "./error";
 import { replaceIpfsWithGateway } from "./ipfs";
@@ -56,6 +56,11 @@ export interface NFTMetadata {
 }
 
 /**
+ * @internal
+ */
+export type NFTContractTypes = NFT | NFTCollection | LazyNFT;
+
+/**
 /* @internal
  */
 export async function getMetadataWithoutContract(
@@ -89,7 +94,7 @@ export async function getMetadataWithoutContract(
 /* @internal
  */
 export async function getMetadata(
-  contract: NFT | NFTCollection,
+  contract: NFTContractTypes,
   tokenId: string,
   ipfsGatewayUrl: string,
 ): Promise<NFTMetadata> {
@@ -114,7 +119,7 @@ export async function getMetadata(
 /* @internal
  */
 export async function getMetadataUri(
-  contract: NFT | NFTCollection,
+  contract: NFTContractTypes,
   tokenId: string,
 ): Promise<string> {
   let uri = "";
