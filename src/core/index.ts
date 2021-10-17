@@ -91,6 +91,7 @@ export class NFTLabsSDK {
   private set registry(value: RegistryModule | null) {
     this._registry = value;
   }
+
   constructor(
     providerOrNetwork: ValidProviderInput,
     opts?: Partial<ISDKOptions>,
@@ -319,8 +320,8 @@ export class NFTLabsSDK {
 
   /**
    *
-   * @param address - The contract address of the given Market module.
-   * @returns The Market Module.
+   * @param address - The contract address of the given Lazy NFT module.
+   * @returns The LazyNFT Module.
    */
   public getLazyNFTModule(address: string): LazyNFTModule {
     return this.getOrCreateModule(address, LazyNFTModule);

@@ -14,11 +14,11 @@ getLazyNFTModule(address: string): LazyNFTModule;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  address | string | The contract address of the given Market module. |
+|  address | string | The contract address of the given Lazy NFT module. |
 
 <b>Returns:</b>
 
 LazyNFTModule
 
-The Market Module.
+The LazyNFT Module.
 
