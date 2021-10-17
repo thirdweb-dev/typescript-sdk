@@ -4,14 +4,9 @@ import { MetadataURIOrObject } from "../core/types";
 import { LazyNFT, LazyNFT__factory } from "../../contract-interfaces";
 import { getRoleHash, ModuleType, Role } from "../common";
 import { uploadMetadata } from "../common/ipfs";
-import { getMetadata, NFTMetadata } from "../common/nft";
+import { getMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { Module } from "../core/module";
 import { hexZeroPad } from "@ethersproject/bytes";
-
-export interface NFTMetadataOwner {
-  owner: string;
-  metadata: NFTMetadata;
-}
 
 export interface CreatePublicMintCondition {
   startTimestampInSeconds?: BigNumberish;

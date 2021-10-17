@@ -18,7 +18,7 @@ getLazyNFTModule(address: string): LazyNFTModule;
 
 <b>Returns:</b>
 
-LazyNFTModule
+[LazyNFTModule](./sdk.lazynftmodule.md)
 
 The LazyNFT Module.
 

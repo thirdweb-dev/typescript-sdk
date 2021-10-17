@@ -3,13 +3,8 @@ import { MetadataURIOrObject } from "../core/types";
 import { NFT, NFT__factory } from "../../contract-interfaces";
 import { getRoleHash, ModuleType, Role } from "../common";
 import { uploadMetadata } from "../common/ipfs";
-import { getMetadata, NFTMetadata } from "../common/nft";
+import { getMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { Module } from "../core/module";
-
-export interface NFTMetadataOwner {
-  owner: string;
-  metadata: NFTMetadata;
-}
 
 /**
  * The NFTModule. This should always be created via `getNFTModule()` on the main SDK.

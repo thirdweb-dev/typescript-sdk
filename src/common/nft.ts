@@ -55,6 +55,11 @@ export interface NFTMetadata {
   properties?: Record<string, JSONValue>;
 }
 
+export interface NFTMetadataOwner {
+  owner: string;
+  metadata: NFTMetadata;
+}
+
 /**
  * @internal
  */
