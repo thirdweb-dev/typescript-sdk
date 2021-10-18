@@ -48,6 +48,7 @@ export declare class LazyNFTModule extends Module
 |  [setPublicMintConditions(conditions)](./sdk.lazynftmodule.setpublicmintconditions.md) |  |  |
 |  [setRoyaltyBps(amount)](./sdk.lazynftmodule.setroyaltybps.md) |  |  |
 |  [totalLazyMintedSupply()](./sdk.lazynftmodule.totallazymintedsupply.md) |  |  |
+|  [totalMintedSupply()](./sdk.lazynftmodule.totalmintedsupply.md) |  |  |
 |  [totalSupply()](./sdk.lazynftmodule.totalsupply.md) |  |  |
 |  [transfer(to, tokenId)](./sdk.lazynftmodule.transfer.md) |  |  |
 |  [transferFrom(from, to, tokenId)](./sdk.lazynftmodule.transferfrom.md) |  |  |

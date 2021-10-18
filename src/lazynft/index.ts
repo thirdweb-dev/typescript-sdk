@@ -71,7 +71,7 @@ export class LazyNFTModule extends Module {
   }
 
   public async getAll(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.contract.nextTokenId()).toNumber();
+    const maxId = (await this.contract.nextMintTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
@@ -109,6 +109,10 @@ export class LazyNFTModule extends Module {
 
   public async totalLazyMintedSupply(): Promise<BigNumber> {
     return await this.contract.nextTokenId();
+  }
+
+  public async totalMintedSupply(): Promise<BigNumber> {
+    return await this.contract.nextMintTokenId();
   }
 
   public async balanceOf(address: string): Promise<BigNumber> {
