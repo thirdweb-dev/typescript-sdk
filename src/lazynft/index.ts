@@ -77,6 +77,15 @@ export class LazyNFTModule extends Module {
     );
   }
 
+  public async getAllLazy(): Promise<NFTMetadata[]> {
+    const maxId = (await this.contract.nextTokenId()).toNumber();
+    return await Promise.all(
+      Array.from(Array(maxId).keys()).map((i) =>
+        this.getMetadata(i.toString()),
+      ),
+    );
+  }
+
   public async ownerOf(tokenId: string): Promise<string> {
     return await this.contract.ownerOf(tokenId);
   }

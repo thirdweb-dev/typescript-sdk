@@ -30,6 +30,7 @@ export declare class LazyNFTModule extends Module
 |  [get(tokenId)](./sdk.lazynftmodule.get.md) |  |  |
 |  [getActiveMintCondition()](./sdk.lazynftmodule.getactivemintcondition.md) |  |  |
 |  [getAll()](./sdk.lazynftmodule.getall.md) |  |  |
+|  [getAllLazy()](./sdk.lazynftmodule.getalllazy.md) |  |  |
 |  [getAllRoleMembers()](./sdk.lazynftmodule.getallrolemembers.md) |  |  |
 |  [getOwned(\_address)](./sdk.lazynftmodule.getowned.md) |  |  |
 |  [getRoleMembers(role)](./sdk.lazynftmodule.getrolemembers.md) |  |  |
