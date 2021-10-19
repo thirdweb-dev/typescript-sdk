@@ -195,4 +195,9 @@ export class CurrencyModule extends Module {
       pauser,
     };
   }
+
+  public async setRestrictedTransfer(restricted = false): Promise<void> {
+    const tx = await this.contract.setRestrictedTransfer(restricted);
+    await tx.wait();
+  }
 }
