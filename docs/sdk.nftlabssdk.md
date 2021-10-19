@@ -28,6 +28,7 @@ export declare class NFTLabsSDK
 |  [getCollectionModule(address)](./sdk.nftlabssdk.getcollectionmodule.md) |  |  |
 |  [getCurrencyModule(address)](./sdk.nftlabssdk.getcurrencymodule.md) |  |  |
 |  [getGasPrice(speed, maxGasGwei)](./sdk.nftlabssdk.getgasprice.md) |  |  |
+|  [getLazyNFTModule(address)](./sdk.nftlabssdk.getlazynftmodule.md) |  |  |
 |  [getMarketModule(address)](./sdk.nftlabssdk.getmarketmodule.md) |  |  |
 |  [getNFTModule(address)](./sdk.nftlabssdk.getnftmodule.md) |  |  |
 |  [getPackModule(address)](./sdk.nftlabssdk.getpackmodule.md) |  |  |

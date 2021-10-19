@@ -1,64 +1,87 @@
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { AddressZero } from "@ethersproject/constants";
 import { MetadataURIOrObject } from "../core/types";
-import { NFT, NFT__factory } from "../../contract-interfaces";
+import { LazyNFT, LazyNFT__factory } from "../../contract-interfaces";
 import { getRoleHash, ModuleType, Role } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { Module } from "../core/module";
+import { hexZeroPad } from "@ethersproject/bytes";
+
+export interface CreatePublicMintCondition {
+  startTimestampInSeconds?: BigNumberish;
+  maxMintSupply: BigNumberish;
+  quantityLimitPerTransaction?: BigNumberish;
+  waitTimeSecondsLimitPerTransaction?: BigNumberish;
+  pricePerToken?: BigNumberish;
+  currency?: string;
+  merkleRoot?: BytesLike;
+}
+
+export interface PublicMintCondition {
+  startTimestamp: BigNumberish;
+  maxMintSupply: BigNumberish;
+  currentMintSupply: BigNumberish;
+  quantityLimitPerTransaction: BigNumberish;
+  waitTimeSecondsLimitPerTransaction: BigNumberish;
+  pricePerToken: BigNumberish;
+  currency: string;
+  merkleRoot: BytesLike;
+}
 
 /**
- * The NFTModule. This should always be created via `getNFTModule()` on the main SDK.
+ * The LazyNFTModule. This should always be created via `getLazyNFTModule()` on the main SDK.
  * @public
  */
-export class NFTModule extends Module {
-  public static moduleType: ModuleType = ModuleType.NFT;
+export class LazyNFTModule extends Module {
+  public static moduleType: ModuleType = ModuleType.LAZY_NFT;
 
-  private _contract: NFT | null = null;
+  private _contract: LazyNFT | null = null;
   /**
    * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
    */
-  public get contract(): NFT {
+  public get contract(): LazyNFT {
     return this._contract || this.connectContract();
   }
-  private set contract(value: NFT) {
+  private set contract(value: LazyNFT) {
     this._contract = value;
   }
 
   /**
    * @internal
    */
-  protected connectContract(): NFT {
-    return (this.contract = NFT__factory.connect(
+  protected connectContract(): LazyNFT {
+    return (this.contract = LazyNFT__factory.connect(
       this.address,
       this.providerOrSigner,
     ));
   }
 
-  public async get(tokenId: string): Promise<NFTMetadata> {
+  private async getMetadata(tokenId: string): Promise<NFTMetadata> {
     return await getMetadata(this.contract, tokenId, this.ipfsGatewayUrl);
   }
 
-  public async getAll(): Promise<NFTMetadata[]> {
-    const maxId = (await this.contract.nextTokenId()).toNumber();
-    return await Promise.all(
-      Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
-    );
-  }
-
-  public async getWithOwner(tokenId: string): Promise<NFTMetadataOwner> {
+  public async get(tokenId: string): Promise<NFTMetadataOwner> {
     const [owner, metadata] = await Promise.all([
       this.ownerOf(tokenId),
-      getMetadata(this.contract, tokenId, this.ipfsGatewayUrl),
+      this.getMetadata(tokenId),
     ]);
 
     return { owner, metadata };
   }
 
-  public async getAllWithOwner(): Promise<NFTMetadataOwner[]> {
+  public async getAll(): Promise<NFTMetadataOwner[]> {
+    const maxId = (await this.contract.nextMintTokenId()).toNumber();
+    return await Promise.all(
+      Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
+    );
+  }
+
+  public async getAllLazy(): Promise<NFTMetadata[]> {
     const maxId = (await this.contract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) =>
-        this.getWithOwner(i.toString()),
+        this.getMetadata(i.toString()),
       ),
     );
   }
@@ -67,7 +90,7 @@ export class NFTModule extends Module {
     return await this.contract.ownerOf(tokenId);
   }
 
-  public async getOwned(_address?: string): Promise<NFTMetadata[]> {
+  public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
     const address = _address ? _address : await this.getSignerAddress();
     const balance = await this.contract.balanceOf(address);
     const indices = Array.from(Array(balance.toNumber()).keys());
@@ -79,9 +102,26 @@ export class NFTModule extends Module {
     );
   }
 
+  public async getActiveMintCondition(): Promise<PublicMintCondition> {
+    const index = await this.contract.getLastStartedMintConditionIndex();
+    return await this.contract.mintConditions(index);
+  }
+
   // passthrough to the contract
   public async totalSupply(): Promise<BigNumber> {
     return await this.contract.totalSupply();
+  }
+
+  public async maxTotalSupply(): Promise<BigNumber> {
+    return await this.contract.maxTotalSupply();
+  }
+
+  public async totalLazyMintedSupply(): Promise<BigNumber> {
+    return await this.contract.nextTokenId();
+  }
+
+  public async totalMintedSupply(): Promise<BigNumber> {
+    return await this.contract.nextMintTokenId();
   }
 
   public async balanceOf(address: string): Promise<BigNumber> {
@@ -117,48 +157,65 @@ export class NFTModule extends Module {
   }
 
   // owner functions
-  public async mint(metadata: MetadataURIOrObject): Promise<NFTMetadata> {
-    return await this.mintTo(await this.getSignerAddress(), metadata);
-  }
-
-  public async mintTo(
-    to: string,
-    metadata: MetadataURIOrObject,
-  ): Promise<NFTMetadata> {
+  public async lazyMint(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.mintNFT(
-      to,
-      uri,
-      await this.getCallOverrides(),
-    );
-    const receipt = await tx.wait();
-    const event = receipt?.events?.find((e) => e.event === "Minted");
-    const tokenId = event?.args?.tokenId;
-    return await this.get(tokenId.toString());
+    const tx = await this.contract.lazyMint(uri, await this.getCallOverrides());
+    await tx.wait();
   }
 
-  public async mintBatch(
-    metadatas: MetadataURIOrObject[],
-  ): Promise<NFTMetadata[]> {
-    return await this.mintBatchTo(await this.getSignerAddress(), metadatas);
-  }
-
-  public async mintBatchTo(
-    to: string,
-    metadatas: MetadataURIOrObject[],
-  ): Promise<NFTMetadata[]> {
+  public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
     const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
-    const tx = await this.contract.mintNFTBatch(
-      to,
+    const tx = await this.contract.lazyMintBatch(
       uris,
       await this.getCallOverrides(),
     );
-    const receipt = await tx.wait();
-    const event = receipt?.events?.find((e) => e.event === "MintedBatch");
-    const tokenIds = event?.args?.tokenIds;
-    return await Promise.all(
-      tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),
+    await tx.wait();
+  }
+
+  public async lazyMintAmount(amount: BigNumberish) {
+    const tx = await this.contract.lazyMintAmount(
+      amount,
+      await this.getCallOverrides(),
     );
+    await tx.wait();
+  }
+
+  public async setPublicMintConditions(
+    conditions: CreatePublicMintCondition[],
+  ) {
+    const _conditions = conditions.map((c) => ({
+      startTimestamp: c.startTimestampInSeconds || 0,
+      maxMintSupply: c.maxMintSupply,
+      currentMintSupply: 0,
+      quantityLimitPerTransaction:
+        c.quantityLimitPerTransaction || c.maxMintSupply,
+      waitTimeSecondsLimitPerTransaction:
+        c.waitTimeSecondsLimitPerTransaction || 0,
+      pricePerToken: c.pricePerToken || 0,
+      currency: c.currency || AddressZero,
+      merkleRoot: c.merkleRoot || hexZeroPad("0", 32),
+    }));
+    const tx = await this.contract.setPublicMintConditions(
+      _conditions,
+      await this.getCallOverrides(),
+    );
+    await tx.wait();
+  }
+
+  public async claim(quantity: BigNumberish) {
+    const proofs = [hexZeroPad("0", 32)];
+    const mintCondition = await this.getActiveMintCondition();
+    const overrides = (await this.getCallOverrides()) || {};
+    if (
+      mintCondition.currency === AddressZero &&
+      mintCondition.pricePerToken > 0
+    ) {
+      overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
+        quantity,
+      );
+    }
+    const tx = await this.contract.claim(quantity, proofs, overrides);
+    await tx.wait();
   }
 
   public async burn(tokenId: BigNumberish) {
@@ -222,6 +279,23 @@ export class NFTModule extends Module {
     }
   }
 
+  public async setBaseTokenUri(uri: string) {
+    const tx = await this.contract.setBaseTokenURI(
+      uri,
+      await this.getCallOverrides(),
+    );
+    await tx.wait();
+  }
+
+  public async setMaxTotalSupply(amount: BigNumberish) {
+    const tx = await this.contract.setMaxTotalSupply(
+      amount,
+      await this.getCallOverrides(),
+    );
+    await tx.wait();
+  }
+
+  // roles
   public async getRoleMembers(role: Role): Promise<string[]> {
     const roleHash = getRoleHash(role);
     const count = (await this.contract.getRoleMemberCount(roleHash)).toNumber();
@@ -245,10 +319,5 @@ export class NFTModule extends Module {
       minter,
       pauser,
     };
-  }
-
-  public async setRestrictedTransfer(restricted = false): Promise<void> {
-    const tx = await this.contract.setRestrictedTransfer(restricted);
-    await tx.wait();
   }
 }

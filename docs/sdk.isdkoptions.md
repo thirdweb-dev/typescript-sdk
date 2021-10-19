@@ -19,5 +19,5 @@ export interface ISDKOptions
 |  [gasSpeed](./sdk.isdkoptions.gasspeed.md) | string | Optional default speed setting for transactions |
 |  [ipfsGatewayUrl](./sdk.isdkoptions.ipfsgatewayurl.md) | string | An optional IPFS Gateway. (Default: <code>https://cloudflare-ipfs.com/ipfs/</code>). |
 |  [maxGasPriceInGwei](./sdk.isdkoptions.maxgaspriceingwei.md) | number | maxGasPrice for transactions |
-|  [registryContractAddress](./sdk.isdkoptions.registrycontractaddress.md) | string | Optional Contract Address |
+|  [registryContractAddress](./sdk.isdkoptions.registrycontractaddress.md) | string | Optional Registry Contract Address |
 

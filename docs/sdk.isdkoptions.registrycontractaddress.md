@@ -4,7 +4,7 @@
 
 ## ISDKOptions.registryContractAddress property
 
-Optional Contract Address
+Optional Registry Contract Address
 
 <b>Signature:</b>
 
