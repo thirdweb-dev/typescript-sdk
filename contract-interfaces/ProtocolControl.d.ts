@@ -35,7 +35,6 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     "hasRole(bytes32,address)": FunctionFragment;
     "modules(bytes32)": FunctionFragment;
     "numOfModuleType(uint256)": FunctionFragment;
-    "pauseProtocol(bool)": FunctionFragment;
     "registry()": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
@@ -45,8 +44,8 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     "setModuleRoyaltyTreasury(address,address)": FunctionFragment;
     "setRoyaltyTreasury(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
-    "systemPaused()": FunctionFragment;
     "updateModule(bytes32,address)": FunctionFragment;
+    "withdrawFunds(address,address)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -99,10 +98,6 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     functionFragment: "numOfModuleType",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "pauseProtocol",
-    values: [boolean]
-  ): string;
   encodeFunctionData(functionFragment: "registry", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
@@ -137,12 +132,12 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "systemPaused",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "updateModule",
     values: [BytesLike, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawFunds",
+    values: [string, string]
   ): string;
 
   decodeFunctionResult(
@@ -186,10 +181,6 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     functionFragment: "numOfModuleType",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "pauseProtocol",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
@@ -221,35 +212,52 @@ interface ProtocolControlInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "systemPaused",
+    functionFragment: "updateModule",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateModule",
+    functionFragment: "withdrawFunds",
     data: BytesLike
   ): Result;
 
   events: {
+    "EtherReceived(address,uint256)": EventFragment;
     "ForwarderUpdated(address)": EventFragment;
+    "FundsWithdrawn(address,address,uint256,uint256)": EventFragment;
     "ModuleUpdated(bytes32,address)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
-    "SystemPaused(bool)": EventFragment;
+    "RoyaltyTreasuryUpdated(address,address,address)": EventFragment;
     "TreasuryUpdated(address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "EtherReceived"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ForwarderUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "FundsWithdrawn"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ModuleUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SystemPaused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoyaltyTreasuryUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TreasuryUpdated"): EventFragment;
 }
 
+export type EtherReceivedEvent = TypedEvent<
+  [string, BigNumber] & { from: string; amount: BigNumber }
+>;
+
 export type ForwarderUpdatedEvent = TypedEvent<
   [string] & { _newForwarder: string }
+>;
+
+export type FundsWithdrawnEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber] & {
+    to: string;
+    currency: string;
+    amount: BigNumber;
+    fee: BigNumber;
+  }
 >;
 
 export type ModuleUpdatedEvent = TypedEvent<
@@ -272,7 +280,13 @@ export type RoleRevokedEvent = TypedEvent<
   [string, string, string] & { role: string; account: string; sender: string }
 >;
 
-export type SystemPausedEvent = TypedEvent<[boolean] & { isPaused: boolean }>;
+export type RoyaltyTreasuryUpdatedEvent = TypedEvent<
+  [string, string, string] & {
+    protocolControlAddress: string;
+    moduleAddress: string;
+    treasury: string;
+  }
+>;
 
 export type TreasuryUpdatedEvent = TypedEvent<
   [string] & { _newTreasury: string }
@@ -378,11 +392,6 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    pauseProtocol(
-      _toPause: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     registry(overrides?: CallOverrides): Promise<[string]>;
 
     renounceRole(
@@ -425,11 +434,15 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    systemPaused(overrides?: CallOverrides): Promise<[boolean]>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawFunds(
+      to: string,
+      currency: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -490,11 +503,6 @@ export class ProtocolControl extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  pauseProtocol(
-    _toPause: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   registry(overrides?: CallOverrides): Promise<string>;
 
   renounceRole(
@@ -537,11 +545,15 @@ export class ProtocolControl extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  systemPaused(overrides?: CallOverrides): Promise<boolean>;
-
   updateModule(
     _moduleId: BytesLike,
     _newModuleAddress: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawFunds(
+    to: string,
+    currency: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -602,8 +614,6 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    pauseProtocol(_toPause: boolean, overrides?: CallOverrides): Promise<void>;
-
     registry(overrides?: CallOverrides): Promise<string>;
 
     renounceRole(
@@ -640,16 +650,36 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    systemPaused(overrides?: CallOverrides): Promise<boolean>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    withdrawFunds(
+      to: string,
+      currency: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
+    "EtherReceived(address,uint256)"(
+      from?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { from: string; amount: BigNumber }
+    >;
+
+    EtherReceived(
+      from?: null,
+      amount?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { from: string; amount: BigNumber }
+    >;
+
     "ForwarderUpdated(address)"(
       _newForwarder?: null
     ): TypedEventFilter<[string], { _newForwarder: string }>;
@@ -657,6 +687,26 @@ export class ProtocolControl extends BaseContract {
     ForwarderUpdated(
       _newForwarder?: null
     ): TypedEventFilter<[string], { _newForwarder: string }>;
+
+    "FundsWithdrawn(address,address,uint256,uint256)"(
+      to?: string | null,
+      currency?: string | null,
+      amount?: null,
+      fee?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber],
+      { to: string; currency: string; amount: BigNumber; fee: BigNumber }
+    >;
+
+    FundsWithdrawn(
+      to?: string | null,
+      currency?: string | null,
+      amount?: null,
+      fee?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber, BigNumber],
+      { to: string; currency: string; amount: BigNumber; fee: BigNumber }
+    >;
 
     "ModuleUpdated(bytes32,address)"(
       moduleId?: BytesLike | null,
@@ -722,13 +772,31 @@ export class ProtocolControl extends BaseContract {
       { role: string; account: string; sender: string }
     >;
 
-    "SystemPaused(bool)"(
-      isPaused?: null
-    ): TypedEventFilter<[boolean], { isPaused: boolean }>;
+    "RoyaltyTreasuryUpdated(address,address,address)"(
+      protocolControlAddress?: string | null,
+      moduleAddress?: string | null,
+      treasury?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      {
+        protocolControlAddress: string;
+        moduleAddress: string;
+        treasury: string;
+      }
+    >;
 
-    SystemPaused(
-      isPaused?: null
-    ): TypedEventFilter<[boolean], { isPaused: boolean }>;
+    RoyaltyTreasuryUpdated(
+      protocolControlAddress?: string | null,
+      moduleAddress?: string | null,
+      treasury?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      {
+        protocolControlAddress: string;
+        moduleAddress: string;
+        treasury: string;
+      }
+    >;
 
     "TreasuryUpdated(address)"(
       _newTreasury?: null
@@ -799,11 +867,6 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    pauseProtocol(
-      _toPause: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     registry(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceRole(
@@ -846,11 +909,15 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    systemPaused(overrides?: CallOverrides): Promise<BigNumber>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    withdrawFunds(
+      to: string,
+      currency: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -920,11 +987,6 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    pauseProtocol(
-      _toPause: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     registry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceRole(
@@ -967,11 +1029,15 @@ export class ProtocolControl extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    systemPaused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     updateModule(
       _moduleId: BytesLike,
       _newModuleAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawFunds(
+      to: string,
+      currency: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

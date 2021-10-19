@@ -22,6 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface RegistryInterface extends ethers.utils.Interface {
   functions: {
     "MAX_PROVIDER_FEE_BPS()": FunctionFragment;
+    "addProtocolControl(address,address)": FunctionFragment;
     "defaultFeeBps()": FunctionFragment;
     "deployProtocol(string)": FunctionFragment;
     "deployer()": FunctionFragment;
@@ -42,6 +43,10 @@ interface RegistryInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "MAX_PROVIDER_FEE_BPS",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addProtocolControl",
+    values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "defaultFeeBps",
@@ -85,6 +90,10 @@ interface RegistryInterface extends ethers.utils.Interface {
 
   decodeFunctionResult(
     functionFragment: "MAX_PROVIDER_FEE_BPS",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "addProtocolControl",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -136,6 +145,7 @@ interface RegistryInterface extends ethers.utils.Interface {
   events: {
     "DefaultFeeBpsUpdated(uint256)": EventFragment;
     "DeployerUpdated(address)": EventFragment;
+    "MigratedProtocolControl(address,uint256,address)": EventFragment;
     "NewProtocolControl(address,uint256,address,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "ProtocolControlFeeBpsUpdated(address,uint256)": EventFragment;
@@ -144,6 +154,7 @@ interface RegistryInterface extends ethers.utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "DefaultFeeBpsUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "DeployerUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MigratedProtocolControl"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewProtocolControl"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(
@@ -158,6 +169,14 @@ export type DefaultFeeBpsUpdatedEvent = TypedEvent<
 
 export type DeployerUpdatedEvent = TypedEvent<
   [string] & { newDeployer: string }
+>;
+
+export type MigratedProtocolControlEvent = TypedEvent<
+  [string, BigNumber, string] & {
+    deployer: string;
+    version: BigNumber;
+    controlAddress: string;
+  }
 >;
 
 export type NewProtocolControlEvent = TypedEvent<
@@ -227,6 +246,12 @@ export class Registry extends BaseContract {
   functions: {
     MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    addProtocolControl(
+      _deployer: string,
+      _protocolControl: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     defaultFeeBps(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     deployProtocol(
@@ -291,6 +316,12 @@ export class Registry extends BaseContract {
 
   MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
+  addProtocolControl(
+    _deployer: string,
+    _protocolControl: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   defaultFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
 
   deployProtocol(
@@ -354,6 +385,12 @@ export class Registry extends BaseContract {
 
   callStatic: {
     MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
+
+    addProtocolControl(
+      _deployer: string,
+      _protocolControl: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     defaultFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -422,6 +459,24 @@ export class Registry extends BaseContract {
     DeployerUpdated(
       newDeployer?: null
     ): TypedEventFilter<[string], { newDeployer: string }>;
+
+    "MigratedProtocolControl(address,uint256,address)"(
+      deployer?: string | null,
+      version?: BigNumberish | null,
+      controlAddress?: string | null
+    ): TypedEventFilter<
+      [string, BigNumber, string],
+      { deployer: string; version: BigNumber; controlAddress: string }
+    >;
+
+    MigratedProtocolControl(
+      deployer?: string | null,
+      version?: BigNumberish | null,
+      controlAddress?: string | null
+    ): TypedEventFilter<
+      [string, BigNumber, string],
+      { deployer: string; version: BigNumber; controlAddress: string }
+    >;
 
     "NewProtocolControl(address,uint256,address,address)"(
       deployer?: string | null,
@@ -497,6 +552,12 @@ export class Registry extends BaseContract {
   estimateGas: {
     MAX_PROVIDER_FEE_BPS(overrides?: CallOverrides): Promise<BigNumber>;
 
+    addProtocolControl(
+      _deployer: string,
+      _protocolControl: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     defaultFeeBps(overrides?: CallOverrides): Promise<BigNumber>;
 
     deployProtocol(
@@ -562,6 +623,12 @@ export class Registry extends BaseContract {
   populateTransaction: {
     MAX_PROVIDER_FEE_BPS(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    addProtocolControl(
+      _deployer: string,
+      _protocolControl: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     defaultFeeBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
