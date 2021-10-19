@@ -43,6 +43,7 @@ export declare class NFTModule extends Module
 |  [revokeRole(role, address)](./sdk.nftmodule.revokerole.md) |  |  |
 |  [setApproval(operator, approved)](./sdk.nftmodule.setapproval.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.nftmodule.setmodulemetadata.md) |  |  |
+|  [setRestrictedTransfer(restricted)](./sdk.nftmodule.setrestrictedtransfer.md) |  |  |
 |  [setRoyaltyBps(amount)](./sdk.nftmodule.setroyaltybps.md) |  |  |
 |  [totalSupply()](./sdk.nftmodule.totalsupply.md) |  |  |
 |  [transfer(to, tokenId)](./sdk.nftmodule.transfer.md) |  |  |

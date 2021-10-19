@@ -39,6 +39,7 @@ export declare class CurrencyModule extends Module
 |  [revokeRole(role, address)](./sdk.currencymodule.revokerole.md) |  |  |
 |  [setAllowance(spender, amount)](./sdk.currencymodule.setallowance.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.currencymodule.setmodulemetadata.md) |  |  |
+|  [setRestrictedTransfer(restricted)](./sdk.currencymodule.setrestrictedtransfer.md) |  |  |
 |  [totalSupply()](./sdk.currencymodule.totalsupply.md) |  |  |
 |  [transfer(to, amount)](./sdk.currencymodule.transfer.md) |  |  |
 |  [transferFrom(from, to, amount)](./sdk.currencymodule.transferfrom.md) |  |  |

@@ -48,6 +48,7 @@ export declare class CollectionModule extends Module
 |  [revokeRole(role, address)](./sdk.collectionmodule.revokerole.md) |  |  |
 |  [setApproval(operator, approved)](./sdk.collectionmodule.setapproval.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.collectionmodule.setmodulemetadata.md) |  |  |
+|  [setRestrictedTransfer(restricted)](./sdk.collectionmodule.setrestrictedtransfer.md) |  |  |
 |  [setRoyaltyBps(amount)](./sdk.collectionmodule.setroyaltybps.md) |  |  |
 |  [transfer(to, tokenId, amount)](./sdk.collectionmodule.transfer.md) |  |  |
 |  [transferBatchFrom(from, to, args, data)](./sdk.collectionmodule.transferbatchfrom.md) |  |  |

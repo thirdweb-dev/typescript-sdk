@@ -39,6 +39,7 @@ export declare class PackModule extends Module
 |  [revokeRole(role, address)](./sdk.packmodule.revokerole.md) |  |  |
 |  [setApproval(operator, approved)](./sdk.packmodule.setapproval.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.packmodule.setmodulemetadata.md) |  |  |
+|  [setRestrictedTransfer(restricted)](./sdk.packmodule.setrestrictedtransfer.md) |  |  |
 |  [setRoyaltyBps(amount)](./sdk.packmodule.setroyaltybps.md) |  |  |
 |  [transfer(to, tokenId, amount)](./sdk.packmodule.transfer.md) |  |  |
 |  [transferBatchFrom(from, to, args, data)](./sdk.packmodule.transferbatchfrom.md) |  |  |
