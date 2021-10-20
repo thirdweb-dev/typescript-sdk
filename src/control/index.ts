@@ -6,6 +6,8 @@ import {
 import { ModuleType, uploadMetadata } from "../common";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { Module } from "../core/module";
+import { AddressZero } from "@ethersproject/constants";
+
 /**
  * A Module with metadata.
  * @public
@@ -93,7 +95,7 @@ export class AppModule extends Module {
   }
 
   public async getRoyaltyTreasury(address?: string): Promise<string> {
-    return await this.contract.getRoyaltyTreasury(address || "");
+    return await this.contract.getRoyaltyTreasury(address || AddressZero);
   }
 
   /**
