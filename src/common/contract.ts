@@ -1,5 +1,6 @@
 import { arrayify } from "@ethersproject/bytes";
 import { Contract } from "@ethersproject/contracts";
+import { Provider } from "@ethersproject/providers";
 import { ProviderOrSigner } from "../core/types";
 import { replaceIpfsWithGateway } from "./ipfs";
 
@@ -58,4 +59,14 @@ export async function getContractMetadata(
     image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
   };
   return entity;
+}
+
+/**
+ * @internal
+ */
+export async function isContract(
+  provider: Provider,
+  address: string,
+): Promise<boolean> {
+  return (await provider.getCode(address)) !== "0x";
 }

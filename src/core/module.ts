@@ -4,6 +4,7 @@ import invariant from "ts-invariant";
 import type { ProviderOrSigner } from "./types";
 import type { ISDKOptions } from ".";
 import { getTransactionCallOverrides } from "../common/transaction";
+import { isContract } from "../common/contract";
 
 /**
  *
@@ -82,12 +83,17 @@ export class Module {
     return await signer.getAddress();
   }
 
-  protected async getChainID(): Promise<number> {
+  protected async getProvider(): Promise<Provider | undefined> {
     const provider: Provider | undefined = Signer.isSigner(
       this.getProviderOrSigner(),
     )
       ? (this.providerOrSigner as Signer).provider
       : (this.providerOrSigner as Provider);
+    return provider;
+  }
+
+  protected async getChainID(): Promise<number> {
+    const provider = await this.getProvider();
     invariant(provider, "getChainID() -- No Provider");
     const { chainId } = await provider.getNetwork();
     return chainId;
@@ -103,5 +109,11 @@ export class Module {
       this.options.gasSpeed,
       this.options.maxGasPriceInGwei,
     );
+  }
+
+  public async exists(): Promise<boolean> {
+    const provider = await this.getProvider();
+    invariant(provider, "exists() -- No Provider");
+    return isContract(provider, this.address);
   }
 }
