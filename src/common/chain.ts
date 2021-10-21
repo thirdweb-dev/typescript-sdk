@@ -19,6 +19,7 @@ export enum ChainId {
 }
 
 export type SUPPORTED_CHAIN_ID =
+  | ChainId.Mainnet
   | ChainId.Rinkeby
   | ChainId.Mumbai
   | ChainId.Polygon
@@ -28,6 +29,7 @@ export type SUPPORTED_CHAIN_ID =
   | ChainId.AvalancheFujiTestnet;
 
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
+  ChainId.Mainnet,
   ChainId.Rinkeby,
   ChainId.Polygon,
   ChainId.Mumbai,

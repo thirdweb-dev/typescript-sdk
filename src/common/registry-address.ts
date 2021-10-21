@@ -4,6 +4,9 @@ export const CONTRACT_ADDRESSES: Record<
   SUPPORTED_CHAIN_ID,
   Record<"registry", string>
 > = {
+  [ChainId.Mainnet]: {
+    registry: "0x902a29f2cfe9f8580ad672AaAD7E917d85ca9a2E",
+  },
   [ChainId.Rinkeby]: {
     registry: "0x902a29f2cfe9f8580ad672AaAD7E917d85ca9a2E",
   },
