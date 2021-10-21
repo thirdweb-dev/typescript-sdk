@@ -49,7 +49,6 @@ export interface IPackCreateArgs {
     amount: BigNumberish;
   }[];
   secondsUntilOpenStart?: number;
-  secondsUntilOpenEnd?: number;
   rewardsPerOpen?: number;
 }
 
@@ -229,13 +228,8 @@ export class PackModule extends Module {
     const uri = await uploadMetadata(args.metadata);
 
     const packParams = ethers.utils.defaultAbiCoder.encode(
-      ["string", "uint256", "uint256", "uint256"],
-      [
-        uri,
-        args.secondsUntilOpenStart || 0,
-        args.secondsUntilOpenEnd || 0,
-        args.rewardsPerOpen || 1,
-      ],
+      ["string", "uint256", "uint256"],
+      [uri, args.secondsUntilOpenStart || 0, args.rewardsPerOpen || 1],
     );
 
     const tx = await asset.safeBatchTransferFrom(
