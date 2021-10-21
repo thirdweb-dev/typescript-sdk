@@ -1,4 +1,4 @@
-import { MetadataURIOrObject } from "../core/types";
+import { AddressZero } from "@ethersproject/constants";
 import {
   ProtocolControl,
   ProtocolControl__factory,
@@ -6,7 +6,7 @@ import {
 import { ModuleType, uploadMetadata } from "../common";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { Module } from "../core/module";
-import { AddressZero } from "@ethersproject/constants";
+import { MetadataURIOrObject } from "../core/types";
 
 /**
  * A Module with metadata.
@@ -90,8 +90,8 @@ export class AppModule extends Module {
     return this.getModuleAddress(ModuleType.MARKET);
   }
 
-  private async getLazyNFTAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.LAZY_NFT);
+  private async getDropAddress(): Promise<string[]> {
+    return this.getModuleAddress(ModuleType.DROP);
   }
 
   public async getRoyaltyTreasury(address?: string): Promise<string> {
@@ -139,11 +139,11 @@ export class AppModule extends Module {
   }
 
   /**
-   * Method to get all Market modules.
+   * Method to get all Drop modules.
    * @returns A promise of an array of Market modules.
    */
-  public async getLazyNFTModules(): Promise<ModuleMetadata[]> {
-    return await this.getAllContractMetadata(await this.getLazyNFTAddress());
+  public async getDropModules(): Promise<ModuleMetadata[]> {
+    return await this.getAllContractMetadata(await this.getDropAddress());
   }
 
   // owner functions

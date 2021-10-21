@@ -1,5 +1,4 @@
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
-import { ChainlinkVrf } from "../common/chainlink";
 import {
   ERC1155__factory,
   ERC20__factory,
@@ -13,6 +12,7 @@ import {
   ModuleType,
   Role,
 } from "../common";
+import { ChainlinkVrf } from "../common/chainlink";
 import { NotFoundError } from "../common/error";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
@@ -169,7 +169,7 @@ export class PackModule extends Module {
       packReward.tokenIds.map((tokenId) =>
         getMetadataWithoutContract(
           this.providerOrSigner,
-          this.address,
+          packReward.source,
           tokenId.toString(),
           this.ipfsGatewayUrl,
         ),

@@ -12,7 +12,7 @@ export enum ModuleType {
   ACCESS_NFT = 4,
   PACK = 5,
   MARKET = 6,
-  LAZY_NFT = 7,
+  DROP = 7,
 }
 /**
  *

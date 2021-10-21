@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-getLazyNFTModule(address: string): LazyNFTModule;
+getLazyNFTModule(address: string): DropModule;
 ```
 
 ## Parameters
@@ -18,7 +18,7 @@ getLazyNFTModule(address: string): LazyNFTModule;
 
 <b>Returns:</b>
 
-[LazyNFTModule](./sdk.lazynftmodule.md)
+[DropModule](./sdk.dropmodule.md)
 
 The LazyNFT Module.
 

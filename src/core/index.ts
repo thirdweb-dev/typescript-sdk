@@ -3,20 +3,19 @@ import { parseUnits } from "@ethersproject/units";
 import { ContractReceipt, ethers, Signer } from "ethers";
 import invariant from "ts-invariant";
 import type { C } from "ts-toolbelt";
-import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { CollectionModule } from "../collection";
 import { uploadMetadata } from "../common";
+import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { getContractAddressByChainId } from "../common/registry-address";
 import { AppModule } from "../control";
 import { CurrencyModule } from "../currency";
+import { DropModule } from "../drop";
 import { MarketModule } from "../market";
 import { NFTModule } from "../nft";
 import { PackModule } from "../pack";
-import { LazyNFTModule } from "../lazynft";
 import { IAppModule, RegistryModule } from "../registry";
 import {
-  JSONValue,
   MetadataURIOrObject,
   ProviderOrSigner,
   ValidProviderInput,
@@ -56,7 +55,7 @@ type AnyContract =
   | typeof MarketModule
   | typeof PackModule
   | typeof RegistryModule
-  | typeof LazyNFTModule;
+  | typeof DropModule;
 
 /**
  * The entrypoint to the NFTLabsSDK.
@@ -323,7 +322,7 @@ export class NFTLabsSDK {
    * @param address - The contract address of the given Lazy NFT module.
    * @returns The LazyNFT Module.
    */
-  public getLazyNFTModule(address: string): LazyNFTModule {
-    return this.getOrCreateModule(address, LazyNFTModule);
+  public getLazyNFTModule(address: string): DropModule {
+    return this.getOrCreateModule(address, DropModule);
   }
 }
