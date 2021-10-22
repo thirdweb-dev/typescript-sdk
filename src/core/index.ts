@@ -319,10 +319,10 @@ export class NFTLabsSDK {
 
   /**
    *
-   * @param address - The contract address of the given Lazy NFT module.
-   * @returns The LazyNFT Module.
+   * @param address - The contract address of the given Drop module.
+   * @returns The Drop Module.
    */
-  public getLazyNFTModule(address: string): DropModule {
+  public getDropModule(address: string): DropModule {
     return this.getOrCreateModule(address, DropModule);
   }
 }
