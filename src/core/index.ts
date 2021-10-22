@@ -7,7 +7,7 @@ import { CollectionModule } from "../collection";
 import { uploadMetadata } from "../common";
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
-import { getContractAddressByChainId } from "../common/registry-address";
+import { getContractAddressByChainId } from "../common/address";
 import { AppModule } from "../control";
 import { CurrencyModule } from "../currency";
 import { DropModule } from "../drop";

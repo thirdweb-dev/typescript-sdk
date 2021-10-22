@@ -1,5 +1,6 @@
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chain";
 
+export const FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 export const CONTRACT_ADDRESSES: Record<
   SUPPORTED_CHAIN_ID,
   Record<"registry", string>
