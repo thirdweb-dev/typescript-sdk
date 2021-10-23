@@ -1,6 +1,5 @@
-import { Forwarder, Forwarder__factory } from "../../contract-interfaces";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
-import { FORWARDER_ADDRESS } from "./address";
+import { Forwarder } from "../../contract-interfaces";
+import { BigNumber } from "ethers";
 
 /**
  * @internal

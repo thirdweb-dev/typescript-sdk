@@ -85,7 +85,7 @@ export class NFTLabsSDK {
     maxGasPriceInGwei: 100,
     gasSpeed: "fastest",
     transactionRelayerUrl: "",
-    transactionRelayerSendFunction: this.defaultRelayerSendFunction,
+    transactionRelayerSendFunction: this.defaultRelayerSendFunction.bind(this),
   };
   private modules = new Map<string, C.Instance<AnyContract>>();
   private providerOrSigner: ProviderOrSigner;
@@ -342,14 +342,20 @@ export class NFTLabsSDK {
     message: ForwardRequestMessage,
     signature: BytesLike,
   ): Promise<string> {
-    const body = JSON.stringify({ request: message, signature });
+    const body = JSON.stringify({
+      request: message,
+      signature,
+      type: "forward",
+    });
+    // console.log("POST", this.options.transactionRelayerUrl, body);
     const response = await fetch(this.options.transactionRelayerUrl, {
       method: "POST",
       body,
     });
     if (response.ok) {
-      const { txHash } = await response.json();
-      return txHash;
+      const resp = await response.json();
+      const result = JSON.parse(resp.result);
+      return result.txHash;
     }
     throw new Error("relay transaction failed");
   }
