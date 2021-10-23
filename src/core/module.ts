@@ -1,5 +1,9 @@
-import { JsonRpcSigner, Provider } from "@ethersproject/providers";
-import { BaseContract, CallOverrides, Signer } from "ethers";
+import {
+  JsonRpcSigner,
+  Provider,
+  TransactionReceipt,
+} from "@ethersproject/providers";
+import { BaseContract, BigNumber, CallOverrides, Signer } from "ethers";
 import invariant from "ts-invariant";
 import type { ProviderOrSigner } from "./types";
 import type { ISDKOptions } from ".";
@@ -8,6 +12,7 @@ import { isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { Forwarder__factory } from "../../contract-interfaces";
 import { FORWARDER_ADDRESS } from "../common/address";
+import { FunctionFragment } from "@ethersproject/abi";
 
 /**
  *
@@ -120,12 +125,32 @@ export class Module {
     return isContract(provider, this.address);
   }
 
-  protected async execute(fn: string, ...args: any[]): Promise<string> {
+  protected async executeTransaction(
+    fn: string,
+    ...args: any[]
+  ): Promise<string> {
     const contract = this.connectContract();
-    const data = contract.interface.encodeFunctionData(fn, args);
-    console.log("execute", fn, args, "data:", data);
-    this.executeGasless(fn, ...args);
-    return "";
+    let txHash = "";
+    if (this.options.transactionRelayerUrl) {
+      txHash = await this.executeGasless(fn, ...args);
+    } else {
+      const tx = await contract.functions[fn](
+        ...args,
+        await this.getCallOverrides(),
+      );
+      txHash = tx.hash;
+    }
+    return txHash;
+  }
+
+  protected async executeAndWaitTransaction(
+    fn: string,
+    ...args: any[]
+  ): Promise<TransactionReceipt> {
+    const provider = await this.getProvider();
+    invariant(provider, "no provider to execute transaction");
+    const txhash = await this.executeTransaction(fn, ...args);
+    return await provider.waitForTransaction(txhash);
   }
 
   private async executeGasless(fn: string, ...args: any[]): Promise<string> {
@@ -161,9 +186,9 @@ export class Module {
     const message = {
       from,
       to,
-      value,
-      gas,
-      nonce,
+      value: BigNumber.from(value).toString(),
+      gas: BigNumber.from(gas).toString(),
+      nonce: BigNumber.from(nonce).toString(),
       data,
     };
 
@@ -172,8 +197,11 @@ export class Module {
       types,
       message,
     );
-    console.log("fowradr verfify", await forwarder.verify(message, signature));
-    // TODO relayer api call
-    return "";
+
+    // await forwarder.verify(message, signature);
+    return await this.options.transactionRelayerSendFunction(
+      message,
+      signature,
+    );
   }
 }

@@ -1,6 +1,6 @@
 import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
-import { ContractReceipt, ethers, Signer } from "ethers";
+import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
 import invariant from "ts-invariant";
 import type { C } from "ts-toolbelt";
 import { CollectionModule } from "../collection";
@@ -16,6 +16,7 @@ import { NFTModule } from "../nft";
 import { PackModule } from "../pack";
 import { IAppModule, RegistryModule } from "../registry";
 import {
+  ForwardRequestMessage,
   MetadataURIOrObject,
   ProviderOrSigner,
   ValidProviderInput,
@@ -45,6 +46,20 @@ export interface ISDKOptions {
    * Optional default speed setting for transactions
    */
   gasSpeed: string;
+
+  /**
+   * Optional relayer url to be used for gasless transaction
+   */
+  transactionRelayerUrl: string;
+
+  /**
+   * Optional function for sending transaction to relayer
+   * @returns transaction hash of relayed transaction.
+   */
+  transactionRelayerSendFunction: (
+    message: ForwardRequestMessage,
+    signature: BytesLike,
+  ) => Promise<string>;
 }
 
 type AnyContract =
@@ -62,16 +77,21 @@ type AnyContract =
  * @public
  */
 export class NFTLabsSDK {
-  private options: ISDKOptions = {
+  // default options
+  private options: ISDKOptions;
+  private defaultOptions: ISDKOptions = {
     ipfsGatewayUrl: "https://cloudflare-ipfs.com/ipfs/",
     registryContractAddress: "",
     maxGasPriceInGwei: 100,
     gasSpeed: "fastest",
+    transactionRelayerUrl: "",
+    transactionRelayerSendFunction: this.defaultRelayerSendFunction,
   };
   private modules = new Map<string, C.Instance<AnyContract>>();
   private providerOrSigner: ProviderOrSigner;
 
   private _signer: Signer | null = null;
+
   /**
    * The active Signer, you should not need to access this unless you are deploying new modules.
    * @internal
@@ -96,18 +116,10 @@ export class NFTLabsSDK {
     opts?: Partial<ISDKOptions>,
   ) {
     this.providerOrSigner = this.setProviderOrSigner(providerOrNetwork);
-    if (opts?.ipfsGatewayUrl) {
-      this.options.ipfsGatewayUrl = opts.ipfsGatewayUrl;
-    }
-    if (opts?.registryContractAddress) {
-      this.options.registryContractAddress = opts.registryContractAddress;
-    }
-    if (opts?.maxGasPriceInGwei) {
-      this.options.maxGasPriceInGwei = opts.maxGasPriceInGwei;
-    }
-    if (opts?.gasSpeed) {
-      this.options.gasSpeed = opts.gasSpeed;
-    }
+    this.options = {
+      ...this.defaultOptions,
+      ...opts,
+    };
   }
   private updateModuleSigners() {
     for (const [, _module] of this.modules) {
@@ -324,5 +336,21 @@ export class NFTLabsSDK {
    */
   public getDropModule(address: string): DropModule {
     return this.getOrCreateModule(address, DropModule);
+  }
+
+  private async defaultRelayerSendFunction(
+    message: ForwardRequestMessage,
+    signature: BytesLike,
+  ): Promise<string> {
+    const body = JSON.stringify({ request: message, signature });
+    const response = await fetch(this.options.transactionRelayerUrl, {
+      method: "POST",
+      body,
+    });
+    if (response.ok) {
+      const { txHash } = await response.json();
+      return txHash;
+    }
+    throw new Error("relay transaction failed");
   }
 }
