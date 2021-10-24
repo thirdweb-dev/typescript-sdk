@@ -218,6 +218,19 @@ export class DropModule extends Module {
     await this.sendTransaction("setContractURI", [uri]);
   }
 
+  public async setBaseTokenUri(uri: string) {
+    await this.sendTransaction("setBaseTokenURI", [uri]);
+  }
+
+  public async setMaxTotalSupply(amount: BigNumberish) {
+    await this.sendTransaction("setMaxTotalSupply", [amount]);
+  }
+
+  public async setRestrictedTransfer(restricted: boolean) {
+    await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  // roles
   public async grantRole(role: Role, address: string) {
     await this.sendTransaction("grantRole", [getRoleHash(role), address]);
   }
@@ -231,15 +244,6 @@ export class DropModule extends Module {
     }
   }
 
-  public async setBaseTokenUri(uri: string) {
-    await this.sendTransaction("setBaseTokenURI", [uri]);
-  }
-
-  public async setMaxTotalSupply(amount: BigNumberish) {
-    await this.sendTransaction("setMaxTotalSupply", [amount]);
-  }
-
-  // roles
   public async getRoleMembers(role: Role): Promise<string[]> {
     const roleHash = getRoleHash(role);
     const count = (await this.contract.getRoleMemberCount(roleHash)).toNumber();

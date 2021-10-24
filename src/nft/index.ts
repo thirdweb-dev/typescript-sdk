@@ -1,4 +1,5 @@
-import { BigNumber, BigNumberish } from "ethers";
+/* eslint-disable new-cap */
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { MetadataURIOrObject } from "../core/types";
 import { NFT, NFT__factory } from "../../contract-interfaces";
 import { getRoleHash, ModuleType, Role } from "../common";
@@ -96,24 +97,18 @@ export class NFTModule extends Module {
     return await this.contract.isApprovedForAll(address, operator);
   }
 
+  // write functions
   public async setApproval(operator: string, approved = true) {
-    const tx = await this.contract.setApprovalForAll(
-      operator,
-      approved,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setApprovalForAll", [operator, approved]);
   }
 
   public async transfer(to: string, tokenId: string) {
     const from = await this.getSignerAddress();
-    const tx = await this.contract["safeTransferFrom(address,address,uint256)"](
+    await this.sendTransaction("safeTransferFrom(address,address,uint256)", [
       from,
       to,
       tokenId,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    ]);
   }
 
   // owner functions
@@ -126,14 +121,14 @@ export class NFTModule extends Module {
     metadata: MetadataURIOrObject,
   ): Promise<NFTMetadata> {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.mintNFT(
-      to,
-      uri,
-      await this.getCallOverrides(),
+    const receipt = await this.sendTransaction("mintNFT", [to, uri]);
+    const eventIndex = 1;
+    const event = this.contract.interface.decodeEventLog(
+      "Minted",
+      receipt?.logs[eventIndex].data || "0x",
+      receipt?.logs[eventIndex].topics,
     );
-    const receipt = await tx.wait();
-    const event = receipt?.events?.find((e) => e.event === "Minted");
-    const tokenId = event?.args?.tokenId;
+    const tokenId = event.tokenId;
     return await this.get(tokenId.toString());
   }
 
@@ -148,77 +143,51 @@ export class NFTModule extends Module {
     metadatas: MetadataURIOrObject[],
   ): Promise<NFTMetadata[]> {
     const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
-    const tx = await this.contract.mintNFTBatch(
-      to,
-      uris,
-      await this.getCallOverrides(),
+    const receipt = await this.sendTransaction("mintNFTBatch", [to, uris]);
+    const eventIndex = 1;
+    const event = this.contract.interface.decodeEventLog(
+      "MintedBatch",
+      receipt?.logs[eventIndex].data || "0x",
+      receipt?.logs[eventIndex].topics,
     );
-    const receipt = await tx.wait();
-    const event = receipt?.events?.find((e) => e.event === "MintedBatch");
-    const tokenIds = event?.args?.tokenIds;
+    const tokenIds = event.tokenIds;
     return await Promise.all(
       tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),
     );
   }
 
   public async burn(tokenId: BigNumberish) {
-    const tx = await this.contract.burn(tokenId, await this.getCallOverrides());
-    await tx.wait();
+    await this.sendTransaction("burn", [tokenId]);
   }
 
   public async transferFrom(from: string, to: string, tokenId: BigNumberish) {
-    const tx = await this.contract.transferFrom(
-      from,
-      to,
-      tokenId,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("transferFrom", [from, to, tokenId]);
   }
 
   // owner functions
+  public async setRestrictedTransfer(restricted = false): Promise<void> {
+    await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
   public async setRoyaltyBps(amount: number) {
-    const tx = await this.contract.setRoyaltyBps(
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setRoyaltyBps", [amount]);
   }
 
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(
-      uri,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setContractURI", [uri]);
   }
 
   public async grantRole(role: Role, address: string) {
-    const tx = await this.contract.grantRole(
-      getRoleHash(role),
-      address,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("grantRole", [getRoleHash(role), address]);
   }
 
   public async revokeRole(role: Role, address: string) {
     const signerAddress = await this.getSignerAddress();
     if (signerAddress.toLowerCase() === address.toLowerCase()) {
-      const tx = await this.contract.renounceRole(
-        getRoleHash(role),
-        address,
-        await this.getCallOverrides(),
-      );
-      await tx.wait();
+      await this.sendTransaction("renounceRole", [getRoleHash(role), address]);
     } else {
-      const tx = await this.contract.revokeRole(
-        getRoleHash(role),
-        address,
-        await this.getCallOverrides(),
-      );
-      await tx.wait();
+      await this.sendTransaction("revokeRole", [getRoleHash(role), address]);
     }
   }
 
@@ -245,10 +214,5 @@ export class NFTModule extends Module {
       minter,
       pauser,
     };
-  }
-
-  public async setRestrictedTransfer(restricted = false): Promise<void> {
-    const tx = await this.contract.setRestrictedTransfer(restricted);
-    await tx.wait();
   }
 }
