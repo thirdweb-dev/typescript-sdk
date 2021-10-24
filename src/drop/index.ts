@@ -140,47 +140,31 @@ export class DropModule extends Module {
   }
 
   public async setApproval(operator: string, approved = true) {
-    const tx = await this.contract.setApprovalForAll(
-      operator,
-      approved,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setApprovalForAll", [operator, approved]);
   }
 
   public async transfer(to: string, tokenId: string) {
     const from = await this.getSignerAddress();
-    const tx = await this.contract["safeTransferFrom(address,address,uint256)"](
+    await this.sendTransaction("safeTransferFrom(address,address,uint256)", [
       from,
       to,
       tokenId,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    ]);
   }
 
   // owner functions
   public async lazyMint(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.lazyMint(uri, await this.getCallOverrides());
-    await tx.wait();
+    await this.sendTransaction("lazyMint", [uri]);
   }
 
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
     const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
-    const tx = await this.contract.lazyMintBatch(
-      uris,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("lazyMintBatch", [uris]);
   }
 
   public async lazyMintAmount(amount: BigNumberish) {
-    const tx = await this.contract.lazyMintAmount(
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("lazyMintAmount", [amount]);
   }
 
   public async setPublicMintConditions(
@@ -198,11 +182,7 @@ export class DropModule extends Module {
       currency: c.currency || AddressZero,
       merkleRoot: c.merkleRoot || hexZeroPad("0", 32),
     }));
-    const tx = await this.contract.setPublicMintConditions(
-      _conditions,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setPublicMintConditions", [_conditions]);
   }
 
   public async claim(quantity: BigNumberish) {
@@ -217,85 +197,46 @@ export class DropModule extends Module {
         quantity,
       );
     }
-    const tx = await this.contract.claim(quantity, proofs, overrides);
-    await tx.wait();
+    await this.sendTransaction("claim", [quantity, proofs], overrides);
   }
 
   public async burn(tokenId: BigNumberish) {
-    const tx = await this.contract.burn(tokenId, await this.getCallOverrides());
-    await tx.wait();
+    await this.sendTransaction("burn", [tokenId]);
   }
 
   public async transferFrom(from: string, to: string, tokenId: BigNumberish) {
-    const tx = await this.contract.transferFrom(
-      from,
-      to,
-      tokenId,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("transferFrom", [from, to, tokenId]);
   }
 
   // owner functions
   public async setRoyaltyBps(amount: number) {
-    const tx = await this.contract.setRoyaltyBps(
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setRoyaltyBps", [amount]);
   }
 
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(
-      uri,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setContractURI", [uri]);
   }
 
   public async grantRole(role: Role, address: string) {
-    const tx = await this.contract.grantRole(
-      getRoleHash(role),
-      address,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("grantRole", [getRoleHash(role), address]);
   }
 
   public async revokeRole(role: Role, address: string) {
     const signerAddress = await this.getSignerAddress();
     if (signerAddress.toLowerCase() === address.toLowerCase()) {
-      const tx = await this.contract.renounceRole(
-        getRoleHash(role),
-        address,
-        await this.getCallOverrides(),
-      );
-      await tx.wait();
+      await this.sendTransaction("renounceRole", [getRoleHash(role), address]);
     } else {
-      const tx = await this.contract.revokeRole(
-        getRoleHash(role),
-        address,
-        await this.getCallOverrides(),
-      );
-      await tx.wait();
+      await this.sendTransaction("revokeRole", [getRoleHash(role), address]);
     }
   }
 
   public async setBaseTokenUri(uri: string) {
-    const tx = await this.contract.setBaseTokenURI(
-      uri,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setBaseTokenURI", [uri]);
   }
 
   public async setMaxTotalSupply(amount: BigNumberish) {
-    const tx = await this.contract.setMaxTotalSupply(
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setMaxTotalSupply", [amount]);
   }
 
   // roles
