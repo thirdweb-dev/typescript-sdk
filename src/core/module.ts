@@ -3,7 +3,13 @@ import {
   Provider,
   TransactionReceipt,
 } from "@ethersproject/providers";
-import { BaseContract, BigNumber, CallOverrides, Signer } from "ethers";
+import {
+  BaseContract,
+  BigNumber,
+  CallOverrides,
+  ContractTransaction,
+  Signer,
+} from "ethers";
 import invariant from "ts-invariant";
 import type { ProviderOrSigner } from "./types";
 import type { ISDKOptions } from ".";
@@ -125,40 +131,46 @@ export class Module {
     return isContract(provider, this.address);
   }
 
-  protected async executeTransaction(
+  protected async sendTransaction(
     fn: string,
-    ...args: any[]
-  ): Promise<string> {
-    const contract = this.connectContract();
-    let txHash = "";
-    if (this.options.transactionRelayerUrl) {
-      txHash = await this.executeGasless(fn, ...args);
-    } else {
-      const tx = await contract.functions[fn](
-        ...args,
-        await this.getCallOverrides(),
-      );
-      txHash = tx.hash;
+    args: any[],
+    callOverrides?: CallOverrides,
+  ): Promise<TransactionReceipt | null> {
+    if (!callOverrides) {
+      callOverrides = await this.getCallOverrides();
     }
-    return txHash;
+    if (this.options.transactionRelayerUrl) {
+      return await this.sendGaslessTransaction(fn, args, callOverrides);
+    } else {
+      return await this.sendAndWaitForTransaction(fn, args, callOverrides);
+    }
   }
 
-  protected async executeAndWaitTransaction(
+  private async sendAndWaitForTransaction(
     fn: string,
-    ...args: any[]
-  ): Promise<TransactionReceipt> {
-    const provider = await this.getProvider();
-    invariant(provider, "no provider to execute transaction");
-    const txhash = await this.executeTransaction(fn, ...args);
-    return await provider.waitForTransaction(txhash);
+    args: any[],
+    callOverrides?: CallOverrides,
+  ): Promise<TransactionReceipt | null> {
+    const contract = this.connectContract();
+    const tx = await contract.functions[fn](...args, callOverrides);
+    if (tx.wait) {
+      return await tx.wait();
+    }
+    return null;
   }
 
-  private async executeGasless(fn: string, ...args: any[]): Promise<string> {
+  private async sendGaslessTransaction(
+    fn: string,
+    args: any[],
+    callOverrides?: CallOverrides,
+  ): Promise<TransactionReceipt> {
     const signer = this.getSigner();
     invariant(
       signer,
       "Cannot execute gasless transaction without valid signer",
     );
+    const provider = await this.getProvider();
+    invariant(provider, "no provider to execute transaction");
     const chainId = await this.getChainID();
     const contract = this.connectContract();
     const from = await this.getSignerAddress();
@@ -199,9 +211,11 @@ export class Module {
     );
 
     // await forwarder.verify(message, signature);
-    return await this.options.transactionRelayerSendFunction(
+    const txHash = await this.options.transactionRelayerSendFunction(
       message,
       signature,
     );
+
+    return await provider.waitForTransaction(txHash);
   }
 }
