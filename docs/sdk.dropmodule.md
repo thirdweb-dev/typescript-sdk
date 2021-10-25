@@ -47,6 +47,7 @@ export declare class DropModule extends Module
 |  [setMaxTotalSupply(amount)](./sdk.dropmodule.setmaxtotalsupply.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.dropmodule.setmodulemetadata.md) |  |  |
 |  [setPublicMintConditions(conditions)](./sdk.dropmodule.setpublicmintconditions.md) |  |  |
+|  [setRestrictedTransfer(restricted)](./sdk.dropmodule.setrestrictedtransfer.md) |  |  |
 |  [setRoyaltyBps(amount)](./sdk.dropmodule.setroyaltybps.md) |  |  |
 |  [totalLazyMintedSupply()](./sdk.dropmodule.totallazymintedsupply.md) |  |  |
 |  [totalMintedSupply()](./sdk.dropmodule.totalmintedsupply.md) |  |  |

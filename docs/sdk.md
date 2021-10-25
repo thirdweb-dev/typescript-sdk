@@ -61,6 +61,7 @@
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |
 |  [MetadataURIOrObject](./sdk.metadatauriorobject.md) | A valid URI string or metadata object |
 |  [ProviderOrSigner](./sdk.providerorsigner.md) | A valid "ethers" Provider or Signer. |

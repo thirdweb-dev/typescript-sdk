@@ -20,4 +20,6 @@ export interface ISDKOptions
 |  [ipfsGatewayUrl](./sdk.isdkoptions.ipfsgatewayurl.md) | string | An optional IPFS Gateway. (Default: <code>https://cloudflare-ipfs.com/ipfs/</code>). |
 |  [maxGasPriceInGwei](./sdk.isdkoptions.maxgaspriceingwei.md) | number | maxGasPrice for transactions |
 |  [registryContractAddress](./sdk.isdkoptions.registrycontractaddress.md) | string | Optional Registry Contract Address |
+|  [transactionRelayerSendFunction](./sdk.isdkoptions.transactionrelayersendfunction.md) | (message: [ForwardRequestMessage](./sdk.forwardrequestmessage.md)<!-- -->, signature: BytesLike) =&gt; Promise&lt;string&gt; | Optional function for sending transaction to relayer |
+|  [transactionRelayerUrl](./sdk.isdkoptions.transactionrelayerurl.md) | string | Optional relayer url to be used for gasless transaction |
 
