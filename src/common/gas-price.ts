@@ -1,7 +1,6 @@
 import { ChainId } from "./chain";
 
 /**
- *
  * @internal
  */
 function getGasStationUrl(chainId?: number): string | null {

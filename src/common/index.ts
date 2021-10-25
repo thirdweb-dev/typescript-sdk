@@ -6,4 +6,4 @@ export * from "./ipfs";
 export * from "./module-type";
 export * from "./nft";
 export * from "./role";
-export * from "./transaction";
+export * from "./gas-price";

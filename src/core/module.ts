@@ -4,22 +4,15 @@ import {
   Provider,
   TransactionReceipt,
 } from "@ethersproject/providers";
-import {
-  BaseContract,
-  BigNumber,
-  CallOverrides,
-  ContractTransaction,
-  Signer,
-} from "ethers";
+import { BaseContract, BigNumber, CallOverrides, ethers, Signer } from "ethers";
 import invariant from "ts-invariant";
 import type { ProviderOrSigner } from "./types";
 import type { ISDKOptions } from ".";
-import { getTransactionCallOverrides } from "../common/transaction";
 import { isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { Forwarder__factory } from "../../contract-interfaces";
 import { FORWARDER_ADDRESS } from "../common/address";
-import { FunctionFragment } from "@ethersproject/abi";
+import { getGasPriceForChain } from "../common/gas-price";
 
 /**
  *
@@ -119,11 +112,21 @@ export class Module {
   }
 
   protected async getCallOverrides(): Promise<CallOverrides | undefined> {
-    return await getTransactionCallOverrides(
-      await this.getChainID(),
-      this.options.gasSpeed,
-      this.options.maxGasPriceInGwei,
+    const chainId = await this.getChainID();
+    const speed = this.options.gasSpeed;
+    const maxGasPrice = this.options.maxGasPriceInGwei;
+    const gasPriceChain = await getGasPriceForChain(
+      chainId,
+      speed,
+      maxGasPrice,
     );
+    if (!gasPriceChain) {
+      return undefined;
+    }
+    // TODO: support EIP-1559 by try-catch, provider.getFeeData();
+    return {
+      gasPrice: ethers.utils.parseUnits(gasPriceChain.toString(), "gwei"),
+    };
   }
 
   public async exists(): Promise<boolean> {
@@ -232,8 +235,6 @@ export class Module {
           log.data,
           log.topics,
         );
-        console.log("event", event);
-        console.log("event", event.tokenId);
         return event;
         // eslint-disable-next-line no-empty
       } catch (e) {}
