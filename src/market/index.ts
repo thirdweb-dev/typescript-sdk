@@ -223,7 +223,7 @@ export class MarketModule extends Module {
           this.address.toLowerCase();
 
         if (!isTokenApproved) {
-          // TODO: gasless
+          // TODO: make it gasless
           const tx = await asset.setApprovalForAll(
             this.address,
             true,
@@ -240,7 +240,7 @@ export class MarketModule extends Module {
 
       const approved = await asset.isApprovedForAll(from, this.address);
       if (!approved) {
-        // TODO: gasless
+        // TODO: make it gasless
         const tx = await asset.setApprovalForAll(
           this.address,
           true,
@@ -289,7 +289,13 @@ export class MarketModule extends Module {
       );
       const allowance = await erc20.allowance(owner, spender);
       if (allowance.lt(totalPrice)) {
-        await this.sendTransaction("increaseAllowance", [spender, totalPrice]);
+        // TODO: make it gasless
+        const tx = await erc20.increaseAllowance(
+          spender,
+          totalPrice,
+          await this.getCallOverrides(),
+        );
+        await tx.wait();
       }
     }
 
