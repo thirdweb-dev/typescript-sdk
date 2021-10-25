@@ -1,5 +1,6 @@
 import {
   JsonRpcSigner,
+  Log,
   Provider,
   TransactionReceipt,
 } from "@ethersproject/providers";
@@ -217,5 +218,26 @@ export class Module {
     );
 
     return await provider.waitForTransaction(txHash);
+  }
+
+  protected parseEventLogs(eventName: string, logs?: Log[]): any {
+    if (!logs) {
+      return null;
+    }
+    const contract = this.connectContract();
+    for (const log of logs) {
+      try {
+        const event = contract.interface.decodeEventLog(
+          eventName,
+          log.data,
+          log.topics,
+        );
+        console.log("event", event);
+        console.log("event", event.tokenId);
+        return event;
+        // eslint-disable-next-line no-empty
+      } catch (e) {}
+    }
+    return null;
   }
 }

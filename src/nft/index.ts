@@ -122,13 +122,8 @@ export class NFTModule extends Module {
   ): Promise<NFTMetadata> {
     const uri = await uploadMetadata(metadata);
     const receipt = await this.sendTransaction("mintNFT", [to, uri]);
-    const eventIndex = 1;
-    const event = this.contract.interface.decodeEventLog(
-      "Minted",
-      receipt?.logs[eventIndex].data || "0x",
-      receipt?.logs[eventIndex].topics,
-    );
-    const tokenId = event.tokenId;
+    const event = this.parseEventLogs("Minted", receipt?.logs);
+    const tokenId = event?.tokenId;
     return await this.get(tokenId.toString());
   }
 
@@ -144,12 +139,7 @@ export class NFTModule extends Module {
   ): Promise<NFTMetadata[]> {
     const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
     const receipt = await this.sendTransaction("mintNFTBatch", [to, uris]);
-    const eventIndex = 1;
-    const event = this.contract.interface.decodeEventLog(
-      "MintedBatch",
-      receipt?.logs[eventIndex].data || "0x",
-      receipt?.logs[eventIndex].topics,
-    );
+    const event = this.parseEventLogs("MintedBatch", receipt?.logs);
     const tokenIds = event.tokenIds;
     return await Promise.all(
       tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),

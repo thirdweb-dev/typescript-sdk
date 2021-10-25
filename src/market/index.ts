@@ -223,6 +223,7 @@ export class MarketModule extends Module {
           this.address.toLowerCase();
 
         if (!isTokenApproved) {
+          // TODO: gasless
           const tx = await asset.setApprovalForAll(
             this.address,
             true,
@@ -239,6 +240,7 @@ export class MarketModule extends Module {
 
       const approved = await asset.isApprovedForAll(from, this.address);
       if (!approved) {
+        // TODO: gasless
         const tx = await asset.setApprovalForAll(
           this.address,
           true,
@@ -248,7 +250,7 @@ export class MarketModule extends Module {
       }
     }
 
-    const tx = await this.contract.list(
+    const receipt = await this.sendTransaction("list", [
       assetContract,
       tokenId,
       currencyContract,
@@ -257,10 +259,8 @@ export class MarketModule extends Module {
       tokensPerBuyer,
       secondsUntilStart,
       secondsUntilEnd,
-      await this.getCallOverrides(),
-    );
-    const receipt = await tx.wait();
-    const event = receipt?.events?.find((e) => e.event === "NewListing");
+    ]);
+    const event = this.parseEventLogs("NewListing", receipt?.logs);
     const listing = event?.args?.listing;
     return await this.transformResultToListing(listing);
   }
@@ -271,12 +271,7 @@ export class MarketModule extends Module {
   }
 
   public async unlist(listingId: string, quantity: BigNumberish) {
-    const tx = await this.contract.unlist(
-      listingId,
-      quantity,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("unlist", [listingId, quantity]);
   }
 
   public async buy(
@@ -293,22 +288,13 @@ export class MarketModule extends Module {
         this.providerOrSigner,
       );
       const allowance = await erc20.allowance(owner, spender);
-      if (allowance.lte(totalPrice)) {
-        const tx = await erc20.increaseAllowance(
-          spender,
-          totalPrice,
-          await this.getCallOverrides(),
-        );
-        await tx.wait();
+      if (allowance.lt(totalPrice)) {
+        await this.sendTransaction("increaseAllowance", [spender, totalPrice]);
       }
     }
-    const tx = await this.contract.buy(
-      listingId,
-      quantity,
-      await this.getCallOverrides(),
-    );
-    const receipt = await tx.wait();
-    const event = receipt?.events?.find((e) => e.event === "NewSale");
+
+    const receipt = await this.sendTransaction("buy", [listingId, quantity]);
+    const event = this.parseEventLogs("NewSale", receipt?.logs);
     return await this.transformResultToListing(event?.args?.listing);
   }
 
@@ -320,18 +306,10 @@ export class MarketModule extends Module {
   // owner functions
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(
-      uri,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setContractURI", [uri]);
   }
 
   public async setMarketFeeBps(fee: number) {
-    const tx = await this.contract.setMarketFeeBps(
-      fee,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setMarketFeeBps", [fee]);
   }
 }
