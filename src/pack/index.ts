@@ -89,16 +89,10 @@ export class PackModule extends Module {
   }
 
   public async open(packId: string): Promise<NFTMetadata[]> {
-    const tx = await this.contract.openPack(
-      packId,
-      await this.getCallOverrides(),
-    );
-    const receipt = await tx.wait();
-
-    const event = receipt?.events?.find((e) => e.event === "PackOpenRequest");
-    const args = event?.args;
-    const requestId = args?.requestId as string;
-    const opener = args?.opener as string;
+    const receipt = await this.sendTransaction("openPack", [packId]);
+    const event = this.parseEventLogs("PackOpenRequest", receipt?.logs);
+    const requestId = event.requestId;
+    const opener = event.opener;
 
     const fulfillEvent: any = await new Promise((resolve) => {
       this.contract.once(

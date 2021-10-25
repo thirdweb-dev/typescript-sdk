@@ -261,7 +261,7 @@ export class MarketModule extends Module {
       secondsUntilEnd,
     ]);
     const event = this.parseEventLogs("NewListing", receipt?.logs);
-    const listing = event?.args?.listing;
+    const listing = event?.listing;
     return await this.transformResultToListing(listing);
   }
 
@@ -301,7 +301,7 @@ export class MarketModule extends Module {
 
     const receipt = await this.sendTransaction("buy", [listingId, quantity]);
     const event = this.parseEventLogs("NewSale", receipt?.logs);
-    return await this.transformResultToListing(event?.args?.listing);
+    return await this.transformResultToListing(event?.listing);
   }
 
   // passthrough
