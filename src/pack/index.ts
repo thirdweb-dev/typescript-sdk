@@ -195,24 +195,17 @@ export class PackModule extends Module {
   }
 
   public async setApproval(operator: string, approved = true) {
-    const tx = await this.contract.setApprovalForAll(
-      operator,
-      approved,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setApprovalForAll", [operator, approved]);
   }
 
   public async transfer(to: string, tokenId: string, amount: BigNumber) {
-    const tx = await this.contract.safeTransferFrom(
+    await this.sendTransaction("safeTransferFrom", [
       await this.getSignerAddress(),
       to,
       tokenId,
       amount,
       [0],
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    ]);
   }
 
   // owner functions
@@ -232,6 +225,7 @@ export class PackModule extends Module {
       [uri, args.secondsUntilOpenStart || 0, args.rewardsPerOpen || 1],
     );
 
+    // TODO: make it gasless
     const tx = await asset.safeBatchTransferFrom(
       from,
       this.address,
@@ -252,15 +246,13 @@ export class PackModule extends Module {
     args: IPackBatchArgs,
     data: BytesLike = [0],
   ) {
-    const tx = await this.contract.safeTransferFrom(
+    await this.sendTransaction("safeTransferFrom", [
       from,
       to,
       args.tokenId,
       args.amount,
       data,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    ]);
   }
 
   public async transferBatchFrom(
@@ -271,15 +263,13 @@ export class PackModule extends Module {
   ) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
-    const tx = await this.contract.safeBatchTransferFrom(
+    await this.sendTransaction("safeBatchTransferFrom", [
       from,
       to,
       ids,
       amounts,
       data,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    ]);
   }
 
   // owner functions
@@ -304,6 +294,7 @@ export class PackModule extends Module {
       chainlink.linkTokenAddress,
       this.providerOrSigner,
     );
+    // TODO: make it gasless
     const tx = await erc20.transfer(
       this.address,
       amount,
@@ -313,56 +304,33 @@ export class PackModule extends Module {
   }
 
   public async withdrawLink(to: string, amount: BigNumberish) {
-    const tx = await this.contract.transferLink(
-      to,
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("transferLink", [to, amount]);
   }
 
   public async setRoyaltyBps(amount: number) {
-    const tx = await this.contract.setRoyaltyBps(
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setRoyaltyBps", [amount]);
   }
 
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(
-      uri,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setContractURI", [uri]);
   }
 
+  public async setRestrictedTransfer(restricted = false): Promise<void> {
+    await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  // roles
   public async grantRole(role: Role, address: string) {
-    const tx = await this.contract.grantRole(
-      getRoleHash(role),
-      address,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("grantRole", [getRoleHash(role), address]);
   }
 
   public async revokeRole(role: Role, address: string) {
     const signerAddress = await this.getSignerAddress();
     if (signerAddress.toLowerCase() === address.toLowerCase()) {
-      const tx = await this.contract.renounceRole(
-        getRoleHash(role),
-        address,
-        await this.getCallOverrides(),
-      );
-      await tx.wait();
+      await this.sendTransaction("renounceRole", [getRoleHash(role), address]);
     } else {
-      const tx = await this.contract.revokeRole(
-        getRoleHash(role),
-        address,
-        await this.getCallOverrides(),
-      );
-      await tx.wait();
+      await this.sendTransaction("revokeRole", [getRoleHash(role), address]);
     }
   }
 
@@ -389,10 +357,5 @@ export class PackModule extends Module {
       minter,
       pauser,
     };
-  }
-
-  public async setRestrictedTransfer(restricted = false): Promise<void> {
-    const tx = await this.contract.setRestrictedTransfer(restricted);
-    await tx.wait();
   }
 }
