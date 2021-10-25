@@ -64,15 +64,6 @@ export class CurrencyModule extends Module {
     return await this.balanceOf(await this.getSignerAddress());
   }
 
-  public async transfer(to: string, amount: BigNumber) {
-    const tx = await this.contract.transfer(
-      to,
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
-  }
-
   public async allowance(spender: string): Promise<BigNumber> {
     return await this.allowanceOf(await this.getSignerAddress(), spender);
   }
@@ -82,6 +73,10 @@ export class CurrencyModule extends Module {
   }
 
   // write functions
+  public async transfer(to: string, amount: BigNumber) {
+    await this.sendTransaction("transfer", [to, amount]);
+  }
+
   public async setAllowance(spender: string, amount: BigNumber) {
     await this.sendTransaction("approve", [spender, amount]);
   }
