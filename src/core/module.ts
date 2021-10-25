@@ -182,8 +182,9 @@ export class Module {
     const value = 0;
     const data = contract.interface.encodeFunctionData(fn, args);
     const gas = (await contract.estimateGas[fn](...args)).mul(2);
+    const forwarderAddress = this.options.transactionRelayerForwarderAddress;
     const forwarder = Forwarder__factory.connect(
-      FORWARDER_ADDRESS,
+      forwarderAddress,
       this.getProviderOrSigner(),
     );
     const nonce = await getAndIncrementNonce(forwarder, from);
@@ -192,7 +193,7 @@ export class Module {
       name: "GSNv2 Forwarder",
       version: "0.0.1",
       chainId,
-      verifyingContract: FORWARDER_ADDRESS,
+      verifyingContract: forwarderAddress,
     };
 
     const types = {

@@ -7,7 +7,10 @@ import { CollectionModule } from "../collection";
 import { uploadMetadata } from "../common";
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
-import { getContractAddressByChainId } from "../common/address";
+import {
+  FORWARDER_ADDRESS,
+  getContractAddressByChainId,
+} from "../common/address";
 import { AppModule } from "../control";
 import { CurrencyModule } from "../currency";
 import { DropModule } from "../drop";
@@ -60,6 +63,11 @@ export interface ISDKOptions {
     message: ForwardRequestMessage,
     signature: BytesLike,
   ) => Promise<string>;
+
+  /**
+   * Optional trusted forwarder address
+   */
+  transactionRelayerForwarderAddress: string;
 }
 
 type AnyContract =
@@ -86,6 +94,7 @@ export class NFTLabsSDK {
     gasSpeed: "fastest",
     transactionRelayerUrl: "",
     transactionRelayerSendFunction: this.defaultRelayerSendFunction.bind(this),
+    transactionRelayerForwarderAddress: FORWARDER_ADDRESS,
   };
   private modules = new Map<string, C.Instance<AnyContract>>();
   private providerOrSigner: ProviderOrSigner;
