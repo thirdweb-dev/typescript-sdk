@@ -111,7 +111,7 @@ export class Module {
     throw new Error("connectContract has to be implemented");
   }
 
-  protected async getCallOverrides(): Promise<CallOverrides | undefined> {
+  protected async getCallOverrides(): Promise<CallOverrides> {
     const chainId = await this.getChainID();
     const speed = this.options.gasSpeed;
     const maxGasPrice = this.options.maxGasPriceInGwei;
@@ -121,7 +121,7 @@ export class Module {
       maxGasPrice,
     );
     if (!gasPriceChain) {
-      return undefined;
+      return {};
     }
     // TODO: support EIP-1559 by try-catch, provider.getFeeData();
     return {
@@ -153,7 +153,7 @@ export class Module {
   private async sendAndWaitForTransaction(
     fn: string,
     args: any[],
-    callOverrides?: CallOverrides,
+    callOverrides: CallOverrides,
   ): Promise<TransactionReceipt | null> {
     const contract = this.connectContract();
     const tx = await contract.functions[fn](...args, callOverrides);
@@ -166,7 +166,7 @@ export class Module {
   private async sendGaslessTransaction(
     fn: string,
     args: any[],
-    callOverrides?: CallOverrides,
+    callOverrides: CallOverrides,
   ): Promise<TransactionReceipt> {
     const signer = this.getSigner();
     invariant(
