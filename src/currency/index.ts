@@ -81,93 +81,52 @@ export class CurrencyModule extends Module {
     return await this.contract.allowance(owner, spender);
   }
 
+  // write functions
   public async setAllowance(spender: string, amount: BigNumber) {
-    const tx = await this.contract.approve(
-      spender,
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("approve", [spender, amount]);
   }
 
   // owner functions
-  public async mintTo(to: string, amount: BigNumberish) {
-    const tx = await this.contract.mint(
-      to,
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+  public async mint(amount: BigNumberish) {
+    await this.mintTo(await this.getSignerAddress(), amount);
   }
 
-  public async mint(amount: BigNumberish) {
-    const tx = await this.contract.mint(
-      await this.getSignerAddress(),
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+  public async mintTo(to: string, amount: BigNumberish) {
+    await this.sendTransaction("mint", [to, amount]);
   }
 
   public async burn(amount: BigNumberish) {
-    const tx = await this.contract.burn(amount, await this.getCallOverrides());
-    await tx.wait();
+    await this.sendTransaction("burn", [amount]);
   }
 
   public async burnFrom(from: string, amount: BigNumberish) {
-    const tx = await this.contract.burnFrom(
-      from,
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("burnFrom", [from, amount]);
   }
 
   public async transferFrom(from: string, to: string, amount: BigNumberish) {
-    const tx = await this.contract.transferFrom(
-      from,
-      to,
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("transferFrom", [from, to, amount]);
   }
 
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(
-      uri,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setContractURI", [uri]);
+  }
+
+  public async setRestrictedTransfer(restricted = false): Promise<void> {
+    await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 
   // owner role functions
   public async grantRole(role: Role, address: string) {
-    const tx = await this.contract.grantRole(
-      getRoleHash(role),
-      address,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("grantRole", [getRoleHash(role), address]);
   }
 
   public async revokeRole(role: Role, address: string) {
     const signerAddress = await this.getSignerAddress();
     if (signerAddress.toLowerCase() === address.toLowerCase()) {
-      const tx = await this.contract.renounceRole(
-        getRoleHash(role),
-        address,
-        await this.getCallOverrides(),
-      );
-      await tx.wait();
+      await this.sendTransaction("renounceRole", [getRoleHash(role), address]);
     } else {
-      const tx = await this.contract.revokeRole(
-        getRoleHash(role),
-        address,
-        await this.getCallOverrides(),
-      );
-      await tx.wait();
+      await this.sendTransaction("revokeRole", [getRoleHash(role), address]);
     }
   }
 
@@ -194,10 +153,5 @@ export class CurrencyModule extends Module {
       minter,
       pauser,
     };
-  }
-
-  public async setRestrictedTransfer(restricted = false): Promise<void> {
-    const tx = await this.contract.setRestrictedTransfer(restricted);
-    await tx.wait();
   }
 }
