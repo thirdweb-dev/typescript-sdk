@@ -149,30 +149,17 @@ export class AppModule extends Module {
   // owner functions
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(
-      uri,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    this.sendTransaction("setContractURI", [uri]);
   }
 
   public async setRoyaltyTreasury(treasury: string) {
-    const tx = await this.contract.setRoyaltyTreasury(
-      treasury,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    this.sendTransaction("setRoyaltyTreasury", [treasury]);
   }
 
   public async setModuleRoyaltyTreasury(
     moduleAddress: string,
     treasury: string,
   ) {
-    const tx = await this.contract.setModuleRoyaltyTreasury(
-      moduleAddress,
-      treasury,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    this.sendTransaction("setModuleRoyaltyTreasury", [moduleAddress, treasury]);
   }
 }
