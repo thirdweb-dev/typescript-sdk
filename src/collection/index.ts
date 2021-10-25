@@ -109,25 +109,13 @@ export class CollectionModule extends Module {
     return await this.contract.isApprovedForAll(address, operator);
   }
 
+  // write functions
   public async setApproval(operator: string, approved = true) {
-    const tx = await this.contract.setApprovalForAll(
-      operator,
-      approved,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setApprovalForAll", [operator, approved]);
   }
 
   public async transfer(to: string, tokenId: string, amount: BigNumberish) {
-    const tx = await this.contract.safeTransferFrom(
-      await this.getSignerAddress(),
-      to,
-      tokenId,
-      amount,
-      [0],
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("safeTransferFrom", [to, tokenId, amount, [0]]);
   }
 
   // owner functions
@@ -161,16 +149,14 @@ export class CollectionModule extends Module {
     );
     const supplies = metadataWithSupply.map((a) => a.supply);
     const to = await this.getSignerAddress();
-    const tx = await this.contract.createNativeTokens(
+    const receipt = await this.sendTransaction("createNativeTokens", [
       to,
       uris,
       supplies,
       [0],
-      await this.getCallOverrides(),
-    );
-    const receipt = await tx.wait();
-    const event = receipt?.events?.find((e) => e.event === "NativeTokens");
-    const tokenIds = event?.args?.tokenIds;
+    ]);
+    const event = this.parseEventLogs("NativeTokens", receipt?.logs);
+    const tokenIds = event?.tokenIds;
     return await Promise.all(
       tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),
     );
@@ -182,14 +168,12 @@ export class CollectionModule extends Module {
     args: INFTCollectionCreateArgs,
   ) {
     const uri = await uploadMetadata(args.metadata);
-    const tx = await this.contract.wrapERC20(
+    await this.sendTransaction("wrapERC20", [
       tokenContract,
       tokenAmount,
       args.supply,
       uri,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    ]);
   }
 
   public async createWithERC721(
@@ -198,13 +182,7 @@ export class CollectionModule extends Module {
     metadata: MetadataURIOrObject,
   ) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.wrapERC721(
-      tokenContract,
-      tokenId,
-      uri,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("wrapERC721", [tokenContract, tokenId, uri]);
   }
 
   public async mint(args: INFTCollectionBatchArgs) {
@@ -216,14 +194,7 @@ export class CollectionModule extends Module {
     args: INFTCollectionBatchArgs,
     data: BytesLike = [0],
   ) {
-    const tx = await this.contract.mint(
-      to,
-      args.tokenId,
-      args.amount,
-      data,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("mint", [to, args.tokenId, args.amount, data]);
   }
 
   public async mintBatch(args: INFTCollectionBatchArgs[]) {
@@ -237,14 +208,7 @@ export class CollectionModule extends Module {
   ) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
-    const tx = await this.contract.mintBatch(
-      to,
-      ids,
-      amounts,
-      data,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("mintBatch", [to, ids, amounts, data]);
   }
 
   public async burn(args: INFTCollectionBatchArgs) {
@@ -256,25 +220,13 @@ export class CollectionModule extends Module {
   }
 
   public async burnFrom(account: string, args: INFTCollectionBatchArgs) {
-    const tx = await this.contract.burn(
-      account,
-      args.tokenId,
-      args.amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("burn", [account, args.tokenId, args.amount]);
   }
 
   public async burnBatchFrom(account: string, args: INFTCollectionBatchArgs[]) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
-    const tx = await this.contract.burnBatch(
-      account,
-      ids,
-      amounts,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("burnBatch", [account, ids, amounts]);
   }
 
   public async transferFrom(
@@ -283,15 +235,13 @@ export class CollectionModule extends Module {
     args: INFTCollectionBatchArgs,
     data: BytesLike = [0],
   ) {
-    const tx = await this.contract.safeTransferFrom(
+    await this.sendTransaction("safeTransferFrom", [
       from,
       to,
       args.tokenId,
       args.amount,
       data,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    ]);
   }
 
   public async transferBatchFrom(
@@ -302,59 +252,39 @@ export class CollectionModule extends Module {
   ) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
-    const tx = await this.contract.safeBatchTransferFrom(
+    await this.sendTransaction("safeBatchTransferFrom", [
       from,
       to,
       ids,
       amounts,
       data,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    ]);
   }
 
   public async setRoyaltyBps(amount: number) {
-    const tx = await this.contract.setRoyaltyBps(
-      amount,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setRoyaltyBps", [amount]);
   }
 
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
-    const tx = await this.contract.setContractURI(
-      uri,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("setContractURI", [uri]);
   }
 
+  public async setRestrictedTransfer(restricted = false): Promise<void> {
+    await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  // roles
   public async grantRole(role: Role, address: string) {
-    const tx = await this.contract.grantRole(
-      getRoleHash(role),
-      address,
-      await this.getCallOverrides(),
-    );
-    await tx.wait();
+    await this.sendTransaction("grantRole", [getRoleHash(role), address]);
   }
 
   public async revokeRole(role: Role, address: string) {
     const signerAddress = await this.getSignerAddress();
     if (signerAddress.toLowerCase() === address.toLowerCase()) {
-      const tx = await this.contract.renounceRole(
-        getRoleHash(role),
-        address,
-        await this.getCallOverrides(),
-      );
-      await tx.wait();
+      await this.sendTransaction("renounceRole", [getRoleHash(role), address]);
     } else {
-      const tx = await this.contract.revokeRole(
-        getRoleHash(role),
-        address,
-        await this.getCallOverrides(),
-      );
-      await tx.wait();
+      await this.sendTransaction("revokeRole", [getRoleHash(role), address]);
     }
   }
 
@@ -384,10 +314,5 @@ export class CollectionModule extends Module {
       minter,
       pauser,
     };
-  }
-
-  public async setRestrictedTransfer(restricted = false): Promise<void> {
-    const tx = await this.contract.setRestrictedTransfer(restricted);
-    await tx.wait();
   }
 }
