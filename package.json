@@ -1,6 +1,6 @@
 {
   "name": "@nftlabs/sdk",
-  "version": "1.6.0-alpha.1",
+  "version": "1.6.0-alpha.3",
   "description": "The main NFTLabs SDK.",
   "repository": {
     "type": "git",
@@ -8,22 +8,17 @@
   },
   "license": "MIT",
   "source": "src/index.ts",
+  "type": "module",
   "main": "lib/sdk.js",
-  "module": "lib/sdk.module.js",
-  "browser": "lib/sdk.browser.js",
   "types": "lib/sdk.d.ts",
   "files": [
-    "lib/",
-    "contract-interfaces/"
+    "lib/"
   ],
   "engines": {
     "node": ">= 14"
   },
   "targets": {
-    "types": false,
-    "options": {
-      "isLibrary": true
-    }
+    "types": false
   },
   "scripts": {
     "build": "parcel build",

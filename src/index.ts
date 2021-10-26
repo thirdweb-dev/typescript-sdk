@@ -2,6 +2,7 @@ import fetch from "node-fetch";
 
 export * from "./collection";
 export * from "./common";
+export * from "./contract-interface";
 export * from "./control";
 export * from "./core";
 export * from "./core/types";
