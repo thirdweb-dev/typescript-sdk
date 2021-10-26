@@ -1,6 +1,10 @@
 {
   "extends": "@parcel/config-default",
   "compressors": {
-    "*.{js,html,css}": ["@parcel/compressor-gzip", "@parcel/compressor-brotli"]
+    "*.{js,html,css}": [
+      "...",
+      "@parcel/compressor-gzip",
+      "@parcel/compressor-brotli"
+    ]
   }
 }
