@@ -53,9 +53,9 @@ export declare class DropModule extends Module
 |  [setPublicMintConditions(conditions)](./sdk.dropmodule.setpublicmintconditions.md) |  | <b><i>(BETA)</i></b> |
 |  [setRestrictedTransfer(restricted)](./sdk.dropmodule.setrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |
 |  [setRoyaltyBps(amount)](./sdk.dropmodule.setroyaltybps.md) |  | <b><i>(BETA)</i></b> |
-|  [totalLazyMintedSupply()](./sdk.dropmodule.totallazymintedsupply.md) |  | <b><i>(BETA)</i></b> |
-|  [totalMintedSupply()](./sdk.dropmodule.totalmintedsupply.md) |  | <b><i>(BETA)</i></b> |
+|  [totalClaimedSupply()](./sdk.dropmodule.totalclaimedsupply.md) |  | <b><i>(BETA)</i></b> |
 |  [totalSupply()](./sdk.dropmodule.totalsupply.md) |  | <b><i>(BETA)</i></b> |
+|  [totalUnclaimedSupply()](./sdk.dropmodule.totalunclaimedsupply.md) |  | <b><i>(BETA)</i></b> |
 |  [transfer(to, tokenId)](./sdk.dropmodule.transfer.md) |  | <b><i>(BETA)</i></b> |
 |  [transferFrom(from, to, tokenId)](./sdk.dropmodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
 

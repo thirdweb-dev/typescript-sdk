@@ -87,11 +87,11 @@ export class DropModule extends Module {
   }
 
   public async getAllUnclaimed(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.contract.nextTokenId()).toNumber();
-    const unmintedId = (await this.contract.nextMintTokenId()).toNumber();
+    const maxId = await this.contract.nextTokenId();
+    const unmintedId = await this.contract.nextMintTokenId();
     return await Promise.all(
-      Array.from(Array(maxId - unmintedId).keys()).map((i) =>
-        this.get((i + unmintedId).toString()),
+      Array.from(Array(maxId.sub(unmintedId).toNumber()).keys()).map((i) =>
+        this.get(unmintedId.add(i).toString()),
       ),
     );
   }
@@ -126,18 +126,20 @@ export class DropModule extends Module {
 
   // passthrough to the contract
   public async totalSupply(): Promise<BigNumber> {
-    return await this.contract.totalSupply();
+    return await this.contract.nextTokenId();
   }
 
   public async maxTotalSupply(): Promise<BigNumber> {
     return await this.contract.maxTotalSupply();
   }
 
-  public async totalLazyMintedSupply(): Promise<BigNumber> {
-    return await this.contract.nextTokenId();
+  public async totalUnclaimedSupply(): Promise<BigNumber> {
+    return (await this.contract.nextTokenId()).sub(
+      await this.totalClaimedSupply(),
+    );
   }
 
-  public async totalMintedSupply(): Promise<BigNumber> {
+  public async totalClaimedSupply(): Promise<BigNumber> {
     return await this.contract.nextMintTokenId();
   }
 
