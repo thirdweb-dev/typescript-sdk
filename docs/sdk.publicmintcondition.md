@@ -4,6 +4,10 @@
 
 ## PublicMintCondition interface
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,12 +18,12 @@ export interface PublicMintCondition
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [currency](./sdk.publicmintcondition.currency.md) | string |  |
-|  [currentMintSupply](./sdk.publicmintcondition.currentmintsupply.md) | BigNumberish |  |
-|  [maxMintSupply](./sdk.publicmintcondition.maxmintsupply.md) | BigNumberish |  |
-|  [merkleRoot](./sdk.publicmintcondition.merkleroot.md) | BytesLike |  |
-|  [pricePerToken](./sdk.publicmintcondition.pricepertoken.md) | BigNumberish |  |
-|  [quantityLimitPerTransaction](./sdk.publicmintcondition.quantitylimitpertransaction.md) | BigNumberish |  |
-|  [startTimestamp](./sdk.publicmintcondition.starttimestamp.md) | BigNumberish |  |
-|  [waitTimeSecondsLimitPerTransaction](./sdk.publicmintcondition.waittimesecondslimitpertransaction.md) | BigNumberish |  |
+|  [currency](./sdk.publicmintcondition.currency.md) | string | <b><i>(BETA)</i></b> |
+|  [currentMintSupply](./sdk.publicmintcondition.currentmintsupply.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [maxMintSupply](./sdk.publicmintcondition.maxmintsupply.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [merkleRoot](./sdk.publicmintcondition.merkleroot.md) | BytesLike | <b><i>(BETA)</i></b> |
+|  [pricePerToken](./sdk.publicmintcondition.pricepertoken.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [quantityLimitPerTransaction](./sdk.publicmintcondition.quantitylimitpertransaction.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [startTimestamp](./sdk.publicmintcondition.starttimestamp.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [waitTimeSecondsLimitPerTransaction](./sdk.publicmintcondition.waittimesecondslimitpertransaction.md) | BigNumberish | <b><i>(BETA)</i></b> |
 

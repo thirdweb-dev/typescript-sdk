@@ -4,6 +4,10 @@
 
 ## CreatePublicMintCondition interface
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,11 +18,11 @@ export interface CreatePublicMintCondition
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [currency?](./sdk.createpublicmintcondition.currency.md) | string | <i>(Optional)</i> |
-|  [maxMintSupply](./sdk.createpublicmintcondition.maxmintsupply.md) | BigNumberish |  |
-|  [merkleRoot?](./sdk.createpublicmintcondition.merkleroot.md) | BytesLike | <i>(Optional)</i> |
-|  [pricePerToken?](./sdk.createpublicmintcondition.pricepertoken.md) | BigNumberish | <i>(Optional)</i> |
-|  [quantityLimitPerTransaction?](./sdk.createpublicmintcondition.quantitylimitpertransaction.md) | BigNumberish | <i>(Optional)</i> |
-|  [startTimestampInSeconds?](./sdk.createpublicmintcondition.starttimestampinseconds.md) | BigNumberish | <i>(Optional)</i> |
-|  [waitTimeSecondsLimitPerTransaction?](./sdk.createpublicmintcondition.waittimesecondslimitpertransaction.md) | BigNumberish | <i>(Optional)</i> |
+|  [currency?](./sdk.createpublicmintcondition.currency.md) | string | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [maxMintSupply](./sdk.createpublicmintcondition.maxmintsupply.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [merkleRoot?](./sdk.createpublicmintcondition.merkleroot.md) | BytesLike | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [pricePerToken?](./sdk.createpublicmintcondition.pricepertoken.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [quantityLimitPerTransaction?](./sdk.createpublicmintcondition.quantitylimitpertransaction.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [startTimestampInSeconds?](./sdk.createpublicmintcondition.starttimestampinseconds.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [waitTimeSecondsLimitPerTransaction?](./sdk.createpublicmintcondition.waittimesecondslimitpertransaction.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
 

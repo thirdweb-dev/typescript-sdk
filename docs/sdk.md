@@ -11,7 +11,7 @@
 |  [AppModule](./sdk.appmodule.md) | The AppModule. This should always be created via <code>getAppModule()</code> on the main SDK. |
 |  [CollectionModule](./sdk.collectionmodule.md) | The CollectionModule. This should always be created via <code>getCollectionModule()</code> on the main SDK. |
 |  [CurrencyModule](./sdk.currencymodule.md) | The CurrencyModule. This should always be created via <code>getCurrencyModule()</code> on the main SDK. |
-|  [DropModule](./sdk.dropmodule.md) | The DropModule. This should always be created via <code>getDropModule()</code> on the main SDK. |
+|  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> The DropModule. This should always be created via <code>getDropModule()</code> on the main SDK. |
 |  [MarketModule](./sdk.marketmodule.md) | The MarketModule. This should always be created via <code>getMarketModule()</code> on the main SDK. |
 |  [NFTLabsSDK](./sdk.nftlabssdk.md) | The entrypoint to the NFTLabsSDK. |
 |  [NFTModule](./sdk.nftmodule.md) | The NFTModule. This should always be created via <code>getNFTModule()</code> on the main SDK. |
@@ -39,7 +39,7 @@
 |  --- | --- |
 |  [CollectionMetadata](./sdk.collectionmetadata.md) |  |
 |  [ContractMetadata](./sdk.contractmetadata.md) |  |
-|  [CreatePublicMintCondition](./sdk.createpublicmintcondition.md) |  |
+|  [CreatePublicMintCondition](./sdk.createpublicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [Currency](./sdk.currency.md) |  |
 |  [CurrencyValue](./sdk.currencyvalue.md) |  |
 |  [IAppModule](./sdk.iappmodule.md) |  |
@@ -55,7 +55,7 @@
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) |  |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
-|  [PublicMintCondition](./sdk.publicmintcondition.md) |  |
+|  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
 
 ## Type Aliases
 

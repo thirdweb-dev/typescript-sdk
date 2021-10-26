@@ -4,6 +4,9 @@
 
 ## DropModule class
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
 The DropModule. This should always be created via `getDropModule()` on the main SDK.
 
 <b>Signature:</b>
@@ -17,41 +20,42 @@ export declare class DropModule extends Module
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [moduleType](./sdk.dropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [moduleType](./sdk.dropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [balance()](./sdk.dropmodule.balance.md) |  |  |
-|  [balanceOf(address)](./sdk.dropmodule.balanceof.md) |  |  |
-|  [burn(tokenId)](./sdk.dropmodule.burn.md) |  |  |
-|  [claim(quantity)](./sdk.dropmodule.claim.md) |  |  |
-|  [get(tokenId)](./sdk.dropmodule.get.md) |  |  |
-|  [getActiveMintCondition()](./sdk.dropmodule.getactivemintcondition.md) |  |  |
-|  [getAll()](./sdk.dropmodule.getall.md) |  |  |
-|  [getAllLazy()](./sdk.dropmodule.getalllazy.md) |  |  |
-|  [getAllRoleMembers()](./sdk.dropmodule.getallrolemembers.md) |  |  |
-|  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  |  |
-|  [getRoleMembers(role)](./sdk.dropmodule.getrolemembers.md) |  |  |
-|  [grantRole(role, address)](./sdk.dropmodule.grantrole.md) |  |  |
-|  [isApproved(address, operator)](./sdk.dropmodule.isapproved.md) |  |  |
-|  [lazyMint(metadata)](./sdk.dropmodule.lazymint.md) |  |  |
-|  [lazyMintAmount(amount)](./sdk.dropmodule.lazymintamount.md) |  |  |
-|  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  |  |
-|  [maxTotalSupply()](./sdk.dropmodule.maxtotalsupply.md) |  |  |
-|  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  |  |
-|  [revokeRole(role, address)](./sdk.dropmodule.revokerole.md) |  |  |
-|  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  |  |
-|  [setBaseTokenUri(uri)](./sdk.dropmodule.setbasetokenuri.md) |  |  |
-|  [setMaxTotalSupply(amount)](./sdk.dropmodule.setmaxtotalsupply.md) |  |  |
-|  [setModuleMetadata(metadata)](./sdk.dropmodule.setmodulemetadata.md) |  |  |
-|  [setPublicMintConditions(conditions)](./sdk.dropmodule.setpublicmintconditions.md) |  |  |
-|  [setRestrictedTransfer(restricted)](./sdk.dropmodule.setrestrictedtransfer.md) |  |  |
-|  [setRoyaltyBps(amount)](./sdk.dropmodule.setroyaltybps.md) |  |  |
-|  [totalLazyMintedSupply()](./sdk.dropmodule.totallazymintedsupply.md) |  |  |
-|  [totalMintedSupply()](./sdk.dropmodule.totalmintedsupply.md) |  |  |
-|  [totalSupply()](./sdk.dropmodule.totalsupply.md) |  |  |
-|  [transfer(to, tokenId)](./sdk.dropmodule.transfer.md) |  |  |
-|  [transferFrom(from, to, tokenId)](./sdk.dropmodule.transferfrom.md) |  |  |
+|  [balance()](./sdk.dropmodule.balance.md) |  | <b><i>(BETA)</i></b> |
+|  [balanceOf(address)](./sdk.dropmodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
+|  [burn(tokenId)](./sdk.dropmodule.burn.md) |  | <b><i>(BETA)</i></b> |
+|  [claim(quantity)](./sdk.dropmodule.claim.md) |  | <b><i>(BETA)</i></b> |
+|  [get(tokenId)](./sdk.dropmodule.get.md) |  | <b><i>(BETA)</i></b> |
+|  [getActiveMintCondition()](./sdk.dropmodule.getactivemintcondition.md) |  | <b><i>(BETA)</i></b> |
+|  [getAll()](./sdk.dropmodule.getall.md) |  | <b><i>(BETA)</i></b> |
+|  [getAllClaimed()](./sdk.dropmodule.getallclaimed.md) |  | <b><i>(BETA)</i></b> |
+|  [getAllRoleMembers()](./sdk.dropmodule.getallrolemembers.md) |  | <b><i>(BETA)</i></b> |
+|  [getAllUnclaimed()](./sdk.dropmodule.getallunclaimed.md) |  | <b><i>(BETA)</i></b> |
+|  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | <b><i>(BETA)</i></b> |
+|  [getRoleMembers(role)](./sdk.dropmodule.getrolemembers.md) |  | <b><i>(BETA)</i></b> |
+|  [grantRole(role, address)](./sdk.dropmodule.grantrole.md) |  | <b><i>(BETA)</i></b> |
+|  [isApproved(address, operator)](./sdk.dropmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
+|  [lazyMint(metadata)](./sdk.dropmodule.lazymint.md) |  | <b><i>(BETA)</i></b> |
+|  [lazyMintAmount(amount)](./sdk.dropmodule.lazymintamount.md) |  | <b><i>(BETA)</i></b> |
+|  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  | <b><i>(BETA)</i></b> |
+|  [maxTotalSupply()](./sdk.dropmodule.maxtotalsupply.md) |  | <b><i>(BETA)</i></b> |
+|  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  | <b><i>(BETA)</i></b> |
+|  [revokeRole(role, address)](./sdk.dropmodule.revokerole.md) |  | <b><i>(BETA)</i></b> |
+|  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
+|  [setBaseTokenUri(uri)](./sdk.dropmodule.setbasetokenuri.md) |  | <b><i>(BETA)</i></b> |
+|  [setMaxTotalSupply(amount)](./sdk.dropmodule.setmaxtotalsupply.md) |  | <b><i>(BETA)</i></b> |
+|  [setModuleMetadata(metadata)](./sdk.dropmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
+|  [setPublicMintConditions(conditions)](./sdk.dropmodule.setpublicmintconditions.md) |  | <b><i>(BETA)</i></b> |
+|  [setRestrictedTransfer(restricted)](./sdk.dropmodule.setrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |
+|  [setRoyaltyBps(amount)](./sdk.dropmodule.setroyaltybps.md) |  | <b><i>(BETA)</i></b> |
+|  [totalLazyMintedSupply()](./sdk.dropmodule.totallazymintedsupply.md) |  | <b><i>(BETA)</i></b> |
+|  [totalMintedSupply()](./sdk.dropmodule.totalmintedsupply.md) |  | <b><i>(BETA)</i></b> |
+|  [totalSupply()](./sdk.dropmodule.totalsupply.md) |  | <b><i>(BETA)</i></b> |
+|  [transfer(to, tokenId)](./sdk.dropmodule.transfer.md) |  | <b><i>(BETA)</i></b> |
+|  [transferFrom(from, to, tokenId)](./sdk.dropmodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
 

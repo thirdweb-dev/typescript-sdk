@@ -11,6 +11,9 @@ import { getMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { Module } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
+/**
+ * @beta
+ */
 export interface CreatePublicMintCondition {
   startTimestampInSeconds?: BigNumberish;
   maxMintSupply: BigNumberish;
@@ -21,6 +24,9 @@ export interface CreatePublicMintCondition {
   merkleRoot?: BytesLike;
 }
 
+/**
+ * @beta
+ */
 export interface PublicMintCondition {
   startTimestamp: BigNumberish;
   maxMintSupply: BigNumberish;
@@ -34,7 +40,7 @@ export interface PublicMintCondition {
 
 /**
  * The DropModule. This should always be created via `getDropModule()` on the main SDK.
- * @public
+ * @beta
  */
 export class DropModule extends Module {
   public static moduleType: ModuleType = ModuleType.DROP;
@@ -66,7 +72,7 @@ export class DropModule extends Module {
 
   public async get(tokenId: string): Promise<NFTMetadataOwner> {
     const [owner, metadata] = await Promise.all([
-      this.ownerOf(tokenId),
+      this.ownerOf(tokenId).catch(() => AddressZero),
       this.getMetadata(tokenId),
     ]);
 
@@ -74,18 +80,26 @@ export class DropModule extends Module {
   }
 
   public async getAll(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.contract.nextMintTokenId()).toNumber();
+    const maxId = (await this.contract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
   }
 
-  public async getAllLazy(): Promise<NFTMetadata[]> {
+  public async getAllUnclaimed(): Promise<NFTMetadataOwner[]> {
     const maxId = (await this.contract.nextTokenId()).toNumber();
+    const unmintedId = (await this.contract.nextMintTokenId()).toNumber();
     return await Promise.all(
-      Array.from(Array(maxId).keys()).map((i) =>
-        this.getMetadata(i.toString()),
+      Array.from(Array(maxId - unmintedId).keys()).map((i) =>
+        this.get((i + unmintedId).toString()),
       ),
+    );
+  }
+
+  public async getAllClaimed(): Promise<NFTMetadataOwner[]> {
+    const maxId = (await this.contract.nextMintTokenId()).toNumber();
+    return await Promise.all(
+      Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
   }
 
@@ -180,13 +194,13 @@ export class DropModule extends Module {
         c.waitTimeSecondsLimitPerTransaction || 0,
       pricePerToken: c.pricePerToken || 0,
       currency: c.currency || AddressZero,
-      merkleRoot: c.merkleRoot || hexZeroPad("0", 32),
+      merkleRoot: c.merkleRoot || hexZeroPad([0], 32),
     }));
     await this.sendTransaction("setPublicMintConditions", [_conditions]);
   }
 
   public async claim(quantity: BigNumberish) {
-    const proofs = [hexZeroPad("0", 32)];
+    const proofs = [hexZeroPad([0], 32)];
     const mintCondition = await this.getActiveMintCondition();
     const overrides = (await this.getCallOverrides()) || {};
     if (
@@ -209,13 +223,13 @@ export class DropModule extends Module {
   }
 
   // owner functions
-  public async setRoyaltyBps(amount: number) {
-    await this.sendTransaction("setRoyaltyBps", [amount]);
-  }
-
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
     const uri = await uploadMetadata(metadata);
     await this.sendTransaction("setContractURI", [uri]);
+  }
+
+  public async setRoyaltyBps(amount: number) {
+    await this.sendTransaction("setRoyaltyBps", [amount]);
   }
 
   public async setBaseTokenUri(uri: string) {
