@@ -34,6 +34,7 @@ export declare class DropModule extends Module
 |  [getActiveMintCondition()](./sdk.dropmodule.getactivemintcondition.md) |  | <b><i>(BETA)</i></b> |
 |  [getAll()](./sdk.dropmodule.getall.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllClaimed()](./sdk.dropmodule.getallclaimed.md) |  | <b><i>(BETA)</i></b> |
+|  [getAllMintConditions()](./sdk.dropmodule.getallmintconditions.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllRoleMembers()](./sdk.dropmodule.getallrolemembers.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllUnclaimed()](./sdk.dropmodule.getallunclaimed.md) |  | <b><i>(BETA)</i></b> |
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | <b><i>(BETA)</i></b> |

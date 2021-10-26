@@ -124,6 +124,18 @@ export class DropModule extends Module {
     return await this.contract.mintConditions(index);
   }
 
+  public async getAllMintConditions(): Promise<PublicMintCondition[]> {
+    const conditions = [];
+    for (let i = 0; ; i++) {
+      try {
+        conditions.push(await this.contract.mintConditions(i));
+      } catch (e) {
+        break;
+      }
+    }
+    return conditions;
+  }
+
   // passthrough to the contract
   public async totalSupply(): Promise<BigNumber> {
     return await this.contract.nextTokenId();
