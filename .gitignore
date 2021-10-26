@@ -4,3 +4,6 @@ temp/
 etc/
 bin/
 dist/
+yarn-error.log
+.DS_Store
+.parcel-cache/
