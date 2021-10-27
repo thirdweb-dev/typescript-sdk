@@ -1,6 +1,6 @@
 {
   "name": "@nftlabs/sdk",
-  "version": "1.6.0-alpha.6",
+  "version": "1.6.0-alpha.7",
   "description": "The main NFTLabs SDK.",
   "repository": {
     "type": "git",
@@ -8,8 +8,8 @@
   },
   "license": "MIT",
   "source": "src/index.ts",
-  "main": "lib/sdk.cjs",
-  "exports": "./lib/sdk.js",
+  "main": "lib/sdk.js",
+  "exports": "./lib/sdk.mjs",
   "types": "lib/sdk.d.ts",
   "files": [
     "lib/"
