@@ -10,6 +10,7 @@ import {
 } from "../common/currency";
 import { uploadMetadata } from "../common/ipfs";
 import { Module } from "../core/module";
+import { TransactionReceipt } from "@ethersproject/providers";
 
 /**
  * The CurrencyModule. This should always be created via `getCurrencyModule()` on the main SDK.
@@ -55,7 +56,6 @@ export class CurrencyModule extends Module {
     return await this.contract.totalSupply();
   }
 
-  // passthrough to the contract
   public async balanceOf(address: string): Promise<CurrencyValue> {
     return await this.getValue(await this.contract.balanceOf(address));
   }
@@ -70,59 +70,6 @@ export class CurrencyModule extends Module {
 
   public async allowanceOf(owner: string, spender: string): Promise<BigNumber> {
     return await this.contract.allowance(owner, spender);
-  }
-
-  // write functions
-  public async transfer(to: string, amount: BigNumber) {
-    await this.sendTransaction("transfer", [to, amount]);
-  }
-
-  public async setAllowance(spender: string, amount: BigNumber) {
-    await this.sendTransaction("approve", [spender, amount]);
-  }
-
-  // owner functions
-  public async mint(amount: BigNumberish) {
-    await this.mintTo(await this.getSignerAddress(), amount);
-  }
-
-  public async mintTo(to: string, amount: BigNumberish) {
-    await this.sendTransaction("mint", [to, amount]);
-  }
-
-  public async burn(amount: BigNumberish) {
-    await this.sendTransaction("burn", [amount]);
-  }
-
-  public async burnFrom(from: string, amount: BigNumberish) {
-    await this.sendTransaction("burnFrom", [from, amount]);
-  }
-
-  public async transferFrom(from: string, to: string, amount: BigNumberish) {
-    await this.sendTransaction("transferFrom", [from, to, amount]);
-  }
-
-  public async setModuleMetadata(metadata: MetadataURIOrObject) {
-    const uri = await uploadMetadata(metadata);
-    await this.sendTransaction("setContractURI", [uri]);
-  }
-
-  public async setRestrictedTransfer(restricted = false): Promise<void> {
-    await this.sendTransaction("setRestrictedTransfer", [restricted]);
-  }
-
-  // owner role functions
-  public async grantRole(role: Role, address: string) {
-    await this.sendTransaction("grantRole", [getRoleHash(role), address]);
-  }
-
-  public async revokeRole(role: Role, address: string) {
-    const signerAddress = await this.getSignerAddress();
-    if (signerAddress.toLowerCase() === address.toLowerCase()) {
-      await this.sendTransaction("renounceRole", [getRoleHash(role), address]);
-    } else {
-      await this.sendTransaction("revokeRole", [getRoleHash(role), address]);
-    }
   }
 
   public async getRoleMembers(role: Role): Promise<string[]> {
@@ -148,5 +95,90 @@ export class CurrencyModule extends Module {
       minter,
       pauser,
     };
+  }
+
+  // write functions
+  public async transfer(
+    to: string,
+    amount: BigNumber,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("transfer", [to, amount]);
+  }
+
+  public async setAllowance(
+    spender: string,
+    amount: BigNumber,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("approve", [spender, amount]);
+  }
+
+  // owner functions
+  public async mint(amount: BigNumberish) {
+    await this.mintTo(await this.getSignerAddress(), amount);
+  }
+
+  public async mintTo(to: string, amount: BigNumberish) {
+    await this.sendTransaction("mint", [to, amount]);
+  }
+
+  public async burn(amount: BigNumberish): Promise<TransactionReceipt> {
+    return await this.sendTransaction("burn", [amount]);
+  }
+
+  public async burnFrom(
+    from: string,
+    amount: BigNumberish,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("burnFrom", [from, amount]);
+  }
+
+  public async transferFrom(
+    from: string,
+    to: string,
+    amount: BigNumberish,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("transferFrom", [from, to, amount]);
+  }
+
+  public async setModuleMetadata(
+    metadata: MetadataURIOrObject,
+  ): Promise<TransactionReceipt> {
+    const uri = await uploadMetadata(metadata);
+    return await this.sendTransaction("setContractURI", [uri]);
+  }
+
+  public async setRestrictedTransfer(
+    restricted = false,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  // owner role functions
+  public async grantRole(
+    role: Role,
+    address: string,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("grantRole", [
+      getRoleHash(role),
+      address,
+    ]);
+  }
+
+  public async revokeRole(
+    role: Role,
+    address: string,
+  ): Promise<TransactionReceipt> {
+    const signerAddress = await this.getSignerAddress();
+    if (signerAddress.toLowerCase() === address.toLowerCase()) {
+      return await this.sendTransaction("renounceRole", [
+        getRoleHash(role),
+        address,
+      ]);
+    } else {
+      return await this.sendTransaction("revokeRole", [
+        getRoleHash(role),
+        address,
+      ]);
+    }
   }
 }

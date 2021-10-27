@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-setRoyaltyBps(amount: number): Promise<void>;
+setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ setRoyaltyBps(amount: number): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

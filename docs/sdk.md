@@ -16,7 +16,7 @@
 |  [NFTLabsSDK](./sdk.nftlabssdk.md) | The entrypoint to the NFTLabsSDK. |
 |  [NFTModule](./sdk.nftmodule.md) | The NFTModule. This should always be created via <code>getNFTModule()</code> on the main SDK. |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
-|  [PackModule](./sdk.packmodule.md) | The PackModule. This should always be created via <code>getPackModule()</code> on the main SDK. |
+|  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> The PackModule. This should always be created via <code>getPackModule()</code> on the main SDK. |
 
 ## Enumerations
 
@@ -45,15 +45,15 @@
 |  [IAppModule](./sdk.iappmodule.md) |  |
 |  [INFTCollectionBatchArgs](./sdk.inftcollectionbatchargs.md) |  |
 |  [INFTCollectionCreateArgs](./sdk.inftcollectioncreateargs.md) |  |
-|  [IPackBatchArgs](./sdk.ipackbatchargs.md) |  |
-|  [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
+|  [IPackBatchArgs](./sdk.ipackbatchargs.md) | <b><i>(BETA)</i></b> |
+|  [IPackCreateArgs](./sdk.ipackcreateargs.md) | <b><i>(BETA)</i></b> |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
 |  [ListingFilter](./sdk.listingfilter.md) |  |
 |  [ListingMetadata](./sdk.listingmetadata.md) |  |
 |  [ModuleMetadata](./sdk.modulemetadata.md) | A Module with metadata. |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
-|  [PackMetadata](./sdk.packmetadata.md) |  |
+|  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
 

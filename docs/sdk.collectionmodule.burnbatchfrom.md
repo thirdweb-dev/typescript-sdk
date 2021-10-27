@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-burnBatchFrom(account: string, args: INFTCollectionBatchArgs[]): Promise<void>;
+burnBatchFrom(account: string, args: INFTCollectionBatchArgs[]): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -19,5 +19,5 @@ burnBatchFrom(account: string, args: INFTCollectionBatchArgs[]): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

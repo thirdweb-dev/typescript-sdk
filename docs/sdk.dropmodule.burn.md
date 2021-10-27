@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-burn(tokenId: BigNumberish): Promise<void>;
+burn(tokenId: BigNumberish): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ burn(tokenId: BigNumberish): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

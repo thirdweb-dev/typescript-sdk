@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-grantRole(role: Role, address: string): Promise<void>;
+grantRole(role: Role, address: string): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -19,5 +19,5 @@ grantRole(role: Role, address: string): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-burnFrom(from: string, amount: BigNumberish): Promise<void>;
+burnFrom(from: string, amount: BigNumberish): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -19,5 +19,5 @@ burnFrom(from: string, amount: BigNumberish): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

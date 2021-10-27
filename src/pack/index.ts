@@ -20,7 +20,7 @@ import { Module } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
 /**
- * @public
+ * @beta
  */
 export interface PackMetadata {
   id: string;
@@ -39,7 +39,7 @@ export interface PackNFTMetadata {
 }
 
 /**
- * @public
+ * @beta
  */
 export interface IPackCreateArgs {
   assetContract: string;
@@ -53,7 +53,7 @@ export interface IPackCreateArgs {
 }
 
 /**
- * @public
+ * @beta
  */
 export interface IPackBatchArgs {
   tokenId: BigNumberish;
@@ -62,7 +62,7 @@ export interface IPackBatchArgs {
 
 /**
  * The PackModule. This should always be created via `getPackModule()` on the main SDK.
- * @public
+ * @beta
  */
 export class PackModule extends Module {
   public static moduleType: ModuleType = ModuleType.PACK;

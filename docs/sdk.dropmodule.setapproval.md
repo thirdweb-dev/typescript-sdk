@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-setApproval(operator: string, approved?: boolean): Promise<void>;
+setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -22,5 +22,5 @@ setApproval(operator: string, approved?: boolean): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

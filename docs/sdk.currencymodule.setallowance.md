@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-setAllowance(spender: string, amount: BigNumber): Promise<void>;
+setAllowance(spender: string, amount: BigNumber): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -19,5 +19,5 @@ setAllowance(spender: string, amount: BigNumber): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

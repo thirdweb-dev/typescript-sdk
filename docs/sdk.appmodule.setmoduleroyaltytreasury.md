@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-setModuleRoyaltyTreasury(moduleAddress: string, treasury: string): Promise<void>;
+setModuleRoyaltyTreasury(moduleAddress: string, treasury: string): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -19,5 +19,5 @@ setModuleRoyaltyTreasury(moduleAddress: string, treasury: string): Promise<void>
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

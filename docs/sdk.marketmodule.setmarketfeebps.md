@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-setMarketFeeBps(fee: number): Promise<void>;
+setMarketFeeBps(fee: number): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -18,5 +18,5 @@ setMarketFeeBps(fee: number): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

@@ -4,6 +4,9 @@
 
 ## IPackCreateArgs interface
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
 
 <b>Signature:</b>
 
@@ -15,9 +18,9 @@ export interface IPackCreateArgs
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [assetContract](./sdk.ipackcreateargs.assetcontract.md) | string |  |
-|  [assets](./sdk.ipackcreateargs.assets.md) | { tokenId: BigNumberish; amount: BigNumberish; }\[\] |  |
-|  [metadata](./sdk.ipackcreateargs.metadata.md) | [MetadataURIOrObject](./sdk.metadatauriorobject.md) |  |
-|  [rewardsPerOpen?](./sdk.ipackcreateargs.rewardsperopen.md) | number | <i>(Optional)</i> |
-|  [secondsUntilOpenStart?](./sdk.ipackcreateargs.secondsuntilopenstart.md) | number | <i>(Optional)</i> |
+|  [assetContract](./sdk.ipackcreateargs.assetcontract.md) | string | <b><i>(BETA)</i></b> |
+|  [assets](./sdk.ipackcreateargs.assets.md) | { tokenId: BigNumberish; amount: BigNumberish; }\[\] | <b><i>(BETA)</i></b> |
+|  [metadata](./sdk.ipackcreateargs.metadata.md) | [MetadataURIOrObject](./sdk.metadatauriorobject.md) | <b><i>(BETA)</i></b> |
+|  [rewardsPerOpen?](./sdk.ipackcreateargs.rewardsperopen.md) | number | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [secondsUntilOpenStart?](./sdk.ipackcreateargs.secondsuntilopenstart.md) | number | <b><i>(BETA)</i></b> <i>(Optional)</i> |
 

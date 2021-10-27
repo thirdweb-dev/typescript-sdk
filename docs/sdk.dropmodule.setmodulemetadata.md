@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-setModuleMetadata(metadata: MetadataURIOrObject): Promise<void>;
+setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ setModuleMetadata(metadata: MetadataURIOrObject): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

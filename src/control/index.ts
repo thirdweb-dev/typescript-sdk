@@ -1,4 +1,5 @@
 import { AddressZero } from "@ethersproject/constants";
+import { TransactionReceipt } from "@ethersproject/providers";
 import {
   ProtocolControl,
   ProtocolControl__factory,
@@ -47,29 +48,6 @@ export class AppModule extends Module {
     return await this.contract.getAllModulesOfType(moduleType);
   }
 
-  public async getAllContractMetadata(
-    addresses: string[],
-  ): Promise<ModuleMetadata[]> {
-    const metadatas = await Promise.all(
-      addresses.map((address) =>
-        getContractMetadata(
-          this.providerOrSigner,
-          address,
-          this.ipfsGatewayUrl,
-        ).catch(() => undefined),
-      ),
-    );
-    return addresses
-      .filter((d) => d)
-      .map((address, i) => {
-        return {
-          address,
-          metadata: metadatas[i],
-        };
-      });
-  }
-
-  // these used to be public but there really is no reason they need to be
   private async getNFTAddress(): Promise<string[]> {
     return this.getModuleAddress(ModuleType.NFT);
   }
@@ -96,6 +74,28 @@ export class AppModule extends Module {
 
   public async getRoyaltyTreasury(address?: string): Promise<string> {
     return await this.contract.getRoyaltyTreasury(address || AddressZero);
+  }
+
+  public async getAllContractMetadata(
+    addresses: string[],
+  ): Promise<ModuleMetadata[]> {
+    const metadatas = await Promise.all(
+      addresses.map((address) =>
+        getContractMetadata(
+          this.providerOrSigner,
+          address,
+          this.ipfsGatewayUrl,
+        ).catch(() => undefined),
+      ),
+    );
+    return addresses
+      .filter((d) => d)
+      .map((address, i) => {
+        return {
+          address,
+          metadata: metadatas[i],
+        };
+      });
   }
 
   /**
@@ -140,26 +140,40 @@ export class AppModule extends Module {
 
   /**
    * Method to get all Drop modules.
-   * @returns A promise of an array of Market modules.
+   * @returns A promise of an array of Drop modules.
    */
   public async getDropModules(): Promise<ModuleMetadata[]> {
     return await this.getAllContractMetadata(await this.getDropAddress());
   }
 
   // owner functions
-  public async setModuleMetadata(metadata: MetadataURIOrObject) {
+  public async setModuleMetadata(
+    metadata: MetadataURIOrObject,
+  ): Promise<TransactionReceipt> {
     const uri = await uploadMetadata(metadata);
-    this.sendTransaction("setContractURI", [uri]);
+    return await this.sendTransaction("setContractURI", [uri]);
   }
 
-  public async setRoyaltyTreasury(treasury: string) {
-    this.sendTransaction("setRoyaltyTreasury", [treasury]);
+  public async setRoyaltyTreasury(
+    treasury: string,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setRoyaltyTreasury", [treasury]);
   }
 
   public async setModuleRoyaltyTreasury(
     moduleAddress: string,
     treasury: string,
-  ) {
-    this.sendTransaction("setModuleRoyaltyTreasury", [moduleAddress, treasury]);
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setModuleRoyaltyTreasury", [
+      moduleAddress,
+      treasury,
+    ]);
+  }
+
+  public async withdrawFunds(
+    to: string,
+    currency: string,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("withdrawFunds", [to, currency]);
   }
 }

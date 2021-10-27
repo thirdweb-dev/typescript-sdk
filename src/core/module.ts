@@ -138,7 +138,7 @@ export class Module {
     fn: string,
     args: any[],
     callOverrides?: CallOverrides,
-  ): Promise<TransactionReceipt | null> {
+  ): Promise<TransactionReceipt> {
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
@@ -153,13 +153,13 @@ export class Module {
     fn: string,
     args: any[],
     callOverrides: CallOverrides,
-  ): Promise<TransactionReceipt | null> {
+  ): Promise<TransactionReceipt> {
     const contract = this.connectContract();
     const tx = await contract.functions[fn](...args, callOverrides);
     if (tx.wait) {
       return await tx.wait();
     }
-    return null;
+    return tx;
   }
 
   private async sendGaslessTransaction(

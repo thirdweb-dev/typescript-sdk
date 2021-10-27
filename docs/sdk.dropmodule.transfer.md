@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-transfer(to: string, tokenId: string): Promise<void>;
+transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -22,5 +22,5 @@ transfer(to: string, tokenId: string): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 
