@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-transferFrom(from: string, to: string, args: INFTCollectionBatchArgs, data?: BytesLike): Promise<void>;
+transferFrom(from: string, to: string, args: INFTCollectionBatchArgs, data?: BytesLike): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ transferFrom(from: string, to: string, args: INFTCollectionBatchArgs, data?: Byt
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

@@ -28,4 +28,5 @@ export declare class AppModule extends Module
 |  [setModuleMetadata(metadata)](./sdk.appmodule.setmodulemetadata.md) |  |  |
 |  [setModuleRoyaltyTreasury(moduleAddress, treasury)](./sdk.appmodule.setmoduleroyaltytreasury.md) |  |  |
 |  [setRoyaltyTreasury(treasury)](./sdk.appmodule.setroyaltytreasury.md) |  |  |
+|  [withdrawFunds(to, currency)](./sdk.appmodule.withdrawfunds.md) |  |  |
 

@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-setMaxTotalSupply(amount: BigNumberish): Promise<void>;
+setMaxTotalSupply(amount: BigNumberish): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ setMaxTotalSupply(amount: BigNumberish): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

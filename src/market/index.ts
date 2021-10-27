@@ -15,6 +15,7 @@ import { CurrencyValue, getCurrencyValue } from "../common/currency";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
+import { TransactionReceipt } from "@ethersproject/providers";
 
 export interface ListingFilter {
   seller?: string;
@@ -192,6 +193,11 @@ export class MarketModule extends Module {
     return await Promise.all(listings);
   }
 
+  public async getMarketFeeBps(): Promise<BigNumber> {
+    return await this.contract.marketFeeBps();
+  }
+
+  // write functions
   public async list(
     assetContract: string,
     tokenId: string,
@@ -304,18 +310,15 @@ export class MarketModule extends Module {
     return await this.transformResultToListing(event?.listing);
   }
 
-  // passthrough
-  public async getMarketFeeBps(): Promise<BigNumber> {
-    return await this.contract.marketFeeBps();
-  }
-
   // owner functions
-  public async setModuleMetadata(metadata: MetadataURIOrObject) {
+  public async setModuleMetadata(
+    metadata: MetadataURIOrObject,
+  ): Promise<TransactionReceipt> {
     const uri = await uploadMetadata(metadata);
-    await this.sendTransaction("setContractURI", [uri]);
+    return await this.sendTransaction("setContractURI", [uri]);
   }
 
-  public async setMarketFeeBps(fee: number) {
-    await this.sendTransaction("setMarketFeeBps", [fee]);
+  public async setMarketFeeBps(fee: number): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setMarketFeeBps", [fee]);
   }
 }

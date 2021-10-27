@@ -15,5 +15,5 @@ getDropModules(): Promise<ModuleMetadata[]>;
 
 Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->\[\]&gt;
 
-A promise of an array of Market modules.
+A promise of an array of Drop modules.
 

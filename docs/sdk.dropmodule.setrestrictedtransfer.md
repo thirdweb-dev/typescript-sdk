@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-setRestrictedTransfer(restricted: boolean): Promise<void>;
+setRestrictedTransfer(restricted: boolean): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ setRestrictedTransfer(restricted: boolean): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

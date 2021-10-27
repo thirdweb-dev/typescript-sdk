@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-setBaseTokenUri(uri: string): Promise<void>;
+setBaseTokenUri(uri: string): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ setBaseTokenUri(uri: string): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

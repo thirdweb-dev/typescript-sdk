@@ -10,6 +10,7 @@ import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { getRoleHash, Role } from "../common/role";
 import { Module } from "../core/module";
+import { TransactionReceipt } from "@ethersproject/providers";
 
 /**
  * @public
@@ -93,7 +94,6 @@ export class CollectionModule extends Module {
     );
   }
 
-  // passthrough to the contract
   public async balanceOf(address: string, tokenId: string): Promise<BigNumber> {
     return await this.contract.balanceOf(address, tokenId);
   }
@@ -109,13 +109,56 @@ export class CollectionModule extends Module {
     return await this.contract.isApprovedForAll(address, operator);
   }
 
-  // write functions
-  public async setApproval(operator: string, approved = true) {
-    await this.sendTransaction("setApprovalForAll", [operator, approved]);
+  public async getRoleMembers(role: Role): Promise<string[]> {
+    const roleHash = getRoleHash(role);
+    const count = (await this.contract.getRoleMemberCount(roleHash)).toNumber();
+    if (count === 0) {
+      return [];
+    }
+    return await Promise.all(
+      Array.from(Array(count).keys()).map((i) =>
+        this.contract.getRoleMember(roleHash, i),
+      ),
+    );
   }
 
-  public async transfer(to: string, tokenId: string, amount: BigNumberish) {
-    await this.sendTransaction("safeTransferFrom", [to, tokenId, amount, [0]]);
+  public async getAllRoleMembers(): Promise<Record<Role, string[]>> {
+    const [admin, transfer, minter, pauser] = await Promise.all([
+      this.getRoleMembers("admin"),
+      this.getRoleMembers("transfer"),
+      this.getRoleMembers("minter"),
+      this.getRoleMembers("pauser"),
+    ]);
+    return {
+      admin,
+      transfer,
+      minter,
+      pauser,
+    };
+  }
+
+  // write functions
+  public async setApproval(
+    operator: string,
+    approved = true,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setApprovalForAll", [
+      operator,
+      approved,
+    ]);
+  }
+
+  public async transfer(
+    to: string,
+    tokenId: string,
+    amount: BigNumberish,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("safeTransferFrom", [
+      to,
+      tokenId,
+      amount,
+      [0],
+    ]);
   }
 
   // owner functions
@@ -211,22 +254,36 @@ export class CollectionModule extends Module {
     await this.sendTransaction("mintBatch", [to, ids, amounts, data]);
   }
 
-  public async burn(args: INFTCollectionBatchArgs) {
-    await this.burnFrom(await this.getSignerAddress(), args);
+  public async burn(
+    args: INFTCollectionBatchArgs,
+  ): Promise<TransactionReceipt> {
+    return await this.burnFrom(await this.getSignerAddress(), args);
   }
 
-  public async burnBatch(args: INFTCollectionBatchArgs[]) {
-    await this.burnBatchFrom(await this.getSignerAddress(), args);
+  public async burnBatch(
+    args: INFTCollectionBatchArgs[],
+  ): Promise<TransactionReceipt> {
+    return await this.burnBatchFrom(await this.getSignerAddress(), args);
   }
 
-  public async burnFrom(account: string, args: INFTCollectionBatchArgs) {
-    await this.sendTransaction("burn", [account, args.tokenId, args.amount]);
+  public async burnFrom(
+    account: string,
+    args: INFTCollectionBatchArgs,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("burn", [
+      account,
+      args.tokenId,
+      args.amount,
+    ]);
   }
 
-  public async burnBatchFrom(account: string, args: INFTCollectionBatchArgs[]) {
+  public async burnBatchFrom(
+    account: string,
+    args: INFTCollectionBatchArgs[],
+  ): Promise<TransactionReceipt> {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
-    await this.sendTransaction("burnBatch", [account, ids, amounts]);
+    return await this.sendTransaction("burnBatch", [account, ids, amounts]);
   }
 
   public async transferFrom(
@@ -234,8 +291,8 @@ export class CollectionModule extends Module {
     to: string,
     args: INFTCollectionBatchArgs,
     data: BytesLike = [0],
-  ) {
-    await this.sendTransaction("safeTransferFrom", [
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("safeTransferFrom", [
       from,
       to,
       args.tokenId,
@@ -249,10 +306,10 @@ export class CollectionModule extends Module {
     to: string,
     args: INFTCollectionBatchArgs[],
     data: BytesLike = [0],
-  ) {
+  ): Promise<TransactionReceipt> {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
-    await this.sendTransaction("safeBatchTransferFrom", [
+    return await this.sendTransaction("safeBatchTransferFrom", [
       from,
       to,
       ids,
@@ -261,58 +318,49 @@ export class CollectionModule extends Module {
     ]);
   }
 
-  public async setRoyaltyBps(amount: number) {
-    await this.sendTransaction("setRoyaltyBps", [amount]);
+  public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setRoyaltyBps", [amount]);
   }
 
-  public async setModuleMetadata(metadata: MetadataURIOrObject) {
+  public async setModuleMetadata(
+    metadata: MetadataURIOrObject,
+  ): Promise<TransactionReceipt> {
     const uri = await uploadMetadata(metadata);
-    await this.sendTransaction("setContractURI", [uri]);
+    return await this.sendTransaction("setContractURI", [uri]);
   }
 
-  public async setRestrictedTransfer(restricted = false): Promise<void> {
-    await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  public async setRestrictedTransfer(
+    restricted = false,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 
   // roles
-  public async grantRole(role: Role, address: string) {
-    await this.sendTransaction("grantRole", [getRoleHash(role), address]);
+  public async grantRole(
+    role: Role,
+    address: string,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("grantRole", [
+      getRoleHash(role),
+      address,
+    ]);
   }
 
-  public async revokeRole(role: Role, address: string) {
+  public async revokeRole(
+    role: Role,
+    address: string,
+  ): Promise<TransactionReceipt> {
     const signerAddress = await this.getSignerAddress();
     if (signerAddress.toLowerCase() === address.toLowerCase()) {
-      await this.sendTransaction("renounceRole", [getRoleHash(role), address]);
+      return await this.sendTransaction("renounceRole", [
+        getRoleHash(role),
+        address,
+      ]);
     } else {
-      await this.sendTransaction("revokeRole", [getRoleHash(role), address]);
+      return await this.sendTransaction("revokeRole", [
+        getRoleHash(role),
+        address,
+      ]);
     }
-  }
-
-  public async getRoleMembers(role: Role): Promise<string[]> {
-    const roleHash = getRoleHash(role);
-    const count = (await this.contract.getRoleMemberCount(roleHash)).toNumber();
-    if (count === 0) {
-      return [];
-    }
-    return await Promise.all(
-      Array.from(Array(count).keys()).map((i) =>
-        this.contract.getRoleMember(roleHash, i),
-      ),
-    );
-  }
-
-  public async getAllRoleMembers(): Promise<Record<Role, string[]>> {
-    const [admin, transfer, minter, pauser] = await Promise.all([
-      this.getRoleMembers("admin"),
-      this.getRoleMembers("transfer"),
-      this.getRoleMembers("minter"),
-      this.getRoleMembers("pauser"),
-    ]);
-    return {
-      admin,
-      transfer,
-      minter,
-      pauser,
-    };
   }
 }

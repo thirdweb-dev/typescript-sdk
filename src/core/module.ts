@@ -11,7 +11,6 @@ import type { ISDKOptions } from ".";
 import { isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { Forwarder__factory } from "../../contract-interfaces";
-import { FORWARDER_ADDRESS } from "../common/address";
 import { getGasPriceForChain } from "../common/gas-price";
 
 /**
@@ -139,7 +138,7 @@ export class Module {
     fn: string,
     args: any[],
     callOverrides?: CallOverrides,
-  ): Promise<TransactionReceipt | null> {
+  ): Promise<TransactionReceipt> {
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
@@ -154,13 +153,13 @@ export class Module {
     fn: string,
     args: any[],
     callOverrides: CallOverrides,
-  ): Promise<TransactionReceipt | null> {
+  ): Promise<TransactionReceipt> {
     const contract = this.connectContract();
     const tx = await contract.functions[fn](...args, callOverrides);
     if (tx.wait) {
       return await tx.wait();
     }
-    return null;
+    return tx;
   }
 
   private async sendGaslessTransaction(

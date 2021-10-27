@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-transferFrom(from: string, to: string, tokenId: BigNumberish): Promise<void>;
+transferFrom(from: string, to: string, tokenId: BigNumberish): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ transferFrom(from: string, to: string, tokenId: BigNumberish): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

@@ -4,6 +4,9 @@
 
 ## PackMetadata interface
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
 
 <b>Signature:</b>
 
@@ -15,9 +18,9 @@ export interface PackMetadata
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [creator](./sdk.packmetadata.creator.md) | string |  |
-|  [currentSupply](./sdk.packmetadata.currentsupply.md) | BigNumber |  |
-|  [id](./sdk.packmetadata.id.md) | string |  |
-|  [metadata](./sdk.packmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) |  |
-|  [openStart](./sdk.packmetadata.openstart.md) | Date \| null |  |
+|  [creator](./sdk.packmetadata.creator.md) | string | <b><i>(BETA)</i></b> |
+|  [currentSupply](./sdk.packmetadata.currentsupply.md) | BigNumber | <b><i>(BETA)</i></b> |
+|  [id](./sdk.packmetadata.id.md) | string | <b><i>(BETA)</i></b> |
+|  [metadata](./sdk.packmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) | <b><i>(BETA)</i></b> |
+|  [openStart](./sdk.packmetadata.openstart.md) | Date \| null | <b><i>(BETA)</i></b> |
 

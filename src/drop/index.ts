@@ -1,5 +1,6 @@
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
+import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import {
   LazyNFT as Drop,
@@ -136,7 +137,6 @@ export class DropModule extends Module {
     return conditions;
   }
 
-  // passthrough to the contract
   public async totalSupply(): Promise<BigNumber> {
     return await this.contract.nextTokenId();
   }
@@ -163,21 +163,55 @@ export class DropModule extends Module {
     return await this.balanceOf(await this.getSignerAddress());
   }
 
+  public async getRoleMembers(role: Role): Promise<string[]> {
+    const roleHash = getRoleHash(role);
+    const count = (await this.contract.getRoleMemberCount(roleHash)).toNumber();
+    return await Promise.all(
+      Array.from(Array(count).keys()).map((i) =>
+        this.contract.getRoleMember(roleHash, i),
+      ),
+    );
+  }
+
+  public async getAllRoleMembers(): Promise<Record<Role, string[]>> {
+    const [admin, transfer, minter, pauser] = await Promise.all([
+      this.getRoleMembers("admin"),
+      this.getRoleMembers("transfer"),
+      this.getRoleMembers("minter"),
+      this.getRoleMembers("pauser"),
+    ]);
+    return {
+      admin,
+      transfer,
+      minter,
+      pauser,
+    };
+  }
+
   public async isApproved(address: string, operator: string): Promise<boolean> {
     return await this.contract.isApprovedForAll(address, operator);
   }
 
-  public async setApproval(operator: string, approved = true) {
-    await this.sendTransaction("setApprovalForAll", [operator, approved]);
+  // write functions
+  public async setApproval(
+    operator: string,
+    approved = true,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setApprovalForAll", [
+      operator,
+      approved,
+    ]);
   }
 
-  public async transfer(to: string, tokenId: string) {
+  public async transfer(
+    to: string,
+    tokenId: string,
+  ): Promise<TransactionReceipt> {
     const from = await this.getSignerAddress();
-    await this.sendTransaction("safeTransferFrom(address,address,uint256)", [
-      from,
-      to,
-      tokenId,
-    ]);
+    return await this.sendTransaction(
+      "safeTransferFrom(address,address,uint256)",
+      [from, to, tokenId],
+    );
   }
 
   // owner functions
@@ -228,72 +262,72 @@ export class DropModule extends Module {
     await this.sendTransaction("claim", [quantity, proofs], overrides);
   }
 
-  public async burn(tokenId: BigNumberish) {
-    await this.sendTransaction("burn", [tokenId]);
+  public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
+    return await this.sendTransaction("burn", [tokenId]);
   }
 
-  public async transferFrom(from: string, to: string, tokenId: BigNumberish) {
-    await this.sendTransaction("transferFrom", [from, to, tokenId]);
+  public async transferFrom(
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("transferFrom", [from, to, tokenId]);
   }
 
   // owner functions
-  public async setModuleMetadata(metadata: MetadataURIOrObject) {
+  public async setModuleMetadata(
+    metadata: MetadataURIOrObject,
+  ): Promise<TransactionReceipt> {
     const uri = await uploadMetadata(metadata);
-    await this.sendTransaction("setContractURI", [uri]);
+    return await this.sendTransaction("setContractURI", [uri]);
   }
 
-  public async setRoyaltyBps(amount: number) {
-    await this.sendTransaction("setRoyaltyBps", [amount]);
+  public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setRoyaltyBps", [amount]);
   }
 
-  public async setBaseTokenUri(uri: string) {
-    await this.sendTransaction("setBaseTokenURI", [uri]);
+  public async setBaseTokenUri(uri: string): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setBaseTokenURI", [uri]);
   }
 
-  public async setMaxTotalSupply(amount: BigNumberish) {
-    await this.sendTransaction("setMaxTotalSupply", [amount]);
+  public async setMaxTotalSupply(
+    amount: BigNumberish,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setMaxTotalSupply", [amount]);
   }
 
-  public async setRestrictedTransfer(restricted: boolean) {
-    await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  public async setRestrictedTransfer(
+    restricted: boolean,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 
   // roles
-  public async grantRole(role: Role, address: string) {
-    await this.sendTransaction("grantRole", [getRoleHash(role), address]);
+  public async grantRole(
+    role: Role,
+    address: string,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("grantRole", [
+      getRoleHash(role),
+      address,
+    ]);
   }
 
-  public async revokeRole(role: Role, address: string) {
+  public async revokeRole(
+    role: Role,
+    address: string,
+  ): Promise<TransactionReceipt> {
     const signerAddress = await this.getSignerAddress();
     if (signerAddress.toLowerCase() === address.toLowerCase()) {
-      await this.sendTransaction("renounceRole", [getRoleHash(role), address]);
+      return await this.sendTransaction("renounceRole", [
+        getRoleHash(role),
+        address,
+      ]);
     } else {
-      await this.sendTransaction("revokeRole", [getRoleHash(role), address]);
+      return await this.sendTransaction("revokeRole", [
+        getRoleHash(role),
+        address,
+      ]);
     }
-  }
-
-  public async getRoleMembers(role: Role): Promise<string[]> {
-    const roleHash = getRoleHash(role);
-    const count = (await this.contract.getRoleMemberCount(roleHash)).toNumber();
-    return await Promise.all(
-      Array.from(Array(count).keys()).map((i) =>
-        this.contract.getRoleMember(roleHash, i),
-      ),
-    );
-  }
-
-  public async getAllRoleMembers(): Promise<Record<Role, string[]>> {
-    const [admin, transfer, minter, pauser] = await Promise.all([
-      this.getRoleMembers("admin"),
-      this.getRoleMembers("transfer"),
-      this.getRoleMembers("minter"),
-      this.getRoleMembers("pauser"),
-    ]);
-    return {
-      admin,
-      transfer,
-      minter,
-      pauser,
-    };
   }
 }

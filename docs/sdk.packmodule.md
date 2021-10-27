@@ -4,6 +4,9 @@
 
 ## PackModule class
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
 The PackModule. This should always be created via `getPackModule()` on the main SDK.
 
 <b>Signature:</b>
@@ -17,32 +20,32 @@ export declare class PackModule extends Module
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [moduleType](./sdk.packmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [moduleType](./sdk.packmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [balance(tokenId)](./sdk.packmodule.balance.md) |  |  |
-|  [balanceOf(address, tokenId)](./sdk.packmodule.balanceof.md) |  |  |
-|  [create(args)](./sdk.packmodule.create.md) |  |  |
-|  [depositLink(amount)](./sdk.packmodule.depositlink.md) |  |  |
-|  [get(packId)](./sdk.packmodule.get.md) |  |  |
-|  [getAll()](./sdk.packmodule.getall.md) |  |  |
-|  [getAllRoleMembers()](./sdk.packmodule.getallrolemembers.md) |  |  |
-|  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  |  |
-|  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  |  |
-|  [getRoleMembers(role)](./sdk.packmodule.getrolemembers.md) |  |  |
-|  [grantRole(role, address)](./sdk.packmodule.grantrole.md) |  |  |
-|  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  |  |
-|  [open(packId)](./sdk.packmodule.open.md) |  |  |
-|  [revokeRole(role, address)](./sdk.packmodule.revokerole.md) |  |  |
-|  [setApproval(operator, approved)](./sdk.packmodule.setapproval.md) |  |  |
-|  [setModuleMetadata(metadata)](./sdk.packmodule.setmodulemetadata.md) |  |  |
-|  [setRestrictedTransfer(restricted)](./sdk.packmodule.setrestrictedtransfer.md) |  |  |
-|  [setRoyaltyBps(amount)](./sdk.packmodule.setroyaltybps.md) |  |  |
-|  [transfer(to, tokenId, amount)](./sdk.packmodule.transfer.md) |  |  |
-|  [transferBatchFrom(from, to, args, data)](./sdk.packmodule.transferbatchfrom.md) |  |  |
-|  [transferFrom(from, to, args, data)](./sdk.packmodule.transferfrom.md) |  |  |
-|  [withdrawLink(to, amount)](./sdk.packmodule.withdrawlink.md) |  |  |
+|  [balance(tokenId)](./sdk.packmodule.balance.md) |  | <b><i>(BETA)</i></b> |
+|  [balanceOf(address, tokenId)](./sdk.packmodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
+|  [create(args)](./sdk.packmodule.create.md) |  | <b><i>(BETA)</i></b> |
+|  [depositLink(amount)](./sdk.packmodule.depositlink.md) |  | <b><i>(BETA)</i></b> |
+|  [get(packId)](./sdk.packmodule.get.md) |  | <b><i>(BETA)</i></b> |
+|  [getAll()](./sdk.packmodule.getall.md) |  | <b><i>(BETA)</i></b> |
+|  [getAllRoleMembers()](./sdk.packmodule.getallrolemembers.md) |  | <b><i>(BETA)</i></b> |
+|  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  | <b><i>(BETA)</i></b> |
+|  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  | <b><i>(BETA)</i></b> |
+|  [getRoleMembers(role)](./sdk.packmodule.getrolemembers.md) |  | <b><i>(BETA)</i></b> |
+|  [grantRole(role, address)](./sdk.packmodule.grantrole.md) |  | <b><i>(BETA)</i></b> |
+|  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
+|  [open(packId)](./sdk.packmodule.open.md) |  | <b><i>(BETA)</i></b> |
+|  [revokeRole(role, address)](./sdk.packmodule.revokerole.md) |  | <b><i>(BETA)</i></b> |
+|  [setApproval(operator, approved)](./sdk.packmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
+|  [setModuleMetadata(metadata)](./sdk.packmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
+|  [setRestrictedTransfer(restricted)](./sdk.packmodule.setrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |
+|  [setRoyaltyBps(amount)](./sdk.packmodule.setroyaltybps.md) |  | <b><i>(BETA)</i></b> |
+|  [transfer(to, tokenId, amount)](./sdk.packmodule.transfer.md) |  | <b><i>(BETA)</i></b> |
+|  [transferBatchFrom(from, to, args, data)](./sdk.packmodule.transferbatchfrom.md) |  | <b><i>(BETA)</i></b> |
+|  [transferFrom(from, to, args, data)](./sdk.packmodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
+|  [withdrawLink(to, amount)](./sdk.packmodule.withdrawlink.md) |  | <b><i>(BETA)</i></b> |
 
