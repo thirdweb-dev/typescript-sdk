@@ -1,6 +1,6 @@
 {
   "name": "@nftlabs/sdk",
-  "version": "1.6.0-alpha.7",
+  "version": "1.6.0-alpha.8",
   "description": "The main NFTLabs SDK.",
   "repository": {
     "type": "git",
@@ -8,21 +8,15 @@
   },
   "license": "MIT",
   "source": "src/index.ts",
-  "main": "lib/sdk.js",
-  "exports": "./lib/sdk.mjs",
+  "main": "lib/sdk.cjs.js",
+  "module": "lib/sdk.mjs.js",
   "types": "lib/sdk.d.ts",
   "files": [
     "lib/"
   ],
-  "engines": {
-    "node": ">= 14"
-  },
+  "sideEffects": false,
   "targets": {
-    "types": false,
-    "exports": {
-      "isLibrary": true,
-      "outputFormat": "esmodule"
-    }
+    "types": false
   },
   "scripts": {
     "build": "parcel build",
@@ -47,7 +41,7 @@
     "@parcel/compressor-gzip": "^2.0.0",
     "@parcel/transformer-typescript-types": "^2.0.0",
     "@typechain/ethers-v5": "^7.1.0",
-    "@types/node-fetch": "^3.0.3",
+    "@types/node-fetch": "^2",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
     "copyfiles": "^2.4.1",
@@ -75,7 +69,7 @@
     "@ethersproject/providers": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
     "form-data": "^4.0.0",
-    "node-fetch": "^3.0.0",
+    "node-fetch": "^2",
     "ts-enum-util": "^4.0.2"
   },
   "bugs": {
