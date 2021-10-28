@@ -4,3 +4,6 @@ temp/
 etc/
 bin/
 dist/
+
+.idea
+.vscode
