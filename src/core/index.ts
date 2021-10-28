@@ -24,6 +24,7 @@ import {
   ProviderOrSigner,
   ValidProviderInput,
 } from "./types";
+import { DatastoreModule } from "src/datastore";
 
 /**
  * The optional options that can be passed to the SDK.
@@ -327,6 +328,15 @@ export class NFTLabsSDK {
    */
   public getCurrencyModule(address: string): CurrencyModule {
     return this.getOrCreateModule(address, CurrencyModule);
+  }
+
+  /**
+   *
+   * @param address - The contract address of the given Datastore module.
+   * @returns The Datastore Module.
+   */
+  public getDatastoreModule(address: string): DatastoreModule {
+    return this.getOrCreateModule(address, DatastoreModule);
   }
 
   /**
