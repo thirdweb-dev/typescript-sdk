@@ -24,7 +24,7 @@ import {
   ProviderOrSigner,
   ValidProviderInput,
 } from "./types";
-import { DatastoreModule } from "src/datastore";
+import { DatastoreModule } from "../datastore";
 
 /**
  * The optional options that can be passed to the SDK.
