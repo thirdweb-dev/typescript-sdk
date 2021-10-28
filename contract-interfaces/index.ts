@@ -3,6 +3,7 @@
 /* eslint-disable */
 export type { AccessNFT } from "./AccessNFT";
 export type { Coin } from "./Coin";
+export type { DataStore } from "./DataStore";
 export type { ERC1155 } from "./ERC1155";
 export type { ERC165 } from "./ERC165";
 export type { ERC20 } from "./ERC20";
@@ -19,6 +20,7 @@ export type { Royalty } from "./Royalty";
 
 export { AccessNFT__factory } from "./factories/AccessNFT__factory";
 export { Coin__factory } from "./factories/Coin__factory";
+export { DataStore__factory } from "./factories/DataStore__factory";
 export { ERC1155__factory } from "./factories/ERC1155__factory";
 export { ERC165__factory } from "./factories/ERC165__factory";
 export { ERC20__factory } from "./factories/ERC20__factory";
