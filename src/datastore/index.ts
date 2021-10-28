@@ -6,7 +6,7 @@ import { ModuleType } from "../common";
 import { Module } from "../core/module";
 
 /**
- * The CurrencyModule. This should always be created via `getCurrencyModule()` on the main SDK.
+ * The DatastoreModule. This should always be created via `getCurrencyModule()` on the main SDK.
  * @public
  */
 export class DatastoreModule extends Module {
@@ -33,16 +33,14 @@ export class DatastoreModule extends Module {
     ));
   }
 
-  public async getUint(
-    key: string | number,
-  ): Promise<BigNumberish | undefined> {
+  public async getUint(key: string): Promise<BigNumberish | undefined> {
     const keyHash = keccak256(key.toString());
-    return await this.__contract?.getUint(keyHash);
+    return await this.contract.getUint(keyHash);
   }
 
   // write functions
   public async setUint(
-    key: string | number,
+    key: string,
     value: BigNumberish,
   ): Promise<TransactionReceipt> {
     const keyHash = keccak256(key.toString());
