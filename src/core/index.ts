@@ -79,7 +79,8 @@ type AnyContract =
   | typeof MarketModule
   | typeof PackModule
   | typeof RegistryModule
-  | typeof DropModule;
+  | typeof DropModule
+  | typeof DatastoreModule;
 
 /**
  * The entrypoint to the NFTLabsSDK.
