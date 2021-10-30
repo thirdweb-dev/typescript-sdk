@@ -20,6 +20,7 @@ export declare class AppModule extends Module
 |  [getAllContractMetadata(addresses)](./sdk.appmodule.getallcontractmetadata.md) |  |  |
 |  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get all Collection modules. |
 |  [getCurrencyModules()](./sdk.appmodule.getcurrencymodules.md) |  | Method to get all Currency modules. |
+|  [getDatastoreModules()](./sdk.appmodule.getdatastoremodules.md) |  | Method to get all Datastore modules. |
 |  [getDropModules()](./sdk.appmodule.getdropmodules.md) |  | Method to get all Drop modules. |
 |  [getMarketModules()](./sdk.appmodule.getmarketmodules.md) |  | Method to get all Market modules. |
 |  [getNFTModules()](./sdk.appmodule.getnftmodules.md) |  | Method to get all NFT modules. |
