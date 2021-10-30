@@ -19,6 +19,7 @@ export declare enum ModuleType
 |  ACCESS\_NFT | <code>4</code> |  |
 |  COLLECTION | <code>1</code> |  |
 |  CURRENCY | <code>0</code> |  |
+|  DATASTORE | <code>8</code> |  |
 |  DROP | <code>7</code> |  |
 |  DYNAMIC\_NFT | <code>3</code> |  |
 |  MARKET | <code>6</code> |  |

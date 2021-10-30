@@ -13,6 +13,7 @@ export enum ModuleType {
   PACK = 5,
   MARKET = 6,
   DROP = 7,
+  DATASTORE = 8,
 }
 /**
  *

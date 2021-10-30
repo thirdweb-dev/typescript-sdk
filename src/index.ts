@@ -11,6 +11,7 @@ export * from "./drop";
 export * from "./market";
 export * from "./nft";
 export * from "./pack";
+export * from "./datastore";
 export type { IAppModule } from "./registry";
 
 if (!globalThis.fetch) {

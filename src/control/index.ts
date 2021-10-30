@@ -72,6 +72,10 @@ export class AppModule extends Module {
     return this.getModuleAddress(ModuleType.DROP);
   }
 
+  private async getDatastoreAddress(): Promise<string[]> {
+    return this.getModuleAddress(ModuleType.DATASTORE);
+  }
+
   public async getRoyaltyTreasury(address?: string): Promise<string> {
     return await this.contract.getRoyaltyTreasury(address || AddressZero);
   }
@@ -128,6 +132,14 @@ export class AppModule extends Module {
    */
   public async getCurrencyModules(): Promise<ModuleMetadata[]> {
     return await this.getAllContractMetadata(await this.getCurrencyAddress());
+  }
+
+  /**
+   * Method to get all Datastore modules.
+   * @returns A promise of an array of Currency modules.
+   */
+  public async getDatastoreModules(): Promise<ModuleMetadata[]> {
+    return await this.getAllContractMetadata(await this.getDatastoreAddress());
   }
 
   /**
