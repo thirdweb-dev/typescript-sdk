@@ -1,7 +1,6 @@
 node_modules/
 lib/
 temp/
-etc/
 bin/
 dist/
 .idea
