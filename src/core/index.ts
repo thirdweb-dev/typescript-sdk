@@ -1,16 +1,16 @@
 import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
-import invariant from "ts-invariant";
 import type { C } from "ts-toolbelt";
 import { CollectionModule } from "../collection";
 import { uploadMetadata } from "../common";
-import { SUPPORTED_CHAIN_ID } from "../common/chain";
-import { getGasPriceForChain } from "../common/gas-price";
 import {
   FORWARDER_ADDRESS,
   getContractAddressByChainId,
 } from "../common/address";
+import { SUPPORTED_CHAIN_ID } from "../common/chain";
+import { getGasPriceForChain } from "../common/gas-price";
+import { invariant } from "../common/invariant";
 import { AppModule } from "../control";
 import { CurrencyModule } from "../currency";
 import { DropModule } from "../drop";

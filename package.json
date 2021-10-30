@@ -1,6 +1,6 @@
 {
   "name": "@nftlabs/sdk",
-  "version": "1.8.0-beta.7",
+  "version": "1.8.0-alpha.1",
   "description": "The main NFTLabs SDK.",
   "repository": {
     "type": "git",
@@ -8,15 +8,19 @@
   },
   "license": "MIT",
   "source": "src/index.ts",
-  "main": "lib/sdk.js",
+  "main": "lib/sdk.cjs.js",
+  "module": "lib/sdk.mjs.js",
   "types": "lib/sdk.d.ts",
   "files": [
-    "lib/",
-    "contract-interfaces/"
+    "lib/"
   ],
+  "sideEffects": false,
+  "targets": {
+    "types": false
+  },
   "scripts": {
-    "build": "microbundle --no-generateTypes --tsconfig tsconfig-microbundle.json --no-compress",
-    "dev": "microbundle watch",
+    "build": "parcel build",
+    "dev": "parcel watch",
     "format": "prettier src/ --write",
     "prepublishOnly": "yarn lint",
     "lint": "eslint src/",
@@ -31,14 +35,15 @@
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.1",
-    "@ethersproject/bytes": "^5.4.0",
-    "@ethersproject/providers": "^5.4.5",
     "@microsoft/api-documenter": "^7.13.53",
     "@microsoft/api-extractor": "^7.18.10",
+    "@parcel/compressor-brotli": "^2.0.0",
+    "@parcel/compressor-gzip": "^2.0.0",
+    "@parcel/transformer-typescript-types": "^2.0.0",
     "@typechain/ethers-v5": "^7.1.0",
-    "@types/node-fetch": "^2.5.12",
-    "@typescript-eslint/eslint-plugin": "^4.30.0",
-    "@typescript-eslint/parser": "^4.31.2",
+    "@types/node-fetch": "^2",
+    "@typescript-eslint/eslint-plugin": "^5.2.0",
+    "@typescript-eslint/parser": "^5.2.0",
     "copyfiles": "^2.4.1",
     "eslint": "7.32.0",
     "eslint-config-prettier": "^8.3.0",
@@ -47,7 +52,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-tsdoc": "^0.2.14",
     "ethers": "^5.4.7",
-    "microbundle": "^0.13.3",
+    "parcel": "^2.0.0",
     "prettier": "^2.4.1",
     "ts-toolbelt": "^9.6.0",
     "typechain": "^5.1.2",
@@ -57,15 +62,15 @@
     "ethers": "^5.4.6"
   },
   "dependencies": {
+    "@ethersproject/bignumber": "^5.5.0",
+    "@ethersproject/bytes": "^5.4.0",
+    "@ethersproject/constants": "^5.5.0",
+    "@ethersproject/contracts": "^5.5.0",
+    "@ethersproject/providers": "^5.5.0",
+    "@ethersproject/units": "^5.5.0",
     "form-data": "^4.0.0",
-    "node-fetch": "^2.6.2",
-    "ts-enum-util": "^4.0.2",
-    "ts-invariant": "^0.9.3"
-  },
-  "resolutions": {
-    "ansi-regex": "^5.0.0",
-    "strip-ansi": "^5.0.0",
-    "node-fetch": "^2.6.2"
+    "node-fetch": "^2.6.5",
+    "ts-enum-util": "^4.0.2"
   },
   "bugs": {
     "url": "https://github.com/nftlabs/nftlabs-sdk-ts/issues"
