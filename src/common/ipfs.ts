@@ -1,5 +1,5 @@
 import FormData from "form-data";
-import { JSONValue, MetadataURIOrObject } from "../core/types";
+import { MetadataURIOrObject } from "../core/types";
 
 /**
  *

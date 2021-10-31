@@ -26,7 +26,7 @@ export const InterfaceId_IERC1155 = arrayify("0xd9b67a26");
 
 const contractUriABI = [
   {
-    inputs: [],
+    inputs: [] as [],
     name: "contractURI",
     outputs: [
       {
