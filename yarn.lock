@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@3rdweb/contracts@^0.1.2-0":
-  version "0.1.2-0"
-  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-0.1.2-0.tgz#ffaf85cd6706d2b5e25ca9c410ef58471364e208"
-  integrity sha512-KLYgNdvuPdIVwX3B+Qd2Oz7XttRzzupuFgl/xbR+u799CetQ6dQFAdYedJuW8vxyGP50/1TdyV+F03W/rGTwyQ==
+"@3rdweb/contracts@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-0.1.1.tgz#cdff600e775ce28b3a6f5f772b8db15dbaf850c1"
+  integrity sha512-sxWjp0NlwHX2D8Gkg/MlaOCywmyuNWgcL2ncFEU7X3MaZCSnncs63VJQ4Xn75puy1rR7OgkzreCIafK0wOIihA==
   dependencies:
     "@chainlink/contracts" "^0.2.2"
     "@nomiclabs/hardhat-etherscan" "^2.1.4"

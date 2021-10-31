@@ -15,9 +15,6 @@
     "dist/"
   ],
   "sideEffects": false,
-  "targets": {
-    "types": false
-  },
   "scripts": {
     "build:tsdx": "tsdx build",
     "dev": "parcel watch",
@@ -58,7 +55,7 @@
     "ethers": "^5.4.6"
   },
   "dependencies": {
-    "@3rdweb/contracts": "^0.1.2-0",
+    "@3rdweb/contracts": "^0.1.1",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/constants": "^5.5.0",
