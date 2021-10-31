@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish } from "ethers";
 import { MetadataURIOrObject } from "../core/types";
-import { Coin, Coin__factory } from "../../contract-interfaces";
+import { Coin, Coin__factory } from "@3rdweb/contracts";
 import { getRoleHash, ModuleType, Role } from "../common";
 import {
   Currency,

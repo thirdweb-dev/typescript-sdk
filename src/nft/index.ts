@@ -1,7 +1,7 @@
 /* eslint-disable new-cap */
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { MetadataURIOrObject } from "../core/types";
-import { NFT, NFT__factory } from "../../contract-interfaces";
+import { NFT, NFT__factory } from "@3rdweb/contracts";
 import { getRoleHash, ModuleType, Role } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";

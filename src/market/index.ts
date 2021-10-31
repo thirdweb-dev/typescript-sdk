@@ -8,7 +8,7 @@ import {
   ERC721__factory,
   Market,
   Market__factory,
-} from "../../contract-interfaces";
+} from "@3rdweb/contracts";
 import { ModuleType } from "../common";
 import { InterfaceId_IERC721 } from "../common/contract";
 import { CurrencyValue, getCurrencyValue } from "../common/currency";

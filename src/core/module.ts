@@ -5,13 +5,13 @@ import {
   TransactionReceipt,
 } from "@ethersproject/providers";
 import { BaseContract, BigNumber, CallOverrides, ethers, Signer } from "ethers";
-import invariant from "ts-invariant";
-import type { ProviderOrSigner } from "./types";
 import type { ISDKOptions } from ".";
+import { Forwarder__factory } from "@3rdweb/contracts";
 import { isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
-import { Forwarder__factory } from "../../contract-interfaces";
 import { getGasPriceForChain } from "../common/gas-price";
+import { invariant } from "../common/invariant";
+import type { ProviderOrSigner } from "./types";
 
 /**
  *
@@ -167,6 +167,7 @@ export class Module {
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<TransactionReceipt> {
+    console.log("callOverrides", callOverrides);
     const signer = this.getSigner();
     invariant(
       signer,

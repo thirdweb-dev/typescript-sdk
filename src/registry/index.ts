@@ -1,4 +1,4 @@
-import { Registry, Registry__factory } from "../../contract-interfaces";
+import { Registry, Registry__factory } from "@3rdweb/contracts";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { Module } from "../core/module";
 

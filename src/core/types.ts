@@ -1,5 +1,5 @@
 import type { Network, Provider } from "@ethersproject/providers";
-import type { BigNumberish, BytesLike, Signer } from "ethers";
+import type { BytesLike, Signer } from "ethers";
 
 /**
  * A valid "ethers" Provider or Signer.

@@ -1,5 +1,5 @@
 import { Contract } from "@ethersproject/contracts";
-import { LazyNFT, NFT, NFTCollection } from "../../contract-interfaces";
+import { LazyNFT, NFT, NFTCollection } from "@3rdweb/contracts";
 import { JSONValue, ProviderOrSigner } from "../core/types";
 import { NotFoundError } from "./error";
 import { replaceIpfsWithGateway } from "./ipfs";

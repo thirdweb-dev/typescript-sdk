@@ -1,4 +1,4 @@
-import { Forwarder } from "../../contract-interfaces";
+import { Forwarder } from "@3rdweb/contracts";
 import { BigNumber } from "ethers";
 
 /**
