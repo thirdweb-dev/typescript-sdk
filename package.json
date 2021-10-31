@@ -1,7 +1,7 @@
 {
   "name": "@3rdweb/sdk",
   "version": "1.11.0",
-  "description": "The main NFTLabs SDK.",
+  "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nftlabs/nftlabs-sdk-ts.git"
