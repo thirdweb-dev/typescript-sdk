@@ -8,5 +8,5 @@
 
 |  Package | Description |
 |  --- | --- |
-|  [@nftlabs/sdk](./sdk.md) |  |
+|  [@3rdweb/sdk](./sdk.md) |  |
 
