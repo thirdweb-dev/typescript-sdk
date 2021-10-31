@@ -6,7 +6,7 @@ import {
 } from "@ethersproject/providers";
 import { BaseContract, BigNumber, CallOverrides, ethers, Signer } from "ethers";
 import type { ISDKOptions } from ".";
-import { Forwarder__factory } from "../../contract-interfaces";
+import { Forwarder__factory } from "@3rdweb/contracts";
 import { isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";

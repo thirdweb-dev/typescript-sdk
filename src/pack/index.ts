@@ -4,7 +4,7 @@ import {
   ERC20__factory,
   Pack as PackContract,
   Pack__factory,
-} from "../../contract-interfaces";
+} from "@3rdweb/contracts";
 import {
   CurrencyValue,
   getCurrencyValue,

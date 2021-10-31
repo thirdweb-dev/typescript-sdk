@@ -5,7 +5,7 @@ import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import {
   LazyNFT as Drop,
   LazyNFT__factory as Drop__factory,
-} from "../../contract-interfaces";
+} from "@3rdweb/contracts";
 import { getRoleHash, ModuleType, Role } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";

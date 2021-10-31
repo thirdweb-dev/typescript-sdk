@@ -1,16 +1,16 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { BytesLike } from "ethers";
 import { MetadataURIOrObject } from "../core/types";
 import {
   NFTCollection as NFTCollectionContract,
   NFTCollection__factory,
-} from "../../contract-interfaces";
+} from "@3rdweb/contracts";
 import { ModuleType } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { getRoleHash, Role } from "../common/role";
 import { Module } from "../core/module";
 import { TransactionReceipt } from "@ethersproject/providers";
+import { BytesLike } from "ethers";
 
 /**
  * @public

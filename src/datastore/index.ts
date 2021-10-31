@@ -1,7 +1,7 @@
 import { keccak256 } from "@ethersproject/keccak256";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumberish } from "ethers";
-import { DataStore, DataStore__factory } from "../../contract-interfaces";
+import { DataStore, DataStore__factory } from "@3rdweb/contracts";
 import { ModuleType } from "../common";
 import { Module } from "../core/module";
 

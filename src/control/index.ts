@@ -1,9 +1,6 @@
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import {
-  ProtocolControl,
-  ProtocolControl__factory,
-} from "../../contract-interfaces";
+import { ProtocolControl, ProtocolControl__factory } from "@3rdweb/contracts";
 import { ModuleType, uploadMetadata } from "../common";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { Module } from "../core/module";
