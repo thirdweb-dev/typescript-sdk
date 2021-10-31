@@ -1,9 +1,9 @@
-# nftlabs-sdk
-
+# thirdweb-sdk
 
 ### Docs
-https://docs.nftlabs.co
+
+https://docs.thirdweb.com
 
 ### Api Reference
-https://nftlabs.github.io/nftlabs-sdk-ts/sdk.html
 
+https://nftlabs.github.io/nftlabs-sdk-ts/sdk.html

@@ -584,42 +584,8 @@ export enum ModuleType {
 // @internal (undocumented)
 export type NFTContractTypes = NFT | NFTCollection | LazyNFT;
 
-// @public
-export class NFTLabsSDK {
-    constructor(providerOrNetwork: ValidProviderInput, opts?: Partial<ISDKOptions>);
-    createApp(metadata: MetadataURIOrObject): Promise<ContractReceipt>;
-    // (undocumented)
-    getAppModule(address: string): AppModule;
-    getApps(): Promise<IAppModule[]>;
-    // (undocumented)
-    getCollectionModule(address: string): CollectionModule;
-    // (undocumented)
-    getCurrencyModule(address: string): CurrencyModule;
-    // (undocumented)
-    getDatastoreModule(address: string): DatastoreModule;
-    // Warning: (ae-incompatible-release-tags) The symbol "getDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
-    //
-    // (undocumented)
-    getDropModule(address: string): DropModule;
-    // @internal
-    getForwarderAddress(): Promise<string>;
-    // (undocumented)
-    getGasPrice(speed?: string, maxGasGwei?: number): Promise<number | null>;
-    // (undocumented)
-    getMarketModule(address: string): MarketModule;
-    // (undocumented)
-    getNFTModule(address: string): NFTModule;
-    // Warning: (ae-incompatible-release-tags) The symbol "getPackModule" is marked as @public, but its signature references "PackModule" which is marked as @beta
-    //
-    // (undocumented)
-    getPackModule(address: string): PackModule;
-    // (undocumented)
-    isReadOnly(): boolean;
-    // (undocumented)
-    setProviderOrSigner(providerOrSignerOrNetwork: ValidProviderInput): ProviderOrSigner;
-    // @internal
-    get signer(): Signer | null;
-}
+// @public @deprecated
+export const NFTLabsSDK: typeof ThirdwebSDK;
 
 // @public (undocumented)
 export interface NFTMetadata {
@@ -816,6 +782,43 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string): str
 
 // @public (undocumented)
 export type Role = "admin" | "minter" | "pauser" | "transfer";
+
+// @public
+export class ThirdwebSDK {
+    constructor(providerOrNetwork: ValidProviderInput, opts?: Partial<ISDKOptions>);
+    createApp(metadata: MetadataURIOrObject): Promise<ContractReceipt>;
+    // (undocumented)
+    getAppModule(address: string): AppModule;
+    getApps(): Promise<IAppModule[]>;
+    // (undocumented)
+    getCollectionModule(address: string): CollectionModule;
+    // (undocumented)
+    getCurrencyModule(address: string): CurrencyModule;
+    // (undocumented)
+    getDatastoreModule(address: string): DatastoreModule;
+    // Warning: (ae-incompatible-release-tags) The symbol "getDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
+    //
+    // (undocumented)
+    getDropModule(address: string): DropModule;
+    // @internal
+    getForwarderAddress(): Promise<string>;
+    // (undocumented)
+    getGasPrice(speed?: string, maxGasGwei?: number): Promise<number | null>;
+    // (undocumented)
+    getMarketModule(address: string): MarketModule;
+    // (undocumented)
+    getNFTModule(address: string): NFTModule;
+    // Warning: (ae-incompatible-release-tags) The symbol "getPackModule" is marked as @public, but its signature references "PackModule" which is marked as @beta
+    //
+    // (undocumented)
+    getPackModule(address: string): PackModule;
+    // (undocumented)
+    isReadOnly(): boolean;
+    // (undocumented)
+    setProviderOrSigner(providerOrSignerOrNetwork: ValidProviderInput): ProviderOrSigner;
+    // @internal
+    get signer(): Signer | null;
+}
 
 // Warning: (ae-internal-missing-underscore) The name "uploadMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //

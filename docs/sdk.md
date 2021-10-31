@@ -14,10 +14,10 @@
 |  [DatastoreModule](./sdk.datastoremodule.md) | The DatastoreModule. This should always be created via <code>getCurrencyModule()</code> on the main SDK. |
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> The DropModule. This should always be created via <code>getDropModule()</code> on the main SDK. |
 |  [MarketModule](./sdk.marketmodule.md) | The MarketModule. This should always be created via <code>getMarketModule()</code> on the main SDK. |
-|  [NFTLabsSDK](./sdk.nftlabssdk.md) | The entrypoint to the NFTLabsSDK. |
 |  [NFTModule](./sdk.nftmodule.md) | The NFTModule. This should always be created via <code>getNFTModule()</code> on the main SDK. |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> The PackModule. This should always be created via <code>getPackModule()</code> on the main SDK. |
+|  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
 
 ## Enumerations
 
@@ -57,6 +57,12 @@
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
+
+## Variables
+
+|  Variable | Description |
+|  --- | --- |
+|  [NFTLabsSDK](./sdk.nftlabssdk.md) | Deprecated, please use ThirdwebSDK instead. |
 
 ## Type Aliases
 

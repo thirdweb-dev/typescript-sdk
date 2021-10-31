@@ -13,6 +13,7 @@ import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { AppModule } from "../control";
 import { CurrencyModule } from "../currency";
+import { DatastoreModule } from "../datastore";
 import { DropModule } from "../drop";
 import { MarketModule } from "../market";
 import { NFTModule } from "../nft";
@@ -24,7 +25,6 @@ import {
   ProviderOrSigner,
   ValidProviderInput,
 } from "./types";
-import { DatastoreModule } from "../datastore";
 
 /**
  * The optional options that can be passed to the SDK.
@@ -83,10 +83,10 @@ type AnyContract =
   | typeof DatastoreModule;
 
 /**
- * The entrypoint to the NFTLabsSDK.
+ * The entrypoint to the SDK.
  * @public
  */
-export class NFTLabsSDK {
+export class ThirdwebSDK {
   // default options
   private options: ISDKOptions;
   private defaultOptions: ISDKOptions = {
@@ -380,3 +380,9 @@ export class NFTLabsSDK {
     throw new Error("relay transaction failed");
   }
 }
+
+/**
+ * Deprecated, please use ThirdwebSDK instead.
+ * @deprecated use ThirdwebSDK instead
+ */
+export const NFTLabsSDK = ThirdwebSDK;

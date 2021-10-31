@@ -2,37 +2,17 @@
 
 [Home](./index.md) &gt; [@3rdweb/sdk](./sdk.md) &gt; [NFTLabsSDK](./sdk.nftlabssdk.md)
 
-## NFTLabsSDK class
+## NFTLabsSDK variable
 
-The entrypoint to the NFTLabsSDK.
+> Warning: This API is now obsolete.
+> 
+> use ThirdwebSDK instead
+> 
+
+Deprecated, please use ThirdwebSDK instead.
 
 <b>Signature:</b>
 
 ```typescript
-export declare class NFTLabsSDK 
+NFTLabsSDK: typeof ThirdwebSDK
 ```
-
-## Constructors
-
-|  Constructor | Modifiers | Description |
-|  --- | --- | --- |
-|  [(constructor)(providerOrNetwork, opts)](./sdk.nftlabssdk._constructor_.md) |  | Constructs a new instance of the <code>NFTLabsSDK</code> class |
-
-## Methods
-
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [createApp(metadata)](./sdk.nftlabssdk.createapp.md) |  | Call this to create a new app |
-|  [getAppModule(address)](./sdk.nftlabssdk.getappmodule.md) |  |  |
-|  [getApps()](./sdk.nftlabssdk.getapps.md) |  | Call this to get the current apps. |
-|  [getCollectionModule(address)](./sdk.nftlabssdk.getcollectionmodule.md) |  |  |
-|  [getCurrencyModule(address)](./sdk.nftlabssdk.getcurrencymodule.md) |  |  |
-|  [getDatastoreModule(address)](./sdk.nftlabssdk.getdatastoremodule.md) |  |  |
-|  [getDropModule(address)](./sdk.nftlabssdk.getdropmodule.md) |  |  |
-|  [getGasPrice(speed, maxGasGwei)](./sdk.nftlabssdk.getgasprice.md) |  |  |
-|  [getMarketModule(address)](./sdk.nftlabssdk.getmarketmodule.md) |  |  |
-|  [getNFTModule(address)](./sdk.nftlabssdk.getnftmodule.md) |  |  |
-|  [getPackModule(address)](./sdk.nftlabssdk.getpackmodule.md) |  |  |
-|  [isReadOnly()](./sdk.nftlabssdk.isreadonly.md) |  |  |
-|  [setProviderOrSigner(providerOrSignerOrNetwork)](./sdk.nftlabssdk.setproviderorsigner.md) |  |  |
-
