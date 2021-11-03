@@ -4,12 +4,12 @@
 
 ## CollectionModule.get() method
 
-Get a signle collection item by tokenId.
+Get a single collection item by tokenId.
 
 <b>Signature:</b>
 
 ```typescript
-get(tokenId: string): Promise<CollectionMetadata>;
+get(tokenId: string, address?: string): Promise<CollectionMetadata>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ get(tokenId: string): Promise<CollectionMetadata>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  tokenId | string | the unique token id of the nft |
+|  address | string |  |
 
 <b>Returns:</b>
 

@@ -83,7 +83,9 @@ export interface CollectionMetadata {
     // (undocumented)
     creator: string;
     // (undocumented)
-    metadata?: NFTMetadata;
+    metadata: NFTMetadata;
+    // (undocumented)
+    ownedByAddress: number;
     // (undocumented)
     supply: BigNumber;
 }
@@ -118,8 +120,8 @@ export class CollectionModule extends Module {
     createWithERC20(tokenContract: string, tokenAmount: BigNumberish, args: INFTCollectionCreateArgs): Promise<void>;
     // (undocumented)
     createWithERC721(tokenContract: string, tokenId: BigNumberish, metadata: MetadataURIOrObject): Promise<void>;
-    get(tokenId: string): Promise<CollectionMetadata>;
-    getAll(): Promise<CollectionMetadata[]>;
+    get(tokenId: string, address?: string): Promise<CollectionMetadata>;
+    getAll(address?: string): Promise<CollectionMetadata[]>;
     // (undocumented)
     getAllRoleMembers(): Promise<Record<Role, string[]>>;
     // @internal (undocumented)

@@ -18,7 +18,8 @@ import { MetadataURIOrObject } from "../core/types";
 export interface CollectionMetadata {
   creator: string;
   supply: BigNumber;
-  metadata?: NFTMetadata;
+  metadata: NFTMetadata;
+  ownedByAddress: number;
 }
 
 /**
@@ -73,20 +74,25 @@ export class CollectionModule extends Module {
 
   /**
    *
-   * Get a signle collection item by tokenId.
+   * Get a single collection item by tokenId.
    * @param tokenId - the unique token id of the nft
    * @returns A promise that resolves to a `CollectionMetadata`.
    */
-  public async get(tokenId: string): Promise<CollectionMetadata> {
-    const [metadata, creator, supply] = await Promise.all([
+  public async get(
+    tokenId: string,
+    address?: string,
+  ): Promise<CollectionMetadata> {
+    const [metadata, creator, supply, ownedByAddress] = await Promise.all([
       getMetadata(this.contract, tokenId, this.ipfsGatewayUrl),
       this.contract.creator(tokenId),
       this.contract.totalSupply(tokenId).catch(() => BigNumber.from("0")),
+      address ? (await this.balanceOf(address, tokenId)).toNumber() : 0,
     ]);
     return {
       creator,
       supply,
       metadata,
+      ownedByAddress,
     };
   }
 
@@ -94,10 +100,12 @@ export class CollectionModule extends Module {
    * Return all items in the collection.
    * @returns An array of `INFTCollection`.
    */
-  public async getAll(): Promise<CollectionMetadata[]> {
+  public async getAll(address?: string): Promise<CollectionMetadata[]> {
     const maxId = (await this.contract.nextTokenId()).toNumber();
     return await Promise.all(
-      Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
+      Array.from(Array(maxId).keys()).map((i) =>
+        this.get(i.toString(), address),
+      ),
     );
   }
 

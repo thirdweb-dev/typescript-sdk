@@ -35,8 +35,8 @@ export declare class CollectionModule extends Module
 |  [createBatch(metadatas)](./sdk.collectionmodule.createbatch.md) |  |  |
 |  [createWithERC20(tokenContract, tokenAmount, args)](./sdk.collectionmodule.createwitherc20.md) |  |  |
 |  [createWithERC721(tokenContract, tokenId, metadata)](./sdk.collectionmodule.createwitherc721.md) |  |  |
-|  [get(tokenId)](./sdk.collectionmodule.get.md) |  | Get a signle collection item by tokenId. |
-|  [getAll()](./sdk.collectionmodule.getall.md) |  | Return all items in the collection. |
+|  [get(tokenId, address)](./sdk.collectionmodule.get.md) |  | Get a single collection item by tokenId. |
+|  [getAll(address)](./sdk.collectionmodule.getall.md) |  | Return all items in the collection. |
 |  [getAllRoleMembers()](./sdk.collectionmodule.getallrolemembers.md) |  |  |
 |  [getRoleMembers(role)](./sdk.collectionmodule.getrolemembers.md) |  |  |
 |  [grantRole(role, address)](./sdk.collectionmodule.grantrole.md) |  |  |

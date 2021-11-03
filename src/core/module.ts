@@ -211,11 +211,11 @@ export class Module {
     const type = this.getModuleType();
 
     return {
-      ...(await getContractMetadata(
+      metadata: await getContractMetadata(
         this.getProviderOrSigner(),
         contract.address,
         this.options.ipfsGatewayUrl,
-      )),
+      ),
       address: contract.address,
       type,
     };
