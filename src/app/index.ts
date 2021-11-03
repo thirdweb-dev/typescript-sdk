@@ -1,18 +1,28 @@
+import { ProtocolControl, ProtocolControl__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { ProtocolControl, ProtocolControl__factory } from "@3rdweb/contracts";
-import { ModuleType, uploadMetadata } from "../common";
+import { uploadMetadata } from "../common";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
+import { ModuleType } from "../common/module-type";
 import { Module } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
 /**
- * A Module with metadata.
+ * The module metadata, but missing the ModuleType.
  * @public
+ * @deprecated - You should rely on the {@link ModuleMetadata} instead, since it includes the type of the module.
  */
-export interface ModuleMetadata {
+export interface ModuleMetadataNoType {
   address: string;
   metadata?: ContractMetadata;
+}
+
+/**
+ * The module metadata, includes the `address` and the {@link ModuleType}.
+ * @public
+ */
+export interface ModuleMetadata extends ModuleMetadataNoType {
+  type: ModuleType;
 }
 
 /**
@@ -20,6 +30,14 @@ export interface ModuleMetadata {
  * @public
  */
 export class AppModule extends Module {
+  /**
+   * The internal module type for the app module.
+   * We do not treat it as a fully fledged module on the contract level, so it does not have a real type.
+   * @internal
+   * @readonly
+   */
+  private moduleType: ModuleType = -1;
+
   private __contract: ProtocolControl | null = null;
   /**
    * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
@@ -41,6 +59,17 @@ export class AppModule extends Module {
     ));
   }
 
+  /**
+   * @internal
+   */
+  protected getModuleType(): ModuleType {
+    return this.moduleType;
+  }
+
+  /**
+   * @internal
+   *
+   */
   private async getModuleAddress(moduleType: ModuleType): Promise<string[]> {
     return await this.contract.getAllModulesOfType(moduleType);
   }
@@ -77,16 +106,20 @@ export class AppModule extends Module {
     return await this.contract.getRoyaltyTreasury(address || AddressZero);
   }
 
+  /**
+   * @internal
+   * @param addresses - The addresses of the modules to get metadata for.
+   */
   public async getAllContractMetadata(
     addresses: string[],
-  ): Promise<ModuleMetadata[]> {
+  ): Promise<ModuleMetadataNoType[]> {
     const metadatas = await Promise.all(
       addresses.map((address) =>
         getContractMetadata(
           this.providerOrSigner,
           address,
           this.ipfsGatewayUrl,
-        ).catch(() => undefined),
+        ),
       ),
     );
     return addresses
@@ -100,62 +133,140 @@ export class AppModule extends Module {
   }
 
   /**
-   * Method to get all pack modules.
+   * Method to get a list of pack module metadata.
    * @returns A promise of an array of Pack modules.
+   * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getPackModules(): Promise<ModuleMetadata[]> {
-    return await this.getAllContractMetadata(await this.getPackAddress());
+    return (await this.getAllContractMetadata(await this.getPackAddress())).map(
+      (m) => ({
+        ...m,
+        type: ModuleType.PACK,
+      }),
+    );
   }
 
   /**
-   * Method to get all NFT modules.
+   * Method to get a list of NFT module metadata.
    * @returns A promise of an array of NFT modules.
+   * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getNFTModules(): Promise<ModuleMetadata[]> {
-    return await this.getAllContractMetadata(await this.getNFTAddress());
+    return (await this.getAllContractMetadata(await this.getNFTAddress())).map(
+      (m) => ({
+        ...m,
+        type: ModuleType.NFT,
+      }),
+    );
   }
 
   /**
-   * Method to get all Collection modules.
+   * Method to get a list of Collection module metadata.
    * @returns A promise of an array of Collection modules.
+   * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getCollectionModules(): Promise<ModuleMetadata[]> {
-    return await this.getAllContractMetadata(await this.getCollectionAddress());
+    return (
+      await this.getAllContractMetadata(await this.getCollectionAddress())
+    ).map((m) => ({
+      ...m,
+      type: ModuleType.COLLECTION,
+    }));
   }
 
   /**
-   * Method to get all Currency modules.
+   * Method to get a list of Currency module metadata.
    * @returns A promise of an array of Currency modules.
+   * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getCurrencyModules(): Promise<ModuleMetadata[]> {
-    return await this.getAllContractMetadata(await this.getCurrencyAddress());
+    return (
+      await this.getAllContractMetadata(await this.getCurrencyAddress())
+    ).map((m) => ({
+      ...m,
+      type: ModuleType.CURRENCY,
+    }));
   }
 
   /**
-   * Method to get all Datastore modules.
+   * Method to get a list of Datastore module metadata.
    * @returns A promise of an array of Currency modules.
+   * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getDatastoreModules(): Promise<ModuleMetadata[]> {
-    return await this.getAllContractMetadata(await this.getDatastoreAddress());
+    return (
+      await this.getAllContractMetadata(await this.getDatastoreAddress())
+    ).map((m) => ({
+      ...m,
+      type: ModuleType.DATASTORE,
+    }));
   }
 
   /**
-   * Method to get all Market modules.
+   * Method to get a list of Market module metadata.
    * @returns A promise of an array of Market modules.
+   * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getMarketModules(): Promise<ModuleMetadata[]> {
-    return await this.getAllContractMetadata(await this.getMarketAddress());
+    return (
+      await this.getAllContractMetadata(await this.getMarketAddress())
+    ).map((m) => ({
+      ...m,
+      type: ModuleType.MARKET,
+    }));
   }
 
   /**
-   * Method to get all Drop modules.
+   * Method to get a list of Drop module metadata.
    * @returns A promise of an array of Drop modules.
+   * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getDropModules(): Promise<ModuleMetadata[]> {
-    return await this.getAllContractMetadata(await this.getDropAddress());
+    return (await this.getAllContractMetadata(await this.getDropAddress())).map(
+      (m) => ({
+        ...m,
+        type: ModuleType.DROP,
+      }),
+    );
+  }
+
+  /**
+   * Method to get a list of all module metadata on a given app.
+   * @public
+   * @param filterByModuleType - Optional array of {@link ModuleType} to filter by.
+   * @returns Array of module metadata
+   */
+  public async getAllModuleMetadata(
+    filterByModuleType?: ModuleType[],
+  ): Promise<ModuleMetadata[]> {
+    const moduleTypesToGet = filterByModuleType || [
+      ModuleType.NFT,
+      ModuleType.COLLECTION,
+      ModuleType.PACK,
+      ModuleType.CURRENCY,
+      ModuleType.MARKET,
+      ModuleType.DROP,
+      ModuleType.DATASTORE,
+    ];
+    return (
+      await Promise.all(
+        moduleTypesToGet.map(async (moduleType) => {
+          const moduleAddresses = await this.getModuleAddress(moduleType);
+          return (await this.getAllContractMetadata(moduleAddresses)).map(
+            (m) => ({
+              ...m,
+              type: moduleType,
+            }),
+          );
+        }),
+      )
+    ).reduce((acc, curr) => acc.concat(curr), []);
   }
 
   // owner functions
+  /**
+   * @deprecated - Use setMetadata() instead
+   */
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
   ): Promise<TransactionReceipt> {

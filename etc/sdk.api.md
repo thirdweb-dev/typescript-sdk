@@ -26,26 +26,34 @@ import { Provider } from '@ethersproject/providers';
 import { Signer } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/providers';
 
-// Warning: (ae-forgotten-export) The symbol "Module" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class AppModule extends Module {
     // @internal (undocumented)
     protected connectContract(): ProtocolControl;
     // @internal
     get contract(): ProtocolControl;
-    // (undocumented)
-    getAllContractMetadata(addresses: string[]): Promise<ModuleMetadata[]>;
+    // @internal (undocumented)
+    getAllContractMetadata(addresses: string[]): Promise<ModuleMetadataNoType[]>;
+    getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
+    // @deprecated
     getCollectionModules(): Promise<ModuleMetadata[]>;
+    // @deprecated
     getCurrencyModules(): Promise<ModuleMetadata[]>;
+    // @deprecated
     getDatastoreModules(): Promise<ModuleMetadata[]>;
+    // @deprecated
     getDropModules(): Promise<ModuleMetadata[]>;
+    // @deprecated
     getMarketModules(): Promise<ModuleMetadata[]>;
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
+    // @deprecated
     getNFTModules(): Promise<ModuleMetadata[]>;
+    // @deprecated
     getPackModules(): Promise<ModuleMetadata[]>;
     // (undocumented)
     getRoyaltyTreasury(address?: string): Promise<string>;
-    // (undocumented)
+    // @deprecated (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleRoyaltyTreasury(moduleAddress: string, treasury: string): Promise<TransactionReceipt>;
@@ -114,6 +122,8 @@ export class CollectionModule extends Module {
     getAll(): Promise<CollectionMetadata[]>;
     // (undocumented)
     getAllRoleMembers(): Promise<Record<Role, string[]>>;
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
     // (undocumented)
     getRoleMembers(role: Role): Promise<string[]>;
     // (undocumented)
@@ -148,7 +158,7 @@ export class CollectionModule extends Module {
     transferFrom(from: string, to: string, args: INFTCollectionBatchArgs, data?: BytesLike): Promise<TransactionReceipt>;
 }
 
-// @public (undocumented)
+// @public
 export interface ContractMetadata {
     // (undocumented)
     description?: string;
@@ -190,7 +200,7 @@ export interface CreatePublicMintCondition {
     waitTimeSecondsLimitPerTransaction?: BigNumberish_2;
 }
 
-// @public (undocumented)
+// @public
 export interface Currency {
     // (undocumented)
     decimals: number;
@@ -222,6 +232,8 @@ export class CurrencyModule extends Module {
     get(): Promise<Currency>;
     // (undocumented)
     getAllRoleMembers(): Promise<Record<Role, string[]>>;
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
     // (undocumented)
     getRoleMembers(role: Role): Promise<string[]>;
     // (undocumented)
@@ -250,7 +262,7 @@ export class CurrencyModule extends Module {
     transferFrom(from: string, to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
 }
 
-// @public (undocumented)
+// @public
 export interface CurrencyValue extends Currency {
     // (undocumented)
     displayValue: string;
@@ -264,6 +276,8 @@ export class DatastoreModule extends Module {
     protected connectContract(): DataStore;
     // @internal
     get contract(): DataStore;
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
     // (undocumented)
     getUint(key: string): Promise<BigNumberish_2 | undefined>;
     // (undocumented)
@@ -300,6 +314,8 @@ export class DropModule extends Module {
     getAllRoleMembers(): Promise<Record<Role, string[]>>;
     // (undocumented)
     getAllUnclaimed(): Promise<NFTMetadataOwner[]>;
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
     // (undocumented)
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
     // (undocumented)
@@ -393,7 +409,9 @@ export function getMetadataUri(contract: NFTContractTypes, tokenId: string): Pro
 // @internal
 export function getMetadataWithoutContract(provider: ProviderOrSigner, contractAddress: string, tokenId: string, ipfsGatewayUrl: string): Promise<NFTMetadata>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "getRoleHash" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export function getRoleHash(role: Role): BytesLike;
 
 // @public (undocumented)
@@ -478,7 +496,7 @@ export type JSONValue = string | number | null | boolean | JSONValue[] | {
     [key: string]: JSONValue;
 };
 
-// @public (undocumented)
+// @public
 export interface ListingFilter {
     // (undocumented)
     seller?: string;
@@ -488,7 +506,7 @@ export interface ListingFilter {
     tokenId?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ListingMetadata {
     // (undocumented)
     currencyContract: string;
@@ -532,6 +550,8 @@ export class MarketModule extends Module {
     getListing(listingId: string): Promise<ListingMetadata>;
     // (undocumented)
     getMarketFeeBps(): Promise<BigNumber_2>;
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
     // (undocumented)
     list(assetContract: string, tokenId: string, currencyContract: string, price: BigNumberish_2, quantity: BigNumberish_2, tokensPerBuyer?: BigNumberish_2, secondsUntilStart?: BigNumberish_2, secondsUntilEnd?: BigNumberish_2): Promise<ListingMetadata>;
     // (undocumented)
@@ -550,7 +570,57 @@ export class MarketModule extends Module {
 export type MetadataURIOrObject = string | Record<string, JSONValue>;
 
 // @public
-export interface ModuleMetadata {
+export class Module {
+    // @internal
+    constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions);
+    // (undocumented)
+    readonly address: string;
+    // @internal (undocumented)
+    clearSigner(): void;
+    // @internal @override (undocumented)
+    protected connectContract(): BaseContract;
+    // (undocumented)
+    exists(): Promise<boolean>;
+    // @internal (undocumented)
+    protected getCallOverrides(): Promise<CallOverrides>;
+    // @internal (undocumented)
+    protected getChainID(): Promise<number>;
+    getMetadata(): Promise<ModuleMetadata>;
+    // @internal @override (undocumented)
+    protected getModuleType(): ModuleType;
+    // @internal (undocumented)
+    protected getProvider(): Promise<Provider | undefined>;
+    // @internal (undocumented)
+    protected getSigner(): Signer | null;
+    // @internal (undocumented)
+    protected getSignerAddress(): Promise<string>;
+    // @internal (undocumented)
+    protected hasValidSigner(): boolean;
+    // @internal (undocumented)
+    protected readonly ipfsGatewayUrl: string;
+    // @internal (undocumented)
+    protected readonly options: ISDKOptions;
+    // (undocumented)
+    protected parseEventLogs(eventName: string, logs?: Log[]): any;
+    // @internal (undocumented)
+    protected get providerOrSigner(): ProviderOrSigner;
+    // @internal (undocumented)
+    protected sendTransaction(fn: string, args: any[], callOverrides?: CallOverrides): Promise<TransactionReceipt>;
+    setMetadata(metadata: MetadataURIOrObject): Promise<ModuleMetadata>;
+    // @internal (undocumented)
+    setProviderOrSigner(providerOrSigner: ProviderOrSigner): void;
+    // @internal (undocumented)
+    protected get signer(): Signer | null;
+}
+
+// @public
+export interface ModuleMetadata extends ModuleMetadataNoType {
+    // (undocumented)
+    type: ModuleType;
+}
+
+// @public @deprecated
+export interface ModuleMetadataNoType {
     // (undocumented)
     address: string;
     // (undocumented)
@@ -587,7 +657,7 @@ export type NFTContractTypes = NFT | NFTCollection | LazyNFT;
 // @public @deprecated
 export const NFTLabsSDK: typeof ThirdwebSDK;
 
-// @public (undocumented)
+// @public
 export interface NFTMetadata {
     // (undocumented)
     description?: string;
@@ -603,7 +673,7 @@ export interface NFTMetadata {
     uri: string;
 }
 
-// @public (undocumented)
+// @public
 export interface NFTMetadataOwner {
     // (undocumented)
     metadata: NFTMetadata;
@@ -631,6 +701,8 @@ export class NFTModule extends Module {
     getAllRoleMembers(): Promise<Record<Role, string[]>>;
     // (undocumented)
     getAllWithOwner(): Promise<NFTMetadataOwner[]>;
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
     // (undocumented)
     getOwned(_address?: string): Promise<NFTMetadata[]>;
     // (undocumented)
@@ -712,6 +784,8 @@ export class PackModule extends Module {
     getAllRoleMembers(): Promise<Record<Role, string[]>>;
     // (undocumented)
     getLinkBalance(): Promise<CurrencyValue>;
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
     // (undocumented)
     getNFTs(packId: string): Promise<PackNFTMetadata[]>;
     // (undocumented)
@@ -780,7 +854,7 @@ export interface PublicMintCondition {
 // @internal (undocumented)
 export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string): string;
 
-// @public (undocumented)
+// @public
 export type Role = "admin" | "minter" | "pauser" | "transfer";
 
 // @public
@@ -792,6 +866,8 @@ export class ThirdwebSDK {
     getApps(): Promise<IAppModule[]>;
     // (undocumented)
     getCollectionModule(address: string): CollectionModule;
+    // (undocumented)
+    getContractMetadata(address: string): Promise<ModuleMetadataNoType>;
     // (undocumented)
     getCurrencyModule(address: string): CurrencyModule;
     // (undocumented)

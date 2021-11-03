@@ -11,7 +11,7 @@ The CollectionModule. This should always be created via `getCollectionModule()` 
 ```typescript
 export declare class CollectionModule extends Module 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [Module](./sdk.module.md)
 
 ## Properties
 

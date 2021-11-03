@@ -4,6 +4,8 @@
 
 ## CurrencyValue interface
 
+Currency metadata &amp; value.
+
 <b>Signature:</b>
 
 ```typescript

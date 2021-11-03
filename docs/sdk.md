@@ -14,6 +14,7 @@
 |  [DatastoreModule](./sdk.datastoremodule.md) | The DatastoreModule. This should always be created via <code>getCurrencyModule()</code> on the main SDK. |
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> The DropModule. This should always be created via <code>getDropModule()</code> on the main SDK. |
 |  [MarketModule](./sdk.marketmodule.md) | The MarketModule. This should always be created via <code>getMarketModule()</code> on the main SDK. |
+|  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. It should never be instantiated directly. |
 |  [NFTModule](./sdk.nftmodule.md) | The NFTModule. This should always be created via <code>getNFTModule()</code> on the main SDK. |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> The PackModule. This should always be created via <code>getPackModule()</code> on the main SDK. |
@@ -31,7 +32,6 @@
 |  --- | --- |
 |  [convertModuleTypeToName(moduleType)](./sdk.convertmoduletypetoname.md) |  |
 |  [convertNameToModuleType(moduleName)](./sdk.convertnametomoduletype.md) |  |
-|  [getRoleHash(role)](./sdk.getrolehash.md) |  |
 |  [uploadToIPFS(data, contractAddress, signerAddress)](./sdk.uploadtoipfs.md) | A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri. |
 
 ## Interfaces
@@ -39,21 +39,22 @@
 |  Interface | Description |
 |  --- | --- |
 |  [CollectionMetadata](./sdk.collectionmetadata.md) |  |
-|  [ContractMetadata](./sdk.contractmetadata.md) |  |
+|  [ContractMetadata](./sdk.contractmetadata.md) | The typical contract metadata found on the modules. |
 |  [CreatePublicMintCondition](./sdk.createpublicmintcondition.md) | <b><i>(BETA)</i></b> |
-|  [Currency](./sdk.currency.md) |  |
-|  [CurrencyValue](./sdk.currencyvalue.md) |  |
+|  [Currency](./sdk.currency.md) | Currency metadata. |
+|  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [IAppModule](./sdk.iappmodule.md) |  |
 |  [INFTCollectionBatchArgs](./sdk.inftcollectionbatchargs.md) |  |
 |  [INFTCollectionCreateArgs](./sdk.inftcollectioncreateargs.md) |  |
 |  [IPackBatchArgs](./sdk.ipackbatchargs.md) | <b><i>(BETA)</i></b> |
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) | <b><i>(BETA)</i></b> |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
-|  [ListingFilter](./sdk.listingfilter.md) |  |
-|  [ListingMetadata](./sdk.listingmetadata.md) |  |
-|  [ModuleMetadata](./sdk.modulemetadata.md) | A Module with metadata. |
-|  [NFTMetadata](./sdk.nftmetadata.md) |  |
-|  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
+|  [ListingFilter](./sdk.listingfilter.md) | Filter options for the Market module. |
+|  [ListingMetadata](./sdk.listingmetadata.md) | Metadata for items listed on a Market module. |
+|  [ModuleMetadata](./sdk.modulemetadata.md) | The module metadata, includes the <code>address</code> and the [ModuleType](./sdk.moduletype.md)<!-- -->. |
+|  [ModuleMetadataNoType](./sdk.modulemetadatanotype.md) | The module metadata, but missing the ModuleType. |
+|  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |
+|  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
@@ -72,6 +73,6 @@
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |
 |  [MetadataURIOrObject](./sdk.metadatauriorobject.md) | A valid URI string or metadata object |
 |  [ProviderOrSigner](./sdk.providerorsigner.md) | A valid "ethers" Provider or Signer. |
-|  [Role](./sdk.role.md) |  |
+|  [Role](./sdk.role.md) | Roles that are used for permissions on the contract. |
 |  [ValidProviderInput](./sdk.validproviderinput.md) | A valid "ethers" Provider, Signer or a Network object or url address to create a Provider with. |
 

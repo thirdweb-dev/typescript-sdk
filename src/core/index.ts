@@ -2,8 +2,9 @@ import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
 import type { C } from "ts-toolbelt";
+import { AppModule, ModuleMetadataNoType } from "../app";
 import { CollectionModule } from "../collection";
-import { uploadMetadata } from "../common";
+import { getContractMetadata, uploadMetadata } from "../common";
 import {
   FORWARDER_ADDRESS,
   getContractAddressByChainId,
@@ -11,7 +12,6 @@ import {
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
-import { AppModule } from "../control";
 import { CurrencyModule } from "../currency";
 import { DatastoreModule } from "../datastore";
 import { DropModule } from "../drop";
@@ -280,10 +280,28 @@ export class ThirdwebSDK {
 
   /**
    *
+   * @public
    * @returns Whether the SDK is in read-only mode. (Meaning it has not been passed a valid "Signer.")
    */
   public isReadOnly(): boolean {
     return !Signer.isSigner(this.signer);
+  }
+
+  /**
+   * @public
+   * @returns The contract metadata for the given contract address.
+   */
+  public async getContractMetadata(
+    address: string,
+  ): Promise<ModuleMetadataNoType> {
+    return {
+      ...(await getContractMetadata(
+        this.providerOrSigner,
+        address,
+        this.options.ipfsGatewayUrl,
+      )),
+      address,
+    };
   }
 
   /**
@@ -383,6 +401,7 @@ export class ThirdwebSDK {
 
 /**
  * Deprecated, please use ThirdwebSDK instead.
+ * @public
  * @deprecated use ThirdwebSDK instead
  */
 export const NFTLabsSDK = ThirdwebSDK;

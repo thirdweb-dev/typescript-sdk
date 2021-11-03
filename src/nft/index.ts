@@ -1,12 +1,12 @@
 /* eslint-disable new-cap */
-import { BigNumber, BigNumberish } from "ethers";
-import { MetadataURIOrObject } from "../core/types";
 import { NFT, NFT__factory } from "@3rdweb/contracts";
+import { TransactionReceipt } from "@ethersproject/providers";
+import { BigNumber, BigNumberish } from "ethers";
 import { getRoleHash, ModuleType, Role } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { Module } from "../core/module";
-import { TransactionReceipt } from "@ethersproject/providers";
+import { MetadataURIOrObject } from "../core/types";
 
 /**
  * The NFTModule. This should always be created via `getNFTModule()` on the main SDK.
@@ -34,6 +34,13 @@ export class NFTModule extends Module {
       this.address,
       this.providerOrSigner,
     ));
+  }
+
+  /**
+   * @internal
+   */
+  protected getModuleType(): ModuleType {
+    return NFTModule.moduleType;
   }
 
   public async get(tokenId: string): Promise<NFTMetadata> {

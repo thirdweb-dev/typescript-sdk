@@ -11,7 +11,7 @@ The CurrencyModule. This should always be created via `getCurrencyModule()` on t
 ```typescript
 export declare class CurrencyModule extends Module 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [Module](./sdk.module.md)
 
 ## Properties
 

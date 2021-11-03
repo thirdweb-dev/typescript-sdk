@@ -11,7 +11,7 @@ The DatastoreModule. This should always be created via `getCurrencyModule()` on 
 ```typescript
 export declare class DatastoreModule extends Module 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [Module](./sdk.module.md)
 
 ## Properties
 

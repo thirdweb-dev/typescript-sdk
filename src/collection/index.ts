@@ -1,16 +1,16 @@
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { MetadataURIOrObject } from "../core/types";
 import {
   NFTCollection as NFTCollectionContract,
   NFTCollection__factory,
 } from "@3rdweb/contracts";
+import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
+import { TransactionReceipt } from "@ethersproject/providers";
+import { BytesLike } from "ethers";
 import { ModuleType } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { getRoleHash, Role } from "../common/role";
 import { Module } from "../core/module";
-import { TransactionReceipt } from "@ethersproject/providers";
-import { BytesLike } from "ethers";
+import { MetadataURIOrObject } from "../core/types";
 
 /**
  * @public
@@ -62,6 +62,13 @@ export class CollectionModule extends Module {
       this.address,
       this.providerOrSigner,
     ));
+  }
+
+  /**
+   * @internal
+   */
+  protected getModuleType(): ModuleType {
+    return CollectionModule.moduleType;
   }
 
   /**

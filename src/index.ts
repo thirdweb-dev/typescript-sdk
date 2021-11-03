@@ -1,16 +1,17 @@
 import fetch from "node-fetch";
 
+export * from "./app";
 export * from "./collection";
 export * from "./common";
-export * from "./control";
 export * from "./core";
+export type { Module } from "./core/module";
 export * from "./core/types";
 export * from "./currency";
+export * from "./datastore";
 export * from "./drop";
 export * from "./market";
 export * from "./nft";
 export * from "./pack";
-export * from "./datastore";
 export type { IAppModule } from "./registry";
 
 if (!globalThis.fetch) {

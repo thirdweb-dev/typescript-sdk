@@ -11,7 +11,7 @@ The MarketModule. This should always be created via `getMarketModule()` on the m
 ```typescript
 export declare class MarketModule extends Module 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [Module](./sdk.module.md)
 
 ## Properties
 

@@ -11,20 +11,20 @@ The AppModule. This should always be created via `getAppModule()` on the main SD
 ```typescript
 export declare class AppModule extends Module 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [Module](./sdk.module.md)
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [getAllContractMetadata(addresses)](./sdk.appmodule.getallcontractmetadata.md) |  |  |
-|  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get all Collection modules. |
-|  [getCurrencyModules()](./sdk.appmodule.getcurrencymodules.md) |  | Method to get all Currency modules. |
-|  [getDatastoreModules()](./sdk.appmodule.getdatastoremodules.md) |  | Method to get all Datastore modules. |
-|  [getDropModules()](./sdk.appmodule.getdropmodules.md) |  | Method to get all Drop modules. |
-|  [getMarketModules()](./sdk.appmodule.getmarketmodules.md) |  | Method to get all Market modules. |
-|  [getNFTModules()](./sdk.appmodule.getnftmodules.md) |  | Method to get all NFT modules. |
-|  [getPackModules()](./sdk.appmodule.getpackmodules.md) |  | Method to get all pack modules. |
+|  [getAllModuleMetadata(filterByModuleType)](./sdk.appmodule.getallmodulemetadata.md) |  | Method to get a list of all module metadata on a given app. |
+|  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get a list of Collection module metadata. |
+|  [getCurrencyModules()](./sdk.appmodule.getcurrencymodules.md) |  | Method to get a list of Currency module metadata. |
+|  [getDatastoreModules()](./sdk.appmodule.getdatastoremodules.md) |  | Method to get a list of Datastore module metadata. |
+|  [getDropModules()](./sdk.appmodule.getdropmodules.md) |  | Method to get a list of Drop module metadata. |
+|  [getMarketModules()](./sdk.appmodule.getmarketmodules.md) |  | Method to get a list of Market module metadata. |
+|  [getNFTModules()](./sdk.appmodule.getnftmodules.md) |  | Method to get a list of NFT module metadata. |
+|  [getPackModules()](./sdk.appmodule.getpackmodules.md) |  | Method to get a list of pack module metadata. |
 |  [getRoyaltyTreasury(address)](./sdk.appmodule.getroyaltytreasury.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.appmodule.setmodulemetadata.md) |  |  |
 |  [setModuleRoyaltyTreasury(moduleAddress, treasury)](./sdk.appmodule.setmoduleroyaltytreasury.md) |  |  |

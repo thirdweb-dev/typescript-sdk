@@ -4,6 +4,8 @@
 
 ## NFTMetadata interface
 
+The shared NFT metadata.
+
 <b>Signature:</b>
 
 ```typescript

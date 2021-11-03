@@ -4,6 +4,8 @@
 
 ## NFTMetadataOwner interface
 
+The shared NFT metadata, including the current owner address.
+
 <b>Signature:</b>
 
 ```typescript

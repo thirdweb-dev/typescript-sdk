@@ -1,11 +1,11 @@
-import { hexZeroPad } from "@ethersproject/bytes";
-import { AddressZero } from "@ethersproject/constants";
-import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import {
   LazyNFT as Drop,
   LazyNFT__factory as Drop__factory,
 } from "@3rdweb/contracts";
+import { hexZeroPad } from "@ethersproject/bytes";
+import { AddressZero } from "@ethersproject/constants";
+import { TransactionReceipt } from "@ethersproject/providers";
+import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { getRoleHash, ModuleType, Role } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
@@ -67,14 +67,21 @@ export class DropModule extends Module {
     ));
   }
 
-  private async getMetadata(tokenId: string): Promise<NFTMetadata> {
+  /**
+   * @internal
+   */
+  protected getModuleType(): ModuleType {
+    return DropModule.moduleType;
+  }
+
+  private async getTokenMetadata(tokenId: string): Promise<NFTMetadata> {
     return await getMetadata(this.contract, tokenId, this.ipfsGatewayUrl);
   }
 
   public async get(tokenId: string): Promise<NFTMetadataOwner> {
     const [owner, metadata] = await Promise.all([
       this.ownerOf(tokenId).catch(() => AddressZero),
-      this.getMetadata(tokenId),
+      this.getTokenMetadata(tokenId),
     ]);
 
     return { owner, metadata };

@@ -4,6 +4,8 @@
 
 ## Role type
 
+Roles that are used for permissions on the contract.
+
 <b>Signature:</b>
 
 ```typescript

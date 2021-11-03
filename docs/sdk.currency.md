@@ -4,6 +4,8 @@
 
 ## Currency interface
 
+Currency metadata.
+
 <b>Signature:</b>
 
 ```typescript

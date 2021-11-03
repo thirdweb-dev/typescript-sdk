@@ -11,7 +11,7 @@ The NFTModule. This should always be created via `getNFTModule()` on the main SD
 ```typescript
 export declare class NFTModule extends Module 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [Module](./sdk.module.md)
 
 ## Properties
 

@@ -4,7 +4,12 @@
 
 ## AppModule.getPackModules() method
 
-Method to get all pack modules.
+> Warning: This API is now obsolete.
+> 
+> - Use [AppModule.getAllModuleMetadata()](./sdk.appmodule.getallmodulemetadata.md) instead
+> 
+
+Method to get a list of pack module metadata.
 
 <b>Signature:</b>
 

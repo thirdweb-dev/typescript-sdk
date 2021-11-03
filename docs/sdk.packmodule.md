@@ -14,7 +14,7 @@ The PackModule. This should always be created via `getPackModule()` on the main 
 ```typescript
 export declare class PackModule extends Module 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [Module](./sdk.module.md)
 
 ## Properties
 

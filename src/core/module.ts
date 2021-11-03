@@ -1,3 +1,4 @@
+import { Forwarder__factory } from "@3rdweb/contracts";
 import {
   JsonRpcSigner,
   Log,
@@ -6,40 +7,69 @@ import {
 } from "@ethersproject/providers";
 import { BaseContract, BigNumber, CallOverrides, ethers, Signer } from "ethers";
 import type { ISDKOptions } from ".";
-import { Forwarder__factory } from "@3rdweb/contracts";
-import { isContract } from "../common/contract";
+import type { ModuleMetadata } from "../app";
+import { getContractMetadata, isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
-import type { ProviderOrSigner } from "./types";
+import { uploadMetadata } from "../common/ipfs";
+import { ModuleType } from "../common/module-type";
+import type { MetadataURIOrObject, ProviderOrSigner } from "./types";
 
 /**
- *
- * The root Module class to be extended and not used directly!
- * @internal
- *
+ * The root Module class. All other Modules extend this.
+ * It should never be instantiated directly.
+ * @public
  */
 export class Module {
+  /**
+   * @readonly
+   */
   public readonly address: string;
+  /**
+   * @internal
+   * @readonly
+   */
   protected readonly ipfsGatewayUrl: string;
+  /**
+   * @internal
+   * @readonly
+   */
   protected readonly options: ISDKOptions;
 
+  /**
+   * @internal
+   */
   private _providerOrSigner: ProviderOrSigner | null = null;
+  /**
+   * @internal
+   */
   protected get providerOrSigner(): ProviderOrSigner {
     return this.signer || this._providerOrSigner || this.getProviderOrSigner();
   }
+
   private set providerOrSigner(value: ProviderOrSigner) {
     this._providerOrSigner = value;
   }
 
+  /**
+   * @internal
+   */
   private _signer: Signer | null = null;
+  /**
+   * @internal
+   */
   protected get signer(): Signer | null {
     return this._signer;
   }
+
   private set signer(value: Signer | null) {
     this._signer = value;
   }
 
+  /**
+   * @internal
+   */
   constructor(
     providerOrSigner: ProviderOrSigner,
     address: string,
@@ -51,7 +81,7 @@ export class Module {
     this.setProviderOrSigner(providerOrSigner);
   }
 
-  /*
+  /**
    * @internal
    */
   public setProviderOrSigner(providerOrSigner: ProviderOrSigner) {
@@ -62,17 +92,23 @@ export class Module {
     this.connectContract();
   }
 
-  /*
+  /**
    * @internal
    */
   public clearSigner(): void {
     this.signer = null;
   }
 
+  /**
+   * @internal
+   */
   private getProviderOrSigner(): ProviderOrSigner {
     return this.signer || this.providerOrSigner;
   }
 
+  /**
+   * @internal
+   */
   protected getSigner(): Signer | null {
     if (Signer.isSigner(this.signer)) {
       return this.signer;
@@ -80,16 +116,25 @@ export class Module {
     return null;
   }
 
+  /**
+   * @internal
+   */
   protected hasValidSigner(): boolean {
     return Signer.isSigner(this.signer);
   }
 
+  /**
+   * @internal
+   */
   protected async getSignerAddress(): Promise<string> {
     const signer = this.getSigner();
     invariant(signer, "Cannot get signer address without valid signer");
     return await signer.getAddress();
   }
 
+  /**
+   * @internal
+   */
   protected async getProvider(): Promise<Provider | undefined> {
     const provider: Provider | undefined = Signer.isSigner(
       this.getProviderOrSigner(),
@@ -99,6 +144,9 @@ export class Module {
     return provider;
   }
 
+  /**
+   * @internal
+   */
   protected async getChainID(): Promise<number> {
     const provider = await this.getProvider();
     invariant(provider, "getChainID() -- No Provider");
@@ -106,10 +154,25 @@ export class Module {
     return chainId;
   }
 
+  /**
+   * @override
+   * @internal
+   */
   protected connectContract(): BaseContract {
     throw new Error("connectContract has to be implemented");
   }
 
+  /**
+   * @override
+   * @internal
+   */
+  protected getModuleType(): ModuleType {
+    throw new Error("getModuleType has to be implemented");
+  }
+
+  /**
+   * @internal
+   */
   protected async getCallOverrides(): Promise<CallOverrides> {
     const chainId = await this.getChainID();
     const speed = this.options.gasSpeed;
@@ -128,12 +191,53 @@ export class Module {
     };
   }
 
+  /**
+   * @public
+   * @returns whether the given contract exists on-chain
+   */
   public async exists(): Promise<boolean> {
     const provider = await this.getProvider();
     invariant(provider, "exists() -- No Provider");
     return isContract(provider, this.address);
   }
 
+  /**
+   * @public
+   * Get the metadata of the contract.
+   */
+  public async getMetadata(): Promise<ModuleMetadata> {
+    invariant(await this.exists(), "contract does not exist");
+    const contract = this.connectContract();
+    const type = this.getModuleType();
+
+    return {
+      ...(await getContractMetadata(
+        this.getProviderOrSigner(),
+        contract.address,
+        this.options.ipfsGatewayUrl,
+      )),
+      address: contract.address,
+      type,
+    };
+  }
+
+  /**
+   * @public
+   * Set new metadata on the contract and return it if successful.
+   * @param metadata - The metadata to set.
+   */
+  public async setMetadata(
+    metadata: MetadataURIOrObject,
+  ): Promise<ModuleMetadata> {
+    invariant(await this.exists(), "contract does not exist");
+    const uri = await uploadMetadata(metadata);
+    await this.sendTransaction("setContractURI", [uri]);
+    return this.getMetadata();
+  }
+
+  /**
+   * @internal
+   */
   protected async sendTransaction(
     fn: string,
     args: any[],
@@ -149,6 +253,9 @@ export class Module {
     }
   }
 
+  /**
+   * @internal
+   */
   private async sendAndWaitForTransaction(
     fn: string,
     args: any[],
@@ -162,6 +269,9 @@ export class Module {
     return tx;
   }
 
+  /**
+   * @internal
+   */
   private async sendGaslessTransaction(
     fn: string,
     args: any[],

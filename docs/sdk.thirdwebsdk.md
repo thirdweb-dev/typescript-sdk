@@ -26,6 +26,7 @@ export declare class ThirdwebSDK
 |  [getAppModule(address)](./sdk.thirdwebsdk.getappmodule.md) |  |  |
 |  [getApps()](./sdk.thirdwebsdk.getapps.md) |  | Call this to get the current apps. |
 |  [getCollectionModule(address)](./sdk.thirdwebsdk.getcollectionmodule.md) |  |  |
+|  [getContractMetadata(address)](./sdk.thirdwebsdk.getcontractmetadata.md) |  |  |
 |  [getCurrencyModule(address)](./sdk.thirdwebsdk.getcurrencymodule.md) |  |  |
 |  [getDatastoreModule(address)](./sdk.thirdwebsdk.getdatastoremodule.md) |  |  |
 |  [getDropModule(address)](./sdk.thirdwebsdk.getdropmodule.md) |  |  |

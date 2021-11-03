@@ -1,6 +1,6 @@
-import { BigNumber, BigNumberish } from "ethers";
-import { MetadataURIOrObject } from "../core/types";
 import { Coin, Coin__factory } from "@3rdweb/contracts";
+import { TransactionReceipt } from "@ethersproject/providers";
+import { BigNumber, BigNumberish } from "ethers";
 import { getRoleHash, ModuleType, Role } from "../common";
 import {
   Currency,
@@ -10,7 +10,7 @@ import {
 } from "../common/currency";
 import { uploadMetadata } from "../common/ipfs";
 import { Module } from "../core/module";
-import { TransactionReceipt } from "@ethersproject/providers";
+import { MetadataURIOrObject } from "../core/types";
 
 /**
  * The CurrencyModule. This should always be created via `getCurrencyModule()` on the main SDK.
@@ -38,6 +38,13 @@ export class CurrencyModule extends Module {
       this.address,
       this.providerOrSigner,
     ));
+  }
+
+  /**
+   * @internal
+   */
+  protected getModuleType(): ModuleType {
+    return CurrencyModule.moduleType;
   }
 
   public async get(): Promise<Currency> {

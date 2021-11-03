@@ -1,10 +1,10 @@
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import {
   ERC1155__factory,
   ERC20__factory,
   Pack as PackContract,
   Pack__factory,
 } from "@3rdweb/contracts";
+import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import {
   CurrencyValue,
   getCurrencyValue,
@@ -86,6 +86,13 @@ export class PackModule extends Module {
       this.address,
       this.providerOrSigner,
     ));
+  }
+
+  /**
+   * @internal
+   */
+  protected getModuleType(): ModuleType {
+    return PackModule.moduleType;
   }
 
   public async open(packId: string): Promise<NFTMetadata[]> {

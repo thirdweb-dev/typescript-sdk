@@ -14,7 +14,7 @@ The DropModule. This should always be created via `getDropModule()` on the main 
 ```typescript
 export declare class DropModule extends Module 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [Module](./sdk.module.md)
 
 ## Properties
 

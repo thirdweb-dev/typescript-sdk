@@ -1,6 +1,3 @@
-import { AddressZero } from "@ethersproject/constants";
-import { BigNumber, BigNumberish } from "ethers";
-import { MetadataURIOrObject } from "../core/types";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -9,20 +6,31 @@ import {
   Market,
   Market__factory,
 } from "@3rdweb/contracts";
+import { AddressZero } from "@ethersproject/constants";
+import { TransactionReceipt } from "@ethersproject/providers";
+import { BigNumber, BigNumberish } from "ethers";
 import { ModuleType } from "../common";
 import { InterfaceId_IERC721 } from "../common/contract";
 import { CurrencyValue, getCurrencyValue } from "../common/currency";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { Module } from "../core/module";
-import { TransactionReceipt } from "@ethersproject/providers";
+import { MetadataURIOrObject } from "../core/types";
 
+/**
+ * Filter options for the Market module.
+ * @public
+ */
 export interface ListingFilter {
   seller?: string;
   tokenContract?: string;
   tokenId?: string;
 }
 
+/**
+ * Metadata for items listed on a Market module.
+ * @public
+ */
 export interface ListingMetadata {
   id: string;
   seller: string;
@@ -63,6 +71,13 @@ export class MarketModule extends Module {
       this.address,
       this.providerOrSigner,
     ));
+  }
+
+  /**
+   * @internal
+   */
+  protected getModuleType(): ModuleType {
+    return MarketModule.moduleType;
   }
 
   private async transformResultToListing(

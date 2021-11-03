@@ -4,7 +4,12 @@
 
 ## AppModule.getCollectionModules() method
 
-Method to get all Collection modules.
+> Warning: This API is now obsolete.
+> 
+> - Use [AppModule.getAllModuleMetadata()](./sdk.appmodule.getallmodulemetadata.md) instead
+> 
+
+Method to get a list of Collection module metadata.
 
 <b>Signature:</b>
 

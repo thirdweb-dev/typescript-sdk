@@ -4,6 +4,8 @@
 
 ## ContractMetadata interface
 
+The typical contract metadata found on the modules.
+
 <b>Signature:</b>
 
 ```typescript

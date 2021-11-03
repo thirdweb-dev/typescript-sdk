@@ -37,6 +37,9 @@ export class RegistryModule extends Module {
     ));
   }
 
+  /**
+   * @internal
+   */
   public async getProtocolContracts(): Promise<IAppModule[]> {
     const deployer = await this.getSignerAddress();
     const maxVersion = await this.contract.getProtocolControlCount(deployer);
