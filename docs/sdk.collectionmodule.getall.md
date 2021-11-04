@@ -9,8 +9,15 @@ Return all items in the collection.
 <b>Signature:</b>
 
 ```typescript
-getAll(): Promise<CollectionMetadata[]>;
+getAll(address?: string): Promise<CollectionMetadata[]>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  address | string |  |
+
 <b>Returns:</b>
 
 Promise&lt;[CollectionMetadata](./sdk.collectionmetadata.md)<!-- -->\[\]&gt;

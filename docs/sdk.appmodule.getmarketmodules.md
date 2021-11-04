@@ -4,7 +4,12 @@
 
 ## AppModule.getMarketModules() method
 
-Method to get all Market modules.
+> Warning: This API is now obsolete.
+> 
+> - Use [AppModule.getAllModuleMetadata()](./sdk.appmodule.getallmodulemetadata.md) instead
+> 
+
+Method to get a list of Market module metadata.
 
 <b>Signature:</b>
 

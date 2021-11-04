@@ -4,6 +4,10 @@ import { Provider } from "@ethersproject/providers";
 import { ProviderOrSigner } from "../core/types";
 import { replaceIpfsWithGateway } from "./ipfs";
 
+/**
+ * The typical contract metadata found on the modules.
+ * @public
+ */
 export interface ContractMetadata {
   uri: string;
   name?: string;

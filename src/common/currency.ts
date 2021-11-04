@@ -1,15 +1,23 @@
+import { ERC20__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { formatUnits } from "@ethersproject/units";
 import { BigNumber } from "ethers";
-import { ERC20__factory } from "@3rdweb/contracts";
 import { ProviderOrSigner } from "../core/types";
 
+/**
+ * Currency metadata.
+ * @public
+ */
 export interface Currency {
   name: string;
   symbol: string;
   decimals: number;
 }
 
+/**
+ * Currency metadata & value.
+ * @public
+ */
 export interface CurrencyValue extends Currency {
   value: string;
   displayValue: string;

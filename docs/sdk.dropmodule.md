@@ -12,15 +12,16 @@ The DropModule. This should always be created via `getDropModule()` on the main 
 <b>Signature:</b>
 
 ```typescript
-export declare class DropModule extends Module 
+export declare class DropModule extends ModuleWithRoles 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.dropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
+|  [roles](./sdk.dropmodule.roles.md) | <code>static</code> | ("admin" \| "minter" \| "pauser" \| "transfer")\[\] | <b><i>(BETA)</i></b> |
 
 ## Methods
 
@@ -35,18 +36,15 @@ export declare class DropModule extends Module
 |  [getAll()](./sdk.dropmodule.getall.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllClaimed()](./sdk.dropmodule.getallclaimed.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllMintConditions()](./sdk.dropmodule.getallmintconditions.md) |  | <b><i>(BETA)</i></b> |
-|  [getAllRoleMembers()](./sdk.dropmodule.getallrolemembers.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllUnclaimed()](./sdk.dropmodule.getallunclaimed.md) |  | <b><i>(BETA)</i></b> |
+|  [getModuleRoles()](./sdk.dropmodule.getmoduleroles.md) |  | <b><i>(BETA)</i></b> |
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | <b><i>(BETA)</i></b> |
-|  [getRoleMembers(role)](./sdk.dropmodule.getrolemembers.md) |  | <b><i>(BETA)</i></b> |
-|  [grantRole(role, address)](./sdk.dropmodule.grantrole.md) |  | <b><i>(BETA)</i></b> |
 |  [isApproved(address, operator)](./sdk.dropmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
 |  [lazyMint(metadata)](./sdk.dropmodule.lazymint.md) |  | <b><i>(BETA)</i></b> |
 |  [lazyMintAmount(amount)](./sdk.dropmodule.lazymintamount.md) |  | <b><i>(BETA)</i></b> |
 |  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  | <b><i>(BETA)</i></b> |
 |  [maxTotalSupply()](./sdk.dropmodule.maxtotalsupply.md) |  | <b><i>(BETA)</i></b> |
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  | <b><i>(BETA)</i></b> |
-|  [revokeRole(role, address)](./sdk.dropmodule.revokerole.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
 |  [setBaseTokenUri(uri)](./sdk.dropmodule.setbasetokenuri.md) |  | <b><i>(BETA)</i></b> |
 |  [setMaxTotalSupply(amount)](./sdk.dropmodule.setmaxtotalsupply.md) |  | <b><i>(BETA)</i></b> |

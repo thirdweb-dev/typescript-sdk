@@ -4,7 +4,12 @@
 
 ## AppModule.getCurrencyModules() method
 
-Method to get all Currency modules.
+> Warning: This API is now obsolete.
+> 
+> - Use [AppModule.getAllModuleMetadata()](./sdk.appmodule.getallmodulemetadata.md) instead
+> 
+
+Method to get a list of Currency module metadata.
 
 <b>Signature:</b>
 

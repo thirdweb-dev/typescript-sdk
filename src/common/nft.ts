@@ -1,5 +1,5 @@
-import { Contract } from "@ethersproject/contracts";
 import { LazyNFT, NFT, NFTCollection } from "@3rdweb/contracts";
+import { Contract } from "@ethersproject/contracts";
 import { JSONValue, ProviderOrSigner } from "../core/types";
 import { NotFoundError } from "./error";
 import { replaceIpfsWithGateway } from "./ipfs";
@@ -46,6 +46,10 @@ const tokenUriABI = [
   },
 ];
 
+/**
+ * The shared NFT metadata.
+ * @public
+ */
 export interface NFTMetadata {
   id: string;
   uri: string;
@@ -55,6 +59,10 @@ export interface NFTMetadata {
   properties?: Record<string, JSONValue>;
 }
 
+/**
+ * The shared NFT metadata, including the current owner address.
+ * @public
+ */
 export interface NFTMetadataOwner {
   owner: string;
   metadata: NFTMetadata;

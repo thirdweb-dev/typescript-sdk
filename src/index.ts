@@ -1,17 +1,11 @@
 import fetch from "node-fetch";
 
-export * from "./collection";
 export * from "./common";
-export * from "./control";
 export * from "./core";
+export type { Module, ModuleWithRoles } from "./core/module";
+export type { IAppModule } from "./core/registry";
 export * from "./core/types";
-export * from "./currency";
-export * from "./drop";
-export * from "./market";
-export * from "./nft";
-export * from "./pack";
-export * from "./datastore";
-export type { IAppModule } from "./registry";
+export * from "./modules";
 
 if (!globalThis.fetch) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

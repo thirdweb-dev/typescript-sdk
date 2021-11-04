@@ -4,7 +4,12 @@
 
 ## AppModule.getDatastoreModules() method
 
-Method to get all Datastore modules.
+> Warning: This API is now obsolete.
+> 
+> - Use [AppModule.getAllModuleMetadata()](./sdk.appmodule.getallmodulemetadata.md) instead
+> 
+
+Method to get a list of Datastore module metadata.
 
 <b>Signature:</b>
 

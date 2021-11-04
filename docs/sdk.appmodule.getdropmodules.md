@@ -4,7 +4,12 @@
 
 ## AppModule.getDropModules() method
 
-Method to get all Drop modules.
+> Warning: This API is now obsolete.
+> 
+> - Use [AppModule.getAllModuleMetadata()](./sdk.appmodule.getallmodulemetadata.md) instead
+> 
+
+Method to get a list of Drop module metadata.
 
 <b>Signature:</b>
 

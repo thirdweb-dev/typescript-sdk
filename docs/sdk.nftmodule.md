@@ -9,15 +9,16 @@ The NFTModule. This should always be created via `getNFTModule()` on the main SD
 <b>Signature:</b>
 
 ```typescript
-export declare class NFTModule extends Module 
+export declare class NFTModule extends ModuleWithRoles 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.nftmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [roles](./sdk.nftmodule.roles.md) | <code>static</code> | ("admin" \| "minter" \| "pauser" \| "transfer")\[\] |  |
 
 ## Methods
 
@@ -28,19 +29,16 @@ export declare class NFTModule extends Module
 |  [burn(tokenId)](./sdk.nftmodule.burn.md) |  |  |
 |  [get(tokenId)](./sdk.nftmodule.get.md) |  |  |
 |  [getAll()](./sdk.nftmodule.getall.md) |  |  |
-|  [getAllRoleMembers()](./sdk.nftmodule.getallrolemembers.md) |  |  |
 |  [getAllWithOwner()](./sdk.nftmodule.getallwithowner.md) |  |  |
+|  [getModuleRoles()](./sdk.nftmodule.getmoduleroles.md) |  |  |
 |  [getOwned(\_address)](./sdk.nftmodule.getowned.md) |  |  |
-|  [getRoleMembers(role)](./sdk.nftmodule.getrolemembers.md) |  |  |
 |  [getWithOwner(tokenId)](./sdk.nftmodule.getwithowner.md) |  |  |
-|  [grantRole(role, address)](./sdk.nftmodule.grantrole.md) |  |  |
 |  [isApproved(address, operator)](./sdk.nftmodule.isapproved.md) |  |  |
 |  [mint(metadata)](./sdk.nftmodule.mint.md) |  |  |
 |  [mintBatch(metadatas)](./sdk.nftmodule.mintbatch.md) |  |  |
 |  [mintBatchTo(to, metadatas)](./sdk.nftmodule.mintbatchto.md) |  |  |
 |  [mintTo(to, metadata)](./sdk.nftmodule.mintto.md) |  |  |
 |  [ownerOf(tokenId)](./sdk.nftmodule.ownerof.md) |  |  |
-|  [revokeRole(role, address)](./sdk.nftmodule.revokerole.md) |  |  |
 |  [setApproval(operator, approved)](./sdk.nftmodule.setapproval.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.nftmodule.setmodulemetadata.md) |  |  |
 |  [setRestrictedTransfer(restricted)](./sdk.nftmodule.setrestrictedtransfer.md) |  |  |

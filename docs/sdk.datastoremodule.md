@@ -9,20 +9,22 @@ The DatastoreModule. This should always be created via `getCurrencyModule()` on 
 <b>Signature:</b>
 
 ```typescript
-export declare class DatastoreModule extends Module 
+export declare class DatastoreModule extends ModuleWithRoles 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.datastoremodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [roles](./sdk.datastoremodule.roles.md) | <code>static</code> | ("admin" \| "editor")\[\] |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [getModuleRoles()](./sdk.datastoremodule.getmoduleroles.md) |  |  |
 |  [getUint(key)](./sdk.datastoremodule.getuint.md) |  |  |
 |  [setUint(key, value)](./sdk.datastoremodule.setuint.md) |  |  |
 

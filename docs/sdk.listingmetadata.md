@@ -4,6 +4,8 @@
 
 ## ListingMetadata interface
 
+Metadata for items listed on a Market module.
+
 <b>Signature:</b>
 
 ```typescript

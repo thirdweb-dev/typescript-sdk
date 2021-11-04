@@ -4,6 +4,8 @@
 
 ## ListingFilter interface
 
+Filter options for the Market module.
+
 <b>Signature:</b>
 
 ```typescript

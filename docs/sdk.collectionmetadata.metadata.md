@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-metadata?: NFTMetadata;
+metadata: NFTMetadata;
 ```

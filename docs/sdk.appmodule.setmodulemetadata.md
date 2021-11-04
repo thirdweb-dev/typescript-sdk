@@ -4,6 +4,11 @@
 
 ## AppModule.setModuleMetadata() method
 
+> Warning: This API is now obsolete.
+> 
+> - Use setMetadata() instead
+> 
+
 <b>Signature:</b>
 
 ```typescript

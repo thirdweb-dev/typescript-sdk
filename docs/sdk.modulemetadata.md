@@ -4,18 +4,18 @@
 
 ## ModuleMetadata interface
 
-A Module with metadata.
+The module metadata, includes the `address` and the [ModuleType](./sdk.moduletype.md)<!-- -->.
 
 <b>Signature:</b>
 
 ```typescript
-export interface ModuleMetadata 
+export interface ModuleMetadata extends ModuleMetadataNoType 
 ```
+<b>Extends:</b> [ModuleMetadataNoType](./sdk.modulemetadatanotype.md)
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [address](./sdk.modulemetadata.address.md) | string |  |
-|  [metadata?](./sdk.modulemetadata.metadata.md) | [ContractMetadata](./sdk.contractmetadata.md) | <i>(Optional)</i> |
+|  [type](./sdk.modulemetadata.type.md) | [ModuleType](./sdk.moduletype.md) |  |
 

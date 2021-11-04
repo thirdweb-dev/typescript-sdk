@@ -9,15 +9,16 @@ The MarketModule. This should always be created via `getMarketModule()` on the m
 <b>Signature:</b>
 
 ```typescript
-export declare class MarketModule extends Module 
+export declare class MarketModule extends ModuleWithRoles 
 ```
-<b>Extends:</b> Module
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.marketmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [roles](./sdk.marketmodule.roles.md) | <code>static</code> | ("admin" \| "pauser" \| "lister")\[\] |  |
 
 ## Methods
 
@@ -29,6 +30,7 @@ export declare class MarketModule extends Module
 |  [getAllListings(filter)](./sdk.marketmodule.getalllistings.md) |  |  |
 |  [getListing(listingId)](./sdk.marketmodule.getlisting.md) |  |  |
 |  [getMarketFeeBps()](./sdk.marketmodule.getmarketfeebps.md) |  |  |
+|  [getModuleRoles()](./sdk.marketmodule.getmoduleroles.md) |  |  |
 |  [list(assetContract, tokenId, currencyContract, price, quantity, tokensPerBuyer, secondsUntilStart, secondsUntilEnd)](./sdk.marketmodule.list.md) |  |  |
 |  [setMarketFeeBps(fee)](./sdk.marketmodule.setmarketfeebps.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.marketmodule.setmodulemetadata.md) |  |  |
