@@ -9,15 +9,16 @@ The CurrencyModule. This should always be created via `getCurrencyModule()` on t
 <b>Signature:</b>
 
 ```typescript
-export declare class CurrencyModule extends Module 
+export declare class CurrencyModule extends ModuleWithRoles 
 ```
-<b>Extends:</b> [Module](./sdk.module.md)
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.currencymodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [roles](./sdk.currencymodule.roles.md) | <code>static</code> | ("admin" \| "minter" \| "pauser" \| "transfer")\[\] |  |
 
 ## Methods
 
@@ -30,13 +31,10 @@ export declare class CurrencyModule extends Module
 |  [burn(amount)](./sdk.currencymodule.burn.md) |  |  |
 |  [burnFrom(from, amount)](./sdk.currencymodule.burnfrom.md) |  |  |
 |  [get()](./sdk.currencymodule.get.md) |  |  |
-|  [getAllRoleMembers()](./sdk.currencymodule.getallrolemembers.md) |  |  |
-|  [getRoleMembers(role)](./sdk.currencymodule.getrolemembers.md) |  |  |
+|  [getModuleRoles()](./sdk.currencymodule.getmoduleroles.md) |  |  |
 |  [getValue(value)](./sdk.currencymodule.getvalue.md) |  |  |
-|  [grantRole(role, address)](./sdk.currencymodule.grantrole.md) |  |  |
 |  [mint(amount)](./sdk.currencymodule.mint.md) |  |  |
 |  [mintTo(to, amount)](./sdk.currencymodule.mintto.md) |  |  |
-|  [revokeRole(role, address)](./sdk.currencymodule.revokerole.md) |  |  |
 |  [setAllowance(spender, amount)](./sdk.currencymodule.setallowance.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.currencymodule.setmodulemetadata.md) |  |  |
 |  [setRestrictedTransfer(restricted)](./sdk.currencymodule.setrestrictedtransfer.md) |  |  |

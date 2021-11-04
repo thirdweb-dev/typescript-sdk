@@ -12,15 +12,16 @@ The PackModule. This should always be created via `getPackModule()` on the main 
 <b>Signature:</b>
 
 ```typescript
-export declare class PackModule extends Module 
+export declare class PackModule extends ModuleWithRoles 
 ```
-<b>Extends:</b> [Module](./sdk.module.md)
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.packmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
+|  [roles](./sdk.packmodule.roles.md) | <code>static</code> | ("admin" \| "minter" \| "pauser" \| "transfer")\[\] | <b><i>(BETA)</i></b> |
 
 ## Methods
 
@@ -32,14 +33,11 @@ export declare class PackModule extends Module
 |  [depositLink(amount)](./sdk.packmodule.depositlink.md) |  | <b><i>(BETA)</i></b> |
 |  [get(packId)](./sdk.packmodule.get.md) |  | <b><i>(BETA)</i></b> |
 |  [getAll()](./sdk.packmodule.getall.md) |  | <b><i>(BETA)</i></b> |
-|  [getAllRoleMembers()](./sdk.packmodule.getallrolemembers.md) |  | <b><i>(BETA)</i></b> |
 |  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  | <b><i>(BETA)</i></b> |
+|  [getModuleRoles()](./sdk.packmodule.getmoduleroles.md) |  | <b><i>(BETA)</i></b> |
 |  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  | <b><i>(BETA)</i></b> |
-|  [getRoleMembers(role)](./sdk.packmodule.getrolemembers.md) |  | <b><i>(BETA)</i></b> |
-|  [grantRole(role, address)](./sdk.packmodule.grantrole.md) |  | <b><i>(BETA)</i></b> |
 |  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
 |  [open(packId)](./sdk.packmodule.open.md) |  | <b><i>(BETA)</i></b> |
-|  [revokeRole(role, address)](./sdk.packmodule.revokerole.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.packmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
 |  [setModuleMetadata(metadata)](./sdk.packmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
 |  [setRestrictedTransfer(restricted)](./sdk.packmodule.setrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |

@@ -15,6 +15,7 @@
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> The DropModule. This should always be created via <code>getDropModule()</code> on the main SDK. |
 |  [MarketModule](./sdk.marketmodule.md) | The MarketModule. This should always be created via <code>getMarketModule()</code> on the main SDK. |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. It should never be instantiated directly. |
+|  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add roles functionality. It should never be instantiated directly. |
 |  [NFTModule](./sdk.nftmodule.md) | The NFTModule. This should always be created via <code>getNFTModule()</code> on the main SDK. |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> The PackModule. This should always be created via <code>getPackModule()</code> on the main SDK. |
@@ -73,6 +74,6 @@
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |
 |  [MetadataURIOrObject](./sdk.metadatauriorobject.md) | A valid URI string or metadata object |
 |  [ProviderOrSigner](./sdk.providerorsigner.md) | A valid "ethers" Provider or Signer. |
-|  [Role](./sdk.role.md) | Roles that are used for permissions on the contract. |
+|  [Role](./sdk.role.md) | Rs that are used for permissions on the contract. |
 |  [ValidProviderInput](./sdk.validproviderinput.md) | A valid "ethers" Provider, Signer or a Network object or url address to create a Provider with. |
 

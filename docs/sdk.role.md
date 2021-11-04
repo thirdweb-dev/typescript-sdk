@@ -4,10 +4,10 @@
 
 ## Role type
 
-Roles that are used for permissions on the contract.
+Rs that are used for permissions on the contract.
 
 <b>Signature:</b>
 
 ```typescript
-export declare type Role = "admin" | "minter" | "pauser" | "transfer";
+export declare type Role = typeof ROLES[keyof typeof ROLES];
 ```

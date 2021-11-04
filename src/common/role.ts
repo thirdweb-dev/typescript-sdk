@@ -1,10 +1,29 @@
 import { BytesLike, ethers } from "ethers";
 
+const admin = "admin" as const;
+const minter = "minter" as const;
+const pauser = "pauser" as const;
+const transfer = "transfer" as const;
+const editor = "editor" as const;
+const lister = "lister" as const;
+
 /**
- * Roles that are used for permissions on the contract.
+ * @internal
+ */
+export const ROLES = {
+  admin,
+  minter,
+  pauser,
+  transfer,
+  editor,
+  lister,
+};
+
+/**
+ * Rs that are used for permissions on the contract.
  * @public
  */
-export type Role = "admin" | "minter" | "pauser" | "transfer";
+export type Role = typeof ROLES[keyof typeof ROLES];
 
 /**
  *
@@ -15,6 +34,8 @@ const _role: Record<Role, string> = {
   transfer: "TRANSFER_ROLE",
   minter: "MINTER_ROLE",
   pauser: "PAUSER_ROLE",
+  editor: "EDITOR_ROLE",
+  lister: "LISTER_ROLE",
 };
 
 /**

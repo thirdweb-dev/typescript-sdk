@@ -9,15 +9,16 @@ The CollectionModule. This should always be created via `getCollectionModule()` 
 <b>Signature:</b>
 
 ```typescript
-export declare class CollectionModule extends Module 
+export declare class CollectionModule extends ModuleWithRoles 
 ```
-<b>Extends:</b> [Module](./sdk.module.md)
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.collectionmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [roles](./sdk.collectionmodule.roles.md) | <code>static</code> | ("admin" \| "minter" \| "pauser" \| "transfer")\[\] |  |
 
 ## Methods
 
@@ -37,15 +38,12 @@ export declare class CollectionModule extends Module
 |  [createWithERC721(tokenContract, tokenId, metadata)](./sdk.collectionmodule.createwitherc721.md) |  |  |
 |  [get(tokenId, address)](./sdk.collectionmodule.get.md) |  | Get a single collection item by tokenId. |
 |  [getAll(address)](./sdk.collectionmodule.getall.md) |  | Return all items in the collection. |
-|  [getAllRoleMembers()](./sdk.collectionmodule.getallrolemembers.md) |  |  |
-|  [getRoleMembers(role)](./sdk.collectionmodule.getrolemembers.md) |  |  |
-|  [grantRole(role, address)](./sdk.collectionmodule.grantrole.md) |  |  |
+|  [getModuleRoles()](./sdk.collectionmodule.getmoduleroles.md) |  |  |
 |  [isApproved(address, operator)](./sdk.collectionmodule.isapproved.md) |  |  |
 |  [mint(args)](./sdk.collectionmodule.mint.md) |  |  |
 |  [mintBatch(args)](./sdk.collectionmodule.mintbatch.md) |  |  |
 |  [mintBatchTo(to, args, data)](./sdk.collectionmodule.mintbatchto.md) |  |  |
 |  [mintTo(to, args, data)](./sdk.collectionmodule.mintto.md) |  |  |
-|  [revokeRole(role, address)](./sdk.collectionmodule.revokerole.md) |  |  |
 |  [setApproval(operator, approved)](./sdk.collectionmodule.setapproval.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.collectionmodule.setmodulemetadata.md) |  |  |
 |  [setRestrictedTransfer(restricted)](./sdk.collectionmodule.setrestrictedtransfer.md) |  |  |

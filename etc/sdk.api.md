@@ -5,8 +5,8 @@
 ```ts
 
 import { BaseContract } from 'ethers';
-import { BigNumber } from '@ethersproject/bignumber';
-import { BigNumber as BigNumber_2 } from 'ethers';
+import { BigNumber } from 'ethers';
+import { BigNumber as BigNumber_2 } from '@ethersproject/bignumber';
 import { BigNumberish } from '@ethersproject/bignumber';
 import { BigNumberish as BigNumberish_2 } from 'ethers';
 import { BytesLike } from 'ethers';
@@ -23,8 +23,15 @@ import { NFTCollection } from '@3rdweb/contracts';
 import { Pack } from '@3rdweb/contracts';
 import { ProtocolControl } from '@3rdweb/contracts';
 import { Provider } from '@ethersproject/providers';
+import { Registry } from '@3rdweb/contracts';
 import { Signer } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/providers';
+
+// Warning: (ae-forgotten-export) The symbol "RegistryModule" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export type AnyContract = typeof AppModule | typeof CollectionModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule;
 
 // @public
 export class AppModule extends Module {
@@ -70,7 +77,7 @@ export type ChainlinkInfo = {
     vrfCoordinator: string;
     linkTokenAddress: string;
     keyHash: string;
-    fees: BigNumber_2;
+    fees: BigNumber;
 };
 
 // Warning: (ae-internal-missing-underscore) The name "ChainlinkVrf" should be prefixed with an underscore because the declaration is marked as @internal
@@ -87,15 +94,15 @@ export interface CollectionMetadata {
     // (undocumented)
     ownedByAddress: number;
     // (undocumented)
-    supply: BigNumber;
+    supply: BigNumber_2;
 }
 
 // @public
-export class CollectionModule extends Module {
+export class CollectionModule extends ModuleWithRoles {
     // (undocumented)
-    balance(tokenId: string): Promise<BigNumber>;
+    balance(tokenId: string): Promise<BigNumber_2>;
     // (undocumented)
-    balanceOf(address: string, tokenId: string): Promise<BigNumber>;
+    balanceOf(address: string, tokenId: string): Promise<BigNumber_2>;
     // (undocumented)
     burn(args: INFTCollectionBatchArgs): Promise<TransactionReceipt>;
     // (undocumented)
@@ -123,13 +130,9 @@ export class CollectionModule extends Module {
     get(tokenId: string, address?: string): Promise<CollectionMetadata>;
     getAll(address?: string): Promise<CollectionMetadata[]>;
     // (undocumented)
-    getAllRoleMembers(): Promise<Record<Role, string[]>>;
+    protected getModuleRoles(): Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
-    // (undocumented)
-    getRoleMembers(role: Role): Promise<string[]>;
-    // (undocumented)
-    grantRole(role: Role, address: string): Promise<TransactionReceipt>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
@@ -143,7 +146,7 @@ export class CollectionModule extends Module {
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
-    revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
+    static roles: ("admin" | "minter" | "pauser" | "transfer")[];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
@@ -213,11 +216,11 @@ export interface Currency {
 }
 
 // @public
-export class CurrencyModule extends Module {
+export class CurrencyModule extends ModuleWithRoles {
     // (undocumented)
-    allowance(spender: string): Promise<BigNumber_2>;
+    allowance(spender: string): Promise<BigNumber>;
     // (undocumented)
-    allowanceOf(owner: string, spender: string): Promise<BigNumber_2>;
+    allowanceOf(owner: string, spender: string): Promise<BigNumber>;
     // (undocumented)
     balance(): Promise<CurrencyValue>;
     // (undocumented)
@@ -233,15 +236,11 @@ export class CurrencyModule extends Module {
     // (undocumented)
     get(): Promise<Currency>;
     // (undocumented)
-    getAllRoleMembers(): Promise<Record<Role, string[]>>;
+    protected getModuleRoles(): Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
-    getRoleMembers(role: Role): Promise<string[]>;
-    // (undocumented)
     getValue(value: BigNumberish_2): Promise<CurrencyValue>;
-    // (undocumented)
-    grantRole(role: Role, address: string): Promise<TransactionReceipt>;
     // (undocumented)
     mint(amount: BigNumberish_2): Promise<void>;
     // (undocumented)
@@ -249,17 +248,17 @@ export class CurrencyModule extends Module {
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
-    revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
+    static roles: ("admin" | "minter" | "pauser" | "transfer")[];
     // (undocumented)
-    setAllowance(spender: string, amount: BigNumber_2): Promise<TransactionReceipt>;
+    setAllowance(spender: string, amount: BigNumber): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
-    totalSupply(): Promise<BigNumber_2>;
+    totalSupply(): Promise<BigNumber>;
     // (undocumented)
-    transfer(to: string, amount: BigNumber_2): Promise<TransactionReceipt>;
+    transfer(to: string, amount: BigNumber): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
 }
@@ -273,11 +272,13 @@ export interface CurrencyValue extends Currency {
 }
 
 // @public
-export class DatastoreModule extends Module {
+export class DatastoreModule extends ModuleWithRoles {
     // @internal (undocumented)
     protected connectContract(): DataStore;
     // @internal
     get contract(): DataStore;
+    // (undocumented)
+    protected getModuleRoles(): Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
@@ -285,15 +286,17 @@ export class DatastoreModule extends Module {
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
+    static roles: ("admin" | "editor")[];
+    // (undocumented)
     setUint(key: string, value: BigNumberish_2): Promise<TransactionReceipt>;
 }
 
 // @beta
-export class DropModule extends Module {
+export class DropModule extends ModuleWithRoles {
     // (undocumented)
-    balance(): Promise<BigNumber_2>;
+    balance(): Promise<BigNumber>;
     // (undocumented)
-    balanceOf(address: string): Promise<BigNumber_2>;
+    balanceOf(address: string): Promise<BigNumber>;
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
@@ -313,17 +316,13 @@ export class DropModule extends Module {
     // (undocumented)
     getAllMintConditions(): Promise<PublicMintCondition[]>;
     // (undocumented)
-    getAllRoleMembers(): Promise<Record<Role, string[]>>;
-    // (undocumented)
     getAllUnclaimed(): Promise<NFTMetadataOwner[]>;
+    // (undocumented)
+    protected getModuleRoles(): Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
-    // (undocumented)
-    getRoleMembers(role: Role): Promise<string[]>;
-    // (undocumented)
-    grantRole(role: Role, address: string): Promise<TransactionReceipt>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
@@ -333,13 +332,13 @@ export class DropModule extends Module {
     // (undocumented)
     lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
     // (undocumented)
-    maxTotalSupply(): Promise<BigNumber_2>;
+    maxTotalSupply(): Promise<BigNumber>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
-    revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
+    static roles: ("admin" | "minter" | "pauser" | "transfer")[];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
@@ -355,11 +354,11 @@ export class DropModule extends Module {
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
-    totalClaimedSupply(): Promise<BigNumber_2>;
+    totalClaimedSupply(): Promise<BigNumber>;
     // (undocumented)
-    totalSupply(): Promise<BigNumber_2>;
+    totalSupply(): Promise<BigNumber>;
     // (undocumented)
-    totalUnclaimedSupply(): Promise<BigNumber_2>;
+    totalUnclaimedSupply(): Promise<BigNumber>;
     // (undocumented)
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
@@ -389,7 +388,7 @@ export function getCurrencyMetadata(providerOrSigner: ProviderOrSigner, asset: s
 // Warning: (ae-internal-missing-underscore) The name "getCurrencyValue" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getCurrencyValue(providerOrSigner: ProviderOrSigner, asset: string, price: BigNumber_2): Promise<CurrencyValue>;
+export function getCurrencyValue(providerOrSigner: ProviderOrSigner, asset: string, price: BigNumber): Promise<CurrencyValue>;
 
 // Warning: (ae-internal-missing-underscore) The name "getGasPriceForChain" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -517,9 +516,9 @@ export interface ListingMetadata {
     // (undocumented)
     id: string;
     // (undocumented)
-    price: BigNumber_2;
+    price: BigNumber;
     // (undocumented)
-    quantity: BigNumber_2;
+    quantity: BigNumber;
     // (undocumented)
     saleEnd: Date | null;
     // (undocumented)
@@ -535,7 +534,7 @@ export interface ListingMetadata {
 }
 
 // @public
-export class MarketModule extends Module {
+export class MarketModule extends ModuleWithRoles {
     // (undocumented)
     buy(listingId: string, quantity: BigNumberish_2): Promise<ListingMetadata>;
     // @internal (undocumented)
@@ -551,13 +550,17 @@ export class MarketModule extends Module {
     // @deprecated (undocumented)
     getListing(listingId: string): Promise<ListingMetadata>;
     // (undocumented)
-    getMarketFeeBps(): Promise<BigNumber_2>;
+    getMarketFeeBps(): Promise<BigNumber>;
+    // (undocumented)
+    protected getModuleRoles(): Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
     list(assetContract: string, tokenId: string, currencyContract: string, price: BigNumberish_2, quantity: BigNumberish_2, tokensPerBuyer?: BigNumberish_2, secondsUntilStart?: BigNumberish_2, secondsUntilEnd?: BigNumberish_2): Promise<ListingMetadata>;
     // (undocumented)
     static moduleType: ModuleType;
+    // (undocumented)
+    static roles: ("admin" | "pauser" | "lister")[];
     // (undocumented)
     setMarketFeeBps(fee: number): Promise<TransactionReceipt>;
     // (undocumented)
@@ -651,6 +654,22 @@ export enum ModuleType {
     PACK = 5
 }
 
+// @public
+export class ModuleWithRoles extends Module {
+    // (undocumented)
+    getAllRoleMembers(): Promise<Partial<Record<Role, string[]>>>;
+    // @internal @override
+    protected getModuleRoles(): Role[];
+    // (undocumented)
+    getRoleMembers(role: Role): Promise<string[]>;
+    // (undocumented)
+    grantRole(role: Role, address: string): Promise<TransactionReceipt>;
+    // (undocumented)
+    revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
+    // @internal (undocumented)
+    get roles(): Role[];
+}
+
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -684,11 +703,11 @@ export interface NFTMetadataOwner {
 }
 
 // @public
-export class NFTModule extends Module {
+export class NFTModule extends ModuleWithRoles {
     // (undocumented)
-    balance(): Promise<BigNumber_2>;
+    balance(): Promise<BigNumber>;
     // (undocumented)
-    balanceOf(address: string): Promise<BigNumber_2>;
+    balanceOf(address: string): Promise<BigNumber>;
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // @internal (undocumented)
@@ -700,19 +719,15 @@ export class NFTModule extends Module {
     // (undocumented)
     getAll(): Promise<NFTMetadata[]>;
     // (undocumented)
-    getAllRoleMembers(): Promise<Record<Role, string[]>>;
-    // (undocumented)
     getAllWithOwner(): Promise<NFTMetadataOwner[]>;
+    // (undocumented)
+    protected getModuleRoles(): Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
     getOwned(_address?: string): Promise<NFTMetadata[]>;
     // (undocumented)
-    getRoleMembers(role: Role): Promise<string[]>;
-    // (undocumented)
     getWithOwner(tokenId: string): Promise<NFTMetadataOwner>;
-    // (undocumented)
-    grantRole(role: Role, address: string): Promise<TransactionReceipt>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
@@ -728,7 +743,7 @@ export class NFTModule extends Module {
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
-    revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
+    static roles: ("admin" | "minter" | "pauser" | "transfer")[];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
@@ -738,7 +753,7 @@ export class NFTModule extends Module {
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
-    totalSupply(): Promise<BigNumber_2>;
+    totalSupply(): Promise<BigNumber>;
     // (undocumented)
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
@@ -755,7 +770,7 @@ export interface PackMetadata {
     // (undocumented)
     creator: string;
     // (undocumented)
-    currentSupply: BigNumber_2;
+    currentSupply: BigNumber;
     // (undocumented)
     id: string;
     // (undocumented)
@@ -765,11 +780,11 @@ export interface PackMetadata {
 }
 
 // @beta
-export class PackModule extends Module {
+export class PackModule extends ModuleWithRoles {
     // (undocumented)
-    balance(tokenId: string): Promise<BigNumber_2>;
+    balance(tokenId: string): Promise<BigNumber>;
     // (undocumented)
-    balanceOf(address: string, tokenId: string): Promise<BigNumber_2>;
+    balanceOf(address: string, tokenId: string): Promise<BigNumber>;
     // @internal (undocumented)
     protected connectContract(): Pack;
     // @internal
@@ -783,17 +798,13 @@ export class PackModule extends Module {
     // (undocumented)
     getAll(): Promise<PackMetadata[]>;
     // (undocumented)
-    getAllRoleMembers(): Promise<Record<Role, string[]>>;
-    // (undocumented)
     getLinkBalance(): Promise<CurrencyValue>;
+    // (undocumented)
+    protected getModuleRoles(): Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
     getNFTs(packId: string): Promise<PackNFTMetadata[]>;
-    // (undocumented)
-    getRoleMembers(role: Role): Promise<string[]>;
-    // (undocumented)
-    grantRole(role: Role, address: string): Promise<void>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
@@ -801,7 +812,7 @@ export class PackModule extends Module {
     // (undocumented)
     open(packId: string): Promise<NFTMetadata[]>;
     // (undocumented)
-    revokeRole(role: Role, address: string): Promise<void>;
+    static roles: ("admin" | "minter" | "pauser" | "transfer")[];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<void>;
     // (undocumented)
@@ -811,7 +822,7 @@ export class PackModule extends Module {
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<void>;
     // (undocumented)
-    transfer(to: string, tokenId: string, amount: BigNumber_2): Promise<void>;
+    transfer(to: string, tokenId: string, amount: BigNumber): Promise<void>;
     // (undocumented)
     transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: BytesLike): Promise<void>;
     // (undocumented)
@@ -825,7 +836,7 @@ export interface PackNFTMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    supply: BigNumber_2;
+    supply: BigNumber;
 }
 
 // @public
@@ -856,8 +867,22 @@ export interface PublicMintCondition {
 // @internal (undocumented)
 export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string): string;
 
+// Warning: (ae-incompatible-release-tags) The symbol "Role" is marked as @public, but its signature references "ROLES" which is marked as @internal
+//
 // @public
-export type Role = "admin" | "minter" | "pauser" | "transfer";
+export type Role = typeof ROLES[keyof typeof ROLES];
+
+// Warning: (ae-internal-missing-underscore) The name "ROLES" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const ROLES: {
+    admin: "admin";
+    minter: "minter";
+    pauser: "pauser";
+    transfer: "transfer";
+    editor: "editor";
+    lister: "lister";
+};
 
 // @public
 export class ThirdwebSDK {

@@ -2,8 +2,6 @@ import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
 import type { C } from "ts-toolbelt";
-import { AppModule, ModuleMetadataNoType } from "../app";
-import { CollectionModule } from "../collection";
 import { getContractMetadata, uploadMetadata } from "../common";
 import {
   FORWARDER_ADDRESS,
@@ -12,13 +10,15 @@ import {
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
-import { CurrencyModule } from "../currency";
-import { DatastoreModule } from "../datastore";
-import { DropModule } from "../drop";
-import { MarketModule } from "../market";
-import { NFTModule } from "../nft";
-import { PackModule } from "../pack";
-import { IAppModule, RegistryModule } from "../registry";
+import { AppModule, ModuleMetadataNoType } from "../modules/app";
+import { CollectionModule } from "../modules/collection";
+import { DatastoreModule } from "../modules/datastore";
+import { DropModule } from "../modules/drop";
+import { MarketModule } from "../modules/market";
+import { NFTModule } from "../modules/nft";
+import { PackModule } from "../modules/pack";
+import { CurrencyModule } from "../modules/token";
+import { IAppModule, RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,
   MetadataURIOrObject,
@@ -71,7 +71,10 @@ export interface ISDKOptions {
   transactionRelayerForwarderAddress: string;
 }
 
-type AnyContract =
+/**
+ * @internal
+ */
+export type AnyContract =
   | typeof AppModule
   | typeof CollectionModule
   | typeof NFTModule

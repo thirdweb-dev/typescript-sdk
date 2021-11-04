@@ -1,4 +1,14 @@
-import { Forwarder__factory } from "@3rdweb/contracts";
+import {
+  Coin as Token,
+  DataStore,
+  Forwarder__factory,
+  LazyNFT as Drop,
+  Market,
+  NFT,
+  NFTCollection as Collection,
+  Pack,
+  ProtocolControl as App,
+} from "@3rdweb/contracts";
 import {
   JsonRpcSigner,
   Log,
@@ -7,14 +17,25 @@ import {
 } from "@ethersproject/providers";
 import { BaseContract, BigNumber, CallOverrides, ethers, Signer } from "ethers";
 import type { ISDKOptions } from ".";
-import type { ModuleMetadata } from "../app";
 import { getContractMetadata, isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { uploadMetadata } from "../common/ipfs";
 import { ModuleType } from "../common/module-type";
+import { getRoleHash, Role } from "../common/role";
+import type { ModuleMetadata } from "../modules/app";
 import type { MetadataURIOrObject, ProviderOrSigner } from "./types";
+
+type PossibleContract =
+  | App
+  | Collection
+  | DataStore
+  | Drop
+  | Market
+  | NFT
+  | Pack
+  | Token;
 
 /**
  * The root Module class. All other Modules extend this.
@@ -351,5 +372,91 @@ export class Module {
       } catch (e) {}
     }
     return null;
+  }
+}
+
+/**
+ * Extends the {@link Module} class to add roles functionality.
+ * It should never be instantiated directly.
+ * @public
+ */
+export class ModuleWithRoles extends Module {
+  /**
+   * @override - needs to be overridden by subclasses
+   * @internal
+   */
+  protected getModuleRoles(): Role[] {
+    throw new Error("getModuleRoles has to be implemented by a subclass");
+  }
+
+  /**
+   * @internal
+   */
+  public get roles() {
+    return this.getModuleRoles();
+  }
+
+  public async getRoleMembers(role: Role): Promise<string[]> {
+    invariant(
+      this.roles.includes(role),
+      `this module does not support the "${role}" role`,
+    );
+    const contract = this.connectContract() as PossibleContract;
+    invariant(
+      contract.getRoleMemberCount,
+      "roles are not supported on this module",
+    );
+    const roleHash = getRoleHash(role);
+    const count = (await contract.getRoleMemberCount(roleHash)).toNumber();
+    return await Promise.all(
+      Array.from(Array(count).keys()).map((i) =>
+        contract.getRoleMember(roleHash, i),
+      ),
+    );
+  }
+
+  public async getAllRoleMembers(): Promise<Partial<Record<Role, string[]>>> {
+    invariant(this.roles.length, "this module has no support for roles");
+    const roles: Partial<Record<Role, string[]>> = {};
+    for (const role of this.roles) {
+      roles[role] = await this.getRoleMembers(role);
+    }
+    return roles;
+  }
+
+  public async grantRole(
+    role: Role,
+    address: string,
+  ): Promise<TransactionReceipt> {
+    invariant(
+      this.roles.includes(role),
+      `this module does not support the "${role}" role`,
+    );
+    return await this.sendTransaction("grantRole", [
+      getRoleHash(role),
+      address,
+    ]);
+  }
+
+  public async revokeRole(
+    role: Role,
+    address: string,
+  ): Promise<TransactionReceipt> {
+    invariant(
+      this.roles.includes(role),
+      `this module does not support the "${role}" role`,
+    );
+    const signerAddress = await this.getSignerAddress();
+    if (signerAddress.toLowerCase() === address.toLowerCase()) {
+      return await this.sendTransaction("renounceRole", [
+        getRoleHash(role),
+        address,
+      ]);
+    } else {
+      return await this.sendTransaction("revokeRole", [
+        getRoleHash(role),
+        address,
+      ]);
+    }
   }
 }
