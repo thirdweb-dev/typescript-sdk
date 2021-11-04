@@ -4,7 +4,7 @@
 
 ## ModuleWithRoles class
 
-Extends the [Module](./sdk.module.md) class to add roles functionality. It should never be instantiated directly.
+Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality.
 
 <b>Signature:</b>
 
@@ -13,12 +13,16 @@ export declare class ModuleWithRoles extends Module
 ```
 <b>Extends:</b> [Module](./sdk.module.md)
 
+## Remarks
+
+The constructor for this class is marked as internal. Third-party code should not call the constructor directly or create subclasses that extend the `ModuleWithRoles` class.
+
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [getAllRoleMembers()](./sdk.modulewithroles.getallrolemembers.md) |  |  |
-|  [getRoleMembers(role)](./sdk.modulewithroles.getrolemembers.md) |  |  |
-|  [grantRole(role, address)](./sdk.modulewithroles.grantrole.md) |  |  |
-|  [revokeRole(role, address)](./sdk.modulewithroles.revokerole.md) |  |  |
+|  [getAllRoleMembers()](./sdk.modulewithroles.getallrolemembers.md) |  | Call this to get get a list of addresses for all supported roles on the module. |
+|  [getRoleMembers(role)](./sdk.modulewithroles.getrolemembers.md) |  | Call this to get a list of addresses that are members of a specific role. |
+|  [grantRole(role, address)](./sdk.modulewithroles.grantrole.md) |  | Call this to grant a role to a specific address. |
+|  [revokeRole(role, address)](./sdk.modulewithroles.revokerole.md) |  | Call this to revoke a role from a specific address. |
 

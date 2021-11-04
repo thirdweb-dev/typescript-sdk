@@ -4,10 +4,12 @@
 
 ## Role type
 
-Rs that are used for permissions on the contract.
+Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->.
 
 <b>Signature:</b>
 
 ```typescript
-export declare type Role = typeof ROLES[keyof typeof ROLES];
+export declare type Role = keyof IRoles;
 ```
+<b>References:</b> [IRoles](./sdk.iroles.md)
+

@@ -7,7 +7,7 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
-The PackModule. This should always be created via `getPackModule()` on the main SDK.
+Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.getpackmodule.md)
 
 <b>Signature:</b>
 
@@ -21,7 +21,7 @@ export declare class PackModule extends ModuleWithRoles
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.packmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
-|  [roles](./sdk.packmodule.roles.md) | <code>static</code> | ("admin" \| "minter" \| "pauser" \| "transfer")\[\] | <b><i>(BETA)</i></b> |
+|  [roles](./sdk.packmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] | <b><i>(BETA)</i></b> |
 
 ## Methods
 
@@ -34,7 +34,6 @@ export declare class PackModule extends ModuleWithRoles
 |  [get(packId)](./sdk.packmodule.get.md) |  | <b><i>(BETA)</i></b> |
 |  [getAll()](./sdk.packmodule.getall.md) |  | <b><i>(BETA)</i></b> |
 |  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  | <b><i>(BETA)</i></b> |
-|  [getModuleRoles()](./sdk.packmodule.getmoduleroles.md) |  | <b><i>(BETA)</i></b> |
 |  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  | <b><i>(BETA)</i></b> |
 |  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
 |  [open(packId)](./sdk.packmodule.open.md) |  | <b><i>(BETA)</i></b> |

@@ -26,7 +26,7 @@
     "extract-api": "api-extractor run --local",
     "full-build": "yarn build:tsdx && yarn extract-api",
     "generate-md-docs": "yarn api-documenter markdown -i ./temp -o ./docs",
-    "generate-docs": "rm -rf docs && yarn full-build && yarn generate-md-docs",
+    "generate-docs": "yarn full-build && yarn generate-md-docs",
     "build": "yarn generate-docs"
   },
   "devDependencies": {

@@ -4,21 +4,81 @@
 
 ## sdk package
 
+The [thirdweb](https://thirdweb.com) typescript sdk.
+
+## Remarks
+
+Please keep in mind that the thirdweb typescript sdk and [Admin Dashboard](https://thirdweb.com/dashboard) are currently in Early Access.
+
+Should you find bugs or in the case you need help please reach out to us in [Discord](https://discord.gg/thirdweb)<!-- -->. (We also have 🍪 )
+
+## Example
+
+To get you started here's how you would instantiate the SDK and fetch some NFTs
+
+1. Install the sdk
+
+```shell
+npm install @3rdweb/sdk || yarn add @3rdweb/sdk
+```
+2. Get your NFT contract address from the [Admin Dashboard](https://thirdweb.com/dashboard)<!-- -->.
+
+3. Write the tiniest amount of code!
+
+```typescript
+ 1 | import { ThirdwebSDK } from "@3rdweb/sdk";
+ 2 | import type { NFTModule, NFTMetadataOwner } from "@3rdweb/sdk";
+ 3 |
+ 5 | const contractAddress = "0x..."; // your contract address from step 2
+ 6 |
+ 7 | const sdk = new ThirdwebSDK();
+ 8 |
+ 9 | const nftModule: NFTModule = sdk.getNftModule(contractAddress);
+10 |
+11 | const nftListWithOwnerAddress: NFTMetadataOwner[] = await nftModule.getAllWithOwner();
+12 |
+13 | console.log(nftListWithOwnerAddress);
+```
+
+```
+Output
+=> [
+      {
+         owner: "0x...",
+         metadata: {
+           name: "...",
+           description: "...",
+           image: "..."
+         },
+      },
+      {
+         owner: "0x...",
+         metadata: {
+           name: "...",
+           description: "...",
+           image: "..."
+         },
+      },
+      ...
+   ]
+```
+
 ## Classes
 
 |  Class | Description |
 |  --- | --- |
-|  [AppModule](./sdk.appmodule.md) | The AppModule. This should always be created via <code>getAppModule()</code> on the main SDK. |
-|  [CollectionModule](./sdk.collectionmodule.md) | The CollectionModule. This should always be created via <code>getCollectionModule()</code> on the main SDK. |
-|  [CurrencyModule](./sdk.currencymodule.md) | The CurrencyModule. This should always be created via <code>getCurrencyModule()</code> on the main SDK. |
-|  [DatastoreModule](./sdk.datastoremodule.md) | The DatastoreModule. This should always be created via <code>getCurrencyModule()</code> on the main SDK. |
-|  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> The DropModule. This should always be created via <code>getDropModule()</code> on the main SDK. |
-|  [MarketModule](./sdk.marketmodule.md) | The MarketModule. This should always be created via <code>getMarketModule()</code> on the main SDK. |
-|  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. It should never be instantiated directly. |
-|  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add roles functionality. It should never be instantiated directly. |
-|  [NFTModule](./sdk.nftmodule.md) | The NFTModule. This should always be created via <code>getNFTModule()</code> on the main SDK. |
+|  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
+|  [CollectionModule](./sdk.collectionmodule.md) | Access this module by calling [ThirdwebSDK.getCollectionModule()](./sdk.thirdwebsdk.getcollectionmodule.md) |
+|  [CurrencyModule](./sdk.currencymodule.md) | Access this module by calling [ThirdwebSDK.getCurrencyModule()](./sdk.thirdwebsdk.getcurrencymodule.md) |
+|  [DatastoreModule](./sdk.datastoremodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDatastoreModule()](./sdk.thirdwebsdk.getdatastoremodule.md) |
+|  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md) |
+|  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
+|  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
+|  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
+|  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality. |
+|  [NFTModule](./sdk.nftmodule.md) | Access this module by calling [ThirdwebSDK.getNFTModule()](./sdk.thirdwebsdk.getnftmodule.md) |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
-|  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> The PackModule. This should always be created via <code>getPackModule()</code> on the main SDK. |
+|  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.getpackmodule.md) |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
 
 ## Enumerations
@@ -49,6 +109,7 @@
 |  [INFTCollectionCreateArgs](./sdk.inftcollectioncreateargs.md) |  |
 |  [IPackBatchArgs](./sdk.ipackbatchargs.md) | <b><i>(BETA)</i></b> |
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) | <b><i>(BETA)</i></b> |
+|  [IRoles](./sdk.iroles.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
 |  [ListingFilter](./sdk.listingfilter.md) | Filter options for the Market module. |
 |  [ListingMetadata](./sdk.listingmetadata.md) | Metadata for items listed on a Market module. |
@@ -74,6 +135,6 @@
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |
 |  [MetadataURIOrObject](./sdk.metadatauriorobject.md) | A valid URI string or metadata object |
 |  [ProviderOrSigner](./sdk.providerorsigner.md) | A valid "ethers" Provider or Signer. |
-|  [Role](./sdk.role.md) | Rs that are used for permissions on the contract. |
+|  [Role](./sdk.role.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |
 |  [ValidProviderInput](./sdk.validproviderinput.md) | A valid "ethers" Provider, Signer or a Network object or url address to create a Provider with. |
 

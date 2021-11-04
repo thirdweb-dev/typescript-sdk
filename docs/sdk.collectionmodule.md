@@ -4,7 +4,7 @@
 
 ## CollectionModule class
 
-The CollectionModule. This should always be created via `getCollectionModule()` on the main SDK.
+Access this module by calling [ThirdwebSDK.getCollectionModule()](./sdk.thirdwebsdk.getcollectionmodule.md)
 
 <b>Signature:</b>
 
@@ -18,7 +18,7 @@ export declare class CollectionModule extends ModuleWithRoles
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.collectionmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.collectionmodule.roles.md) | <code>static</code> | ("admin" \| "minter" \| "pauser" \| "transfer")\[\] |  |
+|  [roles](./sdk.collectionmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
 
 ## Methods
 
@@ -38,7 +38,6 @@ export declare class CollectionModule extends ModuleWithRoles
 |  [createWithERC721(tokenContract, tokenId, metadata)](./sdk.collectionmodule.createwitherc721.md) |  |  |
 |  [get(tokenId, address)](./sdk.collectionmodule.get.md) |  | Get a single collection item by tokenId. |
 |  [getAll(address)](./sdk.collectionmodule.getall.md) |  | Return all items in the collection. |
-|  [getModuleRoles()](./sdk.collectionmodule.getmoduleroles.md) |  |  |
 |  [isApproved(address, operator)](./sdk.collectionmodule.isapproved.md) |  |  |
 |  [mint(args)](./sdk.collectionmodule.mint.md) |  |  |
 |  [mintBatch(args)](./sdk.collectionmodule.mintbatch.md) |  |  |

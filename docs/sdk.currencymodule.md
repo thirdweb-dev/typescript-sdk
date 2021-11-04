@@ -4,7 +4,7 @@
 
 ## CurrencyModule class
 
-The CurrencyModule. This should always be created via `getCurrencyModule()` on the main SDK.
+Access this module by calling [ThirdwebSDK.getCurrencyModule()](./sdk.thirdwebsdk.getcurrencymodule.md)
 
 <b>Signature:</b>
 
@@ -18,7 +18,7 @@ export declare class CurrencyModule extends ModuleWithRoles
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.currencymodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.currencymodule.roles.md) | <code>static</code> | ("admin" \| "minter" \| "pauser" \| "transfer")\[\] |  |
+|  [roles](./sdk.currencymodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
 
 ## Methods
 
@@ -31,7 +31,6 @@ export declare class CurrencyModule extends ModuleWithRoles
 |  [burn(amount)](./sdk.currencymodule.burn.md) |  |  |
 |  [burnFrom(from, amount)](./sdk.currencymodule.burnfrom.md) |  |  |
 |  [get()](./sdk.currencymodule.get.md) |  |  |
-|  [getModuleRoles()](./sdk.currencymodule.getmoduleroles.md) |  |  |
 |  [getValue(value)](./sdk.currencymodule.getvalue.md) |  |  |
 |  [mint(amount)](./sdk.currencymodule.mint.md) |  |  |
 |  [mintTo(to, amount)](./sdk.currencymodule.mintto.md) |  |  |

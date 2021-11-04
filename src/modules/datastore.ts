@@ -2,19 +2,23 @@ import { DataStore, DataStore__factory } from "@3rdweb/contracts";
 import { keccak256 } from "@ethersproject/keccak256";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumberish } from "ethers";
-import { ModuleType, Role, ROLES } from "../common";
+import { ModuleType, Role, RolesMap } from "../common";
 import { ModuleWithRoles } from "../core/module";
 
 /**
- * The DatastoreModule. This should always be created via `getCurrencyModule()` on the main SDK.
- * @public
+ * Access this module by calling {@link ThirdwebSDK.getDatastoreModule}
+ * @beta
  */
 export class DatastoreModule extends ModuleWithRoles {
   public static moduleType: ModuleType = ModuleType.DATASTORE;
 
-  public static roles = [ROLES.admin, ROLES.editor];
+  public static roles = [RolesMap.admin, RolesMap.editor] as const;
 
-  protected getModuleRoles(): Role[] {
+  /**
+   * @override
+   * @internal
+   */
+  protected getModuleRoles(): readonly Role[] {
     return DatastoreModule.roles;
   }
 

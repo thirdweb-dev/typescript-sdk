@@ -129,8 +129,8 @@ export class CollectionModule extends ModuleWithRoles {
     createWithERC721(tokenContract: string, tokenId: BigNumberish, metadata: MetadataURIOrObject): Promise<void>;
     get(tokenId: string, address?: string): Promise<CollectionMetadata>;
     getAll(address?: string): Promise<CollectionMetadata[]>;
-    // (undocumented)
-    protected getModuleRoles(): Role[];
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
@@ -146,7 +146,7 @@ export class CollectionModule extends ModuleWithRoles {
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
-    static roles: ("admin" | "minter" | "pauser" | "transfer")[];
+    static roles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
@@ -235,8 +235,8 @@ export class CurrencyModule extends ModuleWithRoles {
     get contract(): Coin;
     // (undocumented)
     get(): Promise<Currency>;
-    // (undocumented)
-    protected getModuleRoles(): Role[];
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
@@ -248,7 +248,7 @@ export class CurrencyModule extends ModuleWithRoles {
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
-    static roles: ("admin" | "minter" | "pauser" | "transfer")[];
+    static roles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
     setAllowance(spender: string, amount: BigNumber): Promise<TransactionReceipt>;
     // (undocumented)
@@ -271,14 +271,14 @@ export interface CurrencyValue extends Currency {
     value: string;
 }
 
-// @public
+// @beta
 export class DatastoreModule extends ModuleWithRoles {
     // @internal (undocumented)
     protected connectContract(): DataStore;
     // @internal
     get contract(): DataStore;
-    // (undocumented)
-    protected getModuleRoles(): Role[];
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
@@ -286,7 +286,7 @@ export class DatastoreModule extends ModuleWithRoles {
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
-    static roles: ("admin" | "editor")[];
+    static roles: readonly ["admin", "editor"];
     // (undocumented)
     setUint(key: string, value: BigNumberish_2): Promise<TransactionReceipt>;
 }
@@ -317,8 +317,8 @@ export class DropModule extends ModuleWithRoles {
     getAllMintConditions(): Promise<PublicMintCondition[]>;
     // (undocumented)
     getAllUnclaimed(): Promise<NFTMetadataOwner[]>;
-    // (undocumented)
-    protected getModuleRoles(): Role[];
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
@@ -338,7 +338,7 @@ export class DropModule extends ModuleWithRoles {
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
-    static roles: ("admin" | "minter" | "pauser" | "transfer")[];
+    static roles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
@@ -451,6 +451,16 @@ export const InterfaceId_IERC1155: Uint8Array;
 // @internal (undocumented)
 export const InterfaceId_IERC721: Uint8Array;
 
+// @public
+export class InvariantError extends Error {
+    // @internal
+    constructor(message?: string);
+    // @internal (undocumented)
+    framesToPop: number;
+    // @internal (undocumented)
+    name: string;
+}
+
 // @beta (undocumented)
 export interface IPackBatchArgs {
     // (undocumented)
@@ -474,6 +484,17 @@ export interface IPackCreateArgs {
     rewardsPerOpen?: number;
     // (undocumented)
     secondsUntilOpenStart?: number;
+}
+
+// @public
+export interface IRoles {
+    admin: "admin";
+    // @beta
+    editor: "editor";
+    lister: "lister";
+    minter: "minter";
+    pauser: "pauser";
+    transfer: "transfer";
 }
 
 // Warning: (ae-internal-missing-underscore) The name "isContract" should be prefixed with an underscore because the declaration is marked as @internal
@@ -551,8 +572,8 @@ export class MarketModule extends ModuleWithRoles {
     getListing(listingId: string): Promise<ListingMetadata>;
     // (undocumented)
     getMarketFeeBps(): Promise<BigNumber>;
-    // (undocumented)
-    protected getModuleRoles(): Role[];
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
@@ -560,7 +581,7 @@ export class MarketModule extends ModuleWithRoles {
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
-    static roles: ("admin" | "pauser" | "lister")[];
+    static roles: readonly ["admin", "lister", "pauser"];
     // (undocumented)
     setMarketFeeBps(fee: number): Promise<TransactionReceipt>;
     // (undocumented)
@@ -582,7 +603,7 @@ export class Module {
     readonly address: string;
     // @internal (undocumented)
     clearSigner(): void;
-    // @internal @override (undocumented)
+    // @internal @virtual (undocumented)
     protected connectContract(): BaseContract;
     // (undocumented)
     exists(): Promise<boolean>;
@@ -591,7 +612,7 @@ export class Module {
     // @internal (undocumented)
     protected getChainID(): Promise<number>;
     getMetadata(): Promise<ModuleMetadata>;
-    // @internal @override (undocumented)
+    // @internal @virtual (undocumented)
     protected getModuleType(): ModuleType;
     // @internal (undocumented)
     protected getProvider(): Promise<Provider | undefined>;
@@ -656,18 +677,14 @@ export enum ModuleType {
 
 // @public
 export class ModuleWithRoles extends Module {
-    // (undocumented)
+    // @internal
+    constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions);
     getAllRoleMembers(): Promise<Partial<Record<Role, string[]>>>;
-    // @internal @override
-    protected getModuleRoles(): Role[];
-    // (undocumented)
+    // @internal @virtual (undocumented)
+    protected getModuleRoles(): readonly Role[];
     getRoleMembers(role: Role): Promise<string[]>;
-    // (undocumented)
     grantRole(role: Role, address: string): Promise<TransactionReceipt>;
-    // (undocumented)
     revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
-    // @internal (undocumented)
-    get roles(): Role[];
 }
 
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
@@ -721,7 +738,7 @@ export class NFTModule extends ModuleWithRoles {
     // (undocumented)
     getAllWithOwner(): Promise<NFTMetadataOwner[]>;
     // (undocumented)
-    protected getModuleRoles(): Role[];
+    protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
@@ -743,7 +760,7 @@ export class NFTModule extends ModuleWithRoles {
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
-    static roles: ("admin" | "minter" | "pauser" | "transfer")[];
+    static roles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
@@ -762,6 +779,7 @@ export class NFTModule extends ModuleWithRoles {
 
 // @public
 export class NotFoundError extends Error {
+    // @internal
     constructor();
 }
 
@@ -799,8 +817,8 @@ export class PackModule extends ModuleWithRoles {
     getAll(): Promise<PackMetadata[]>;
     // (undocumented)
     getLinkBalance(): Promise<CurrencyValue>;
-    // (undocumented)
-    protected getModuleRoles(): Role[];
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
@@ -812,7 +830,7 @@ export class PackModule extends ModuleWithRoles {
     // (undocumented)
     open(packId: string): Promise<NFTMetadata[]>;
     // (undocumented)
-    static roles: ("admin" | "minter" | "pauser" | "transfer")[];
+    static roles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<void>;
     // (undocumented)
@@ -867,22 +885,13 @@ export interface PublicMintCondition {
 // @internal (undocumented)
 export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string): string;
 
-// Warning: (ae-incompatible-release-tags) The symbol "Role" is marked as @public, but its signature references "ROLES" which is marked as @internal
-//
 // @public
-export type Role = typeof ROLES[keyof typeof ROLES];
+export type Role = keyof IRoles;
 
-// Warning: (ae-internal-missing-underscore) The name "ROLES" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-internal-missing-underscore) The name "RolesMap" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const ROLES: {
-    admin: "admin";
-    minter: "minter";
-    pauser: "pauser";
-    transfer: "transfer";
-    editor: "editor";
-    lister: "lister";
-};
+export const RolesMap: IRoles;
 
 // @public
 export class ThirdwebSDK {
@@ -897,6 +906,8 @@ export class ThirdwebSDK {
     getContractMetadata(address: string): Promise<ModuleMetadataNoType>;
     // (undocumented)
     getCurrencyModule(address: string): CurrencyModule;
+    // Warning: (ae-incompatible-release-tags) The symbol "getDatastoreModule" is marked as @public, but its signature references "DatastoreModule" which is marked as @beta
+    //
     // (undocumented)
     getDatastoreModule(address: string): DatastoreModule;
     // Warning: (ae-incompatible-release-tags) The symbol "getDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
@@ -933,7 +944,5 @@ export function uploadToIPFS(data: string | File, contractAddress?: string, sign
 
 // @public
 export type ValidProviderInput = ProviderOrSigner | Network | string;
-
-// (No @packageDocumentation comment for this package)
 
 ```

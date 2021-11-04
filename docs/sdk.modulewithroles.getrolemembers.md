@@ -4,6 +4,8 @@
 
 ## ModuleWithRoles.getRoleMembers() method
 
+Call this to get a list of addresses that are members of a specific role.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,23 @@ getRoleMembers(role: Role): Promise<string[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  role | [Role](./sdk.role.md) |  |
+|  role | [Role](./sdk.role.md) | The [role](./sdk.iroles.md) to to get a memberlist for. |
 
 <b>Returns:</b>
 
 Promise&lt;string\[\]&gt;
+
+The list of addresses that are members of the specific role.
+
+## Exceptions
+
+If you are requestiong a role that does not exist on the module this will throw an [InvariantError](./sdk.invarianterror.md)<!-- -->.
+
+## Example
+
+Say you want to get the list of addresses that are members of the [minter](./sdk.iroles.minter.md) role.
+
+```typescript
+const minterAddresses: string[] = await module.getRoleMemberList("minter");
+```
 

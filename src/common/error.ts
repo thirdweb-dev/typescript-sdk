@@ -3,6 +3,7 @@
  * @public
  */
 export class NotFoundError extends Error {
+  /** @internal */
   constructor() {
     super("NOT_FOUND");
   }

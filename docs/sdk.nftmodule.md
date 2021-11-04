@@ -4,7 +4,7 @@
 
 ## NFTModule class
 
-The NFTModule. This should always be created via `getNFTModule()` on the main SDK.
+Access this module by calling [ThirdwebSDK.getNFTModule()](./sdk.thirdwebsdk.getnftmodule.md)
 
 <b>Signature:</b>
 
@@ -18,7 +18,7 @@ export declare class NFTModule extends ModuleWithRoles
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.nftmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.nftmodule.roles.md) | <code>static</code> | ("admin" \| "minter" \| "pauser" \| "transfer")\[\] |  |
+|  [roles](./sdk.nftmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
 
 ## Methods
 

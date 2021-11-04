@@ -5,7 +5,7 @@ import {
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BytesLike } from "ethers";
-import { ModuleType, Role, ROLES } from "../common";
+import { ModuleType, Role, RolesMap } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
@@ -37,20 +37,24 @@ export interface INFTCollectionBatchArgs {
   amount: BigNumberish;
 }
 /**
- * The CollectionModule. This should always be created via `getCollectionModule()` on the main SDK.
+ * Access this module by calling {@link ThirdwebSDK.getCollectionModule}
  * @public
  */
 export class CollectionModule extends ModuleWithRoles {
   public static moduleType: ModuleType = ModuleType.COLLECTION;
 
   public static roles = [
-    ROLES.admin,
-    ROLES.minter,
-    ROLES.pauser,
-    ROLES.transfer,
-  ];
+    RolesMap.admin,
+    RolesMap.minter,
+    RolesMap.pauser,
+    RolesMap.transfer,
+  ] as const;
 
-  protected getModuleRoles(): Role[] {
+  /**
+   * @override
+   * @internal
+   */
+  protected getModuleRoles(): readonly Role[] {
     return CollectionModule.roles;
   }
 

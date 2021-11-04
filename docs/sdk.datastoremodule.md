@@ -4,7 +4,10 @@
 
 ## DatastoreModule class
 
-The DatastoreModule. This should always be created via `getCurrencyModule()` on the main SDK.
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
+Access this module by calling [ThirdwebSDK.getDatastoreModule()](./sdk.thirdwebsdk.getdatastoremodule.md)
 
 <b>Signature:</b>
 
@@ -17,14 +20,13 @@ export declare class DatastoreModule extends ModuleWithRoles
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [moduleType](./sdk.datastoremodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.datastoremodule.roles.md) | <code>static</code> | ("admin" \| "editor")\[\] |  |
+|  [moduleType](./sdk.datastoremodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
+|  [roles](./sdk.datastoremodule.roles.md) | <code>static</code> | readonly \["admin", "editor"\] | <b><i>(BETA)</i></b> |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [getModuleRoles()](./sdk.datastoremodule.getmoduleroles.md) |  |  |
-|  [getUint(key)](./sdk.datastoremodule.getuint.md) |  |  |
-|  [setUint(key, value)](./sdk.datastoremodule.setuint.md) |  |  |
+|  [getUint(key)](./sdk.datastoremodule.getuint.md) |  | <b><i>(BETA)</i></b> |
+|  [setUint(key, value)](./sdk.datastoremodule.setuint.md) |  | <b><i>(BETA)</i></b> |
 

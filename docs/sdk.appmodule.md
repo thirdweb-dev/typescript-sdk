@@ -4,7 +4,7 @@
 
 ## AppModule class
 
-The AppModule. This should always be created via `getAppModule()` on the main SDK.
+Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md)
 
 <b>Signature:</b>
 

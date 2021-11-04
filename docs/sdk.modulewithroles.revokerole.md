@@ -4,6 +4,8 @@
 
 ## ModuleWithRoles.revokeRole() method
 
+Call this to revoke a role from a specific address.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,10 +16,22 @@ revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  role | [Role](./sdk.role.md) |  |
-|  address | string |  |
+|  role | [Role](./sdk.role.md) | The [role](./sdk.iroles.md) to revoke |
+|  address | string | The address to revoke the role from |
 
 <b>Returns:</b>
 
 Promise&lt;TransactionReceipt&gt;
+
+The transaction receipt
+
+## Exceptions
+
+If you are trying to revoke does not exist on the module this will throw an [InvariantError](./sdk.invarianterror.md)<!-- -->.
+
+## Remarks
+
+-- Caution --
+
+This will let you remove yourself from the role, too. If you remove yourself from the [admin](./sdk.iroles.admin.md) role, you will no longer be able to administer the module. There is no way to recover from this.
 

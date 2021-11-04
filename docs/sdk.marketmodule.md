@@ -4,7 +4,7 @@
 
 ## MarketModule class
 
-The MarketModule. This should always be created via `getMarketModule()` on the main SDK.
+Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md)
 
 <b>Signature:</b>
 
@@ -18,7 +18,7 @@ export declare class MarketModule extends ModuleWithRoles
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.marketmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.marketmodule.roles.md) | <code>static</code> | ("admin" \| "pauser" \| "lister")\[\] |  |
+|  [roles](./sdk.marketmodule.roles.md) | <code>static</code> | readonly \["admin", "lister", "pauser"\] |  |
 
 ## Methods
 
@@ -30,7 +30,6 @@ export declare class MarketModule extends ModuleWithRoles
 |  [getAllListings(filter)](./sdk.marketmodule.getalllistings.md) |  |  |
 |  [getListing(listingId)](./sdk.marketmodule.getlisting.md) |  |  |
 |  [getMarketFeeBps()](./sdk.marketmodule.getmarketfeebps.md) |  |  |
-|  [getModuleRoles()](./sdk.marketmodule.getmoduleroles.md) |  |  |
 |  [list(assetContract, tokenId, currencyContract, price, quantity, tokensPerBuyer, secondsUntilStart, secondsUntilEnd)](./sdk.marketmodule.list.md) |  |  |
 |  [setMarketFeeBps(fee)](./sdk.marketmodule.setmarketfeebps.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.marketmodule.setmodulemetadata.md) |  |  |

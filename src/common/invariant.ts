@@ -8,11 +8,21 @@ const {
 } = Object as any;
 
 /**
- * @internal
+ * Error that may get thrown when an invariant assummption fails.
+ * @public
  */
 export class InvariantError extends Error {
+  /**
+   * @internal
+   */
   framesToPop = 1;
+  /**
+   * @internal
+   */
   name = genericMessage;
+  /**
+   * @internal
+   */
   constructor(message: string = genericMessage) {
     super(
       typeof message === "number"

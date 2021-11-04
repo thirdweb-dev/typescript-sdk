@@ -13,9 +13,7 @@ export declare class NotFoundError extends Error
 ```
 <b>Extends:</b> Error
 
-## Constructors
+## Remarks
 
-|  Constructor | Modifiers | Description |
-|  --- | --- | --- |
-|  [(constructor)()](./sdk.notfounderror._constructor_.md) |  | Constructs a new instance of the <code>NotFoundError</code> class |
+The constructor for this class is marked as internal. Third-party code should not call the constructor directly or create subclasses that extend the `NotFoundError` class.
 

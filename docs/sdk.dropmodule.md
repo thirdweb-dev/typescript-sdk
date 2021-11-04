@@ -7,7 +7,7 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
-The DropModule. This should always be created via `getDropModule()` on the main SDK.
+Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md)
 
 <b>Signature:</b>
 
@@ -21,7 +21,7 @@ export declare class DropModule extends ModuleWithRoles
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.dropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
-|  [roles](./sdk.dropmodule.roles.md) | <code>static</code> | ("admin" \| "minter" \| "pauser" \| "transfer")\[\] | <b><i>(BETA)</i></b> |
+|  [roles](./sdk.dropmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] | <b><i>(BETA)</i></b> |
 
 ## Methods
 
@@ -37,7 +37,6 @@ export declare class DropModule extends ModuleWithRoles
 |  [getAllClaimed()](./sdk.dropmodule.getallclaimed.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllMintConditions()](./sdk.dropmodule.getallmintconditions.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllUnclaimed()](./sdk.dropmodule.getallunclaimed.md) |  | <b><i>(BETA)</i></b> |
-|  [getModuleRoles()](./sdk.dropmodule.getmoduleroles.md) |  | <b><i>(BETA)</i></b> |
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | <b><i>(BETA)</i></b> |
 |  [isApproved(address, operator)](./sdk.dropmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
 |  [lazyMint(metadata)](./sdk.dropmodule.lazymint.md) |  | <b><i>(BETA)</i></b> |

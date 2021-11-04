@@ -1,29 +1,62 @@
 import { BytesLike, ethers } from "ethers";
 
-const admin = "admin" as const;
-const minter = "minter" as const;
-const pauser = "pauser" as const;
-const transfer = "transfer" as const;
-const editor = "editor" as const;
-const lister = "lister" as const;
-
 /**
- * @internal
- */
-export const ROLES = {
-  admin,
-  minter,
-  pauser,
-  transfer,
-  editor,
-  lister,
-};
-
-/**
- * Rs that are used for permissions on the contract.
+ * Roles are used to handle permissions on modules that extend {@link ModuleWithRoles}.
  * @public
  */
-export type Role = typeof ROLES[keyof typeof ROLES];
+export interface IRoles {
+  /**
+   * This admin role allows the wallet to modify contract metadata and {@link ModuleWithRoles.grantRole | grant} and {@link ModuleWithRoles.revokeRole | revoke} Roles.
+   * @public
+   */
+  admin: "admin";
+  /**
+   * The minter role allows the wallet to mint new assets.
+   * ({@link NFTModule.mint | NFTs}, {@link CurrencyModule.mint | Tokens}, {@link PackModule.create | Packs}, etc)
+   * @public
+   */
+  minter: "minter";
+  /**
+   * The pauser role allows the wallet to pause all external contract interactions.
+   * @public
+   */
+  pauser: "pauser";
+  /**
+   * The transfer role allows the wallet to transfer and receive assets
+   * **even** when the module is set to be non-transferrable.
+   * @public
+   */
+  transfer: "transfer";
+  /**
+   * The editor role allows the wallet to edit data in the {@link DatastoreModule}.
+   * @beta
+   */
+  editor: "editor";
+  /**
+   * The lister role allows the wallet to list assets on the {@link MarketModule}.
+   * @public
+   */
+  lister: "lister";
+}
+
+/**
+ * {@inheritDoc IRoles}
+ * @public
+ */
+export type Role = keyof IRoles;
+
+/**
+ *
+ * @internal
+ */
+export const RolesMap: IRoles = {
+  admin: "admin",
+  minter: "minter",
+  pauser: "pauser",
+  transfer: "transfer",
+  editor: "editor",
+  lister: "lister",
+} as const;
 
 /**
  *

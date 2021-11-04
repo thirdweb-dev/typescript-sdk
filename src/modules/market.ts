@@ -9,7 +9,7 @@ import {
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
-import { ModuleType, Role, ROLES } from "../common";
+import { ModuleType, Role, RolesMap } from "../common";
 import { InterfaceId_IERC721 } from "../common/contract";
 import { CurrencyValue, getCurrencyValue } from "../common/currency";
 import { uploadMetadata } from "../common/ipfs";
@@ -46,15 +46,23 @@ export interface ListingMetadata {
 }
 
 /**
- * The MarketModule. This should always be created via `getMarketModule()` on the main SDK.
+ * Access this module by calling {@link ThirdwebSDK.getMarketModule}
  * @public
  */
 export class MarketModule extends ModuleWithRoles {
   public static moduleType: ModuleType = ModuleType.MARKET;
 
-  public static roles = [ROLES.admin, ROLES.lister, ROLES.pauser];
+  public static roles = [
+    RolesMap.admin,
+    RolesMap.lister,
+    RolesMap.pauser,
+  ] as const;
 
-  protected getModuleRoles(): Role[] {
+  /**
+   * @override
+   * @internal
+   */
+  protected getModuleRoles(): readonly Role[] {
     return MarketModule.roles;
   }
 

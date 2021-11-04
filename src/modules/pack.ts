@@ -10,7 +10,7 @@ import {
   getCurrencyValue,
   ModuleType,
   Role,
-  ROLES,
+  RolesMap,
 } from "../common";
 import { ChainlinkVrf } from "../common/chainlink";
 import { NotFoundError } from "../common/error";
@@ -61,20 +61,24 @@ export interface IPackBatchArgs {
 }
 
 /**
- * The PackModule. This should always be created via `getPackModule()` on the main SDK.
+ * Access this module by calling {@link ThirdwebSDK.getPackModule}
  * @beta
  */
 export class PackModule extends ModuleWithRoles {
   public static moduleType: ModuleType = ModuleType.PACK;
 
   public static roles = [
-    ROLES.admin,
-    ROLES.minter,
-    ROLES.pauser,
-    ROLES.transfer,
-  ];
+    RolesMap.admin,
+    RolesMap.minter,
+    RolesMap.pauser,
+    RolesMap.transfer,
+  ] as const;
 
-  protected getModuleRoles(): Role[] {
+  /**
+   * @override
+   * @internal
+   */
+  protected getModuleRoles(): readonly Role[] {
     return PackModule.roles;
   }
 

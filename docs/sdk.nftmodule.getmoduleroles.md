@@ -7,9 +7,9 @@
 <b>Signature:</b>
 
 ```typescript
-protected getModuleRoles(): Role[];
+protected getModuleRoles(): readonly Role[];
 ```
 <b>Returns:</b>
 
-[Role](./sdk.role.md)<!-- -->\[\]
+readonly [Role](./sdk.role.md)<!-- -->\[\]
 

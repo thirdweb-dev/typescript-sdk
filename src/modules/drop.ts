@@ -6,7 +6,7 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
-import { ModuleType, Role, ROLES } from "../common";
+import { ModuleType, Role, RolesMap } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
@@ -40,20 +40,24 @@ export interface PublicMintCondition {
 }
 
 /**
- * The DropModule. This should always be created via `getDropModule()` on the main SDK.
+ * Access this module by calling {@link ThirdwebSDK.getDropModule}
  * @beta
  */
 export class DropModule extends ModuleWithRoles {
   public static moduleType: ModuleType = ModuleType.DROP;
 
   public static roles = [
-    ROLES.admin,
-    ROLES.minter,
-    ROLES.pauser,
-    ROLES.transfer,
-  ];
+    RolesMap.admin,
+    RolesMap.minter,
+    RolesMap.pauser,
+    RolesMap.transfer,
+  ] as const;
 
-  protected getModuleRoles(): Role[] {
+  /**
+   * @override
+   * @internal
+   */
+  protected getModuleRoles(): readonly Role[] {
     return DropModule.roles;
   }
 

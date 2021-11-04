@@ -1,7 +1,7 @@
 import { Coin, Coin__factory } from "@3rdweb/contracts";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
-import { ModuleType, Role, ROLES } from "../common";
+import { ModuleType, Role, RolesMap } from "../common";
 import {
   Currency,
   CurrencyValue,
@@ -13,20 +13,25 @@ import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
 /**
- * The CurrencyModule. This should always be created via `getCurrencyModule()` on the main SDK.
+ *
+ * Access this module by calling {@link ThirdwebSDK.getCurrencyModule}
  * @public
  */
 export class CurrencyModule extends ModuleWithRoles {
-  public static moduleType: ModuleType = ModuleType.CURRENCY;
+  public static moduleType: ModuleType = ModuleType.CURRENCY as const;
 
   public static roles = [
-    ROLES.admin,
-    ROLES.minter,
-    ROLES.pauser,
-    ROLES.transfer,
-  ];
+    RolesMap.admin,
+    RolesMap.minter,
+    RolesMap.pauser,
+    RolesMap.transfer,
+  ] as const;
 
-  protected getModuleRoles(): Role[] {
+  /**
+   * @override
+   * @internal
+   */
+  protected getModuleRoles(): readonly Role[] {
     return CurrencyModule.roles;
   }
 

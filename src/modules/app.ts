@@ -26,7 +26,7 @@ export interface ModuleMetadata extends ModuleMetadataNoType {
 }
 
 /**
- * The AppModule. This should always be created via `getAppModule()` on the main SDK.
+ * Access this module by calling {@link ThirdwebSDK.getAppModule}
  * @public
  */
 export class AppModule extends Module {

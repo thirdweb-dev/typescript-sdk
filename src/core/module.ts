@@ -36,10 +36,9 @@ type PossibleContract =
   | NFT
   | Pack
   | Token;
-
 /**
  * The root Module class. All other Modules extend this.
- * It should never be instantiated directly.
+ * @remarks This should never be instantiated directly.
  * @public
  */
 export class Module {
@@ -176,7 +175,7 @@ export class Module {
   }
 
   /**
-   * @override
+   * @virtual
    * @internal
    */
   protected connectContract(): BaseContract {
@@ -184,7 +183,7 @@ export class Module {
   }
 
   /**
-   * @override
+   * @virtual
    * @internal
    */
   protected getModuleType(): ModuleType {
@@ -376,26 +375,49 @@ export class Module {
 }
 
 /**
- * Extends the {@link Module} class to add roles functionality.
- * It should never be instantiated directly.
+ * Extends the {@link Module} class to add {@link Role} functionality.
+ *
  * @public
  */
 export class ModuleWithRoles extends Module {
   /**
-   * @override - needs to be overridden by subclasses
+   * @virtual
    * @internal
    */
-  protected getModuleRoles(): Role[] {
+  protected getModuleRoles(): readonly Role[] {
     throw new Error("getModuleRoles has to be implemented by a subclass");
   }
 
   /**
    * @internal
    */
-  public get roles() {
+  private get roles() {
     return this.getModuleRoles();
   }
 
+  /** @internal */
+  constructor(
+    providerOrSigner: ProviderOrSigner,
+    address: string,
+    options: ISDKOptions,
+  ) {
+    super(providerOrSigner, address, options);
+  }
+
+  /**
+   * Call this to get a list of addresses that are members of a specific role.
+   *
+   * @param role - The {@link IRoles | role} to to get a memberlist for.
+   * @returns The list of addresses that are members of the specific role.
+   * @throws If you are requestiong a role that does not exist on the module this will throw an {@link InvariantError}.
+   * @see {@link ModuleWithRoles.getAllRoleMembers | getAllRoleMembers} to get get a list of addresses for all supported roles on the module.
+   * @example Say you want to get the list of addresses that are members of the {@link IRoles.minter | minter} role.
+   * ```typescript
+   * const minterAddresses: string[] = await module.getRoleMemberList("minter");
+   * ```
+   *
+   * @public
+   */
   public async getRoleMembers(role: Role): Promise<string[]> {
     invariant(
       this.roles.includes(role),
@@ -415,6 +437,15 @@ export class ModuleWithRoles extends Module {
     );
   }
 
+  /**
+   * Call this to get get a list of addresses for all supported roles on the module.
+   *
+   * @see {@link ModuleWithRoles.getRoleMembers | getRoleMembers} to get a list of addresses that are members of a specific role.
+   * @returns A record of {@link Role}s to lists of addresses that are members of the given role.
+   * @throws If the module does not support roles this will throw an {@link InvariantError}.
+   *
+   * @public
+   */
   public async getAllRoleMembers(): Promise<Partial<Record<Role, string[]>>> {
     invariant(this.roles.length, "this module has no support for roles");
     const roles: Partial<Record<Role, string[]>> = {};
@@ -424,6 +455,20 @@ export class ModuleWithRoles extends Module {
     return roles;
   }
 
+  /**
+   * Call this to grant a role to a specific address.
+   *
+   * @remarks
+   *
+   * Make sure you are sure you want to grant the role to the address.
+   *
+   * @param role - The {@link IRoles | role} to grant to the address
+   * @param address - The address to grant the role to
+   * @returns The transaction receipt
+   * @throws If you are trying to grant does not exist on the module this will throw an {@link InvariantError}.
+   *
+   * @public
+   */
   public async grantRole(
     role: Role,
     address: string,
@@ -438,6 +483,24 @@ export class ModuleWithRoles extends Module {
     ]);
   }
 
+  /**
+   * Call this to revoke a role from a specific address.
+   *
+   * @remarks
+   *
+   * -- Caution --
+   *
+   * This will let you remove yourself from the role, too.
+   * If you remove yourself from the {@link IRoles.admin | admin} role, you will no longer be able to administer the module.
+   * There is no way to recover from this.
+   *
+   * @param role - The {@link IRoles | role} to revoke
+   * @param address - The address to revoke the role from
+   * @returns The transaction receipt
+   * @throws If you are trying to revoke does not exist on the module this will throw an {@link InvariantError}.
+   *
+   * @public
+   */
   public async revokeRole(
     role: Role,
     address: string,
