@@ -359,7 +359,7 @@ export class ThirdwebSDK {
   }
 
   /**
-   *
+   * @alpha
    * @param address - The contract address of the given Datastore module.
    * @returns The Datastore Module.
    */

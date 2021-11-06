@@ -898,9 +898,7 @@ export class ThirdwebSDK {
     getContractMetadata(address: string): Promise<ModuleMetadataNoType>;
     // (undocumented)
     getCurrencyModule(address: string): CurrencyModule;
-    // Warning: (ae-incompatible-release-tags) The symbol "getDatastoreModule" is marked as @public, but its signature references "DatastoreModule" which is marked as @alpha
-    //
-    // (undocumented)
+    // @alpha (undocumented)
     getDatastoreModule(address: string): DatastoreModule;
     // Warning: (ae-incompatible-release-tags) The symbol "getDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
     //
