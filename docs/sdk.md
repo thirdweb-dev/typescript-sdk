@@ -19,7 +19,7 @@ To get you started here's how you would instantiate the SDK and fetch some NFTs
 1. Install the sdk
 
 ```shell
-npm install @3rdweb/sdk || yarn add @3rdweb/sdk
+npm install @3rdweb/sdk
 ```
 2. Get your NFT contract address from the [Admin Dashboard](https://thirdweb.com/dashboard)<!-- -->.
 
@@ -68,9 +68,8 @@ Output
 |  Class | Description |
 |  --- | --- |
 |  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
-|  [CollectionModule](./sdk.collectionmodule.md) | Access this module by calling [ThirdwebSDK.getCollectionModule()](./sdk.thirdwebsdk.getcollectionmodule.md) |
+|  [CollectionModule](./sdk.collectionmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getCollectionModule()](./sdk.thirdwebsdk.getcollectionmodule.md) |
 |  [CurrencyModule](./sdk.currencymodule.md) | Access this module by calling [ThirdwebSDK.getCurrencyModule()](./sdk.thirdwebsdk.getcurrencymodule.md) |
-|  [DatastoreModule](./sdk.datastoremodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDatastoreModule()](./sdk.thirdwebsdk.getdatastoremodule.md) |
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md) |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
@@ -99,14 +98,14 @@ Output
 
 |  Interface | Description |
 |  --- | --- |
-|  [CollectionMetadata](./sdk.collectionmetadata.md) |  |
+|  [CollectionMetadata](./sdk.collectionmetadata.md) | <b><i>(BETA)</i></b> |
 |  [ContractMetadata](./sdk.contractmetadata.md) | The typical contract metadata found on the modules. |
 |  [CreatePublicMintCondition](./sdk.createpublicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [Currency](./sdk.currency.md) | Currency metadata. |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [IAppModule](./sdk.iappmodule.md) |  |
-|  [INFTCollectionBatchArgs](./sdk.inftcollectionbatchargs.md) |  |
-|  [INFTCollectionCreateArgs](./sdk.inftcollectioncreateargs.md) |  |
+|  [INFTCollectionBatchArgs](./sdk.inftcollectionbatchargs.md) | <b><i>(BETA)</i></b> |
+|  [INFTCollectionCreateArgs](./sdk.inftcollectioncreateargs.md) | <b><i>(BETA)</i></b> |
 |  [IPackBatchArgs](./sdk.ipackbatchargs.md) | <b><i>(BETA)</i></b> |
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) | <b><i>(BETA)</i></b> |
 |  [IRoles](./sdk.iroles.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |

@@ -181,7 +181,8 @@ export class AppModule extends Module<ProtocolControl> {
 
   /**
    * Method to get a list of Datastore module metadata.
-   * @returns A promise of an array of Currency modules.
+   * @alpha
+   * @returns A promise of an array of Datastore modules.
    * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getDatastoreModules(): Promise<ModuleMetadata[]> {

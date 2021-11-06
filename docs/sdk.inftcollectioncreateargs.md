@@ -4,6 +4,9 @@
 
 ## INFTCollectionCreateArgs interface
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
 
 <b>Signature:</b>
 
@@ -15,6 +18,6 @@ export interface INFTCollectionCreateArgs
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [metadata](./sdk.inftcollectioncreateargs.metadata.md) | [MetadataURIOrObject](./sdk.metadatauriorobject.md) |  |
-|  [supply](./sdk.inftcollectioncreateargs.supply.md) | BigNumberish |  |
+|  [metadata](./sdk.inftcollectioncreateargs.metadata.md) | [MetadataURIOrObject](./sdk.metadatauriorobject.md) | <b><i>(BETA)</i></b> |
+|  [supply](./sdk.inftcollectioncreateargs.supply.md) | BigNumberish | <b><i>(BETA)</i></b> |
 

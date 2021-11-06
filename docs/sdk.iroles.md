@@ -17,7 +17,6 @@ export interface IRoles
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [admin](./sdk.iroles.admin.md) | "admin" | This admin role allows the wallet to modify contract metadata and [grant](./sdk.modulewithroles.grantrole.md) and [revoke](./sdk.modulewithroles.revokerole.md) Roles. |
-|  [editor](./sdk.iroles.editor.md) | "editor" | <b><i>(BETA)</i></b> The editor role allows the wallet to edit data in the [DatastoreModule](./sdk.datastoremodule.md)<!-- -->. |
 |  [lister](./sdk.iroles.lister.md) | "lister" | The lister role allows the wallet to list assets on the [MarketModule](./sdk.marketmodule.md)<!-- -->. |
 |  [minter](./sdk.iroles.minter.md) | "minter" | The minter role allows the wallet to mint new assets. ([NFTs](./sdk.nftmodule.mint.md)<!-- -->, [Tokens](./sdk.currencymodule.mint.md)<!-- -->, [Packs](./sdk.packmodule.create.md)<!-- -->, etc) |
 |  [pauser](./sdk.iroles.pauser.md) | "pauser" | The pauser role allows the wallet to pause all external contract interactions. |

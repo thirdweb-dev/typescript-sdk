@@ -18,7 +18,7 @@ getDatastoreModule(address: string): DatastoreModule;
 
 <b>Returns:</b>
 
-[DatastoreModule](./sdk.datastoremodule.md)
+DatastoreModule
 
 The Datastore Module.
 

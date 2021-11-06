@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AccessControlEnumerable } from '@3rdweb/contracts';
 import { BaseContract } from 'ethers';
 import { BigNumber } from 'ethers';
 import { BigNumber as BigNumber_2 } from '@ethersproject/bignumber';
@@ -34,11 +35,9 @@ import { TransactionReceipt } from '@ethersproject/providers';
 export type AnyContract = typeof AppModule | typeof CollectionModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule;
 
 // @public
-export class AppModule extends Module {
+export class AppModule extends Module<ProtocolControl> {
     // @internal (undocumented)
     protected connectContract(): ProtocolControl;
-    // @internal
-    get contract(): ProtocolControl;
     // @internal (undocumented)
     getAllContractMetadata(addresses: string[]): Promise<ModuleMetadataNoType[]>;
     getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
@@ -46,7 +45,7 @@ export class AppModule extends Module {
     getCollectionModules(): Promise<ModuleMetadata[]>;
     // @deprecated
     getCurrencyModules(): Promise<ModuleMetadata[]>;
-    // @deprecated
+    // @alpha @deprecated
     getDatastoreModules(): Promise<ModuleMetadata[]>;
     // @deprecated
     getDropModules(): Promise<ModuleMetadata[]>;
@@ -85,7 +84,7 @@ export type ChainlinkInfo = {
 // @internal (undocumented)
 export const ChainlinkVrf: Record<number, ChainlinkInfo>;
 
-// @public (undocumented)
+// @beta (undocumented)
 export interface CollectionMetadata {
     // (undocumented)
     creator: string;
@@ -97,8 +96,8 @@ export interface CollectionMetadata {
     supply: BigNumber_2;
 }
 
-// @public
-export class CollectionModule extends ModuleWithRoles {
+// @beta
+export class CollectionModule extends ModuleWithRoles<NFTCollection> {
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber_2>;
     // (undocumented)
@@ -113,8 +112,6 @@ export class CollectionModule extends ModuleWithRoles {
     burnFrom(account: string, args: INFTCollectionBatchArgs): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): NFTCollection;
-    // @internal
-    get contract(): NFTCollection;
     // (undocumented)
     create(metadata: MetadataURIOrObject): Promise<CollectionMetadata>;
     // (undocumented)
@@ -216,7 +213,7 @@ export interface Currency {
 }
 
 // @public
-export class CurrencyModule extends ModuleWithRoles {
+export class CurrencyModule extends ModuleWithRoles<Coin> {
     // (undocumented)
     allowance(spender: string): Promise<BigNumber>;
     // (undocumented)
@@ -231,8 +228,6 @@ export class CurrencyModule extends ModuleWithRoles {
     burnFrom(from: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): Coin;
-    // @internal
-    get contract(): Coin;
     // (undocumented)
     get(): Promise<Currency>;
     // @internal @override (undocumented)
@@ -271,12 +266,10 @@ export interface CurrencyValue extends Currency {
     value: string;
 }
 
-// @beta
-export class DatastoreModule extends ModuleWithRoles {
+// @alpha
+export class DatastoreModule extends ModuleWithRoles<DataStore> {
     // @internal (undocumented)
     protected connectContract(): DataStore;
-    // @internal
-    get contract(): DataStore;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
@@ -292,7 +285,7 @@ export class DatastoreModule extends ModuleWithRoles {
 }
 
 // @beta
-export class DropModule extends ModuleWithRoles {
+export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     balance(): Promise<BigNumber>;
     // (undocumented)
@@ -303,8 +296,6 @@ export class DropModule extends ModuleWithRoles {
     claim(quantity: BigNumberish_2): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): LazyNFT;
-    // @internal
-    get contract(): LazyNFT;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
     // (undocumented)
@@ -395,16 +386,6 @@ export function getCurrencyValue(providerOrSigner: ProviderOrSigner, asset: stri
 // @internal (undocumented)
 export function getGasPriceForChain(chainId: number, speed: string, maxGasPrice: number): Promise<number | null>;
 
-// Warning: (ae-internal-missing-underscore) The name "getMetadata" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
-export function getMetadata(contract: NFTContractTypes, tokenId: string, ipfsGatewayUrl: string): Promise<NFTMetadata>;
-
-// Warning: (ae-internal-missing-underscore) The name "getMetadataUri" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
-export function getMetadataUri(contract: NFTContractTypes, tokenId: string): Promise<string>;
-
 // Warning: (ae-internal-missing-underscore) The name "getMetadataWithoutContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -414,6 +395,16 @@ export function getMetadataWithoutContract(provider: ProviderOrSigner, contractA
 //
 // @internal (undocumented)
 export function getRoleHash(role: Role): BytesLike;
+
+// Warning: (ae-internal-missing-underscore) The name "getTokenMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export function getTokenMetadata(contract: NFTContractTypes, tokenId: string, ipfsGatewayUrl: string): Promise<NFTMetadata>;
+
+// Warning: (ae-internal-missing-underscore) The name "getTokenUri" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export function getTokenUri(contract: NFTContractTypes, tokenId: string): Promise<string>;
 
 // @public (undocumented)
 export interface IAppModule {
@@ -425,7 +416,7 @@ export interface IAppModule {
     version: number;
 }
 
-// @public (undocumented)
+// @beta (undocumented)
 export interface INFTCollectionBatchArgs {
     // (undocumented)
     amount: BigNumberish;
@@ -433,7 +424,7 @@ export interface INFTCollectionBatchArgs {
     tokenId: BigNumberish;
 }
 
-// @public (undocumented)
+// @beta (undocumented)
 export interface INFTCollectionCreateArgs {
     // (undocumented)
     metadata: MetadataURIOrObject;
@@ -489,7 +480,7 @@ export interface IPackCreateArgs {
 // @public
 export interface IRoles {
     admin: "admin";
-    // @beta
+    // @alpha
     editor: "editor";
     lister: "lister";
     minter: "minter";
@@ -507,6 +498,7 @@ export interface ISDKOptions {
     gasSpeed: string;
     ipfsGatewayUrl: string;
     maxGasPriceInGwei: number;
+    readOnlyRpcUrl: string;
     registryContractAddress: string;
     transactionRelayerForwarderAddress: string;
     transactionRelayerSendFunction: (message: ForwardRequestMessage, signature: BytesLike) => Promise<string>;
@@ -555,13 +547,11 @@ export interface ListingMetadata {
 }
 
 // @public
-export class MarketModule extends ModuleWithRoles {
+export class MarketModule extends ModuleWithRoles<Market> {
     // (undocumented)
     buy(listingId: string, quantity: BigNumberish_2): Promise<ListingMetadata>;
     // @internal (undocumented)
     protected connectContract(): Market;
-    // @internal
-    get contract(): Market;
     // (undocumented)
     get(listingId: string): Promise<ListingMetadata>;
     // (undocumented)
@@ -596,7 +586,7 @@ export class MarketModule extends ModuleWithRoles {
 export type MetadataURIOrObject = string | Record<string, JSONValue>;
 
 // @public
-export class Module {
+export class Module<TContract extends BaseContract> {
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions);
     // (undocumented)
@@ -604,7 +594,9 @@ export class Module {
     // @internal (undocumented)
     clearSigner(): void;
     // @internal @virtual (undocumented)
-    protected connectContract(): BaseContract;
+    protected connectContract(): TContract;
+    // @internal
+    contract: TContract;
     // (undocumented)
     exists(): Promise<boolean>;
     // @internal (undocumented)
@@ -630,6 +622,10 @@ export class Module {
     protected parseEventLogs(eventName: string, logs?: Log[]): any;
     // @internal (undocumented)
     protected get providerOrSigner(): ProviderOrSigner;
+    // @internal
+    readOnlyContract: TContract;
+    // @internal (undocumented)
+    protected sendReadTransaction(fn: string, args: any[], callOverrides?: CallOverrides): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected sendTransaction(fn: string, args: any[], callOverrides?: CallOverrides): Promise<TransactionReceipt>;
     setMetadata(metadata: MetadataURIOrObject): Promise<ModuleMetadata>;
@@ -676,7 +672,7 @@ export enum ModuleType {
 }
 
 // @public
-export class ModuleWithRoles extends Module {
+export class ModuleWithRoles<TContract extends AccessControlEnumerable> extends Module<TContract> {
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions);
     getAllRoleMembers(): Promise<Partial<Record<Role, string[]>>>;
@@ -720,7 +716,7 @@ export interface NFTMetadataOwner {
 }
 
 // @public
-export class NFTModule extends ModuleWithRoles {
+export class NFTModule extends ModuleWithRoles<NFT> {
     // (undocumented)
     balance(): Promise<BigNumber>;
     // (undocumented)
@@ -729,8 +725,6 @@ export class NFTModule extends ModuleWithRoles {
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): NFT;
-    // @internal
-    get contract(): NFT;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadata>;
     // (undocumented)
@@ -798,15 +792,13 @@ export interface PackMetadata {
 }
 
 // @beta
-export class PackModule extends ModuleWithRoles {
+export class PackModule extends ModuleWithRoles<Pack> {
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber>;
     // (undocumented)
     balanceOf(address: string, tokenId: string): Promise<BigNumber>;
     // @internal (undocumented)
     protected connectContract(): Pack;
-    // @internal
-    get contract(): Pack;
     // (undocumented)
     create(args: IPackCreateArgs): Promise<PackMetadata>;
     // (undocumented)
@@ -900,13 +892,15 @@ export class ThirdwebSDK {
     // (undocumented)
     getAppModule(address: string): AppModule;
     getApps(): Promise<IAppModule[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getCollectionModule" is marked as @public, but its signature references "CollectionModule" which is marked as @beta
+    //
     // (undocumented)
     getCollectionModule(address: string): CollectionModule;
     // (undocumented)
     getContractMetadata(address: string): Promise<ModuleMetadataNoType>;
     // (undocumented)
     getCurrencyModule(address: string): CurrencyModule;
-    // Warning: (ae-incompatible-release-tags) The symbol "getDatastoreModule" is marked as @public, but its signature references "DatastoreModule" which is marked as @beta
+    // Warning: (ae-incompatible-release-tags) The symbol "getDatastoreModule" is marked as @public, but its signature references "DatastoreModule" which is marked as @alpha
     //
     // (undocumented)
     getDatastoreModule(address: string): DatastoreModule;

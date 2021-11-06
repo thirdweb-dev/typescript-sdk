@@ -204,7 +204,7 @@ export class ThirdwebSDK {
   public async getForwarderAddress(): Promise<string> {
     return await (
       this.registry || (await this.getRegistryModule())
-    ).contract.forwarder();
+    ).readOnlyContract.forwarder();
   }
 
   /**
@@ -239,8 +239,8 @@ export class ThirdwebSDK {
       registryContract.address,
       (await this.signer?.getAddress()) || undefined,
     );
-    const txn = await registryContract.deployProtocol(uri, txOpts);
 
+    const txn = await registryContract.deployProtocol(uri, txOpts);
     return await txn.wait();
   }
 

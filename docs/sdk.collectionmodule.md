@@ -4,50 +4,53 @@
 
 ## CollectionModule class
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
 Access this module by calling [ThirdwebSDK.getCollectionModule()](./sdk.thirdwebsdk.getcollectionmodule.md)
 
 <b>Signature:</b>
 
 ```typescript
-export declare class CollectionModule extends ModuleWithRoles 
+export declare class CollectionModule extends ModuleWithRoles<NFTCollectionContract> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;NFTCollectionContract&gt;
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [moduleType](./sdk.collectionmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.collectionmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
+|  [moduleType](./sdk.collectionmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
+|  [roles](./sdk.collectionmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] | <b><i>(BETA)</i></b> |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [balance(tokenId)](./sdk.collectionmodule.balance.md) |  |  |
-|  [balanceOf(address, tokenId)](./sdk.collectionmodule.balanceof.md) |  |  |
-|  [burn(args)](./sdk.collectionmodule.burn.md) |  |  |
-|  [burnBatch(args)](./sdk.collectionmodule.burnbatch.md) |  |  |
-|  [burnBatchFrom(account, args)](./sdk.collectionmodule.burnbatchfrom.md) |  |  |
-|  [burnFrom(account, args)](./sdk.collectionmodule.burnfrom.md) |  |  |
-|  [create(metadata)](./sdk.collectionmodule.create.md) |  |  |
-|  [createAndMint(metadataWithSupply)](./sdk.collectionmodule.createandmint.md) |  |  |
-|  [createAndMintBatch(metadataWithSupply)](./sdk.collectionmodule.createandmintbatch.md) |  |  |
-|  [createBatch(metadatas)](./sdk.collectionmodule.createbatch.md) |  |  |
-|  [createWithERC20(tokenContract, tokenAmount, args)](./sdk.collectionmodule.createwitherc20.md) |  |  |
-|  [createWithERC721(tokenContract, tokenId, metadata)](./sdk.collectionmodule.createwitherc721.md) |  |  |
-|  [get(tokenId, address)](./sdk.collectionmodule.get.md) |  | Get a single collection item by tokenId. |
-|  [getAll(address)](./sdk.collectionmodule.getall.md) |  | Return all items in the collection. |
-|  [isApproved(address, operator)](./sdk.collectionmodule.isapproved.md) |  |  |
-|  [mint(args)](./sdk.collectionmodule.mint.md) |  |  |
-|  [mintBatch(args)](./sdk.collectionmodule.mintbatch.md) |  |  |
-|  [mintBatchTo(to, args, data)](./sdk.collectionmodule.mintbatchto.md) |  |  |
-|  [mintTo(to, args, data)](./sdk.collectionmodule.mintto.md) |  |  |
-|  [setApproval(operator, approved)](./sdk.collectionmodule.setapproval.md) |  |  |
-|  [setModuleMetadata(metadata)](./sdk.collectionmodule.setmodulemetadata.md) |  |  |
-|  [setRestrictedTransfer(restricted)](./sdk.collectionmodule.setrestrictedtransfer.md) |  |  |
-|  [setRoyaltyBps(amount)](./sdk.collectionmodule.setroyaltybps.md) |  |  |
-|  [transfer(to, tokenId, amount)](./sdk.collectionmodule.transfer.md) |  |  |
-|  [transferBatchFrom(from, to, args, data)](./sdk.collectionmodule.transferbatchfrom.md) |  |  |
-|  [transferFrom(from, to, args, data)](./sdk.collectionmodule.transferfrom.md) |  |  |
+|  [balance(tokenId)](./sdk.collectionmodule.balance.md) |  | <b><i>(BETA)</i></b> |
+|  [balanceOf(address, tokenId)](./sdk.collectionmodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
+|  [burn(args)](./sdk.collectionmodule.burn.md) |  | <b><i>(BETA)</i></b> |
+|  [burnBatch(args)](./sdk.collectionmodule.burnbatch.md) |  | <b><i>(BETA)</i></b> |
+|  [burnBatchFrom(account, args)](./sdk.collectionmodule.burnbatchfrom.md) |  | <b><i>(BETA)</i></b> |
+|  [burnFrom(account, args)](./sdk.collectionmodule.burnfrom.md) |  | <b><i>(BETA)</i></b> |
+|  [create(metadata)](./sdk.collectionmodule.create.md) |  | <b><i>(BETA)</i></b> |
+|  [createAndMint(metadataWithSupply)](./sdk.collectionmodule.createandmint.md) |  | <b><i>(BETA)</i></b> |
+|  [createAndMintBatch(metadataWithSupply)](./sdk.collectionmodule.createandmintbatch.md) |  | <b><i>(BETA)</i></b> |
+|  [createBatch(metadatas)](./sdk.collectionmodule.createbatch.md) |  | <b><i>(BETA)</i></b> |
+|  [createWithERC20(tokenContract, tokenAmount, args)](./sdk.collectionmodule.createwitherc20.md) |  | <b><i>(BETA)</i></b> |
+|  [createWithERC721(tokenContract, tokenId, metadata)](./sdk.collectionmodule.createwitherc721.md) |  | <b><i>(BETA)</i></b> |
+|  [get(tokenId, address)](./sdk.collectionmodule.get.md) |  | <b><i>(BETA)</i></b> Get a single collection item by tokenId. |
+|  [getAll(address)](./sdk.collectionmodule.getall.md) |  | <b><i>(BETA)</i></b> Return all items in the collection. |
+|  [isApproved(address, operator)](./sdk.collectionmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
+|  [mint(args)](./sdk.collectionmodule.mint.md) |  | <b><i>(BETA)</i></b> |
+|  [mintBatch(args)](./sdk.collectionmodule.mintbatch.md) |  | <b><i>(BETA)</i></b> |
+|  [mintBatchTo(to, args, data)](./sdk.collectionmodule.mintbatchto.md) |  | <b><i>(BETA)</i></b> |
+|  [mintTo(to, args, data)](./sdk.collectionmodule.mintto.md) |  | <b><i>(BETA)</i></b> |
+|  [setApproval(operator, approved)](./sdk.collectionmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
+|  [setModuleMetadata(metadata)](./sdk.collectionmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
+|  [setRestrictedTransfer(restricted)](./sdk.collectionmodule.setrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |
+|  [setRoyaltyBps(amount)](./sdk.collectionmodule.setroyaltybps.md) |  | <b><i>(BETA)</i></b> |
+|  [transfer(to, tokenId, amount)](./sdk.collectionmodule.transfer.md) |  | <b><i>(BETA)</i></b> |
+|  [transferBatchFrom(from, to, args, data)](./sdk.collectionmodule.transferbatchfrom.md) |  | <b><i>(BETA)</i></b> |
+|  [transferFrom(from, to, args, data)](./sdk.collectionmodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
 

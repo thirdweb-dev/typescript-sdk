@@ -29,7 +29,7 @@ export interface IRoles {
   transfer: "transfer";
   /**
    * The editor role allows the wallet to edit data in the {@link DatastoreModule}.
-   * @beta
+   * @alpha
    */
   editor: "editor";
   /**

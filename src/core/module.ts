@@ -68,8 +68,16 @@ export class Module<TContract extends BaseContract> {
     this._signer = value;
   }
 
-  protected contract: TContract;
-  protected readOnlyContract: TContract;
+  /**
+   * Contract connects to the SDK signer or provider
+   * @internal
+   */
+  public contract: TContract;
+  /**
+   * Contract connects to the {@link ISDKOptions.readOnlyRpcUrl} if provided, otherwise connect to signer or provider
+   * @internal
+   */
+  public readOnlyContract: TContract;
 
   /**
    * @internal
