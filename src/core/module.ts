@@ -261,24 +261,6 @@ export class Module<TContract extends BaseContract> {
   /**
    * @internal
    */
-  protected async sendReadTransaction(
-    fn: string,
-    args: any[],
-    callOverrides?: CallOverrides,
-  ): Promise<TransactionReceipt> {
-    if (!callOverrides) {
-      callOverrides = await this.getCallOverrides();
-    }
-    if (this.options.transactionRelayerUrl) {
-      return await this.sendGaslessTransaction(fn, args, callOverrides);
-    } else {
-      return await this.sendAndWaitForTransaction(fn, args, callOverrides);
-    }
-  }
-
-  /**
-   * @internal
-   */
   protected async sendTransaction(
     fn: string,
     args: any[],

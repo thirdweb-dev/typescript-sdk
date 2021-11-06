@@ -625,8 +625,6 @@ export class Module<TContract extends BaseContract> {
     // @internal
     readOnlyContract: TContract;
     // @internal (undocumented)
-    protected sendReadTransaction(fn: string, args: any[], callOverrides?: CallOverrides): Promise<TransactionReceipt>;
-    // @internal (undocumented)
     protected sendTransaction(fn: string, args: any[], callOverrides?: CallOverrides): Promise<TransactionReceipt>;
     setMetadata(metadata: MetadataURIOrObject): Promise<ModuleMetadata>;
     // @internal (undocumented)
