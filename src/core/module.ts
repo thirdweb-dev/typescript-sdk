@@ -383,7 +383,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
  * @public
  */
 export class ModuleWithRoles<
-  TContract extends AccessControlEnumerable,
+  TContract extends AccessControlEnumerable = AccessControlEnumerable,
 > extends Module<TContract> {
   /**
    * @virtual

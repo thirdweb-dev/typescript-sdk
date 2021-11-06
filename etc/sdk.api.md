@@ -670,7 +670,7 @@ export enum ModuleType {
 }
 
 // @public
-export class ModuleWithRoles<TContract extends AccessControlEnumerable> extends Module<TContract> {
+export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessControlEnumerable> extends Module<TContract> {
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions);
     getAllRoleMembers(): Promise<Partial<Record<Role, string[]>>>;
