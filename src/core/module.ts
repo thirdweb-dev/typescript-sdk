@@ -22,7 +22,7 @@ import type { MetadataURIOrObject, ProviderOrSigner } from "./types";
  * @remarks This should never be instantiated directly.
  * @public
  */
-export class Module<TContract extends BaseContract> {
+export class Module<TContract extends BaseContract = BaseContract> {
   /**
    * @readonly
    */

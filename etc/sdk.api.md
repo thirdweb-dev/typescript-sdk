@@ -586,7 +586,7 @@ export class MarketModule extends ModuleWithRoles<Market> {
 export type MetadataURIOrObject = string | Record<string, JSONValue>;
 
 // @public
-export class Module<TContract extends BaseContract> {
+export class Module<TContract extends BaseContract = BaseContract> {
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions);
     // (undocumented)
