@@ -64,7 +64,7 @@ export interface IPackBatchArgs {
  * Access this module by calling {@link ThirdwebSDK.getPackModule}
  * @beta
  */
-export class PackModule extends ModuleWithRoles {
+export class PackModule extends ModuleWithRoles<PackContract> {
   public static moduleType: ModuleType = ModuleType.PACK;
 
   public static roles = [
@@ -82,25 +82,11 @@ export class PackModule extends ModuleWithRoles {
     return PackModule.roles;
   }
 
-  private __contract: PackContract | null = null;
-  /**
-   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
-   */
-  public get contract(): PackContract {
-    return this.__contract || this.connectContract();
-  }
-  private set contract(value: PackContract) {
-    this.__contract = value;
-  }
-
   /**
    * @internal
    */
   protected connectContract(): PackContract {
-    return (this.contract = Pack__factory.connect(
-      this.address,
-      this.providerOrSigner,
-    ));
+    return Pack__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**
@@ -117,9 +103,9 @@ export class PackModule extends ModuleWithRoles {
     const opener = event.opener;
 
     const fulfillEvent: any = await new Promise((resolve) => {
-      this.contract.once(
+      this.readOnlyContract.once(
         // eslint-disable-next-line new-cap
-        this.contract.filters.PackOpenFulfilled(null, opener),
+        this.readOnlyContract.filters.PackOpenFulfilled(null, opener),
         (_packId, _opener, _requestId, rewardContract, rewardIds) => {
           if (requestId === _requestId) {
             resolve({
@@ -154,8 +140,10 @@ export class PackModule extends ModuleWithRoles {
         packId,
         this.ipfsGatewayUrl,
       ),
-      this.contract.getPack(packId),
-      this.contract.totalSupply(packId).catch(() => BigNumber.from("0")),
+      this.readOnlyContract.getPack(packId),
+      this.readOnlyContract
+        .totalSupply(packId)
+        .catch(() => BigNumber.from("0")),
     ]);
     const entity: PackMetadata = {
       id: packId,
@@ -170,14 +158,14 @@ export class PackModule extends ModuleWithRoles {
   }
 
   public async getAll(): Promise<PackMetadata[]> {
-    const maxId = (await this.contract.nextTokenId()).toNumber();
+    const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
   }
 
   public async getNFTs(packId: string): Promise<PackNFTMetadata[]> {
-    const packReward = await this.contract.getPackWithRewards(packId);
+    const packReward = await this.readOnlyContract.getPackWithRewards(packId);
     if (!packReward.source) {
       throw new NotFoundError();
     }
@@ -199,7 +187,7 @@ export class PackModule extends ModuleWithRoles {
 
   // passthrough to the contract
   public async balanceOf(address: string, tokenId: string): Promise<BigNumber> {
-    return await this.contract.balanceOf(address, tokenId);
+    return await this.readOnlyContract.balanceOf(address, tokenId);
   }
 
   public async balance(tokenId: string): Promise<BigNumber> {
@@ -207,7 +195,7 @@ export class PackModule extends ModuleWithRoles {
   }
 
   public async isApproved(address: string, operator: string): Promise<boolean> {
-    return await this.contract.isApprovedForAll(address, operator);
+    return await this.readOnlyContract.isApprovedForAll(address, operator);
   }
 
   public async setApproval(operator: string, approved = true) {

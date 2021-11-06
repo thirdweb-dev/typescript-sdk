@@ -12,7 +12,7 @@
  *
  * 1. Install the sdk
  * ```shell
- * npm install @3rdweb/sdk || yarn add @3rdweb/sdk
+ * npm install @3rdweb/sdk
  * ```
  *
  * 2. Get your NFT contract address from the {@link https://thirdweb.com/dashboard | Admin Dashboard}.

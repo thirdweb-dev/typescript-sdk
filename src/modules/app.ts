@@ -29,7 +29,7 @@ export interface ModuleMetadata extends ModuleMetadataNoType {
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
  * @public
  */
-export class AppModule extends Module {
+export class AppModule extends Module<ProtocolControl> {
   /**
    * The internal module type for the app module.
    * We do not treat it as a fully fledged module on the contract level, so it does not have a real type.
@@ -38,25 +38,14 @@ export class AppModule extends Module {
    */
   private moduleType: ModuleType = -1;
 
-  private __contract: ProtocolControl | null = null;
-  /**
-   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
-   */
-  public get contract(): ProtocolControl {
-    return this.__contract || this.connectContract();
-  }
-  private set contract(value: ProtocolControl) {
-    this.__contract = value;
-  }
-
   /**
    * @internal
    */
   protected connectContract(): ProtocolControl {
-    return (this.contract = ProtocolControl__factory.connect(
+    return ProtocolControl__factory.connect(
       this.address,
       this.providerOrSigner,
-    ));
+    );
   }
 
   /**
@@ -71,7 +60,7 @@ export class AppModule extends Module {
    *
    */
   private async getModuleAddress(moduleType: ModuleType): Promise<string[]> {
-    return await this.contract.getAllModulesOfType(moduleType);
+    return await this.readOnlyContract.getAllModulesOfType(moduleType);
   }
 
   private async getNFTAddress(): Promise<string[]> {
@@ -103,7 +92,9 @@ export class AppModule extends Module {
   }
 
   public async getRoyaltyTreasury(address?: string): Promise<string> {
-    return await this.contract.getRoyaltyTreasury(address || AddressZero);
+    return await this.readOnlyContract.getRoyaltyTreasury(
+      address || AddressZero,
+    );
   }
 
   /**

@@ -4,7 +4,7 @@ import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
 import { uploadMetadata } from "../common/ipfs";
-import { getMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
+import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
@@ -12,7 +12,7 @@ import { MetadataURIOrObject } from "../core/types";
  * Access this module by calling {@link ThirdwebSDK.getNFTModule}
  * @public
  */
-export class NFTModule extends ModuleWithRoles {
+export class NFTModule extends ModuleWithRoles<NFT> {
   public static moduleType: ModuleType = ModuleType.NFT;
 
   public static roles = [
@@ -26,25 +26,11 @@ export class NFTModule extends ModuleWithRoles {
     return NFTModule.roles;
   }
 
-  private _contract: NFT | null = null;
-  /**
-   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
-   */
-  public get contract(): NFT {
-    return this._contract || this.connectContract();
-  }
-  private set contract(value: NFT) {
-    this._contract = value;
-  }
-
   /**
    * @internal
    */
   protected connectContract(): NFT {
-    return (this.contract = NFT__factory.connect(
-      this.address,
-      this.providerOrSigner,
-    ));
+    return NFT__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**
@@ -55,11 +41,15 @@ export class NFTModule extends ModuleWithRoles {
   }
 
   public async get(tokenId: string): Promise<NFTMetadata> {
-    return await getMetadata(this.contract, tokenId, this.ipfsGatewayUrl);
+    return await getTokenMetadata(
+      this.readOnlyContract,
+      tokenId,
+      this.ipfsGatewayUrl,
+    );
   }
 
   public async getAll(): Promise<NFTMetadata[]> {
-    const maxId = (await this.contract.nextTokenId()).toNumber();
+    const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
@@ -68,14 +58,14 @@ export class NFTModule extends ModuleWithRoles {
   public async getWithOwner(tokenId: string): Promise<NFTMetadataOwner> {
     const [owner, metadata] = await Promise.all([
       this.ownerOf(tokenId),
-      getMetadata(this.contract, tokenId, this.ipfsGatewayUrl),
+      this.get(tokenId),
     ]);
 
     return { owner, metadata };
   }
 
   public async getAllWithOwner(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.contract.nextTokenId()).toNumber();
+    const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) =>
         this.getWithOwner(i.toString()),
@@ -84,15 +74,15 @@ export class NFTModule extends ModuleWithRoles {
   }
 
   public async ownerOf(tokenId: string): Promise<string> {
-    return await this.contract.ownerOf(tokenId);
+    return await this.readOnlyContract.ownerOf(tokenId);
   }
 
   public async getOwned(_address?: string): Promise<NFTMetadata[]> {
     const address = _address ? _address : await this.getSignerAddress();
-    const balance = await this.contract.balanceOf(address);
+    const balance = await this.readOnlyContract.balanceOf(address);
     const indices = Array.from(Array(balance.toNumber()).keys());
     const tokenIds = await Promise.all(
-      indices.map((i) => this.contract.tokenOfOwnerByIndex(address, i)),
+      indices.map((i) => this.readOnlyContract.tokenOfOwnerByIndex(address, i)),
     );
     return await Promise.all(
       tokenIds.map((tokenId) => this.get(tokenId.toString())),
@@ -100,11 +90,11 @@ export class NFTModule extends ModuleWithRoles {
   }
 
   public async totalSupply(): Promise<BigNumber> {
-    return await this.contract.totalSupply();
+    return await this.readOnlyContract.totalSupply();
   }
 
   public async balanceOf(address: string): Promise<BigNumber> {
-    return await this.contract.balanceOf(address);
+    return await this.readOnlyContract.balanceOf(address);
   }
 
   public async balance(): Promise<BigNumber> {
@@ -112,7 +102,7 @@ export class NFTModule extends ModuleWithRoles {
   }
 
   public async isApproved(address: string, operator: string): Promise<boolean> {
-    return await this.contract.isApprovedForAll(address, operator);
+    return await this.readOnlyContract.isApprovedForAll(address, operator);
   }
   // write functions
   public async setApproval(

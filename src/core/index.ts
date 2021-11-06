@@ -66,9 +66,14 @@ export interface ISDKOptions {
   ) => Promise<string>;
 
   /**
-   * Optional trusted forwarder address
+   * Optional trusted forwarder address overwrite
    */
   transactionRelayerForwarderAddress: string;
+
+  /**
+   * Optional read only RPC url
+   */
+  readOnlyRpcUrl: string;
 }
 
 /**
@@ -100,6 +105,7 @@ export class ThirdwebSDK {
     transactionRelayerUrl: "",
     transactionRelayerSendFunction: this.defaultRelayerSendFunction.bind(this),
     transactionRelayerForwarderAddress: FORWARDER_ADDRESS,
+    readOnlyRpcUrl: "",
   };
   private modules = new Map<string, C.Instance<AnyContract>>();
   private providerOrSigner: ProviderOrSigner;

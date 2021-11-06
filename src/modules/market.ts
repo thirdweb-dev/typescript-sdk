@@ -49,7 +49,7 @@ export interface ListingMetadata {
  * Access this module by calling {@link ThirdwebSDK.getMarketModule}
  * @public
  */
-export class MarketModule extends ModuleWithRoles {
+export class MarketModule extends ModuleWithRoles<Market> {
   public static moduleType: ModuleType = ModuleType.MARKET;
 
   public static roles = [
@@ -66,25 +66,11 @@ export class MarketModule extends ModuleWithRoles {
     return MarketModule.roles;
   }
 
-  private __contract: Market | null = null;
-  /**
-   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
-   */
-  public get contract(): Market {
-    return this.__contract || this.connectContract();
-  }
-  private set contract(value: Market) {
-    this.__contract = value;
-  }
-
   /**
    * @internal
    */
   protected connectContract(): Market {
-    return (this.contract = Market__factory.connect(
-      this.address,
-      this.providerOrSigner,
-    ));
+    return Market__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**
@@ -157,7 +143,7 @@ export class MarketModule extends ModuleWithRoles {
   }
 
   public async get(listingId: string): Promise<ListingMetadata> {
-    const listing = await this.contract.listings(listingId);
+    const listing = await this.readOnlyContract.listings(listingId);
     return await this.transformResultToListing(listing);
   }
 
@@ -165,25 +151,29 @@ export class MarketModule extends ModuleWithRoles {
     let listings: any[] = [];
 
     if (!filter) {
-      listings = listings.concat(await this.contract.getAllListings());
+      listings = listings.concat(await this.readOnlyContract.getAllListings());
     } else {
       if (filter.tokenContract && filter.tokenId) {
         listings = listings.concat(
-          await this.contract.getListingsByAsset(
+          await this.readOnlyContract.getListingsByAsset(
             filter.tokenContract,
             filter.tokenId,
           ),
         );
       } else if (filter.seller) {
         listings = listings.concat(
-          await this.contract.getListingsBySeller(filter.seller),
+          await this.readOnlyContract.getListingsBySeller(filter.seller),
         );
       } else if (filter.tokenContract) {
         listings = listings.concat(
-          await this.contract.getListingsByAssetContract(filter.tokenContract),
+          await this.readOnlyContract.getListingsByAssetContract(
+            filter.tokenContract,
+          ),
         );
       } else {
-        listings = listings.concat(await this.contract.getAllListings());
+        listings = listings.concat(
+          await this.readOnlyContract.getAllListings(),
+        );
       }
     }
 
@@ -223,7 +213,7 @@ export class MarketModule extends ModuleWithRoles {
   }
 
   public async getMarketFeeBps(): Promise<BigNumber> {
-    return await this.contract.marketFeeBps();
+    return await this.readOnlyContract.marketFeeBps();
   }
 
   // write functions
