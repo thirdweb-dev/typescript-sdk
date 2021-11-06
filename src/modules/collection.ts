@@ -141,12 +141,12 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
     tokenId: string,
     amount: BigNumberish,
   ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("safeTransferFrom", [
+    return await this.transferFrom(
+      await this.getSignerAddress(),
       to,
-      tokenId,
-      amount,
+      { tokenId, amount },
       [0],
-    ]);
+    );
   }
 
   // owner functions
