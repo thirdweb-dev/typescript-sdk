@@ -82,37 +82,19 @@ export async function getMetadataWithoutContract(
   tokenId: string,
   ipfsGatewayUrl: string,
 ): Promise<NFTMetadata> {
-  const contract = new Contract(
-    contractAddress,
-    tokenUriABI,
-    provider,
-  ) as NFTCollection;
-  const uri = await getMetadataUri(contract, tokenId);
-  if (!uri) {
-    throw new NotFoundError();
-  }
-  const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
-  const meta = await fetch(gatewayUrl);
-  const metadata = await meta.json();
-  const entity: NFTMetadata = {
-    ...metadata,
-    id: tokenId,
-    uri,
-    image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
-  };
-  return entity;
+  const contract = new Contract(contractAddress, tokenUriABI, provider) as NFT;
+  return getTokenMetadata(contract, tokenId, ipfsGatewayUrl);
 }
 
 /**
 /* @internal
  */
-export async function getMetadata(
+export async function getTokenMetadata(
   contract: NFTContractTypes,
   tokenId: string,
   ipfsGatewayUrl: string,
 ): Promise<NFTMetadata> {
-  // contract.uri(tokenId);
-  const uri = await getMetadataUri(contract, tokenId);
+  const uri = await getTokenUri(contract, tokenId);
   if (!uri) {
     throw new NotFoundError();
   }
@@ -131,7 +113,7 @@ export async function getMetadata(
 /**
 /* @internal
  */
-export async function getMetadataUri(
+export async function getTokenUri(
   contract: NFTContractTypes,
   tokenId: string,
 ): Promise<string> {
@@ -147,6 +129,5 @@ export async function getMetadataUri(
       // eslint-disable-next-line no-empty
     } catch (e) {}
   }
-
   return uri;
 }

@@ -9,9 +9,9 @@ Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.get
 <b>Signature:</b>
 
 ```typescript
-export declare class AppModule extends Module 
+export declare class AppModule extends Module<ProtocolControl> 
 ```
-<b>Extends:</b> [Module](./sdk.module.md)
+<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;ProtocolControl&gt;
 
 ## Methods
 
@@ -20,7 +20,6 @@ export declare class AppModule extends Module
 |  [getAllModuleMetadata(filterByModuleType)](./sdk.appmodule.getallmodulemetadata.md) |  | Method to get a list of all module metadata on a given app. |
 |  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get a list of Collection module metadata. |
 |  [getCurrencyModules()](./sdk.appmodule.getcurrencymodules.md) |  | Method to get a list of Currency module metadata. |
-|  [getDatastoreModules()](./sdk.appmodule.getdatastoremodules.md) |  | Method to get a list of Datastore module metadata. |
 |  [getDropModules()](./sdk.appmodule.getdropmodules.md) |  | Method to get a list of Drop module metadata. |
 |  [getMarketModules()](./sdk.appmodule.getmarketmodules.md) |  | Method to get a list of Market module metadata. |
 |  [getNFTModules()](./sdk.appmodule.getnftmodules.md) |  | Method to get a list of NFT module metadata. |

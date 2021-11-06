@@ -9,9 +9,9 @@ Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.
 <b>Signature:</b>
 
 ```typescript
-export declare class MarketModule extends ModuleWithRoles 
+export declare class MarketModule extends ModuleWithRoles<Market> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Market&gt;
 
 ## Properties
 

@@ -66,9 +66,14 @@ export interface ISDKOptions {
   ) => Promise<string>;
 
   /**
-   * Optional trusted forwarder address
+   * Optional trusted forwarder address overwrite
    */
   transactionRelayerForwarderAddress: string;
+
+  /**
+   * Optional read only RPC url
+   */
+  readOnlyRpcUrl: string;
 }
 
 /**
@@ -100,6 +105,7 @@ export class ThirdwebSDK {
     transactionRelayerUrl: "",
     transactionRelayerSendFunction: this.defaultRelayerSendFunction.bind(this),
     transactionRelayerForwarderAddress: FORWARDER_ADDRESS,
+    readOnlyRpcUrl: "",
   };
   private modules = new Map<string, C.Instance<AnyContract>>();
   private providerOrSigner: ProviderOrSigner;
@@ -198,7 +204,7 @@ export class ThirdwebSDK {
   public async getForwarderAddress(): Promise<string> {
     return await (
       this.registry || (await this.getRegistryModule())
-    ).contract.forwarder();
+    ).readOnlyContract.forwarder();
   }
 
   /**
@@ -233,8 +239,8 @@ export class ThirdwebSDK {
       registryContract.address,
       (await this.signer?.getAddress()) || undefined,
     );
-    const txn = await registryContract.deployProtocol(uri, txOpts);
 
+    const txn = await registryContract.deployProtocol(uri, txOpts);
     return await txn.wait();
   }
 
@@ -353,7 +359,7 @@ export class ThirdwebSDK {
   }
 
   /**
-   *
+   * @alpha
    * @param address - The contract address of the given Datastore module.
    * @returns The Datastore Module.
    */

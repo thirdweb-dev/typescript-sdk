@@ -15,26 +15,12 @@ export interface IAppModule {
  * The RegistryModule. This should always be created via `getRegistryModule()` on the main SDK.
  * @internal
  */
-export class RegistryModule extends Module {
-  private __contract: Registry | null = null;
-  /**
-   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
-   */
-  public get contract(): Registry {
-    return this.__contract || this.connectContract();
-  }
-  private set contract(value: Registry) {
-    this.__contract = value;
-  }
-
+export class RegistryModule extends Module<Registry> {
   /**
    * @internal
    */
   protected connectContract(): Registry {
-    return (this.contract = Registry__factory.connect(
-      this.address,
-      this.providerOrSigner,
-    ));
+    return Registry__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**
@@ -42,11 +28,13 @@ export class RegistryModule extends Module {
    */
   public async getProtocolContracts(): Promise<IAppModule[]> {
     const deployer = await this.getSignerAddress();
-    const maxVersion = await this.contract.getProtocolControlCount(deployer);
+    const maxVersion = await this.readOnlyContract.getProtocolControlCount(
+      deployer,
+    );
     const versions = Array.from(Array(maxVersion.toNumber()).keys()).reverse();
     const addresses = await Promise.all(
       versions.map((v) =>
-        this.contract.getProtocolControl(deployer, (v + 1).toString()),
+        this.readOnlyContract.getProtocolControl(deployer, (v + 1).toString()),
       ),
     );
     const metadatas = await Promise.all(

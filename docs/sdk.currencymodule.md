@@ -9,9 +9,9 @@ Access this module by calling [ThirdwebSDK.getCurrencyModule()](./sdk.thirdwebsd
 <b>Signature:</b>
 
 ```typescript
-export declare class CurrencyModule extends ModuleWithRoles 
+export declare class CurrencyModule extends ModuleWithRoles<Coin> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Coin&gt;
 
 ## Properties
 

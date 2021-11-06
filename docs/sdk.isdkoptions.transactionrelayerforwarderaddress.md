@@ -4,7 +4,7 @@
 
 ## ISDKOptions.transactionRelayerForwarderAddress property
 
-Optional trusted forwarder address
+Optional trusted forwarder address overwrite
 
 <b>Signature:</b>
 

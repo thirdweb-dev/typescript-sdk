@@ -9,9 +9,9 @@ Access this module by calling [ThirdwebSDK.getNFTModule()](./sdk.thirdwebsdk.get
 <b>Signature:</b>
 
 ```typescript
-export declare class NFTModule extends ModuleWithRoles 
+export declare class NFTModule extends ModuleWithRoles<NFT> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;NFT&gt;
 
 ## Properties
 

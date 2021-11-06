@@ -8,7 +8,7 @@ import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
 import { uploadMetadata } from "../common/ipfs";
-import { getMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
+import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
@@ -43,7 +43,7 @@ export interface PublicMintCondition {
  * Access this module by calling {@link ThirdwebSDK.getDropModule}
  * @beta
  */
-export class DropModule extends ModuleWithRoles {
+export class DropModule extends ModuleWithRoles<Drop> {
   public static moduleType: ModuleType = ModuleType.DROP;
 
   public static roles = [
@@ -61,25 +61,11 @@ export class DropModule extends ModuleWithRoles {
     return DropModule.roles;
   }
 
-  private _contract: Drop | null = null;
-  /**
-   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
-   */
-  public get contract(): Drop {
-    return this._contract || this.connectContract();
-  }
-  private set contract(value: Drop) {
-    this._contract = value;
-  }
-
   /**
    * @internal
    */
   protected connectContract(): Drop {
-    return (this.contract = Drop__factory.connect(
-      this.address,
-      this.providerOrSigner,
-    ));
+    return Drop__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**
@@ -90,7 +76,11 @@ export class DropModule extends ModuleWithRoles {
   }
 
   private async getTokenMetadata(tokenId: string): Promise<NFTMetadata> {
-    return await getMetadata(this.contract, tokenId, this.ipfsGatewayUrl);
+    return await getTokenMetadata(
+      this.readOnlyContract,
+      tokenId,
+      this.ipfsGatewayUrl,
+    );
   }
 
   public async get(tokenId: string): Promise<NFTMetadataOwner> {
@@ -103,15 +93,15 @@ export class DropModule extends ModuleWithRoles {
   }
 
   public async getAll(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.contract.nextTokenId()).toNumber();
+    const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
   }
 
   public async getAllUnclaimed(): Promise<NFTMetadataOwner[]> {
-    const maxId = await this.contract.nextTokenId();
-    const unmintedId = await this.contract.nextMintTokenId();
+    const maxId = await this.readOnlyContract.nextTokenId();
+    const unmintedId = await this.readOnlyContract.nextMintTokenId();
     return await Promise.all(
       Array.from(Array(maxId.sub(unmintedId).toNumber()).keys()).map((i) =>
         this.get(unmintedId.add(i).toString()),
@@ -120,22 +110,22 @@ export class DropModule extends ModuleWithRoles {
   }
 
   public async getAllClaimed(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.contract.nextMintTokenId()).toNumber();
+    const maxId = (await this.readOnlyContract.nextMintTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
   }
 
   public async ownerOf(tokenId: string): Promise<string> {
-    return await this.contract.ownerOf(tokenId);
+    return await this.readOnlyContract.ownerOf(tokenId);
   }
 
   public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
     const address = _address ? _address : await this.getSignerAddress();
-    const balance = await this.contract.balanceOf(address);
+    const balance = await this.readOnlyContract.balanceOf(address);
     const indices = Array.from(Array(balance.toNumber()).keys());
     const tokenIds = await Promise.all(
-      indices.map((i) => this.contract.tokenOfOwnerByIndex(address, i)),
+      indices.map((i) => this.readOnlyContract.tokenOfOwnerByIndex(address, i)),
     );
     return await Promise.all(
       tokenIds.map((tokenId) => this.get(tokenId.toString())),
@@ -143,15 +133,16 @@ export class DropModule extends ModuleWithRoles {
   }
 
   public async getActiveMintCondition(): Promise<PublicMintCondition> {
-    const index = await this.contract.getLastStartedMintConditionIndex();
-    return await this.contract.mintConditions(index);
+    const index =
+      await this.readOnlyContract.getLastStartedMintConditionIndex();
+    return await this.readOnlyContract.mintConditions(index);
   }
 
   public async getAllMintConditions(): Promise<PublicMintCondition[]> {
     const conditions = [];
     for (let i = 0; ; i++) {
       try {
-        conditions.push(await this.contract.mintConditions(i));
+        conditions.push(await this.readOnlyContract.mintConditions(i));
       } catch (e) {
         break;
       }
@@ -160,32 +151,32 @@ export class DropModule extends ModuleWithRoles {
   }
 
   public async totalSupply(): Promise<BigNumber> {
-    return await this.contract.nextTokenId();
+    return await this.readOnlyContract.nextTokenId();
   }
 
   public async maxTotalSupply(): Promise<BigNumber> {
-    return await this.contract.maxTotalSupply();
+    return await this.readOnlyContract.maxTotalSupply();
   }
 
   public async totalUnclaimedSupply(): Promise<BigNumber> {
-    return (await this.contract.nextTokenId()).sub(
+    return (await this.readOnlyContract.nextTokenId()).sub(
       await this.totalClaimedSupply(),
     );
   }
 
   public async totalClaimedSupply(): Promise<BigNumber> {
-    return await this.contract.nextMintTokenId();
+    return await this.readOnlyContract.nextMintTokenId();
   }
 
   public async balanceOf(address: string): Promise<BigNumber> {
-    return await this.contract.balanceOf(address);
+    return await this.readOnlyContract.balanceOf(address);
   }
 
   public async balance(): Promise<BigNumber> {
     return await this.balanceOf(await this.getSignerAddress());
   }
   public async isApproved(address: string, operator: string): Promise<boolean> {
-    return await this.contract.isApprovedForAll(address, operator);
+    return await this.readOnlyContract.isApprovedForAll(address, operator);
   }
 
   // write functions

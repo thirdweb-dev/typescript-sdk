@@ -28,7 +28,6 @@ export declare class ThirdwebSDK
 |  [getCollectionModule(address)](./sdk.thirdwebsdk.getcollectionmodule.md) |  |  |
 |  [getContractMetadata(address)](./sdk.thirdwebsdk.getcontractmetadata.md) |  |  |
 |  [getCurrencyModule(address)](./sdk.thirdwebsdk.getcurrencymodule.md) |  |  |
-|  [getDatastoreModule(address)](./sdk.thirdwebsdk.getdatastoremodule.md) |  |  |
 |  [getDropModule(address)](./sdk.thirdwebsdk.getdropmodule.md) |  |  |
 |  [getGasPrice(speed, maxGasGwei)](./sdk.thirdwebsdk.getgasprice.md) |  |  |
 |  [getMarketModule(address)](./sdk.thirdwebsdk.getmarketmodule.md) |  |  |

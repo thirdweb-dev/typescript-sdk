@@ -17,7 +17,7 @@ import { MetadataURIOrObject } from "../core/types";
  * Access this module by calling {@link ThirdwebSDK.getCurrencyModule}
  * @public
  */
-export class CurrencyModule extends ModuleWithRoles {
+export class CurrencyModule extends ModuleWithRoles<Coin> {
   public static moduleType: ModuleType = ModuleType.CURRENCY as const;
 
   public static roles = [
@@ -35,25 +35,11 @@ export class CurrencyModule extends ModuleWithRoles {
     return CurrencyModule.roles;
   }
 
-  private __contract: Coin | null = null;
-  /**
-   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
-   */
-  public get contract(): Coin {
-    return this.__contract || this.connectContract();
-  }
-  private set contract(value: Coin) {
-    this.__contract = value;
-  }
-
   /**
    * @internal
    */
   protected connectContract(): Coin {
-    return (this.contract = Coin__factory.connect(
-      this.address,
-      this.providerOrSigner,
-    ));
+    return Coin__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**
@@ -76,15 +62,15 @@ export class CurrencyModule extends ModuleWithRoles {
   }
 
   public async totalSupply(): Promise<BigNumber> {
-    return await this.contract.totalSupply();
-  }
-
-  public async balanceOf(address: string): Promise<CurrencyValue> {
-    return await this.getValue(await this.contract.balanceOf(address));
+    return await this.readOnlyContract.totalSupply();
   }
 
   public async balance(): Promise<CurrencyValue> {
     return await this.balanceOf(await this.getSignerAddress());
+  }
+
+  public async balanceOf(address: string): Promise<CurrencyValue> {
+    return await this.getValue(await this.readOnlyContract.balanceOf(address));
   }
 
   public async allowance(spender: string): Promise<BigNumber> {
@@ -92,7 +78,7 @@ export class CurrencyModule extends ModuleWithRoles {
   }
 
   public async allowanceOf(owner: string, spender: string): Promise<BigNumber> {
-    return await this.contract.allowance(owner, spender);
+    return await this.readOnlyContract.allowance(owner, spender);
   }
   // write functions
   public async transfer(

@@ -7,12 +7,12 @@ import { TransactionReceipt } from "@ethersproject/providers";
 import { BytesLike } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
 import { uploadMetadata } from "../common/ipfs";
-import { getMetadata, NFTMetadata } from "../common/nft";
+import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
 /**
- * @public
+ * @beta
  */
 export interface CollectionMetadata {
   creator: string;
@@ -22,7 +22,7 @@ export interface CollectionMetadata {
 }
 
 /**
- * @public
+ * @beta
  */
 export interface INFTCollectionCreateArgs {
   metadata: MetadataURIOrObject;
@@ -30,7 +30,7 @@ export interface INFTCollectionCreateArgs {
 }
 
 /**
- * @public
+ * @beta
  */
 export interface INFTCollectionBatchArgs {
   tokenId: BigNumberish;
@@ -38,9 +38,9 @@ export interface INFTCollectionBatchArgs {
 }
 /**
  * Access this module by calling {@link ThirdwebSDK.getCollectionModule}
- * @public
+ * @beta
  */
-export class CollectionModule extends ModuleWithRoles {
+export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
   public static moduleType: ModuleType = ModuleType.COLLECTION;
 
   public static roles = [
@@ -58,25 +58,11 @@ export class CollectionModule extends ModuleWithRoles {
     return CollectionModule.roles;
   }
 
-  private _contract: NFTCollectionContract | null = null;
-  /**
-   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
-   */
-  public get contract(): NFTCollectionContract {
-    return this._contract || this.connectContract();
-  }
-  private set contract(value: NFTCollectionContract) {
-    this._contract = value;
-  }
-
   /**
    * @internal
    */
   protected connectContract(): NFTCollectionContract {
-    return (this.contract = NFTCollection__factory.connect(
-      this.address,
-      this.providerOrSigner,
-    ));
+    return NFTCollection__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**
@@ -97,9 +83,11 @@ export class CollectionModule extends ModuleWithRoles {
     address?: string,
   ): Promise<CollectionMetadata> {
     const [metadata, creator, supply, ownedByAddress] = await Promise.all([
-      getMetadata(this.contract, tokenId, this.ipfsGatewayUrl),
-      this.contract.creator(tokenId),
-      this.contract.totalSupply(tokenId).catch(() => BigNumber.from("0")),
+      getTokenMetadata(this.readOnlyContract, tokenId, this.ipfsGatewayUrl),
+      this.readOnlyContract.creator(tokenId),
+      this.readOnlyContract
+        .totalSupply(tokenId)
+        .catch(() => BigNumber.from("0")),
       address ? (await this.balanceOf(address, tokenId)).toNumber() : 0,
     ]);
     return {
@@ -115,7 +103,7 @@ export class CollectionModule extends ModuleWithRoles {
    * @returns An array of `INFTCollection`.
    */
   public async getAll(address?: string): Promise<CollectionMetadata[]> {
-    const maxId = (await this.contract.nextTokenId()).toNumber();
+    const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) =>
         this.get(i.toString(), address),
@@ -124,18 +112,18 @@ export class CollectionModule extends ModuleWithRoles {
   }
 
   public async balanceOf(address: string, tokenId: string): Promise<BigNumber> {
-    return await this.contract.balanceOf(address, tokenId);
+    return await this.readOnlyContract.balanceOf(address, tokenId);
   }
 
   public async balance(tokenId: string): Promise<BigNumber> {
-    return await this.contract.balanceOf(
+    return await this.readOnlyContract.balanceOf(
       await this.getSignerAddress(),
       tokenId,
     );
   }
 
   public async isApproved(address: string, operator: string): Promise<boolean> {
-    return await this.contract.isApprovedForAll(address, operator);
+    return await this.readOnlyContract.isApprovedForAll(address, operator);
   }
   // write functions
   public async setApproval(

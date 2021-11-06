@@ -12,9 +12,9 @@ Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.ge
 <b>Signature:</b>
 
 ```typescript
-export declare class PackModule extends ModuleWithRoles 
+export declare class PackModule extends ModuleWithRoles<PackContract> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;PackContract&gt;
 
 ## Properties
 

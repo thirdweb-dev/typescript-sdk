@@ -1,14 +1,4 @@
-import {
-  Coin as Token,
-  DataStore,
-  Forwarder__factory,
-  LazyNFT as Drop,
-  Market,
-  NFT,
-  NFTCollection as Collection,
-  Pack,
-  ProtocolControl as App,
-} from "@3rdweb/contracts";
+import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
 import {
   JsonRpcSigner,
   Log,
@@ -27,21 +17,12 @@ import { getRoleHash, Role } from "../common/role";
 import type { ModuleMetadata } from "../modules/app";
 import type { MetadataURIOrObject, ProviderOrSigner } from "./types";
 
-type PossibleContract =
-  | App
-  | Collection
-  | DataStore
-  | Drop
-  | Market
-  | NFT
-  | Pack
-  | Token;
 /**
  * The root Module class. All other Modules extend this.
  * @remarks This should never be instantiated directly.
  * @public
  */
-export class Module {
+export class Module<TContract extends BaseContract = BaseContract> {
   /**
    * @readonly
    */
@@ -88,6 +69,17 @@ export class Module {
   }
 
   /**
+   * Contract connects to the SDK signer or provider
+   * @internal
+   */
+  public contract: TContract;
+  /**
+   * Contract connects to the {@link ISDKOptions.readOnlyRpcUrl} if provided, otherwise connect to signer or provider
+   * @internal
+   */
+  public readOnlyContract: TContract;
+
+  /**
    * @internal
    */
   constructor(
@@ -99,6 +91,56 @@ export class Module {
     this.options = options;
     this.ipfsGatewayUrl = options.ipfsGatewayUrl;
     this.setProviderOrSigner(providerOrSigner);
+    this.contract = this.connectContract();
+    this.readOnlyContract = this.options.readOnlyRpcUrl
+      ? (this.contract.connect(
+          ethers.getDefaultProvider(this.options.readOnlyRpcUrl),
+        ) as TContract)
+      : this.contract;
+  }
+
+  /**
+   * @public
+   * @returns whether the given contract exists on-chain
+   */
+  public async exists(): Promise<boolean> {
+    const provider = await this.getProvider();
+    invariant(provider, "exists() -- No Provider");
+    return isContract(provider, this.address);
+  }
+
+  /**
+   * @public
+   * Get the metadata of the contract.
+   */
+  public async getMetadata(): Promise<ModuleMetadata> {
+    invariant(await this.exists(), "contract does not exist");
+    const contract = this.connectContract();
+    const type = this.getModuleType();
+
+    return {
+      metadata: await getContractMetadata(
+        this.getProviderOrSigner(),
+        contract.address,
+        this.options.ipfsGatewayUrl,
+      ),
+      address: contract.address,
+      type,
+    };
+  }
+
+  /**
+   * @public
+   * Set new metadata on the contract and return it if successful.
+   * @param metadata - The metadata to set.
+   */
+  public async setMetadata(
+    metadata: MetadataURIOrObject,
+  ): Promise<ModuleMetadata> {
+    invariant(await this.exists(), "contract does not exist");
+    const uri = await uploadMetadata(metadata);
+    await this.sendTransaction("setContractURI", [uri]);
+    return this.getMetadata();
   }
 
   /**
@@ -109,7 +151,12 @@ export class Module {
     if (Signer.isSigner(providerOrSigner)) {
       this.signer = providerOrSigner;
     }
-    this.connectContract();
+    this.contract = this.connectContract();
+    this.readOnlyContract = this.options.readOnlyRpcUrl
+      ? (this.contract.connect(
+          ethers.getDefaultProvider(this.options.readOnlyRpcUrl),
+        ) as TContract)
+      : this.contract;
   }
 
   /**
@@ -178,7 +225,7 @@ export class Module {
    * @virtual
    * @internal
    */
-  protected connectContract(): BaseContract {
+  protected connectContract(): TContract {
     throw new Error("connectContract has to be implemented");
   }
 
@@ -212,50 +259,6 @@ export class Module {
   }
 
   /**
-   * @public
-   * @returns whether the given contract exists on-chain
-   */
-  public async exists(): Promise<boolean> {
-    const provider = await this.getProvider();
-    invariant(provider, "exists() -- No Provider");
-    return isContract(provider, this.address);
-  }
-
-  /**
-   * @public
-   * Get the metadata of the contract.
-   */
-  public async getMetadata(): Promise<ModuleMetadata> {
-    invariant(await this.exists(), "contract does not exist");
-    const contract = this.connectContract();
-    const type = this.getModuleType();
-
-    return {
-      metadata: await getContractMetadata(
-        this.getProviderOrSigner(),
-        contract.address,
-        this.options.ipfsGatewayUrl,
-      ),
-      address: contract.address,
-      type,
-    };
-  }
-
-  /**
-   * @public
-   * Set new metadata on the contract and return it if successful.
-   * @param metadata - The metadata to set.
-   */
-  public async setMetadata(
-    metadata: MetadataURIOrObject,
-  ): Promise<ModuleMetadata> {
-    invariant(await this.exists(), "contract does not exist");
-    const uri = await uploadMetadata(metadata);
-    await this.sendTransaction("setContractURI", [uri]);
-    return this.getMetadata();
-  }
-
-  /**
    * @internal
    */
   protected async sendTransaction(
@@ -281,7 +284,7 @@ export class Module {
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<TransactionReceipt> {
-    const contract = this.connectContract();
+    const contract = this.contract;
     const tx = await contract.functions[fn](...args, callOverrides);
     if (tx.wait) {
       return await tx.wait();
@@ -306,7 +309,7 @@ export class Module {
     const provider = await this.getProvider();
     invariant(provider, "no provider to execute transaction");
     const chainId = await this.getChainID();
-    const contract = this.connectContract();
+    const contract = this.contract;
     const from = await this.getSignerAddress();
     const to = this.address;
     const value = 0;
@@ -358,7 +361,7 @@ export class Module {
     if (!logs) {
       return null;
     }
-    const contract = this.connectContract();
+    const contract = this.contract;
     for (const log of logs) {
       try {
         const event = contract.interface.decodeEventLog(
@@ -379,7 +382,9 @@ export class Module {
  *
  * @public
  */
-export class ModuleWithRoles extends Module {
+export class ModuleWithRoles<
+  TContract extends AccessControlEnumerable = AccessControlEnumerable,
+> extends Module<TContract> {
   /**
    * @virtual
    * @internal
@@ -423,11 +428,7 @@ export class ModuleWithRoles extends Module {
       this.roles.includes(role),
       `this module does not support the "${role}" role`,
     );
-    const contract = this.connectContract() as PossibleContract;
-    invariant(
-      contract.getRoleMemberCount,
-      "roles are not supported on this module",
-    );
+    const contract = this.contract;
     const roleHash = getRoleHash(role);
     const count = (await contract.getRoleMemberCount(roleHash)).toNumber();
     return await Promise.all(

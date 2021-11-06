@@ -7,9 +7,9 @@ import { ModuleWithRoles } from "../core/module";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getDatastoreModule}
- * @beta
+ * @alpha
  */
-export class DatastoreModule extends ModuleWithRoles {
+export class DatastoreModule extends ModuleWithRoles<DataStore> {
   public static moduleType: ModuleType = ModuleType.DATASTORE;
 
   public static roles = [RolesMap.admin, RolesMap.editor] as const;
@@ -22,25 +22,11 @@ export class DatastoreModule extends ModuleWithRoles {
     return DatastoreModule.roles;
   }
 
-  private __contract: DataStore | null = null;
-  /**
-   * @internal - This is a temporary way to access the underlying contract directly and will likely become private once this module implements all the contract functions.
-   */
-  public get contract(): DataStore {
-    return this.__contract || this.connectContract();
-  }
-  private set contract(value: DataStore) {
-    this.__contract = value;
-  }
-
   /**
    * @internal
    */
   protected connectContract(): DataStore {
-    return (this.contract = DataStore__factory.connect(
-      this.address,
-      this.providerOrSigner,
-    ));
+    return DataStore__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**
@@ -52,7 +38,7 @@ export class DatastoreModule extends ModuleWithRoles {
 
   public async getUint(key: string): Promise<BigNumberish | undefined> {
     const keyHash = keccak256(key.toString());
-    return await this.contract.getUint(keyHash);
+    return await this.readOnlyContract.getUint(keyHash);
   }
 
   // write functions

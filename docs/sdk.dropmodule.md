@@ -12,9 +12,9 @@ Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.ge
 <b>Signature:</b>
 
 ```typescript
-export declare class DropModule extends ModuleWithRoles 
+export declare class DropModule extends ModuleWithRoles<Drop> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Drop&gt;
 
 ## Properties
 

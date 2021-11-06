@@ -9,9 +9,9 @@ Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functio
 <b>Signature:</b>
 
 ```typescript
-export declare class ModuleWithRoles extends Module 
+export declare class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessControlEnumerable> extends Module<TContract> 
 ```
-<b>Extends:</b> [Module](./sdk.module.md)
+<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;TContract&gt;
 
 ## Remarks
 
