@@ -73,8 +73,19 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     );
   }
 
+  /**
+   * Checks the owner of a particular NFT
+   *
+   * @param tokenId - ID of the NFT to get the owner of
+   * @returns the owner of the token, or an empty string if the
+   * token has been burned
+   */
   public async ownerOf(tokenId: string): Promise<string> {
-    return await this.readOnlyContract.ownerOf(tokenId);
+    try {
+      return await this.readOnlyContract.ownerOf(tokenId);
+    } catch (e) {
+      return "";
+    }
   }
 
   public async getOwned(_address?: string): Promise<NFTMetadata[]> {
