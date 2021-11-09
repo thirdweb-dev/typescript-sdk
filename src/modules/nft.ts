@@ -1,5 +1,6 @@
 /* eslint-disable new-cap */
 import { NFT, NFT__factory } from "@3rdweb/contracts";
+import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
@@ -77,14 +78,14 @@ export class NFTModule extends ModuleWithRoles<NFT> {
    * Checks the owner of a particular NFT
    *
    * @param tokenId - ID of the NFT to get the owner of
-   * @returns the owner of the token, or an empty string if the
+   * @returns the owner of the token, or a zero address if the
    * token has been burned
    */
   public async ownerOf(tokenId: string): Promise<string> {
     try {
       return await this.readOnlyContract.ownerOf(tokenId);
     } catch (e) {
-      return "";
+      return AddressZero;
     }
   }
 
