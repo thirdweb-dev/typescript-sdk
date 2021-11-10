@@ -4,7 +4,7 @@ import { ModuleType, Role, RolesMap } from "../common";
 import { Currency, getCurrencyMetadata } from "../common/currency";
 import { Module } from "../core/module";
 
-export interface IRoyalty {
+export interface IRoyaltyModule {
   /**
    * Get the total shares held by payees
    */
@@ -75,7 +75,7 @@ export interface IRoyalty {
  * Access this module by calling {@link ThirdwebSDK.getRoyaltyModule}
  * @public
  */
-export class RoyaltyModule extends Module implements IRoyalty {
+export class RoyaltyModule extends Module implements IRoyaltyModule {
   public static moduleType: ModuleType = ModuleType.ROYALTY as const;
 
   public static roles = [
