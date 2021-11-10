@@ -4,7 +4,7 @@ import { ModuleType, Role, RolesMap } from "../common";
 import { Currency, getCurrencyMetadata } from "../common/currency";
 import { Module } from "../core/module";
 
-interface IRoyalty {
+export interface IRoyalty {
   /**
    * Get the total shares held by payees
    */
