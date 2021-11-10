@@ -130,6 +130,7 @@ export class CollectionModule extends ModuleWithRoles<NFTCollection> {
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
+    getOwned(_address?: string): Promise<CollectionMetadata[]>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)

@@ -41,6 +41,7 @@ export declare class CollectionModule extends ModuleWithRoles<NFTCollectionContr
 |  [createWithERC721(tokenContract, tokenId, metadata)](./sdk.collectionmodule.createwitherc721.md) |  | <b><i>(BETA)</i></b> |
 |  [get(tokenId, address)](./sdk.collectionmodule.get.md) |  | <b><i>(BETA)</i></b> Get a single collection item by tokenId. |
 |  [getAll(address)](./sdk.collectionmodule.getall.md) |  | <b><i>(BETA)</i></b> Return all items in the collection. |
+|  [getOwned(\_address)](./sdk.collectionmodule.getowned.md) |  | <b><i>(BETA)</i></b> <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
 |  [isApproved(address, operator)](./sdk.collectionmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
 |  [mint(args)](./sdk.collectionmodule.mint.md) |  | <b><i>(BETA)</i></b> |
 |  [mintBatch(args)](./sdk.collectionmodule.mintbatch.md) |  | <b><i>(BETA)</i></b> |
