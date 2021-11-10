@@ -17,6 +17,7 @@ import { DropModule } from "../modules/drop";
 import { MarketModule } from "../modules/market";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
+import { RoyaltyModule } from "../modules/royalty";
 import { CurrencyModule } from "../modules/token";
 import { IAppModule, RegistryModule } from "./registry";
 import {
@@ -88,7 +89,8 @@ export type AnyContract =
   | typeof PackModule
   | typeof RegistryModule
   | typeof DropModule
-  | typeof DatastoreModule;
+  | typeof DatastoreModule
+  | typeof RoyaltyModule;
 
 /**
  * The entrypoint to the SDK.
@@ -383,6 +385,15 @@ export class ThirdwebSDK {
    */
   public getDropModule(address: string): DropModule {
     return this.getOrCreateModule(address, DropModule);
+  }
+
+  /**
+   *
+   * @param address - The contract address of the given Royalty module.
+   * @returns The Drop Module.
+   */
+  public getRoyaltyModule(address: string): RoyaltyModule {
+    return this.getOrCreateModule(address, RoyaltyModule);
   }
 
   private async defaultRelayerSendFunction(

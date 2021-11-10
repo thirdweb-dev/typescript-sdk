@@ -91,6 +91,10 @@ export class AppModule extends Module<ProtocolControl> {
     return this.getModuleAddress(ModuleType.DATASTORE);
   }
 
+  private async getRoyaltyAddress(): Promise<string[]> {
+    return this.getModuleAddress(ModuleType.ROYALTY);
+  }
+
   public async getRoyaltyTreasury(address?: string): Promise<string> {
     return await this.readOnlyContract.getRoyaltyTreasury(
       address || AddressZero,
@@ -191,6 +195,21 @@ export class AppModule extends Module<ProtocolControl> {
     ).map((m) => ({
       ...m,
       type: ModuleType.DATASTORE,
+    }));
+  }
+
+  /**
+   * Method to get a list of Royalty module metadata.
+   * @alpha
+   * @returns A promise of an array of Royalty modules.
+   * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
+   */
+  public async getRoyaltyModules(): Promise<ModuleMetadata[]> {
+    return (
+      await this.getAllContractMetadata(await this.getDatastoreAddress())
+    ).map((m) => ({
+      ...m,
+      type: ModuleType.ROYALTY,
     }));
   }
 
