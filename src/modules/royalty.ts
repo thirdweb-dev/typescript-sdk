@@ -1,5 +1,5 @@
 import { Royalty, Royalty__factory } from "@3rdweb/contracts";
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
 import { Currency, getCurrencyMetadata } from "../common/currency";
 import { Module } from "../core/module";
@@ -8,33 +8,33 @@ export interface IRoyaltyModule {
   /**
    * Get the total shares held by payees
    */
-  totalShares(): Promise<BigNumberish>;
+  totalShares(): Promise<BigNumber>;
 
   /**
    * Get the total amount of royalty already released
    */
-  totalReleased(): Promise<BigNumberish>;
+  totalReleased(): Promise<BigNumber>;
 
   /**
    * Returns the amount of `token` released to payees
    *
    * @param tokenAddress - The ERC20 token address to check royalty distributions for
    */
-  totalReleasedByToken(tokenAddress: string): Promise<BigNumberish>;
+  totalReleasedByToken(tokenAddress: string): Promise<BigNumber>;
 
   /**
    * Gets the amount of shares held by an account at the address `address`
    *
    * @param address - The address to check the shares held for
    */
-  shares(address: string): Promise<BigNumberish>;
+  shares(address: string): Promise<BigNumber>;
 
   /**
    * Gets the amount of royalties already released to the address `address`
    *
    * @param address - The address to check the amount of released royalties
    */
-  released(address: string): Promise<BigNumberish>;
+  released(address: string): Promise<BigNumber>;
 
   /**
    * Gets the amount of royalties already released to the address `address`
@@ -43,7 +43,7 @@ export interface IRoyaltyModule {
    * @param address - The address to check the amount of released royalties
    * @param tokenAddress - The ERC20 token address to check royalty distributions for
    */
-  releasedByToken(address: string, tokenAddress: string): Promise<BigNumberish>;
+  releasedByToken(address: string, tokenAddress: string): Promise<BigNumber>;
 
   /**
    * Gets the address of the payee at index `index`
@@ -111,34 +111,34 @@ export class RoyaltyModule extends Module implements IRoyaltyModule {
     return await getCurrencyMetadata(this.providerOrSigner, this.address);
   }
 
-  public totalShares(): Promise<BigNumberish> {
+  public totalShares(): Promise<BigNumber> {
     throw new Error("Method not implemented.");
   }
 
-  public totalReleased(): Promise<BigNumberish> {
+  public totalReleased(): Promise<BigNumber> {
     throw new Error("Method not implemented.");
   }
 
-  public totalReleasedByToken(tokenAddress: string): Promise<BigNumberish> {
+  public totalReleasedByToken(tokenAddress: string): Promise<BigNumber> {
     throw new Error("Method not implemented.");
   }
 
-  public shares(address: string): Promise<BigNumberish> {
+  public shares(address: string): Promise<BigNumber> {
     throw new Error("Method not implemented.");
   }
 
-  public released(address: string): Promise<BigNumberish> {
+  public released(address: string): Promise<BigNumber> {
     throw new Error("Method not implemented.");
   }
 
   public releasedByToken(
     address: string,
     tokenAddress: string,
-  ): Promise<BigNumberish> {
+  ): Promise<BigNumber> {
     throw new Error("Method not implemented.");
   }
 
-  public payee(index: BigNumberish): Promise<string> {
+  public payee(index: BigNumber): Promise<string> {
     throw new Error("Method not implemented.");
   }
 
