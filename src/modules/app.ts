@@ -92,7 +92,7 @@ export class AppModule extends Module<ProtocolControl> {
   }
 
   private async getSplitsAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.ROYALTY);
+    return this.getModuleAddress(ModuleType.SPLITS);
   }
 
   public async getRoyaltyTreasury(address?: string): Promise<string> {
