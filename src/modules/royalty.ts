@@ -71,10 +71,10 @@ export interface ISplitsModule {
 
 /**
  *
- * Access this module by calling {@link ThirdwebSDK.getRoyaltyModule}
+ * Access this module by calling {@link ThirdwebSDK.getSplitsModule}
  * @public
  */
-export class RoyaltyModule extends Module implements ISplitsModule {
+export class SplitsModule extends Module implements ISplitsModule {
   public static moduleType: ModuleType = ModuleType.ROYALTY as const;
 
   /**
@@ -88,7 +88,7 @@ export class RoyaltyModule extends Module implements ISplitsModule {
    * @internal
    */
   protected getModuleType(): ModuleType {
-    return RoyaltyModule.moduleType;
+    return SplitsModule.moduleType;
   }
 
   public async get(): Promise<Currency> {
