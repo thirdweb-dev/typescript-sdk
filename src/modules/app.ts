@@ -199,21 +199,6 @@ export class AppModule extends Module<ProtocolControl> {
   }
 
   /**
-   * Method to get a list of Royalty module metadata.
-   * @alpha
-   * @returns A promise of an array of Royalty modules.
-   * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
-   */
-  public async getRoyaltyModules(): Promise<ModuleMetadata[]> {
-    return (
-      await this.getAllContractMetadata(await this.getDatastoreAddress())
-    ).map((m) => ({
-      ...m,
-      type: ModuleType.ROYALTY,
-    }));
-  }
-
-  /**
    * Method to get a list of Market module metadata.
    * @returns A promise of an array of Market modules.
    * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
