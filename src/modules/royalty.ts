@@ -78,21 +78,6 @@ export interface IRoyaltyModule {
 export class RoyaltyModule extends Module implements IRoyaltyModule {
   public static moduleType: ModuleType = ModuleType.ROYALTY as const;
 
-  public static roles = [
-    RolesMap.admin,
-    RolesMap.minter,
-    RolesMap.pauser,
-    RolesMap.transfer,
-  ] as const;
-
-  /**
-   * @override
-   * @internal
-   */
-  protected getModuleRoles(): readonly Role[] {
-    return RoyaltyModule.roles;
-  }
-
   /**
    * @internal
    */
