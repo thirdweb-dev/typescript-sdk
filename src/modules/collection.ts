@@ -322,4 +322,32 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
+
+  /**
+   * `getOwned` is a convenience method for getting all owned tokens
+   * for a particular wallet.
+   *
+   * @param _address - The address to check for token ownership
+   * @returns An array of CollectionMetadata objects that are owned by the address
+   */
+  public async getOwned(_address?: string): Promise<CollectionMetadata[]> {
+    const address = _address ? _address : await this.getSignerAddress();
+    const maxId = await this.readOnlyContract.nextTokenId();
+    const balances = await this.readOnlyContract.balanceOfBatch(
+      Array(maxId.toNumber()).fill(address),
+      Array.from(Array(maxId.toNumber()).keys()),
+    );
+
+    const ownedBalances = balances
+      .map((b, i) => {
+        return {
+          tokenId: i,
+          balance: b,
+        };
+      })
+      .filter((b) => b.balance.gt(0));
+    return await Promise.all(
+      ownedBalances.map(async (b) => await this.get(b.tokenId.toString())),
+    );
+  }
 }
