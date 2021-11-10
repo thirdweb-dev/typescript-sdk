@@ -3,6 +3,7 @@ import { BigNumber } from "ethers";
 import { ModuleType } from "../common";
 import { Currency, getCurrencyMetadata } from "../common/currency";
 import { Module } from "../core/module";
+import { SplitRecipient } from "../types/SplitRecipient";
 
 export interface ISplitsModule {
   /**
@@ -10,22 +11,14 @@ export interface ISplitsModule {
    * respective split percentages.
    *
    */
-  getAllRecipients(): Promise<
-    {
-      address: string;
-      splitPercentage: BigNumber;
-    }[]
-  >;
+  getAllRecipients(): Promise<SplitRecipient[]>;
 
   /**
    * Get the split percentage of a recipient.
    *
    * @param address - The address of the recipient.
    */
-  getRecipientSplitPercentage(address: string): Promise<{
-    address: string;
-    splitPercentage: BigNumber;
-  }>;
+  getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
 
   /**
    * Returns the amount of royalty available for a recipient
