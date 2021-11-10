@@ -749,7 +749,6 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     mintTo(to: string, metadata: MetadataURIOrObject): Promise<NFTMetadata>;
     // (undocumented)
     static moduleType: ModuleType;
-    // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
     static roles: readonly ["admin", "minter", "pauser", "transfer"];

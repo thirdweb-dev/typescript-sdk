@@ -4,6 +4,8 @@
 
 ## NFTModule.ownerOf() method
 
+Checks the owner of a particular NFT
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,11 @@ ownerOf(tokenId: string): Promise<string>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  tokenId | string |  |
+|  tokenId | string | ID of the NFT to get the owner of |
 
 <b>Returns:</b>
 
 Promise&lt;string&gt;
+
+the owner of the token, or a zero address if the token has been burned
 

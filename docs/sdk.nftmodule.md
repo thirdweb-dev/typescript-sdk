@@ -38,7 +38,7 @@ export declare class NFTModule extends ModuleWithRoles<NFT>
 |  [mintBatch(metadatas)](./sdk.nftmodule.mintbatch.md) |  |  |
 |  [mintBatchTo(to, metadatas)](./sdk.nftmodule.mintbatchto.md) |  |  |
 |  [mintTo(to, metadata)](./sdk.nftmodule.mintto.md) |  |  |
-|  [ownerOf(tokenId)](./sdk.nftmodule.ownerof.md) |  |  |
+|  [ownerOf(tokenId)](./sdk.nftmodule.ownerof.md) |  | Checks the owner of a particular NFT |
 |  [setApproval(operator, approved)](./sdk.nftmodule.setapproval.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.nftmodule.setmodulemetadata.md) |  |  |
 |  [setRestrictedTransfer(restricted)](./sdk.nftmodule.setrestrictedtransfer.md) |  |  |
