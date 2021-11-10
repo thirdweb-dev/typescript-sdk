@@ -1,73 +1,72 @@
 import { Royalty, Royalty__factory } from "@3rdweb/contracts";
-import { BigNumber, BigNumberish } from "ethers";
-import { ModuleType, Role, RolesMap } from "../common";
+import { BigNumber } from "ethers";
+import { ModuleType } from "../common";
 import { Currency, getCurrencyMetadata } from "../common/currency";
 import { Module } from "../core/module";
 
-export interface IRoyaltyModule {
+export interface ISplitsModule {
   /**
-   * Get the total shares held by payees
-   */
-  totalShares(): Promise<BigNumber>;
-
-  /**
-   * Get the total amount of royalty already released
-   */
-  totalReleased(): Promise<BigNumber>;
-
-  /**
-   * Returns the amount of `token` released to payees
+   * Returns a list of all recipients with their
+   * respective split percentages.
    *
-   * @param tokenAddress - The ERC20 token address to check royalty distributions for
    */
-  totalReleasedByToken(tokenAddress: string): Promise<BigNumber>;
+  getAllRecipients(): Promise<
+    {
+      address: string;
+      splitPercentage: BigNumber;
+    }[]
+  >;
 
   /**
-   * Gets the amount of shares held by an account at the address `address`
+   * Get the split percentage of a recipient.
    *
-   * @param address - The address to check the shares held for
+   * @param address - The address of the recipient.
    */
-  shares(address: string): Promise<BigNumber>;
+  getRecipientSplitPercentage(address: string): Promise<{
+    address: string;
+    splitPercentage: BigNumber;
+  }>;
 
   /**
-   * Gets the amount of royalties already released to the address `address`
+   * Returns the amount of royalty available for a recipient
+   * to withdraw in the native currency.
    *
-   * @param address - The address to check the amount of released royalties
+   * @param address - The address of the recipient to check the balance of.
    */
-  released(address: string): Promise<BigNumber>;
+  balanceOf(address: string): Promise<BigNumber>;
 
   /**
-   * Gets the amount of royalties already released to the address `address`
-   * for the specific token `tokenAddress`
+   * Returns the amount of royalty available for a recipient
+   * to withdraw in the native currency in a specific currency.
    *
-   * @param address - The address to check the amount of released royalties
-   * @param tokenAddress - The ERC20 token address to check royalty distributions for
+   * @param walletAddress - The address of the recipient to check the balance of.
+   * @param tokenAddress - The address of the currency to check the balance in.
    */
-  releasedByToken(address: string, tokenAddress: string): Promise<BigNumber>;
+  balanceOfByToken(
+    walletAddress: string,
+    tokenAddress: string,
+  ): Promise<BigNumber>;
 
   /**
-   * Gets the address of the payee at index `index`
+   * Transaction that will withdraw the split amount of royalty that
+   * the `address` is owed and transfer it to the wallet.
    *
-   * @param index - The index of the payee to get the address of
+   * @param address - The address to withdraw royalties for.
    */
-  payee(index: BigNumberish): Promise<string>;
+  withdraw(address: string): Promise<void>;
 
   /**
-   * Triggers the release of the amount of tokens owed to `address` according
-   * to their percentage of the total shares and their previous withdrawals.
+   * Transaction that will withdraw the split amount of royalty that
+   * the `address` is owed and transfer it to the wallet, in the
+   * currency specified by `tokenAddress`.
    *
-   * @param address - The address of the payee to release the tokens for
-   */
-  release(address: string): Promise<void>;
-
-  /**
-   * Triggers the release of the amount of `tokenAddress` tokens owed to `address`
-   * according to their percentage of the total shares and their previous withdrawals.
+   * For example: If the native currency of a chain is ETH but the user
+   * wants to withdraw their split in $MATIC, they should pass
+   * the address of the $MATIC token as the `tokenAddress` parameter.
    *
-   * @param address - The address of the payee to release the tokens for
-   * @param tokenAddress - The ERC20 token address to release the tokens for
+   * @param walletAddress - The address to withdraw royalties for.
    */
-  releaseByToken(address: string, tokenAddress: string): Promise<void>;
+  withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;
 }
 
 /**
@@ -75,7 +74,7 @@ export interface IRoyaltyModule {
  * Access this module by calling {@link ThirdwebSDK.getRoyaltyModule}
  * @public
  */
-export class RoyaltyModule extends Module implements IRoyaltyModule {
+export class RoyaltyModule extends Module implements ISplitsModule {
   public static moduleType: ModuleType = ModuleType.ROYALTY as const;
 
   /**
@@ -94,44 +93,5 @@ export class RoyaltyModule extends Module implements IRoyaltyModule {
 
   public async get(): Promise<Currency> {
     return await getCurrencyMetadata(this.providerOrSigner, this.address);
-  }
-
-  public totalShares(): Promise<BigNumber> {
-    throw new Error("Method not implemented.");
-  }
-
-  public totalReleased(): Promise<BigNumber> {
-    throw new Error("Method not implemented.");
-  }
-
-  public totalReleasedByToken(tokenAddress: string): Promise<BigNumber> {
-    throw new Error("Method not implemented.");
-  }
-
-  public shares(address: string): Promise<BigNumber> {
-    throw new Error("Method not implemented.");
-  }
-
-  public released(address: string): Promise<BigNumber> {
-    throw new Error("Method not implemented.");
-  }
-
-  public releasedByToken(
-    address: string,
-    tokenAddress: string,
-  ): Promise<BigNumber> {
-    throw new Error("Method not implemented.");
-  }
-
-  public payee(index: BigNumber): Promise<string> {
-    throw new Error("Method not implemented.");
-  }
-
-  public release(address: string): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-
-  public releaseByToken(address: string, tokenAddress: string): Promise<void> {
-    throw new Error("Method not implemented.");
   }
 }
