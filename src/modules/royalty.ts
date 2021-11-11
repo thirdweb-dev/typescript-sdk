@@ -40,7 +40,7 @@ export interface ISplitsModule {
    * @param walletAddress - The address of the recipient to check the balance of.
    * @param tokenAddress - The address of the currency to check the balance in.
    */
-  balanceOfByToken(
+  balanceOfToken(
     walletAddress: string,
     tokenAddress: string,
   ): Promise<CurrencyValue>;
@@ -152,7 +152,7 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     );
   }
 
-  public async balanceOfByToken(
+  public async balanceOfToken(
     walletAddress: string,
     tokenAddress: string,
   ): Promise<CurrencyValue> {
