@@ -28,7 +28,7 @@
     "generate-md-docs": "yarn api-documenter markdown -i ./temp -o ./docs",
     "generate-docs": "yarn full-build && yarn generate-md-docs",
     "build": "yarn generate-docs",
-    "test": "ts-mocha -t 10000 -r esm -p tsconfig.testing.json test/**/*.ts"
+    "test": "ts-mocha -t 30000 -r esm -p tsconfig.testing.json test/**/*.ts"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.1",

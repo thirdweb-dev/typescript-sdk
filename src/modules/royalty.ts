@@ -1,4 +1,4 @@
-import { Royalty, Royalty__factory } from "@3rdweb/contracts";
+import { ERC20__factory, Royalty, Royalty__factory } from "@3rdweb/contracts";
 import { BigNumber } from "ethers";
 import { ModuleType } from "../common";
 import { Currency, getCurrencyMetadata } from "../common/currency";
@@ -67,7 +67,7 @@ export interface ISplitsModule {
  * Access this module by calling {@link ThirdwebSDK.getSplitsModule}
  * @public
  */
-export class SplitsModule extends Module implements ISplitsModule {
+export class SplitsModule extends Module<Royalty> implements ISplitsModule {
   public static moduleType: ModuleType = ModuleType.SPLITS as const;
 
   /**
@@ -86,5 +86,112 @@ export class SplitsModule extends Module implements ISplitsModule {
 
   public async get(): Promise<Currency> {
     return await getCurrencyMetadata(this.providerOrSigner, this.address);
+  }
+
+  public async getAllRecipients(): Promise<SplitRecipient[]> {
+    const recipients: SplitRecipient[] = [];
+
+    let index = BigNumber.from(0);
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      try {
+        const recipientAddress = await this.readOnlyContract.payee(index);
+        recipients.push(
+          await this.getRecipientSplitPercentage(recipientAddress),
+        );
+        index = index.add(1);
+      } catch (err: any) {
+        // The only way we know how to detect that we've found all recipients
+        // is if we get an error when trying to get the next recipient.
+        if (
+          "method" in err &&
+          (err["method"] as string).toLowerCase().includes("payee(uint256)")
+        ) {
+          break;
+        } else {
+          throw err;
+        }
+      }
+    }
+
+    return recipients;
+  }
+
+  public async getRecipientSplitPercentage(
+    address: string,
+  ): Promise<SplitRecipient> {
+    const [totalShares, walletsShares] = await Promise.all([
+      this.readOnlyContract.totalShares(),
+      this.readOnlyContract.shares(address),
+    ]);
+
+    return {
+      address,
+      splitPercentage:
+        walletsShares.mul(BigNumber.from(1e9)).div(totalShares).toNumber() /
+        1e7,
+    };
+  }
+
+  public async balanceOf(address: string): Promise<BigNumber> {
+    const walletBalance = await this.providerOrSigner.getBalance(this.address);
+    const totalReleased = await this.readOnlyContract["totalReleased()"]();
+    const totalReceived = walletBalance.add(totalReleased);
+
+    return this._pendingPayment(
+      address,
+      totalReceived,
+      await this.readOnlyContract["released(address)"](address),
+    );
+  }
+
+  public async balanceOfByToken(
+    walletAddress: string,
+    tokenAddress: string,
+  ): Promise<BigNumber> {
+    const erc20 = ERC20__factory.connect(tokenAddress, this.providerOrSigner);
+    const walletBalance = await erc20.balanceOf(this.address);
+    const totalReleased = await this.readOnlyContract["totalReleased(address)"](
+      tokenAddress,
+    );
+    const totalReceived = walletBalance.add(totalReleased);
+    return this._pendingPayment(
+      walletAddress,
+      totalReceived,
+      await this.readOnlyContract["released(address,address)"](
+        tokenAddress,
+        walletAddress,
+      ),
+    );
+  }
+
+  public async withdraw(address: string): Promise<void> {
+    await this.sendTransaction("release(address)", [address]);
+  }
+
+  private async _pendingPayment(
+    address: string,
+    totalReceived: BigNumber,
+    alreadyReleased: BigNumber,
+  ): Promise<BigNumber> {
+    const addressReceived = totalReceived.mul(
+      await this.readOnlyContract.shares(address),
+    );
+
+    const totalRoyaltyAvailable = addressReceived.div(
+      await this.readOnlyContract.totalShares(),
+    );
+
+    return totalRoyaltyAvailable.sub(alreadyReleased);
+  }
+
+  public async withdrawToken(
+    walletAddress: string,
+    tokenAddress: string,
+  ): Promise<void> {
+    await this.sendTransaction("release(address,address)", [
+      tokenAddress,
+      walletAddress,
+    ]);
   }
 }
