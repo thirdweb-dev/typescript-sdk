@@ -12,6 +12,7 @@ import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { AppModule, ModuleMetadataNoType } from "../modules/app";
 import { CollectionModule } from "../modules/collection";
+import {BundleModule} from "../modules/bundle";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
 import { MarketModule } from "../modules/market";
@@ -82,6 +83,7 @@ export interface ISDKOptions {
 export type AnyContract =
   | typeof AppModule
   | typeof CollectionModule
+  | typeof BundleModule
   | typeof NFTModule
   | typeof CurrencyModule
   | typeof MarketModule
@@ -333,11 +335,14 @@ export class ThirdwebSDK {
 
   /**
    *
-   * @param address - The contract address of the given Collection module.
-   * @returns The Collection Module.
+   * @param address - The contract address of the given Bundle module.
+   * @returns The Bundle Module.
    */
   public getCollectionModule(address: string): CollectionModule {
     return this.getOrCreateModule(address, CollectionModule);
+  }
+  public getBundleModule(address: string): BundleModule {
+    return this.getOrCreateModule(address, BundleModule);
   }
 
   /**
