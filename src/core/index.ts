@@ -390,7 +390,7 @@ export class ThirdwebSDK {
   /**
    *
    * @param address - The contract address of the given Royalty module.
-   * @returns The Drop Module.
+   * @returns The Splits Module.
    */
   public getSplitsModule(address: string): SplitsModule {
     return this.getOrCreateModule(address, SplitsModule);
