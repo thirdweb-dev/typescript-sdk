@@ -25,14 +25,16 @@ import { Pack } from '@3rdweb/contracts';
 import { ProtocolControl } from '@3rdweb/contracts';
 import { Provider } from '@ethersproject/providers';
 import { Registry } from '@3rdweb/contracts';
+import { Royalty } from '@3rdweb/contracts';
 import { Signer } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/providers';
 
 // Warning: (ae-forgotten-export) The symbol "RegistryModule" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "SplitsModule" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type AnyContract = typeof AppModule | typeof CollectionModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule;
+export type AnyContract = typeof AppModule | typeof CollectionModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule;
 
 // @public
 export class AppModule extends Module<ProtocolControl> {
@@ -667,7 +669,9 @@ export enum ModuleType {
     // (undocumented)
     NFT = 2,
     // (undocumented)
-    PACK = 5
+    PACK = 5,
+    // (undocumented)
+    SPLITS = 9
 }
 
 // @public
@@ -916,6 +920,8 @@ export class ThirdwebSDK {
     //
     // (undocumented)
     getPackModule(address: string): PackModule;
+    // (undocumented)
+    getSplitsModule(address: string): SplitsModule;
     // (undocumented)
     isReadOnly(): boolean;
     // (undocumented)
