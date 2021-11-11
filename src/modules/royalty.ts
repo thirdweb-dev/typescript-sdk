@@ -1,7 +1,12 @@
 import { ERC20__factory, Royalty, Royalty__factory } from "@3rdweb/contracts";
 import { BigNumber } from "ethers";
 import { ModuleType } from "../common";
-import { Currency, getCurrencyMetadata } from "../common/currency";
+import {
+  Currency,
+  CurrencyValue,
+  getCurrencyMetadata,
+  getCurrencyValue,
+} from "../common/currency";
 import { Module } from "../core/module";
 import { SplitRecipient } from "../types/SplitRecipient";
 
@@ -38,7 +43,7 @@ export interface ISplitsModule {
   balanceOfByToken(
     walletAddress: string,
     tokenAddress: string,
-  ): Promise<BigNumber>;
+  ): Promise<CurrencyValue>;
 
   /**
    * Transaction that will withdraw the split amount of royalty that
@@ -128,13 +133,15 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     return {
       address,
       splitPercentage:
-        walletsShares.mul(BigNumber.from(1e9)).div(totalShares).toNumber() /
-        1e7,
+        walletsShares.mul(BigNumber.from(1e7)).div(totalShares).toNumber() /
+        1e5,
     };
   }
 
   public async balanceOf(address: string): Promise<BigNumber> {
-    const walletBalance = await this.providerOrSigner.getBalance(this.address);
+    const walletBalance = await this.readOnlyContract.provider.getBalance(
+      this.address,
+    );
     const totalReleased = await this.readOnlyContract["totalReleased()"]();
     const totalReceived = walletBalance.add(totalReleased);
 
@@ -148,14 +155,14 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
   public async balanceOfByToken(
     walletAddress: string,
     tokenAddress: string,
-  ): Promise<BigNumber> {
+  ): Promise<CurrencyValue> {
     const erc20 = ERC20__factory.connect(tokenAddress, this.providerOrSigner);
     const walletBalance = await erc20.balanceOf(this.address);
     const totalReleased = await this.readOnlyContract["totalReleased(address)"](
       tokenAddress,
     );
     const totalReceived = walletBalance.add(totalReleased);
-    return this._pendingPayment(
+    const value = await this._pendingPayment(
       walletAddress,
       totalReceived,
       await this.readOnlyContract["released(address,address)"](
@@ -163,6 +170,7 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
         walletAddress,
       ),
     );
+    return await getCurrencyValue(this.providerOrSigner, tokenAddress, value);
   }
 
   public async withdraw(address: string): Promise<void> {
@@ -177,11 +185,9 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     const addressReceived = totalReceived.mul(
       await this.readOnlyContract.shares(address),
     );
-
     const totalRoyaltyAvailable = addressReceived.div(
       await this.readOnlyContract.totalShares(),
     );
-
     return totalRoyaltyAvailable.sub(alreadyReleased);
   }
 
