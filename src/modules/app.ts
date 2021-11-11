@@ -91,10 +91,6 @@ export class AppModule extends Module<ProtocolControl> {
     return this.getModuleAddress(ModuleType.DATASTORE);
   }
 
-  private async getSplitsAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.SPLITS);
-  }
-
   public async getRoyaltyTreasury(address?: string): Promise<string> {
     return await this.readOnlyContract.getRoyaltyTreasury(
       address || AddressZero,
