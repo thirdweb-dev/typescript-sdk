@@ -11,13 +11,14 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/sdk.esm.js",
+  "browser": "dist/sdk.umd.production.min.js",
   "files": [
     "src/",
     "dist/"
   ],
   "sideEffects": false,
   "scripts": {
-    "build:tsdx": "tsdx build",
+    "build:tsdx": "tsdx build --format cjs,esm,umd",
     "format": "prettier src/ --write",
     "prepublishOnly": "yarn lint",
     "lint": "eslint src/",
