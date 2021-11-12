@@ -1,3 +1,6 @@
+/**
+ * The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage.
+ */
 export interface SplitRecipient {
   /**
    * The address of the recipient
