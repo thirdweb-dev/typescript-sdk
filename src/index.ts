@@ -58,7 +58,11 @@
  * @packageDocumentation
  */
 
-import fetch from "node-fetch";
+if (!globalThis.fetch) {
+  globalThis.fetch = require("node-fetch");
+}
+
+import { ThirdwebSDK } from "./core";
 
 export * from "./common";
 export type { InvariantError } from "./common/invariant";
@@ -68,8 +72,4 @@ export type { IAppModule } from "./core/registry";
 export * from "./core/types";
 export * from "./modules";
 
-if (!globalThis.fetch) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  globalThis.fetch = fetch;
-}
+export default ThirdwebSDK;

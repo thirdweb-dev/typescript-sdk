@@ -8,8 +8,8 @@ import { AccessControlEnumerable } from '@3rdweb/contracts';
 import { BaseContract } from 'ethers';
 import { BigNumber } from 'ethers';
 import { BigNumber as BigNumber_2 } from '@ethersproject/bignumber';
-import { BigNumberish } from '@ethersproject/bignumber';
-import { BigNumberish as BigNumberish_2 } from 'ethers';
+import { BigNumberish } from 'ethers';
+import { BigNumberish as BigNumberish_2 } from '@ethersproject/bignumber';
 import { BytesLike } from 'ethers';
 import { CallOverrides } from 'ethers';
 import { Coin } from '@3rdweb/contracts';
@@ -121,9 +121,9 @@ export class CollectionModule extends ModuleWithRoles<NFTCollection> {
     // (undocumented)
     createBatch(metadatas: MetadataURIOrObject[]): Promise<CollectionMetadata[]>;
     // (undocumented)
-    createWithERC20(tokenContract: string, tokenAmount: BigNumberish, args: INFTCollectionCreateArgs): Promise<void>;
+    createWithERC20(tokenContract: string, tokenAmount: BigNumberish_2, args: INFTCollectionCreateArgs): Promise<void>;
     // (undocumented)
-    createWithERC721(tokenContract: string, tokenId: BigNumberish, metadata: MetadataURIOrObject): Promise<void>;
+    createWithERC721(tokenContract: string, tokenId: BigNumberish_2, metadata: MetadataURIOrObject): Promise<void>;
     get(tokenId: string, address?: string): Promise<CollectionMetadata>;
     getAll(address?: string): Promise<CollectionMetadata[]>;
     // @internal @override (undocumented)
@@ -153,7 +153,7 @@ export class CollectionModule extends ModuleWithRoles<NFTCollection> {
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
-    transfer(to: string, tokenId: string, amount: BigNumberish): Promise<TransactionReceipt>;
+    transfer(to: string, tokenId: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
     transferBatchFrom(from: string, to: string, args: INFTCollectionBatchArgs[], data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
@@ -189,17 +189,17 @@ export interface CreatePublicMintCondition {
     // (undocumented)
     currency?: string;
     // (undocumented)
-    maxMintSupply: BigNumberish_2;
+    maxMintSupply: BigNumberish;
     // (undocumented)
     merkleRoot?: BytesLike;
     // (undocumented)
-    pricePerToken?: BigNumberish_2;
+    pricePerToken?: BigNumberish;
     // (undocumented)
-    quantityLimitPerTransaction?: BigNumberish_2;
+    quantityLimitPerTransaction?: BigNumberish;
     // (undocumented)
-    startTimestampInSeconds?: BigNumberish_2;
+    startTimestampInSeconds?: BigNumberish;
     // (undocumented)
-    waitTimeSecondsLimitPerTransaction?: BigNumberish_2;
+    waitTimeSecondsLimitPerTransaction?: BigNumberish;
 }
 
 // @public
@@ -223,9 +223,9 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     // (undocumented)
     balanceOf(address: string): Promise<CurrencyValue>;
     // (undocumented)
-    burn(amount: BigNumberish_2): Promise<TransactionReceipt>;
+    burn(amount: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
-    burnFrom(from: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    burnFrom(from: string, amount: BigNumberish): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): Coin;
     // (undocumented)
@@ -235,11 +235,11 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
-    getValue(value: BigNumberish_2): Promise<CurrencyValue>;
+    getValue(value: BigNumberish): Promise<CurrencyValue>;
     // (undocumented)
-    mint(amount: BigNumberish_2): Promise<void>;
+    mint(amount: BigNumberish): Promise<void>;
     // (undocumented)
-    mintTo(to: string, amount: BigNumberish_2): Promise<void>;
+    mintTo(to: string, amount: BigNumberish): Promise<void>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
@@ -255,7 +255,7 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     // (undocumented)
     transfer(to: string, amount: BigNumber): Promise<TransactionReceipt>;
     // (undocumented)
-    transferFrom(from: string, to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    transferFrom(from: string, to: string, amount: BigNumberish): Promise<TransactionReceipt>;
 }
 
 // @public
@@ -275,13 +275,13 @@ export class DatastoreModule extends ModuleWithRoles<DataStore> {
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
-    getUint(key: string): Promise<BigNumberish_2 | undefined>;
+    getUint(key: string): Promise<BigNumberish | undefined>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
     static roles: readonly ["admin", "editor"];
     // (undocumented)
-    setUint(key: string, value: BigNumberish_2): Promise<TransactionReceipt>;
+    setUint(key: string, value: BigNumberish): Promise<TransactionReceipt>;
 }
 
 // @beta
@@ -291,9 +291,9 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     balanceOf(address: string): Promise<BigNumber>;
     // (undocumented)
-    burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
+    burn(tokenId: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
-    claim(quantity: BigNumberish_2): Promise<void>;
+    claim(quantity: BigNumberish): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): LazyNFT;
     // (undocumented)
@@ -319,7 +319,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     lazyMint(metadata: MetadataURIOrObject): Promise<void>;
     // (undocumented)
-    lazyMintAmount(amount: BigNumberish_2): Promise<void>;
+    lazyMintAmount(amount: BigNumberish): Promise<void>;
     // (undocumented)
     lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
     // (undocumented)
@@ -335,7 +335,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     setBaseTokenUri(uri: string): Promise<TransactionReceipt>;
     // (undocumented)
-    setMaxTotalSupply(amount: BigNumberish_2): Promise<TransactionReceipt>;
+    setMaxTotalSupply(amount: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
@@ -353,7 +353,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
-    transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
+    transferFrom(from: string, to: string, tokenId: BigNumberish): Promise<TransactionReceipt>;
 }
 
 // @public
@@ -419,9 +419,9 @@ export interface IAppModule {
 // @beta (undocumented)
 export interface INFTCollectionBatchArgs {
     // (undocumented)
-    amount: BigNumberish;
+    amount: BigNumberish_2;
     // (undocumented)
-    tokenId: BigNumberish;
+    tokenId: BigNumberish_2;
 }
 
 // @beta (undocumented)
@@ -429,7 +429,7 @@ export interface INFTCollectionCreateArgs {
     // (undocumented)
     metadata: MetadataURIOrObject;
     // (undocumented)
-    supply: BigNumberish;
+    supply: BigNumberish_2;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "InterfaceId_IERC1155" should be prefixed with an underscore because the declaration is marked as @internal
@@ -455,9 +455,9 @@ export class InvariantError extends Error {
 // @beta (undocumented)
 export interface IPackBatchArgs {
     // (undocumented)
-    amount: BigNumberish_2;
+    amount: BigNumberish;
     // (undocumented)
-    tokenId: BigNumberish_2;
+    tokenId: BigNumberish;
 }
 
 // @beta (undocumented)
@@ -466,8 +466,8 @@ export interface IPackCreateArgs {
     assetContract: string;
     // (undocumented)
     assets: {
-        tokenId: BigNumberish_2;
-        amount: BigNumberish_2;
+        tokenId: BigNumberish;
+        amount: BigNumberish;
     }[];
     // (undocumented)
     metadata: MetadataURIOrObject;
@@ -549,7 +549,7 @@ export interface ListingMetadata {
 // @public
 export class MarketModule extends ModuleWithRoles<Market> {
     // (undocumented)
-    buy(listingId: string, quantity: BigNumberish_2): Promise<ListingMetadata>;
+    buy(listingId: string, quantity: BigNumberish): Promise<ListingMetadata>;
     // @internal (undocumented)
     protected connectContract(): Market;
     // (undocumented)
@@ -567,7 +567,7 @@ export class MarketModule extends ModuleWithRoles<Market> {
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
-    list(assetContract: string, tokenId: string, currencyContract: string, price: BigNumberish_2, quantity: BigNumberish_2, tokensPerBuyer?: BigNumberish_2, secondsUntilStart?: BigNumberish_2, secondsUntilEnd?: BigNumberish_2): Promise<ListingMetadata>;
+    list(assetContract: string, tokenId: string, currencyContract: string, price: BigNumberish, quantity: BigNumberish, tokensPerBuyer?: BigNumberish, secondsUntilStart?: BigNumberish, secondsUntilEnd?: BigNumberish): Promise<ListingMetadata>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
@@ -577,7 +577,7 @@ export class MarketModule extends ModuleWithRoles<Market> {
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
-    unlist(listingId: string, quantity: BigNumberish_2): Promise<void>;
+    unlist(listingId: string, quantity: BigNumberish): Promise<void>;
     // (undocumented)
     unlistAll(listingId: string): Promise<void>;
 }
@@ -720,7 +720,7 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     // (undocumented)
     balanceOf(address: string): Promise<BigNumber>;
     // (undocumented)
-    burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
+    burn(tokenId: BigNumberish): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): NFT;
     // (undocumented)
@@ -766,7 +766,7 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     // (undocumented)
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
-    transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
+    transferFrom(from: string, to: string, tokenId: BigNumberish): Promise<TransactionReceipt>;
 }
 
 // @public
@@ -800,7 +800,7 @@ export class PackModule extends ModuleWithRoles<Pack> {
     // (undocumented)
     create(args: IPackCreateArgs): Promise<PackMetadata>;
     // (undocumented)
-    depositLink(amount: BigNumberish_2): Promise<void>;
+    depositLink(amount: BigNumberish): Promise<void>;
     // (undocumented)
     get(packId: string): Promise<PackMetadata>;
     // (undocumented)
@@ -836,7 +836,7 @@ export class PackModule extends ModuleWithRoles<Pack> {
     // (undocumented)
     transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): Promise<void>;
     // (undocumented)
-    withdrawLink(to: string, amount: BigNumberish_2): Promise<void>;
+    withdrawLink(to: string, amount: BigNumberish): Promise<void>;
 }
 
 // @public (undocumented)
@@ -855,19 +855,19 @@ export interface PublicMintCondition {
     // (undocumented)
     currency: string;
     // (undocumented)
-    currentMintSupply: BigNumberish_2;
+    currentMintSupply: BigNumberish;
     // (undocumented)
-    maxMintSupply: BigNumberish_2;
+    maxMintSupply: BigNumberish;
     // (undocumented)
     merkleRoot: BytesLike;
     // (undocumented)
-    pricePerToken: BigNumberish_2;
+    pricePerToken: BigNumberish;
     // (undocumented)
-    quantityLimitPerTransaction: BigNumberish_2;
+    quantityLimitPerTransaction: BigNumberish;
     // (undocumented)
-    startTimestamp: BigNumberish_2;
+    startTimestamp: BigNumberish;
     // (undocumented)
-    waitTimeSecondsLimitPerTransaction: BigNumberish_2;
+    waitTimeSecondsLimitPerTransaction: BigNumberish;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "replaceIpfsWithGateway" should be prefixed with an underscore because the declaration is marked as @internal
@@ -884,7 +884,7 @@ export type Role = keyof IRoles;
 export const RolesMap: IRoles;
 
 // @public
-export class ThirdwebSDK {
+class ThirdwebSDK {
     constructor(providerOrNetwork: ValidProviderInput, opts?: Partial<ISDKOptions>);
     createApp(metadata: MetadataURIOrObject): Promise<ContractReceipt>;
     // (undocumented)
@@ -923,6 +923,8 @@ export class ThirdwebSDK {
     // @internal
     get signer(): Signer | null;
 }
+export { ThirdwebSDK }
+export default ThirdwebSDK;
 
 // Warning: (ae-internal-missing-underscore) The name "uploadMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //

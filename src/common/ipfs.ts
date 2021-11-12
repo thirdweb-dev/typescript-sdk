@@ -1,5 +1,7 @@
-import FormData from "form-data";
 import { MetadataURIOrObject } from "../core/types";
+if (!globalThis.FormData) {
+  globalThis.FormData = require("form-data");
+}
 
 /**
  *
