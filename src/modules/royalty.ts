@@ -65,6 +65,18 @@ export interface ISplitsModule {
    * @param walletAddress - The address to withdraw royalties for.
    */
   withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;
+
+  /**
+   * Distributes all funds to the recipients.
+   */
+  distribute(): Promise<void>;
+
+  /**
+   * Distributes all funds to the recipients in the specified currency.
+   *
+   * @param tokenAddress - The address of the currency to distribute the funds in.
+   */
+  distributeToken(tokenAddress: string): Promise<void>;
 }
 
 /**
@@ -201,5 +213,13 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
       tokenAddress,
       walletAddress,
     ]);
+  }
+
+  public async distribute(): Promise<void> {
+    await this.sendTransaction("distribute()", []);
+  }
+
+  public async distributeToken(tokenAddress: string): Promise<void> {
+    await this.sendTransaction("distribute(address)", [tokenAddress]);
   }
 }

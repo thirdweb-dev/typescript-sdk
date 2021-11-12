@@ -1,5 +1,4 @@
 import * as chai from "chai";
-import { ethers } from "ethers";
 import { ThirdwebSDK } from "../src/index";
 import { SplitsModule } from "../src/modules/royalty";
 
@@ -8,7 +7,7 @@ global.fetch = require("node-fetch");
 const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
 
 const testTokenAddress = "0xf18feb8b2f58691d67c98db98b360840df340e74";
-const testSplitModule = "0xb67223c0518894514D66C9990C3A544eC8BfbA46";
+const testSplitModule = "0xe13B1c6856c85aD3bEA8DCf2c41620D4aBe3Daa0";
 const thirdwebRoyaltyAddress = "0xE00994EBDB59f70350E2cdeb897796F732331562";
 
 describe("Splits Module", async () => {
@@ -17,8 +16,12 @@ describe("Splits Module", async () => {
 
   beforeEach(async () => {
     sdk = new ThirdwebSDK(RPC_URL);
-
     royaltyModule = sdk.getSplitsModule(testSplitModule);
+  });
+
+  it("distribuing funds should work", async () => {
+    await royaltyModule.distributeToken(testTokenAddress);
+    console.log("DISTRIBUTED");
   });
 
   it("should return all recipients of splits", async () => {
@@ -56,9 +59,3 @@ describe("Splits Module", async () => {
     await royaltyModule.withdrawToken(thirdwebRoyaltyAddress, testTokenAddress);
   });
 });
-
-/**
- * Currency = 0xF18FEb8b2F58691d67C98dB98B360840df340e74
- *
- * Send 0x4d36d531D9cB40b8694763123D52170FAE5e1195
- */
