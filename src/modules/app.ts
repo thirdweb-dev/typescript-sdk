@@ -1,11 +1,12 @@
 import { ProtocolControl, ProtocolControl__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { uploadMetadata } from "../common";
+import { Role, RolesMap, uploadMetadata } from "../common";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { ModuleType } from "../common/module-type";
-import { Module } from "../core/module";
+import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import { CurrencyModule } from "./token";
 
 /**
  * The module metadata, but missing the ModuleType.
@@ -29,7 +30,17 @@ export interface ModuleMetadata extends ModuleMetadataNoType {
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
  * @public
  */
-export class AppModule extends Module<ProtocolControl> {
+export class AppModule extends ModuleWithRoles<ProtocolControl> {
+  public static roles = [RolesMap.admin] as const;
+
+  /**
+   * @override
+   * @internal
+   */
+  protected getModuleRoles(): readonly Role[] {
+    return CurrencyModule.roles;
+  }
+
   /**
    * The internal module type for the app module.
    * We do not treat it as a fully fledged module on the contract level, so it does not have a real type.
