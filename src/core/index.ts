@@ -388,6 +388,7 @@ export class ThirdwebSDK {
   }
 
   /**
+   * @alpha
    *
    * @param address - The contract address of the given Royalty module.
    * @returns The Splits Module.

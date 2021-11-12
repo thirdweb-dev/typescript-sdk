@@ -68,6 +68,7 @@ export interface ISplitsModule {
 }
 
 /**
+ * @alpha
  *
  * Access this module by calling {@link ThirdwebSDK.getSplitsModule}
  * @public
