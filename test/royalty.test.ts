@@ -45,7 +45,7 @@ describe("Splits Module", async () => {
       console.log(
         "Balance for",
         r.address,
-        (await royaltyModule.balanceOfByToken(r.address, testTokenAddress))
+        (await royaltyModule.balanceOfToken(r.address, testTokenAddress))
           .displayValue,
       );
     }

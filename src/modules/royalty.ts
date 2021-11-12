@@ -130,6 +130,7 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
       this.readOnlyContract.shares(address),
     ]);
 
+    // We convert to basis points to avoid floating point loss of precision
     return {
       address,
       splitPercentage:
