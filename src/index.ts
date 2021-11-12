@@ -58,10 +58,6 @@
  * @packageDocumentation
  */
 
-if (!globalThis.fetch) {
-  globalThis.fetch = require("node-fetch");
-}
-
 import { ThirdwebSDK } from "./core";
 
 export * from "./common";
@@ -71,5 +67,9 @@ export type { Module, ModuleWithRoles } from "./core/module";
 export type { IAppModule } from "./core/registry";
 export * from "./core/types";
 export * from "./modules";
+
+if (!globalThis.fetch) {
+  globalThis.fetch = require("node-fetch");
+}
 
 export default ThirdwebSDK;
