@@ -1,4 +1,5 @@
-import { ContractMetadata, ModuleType } from "..";
+import { ContractMetadata } from "../common/contract";
+import { ModuleType } from "../common/module-type";
 
 /**
  * The module metadata, but missing the ModuleType.
