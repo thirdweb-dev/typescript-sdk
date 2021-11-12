@@ -2,29 +2,12 @@ import { ProtocolControl, ProtocolControl__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { Role, RolesMap, uploadMetadata } from "../common";
-import { ContractMetadata, getContractMetadata } from "../common/contract";
+import { getContractMetadata } from "../common/contract";
 import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { CurrencyModule } from "./token";
-
-/**
- * The module metadata, but missing the ModuleType.
- * @public
- * @deprecated - You should rely on the {@link ModuleMetadata} instead, since it includes the type of the module.
- */
-export interface ModuleMetadataNoType {
-  address: string;
-  metadata?: ContractMetadata;
-}
-
-/**
- * The module metadata, includes the `address` and the {@link ModuleType}.
- * @public
- */
-export interface ModuleMetadata extends ModuleMetadataNoType {
-  type: ModuleType;
-}
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
