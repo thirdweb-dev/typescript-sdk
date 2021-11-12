@@ -33,6 +33,7 @@ export declare class ThirdwebSDK
 |  [getMarketModule(address)](./sdk.thirdwebsdk.getmarketmodule.md) |  |  |
 |  [getNFTModule(address)](./sdk.thirdwebsdk.getnftmodule.md) |  |  |
 |  [getPackModule(address)](./sdk.thirdwebsdk.getpackmodule.md) |  |  |
+|  [getSplitsModule(address)](./sdk.thirdwebsdk.getsplitsmodule.md) |  |  |
 |  [isReadOnly()](./sdk.thirdwebsdk.isreadonly.md) |  |  |
 |  [setProviderOrSigner(providerOrSignerOrNetwork)](./sdk.thirdwebsdk.setproviderorsigner.md) |  |  |
 

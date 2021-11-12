@@ -9,9 +9,7 @@ describe("NFT Module", async () => {
   let nftModule: NFTModule;
 
   beforeEach(async () => {
-    sdk = new ThirdwebSDK(
-      "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    );
+    sdk = new ThirdwebSDK("https://rinkeby-light.eth.linkpool.io");
 
     /**
      * This contract address *should* exist forever on testnet

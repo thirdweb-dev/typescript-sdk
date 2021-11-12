@@ -1,5 +1,5 @@
-import { CollectionModule, ThirdwebSDK } from "../src/index";
 import * as chai from "chai";
+import { CollectionModule, ThirdwebSDK } from "../src/index";
 
 global.fetch = require("node-fetch");
 
