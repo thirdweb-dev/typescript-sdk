@@ -19,7 +19,7 @@ describe("Splits Module", async () => {
     royaltyModule = sdk.getSplitsModule(testSplitModule);
   });
 
-  it("distribuing funds should work", async () => {
+  it.skip("distributing funds should work", async () => {
     await royaltyModule.distributeToken(testTokenAddress);
     console.log("DISTRIBUTED");
   });
@@ -42,7 +42,7 @@ describe("Splits Module", async () => {
     );
   });
 
-  it("should return the correct balance", async () => {
+  it.skip("should return the correct balance", async () => {
     const recipients = await royaltyModule.getAllRecipients();
     for (const r of recipients) {
       console.log(
