@@ -9,9 +9,15 @@ Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.get
 <b>Signature:</b>
 
 ```typescript
-export declare class AppModule extends Module<ProtocolControl> 
+export declare class AppModule extends ModuleWithRoles<ProtocolControl> 
 ```
-<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;ProtocolControl&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;ProtocolControl&gt;
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [roles](./sdk.appmodule.roles.md) | <code>static</code> | readonly \["admin"\] |  |
 
 ## Methods
 

@@ -37,7 +37,7 @@ import { TransactionReceipt } from '@ethersproject/providers';
 export type AnyContract = typeof AppModule | typeof CollectionModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule;
 
 // @public
-export class AppModule extends Module<ProtocolControl> {
+export class AppModule extends ModuleWithRoles<ProtocolControl> {
     // @internal (undocumented)
     protected connectContract(): ProtocolControl;
     // @internal (undocumented)
@@ -53,6 +53,8 @@ export class AppModule extends Module<ProtocolControl> {
     getDropModules(): Promise<ModuleMetadata[]>;
     // @deprecated
     getMarketModules(): Promise<ModuleMetadata[]>;
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // @deprecated
@@ -61,6 +63,8 @@ export class AppModule extends Module<ProtocolControl> {
     getPackModules(): Promise<ModuleMetadata[]>;
     // (undocumented)
     getRoyaltyTreasury(address?: string): Promise<string>;
+    // (undocumented)
+    static roles: readonly ["admin"];
     // @deprecated (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
@@ -920,7 +924,7 @@ export class ThirdwebSDK {
     //
     // (undocumented)
     getPackModule(address: string): PackModule;
-    // (undocumented)
+    // @alpha (undocumented)
     getSplitsModule(address: string): SplitsModule;
     // (undocumented)
     isReadOnly(): boolean;
