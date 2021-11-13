@@ -14,7 +14,7 @@ import { invariant } from "../common/invariant";
 import { uploadMetadata } from "../common/ipfs";
 import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role } from "../common/role";
-import type { ModuleMetadata } from "../modules/app";
+import { ModuleMetadata } from "../types/ModuleMetadata";
 import type { MetadataURIOrObject, ProviderOrSigner } from "./types";
 
 /**
