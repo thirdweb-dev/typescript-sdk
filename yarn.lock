@@ -5219,6 +5219,11 @@ json-stringify-safe@~5.0.1:
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
   integrity sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
 
+json2typescript@^1.5.0-rc.0:
+  version "1.5.0-rc.0"
+  resolved "https://registry.yarnpkg.com/json2typescript/-/json2typescript-1.5.0-rc.0.tgz#73f2101b438a0ca3a393c54cbcb7c0508e73313a"
+  integrity sha512-9v0Q6P38nV9zznaZxHRA8THp5oEGzancSUGgm8NXZSVRU/X8h/RlpP5hutP15J5sMODdx2pz9Fs/SNEpCTFAfA==
+
 json5@2.x, json5@^2.1.2:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.0.tgz#2dfefe720c6ba525d9ebd909950f0515316c89a3"
