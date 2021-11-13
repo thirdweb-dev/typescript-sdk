@@ -1,5 +1,7 @@
-import FormData from "form-data";
 import { MetadataURIOrObject } from "../core/types";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const FormData = require("form-data");
 
 /**
  *
