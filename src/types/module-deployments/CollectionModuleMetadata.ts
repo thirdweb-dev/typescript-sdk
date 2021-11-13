@@ -15,7 +15,11 @@ export default class CollectionModuleMetadata extends CommonModuleMetadata {
    *
    * For example: if this value is 100, then the royalty is 1% of the total sales.
    */
-  @JsonProperty("seller_fee_basis_points", Number)
+  @JsonProperty(
+    "seller_fee_basis_points",
+    Number,
+    PropertyConvertingMode.IGNORE_NULLABLE,
+  )
   sellerFeeBasisPoints = 0;
 
   /**
