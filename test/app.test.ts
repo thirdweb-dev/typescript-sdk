@@ -12,9 +12,10 @@ describe("App Module", async () => {
   let appModule: AppModule;
 
   beforeEach(async () => {
-    sdk = new ThirdwebSDK(
-      new ethers.Wallet(process.env.PKEY, ethers.getDefaultProvider(RPC_URL)),
-    );
+    // sdk = new ThirdwebSDK(
+    //   new ethers.Wallet(process.env.PKEY, ethers.getDefaultProvider(RPC_URL)),
+    // );
+    sdk = new ThirdwebSDK(RPC_URL);
     appModule = sdk.getAppModule("0xA47220197e8c7F7ec462989Ca992b706747B77A8");
   });
 
