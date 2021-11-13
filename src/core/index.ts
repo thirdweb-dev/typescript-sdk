@@ -193,6 +193,7 @@ export class ThirdwebSDK {
       this.providerOrSigner,
       address,
       this.options,
+      this,
     );
     this.modules.set(address, _newModule);
     return _newModule as C.Instance<T>;
