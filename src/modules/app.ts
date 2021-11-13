@@ -1,19 +1,36 @@
-import { ProtocolControl, ProtocolControl__factory } from "@3rdweb/contracts";
+import {
+  NFTCollection__factory,
+  ProtocolControl,
+  ProtocolControl__factory,
+  Royalty__factory,
+} from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
+import { BigNumber, ethers, Signer } from "ethers";
+import { JsonConvert } from "json2typescript";
 import { Role, RolesMap, uploadMetadata } from "../common";
 import { getContractMetadata } from "../common/contract";
 import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import IAppModule from "../interfaces/IAppModule";
+import { CollectionModuleMetadata } from "../types";
+import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
+import { CollectionModule } from "./collection";
+import { SplitsModule } from "./royalty";
 import { CurrencyModule } from "./token";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
  * @public
  */
-export class AppModule extends ModuleWithRoles<ProtocolControl> {
+export class AppModule
+  extends ModuleWithRoles<ProtocolControl>
+  implements IAppModule
+{
+  private jsonConvert = new JsonConvert();
+
   public static roles = [RolesMap.admin] as const;
 
   /**
@@ -281,5 +298,108 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> {
     currency: string,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("withdrawFunds", [to, currency]);
+  }
+
+  /**
+   * Helper method that deploys a module and returns its address
+   *
+   * @internal
+   *
+   * @param moduleType - The ModuleType to deploy
+   * @param args - Constructor arguments for the module
+   * @param factory - The ABI factory used to call the `deploy` method
+   * @returns The address of the deployed module
+   */
+  private async _deployModule<T extends ModuleType>(
+    moduleType: T,
+    args: any[],
+    factory: any,
+  ): Promise<string> {
+    const gasPrice = await this.sdk.getGasPrice();
+    const txOpts = gasPrice
+      ? { gasPrice: ethers.utils.parseUnits(gasPrice.toString(), "gwei") }
+      : {};
+
+    const tx = await new ethers.ContractFactory(factory.abi, factory.bytecode)
+      .connect(this.signer as Signer)
+      .deploy(...args, txOpts);
+
+    await tx.deployed();
+    const contractAddress = tx.address;
+
+    const addModuleTx = await this.contract.addModule(
+      contractAddress,
+      moduleType,
+      txOpts,
+    );
+    await addModuleTx.wait();
+    return contractAddress;
+  }
+
+  /**
+   * Deploys a collection module.
+   *
+   * @param appAddress - The address of the application the module should be deployed in.
+   * @param metadata - Metadata about the module.
+   *
+   * @returns A promise with the newly created module.
+   */
+  public async deployCollectionModule(
+    metadata: CollectionModuleMetadata,
+  ): Promise<CollectionModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      CollectionModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.COLLECTION,
+      [
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+        BigNumber.from(
+          metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+        ),
+      ],
+      NFTCollection__factory,
+    );
+
+    return this.sdk.getCollectionModule(address);
+  }
+
+  public async deploySplitsModule(
+    metadata: SplitsModuleMetadata,
+  ): Promise<SplitsModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      SplitsModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.COLLECTION,
+      [
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+        metadata.recipientSplits.map((s) => s.address),
+        metadata.recipientSplits.map((s) => s.shares),
+      ],
+      Royalty__factory,
+    );
+
+    return this.sdk.getSplitsModule(address);
   }
 }
