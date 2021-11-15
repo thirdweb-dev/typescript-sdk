@@ -137,7 +137,7 @@ describe("App Module", async () => {
   });
 
   it.skip("should deploy a marketplace module successfully", async () => {
-    const result = await appModule.deployMarketplaceModule({
+    const result = await appModule.deployMarketModule({
       name: `Testing market from SDK - ${new Date().toLocaleString()}`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",

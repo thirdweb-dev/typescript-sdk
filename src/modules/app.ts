@@ -501,7 +501,7 @@ export class AppModule
    * @param metadata - The module metadata
    * @returns - The deployed Marketplace module
    */
-  public async deployMarketplaceModule(
+  public async deployMarketModule(
     metadata: MarketModuleMetadata,
   ): Promise<MarketModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(

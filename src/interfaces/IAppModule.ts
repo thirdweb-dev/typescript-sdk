@@ -26,9 +26,7 @@ export default interface IAppModule {
     metadata: CurrencyModuleMetadata,
   ): Promise<CurrencyModule>;
 
-  deployMarketplaceModule(
-    metadata: MarketModuleMetadata,
-  ): Promise<MarketModule>;
+  deployMarketModule(metadata: MarketModuleMetadata): Promise<MarketModule>;
 
   deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
 
