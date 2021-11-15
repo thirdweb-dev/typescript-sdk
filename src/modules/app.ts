@@ -20,7 +20,7 @@ import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import IAppModule from "../interfaces/IAppModule";
-import { CollectionModuleMetadata } from "../types";
+import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
 import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
 import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
@@ -359,12 +359,12 @@ export class AppModule
    * @param metadata - Metadata about the module.
    * @returns A promise with the newly created module.
    */
-  public async deployCollectionModule(
-    metadata: CollectionModuleMetadata,
+  public async deployBundleModule(
+    metadata: BundleModuleMetadata,
   ): Promise<CollectionModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
       metadata,
-      CollectionModuleMetadata,
+      BundleModuleMetadata,
     );
 
     const metadataUri = await uploadMetadata(

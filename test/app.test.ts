@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import { BigNumber, ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
-import { AppModule, CollectionModuleMetadata, ThirdwebSDK } from "../src/index";
+import { AppModule, BundleModuleMetadata, ThirdwebSDK } from "../src/index";
 
 global.fetch = require("node-fetch");
 
@@ -25,7 +25,7 @@ describe("App Module", async () => {
   it("should serialize metadata correctly", async () => {
     const tests: {
       expected: any;
-      test: CollectionModuleMetadata;
+      test: BundleModuleMetadata;
       type: any;
     }[] = [
       {
@@ -41,7 +41,7 @@ describe("App Module", async () => {
           externalLink: "https://google.com",
           sellerFeeBasisPoints: 100,
         },
-        type: CollectionModuleMetadata,
+        type: BundleModuleMetadata,
       },
       {
         expected: {
@@ -59,8 +59,8 @@ describe("App Module", async () => {
           sellerFeeBasisPoints: 100,
           feeRecipient: "0x0",
           image: "test",
-        } as CollectionModuleMetadata,
-        type: CollectionModuleMetadata,
+        } as BundleModuleMetadata,
+        type: BundleModuleMetadata,
       },
       {
         expected: {
@@ -68,8 +68,8 @@ describe("App Module", async () => {
         },
         test: {
           name: "Testing",
-        } as CollectionModuleMetadata,
-        type: CollectionModuleMetadata,
+        } as BundleModuleMetadata,
+        type: BundleModuleMetadata,
       },
     ];
 
@@ -81,14 +81,12 @@ describe("App Module", async () => {
   });
 
   it.skip("should deploy a collection module successfully", async () => {
-    const module = await appModule.deployCollectionModule({
+    const module = await appModule.deployBundleModule({
       name: "Testing module from SDK",
       sellerFeeBasisPoints: 1000,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
     });
-
-    console.log("DEPLOYED MODULE =", module);
   });
 
   it.skip("should deploy a splits module successfully", async () => {

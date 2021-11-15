@@ -6,7 +6,7 @@ import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule } from "../modules/token";
-import CollectionModuleMetadata from "../types/module-deployments/CollectionModuleMetadata";
+import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
 import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
 import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
@@ -16,9 +16,7 @@ import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 
 export default interface IAppModule {
-  deployCollectionModule(
-    metadata: CollectionModuleMetadata,
-  ): Promise<CollectionModule>;
+  deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
 
   deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
 
