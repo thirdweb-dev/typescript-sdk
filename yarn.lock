@@ -3,9 +3,9 @@
 
 
 "@3rdweb/contracts@^1.10.0":
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.11.0.tgz#8ad5df3db0f47d98052a3f8cfca0b0e02a7051c4"
-  integrity sha512-ESerqESD6XeY6G4eLUKaTFatFKrKPv5YmCt+jr2Jk0FNkCN+60/7bh4mEuZey+NBkYGxFGPJ/Am/tQgtFC1sOQ==
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.12.0.tgz#cc12fd1ccec31f5a862c7f77a54852e8c50fe523"
+  integrity sha512-iS99EmzxT8ntilixMmZxvngb2UJ4gL3/Ua2Lh0A4PHH4c8QG/Fy5ZB1OilHzob1HQsF3CXLMMDCT61/lqNm9jQ==
   dependencies:
     "@chainlink/contracts" "^0.2.2"
     "@openzeppelin/contracts" "^4.3.2"
@@ -1586,9 +1586,9 @@
     fastq "^1.6.0"
 
 "@openzeppelin/contracts@^4.3.2":
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.3.2.tgz#ff80affd6d352dbe1bbc5b4e1833c41afd6283b6"
-  integrity sha512-AybF1cesONZStg5kWf6ao9OlqTZuPqddvprc0ky7lrUVOjXeKpmQ2Y9FK+6ygxasb+4aic4O5pneFBfwVsRRRg==
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.3.3.tgz#ff6ee919fc2a1abaf72b22814bfb72ed129ec137"
+  integrity sha512-tDBopO1c98Yk7Cv/PZlHqrvtVjlgK5R4J6jxLwoO7qxK4xqOiZG+zSkIvGFpPZ0ikc3QOED3plgdqjgNTnBc7g==
 
 "@rollup/plugin-babel@^5.1.0":
   version "5.3.0"
