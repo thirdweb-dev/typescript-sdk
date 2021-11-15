@@ -1,5 +1,6 @@
 import {
   Coin__factory,
+  DataStore__factory,
   LazyNFT__factory,
   Market__factory,
   NFTCollection__factory,
@@ -21,6 +22,7 @@ import { MetadataURIOrObject } from "../core/types";
 import IAppModule from "../interfaces/IAppModule";
 import { CollectionModuleMetadata } from "../types";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
+import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
 import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
 import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetadata";
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
@@ -28,6 +30,7 @@ import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { CollectionModule } from "./collection";
+import { DatastoreModule } from "./datastore";
 import { DropModule } from "./drop";
 import { MarketModule } from "./market";
 import { NFTModule } from "./nft";
@@ -407,7 +410,7 @@ export class AppModule
     );
 
     const address = await this._deployModule(
-      ModuleType.COLLECTION,
+      ModuleType.SPLITS,
       [
         this.address,
         await this.sdk.getForwarderAddress(),
@@ -604,5 +607,34 @@ export class AppModule
     );
 
     return this.sdk.getDropModule(address);
+  }
+
+  /**
+   * Deploys a Datastore module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed Datastore module
+   */
+  public async deployDatastoreModule(
+    metadata: DatastoreModuleMetadata,
+  ): Promise<DatastoreModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      DatastoreModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.DATASTORE,
+      [this.address, await this.sdk.getForwarderAddress(), metadataUri],
+      DataStore__factory,
+    );
+
+    return this.sdk.getDatastoreModule(address);
   }
 }

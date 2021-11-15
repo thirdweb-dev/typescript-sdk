@@ -158,13 +158,14 @@ describe("App Module", async () => {
     await sdk.getPackModule(result.address);
   });
 
-  it("should deploy a drop module successfully", async () => {
+  it.skip("should deploy a drop module successfully", async () => {
     const result = await appModule.deployDropModule({
       name: `Testing drop from SDK - ${new Date().toLocaleString()}`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       sellerFeeBasisPoints: 100,
       maxSupply: 10,
+      baseTokenUri: "/test",
     });
     console.log("deplyed with address", result.address);
 
@@ -174,5 +175,16 @@ describe("App Module", async () => {
       10,
       "The max supply should be 10",
     );
+  });
+
+  it.skip("should deploy a datastore module successfully", async () => {
+    const result = await appModule.deployDatastoreModule({
+      name: `Testing drop from SDK - ${new Date().toLocaleString()}`,
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+    });
+    console.log("deplyed datastore with address", result.address);
+
+    await sdk.getDatastoreModule(result.address);
   });
 });
