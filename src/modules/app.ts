@@ -8,6 +8,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, ethers, Signer } from "ethers";
 import { JsonConvert } from "json2typescript";
+import { NFTModule } from ".";
 import { Role, RolesMap, uploadMetadata } from "../common";
 import { getContractMetadata } from "../common/contract";
 import { ModuleType } from "../common/module-type";
@@ -15,6 +16,7 @@ import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import IAppModule from "../interfaces/IAppModule";
 import { CollectionModuleMetadata } from "../types";
+import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { CollectionModule } from "./collection";
@@ -401,5 +403,34 @@ export class AppModule
     );
 
     return this.sdk.getSplitsModule(address);
+  }
+
+  public async deployNftModule(
+    metadata: NftModuleMetadata,
+  ): Promise<NFTModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      SplitsModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    // const address = await this._deployModule(
+    //   ModuleType.COLLECTION,
+    //   [
+    //     this.address,
+    //     await this.sdk.getForwarderAddress(),
+    //     metadataUri,
+    //     metadata.recipientSplits.map((s) => s.address),
+    //     metadata.recipientSplits.map((s) => s.shares),
+    //   ],
+    //   Royalty__factory,
+    // );
+
+    return this.sdk.getNFTModule(address);
   }
 }
