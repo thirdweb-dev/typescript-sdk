@@ -21,4 +21,11 @@ export default class PackModuleMetadata extends CommonModuleMetadata {
     PropertyConvertingMode.IGNORE_NULLABLE,
   )
   sellerFeeBasisPoints = 0;
+
+  /**
+   * The address of the royalty recipient. All royalties will be sent
+   * to this address.
+   */
+  @JsonProperty("fee_recipient", String, PropertyConvertingMode.IGNORE_NULLABLE)
+  feeRecipient?: string = undefined;
 }
