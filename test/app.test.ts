@@ -121,11 +121,20 @@ describe("App Module", async () => {
   });
 
   it.skip("should deploy an nft module successfully", async () => {
-    const module = await appModule.deployNftModule({
+    await appModule.deployNftModule({
       name: "Testing module from SDK",
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       sellerFeeBasisPoints: 0,
+    });
+  });
+
+  it("should deploy a currency module successfully", async () => {
+    await appModule.deployCurrencyModule({
+      name: "Testing currency from SDK",
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      symbol: "TEST",
     });
   });
 });

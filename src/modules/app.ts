@@ -1,4 +1,5 @@
 import {
+  Coin__factory,
   NFTCollection__factory,
   NFT__factory,
   ProtocolControl,
@@ -9,7 +10,6 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, ethers, Signer } from "ethers";
 import { JsonConvert } from "json2typescript";
-import { NFTModule } from ".";
 import { Role, RolesMap, uploadMetadata } from "../common";
 import { getContractMetadata } from "../common/contract";
 import { ModuleType } from "../common/module-type";
@@ -17,10 +17,12 @@ import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import IAppModule from "../interfaces/IAppModule";
 import { CollectionModuleMetadata } from "../types";
+import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { CollectionModule } from "./collection";
+import { NFTModule } from "./nft";
 import { SplitsModule } from "./royalty";
 import { CurrencyModule } from "./token";
 
@@ -434,5 +436,35 @@ export class AppModule
     );
 
     return this.sdk.getNFTModule(address);
+  }
+
+  public async deployCurrencyModule(
+    metadata: CurrencyModuleMetadata,
+  ): Promise<CurrencyModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      SplitsModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    console.log("SYMBOL + ", metadata.symbol);
+    const address = await this._deployModule(
+      ModuleType.CURRENCY,
+      [
+        this.address,
+        metadata.name,
+        metadata.symbol ? metadata.symbol : "",
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+      ],
+      Coin__factory,
+    );
+
+    return this.sdk.getCurrencyModule(address);
   }
 }
