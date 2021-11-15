@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { BigNumberish } from "ethers";
 
 /**
  * The NewSplitRecipient interface describes the structure of a new split recipient.
@@ -22,5 +22,5 @@ export interface NewSplitRecipient {
   /**
    * The number of shares for the recipient
    */
-  shares: BigNumber;
+  shares: BigNumberish;
 }
