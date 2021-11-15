@@ -33,5 +33,5 @@ export default class NftModuleMetadata extends CommonModuleMetadata {
    * The symbol for the NFT Collection
    */
   @JsonProperty("symbol", String, PropertyConvertingMode.IGNORE_NULLABLE)
-  symbol?: string = undefined;
+  symbol?: string;
 }

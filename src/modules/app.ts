@@ -1,5 +1,6 @@
 import {
   NFTCollection__factory,
+  NFT__factory,
   ProtocolControl,
   ProtocolControl__factory,
   Royalty__factory,
@@ -419,17 +420,18 @@ export class AppModule
       await this.getSignerAddress(),
     );
 
-    // const address = await this._deployModule(
-    //   ModuleType.COLLECTION,
-    //   [
-    //     this.address,
-    //     await this.sdk.getForwarderAddress(),
-    //     metadataUri,
-    //     metadata.recipientSplits.map((s) => s.address),
-    //     metadata.recipientSplits.map((s) => s.shares),
-    //   ],
-    //   Royalty__factory,
-    // );
+    const address = await this._deployModule(
+      ModuleType.NFT,
+      [
+        this.address,
+        metadata.name,
+        metadata.symbol ? metadata.symbol : "",
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+        metadata.sellerFeeBasisPoints,
+      ],
+      NFT__factory,
+    );
 
     return this.sdk.getNFTModule(address);
   }
