@@ -6,7 +6,11 @@ import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule } from "../modules/token";
 import CollectionModuleMetadata from "../types/module-deployments/CollectionModuleMetadata";
+import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
+import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
+import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetadata";
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
+import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 
 export default interface IAppModule {
@@ -18,11 +22,15 @@ export default interface IAppModule {
 
   deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
 
-  deployCurrencyModule(metadata: any): Promise<CurrencyModule>;
+  deployCurrencyModule(
+    metadata: CurrencyModuleMetadata,
+  ): Promise<CurrencyModule>;
 
-  deployMarketplaceModule(metadata: any): Promise<MarketModule>;
+  deployMarketplaceModule(
+    metadata: MarketModuleMetadata,
+  ): Promise<MarketModule>;
 
-  deployPackModule(metadata: any): Promise<PackModule>;
+  deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
 
-  deployDropModule(metadata: any): Promise<DropModule>;
+  deployDropModule(metadata: DropModuleMetadata): Promise<DropModule>;
 }
