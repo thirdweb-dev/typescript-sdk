@@ -157,4 +157,22 @@ describe("App Module", async () => {
     });
     await sdk.getPackModule(result.address);
   });
+
+  it("should deploy a drop module successfully", async () => {
+    const result = await appModule.deployDropModule({
+      name: `Testing drop from SDK - ${new Date().toLocaleString()}`,
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      sellerFeeBasisPoints: 100,
+      maxSupply: 10,
+    });
+    console.log("deplyed with address", result.address);
+
+    const module = await sdk.getDropModule(result.address);
+    chai.assert.equal(
+      (await module.maxTotalSupply()).toNumber(),
+      10,
+      "The max supply should be 10",
+    );
+  });
 });

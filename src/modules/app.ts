@@ -1,5 +1,6 @@
 import {
   Coin__factory,
+  LazyNFT__factory,
   Market__factory,
   NFTCollection__factory,
   NFT__factory,
@@ -20,12 +21,14 @@ import { MetadataURIOrObject } from "../core/types";
 import IAppModule from "../interfaces/IAppModule";
 import { CollectionModuleMetadata } from "../types";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
+import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
 import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetadata";
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { CollectionModule } from "./collection";
+import { DropModule } from "./drop";
 import { MarketModule } from "./market";
 import { NFTModule } from "./nft";
 import { PackModule } from "./pack";
@@ -429,7 +432,7 @@ export class AppModule
   ): Promise<NFTModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
       metadata,
-      SplitsModuleMetadata,
+      NftModuleMetadata,
     );
 
     const metadataUri = await uploadMetadata(
@@ -465,7 +468,7 @@ export class AppModule
   ): Promise<CurrencyModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
       metadata,
-      SplitsModuleMetadata,
+      CurrencyModuleMetadata,
     );
 
     const metadataUri = await uploadMetadata(
@@ -500,7 +503,7 @@ export class AppModule
   ): Promise<MarketModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
       metadata,
-      SplitsModuleMetadata,
+      MarketModuleMetadata,
     );
 
     const metadataUri = await uploadMetadata(
@@ -534,7 +537,7 @@ export class AppModule
   ): Promise<PackModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
       metadata,
-      SplitsModuleMetadata,
+      PackModuleMetadata,
     );
 
     const metadataUri = await uploadMetadata(
@@ -563,5 +566,43 @@ export class AppModule
     );
 
     return this.sdk.getPackModule(address);
+  }
+
+  /**
+   * Deploys a Drop module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed Drop module
+   */
+  public async deployDropModule(
+    metadata: DropModuleMetadata,
+  ): Promise<DropModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      DropModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.DROP,
+      [
+        this.address,
+        metadata.name,
+        metadata.symbol ? metadata.symbol : "",
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+        metadata.baseTokenUri ? metadata.baseTokenUri : "",
+        metadata.maxSupply ? metadata.maxSupply : 1,
+        metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+      ],
+      LazyNFT__factory,
+    );
+
+    return this.sdk.getDropModule(address);
   }
 }
