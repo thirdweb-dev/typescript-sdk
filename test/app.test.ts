@@ -129,12 +129,22 @@ describe("App Module", async () => {
     });
   });
 
-  it("should deploy a currency module successfully", async () => {
+  it.skip("should deploy a currency module successfully", async () => {
     await appModule.deployCurrencyModule({
       name: "Testing currency from SDK",
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       symbol: "TEST",
     });
+  });
+
+  it("should deploy a marketplace module successfully", async () => {
+    const result = await appModule.deployMarketplaceModule({
+      name: `Testing market from SDK - ${new Date().toLocaleString()}`,
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      marketFeeBasisPoints: 100,
+    });
+    await sdk.getMarketModule(result.address);
   });
 });

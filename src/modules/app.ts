@@ -1,5 +1,6 @@
 import {
   Coin__factory,
+  Market__factory,
   NFTCollection__factory,
   NFT__factory,
   ProtocolControl,
@@ -18,10 +19,12 @@ import { MetadataURIOrObject } from "../core/types";
 import IAppModule from "../interfaces/IAppModule";
 import { CollectionModuleMetadata } from "../types";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
+import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetadata";
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { CollectionModule } from "./collection";
+import { MarketModule } from "./market";
 import { NFTModule } from "./nft";
 import { SplitsModule } from "./royalty";
 import { CurrencyModule } from "./token";
@@ -344,9 +347,7 @@ export class AppModule
   /**
    * Deploys a collection module.
    *
-   * @param appAddress - The address of the application the module should be deployed in.
    * @param metadata - Metadata about the module.
-   *
    * @returns A promise with the newly created module.
    */
   public async deployCollectionModule(
@@ -379,6 +380,12 @@ export class AppModule
     return this.sdk.getCollectionModule(address);
   }
 
+  /**
+   * Deploys a Splits module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed splits module
+   */
   public async deploySplitsModule(
     metadata: SplitsModuleMetadata,
   ): Promise<SplitsModule> {
@@ -408,6 +415,12 @@ export class AppModule
     return this.sdk.getSplitsModule(address);
   }
 
+  /**
+   * Deploys a NFT module.
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed NFT module
+   */
   public async deployNftModule(
     metadata: NftModuleMetadata,
   ): Promise<NFTModule> {
@@ -438,6 +451,12 @@ export class AppModule
     return this.sdk.getNFTModule(address);
   }
 
+  /**
+   * Deploys a currency module.
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed currency module
+   */
   public async deployCurrencyModule(
     metadata: CurrencyModuleMetadata,
   ): Promise<CurrencyModule> {
@@ -452,7 +471,6 @@ export class AppModule
       await this.getSignerAddress(),
     );
 
-    console.log("SYMBOL + ", metadata.symbol);
     const address = await this._deployModule(
       ModuleType.CURRENCY,
       [
@@ -466,5 +484,39 @@ export class AppModule
     );
 
     return this.sdk.getCurrencyModule(address);
+  }
+
+  /**
+   * Deploys a Marketplace module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed Marketplace module
+   */
+  public async deployMarketplaceModule(
+    metadata: MarketModuleMetadata,
+  ): Promise<MarketModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      SplitsModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.MARKET,
+      [
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+        metadata.marketFeeBasisPoints ? metadata.marketFeeBasisPoints : 0,
+      ],
+      Market__factory,
+    );
+
+    return this.sdk.getMarketModule(address);
   }
 }
