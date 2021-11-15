@@ -138,7 +138,7 @@ describe("App Module", async () => {
     });
   });
 
-  it("should deploy a marketplace module successfully", async () => {
+  it.skip("should deploy a marketplace module successfully", async () => {
     const result = await appModule.deployMarketplaceModule({
       name: `Testing market from SDK - ${new Date().toLocaleString()}`,
       image:
@@ -146,5 +146,15 @@ describe("App Module", async () => {
       marketFeeBasisPoints: 100,
     });
     await sdk.getMarketModule(result.address);
+  });
+
+  it.skip("should deploy a pack module successfully", async () => {
+    const result = await appModule.deployPackModule({
+      name: `Testing pack from SDK - ${new Date().toLocaleString()}`,
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      sellerFeeBasisPoints: 100,
+    });
+    await sdk.getPackModule(result.address);
   });
 });

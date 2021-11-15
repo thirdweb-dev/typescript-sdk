@@ -3,6 +3,7 @@ import {
   Market__factory,
   NFTCollection__factory,
   NFT__factory,
+  Pack__factory,
   ProtocolControl,
   ProtocolControl__factory,
   Royalty__factory,
@@ -11,7 +12,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, ethers, Signer } from "ethers";
 import { JsonConvert } from "json2typescript";
-import { Role, RolesMap, uploadMetadata } from "../common";
+import { ChainlinkVrf, Role, RolesMap, uploadMetadata } from "../common";
 import { getContractMetadata } from "../common/contract";
 import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
@@ -21,11 +22,13 @@ import { CollectionModuleMetadata } from "../types";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
 import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetadata";
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
+import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { CollectionModule } from "./collection";
 import { MarketModule } from "./market";
 import { NFTModule } from "./nft";
+import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
 import { CurrencyModule } from "./token";
 
@@ -518,5 +521,47 @@ export class AppModule
     );
 
     return this.sdk.getMarketModule(address);
+  }
+
+  /**
+   * Deploys a Pack module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed Pack module
+   */
+  public async deployPackModule(
+    metadata: PackModuleMetadata,
+  ): Promise<PackModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      SplitsModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const chainId = await this.getChainID();
+    const { vrfCoordinator, linkTokenAddress, keyHash, fees } =
+      ChainlinkVrf[chainId as keyof typeof ChainlinkVrf];
+
+    const address = await this._deployModule(
+      ModuleType.PACK,
+      [
+        this.address,
+        metadataUri,
+        vrfCoordinator,
+        linkTokenAddress,
+        keyHash,
+        fees,
+        await this.sdk.getForwarderAddress(),
+        metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+      ],
+      Pack__factory,
+    );
+
+    return this.sdk.getPackModule(address);
   }
 }
