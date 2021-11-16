@@ -10,7 +10,7 @@ import {
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
-import { AppModule, ModuleMetadataNoType } from "../modules/app";
+import { AppModule } from "../modules/app";
 import { CollectionModule } from "../modules/collection";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
@@ -19,6 +19,7 @@ import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule } from "../modules/token";
+import { ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { IAppModule, RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,

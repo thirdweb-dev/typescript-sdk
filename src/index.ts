@@ -68,7 +68,6 @@ export type { IAppModule } from "./core/registry";
 export * from "./core/types";
 export * from "./modules";
 export * from "./types";
-export { CollectionModuleMetadata } from "./types";
 
 if (!globalThis.fetch) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
