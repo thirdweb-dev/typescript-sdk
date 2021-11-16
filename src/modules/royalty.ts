@@ -80,10 +80,9 @@ export interface ISplitsModule {
 }
 
 /**
- * @alpha
  *
  * Access this module by calling {@link ThirdwebSDK.getSplitsModule}
- * @public
+ * @alpha
  */
 export class SplitsModule extends Module<Royalty> implements ISplitsModule {
   public static moduleType: ModuleType = ModuleType.SPLITS as const;
