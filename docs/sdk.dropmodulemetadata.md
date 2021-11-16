@@ -16,6 +16,7 @@ export default class DropModuleMetadata extends CommonModuleMetadata
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [baseTokenUri](./sdk.dropmodulemetadata.basetokenuri.md) |  | string | The IPFS base URI thats prepended to all token URIs. This allows you to batch upload all the metadata for the tokens ahead of time so they can be lazy minted later<!-- -->e.g. if a Drop Collection has a token URI of /ipfs/BOREDAPES/TOKEN1, then the IPFS base URI is /BOREDAPES/ |
+|  [feeRecipient?](./sdk.dropmodulemetadata.feerecipient.md) |  | string | <i>(Optional)</i> The address of the royalty recipient. All royalties will be sent to this address. |
 |  [maxSupply](./sdk.dropmodulemetadata.maxsupply.md) |  | number | The max supply (required) |
 |  [sellerFeeBasisPoints](./sdk.dropmodulemetadata.sellerfeebasispoints.md) |  | number | The amount of royalty collected on all royalties represented as basis points. The default is 0 (no royalties).<!-- -->1 basis point = 0.01%<!-- -->For example: if this value is 100, then the royalty is 1% of the total sales. |
 |  [symbol?](./sdk.dropmodulemetadata.symbol.md) |  | string | <i>(Optional)</i> The symbol for the Drop Collection |

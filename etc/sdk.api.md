@@ -401,6 +401,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
 // @public (undocumented)
 export class DropModuleMetadata extends CommonModuleMetadata {
     baseTokenUri: string;
+    feeRecipient?: string;
     maxSupply: number;
     sellerFeeBasisPoints: number;
     symbol?: string;
