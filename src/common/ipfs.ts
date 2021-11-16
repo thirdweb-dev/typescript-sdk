@@ -1,7 +1,9 @@
 import { MetadataURIOrObject } from "../core/types";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const FormData = require("form-data");
+if (!globalThis.FormData) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  globalThis.FormData = require("form-data");
+}
 
 /**
  *
