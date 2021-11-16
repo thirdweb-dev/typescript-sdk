@@ -39,7 +39,7 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
    * you to batch upload all the metadata for the tokens ahead of time
    * so they can be lazy minted later
    *
-   * e.g. if a Drop Collection has a token URI of /ipfs/BOREDAPES/TOKEN1, then the IPFS base URI is /BOREDAPES
+   * e.g. if a Drop Collection has a token URI of /ipfs/BOREDAPES/TOKEN1, then the IPFS base URI is /BOREDAPES/
    */
   @JsonProperty(
     "base_token_uri",
