@@ -926,6 +926,8 @@ export class ThirdwebSDK {
     getPackModule(address: string): PackModule;
     // @alpha (undocumented)
     getSplitsModule(address: string): SplitsModule;
+    // @internal
+    invokeRoute(route: string, payload: Record<string, any>): any;
     // (undocumented)
     isReadOnly(): boolean;
     // (undocumented)
