@@ -20,7 +20,7 @@ getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[
 
 <b>Returns:</b>
 
-Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->\[\]&gt;
+Promise&lt;ModuleMetadata\[\]&gt;
 
 Array of module metadata
 

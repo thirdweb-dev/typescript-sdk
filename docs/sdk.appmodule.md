@@ -9,9 +9,11 @@ Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.get
 <b>Signature:</b>
 
 ```typescript
-export declare class AppModule extends ModuleWithRoles<ProtocolControl> 
+export declare class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppModule 
 ```
 <b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;ProtocolControl&gt;
+
+<b>Implements:</b> IAppModule
 
 ## Properties
 
@@ -23,6 +25,14 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl>
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [deployBundleModule(metadata)](./sdk.appmodule.deploybundlemodule.md) |  | Deploys a collection module. |
+|  [deployCurrencyModule(metadata)](./sdk.appmodule.deploycurrencymodule.md) |  | Deploys a currency module. |
+|  [deployDatastoreModule(metadata)](./sdk.appmodule.deploydatastoremodule.md) |  | Deploys a Datastore module |
+|  [deployDropModule(metadata)](./sdk.appmodule.deploydropmodule.md) |  | Deploys a Drop module |
+|  [deployMarketModule(metadata)](./sdk.appmodule.deploymarketmodule.md) |  | Deploys a Marketplace module |
+|  [deployNftModule(metadata)](./sdk.appmodule.deploynftmodule.md) |  | Deploys a NFT module. |
+|  [deployPackModule(metadata)](./sdk.appmodule.deploypackmodule.md) |  | Deploys a Pack module |
+|  [deploySplitsModule(metadata)](./sdk.appmodule.deploysplitsmodule.md) |  | Deploys a Splits module |
 |  [getAllModuleMetadata(filterByModuleType)](./sdk.appmodule.getallmodulemetadata.md) |  | Method to get a list of all module metadata on a given app. |
 |  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get a list of Collection module metadata. |
 |  [getCurrencyModules()](./sdk.appmodule.getcurrencymodules.md) |  | Method to get a list of Currency module metadata. |

@@ -18,7 +18,7 @@ getCurrencyModules(): Promise<ModuleMetadata[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->\[\]&gt;
+Promise&lt;ModuleMetadata\[\]&gt;
 
 A promise of an array of Currency modules.
 
