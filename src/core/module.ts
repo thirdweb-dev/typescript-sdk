@@ -6,7 +6,7 @@ import {
   TransactionReceipt,
 } from "@ethersproject/providers";
 import { BaseContract, BigNumber, CallOverrides, ethers, Signer } from "ethers";
-import type { ISDKOptions } from ".";
+import type { ISDKOptions, ThirdwebSDK } from ".";
 import { getContractMetadata, isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
@@ -14,7 +14,7 @@ import { invariant } from "../common/invariant";
 import { uploadMetadata } from "../common/ipfs";
 import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role } from "../common/role";
-import type { ModuleMetadata } from "../modules/app";
+import { ModuleMetadata } from "../types/ModuleMetadata";
 import type { MetadataURIOrObject, ProviderOrSigner } from "./types";
 
 /**
@@ -37,6 +37,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
    * @readonly
    */
   protected readonly options: ISDKOptions;
+
+  protected readonly sdk: ThirdwebSDK;
 
   /**
    * @internal
@@ -86,6 +88,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     providerOrSigner: ProviderOrSigner,
     address: string,
     options: ISDKOptions,
+    sdk: ThirdwebSDK,
   ) {
     this.address = address;
     this.options = options;
@@ -97,6 +100,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
           ethers.getDefaultProvider(this.options.readOnlyRpcUrl),
         ) as TContract)
       : this.contract;
+    this.sdk = sdk;
   }
 
   /**
@@ -405,8 +409,9 @@ export class ModuleWithRoles<
     providerOrSigner: ProviderOrSigner,
     address: string,
     options: ISDKOptions,
+    sdk: ThirdwebSDK,
   ) {
-    super(providerOrSigner, address, options);
+    super(providerOrSigner, address, options, sdk);
   }
 
   /**

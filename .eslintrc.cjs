@@ -47,7 +47,6 @@ module.exports = {
     ],
     "keyword-spacing": ["error", { before: true, after: true }],
     "line-comment-position": "error",
-    "new-cap": "error",
     "no-alert": "error",
     "no-case-declarations": "off",
 

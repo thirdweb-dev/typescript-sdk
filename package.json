@@ -1,5 +1,6 @@
 {
   "name": "@3rdweb/sdk",
+  "version": "1.15.0-3",
   "version": "1.16.1",
   "description": "The main thirdweb SDK.",
   "repository": {
@@ -36,6 +37,7 @@
     "@microsoft/api-extractor": "^7.18.10",
     "@types/chai": "^4.2.22",
     "@types/expect": "^24.3.0",
+    "@types/form-data": "^2.5.0",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.7",
     "@types/node-fetch": "^2",
@@ -71,6 +73,7 @@
     "@ethersproject/providers": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
     "form-data": "^4.0.0",
+    "json2typescript": "^1.5.0-rc.0",
     "node-fetch": "^2.6.5",
     "ts-enum-util": "^4.0.2"
   },
