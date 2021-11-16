@@ -16,6 +16,7 @@ import { BigNumber, ethers, Signer } from "ethers";
 import { JsonConvert } from "json2typescript";
 import { ChainlinkVrf, Role, RolesMap, uploadMetadata } from "../common";
 import { getContractMetadata } from "../common/contract";
+import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -580,6 +581,8 @@ export class AppModule
   public async deployDropModule(
     metadata: DropModuleMetadata,
   ): Promise<DropModule> {
+    invariant(metadata.maxSupply !== undefined, "Max supply must be specified");
+
     const serializedMetadata = this.jsonConvert.serializeObject(
       metadata,
       DropModuleMetadata,
@@ -600,7 +603,7 @@ export class AppModule
         await this.sdk.getForwarderAddress(),
         metadataUri,
         metadata.baseTokenUri ? metadata.baseTokenUri : "",
-        metadata.maxSupply ? metadata.maxSupply : 1,
+        metadata.maxSupply,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
       ],
       LazyNFT__factory,

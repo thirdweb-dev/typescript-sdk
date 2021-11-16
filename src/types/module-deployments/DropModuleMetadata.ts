@@ -23,6 +23,13 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
   sellerFeeBasisPoints = 0;
 
   /**
+   * The address of the royalty recipient. All royalties will be sent
+   * to this address.
+   */
+  @JsonProperty("fee_recipient", String, PropertyConvertingMode.IGNORE_NULLABLE)
+  feeRecipient?: string = undefined;
+
+  /**
    * The symbol for the Drop Collection
    */
   @JsonProperty("symbol", String, PropertyConvertingMode.IGNORE_NULLABLE)
