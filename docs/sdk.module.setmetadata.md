@@ -20,5 +20,5 @@ setMetadata(metadata: MetadataURIOrObject): Promise<ModuleMetadata>;
 
 <b>Returns:</b>
 
-Promise&lt;ModuleMetadata&gt;
+Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->&gt;
 

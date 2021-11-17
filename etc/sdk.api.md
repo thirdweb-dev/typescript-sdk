@@ -75,8 +75,6 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     protected getModuleType(): ModuleType;
     // @deprecated
     getNFTModules(): Promise<ModuleMetadata[]>;
-    // Warning: (ae-forgotten-export) The symbol "ModuleMetadata" needs to be exported by the entry point index.d.ts
-    //
     // @deprecated
     getPackModules(): Promise<ModuleMetadata[]>;
     // (undocumented)
@@ -689,6 +687,12 @@ export class Module<TContract extends BaseContract = BaseContract> {
     setProviderOrSigner(providerOrSigner: ProviderOrSigner): void;
     // @internal (undocumented)
     protected get signer(): Signer | null;
+}
+
+// @public
+export interface ModuleMetadata extends ModuleMetadataNoType {
+    // (undocumented)
+    type: ModuleType;
 }
 
 // @public

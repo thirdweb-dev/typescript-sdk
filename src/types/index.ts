@@ -6,6 +6,7 @@ import MarketModuleMetadata from "./module-deployments/MarketModuleMetadata";
 import NftModuleMetadata from "./module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "./module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "./module-deployments/SplitsModuleMetadata";
+import { ModuleMetadata } from "./ModuleMetadata";
 import { SplitRecipient } from "./SplitRecipient";
 
 export {
@@ -18,4 +19,5 @@ export {
   NftModuleMetadata,
   PackModuleMetadata,
   SplitsModuleMetadata,
+  ModuleMetadata,
 };
