@@ -1,14 +1,9 @@
-import { Blob } from "@web-std/file";
 import { MetadataURIOrObject } from "../core/types";
 import FileOrBuffer from "../types/FileOrBuffer";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   globalThis.FormData = require("form-data");
-}
-
-if (!globalThis.Blob) {
-  globalThis.Blob = Blob;
 }
 
 /**
