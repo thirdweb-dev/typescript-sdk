@@ -1,11 +1,13 @@
 import * as chai from "chai";
 import { BigNumber, ethers } from "ethers";
+import { readFileSync } from "fs";
 import { JsonConvert } from "json2typescript";
+import path from "path";
 import { AppModule, BundleModuleMetadata, ThirdwebSDK } from "../src/index";
 
 global.fetch = require("node-fetch");
 
-const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
+const RPC_URL = "https://rpc-mumbai.maticvigil.com";
 
 describe("App Module", async () => {
   let sdk: ThirdwebSDK;
@@ -22,7 +24,7 @@ describe("App Module", async () => {
     appModule = sdk.getAppModule("0xA47220197e8c7F7ec462989Ca992b706747B77A8");
   });
 
-  it("should serialize metadata correctly", async () => {
+  it.skip("should serialize metadata correctly", async () => {
     const tests: {
       expected: any;
       test: BundleModuleMetadata;
@@ -110,7 +112,7 @@ describe("App Module", async () => {
     console.log("DEPLOYED MODULE =", module);
   });
 
-  it("Should return a valid splits module", async () => {
+  it.skip("Should return a valid splits module", async () => {
     const module = await sdk.getSplitsModule(
       "0x255d57Be74C055Bdd29Dfb7c714EEfFdd2492163",
     );
@@ -118,22 +120,37 @@ describe("App Module", async () => {
     console.log(await module.getAllRecipients());
   });
 
-  it.skip("should deploy an nft module successfully", async () => {
-    await appModule.deployNftModule({
+  it.skip("should deploy an nft module with an image file successfully", async () => {
+    const filePath = `${__dirname}/3510820011_4f558b6dea_b.jpg`;
+    const image = readFileSync(filePath);
+    const module = await appModule.deployNftModule({
       name: "Testing module from SDK",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       sellerFeeBasisPoints: 0,
+      image,
     });
+
+    const metadata = await module.getMetadata();
+    chai.assert.isTrue(
+      metadata.metadata.image.includes("ipfs/"),
+      `Image property = ${metadata.metadata.image}, should include ipfs/`,
+    );
   });
 
   it.skip("should deploy a currency module successfully", async () => {
-    await appModule.deployCurrencyModule({
+    const image =
+      "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg";
+    const module = await appModule.deployCurrencyModule({
       name: "Testing currency from SDK",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      image,
       symbol: "TEST",
     });
+
+    const metadata = await module.getMetadata();
+    chai.assert.equal(
+      metadata.metadata.image,
+      image,
+      `Image property = ${metadata.metadata.image}, should include ipfs/`,
+    );
   });
 
   it.skip("should deploy a marketplace module successfully", async () => {

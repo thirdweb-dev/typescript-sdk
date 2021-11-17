@@ -1,3 +1,4 @@
+import FileOrBuffer from "./FileOrBuffer";
 import BundleModuleMetadata from "./module-deployments/BundleModuleMetadata";
 import CurrencyModuleMetadata from "./module-deployments/CurrencyModuleMetadata";
 import DatastoreModuleMetadata from "./module-deployments/DatastoreModuleMetadata";
@@ -20,4 +21,5 @@ export {
   PackModuleMetadata,
   SplitsModuleMetadata,
   ModuleMetadata,
+  FileOrBuffer,
 };

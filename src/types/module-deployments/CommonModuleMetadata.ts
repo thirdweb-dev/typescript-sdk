@@ -3,6 +3,7 @@ import {
   JsonProperty,
   PropertyConvertingMode,
 } from "json2typescript";
+import FileOrBuffer from "../FileOrBuffer";
 
 /**
  * CommonModuleMetadata defines the common properties of a module deployment.
@@ -22,10 +23,14 @@ export default class CommonModuleMetadata {
   description?: string = undefined;
 
   /**
-   * An image URI for the module.
+   * An image for the module.
+   *
+   * If the image is a File or Buffer, it will be uploaded to IPFS.
+   * If the image is a string, it will be used as-is (in case you already uploaded it to IPFS
+   * and the property is the IPFS hash uri).
    */
   @JsonProperty("image", String, PropertyConvertingMode.IGNORE_NULLABLE)
-  image?: string = undefined;
+  image?: string | FileOrBuffer = undefined;
 
   /**
    * An external link for the module.

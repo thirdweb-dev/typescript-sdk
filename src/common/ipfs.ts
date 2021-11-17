@@ -1,8 +1,14 @@
+import { Blob } from "@web-std/file";
 import { MetadataURIOrObject } from "../core/types";
+import FileOrBuffer from "../types/FileOrBuffer";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   globalThis.FormData = require("form-data");
+}
+
+if (!globalThis.Blob) {
+  globalThis.Blob = Blob;
 }
 
 /**
@@ -31,7 +37,7 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
  * @public
  */
 export async function uploadToIPFS(
-  data: string | File,
+  data: string | File | FileOrBuffer,
   contractAddress?: string,
   signerAddress?: string,
 ): Promise<string> {
@@ -41,7 +47,7 @@ export async function uploadToIPFS(
   };
 
   const formData = new FormData();
-  formData.append("file", data);
+  formData.append("file", data as any);
   const res = await fetch("https://upload.nftlabs.co/upload", {
     method: "POST",
     body: formData as any,
