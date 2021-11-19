@@ -4,6 +4,8 @@
 
 ```ts
 
+/// <reference types="node" />
+
 import { AccessControlEnumerable } from '@3rdweb/contracts';
 import { BaseContract } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -404,6 +406,9 @@ export class DropModuleMetadata extends CommonModuleMetadata {
     sellerFeeBasisPoints: number;
     symbol?: string;
 }
+
+// @public (undocumented)
+export type FileOrBuffer = Buffer | File;
 
 // @public
 export type ForwardRequestMessage = {
@@ -1010,7 +1015,7 @@ export class ThirdwebSDK {
 export function uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
 
 // @public
-export function uploadToIPFS(data: string | File, contractAddress?: string, signerAddress?: string): Promise<string>;
+export function uploadToIPFS(data: string | File | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
 
 // @public
 export type ValidProviderInput = ProviderOrSigner | Network | string;
