@@ -582,6 +582,10 @@ export class AppModule
     metadata: DropModuleMetadata,
   ): Promise<DropModule> {
     invariant(metadata.maxSupply !== undefined, "Max supply must be specified");
+    invariant(
+      metadata.primarySaleRecipientAddress !== "",
+      "Primary sale recipient address must be specified",
+    );
 
     const serializedMetadata = this.jsonConvert.serializeObject(
       metadata,
@@ -605,6 +609,10 @@ export class AppModule
         metadata.baseTokenUri ? metadata.baseTokenUri : "",
         metadata.maxSupply,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+        metadata.primarySaleFeeBasisPoints
+          ? metadata.primarySaleFeeBasisPoints
+          : 0,
+        metadata.primarySaleRecipientAddress,
       ],
       LazyNFT__factory,
     );

@@ -1,3 +1,4 @@
+import { AddressZero } from "@ethersproject/constants";
 import * as chai from "chai";
 import { BigNumber, ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
@@ -156,7 +157,7 @@ describe("App Module", async () => {
     await sdk.getPackModule(result.address);
   });
 
-  it.skip("should deploy a drop module successfully", async () => {
+  it("should deploy a drop module successfully", async () => {
     const result = await appModule.deployDropModule({
       name: `Testing drop from SDK - ${new Date().toLocaleString()}`,
       image:
@@ -164,6 +165,7 @@ describe("App Module", async () => {
       sellerFeeBasisPoints: 100,
       maxSupply: 10,
       baseTokenUri: "/test",
+      primarySaleRecipientAddress: AddressZero,
     });
     console.log("deplyed with address", result.address);
 
