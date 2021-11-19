@@ -14,7 +14,6 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, ethers, Signer } from "ethers";
 import { JsonConvert } from "json2typescript";
-import { FileOrBuffer } from "..";
 import {
   ChainlinkVrf,
   Role,
@@ -28,6 +27,7 @@ import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import IAppModule from "../interfaces/IAppModule";
+import FileOrBuffer from "../types/FileOrBuffer";
 import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
 import CommonModuleMetadata from "../types/module-deployments/CommonModuleMetadata";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
