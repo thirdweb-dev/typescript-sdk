@@ -13,6 +13,7 @@ import {
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, ethers, Signer } from "ethers";
+import { isAddress } from "ethers/lib/utils";
 import { JsonConvert } from "json2typescript";
 import { ChainlinkVrf, Role, RolesMap, uploadMetadata } from "../common";
 import { getContractMetadata } from "../common/contract";
@@ -582,6 +583,11 @@ export class AppModule
     metadata: DropModuleMetadata,
   ): Promise<DropModule> {
     invariant(metadata.maxSupply !== undefined, "Max supply must be specified");
+    invariant(
+      metadata.primarySaleRecipientAddress !== "" &&
+        isAddress(metadata.primarySaleRecipientAddress),
+      "Primary sale recipient address must be specified and must be a valid address",
+    );
 
     const serializedMetadata = this.jsonConvert.serializeObject(
       metadata,
@@ -605,6 +611,10 @@ export class AppModule
         metadata.baseTokenUri ? metadata.baseTokenUri : "",
         metadata.maxSupply,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+        metadata.primarySaleFeeBasisPoints
+          ? metadata.primarySaleFeeBasisPoints
+          : 0,
+        metadata.primarySaleRecipientAddress,
       ],
       LazyNFT__factory,
     );

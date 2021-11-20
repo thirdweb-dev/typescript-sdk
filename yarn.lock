@@ -3,12 +3,12 @@
 
 
 "@3rdweb/contracts@^1.10.0":
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.12.0.tgz#cc12fd1ccec31f5a862c7f77a54852e8c50fe523"
-  integrity sha512-iS99EmzxT8ntilixMmZxvngb2UJ4gL3/Ua2Lh0A4PHH4c8QG/Fy5ZB1OilHzob1HQsF3CXLMMDCT61/lqNm9jQ==
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.13.1.tgz#6ed6875ac69b3e27d047aea18e2585da1d08b8df"
+  integrity sha512-2nzaPvX3JmtA+AioinahG11+RDa45AqHLTvEZWm7hEhedLOYKYphKqHeILTHG6sA3Ra/srB0YjzNRbHJtYFL9A==
   dependencies:
     "@chainlink/contracts" "^0.2.2"
-    "@openzeppelin/contracts" "^4.3.2"
+    "@openzeppelin/contracts" "^4.3.3"
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
@@ -1585,7 +1585,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@openzeppelin/contracts@^4.3.2":
+"@openzeppelin/contracts@^4.3.3":
   version "4.3.3"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.3.3.tgz#ff6ee919fc2a1abaf72b22814bfb72ed129ec137"
   integrity sha512-tDBopO1c98Yk7Cv/PZlHqrvtVjlgK5R4J6jxLwoO7qxK4xqOiZG+zSkIvGFpPZ0ikc3QOED3plgdqjgNTnBc7g==
