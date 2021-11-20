@@ -157,7 +157,7 @@ describe("App Module", async () => {
     await sdk.getPackModule(result.address);
   });
 
-  it("should deploy a drop module successfully", async () => {
+  it.skip("should deploy a drop module successfully", async () => {
     const result = await appModule.deployDropModule({
       name: `Testing drop from SDK - ${new Date().toLocaleString()}`,
       image:
