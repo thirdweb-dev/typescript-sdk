@@ -12,6 +12,11 @@ import { uploadMetadata } from "../common/ipfs";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
+export interface ITokenMintArgs {
+  address: string;
+  amount: BigNumberish;
+}
+
 /**
  *
  * Access this module by calling {@link ThirdwebSDK.getCurrencyModule}
@@ -102,6 +107,19 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
 
   public async mintTo(to: string, amount: BigNumberish) {
     await this.sendTransaction("mint", [to, amount]);
+  }
+
+  public async mintBatchTo(args: ITokenMintArgs[]) {
+    const encoded = [];
+    for (const arg of args) {
+      encoded.push(
+        this.contract.interface.encodeFunctionData("mint", [
+          arg.address,
+          arg.amount,
+        ]),
+      );
+    }
+    await this.sendTransaction("multicall", [encoded]);
   }
 
   public async burn(amount: BigNumberish): Promise<TransactionReceipt> {
