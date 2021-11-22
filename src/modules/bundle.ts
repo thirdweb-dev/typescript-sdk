@@ -1,6 +1,7 @@
 import {
   NFTCollection as NFTBundleContract,
   NFTCollection__factory,
+  ERC721__factory,
 } from "@3rdweb/contracts";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -144,10 +145,22 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     );
   }
 
-  public async isApproved(address: string, operator: string): Promise<boolean> {
+  public async isApproved(address: string, operator: string, tokenContract?: string, tokenId?: BigNumberish): Promise<boolean> {
+    if(!tokenContract) {
     return await this.readOnlyContract.isApprovedForAll(address, operator);
+    }
+    if(!tokenId){
+      throw new Error("tokenId is required");
+    }
+    const contract = ERC721__factory.connect(
+      tokenContract,
+      this.providerOrSigner,
+    );
+    const approved = await contract.isApprovedForAll(await this.getSignerAddress(), this.address);
+    const isTokenApproved = (await contract.getApproved(tokenId)).toLowerCase() === this.address.toLowerCase();
+    return approved || isTokenApproved;
   }
-  // write functions
+  // write functions  
   public async setApproval(
     operator: string,
     approved = true,
