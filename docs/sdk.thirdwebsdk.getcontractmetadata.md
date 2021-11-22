@@ -18,7 +18,7 @@ getContractMetadata(address: string): Promise<ModuleMetadataNoType>;
 
 <b>Returns:</b>
 
-Promise&lt;[ModuleMetadataNoType](./sdk.modulemetadatanotype.md)<!-- -->&gt;
+Promise&lt;ModuleMetadataNoType&gt;
 
 The contract metadata for the given contract address.
 

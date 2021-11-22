@@ -23,6 +23,7 @@ The constructor for this class is marked as internal. Third-party code should no
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [address](./sdk.module.address.md) |  | string |  |
+|  [sdk](./sdk.module.sdk.md) |  | [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
 
 ## Methods
 
