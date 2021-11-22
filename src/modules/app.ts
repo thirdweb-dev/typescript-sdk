@@ -1,35 +1,65 @@
-import { ProtocolControl, ProtocolControl__factory } from "@3rdweb/contracts";
+import {
+  Coin__factory,
+  DataStore__factory,
+  LazyNFT__factory,
+  Market__factory,
+  NFTCollection__factory,
+  NFT__factory,
+  Pack__factory,
+  ProtocolControl,
+  ProtocolControl__factory,
+  Royalty__factory,
+} from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { uploadMetadata } from "../common";
-import { ContractMetadata, getContractMetadata } from "../common/contract";
+import { BigNumber, ethers, Signer } from "ethers";
+import { isAddress } from "ethers/lib/utils";
+import { JsonConvert } from "json2typescript";
+import { ChainlinkVrf, Role, RolesMap, uploadMetadata } from "../common";
+import { getContractMetadata } from "../common/contract";
+import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
-import { Module } from "../core/module";
+import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
-
-/**
- * The module metadata, but missing the ModuleType.
- * @public
- * @deprecated - You should rely on the {@link ModuleMetadata} instead, since it includes the type of the module.
- */
-export interface ModuleMetadataNoType {
-  address: string;
-  metadata?: ContractMetadata;
-}
-
-/**
- * The module metadata, includes the `address` and the {@link ModuleType}.
- * @public
- */
-export interface ModuleMetadata extends ModuleMetadataNoType {
-  type: ModuleType;
-}
+import IAppModule from "../interfaces/IAppModule";
+import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
+import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
+import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
+import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
+import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetadata";
+import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
+import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
+import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
+import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
+import { CollectionModule } from "./collection";
+import { DatastoreModule } from "./datastore";
+import { DropModule } from "./drop";
+import { MarketModule } from "./market";
+import { NFTModule } from "./nft";
+import { PackModule } from "./pack";
+import { SplitsModule } from "./royalty";
+import { CurrencyModule } from "./token";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
  * @public
  */
-export class AppModule extends Module<ProtocolControl> {
+export class AppModule
+  extends ModuleWithRoles<ProtocolControl>
+  implements IAppModule
+{
+  private jsonConvert = new JsonConvert();
+
+  public static roles = [RolesMap.admin] as const;
+
+  /**
+   * @override
+   * @internal
+   */
+  protected getModuleRoles(): readonly Role[] {
+    return CurrencyModule.roles;
+  }
+
   /**
    * The internal module type for the app module.
    * We do not treat it as a fully fledged module on the contract level, so it does not have a real type.
@@ -291,5 +321,337 @@ export class AppModule extends Module<ProtocolControl> {
     currency: string,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("withdrawFunds", [to, currency]);
+  }
+
+  /**
+   * Helper method that deploys a module and returns its address
+   *
+   * @internal
+   *
+   * @param moduleType - The ModuleType to deploy
+   * @param args - Constructor arguments for the module
+   * @param factory - The ABI factory used to call the `deploy` method
+   * @returns The address of the deployed module
+   */
+  private async _deployModule<T extends ModuleType>(
+    moduleType: T,
+    args: any[],
+    factory: any,
+  ): Promise<string> {
+    const gasPrice = await this.sdk.getGasPrice();
+    const txOpts = gasPrice
+      ? { gasPrice: ethers.utils.parseUnits(gasPrice.toString(), "gwei") }
+      : {};
+
+    const tx = await new ethers.ContractFactory(factory.abi, factory.bytecode)
+      .connect(this.signer as Signer)
+      .deploy(...args, txOpts);
+
+    await tx.deployed();
+    const contractAddress = tx.address;
+
+    const addModuleTx = await this.contract.addModule(
+      contractAddress,
+      moduleType,
+      txOpts,
+    );
+    await addModuleTx.wait();
+    return contractAddress;
+  }
+
+  /**
+   * Deploys a collection module.
+   *
+   * @param metadata - Metadata about the module.
+   * @returns A promise with the newly created module.
+   */
+  public async deployBundleModule(
+    metadata: BundleModuleMetadata,
+  ): Promise<CollectionModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      BundleModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.COLLECTION,
+      [
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+        BigNumber.from(
+          metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+        ),
+      ],
+      NFTCollection__factory,
+    );
+
+    return this.sdk.getCollectionModule(address);
+  }
+
+  /**
+   * Deploys a Splits module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed splits module
+   */
+  public async deploySplitsModule(
+    metadata: SplitsModuleMetadata,
+  ): Promise<SplitsModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      SplitsModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.SPLITS,
+      [
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+        metadata.recipientSplits.map((s) => s.address),
+        metadata.recipientSplits.map((s) => s.shares),
+      ],
+      Royalty__factory,
+    );
+
+    return this.sdk.getSplitsModule(address);
+  }
+
+  /**
+   * Deploys a NFT module.
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed NFT module
+   */
+  public async deployNftModule(
+    metadata: NftModuleMetadata,
+  ): Promise<NFTModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      NftModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.NFT,
+      [
+        this.address,
+        metadata.name,
+        metadata.symbol ? metadata.symbol : "",
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+        metadata.sellerFeeBasisPoints,
+      ],
+      NFT__factory,
+    );
+
+    return this.sdk.getNFTModule(address);
+  }
+
+  /**
+   * Deploys a currency module.
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed currency module
+   */
+  public async deployCurrencyModule(
+    metadata: CurrencyModuleMetadata,
+  ): Promise<CurrencyModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      CurrencyModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.CURRENCY,
+      [
+        this.address,
+        metadata.name,
+        metadata.symbol ? metadata.symbol : "",
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+      ],
+      Coin__factory,
+    );
+
+    return this.sdk.getCurrencyModule(address);
+  }
+
+  /**
+   * Deploys a Marketplace module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed Marketplace module
+   */
+  public async deployMarketModule(
+    metadata: MarketModuleMetadata,
+  ): Promise<MarketModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      MarketModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.MARKET,
+      [
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+        metadata.marketFeeBasisPoints ? metadata.marketFeeBasisPoints : 0,
+      ],
+      Market__factory,
+    );
+
+    return this.sdk.getMarketModule(address);
+  }
+
+  /**
+   * Deploys a Pack module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed Pack module
+   */
+  public async deployPackModule(
+    metadata: PackModuleMetadata,
+  ): Promise<PackModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      PackModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const chainId = await this.getChainID();
+    const { vrfCoordinator, linkTokenAddress, keyHash, fees } =
+      ChainlinkVrf[chainId as keyof typeof ChainlinkVrf];
+
+    const address = await this._deployModule(
+      ModuleType.PACK,
+      [
+        this.address,
+        metadataUri,
+        vrfCoordinator,
+        linkTokenAddress,
+        keyHash,
+        fees,
+        await this.sdk.getForwarderAddress(),
+        metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+      ],
+      Pack__factory,
+    );
+
+    return this.sdk.getPackModule(address);
+  }
+
+  /**
+   * Deploys a Drop module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed Drop module
+   */
+  public async deployDropModule(
+    metadata: DropModuleMetadata,
+  ): Promise<DropModule> {
+    invariant(metadata.maxSupply !== undefined, "Max supply must be specified");
+    invariant(
+      metadata.primarySaleRecipientAddress !== "" &&
+        isAddress(metadata.primarySaleRecipientAddress),
+      "Primary sale recipient address must be specified and must be a valid address",
+    );
+
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      DropModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.DROP,
+      [
+        this.address,
+        metadata.name,
+        metadata.symbol ? metadata.symbol : "",
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+        metadata.baseTokenUri ? metadata.baseTokenUri : "",
+        metadata.maxSupply,
+        metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+        metadata.primarySaleFeeBasisPoints
+          ? metadata.primarySaleFeeBasisPoints
+          : 0,
+        metadata.primarySaleRecipientAddress,
+      ],
+      LazyNFT__factory,
+    );
+
+    return this.sdk.getDropModule(address);
+  }
+
+  /**
+   * Deploys a Datastore module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed Datastore module
+   */
+  public async deployDatastoreModule(
+    metadata: DatastoreModuleMetadata,
+  ): Promise<DatastoreModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      metadata,
+      DatastoreModuleMetadata,
+    );
+
+    const metadataUri = await uploadMetadata(
+      serializedMetadata,
+      this.address,
+      await this.getSignerAddress(),
+    );
+
+    const address = await this._deployModule(
+      ModuleType.DATASTORE,
+      [this.address, await this.sdk.getForwarderAddress(), metadataUri],
+      DataStore__factory,
+    );
+
+    return this.sdk.getDatastoreModule(address);
   }
 }

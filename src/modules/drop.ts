@@ -203,8 +203,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
 
   // owner functions
   public async lazyMint(metadata: MetadataURIOrObject) {
-    const uri = await uploadMetadata(metadata);
-    await this.sendTransaction("lazyMint", [uri]);
+    await this.lazyMintBatch([metadata]);
   }
 
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {

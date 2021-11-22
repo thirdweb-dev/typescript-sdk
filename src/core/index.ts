@@ -17,7 +17,9 @@ import { DropModule } from "../modules/drop";
 import { MarketModule } from "../modules/market";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
+import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule } from "../modules/token";
+import { ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { IAppModule, RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,
@@ -88,7 +90,8 @@ export type AnyContract =
   | typeof PackModule
   | typeof RegistryModule
   | typeof DropModule
-  | typeof DatastoreModule;
+  | typeof DatastoreModule
+  | typeof SplitsModule;
 
 /**
  * The entrypoint to the SDK.
@@ -191,6 +194,7 @@ export class ThirdwebSDK {
       this.providerOrSigner,
       address,
       this.options,
+      this,
     );
     this.modules.set(address, _newModule);
     return _newModule as C.Instance<T>;
@@ -386,6 +390,74 @@ export class ThirdwebSDK {
    */
   public getDropModule(address: string): DropModule {
     return this.getOrCreateModule(address, DropModule);
+  }
+
+  /**
+   * @alpha
+   *
+   * @param address - The contract address of the given Royalty module.
+   * @returns The Splits Module.
+   */
+  public getSplitsModule(address: string): SplitsModule {
+    return this.getOrCreateModule(address, SplitsModule);
+  }
+
+  /**
+   * Used for SDK that requires js bridging like Unity SDK.
+   * Convenient function to let the caller calls into the SDK using routing scheme rather than function call.
+   *
+   * @internal
+   * @param route - sdk execution route
+   * @param payload - request arguments for the function
+   * @returns
+   */
+  public invokeRoute(route: string, payload: Record<string, any>) {
+    const parts = route.split(".");
+
+    if (parts.length > 0 && parts[0] === "thirdweb") {
+      if (parts.length === 4) {
+        // thirdweb.module_name.address.function_name
+        const moduleName = parts[1];
+        const moduleAddress = parts[2];
+        const funcName = parts[3];
+        return (this.getModuleByName(moduleName, moduleAddress) as any)[
+          funcName
+        ](...(payload.arguments || []));
+      } else if (parts.length === 3) {
+        // reserved for: thirdweb.bridge.function_name
+        throw new Error("reserved for thirdweb.bridge.function_name");
+      } else if (parts.length === 2) {
+        // main sdk functions: thirdweb.function_name
+        const funcName = parts[1];
+        return (this as any)[funcName](...(payload.arguments || []));
+      }
+    }
+
+    throw new Error("uknown route");
+  }
+
+  // used for invoke route for unity sdk.
+  private getModuleByName(name: string, address: string) {
+    if (name === "currency") {
+      return this.getCurrencyModule(address);
+    } else if (name === "nft") {
+      return this.getNFTModule(address);
+    } else if (name === "market") {
+      return this.getMarketModule(address);
+    } else if (name === "bundle" || name === "collection") {
+      return this.getCollectionModule(address);
+    } else if (name === "drop") {
+      return this.getDropModule(address);
+    } else if (name === "splits") {
+      return this.getSplitsModule(address);
+    } else if (name === "pack") {
+      return this.getPackModule(address);
+    } else if (name === "datastore") {
+      return this.getDatastoreModule(address);
+    } else if (name === "app" || name === "project") {
+      return this.getAppModule(address);
+    }
+    throw new Error("unsupported module");
   }
 
   private async defaultRelayerSendFunction(

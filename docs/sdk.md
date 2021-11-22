@@ -68,16 +68,24 @@ Output
 |  Class | Description |
 |  --- | --- |
 |  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
+|  [BundleModuleMetadata](./sdk.bundlemodulemetadata.md) |  |
 |  [CollectionModule](./sdk.collectionmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getCollectionModule()](./sdk.thirdwebsdk.getcollectionmodule.md) |
 |  [CurrencyModule](./sdk.currencymodule.md) | Access this module by calling [ThirdwebSDK.getCurrencyModule()](./sdk.thirdwebsdk.getcurrencymodule.md) |
+|  [CurrencyModuleMetadata](./sdk.currencymodulemetadata.md) |  |
+|  [DatastoreModuleMetadata](./sdk.datastoremodulemetadata.md) |  |
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md) |
+|  [DropModuleMetadata](./sdk.dropmodulemetadata.md) |  |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
+|  [MarketModuleMetadata](./sdk.marketmodulemetadata.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
 |  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality. |
 |  [NFTModule](./sdk.nftmodule.md) | Access this module by calling [ThirdwebSDK.getNFTModule()](./sdk.thirdwebsdk.getnftmodule.md) |
+|  [NftModuleMetadata](./sdk.nftmodulemetadata.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.getpackmodule.md) |
+|  [PackModuleMetadata](./sdk.packmodulemetadata.md) |  |
+|  [SplitsModuleMetadata](./sdk.splitsmodulemetadata.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
 
 ## Enumerations
@@ -113,12 +121,12 @@ Output
 |  [ListingFilter](./sdk.listingfilter.md) | Filter options for the Market module. |
 |  [ListingMetadata](./sdk.listingmetadata.md) | Metadata for items listed on a Market module. |
 |  [ModuleMetadata](./sdk.modulemetadata.md) | The module metadata, includes the <code>address</code> and the [ModuleType](./sdk.moduletype.md)<!-- -->. |
-|  [ModuleMetadataNoType](./sdk.modulemetadatanotype.md) | The module metadata, but missing the ModuleType. |
 |  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
+|  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
 
 ## Variables
 
