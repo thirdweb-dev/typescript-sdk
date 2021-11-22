@@ -215,7 +215,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     );
   }
 
-  public async createWithERC20(
+  public async createWithToken(
     tokenContract: string,
     tokenAmount: BigNumberish,
     args: INFTBundleCreateArgs,
@@ -228,8 +228,16 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
       uri,
     ]);
   }
-
-  public async createWithERC721(
+  public async createWithErc20(
+    tokenContract: string,
+    tokenAmount: BigNumberish,
+    args: INFTBundleCreateArgs,
+  ){
+    return this.createWithToken(tokenContract, tokenAmount, args);
+  }
+  
+  
+  public async createWithNFT(
     tokenContract: string,
     tokenId: BigNumberish,
     metadata: MetadataURIOrObject,
@@ -237,10 +245,19 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     const uri = await uploadMetadata(metadata);
     await this.sendTransaction("wrapERC721", [tokenContract, tokenId, uri]);
   }
+  public async createWithERC721(
+    tokenContract: string,
+    tokenId: BigNumberish,
+    metadata: MetadataURIOrObject,
+  ) {
+    return this.createWithNFT(tokenContract, tokenId, metadata);
+  }
 
   public async mint(args: INFTBundleBatchArgs) {
     await this.mintTo(await this.getSignerAddress(), args);
   }
+
+
 
   public async mintTo(
     to: string,
