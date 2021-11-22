@@ -22,6 +22,12 @@ export interface BundleMetadata{
   metadata: NFTMetadata;
   ownedByAddress: number;
 }
+export interface CollectionMetadata {
+  creator: string;
+  supply: BigNumber;
+  metadata: NFTMetadata;
+  ownedByAddress: number;
+}
 
 /**
  * @beta
@@ -32,12 +38,19 @@ export interface INFTBundleCreateArgs {
   metadata: MetadataURIOrObject;
   supply: BigNumberish;
 }
-
+export interface INFTCollectionCreateArgs {
+  metadata: MetadataURIOrObject;
+  supply: BigNumberish;
+}
 
 /**
  * @beta
  */
 
+ export interface INFTCollectionBatchArgs {
+  tokenId: BigNumberish;
+  amount: BigNumberish;
+}
 
 export interface INFTBundleBatchArgs {
   tokenId: BigNumberish;

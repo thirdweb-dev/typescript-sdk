@@ -67,9 +67,6 @@ export class AppModule extends Module<ProtocolControl> {
     return this.getModuleAddress(ModuleType.NFT);
   }
 
-  private async getCollectionAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.BUNDLE);
-  }
   private async getBundleAddress(): Promise<string[]> {
     return this.getModuleAddress(ModuleType.BUNDLE);
   }
@@ -160,12 +157,7 @@ export class AppModule extends Module<ProtocolControl> {
    * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getCollectionModules(): Promise<ModuleMetadata[]> {
-    return (
-      await this.getAllContractMetadata(await this.getCollectionAddress())
-    ).map((m) => ({
-      ...m,
-      type: ModuleType.BUNDLE,
-    }));
+    return await this.getBundleModules();
   }
 
   public async getBundleModules(): Promise<ModuleMetadata[]> {
@@ -245,7 +237,6 @@ export class AppModule extends Module<ProtocolControl> {
   ): Promise<ModuleMetadata[]> {
     const moduleTypesToGet = filterByModuleType || [
       ModuleType.NFT,
-      ModuleType.COLLECTON,
       ModuleType.BUNDLE,
       ModuleType.PACK,
       ModuleType.CURRENCY,
