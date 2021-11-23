@@ -40,5 +40,7 @@ export declare class CurrencyModule extends ModuleWithRoles<Coin>
 |  [setRestrictedTransfer(restricted)](./sdk.currencymodule.setrestrictedtransfer.md) |  |  |
 |  [totalSupply()](./sdk.currencymodule.totalsupply.md) |  |  |
 |  [transfer(to, amount)](./sdk.currencymodule.transfer.md) |  |  |
+|  [transferBatch(args)](./sdk.currencymodule.transferbatch.md) |  |  |
 |  [transferFrom(from, to, amount)](./sdk.currencymodule.transferfrom.md) |  |  |
+|  [transferFromBatch(args)](./sdk.currencymodule.transferfrombatch.md) |  |  |
 
