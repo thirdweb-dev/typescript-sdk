@@ -31,7 +31,7 @@ import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
-import { CollectionModule } from "./collection";
+import { BundleModule } from "./bundle";
 import { DatastoreModule } from "./datastore";
 import { DropModule } from "./drop";
 import { MarketModule } from "./market";
@@ -40,6 +40,7 @@ import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
 import { CurrencyModule } from "./token";
 
+export type CollectionModule = BundleModule;
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
  * @public
@@ -97,8 +98,8 @@ export class AppModule
     return this.getModuleAddress(ModuleType.NFT);
   }
 
-  private async getCollectionAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.COLLECTION);
+  private async getBundleAddress(): Promise<string[]> {
+    return this.getModuleAddress(ModuleType.BUNDLE);
   }
 
   private async getPackAddress(): Promise<string[]> {
@@ -182,16 +183,20 @@ export class AppModule
   }
 
   /**
-   * Method to get a list of Collection module metadata.
-   * @returns A promise of an array of Collection modules.
+   * Method to get a list of Bundle module metadata.
+   * @returns A promise of an array of Bundle modules.
    * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getCollectionModules(): Promise<ModuleMetadata[]> {
+    return await this.getBundleModules();
+  }
+
+  public async getBundleModules(): Promise<ModuleMetadata[]> {
     return (
-      await this.getAllContractMetadata(await this.getCollectionAddress())
+      await this.getAllContractMetadata(await this.getBundleAddress())
     ).map((m) => ({
       ...m,
-      type: ModuleType.COLLECTION,
+      type: ModuleType.BUNDLE,
     }));
   }
 
@@ -263,7 +268,7 @@ export class AppModule
   ): Promise<ModuleMetadata[]> {
     const moduleTypesToGet = filterByModuleType || [
       ModuleType.NFT,
-      ModuleType.COLLECTION,
+      ModuleType.BUNDLE,
       ModuleType.PACK,
       ModuleType.CURRENCY,
       ModuleType.MARKET,

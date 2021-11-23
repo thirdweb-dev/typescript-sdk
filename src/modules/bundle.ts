@@ -1,6 +1,7 @@
 import {
-  NFTCollection as NFTCollectionContract,
+  NFTCollection as NFTBundleContract,
   NFTCollection__factory,
+  ERC721__factory,
 } from "@3rdweb/contracts";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -14,6 +15,13 @@ import { MetadataURIOrObject } from "../core/types";
 /**
  * @beta
  */
+
+export interface BundleMetadata {
+  creator: string;
+  supply: BigNumber;
+  metadata: NFTMetadata;
+  ownedByAddress: number;
+}
 export interface CollectionMetadata {
   creator: string;
   supply: BigNumber;
@@ -24,6 +32,11 @@ export interface CollectionMetadata {
 /**
  * @beta
  */
+
+export interface INFTBundleCreateArgs {
+  metadata: MetadataURIOrObject;
+  supply: BigNumberish;
+}
 export interface INFTCollectionCreateArgs {
   metadata: MetadataURIOrObject;
   supply: BigNumberish;
@@ -32,16 +45,23 @@ export interface INFTCollectionCreateArgs {
 /**
  * @beta
  */
+
 export interface INFTCollectionBatchArgs {
   tokenId: BigNumberish;
   amount: BigNumberish;
 }
+
+export interface INFTBundleBatchArgs {
+  tokenId: BigNumberish;
+  amount: BigNumberish;
+}
+
 /**
- * Access this module by calling {@link ThirdwebSDK.getCollectionModule}
+ * Access this module by calling {@link ThirdwebSDK.getBundleModule}
  * @beta
  */
-export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
-  public static moduleType: ModuleType = ModuleType.COLLECTION;
+export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
+  public static moduleType: ModuleType = ModuleType.BUNDLE;
 
   public static roles = [
     RolesMap.admin,
@@ -55,13 +75,13 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
    * @internal
    */
   protected getModuleRoles(): readonly Role[] {
-    return CollectionModule.roles;
+    return BundleModule.roles;
   }
 
   /**
    * @internal
    */
-  protected connectContract(): NFTCollectionContract {
+  protected connectContract(): NFTBundleContract {
     return NFTCollection__factory.connect(this.address, this.providerOrSigner);
   }
 
@@ -69,19 +89,16 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
    * @internal
    */
   protected getModuleType(): ModuleType {
-    return CollectionModule.moduleType;
+    return BundleModule.moduleType;
   }
 
   /**
    *
-   * Get a single collection item by tokenId.
+   * Get a single bundle item by tokenId.
    * @param tokenId - the unique token id of the nft
-   * @returns A promise that resolves to a `CollectionMetadata`.
+   * @returns A promise that resolves to a `BundleMetadata`.
    */
-  public async get(
-    tokenId: string,
-    address?: string,
-  ): Promise<CollectionMetadata> {
+  public async get(tokenId: string, address?: string): Promise<BundleMetadata> {
     const [metadata, creator, supply, ownedByAddress] = await Promise.all([
       getTokenMetadata(this.readOnlyContract, tokenId, this.ipfsGatewayUrl),
       this.readOnlyContract.creator(tokenId),
@@ -99,10 +116,10 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
   }
 
   /**
-   * Return all items in the collection.
-   * @returns An array of `INFTCollection`.
+   * Return all items in the bundle.
+   * @returns An array of `INFTBundle`.
    */
-  public async getAll(address?: string): Promise<CollectionMetadata[]> {
+  public async getAll(address?: string): Promise<BundleMetadata[]> {
     const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) =>
@@ -122,8 +139,30 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
     );
   }
 
-  public async isApproved(address: string, operator: string): Promise<boolean> {
-    return await this.readOnlyContract.isApprovedForAll(address, operator);
+  private async isApproved(
+    address: string,
+    operator: string,
+    assetContract?: string,
+    assetId?: BigNumberish,
+  ): Promise<boolean> {
+    if (!assetContract) {
+      return await this.readOnlyContract.isApprovedForAll(address, operator);
+    }
+    if (!assetId) {
+      throw new Error("tokenId is required");
+    }
+    const contract = ERC721__factory.connect(
+      assetContract,
+      this.providerOrSigner,
+    );
+    const approved = await contract.isApprovedForAll(
+      await this.getSignerAddress(),
+      this.address,
+    );
+    const isTokenApproved =
+      (await contract.getApproved(assetId)).toLowerCase() ===
+      this.address.toLowerCase();
+    return approved || isTokenApproved;
   }
   // write functions
   public async setApproval(
@@ -150,15 +189,13 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
   }
 
   // owner functions
-  public async create(
-    metadata: MetadataURIOrObject,
-  ): Promise<CollectionMetadata> {
+  public async create(metadata: MetadataURIOrObject): Promise<BundleMetadata> {
     return (await this.createBatch([metadata]))[0];
   }
 
   public async createBatch(
     metadatas: MetadataURIOrObject[],
-  ): Promise<CollectionMetadata[]> {
+  ): Promise<BundleMetadata[]> {
     const metadataWithSupply = metadatas.map((m) => ({
       metadata: m,
       supply: 0,
@@ -167,14 +204,14 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
   }
 
   public async createAndMint(
-    metadataWithSupply: INFTCollectionCreateArgs,
-  ): Promise<CollectionMetadata> {
+    metadataWithSupply: INFTBundleCreateArgs,
+  ): Promise<BundleMetadata> {
     return (await this.createAndMintBatch([metadataWithSupply]))[0];
   }
 
   public async createAndMintBatch(
-    metadataWithSupply: INFTCollectionCreateArgs[],
-  ): Promise<CollectionMetadata[]> {
+    metadataWithSupply: INFTBundleCreateArgs[],
+  ): Promise<BundleMetadata[]> {
     const uris = await Promise.all(
       metadataWithSupply.map((a) => a.metadata).map((a) => uploadMetadata(a)),
     );
@@ -193,10 +230,10 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
     );
   }
 
-  public async createWithERC20(
+  public async createWithToken(
     tokenContract: string,
     tokenAmount: BigNumberish,
-    args: INFTCollectionCreateArgs,
+    args: INFTBundleCreateArgs,
   ) {
     const uri = await uploadMetadata(args.metadata);
     await this.sendTransaction("wrapERC20", [
@@ -206,8 +243,15 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
       uri,
     ]);
   }
+  public async createWithErc20(
+    tokenContract: string,
+    tokenAmount: BigNumberish,
+    args: INFTBundleCreateArgs,
+  ) {
+    return this.createWithToken(tokenContract, tokenAmount, args);
+  }
 
-  public async createWithERC721(
+  public async createWithNFT(
     tokenContract: string,
     tokenId: BigNumberish,
     metadata: MetadataURIOrObject,
@@ -215,26 +259,33 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
     const uri = await uploadMetadata(metadata);
     await this.sendTransaction("wrapERC721", [tokenContract, tokenId, uri]);
   }
+  public async createWithERC721(
+    tokenContract: string,
+    tokenId: BigNumberish,
+    metadata: MetadataURIOrObject,
+  ) {
+    return this.createWithNFT(tokenContract, tokenId, metadata);
+  }
 
-  public async mint(args: INFTCollectionBatchArgs) {
+  public async mint(args: INFTBundleBatchArgs) {
     await this.mintTo(await this.getSignerAddress(), args);
   }
 
   public async mintTo(
     to: string,
-    args: INFTCollectionBatchArgs,
+    args: INFTBundleBatchArgs,
     data: BytesLike = [0],
   ) {
     await this.sendTransaction("mint", [to, args.tokenId, args.amount, data]);
   }
 
-  public async mintBatch(args: INFTCollectionBatchArgs[]) {
+  public async mintBatch(args: INFTBundleBatchArgs[]) {
     await this.mintBatchTo(await this.getSignerAddress(), args);
   }
 
   public async mintBatchTo(
     to: string,
-    args: INFTCollectionBatchArgs[],
+    args: INFTBundleBatchArgs[],
     data: BytesLike = [0],
   ) {
     const ids = args.map((a) => a.tokenId);
@@ -242,21 +293,19 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
     await this.sendTransaction("mintBatch", [to, ids, amounts, data]);
   }
 
-  public async burn(
-    args: INFTCollectionBatchArgs,
-  ): Promise<TransactionReceipt> {
+  public async burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt> {
     return await this.burnFrom(await this.getSignerAddress(), args);
   }
 
   public async burnBatch(
-    args: INFTCollectionBatchArgs[],
+    args: INFTBundleBatchArgs[],
   ): Promise<TransactionReceipt> {
     return await this.burnBatchFrom(await this.getSignerAddress(), args);
   }
 
   public async burnFrom(
     account: string,
-    args: INFTCollectionBatchArgs,
+    args: INFTBundleBatchArgs,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [
       account,
@@ -267,7 +316,7 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
 
   public async burnBatchFrom(
     account: string,
-    args: INFTCollectionBatchArgs[],
+    args: INFTBundleBatchArgs[],
   ): Promise<TransactionReceipt> {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
@@ -277,7 +326,7 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
   public async transferFrom(
     from: string,
     to: string,
-    args: INFTCollectionBatchArgs,
+    args: INFTBundleBatchArgs,
     data: BytesLike = [0],
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("safeTransferFrom", [
@@ -292,7 +341,7 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
   public async transferBatchFrom(
     from: string,
     to: string,
-    args: INFTCollectionBatchArgs[],
+    args: INFTBundleBatchArgs[],
     data: BytesLike = [0],
   ): Promise<TransactionReceipt> {
     const ids = args.map((a) => a.tokenId);
@@ -328,9 +377,9 @@ export class CollectionModule extends ModuleWithRoles<NFTCollectionContract> {
    * for a particular wallet.
    *
    * @param _address - The address to check for token ownership
-   * @returns An array of CollectionMetadata objects that are owned by the address
+   * @returns An array of BundleMetadata objects that are owned by the address
    */
-  public async getOwned(_address?: string): Promise<CollectionMetadata[]> {
+  public async getOwned(_address?: string): Promise<BundleMetadata[]> {
     const address = _address ? _address : await this.getSignerAddress();
     const maxId = await this.readOnlyContract.nextTokenId();
     const balances = await this.readOnlyContract.balanceOfBatch(
