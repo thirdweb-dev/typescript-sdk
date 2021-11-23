@@ -5,6 +5,8 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PKEY: ${{ secrets.PKEY }}
 
     strategy:
       matrix:

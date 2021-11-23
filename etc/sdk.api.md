@@ -270,6 +270,8 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     // (undocumented)
     mint(amount: BigNumberish_2): Promise<void>;
     // (undocumented)
+    mintBatchTo(args: ITokenMintArgs[]): Promise<void>;
+    // (undocumented)
     mintTo(to: string, amount: BigNumberish_2): Promise<void>;
     // (undocumented)
     static moduleType: ModuleType;
@@ -554,6 +556,14 @@ export interface ISDKOptions {
     transactionRelayerForwarderAddress: string;
     transactionRelayerSendFunction: (message: ForwardRequestMessage, signature: BytesLike) => Promise<string>;
     transactionRelayerUrl: string;
+}
+
+// @public (undocumented)
+export interface ITokenMintArgs {
+    // (undocumented)
+    address: string;
+    // (undocumented)
+    amount: BigNumberish_2;
 }
 
 // @public
