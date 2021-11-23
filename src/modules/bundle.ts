@@ -16,8 +16,7 @@ import { MetadataURIOrObject } from "../core/types";
  * @beta
  */
 
-
-export interface BundleMetadata{
+export interface BundleMetadata {
   creator: string;
   supply: BigNumber;
   metadata: NFTMetadata;
@@ -34,7 +33,6 @@ export interface CollectionMetadata {
  * @beta
  */
 
-
 export interface INFTBundleCreateArgs {
   metadata: MetadataURIOrObject;
   supply: BigNumberish;
@@ -48,7 +46,7 @@ export interface INFTCollectionCreateArgs {
  * @beta
  */
 
- export interface INFTCollectionBatchArgs {
+export interface INFTCollectionBatchArgs {
   tokenId: BigNumberish;
   amount: BigNumberish;
 }
@@ -57,7 +55,6 @@ export interface INFTBundleBatchArgs {
   tokenId: BigNumberish;
   amount: BigNumberish;
 }
-
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getBundleModule}
@@ -101,10 +98,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
    * @param tokenId - the unique token id of the nft
    * @returns A promise that resolves to a `BundleMetadata`.
    */
-  public async get(
-    tokenId: string,
-    address?: string,
-  ): Promise<BundleMetadata> {
+  public async get(tokenId: string, address?: string): Promise<BundleMetadata> {
     const [metadata, creator, supply, ownedByAddress] = await Promise.all([
       getTokenMetadata(this.readOnlyContract, tokenId, this.ipfsGatewayUrl),
       this.readOnlyContract.creator(tokenId),
@@ -145,22 +139,32 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     );
   }
 
-  public async isApproved(address: string, operator: string, tokenContract?: string, tokenId?: BigNumberish): Promise<boolean> {
-    if(!tokenContract) {
-    return await this.readOnlyContract.isApprovedForAll(address, operator);
+  private async isApproved(
+    address: string,
+    operator: string,
+    assetContract?: string,
+    assetId?: BigNumberish,
+  ): Promise<boolean> {
+    if (!assetContract) {
+      return await this.readOnlyContract.isApprovedForAll(address, operator);
     }
-    if(!tokenId){
+    if (!assetId) {
       throw new Error("tokenId is required");
     }
     const contract = ERC721__factory.connect(
-      tokenContract,
+      assetContract,
       this.providerOrSigner,
     );
-    const approved = await contract.isApprovedForAll(await this.getSignerAddress(), this.address);
-    const isTokenApproved = (await contract.getApproved(tokenId)).toLowerCase() === this.address.toLowerCase();
+    const approved = await contract.isApprovedForAll(
+      await this.getSignerAddress(),
+      this.address,
+    );
+    const isTokenApproved =
+      (await contract.getApproved(assetId)).toLowerCase() ===
+      this.address.toLowerCase();
     return approved || isTokenApproved;
   }
-  // write functions  
+  // write functions
   public async setApproval(
     operator: string,
     approved = true,
@@ -185,9 +189,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
   }
 
   // owner functions
-  public async create(
-    metadata: MetadataURIOrObject,
-  ): Promise<BundleMetadata> {
+  public async create(metadata: MetadataURIOrObject): Promise<BundleMetadata> {
     return (await this.createBatch([metadata]))[0];
   }
 
@@ -245,11 +247,10 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     tokenContract: string,
     tokenAmount: BigNumberish,
     args: INFTBundleCreateArgs,
-  ){
+  ) {
     return this.createWithToken(tokenContract, tokenAmount, args);
   }
-  
-  
+
   public async createWithNFT(
     tokenContract: string,
     tokenId: BigNumberish,
@@ -269,8 +270,6 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
   public async mint(args: INFTBundleBatchArgs) {
     await this.mintTo(await this.getSignerAddress(), args);
   }
-
-
 
   public async mintTo(
     to: string,
@@ -294,9 +293,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     await this.sendTransaction("mintBatch", [to, ids, amounts, data]);
   }
 
-  public async burn(
-    args: INFTBundleBatchArgs,
-  ): Promise<TransactionReceipt> {
+  public async burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt> {
     return await this.burnFrom(await this.getSignerAddress(), args);
   }
 
