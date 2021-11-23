@@ -12,6 +12,12 @@ import { uploadMetadata } from "../common/ipfs";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
+export interface ITokenMintFromArgs {
+  address: string;
+  amount: BigNumberish;
+  fromAddress: string;
+}
+
 export interface ITokenMintArgs {
   address: string;
   amount: BigNumberish;
@@ -164,10 +170,10 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     await this.sendTransaction("multicall", [encoded]);
   }
 
-  public async transferFromBatch(from: string, args: ITokenMintArgs[]) {
+  public async transferFromBatch(args: ITokenMintFromArgs[]) {
     const encoded = args.map((arg) =>
       this.contract.interface.encodeFunctionData("transferFrom", [
-        from,
+        arg.fromAddress,
         arg.address,
         arg.amount,
       ]),
