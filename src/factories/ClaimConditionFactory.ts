@@ -12,6 +12,10 @@ import { InvalidAddressError } from "../common/error";
  * Expecations:
  *
  * 1. Ability to set a currency used to pay for the drop
+ * 2. Configurable price
+ * 3. *N* number of merkle conditions
+ * 4. Configurable `quantityLimitPerTransaction
+ *
  *
  *
  */
