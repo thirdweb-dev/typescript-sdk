@@ -44,4 +44,19 @@ describe("NFT Module", async () => {
       chai.assert.fail(err);
     }
   });
+
+  it("the metadata was not changed", async () => {
+    /**
+     * The token with id 1 has been burned and can never be recovered,
+     * so it serves as a good test case.
+     */
+    try {
+      const testBPS = Math.floor(Math.random() * 10);
+      await nftModule.setRoyaltyBps(testBPS);
+      chai.assert.equal(testBPS, (await nftModule.getMetadata()).metadata.seller_fee_basis_points);
+    } catch (err) {
+      chai.assert.fail(err);
+    }
+  });
+
 });

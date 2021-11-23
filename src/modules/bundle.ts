@@ -2,6 +2,7 @@ import {
   NFTCollection as NFTBundleContract,
   NFTCollection__factory,
   ERC721__factory,
+  ERC20__factory
 } from "@3rdweb/contracts";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -235,6 +236,14 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     tokenAmount: BigNumberish,
     args: INFTBundleCreateArgs,
   ) {
+    const token = ERC20__factory.connect(tokenContract, this.providerOrSigner);
+    const allowance = await token.allowance(
+      await this.getSignerAddress(),
+      this.address,
+    );
+    if (allowance < tokenAmount) {
+      await token.increaseAllowance(await this.getSignerAddress(), tokenAmount);
+    }
     const uri = await uploadMetadata(args.metadata);
     await this.sendTransaction("wrapERC20", [
       tokenContract,
@@ -256,6 +265,14 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     tokenId: BigNumberish,
     metadata: MetadataURIOrObject,
   ) {
+    const asset = ERC721__factory.connect(tokenContract, this.providerOrSigner);
+  
+    if(!asset.isApprovedForAll(await this.getSignerAddress(), this.address)) {
+      const isTokenApproved = ((await asset.getApproved(tokenId)).toLowerCase() === this.address.toLowerCase());
+      if(!isTokenApproved) {
+      await asset.setApprovalForAll(this.address, true);
+      }
+    }
     const uri = await uploadMetadata(metadata);
     await this.sendTransaction("wrapERC721", [tokenContract, tokenId, uri]);
   }

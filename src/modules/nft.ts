@@ -193,8 +193,25 @@ export class NFTModule extends ModuleWithRoles<NFT> {
   }
 
   public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setRoyaltyBps", [amount]);
+    const metadata = await this.getMetadata();
+    const encoded = [];
+    if (metadata.metadata?.seller_fee_basis_points) {
+      metadata.metadata.seller_fee_basis_points = amount;
+    }
+    const uri = await uploadMetadata(
+      JSON.stringify(metadata),
+      this.address,
+      await this.getSignerAddress(),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
+    );
+    return await this.sendTransaction("multicall", [encoded]);
   }
+
 
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
