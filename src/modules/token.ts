@@ -88,7 +88,7 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
   // write functions
   public async transfer(
     to: string,
-    amount: BigNumber,
+    amount: BigNumberish,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("transfer", [to, amount]);
   }
@@ -152,5 +152,26 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     restricted = false,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  public async transferBatch(args: ITokenMintArgs[]) {
+    const encoded = args.map((arg) =>
+      this.contract.interface.encodeFunctionData("transfer", [
+        arg.address,
+        arg.amount,
+      ]),
+    );
+    await this.sendTransaction("multicall", [encoded]);
+  }
+
+  public async transferFromBatch(from: string, args: ITokenMintArgs[]) {
+    const encoded = args.map((arg) =>
+      this.contract.interface.encodeFunctionData("transferFrom", [
+        from,
+        arg.address,
+        arg.amount,
+      ]),
+    );
+    await this.sendTransaction("multicall", [encoded]);
   }
 }
