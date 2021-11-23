@@ -6,3 +6,4 @@ export * from "./market";
 export * from "./nft";
 export * from "./pack";
 export * from "./token";
+export * from "./collection";

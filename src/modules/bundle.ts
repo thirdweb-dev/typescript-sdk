@@ -139,7 +139,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     );
   }
 
-  private async isApproved(
+  public async isApproved(
     address: string,
     operator: string,
     assetContract?: string,
@@ -164,6 +164,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
       this.address.toLowerCase();
     return approved || isTokenApproved;
   }
+
   // write functions
   public async setApproval(
     operator: string,
