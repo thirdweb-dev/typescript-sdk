@@ -343,7 +343,7 @@ export class ThirdwebSDK {
    * @deprecated Use the new {@link getBundleModule} function instead.
    */
   public getCollectionModule(address: string): CollectionModule {
-    return this.getOrCreateModule(address, BundleModule);
+    return this.getBundleModule(address);
   }
 
   /**
