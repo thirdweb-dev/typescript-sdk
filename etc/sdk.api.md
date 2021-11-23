@@ -34,7 +34,7 @@ import { TransactionReceipt } from '@ethersproject/providers';
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type AnyContract = typeof AppModule | typeof CollectionModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule;
+export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule;
 
 // Warning: (ae-forgotten-export) The symbol "IAppModule" needs to be exported by the entry point index.d.ts
 //
@@ -42,7 +42,6 @@ export type AnyContract = typeof AppModule | typeof CollectionModule | typeof NF
 export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppModule_2 {
     // @internal (undocumented)
     protected connectContract(): ProtocolControl;
-    // Warning: (ae-incompatible-release-tags) The symbol "deployBundleModule" is marked as @public, but its signature references "CollectionModule" which is marked as @beta
     deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
     deployCurrencyModule(metadata: CurrencyModuleMetadata): Promise<CurrencyModule>;
     // Warning: (ae-incompatible-release-tags) The symbol "deployDatastoreModule" is marked as @public, but its signature references "DatastoreModule" which is marked as @alpha
@@ -59,6 +58,8 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     // @internal (undocumented)
     getAllContractMetadata(addresses: string[]): Promise<ModuleMetadataNoType[]>;
     getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
+    // (undocumented)
+    getBundleModules(): Promise<ModuleMetadata[]>;
     // @deprecated
     getCollectionModules(): Promise<ModuleMetadata[]>;
     // @deprecated
@@ -91,6 +92,87 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     withdrawFunds(to: string, currency: string): Promise<TransactionReceipt>;
 }
 
+// @beta (undocumented)
+export interface BundleMetadata {
+    // (undocumented)
+    creator: string;
+    // (undocumented)
+    metadata: NFTMetadata;
+    // (undocumented)
+    ownedByAddress: number;
+    // (undocumented)
+    supply: BigNumber;
+}
+
+// @beta
+export class BundleModule extends ModuleWithRoles<NFTCollection> {
+    // (undocumented)
+    balance(tokenId: string): Promise<BigNumber>;
+    // (undocumented)
+    balanceOf(address: string, tokenId: string): Promise<BigNumber>;
+    // (undocumented)
+    burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt>;
+    // (undocumented)
+    burnBatch(args: INFTBundleBatchArgs[]): Promise<TransactionReceipt>;
+    // (undocumented)
+    burnBatchFrom(account: string, args: INFTBundleBatchArgs[]): Promise<TransactionReceipt>;
+    // (undocumented)
+    burnFrom(account: string, args: INFTBundleBatchArgs): Promise<TransactionReceipt>;
+    // @internal (undocumented)
+    protected connectContract(): NFTCollection;
+    // (undocumented)
+    create(metadata: MetadataURIOrObject): Promise<BundleMetadata>;
+    // (undocumented)
+    createAndMint(metadataWithSupply: INFTBundleCreateArgs): Promise<BundleMetadata>;
+    // (undocumented)
+    createAndMintBatch(metadataWithSupply: INFTBundleCreateArgs[]): Promise<BundleMetadata[]>;
+    // (undocumented)
+    createBatch(metadatas: MetadataURIOrObject[]): Promise<BundleMetadata[]>;
+    // (undocumented)
+    createWithErc20(tokenContract: string, tokenAmount: BigNumberish, args: INFTBundleCreateArgs): Promise<void>;
+    // (undocumented)
+    createWithERC721(tokenContract: string, tokenId: BigNumberish, metadata: MetadataURIOrObject): Promise<void>;
+    // (undocumented)
+    createWithNFT(tokenContract: string, tokenId: BigNumberish, metadata: MetadataURIOrObject): Promise<void>;
+    // (undocumented)
+    createWithToken(tokenContract: string, tokenAmount: BigNumberish, args: INFTBundleCreateArgs): Promise<void>;
+    get(tokenId: string, address?: string): Promise<BundleMetadata>;
+    getAll(address?: string): Promise<BundleMetadata[]>;
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
+    getOwned(_address?: string): Promise<BundleMetadata[]>;
+    // (undocumented)
+    isApproved(address: string, operator: string, assetContract?: string, assetId?: BigNumberish): Promise<boolean>;
+    // (undocumented)
+    mint(args: INFTBundleBatchArgs): Promise<void>;
+    // (undocumented)
+    mintBatch(args: INFTBundleBatchArgs[]): Promise<void>;
+    // (undocumented)
+    mintBatchTo(to: string, args: INFTBundleBatchArgs[], data?: BytesLike): Promise<void>;
+    // (undocumented)
+    mintTo(to: string, args: INFTBundleBatchArgs, data?: BytesLike): Promise<void>;
+    // (undocumented)
+    static moduleType: ModuleType;
+    // (undocumented)
+    static roles: readonly ["admin", "minter", "pauser", "transfer"];
+    // (undocumented)
+    setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
+    // (undocumented)
+    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    // (undocumented)
+    setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
+    // (undocumented)
+    setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
+    // (undocumented)
+    transfer(to: string, tokenId: string, amount: BigNumberish): Promise<TransactionReceipt>;
+    // (undocumented)
+    transferBatchFrom(from: string, to: string, args: INFTBundleBatchArgs[], data?: BytesLike): Promise<TransactionReceipt>;
+    // (undocumented)
+    transferFrom(from: string, to: string, args: INFTBundleBatchArgs, data?: BytesLike): Promise<TransactionReceipt>;
+}
+
 // Warning: (ae-forgotten-export) The symbol "CommonModuleMetadata" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
@@ -114,7 +196,7 @@ export type ChainlinkInfo = {
 // @internal (undocumented)
 export const ChainlinkVrf: Record<number, ChainlinkInfo>;
 
-// @beta (undocumented)
+// @public (undocumented)
 export interface CollectionMetadata {
     // (undocumented)
     creator: string;
@@ -126,70 +208,10 @@ export interface CollectionMetadata {
     supply: BigNumber;
 }
 
-// @beta
-export class CollectionModule extends ModuleWithRoles<NFTCollection> {
-    // (undocumented)
-    balance(tokenId: string): Promise<BigNumber>;
-    // (undocumented)
-    balanceOf(address: string, tokenId: string): Promise<BigNumber>;
-    // (undocumented)
-    burn(args: INFTCollectionBatchArgs): Promise<TransactionReceipt>;
-    // (undocumented)
-    burnBatch(args: INFTCollectionBatchArgs[]): Promise<TransactionReceipt>;
-    // (undocumented)
-    burnBatchFrom(account: string, args: INFTCollectionBatchArgs[]): Promise<TransactionReceipt>;
-    // (undocumented)
-    burnFrom(account: string, args: INFTCollectionBatchArgs): Promise<TransactionReceipt>;
-    // @internal (undocumented)
-    protected connectContract(): NFTCollection;
-    // (undocumented)
-    create(metadata: MetadataURIOrObject): Promise<CollectionMetadata>;
-    // (undocumented)
-    createAndMint(metadataWithSupply: INFTCollectionCreateArgs): Promise<CollectionMetadata>;
-    // (undocumented)
-    createAndMintBatch(metadataWithSupply: INFTCollectionCreateArgs[]): Promise<CollectionMetadata[]>;
-    // (undocumented)
-    createBatch(metadatas: MetadataURIOrObject[]): Promise<CollectionMetadata[]>;
-    // (undocumented)
-    createWithERC20(tokenContract: string, tokenAmount: BigNumberish, args: INFTCollectionCreateArgs): Promise<void>;
-    // (undocumented)
-    createWithERC721(tokenContract: string, tokenId: BigNumberish, metadata: MetadataURIOrObject): Promise<void>;
-    get(tokenId: string, address?: string): Promise<CollectionMetadata>;
-    getAll(address?: string): Promise<CollectionMetadata[]>;
-    // @internal @override (undocumented)
-    protected getModuleRoles(): readonly Role[];
-    // @internal (undocumented)
-    protected getModuleType(): ModuleType;
-    getOwned(_address?: string): Promise<CollectionMetadata[]>;
-    // (undocumented)
-    isApproved(address: string, operator: string): Promise<boolean>;
-    // (undocumented)
-    mint(args: INFTCollectionBatchArgs): Promise<void>;
-    // (undocumented)
-    mintBatch(args: INFTCollectionBatchArgs[]): Promise<void>;
-    // (undocumented)
-    mintBatchTo(to: string, args: INFTCollectionBatchArgs[], data?: BytesLike): Promise<void>;
-    // (undocumented)
-    mintTo(to: string, args: INFTCollectionBatchArgs, data?: BytesLike): Promise<void>;
-    // (undocumented)
-    static moduleType: ModuleType;
-    // (undocumented)
-    static roles: readonly ["admin", "minter", "pauser", "transfer"];
-    // (undocumented)
-    setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // (undocumented)
-    setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
-    // (undocumented)
-    transfer(to: string, tokenId: string, amount: BigNumberish): Promise<TransactionReceipt>;
-    // (undocumented)
-    transferBatchFrom(from: string, to: string, args: INFTCollectionBatchArgs[], data?: BytesLike): Promise<TransactionReceipt>;
-    // (undocumented)
-    transferFrom(from: string, to: string, args: INFTCollectionBatchArgs, data?: BytesLike): Promise<TransactionReceipt>;
-}
+// Warning: (ae-incompatible-release-tags) The symbol "CollectionModule" is marked as @public, but its signature references "BundleModule" which is marked as @beta
+//
+// @public (undocumented)
+export type CollectionModule = BundleModule;
 
 // @public
 export interface ContractMetadata {
@@ -270,6 +292,8 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     // (undocumented)
     mint(amount: BigNumberish_2): Promise<void>;
     // (undocumented)
+    mintBatchTo(args: ITokenMintArgs[]): Promise<void>;
+    // (undocumented)
     mintTo(to: string, amount: BigNumberish_2): Promise<void>;
     // (undocumented)
     static moduleType: ModuleType;
@@ -284,9 +308,13 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     // (undocumented)
     totalSupply(): Promise<BigNumber_2>;
     // (undocumented)
-    transfer(to: string, amount: BigNumber_2): Promise<TransactionReceipt>;
+    transfer(to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    transferBatch(args: ITokenMintArgs[]): Promise<void>;
     // (undocumented)
     transferFrom(from: string, to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    transferFromBatch(args: ITokenMintFromArgs[]): Promise<void>;
 }
 
 // @public (undocumented)
@@ -467,6 +495,22 @@ export interface IAppModule {
     version: number;
 }
 
+// @public (undocumented)
+export interface INFTBundleBatchArgs {
+    // (undocumented)
+    amount: BigNumberish;
+    // (undocumented)
+    tokenId: BigNumberish;
+}
+
+// @beta (undocumented)
+export interface INFTBundleCreateArgs {
+    // (undocumented)
+    metadata: MetadataURIOrObject;
+    // (undocumented)
+    supply: BigNumberish;
+}
+
 // @beta (undocumented)
 export interface INFTCollectionBatchArgs {
     // (undocumented)
@@ -475,7 +519,7 @@ export interface INFTCollectionBatchArgs {
     tokenId: BigNumberish;
 }
 
-// @beta (undocumented)
+// @public (undocumented)
 export interface INFTCollectionCreateArgs {
     // (undocumented)
     metadata: MetadataURIOrObject;
@@ -554,6 +598,20 @@ export interface ISDKOptions {
     transactionRelayerForwarderAddress: string;
     transactionRelayerSendFunction: (message: ForwardRequestMessage, signature: BytesLike) => Promise<string>;
     transactionRelayerUrl: string;
+}
+
+// @public (undocumented)
+export interface ITokenMintArgs {
+    // (undocumented)
+    address: string;
+    // (undocumented)
+    amount: BigNumberish_2;
+}
+
+// @public (undocumented)
+export interface ITokenMintFromArgs extends ITokenMintArgs {
+    // (undocumented)
+    fromAddress: string;
 }
 
 // @public
@@ -701,6 +759,8 @@ export interface ModuleMetadata extends ModuleMetadataNoType {
 export enum ModuleType {
     // (undocumented)
     ACCESS_NFT = 4,
+    // (undocumented)
+    BUNDLE = 1,
     // (undocumented)
     COLLECTION = 1,
     // (undocumented)
@@ -968,9 +1028,11 @@ export class ThirdwebSDK {
     // (undocumented)
     getAppModule(address: string): AppModule;
     getApps(): Promise<IAppModule[]>;
-    // Warning: (ae-incompatible-release-tags) The symbol "getCollectionModule" is marked as @public, but its signature references "CollectionModule" which is marked as @beta
+    // Warning: (ae-incompatible-release-tags) The symbol "getBundleModule" is marked as @public, but its signature references "BundleModule" which is marked as @beta
     //
     // (undocumented)
+    getBundleModule(address: string): BundleModule;
+    // @deprecated (undocumented)
     getCollectionModule(address: string): CollectionModule;
     // (undocumented)
     getContractMetadata(address: string): Promise<ModuleMetadataNoType>;

@@ -25,6 +25,7 @@ export declare class ThirdwebSDK
 |  [createApp(metadata)](./sdk.thirdwebsdk.createapp.md) |  | Call this to create a new app |
 |  [getAppModule(address)](./sdk.thirdwebsdk.getappmodule.md) |  |  |
 |  [getApps()](./sdk.thirdwebsdk.getapps.md) |  | Call this to get the current apps. |
+|  [getBundleModule(address)](./sdk.thirdwebsdk.getbundlemodule.md) |  |  |
 |  [getCollectionModule(address)](./sdk.thirdwebsdk.getcollectionmodule.md) |  |  |
 |  [getContractMetadata(address)](./sdk.thirdwebsdk.getcontractmetadata.md) |  |  |
 |  [getCurrencyModule(address)](./sdk.thirdwebsdk.getcurrencymodule.md) |  |  |

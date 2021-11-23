@@ -97,8 +97,8 @@ export class AppModule
     return this.getModuleAddress(ModuleType.NFT);
   }
 
-  private async getCollectionAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.COLLECTION);
+  private async getBundleAddress(): Promise<string[]> {
+    return this.getModuleAddress(ModuleType.BUNDLE);
   }
 
   private async getPackAddress(): Promise<string[]> {
@@ -182,16 +182,20 @@ export class AppModule
   }
 
   /**
-   * Method to get a list of Collection module metadata.
-   * @returns A promise of an array of Collection modules.
+   * Method to get a list of Bundle module metadata.
+   * @returns A promise of an array of Bundle modules.
    * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getCollectionModules(): Promise<ModuleMetadata[]> {
+    return await this.getBundleModules();
+  }
+
+  public async getBundleModules(): Promise<ModuleMetadata[]> {
     return (
-      await this.getAllContractMetadata(await this.getCollectionAddress())
+      await this.getAllContractMetadata(await this.getBundleAddress())
     ).map((m) => ({
       ...m,
-      type: ModuleType.COLLECTION,
+      type: ModuleType.BUNDLE,
     }));
   }
 
@@ -263,7 +267,7 @@ export class AppModule
   ): Promise<ModuleMetadata[]> {
     const moduleTypesToGet = filterByModuleType || [
       ModuleType.NFT,
-      ModuleType.COLLECTION,
+      ModuleType.BUNDLE,
       ModuleType.PACK,
       ModuleType.CURRENCY,
       ModuleType.MARKET,

@@ -1,6 +1,6 @@
 {
   "name": "@3rdweb/sdk",
-  "version": "1.17.3",
+  "version": "1.18.1",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -57,13 +57,13 @@
     "ts-toolbelt": "^9.6.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.4"
+    "typescript": "^4.4.3"
   },
   "peerDependencies": {
     "ethers": "^5.4.6"
   },
   "dependencies": {
-    "@3rdweb/contracts": "^1.10.0",
+    "@3rdweb/contracts": "^1.13.1",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/constants": "^5.5.0",

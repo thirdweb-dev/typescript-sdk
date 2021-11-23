@@ -68,8 +68,8 @@ Output
 |  Class | Description |
 |  --- | --- |
 |  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
+|  [BundleModule](./sdk.bundlemodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md) |
 |  [BundleModuleMetadata](./sdk.bundlemodulemetadata.md) |  |
-|  [CollectionModule](./sdk.collectionmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getCollectionModule()](./sdk.thirdwebsdk.getcollectionmodule.md) |
 |  [CurrencyModule](./sdk.currencymodule.md) | Access this module by calling [ThirdwebSDK.getCurrencyModule()](./sdk.thirdwebsdk.getcurrencymodule.md) |
 |  [CurrencyModuleMetadata](./sdk.currencymodulemetadata.md) |  |
 |  [DatastoreModuleMetadata](./sdk.datastoremodulemetadata.md) |  |
@@ -106,18 +106,23 @@ Output
 
 |  Interface | Description |
 |  --- | --- |
-|  [CollectionMetadata](./sdk.collectionmetadata.md) | <b><i>(BETA)</i></b> |
+|  [BundleMetadata](./sdk.bundlemetadata.md) | <b><i>(BETA)</i></b> |
+|  [CollectionMetadata](./sdk.collectionmetadata.md) |  |
 |  [ContractMetadata](./sdk.contractmetadata.md) | The typical contract metadata found on the modules. |
 |  [CreatePublicMintCondition](./sdk.createpublicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [Currency](./sdk.currency.md) | Currency metadata. |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [IAppModule](./sdk.iappmodule.md) |  |
+|  [INFTBundleBatchArgs](./sdk.inftbundlebatchargs.md) |  |
+|  [INFTBundleCreateArgs](./sdk.inftbundlecreateargs.md) | <b><i>(BETA)</i></b> |
 |  [INFTCollectionBatchArgs](./sdk.inftcollectionbatchargs.md) | <b><i>(BETA)</i></b> |
-|  [INFTCollectionCreateArgs](./sdk.inftcollectioncreateargs.md) | <b><i>(BETA)</i></b> |
+|  [INFTCollectionCreateArgs](./sdk.inftcollectioncreateargs.md) |  |
 |  [IPackBatchArgs](./sdk.ipackbatchargs.md) | <b><i>(BETA)</i></b> |
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) | <b><i>(BETA)</i></b> |
 |  [IRoles](./sdk.iroles.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
+|  [ITokenMintArgs](./sdk.itokenmintargs.md) |  |
+|  [ITokenMintFromArgs](./sdk.itokenmintfromargs.md) |  |
 |  [ListingFilter](./sdk.listingfilter.md) | Filter options for the Market module. |
 |  [ListingMetadata](./sdk.listingmetadata.md) | Metadata for items listed on a Market module. |
 |  [ModuleMetadata](./sdk.modulemetadata.md) | The module metadata, includes the <code>address</code> and the [ModuleType](./sdk.moduletype.md)<!-- -->. |
@@ -138,6 +143,7 @@ Output
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [CollectionModule](./sdk.collectionmodule.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |
 |  [MetadataURIOrObject](./sdk.metadatauriorobject.md) | A valid URI string or metadata object |
