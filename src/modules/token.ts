@@ -12,15 +12,13 @@ import { uploadMetadata } from "../common/ipfs";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
-export interface ITokenMintFromArgs {
-  address: string;
-  amount: BigNumberish;
-  fromAddress: string;
-}
-
 export interface ITokenMintArgs {
   address: string;
   amount: BigNumberish;
+}
+
+export interface ITokenMintFromArgs extends ITokenMintArgs {
+  fromAddress: string;
 }
 
 /**
