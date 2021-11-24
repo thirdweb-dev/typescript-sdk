@@ -602,7 +602,7 @@ export interface ISDKOptions {
     readOnlyRpcUrl: string;
     registryContractAddress: string;
     transactionRelayerForwarderAddress: string;
-    transactionRelayerSendFunction: (message: ForwardRequestMessage, signature: BytesLike) => Promise<string>;
+    transactionRelayerSendFunction: (message: ForwardRequestMessage | PermitRequestMessage, signature: BytesLike) => Promise<string>;
     transactionRelayerUrl: string;
 }
 
@@ -980,6 +980,16 @@ export interface PackNFTMetadata {
     // (undocumented)
     supply: BigNumber_2;
 }
+
+// @public
+export type PermitRequestMessage = {
+    to: string;
+    owner: string;
+    spender: string;
+    value: number | string;
+    nonce: number | string;
+    deadline: number | string;
+};
 
 // @public
 export type ProviderOrSigner = Provider | Signer;
