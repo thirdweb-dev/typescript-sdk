@@ -31,7 +31,6 @@ import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
-import { BundleModule } from "./bundle";
 import { CollectionModule } from "./collection";
 import { DatastoreModule } from "./datastore";
 import { DropModule } from "./drop";
