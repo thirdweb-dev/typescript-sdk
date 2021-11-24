@@ -58,7 +58,7 @@ describe("NFT Module", async () => {
      * so it serves as a good test case.
      */
     try {
-      const testBPS = Math.floor(Math.random() * 10);
+      const testBPS = Math.floor(Math.random() * 10) * 100;
       await nftModule.setRoyaltyBps(testBPS);
       chai.assert.equal(testBPS, (await nftModule.getMetadata()).metadata.seller_fee_basis_points);
     } catch (err) {

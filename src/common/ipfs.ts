@@ -1,3 +1,4 @@
+import { Body } from "node-fetch";
 import { MetadataURIOrObject } from "../core/types";
 
 if (!globalThis.FormData) {
@@ -47,9 +48,12 @@ export async function uploadToIPFS(
     body: formData as any,
     headers,
   });
-
+  try{
   const body = await res.json();
   return body.IpfsUri;
+  }catch(e){
+    throw new Error(`Failed to upload to IPFS: ${e}`)
+  }
 }
 
 /**
@@ -60,10 +64,9 @@ export async function uploadMetadata(
   contractAddress?: string,
   signerAddress?: string,
 ): Promise<string> {
-  if (typeof metadata === "string") {
+  if (typeof metadata === "string" && metadata.startsWith("ipfs://")) {
     return metadata;
   }
-
   return await uploadToIPFS(
     JSON.stringify(metadata),
     contractAddress,
