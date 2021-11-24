@@ -193,7 +193,30 @@ export class NFTModule extends ModuleWithRoles<NFT> {
   }
 
   public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setRoyaltyBps", [amount]);
+    // TODO: reduce this duplication and provide common functions around
+    // royalties through an interface. Currently this function is
+    // duplicated across 4 modules
+    const { metadata } = await this.getMetadata();
+    const encoded: string[] = [];
+    if (!metadata) {
+      throw new Error("No metadata found, this module might be invalid!");
+    }
+
+    metadata.seller_fee_basis_points = amount;
+    const uri = await uploadMetadata(
+      {
+        ...metadata,
+      },
+      this.address,
+      await this.getSignerAddress(),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
+    );
+    return await this.sendTransaction("multicall", [encoded]);
   }
 
   public async setModuleMetadata(

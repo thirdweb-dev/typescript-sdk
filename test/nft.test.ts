@@ -1,5 +1,6 @@
 import { AddressZero } from "@ethersproject/constants";
 import * as chai from "chai";
+import { ethers } from "ethers";
 import { NFTModule, ThirdwebSDK } from "../src/index";
 
 global.fetch = require("node-fetch");
@@ -9,7 +10,12 @@ describe("NFT Module", async () => {
   let nftModule: NFTModule;
 
   beforeEach(async () => {
-    sdk = new ThirdwebSDK("https://rinkeby-light.eth.linkpool.io");
+    sdk = new ThirdwebSDK(
+      new ethers.Wallet(
+        process.env.PKEY,
+        ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com"),
+      ),
+    );
 
     /**
      * This contract address *should* exist forever on testnet
@@ -20,7 +26,7 @@ describe("NFT Module", async () => {
      * for testing.
      */
 
-    nftModule = sdk.getNFTModule("0xf27C2a1c44E6F16Fbcc9FBB582d7799057Dc57a6");
+    nftModule = sdk.getNFTModule("0x364A9b8f4382bB583C3833E484A44f7A189312a7");
   });
 
   it("should return nfts even if some are burned", async () => {
@@ -38,7 +44,7 @@ describe("NFT Module", async () => {
      * so it serves as a good test case.
      */
     try {
-      const nft = await nftModule.getWithOwner("1");
+      const nft = await nftModule.getWithOwner("0");
       chai.assert.equal(nft.owner, AddressZero);
     } catch (err) {
       chai.assert.fail(err);

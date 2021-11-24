@@ -1,4 +1,5 @@
 import { MetadataURIOrObject } from "../core/types";
+import { UploadError } from "../common/error";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -39,7 +40,6 @@ export async function uploadToIPFS(
     "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
     "X-Public-Address": signerAddress || "",
   };
-
   const formData = new FormData();
   formData.append("file", data);
   const res = await fetch("https://upload.nftlabs.co/upload", {
@@ -47,9 +47,12 @@ export async function uploadToIPFS(
     body: formData as any,
     headers,
   });
-
-  const body = await res.json();
-  return body.IpfsUri;
+  try {
+    const body = await res.json();
+    return body.IpfsUri;
+  } catch (e) {
+    throw new UploadError(`Failed to upload to IPFS: ${e}`);
+  }
 }
 
 /**
@@ -60,10 +63,10 @@ export async function uploadMetadata(
   contractAddress?: string,
   signerAddress?: string,
 ): Promise<string> {
-  if (typeof metadata === "string") {
+  if (typeof metadata === "string" && metadata.startsWith("ipfs://")) {
     return metadata;
   }
-
+  //throw new Error(JSON.stringify(metadata));
   return await uploadToIPFS(
     JSON.stringify(metadata),
     contractAddress,
