@@ -8,3 +8,10 @@ export class NotFoundError extends Error {
     super("NOT_FOUND");
   }
 }
+
+export class UploadError extends Error {
+  /** @internal */
+  constructor(message: string) {
+    super(`UPLOAD_FAILED: ${message}`);
+  }
+}
