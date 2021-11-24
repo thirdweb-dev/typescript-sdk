@@ -17,6 +17,7 @@ export declare enum ModuleType
 |  Member | Value | Description |
 |  --- | --- | --- |
 |  ACCESS\_NFT | <code>4</code> |  |
+|  BUNDLE | <code>1</code> |  |
 |  COLLECTION | <code>1</code> |  |
 |  CURRENCY | <code>0</code> |  |
 |  DATASTORE | <code>8</code> |  |

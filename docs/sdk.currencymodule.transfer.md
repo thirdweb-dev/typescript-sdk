@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-transfer(to: string, amount: BigNumber): Promise<TransactionReceipt>;
+transfer(to: string, amount: BigNumberish): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -15,7 +15,7 @@ transfer(to: string, amount: BigNumber): Promise<TransactionReceipt>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  to | string |  |
-|  amount | BigNumber |  |
+|  amount | BigNumberish |  |
 
 <b>Returns:</b>
 

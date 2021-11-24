@@ -4,6 +4,11 @@
 
 ## ThirdwebSDK.getCollectionModule() method
 
+> Warning: This API is now obsolete.
+> 
+> Use the new  function instead.
+> 
+
 <b>Signature:</b>
 
 ```typescript
@@ -20,5 +25,5 @@ getCollectionModule(address: string): CollectionModule;
 
 [CollectionModule](./sdk.collectionmodule.md)
 
-The Collection Module.
+The Bundle Module.
 
