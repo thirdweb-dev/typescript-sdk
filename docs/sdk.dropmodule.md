@@ -21,7 +21,7 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.dropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
-|  [roles](./sdk.dropmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] | <b><i>(BETA)</i></b> |
+|  [roles](./sdk.dropmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] | <b><i>(BETA)</i></b> |
 
 ## Methods
 

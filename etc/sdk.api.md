@@ -403,7 +403,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
-    static roles: readonly ["admin", "minter", "pauser", "transfer"];
+    static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
@@ -956,7 +956,7 @@ export class PackModule extends ModuleWithRoles<Pack> {
     // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<void>;
     // (undocumented)
-    setRoyaltyBps(amount: number): Promise<void>;
+    setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
     transfer(to: string, tokenId: string, amount: BigNumber_2): Promise<void>;
     // (undocumented)
@@ -1076,6 +1076,12 @@ export class ThirdwebSDK {
     setProviderOrSigner(providerOrSignerOrNetwork: ValidProviderInput): ProviderOrSigner;
     // @internal
     get signer(): Signer | null;
+}
+
+// @public (undocumented)
+export class UploadError extends Error {
+    // @internal
+    constructor(message: string);
 }
 
 // Warning: (ae-internal-missing-underscore) The name "uploadMetadata" should be prefixed with an underscore because the declaration is marked as @internal

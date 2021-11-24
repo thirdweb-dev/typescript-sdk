@@ -87,6 +87,7 @@ Output
 |  [PackModuleMetadata](./sdk.packmodulemetadata.md) |  |
 |  [SplitsModuleMetadata](./sdk.splitsmodulemetadata.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
+|  [UploadError](./sdk.uploaderror.md) |  |
 
 ## Enumerations
 
