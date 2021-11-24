@@ -165,6 +165,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
       this.address.toLowerCase();
     return approved || isTokenApproved;
   }
+
   // write functions
   public async setApproval(
     operator: string,

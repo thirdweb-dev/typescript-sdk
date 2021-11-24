@@ -4,10 +4,6 @@
 
 ## CollectionMetadata interface
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
-
-
 <b>Signature:</b>
 
 ```typescript
@@ -18,8 +14,8 @@ export interface CollectionMetadata
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [creator](./sdk.collectionmetadata.creator.md) | string | <b><i>(BETA)</i></b> |
-|  [metadata](./sdk.collectionmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) | <b><i>(BETA)</i></b> |
-|  [ownedByAddress](./sdk.collectionmetadata.ownedbyaddress.md) | number | <b><i>(BETA)</i></b> |
-|  [supply](./sdk.collectionmetadata.supply.md) | BigNumber | <b><i>(BETA)</i></b> |
+|  [creator](./sdk.collectionmetadata.creator.md) | string |  |
+|  [metadata](./sdk.collectionmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) |  |
+|  [ownedByAddress](./sdk.collectionmetadata.ownedbyaddress.md) | number |  |
+|  [supply](./sdk.collectionmetadata.supply.md) | BigNumber |  |
 
