@@ -13,7 +13,7 @@ describe("NFT Module", async () => {
     sdk = new ThirdwebSDK(
       new ethers.Wallet(
         process.env.PKEY,
-        ethers.getDefaultProvider("https://rinkeby-light.eth.linkpool.io")
+        ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com")
         )
     );
 
@@ -26,7 +26,7 @@ describe("NFT Module", async () => {
      * for testing.
      */
 
-    nftModule = sdk.getNFTModule("0xf27C2a1c44E6F16Fbcc9FBB582d7799057Dc57a6");
+    nftModule = sdk.getNFTModule("0x201C7CA0FA7d8835E968b9E0435181C33C8162a5");
   });
 
   it("should return nfts even if some are burned", async () => {
@@ -47,6 +47,7 @@ describe("NFT Module", async () => {
       const nft = await nftModule.getWithOwner("1");
       chai.assert.equal(nft.owner, AddressZero);
     } catch (err) {
+
       chai.assert.fail(err);
     }
   });
