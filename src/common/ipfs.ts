@@ -1,4 +1,3 @@
-import { Body } from "node-fetch";
 import { MetadataURIOrObject } from "../core/types";
 
 if (!globalThis.FormData) {
