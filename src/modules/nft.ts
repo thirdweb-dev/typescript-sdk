@@ -200,7 +200,7 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     if (metadata.metadata) {
       metadata.metadata.seller_fee_basis_points = amount;
       const uri = await uploadMetadata(
-        JSON.parse(JSON.stringify(metadata)),
+        JSON.parse(JSON.stringify(metadata.metadata)),
         this.address,
         await this.getSignerAddress(),
       );

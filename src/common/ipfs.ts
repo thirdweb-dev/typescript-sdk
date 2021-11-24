@@ -47,10 +47,10 @@ export async function uploadToIPFS(
     body: formData as any,
     headers,
   });
-  try{
-  const body = await res.json();
-  return body.IpfsUri;
-  }catch(e){
+  try {
+    const body = await res.json();
+    return body.IpfsUri;
+  } catch (e) {
     throw new Error(`Failed to upload to IPFS: ${e}`)
   }
 }
