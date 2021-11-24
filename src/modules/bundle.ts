@@ -416,4 +416,26 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
       ownedBalances.map(async (b) => await this.get(b.tokenId.toString())),
     );
   }
+
+  /**
+   * Gets the royalty BPS (basis points) of the contract
+   *
+   * @returns - The royalty BPS
+   */
+  public async getRoyaltyBps(): Promise<BigNumberish> {
+    return await this.readOnlyContract.royaltyBps();
+  }
+
+  /**
+   * Gets the address of the royalty recipient
+   *
+   * @returns - The royalty BPS
+   */
+  public async getRoyaltyRecipientAddress(): Promise<string> {
+    const metadata = await this.getMetadata();
+    if (metadata.metadata?.fee_recipient !== undefined) {
+      return metadata.metadata.fee_recipient;
+    }
+    return "";
+  }
 }

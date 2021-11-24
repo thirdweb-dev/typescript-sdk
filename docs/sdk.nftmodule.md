@@ -32,6 +32,8 @@ export declare class NFTModule extends ModuleWithRoles<NFT>
 |  [getAllWithOwner()](./sdk.nftmodule.getallwithowner.md) |  |  |
 |  [getModuleRoles()](./sdk.nftmodule.getmoduleroles.md) |  |  |
 |  [getOwned(\_address)](./sdk.nftmodule.getowned.md) |  |  |
+|  [getRoyaltyBps()](./sdk.nftmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
+|  [getRoyaltyRecipientAddress()](./sdk.nftmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
 |  [getWithOwner(tokenId)](./sdk.nftmodule.getwithowner.md) |  |  |
 |  [isApproved(address, operator)](./sdk.nftmodule.isapproved.md) |  |  |
 |  [mint(metadata)](./sdk.nftmodule.mint.md) |  |  |
