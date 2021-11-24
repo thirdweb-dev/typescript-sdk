@@ -143,6 +143,8 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> {
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     getOwned(_address?: string): Promise<BundleMetadata[]>;
+    getRoyaltyBps(): Promise<BigNumberish>;
+    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string, assetContract?: string, assetId?: BigNumberish): Promise<boolean>;
     // (undocumented)
@@ -382,6 +384,8 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     protected getModuleType(): ModuleType;
     // (undocumented)
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
+    getRoyaltyBps(): Promise<BigNumberish_2>;
+    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
@@ -847,6 +851,8 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     protected getModuleType(): ModuleType;
     // (undocumented)
     getOwned(_address?: string): Promise<NFTMetadata[]>;
+    getRoyaltyBps(): Promise<BigNumberish_2>;
+    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     getWithOwner(tokenId: string): Promise<NFTMetadataOwner>;
     // (undocumented)
@@ -931,6 +937,8 @@ export class PackModule extends ModuleWithRoles<Pack> {
     protected getModuleType(): ModuleType;
     // (undocumented)
     getNFTs(packId: string): Promise<PackNFTMetadata[]>;
+    getRoyaltyBps(): Promise<BigNumberish_2>;
+    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
