@@ -1,6 +1,7 @@
 import { AddressZero } from "@ethersproject/constants";
 import * as chai from "chai";
 import { NFTModule, ThirdwebSDK } from "../src/index";
+import ethers from "ethers";
 
 global.fetch = require("node-fetch");
 
@@ -9,7 +10,10 @@ describe("NFT Module", async () => {
   let nftModule: NFTModule;
 
   beforeEach(async () => {
-    sdk = new ThirdwebSDK("https://rinkeby-light.eth.linkpool.io");
+    sdk = new ThirdwebSDK(
+      new ethers.Wallet(
+        process.env.PKEY,
+        ethers.getDefaultProvider("https://rinkeby-light.eth.linkpool.io")));
 
     /**
      * This contract address *should* exist forever on testnet
