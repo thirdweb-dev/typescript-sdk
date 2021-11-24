@@ -50,29 +50,4 @@ describe("NFT Module", async () => {
       chai.assert.fail(err);
     }
   });
-
-  it("updates the bps in both the metadata and on-chain", async () => {
-    /**
-     * The token with id 1 has been burned and can never be recovered,
-     * so it serves as a good test case.
-     */
-    try {
-      const testBPS = 100;
-      await nftModule.setRoyaltyBps(testBPS);
-      const { metadata } = await nftModule.getMetadata();
-
-      chai.assert.equal(
-        metadata.seller_fee_basis_points,
-        testBPS,
-        "Fetching the BPS from the metadata should return 100",
-      );
-      chai.assert.equal(
-        await nftModule.getRoyaltyBps(),
-        testBPS,
-        "Fetching the BPS with the tx should return 100",
-      );
-    } catch (err) {
-      chai.assert.fail(err);
-    }
-  });
 });
