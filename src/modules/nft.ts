@@ -196,26 +196,23 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     const metadata = await this.getMetadata();
 
     //throw new Error(JSON.stringify(metadata));
-    const encoded = [];
-    if (metadata.metadata?.seller_fee_basis_points) {
+    const encoded: string[] = [];
+    if (metadata.metadata) {
       metadata.metadata.seller_fee_basis_points = amount;
+      const uri = await uploadMetadata(
+        JSON.parse(JSON.stringify(metadata)),
+        this.address,
+        await this.getSignerAddress(),
+      );
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
+      );
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [uri]),
+      );
     }
-    else {
-      metadata.metadata.seller_fee_basis_points = amount;
-    }
-    //throw new Error(JSON.stringify(metadata));
-    const uri = await uploadMetadata(
-      metadata.metadata,
-      this.address,
-      await this.getSignerAddress(),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
-    );
     return await this.sendTransaction("multicall", [encoded]);
+
   }
 
 
