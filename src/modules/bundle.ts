@@ -1,8 +1,8 @@
 import {
+  ERC20__factory,
+  ERC721__factory,
   NFTCollection as NFTBundleContract,
   NFTCollection__factory,
-  ERC721__factory,
-  ERC20__factory
 } from "@3rdweb/contracts";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -238,10 +238,12 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     args: INFTBundleCreateArgs,
   ) {
     const token = ERC20__factory.connect(tokenContract, this.providerOrSigner);
-    const allowance = await token.allowance(await this.getSignerAddress(), this.address);
+    const allowance = await token.allowance(
+      await this.getSignerAddress(),
+      this.address,
+    );
     if (allowance < tokenAmount) {
       await token.increaseAllowance(this.address, tokenAmount);
-
     }
     const uri = await uploadMetadata(args.metadata);
     await this.sendTransaction("wrapERC20", [
@@ -266,9 +268,15 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
   ) {
     const asset = ERC721__factory.connect(tokenContract, this.providerOrSigner);
 
-    if (!await asset.isApprovedForAll(await this.getSignerAddress(), this.address)) {
-
-      const isTokenApproved = ((await asset.getApproved(tokenId)).toLowerCase() === this.address.toLowerCase());
+    if (
+      !(await asset.isApprovedForAll(
+        await this.getSignerAddress(),
+        this.address,
+      ))
+    ) {
+      const isTokenApproved =
+        (await asset.getApproved(tokenId)).toLowerCase() ===
+        this.address.toLowerCase();
       if (!isTokenApproved) {
         await asset.setApprovalForAll(this.address, true);
       }
@@ -373,7 +381,30 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
   }
 
   public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setRoyaltyBps", [amount]);
+    // TODO: reduce this duplication and provide common functions around
+    // royalties through an interface. Currently this function is
+    // duplicated across 4 modules
+    const { metadata } = await this.getMetadata();
+    const encoded: string[] = [];
+    if (!metadata) {
+      throw new Error("No metadata found, this module might be invalid!");
+    }
+
+    metadata.seller_fee_basis_points = amount;
+    const uri = await uploadMetadata(
+      {
+        ...metadata,
+      },
+      this.address,
+      await this.getSignerAddress(),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
+    );
+    return await this.sendTransaction("multicall", [encoded]);
   }
 
   public async setModuleMetadata(

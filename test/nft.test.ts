@@ -1,7 +1,7 @@
 import { AddressZero } from "@ethersproject/constants";
 import * as chai from "chai";
-import { NFTModule, ThirdwebSDK } from "../src/index";
 import { ethers } from "ethers";
+import { NFTModule, ThirdwebSDK } from "../src/index";
 
 global.fetch = require("node-fetch");
 
@@ -13,8 +13,8 @@ describe("NFT Module", async () => {
     sdk = new ThirdwebSDK(
       new ethers.Wallet(
         process.env.PKEY,
-        ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com")
-        )
+        ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com"),
+      ),
     );
 
     /**
@@ -47,25 +47,32 @@ describe("NFT Module", async () => {
       const nft = await nftModule.getWithOwner("0");
       chai.assert.equal(nft.owner, AddressZero);
     } catch (err) {
-
       chai.assert.fail(err);
     }
   });
 
-  it("the metadata was not changed", async () => {
+  it("updates the bps in both the metadata and on-chain", async () => {
     /**
      * The token with id 1 has been burned and can never be recovered,
      * so it serves as a good test case.
      */
     try {
-      const testBPS = Math.floor(Math.random() * 10) * 100;
+      const testBPS = 100;
       await nftModule.setRoyaltyBps(testBPS);
-      //throw new Error("should not reach here");
-      //throw new Error(JSON.stringify(await nftModule.getMetadata()));
-      chai.assert.equal(testBPS, (await nftModule.getMetadata()).metadata.seller_fee_basis_points);
+      const { metadata } = await nftModule.getMetadata();
+
+      chai.assert.equal(
+        metadata.seller_fee_basis_points,
+        testBPS,
+        "Fetching the BPS from the metadata should return 100",
+      );
+      chai.assert.equal(
+        await nftModule.getRoyaltyBps(),
+        testBPS,
+        "Fetching the BPS with the tx should return 100",
+      );
     } catch (err) {
       chai.assert.fail(err);
     }
   });
-
 });
