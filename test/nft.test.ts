@@ -26,7 +26,7 @@ describe("NFT Module", async () => {
      * for testing.
      */
 
-    nftModule = sdk.getNFTModule("0x201C7CA0FA7d8835E968b9E0435181C33C8162a5");
+    nftModule = sdk.getNFTModule("0x364A9b8f4382bB583C3833E484A44f7A189312a7");
   });
 
   it("should return nfts even if some are burned", async () => {
@@ -44,7 +44,7 @@ describe("NFT Module", async () => {
      * so it serves as a good test case.
      */
     try {
-      const nft = await nftModule.getWithOwner("1");
+      const nft = await nftModule.getWithOwner("0");
       chai.assert.equal(nft.owner, AddressZero);
     } catch (err) {
 
@@ -60,6 +60,8 @@ describe("NFT Module", async () => {
     try {
       const testBPS = Math.floor(Math.random() * 10) * 100;
       await nftModule.setRoyaltyBps(testBPS);
+      //throw new Error("should not reach here");
+      //throw new Error(JSON.stringify(await nftModule.getMetadata()));
       chai.assert.equal(testBPS, (await nftModule.getMetadata()).metadata.seller_fee_basis_points);
     } catch (err) {
       chai.assert.fail(err);
