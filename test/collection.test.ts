@@ -16,7 +16,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
       new ethers.Wallet(
         process.env.PKEY,
         ethers.getDefaultProvider(RPC_URL)
-        )
+      )
     );
     /**
      * This contract address *should* exist forever on mumbai
@@ -48,22 +48,23 @@ describe("Bundle Module (aka Collection Module)", async () => {
     chai.expect(nfts).to.be.an("array").length.greaterThan(1);
   });
   it("should create a new collection using token", async () => {
-    try{
-    await collectionModule.createWithToken("0xbf422E6296770E8750Ff0Ba221EcD7D3f740EE26", 1, {
-      metadata: {},
-      supply: 1,
-    });
-  } catch (err) {
-    chai.assert.fail(err);
-  }
+    try {
+      await collectionModule.createWithToken("0xbf422E6296770E8750Ff0Ba221EcD7D3f740EE26", 1, {
+        metadata: {},
+        supply: 1,
+      });
+    } catch (err) {
+      chai.assert.fail(err);
+    }
   });
 
   it("should create a new collection using NFT", async () => {
-    try{
-    const tokenId = (await nftModule.mint({})).id
-    await collectionModule.createWithERC721("0x364A9b8f4382bB583C3833E484A44f7A189312a7", tokenId, {})
-  } catch (err) {
-    chai.assert.fail(err);
-  }
+    try {
+      const tokenId = (await nftModule.mint({})).id
+      const owned = await collectionModule.getOwned("0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803")
+      await collectionModule.createWithERC721("0x364A9b8f4382bB583C3833E484A44f7A189312a7", tokenId, {})
+    } catch (err) {
+      chai.assert.fail(err);
+    }
   });
 });
