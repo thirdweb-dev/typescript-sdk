@@ -323,4 +323,26 @@ export class PackModule extends ModuleWithRoles<PackContract> {
   public async setRestrictedTransfer(restricted = false): Promise<void> {
     await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
+
+  /**
+   * Gets the royalty BPS (basis points) of the contract
+   *
+   * @returns - The royalty BPS
+   */
+  public async getRoyaltyBps(): Promise<BigNumberish> {
+    return await this.readOnlyContract.royaltyBps();
+  }
+
+  /**
+   * Gets the address of the royalty recipient
+   *
+   * @returns - The royalty BPS
+   */
+  public async getRoyaltyRecipientAddress(): Promise<string> {
+    const metadata = await this.getMetadata();
+    if (metadata.metadata?.fee_recipient !== undefined) {
+      return metadata.metadata.fee_recipient;
+    }
+    return "";
+  }
 }
