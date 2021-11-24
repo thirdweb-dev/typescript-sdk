@@ -5,7 +5,7 @@ global.fetch = require("node-fetch");
 
 const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
 
-describe("App Module", async () => {
+describe("Token Module", async () => {
   let sdk: ThirdwebSDK;
   let currencyModule: CurrencyModule;
 
