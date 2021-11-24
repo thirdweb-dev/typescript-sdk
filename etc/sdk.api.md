@@ -40,6 +40,8 @@ export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTMod
 //
 // @public
 export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppModule_2 {
+    balance(): Promise<BigNumber_2>;
+    balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     // @internal (undocumented)
     protected connectContract(): ProtocolControl;
     deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
