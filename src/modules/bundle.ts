@@ -238,12 +238,10 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     args: INFTBundleCreateArgs,
   ) {
     const token = ERC20__factory.connect(tokenContract, this.providerOrSigner);
-    const allowance = await token.allowance(
-      await this.getSignerAddress(),
-      this.address,
-    );
+    const allowance = await token.allowance( await this.getSignerAddress(), this.address);
     if (allowance < tokenAmount) {
-      await token.increaseAllowance(await this.getSignerAddress(), tokenAmount);
+      await token.increaseAllowance(this.address, tokenAmount);
+
     }
     const uri = await uploadMetadata(args.metadata);
     await this.sendTransaction("wrapERC20", [
@@ -268,7 +266,8 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
   ) {
     const asset = ERC721__factory.connect(tokenContract, this.providerOrSigner);
   
-    if(!asset.isApprovedForAll(await this.getSignerAddress(), this.address)) {
+    if(!await asset.isApprovedForAll(await this.getSignerAddress(), this.address)) {
+    
       const isTokenApproved = ((await asset.getApproved(tokenId)).toLowerCase() === this.address.toLowerCase());
       if(!isTokenApproved) {
       await asset.setApprovalForAll(this.address, true);
