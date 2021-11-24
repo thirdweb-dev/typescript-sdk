@@ -10,11 +10,12 @@ import {
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
-import { AppModule, ModuleMetadataNoType } from "../modules/app";
+import { AppModule } from "../modules/app";
 import { BundleModule } from "../modules/bundle";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
 import { MarketModule } from "../modules/market";
+import { CollectionModule } from "../modules/collection";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
@@ -93,7 +94,6 @@ export type AnyContract =
   | typeof DatastoreModule
   | typeof SplitsModule;
 
-export type CollectionModule = BundleModule;
 /**
  * The entrypoint to the SDK.
  * @public

@@ -140,7 +140,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     );
   }
 
-  private async isApproved(
+  public async isApproved(
     address: string,
     operator: string,
     assetContract?: string,

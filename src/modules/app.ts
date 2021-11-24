@@ -32,6 +32,7 @@ import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { BundleModule } from "./bundle";
+import { CollectionModule } from "./collection";
 import { DatastoreModule } from "./datastore";
 import { DropModule } from "./drop";
 import { MarketModule } from "./market";
@@ -40,7 +41,6 @@ import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
 import { CurrencyModule } from "./token";
 
-export type CollectionModule = BundleModule;
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
  * @public
