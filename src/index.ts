@@ -69,7 +69,6 @@ export * from "./core/types";
 export * from "./modules";
 export * from "./types";
 
-
 if (!globalThis.fetch) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore

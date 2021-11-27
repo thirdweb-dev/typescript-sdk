@@ -1,5 +1,5 @@
 export * from "./app";
-export * from "./bundle"
+export * from "./bundle";
 export * from "./datastore";
 export * from "./drop";
 export * from "./market";
