@@ -1,5 +1,5 @@
 import { MetadataURIOrObject } from "../core/types";
-import { UploadError } from "../common/error";
+import { UploadError } from "./error";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
