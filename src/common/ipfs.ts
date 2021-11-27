@@ -63,10 +63,9 @@ export async function uploadMetadata(
   contractAddress?: string,
   signerAddress?: string,
 ): Promise<string> {
-  if (typeof metadata === "string" && metadata.startsWith("ipfs://")) {
+  if (typeof metadata === "string") {
     return metadata;
   }
-  //throw new Error(JSON.stringify(metadata));
   return await uploadToIPFS(
     JSON.stringify(metadata),
     contractAddress,
