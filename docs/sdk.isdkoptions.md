@@ -22,6 +22,6 @@ export interface ISDKOptions
 |  [readOnlyRpcUrl](./sdk.isdkoptions.readonlyrpcurl.md) | string | Optional read only RPC url |
 |  [registryContractAddress](./sdk.isdkoptions.registrycontractaddress.md) | string | Optional Registry Contract Address |
 |  [transactionRelayerForwarderAddress](./sdk.isdkoptions.transactionrelayerforwarderaddress.md) | string | Optional trusted forwarder address overwrite |
-|  [transactionRelayerSendFunction](./sdk.isdkoptions.transactionrelayersendfunction.md) | (message: [ForwardRequestMessage](./sdk.forwardrequestmessage.md)<!-- -->, signature: BytesLike) =&gt; Promise&lt;string&gt; | Optional function for sending transaction to relayer |
+|  [transactionRelayerSendFunction](./sdk.isdkoptions.transactionrelayersendfunction.md) | (message: [ForwardRequestMessage](./sdk.forwardrequestmessage.md) \| [PermitRequestMessage](./sdk.permitrequestmessage.md)<!-- -->, signature: BytesLike) =&gt; Promise&lt;string&gt; | Optional function for sending transaction to relayer |
 |  [transactionRelayerUrl](./sdk.isdkoptions.transactionrelayerurl.md) | string | Optional relayer url to be used for gasless transaction |
 
