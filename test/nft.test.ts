@@ -29,7 +29,7 @@ describe("NFT Module", async () => {
     nftModule = sdk.getNFTModule("0x364A9b8f4382bB583C3833E484A44f7A189312a7");
   });
 
-  it("should return nfts even if some are burned", async () => {
+  it.skip("should return nfts even if some are burned", async () => {
     try {
       const nfts = await nftModule.getAllWithOwner();
       chai.assert.isArray(nfts);
