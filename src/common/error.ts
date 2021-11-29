@@ -21,3 +21,10 @@ export class InvalidAddressError extends Error {
     );
   }
 }
+
+export class UploadError extends Error {
+  /** @internal */
+  constructor(message: string) {
+    super(`UPLOAD_FAILED: ${message}`);
+  }
+}

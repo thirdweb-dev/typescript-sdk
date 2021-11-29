@@ -40,6 +40,8 @@ export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTMod
 //
 // @public
 export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppModule_2 {
+    balance(): Promise<BigNumber_2>;
+    balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     // @internal (undocumented)
     protected connectContract(): ProtocolControl;
     deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
@@ -143,6 +145,8 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> {
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     getOwned(_address?: string): Promise<BundleMetadata[]>;
+    getRoyaltyBps(): Promise<BigNumberish>;
+    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string, assetContract?: string, assetId?: BigNumberish): Promise<boolean>;
     // (undocumented)
@@ -382,6 +386,8 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     protected getModuleType(): ModuleType;
     // (undocumented)
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
+    getRoyaltyBps(): Promise<BigNumberish_2>;
+    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
@@ -397,7 +403,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
-    static roles: readonly ["admin", "minter", "pauser", "transfer"];
+    static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
@@ -596,7 +602,7 @@ export interface ISDKOptions {
     readOnlyRpcUrl: string;
     registryContractAddress: string;
     transactionRelayerForwarderAddress: string;
-    transactionRelayerSendFunction: (message: ForwardRequestMessage, signature: BytesLike) => Promise<string>;
+    transactionRelayerSendFunction: (message: ForwardRequestMessage | PermitRequestMessage, signature: BytesLike) => Promise<string>;
     transactionRelayerUrl: string;
 }
 
@@ -847,6 +853,8 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     protected getModuleType(): ModuleType;
     // (undocumented)
     getOwned(_address?: string): Promise<NFTMetadata[]>;
+    getRoyaltyBps(): Promise<BigNumberish_2>;
+    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     getWithOwner(tokenId: string): Promise<NFTMetadataOwner>;
     // (undocumented)
@@ -931,6 +939,8 @@ export class PackModule extends ModuleWithRoles<Pack> {
     protected getModuleType(): ModuleType;
     // (undocumented)
     getNFTs(packId: string): Promise<PackNFTMetadata[]>;
+    getRoyaltyBps(): Promise<BigNumberish_2>;
+    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
@@ -946,7 +956,7 @@ export class PackModule extends ModuleWithRoles<Pack> {
     // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<void>;
     // (undocumented)
-    setRoyaltyBps(amount: number): Promise<void>;
+    setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
     transfer(to: string, tokenId: string, amount: BigNumber_2): Promise<void>;
     // (undocumented)
@@ -970,6 +980,16 @@ export interface PackNFTMetadata {
     // (undocumented)
     supply: BigNumber_2;
 }
+
+// @public
+export type PermitRequestMessage = {
+    to: string;
+    owner: string;
+    spender: string;
+    value: number | string;
+    nonce: number | string;
+    deadline: number | string;
+};
 
 // @public
 export type ProviderOrSigner = Provider | Signer;
@@ -1066,6 +1086,12 @@ export class ThirdwebSDK {
     setProviderOrSigner(providerOrSignerOrNetwork: ValidProviderInput): ProviderOrSigner;
     // @internal
     get signer(): Signer | null;
+}
+
+// @public (undocumented)
+export class UploadError extends Error {
+    // @internal
+    constructor(message: string);
 }
 
 // Warning: (ae-internal-missing-underscore) The name "uploadMetadata" should be prefixed with an underscore because the declaration is marked as @internal

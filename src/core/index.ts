@@ -25,6 +25,7 @@ import { IAppModule, RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,
   MetadataURIOrObject,
+  PermitRequestMessage,
   ProviderOrSigner,
   ValidProviderInput,
 } from "./types";
@@ -64,7 +65,7 @@ export interface ISDKOptions {
    * @returns transaction hash of relayed transaction.
    */
   transactionRelayerSendFunction: (
-    message: ForwardRequestMessage,
+    message: ForwardRequestMessage | PermitRequestMessage,
     signature: BytesLike,
   ) => Promise<string>;
 
@@ -469,14 +470,22 @@ export class ThirdwebSDK {
   }
 
   private async defaultRelayerSendFunction(
-    message: ForwardRequestMessage,
+    message: ForwardRequestMessage | PermitRequestMessage,
     signature: BytesLike,
   ): Promise<string> {
+    let messageType = "forward";
+
+    // if has owner property then it's permit :)
+    if ((message as PermitRequestMessage)?.owner) {
+      messageType = "permit";
+    }
+
     const body = JSON.stringify({
       request: message,
       signature,
-      type: "forward",
+      type: messageType,
     });
+
     // console.log("POST", this.options.transactionRelayerUrl, body);
     const response = await fetch(this.options.transactionRelayerUrl, {
       method: "POST",

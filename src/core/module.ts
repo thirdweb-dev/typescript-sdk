@@ -1,11 +1,19 @@
 import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
+import { signERC2612Permit } from "eth-permit";
 import {
   JsonRpcSigner,
   Log,
   Provider,
   TransactionReceipt,
 } from "@ethersproject/providers";
-import { BaseContract, BigNumber, CallOverrides, ethers, Signer } from "ethers";
+import {
+  BaseContract,
+  BigNumber,
+  BytesLike,
+  CallOverrides,
+  ethers,
+  Signer,
+} from "ethers";
 import type { ISDKOptions, ThirdwebSDK } from ".";
 import { getContractMetadata, isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
@@ -15,7 +23,12 @@ import { uploadMetadata } from "../common/ipfs";
 import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role } from "../common/role";
 import { ModuleMetadata } from "../types/ModuleMetadata";
-import type { MetadataURIOrObject, ProviderOrSigner } from "./types";
+import type {
+  ForwardRequestMessage,
+  MetadataURIOrObject,
+  PermitRequestMessage,
+  ProviderOrSigner,
+} from "./types";
 
 /**
  * The root Module class. All other Modules extend this.
@@ -304,7 +317,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<TransactionReceipt> {
-    console.log("callOverrides", callOverrides);
+    // console.log("callOverrides", callOverrides);
     const signer = this.getSigner();
     invariant(
       signer,
@@ -316,7 +329,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     const contract = this.contract;
     const from = await this.getSignerAddress();
     const to = this.address;
-    const value = 0;
+    const value = callOverrides?.value || 0;
     const data = contract.interface.encodeFunctionData(fn, args);
     const gas = (await contract.estimateGas[fn](...args)).mul(2);
     const forwarderAddress = this.options.transactionRelayerForwarderAddress;
@@ -337,7 +350,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
       ForwardRequest,
     };
 
-    const message = {
+    let message: ForwardRequestMessage | PermitRequestMessage = {
       from,
       to,
       value: BigNumber.from(value).toString(),
@@ -346,11 +359,36 @@ export class Module<TContract extends BaseContract = BaseContract> {
       data,
     };
 
-    const signature = await (signer as JsonRpcSigner)._signTypedData(
-      domain,
-      types,
-      message,
-    );
+    let signature: BytesLike;
+
+    // if the executing function is "approve" and matches with erc20 approve signature
+    // and if the token supports permit, then we use permit for gasless instead of approve.
+    if (
+      fn === "approve" &&
+      args.length === 2 &&
+      contract.interface.functions["approve(address,uint256)"] &&
+      contract.interface.functions[
+        "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"
+      ]
+    ) {
+      const spender = args[0];
+      const amount = args[1];
+      const permit = await signERC2612Permit(
+        signer,
+        contract.address,
+        from,
+        spender,
+        amount,
+      );
+      message = { to: contract.address, ...permit };
+      signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
+    } else {
+      signature = await (signer as JsonRpcSigner)._signTypedData(
+        domain,
+        types,
+        message,
+      );
+    }
 
     // await forwarder.verify(message, signature);
     const txHash = await this.options.transactionRelayerSendFunction(

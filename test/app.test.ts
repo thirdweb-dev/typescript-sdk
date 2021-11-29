@@ -187,4 +187,14 @@ describe("App Module", async () => {
 
     await sdk.getDatastoreModule(result.address);
   });
+
+  it.skip("should return the correct balance", async () => {
+    const nativeBalance = await appModule.balance();
+    chai.assert.equal(nativeBalance.toString(), "10000000000000000");
+
+    const testBalance = await appModule.balanceOfToken(
+      "0xf18feb8b2f58691d67c98db98b360840df340e74",
+    );
+    chai.assert.equal(testBalance.displayValue, "100.0");
+  });
 });

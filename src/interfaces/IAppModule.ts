@@ -15,6 +15,7 @@ import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 
+/* eslint-disable semi */
 export default interface IAppModule {
   deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
 

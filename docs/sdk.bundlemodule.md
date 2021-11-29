@@ -44,6 +44,8 @@ export declare class BundleModule extends ModuleWithRoles<NFTBundleContract>
 |  [get(tokenId, address)](./sdk.bundlemodule.get.md) |  | <b><i>(BETA)</i></b> Get a single bundle item by tokenId. |
 |  [getAll(address)](./sdk.bundlemodule.getall.md) |  | <b><i>(BETA)</i></b> Return all items in the bundle. |
 |  [getOwned(\_address)](./sdk.bundlemodule.getowned.md) |  | <b><i>(BETA)</i></b> <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
+|  [getRoyaltyBps()](./sdk.bundlemodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
+|  [getRoyaltyRecipientAddress()](./sdk.bundlemodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |
 |  [isApproved(address, operator, assetContract, assetId)](./sdk.bundlemodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
 |  [mint(args)](./sdk.bundlemodule.mint.md) |  | <b><i>(BETA)</i></b> |
 |  [mintBatch(args)](./sdk.bundlemodule.mintbatch.md) |  | <b><i>(BETA)</i></b> |

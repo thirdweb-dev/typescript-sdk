@@ -43,3 +43,16 @@ export type ForwardRequestMessage = {
   nonce: string;
   data: BytesLike;
 };
+
+/**
+ * EIP-2612 token permit message for gasless transaction
+ * @public
+ */
+export type PermitRequestMessage = {
+  to: string;
+  owner: string;
+  spender: string;
+  value: number | string;
+  nonce: number | string;
+  deadline: number | string;
+};
