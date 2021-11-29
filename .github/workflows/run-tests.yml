@@ -3,33 +3,15 @@ name: Run Tests
 on: [push]
 
 jobs:
-  build_v14:
+  build:
     runs-on: ubuntu-latest
     env:
       PKEY: ${{ secrets.PKEY }}
 
     strategy:
+      max-parallel: 1
       matrix:
-        node-version: [14.x]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: yarn install
-    - run: yarn run test
-    
-  build_v16:
-    needs: build_v14
-    runs-on: ubuntu-latest
-    env:
-      PKEY: ${{ secrets.PKEY }}
-
-    strategy:
-      matrix:
-        node-version: [16.x]
+        node-version: [14.x, 16.x]
 
     steps:
     - uses: actions/checkout@v2
