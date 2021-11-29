@@ -103,7 +103,7 @@ export class ThirdwebSDK {
   // default options
   private options: ISDKOptions;
   private defaultOptions: ISDKOptions = {
-    ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+    ipfsGatewayUrl: "https://cloudflare-ipfs.com/ipfs/",
     registryContractAddress: "",
     maxGasPriceInGwei: 100,
     gasSpeed: "fastest",
