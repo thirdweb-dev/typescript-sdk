@@ -2,6 +2,7 @@ import { MetadataURIOrObject } from "../core/types";
 import { UploadError } from "./error";
 import axios from "axios";
 import { createReadStream, readdirSync } from "fs";
+import { readdir } from "fs";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -85,10 +86,15 @@ export async function batchUpload(
   var key = process.env.PINATA_API_KEY;
   var secret = process.env.PINATA_API_SECRET;
   if (!key || !secret) {
-    await axios.get("https://nftlabs-ipfs-server-batch.zeet-nftlabs.zeet.app/grant", { headers }).then((res) => {
-      key = res.data.key;
-      secret = res.data.secret;
-    });
+    await axios
+      .get("https://nftlabs-ipfs-server-batch.zeet-nftlabs.zeet.app/grant", {
+        headers,
+      })
+      .then((res) => {
+        //await axios.get("http://localhost:3002/grant", { headers }).then((res) => {
+        key = res.data.key;
+        secret = res.data.secret;
+      });
   }
   const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
@@ -139,4 +145,17 @@ export async function batchUpload(
     .catch(function (error) {
       console.log(error);
     })) as string;
+}
+
+export async function batchUploadMetadata(
+  directory: string,
+  contractAddress?: string,
+): Promise<MetadataURIOrObject[]> {
+  const ipfsUri = await batchUpload(directory, contractAddress);
+  const files = readdirSync(directory);
+  var metadatas = [];
+  for (var i = 1; i < files.length + 1; i++) {
+    metadatas.push(`ipfs://${ipfsUri}/${i}.json`);
+  }
+  return metadatas;
 }

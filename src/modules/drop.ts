@@ -7,7 +7,11 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
-import { uploadMetadata, batchUpload } from "../common/ipfs";
+import {
+  uploadMetadata,
+  batchUpload,
+  batchUploadMetadata,
+} from "../common/ipfs";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -209,7 +213,10 @@ export class DropModule extends ModuleWithRoles<Drop> {
     return await batchUpload(directory, this.address);
   }
 
-  public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
+  public async lazyMintBatch(metadatas: MetadataURIOrObject[] | string) {
+    if (typeof metadatas === "string") {
+      metadatas = await batchUploadMetadata(metadatas, this.address);
+    }
     const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
     await this.sendTransaction("lazyMintBatch", [uris]);
   }
