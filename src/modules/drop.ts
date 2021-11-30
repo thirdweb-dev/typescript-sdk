@@ -200,7 +200,6 @@ export class DropModule extends ModuleWithRoles<Drop> {
     );
   }
 
-
   // owner functions
   public async lazyMint(metadata: MetadataURIOrObject) {
     await this.lazyMintBatch([metadata]);
