@@ -7,7 +7,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
-import { uploadMetadata } from "../common/ipfs";
+import { uploadMetadata, batchUpload } from "../common/ipfs";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -200,9 +200,14 @@ export class DropModule extends ModuleWithRoles<Drop> {
     );
   }
 
+
   // owner functions
   public async lazyMint(metadata: MetadataURIOrObject) {
     await this.lazyMintBatch([metadata]);
+  }
+
+  public async pinToIpfs(directory: string): Promise<string> {
+    return await batchUpload(directory, this.address);
   }
 
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {

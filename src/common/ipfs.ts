@@ -1,5 +1,7 @@
 import { MetadataURIOrObject } from "../core/types";
 import { UploadError } from "./error";
+import axios from "axios";
+import {createReadStream,readdirSync } from "fs";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -71,4 +73,50 @@ export async function uploadMetadata(
     contractAddress,
     signerAddress,
   );
+}
+
+export async function batchUpload(
+  directory: string,
+  contractAddress?: string,
+): Promise<string> {
+  const headers = {
+    "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
+  };
+  var key = process.env.PINATA_API_KEY;
+  var secret = process.env.PINATA_API_SECRET;
+  if (!key || !secret) {
+    await axios.get("http://localhost:3002/grant", { headers }).then((res) => {
+      key = res.data.key;
+      secret = res.data.secret;
+    });
+  }
+  const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
+
+    const files = readdirSync(directory);
+    let data = new FormData();
+    files.forEach((file) => {
+      console.log(`Adding file: ${file}`);
+      data.append(`file`, createReadStream(`${directory}/${file}`) as unknown as Blob, {filepath: `files/${file}`} as unknown as string);
+    });
+
+    const metadata = {
+      name: `CONSOLE-TS-SDK-${contractAddress}`
+    };
+
+
+    data.append("pinataMetadata", JSON.stringify(metadata));
+    return await axios.post(url, data, {
+        maxBodyLength: Infinity,
+        headers: {
+          'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+          pinata_api_key: key as string,
+          pinata_secret_api_key: secret as string,
+        }
+      })
+      .then(async function (response) {
+        return `ipfs://${response.data.IpfsHash}`
+      })
+      .catch(function (error) {
+        console.log(error);
+      }) as string
 }
