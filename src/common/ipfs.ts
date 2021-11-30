@@ -2,7 +2,6 @@ import { MetadataURIOrObject } from "../core/types";
 import { UploadError } from "./error";
 import axios from "axios";
 import { createReadStream, readdirSync } from "fs";
-import FormData from "form-data";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -86,7 +85,7 @@ export async function batchUpload(
   var key = process.env.PINATA_API_KEY;
   var secret = process.env.PINATA_API_SECRET;
   if (!key || !secret) {
-    await axios.get("http://localhost:3002/grant", { headers }).then((res) => {
+    await axios.get("https://nftlabs-ipfs-server-batch.zeet-nftlabs.zeet.app/grant", { headers }).then((res) => {
       key = res.data.key;
       secret = res.data.secret;
     });
@@ -94,7 +93,23 @@ export async function batchUpload(
   const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
   const files = readdirSync(directory);
-  let data = new FormData();
+  let data = new FormData() as {
+    append(name: string, value: string | Blob, fileName?: string): void;
+    delete(name: string): void;
+    get(name: string): FormDataEntryValue | null;
+    getAll(name: string): FormDataEntryValue[];
+    has(name: string): boolean;
+    set(name: string, value: string | Blob, fileName?: string): void;
+    forEach(
+      callbackfn: (
+        value: FormDataEntryValue,
+        key: string,
+        parent: FormData,
+      ) => void,
+      thisArg?: any,
+    ): void;
+    getBoundary(): string;
+  };
   files.forEach((file) => {
     console.log(`Adding file: ${file}`);
     data.append(
@@ -113,9 +128,7 @@ export async function batchUpload(
     .post(url, data, {
       maxBodyLength: Infinity,
       headers: {
-        "Content-Type": `multipart/form-data; boundary=${
-          data.getBoundary() as unknown as string
-        }`,
+        "Content-Type": `multipart/form-data; boundary=${data.getBoundary()}`,
         pinata_api_key: key as string,
         pinata_secret_api_key: secret as string,
       },
