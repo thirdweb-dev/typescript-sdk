@@ -11,6 +11,8 @@ import { uploadMetadata } from "../common/ipfs";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import ClaimConditionFactory from "../factories/ClaimConditionFactory";
+import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
 
 /**
  * @beta
@@ -23,20 +25,6 @@ export interface CreatePublicMintCondition {
   pricePerToken?: BigNumberish;
   currency?: string;
   merkleRoot?: BytesLike;
-}
-
-/**
- * @beta
- */
-export interface PublicMintCondition {
-  startTimestamp: BigNumberish;
-  maxMintSupply: BigNumberish;
-  currentMintSupply: BigNumberish;
-  quantityLimitPerTransaction: BigNumberish;
-  waitTimeSecondsLimitPerTransaction: BigNumberish;
-  pricePerToken: BigNumberish;
-  currency: string;
-  merkleRoot: BytesLike;
 }
 
 /**
@@ -214,6 +202,27 @@ export class DropModule extends ModuleWithRoles<Drop> {
     await this.sendTransaction("lazyMintAmount", [amount]);
   }
 
+  /**
+   * Sets public mint conditions for the next minting using the
+   * claim condition factory.
+   *
+   * @param factory - The claim condition factory.
+   */
+  public async setMintConditions(factory: ClaimConditionFactory) {
+    const conditions = factory.buildConditions();
+    await this.sendTransaction("setPublicMintConditions", [conditions]);
+  }
+
+  public async getMintConditionsFactory(): Promise<ClaimConditionFactory> {
+    const conditions = await this.getAllMintConditions();
+    const factory = new ClaimConditionFactory();
+    factory.fromPublicMintConditions(conditions);
+    return factory;
+  }
+
+  /**
+   * @deprecated - Use the ClaimConditionFactory instead.
+   */
   public async setPublicMintConditions(
     conditions: CreatePublicMintCondition[],
   ) {
