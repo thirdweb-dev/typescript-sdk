@@ -1,10 +1,10 @@
-import { BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BigNumberish, BytesLike } from "ethers";
 
 /**
  * @beta
  */
 export interface PublicMintCondition {
-  startTimestamp: BigNumberish;
+  startTimestamp: BigNumber;
   maxMintSupply: BigNumberish;
   currentMintSupply: BigNumberish;
   quantityLimitPerTransaction: BigNumberish;

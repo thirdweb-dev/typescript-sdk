@@ -34,9 +34,33 @@ describe("Drop Module", async () => {
 
   it("should allow you to set a currency and price", async () => {
     const factory = await dropModule.getMintConditionsFactory();
+
+    /**
+     *
+     * Notes:
+     *
+     *
+     *
+     */
+
+    // These conditions will apply on December 1st
+    // You need 100 NATIVE tokens to claim a token
     factory
-      .useNativeCurrency()
-      .setPrice(BigNumber.from("100000000000000000000"));
+      .newClaimPhase({
+        startTime: new Date(Date.parse("01 Dec 2021 00:00:00 GMT")),
+      })
+      .setPrice(ethers.utils.parseUnits("100", 18));
+
+    // These conditions will apply on December 10th
+    // You need 100 ENS tokens to claim a token
+    factory
+      .newClaimPhase({
+        startTime: new Date(Date.parse("10 Dec 2021 00:00:00 GMT")),
+      })
+      .setPrice(
+        ethers.utils.parseUnits("100", 18),
+        "0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72",
+      );
 
     await dropModule.setMintConditions(factory);
   });
