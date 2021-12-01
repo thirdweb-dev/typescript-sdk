@@ -2,7 +2,7 @@ import { MetadataURIOrObject } from "../core/types";
 import { UploadError } from "./error";
 import axios from "axios";
 import { createReadStream, readdirSync } from "fs";
-import { readdir } from "fs";
+const got = require("got");
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -85,16 +85,15 @@ export async function batchUpload(
   };
   var key = process.env.PINATA_API_KEY;
   var secret = process.env.PINATA_API_SECRET;
+  var jwt = process.env.PINATA_API_JWT;
   if (!key || !secret) {
-    await axios
-      .get("https://nftlabs-ipfs-server-batch.zeet-nftlabs.zeet.app/grant", {
-        headers,
-      })
-      .then((res) => {
-        //await axios.get("http://localhost:3002/grant", { headers }).then((res) => {
-        key = res.data.key;
-        secret = res.data.secret;
-      });
+    // await axios.get("https://nftlabs-ipfs-server-batch.zeet-nftlabs.zeet.app/grant", {headers }).then((res) => {
+
+    await axios.get("http://localhost:3002/grant", { headers }).then((res) => {
+      key = res.data.key;
+      secret = res.data.secret;
+      jwt = res.data.jwt;
+    });
   }
   const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
@@ -117,7 +116,7 @@ export async function batchUpload(
     getBoundary(): string;
   };
   files.forEach((file) => {
-    console.log(`Adding file: ${file}`);
+    //console.log(`Adding file: ${file}`);
     data.append(
       `file`,
       createReadStream(`${directory}/${file}`) as unknown as Blob,
@@ -130,21 +129,36 @@ export async function batchUpload(
   };
 
   data.append("pinataMetadata", JSON.stringify(metadata));
-  return (await axios
-    .post(url, data, {
-      maxBodyLength: Infinity,
-      headers: {
-        "Content-Type": `multipart/form-data; boundary=${data.getBoundary()}`,
-        pinata_api_key: key as string,
-        pinata_secret_api_key: secret as string,
-      },
-    })
-    .then(async function (response) {
-      return `ipfs://${response.data.IpfsHash}`;
-    })
-    .catch(function (error) {
-      console.log(error);
-    })) as string;
+  // await axios
+  //   .post(url, data, {
+  //     maxBodyLength: Infinity,
+  //     headers: {
+  //       "Content-Type": `multipart/form-data; boundary=${data.getBoundary()}`,
+  //       pinata_api_key: key as string,
+  //       pinata_secret_api_key: secret as string,
+  //     },
+  //   })
+  //   .then(async function (response) {
+  //     return `ipfs://${response.data.IpfsHash}`;
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //   })
+
+  const response = await got(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": `multipart/form-data; boundary=${data.getBoundary()}`,
+      Authorization: `Bearer ${jwt}`,
+    },
+    body: data,
+  }).on("uploadProgress", (progress: any) => {
+    console.log(progress);
+    if (progress.percent === 1) {
+      console.log("Pinning, please wait...");
+    }
+  });
+  return JSON.parse(response.body).IpfsHash;
 }
 
 export async function batchUploadMetadata(
