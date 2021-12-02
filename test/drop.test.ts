@@ -1,7 +1,6 @@
 import { AddressZero } from "@ethersproject/constants";
 import * as chai from "chai";
 import { BigNumber, ethers } from "ethers";
-import { C } from "ts-toolbelt";
 import ClaimConditionFactory from "../src/factories/ClaimConditionFactory";
 import { DropModule, PublicMintCondition, ThirdwebSDK } from "../src/index";
 
