@@ -1,7 +1,7 @@
 import { isAddress } from "@ethersproject/address";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { InvalidAddressError } from "../common/error";
 import { invariant } from "../common/invariant";
 import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
@@ -22,12 +22,6 @@ export default class ClaimConditionPhase {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
 
-  public verify() {
-    if (this._currencyAddress === "" || !isAddress(this._currencyAddress)) {
-      throw new Error("Currency address not set");
-    }
-  }
-
   /**
    * Set the price claim condition for the drop.
    *
@@ -38,6 +32,9 @@ export default class ClaimConditionPhase {
     price: BigNumberish,
     tokenAddress: string = AddressZero,
   ): ClaimConditionPhase {
+    if (!isAddress(tokenAddress)) {
+      throw new InvalidAddressError(tokenAddress);
+    }
     invariant(price >= 0, "Price cannot be negative");
 
     this._price = price;

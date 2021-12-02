@@ -1,22 +1,6 @@
-/**
- * Things to clarify:
- *
- * Can there be > 1 `currency` condition?
- */
-
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
 import ClaimConditionPhase from "./ClaimConditionPhase";
-
-/**
- * Expecations:
- *
- * 1. Ability to set a currency used to pay for the drop
- * 2. Configurable price
- * 3. *N* number of merkle conditions
- * 4. Configurable `quantityLimitPerTransaction
- *
- */
 
 class ClaimConditionFactory {
   private phases: ClaimConditionPhase[] = [];
