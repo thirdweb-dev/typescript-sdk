@@ -24,6 +24,6 @@ export interface PublicMintCondition
 |  [merkleRoot](./sdk.publicmintcondition.merkleroot.md) | BytesLike | <b><i>(BETA)</i></b> |
 |  [pricePerToken](./sdk.publicmintcondition.pricepertoken.md) | BigNumberish | <b><i>(BETA)</i></b> |
 |  [quantityLimitPerTransaction](./sdk.publicmintcondition.quantitylimitpertransaction.md) | BigNumberish | <b><i>(BETA)</i></b> |
-|  [startTimestamp](./sdk.publicmintcondition.starttimestamp.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [startTimestamp](./sdk.publicmintcondition.starttimestamp.md) | BigNumber | <b><i>(BETA)</i></b> |
 |  [waitTimeSecondsLimitPerTransaction](./sdk.publicmintcondition.waittimesecondslimitpertransaction.md) | BigNumberish | <b><i>(BETA)</i></b> |
 

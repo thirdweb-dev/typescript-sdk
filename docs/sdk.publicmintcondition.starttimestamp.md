@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-startTimestamp: BigNumberish;
+startTimestamp: BigNumber;
 ```
