@@ -1,7 +1,7 @@
 import { isAddress } from "@ethersproject/address";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { InvalidAddressError } from "../common/error";
 import { invariant } from "../common/invariant";
 import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
@@ -15,6 +15,9 @@ export default class ClaimConditionPhase {
   private _price: BigNumberish = 0;
 
   private _maxQuantity: BigNumberish = BigNumber.from(0);
+
+  private _quantityLimitPerTransaction: BigNumberish =
+    ethers.constants.MaxUint256;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
@@ -57,6 +60,23 @@ export default class ClaimConditionPhase {
   }
 
   /**
+   * Override the maxQuantity for the claim condition after creating the phase.
+   *
+   * @param maxQuantity - The max quantity NFTs that can be claimed in this phase.
+   */
+  public setMaxQuantity(maxQuantity: BigNumberish): ClaimConditionPhase {
+    this._maxQuantity = maxQuantity;
+    return this;
+  }
+
+  public setMaxQuantityPerTransaction(max: BigNumberish): ClaimConditionPhase {
+    const maxQuantity = BigNumber.from(max);
+    invariant(maxQuantity.gte(1), "Max quantity per transaction must be > 0");
+    this._quantityLimitPerTransaction = maxQuantity;
+    return this;
+  }
+
+  /**
    * Helper method that provides defaults for each claim condition.
    * @internal
    */
@@ -70,18 +90,9 @@ export default class ClaimConditionPhase {
       waitTimeSecondsLimitPerTransaction: 0,
 
       // TODO: I don't understand this default value
-      quantityLimitPerTransaction: 0,
+      quantityLimitPerTransaction: this._quantityLimitPerTransaction,
       currentMintSupply: 0,
       merkleRoot: hexZeroPad([0], 32),
     };
-  }
-
-  /**
-   * Override the maxQuantity for the claim condition after creating the phase.
-   *
-   * @param maxQuantity - The max quantity NFTs that can be claimed in this phase.
-   */
-  public setMaxQuantity(maxQuantity: BigNumberish) {
-    this._maxQuantity = maxQuantity;
   }
 }

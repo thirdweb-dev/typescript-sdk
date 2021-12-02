@@ -4,7 +4,7 @@
  * Can there be > 1 `currency` condition?
  */
 
-import { BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
 import ClaimConditionPhase from "./ClaimConditionPhase";
 
@@ -86,20 +86,26 @@ class ClaimConditionFactory {
    * @param startTime - The start time of the phase in epoch seconds or a `Date` object.
    * @param maxQuantity - The max quantity of the phase. By default, this is set to be infinite. In most cases, if your drop only
    has a single phase, you don't need to override this value. If your drop has multiple phases, you should override this value and specify how many tokens are available for each specific phase.
+    * @param maxQuantityPerTransaction - The maximum number of claims that can be made in a single transaction. By default, this is set to infinite which means that there is no limit.
    *
    * @returns - The claim condition builder.
    */
   public newClaimPhase({
     startTime,
     maxQuantity = ethers.constants.MaxUint256,
+    maxQuantityPerTransaction = ethers.constants.MaxUint256,
   }: {
     startTime: Date | number;
     maxQuantity?: BigNumberish;
+    maxQuantityPerTransaction?: BigNumberish;
   }): ClaimConditionPhase {
     const condition = new ClaimConditionPhase();
 
     condition.setConditionStartTime(startTime);
-    condition.setMaxQuantity(maxQuantity);
+    condition.setMaxQuantity(BigNumber.from(maxQuantity));
+    condition.setMaxQuantityPerTransaction(
+      BigNumber.from(maxQuantityPerTransaction),
+    );
 
     this.phases.push(condition);
     return condition;

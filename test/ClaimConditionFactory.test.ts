@@ -27,6 +27,7 @@ describe("ClaimConditionFactory", async () => {
   const phaseTwoStartDate = new Date(phaseTwoStartTimeInSeconds * 1000);
   const phaseTwoCurrency = "0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72";
   const phaseTwoPrice: BigNumber = ethers.utils.parseUnits("100", 18);
+  const phaseTwoMaxQuantityPerTransaction = 10;
 
   beforeEach(async () => {
     sdk = new ThirdwebSDK(
@@ -56,6 +57,7 @@ describe("ClaimConditionFactory", async () => {
     factory
       .newClaimPhase({
         startTime: phaseTwoStartTimeInSeconds,
+        maxQuantityPerTransaction: phaseTwoMaxQuantityPerTransaction,
       })
       .setPrice(phaseTwoPrice, phaseTwoCurrency);
 
@@ -160,6 +162,22 @@ describe("ClaimConditionFactory", async () => {
       conditions[1].currency,
       phaseTwoCurrency,
       "Phase two price should be set correctly",
+    );
+  });
+
+  it("should allow overriding `maxQuantityPerTransaction`", async () => {
+    chai.assert.equal(
+      conditions[1].quantityLimitPerTransaction.toString(),
+      phaseTwoMaxQuantityPerTransaction.toString(),
+      "Phase two `maxQuantityPerTransaction` should be set correctly",
+    );
+  });
+
+  it("should set the correct default `maxQuantityPerTransaction`", async () => {
+    chai.assert.equal(
+      conditions[0].quantityLimitPerTransaction.toString(),
+      ethers.constants.MaxUint256.toString(),
+      "Phase one `maxQuantityPerTransaction` should be set to Max Uint 256",
     );
   });
 });
