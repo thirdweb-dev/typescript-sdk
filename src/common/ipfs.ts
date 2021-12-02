@@ -3,6 +3,8 @@ import { UploadError } from "./error";
 import axios from "axios";
 import { createReadStream, readdirSync } from "fs";
 const got = require("got");
+const cliProgress = require('cli-progress');
+const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -116,49 +118,46 @@ export async function batchUpload(
     getBoundary(): string;
   };
   files.forEach((file) => {
-    //console.log(`Adding file: ${file}`);
+    console.log(`Adding file: ${file}`);
     data.append(
       `file`,
       createReadStream(`${directory}/${file}`) as unknown as Blob,
       { filepath: `files/${file}` } as unknown as string,
     );
   });
-
+  console.log(`Uploading ${files.length} files to IPFS`);
+  var x = 0
   const metadata = {
     name: `CONSOLE-TS-SDK-${contractAddress}`,
   };
-
+  console.log(`metadata: ${JSON.stringify(metadata)}`);
+  //console.log(data)
   data.append("pinataMetadata", JSON.stringify(metadata));
-  // await axios
-  //   .post(url, data, {
-  //     maxBodyLength: Infinity,
-  //     headers: {
-  //       "Content-Type": `multipart/form-data; boundary=${data.getBoundary()}`,
-  //       pinata_api_key: key as string,
-  //       pinata_secret_api_key: secret as string,
-  //     },
-  //   })
-  //   .then(async function (response) {
-  //     return `ipfs://${response.data.IpfsHash}`;
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //   })
-
-  const response = await got(url, {
+  const res = await got(url, {
     method: "POST",
     headers: {
       "Content-Type": `multipart/form-data; boundary=${data.getBoundary()}`,
       Authorization: `Bearer ${jwt}`,
     },
-    body: data,
+    body: data
   }).on("uploadProgress", (progress: any) => {
-    console.log(progress);
-    if (progress.percent === 1) {
-      console.log("Pinning, please wait...");
+    if(x === 0) {
+      bar1.start(1, 0);
+      x = 1
     }
+    bar1.update(progress.percent);
+  }).then((res: { body: { IpfsHash: any; }; }) => {
+    bar1.stop();
+    console.log(res.body)
+    return res
+  }).catch((err: any) => {
+    bar1.stop();
+    throw new UploadError(`Failed to upload to IPFS: ${err}`);
   });
-  return JSON.parse(response.body).IpfsHash;
+
+  //return (await res.json()).IpfsHash
+  return (await res.body.IpfsHash)
+
 }
 
 export async function batchUploadMetadata(
