@@ -14,7 +14,7 @@ export default class ClaimConditionPhase {
 
   private _price: BigNumberish = 0;
 
-  private _maxQuantity: BigNumberish;
+  private _maxQuantity: BigNumberish = BigNumber.from(0);
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
@@ -49,9 +49,9 @@ export default class ClaimConditionPhase {
    */
   public setConditionStartTime(when: Date | number): ClaimConditionPhase {
     if (typeof when === "number") {
-      this._conditionStartTime = when;
+      this._conditionStartTime = Math.floor(when);
     } else {
-      this._conditionStartTime = when.getTime();
+      this._conditionStartTime = Math.floor(when.getTime() / 1000);
     }
     return this;
   }

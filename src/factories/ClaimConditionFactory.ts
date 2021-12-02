@@ -4,8 +4,7 @@
  * Can there be > 1 `currency` condition?
  */
 
-import { AddressZero } from "@ethersproject/constants";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
 import ClaimConditionPhase from "./ClaimConditionPhase";
 
@@ -20,7 +19,7 @@ import ClaimConditionPhase from "./ClaimConditionPhase";
  */
 
 class ClaimConditionFactory {
-  private conditions: ClaimConditionPhase[] = [];
+  private phases: ClaimConditionPhase[] = [];
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
@@ -33,8 +32,8 @@ class ClaimConditionFactory {
    *
    * @returns - The claim conditions that will be used when validating a users claim transaction.
    */
-  protected buildConditions(): PublicMintCondition[] {
-    const publicClaimConditions = this.conditions.map((c) =>
+  public buildConditions(): PublicMintCondition[] {
+    const publicClaimConditions = this.phases.map((c) =>
       c.buildPublicClaimCondition(),
     );
 
@@ -53,20 +52,18 @@ class ClaimConditionFactory {
   }
 
   /**
-   * Currently supports loading:
-   *
-   * 1. The currency address, if set
-   * 2. The price per token, if set
+   * Converts a set of generic `PublicMintCondition`s into a `ClaimConditionFactory`
    *
    * @param conditions - The conditions to load, should be returned directly from the contract.
    * @returns - The loaded claim condition factory.
    */
   public fromPublicMintConditions(conditions: PublicMintCondition[]) {
+    const phases = [];
     for (const condition of conditions) {
       const phase = new ClaimConditionPhase();
 
       // If there's a price, there must also be an associated currency
-      if (condition.pricePerToken) {
+      if (condition.currency) {
         phase.setPrice(condition.pricePerToken, condition.currency);
       }
 
@@ -74,11 +71,12 @@ class ClaimConditionFactory {
         phase.setMaxQuantity(condition.maxMintSupply);
       }
 
-      // TODO: write a test to make sure the start time is parsed correctly
       phase.setConditionStartTime(
-        new Date(condition.startTimestamp.toString()),
+        new Date(condition.startTimestamp.toNumber() * 1000),
       );
+      phases.push(phase);
     }
+    this.phases = phases;
     return this;
   }
 
@@ -103,8 +101,23 @@ class ClaimConditionFactory {
     condition.setConditionStartTime(startTime);
     condition.setMaxQuantity(maxQuantity);
 
-    this.conditions.push(condition);
+    this.phases.push(condition);
     return condition;
+  }
+
+  /**
+   * Removes a claim condition phase from the factory.
+   *
+   * @param phase - The phase to remove
+   */
+  public removeClaimPhase(index: number): void {
+    if (index < 0 || index >= this.phases.length) {
+      return;
+    }
+
+    const sorted = this.buildConditions();
+    const cleared = sorted.splice(index - 1, 1);
+    this.fromPublicMintConditions(cleared);
   }
 }
 
