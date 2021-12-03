@@ -1,7 +1,6 @@
 import { ethers } from "ethers";
 import { DropModule, ThirdwebSDK } from "../src/index";
 import * as chai from "chai";
-import axios from "axios";
 
 global.fetch = require("node-fetch");
 
@@ -26,13 +25,11 @@ describe("Drop Module", async () => {
   });
 
   it.skip("should upload bulk", async () => {
-    axios.get(`https://hookb.in/032WQ27Bp1u3J0ooJzry?text=generated`)
-    const ipfsUri = await dropModule.pinToIpfs("test/test_dump");
+    const ipfsUri = await dropModule.pinToIpfs("test/images");
     const regex = new RegExp(
       /Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}/,
     );
-    axios.get(`https://hookb.in/032WQ27Bp1u3J0ooJzry?text=${ipfsUri}`)
-    //chai.assert.isTrue(regex.test(ipfsUri));
+    chai.assert.isTrue(regex.test(ipfsUri));
   });
 
 });

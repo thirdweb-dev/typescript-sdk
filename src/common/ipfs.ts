@@ -1,6 +1,5 @@
 import { MetadataURIOrObject } from "../core/types";
 import { UploadError } from "./error";
-import axios from "axios";
 import { createReadStream, readdirSync } from "fs";
 const got = require("got");
 const cliProgress = require("cli-progress");
@@ -89,12 +88,15 @@ export async function batchUpload(
   var secret = process.env.PINATA_API_SECRET;
   var jwt = process.env.PINATA_API_JWT;
   if (!key || !secret) {
-    // await axios.get("https://nftlabs-ipfs-server-batch.zeet-nftlabs.zeet.app/grant", {headers }).then((res) => {
 
-    await axios.get("http://localhost:3002/grant", { headers }).then((res) => {
-      key = res.data.key;
-      secret = res.data.secret;
-      jwt = res.data.jwt;
+    await fetch("https://nftlabs-ipfs-server-batch.zeet-nftlabs.zeet.app/grant", {
+      method: "GET",
+      headers,
+    }).then(async (res) => {
+      const body = await res.json();
+      key = body.key;
+      secret = body.secret;
+      jwt = body.jwt;
     });
   }
   const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
@@ -118,7 +120,6 @@ export async function batchUpload(
     getBoundary(): string;
   };
   files.forEach((file) => {
-    console.log(`Adding file: ${file}`);
     data.append(
       `file`,
       createReadStream(`${directory}/${file}`) as unknown as Blob,
@@ -130,8 +131,7 @@ export async function batchUpload(
   const metadata = {
     name: `CONSOLE-TS-SDK-${contractAddress}`,
   };
-  console.log(`metadata: ${JSON.stringify(metadata)}`);
-  //console.log(data)
+
   data.append("pinataMetadata", JSON.stringify(metadata));
   const res = await got(url, {
     method: "POST",
