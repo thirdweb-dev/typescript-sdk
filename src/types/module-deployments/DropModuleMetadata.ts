@@ -20,7 +20,7 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
     Number,
     PropertyConvertingMode.IGNORE_NULLABLE,
   )
-  sellerFeeBasisPoints = 0;
+  sellerFeeBasisPoints? = 0;
 
   /**
    * The amount of fees collected on the primary sale, represented as basis points. The default is 0.
@@ -82,7 +82,7 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
     String,
     PropertyConvertingMode.IGNORE_NULLABLE,
   )
-  primarySaleRecipientAddress = "";
+  primarySaleRecipientAddress? = "";
 
   /**
    * The IPFS base URI thats prepended to all token URIs. This allows
@@ -96,5 +96,5 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
     String,
     PropertyConvertingMode.IGNORE_NULLABLE,
   )
-  baseTokenUri = "";
+  baseTokenUri? = "";
 }
