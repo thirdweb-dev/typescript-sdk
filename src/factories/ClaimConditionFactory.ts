@@ -41,7 +41,7 @@ class ClaimConditionFactory {
    * @param conditions - The conditions to load, should be returned directly from the contract.
    * @returns - The loaded claim condition factory.
    */
-  public fromPublicMintConditions(conditions: PublicMintCondition[]) {
+  public fromPublicClaimConditions(conditions: PublicMintCondition[]) {
     const phases = [];
     for (const condition of conditions) {
       const phase = new ClaimConditionPhase();
@@ -107,7 +107,7 @@ class ClaimConditionFactory {
 
     const sorted = this.buildConditions();
     const cleared = sorted.splice(index - 1, 1);
-    this.fromPublicMintConditions(cleared);
+    this.fromPublicClaimConditions(cleared);
   }
 }
 

@@ -216,7 +216,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
   public async getMintConditionsFactory(): Promise<ClaimConditionFactory> {
     const conditions = await this.getAllMintConditions();
     const factory = new ClaimConditionFactory();
-    factory.fromPublicMintConditions(conditions);
+    factory.fromPublicClaimConditions(conditions);
     return factory;
   }
 

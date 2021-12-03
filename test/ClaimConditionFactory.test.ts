@@ -2,16 +2,11 @@ import { AddressZero } from "@ethersproject/constants";
 import * as chai from "chai";
 import { BigNumber, ethers } from "ethers";
 import ClaimConditionFactory from "../src/factories/ClaimConditionFactory";
-import { DropModule, PublicMintCondition, ThirdwebSDK } from "../src/index";
+import { PublicMintCondition } from "../src/index";
 
 global.fetch = require("node-fetch");
 
-const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
-
 describe("ClaimConditionFactory", async () => {
-  let sdk: ThirdwebSDK;
-  let dropModule: DropModule;
-
   let factory: ClaimConditionFactory;
   let conditions: PublicMintCondition[];
 
@@ -30,20 +25,8 @@ describe("ClaimConditionFactory", async () => {
   const phaseTwoMaxQuantityPerTransaction = 10;
 
   beforeEach(async () => {
-    sdk = new ThirdwebSDK(
-      new ethers.Wallet(process.env.PKEY, ethers.getDefaultProvider(RPC_URL)),
-    );
-    /**
-     * This contract address *should* exist forever on mumbai
-     * It contains some test data with burned tokens and some tokens owned by
-     * the test address starting with 0xE79
-     */
-    dropModule = sdk.getDropModule(
-      "0x3705506b3ce08b94cf8b1EA41CDe005669B45e37",
-    );
-
     // This will get the factory of an existing drop
-    factory = await dropModule.getMintConditionsFactory();
+    factory = new ClaimConditionFactory();
 
     // You can also instantiate the factory and import a modules existing
     // mint conditions like this:
