@@ -339,18 +339,21 @@ export class AppModule
    * @returns - The sanitized metadata with an uploaded image ipfs hash
    */
   private async _prepareMetadata(metadata: CommonModuleMetadata): Promise<any> {
-    if (typeof metadata.image === "string") {
-      return Promise.resolve(metadata);
-    }
-    if (metadata.image === undefined) {
-      return Promise.resolve(metadata);
+    for(const key in metadata) {
+      if (typeof metadata[key] === "string") { // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+        return Promise.resolve(metadata);
+      }
+      if (metadata[key] === undefined) { // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+        return Promise.resolve(metadata);
+      }
+  
+      metadata[key] = await uploadToIPFS( // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+        metadata[key] as FileOrBuffer, // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+        this.address,
+        await this.getSignerAddress(),
+      );
     }
 
-    metadata.image = await uploadToIPFS(
-      metadata.image as FileOrBuffer,
-      this.address,
-      await this.getSignerAddress(),
-    );
     return Promise.resolve(metadata);
   }
 
