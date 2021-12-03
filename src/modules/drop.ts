@@ -250,8 +250,10 @@ export class DropModule extends ModuleWithRoles<Drop> {
     await this.sendTransaction("setPublicMintConditions", [_conditions]);
   }
 
-  public async claim(quantity: BigNumberish) {
-    const proofs = [hexZeroPad([0], 32)];
+  public async claim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ) {
     const mintCondition = await this.getActiveMintCondition();
     const overrides = (await this.getCallOverrides()) || {};
     if (mintCondition.pricePerToken > 0) {
@@ -378,4 +380,6 @@ export class DropModule extends ModuleWithRoles<Drop> {
     // TODO: Upload all metadata to IPFS
     // call lazyMintAmount(metadata.length - totalSupply) if totalSupply < metadata.length
   }
+
+  public async;
 }
