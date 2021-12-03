@@ -1,9 +1,6 @@
 import { MetadataURIOrObject } from "../core/types";
 import { UploadError } from "./error";
 import { createReadStream, readdirSync } from "fs";
-const got = require("got");
-const cliProgress = require("cli-progress");
-const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -89,7 +86,7 @@ export async function batchUpload(
   var jwt = process.env.PINATA_API_JWT;
   if (!key || !secret) {
 
-    await fetch("https://nftlabs-ipfs-server-batch.zeet-nftlabs.zeet.app/grant", {
+    await fetch("https://upload.nftlabs.co/grant", {
       method: "GET",
       headers,
     }).then(async (res) => {
@@ -127,13 +124,12 @@ export async function batchUpload(
     );
   });
   console.log(`Uploading ${files.length} files to IPFS`);
-  var x = 0;
   const metadata = {
     name: `CONSOLE-TS-SDK-${contractAddress}`,
   };
 
   data.append("pinataMetadata", JSON.stringify(metadata));
-  const res = await got(url, {
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": `multipart/form-data; boundary=${data.getBoundary()}`,
@@ -141,25 +137,15 @@ export async function batchUpload(
     },
     body: data,
   })
-    .on("uploadProgress", (progress: any) => {
-      if (x === 0) {
-        bar1.start(1, 0);
-        x = 1;
-      }
-      bar1.update(progress.percent);
-    })
-    .then((res: { body: { IpfsHash: any } }) => {
-      bar1.stop();
+    .then((res) => {
       console.log(res.body);
       return res;
     })
     .catch((err: any) => {
-      bar1.stop();
       throw new UploadError(`Failed to upload to IPFS: ${err}`);
     });
 
-  //return (await res.json()).IpfsHash
-  return await res.body.IpfsHash;
+  return (await res.json()).IpfsHash
 }
 
 export async function batchUploadMetadata(
