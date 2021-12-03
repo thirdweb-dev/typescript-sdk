@@ -1,3 +1,4 @@
+import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import * as chai from "chai";
 import { BigNumber, ethers } from "ethers";
@@ -16,6 +17,8 @@ describe("ClaimConditionFactory", async () => {
   const phaseOneCurency = AddressZero;
   const phaseOnePrice: BigNumber = ethers.utils.parseUnits("10", 18);
   const phaseOneMaxQuantity = 10;
+  const phaseOneMerkleRoot =
+    "606017133cad29f17971531d784ec4b2552826acb5f5241bccbb57466e2995c8";
 
   const phaseTwoStartTimeInSeconds =
     Date.parse("10 Dec 2021 00:00:00 GMT") / 1000;
@@ -52,7 +55,8 @@ describe("ClaimConditionFactory", async () => {
         startTime: phaseOneStartDate,
         maxQuantity: phaseOneMaxQuantity,
       })
-      .setPrice(phaseOnePrice);
+      .setPrice(phaseOnePrice)
+      .setMerkleRoot(phaseOneMerkleRoot);
 
     conditions = factory.buildConditions();
   });
@@ -161,6 +165,22 @@ describe("ClaimConditionFactory", async () => {
       conditions[0].quantityLimitPerTransaction.toString(),
       ethers.constants.MaxUint256.toString(),
       "Phase one `maxQuantityPerTransaction` should be set to Max Uint 256",
+    );
+  });
+
+  it("should set the correct default `merkleRoot`", async () => {
+    chai.assert.equal(
+      conditions[1].merkleRoot.toString(),
+      hexZeroPad([0], 32).toString(),
+      "Phase two `merkleRoot` should be set to 0x00...",
+    );
+  });
+
+  it("should allow overriding `merkleRoot`", async () => {
+    chai.assert.equal(
+      conditions[0].merkleRoot.toString(),
+      phaseOneMerkleRoot,
+      "Phase one `merkleRoot` should be set ",
     );
   });
 });

@@ -1,5 +1,5 @@
 import { isAddress } from "@ethersproject/address";
-import { hexZeroPad } from "@ethersproject/bytes";
+import { BytesLike, hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { InvalidAddressError } from "../common/error";
@@ -18,6 +18,8 @@ export default class ClaimConditionPhase {
 
   private _quantityLimitPerTransaction: BigNumberish =
     ethers.constants.MaxUint256;
+
+  private _merkleRootHash: BytesLike = hexZeroPad([0], 32);
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
@@ -66,10 +68,25 @@ export default class ClaimConditionPhase {
     return this;
   }
 
+  /**
+   * The max quantity of NFTs that can be claimed in a single transaction.
+   *
+   * @param max - The max quantity NFTs that can be claimed in a single transaction.
+   */
   public setMaxQuantityPerTransaction(max: BigNumberish): ClaimConditionPhase {
     const maxQuantity = BigNumber.from(max);
     invariant(maxQuantity.gte(1), "Max quantity per transaction must be > 0");
     this._quantityLimitPerTransaction = maxQuantity;
+    return this;
+  }
+
+  /**
+   * Sets a merkle root hash for the claim condition.
+   *
+   * @param root - The merkle root hash
+   */
+  public setMerkleRoot(root: string): ClaimConditionPhase {
+    this._merkleRootHash = root;
     return this;
   }
 
@@ -89,7 +106,7 @@ export default class ClaimConditionPhase {
       // TODO: I don't understand this default value
       quantityLimitPerTransaction: this._quantityLimitPerTransaction,
       currentMintSupply: 0,
-      merkleRoot: hexZeroPad([0], 32),
+      merkleRoot: this._merkleRootHash,
     };
   }
 }

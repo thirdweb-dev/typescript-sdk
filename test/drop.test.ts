@@ -1,8 +1,7 @@
 import { AddressZero } from "@ethersproject/constants";
-import * as chai from "chai";
 import { BigNumber, ethers } from "ethers";
 import ClaimConditionFactory from "../src/factories/ClaimConditionFactory";
-import { DropModule, PublicMintCondition, ThirdwebSDK } from "../src/index";
+import { DropModule, ThirdwebSDK } from "../src/index";
 
 global.fetch = require("node-fetch");
 

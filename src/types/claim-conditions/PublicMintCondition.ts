@@ -3,7 +3,7 @@ import { BigNumber, BigNumberish, BytesLike } from "ethers";
 /**
  * @beta
  */
-export interface PublicMintCondition {
+export interface PublicClaimCondition {
   startTimestamp: BigNumber;
   maxMintSupply: BigNumberish;
   currentMintSupply: BigNumberish;
@@ -13,3 +13,9 @@ export interface PublicMintCondition {
   currency: string;
   merkleRoot: BytesLike;
 }
+
+/**
+ * @beta
+ * @deprecated
+ */
+export interface PublicMintCondition extends PublicClaimCondition {}

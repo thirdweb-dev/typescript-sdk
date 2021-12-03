@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
+import { PublicClaimCondition } from "../types/claim-conditions/PublicMintCondition";
 import ClaimConditionPhase from "./ClaimConditionPhase";
 
 class ClaimConditionFactory {
@@ -16,7 +16,7 @@ class ClaimConditionFactory {
    *
    * @returns - The claim conditions that will be used when validating a users claim transaction.
    */
-  public buildConditions(): PublicMintCondition[] {
+  public buildConditions(): PublicClaimCondition[] {
     const publicClaimConditions = this.phases.map((c) =>
       c.buildPublicClaimCondition(),
     );
@@ -36,12 +36,12 @@ class ClaimConditionFactory {
   }
 
   /**
-   * Converts a set of generic `PublicMintCondition`s into a `ClaimConditionFactory`
+   * Converts a set of generic `PublicClaimCondition`s into a `ClaimConditionFactory`
    *
    * @param conditions - The conditions to load, should be returned directly from the contract.
    * @returns - The loaded claim condition factory.
    */
-  public fromPublicClaimConditions(conditions: PublicMintCondition[]) {
+  public fromPublicClaimConditions(conditions: PublicClaimCondition[]) {
     const phases = [];
     for (const condition of conditions) {
       const phase = new ClaimConditionPhase();

@@ -188,16 +188,24 @@ export class DropModule extends ModuleWithRoles<Drop> {
     );
   }
 
-  // owner functions
+  /**
+   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
+   */
   public async lazyMint(metadata: MetadataURIOrObject) {
     await this.lazyMintBatch([metadata]);
   }
 
+  /**
+   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
+   */
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
     const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
     await this.sendTransaction("lazyMintBatch", [uris]);
   }
 
+  /**
+   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
+   */
   public async lazyMintAmount(amount: BigNumberish) {
     await this.sendTransaction("lazyMintAmount", [amount]);
   }
@@ -339,5 +347,14 @@ export class DropModule extends ModuleWithRoles<Drop> {
       return metadata.metadata.fee_recipient;
     }
     return "";
+  }
+
+  /**
+   *
+   * @beta
+   */
+  public async mintBatch(tokenMetadata: MetadataURIOrObject[]) {
+    // TODO: Upload all metadata to IPFS
+    // call lazyMintAmount(metadata.length - totalSupply) if totalSupply < metadata.length
   }
 }
