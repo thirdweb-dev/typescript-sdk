@@ -12,6 +12,15 @@ import { uploadMetadata } from "../common/ipfs";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
+export interface ITokenMintArgs {
+  address: string;
+  amount: BigNumberish;
+}
+
+export interface ITokenMintFromArgs extends ITokenMintArgs {
+  fromAddress: string;
+}
+
 /**
  *
  * Access this module by calling {@link ThirdwebSDK.getCurrencyModule}
@@ -83,7 +92,7 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
   // write functions
   public async transfer(
     to: string,
-    amount: BigNumber,
+    amount: BigNumberish,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("transfer", [to, amount]);
   }
@@ -102,6 +111,19 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
 
   public async mintTo(to: string, amount: BigNumberish) {
     await this.sendTransaction("mint", [to, amount]);
+  }
+
+  public async mintBatchTo(args: ITokenMintArgs[]) {
+    const encoded = [];
+    for (const arg of args) {
+      encoded.push(
+        this.contract.interface.encodeFunctionData("mint", [
+          arg.address,
+          arg.amount,
+        ]),
+      );
+    }
+    await this.sendTransaction("multicall", [encoded]);
   }
 
   public async burn(amount: BigNumberish): Promise<TransactionReceipt> {
@@ -134,5 +156,26 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     restricted = false,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  public async transferBatch(args: ITokenMintArgs[]) {
+    const encoded = args.map((arg) =>
+      this.contract.interface.encodeFunctionData("transfer", [
+        arg.address,
+        arg.amount,
+      ]),
+    );
+    await this.sendTransaction("multicall", [encoded]);
+  }
+
+  public async transferFromBatch(args: ITokenMintFromArgs[]) {
+    const encoded = args.map((arg) =>
+      this.contract.interface.encodeFunctionData("transferFrom", [
+        arg.fromAddress,
+        arg.address,
+        arg.amount,
+      ]),
+    );
+    await this.sendTransaction("multicall", [encoded]);
   }
 }

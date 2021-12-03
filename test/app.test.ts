@@ -1,3 +1,4 @@
+import { AddressZero } from "@ethersproject/constants";
 import * as chai from "chai";
 import { BigNumber, ethers } from "ethers";
 import { readFileSync } from "fs";
@@ -181,6 +182,7 @@ describe("App Module", async () => {
       sellerFeeBasisPoints: 100,
       maxSupply: 10,
       baseTokenUri: "/test",
+      primarySaleRecipientAddress: AddressZero,
     });
     console.log("deplyed with address", result.address);
 
@@ -201,5 +203,15 @@ describe("App Module", async () => {
     console.log("deplyed datastore with address", result.address);
 
     await sdk.getDatastoreModule(result.address);
+  });
+
+  it.skip("should return the correct balance", async () => {
+    const nativeBalance = await appModule.balance();
+    chai.assert.equal(nativeBalance.toString(), "10000000000000000");
+
+    const testBalance = await appModule.balanceOfToken(
+      "0xf18feb8b2f58691d67c98db98b360840df340e74",
+    );
+    chai.assert.equal(testBalance.displayValue, "100.0");
   });
 });

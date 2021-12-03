@@ -35,6 +35,8 @@ export declare class PackModule extends ModuleWithRoles<PackContract>
 |  [getAll()](./sdk.packmodule.getall.md) |  | <b><i>(BETA)</i></b> |
 |  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  | <b><i>(BETA)</i></b> |
 |  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  | <b><i>(BETA)</i></b> |
+|  [getRoyaltyBps()](./sdk.packmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
+|  [getRoyaltyRecipientAddress()](./sdk.packmodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |
 |  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
 |  [open(packId)](./sdk.packmodule.open.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.packmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |

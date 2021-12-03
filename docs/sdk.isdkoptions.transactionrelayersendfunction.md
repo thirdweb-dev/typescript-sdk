@@ -9,5 +9,5 @@ Optional function for sending transaction to relayer
 <b>Signature:</b>
 
 ```typescript
-transactionRelayerSendFunction: (message: ForwardRequestMessage, signature: BytesLike) => Promise<string>;
+transactionRelayerSendFunction: (message: ForwardRequestMessage | PermitRequestMessage, signature: BytesLike) => Promise<string>;
 ```

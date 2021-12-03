@@ -7,6 +7,7 @@ import { $enum } from "ts-enum-util";
 export enum ModuleType {
   CURRENCY = 0,
   COLLECTION = 1,
+  BUNDLE = 1,
   NFT = 2,
   DYNAMIC_NFT = 3,
   ACCESS_NFT = 4,

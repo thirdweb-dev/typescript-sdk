@@ -1,6 +1,7 @@
 import {
   Coin__factory,
   DataStore__factory,
+  ERC20__factory,
   LazyNFT__factory,
   Market__factory,
   NFTCollection__factory,
@@ -8,18 +9,19 @@ import {
   Pack__factory,
   ProtocolControl,
   ProtocolControl__factory,
-  Royalty__factory,
+  Royalty__factory
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, ethers, Signer } from "ethers";
+import { isAddress } from "ethers/lib/utils";
 import { JsonConvert } from "json2typescript";
 import {
-  ChainlinkVrf,
-  Role,
+  ChainlinkVrf, CurrencyValue,
+  getCurrencyValue, Role,
   RolesMap,
   uploadMetadata,
-  uploadToIPFS,
+  uploadToIPFS
 } from "../common";
 import { getContractMetadata } from "../common/contract";
 import { invariant } from "../common/invariant";
@@ -104,8 +106,8 @@ export class AppModule
     return this.getModuleAddress(ModuleType.NFT);
   }
 
-  private async getCollectionAddress(): Promise<string[]> {
-    return this.getModuleAddress(ModuleType.COLLECTION);
+  private async getBundleAddress(): Promise<string[]> {
+    return this.getModuleAddress(ModuleType.BUNDLE);
   }
 
   private async getPackAddress(): Promise<string[]> {
@@ -189,16 +191,20 @@ export class AppModule
   }
 
   /**
-   * Method to get a list of Collection module metadata.
-   * @returns A promise of an array of Collection modules.
+   * Method to get a list of Bundle module metadata.
+   * @returns A promise of an array of Bundle modules.
    * @deprecated - Use {@link AppModule.getAllModuleMetadata} instead
    */
   public async getCollectionModules(): Promise<ModuleMetadata[]> {
+    return await this.getBundleModules();
+  }
+
+  public async getBundleModules(): Promise<ModuleMetadata[]> {
     return (
-      await this.getAllContractMetadata(await this.getCollectionAddress())
+      await this.getAllContractMetadata(await this.getBundleAddress())
     ).map((m) => ({
       ...m,
-      type: ModuleType.COLLECTION,
+      type: ModuleType.BUNDLE,
     }));
   }
 
@@ -270,7 +276,7 @@ export class AppModule
   ): Promise<ModuleMetadata[]> {
     const moduleTypesToGet = filterByModuleType || [
       ModuleType.NFT,
-      ModuleType.COLLECTION,
+      ModuleType.BUNDLE,
       ModuleType.PACK,
       ModuleType.CURRENCY,
       ModuleType.MARKET,
@@ -612,6 +618,11 @@ export class AppModule
     metadata: DropModuleMetadata,
   ): Promise<DropModule> {
     invariant(metadata.maxSupply !== undefined, "Max supply must be specified");
+    invariant(
+      metadata.primarySaleRecipientAddress !== "" &&
+        isAddress(metadata.primarySaleRecipientAddress),
+      "Primary sale recipient address must be specified and must be a valid address",
+    );
 
     const serializedMetadata = this.jsonConvert.serializeObject(
       await this._prepareMetadata(metadata),
@@ -635,6 +646,10 @@ export class AppModule
         metadata.baseTokenUri ? metadata.baseTokenUri : "",
         metadata.maxSupply,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+        metadata.primarySaleFeeBasisPoints
+          ? metadata.primarySaleFeeBasisPoints
+          : 0,
+        metadata.primarySaleRecipientAddress,
       ],
       LazyNFT__factory,
     );
@@ -669,5 +684,32 @@ export class AppModule
     );
 
     return this.sdk.getDatastoreModule(address);
+  }
+
+  /**
+   * Check the balance of the project wallet in the native token of the chain
+   *
+   * @returns - The balance of the project in the native token of the chain
+   */
+  public async balance(): Promise<BigNumber> {
+    const walletBalance = await this.readOnlyContract.provider.getBalance(
+      this.address,
+    );
+    return walletBalance;
+  }
+
+  /**
+   * Check the balance of the project wallet in a particular
+   * ERC20 token contract
+   *
+   * @returns - The balance of the project in the native token of the chain
+   */
+  public async balanceOfToken(tokenAddress: string): Promise<CurrencyValue> {
+    const erc20 = ERC20__factory.connect(tokenAddress, this.providerOrSigner);
+    return await getCurrencyValue(
+      this.providerOrSigner,
+      tokenAddress,
+      await erc20.balanceOf(this.address),
+    );
   }
 }

@@ -4,6 +4,7 @@ import {
   Pack as PackContract,
   Pack__factory,
 } from "@3rdweb/contracts";
+import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import {
   CurrencyValue,
@@ -311,8 +312,31 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     await this.sendTransaction("transferLink", [to, amount]);
   }
 
-  public async setRoyaltyBps(amount: number) {
-    await this.sendTransaction("setRoyaltyBps", [amount]);
+  public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
+    // TODO: reduce this duplication and provide common functions around
+    // royalties through an interface. Currently this function is
+    // duplicated across 4 modules
+    const { metadata } = await this.getMetadata();
+    const encoded: string[] = [];
+    if (!metadata) {
+      throw new Error("No metadata found, this module might be invalid!");
+    }
+
+    metadata.seller_fee_basis_points = amount;
+    const uri = await uploadMetadata(
+      {
+        ...metadata,
+      },
+      this.address,
+      await this.getSignerAddress(),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
+    );
+    return await this.sendTransaction("multicall", [encoded]);
   }
 
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
@@ -322,5 +346,27 @@ export class PackModule extends ModuleWithRoles<PackContract> {
 
   public async setRestrictedTransfer(restricted = false): Promise<void> {
     await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  /**
+   * Gets the royalty BPS (basis points) of the contract
+   *
+   * @returns - The royalty BPS
+   */
+  public async getRoyaltyBps(): Promise<BigNumberish> {
+    return await this.readOnlyContract.royaltyBps();
+  }
+
+  /**
+   * Gets the address of the royalty recipient
+   *
+   * @returns - The royalty BPS
+   */
+  public async getRoyaltyRecipientAddress(): Promise<string> {
+    const metadata = await this.getMetadata();
+    if (metadata.metadata?.fee_recipient !== undefined) {
+      return metadata.metadata.fee_recipient;
+    }
+    return "";
   }
 }

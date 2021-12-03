@@ -25,6 +25,8 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [balance()](./sdk.appmodule.balance.md) |  | Check the balance of the project wallet in the native token of the chain |
+|  [balanceOfToken(tokenAddress)](./sdk.appmodule.balanceoftoken.md) |  | Check the balance of the project wallet in a particular ERC20 token contract |
 |  [deployBundleModule(metadata)](./sdk.appmodule.deploybundlemodule.md) |  | Deploys a collection module. |
 |  [deployCurrencyModule(metadata)](./sdk.appmodule.deploycurrencymodule.md) |  | Deploys a currency module. |
 |  [deployDatastoreModule(metadata)](./sdk.appmodule.deploydatastoremodule.md) |  | Deploys a Datastore module |
@@ -34,7 +36,8 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [deployPackModule(metadata)](./sdk.appmodule.deploypackmodule.md) |  | Deploys a Pack module |
 |  [deploySplitsModule(metadata)](./sdk.appmodule.deploysplitsmodule.md) |  | Deploys a Splits module |
 |  [getAllModuleMetadata(filterByModuleType)](./sdk.appmodule.getallmodulemetadata.md) |  | Method to get a list of all module metadata on a given app. |
-|  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get a list of Collection module metadata. |
+|  [getBundleModules()](./sdk.appmodule.getbundlemodules.md) |  |  |
+|  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get a list of Bundle module metadata. |
 |  [getCurrencyModules()](./sdk.appmodule.getcurrencymodules.md) |  | Method to get a list of Currency module metadata. |
 |  [getDropModules()](./sdk.appmodule.getdropmodules.md) |  | Method to get a list of Drop module metadata. |
 |  [getMarketModules()](./sdk.appmodule.getmarketmodules.md) |  | Method to get a list of Market module metadata. |

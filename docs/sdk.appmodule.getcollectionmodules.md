@@ -9,7 +9,7 @@
 > - Use [AppModule.getAllModuleMetadata()](./sdk.appmodule.getallmodulemetadata.md) instead
 > 
 
-Method to get a list of Collection module metadata.
+Method to get a list of Bundle module metadata.
 
 <b>Signature:</b>
 
@@ -20,5 +20,5 @@ getCollectionModules(): Promise<ModuleMetadata[]>;
 
 Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->\[\]&gt;
 
-A promise of an array of Collection modules.
+A promise of an array of Bundle modules.
 

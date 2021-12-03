@@ -11,10 +11,11 @@ import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { AppModule } from "../modules/app";
-import { CollectionModule } from "../modules/collection";
+import { BundleModule } from "../modules/bundle";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
 import { MarketModule } from "../modules/market";
+import { CollectionModule } from "../modules/collection";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
@@ -24,6 +25,7 @@ import { IAppModule, RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,
   MetadataURIOrObject,
+  PermitRequestMessage,
   ProviderOrSigner,
   ValidProviderInput,
 } from "./types";
@@ -63,7 +65,7 @@ export interface ISDKOptions {
    * @returns transaction hash of relayed transaction.
    */
   transactionRelayerSendFunction: (
-    message: ForwardRequestMessage,
+    message: ForwardRequestMessage | PermitRequestMessage,
     signature: BytesLike,
   ) => Promise<string>;
 
@@ -83,7 +85,7 @@ export interface ISDKOptions {
  */
 export type AnyContract =
   | typeof AppModule
-  | typeof CollectionModule
+  | typeof BundleModule
   | typeof NFTModule
   | typeof CurrencyModule
   | typeof MarketModule
@@ -338,10 +340,20 @@ export class ThirdwebSDK {
   /**
    *
    * @param address - The contract address of the given Collection module.
-   * @returns The Collection Module.
+   * @returns The Bundle Module.
+   * @deprecated Use the new {@link getBundleModule} function instead.
    */
   public getCollectionModule(address: string): CollectionModule {
-    return this.getOrCreateModule(address, CollectionModule);
+    return this.getBundleModule(address);
+  }
+
+  /**
+   *
+   * @param address - The contract address of the given Bundle module.
+   * @returns The Bundle Module.
+   */
+  public getBundleModule(address: string): BundleModule {
+    return this.getOrCreateModule(address, BundleModule);
   }
 
   /**
@@ -458,14 +470,22 @@ export class ThirdwebSDK {
   }
 
   private async defaultRelayerSendFunction(
-    message: ForwardRequestMessage,
+    message: ForwardRequestMessage | PermitRequestMessage,
     signature: BytesLike,
   ): Promise<string> {
+    let messageType = "forward";
+
+    // if has owner property then it's permit :)
+    if ((message as PermitRequestMessage)?.owner) {
+      messageType = "permit";
+    }
+
     const body = JSON.stringify({
       request: message,
       signature,
-      type: "forward",
+      type: messageType,
     });
+
     // console.log("POST", this.options.transactionRelayerUrl, body);
     const response = await fetch(this.options.transactionRelayerUrl, {
       method: "POST",
