@@ -1,4 +1,5 @@
 import {
+  ERC20__factory,
   LazyNFT as Drop,
   LazyNFT__factory as Drop__factory,
 } from "@3rdweb/contracts";
@@ -253,13 +254,33 @@ export class DropModule extends ModuleWithRoles<Drop> {
     const proofs = [hexZeroPad([0], 32)];
     const mintCondition = await this.getActiveMintCondition();
     const overrides = (await this.getCallOverrides()) || {};
-    if (
-      mintCondition.currency === AddressZero &&
-      mintCondition.pricePerToken > 0
-    ) {
-      overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
-        quantity,
-      );
+    if (mintCondition.pricePerToken > 0) {
+      if (mintCondition.currency === AddressZero) {
+        overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
+          quantity,
+        );
+      } else {
+        const erc20 = ERC20__factory.connect(
+          mintCondition.currency,
+          this.providerOrSigner,
+        );
+        const owner = await this.getSignerAddress();
+        const spender = this.address;
+        const allowance = await erc20.allowance(owner, spender);
+        const totalPrice = BigNumber.from(mintCondition.pricePerToken).mul(
+          BigNumber.from(quantity),
+        );
+
+        if (allowance.lt(totalPrice)) {
+          // TODO: make it gasless
+          const tx = await erc20.increaseAllowance(
+            spender,
+            totalPrice,
+            await this.getCallOverrides(),
+          );
+          await tx.wait();
+        }
+      }
     }
     await this.sendTransaction("claim", [quantity, proofs], overrides);
   }
