@@ -28,7 +28,9 @@ describe("NFT Module", async () => {
         name: "test",
         image: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
         test: {
-            image: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+          test: {
+            image: readFileSync("test/3510820011_4f558b6dea_b.jpg")
+          }
         }
       })
       const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}/);

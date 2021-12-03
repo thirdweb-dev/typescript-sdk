@@ -368,6 +368,7 @@ export class AppModule
     moduleType: T,
     args: any[],
     factory: any,
+    
   ): Promise<string> {
     const gasPrice = await this.sdk.getGasPrice();
     const txOpts = gasPrice

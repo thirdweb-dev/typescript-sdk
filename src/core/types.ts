@@ -1,6 +1,5 @@
 import type { Network, Provider } from "@ethersproject/providers";
 import type { BytesLike, Signer } from "ethers";
-import { FileOrBuffer } from "..";
 
 /**
  * A valid "ethers" Provider or Signer.
