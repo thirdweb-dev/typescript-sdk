@@ -37,4 +37,6 @@ export default class CommonModuleMetadata {
    */
   @JsonProperty("external_link", String, PropertyConvertingMode.IGNORE_NULLABLE)
   externalLink?: string = undefined;
+
+  [key: string]: string | number | undefined | FileOrBuffer;
 }

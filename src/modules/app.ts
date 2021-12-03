@@ -340,15 +340,15 @@ export class AppModule
    */
   private async _prepareMetadata(metadata: CommonModuleMetadata): Promise<any> {
     for(const key in metadata) {
-      if (typeof metadata[key] === "string") { // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+      if (typeof metadata[key] === "string") { 
         return Promise.resolve(metadata);
       }
-      if (metadata[key] === undefined) { // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+      if (metadata[key] === undefined) { 
         return Promise.resolve(metadata);
       }
   
-      metadata[key] = await uploadToIPFS( // eslint-disable-line @typescript-eslint/no-unsafe-member-access
-        metadata[key] as FileOrBuffer, // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+      metadata[key] = await uploadToIPFS(
+        metadata[key] as FileOrBuffer,
         this.address,
         await this.getSignerAddress(),
       );
