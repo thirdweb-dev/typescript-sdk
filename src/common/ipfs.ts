@@ -72,12 +72,13 @@ export async function uploadMetadata(
     return metadata;
   }
   async function _fileHandler(object: any){
-    for(const key in Object.keys(object)) {
-      if (object[key] instanceof File) {
-        object[key] = await uploadToIPFS(object[key] as unknown as Buffer, contractAddress, signerAddress);
+    const keys = Object.keys(object)
+    for(const key in keys) {
+      if (Buffer.isBuffer(object[keys[key]])) {
+        object[keys[key]] = await uploadToIPFS(object[keys[key]], contractAddress, signerAddress);
       }
-      if (typeof object[key] === "object") {
-        _fileHandler(object[key]);
+      if (typeof object[keys[key]] === "object") {
+        object[keys[key]] = await _fileHandler(object[keys[key]]);
       }
     }
     return object;

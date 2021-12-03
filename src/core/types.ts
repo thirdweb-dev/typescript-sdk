@@ -1,5 +1,6 @@
 import type { Network, Provider } from "@ethersproject/providers";
 import type { BytesLike, Signer } from "ethers";
+import { FileOrBuffer } from "..";
 
 /**
  * A valid "ethers" Provider or Signer.
@@ -29,8 +30,7 @@ export type JSONValue =
  * A valid URI string or metadata object
  * @public
  */
-export type MetadataURIOrObject = string | Record<string, JSONValue>;
-
+export type MetadataURIOrObject = string | Record<string, any>;
 /**
  * Forward Request Message that's used for gasless transaction
  * @public
