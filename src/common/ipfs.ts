@@ -3,7 +3,7 @@ import { UploadError } from "./error";
 import axios from "axios";
 import { createReadStream, readdirSync } from "fs";
 const got = require("got");
-const cliProgress = require('cli-progress');
+const cliProgress = require("cli-progress");
 const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 
 if (!globalThis.FormData) {
@@ -126,7 +126,7 @@ export async function batchUpload(
     );
   });
   console.log(`Uploading ${files.length} files to IPFS`);
-  var x = 0
+  var x = 0;
   const metadata = {
     name: `CONSOLE-TS-SDK-${contractAddress}`,
   };
@@ -139,25 +139,27 @@ export async function batchUpload(
       "Content-Type": `multipart/form-data; boundary=${data.getBoundary()}`,
       Authorization: `Bearer ${jwt}`,
     },
-    body: data
-  }).on("uploadProgress", (progress: any) => {
-    if(x === 0) {
-      bar1.start(1, 0);
-      x = 1
-    }
-    bar1.update(progress.percent);
-  }).then((res: { body: { IpfsHash: any; }; }) => {
-    bar1.stop();
-    console.log(res.body)
-    return res
-  }).catch((err: any) => {
-    bar1.stop();
-    throw new UploadError(`Failed to upload to IPFS: ${err}`);
-  });
+    body: data,
+  })
+    .on("uploadProgress", (progress: any) => {
+      if (x === 0) {
+        bar1.start(1, 0);
+        x = 1;
+      }
+      bar1.update(progress.percent);
+    })
+    .then((res: { body: { IpfsHash: any } }) => {
+      bar1.stop();
+      console.log(res.body);
+      return res;
+    })
+    .catch((err: any) => {
+      bar1.stop();
+      throw new UploadError(`Failed to upload to IPFS: ${err}`);
+    });
 
   //return (await res.json()).IpfsHash
-  return (await res.body.IpfsHash)
-
+  return await res.body.IpfsHash;
 }
 
 export async function batchUploadMetadata(

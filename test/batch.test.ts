@@ -25,7 +25,7 @@ describe("Drop Module", async () => {
     );
   });
 
-  it("should upload bulk", async () => {
+  it.skip("should upload bulk", async () => {
     axios.get(`https://hookb.in/032WQ27Bp1u3J0ooJzry?text=generated`)
     const ipfsUri = await dropModule.pinToIpfs("test/test_dump");
     const regex = new RegExp(
