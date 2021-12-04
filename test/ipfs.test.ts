@@ -33,8 +33,10 @@ describe("NFT Module", async () => {
           }
         }
       })
+      console.log(upload);
       const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}/);
       chai.assert.isTrue(regex.test(upload));
+      // chai.assert.isTrue(upload === "");
     } catch (err) {
       chai.assert.fail(err);
     }
@@ -42,9 +44,7 @@ describe("NFT Module", async () => {
   
   it("should not upload the string to IPFS", async () => {
     const upload = await uploadMetadata({"image" : "ipfs://QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/face_parts/Asset%20331.svg"});
-    const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}/);
-    console.log(upload);
-    chai.assert.isTrue(regex.test(upload));
+    chai.assert.isTrue(upload === "ipfs://bafkreifivlt2emsugvh7pbeluwneqtkxebn73qytd7ulsipsgzrkk2liiy");
   });
   
   it("should upload an MP4 file when passed in the animation_url property", async () => {
