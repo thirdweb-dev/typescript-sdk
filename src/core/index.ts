@@ -341,7 +341,7 @@ export class ThirdwebSDK {
    *
    * @param address - The contract address of the given Collection module.
    * @returns The Bundle Module.
-   * @deprecated Use the new {@link getBundleModule} function instead.
+   * @deprecated Use the new {@link ThirdwebSDK.getBundleModule} function instead.
    */
   public getCollectionModule(address: string): CollectionModule {
     return this.getBundleModule(address);
