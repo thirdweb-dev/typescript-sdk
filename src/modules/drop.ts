@@ -274,13 +274,10 @@ export class DropModule extends ModuleWithRoles<Drop> {
         );
 
         if (allowance.lt(totalPrice)) {
-          // TODO: make it gasless
-          const tx = await erc20.increaseAllowance(
+          await this.sendContractTransaction(erc20, "approve", [
             spender,
-            totalPrice,
-            await this.getCallOverrides(),
-          );
-          await tx.wait();
+            allowance.add(totalPrice),
+          ]);
         }
       }
     }
