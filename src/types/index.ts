@@ -1,3 +1,7 @@
+import {
+  PublicClaimCondition,
+  PublicMintCondition,
+} from "./claim-conditions/PublicMintCondition";
 import FileOrBuffer from "./FileOrBuffer";
 import BundleModuleMetadata from "./module-deployments/BundleModuleMetadata";
 import CurrencyModuleMetadata from "./module-deployments/CurrencyModuleMetadata";
@@ -21,5 +25,7 @@ export {
   PackModuleMetadata,
   SplitsModuleMetadata,
   ModuleMetadata,
+  PublicMintCondition,
+  PublicClaimCondition,
   FileOrBuffer,
 };

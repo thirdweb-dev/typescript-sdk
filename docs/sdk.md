@@ -75,6 +75,7 @@ Output
 |  [DatastoreModuleMetadata](./sdk.datastoremodulemetadata.md) |  |
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md) |
 |  [DropModuleMetadata](./sdk.dropmodulemetadata.md) |  |
+|  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
 |  [MarketModuleMetadata](./sdk.marketmodulemetadata.md) |  |
@@ -131,6 +132,7 @@ Output
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
+|  [PublicClaimCondition](./sdk.publicclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
 

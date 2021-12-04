@@ -13,5 +13,5 @@ For example: if this value is 100, then the royalty is 1% of the total sales.
 <b>Signature:</b>
 
 ```typescript
-sellerFeeBasisPoints: number;
+sellerFeeBasisPoints?: number | undefined;
 ```

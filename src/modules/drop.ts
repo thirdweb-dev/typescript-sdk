@@ -1,4 +1,5 @@
 import {
+  ERC20__factory,
   LazyNFT as Drop,
   LazyNFT__factory as Drop__factory,
 } from "@3rdweb/contracts";
@@ -11,6 +12,8 @@ import { uploadMetadata } from "../common/ipfs";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import ClaimConditionFactory from "../factories/ClaimConditionFactory";
+import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
 
 /**
  * @beta
@@ -23,20 +26,6 @@ export interface CreatePublicMintCondition {
   pricePerToken?: BigNumberish;
   currency?: string;
   merkleRoot?: BytesLike;
-}
-
-/**
- * @beta
- */
-export interface PublicMintCondition {
-  startTimestamp: BigNumberish;
-  maxMintSupply: BigNumberish;
-  currentMintSupply: BigNumberish;
-  quantityLimitPerTransaction: BigNumberish;
-  waitTimeSecondsLimitPerTransaction: BigNumberish;
-  pricePerToken: BigNumberish;
-  currency: string;
-  merkleRoot: BytesLike;
 }
 
 /**
@@ -200,20 +189,49 @@ export class DropModule extends ModuleWithRoles<Drop> {
     );
   }
 
-  // owner functions
+  /**
+   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
+   */
   public async lazyMint(metadata: MetadataURIOrObject) {
     await this.lazyMintBatch([metadata]);
   }
 
+  /**
+   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
+   */
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
     const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
     await this.sendTransaction("lazyMintBatch", [uris]);
   }
 
+  /**
+   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
+   */
   public async lazyMintAmount(amount: BigNumberish) {
     await this.sendTransaction("lazyMintAmount", [amount]);
   }
 
+  /**
+   * Sets public mint conditions for the next minting using the
+   * claim condition factory.
+   *
+   * @param factory - The claim condition factory.
+   */
+  public async setMintConditions(factory: ClaimConditionFactory) {
+    const conditions = factory.buildConditions();
+    await this.sendTransaction("setPublicMintConditions", [conditions]);
+  }
+
+  public async getMintConditionsFactory(): Promise<ClaimConditionFactory> {
+    const conditions = await this.getAllMintConditions();
+    const factory = new ClaimConditionFactory();
+    factory.fromPublicClaimConditions(conditions);
+    return factory;
+  }
+
+  /**
+   * @deprecated - Use the ClaimConditionFactory instead.
+   */
   public async setPublicMintConditions(
     conditions: CreatePublicMintCondition[],
   ) {
@@ -232,17 +250,39 @@ export class DropModule extends ModuleWithRoles<Drop> {
     await this.sendTransaction("setPublicMintConditions", [_conditions]);
   }
 
-  public async claim(quantity: BigNumberish) {
-    const proofs = [hexZeroPad([0], 32)];
+  public async claim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ) {
     const mintCondition = await this.getActiveMintCondition();
     const overrides = (await this.getCallOverrides()) || {};
-    if (
-      mintCondition.currency === AddressZero &&
-      mintCondition.pricePerToken > 0
-    ) {
-      overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
-        quantity,
-      );
+    if (mintCondition.pricePerToken > 0) {
+      if (mintCondition.currency === AddressZero) {
+        overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
+          quantity,
+        );
+      } else {
+        const erc20 = ERC20__factory.connect(
+          mintCondition.currency,
+          this.providerOrSigner,
+        );
+        const owner = await this.getSignerAddress();
+        const spender = this.address;
+        const allowance = await erc20.allowance(owner, spender);
+        const totalPrice = BigNumber.from(mintCondition.pricePerToken).mul(
+          BigNumber.from(quantity),
+        );
+
+        if (allowance.lt(totalPrice)) {
+          // TODO: make it gasless
+          const tx = await erc20.increaseAllowance(
+            spender,
+            totalPrice,
+            await this.getCallOverrides(),
+          );
+          await tx.wait();
+        }
+      }
     }
     await this.sendTransaction("claim", [quantity, proofs], overrides);
   }
@@ -331,4 +371,9 @@ export class DropModule extends ModuleWithRoles<Drop> {
     }
     return "";
   }
+
+  // public async mintBatch(tokenMetadata: MetadataURIOrObject[]) {
+  // TODO: Upload all metadata to IPFS
+  // call lazyMintAmount(metadata.length - totalSupply) if totalSupply < metadata.length
+  // }
 }
