@@ -762,6 +762,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
     // (undocumented)
     protected readonly sdk: ThirdwebSDK;
     // @internal (undocumented)
+    protected sendContractTransaction(contract: BaseContract, fn: string, args: any[], callOverrides?: CallOverrides): Promise<TransactionReceipt>;
+    // @internal (undocumented)
     protected sendTransaction(fn: string, args: any[], callOverrides?: CallOverrides): Promise<TransactionReceipt>;
     setMetadata(metadata: MetadataURIOrObject): Promise<ModuleMetadata>;
     // @internal (undocumented)

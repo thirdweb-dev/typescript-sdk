@@ -239,6 +239,7 @@ export class PackModule extends ModuleWithRoles<PackContract> {
       packParams,
       await this.getCallOverrides(),
     );
+
     const receipt = await tx.wait();
     const event = receipt?.events?.find((e) => e.event === "PackCreated");
     const packId = event?.args?.packId;

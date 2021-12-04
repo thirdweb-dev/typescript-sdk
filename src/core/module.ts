@@ -283,13 +283,35 @@ export class Module<TContract extends BaseContract = BaseContract> {
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<TransactionReceipt> {
+    return this.sendContractTransaction(this.contract, fn, args, callOverrides);
+  }
+
+  /**
+   * @internal
+   */
+  protected async sendContractTransaction(
+    contract: BaseContract,
+    fn: string,
+    args: any[],
+    callOverrides?: CallOverrides,
+  ): Promise<TransactionReceipt> {
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
     if (this.options.transactionRelayerUrl) {
-      return await this.sendGaslessTransaction(fn, args, callOverrides);
+      return await this.sendGaslessTransaction(
+        contract,
+        fn,
+        args,
+        callOverrides,
+      );
     } else {
-      return await this.sendAndWaitForTransaction(fn, args, callOverrides);
+      return await this.sendAndWaitForTransaction(
+        contract,
+        fn,
+        args,
+        callOverrides,
+      );
     }
   }
 
@@ -297,11 +319,11 @@ export class Module<TContract extends BaseContract = BaseContract> {
    * @internal
    */
   private async sendAndWaitForTransaction(
+    contract: BaseContract,
     fn: string,
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<TransactionReceipt> {
-    const contract = this.contract;
     const tx = await contract.functions[fn](...args, callOverrides);
     if (tx.wait) {
       return await tx.wait();
@@ -313,6 +335,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
    * @internal
    */
   private async sendGaslessTransaction(
+    contract: BaseContract,
     fn: string,
     args: any[],
     callOverrides: CallOverrides,
@@ -326,7 +349,6 @@ export class Module<TContract extends BaseContract = BaseContract> {
     const provider = await this.getProvider();
     invariant(provider, "no provider to execute transaction");
     const chainId = await this.getChainID();
-    const contract = this.contract;
     const from = await this.getSignerAddress();
     const to = this.address;
     const value = callOverrides?.value || 0;
