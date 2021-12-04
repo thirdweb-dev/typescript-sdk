@@ -132,6 +132,7 @@ Output
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
+|  [PublicClaimCondition](./sdk.publicclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
 

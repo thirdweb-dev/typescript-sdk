@@ -367,7 +367,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
-    claim(quantity: BigNumberish_2): Promise<void>;
+    claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): LazyNFT;
     // (undocumented)
@@ -394,11 +394,11 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
-    // (undocumented)
+    // @deprecated (undocumented)
     lazyMint(metadata: MetadataURIOrObject): Promise<void>;
-    // (undocumented)
+    // @deprecated (undocumented)
     lazyMintAmount(amount: BigNumberish_2): Promise<void>;
-    // (undocumented)
+    // @deprecated (undocumented)
     lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
     // (undocumented)
     maxTotalSupply(): Promise<BigNumber_2>;
@@ -438,12 +438,12 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
 
 // @public (undocumented)
 export class DropModuleMetadata extends CommonModuleMetadata {
-    baseTokenUri: string;
+    baseTokenUri?: string | undefined;
     feeRecipient?: string;
     maxSupply: number;
     primarySaleFeeBasisPoints?: number | undefined;
     primarySaleRecipientAddress: string;
-    sellerFeeBasisPoints: number;
+    sellerFeeBasisPoints?: number | undefined;
     symbol?: string;
 }
 
@@ -1010,7 +1010,7 @@ export type PermitRequestMessage = {
 export type ProviderOrSigner = Provider | Signer;
 
 // @beta (undocumented)
-export interface PublicMintCondition {
+export interface PublicClaimCondition {
     // (undocumented)
     currency: string;
     // (undocumented)
@@ -1027,6 +1027,10 @@ export interface PublicMintCondition {
     startTimestamp: BigNumber_2;
     // (undocumented)
     waitTimeSecondsLimitPerTransaction: BigNumberish_2;
+}
+
+// @beta @deprecated (undocumented)
+export interface PublicMintCondition extends PublicClaimCondition {
 }
 
 // Warning: (ae-internal-missing-underscore) The name "replaceIpfsWithGateway" should be prefixed with an underscore because the declaration is marked as @internal
