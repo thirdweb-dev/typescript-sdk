@@ -74,7 +74,7 @@ export async function uploadMetadata(
   async function _fileHandler(object: any){
     const keys = Object.keys(object)
     for(const key in keys) {
-      if (Buffer.isBuffer(object[keys[key]]) || object[keys[key]] instanceof new File([], "")) {
+      if (Buffer.isBuffer(object[keys[key]]) || (typeof object[keys[key]].name == 'string' && typeof object[keys[key]] !='object')) {
         object[keys[key]] = await uploadToIPFS(object[keys[key]], contractAddress, signerAddress);
       }
       if (typeof object[keys[key]] === "object") {
