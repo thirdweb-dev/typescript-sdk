@@ -1,4 +1,5 @@
 import { MetadataURIOrObject } from "../core/types";
+import FileOrBuffer from "../types/FileOrBuffer";
 import { UploadError } from "./error";
 
 if (!globalThis.FormData) {
@@ -32,7 +33,7 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
  * @public
  */
 export async function uploadToIPFS(
-  data: string | File,
+  data: string | File | FileOrBuffer,
   contractAddress?: string,
   signerAddress?: string,
 ): Promise<string> {
@@ -41,7 +42,7 @@ export async function uploadToIPFS(
     "X-Public-Address": signerAddress || "",
   };
   const formData = new FormData();
-  formData.append("file", data);
+  formData.append("file", data as any);
   const res = await fetch("https://upload.nftlabs.co/upload", {
     method: "POST",
     body: formData as any,
