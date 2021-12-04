@@ -372,14 +372,8 @@ export class DropModule extends ModuleWithRoles<Drop> {
     return "";
   }
 
-  /**
-   *
-   * @beta
-   */
-  public async mintBatch(tokenMetadata: MetadataURIOrObject[]) {
-    // TODO: Upload all metadata to IPFS
-    // call lazyMintAmount(metadata.length - totalSupply) if totalSupply < metadata.length
-  }
-
-  public async;
+  // public async mintBatch(tokenMetadata: MetadataURIOrObject[]) {
+  // TODO: Upload all metadata to IPFS
+  // call lazyMintAmount(metadata.length - totalSupply) if totalSupply < metadata.length
+  // }
 }
