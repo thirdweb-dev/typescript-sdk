@@ -77,12 +77,8 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
    *
    * All secondary sales will use the `sellerFeeBasisPoints` and royalty recipient address.
    */
-  @JsonProperty(
-    "primary_sale_recipient_address",
-    String,
-    PropertyConvertingMode.IGNORE_NULLABLE,
-  )
-  primarySaleRecipientAddress? = "";
+  @JsonProperty("primary_sale_recipient_address", String)
+  primarySaleRecipientAddress = "";
 
   /**
    * The IPFS base URI thats prepended to all token URIs. This allows
