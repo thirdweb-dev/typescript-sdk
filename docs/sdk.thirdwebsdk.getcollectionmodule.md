@@ -6,7 +6,7 @@
 
 > Warning: This API is now obsolete.
 > 
-> Use the new  function instead.
+> Use the new [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md) function instead.
 > 
 
 <b>Signature:</b>

@@ -20,7 +20,7 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
     Number,
     PropertyConvertingMode.IGNORE_NULLABLE,
   )
-  sellerFeeBasisPoints = 0;
+  sellerFeeBasisPoints? = 0;
 
   /**
    * The amount of fees collected on the primary sale, represented as basis points. The default is 0.
@@ -77,11 +77,7 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
    *
    * All secondary sales will use the `sellerFeeBasisPoints` and royalty recipient address.
    */
-  @JsonProperty(
-    "primary_sale_recipient_address",
-    String,
-    PropertyConvertingMode.IGNORE_NULLABLE,
-  )
+  @JsonProperty("primary_sale_recipient_address", String)
   primarySaleRecipientAddress = "";
 
   /**
@@ -96,5 +92,5 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
     String,
     PropertyConvertingMode.IGNORE_NULLABLE,
   )
-  baseTokenUri = "";
+  baseTokenUri? = "";
 }
