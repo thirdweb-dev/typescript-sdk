@@ -41,12 +41,22 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     return NFTModule.moduleType;
   }
 
+  /**
+   * Fetches an NFT from storage with the resolved metadata.
+   *
+   * @param tokenId - The id of the token to fetch.
+   * @returns - The NFT metadata.
+   */
   public async get(tokenId: string): Promise<NFTMetadata> {
-    return await getTokenMetadata(
-      this.readOnlyContract,
-      tokenId,
-      this.ipfsGatewayUrl,
-    );
+    const storage = this.sdk.getStorage();
+    const uri = await this.readOnlyContract.tokenURI(tokenId);
+    const metadata = JSON.parse(await storage.get(uri));
+    return {
+      ...metadata,
+      id: tokenId,
+      uri,
+      image: storage.resolveFullUrl(metadata.image),
+    };
   }
 
   public async getAll(): Promise<NFTMetadata[]> {

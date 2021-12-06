@@ -10,16 +10,18 @@ import {
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
+import IStorage from "../interfaces/IStorage";
 import { AppModule } from "../modules/app";
 import { BundleModule } from "../modules/bundle";
+import { CollectionModule } from "../modules/collection";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
 import { MarketModule } from "../modules/market";
-import { CollectionModule } from "../modules/collection";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule } from "../modules/token";
+import IpfsStorage from "../storage/IpfsStorage";
 import { ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { IAppModule, RegistryModule } from "./registry";
 import {
@@ -117,6 +119,8 @@ export class ThirdwebSDK {
 
   private _signer: Signer | null = null;
 
+  private storage: IStorage;
+
   /**
    * The active Signer, you should not need to access this unless you are deploying new modules.
    * @internal
@@ -145,6 +149,7 @@ export class ThirdwebSDK {
       ...this.defaultOptions,
       ...opts,
     };
+    this.storage = new IpfsStorage(this.options.ipfsGatewayUrl);
   }
   private updateModuleSigners() {
     for (const [, _module] of this.modules) {
@@ -497,6 +502,24 @@ export class ThirdwebSDK {
       return result.txHash;
     }
     throw new Error("relay transaction failed");
+  }
+
+  /**
+   * Accessor for the storage instance used by the SDK
+   *
+   * @returns - The Storage instance.
+   */
+  public getStorage(): IStorage {
+    return this.storage;
+  }
+
+  /**
+   * Allows you to override the storage used across the SDK.
+   *
+   * @param storage - The Storage instance to use.
+   */
+  public overrideStorage(storage: IStorage): void {
+    this.storage = storage;
   }
 }
 

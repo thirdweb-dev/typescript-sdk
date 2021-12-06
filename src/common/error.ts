@@ -28,3 +28,16 @@ export class UploadError extends Error {
     super(`UPLOAD_FAILED: ${message}`);
   }
 }
+
+/**
+ * Thrown when data fails to fetch from storage.
+ */
+export class FetchError extends Error {
+  public innerError?: Error;
+
+  /** @internal */
+  constructor(message: string, innerError?: Error) {
+    super(`FETCH_FAILED: ${message}`);
+    this.innerError = innerError;
+  }
+}
