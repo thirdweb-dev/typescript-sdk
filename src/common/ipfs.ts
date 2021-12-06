@@ -56,10 +56,6 @@ export async function uploadToIPFS(
   }
 }
 
-
-
-
-
 /**
  * @internal
  */
@@ -71,11 +67,19 @@ export async function uploadMetadata(
   if (typeof metadata === "string") {
     return metadata;
   }
-  async function _fileHandler(object: any){
-    const keys = Object.keys(object)
-    for(const key in keys) {
-      if (Buffer.isBuffer(object[keys[key]]) || (typeof object[keys[key]].name == 'string' && typeof object[keys[key]] !='object')) {
-        object[keys[key]] = await uploadToIPFS(object[keys[key]], contractAddress, signerAddress);
+  async function _fileHandler(object: any) {
+    const keys = Object.keys(object);
+    for (const key in keys) {
+      if (
+        Buffer.isBuffer(object[keys[key]]) ||
+        (typeof object[keys[key]].name === "string" &&
+          typeof object[keys[key]] !== "object")
+      ) {
+        object[keys[key]] = await uploadToIPFS(
+          object[keys[key]],
+          contractAddress,
+          signerAddress,
+        );
       }
       if (typeof object[keys[key]] === "object") {
         object[keys[key]] = await _fileHandler(object[keys[key]]);

@@ -708,7 +708,7 @@ export class MarketModuleMetadata extends CommonModuleMetadata {
 }
 
 // @public
-export type MetadataURIOrObject = string | Record<string, JSONValue>;
+export type MetadataURIOrObject = string | Record<string, any>;
 
 // @public
 export class Module<TContract extends BaseContract = BaseContract> {
@@ -815,7 +815,11 @@ export const NFTLabsSDK: typeof ThirdwebSDK;
 // @public
 export interface NFTMetadata {
     // (undocumented)
+    animation_url?: string;
+    // (undocumented)
     description?: string;
+    // (undocumented)
+    external_url?: string;
     // (undocumented)
     id: string;
     // (undocumented)

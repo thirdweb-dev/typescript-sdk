@@ -9,7 +9,7 @@ import {
   Pack__factory,
   ProtocolControl,
   ProtocolControl__factory,
-  Royalty__factory
+  Royalty__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -17,11 +17,13 @@ import { BigNumber, ethers, Signer } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { JsonConvert } from "json2typescript";
 import {
-  ChainlinkVrf, CurrencyValue,
-  getCurrencyValue, Role,
+  ChainlinkVrf,
+  CurrencyValue,
+  getCurrencyValue,
+  Role,
   RolesMap,
   uploadMetadata,
-  uploadToIPFS
+  uploadToIPFS,
 } from "../common";
 import { getContractMetadata } from "../common/contract";
 import { invariant } from "../common/invariant";
@@ -338,7 +340,7 @@ export class AppModule
    * @param metadata - The metadata of the module to be deployed
    * @returns - The sanitized metadata with an uploaded image ipfs hash
    */
-   private async _prepareMetadata(metadata: CommonModuleMetadata): Promise<any> {
+  private async _prepareMetadata(metadata: CommonModuleMetadata): Promise<any> {
     if (typeof metadata.image === "string") {
       return Promise.resolve(metadata);
     }
@@ -368,7 +370,6 @@ export class AppModule
     moduleType: T,
     args: any[],
     factory: any,
-    
   ): Promise<string> {
     const gasPrice = await this.sdk.getGasPrice();
     const txOpts = gasPrice

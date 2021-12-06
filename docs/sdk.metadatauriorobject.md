@@ -9,7 +9,5 @@ A valid URI string or metadata object
 <b>Signature:</b>
 
 ```typescript
-export declare type MetadataURIOrObject = string | Record<string, JSONValue>;
+export declare type MetadataURIOrObject = string | Record<string, any>;
 ```
-<b>References:</b> [JSONValue](./sdk.jsonvalue.md)
-
