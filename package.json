@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/nftlabs/nftlabs-sdk-ts.git"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "source": "src/index.ts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
