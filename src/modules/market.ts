@@ -248,13 +248,10 @@ export class MarketModule extends ModuleWithRoles<Market> {
           this.address.toLowerCase();
 
         if (!isTokenApproved) {
-          // TODO: make it gasless
-          const tx = await asset.setApprovalForAll(
+          await this.sendContractTransaction(asset, "setApprovalForAll", [
             this.address,
             true,
-            await this.getCallOverrides(),
-          );
-          await tx.wait();
+          ]);
         }
       }
     } else {
@@ -265,13 +262,10 @@ export class MarketModule extends ModuleWithRoles<Market> {
 
       const approved = await asset.isApprovedForAll(from, this.address);
       if (!approved) {
-        // TODO: make it gasless
-        const tx = await asset.setApprovalForAll(
+        await this.sendContractTransaction(asset, "setApprovalForAll", [
           this.address,
           true,
-          await this.getCallOverrides(),
-        );
-        await tx.wait();
+        ]);
       }
     }
 
@@ -314,13 +308,10 @@ export class MarketModule extends ModuleWithRoles<Market> {
       );
       const allowance = await erc20.allowance(owner, spender);
       if (allowance.lt(totalPrice)) {
-        // TODO: make it gasless
-        const tx = await erc20.increaseAllowance(
+        await this.sendContractTransaction(erc20, "approve", [
           spender,
-          totalPrice,
-          await this.getCallOverrides(),
-        );
-        await tx.wait();
+          allowance.add(totalPrice),
+        ]);
       }
     }
 

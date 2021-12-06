@@ -11,5 +11,5 @@ e.g. if a Drop Collection has a token URI of /ipfs/BOREDAPES/TOKEN1, then the IP
 <b>Signature:</b>
 
 ```typescript
-baseTokenUri: string;
+baseTokenUri?: string | undefined;
 ```

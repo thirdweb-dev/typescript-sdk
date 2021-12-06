@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-claim(quantity: BigNumberish): Promise<void>;
+claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<void>;
 ```
 
 ## Parameters
@@ -18,6 +18,7 @@ claim(quantity: BigNumberish): Promise<void>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  quantity | BigNumberish |  |
+|  proofs | BytesLike\[\] |  |
 
 <b>Returns:</b>
 

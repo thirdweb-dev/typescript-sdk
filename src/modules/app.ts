@@ -23,6 +23,7 @@ import {
   Role,
   RolesMap,
   uploadMetadata,
+  uploadToIPFS,
 } from "../common";
 import { getContractMetadata } from "../common/contract";
 import { invariant } from "../common/invariant";
@@ -30,7 +31,9 @@ import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import IAppModule from "../interfaces/IAppModule";
+import FileOrBuffer from "../types/FileOrBuffer";
 import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
+import CommonModuleMetadata from "../types/module-deployments/CommonModuleMetadata";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
 import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
 import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
@@ -332,6 +335,28 @@ export class AppModule
   }
 
   /**
+   * Helper method that handles `image` property uploads if its a file
+   *
+   * @param metadata - The metadata of the module to be deployed
+   * @returns - The sanitized metadata with an uploaded image ipfs hash
+   */
+  private async _prepareMetadata(metadata: CommonModuleMetadata): Promise<any> {
+    if (typeof metadata.image === "string") {
+      return Promise.resolve(metadata);
+    }
+    if (metadata.image === undefined) {
+      return Promise.resolve(metadata);
+    }
+
+    metadata.image = await uploadToIPFS(
+      metadata.image as FileOrBuffer,
+      this.address,
+      await this.getSignerAddress(),
+    );
+    return Promise.resolve(metadata);
+  }
+
+  /**
    * Helper method that deploys a module and returns its address
    *
    * @internal
@@ -377,7 +402,7 @@ export class AppModule
     metadata: BundleModuleMetadata,
   ): Promise<CollectionModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
-      metadata,
+      await this._prepareMetadata(metadata),
       BundleModuleMetadata,
     );
 
@@ -413,7 +438,7 @@ export class AppModule
     metadata: SplitsModuleMetadata,
   ): Promise<SplitsModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
-      metadata,
+      await this._prepareMetadata(metadata),
       SplitsModuleMetadata,
     );
 
@@ -448,7 +473,7 @@ export class AppModule
     metadata: NftModuleMetadata,
   ): Promise<NFTModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
-      metadata,
+      await this._prepareMetadata(metadata),
       NftModuleMetadata,
     );
 
@@ -484,7 +509,7 @@ export class AppModule
     metadata: CurrencyModuleMetadata,
   ): Promise<CurrencyModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
-      metadata,
+      await this._prepareMetadata(metadata),
       CurrencyModuleMetadata,
     );
 
@@ -519,7 +544,7 @@ export class AppModule
     metadata: MarketModuleMetadata,
   ): Promise<MarketModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
-      metadata,
+      await this._prepareMetadata(metadata),
       MarketModuleMetadata,
     );
 
@@ -553,7 +578,7 @@ export class AppModule
     metadata: PackModuleMetadata,
   ): Promise<PackModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
-      metadata,
+      await this._prepareMetadata(metadata),
       PackModuleMetadata,
     );
 
@@ -602,7 +627,7 @@ export class AppModule
     );
 
     const serializedMetadata = this.jsonConvert.serializeObject(
-      metadata,
+      await this._prepareMetadata(metadata),
       DropModuleMetadata,
     );
 
@@ -644,7 +669,7 @@ export class AppModule
     metadata: DatastoreModuleMetadata,
   ): Promise<DatastoreModule> {
     const serializedMetadata = this.jsonConvert.serializeObject(
-      metadata,
+      await this._prepareMetadata(metadata),
       DatastoreModuleMetadata,
     );
 

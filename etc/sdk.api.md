@@ -4,6 +4,8 @@
 
 ```ts
 
+/// <reference types="node" />
+
 import { AccessControlEnumerable } from '@3rdweb/contracts';
 import { BaseContract } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -365,7 +367,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
-    claim(quantity: BigNumberish_2): Promise<void>;
+    claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): LazyNFT;
     // (undocumented)
@@ -380,6 +382,8 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     getAllMintConditions(): Promise<PublicMintCondition[]>;
     // (undocumented)
     getAllUnclaimed(): Promise<NFTMetadataOwner[]>;
+    // (undocumented)
+    getMintConditionsFactory(): Promise<ClaimConditionFactory>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
@@ -390,11 +394,11 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
-    // (undocumented)
+    // @deprecated (undocumented)
     lazyMint(metadata: MetadataURIOrObject): Promise<void>;
-    // (undocumented)
+    // @deprecated (undocumented)
     lazyMintAmount(amount: BigNumberish_2): Promise<void>;
-    // (undocumented)
+    // @deprecated (undocumented)
     lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
     // (undocumented)
     maxTotalSupply(): Promise<BigNumber_2>;
@@ -410,9 +414,11 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     setBaseTokenUri(uri: string): Promise<TransactionReceipt>;
     // (undocumented)
     setMaxTotalSupply(amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // Warning: (ae-forgotten-export) The symbol "ClaimConditionFactory" needs to be exported by the entry point index.d.ts
+    setMintConditions(factory: ClaimConditionFactory): Promise<void>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // (undocumented)
+    // @deprecated (undocumented)
     setPublicMintConditions(conditions: CreatePublicMintCondition[]): Promise<void>;
     // (undocumented)
     setRestrictedTransfer(restricted: boolean): Promise<TransactionReceipt>;
@@ -432,14 +438,17 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
 
 // @public (undocumented)
 export class DropModuleMetadata extends CommonModuleMetadata {
-    baseTokenUri: string;
+    baseTokenUri?: string | undefined;
     feeRecipient?: string;
     maxSupply: number;
     primarySaleFeeBasisPoints?: number | undefined;
     primarySaleRecipientAddress: string;
-    sellerFeeBasisPoints: number;
+    sellerFeeBasisPoints?: number | undefined;
     symbol?: string;
 }
+
+// @public (undocumented)
+export type FileOrBuffer = Buffer | File;
 
 // @public
 export type ForwardRequestMessage = {
@@ -542,6 +551,12 @@ export const InterfaceId_IERC1155: Uint8Array;
 //
 // @internal (undocumented)
 export const InterfaceId_IERC721: Uint8Array;
+
+// @public
+export class InvalidAddressError extends Error {
+    // @internal
+    constructor(address?: string);
+}
 
 // @public
 export class InvariantError extends Error {
@@ -746,6 +761,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
     readOnlyContract: TContract;
     // (undocumented)
     protected readonly sdk: ThirdwebSDK;
+    // @internal (undocumented)
+    protected sendContractTransaction(contract: BaseContract, fn: string, args: any[], callOverrides?: CallOverrides): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected sendTransaction(fn: string, args: any[], callOverrides?: CallOverrides): Promise<TransactionReceipt>;
     setMetadata(metadata: MetadataURIOrObject): Promise<ModuleMetadata>;
@@ -995,7 +1012,7 @@ export type PermitRequestMessage = {
 export type ProviderOrSigner = Provider | Signer;
 
 // @beta (undocumented)
-export interface PublicMintCondition {
+export interface PublicClaimCondition {
     // (undocumented)
     currency: string;
     // (undocumented)
@@ -1009,9 +1026,13 @@ export interface PublicMintCondition {
     // (undocumented)
     quantityLimitPerTransaction: BigNumberish_2;
     // (undocumented)
-    startTimestamp: BigNumberish_2;
+    startTimestamp: BigNumber_2;
     // (undocumented)
     waitTimeSecondsLimitPerTransaction: BigNumberish_2;
+}
+
+// @beta @deprecated (undocumented)
+export interface PublicMintCondition extends PublicClaimCondition {
 }
 
 // Warning: (ae-internal-missing-underscore) The name "replaceIpfsWithGateway" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1100,7 +1121,7 @@ export class UploadError extends Error {
 export function uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
 
 // @public
-export function uploadToIPFS(data: string | File, contractAddress?: string, signerAddress?: string): Promise<string>;
+export function uploadToIPFS(data: string | File | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
 
 // @public
 export type ValidProviderInput = ProviderOrSigner | Network | string;
