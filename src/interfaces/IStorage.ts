@@ -25,11 +25,7 @@ export default interface IStorage {
    *
    * @returns - The CID of the uploaded folder.
    */
-  uploadFolder(
-    path: string,
-    contractAddress?: string,
-    signerAddress?: string,
-  ): Promise<string>;
+  uploadFolder(path: string, contractAddress?: string): Promise<string>;
 
   /**
    * Fetches a one-time-use upload token that can used to upload
@@ -37,7 +33,7 @@ export default interface IStorage {
    *
    * @returns - The one time use token that can be passed to the Pinata API.
    */
-  getUploadToken(): Promise<string>;
+  getUploadToken(contractAddress: string): Promise<string>;
 
   /**
    * Fetches data from storage. This method does not handle any deserialization.

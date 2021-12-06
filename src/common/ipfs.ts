@@ -82,11 +82,10 @@ export async function batchUpload(
   const headers = {
     "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
   };
-  var key = process.env.PINATA_API_KEY;
-  var secret = process.env.PINATA_API_SECRET;
-  var jwt = process.env.PINATA_API_JWT;
+  let key = process.env.PINATA_API_KEY;
+  let secret = process.env.PINATA_API_SECRET;
+  let jwt = process.env.PINATA_API_JWT;
   if (!key || !secret) {
-
     await fetch("https://upload.nftlabs.co/grant", {
       method: "GET",
       headers,
@@ -100,7 +99,7 @@ export async function batchUpload(
   const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
   const files = readdirSync(directory);
-  let data = new FormData() as {
+  const data = new FormData() as {
     append(name: string, value: string | Blob, fileName?: string): void;
     delete(name: string): void;
     get(name: string): FormDataEntryValue | null;
@@ -138,15 +137,15 @@ export async function batchUpload(
     },
     body: data,
   })
-    .then((res) => {
-      console.log(res.body);
-      return res;
+    .then((response) => {
+      console.log(response.body);
+      return response;
     })
     .catch((err: any) => {
       throw new UploadError(`Failed to upload to IPFS: ${err}`);
     });
 
-  return (await res.json()).IpfsHash
+  return (await res.json()).IpfsHash;
 }
 
 export async function batchUploadMetadata(
@@ -155,8 +154,8 @@ export async function batchUploadMetadata(
 ): Promise<MetadataURIOrObject[]> {
   const ipfsUri = await batchUpload(directory, contractAddress);
   const files = readdirSync(directory);
-  var metadatas = [];
-  for (var i = 1; i < files.length + 1; i++) {
+  const metadatas = [];
+  for (let i = 1; i < files.length + 1; i++) {
     metadatas.push(`ipfs://${ipfsUri}/${i}.json`);
   }
   return metadatas;
