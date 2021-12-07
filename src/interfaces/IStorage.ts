@@ -1,4 +1,4 @@
-import { MetadataURIOrObject } from "..";
+import { MetadataURIOrObject } from "../core/types";
 import FileOrBuffer from "../types/FileOrBuffer";
 
 export default interface IStorage {
