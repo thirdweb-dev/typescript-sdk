@@ -20,6 +20,7 @@ import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { uploadMetadata } from "../common/ipfs";
+import IStorage from "../storage/IpfsStorage";
 import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role } from "../common/role";
 import { ModuleMetadata } from "../types/ModuleMetadata";
@@ -68,6 +69,9 @@ export class Module<TContract extends BaseContract = BaseContract> {
     this._providerOrSigner = value;
   }
 
+  private get getStorage(): IStorage {
+    return new IStorage(this.options.ipfsGatewayUrl);
+  }
   /**
    * @internal
    */

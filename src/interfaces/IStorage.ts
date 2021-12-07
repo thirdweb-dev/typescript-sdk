@@ -1,3 +1,4 @@
+import { JSONValue, MetadataURIOrObject } from "..";
 import FileOrBuffer from "../types/FileOrBuffer";
 
 export default interface IStorage {
@@ -54,4 +55,19 @@ export default interface IStorage {
    * @param hash - The hash of a file.
    */
   resolveFullUrl(hash: string): string;
+
+  /**
+   *
+   * Uploads metadata to IPFS
+   *
+   * @param metadata - The metadata to be uploaded.
+   * @param contractAddress - Optional. The contract address the data belongs to.
+   * @param signerAddress - Optional. The address of the signer.
+   */
+
+  uploadMetadata(
+    metadata: MetadataURIOrObject,
+    contractAddress?: string,
+    signerAddress?: string,
+  ): Promise<string>;
 }

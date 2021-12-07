@@ -1,5 +1,6 @@
 import { createReadStream, readdirSync } from "fs";
 import { FetchError, UploadError } from "../common/error";
+import { MetadataURIOrObject } from "../core/types";
 import IStorage from "../interfaces/IStorage";
 import { FileOrBuffer } from "../types";
 
@@ -122,6 +123,34 @@ export default class IpfsStorage implements IStorage {
     } catch (err: any) {
       throw new FetchError(`Failed to fetch IPFS file: ${uri}`, err);
     }
+  }
+
+  public async uploadMetadata(
+    metadata: MetadataURIOrObject,
+    contractAddress?: string,
+    signerAddress?: string,
+  ): Promise<string> {
+    if (typeof metadata === "string") {
+      return metadata;
+    }
+    return await this.upload(
+      JSON.stringify(metadata),
+      contractAddress,
+      signerAddress,
+    );
+  }
+
+  public async batchUploadMetadata(
+    directory: string,
+    contractAddress?: string,
+  ): Promise<MetadataURIOrObject[]> {
+    const ipfsUri = this.uploadFolder(directory, contractAddress);
+    const files = readdirSync(directory);
+    const metadatas = [];
+    for (let i = 1; i < files.length + 1; i++) {
+      metadatas.push(`ipfs://${ipfsUri}/${i}.json`);
+    }
+    return metadatas;
   }
 
   /**
