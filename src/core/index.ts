@@ -1,6 +1,10 @@
+import { Snapshot } from "./../types/snapshots/Snapshot";
 import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
+import { SHA256 } from "crypto-js";
 import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
+import { JsonConvert } from "json2typescript";
+import MerkleTree from "merkletreejs";
 import type { C } from "ts-toolbelt";
 import { getContractMetadata, uploadMetadata } from "../common";
 import {
@@ -10,17 +14,19 @@ import {
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
+import { ISDKOptions, IThirdwebSdk } from "../interfaces";
 import { AppModule } from "../modules/app";
 import { BundleModule } from "../modules/bundle";
+import { CollectionModule } from "../modules/collection";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
 import { MarketModule } from "../modules/market";
-import { CollectionModule } from "../modules/collection";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule } from "../modules/token";
 import { ModuleMetadataNoType } from "../types/ModuleMetadata";
+import { Snapshot, ClaimProof } from "../types/snapshots";
 import { IAppModule, RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,
@@ -29,56 +35,6 @@ import {
   ProviderOrSigner,
   ValidProviderInput,
 } from "./types";
-
-/**
- * The optional options that can be passed to the SDK.
- * @public
- */
-export interface ISDKOptions {
-  /**
-   * An optional IPFS Gateway. (Default: `https://cloudflare-ipfs.com/ipfs/`).
-   */
-  ipfsGatewayUrl: string;
-
-  /**
-   * Optional Registry Contract Address
-   */
-  registryContractAddress: string;
-
-  /**
-   * maxGasPrice for transactions
-   */
-  maxGasPriceInGwei: number;
-
-  /**
-   * Optional default speed setting for transactions
-   */
-  gasSpeed: string;
-
-  /**
-   * Optional relayer url to be used for gasless transaction
-   */
-  transactionRelayerUrl: string;
-
-  /**
-   * Optional function for sending transaction to relayer
-   * @returns transaction hash of relayed transaction.
-   */
-  transactionRelayerSendFunction: (
-    message: ForwardRequestMessage | PermitRequestMessage,
-    signature: BytesLike,
-  ) => Promise<string>;
-
-  /**
-   * Optional trusted forwarder address overwrite
-   */
-  transactionRelayerForwarderAddress: string;
-
-  /**
-   * Optional read only RPC url
-   */
-  readOnlyRpcUrl: string;
-}
 
 /**
  * @internal
@@ -99,7 +55,7 @@ export type AnyContract =
  * The entrypoint to the SDK.
  * @public
  */
-export class ThirdwebSDK {
+export class ThirdwebSDK implements IThirdwebSdk {
   // default options
   private options: ISDKOptions;
   private defaultOptions: ISDKOptions = {
@@ -116,6 +72,8 @@ export class ThirdwebSDK {
   private providerOrSigner: ProviderOrSigner;
 
   private _signer: Signer | null = null;
+
+  private _jsonConvert = new JsonConvert();
 
   /**
    * The active Signer, you should not need to access this unless you are deploying new modules.
@@ -146,6 +104,7 @@ export class ThirdwebSDK {
       ...opts,
     };
   }
+
   private updateModuleSigners() {
     for (const [, _module] of this.modules) {
       if (this.isReadOnly()) {
@@ -497,6 +456,43 @@ export class ThirdwebSDK {
       return result.txHash;
     }
     throw new Error("relay transaction failed");
+  }
+
+  public async createSnapshot(leafs: string[]): Promise<{
+    merkleRoot: string;
+    snapshotUri: string;
+    snapshot: Snapshot;
+  }> {
+    const hashedLeafs = leafs.map((l) => SHA256(l).toString());
+    const tree = new MerkleTree(hashedLeafs, SHA256, {
+      sortPairs: true,
+    });
+
+    const snapshot: Snapshot = {
+      merkleRoot: tree.getRoot().toString("hex"),
+      claims: leafs.map((l): ClaimProof => {
+        const proof = tree
+          .getProof(SHA256(l).toString())
+          .map((p) => p.data.toString("hex") as string);
+        return {
+          address: l,
+          proof,
+        };
+      }),
+    };
+
+    // TODO: Upload to storage
+    const serializedSnapshot = this._jsonConvert.serializeObject(
+      snapshot,
+      Snapshot,
+    );
+    const uri = "";
+
+    return {
+      merkleRoot: tree.getRoot().toString("hex"),
+      snapshotUri: uri,
+      snapshot,
+    };
   }
 }
 
