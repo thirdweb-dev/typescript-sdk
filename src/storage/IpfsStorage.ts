@@ -1,4 +1,5 @@
 import { createReadStream, readdirSync } from "fs";
+import { uploadMetadata } from "..";
 import { FetchError, UploadError } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
 import IStorage from "../interfaces/IStorage";
@@ -88,7 +89,7 @@ export default class IpfsStorage implements IStorage {
       body: data,
     })
       .then((response) => {
-        console.log(response.body);
+        // console.log(response.body);
         return response;
       })
       .catch((err: any) => {
@@ -134,6 +135,27 @@ export default class IpfsStorage implements IStorage {
     if (typeof metadata === "string") {
       return metadata;
     }
+    const _fileHandler = async (object: any) => {
+      const keys = Object.keys(object);
+      for (const key in keys) {
+        const val = object[keys[key]];
+        const shouldUpload = val instanceof File || val instanceof Buffer;
+
+        if (shouldUpload) {
+          object[keys[key]] = await this.upload(object[keys[key]]);
+        }
+        if (shouldUpload && typeof object[keys[key]] !== "string") {
+          throw new Error("Upload to IPFS failed");
+        }
+        if (typeof val === "object") {
+          object[keys[key]] = await _fileHandler(object[keys[key]]);
+        }
+      }
+      return object;
+    };
+
+    metadata = await _fileHandler(metadata);
+
     return await this.upload(
       JSON.stringify(metadata),
       contractAddress,

@@ -167,7 +167,7 @@ export async function batchUpload(
     body: data,
   })
     .then((response) => {
-      console.log(response.body);
+      // console.log(response.body);
       return response;
     })
     .catch((err: any) => {

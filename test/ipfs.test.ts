@@ -16,7 +16,7 @@ describe("IPFS Uploads", async () => {
       ),
     );
   });
-  async function getFile(upload): Promise<Response> {
+  async function getFile(upload: string): Promise<Response> {
     const response = await fetch(
       `https://nftlabs.mypinata.cloud/ipfs/${upload.replace("ipfs://", "")}`,
     )
