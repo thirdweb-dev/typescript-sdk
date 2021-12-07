@@ -8,7 +8,6 @@ import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BytesLike } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
-import { uploadMetadata } from "../common/ipfs";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -215,7 +214,9 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     metadataWithSupply: INFTBundleCreateArgs[],
   ): Promise<BundleMetadata[]> {
     const uris = await Promise.all(
-      metadataWithSupply.map((a) => a.metadata).map((a) => uploadMetadata(a)),
+      metadataWithSupply
+        .map((a) => a.metadata)
+        .map((a) => this.sdk.getStorage().uploadMetadata(a)),
     );
     const supplies = metadataWithSupply.map((a) => a.supply);
     const to = await this.getSignerAddress();
@@ -245,7 +246,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     if (allowance < tokenAmount) {
       await token.increaseAllowance(this.address, tokenAmount);
     }
-    const uri = await uploadMetadata(args.metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(args.metadata);
     await this.sendTransaction("wrapERC20", [
       tokenContract,
       tokenAmount,
@@ -281,7 +282,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
         await asset.setApprovalForAll(this.address, true);
       }
     }
-    const uri = await uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     await this.sendTransaction("wrapERC721", [tokenContract, tokenId, uri]);
   }
   public async createWithERC721(
@@ -391,7 +392,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     }
 
     metadata.seller_fee_basis_points = amount;
-    const uri = await uploadMetadata(
+    const uri = await this.sdk.getStorage().uploadMetadata(
       {
         ...metadata,
       },
@@ -410,7 +411,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
   ): Promise<TransactionReceipt> {
-    const uri = await uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     return await this.sendTransaction("setContractURI", [uri]);
   }
 

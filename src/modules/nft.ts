@@ -4,7 +4,6 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
-import { uploadMetadata } from "../common/ipfs";
 import { NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -157,7 +156,7 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     to: string,
     metadata: MetadataURIOrObject,
   ): Promise<NFTMetadata> {
-    const uri = await uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     const receipt = await this.sendTransaction("mintNFT", [to, uri]);
     const event = this.parseEventLogs("Minted", receipt?.logs);
     const tokenId = event?.tokenId;
@@ -174,7 +173,9 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     to: string,
     metadatas: MetadataURIOrObject[],
   ): Promise<NFTMetadata[]> {
-    const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
+    const uris = await Promise.all(
+      metadatas.map((m) => this.sdk.getStorage().uploadMetadata(m)),
+    );
     const receipt = await this.sendTransaction("mintNFTBatch", [to, uris]);
     const event = this.parseEventLogs("MintedBatch", receipt?.logs);
     const tokenIds = event.tokenIds;
@@ -213,7 +214,7 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     }
 
     metadata.seller_fee_basis_points = amount;
-    const uri = await uploadMetadata(
+    const uri = await this.sdk.getStorage().uploadMetadata(
       {
         ...metadata,
       },
@@ -232,7 +233,7 @@ export class NFTModule extends ModuleWithRoles<NFT> {
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
   ): Promise<TransactionReceipt> {
-    const uri = await uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     return await this.sendTransaction("setContractURI", [uri]);
   }
 

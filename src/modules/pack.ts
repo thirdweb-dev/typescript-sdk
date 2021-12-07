@@ -15,7 +15,6 @@ import {
 } from "../common";
 import { ChainlinkVrf } from "../common/chainlink";
 import { NotFoundError } from "../common/error";
-import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -223,7 +222,7 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     const from = await this.getSignerAddress();
     const ids = args.assets.map((a) => a.tokenId);
     const amounts = args.assets.map((a) => a.amount);
-    const uri = await uploadMetadata(args.metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(args.metadata);
 
     const packParams = ethers.utils.defaultAbiCoder.encode(
       ["string", "uint256", "uint256"],
@@ -324,7 +323,7 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     }
 
     metadata.seller_fee_basis_points = amount;
-    const uri = await uploadMetadata(
+    const uri = await this.sdk.getStorage().uploadMetadata(
       {
         ...metadata,
       },
@@ -341,7 +340,7 @@ export class PackModule extends ModuleWithRoles<PackContract> {
   }
 
   public async setModuleMetadata(metadata: MetadataURIOrObject) {
-    const uri = await uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     await this.sendTransaction("setContractURI", [uri]);
   }
 
