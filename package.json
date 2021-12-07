@@ -74,7 +74,6 @@
     "@ethersproject/keccak256": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
-    "cross-blob": "^3.0.0",
     "crypto-js": "^4.1.1",
     "eth-permit": "^0.2.1",
     "form-data": "^4.0.0",

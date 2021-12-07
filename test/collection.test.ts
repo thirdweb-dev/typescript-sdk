@@ -77,7 +77,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
     }
   });
 
-  it("updates the bps in both the metadata and on-chain", async () => {
+  it.skip("updates the bps in both the metadata and on-chain", async () => {
     /**
      * Update the bps in the metadata and on-chain
      */
