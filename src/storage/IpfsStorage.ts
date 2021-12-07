@@ -9,7 +9,8 @@ if (!globalThis.FormData) {
   globalThis.FormData = require("form-data");
 }
 
-const thirdwebIpfsServerUrl = "https://upload.nftlabs.co/upload";
+const thirdwebIpfsServerUrl = "https://upload.nftlabs.co";
+// const thirdwebIpfsServerUrl = "http://localhost:3002";
 
 export default class IpfsStorage implements IStorage {
   private gatewayUrl: string;
@@ -29,7 +30,7 @@ export default class IpfsStorage implements IStorage {
     };
     const formData = new FormData();
     formData.append("file", data as any);
-    const res = await fetch(thirdwebIpfsServerUrl, {
+    const res = await fetch(`${thirdwebIpfsServerUrl}/upload`, {
       method: "POST",
       body: formData as any,
       headers,
@@ -105,7 +106,7 @@ export default class IpfsStorage implements IStorage {
       headers,
     });
     try {
-      const body = await res.json();
+      const body = await res.text();
       return body;
     } catch (e) {
       throw new FetchError(`Failed to get upload token: ${e}`);
