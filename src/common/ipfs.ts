@@ -91,9 +91,7 @@ export async function batchUpload(
       headers,
     }).then(async (res) => {
       const body = await res.json();
-      key = body.key;
-      secret = body.secret;
-      jwt = body.jwt;
+      jwt = body;
     });
   }
   const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;

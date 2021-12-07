@@ -106,7 +106,7 @@ export default class IpfsStorage implements IStorage {
     });
     try {
       const body = await res.json();
-      return body.jwt;
+      return body;
     } catch (e) {
       throw new FetchError(`Failed to get upload token: ${e}`);
     }
