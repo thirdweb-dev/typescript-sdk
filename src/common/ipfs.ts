@@ -1,10 +1,16 @@
 import { MetadataURIOrObject } from "../core/types";
 import FileOrBuffer from "../types/FileOrBuffer";
 import { UploadError } from "./error";
+import { File as FilePoly } from "web-file-polyfill";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   globalThis.FormData = require("form-data");
+}
+
+if (!globalThis.File) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  globalThis.File = FilePoly;
 }
 
 /**
@@ -70,19 +76,17 @@ export async function uploadMetadata(
   async function _fileHandler(object: any) {
     const keys = Object.keys(object);
     for (const key in keys) {
-      if (
-        Buffer.isBuffer(object[keys[key]]) ||
-        (typeof object[keys[key]].name === "string" &&
-          typeof object[keys[key]] !== "object")
-      ) {
+      const val = object[keys[key]];
+      const shouldUpload = val instanceof File || val instanceof Buffer;
+      if (shouldUpload) {
         object[keys[key]] = await uploadToIPFS(
-          object[keys[key]],
+          val,
           contractAddress,
           signerAddress,
         );
       }
-      if (typeof object[keys[key]] === "object") {
-        object[keys[key]] = await _fileHandler(object[keys[key]]);
+      if (typeof val === "object") {
+        object[keys[key]] = await _fileHandler(val);
       }
     }
     return object;
