@@ -30,7 +30,7 @@ describe("IPFS Uploads", async () => {
   }
   it("should upload a file through any property, even when it is in an object nested inside another object", async () => {
     try {
-      const upload = await uploadMetadata({
+      const upload = await sdk.getStorage().uploadMetadata({
         name: "test",
         image: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
         test: {
@@ -51,7 +51,7 @@ describe("IPFS Uploads", async () => {
   });
 
   it("should not upload the string to IPFS", async () => {
-    const upload = await uploadMetadata({
+    const upload = await sdk.getStorage().uploadMetadata({
       image:
         "ipfs://QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/face_parts/Asset%20331.svg",
     });
@@ -62,7 +62,7 @@ describe("IPFS Uploads", async () => {
   });
 
   it("should upload an MP4 file when passed in the animation_url property", async () => {
-    const upload = await uploadMetadata({
+    const upload = await sdk.getStorage().uploadMetadata({
       animation_url: readFileSync("test/test.mp4"),
     });
     chai.assert.equal(

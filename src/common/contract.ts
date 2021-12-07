@@ -66,7 +66,7 @@ export async function getContractMetadata(
     return entity;
   } catch (e) {
     throw new Error(
-      `Gateway did not return metadata, instead returned:\n ${meta}`,
+      `Gateway did not return metadata, instead returned:\n ${meta.text()}`,
     );
   }
 }
