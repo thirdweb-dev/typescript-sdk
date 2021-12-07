@@ -78,15 +78,19 @@ export async function uploadMetadata(
     for (const key in keys) {
       const val = object[keys[key]];
       const shouldUpload = val instanceof File || val instanceof Buffer;
+
       if (shouldUpload) {
         object[keys[key]] = await uploadToIPFS(
-          val,
+          object[keys[key]],
           contractAddress,
           signerAddress,
         );
       }
+      if (shouldUpload && typeof object[keys[key]] !== "string") {
+        throw new Error("Upload to IPFS failed");
+      }
       if (typeof val === "object") {
-        object[keys[key]] = await _fileHandler(val);
+        object[keys[key]] = await _fileHandler(object[keys[key]]);
       }
     }
     return object;
