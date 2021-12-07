@@ -101,8 +101,8 @@ Output
 
 |  Function | Description |
 |  --- | --- |
-|  [batchUpload(directory, contractAddress)](./sdk.batchupload.md) |  |
-|  [batchUploadMetadata(directory, contractAddress)](./sdk.batchuploadmetadata.md) |  |
+|  [batchUpload(files, contractAddress)](./sdk.batchupload.md) |  |
+|  [batchUploadMetadata(files, contractAddress)](./sdk.batchuploadmetadata.md) |  |
 |  [convertModuleTypeToName(moduleType)](./sdk.convertmoduletypetoname.md) |  |
 |  [convertNameToModuleType(moduleName)](./sdk.convertnametomoduletype.md) |  |
 |  [uploadToIPFS(data, contractAddress, signerAddress)](./sdk.uploadtoipfs.md) | A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri. |

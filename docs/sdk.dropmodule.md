@@ -48,7 +48,7 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  | <b><i>(BETA)</i></b> |
 |  [maxTotalSupply()](./sdk.dropmodule.maxtotalsupply.md) |  | <b><i>(BETA)</i></b> |
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  | <b><i>(BETA)</i></b> |
-|  [pinToIpfs(directory)](./sdk.dropmodule.pintoipfs.md) |  | <b><i>(BETA)</i></b> |
+|  [pinToIpfs(files)](./sdk.dropmodule.pintoipfs.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
 |  [setBaseTokenUri(uri)](./sdk.dropmodule.setbasetokenuri.md) |  | <b><i>(BETA)</i></b> |
 |  [setMaxTotalSupply(amount)](./sdk.dropmodule.setmaxtotalsupply.md) |  | <b><i>(BETA)</i></b> |

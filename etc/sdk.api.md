@@ -97,10 +97,10 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
 }
 
 // @public (undocumented)
-export function batchUpload(directory: string, contractAddress?: string): Promise<string>;
+export function batchUpload(files: Buffer[], contractAddress?: string): Promise<string>;
 
 // @public (undocumented)
-export function batchUploadMetadata(directory: string, contractAddress?: string): Promise<MetadataURIOrObject[]>;
+export function batchUploadMetadata(files: Buffer[], contractAddress?: string): Promise<MetadataURIOrObject[]>;
 
 // @beta (undocumented)
 export interface BundleMetadata {
@@ -413,7 +413,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
-    pinToIpfs(directory: string): Promise<string>;
+    pinToIpfs(files: Buffer[]): Promise<string>;
     // (undocumented)
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)

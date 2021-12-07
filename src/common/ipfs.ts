@@ -1,7 +1,6 @@
 import { MetadataURIOrObject } from "../core/types";
 import FileOrBuffer from "../types/FileOrBuffer";
 import { UploadError } from "./error";
-import { createReadStream, readdirSync } from "fs";
 import { File as FilePoly } from "web-file-polyfill";
 
 if (!globalThis.FormData) {
@@ -107,7 +106,7 @@ export async function uploadMetadata(
 }
 
 export async function batchUpload(
-  directory: string,
+  files: Buffer[],
   contractAddress?: string,
 ): Promise<string> {
   const headers = {
@@ -127,7 +126,6 @@ export async function batchUpload(
   }
   const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
-  const files = readdirSync(directory);
   const data = new FormData() as {
     append(name: string, value: string | Blob, fileName?: string): void;
     delete(name: string): void;
@@ -146,11 +144,7 @@ export async function batchUpload(
     getBoundary(): string;
   };
   files.forEach((file) => {
-    data.append(
-      `file`,
-      createReadStream(`${directory}/${file}`) as unknown as Blob,
-      { filepath: `files/${file}` } as unknown as string,
-    );
+    data.append(`file`, file as unknown as Blob);
   });
   console.log(`Uploading ${files.length} files to IPFS`);
   const metadata = {
@@ -178,11 +172,10 @@ export async function batchUpload(
 }
 
 export async function batchUploadMetadata(
-  directory: string,
+  files: Buffer[],
   contractAddress?: string,
 ): Promise<MetadataURIOrObject[]> {
-  const ipfsUri = await batchUpload(directory, contractAddress);
-  const files = readdirSync(directory);
+  const ipfsUri = await batchUpload(files, contractAddress);
   const metadatas = [];
   for (let i = 1; i < files.length + 1; i++) {
     metadatas.push(`ipfs://${ipfsUri}/${i}.json`);

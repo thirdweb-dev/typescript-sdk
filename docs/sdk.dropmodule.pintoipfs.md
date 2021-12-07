@@ -10,14 +10,14 @@
 <b>Signature:</b>
 
 ```typescript
-pinToIpfs(directory: string): Promise<string>;
+pinToIpfs(files: Buffer[]): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  directory | string |  |
+|  files | Buffer\[\] |  |
 
 <b>Returns:</b>
 

@@ -1,4 +1,3 @@
-import { createReadStream, readdirSync } from "fs";
 import { FetchError, UploadError } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
 import IStorage from "../interfaces/IStorage";
@@ -10,6 +9,7 @@ if (!globalThis.FormData) {
 }
 
 const thirdwebIpfsServerUrl = "https://upload.nftlabs.co";
+// const thirdwebIpfsServerUrl = "http://localhost:3002";
 
 export default class IpfsStorage implements IStorage {
   private gatewayUrl: string;
@@ -43,7 +43,7 @@ export default class IpfsStorage implements IStorage {
   }
 
   public async uploadBatch(
-    path: string,
+    files: Buffer[],
     contractAddress?: string,
   ): Promise<string> {
     const token = await this.getUploadToken(contractAddress || "");
@@ -51,7 +51,6 @@ export default class IpfsStorage implements IStorage {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
     };
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-    const files = readdirSync(path);
     const data = new FormData() as {
       append(name: string, value: string | Blob, fileName?: string): void;
       delete(name: string): void;
@@ -69,11 +68,12 @@ export default class IpfsStorage implements IStorage {
       ): void;
       getBoundary(): string;
     };
-    files.forEach((file) => {
+
+    files.forEach((file, i) => {
       data.append(
         `file`,
-        createReadStream(`${path}/${file}`) as unknown as Blob,
-        { filepath: `files/${file}` } as unknown as string,
+        file as any,
+        { filepath: `files/${i}` } as unknown as string,
       );
     });
     console.log(`Uploading ${files.length} files to IPFS`);
@@ -87,7 +87,7 @@ export default class IpfsStorage implements IStorage {
       body: data,
     })
       .then((response) => {
-        // console.log(response.body);
+        console.log(`Uploaded ${files.length} files to IPFS`);
         return response;
       })
       .catch((err: any) => {
@@ -162,11 +162,10 @@ export default class IpfsStorage implements IStorage {
   }
 
   public async batchUploadMetadata(
-    directory: string,
+    files: Buffer[],
     contractAddress?: string,
   ): Promise<MetadataURIOrObject[]> {
-    const ipfsUri = this.uploadBatch(directory, contractAddress);
-    const files = readdirSync(directory);
+    const ipfsUri = this.uploadBatch(files, contractAddress);
     const metadatas = [];
     for (let i = 1; i < files.length + 1; i++) {
       metadatas.push(`ipfs://${ipfsUri}/${i}.json`);
