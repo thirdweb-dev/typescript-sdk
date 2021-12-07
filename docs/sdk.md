@@ -75,6 +75,7 @@ Output
 |  [DatastoreModuleMetadata](./sdk.datastoremodulemetadata.md) |  |
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md) |
 |  [DropModuleMetadata](./sdk.dropmodulemetadata.md) |  |
+|  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
@@ -100,6 +101,8 @@ Output
 
 |  Function | Description |
 |  --- | --- |
+|  [batchUpload(directory, contractAddress)](./sdk.batchupload.md) |  |
+|  [batchUploadMetadata(directory, contractAddress)](./sdk.batchuploadmetadata.md) |  |
 |  [convertModuleTypeToName(moduleType)](./sdk.convertmoduletypetoname.md) |  |
 |  [convertNameToModuleType(moduleName)](./sdk.convertnametomoduletype.md) |  |
 |  [uploadToIPFS(data, contractAddress, signerAddress)](./sdk.uploadtoipfs.md) | A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri. |

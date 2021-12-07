@@ -1,4 +1,4 @@
-import { JSONValue, MetadataURIOrObject } from "..";
+import { MetadataURIOrObject } from "..";
 import FileOrBuffer from "../types/FileOrBuffer";
 
 export default interface IStorage {

@@ -27,7 +27,7 @@ export declare class NFTModule extends ModuleWithRoles<NFT>
 |  [balance()](./sdk.nftmodule.balance.md) |  |  |
 |  [balanceOf(address)](./sdk.nftmodule.balanceof.md) |  |  |
 |  [burn(tokenId)](./sdk.nftmodule.burn.md) |  |  |
-|  [get(tokenId)](./sdk.nftmodule.get.md) |  |  |
+|  [get(tokenId)](./sdk.nftmodule.get.md) |  | Fetches an NFT from storage with the resolved metadata. |
 |  [getAll()](./sdk.nftmodule.getall.md) |  |  |
 |  [getAllWithOwner()](./sdk.nftmodule.getallwithowner.md) |  |  |
 |  [getModuleRoles()](./sdk.nftmodule.getmoduleroles.md) |  |  |

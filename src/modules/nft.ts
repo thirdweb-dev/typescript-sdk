@@ -5,7 +5,7 @@ import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
 import { uploadMetadata } from "../common/ipfs";
-import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
+import { NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
