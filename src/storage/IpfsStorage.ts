@@ -10,7 +10,6 @@ if (!globalThis.FormData) {
 }
 
 const thirdwebIpfsServerUrl = "https://upload.nftlabs.co";
-// const thirdwebIpfsServerUrl = "http://localhost:3002";
 
 export default class IpfsStorage implements IStorage {
   private gatewayUrl: string;
@@ -43,7 +42,7 @@ export default class IpfsStorage implements IStorage {
     }
   }
 
-  public async uploadFolder(
+  public async uploadBatch(
     path: string,
     contractAddress?: string,
   ): Promise<string> {
@@ -166,7 +165,7 @@ export default class IpfsStorage implements IStorage {
     directory: string,
     contractAddress?: string,
   ): Promise<MetadataURIOrObject[]> {
-    const ipfsUri = this.uploadFolder(directory, contractAddress);
+    const ipfsUri = this.uploadBatch(directory, contractAddress);
     const files = readdirSync(directory);
     const metadatas = [];
     for (let i = 1; i < files.length + 1; i++) {

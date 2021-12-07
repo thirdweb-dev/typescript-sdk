@@ -197,7 +197,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
   }
 
   public async pinToIpfs(directory: string): Promise<string> {
-    return await this.storage.uploadFolder(directory, this.address);
+    return await this.storage.uploadBatch(directory, this.address);
   }
 
   /**
