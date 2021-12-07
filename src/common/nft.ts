@@ -56,6 +56,8 @@ export interface NFTMetadata {
   name?: string;
   description?: string;
   image?: string;
+  external_url?: string;
+  animation_url?: string;
   properties?: Record<string, JSONValue>;
 }
 

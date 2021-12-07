@@ -16,7 +16,9 @@ export interface NFTMetadata
 
 |  Property | Type | Description |
 |  --- | --- | --- |
+|  [animation\_url?](./sdk.nftmetadata.animation_url.md) | string | <i>(Optional)</i> |
 |  [description?](./sdk.nftmetadata.description.md) | string | <i>(Optional)</i> |
+|  [external\_url?](./sdk.nftmetadata.external_url.md) | string | <i>(Optional)</i> |
 |  [id](./sdk.nftmetadata.id.md) | string |  |
 |  [image?](./sdk.nftmetadata.image.md) | string | <i>(Optional)</i> |
 |  [name?](./sdk.nftmetadata.name.md) | string | <i>(Optional)</i> |
