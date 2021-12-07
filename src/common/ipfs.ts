@@ -82,8 +82,8 @@ export async function batchUpload(
   const headers = {
     "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
   };
-  let key = process.env.PINATA_API_KEY;
-  let secret = process.env.PINATA_API_SECRET;
+  const key = process.env.PINATA_API_KEY;
+  const secret = process.env.PINATA_API_SECRET;
   let jwt = process.env.PINATA_API_JWT;
   if (!key || !secret) {
     await fetch("https://upload.nftlabs.co/grant", {
