@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import { ethers } from "ethers";
 import { readFileSync } from "fs";
-import { ThirdwebSDK, UploadError, uploadMetadata } from "../src/index";
+import { ThirdwebSDK, uploadMetadata } from "../src/index";
 
 global.fetch = require("node-fetch");
 
