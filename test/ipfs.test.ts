@@ -1,11 +1,11 @@
 import * as chai from "chai";
 import { ethers } from "ethers";
 import { readFileSync } from "fs";
-import { ThirdwebSDK, uploadMetadata } from "../src/index";
+import { ThirdwebSDK, UploadError, uploadMetadata } from "../src/index";
 
 global.fetch = require("node-fetch");
 
-describe("NFT Module", async () => {
+describe("IPFS Uploads", async () => {
   let sdk: ThirdwebSDK;
 
   beforeEach(async () => {
@@ -16,7 +16,18 @@ describe("NFT Module", async () => {
       ),
     );
   });
-
+  async function getFile(upload): Promise<Response> {
+    const response = await fetch(
+      `https://cloudflare-ipfs.com/ipfs/${upload.replace("ipfs://", "")}`,
+    )
+      .then(async (res) => {
+        return res;
+      })
+      .catch((e) => {
+        chai.assert.fail(e);
+      });
+    return response;
+  }
   it("should upload a file through any property, even when it is in an object nested inside another object", async () => {
     try {
       const upload = await uploadMetadata({
@@ -28,11 +39,12 @@ describe("NFT Module", async () => {
           },
         },
       });
+      const data = await (await getFile(upload)).json();
+      const uploadTest = await (await getFile(data.test.test.image)).headers
+        .get("content-type")
+        .toString();
 
-      chai.assert.equal(
-        upload,
-        "ipfs://bafkreidb4a4h3xg2ju6y3bmkp27ruottvf4gfmjccbtyj5hfk3uypftidu",
-      );
+      chai.assert.equal(uploadTest, "image/jpeg");
     } catch (err) {
       chai.assert.fail(err);
     }
