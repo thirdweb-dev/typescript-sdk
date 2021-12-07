@@ -76,7 +76,6 @@
     "crypto-js": "^4.1.1",
     "eth-permit": "^0.2.1",
     "form-data": "^4.0.0",
-    "fs": "0.0.1-security",
     "json2typescript": "^1.5.0-rc.0",
     "merkletreejs": "^0.2.24",
     "node-fetch": "^2.6.5",
