@@ -36,7 +36,6 @@ export default class IpfsStorage implements IStorage {
     });
     try {
       const body = await res.json();
-      console.log(body);
       return body.IpfsUri;
     } catch (e) {
       throw new UploadError(`Failed to upload to IPFS: ${e}`);
@@ -80,7 +79,6 @@ export default class IpfsStorage implements IStorage {
         throw new UploadError(`Failed to upload to IPFS: ${err}`);
       });
     const body = await res.json();
-    console.log(body);
     return body.IpfsHash;
   }
 
