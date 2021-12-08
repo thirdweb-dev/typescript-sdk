@@ -26,10 +26,10 @@ describe("Batch uploading", async () => {
   });
 
   it.skip("should upload bulk", async () => {
-    const folder = await readdirSync("test/test_dump");
+    const folder = await readdirSync("test/images");
     const filelist = [];
     folder.forEach((file) => {
-      filelist.push(createReadStream(`test/test_dump/${file}`));
+      filelist.push(createReadStream(`test/images/${file}`));
     });
     const ipfsUri = await dropModule.pinToIpfs(filelist);
     const regex = new RegExp(
