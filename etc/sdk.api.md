@@ -407,8 +407,10 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     getActiveClaimCondition(): Promise<ClaimCondition>;
     // @deprecated (undocumented)
     getActiveMintCondition(): Promise<PublicMintCondition>;
+    // Warning: (ae-forgotten-export) The symbol "QueryAllParams" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    getAll(): Promise<NFTMetadataOwner[]>;
+    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     // (undocumented)
     getAllClaimConditions(): Promise<ClaimCondition[]>;
     // (undocumented)

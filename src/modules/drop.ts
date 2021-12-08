@@ -17,6 +17,7 @@ import {
   ClaimCondition,
   PublicMintCondition,
 } from "../types/claim-conditions/PublicMintCondition";
+import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 
 /**
  * @beta
@@ -83,10 +84,21 @@ export class DropModule extends ModuleWithRoles<Drop> {
     return { owner, metadata };
   }
 
-  public async getAll(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTMetadataOwner[]> {
+    const start = BigNumber.from(queryParams?.start || 0).toNumber();
+    const count = BigNumber.from(
+      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
+    ).toNumber();
+    const maxId = Math.min(
+      (await this.readOnlyContract.nextTokenId()).toNumber(),
+      start + count,
+    );
     return await Promise.all(
-      Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
+      Array.from(Array(maxId - start).keys()).map((i) =>
+        this.get((start + i).toString()),
+      ),
     );
   }
 

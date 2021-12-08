@@ -35,7 +35,7 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  [get(tokenId)](./sdk.dropmodule.get.md) |  | <b><i>(BETA)</i></b> |
 |  [getActiveClaimCondition()](./sdk.dropmodule.getactiveclaimcondition.md) |  | <b><i>(BETA)</i></b> |
 |  [getActiveMintCondition()](./sdk.dropmodule.getactivemintcondition.md) |  | <b><i>(BETA)</i></b> |
-|  [getAll()](./sdk.dropmodule.getall.md) |  | <b><i>(BETA)</i></b> |
+|  [getAll(queryParams)](./sdk.dropmodule.getall.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllClaimConditions()](./sdk.dropmodule.getallclaimconditions.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllClaimed()](./sdk.dropmodule.getallclaimed.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllMintConditions()](./sdk.dropmodule.getallmintconditions.md) |  | <b><i>(BETA)</i></b> |
