@@ -1,6 +1,6 @@
 {
   "name": "@3rdweb/sdk",
-  "version": "1.22.3",
+  "version": "1.22.4-0",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -78,8 +78,8 @@
     "json2typescript": "^1.5.0-rc.0",
     "merkletreejs": "^0.2.24",
     "node-fetch": "^2.6.5",
-    "tslib": "^2.3.1",
-    "ts-enum-util": "^4.0.2"
+    "ts-enum-util": "^4.0.2",
+    "tslib": "^2.3.1"
   },
   "resolutions": {
     "typescript": "^4.4.3",
