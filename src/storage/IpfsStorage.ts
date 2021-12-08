@@ -43,7 +43,7 @@ export default class IpfsStorage implements IStorage {
   }
 
   public async uploadBatch(
-    files: Buffer[],
+    files: Buffer[] | string[] | FileOrBuffer[],
     contractAddress?: string,
   ): Promise<string> {
     const token = await this.getUploadToken(contractAddress || "");
@@ -162,18 +162,6 @@ export default class IpfsStorage implements IStorage {
       contractAddress,
       signerAddress,
     );
-  }
-
-  public async batchUploadMetadata(
-    files: Buffer[] | string[] | FileOrBuffer[],
-    contractAddress?: string,
-  ): Promise<MetadataURIOrObject[]> {
-    const ipfsUri = this.uploadBatch(files, contractAddress);
-    const metadatas = [];
-    for (let i = 1; i < files.length + 1; i++) {
-      metadatas.push(`ipfs://${ipfsUri}/${i}.json`);
-    }
-    return metadatas;
   }
 
   /**
