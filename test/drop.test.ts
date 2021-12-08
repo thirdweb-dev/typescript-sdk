@@ -41,7 +41,6 @@ describe("Drop Module", async () => {
     dropModule = sdk.getDropModule(
       "0x3705506b3ce08b94cf8b1EA41CDe005669B45e37",
     );
-
     // This will get the factory of an existing drop
     factory = await dropModule.getMintConditionsFactory();
 
@@ -71,7 +70,7 @@ describe("Drop Module", async () => {
       .setPrice(phaseOnePrice);
   });
 
-  it("should contain all claim conditions", async () => {
+  it.skip("should contain all claim conditions", async () => {
     const converted = factory.buildConditions();
     console.log(converted);
     await dropModule.setMintConditions(factory);

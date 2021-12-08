@@ -22,6 +22,7 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.dropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
 |  [roles](./sdk.dropmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] | <b><i>(BETA)</i></b> |
+|  [storage](./sdk.dropmodule.storage.md) |  | import("../interfaces/IStorage").default | <b><i>(BETA)</i></b> |
 
 ## Methods
 
@@ -47,6 +48,7 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  | <b><i>(BETA)</i></b> |
 |  [maxTotalSupply()](./sdk.dropmodule.maxtotalsupply.md) |  | <b><i>(BETA)</i></b> |
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  | <b><i>(BETA)</i></b> |
+|  [pinToIpfs(files)](./sdk.dropmodule.pintoipfs.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
 |  [setBaseTokenUri(uri)](./sdk.dropmodule.setbasetokenuri.md) |  | <b><i>(BETA)</i></b> |
 |  [setMaxTotalSupply(amount)](./sdk.dropmodule.setmaxtotalsupply.md) |  | <b><i>(BETA)</i></b> |

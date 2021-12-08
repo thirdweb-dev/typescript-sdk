@@ -4,8 +4,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
-import { uploadMetadata } from "../common/ipfs";
-import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
+import { NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
@@ -41,12 +40,22 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     return NFTModule.moduleType;
   }
 
+  /**
+   * Fetches an NFT from storage with the resolved metadata.
+   *
+   * @param tokenId - The id of the token to fetch.
+   * @returns - The NFT metadata.
+   */
   public async get(tokenId: string): Promise<NFTMetadata> {
-    return await getTokenMetadata(
-      this.readOnlyContract,
-      tokenId,
-      this.ipfsGatewayUrl,
-    );
+    const storage = this.sdk.getStorage();
+    const uri = await this.readOnlyContract.tokenURI(tokenId);
+    const metadata = JSON.parse(await storage.get(uri));
+    return {
+      ...metadata,
+      id: tokenId,
+      uri,
+      image: storage.resolveFullUrl(metadata.image),
+    };
   }
 
   public async getAll(): Promise<NFTMetadata[]> {
@@ -147,7 +156,7 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     to: string,
     metadata: MetadataURIOrObject,
   ): Promise<NFTMetadata> {
-    const uri = await uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     const receipt = await this.sendTransaction("mintNFT", [to, uri]);
     const event = this.parseEventLogs("Minted", receipt?.logs);
     const tokenId = event?.tokenId;
@@ -164,7 +173,9 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     to: string,
     metadatas: MetadataURIOrObject[],
   ): Promise<NFTMetadata[]> {
-    const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
+    const uris = await Promise.all(
+      metadatas.map((m) => this.sdk.getStorage().uploadMetadata(m)),
+    );
     const receipt = await this.sendTransaction("mintNFTBatch", [to, uris]);
     const event = this.parseEventLogs("MintedBatch", receipt?.logs);
     const tokenIds = event.tokenIds;
@@ -203,7 +214,7 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     }
 
     metadata.seller_fee_basis_points = amount;
-    const uri = await uploadMetadata(
+    const uri = await this.sdk.getStorage().uploadMetadata(
       {
         ...metadata,
       },
@@ -222,7 +233,7 @@ export class NFTModule extends ModuleWithRoles<NFT> {
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
   ): Promise<TransactionReceipt> {
-    const uri = await uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     return await this.sendTransaction("setContractURI", [uri]);
   }
 
