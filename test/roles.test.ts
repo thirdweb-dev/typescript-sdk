@@ -1,5 +1,6 @@
 import * as chai from "chai";
 import { AppModule, RolesMap, ThirdwebSDK } from "../src/index";
+import { ethers } from "ethers";
 
 global.fetch = require("node-fetch");
 
@@ -10,9 +11,15 @@ describe("App Module", async () => {
   let appModule: AppModule;
 
   beforeEach(async () => {
-    sdk = new ThirdwebSDK(RPC_URL, {
-      ipfsGatewayUrl: "https://ipfs.io/ipfs/",
-    });
+    sdk = new ThirdwebSDK(
+      new ethers.Wallet(
+        process.env.PKEY,
+        ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com"),
+      ),
+      {
+        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+      },
+    );
 
     /**
      * This contract address *should* exist forever on mumbai
@@ -35,32 +42,21 @@ describe("App Module", async () => {
   });
 
   it("should override current roles in the contract", async () => {
-    const roles = await appModule.getRoleMembers(RolesMap["admin"]);
+    const roles = await appModule.getRoleMembers("admin");
     if (roles.length === 1) {
-      console.log(
-        await appModule.setAllRoleMembers({
-          admin: [
-            "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-            "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
-          ],
-        }),
-      );
-      chai.assert.lengthOf(
-        await appModule.getRoleMembers(RolesMap["admin"]),
-        2,
-        await (await appModule.getRoleMembers(RolesMap["admin"])).toString(),
-      );
+      await appModule.setAllRoleMembers({
+        admin: [
+          "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+          "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
+        ],
+      });
+      chai.assert.lengthOf(await appModule.getRoleMembers("admin"), 2);
     }
     if (roles.length > 1) {
-      console.log(
-        await appModule.setAllRoleMembers({
-          admin: ["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"],
-        }),
-      );
-      chai.assert.lengthOf(
-        await appModule.getRoleMembers(RolesMap["admin"]),
-        1,
-      );
+      await appModule.setAllRoleMembers({
+        admin: ["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"],
+      });
+      chai.assert.lengthOf(await appModule.getRoleMembers("admin"), 1);
     }
   });
 });
