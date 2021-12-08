@@ -26,12 +26,27 @@ export interface CurrencyValue extends Currency {
 /**
  * @internal
  */
+export const NATIVE_TOKEN_ADDRESS =
+  "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+
+/**
+ * @internal
+ */
 export async function getCurrencyMetadata(
   providerOrSigner: ProviderOrSigner,
   asset: string,
 ): Promise<Currency> {
   try {
-    if (asset.toLowerCase() !== AddressZero) {
+    if (
+      asset.toLowerCase() === NATIVE_TOKEN_ADDRESS ||
+      asset.toLowerCase() === AddressZero
+    ) {
+      return {
+        name: "",
+        symbol: "",
+        decimals: 18,
+      };
+    } else if (asset.toLowerCase() !== AddressZero) {
       const erc20 = ERC20__factory.connect(asset, providerOrSigner);
       const [name, symbol, decimals] = await Promise.all([
         erc20.name(),

@@ -30,6 +30,7 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  [balance()](./sdk.dropmodule.balance.md) |  | <b><i>(BETA)</i></b> |
 |  [balanceOf(address)](./sdk.dropmodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
 |  [burn(tokenId)](./sdk.dropmodule.burn.md) |  | <b><i>(BETA)</i></b> |
+|  [canClaim(quantity, proofs)](./sdk.dropmodule.canclaim.md) |  | <b><i>(BETA)</i></b> |
 |  [claim(quantity, proofs)](./sdk.dropmodule.claim.md) |  | <b><i>(BETA)</i></b> |
 |  [get(tokenId)](./sdk.dropmodule.get.md) |  | <b><i>(BETA)</i></b> |
 |  [getActiveClaimCondition()](./sdk.dropmodule.getactiveclaimcondition.md) |  | <b><i>(BETA)</i></b> |

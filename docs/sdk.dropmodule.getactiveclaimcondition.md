@@ -10,9 +10,9 @@
 <b>Signature:</b>
 
 ```typescript
-getActiveClaimCondition(): Promise<PublicClaimCondition>;
+getActiveClaimCondition(): Promise<ClaimCondition>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[PublicClaimCondition](./sdk.publicclaimcondition.md)<!-- -->&gt;
+Promise&lt;ClaimCondition&gt;
 

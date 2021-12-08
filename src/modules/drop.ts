@@ -7,14 +7,14 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
-import { ModuleType, Role, RolesMap } from "../common";
+import { getCurrencyValue, ModuleType, Role, RolesMap } from "../common";
 import { uploadMetadata } from "../common/ipfs";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
 import {
-  PublicClaimCondition,
+  ClaimCondition,
   PublicMintCondition,
 } from "../types/claim-conditions/PublicMintCondition";
 
@@ -125,31 +125,69 @@ export class DropModule extends ModuleWithRoles<Drop> {
     );
   }
 
+  private async transformResultToClaimCondition(
+    pm: any,
+  ): Promise<ClaimCondition> {
+    const cv = await getCurrencyValue(
+      this.providerOrSigner,
+      pm.currency,
+      pm.pricePerToken,
+    );
+    return {
+      startTimestamp: new Date(pm.startTimestamp.toNumber() * 1000),
+      maxMintSupply: pm.maxMintSupply.toString(),
+      currentMintSupply: pm.currentMintSupply.toString(),
+      availableSupply: BigNumber.from(pm.maxMintSupply)
+        .sub(pm.currentMintSupply)
+        .toString(),
+      quantityLimitPerTransaction: pm.quantityLimitPerTransaction.toString(),
+      waitTimeSecondsLimitPerTransaction:
+        pm.waitTimeSecondsLimitPerTransaction.toString(),
+      price: BigNumber.from(pm.pricePerToken),
+      currency: pm.currency,
+      currencyContract: pm.currency,
+      currencyMetadata: cv,
+      merkleRoot: pm.merkleRoot,
+    };
+  }
+
   /**
    * @deprecated - Use {@link DropModule.getActiveClaimCondition} instead
    */
   public async getActiveMintCondition(): Promise<PublicMintCondition> {
-    return this.getActiveClaimCondition();
-  }
-
-  public async getActiveClaimCondition(): Promise<PublicClaimCondition> {
     const index =
       await this.readOnlyContract.getLastStartedMintConditionIndex();
     return await this.readOnlyContract.mintConditions(index);
+  }
+
+  public async getActiveClaimCondition(): Promise<ClaimCondition> {
+    const index =
+      await this.readOnlyContract.getLastStartedMintConditionIndex();
+    const mc = await this.readOnlyContract.mintConditions(index);
+    return await this.transformResultToClaimCondition(mc);
   }
 
   /**
    * @deprecated - Use {@link DropModule.getAllClaimConditions} instead
    */
   public async getAllMintConditions(): Promise<PublicMintCondition[]> {
-    return this.getAllClaimConditions();
-  }
-
-  public async getAllClaimConditions(): Promise<PublicClaimCondition[]> {
     const conditions = [];
     for (let i = 0; ; i++) {
       try {
         conditions.push(await this.readOnlyContract.mintConditions(i));
+      } catch (e) {
+        break;
+      }
+    }
+    return conditions;
+  }
+
+  public async getAllClaimConditions(): Promise<ClaimCondition[]> {
+    const conditions = [];
+    for (let i = 0; ; i++) {
+      try {
+        const mc = await this.readOnlyContract.mintConditions(i);
+        conditions.push(await this.transformResultToClaimCondition(mc));
       } catch (e) {
         break;
       }
@@ -281,6 +319,18 @@ export class DropModule extends ModuleWithRoles<Drop> {
       merkleRoot: c.merkleRoot || hexZeroPad([0], 32),
     }));
     await this.sendTransaction("setPublicMintConditions", [_conditions]);
+  }
+
+  public async canClaim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<boolean> {
+    try {
+      await this.readOnlyContract.callStatic.claim(quantity, proofs);
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
   public async claim(

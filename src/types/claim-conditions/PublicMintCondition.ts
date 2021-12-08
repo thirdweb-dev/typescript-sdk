@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { CurrencyValue } from "../../common/currency";
 
 /**
  * @beta
@@ -16,6 +17,23 @@ export interface PublicClaimCondition {
 
 /**
  * @beta
- * @deprecated
+ */
+export interface ClaimCondition {
+  startTimestamp: Date;
+  maxMintSupply: string;
+  currentMintSupply: string;
+  availableSupply: string;
+  quantityLimitPerTransaction: string;
+  waitTimeSecondsLimitPerTransaction: string;
+  price: BigNumber;
+  currency: string;
+  currencyContract: string;
+  currencyMetadata: CurrencyValue | null;
+  merkleRoot: BytesLike;
+}
+
+/**
+ * @beta
+ * @deprecated - use {@link PublicClaimCondition}
  */
 export interface PublicMintCondition extends PublicClaimCondition {}

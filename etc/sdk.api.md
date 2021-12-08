@@ -394,19 +394,23 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
+    canClaim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<boolean>;
+    // (undocumented)
     claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): LazyNFT;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
+    // Warning: (ae-forgotten-export) The symbol "ClaimCondition" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    getActiveClaimCondition(): Promise<PublicClaimCondition>;
+    getActiveClaimCondition(): Promise<ClaimCondition>;
     // @deprecated (undocumented)
     getActiveMintCondition(): Promise<PublicMintCondition>;
     // (undocumented)
     getAll(): Promise<NFTMetadataOwner[]>;
     // (undocumented)
-    getAllClaimConditions(): Promise<PublicClaimCondition[]>;
+    getAllClaimConditions(): Promise<ClaimCondition[]>;
     // (undocumented)
     getAllClaimed(): Promise<NFTMetadataOwner[]>;
     // @deprecated (undocumented)
@@ -849,6 +853,11 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
     grantRole(role: Role, address: string): Promise<TransactionReceipt>;
     revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
 }
+
+// Warning: (ae-internal-missing-underscore) The name "NATIVE_TOKEN_ADDRESS" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
 //
