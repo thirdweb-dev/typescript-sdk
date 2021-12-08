@@ -43,7 +43,7 @@ export default class IpfsStorage implements IStorage {
   }
 
   public async uploadBatch(
-    files: Buffer[] | string[] | FileOrBuffer[],
+    files: Buffer[] | string[] | FileOrBuffer[] | File[],
     contractAddress?: string,
   ): Promise<string> {
     const token = await this.getUploadToken(contractAddress || "");

@@ -12,7 +12,7 @@ export default interface IStorage {
    * @returns - The hash of the uploaded data.
    */
   upload(
-    data: string | File | FileOrBuffer,
+    data: string | File | FileOrBuffer | Buffer,
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<string>;
@@ -27,7 +27,7 @@ export default interface IStorage {
    * @returns - The CID of the uploaded folder.
    */
   uploadBatch(
-    files: Buffer[] | string[] | FileOrBuffer[],
+    files: Buffer[] | string[] | FileOrBuffer[] | File[],
     contractAddress?: string,
   ): Promise<string>;
 
