@@ -13,12 +13,17 @@ describe("Token Module", async () => {
     if (process.env.PKEY) {
       sdk = new ThirdwebSDK(
         new ethers.Wallet(process.env.PKEY, ethers.getDefaultProvider(RPC_URL)),
+        {
+          ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+        },
       );
     } else {
-      sdk = new ThirdwebSDK(RPC_URL);
+      sdk = new ThirdwebSDK(RPC_URL, {
+        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+      });
     }
 
-    currencyModule = await sdk.getCurrencyModule(
+    currencyModule = sdk.getCurrencyModule(
       "0x4Cb16D7DAec6a7798efe19a43E8957E47A4bD272",
     );
   });

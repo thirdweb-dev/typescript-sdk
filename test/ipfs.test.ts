@@ -14,6 +14,9 @@ describe("IPFS Uploads", async () => {
         process.env.PKEY,
         ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com"),
       ),
+      {
+        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+      },
     );
   });
   async function getFile(upload): Promise<Response> {
