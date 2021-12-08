@@ -541,7 +541,6 @@ export class ModuleWithRoles<
       const toRemove = currentAddresses.filter(
         (address) => !addresses.includes(address),
       );
-      console.log(toAdd, toRemove);
       if (toAdd.length) {
         toAdd.forEach((address) => {
           console.log(address);

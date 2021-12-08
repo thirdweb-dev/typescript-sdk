@@ -33,4 +33,34 @@ describe("App Module", async () => {
       "The app module should have a default admin",
     );
   });
+
+  it("should override current roles in the contract", async () => {
+    const roles = await appModule.getRoleMembers(RolesMap["admin"]);
+    if (roles.length === 1) {
+      console.log(
+        await appModule.setAllRoleMembers({
+          admin: [
+            "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+            "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
+          ],
+        }),
+      );
+      chai.assert.lengthOf(
+        await appModule.getRoleMembers(RolesMap["admin"]),
+        2,
+        await (await appModule.getRoleMembers(RolesMap["admin"])).toString(),
+      );
+    }
+    if (roles.length > 1) {
+      console.log(
+        await appModule.setAllRoleMembers({
+          admin: ["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"],
+        }),
+      );
+      chai.assert.lengthOf(
+        await appModule.getRoleMembers(RolesMap["admin"]),
+        1,
+      );
+    }
+  });
 });
