@@ -3,6 +3,9 @@ import { MetadataURIOrObject } from "../core/types";
 import IStorage from "../interfaces/IStorage";
 import { FileOrBuffer } from "../types";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const FormData = require("form-data");
+
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   globalThis.FormData = require("form-data");
@@ -51,23 +54,24 @@ export default class IpfsStorage implements IStorage {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
     };
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-    const data = new FormData() as {
-      append(name: string, value: string | Blob, fileName?: string): void;
-      delete(name: string): void;
-      get(name: string): FormDataEntryValue | null;
-      getAll(name: string): FormDataEntryValue[];
-      has(name: string): boolean;
-      set(name: string, value: string | Blob, fileName?: string): void;
-      forEach(
-        callbackfn: (
-          value: FormDataEntryValue,
-          key: string,
-          parent: FormData,
-        ) => void,
-        thisArg?: any,
-      ): void;
-      getBoundary(): string;
-    };
+    const data = new FormData();
+    // as {
+    //   append(name: string, value: string | Blob, fileName?: string): void;
+    //   delete(name: string): void;
+    //   get(name: string): FormDataEntryValue | null;
+    //   getAll(name: string): FormDataEntryValue[];
+    //   has(name: string): boolean;
+    //   set(name: string, value: string | Blob, fileName?: string): void;
+    //   forEach(
+    //     callbackfn: (
+    //       value: FormDataEntryValue,
+    //       key: string,
+    //       parent: FormData,
+    //     ) => void,
+    //     thisArg?: any,
+    //   ): void;
+    //   getBoundary(): string;
+    // };
 
     files.forEach((file, i) => {
       data.append(
@@ -84,7 +88,7 @@ export default class IpfsStorage implements IStorage {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      body: data,
+      body: data as any,
     })
       .then((response) => {
         return response;
