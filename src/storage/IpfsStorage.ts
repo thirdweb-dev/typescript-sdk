@@ -2,14 +2,12 @@ import { FetchError, UploadError } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
 import IStorage from "../interfaces/IStorage";
 import { FileOrBuffer } from "../types";
+import * as FormData from "form-data";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const FormData = require("form-data");
-
-if (!globalThis.FormData) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  globalThis.FormData = require("form-data");
-}
+// if (!globalThis.FormData) {
+//   // eslint-disable-next-line @typescript-eslint/no-var-requires
+//   globalThis.FormData = require("form-data");
+// }
 
 const thirdwebIpfsServerUrl = "https://upload.nftlabs.co";
 // const thirdwebIpfsServerUrl = "http://localhost:3002";
