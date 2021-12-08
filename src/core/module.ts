@@ -21,7 +21,7 @@ import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { uploadMetadata } from "../common/ipfs";
 import { ModuleType } from "../common/module-type";
-import { getRoleHash, Role } from "../common/role";
+import { getRoleHash, Role, SetAllRoles } from "../common/role";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import type {
   ForwardRequestMessage,
@@ -519,6 +519,52 @@ export class ModuleWithRoles<
       roles[role] = await this.getRoleMembers(role);
     }
     return roles;
+  }
+
+  public async setAllRoleMembers(
+    rolesWithAddresses: SetAllRoles,
+  ): Promise<any> {
+    const roles = Object.keys(rolesWithAddresses);
+    invariant(roles.length, "you must provide at least one role to set");
+    invariant(
+      roles.every((role) => this.roles.includes(role as Role)),
+      "this module does not support the given role",
+    );
+    const currentRoles = await this.getAllRoleMembers();
+    const encoded: string[] = [];
+    roles.forEach(async (role) => {
+      const addresses = rolesWithAddresses[role as Role] || [];
+      const currentAddresses = currentRoles[role as Role] || [];
+      const toAdd = addresses.filter(
+        (address) => !currentAddresses.includes(address),
+      );
+      const toRemove = currentAddresses.filter(
+        (address) => !addresses.includes(address),
+      );
+      console.log(toAdd, toRemove);
+      if (toAdd.length) {
+        toAdd.forEach((address) => {
+          console.log(address);
+          encoded.push(
+            this.contract.interface.encodeFunctionData("grantRole", [
+              getRoleHash(role as Role),
+              address,
+            ]),
+          );
+        });
+      }
+      if (toRemove.length) {
+        toRemove.forEach((address) => {
+          encoded.push(
+            this.contract.interface.encodeFunctionData("revokeRole", [
+              getRoleHash(role as Role),
+              address,
+            ]),
+          );
+        });
+      }
+    });
+    return await this.sendTransaction("multicall", [encoded]);
   }
 
   /**

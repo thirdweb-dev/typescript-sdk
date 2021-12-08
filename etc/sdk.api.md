@@ -840,6 +840,8 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
     getRoleMembers(role: Role): Promise<string[]>;
     grantRole(role: Role, address: string): Promise<TransactionReceipt>;
     revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
+    // (undocumented)
+    setAllRoleMembers(rolesWithAddresses: SetAllRoles): Promise<any>;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1077,6 +1079,11 @@ export type Role = keyof IRoles;
 //
 // @internal (undocumented)
 export const RolesMap: IRoles;
+
+// @public
+export type SetAllRoles = {
+    [key in keyof IRoles]?: string[];
+};
 
 // @public
 export interface SplitRecipient {

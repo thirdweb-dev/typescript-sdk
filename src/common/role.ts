@@ -45,6 +45,10 @@ export interface IRoles {
  */
 export type Role = keyof IRoles;
 
+export type SetAllRoles = {
+  [key in keyof IRoles]?: string[];
+};
+
 /**
  *
  * @internal

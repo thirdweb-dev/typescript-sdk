@@ -25,4 +25,5 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [getRoleMembers(role)](./sdk.modulewithroles.getrolemembers.md) |  | Call this to get a list of addresses that are members of a specific role. |
 |  [grantRole(role, address)](./sdk.modulewithroles.grantrole.md) |  | Call this to grant a role to a specific address. |
 |  [revokeRole(role, address)](./sdk.modulewithroles.revokerole.md) |  | Call this to revoke a role from a specific address. |
+|  [setAllRoleMembers(rolesWithAddresses)](./sdk.modulewithroles.setallrolemembers.md) |  |  |
 
