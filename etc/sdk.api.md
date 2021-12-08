@@ -96,12 +96,6 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     withdrawFunds(to: string, currency: string): Promise<TransactionReceipt>;
 }
 
-// @public (undocumented)
-export function batchUpload(files: Buffer[], contractAddress?: string): Promise<string>;
-
-// @public (undocumented)
-export function batchUploadMetadata(files: Buffer[], contractAddress?: string): Promise<MetadataURIOrObject[]>;
-
 // @beta (undocumented)
 export interface BundleMetadata {
     // (undocumented)
