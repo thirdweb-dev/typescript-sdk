@@ -474,7 +474,7 @@ export class DropModuleMetadata extends CommonModuleMetadata {
 }
 
 // @public (undocumented)
-export type FileOrBuffer = Buffer | File;
+export type FileOrBuffer = Buffer;
 
 // @public
 export type ForwardRequestMessage = {

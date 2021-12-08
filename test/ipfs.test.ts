@@ -14,11 +14,14 @@ describe("IPFS Uploads", async () => {
         process.env.PKEY,
         ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com"),
       ),
+      {
+        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+      },
     );
   });
   async function getFile(upload): Promise<Response> {
     const response = await fetch(
-      `https://cloudflare-ipfs.com/ipfs/${upload.replace("ipfs://", "")}`,
+      `https://ipfs.io/ipfs/${upload.replace("ipfs://", "")}`,
     )
       .then(async (res) => {
         return res;
