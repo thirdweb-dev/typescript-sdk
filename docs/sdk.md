@@ -136,12 +136,14 @@ Output
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [PublicClaimCondition](./sdk.publicclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
+|  [QueryAllParams](./sdk.queryallparams.md) |  |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
 
 ## Variables
 
 |  Variable | Description |
 |  --- | --- |
+|  [DEFAULT\_QUERY\_ALL\_COUNT](./sdk.default_query_all_count.md) |  |
 |  [NFTLabsSDK](./sdk.nftlabssdk.md) | Deprecated, please use ThirdwebSDK instead. |
 
 ## Type Aliases

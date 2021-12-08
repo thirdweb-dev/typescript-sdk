@@ -13,6 +13,7 @@ import PackModuleMetadata from "./module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "./module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata } from "./ModuleMetadata";
 import { SplitRecipient } from "./SplitRecipient";
+import { QueryAllParams, DEFAULT_QUERY_ALL_COUNT } from "./QueryParams";
 
 export {
   BundleModuleMetadata,
@@ -28,4 +29,6 @@ export {
   PublicMintCondition,
   PublicClaimCondition,
   FileOrBuffer,
+  QueryAllParams,
+  DEFAULT_QUERY_ALL_COUNT,
 };

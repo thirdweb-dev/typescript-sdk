@@ -385,6 +385,9 @@ export class DatastoreModule extends ModuleWithRoles<DataStore> {
 export class DatastoreModuleMetadata extends CommonModuleMetadata {
 }
 
+// @public (undocumented)
+export const DEFAULT_QUERY_ALL_COUNT = 100;
+
 // @beta
 export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
@@ -407,8 +410,6 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     getActiveClaimCondition(): Promise<ClaimCondition>;
     // @deprecated (undocumented)
     getActiveMintCondition(): Promise<PublicMintCondition>;
-    // Warning: (ae-forgotten-export) The symbol "QueryAllParams" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     // (undocumented)
@@ -1082,6 +1083,14 @@ export interface PublicClaimCondition {
 
 // @beta @deprecated (undocumented)
 export interface PublicMintCondition extends PublicClaimCondition {
+}
+
+// @public (undocumented)
+export interface QueryAllParams {
+    // (undocumented)
+    count: BigNumberish_2;
+    // (undocumented)
+    start: BigNumberish_2;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "replaceIpfsWithGateway" should be prefixed with an underscore because the declaration is marked as @internal
