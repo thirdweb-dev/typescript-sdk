@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function batchUploadMetadata(directory: string, contractAddress?: string): Promise<MetadataURIOrObject[]>;
+export declare function batchUploadMetadata(files: Buffer[], contractAddress?: string): Promise<MetadataURIOrObject[]>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  directory | string |  |
+|  files | Buffer\[\] |  |
 |  contractAddress | string |  |
 
 <b>Returns:</b>

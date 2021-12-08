@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function batchUpload(directory: string, contractAddress?: string): Promise<string>;
+export declare function batchUpload(files: Buffer[], contractAddress?: string): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  directory | string |  |
+|  files | Buffer\[\] |  |
 |  contractAddress | string |  |
 
 <b>Returns:</b>

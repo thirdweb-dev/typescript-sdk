@@ -196,8 +196,8 @@ export class DropModule extends ModuleWithRoles<Drop> {
     await this.lazyMintBatch([metadata]);
   }
 
-  public async pinToIpfs(directory: string): Promise<string> {
-    return await this.storage.uploadBatch(directory, this.address);
+  public async pinToIpfs(files: Buffer[]): Promise<string> {
+    return await this.storage.uploadBatch(files, this.address);
   }
 
   /**
