@@ -10,7 +10,9 @@ describe("App Module", async () => {
   let appModule: AppModule;
 
   beforeEach(async () => {
-    sdk = new ThirdwebSDK(RPC_URL);
+    sdk = new ThirdwebSDK(RPC_URL, {
+      ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+    });
 
     /**
      * This contract address *should* exist forever on mumbai

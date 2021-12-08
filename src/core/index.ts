@@ -1,4 +1,3 @@
-import { Snapshot } from "./../types/snapshots/Snapshot";
 import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import { SHA256 } from "crypto-js";
@@ -15,6 +14,7 @@ import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { ISDKOptions, IThirdwebSdk } from "../interfaces";
+import IStorage from "../interfaces/IStorage";
 import { AppModule } from "../modules/app";
 import { BundleModule } from "../modules/bundle";
 import { CollectionModule } from "../modules/collection";
@@ -25,8 +25,9 @@ import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule } from "../modules/token";
+import IpfsStorage from "../storage/IpfsStorage";
 import { ModuleMetadataNoType } from "../types/ModuleMetadata";
-import { Snapshot, ClaimProof } from "../types/snapshots";
+import { ClaimProof, Snapshot } from "../types/snapshots";
 import { IAppModule, RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,
@@ -59,7 +60,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
   // default options
   private options: ISDKOptions;
   private defaultOptions: ISDKOptions = {
-    ipfsGatewayUrl: "https://cloudflare-ipfs.com/ipfs/",
+    ipfsGatewayUrl: "https://nftlabs.mypinata.cloud/ipfs/",
     registryContractAddress: "",
     maxGasPriceInGwei: 100,
     gasSpeed: "fastest",
@@ -74,6 +75,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
   private _signer: Signer | null = null;
 
   private _jsonConvert = new JsonConvert();
+  private storage: IStorage;
 
   /**
    * The active Signer, you should not need to access this unless you are deploying new modules.
@@ -103,6 +105,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
       ...this.defaultOptions,
       ...opts,
     };
+    this.storage = new IpfsStorage(this.options.ipfsGatewayUrl);
   }
 
   private updateModuleSigners() {
@@ -481,18 +484,35 @@ export class ThirdwebSDK implements IThirdwebSdk {
       }),
     };
 
-    // TODO: Upload to storage
     const serializedSnapshot = this._jsonConvert.serializeObject(
       snapshot,
       Snapshot,
     );
-    const uri = "";
+    const uri = await this.storage.upload(serializedSnapshot);
 
     return {
       merkleRoot: tree.getRoot().toString("hex"),
       snapshotUri: uri,
       snapshot,
     };
+  }
+
+  /**
+   * Accessor for the storage instance used by the SDK
+   *
+   * @returns - The Storage instance.
+   */
+  public getStorage(): IStorage {
+    return this.storage;
+  }
+
+  /**
+   * Allows you to override the storage used across the SDK.
+   *
+   * @param storage - The Storage instance to use.
+   */
+  public overrideStorage(storage: IStorage): void {
+    this.storage = storage;
   }
 }
 

@@ -15,6 +15,9 @@ describe("NFT Module", async () => {
         process.env.PKEY,
         ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com"),
       ),
+      {
+        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+      },
     );
 
     /**
@@ -38,7 +41,17 @@ describe("NFT Module", async () => {
     }
   });
 
-  it("should return an owner as zero address for an nft that is burned", async () => {
+  it("should fetch a single nft", async () => {
+    try {
+      const nft = await nftModule.get("0");
+      console.log(nft);
+      chai.assert.isNotNull(nft);
+    } catch (err) {
+      chai.assert.fail(err);
+    }
+  });
+
+  it.skip("should return an owner as zero address for an nft that is burned", async () => {
     /**
      * The token with id 1 has been burned and can never be recovered,
      * so it serves as a good test case.

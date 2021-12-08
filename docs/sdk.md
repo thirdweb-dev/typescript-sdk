@@ -77,6 +77,7 @@ Output
 |  [DatastoreModuleMetadata](./sdk.datastoremodulemetadata.md) |  |
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md) |
 |  [DropModuleMetadata](./sdk.dropmodulemetadata.md) |  |
+|  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |

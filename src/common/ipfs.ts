@@ -1,7 +1,6 @@
 import { MetadataURIOrObject } from "../core/types";
 import FileOrBuffer from "../types/FileOrBuffer";
 import { UploadError } from "./error";
-import { File as FilePoly } from "web-file-polyfill";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -10,7 +9,7 @@ if (!globalThis.FormData) {
 
 if (!globalThis.File) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  globalThis.File = FilePoly;
+  globalThis.File = require("@web-std/file").File;
 }
 
 /**

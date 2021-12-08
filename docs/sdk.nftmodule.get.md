@@ -4,6 +4,8 @@
 
 ## NFTModule.get() method
 
+Fetches an NFT from storage with the resolved metadata.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,11 @@ get(tokenId: string): Promise<NFTMetadata>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  tokenId | string |  |
+|  tokenId | string | The id of the token to fetch. |
 
 <b>Returns:</b>
 
 Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->&gt;
+
+- The NFT metadata.
 

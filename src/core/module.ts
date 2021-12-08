@@ -134,7 +134,6 @@ export class Module<TContract extends BaseContract = BaseContract> {
     invariant(await this.exists(), "contract does not exist");
     const contract = this.connectContract();
     const type = this.getModuleType();
-
     return {
       metadata: await getContractMetadata(
         this.getProviderOrSigner(),

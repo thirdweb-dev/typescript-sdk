@@ -15,7 +15,9 @@ describe("Splits Module", async () => {
   let royaltyModule: SplitsModule;
 
   beforeEach(async () => {
-    sdk = new ThirdwebSDK(RPC_URL);
+    sdk = new ThirdwebSDK(RPC_URL, {
+      ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+    });
     royaltyModule = sdk.getSplitsModule(testSplitModule);
   });
 

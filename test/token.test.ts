@@ -13,17 +13,22 @@ describe("Token Module", async () => {
     if (process.env.PKEY) {
       sdk = new ThirdwebSDK(
         new ethers.Wallet(process.env.PKEY, ethers.getDefaultProvider(RPC_URL)),
+        {
+          ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+        },
       );
     } else {
-      sdk = new ThirdwebSDK(RPC_URL);
+      sdk = new ThirdwebSDK(RPC_URL, {
+        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+      });
     }
 
-    currencyModule = await sdk.getCurrencyModule(
+    currencyModule = sdk.getCurrencyModule(
       "0x4Cb16D7DAec6a7798efe19a43E8957E47A4bD272",
     );
   });
 
-  it("should mint a batch of tokens to the correct wallets", async () => {
+  it.skip("should mint a batch of tokens to the correct wallets", async () => {
     const batch = [
       {
         address: "0x4d36d531D9cB40b8694763123D52170FAE5e1195",
