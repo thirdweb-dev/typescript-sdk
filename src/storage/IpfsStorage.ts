@@ -64,7 +64,6 @@ export default class IpfsStorage implements IStorage {
     });
 
     data.append("pinataMetadata", JSON.stringify(metadata));
-    console.log(data);
     const res = await fetch(url, {
       method: "POST",
       headers: {
