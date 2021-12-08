@@ -15,6 +15,9 @@ describe("NFT Module", async () => {
         process.env.PKEY,
         ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com"),
       ),
+      {
+        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+      },
     );
 
     /**

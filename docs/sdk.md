@@ -70,6 +70,8 @@ Output
 |  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
 |  [BundleModule](./sdk.bundlemodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md) |
 |  [BundleModuleMetadata](./sdk.bundlemodulemetadata.md) |  |
+|  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
+|  [ClaimConditionPhase](./sdk.claimconditionphase.md) |  |
 |  [CurrencyModule](./sdk.currencymodule.md) | Access this module by calling [ThirdwebSDK.getCurrencyModule()](./sdk.thirdwebsdk.getcurrencymodule.md) |
 |  [CurrencyModuleMetadata](./sdk.currencymodulemetadata.md) |  |
 |  [DatastoreModuleMetadata](./sdk.datastoremodulemetadata.md) |  |

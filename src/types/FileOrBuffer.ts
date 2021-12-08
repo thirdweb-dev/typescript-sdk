@@ -1,3 +1,3 @@
-type FileOrBuffer = Buffer | File;
+type FileOrBuffer = Buffer;
 
 export default FileOrBuffer;

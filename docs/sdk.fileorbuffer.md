@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-declare type FileOrBuffer = Buffer | File;
+declare type FileOrBuffer = Buffer;
 ```

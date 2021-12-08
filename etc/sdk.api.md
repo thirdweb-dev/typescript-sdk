@@ -209,6 +209,33 @@ export type ChainlinkInfo = {
 export const ChainlinkVrf: Record<number, ChainlinkInfo>;
 
 // @public (undocumented)
+export class ClaimConditionFactory {
+    constructor();
+    // @internal
+    buildConditions(): PublicClaimCondition[];
+    // Warning: (ae-incompatible-release-tags) The symbol "fromPublicClaimConditions" is marked as @public, but its signature references "PublicClaimCondition" which is marked as @beta
+    fromPublicClaimConditions(conditions: PublicClaimCondition[]): this;
+    newClaimPhase({ startTime, maxQuantity, maxQuantityPerTransaction, }: {
+        startTime: Date | number;
+        maxQuantity?: BigNumberish_2;
+        maxQuantityPerTransaction?: BigNumberish_2;
+    }): ClaimConditionPhase;
+    removeClaimPhase(index: number): void;
+}
+
+// @public (undocumented)
+export class ClaimConditionPhase {
+    constructor();
+    // @internal
+    buildPublicClaimCondition(): PublicMintCondition;
+    setConditionStartTime(when: Date | number): ClaimConditionPhase;
+    setMaxQuantity(maxQuantity: BigNumberish_2): ClaimConditionPhase;
+    setMaxQuantityPerTransaction(max: BigNumberish_2): ClaimConditionPhase;
+    setMerkleRoot(root: string): ClaimConditionPhase;
+    setPrice(price: BigNumberish_2, tokenAddress?: string): ClaimConditionPhase;
+}
+
+// @public (undocumented)
 export interface CollectionMetadata {
     // (undocumented)
     creator: string;
@@ -422,7 +449,6 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     setBaseTokenUri(uri: string): Promise<TransactionReceipt>;
     // (undocumented)
     setMaxTotalSupply(amount: BigNumberish_2): Promise<TransactionReceipt>;
-    // Warning: (ae-forgotten-export) The symbol "ClaimConditionFactory" needs to be exported by the entry point index.d.ts
     setMintConditions(factory: ClaimConditionFactory): Promise<void>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
@@ -468,7 +494,7 @@ export class FetchError extends Error {
 }
 
 // @public (undocumented)
-export type FileOrBuffer = Buffer | File;
+export type FileOrBuffer = Buffer;
 
 // @public
 export type ForwardRequestMessage = {

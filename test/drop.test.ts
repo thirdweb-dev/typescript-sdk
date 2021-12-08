@@ -29,6 +29,9 @@ describe("Drop Module", async () => {
   beforeEach(async () => {
     sdk = new ThirdwebSDK(
       new ethers.Wallet(process.env.PKEY, ethers.getDefaultProvider(RPC_URL)),
+      {
+        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+      },
     );
     /**
      * This contract address *should* exist forever on mumbai

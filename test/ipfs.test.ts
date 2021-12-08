@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import { ethers } from "ethers";
 import { readFileSync } from "fs";
-import { ThirdwebSDK, uploadMetadata } from "../src/index";
+import { ThirdwebSDK } from "../src/index";
 
 global.fetch = require("node-fetch");
 
@@ -14,6 +14,9 @@ describe("IPFS Uploads", async () => {
         process.env.PKEY,
         ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com"),
       ),
+      {
+        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+      },
     );
   });
   async function getFile(upload: string): Promise<Response> {
