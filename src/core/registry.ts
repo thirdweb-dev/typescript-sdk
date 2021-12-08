@@ -43,6 +43,7 @@ export class RegistryModule extends Module<Registry> {
           this.providerOrSigner,
           address,
           this.ipfsGatewayUrl,
+          this.ipfsGatewayUrls,
         ).catch(() => undefined),
       ),
     );
