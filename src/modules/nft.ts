@@ -46,6 +46,7 @@ export class NFTModule extends ModuleWithRoles<NFT> {
       this.readOnlyContract,
       tokenId,
       this.ipfsGatewayUrl,
+      this.ipfsGatewayUrls,
     );
   }
 

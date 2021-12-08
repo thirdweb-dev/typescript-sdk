@@ -101,6 +101,7 @@ export class MarketModule extends ModuleWithRoles<Market> {
         listing.assetContract,
         listing.tokenId.toString(),
         this.ipfsGatewayUrl,
+        this.ipfsGatewayUrls,
       );
       // eslint-disable-next-line no-empty
     } catch (e) {}

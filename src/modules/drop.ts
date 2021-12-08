@@ -68,6 +68,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
       this.readOnlyContract,
       tokenId,
       this.ipfsGatewayUrl,
+      this.ipfsGatewayUrls,
     );
   }
 

@@ -128,6 +128,7 @@ export class PackModule extends ModuleWithRoles<PackContract> {
           this.address,
           rewardId.toString(),
           this.ipfsGatewayUrl,
+          this.ipfsGatewayUrls,
         ),
       ),
     );
@@ -140,6 +141,7 @@ export class PackModule extends ModuleWithRoles<PackContract> {
         this.address,
         packId,
         this.ipfsGatewayUrl,
+        this.ipfsGatewayUrls,
       ),
       this.readOnlyContract.getPack(packId),
       this.readOnlyContract
@@ -177,6 +179,7 @@ export class PackModule extends ModuleWithRoles<PackContract> {
           packReward.source,
           tokenId.toString(),
           this.ipfsGatewayUrl,
+          this.ipfsGatewayUrls,
         ),
       ),
     );
