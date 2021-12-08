@@ -1,9 +1,9 @@
 import { LazyNFT, NFT, NFTCollection } from "@3rdweb/contracts";
 import { Contract } from "@ethersproject/contracts";
 import { JSONValue, ProviderOrSigner } from "../core/types";
-import { NotFoundError } from "./error";
+import { NotFoundError, UploadError } from "./error";
 import { replaceIpfsWithGateway } from "./ipfs";
-
+import fetch from "./timeoutFetch";
 // support erc721 and erc1155
 const tokenUriABI = [
   {
@@ -83,9 +83,10 @@ export async function getMetadataWithoutContract(
   contractAddress: string,
   tokenId: string,
   ipfsGatewayUrl: string,
+  ipfsGatewayUrls: string[],
 ): Promise<NFTMetadata> {
   const contract = new Contract(contractAddress, tokenUriABI, provider) as NFT;
-  return getTokenMetadata(contract, tokenId, ipfsGatewayUrl);
+  return getTokenMetadata(contract, tokenId, ipfsGatewayUrl, ipfsGatewayUrls);
 }
 
 /**
@@ -95,13 +96,22 @@ export async function getTokenMetadata(
   contract: NFTContractTypes,
   tokenId: string,
   ipfsGatewayUrl: string,
+  ipfsGatewayUrls: string[],
 ): Promise<NFTMetadata> {
   const uri = await getTokenUri(contract, tokenId);
   if (!uri) {
     throw new NotFoundError();
   }
   const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
-  const meta = await fetch(gatewayUrl);
+  let tries = 0;
+  const meta = await fetch(gatewayUrl, 10000).catch((e) => {
+    tries++;
+    if (tries < ipfsGatewayUrls.length) {
+      return fetch(replaceIpfsWithGateway(uri, ipfsGatewayUrls[tries]), 10000);
+    } else {
+      throw new UploadError(e);
+    }
+  });
   const metadata = await meta.json();
   const entity: NFTMetadata = {
     ...metadata,

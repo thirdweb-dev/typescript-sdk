@@ -49,6 +49,11 @@ export class Module<TContract extends BaseContract = BaseContract> {
    * @internal
    * @readonly
    */
+  protected readonly ipfsGatewayUrls: string[] | undefined;
+  /**
+   * @internal
+   * @readonly
+   */
   protected readonly options: ISDKOptions;
 
   protected readonly sdk: ThirdwebSDK;
@@ -106,6 +111,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     this.address = address;
     this.options = options;
     this.ipfsGatewayUrl = options.ipfsGatewayUrl;
+    this.ipfsGatewayUrls = options.gatewayUrl.ipfs;
     this.setProviderOrSigner(providerOrSigner);
     this.contract = this.connectContract();
     this.readOnlyContract = this.options.readOnlyRpcUrl
@@ -140,6 +146,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
         this.getProviderOrSigner(),
         contract.address,
         this.options.ipfsGatewayUrl,
+        this.options.gatewayUrl.ipfs,
       ),
       address: contract.address,
       type,

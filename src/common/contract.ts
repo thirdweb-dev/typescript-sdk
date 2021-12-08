@@ -1,8 +1,10 @@
 import { arrayify } from "@ethersproject/bytes";
 import { Contract } from "@ethersproject/contracts";
 import { Provider } from "@ethersproject/providers";
+import { UploadError } from ".";
 import { ProviderOrSigner } from "../core/types";
 import { replaceIpfsWithGateway } from "./ipfs";
+import fetch from "./timeoutFetch";
 
 /**
  * The typical contract metadata found on the modules.
@@ -51,11 +53,20 @@ export async function getContractMetadata(
   provider: ProviderOrSigner,
   address: string,
   ipfsGatewayUrl: string,
+  ipfsGatewayUrls: string[],
 ): Promise<ContractMetadata> {
   const contract = new Contract(address, contractUriABI, provider);
   const uri = await contract.contractURI();
   const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
-  const meta = await fetch(gatewayUrl);
+  let tries = 0;
+  const meta = await fetch(gatewayUrl, 10000).catch((e) => {
+    tries++;
+    if (tries < ipfsGatewayUrls.length) {
+      return fetch(replaceIpfsWithGateway(uri, ipfsGatewayUrls[tries]), 10000);
+    } else {
+      throw new UploadError(e);
+    }
+  });
   const metadata = await meta.json();
   const entity: ContractMetadata = {
     ...metadata,

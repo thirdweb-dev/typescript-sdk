@@ -7,7 +7,7 @@ global.fetch = require("node-fetch");
 
 const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
 
-describe("Drop Module", async () => {
+describe.skip("Drop Module", async () => {
   let sdk: ThirdwebSDK;
   let dropModule: DropModule;
 

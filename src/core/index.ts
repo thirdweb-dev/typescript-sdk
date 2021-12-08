@@ -37,8 +37,13 @@ import {
 export interface ISDKOptions {
   /**
    * An optional IPFS Gateway. (Default: `https://cloudflare-ipfs.com/ipfs/`).
+   * @deprecated - Use the `gatewayUrl` option instead.
    */
   ipfsGatewayUrl: string;
+
+  gatewayUrl: {
+    ipfs: string[];
+  };
 
   /**
    * Optional Registry Contract Address
@@ -104,6 +109,9 @@ export class ThirdwebSDK {
   private options: ISDKOptions;
   private defaultOptions: ISDKOptions = {
     ipfsGatewayUrl: "https://cloudflare-ipfs.com/ipfs/",
+    gatewayUrl: {
+      ipfs: ["https://cloudflare-ipfs.com/ipfs/"],
+    },
     registryContractAddress: "",
     maxGasPriceInGwei: 100,
     gasSpeed: "fastest",
@@ -314,6 +322,7 @@ export class ThirdwebSDK {
         this.providerOrSigner,
         address,
         this.options.ipfsGatewayUrl,
+        this.options.gatewayUrl.ipfs,
       )),
       address,
     };

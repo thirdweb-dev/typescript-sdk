@@ -1,4 +1,3 @@
-import { CollectionModuleMetadata } from "..";
 import { ModuleType } from "../../common/module-type";
 import CommonModuleMetadata from "./CommonModuleMetadata";
 
