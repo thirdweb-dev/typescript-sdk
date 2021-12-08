@@ -49,7 +49,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
    * @internal
    * @readonly
    */
-  protected readonly ipfsGatewayUrls: string[] | undefined;
+  protected readonly ipfsGatewayUrls: string[] = [];
   /**
    * @internal
    * @readonly
