@@ -2,7 +2,9 @@ import { FetchError, UploadError } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
 import IStorage from "../interfaces/IStorage";
 import { FileOrBuffer } from "../types";
-import * as FormData from "form-data";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const IFormData = require("form-data");
 
 // if (!globalThis.FormData) {
 //   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -28,7 +30,7 @@ export default class IpfsStorage implements IStorage {
       "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
       "X-Public-Address": signerAddress || "",
     };
-    const formData = new FormData();
+    const formData = new IFormData();
     formData.append("file", data as any);
     const res = await fetch(`${thirdwebIpfsServerUrl}/upload`, {
       method: "POST",
@@ -52,7 +54,7 @@ export default class IpfsStorage implements IStorage {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
     };
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-    const data = new FormData();
+    const data = new IFormData();
     // as {
     //   append(name: string, value: string | Blob, fileName?: string): void;
     //   delete(name: string): void;
