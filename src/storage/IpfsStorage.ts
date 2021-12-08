@@ -76,7 +76,6 @@ export default class IpfsStorage implements IStorage {
         { filepath: `files/${i}` } as unknown as string,
       );
     });
-    console.log(`Uploading ${files.length} files to IPFS`);
     data.append("pinataMetadata", JSON.stringify(metadata));
     const res = await fetch(url, {
       method: "POST",
@@ -87,7 +86,6 @@ export default class IpfsStorage implements IStorage {
       body: data,
     })
       .then((response) => {
-        console.log(`Uploaded ${files.length} files to IPFS`);
         return response;
       })
       .catch((err: any) => {

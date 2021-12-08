@@ -96,4 +96,14 @@ describe("IPFS Uploads", async () => {
       chai.assert.equal(parsed.id, object.id);
     }
   });
+
+  it("should upload many Buffers correctly", async () => {
+    const sampleObjects: Buffer[] = [
+      readFileSync("test/test.mp4"),
+      readFileSync("test/test.mp4"),
+      readFileSync("test/test.mp4"),
+    ];
+    const cid = await sdk.getStorage().uploadBatch(sampleObjects);
+    console.log(cid);
+  });
 });
