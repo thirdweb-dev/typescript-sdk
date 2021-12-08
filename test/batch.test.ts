@@ -25,7 +25,7 @@ describe("Drop Module", async () => {
     );
   });
 
-  it("should upload bulk", async () => {
+  it.skip("should upload bulk", async () => {
     const folder = await readdirSync("test/images");
     const files = [];
     folder.forEach((file) => {
