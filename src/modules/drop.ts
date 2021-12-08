@@ -93,11 +93,13 @@ export class DropModule extends ModuleWithRoles<Drop> {
   public async getAllUnclaimed(): Promise<NFTMetadataOwner[]> {
     const maxId = await this.readOnlyContract.nextTokenId();
     const unmintedId = await this.readOnlyContract.nextMintTokenId();
-    return await Promise.all(
-      Array.from(Array(maxId.sub(unmintedId).toNumber()).keys()).map((i) =>
-        this.get(unmintedId.add(i).toString()),
-      ),
-    );
+    return (
+      await Promise.all(
+        Array.from(Array(maxId.sub(unmintedId).toNumber()).keys()).map((i) =>
+          this.getTokenMetadata(unmintedId.add(i).toString()),
+        ),
+      )
+    ).map((metadata) => ({ owner: AddressZero, metadata }));
   }
 
   public async getAllClaimed(): Promise<NFTMetadataOwner[]> {
