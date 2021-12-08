@@ -400,16 +400,22 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
     // (undocumented)
+    getActiveClaimCondition(): Promise<PublicClaimCondition>;
+    // @deprecated (undocumented)
     getActiveMintCondition(): Promise<PublicMintCondition>;
     // (undocumented)
     getAll(): Promise<NFTMetadataOwner[]>;
     // (undocumented)
-    getAllClaimed(): Promise<NFTMetadataOwner[]>;
+    getAllClaimConditions(): Promise<PublicClaimCondition[]>;
     // (undocumented)
+    getAllClaimed(): Promise<NFTMetadataOwner[]>;
+    // @deprecated (undocumented)
     getAllMintConditions(): Promise<PublicMintCondition[]>;
     // (undocumented)
     getAllUnclaimed(): Promise<NFTMetadataOwner[]>;
     // (undocumented)
+    getClaimConditionsFactory(): Promise<ClaimConditionFactory>;
+    // @deprecated (undocumented)
     getMintConditionsFactory(): Promise<ClaimConditionFactory>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
@@ -439,8 +445,10 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setBaseTokenUri(uri: string): Promise<TransactionReceipt>;
+    setClaimConditions(factory: ClaimConditionFactory): Promise<void>;
     // (undocumented)
     setMaxTotalSupply(amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // @deprecated (undocumented)
     setMintConditions(factory: ClaimConditionFactory): Promise<void>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;

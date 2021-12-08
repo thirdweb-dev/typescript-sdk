@@ -7,7 +7,10 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
-Sets public mint conditions for the next minting using the claim condition factory.
+> Warning: This API is now obsolete.
+> 
+> - Use [DropModule.setClaimConditions()](./sdk.dropmodule.setclaimconditions.md) instead
+> 
 
 <b>Signature:</b>
 
@@ -19,7 +22,7 @@ setMintConditions(factory: ClaimConditionFactory): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  factory | ClaimConditionFactory | The claim condition factory. |
+|  factory | ClaimConditionFactory |  |
 
 <b>Returns:</b>
 

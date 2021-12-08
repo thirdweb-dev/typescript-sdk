@@ -13,7 +13,10 @@ import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
-import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
+import {
+  PublicClaimCondition,
+  PublicMintCondition,
+} from "../types/claim-conditions/PublicMintCondition";
 
 /**
  * @beta
@@ -120,13 +123,27 @@ export class DropModule extends ModuleWithRoles<Drop> {
     );
   }
 
+  /**
+   * @deprecated - Use {@link DropModule.getActiveClaimCondition} instead
+   */
   public async getActiveMintCondition(): Promise<PublicMintCondition> {
+    return this.getActiveClaimCondition();
+  }
+
+  public async getActiveClaimCondition(): Promise<PublicClaimCondition> {
     const index =
       await this.readOnlyContract.getLastStartedMintConditionIndex();
     return await this.readOnlyContract.mintConditions(index);
   }
 
+  /**
+   * @deprecated - Use {@link DropModule.getAllClaimConditions} instead
+   */
   public async getAllMintConditions(): Promise<PublicMintCondition[]> {
+    return this.getAllClaimConditions();
+  }
+
+  public async getAllClaimConditions(): Promise<PublicClaimCondition[]> {
     const conditions = [];
     for (let i = 0; ; i++) {
       try {
@@ -212,17 +229,31 @@ export class DropModule extends ModuleWithRoles<Drop> {
   }
 
   /**
+   * @deprecated - Use {@link DropModule.setClaimConditions} instead
+   */
+  public async setMintConditions(factory: ClaimConditionFactory) {
+    return this.setClaimConditions(factory);
+  }
+
+  /**
    * Sets public mint conditions for the next minting using the
    * claim condition factory.
    *
    * @param factory - The claim condition factory.
    */
-  public async setMintConditions(factory: ClaimConditionFactory) {
+  public async setClaimConditions(factory: ClaimConditionFactory) {
     const conditions = factory.buildConditions();
     await this.sendTransaction("setPublicMintConditions", [conditions]);
   }
 
+  /**
+   * @deprecated - Use {@link DropModule.getClaimConditionsFactory} instead
+   */
   public async getMintConditionsFactory(): Promise<ClaimConditionFactory> {
+    return this.getClaimConditionsFactory();
+  }
+
+  public async getClaimConditionsFactory(): Promise<ClaimConditionFactory> {
     const conditions = await this.getAllMintConditions();
     const factory = new ClaimConditionFactory();
     factory.fromPublicClaimConditions(conditions);
@@ -230,7 +261,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
   }
 
   /**
-   * @deprecated - Use the ClaimConditionFactory instead.
+   * @deprecated - Use the {@link DropModule.setClaimConditions} instead.
    */
   public async setPublicMintConditions(
     conditions: CreatePublicMintCondition[],
