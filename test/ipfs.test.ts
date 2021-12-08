@@ -21,7 +21,7 @@ describe("IPFS Uploads", async () => {
   });
   async function getFile(upload): Promise<Response> {
     const response = await fetch(
-      `https://cloudflare-ipfs.com/ipfs/${upload.replace("ipfs://", "")}`,
+      `https://ipfs.io/ipfs/${upload.replace("ipfs://", "")}`,
     )
       .then(async (res) => {
         return res;
