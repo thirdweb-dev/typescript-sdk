@@ -113,7 +113,10 @@ export default class IpfsStorage implements IStorage {
   }
 
   public async get(hash: string): Promise<string> {
-    const uri = this.resolveFullUrl(hash);
+    let uri = hash;
+    if (hash) {
+      uri = this.resolveFullUrl(hash);
+    }
     try {
       const result = await fetch(uri);
       if (result.status !== 200) {

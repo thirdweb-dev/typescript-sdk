@@ -68,7 +68,7 @@ describe("Drop Module", async () => {
       .setPrice(phaseOnePrice);
   });
 
-  it.skip("should contain all claim conditions", async () => {
+  it("should contain all claim conditions", async () => {
     const converted = factory.buildConditions();
     console.log(converted);
     await dropModule.setMintConditions(factory);
