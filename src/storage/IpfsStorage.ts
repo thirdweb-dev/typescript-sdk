@@ -77,7 +77,7 @@ export default class IpfsStorage implements IStorage {
       data.append(
         `file`,
         file as any,
-        { filepath: `files/${i}` } as unknown as string,
+        JSON.stringify({ filepath: `files/${i}` }),
       );
     });
 
