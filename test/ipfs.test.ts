@@ -89,7 +89,8 @@ describe("IPFS Uploads", async () => {
         prop: Math.random().toString(),
       },
     ];
-    const serialized = sampleObjects.map((o) => JSON.stringify(o));
+    const serialized = sampleObjects.map((o) => Buffer.from(JSON.stringify(o)));
+    console.log(serialized);
     const cid = await sdk.getStorage().uploadBatch(serialized);
     console.log("OBJECTS CID ", cid);
     for (const object of sampleObjects) {
