@@ -39,6 +39,7 @@ export default class IpfsStorage implements IStorage {
     });
     try {
       const body = await res.json();
+      console.log(body);
       return body.IpfsUri;
     } catch (e) {
       throw new UploadError(`Failed to upload to IPFS: ${e}`);
@@ -74,11 +75,7 @@ export default class IpfsStorage implements IStorage {
     // };
 
     files.forEach((file, i) => {
-      data.append(
-        `file`,
-        file as any,
-        JSON.stringify({ filepath: `files/${i}` }),
-      );
+      data.append(`file`, file as any, { filepath: `files/${i}` });
     });
 
     data.append("pinataMetadata", JSON.stringify(metadata));
@@ -96,7 +93,9 @@ export default class IpfsStorage implements IStorage {
       .catch((err: any) => {
         throw new UploadError(`Failed to upload to IPFS: ${err}`);
       });
-    return (await res.json()).IpfsHash;
+    const body = await res.json();
+    console.log(body);
+    return body.IpfsHash;
   }
 
   public async getUploadToken(contractAddress: string): Promise<string> {
