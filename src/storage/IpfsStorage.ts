@@ -80,7 +80,6 @@ export default class IpfsStorage implements IStorage {
     const res = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": `multipart/form-data; boundary=${data.getBoundary()}`,
         Authorization: `Bearer ${token}`,
       },
       body: data,
