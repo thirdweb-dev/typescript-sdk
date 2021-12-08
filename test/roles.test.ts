@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import { AppModule, RolesMap, ThirdwebSDK } from "../src/index";
+import { AppModule, NFTModule, RolesMap, ThirdwebSDK } from "../src/index";
 import { ethers } from "ethers";
 
 global.fetch = require("node-fetch");
@@ -9,6 +9,7 @@ const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
 describe("App Module", async () => {
   let sdk: ThirdwebSDK;
   let appModule: AppModule;
+  let nftModule: NFTModule;
 
   beforeEach(async () => {
     sdk = new ThirdwebSDK(
@@ -27,6 +28,7 @@ describe("App Module", async () => {
      * the test address starting with 0xE79
      */
     appModule = sdk.getAppModule("0xA47220197e8c7F7ec462989Ca992b706747B77A8");
+    nftModule = sdk.getNFTModule("0x364A9b8f4382bB583C3833E484A44f7A189312a7");
   });
 
   it("should return all assigned roles", async () => {
@@ -41,22 +43,31 @@ describe("App Module", async () => {
     );
   });
 
+  /**
+   * Add multiple roles - confirm that missing roles were added
+   *
+   * Remove multiple roles - confirm that selected roles were removed
+   *
+   * Replace all roles - confirm that all roles were replaced (not just added)
+   *
+   * - 1,2,3,4,5
+   * - 3,4,5,6,7
+   */
+
   it("should override current roles in the contract", async () => {
-    const roles = await appModule.getRoleMembers("admin");
-    if (roles.length === 1) {
-      await appModule.setAllRoleMembers({
-        admin: [
-          "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-          "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
-        ],
-      });
-      chai.assert.lengthOf(await appModule.getRoleMembers("admin"), 2);
-    }
-    if (roles.length > 1) {
-      await appModule.setAllRoleMembers({
-        admin: ["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"],
-      });
-      chai.assert.lengthOf(await appModule.getRoleMembers("admin"), 1);
-    }
+    const roles = await nftModule.getRoleMembers("admin");
+    console.log("Existing roles: ", roles);
+    await nftModule.setAllRoleMembers({
+      admin: [
+        "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+        "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
+      ],
+    });
+
+    chai.assert.lengthOf(await nftModule.getRoleMembers("admin"), 2);
+    await nftModule.setAllRoleMembers({
+      admin: ["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"],
+    });
+    chai.assert.lengthOf(await nftModule.getRoleMembers("admin"), 1);
   });
 });
