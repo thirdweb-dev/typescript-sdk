@@ -101,7 +101,12 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
    */
   public async get(tokenId: string, address?: string): Promise<BundleMetadata> {
     const [metadata, creator, supply, ownedByAddress] = await Promise.all([
-      getTokenMetadata(this.readOnlyContract, tokenId, this.ipfsGatewayUrl),
+      getTokenMetadata(
+        this.readOnlyContract,
+        tokenId,
+        this.ipfsGatewayUrl,
+        this.ipfsGatewayUrls,
+      ),
       this.readOnlyContract.creator(tokenId),
       this.readOnlyContract
         .totalSupply(tokenId)
