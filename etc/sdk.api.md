@@ -488,7 +488,7 @@ export class FetchError extends Error {
 }
 
 // @public (undocumented)
-export type FileOrBuffer = Buffer;
+export type FileOrBuffer = Buffer | File;
 
 // @public
 export type ForwardRequestMessage = {
