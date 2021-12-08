@@ -8,7 +8,6 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { getCurrencyValue, ModuleType, Role, RolesMap } from "../common";
-import { uploadMetadata } from "../common/ipfs";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -38,6 +37,7 @@ export interface CreatePublicMintCondition {
  */
 export class DropModule extends ModuleWithRoles<Drop> {
   public static moduleType: ModuleType = ModuleType.DROP;
+  storage = this.sdk.getStorage();
 
   public static roles = [
     RolesMap.admin,
@@ -265,11 +265,17 @@ export class DropModule extends ModuleWithRoles<Drop> {
     await this.lazyMintBatch([metadata]);
   }
 
+  public async pinToIpfs(files: Buffer[]): Promise<string> {
+    return await this.storage.uploadBatch(files, this.address);
+  }
+
   /**
    * @deprecated - The function has been deprecated. Use `mintBatch` instead.
    */
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
-    const uris = await Promise.all(metadatas.map((m) => uploadMetadata(m)));
+    const uris = await Promise.all(
+      metadatas.map((m) => this.storage.uploadMetadata(m)),
+    );
     await this.sendTransaction("lazyMintBatch", [uris]);
   }
 
@@ -419,7 +425,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
   ): Promise<TransactionReceipt> {
-    const uri = await uploadMetadata(metadata);
+    const uri = await this.storage.uploadMetadata(metadata);
     return await this.sendTransaction("setContractURI", [uri]);
   }
 
@@ -434,7 +440,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
     }
 
     metadata.seller_fee_basis_points = amount;
-    const uri = await uploadMetadata(
+    const uri = await this.storage.uploadMetadata(
       {
         ...metadata,
       },

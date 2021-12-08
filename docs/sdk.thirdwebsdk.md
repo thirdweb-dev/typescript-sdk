@@ -34,6 +34,8 @@ export declare class ThirdwebSDK
 |  [getMarketModule(address)](./sdk.thirdwebsdk.getmarketmodule.md) |  |  |
 |  [getNFTModule(address)](./sdk.thirdwebsdk.getnftmodule.md) |  |  |
 |  [getPackModule(address)](./sdk.thirdwebsdk.getpackmodule.md) |  |  |
+|  [getStorage()](./sdk.thirdwebsdk.getstorage.md) |  | Accessor for the storage instance used by the SDK |
 |  [isReadOnly()](./sdk.thirdwebsdk.isreadonly.md) |  |  |
+|  [overrideStorage(storage)](./sdk.thirdwebsdk.overridestorage.md) |  | Allows you to override the storage used across the SDK. |
 |  [setProviderOrSigner(providerOrSignerOrNetwork)](./sdk.thirdwebsdk.setproviderorsigner.md) |  |  |
 

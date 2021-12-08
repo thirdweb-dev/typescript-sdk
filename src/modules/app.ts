@@ -22,8 +22,6 @@ import {
   getCurrencyValue,
   Role,
   RolesMap,
-  uploadMetadata,
-  uploadToIPFS,
 } from "../common";
 import { getContractMetadata } from "../common/contract";
 import { invariant } from "../common/invariant";
@@ -307,7 +305,7 @@ export class AppModule
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
   ): Promise<TransactionReceipt> {
-    const uri = await uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     return await this.sendTransaction("setContractURI", [uri]);
   }
 
@@ -348,11 +346,13 @@ export class AppModule
       return Promise.resolve(metadata);
     }
 
-    metadata.image = await uploadToIPFS(
-      metadata.image as FileOrBuffer,
-      this.address,
-      await this.getSignerAddress(),
-    );
+    metadata.image = await this.sdk
+      .getStorage()
+      .upload(
+        metadata.image as FileOrBuffer,
+        this.address,
+        await this.getSignerAddress(),
+      );
     return Promise.resolve(metadata);
   }
 
@@ -406,11 +406,13 @@ export class AppModule
       BundleModuleMetadata,
     );
 
-    const metadataUri = await uploadMetadata(
-      serializedMetadata,
-      this.address,
-      await this.getSignerAddress(),
-    );
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
 
     const address = await this._deployModule(
       ModuleType.COLLECTION,
@@ -442,11 +444,13 @@ export class AppModule
       SplitsModuleMetadata,
     );
 
-    const metadataUri = await uploadMetadata(
-      serializedMetadata,
-      this.address,
-      await this.getSignerAddress(),
-    );
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
 
     const address = await this._deployModule(
       ModuleType.SPLITS,
@@ -477,11 +481,13 @@ export class AppModule
       NftModuleMetadata,
     );
 
-    const metadataUri = await uploadMetadata(
-      serializedMetadata,
-      this.address,
-      await this.getSignerAddress(),
-    );
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
 
     const address = await this._deployModule(
       ModuleType.NFT,
@@ -513,11 +519,13 @@ export class AppModule
       CurrencyModuleMetadata,
     );
 
-    const metadataUri = await uploadMetadata(
-      serializedMetadata,
-      this.address,
-      await this.getSignerAddress(),
-    );
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
 
     const address = await this._deployModule(
       ModuleType.CURRENCY,
@@ -548,11 +556,13 @@ export class AppModule
       MarketModuleMetadata,
     );
 
-    const metadataUri = await uploadMetadata(
-      serializedMetadata,
-      this.address,
-      await this.getSignerAddress(),
-    );
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
 
     const address = await this._deployModule(
       ModuleType.MARKET,
@@ -582,11 +592,13 @@ export class AppModule
       PackModuleMetadata,
     );
 
-    const metadataUri = await uploadMetadata(
-      serializedMetadata,
-      this.address,
-      await this.getSignerAddress(),
-    );
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
 
     const chainId = await this.getChainID();
     const { vrfCoordinator, linkTokenAddress, keyHash, fees } =
@@ -631,11 +643,13 @@ export class AppModule
       DropModuleMetadata,
     );
 
-    const metadataUri = await uploadMetadata(
-      serializedMetadata,
-      this.address,
-      await this.getSignerAddress(),
-    );
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
 
     const address = await this._deployModule(
       ModuleType.DROP,
@@ -673,11 +687,13 @@ export class AppModule
       DatastoreModuleMetadata,
     );
 
-    const metadataUri = await uploadMetadata(
-      serializedMetadata,
-      this.address,
-      await this.getSignerAddress(),
-    );
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
 
     const address = await this._deployModule(
       ModuleType.DATASTORE,

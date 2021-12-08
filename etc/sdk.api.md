@@ -447,6 +447,8 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
+    pinToIpfs(files: Buffer[]): Promise<string>;
+    // (undocumented)
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
@@ -465,6 +467,10 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     setRestrictedTransfer(restricted: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
+    // Warning: (ae-forgotten-export) The symbol "IStorage" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    storage: IStorage;
     // (undocumented)
     totalClaimedSupply(): Promise<BigNumber_2>;
     // (undocumented)
@@ -488,8 +494,16 @@ export class DropModuleMetadata extends CommonModuleMetadata {
     symbol?: string;
 }
 
+// @public
+export class FetchError extends Error {
+    // @internal
+    constructor(message: string, innerError?: Error);
+    // (undocumented)
+    innerError?: Error;
+}
+
 // @public (undocumented)
-export type FileOrBuffer = Buffer;
+export type FileOrBuffer = Buffer | File;
 
 // @public
 export type ForwardRequestMessage = {
@@ -908,7 +922,6 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): NFT;
-    // (undocumented)
     get(tokenId: string): Promise<NFTMetadata>;
     // (undocumented)
     getAll(): Promise<NFTMetadata[]>;
@@ -1157,10 +1170,12 @@ export class ThirdwebSDK {
     getPackModule(address: string): PackModule;
     // @alpha (undocumented)
     getSplitsModule(address: string): SplitsModule;
+    getStorage(): IStorage;
     // @internal
     invokeRoute(route: string, payload: Record<string, any>): any;
     // (undocumented)
     isReadOnly(): boolean;
+    overrideStorage(storage: IStorage): void;
     // (undocumented)
     setProviderOrSigner(providerOrSignerOrNetwork: ValidProviderInput): ProviderOrSigner;
     // @internal
