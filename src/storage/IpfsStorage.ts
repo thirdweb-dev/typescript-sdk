@@ -3,13 +3,10 @@ import { MetadataURIOrObject } from "../core/types";
 import IStorage from "../interfaces/IStorage";
 import { FileOrBuffer } from "../types";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const IFormData = require("form-data");
-
-// if (!globalThis.FormData) {
-//   // eslint-disable-next-line @typescript-eslint/no-var-requires
-//   globalThis.FormData = require("form-data");
-// }
+if (!globalThis.FormData) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  globalThis.FormData = require("form-data");
+}
 
 const thirdwebIpfsServerUrl = "https://upload.nftlabs.co";
 // const thirdwebIpfsServerUrl = "http://localhost:3002";
@@ -30,7 +27,7 @@ export default class IpfsStorage implements IStorage {
       "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
       "X-Public-Address": signerAddress || "",
     };
-    const formData = new IFormData();
+    const formData = new FormData();
     formData.append("file", data as any);
     const res = await fetch(`${thirdwebIpfsServerUrl}/upload`, {
       method: "POST",
@@ -54,30 +51,15 @@ export default class IpfsStorage implements IStorage {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
     };
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-    const data = new IFormData();
-    // as {
-    //   append(name: string, value: string | Blob, fileName?: string): void;
-    //   delete(name: string): void;
-    //   get(name: string): FormDataEntryValue | null;
-    //   getAll(name: string): FormDataEntryValue[];
-    //   has(name: string): boolean;
-    //   set(name: string, value: string | Blob, fileName?: string): void;
-    //   forEach(
-    //     callbackfn: (
-    //       value: FormDataEntryValue,
-    //       key: string,
-    //       parent: FormData,
-    //     ) => void,
-    //     thisArg?: any,
-    //   ): void;
-    //   getBoundary(): string;
-    // };
+    const data = new FormData();
 
     files.forEach((file, i) => {
       data.append(
         `file`,
         file as any,
-        { filepath: `files/${i}` } as unknown as string,
+        typeof window === "undefined"
+          ? ({ filepath: `files/${i}` } as unknown as string)
+          : `files/${i}`,
       );
     });
 
