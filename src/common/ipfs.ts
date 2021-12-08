@@ -9,7 +9,7 @@ if (!globalThis.FormData) {
 
 if (!globalThis.File) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  globalThis.File = require("web-file-polyfill");
+  globalThis.File = require("@web-std/file").File;
 }
 
 /**
