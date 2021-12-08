@@ -19,6 +19,7 @@ describe("IPFS Uploads", async () => {
       },
     );
   });
+
   async function getFile(upload: string): Promise<Response> {
     const response = await fetch(
       `https://nftlabs.mypinata.cloud/ipfs/${upload.replace("ipfs://", "")}`,
@@ -31,6 +32,7 @@ describe("IPFS Uploads", async () => {
       });
     return response;
   }
+
   it("should upload a file through any property, even when it is in an object nested inside another object", async () => {
     try {
       const upload = await sdk.getStorage().uploadMetadata({
@@ -72,5 +74,26 @@ describe("IPFS Uploads", async () => {
       upload,
       "ipfs://bafkreih6i5vu3ods5zz3c7j3f6ad5nt7fkoamsmbxpypl54zwdm4vsu4ju",
     );
+  });
+
+  it("should upload many objects correctly", async () => {
+    const sampleObjects: { id: number; description: string }[] = [
+      {
+        id: 0,
+        description: "test 0",
+      },
+      {
+        id: 1,
+        description: "test 1",
+      },
+    ];
+    const serialized = sampleObjects.map((o) => JSON.stringify(o));
+    const cid = await sdk.getStorage().uploadBatch(serialized);
+    for (const object of sampleObjects) {
+      const fetched = await sdk.getStorage().get(`ipfs://${cid}/${object.id}`);
+      const parsed = JSON.parse(fetched);
+      chai.assert.equal(parsed.description, object.description);
+      chai.assert.equal(parsed.id, object.id);
+    }
   });
 });

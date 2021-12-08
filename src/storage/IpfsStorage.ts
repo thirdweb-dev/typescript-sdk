@@ -165,7 +165,7 @@ export default class IpfsStorage implements IStorage {
   }
 
   public async batchUploadMetadata(
-    files: Buffer[],
+    files: Buffer[] | string[] | FileOrBuffer[],
     contractAddress?: string,
   ): Promise<MetadataURIOrObject[]> {
     const ipfsUri = this.uploadBatch(files, contractAddress);

@@ -26,7 +26,10 @@ export default interface IStorage {
    *
    * @returns - The CID of the uploaded folder.
    */
-  uploadBatch(files: Buffer[], contractAddress?: string): Promise<string>;
+  uploadBatch(
+    files: Buffer[] | string[] | FileOrBuffer[],
+    contractAddress?: string,
+  ): Promise<string>;
 
   /**
    * Fetches a one-time-use upload token that can used to upload
