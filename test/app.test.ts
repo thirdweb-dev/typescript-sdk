@@ -217,4 +217,42 @@ describe("App Module", async () => {
     );
     chai.assert.equal(testBalance.displayValue, "100.0");
   });
+
+  it("should properly parse metadata when image is string", async () => {
+    const metadata = {
+      name: "safe",
+      description: "",
+      image:
+        "ipfs://bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
+      sellerFeeBasisPoints: 0,
+      fee_recipient: "0xabE01399799888819f5dCE731F8C22f8E7e6AD26",
+      symbol: "",
+    };
+    const contract = await appModule.deployBundleModule(metadata);
+    const module = sdk.getBundleModule(contract.address);
+    const result = await module.getMetadata();
+    chai.assert.equal(
+      result.metadata.image,
+      "https://ipfs.io/ipfs/bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
+    );
+  });
+
+  it("should upload to ipfs image is file", async () => {
+    const metadata = {
+      name: "safe",
+      description: "",
+      image: readFileSync(`${__dirname}/3510820011_4f558b6dea_b.jpg`),
+      sellerFeeBasisPoints: 0,
+      fee_recipient: "0xabE01399799888819f5dCE731F8C22f8E7e6AD26",
+      symbol: "",
+    };
+    const contract = await appModule.deployBundleModule(metadata);
+    const module = sdk.getBundleModule(contract.address);
+    const result = await module.getMetadata();
+    console.log(result);
+    const regex = new RegExp(
+      /Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}/,
+    );
+    chai.assert.match(result.metadata.image, regex);
+  });
 });
