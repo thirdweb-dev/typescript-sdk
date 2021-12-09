@@ -5,7 +5,11 @@ import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
 import { JsonConvert } from "json2typescript";
 import MerkleTree from "merkletreejs";
 import type { C } from "ts-toolbelt";
-import { getContractMetadata, uploadMetadata } from "../common";
+import {
+  DuplicateLeafsError,
+  getContractMetadata,
+  uploadMetadata,
+} from "../common";
 import {
   FORWARDER_ADDRESS,
   getContractAddressByChainId,
@@ -466,6 +470,11 @@ export class ThirdwebSDK implements IThirdwebSdk {
     snapshotUri: string;
     snapshot: Snapshot;
   }> {
+    const hasDuplicates = new Set(leafs).size < leafs.length;
+    if (hasDuplicates) {
+      throw new DuplicateLeafsError();
+    }
+
     const hashedLeafs = leafs.map((l) => SHA256(l).toString());
     const tree = new MerkleTree(hashedLeafs, SHA256, {
       sortPairs: true,
@@ -484,9 +493,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
       }),
     };
 
-    const serializedSnapshot = this._jsonConvert.serializeObject(
-      snapshot,
-      Snapshot,
+    const serializedSnapshot = JSON.stringify(
+      this._jsonConvert.serializeObject(snapshot, Snapshot),
     );
     const uri = await this.storage.upload(serializedSnapshot);
 
