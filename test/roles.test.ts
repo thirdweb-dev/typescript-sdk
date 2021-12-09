@@ -64,18 +64,24 @@ describe("App Module", async () => {
       pauser: ["0x553C5E856801b5876e80D32a192086b2035286C1"],
       transfer: [],
     });
+
+    const newRoles = await nftModule.getAllRoleMembers();
     chai.assert.isTrue(
-      (await nftModule.getAllRoleMembers()) ===
-        {
-          admin: ["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"],
-          minter: [
-            "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-            "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
-          ],
-          pauser: ["0x553C5E856801b5876e80D32a192086b2035286C1"],
-          transfer: [],
-        },
+      newRoles.admin.length === 1 &&
+        newRoles.admin.includes("0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"),
     );
+    chai.assert.isTrue(
+      newRoles.minter.length === 2 &&
+        newRoles.minter.includes(
+          "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+        ) &&
+        newRoles.minter.includes("0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"),
+    );
+    chai.assert.isTrue(
+      newRoles.pauser.length === 1 &&
+        newRoles.pauser.includes("0x553C5E856801b5876e80D32a192086b2035286C1"),
+    );
+    chai.assert.isTrue(newRoles.transfer.length === 0);
   });
 
   it("Replace all roles - confirm that all roles were replaced (not just added)", async () => {
@@ -88,17 +94,25 @@ describe("App Module", async () => {
       pauser: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
       transfer: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
     });
+    const newRoles = await nftModule.getAllRoleMembers();
     chai.assert.isTrue(
-      (await nftModule.getAllRoleMembers()) ===
-        {
-          admin: [
-            "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-            "0x553C5E856801b5876e80D32a192086b2035286C1",
-          ],
-          minter: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
-          pauser: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
-          transfer: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
-        },
+      newRoles.admin.length === 2 &&
+        newRoles.admin.includes("0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803") &&
+        newRoles.admin.includes("0x553C5E856801b5876e80D32a192086b2035286C1"),
+    );
+    chai.assert.isTrue(
+      newRoles.minter.length === 1 &&
+        newRoles.minter.includes("0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"),
+    );
+    chai.assert.isTrue(
+      newRoles.pauser.length === 1 &&
+        newRoles.pauser.includes("0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"),
+    );
+    chai.assert.isTrue(
+      newRoles.transfer.length === 1 &&
+        newRoles.transfer.includes(
+          "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
+        ),
     );
   });
 });
