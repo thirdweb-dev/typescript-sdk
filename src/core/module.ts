@@ -531,6 +531,7 @@ export class ModuleWithRoles<
       "this module does not support the given role",
     );
     const currentRoles = await this.getAllRoleMembers();
+    console.log(currentRoles);
     const encoded: string[] = [];
     roles.forEach(async (role) => {
       const addresses = rolesWithAddresses[role as Role] || [];
@@ -543,7 +544,7 @@ export class ModuleWithRoles<
       );
       if (toAdd.length) {
         toAdd.forEach((address) => {
-          console.log(address);
+          console.log("+", role, address);
           encoded.push(
             this.contract.interface.encodeFunctionData("grantRole", [
               getRoleHash(role as Role),
@@ -554,6 +555,7 @@ export class ModuleWithRoles<
       }
       if (toRemove.length) {
         toRemove.forEach((address) => {
+          console.log("-", role, address);
           encoded.push(
             this.contract.interface.encodeFunctionData("revokeRole", [
               getRoleHash(role as Role),

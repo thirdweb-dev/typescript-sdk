@@ -55,19 +55,50 @@ describe("App Module", async () => {
    */
 
   it("should override current roles in the contract", async () => {
-    const roles = await nftModule.getRoleMembers("admin");
-    console.log("Existing roles: ", roles);
     await nftModule.setAllRoleMembers({
-      admin: [
+      admin: ["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"],
+      minter: [
         "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
         "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
       ],
+      pauser: ["0x553C5E856801b5876e80D32a192086b2035286C1"],
+      transfer: [],
     });
+    chai.assert.isTrue(
+      (await nftModule.getAllRoleMembers()) ===
+        {
+          admin: ["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"],
+          minter: [
+            "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+            "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
+          ],
+          pauser: ["0x553C5E856801b5876e80D32a192086b2035286C1"],
+          transfer: [],
+        },
+    );
+  });
 
-    chai.assert.lengthOf(await nftModule.getRoleMembers("admin"), 2);
+  it("Replace all roles - confirm that all roles were replaced (not just added)", async () => {
     await nftModule.setAllRoleMembers({
-      admin: ["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"],
+      admin: [
+        "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+        "0x553C5E856801b5876e80D32a192086b2035286C1",
+      ],
+      minter: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
+      pauser: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
+      transfer: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
     });
-    chai.assert.lengthOf(await nftModule.getRoleMembers("admin"), 1);
+    chai.assert.isTrue(
+      (await nftModule.getAllRoleMembers()) ===
+        {
+          admin: [
+            "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+            "0x553C5E856801b5876e80D32a192086b2035286C1",
+          ],
+          minter: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
+          pauser: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
+          transfer: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
+        },
+    );
   });
 });
