@@ -542,7 +542,6 @@ export class ModuleWithRoles<
       );
       if (toAdd.length) {
         toAdd.forEach((address) => {
-          console.log("+", role, address);
           encoded.push(
             this.contract.interface.encodeFunctionData("grantRole", [
               getRoleHash(role as Role),
@@ -553,7 +552,6 @@ export class ModuleWithRoles<
       }
       if (toRemove.length) {
         toRemove.forEach((address) => {
-          console.log("-", role, address);
           encoded.push(
             this.contract.interface.encodeFunctionData("revokeRole", [
               getRoleHash(role as Role),
