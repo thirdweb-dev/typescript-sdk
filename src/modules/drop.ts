@@ -7,12 +7,12 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
-import { IDropModule } from "..";
 import { ModuleType, Role, RolesMap } from "../common";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
+import IDropModule from "../interfaces/IDropModule";
 import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
 
 /**
