@@ -218,7 +218,7 @@ describe("App Module", async () => {
     chai.assert.equal(testBalance.displayValue, "100.0");
   });
 
-  it("should properly parse metadata when image is string", async () => {
+  it.skip("should properly parse metadata when image is string", async () => {
     const metadata = {
       name: "safe",
       description: "",
@@ -237,7 +237,7 @@ describe("App Module", async () => {
     );
   });
 
-  it("should upload to ipfs image is file", async () => {
+  it.skip("should upload to ipfs image is file", async () => {
     const metadata = {
       name: "safe",
       description: "",
