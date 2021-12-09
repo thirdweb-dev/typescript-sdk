@@ -340,7 +340,6 @@ export class Module<TContract extends BaseContract = BaseContract> {
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<TransactionReceipt> {
-    // console.log("callOverrides", callOverrides);
     const signer = this.getSigner();
     invariant(
       signer,
@@ -531,7 +530,6 @@ export class ModuleWithRoles<
       "this module does not support the given role",
     );
     const currentRoles = await this.getAllRoleMembers();
-    console.log(currentRoles);
     const encoded: string[] = [];
     roles.forEach(async (role) => {
       const addresses = rolesWithAddresses[role as Role] || [];
