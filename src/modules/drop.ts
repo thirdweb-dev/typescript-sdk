@@ -7,6 +7,7 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { IDropModule } from "..";
 import { ModuleType, Role, RolesMap } from "../common";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
@@ -31,7 +32,7 @@ export interface CreatePublicMintCondition {
  * Access this module by calling {@link ThirdwebSDK.getDropModule}
  * @beta
  */
-export class DropModule extends ModuleWithRoles<Drop> {
+export class DropModule extends ModuleWithRoles<Drop> implements IDropModule {
   public static moduleType: ModuleType = ModuleType.DROP;
   storage = this.sdk.getStorage();
 
@@ -375,8 +376,20 @@ export class DropModule extends ModuleWithRoles<Drop> {
     return "";
   }
 
-  // public async mintBatch(tokenMetadata: MetadataURIOrObject[]) {
-  // TODO: Upload all metadata to IPFS
-  // call lazyMintAmount(metadata.length - totalSupply) if totalSupply < metadata.length
-  // }
+  public async mintBatch(tokenMetadata: MetadataURIOrObject[]): Promise<void> {
+    // Upload all metadata to storage
+    const cid = await this.storage.uploadMetadata(
+      await this.prepareBatchMetadata(tokenMetadata),
+    );
+    const multicall: string[] = [];
+    multicall.push(
+      this.contract.interface.encodeFunctionData("setBaseTokenURI", [cid]),
+    );
+    multicall.push(
+      this.contract.interface.encodeFunctionData("lazyMintAmount", [
+        tokenMetadata.length,
+      ]),
+    );
+    await this.sendTransaction("multicall", [multicall]);
+  }
 }
