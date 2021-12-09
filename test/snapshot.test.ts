@@ -88,6 +88,4 @@ describe("Snapshots", async () => {
     const deserialized = convert.deserializeObject(rawSnapshotJson, Snapshot);
     expect(deserialized).to.deep.equalInAnyOrder(snapshot);
   });
-
-  it("should include the correct proofs for all leafs", () => {});
 });
