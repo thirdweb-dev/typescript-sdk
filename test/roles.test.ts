@@ -44,25 +44,23 @@ describe("App Module", async () => {
   });
 
   /**
-   * Add multiple roles - confirm that missing roles were added
+   * Add multiple roles - 0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E gets pauser and transfer
    *
-   * Remove multiple roles - confirm that selected roles were removed
+   * Remove multiple roles - 0x553C5E856801b5876e80D32a192086b2035286C1 is revoked from pauser and transfer
    *
-   * Replace all roles - confirm that all roles were replaced (not just added)
+   * Replace all roles - for minter, 0x553C5E856801b5876e80D32a192086b2035286C1 is removed and 0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803 is added
    *
-   * - 1,2,3,4,5
-   * - 3,4,5,6,7
    */
 
   it("should override current roles in the contract", async () => {
     await nftModule.setAllRoleMembers({
       admin: ["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"],
       minter: [
-        "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+        "0x553C5E856801b5876e80D32a192086b2035286C1",
         "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
       ],
       pauser: ["0x553C5E856801b5876e80D32a192086b2035286C1"],
-      transfer: [],
+      transfer: ["0x553C5E856801b5876e80D32a192086b2035286C1"],
     });
 
     const newRoles = await nftModule.getAllRoleMembers();
@@ -73,7 +71,7 @@ describe("App Module", async () => {
     chai.assert.isTrue(
       newRoles.minter.length === 2 &&
         newRoles.minter.includes(
-          "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+          "0x553C5E856801b5876e80D32a192086b2035286C1",
         ) &&
         newRoles.minter.includes("0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"),
     );
@@ -90,7 +88,10 @@ describe("App Module", async () => {
         "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
         "0x553C5E856801b5876e80D32a192086b2035286C1",
       ],
-      minter: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
+      minter: [
+        "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
+        "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+      ],
       pauser: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
       transfer: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
     });
@@ -101,8 +102,11 @@ describe("App Module", async () => {
         newRoles.admin.includes("0x553C5E856801b5876e80D32a192086b2035286C1"),
     );
     chai.assert.isTrue(
-      newRoles.minter.length === 1 &&
-        newRoles.minter.includes("0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"),
+      newRoles.minter.length === 2 &&
+        newRoles.minter.includes(
+          "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
+        ) &&
+        newRoles.minter.includes("0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"),
     );
     chai.assert.isTrue(
       newRoles.pauser.length === 1 &&
