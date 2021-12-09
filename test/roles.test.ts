@@ -79,7 +79,12 @@ describe("App Module", async () => {
       newRoles.pauser.length === 1 &&
         newRoles.pauser.includes("0x553C5E856801b5876e80D32a192086b2035286C1"),
     );
-    chai.assert.isTrue(newRoles.transfer.length === 0);
+    chai.assert.isTrue(
+      newRoles.transfer.length === 1 &&
+        newRoles.transfer.includes(
+          "0x553C5E856801b5876e80D32a192086b2035286C1",
+        ),
+    );
   });
 
   it("Replace all roles - confirm that all roles were replaced (not just added)", async () => {
