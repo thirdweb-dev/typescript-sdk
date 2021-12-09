@@ -6,7 +6,7 @@ global.fetch = require("node-fetch");
 
 const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
 
-describe("App Module", async () => {
+describe("Role Management", async () => {
   let sdk: ThirdwebSDK;
   let appModule: AppModule;
   let nftModule: NFTModule;
