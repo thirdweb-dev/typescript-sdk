@@ -102,8 +102,19 @@ export class DropModule extends ModuleWithRoles<Drop> {
     );
   }
 
-  public async getAllUnclaimed(): Promise<NFTMetadataOwner[]> {
-    const maxId = await this.readOnlyContract.nextTokenId();
+  public async getAllUnclaimed(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTMetadataOwner[]> {
+    const start = BigNumber.from(queryParams?.start || 0).toNumber();
+    const count = BigNumber.from(
+      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
+    ).toNumber();
+    const maxId = BigNumber.from(
+      Math.min(
+        (await this.readOnlyContract.nextTokenId()).toNumber(),
+        start + count,
+      ),
+    );
     const unmintedId = await this.readOnlyContract.nextMintTokenId();
     return (
       await Promise.all(
@@ -114,8 +125,17 @@ export class DropModule extends ModuleWithRoles<Drop> {
     ).map((metadata) => ({ owner: AddressZero, metadata }));
   }
 
-  public async getAllClaimed(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.readOnlyContract.nextMintTokenId()).toNumber();
+  public async getAllClaimed(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTMetadataOwner[]> {
+    const start = BigNumber.from(queryParams?.start || 0).toNumber();
+    const count = BigNumber.from(
+      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
+    ).toNumber();
+    const maxId = Math.min(
+      (await this.readOnlyContract.nextMintTokenId()).toNumber(),
+      start + count,
+    );
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
