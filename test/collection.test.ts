@@ -1,109 +1,118 @@
-import * as chai from "chai";
-import { ethers } from "ethers";
-import { BundleModule, NFTModule, ThirdwebSDK } from "../src/index";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { BundleModule, CurrencyModule, NFTModule } from "../src/index";
+import { appModule, sdk, signers } from "./before.test";
+
+import { expect, assert } from "chai";
 
 global.fetch = require("node-fetch");
 
-const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
-
 describe("Bundle Module (aka Collection Module)", async () => {
-  let sdk: ThirdwebSDK;
   let collectionModule: BundleModule;
   let bundleModule: BundleModule;
   let nftModule: NFTModule;
+  let currencyModule: CurrencyModule;
+
+  let adminWallet: SignerWithAddress,
+    samWallet: SignerWithAddress,
+    bobWallet: SignerWithAddress;
+
+  before(() => {
+    [adminWallet, samWallet, bobWallet] = signers;
+  });
 
   beforeEach(async () => {
-    sdk = new ThirdwebSDK(
-      new ethers.Wallet(process.env.PKEY, ethers.getDefaultProvider(RPC_URL)),
-      {
-        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
-      },
-    );
-    /**
-     * This contract address *should* exist forever on mumbai
-     * It contains some test data with burned tokens and some tokens owned by
-     * the test address starting with 0xE79
-     */
+    sdk.setProviderOrSigner(adminWallet);
 
-    bundleModule = sdk.getBundleModule(
-      "0x5CF412451f4Cef34293604048238bd18D2BD1e71",
-    );
+    nftModule = await appModule.deployNftModule({
+      name: "NFT Module",
+      sellerFeeBasisPoints: 1000,
+    });
+    bundleModule = await appModule.deployBundleModule({
+      name: "Bundle Module",
+      sellerFeeBasisPoints: 1000,
+    });
+    currencyModule = await appModule.deployCurrencyModule({
+      name: "Currency Module",
+      symbol: "TEST",
+    });
 
     /**
      * Testing backwards compatibility
      */
-    collectionModule = sdk.getCollectionModule(
-      "0x5CF412451f4Cef34293604048238bd18D2BD1e71",
-    );
-
-    nftModule = sdk.getNFTModule("0x364A9b8f4382bB583C3833E484A44f7A189312a7");
+    collectionModule = sdk.getCollectionModule(bundleModule.address);
   });
 
   it("should return all owned collection tokens", async () => {
-    /**
-     * This wallet owns only one token in the collection (that contains 6 tokens)
-     */
-    const nfts = await collectionModule.getOwned(
-      "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-    );
-    chai.expect(nfts).to.be.an("array").length.greaterThan(1);
+    await bundleModule.createAndMint({
+      metadata: {
+        name: "Bundle 1",
+        descrition: "Bundle 1",
+      },
+      supply: 100,
+    });
+    const nfts = await bundleModule.getOwned(adminWallet.address);
+    expect(nfts).to.be.an("array").length(1);
+
+    const bobsNfts = await bundleModule.getOwned(bobWallet.address);
+    expect(bobsNfts)
+      .to.be.an("array")
+      .length(0, "Bob should not have any nfts");
   });
 
-  it.skip("should create a new collection using token", async () => {
+  it("should create a new collection using token", async () => {
+    await currencyModule.mint(100);
+
     try {
-      await collectionModule.createWithToken(
-        "0xbf422E6296770E8750Ff0Ba221EcD7D3f740EE26",
-        1,
-        {
-          metadata: {},
-          supply: 1,
+      await collectionModule.createWithToken(currencyModule.address, 1, {
+        metadata: {
+          name: "test",
         },
-      );
+        supply: 1,
+      });
     } catch (err) {
-      chai.assert.fail(err);
+      assert.fail(err);
     }
+    const nfts = await bundleModule.getOwned(adminWallet.address);
+    expect(nfts).to.be.an("array").length(1);
   });
 
-  it.skip("should create a new collection using NFT", async () => {
+  it("should create a new collection using NFT", async () => {
+    const token = await nftModule.mint({
+      name: "test",
+    });
+
     try {
-      const tokenId = (await nftModule.mint({})).id;
-      const owned = await collectionModule.getOwned(
-        "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-      );
-      await collectionModule.createWithERC721(
-        "0x364A9b8f4382bB583C3833E484A44f7A189312a7",
-        tokenId,
-        {},
-      );
+      await collectionModule.createWithERC721(nftModule.address, token.id, {
+        name: "TEST NFT",
+      });
     } catch (err) {
-      chai.assert.fail(err);
+      assert.fail(err);
     }
+
+    const nfts = await bundleModule.getOwned(adminWallet.address);
+    expect(nfts).to.be.an("array").length(1);
   });
 
-  it.skip("updates the bps in both the metadata and on-chain", async () => {
-    /**
-     * Update the bps in the metadata and on-chain
-     */
-    try {
-      const testBPS = 100;
-      const module = sdk.getBundleModule(
-        "0x54ec360704b2e9E4e6499a732b78094D6d78e37B",
-      );
-      await module.setRoyaltyBps(testBPS);
-      const { metadata } = await module.getMetadata();
+  // TODO: This test should move to the royalty suite
+  it("updates the bps in both the metadata and on-chain", async () => {
+    const currentBps = await bundleModule.getRoyaltyBps();
+    assert.equal(currentBps, 1000);
+    const { metadata: cMetadata } = await bundleModule.getMetadata();
+    assert.equal(cMetadata["seller_fee_basis_points"], 1000);
 
-      chai.assert.equal(
-        metadata.seller_fee_basis_points,
-        testBPS,
-        "Fetching the BPS from the metadata should return 100",
-      );
-      chai.assert.equal(
-        await module.getRoyaltyBps(),
-        testBPS,
-        "Fetching the BPS with the tx should return 100",
-      );
-    } catch (err) {
-      chai.assert.fail(err);
-    }
+    const testBPS = 100;
+    await bundleModule.setRoyaltyBps(testBPS);
+    const { metadata: newMetadata } = await bundleModule.getMetadata();
+
+    assert.equal(
+      newMetadata.seller_fee_basis_points,
+      testBPS,
+      "Fetching the BPS from the metadata should return 100",
+    );
+    assert.equal(
+      await bundleModule.getRoyaltyBps(),
+      testBPS,
+      "Fetching the BPS with the tx should return 100",
+    );
   });
 });

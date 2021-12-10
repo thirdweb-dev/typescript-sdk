@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers } from "hardhat";
 import { DropModule, ThirdwebSDK } from "../src/index";
 import * as chai from "chai";
 import { createReadStream, readdirSync } from "fs";
@@ -12,6 +12,8 @@ describe("Batch uploading", async () => {
   let dropModule: DropModule;
 
   beforeEach(async () => {
+    console.log(await ethers.getSigners());
+
     if (process.env.PKEY) {
       sdk = new ThirdwebSDK(
         new ethers.Wallet(process.env.PKEY, ethers.getDefaultProvider(RPC_URL)),
