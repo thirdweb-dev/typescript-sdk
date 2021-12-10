@@ -97,7 +97,6 @@ export default class ClaimConditionPhase {
    * @internal
    */
   public buildPublicClaimCondition(): PublicMintCondition {
-    console.log(BigNumber.from(this._conditionStartTime.toString()).toNumber());
     return {
       startTimestamp: BigNumber.from(this._conditionStartTime.toString()),
       pricePerToken: this._price,
