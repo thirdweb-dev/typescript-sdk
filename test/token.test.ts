@@ -1,9 +1,10 @@
 import { ethers } from "ethers";
 import { CurrencyModule, ThirdwebSDK } from "../src/index";
+import * as chai from "chai";
 
 global.fetch = require("node-fetch");
 
-const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
+const RPC_URL = "rinkeby";
 
 describe("Token Module", async () => {
   let sdk: ThirdwebSDK;
@@ -24,7 +25,7 @@ describe("Token Module", async () => {
     }
 
     currencyModule = sdk.getCurrencyModule(
-      "0x4Cb16D7DAec6a7798efe19a43E8957E47A4bD272",
+      "0xea0b55CF85A41c03daeA88f99B7DdEb6e18DBE94",
     );
   });
 
@@ -69,5 +70,9 @@ describe("Token Module", async () => {
         `Wallet balance should increase by ${b.toMint}`,
       );
     });
+  });
+  it("should log events", async () => {
+    const totest = Number(await currencyModule.getAll());
+    chai.assert.equal(typeof totest, "number");
   });
 });

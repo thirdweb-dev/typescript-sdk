@@ -316,6 +316,8 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     protected connectContract(): Coin;
     // (undocumented)
     get(): Promise<Currency>;
+    // (undocumented)
+    getAll(): Promise<Record<string, BigNumber_2>>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)

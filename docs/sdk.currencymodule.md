@@ -31,6 +31,7 @@ export declare class CurrencyModule extends ModuleWithRoles<Coin>
 |  [burn(amount)](./sdk.currencymodule.burn.md) |  |  |
 |  [burnFrom(from, amount)](./sdk.currencymodule.burnfrom.md) |  |  |
 |  [get()](./sdk.currencymodule.get.md) |  |  |
+|  [getAll()](./sdk.currencymodule.getall.md) |  |  |
 |  [getValue(value)](./sdk.currencymodule.getvalue.md) |  |  |
 |  [mint(amount)](./sdk.currencymodule.mint.md) |  |  |
 |  [mintBatchTo(args)](./sdk.currencymodule.mintbatchto.md) |  |  |

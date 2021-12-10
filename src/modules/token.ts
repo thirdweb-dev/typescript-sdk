@@ -1,4 +1,5 @@
 import { Coin, Coin__factory } from "@3rdweb/contracts";
+import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
@@ -123,6 +124,28 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
       );
     }
     await this.sendTransaction("multicall", [encoded]);
+  }
+  public async getAll(): Promise<Record<string, BigNumber>> {
+    const a = await this.contract.queryFilter(this.contract.filters.Transfer());
+    const txns = a.map((b) => b.args);
+    const balances: {
+      [key: string]: BigNumber;
+    } = {};
+    txns.forEach(async (item) => {
+      if (!(item.from === AddressZero)) {
+        if (!(item.from in balances)) {
+          balances[item.from] = BigNumber.from(0);
+        }
+        balances[item.from] = balances[item.from].sub(item.value);
+      }
+      if (!(item.to === AddressZero)) {
+        if (!(item.to in balances)) {
+          balances[item.to] = BigNumber.from(0);
+        }
+        balances[item.to] = balances[item.to].add(item.value);
+      }
+    });
+    return balances;
   }
 
   public async burn(amount: BigNumberish): Promise<TransactionReceipt> {
