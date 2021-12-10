@@ -132,17 +132,21 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
       [key: string]: BigNumber;
     } = {};
     txns.forEach(async (item) => {
-      if (!(item.from === AddressZero)) {
-        if (!(item.from in balances)) {
-          balances[item.from] = BigNumber.from(0);
+      const from = item.from;
+      const to = item.to;
+      const amount = item.value;
+
+      if (!(from === AddressZero)) {
+        if (!(from in balances)) {
+          balances[from] = BigNumber.from(0);
         }
-        balances[item.from] = balances[item.from].sub(item.value);
+        balances[from] = balances[from].sub(amount);
       }
-      if (!(item.to === AddressZero)) {
-        if (!(item.to in balances)) {
-          balances[item.to] = BigNumber.from(0);
+      if (!(to === AddressZero)) {
+        if (!(to in balances)) {
+          balances[to] = BigNumber.from(0);
         }
-        balances[item.to] = balances[item.to].add(item.value);
+        balances[to] = balances[to].add(amount);
       }
     });
     return balances;
