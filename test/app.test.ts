@@ -1,17 +1,11 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { assert } from "chai";
 import { BigNumber } from "ethers";
 import { readFileSync } from "fs";
 import { JsonConvert } from "json2typescript";
 import { BundleModuleMetadata, DropModule } from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const chai = require("chai");
-
-global.fetch = require("node-fetch");
-
-const { expect, assert } = chai;
 
 describe("App Module", async () => {
   let dropModule: DropModule;
