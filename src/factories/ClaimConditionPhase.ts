@@ -53,9 +53,9 @@ export default class ClaimConditionPhase {
     if (typeof when === "number") {
       this._conditionStartTime = Math.floor(when);
     } else {
-      this._conditionStartTime = Math.floor(
-        (when.getTime() - Date.now()) / 1000,
-      );
+      const secondsUntil = Math.floor((when.getTime() - Date.now()) / 1000);
+      // if its starting in the past, just set it to now
+      this._conditionStartTime = secondsUntil >= 0 ? secondsUntil : 0;
     }
     return this;
   }
