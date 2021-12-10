@@ -53,7 +53,9 @@ export default class ClaimConditionPhase {
     if (typeof when === "number") {
       this._conditionStartTime = Math.floor(when);
     } else {
-      this._conditionStartTime = Math.floor(when.getTime() / 1000);
+      this._conditionStartTime = Math.floor(
+        (when.getTime() - Date.now()) / 1000,
+      );
     }
     return this;
   }
@@ -95,10 +97,11 @@ export default class ClaimConditionPhase {
    * @internal
    */
   public buildPublicClaimCondition(): PublicMintCondition {
+    console.log(BigNumber.from(this._conditionStartTime.toString()).toNumber());
     return {
-      startTimestamp: BigNumber.from(this._conditionStartTime),
+      startTimestamp: BigNumber.from(this._conditionStartTime.toString()),
       pricePerToken: this._price,
-      currency: this._currencyAddress,
+      currency: this._currencyAddress || AddressZero,
       maxMintSupply: this._maxQuantity,
 
       waitTimeSecondsLimitPerTransaction: 0,
