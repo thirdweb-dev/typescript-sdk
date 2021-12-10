@@ -54,11 +54,10 @@ describe("Bundle Module (aka Collection Module)", async () => {
       supply: 100,
     });
     const nfts = await bundleModule.getOwned(adminWallet.address);
-    chai.expect(nfts).to.be.an("array").length(1);
+    expect(nfts).to.be.an("array").length(1);
 
     const bobsNfts = await bundleModule.getOwned(bobWallet.address);
-    chai
-      .expect(bobsNfts)
+    expect(bobsNfts)
       .to.be.an("array")
       .length(0, "Bob should not have any nfts");
   });
@@ -74,10 +73,10 @@ describe("Bundle Module (aka Collection Module)", async () => {
         supply: 1,
       });
     } catch (err) {
-      chai.assert.fail(err);
+      assert.fail(err);
     }
     const nfts = await bundleModule.getOwned(adminWallet.address);
-    chai.expect(nfts).to.be.an("array").length(1);
+    expect(nfts).to.be.an("array").length(1);
   });
 
   it("should create a new collection using NFT", async () => {
@@ -90,11 +89,11 @@ describe("Bundle Module (aka Collection Module)", async () => {
         name: "TEST NFT",
       });
     } catch (err) {
-      chai.assert.fail(err);
+      assert.fail(err);
     }
 
     const nfts = await bundleModule.getOwned(adminWallet.address);
-    chai.expect(nfts).to.be.an("array").length(1);
+    expect(nfts).to.be.an("array").length(1);
   });
 
   // TODO: This test should move to the royalty suite
