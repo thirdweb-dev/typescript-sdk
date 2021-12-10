@@ -519,7 +519,24 @@ export class ModuleWithRoles<
     }
     return roles;
   }
-
+  /**
+   * Call this to OVERWRITE the list of addresses that are members of specific roles.
+   *
+   * Every role in the list will be overwritten with the new list of addresses provided with them.
+   * If you want to add or remove addresses for a single address use {@link ModuleWithRoles.grantRole | grantRole} and {@link ModuleWithRoles.grantRole | revokeRole} irespectively nstead.
+   * @param rolesWithAddresses - A record of {@link Role}s to lists of addresses that should be members of the given role.
+   * @throws If you are requestiong a role that does not exist on the module this will throw an {@link InvariantError}.
+   * @example Say you want to overwrite the list of addresses that are members of the {@link IRoles.minter | minter} role.
+   * ```typescript
+   * const minterAddresses: string[] = await module.getRoleMemberList("minter");
+   * await module.setAllRoleMembers({
+   *  minter: []
+   * });
+   * console.log(await module.getRoleMemberList("minter")); // No matter what members had the role before, the new list will be set to []
+   * ```
+   * @public
+   *
+   * */
   public async setAllRoleMembers(
     rolesWithAddresses: SetAllRoles,
   ): Promise<any> {

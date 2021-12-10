@@ -4,8 +4,6 @@
 
 ## SetAllRoles type
 
-A role that can be granted to a wallet.
-
 <b>Signature:</b>
 
 ```typescript

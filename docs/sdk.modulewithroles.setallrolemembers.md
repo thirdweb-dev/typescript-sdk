@@ -4,6 +4,10 @@
 
 ## ModuleWithRoles.setAllRoleMembers() method
 
+Call this to OVERWRITE the list of addresses that are members of specific roles.
+
+Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use [grantRole](./sdk.modulewithroles.grantrole.md) and [revokeRole](./sdk.modulewithroles.grantrole.md) irespectively nstead.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +18,25 @@ setAllRoleMembers(rolesWithAddresses: SetAllRoles): Promise<any>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  rolesWithAddresses | [SetAllRoles](./sdk.setallroles.md) |  |
+|  rolesWithAddresses | [SetAllRoles](./sdk.setallroles.md) | A record of [Role](./sdk.role.md)<!-- -->s to lists of addresses that should be members of the given role. |
 
 <b>Returns:</b>
 
 Promise&lt;any&gt;
+
+## Exceptions
+
+If you are requestiong a role that does not exist on the module this will throw an [InvariantError](./sdk.invarianterror.md)<!-- -->.
+
+## Example
+
+Say you want to overwrite the list of addresses that are members of the [minter](./sdk.iroles.minter.md) role.
+
+```typescript
+const minterAddresses: string[] = await module.getRoleMemberList("minter");
+await module.setAllRoleMembers({
+ minter: []
+});
+console.log(await module.getRoleMemberList("minter")); // No matter what members had the role before, the new list will be set to []
+```
 
