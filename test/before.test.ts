@@ -1,20 +1,24 @@
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "ethers";
 import { AppModule, ThirdwebSDK } from "../src";
 import { deployRegistry } from "./setup/deployRegistry";
+import { ethers as hardhatEthers } from "hardhat";
 
 const RPC_URL = "http://localhost:8545";
 
 const jsonProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
-const provider = ethers.getDefaultProvider(RPC_URL);
 
 let appModule: AppModule;
 let registryAddress: string;
 let sdk: ThirdwebSDK;
+let signer: SignerWithAddress;
+let signers: SignerWithAddress[];
 
 before(async () => {
-  jsonProvider.send("hardhat_reset", []);
+  signers = await hardhatEthers.getSigners();
+  [signer] = signers;
 
-  const signer = new ethers.Wallet(process.env.PKEY, provider);
+  jsonProvider.send("hardhat_reset", []);
   registryAddress = await deployRegistry(signer);
   console.log("Deployed registry at address: ", registryAddress);
 
@@ -35,4 +39,4 @@ before(async () => {
   appModule = await sdk.getAppModule(address);
 });
 
-export { appModule, sdk };
+export { appModule, sdk, signers };
