@@ -2,10 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BundleModule, CurrencyModule, NFTModule } from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const chai = require("chai");
-
-const { expect, assert } = chai;
+import { expect, assert } from "chai";
 
 global.fetch = require("node-fetch");
 
