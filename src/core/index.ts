@@ -105,7 +105,7 @@ export class ThirdwebSDK {
   // default options
   private options: ISDKOptions;
   private defaultOptions: ISDKOptions = {
-    ipfsGatewayUrl: "https://nftlabs.mypinata.cloud/ipfs/",
+    ipfsGatewayUrl: "https://cloudflare-ipfs.comC/ipfs/",
     registryContractAddress: "",
     maxGasPriceInGwei: 100,
     gasSpeed: "fastest",
