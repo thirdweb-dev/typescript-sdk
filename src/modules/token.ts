@@ -131,7 +131,7 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     const balances: {
       [key: string]: BigNumber;
     } = {};
-    txns.forEach(async (item) => {
+    txns.forEach((item) => {
       const from = item.from;
       const to = item.to;
       const amount = item.value;

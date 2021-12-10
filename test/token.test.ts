@@ -71,8 +71,13 @@ describe("Token Module", async () => {
       );
     });
   });
-  it("should log events", async () => {
-    const totest = Number(await currencyModule.getAll());
-    chai.assert.equal(typeof totest, "number");
+  it("Should parse events properly", async () => {
+    const balance = parseInt((await currencyModule.balance()).value);
+    await currencyModule.mint(10);
+    const totest = await currencyModule.getAll();
+    chai.assert.equal(
+      totest["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"].toNumber(),
+      balance + 10,
+    );
   });
 });
