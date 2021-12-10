@@ -6,7 +6,7 @@
 
 Call this to OVERWRITE the list of addresses that are members of specific roles.
 
-Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use [grantRole](./sdk.modulewithroles.grantrole.md) and [revokeRole](./sdk.modulewithroles.grantrole.md) irespectively nstead.
+Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use [grantRole](./sdk.modulewithroles.grantrole.md) and [revokeRole](./sdk.modulewithroles.grantrole.md) respectively instead.
 
 <b>Signature:</b>
 
