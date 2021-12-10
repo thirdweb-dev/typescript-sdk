@@ -1,10 +1,14 @@
-.PHONY: test
+.PHONY: build
 
 
 SHELL := /bin/bash
 
-test:
+build:
+	yarn run build
+
+test: FORCE
 	docker start hh-node || docker run --name hh-node  -p 8545:8545 ethereumoptimism/hardhat 
 	./test/scripts/waitForHardhatNode.sh
 	yarn run test
 
+FORCE: ;
