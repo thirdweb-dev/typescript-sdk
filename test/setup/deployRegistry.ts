@@ -34,7 +34,7 @@ export async function deployRegistry(signer: Signer): Promise<string> {
   )
     .connect(signer)
     .deploy(
-      "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      await signer.getAddress(),
       forwarderAddress,
       controlDeployerAddress,
     );
