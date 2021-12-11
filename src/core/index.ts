@@ -1,6 +1,6 @@
+import { keccak256 } from "@ethersproject/keccak256";
 import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
-import { SHA256 } from "crypto-js";
 import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
 import { JsonConvert } from "json2typescript";
 import MerkleTree from "merkletreejs";
@@ -471,17 +471,15 @@ export class ThirdwebSDK implements IThirdwebSdk {
       throw new DuplicateLeafsError();
     }
 
-    const hashedLeafs = leafs.map((l) => SHA256(l).toString());
-    const tree = new MerkleTree(hashedLeafs, SHA256, {
+    const hashedLeafs = leafs.map((l) => keccak256(l));
+    const tree = new MerkleTree(hashedLeafs, keccak256, {
       sortPairs: true,
     });
 
     const snapshot: Snapshot = {
       merkleRoot: tree.getRoot().toString("hex"),
       claims: leafs.map((l): ClaimProof => {
-        const proof = tree
-          .getProof(SHA256(l).toString())
-          .map((p) => p.data.toString("hex") as string);
+        const proof = tree.getProof(l).map((p) => `0x${p}`);
         return {
           address: l,
           proof,

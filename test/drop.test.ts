@@ -107,4 +107,55 @@ describe("Drop Module", async () => {
     const newMerkles: { [key: string]: string } = newMetadata["merkle"];
     expect(JSON.stringify(newMerkles)).to.eq("{}");
   });
+  it("test that someone in the merkle tree can successfully claim", async () => {
+    const factory = dropModule.getMintConditionsFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await phase.setSnapshot([
+      bobWallet.address,
+      samWallet.address,
+      abbyWallet.address,
+      "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+    ]);
+    console.log("Setting claim condition");
+    await dropModule.setMintConditions(factory);
+    console.log("Claim condition set");
+    console.log("Minting");
+    await dropModule.lazyMintAmount(1);
+    console.log("Minted");
+    console.log("Claiming");
+    await dropModule.claim(1);
+    console.log("Claimed");
+  });
+  it.skip("should not allow claiming to someone not in the merkle tree", async () => {
+    const factory = dropModule.getMintConditionsFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await phase.setSnapshot([
+      bobWallet.address,
+      samWallet.address,
+      abbyWallet.address,
+    ]);
+    console.log("Setting claim condition");
+    await dropModule.setMintConditions(factory);
+    console.log("Claim condition set");
+    console.log("Minting");
+    await dropModule.lazyMintAmount(1);
+    console.log("Minted");
+    console.log("Claiming");
+    try {
+      await dropModule.claim(1);
+    } catch {
+      console.log("Could not claim!");
+      return;
+    }
+    throw new Error("Claimed to someone not in the merkle tree");
+  });
+
+  it.skip("test that a regular claim with no merkle root works as expected", async () => {
+    dropModule.lazyMintAmount(1);
+    dropModule.claim(1);
+  });
 });

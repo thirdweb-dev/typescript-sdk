@@ -330,6 +330,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
         }
       }
     }
+
     await this.sendTransaction("claim", [quantity, proofs], overrides);
   }
 
