@@ -166,7 +166,7 @@ export class VoteModule extends Module<VotingGovernor> {
       for (let j = 0; j < p.targets.length; j++) {
         e.push({
           to: p.targets[j],
-          value: p.values[j],
+          value: p.values[j] || 0,
           data: p.calldatas[j],
         });
       }

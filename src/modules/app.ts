@@ -722,6 +722,11 @@ export class AppModule
         isAddress(metadata.votingTokenAddress),
       "Voting Token Address must be a valid address",
     );
+    invariant(
+      metadata.votingQuorumFraction >= 0 &&
+        metadata.votingQuorumFraction <= 100,
+      "Quofrum Fraction must be in the range of 0-100 representing percentage",
+    );
 
     // verify making sure that the voting token address is valid
     try {
