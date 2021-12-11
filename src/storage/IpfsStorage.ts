@@ -157,6 +157,8 @@ export default class IpfsStorage implements IStorage {
    * @internal
    */
   resolveFullUrl(ipfsHash: string): string {
-    return ipfsHash.replace("ipfs://", this.gatewayUrl);
+    return ipfsHash && ipfsHash.toLowerCase().includes("ipfs://")
+      ? ipfsHash.replace("ipfs://", this.gatewayUrl)
+      : ipfsHash;
   }
 }

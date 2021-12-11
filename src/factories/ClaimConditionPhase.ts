@@ -5,6 +5,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 import { InvalidAddressError } from "../common/error";
 import { invariant } from "../common/invariant";
 import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
+import { SnapshotInfo } from "../types/snapshots/SnapshotInfo";
 
 export default class ClaimConditionPhase {
   // TODO: Should this be in seconds? Or milliseconds? [seconds, please update]
@@ -21,8 +22,14 @@ export default class ClaimConditionPhase {
 
   private _merkleRootHash: BytesLike = hexZeroPad([0], 32);
 
+  private _merkleCondition?: SnapshotInfo = undefined;
+
+  private createSnapshot: (leafs: string[]) => Promise<SnapshotInfo>;
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
+  constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>) {
+    this.createSnapshot = createSnapshotFunc;
+  }
 
   /**
    * Set the price claim condition for the drop.
@@ -53,7 +60,9 @@ export default class ClaimConditionPhase {
     if (typeof when === "number") {
       this._conditionStartTime = Math.floor(when);
     } else {
-      this._conditionStartTime = Math.floor(when.getTime() / 1000);
+      const secondsUntil = Math.floor((when.getTime() - Date.now()) / 1000);
+      // if its starting in the past, just set it to now
+      this._conditionStartTime = secondsUntil >= 0 ? secondsUntil : 0;
     }
     return this;
   }
@@ -91,14 +100,32 @@ export default class ClaimConditionPhase {
   }
 
   /**
+   * Sets a snapshot for the claim condition. You can use a snapshot
+   * to verify a merkle tree condition.
+   *
+   * @param root - The merkle root hash
+   */
+  public async setSnapshot(addresses: string[]): Promise<ClaimConditionPhase> {
+    this._merkleCondition = await this.createSnapshot(addresses);
+    return this;
+  }
+
+  /**
+   * @internal
+   */
+  public getSnapshot(): SnapshotInfo | undefined {
+    return this._merkleCondition;
+  }
+
+  /**
    * Helper method that provides defaults for each claim condition.
    * @internal
    */
   public buildPublicClaimCondition(): PublicMintCondition {
     return {
-      startTimestamp: BigNumber.from(this._conditionStartTime),
+      startTimestamp: BigNumber.from(this._conditionStartTime.toString()),
       pricePerToken: this._price,
-      currency: this._currencyAddress,
+      currency: this._currencyAddress || AddressZero,
       maxMintSupply: this._maxQuantity,
 
       waitTimeSecondsLimitPerTransaction: 0,
@@ -106,7 +133,9 @@ export default class ClaimConditionPhase {
       // TODO: I don't understand this default value
       quantityLimitPerTransaction: this._quantityLimitPerTransaction,
       currentMintSupply: 0,
-      merkleRoot: this._merkleRootHash,
+      merkleRoot: this._merkleCondition?.merkleRoot
+        ? this._merkleCondition.merkleRoot
+        : this._merkleRootHash,
     };
   }
 }
