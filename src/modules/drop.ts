@@ -8,11 +8,11 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
+import { invariant } from "../common/invariant";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
-import IDropModule from "../interfaces/IDropModule";
 import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
 
 /**
@@ -32,7 +32,7 @@ export interface CreatePublicMintCondition {
  * Access this module by calling {@link ThirdwebSDK.getDropModule}
  * @beta
  */
-export class DropModule extends ModuleWithRoles<Drop> implements IDropModule {
+export class DropModule extends ModuleWithRoles<Drop> {
   public static moduleType: ModuleType = ModuleType.DROP;
   storage = this.sdk.getStorage();
 
@@ -226,13 +226,37 @@ export class DropModule extends ModuleWithRoles<Drop> implements IDropModule {
    */
   public async setMintConditions(factory: ClaimConditionFactory) {
     const conditions = factory.buildConditions();
-    await this.sendTransaction("setPublicMintConditions", [conditions]);
+
+    const merkleInfo: { [key: string]: string } = {};
+    factory.allSnapshots().forEach((s) => {
+      merkleInfo[s.merkleRoot] = s.snapshotUri;
+    });
+
+    const { metadata } = await this.getMetadata();
+    invariant(metadata, "Metadata is not set, this should never happen");
+    metadata["merkle"] = merkleInfo;
+
+    const metatdataUri = await this.storage.upload(JSON.stringify(metadata));
+
+    const encoded = [
+      this.contract.interface.encodeFunctionData("setContractURI", [
+        metatdataUri,
+      ]),
+      this.contract.interface.encodeFunctionData("setPublicMintConditions", [
+        conditions,
+      ]),
+    ];
+    return await this.sendTransaction("multicall", [encoded]);
   }
 
-  public async getMintConditionsFactory(): Promise<ClaimConditionFactory> {
-    const conditions = await this.getAllMintConditions();
-    const factory = new ClaimConditionFactory();
-    factory.fromPublicClaimConditions(conditions);
+  /**
+   * Creates a claim condition factory
+   *
+   * @returns - A new claim condition factory
+   */
+  public getMintConditionsFactory(): ClaimConditionFactory {
+    const createSnapshotFunc = this.sdk.createSnapshot.bind(this.sdk);
+    const factory = new ClaimConditionFactory(createSnapshotFunc);
     return factory;
   }
 
@@ -376,20 +400,8 @@ export class DropModule extends ModuleWithRoles<Drop> implements IDropModule {
     return "";
   }
 
-  public async mintBatch(tokenMetadata: MetadataURIOrObject[]): Promise<void> {
-    // Upload all metadata to storage
-    const cid = await this.storage.uploadMetadata(
-      await this.prepareBatchMetadata(tokenMetadata),
-    );
-    const multicall: string[] = [];
-    multicall.push(
-      this.contract.interface.encodeFunctionData("setBaseTokenURI", [cid]),
-    );
-    multicall.push(
-      this.contract.interface.encodeFunctionData("lazyMintAmount", [
-        tokenMetadata.length,
-      ]),
-    );
-    await this.sendTransaction("multicall", [multicall]);
-  }
+  // public async mintBatch(tokenMetadata: MetadataURIOrObject[]) {
+  // TODO: Upload all metadata to IPFS
+  // call lazyMintAmount(metadata.length - totalSupply) if totalSupply < metadata.length
+  // }
 }

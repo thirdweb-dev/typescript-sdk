@@ -31,7 +31,7 @@ import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule } from "../modules/token";
 import IpfsStorage from "../storage/IpfsStorage";
 import { ModuleMetadataNoType } from "../types/ModuleMetadata";
-import { ClaimProof, Snapshot } from "../types/snapshots";
+import { ClaimProof, Snapshot, SnapshotInfo } from "../types/snapshots";
 import { IAppModule, RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,
@@ -465,11 +465,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     throw new Error("relay transaction failed");
   }
 
-  public async createSnapshot(leafs: string[]): Promise<{
-    merkleRoot: string;
-    snapshotUri: string;
-    snapshot: Snapshot;
-  }> {
+  public async createSnapshot(leafs: string[]): Promise<SnapshotInfo> {
     const hasDuplicates = new Set(leafs).size < leafs.length;
     if (hasDuplicates) {
       throw new DuplicateLeafsError();
@@ -499,7 +495,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     const uri = await this.storage.upload(serializedSnapshot);
 
     return {
-      merkleRoot: tree.getRoot().toString("hex"),
+      merkleRoot: `0x${tree.getRoot().toString("hex")}`,
       snapshotUri: uri,
       snapshot,
     };

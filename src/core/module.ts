@@ -14,7 +14,6 @@ import {
   ethers,
   Signer,
 } from "ethers";
-import { ThirdwebSDK } from ".";
 import { getContractMetadata, isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
@@ -24,6 +23,7 @@ import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role } from "../common/role";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
 import { ModuleMetadata } from "../types/ModuleMetadata";
+import { ThirdwebSDK } from "./index";
 import type {
   ForwardRequestMessage,
   MetadataURIOrObject,
