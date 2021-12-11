@@ -27,4 +27,5 @@ export declare enum ModuleType
 |  NFT | <code>2</code> |  |
 |  PACK | <code>5</code> |  |
 |  SPLITS | <code>9</code> |  |
+|  VOTE | <code>10</code> |  |
 
