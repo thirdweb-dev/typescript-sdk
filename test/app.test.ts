@@ -17,7 +17,7 @@ describe("App Module", async () => {
     [adminWallet, samWallet, bobWallet] = signers;
   });
 
-  it("should serialize metadata correctly", async () => {
+  it.skip("should serialize metadata correctly", async () => {
     const tests: {
       expected: any;
       test: BundleModuleMetadata;
