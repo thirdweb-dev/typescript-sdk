@@ -7,6 +7,8 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { JsonConvert } from "json2typescript";
+import { Snapshot } from "..";
 import { ModuleType, Role, RolesMap } from "../common";
 import { invariant } from "../common/invariant";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
@@ -286,6 +288,22 @@ export class DropModule extends ModuleWithRoles<Drop> {
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ) {
     const mintCondition = await this.getActiveMintCondition();
+    const { metadata } = await this.getMetadata();
+
+    if (mintCondition.merkleRoot) {
+      const snapshot = await this.storage.get(
+        metadata?.merkle[mintCondition.merkleRoot.toString()],
+      );
+      const jsonConvert = new JsonConvert();
+      const snapshotData = jsonConvert.deserializeObject(
+        JSON.parse(snapshot),
+        Snapshot,
+      );
+      const item = snapshotData.claims.filter(
+        async (c) => c.address === (await this.getSignerAddress()),
+      );
+      proofs = item[0].proof;
+    }
     const overrides = (await this.getCallOverrides()) || {};
     if (mintCondition.pricePerToken > 0) {
       if (mintCondition.currency === AddressZero) {

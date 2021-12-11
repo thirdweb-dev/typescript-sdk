@@ -2,7 +2,6 @@ import { ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
 import { ClaimProof, Snapshot, ThirdwebSDK } from "../src/index";
 import chai = require("chai");
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 
