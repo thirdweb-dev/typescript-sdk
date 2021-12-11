@@ -839,6 +839,7 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
     protected getModuleRoles(): readonly Role[];
     getRoleMembers(role: Role): Promise<string[]>;
     grantRole(role: Role, address: string): Promise<TransactionReceipt>;
+    revokeAllRolesFromAddress(address: string): Promise<Role[]>;
     revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
     setAllRoleMembers(rolesWithAddresses: SetAllRoles): Promise<any>;
 }

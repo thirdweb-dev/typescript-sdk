@@ -580,6 +580,34 @@ export class ModuleWithRoles<
     });
     return await this.sendTransaction("multicall", [encoded]);
   }
+  /**
+   *
+   * Call this to revoke all roles given to a specific address.
+   * @param address - The address to revoke all roles for.
+   * @returns A list of roles that were revoked.
+   *
+   * @public
+   *
+   */
+
+  public async revokeAllRolesFromAddress(address: string): Promise<Role[]> {
+    const currentRoles = await this.getAllRoleMembers();
+    const encoded: string[] = [];
+    const rolesRemoved: Role[] = [];
+    Object.keys(currentRoles).forEach(async (role) => {
+      if (currentRoles[role as Role]?.includes(address)) {
+        encoded.push(
+          this.contract.interface.encodeFunctionData("revokeRole", [
+            getRoleHash(role as Role),
+            address,
+          ]),
+        );
+        rolesRemoved.push(role as Role);
+      }
+    });
+    await this.sendTransaction("multicall", [encoded]);
+    return rolesRemoved;
+  }
 
   /**
    * Call this to grant a role to a specific address.
