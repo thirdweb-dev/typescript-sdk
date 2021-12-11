@@ -1,11 +1,8 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import ClaimConditionFactory from "../src/factories/ClaimConditionFactory";
+import { expect } from "chai";
 import { DropModule } from "../src/index";
-
 import { appModule, signers } from "./before.test";
-
-import { expect, assert } from "chai";
 
 global.fetch = require("node-fetch");
 
