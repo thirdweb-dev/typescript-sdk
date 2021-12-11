@@ -46,19 +46,25 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     // @internal (undocumented)
     protected connectContract(): ProtocolControl;
+    // Warning: (ae-forgotten-export) The symbol "BundleModuleMetadata" needs to be exported by the entry point index.d.ts
     deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
+    // Warning: (ae-forgotten-export) The symbol "CurrencyModuleMetadata" needs to be exported by the entry point index.d.ts
     deployCurrencyModule(metadata: CurrencyModuleMetadata): Promise<CurrencyModule>;
+    // Warning: (ae-forgotten-export) The symbol "DatastoreModuleMetadata" needs to be exported by the entry point index.d.ts
     // Warning: (ae-incompatible-release-tags) The symbol "deployDatastoreModule" is marked as @public, but its signature references "DatastoreModule" which is marked as @alpha
     deployDatastoreModule(metadata: DatastoreModuleMetadata): Promise<DatastoreModule>;
+    // Warning: (ae-forgotten-export) The symbol "DropModuleMetadata" needs to be exported by the entry point index.d.ts
     // Warning: (ae-incompatible-release-tags) The symbol "deployDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
     deployDropModule(metadata: DropModuleMetadata): Promise<DropModule>;
+    // Warning: (ae-forgotten-export) The symbol "MarketModuleMetadata" needs to be exported by the entry point index.d.ts
     deployMarketModule(metadata: MarketModuleMetadata): Promise<MarketModule>;
+    // Warning: (ae-forgotten-export) The symbol "NftModuleMetadata" needs to be exported by the entry point index.d.ts
     deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
+    // Warning: (ae-forgotten-export) The symbol "PackModuleMetadata" needs to be exported by the entry point index.d.ts
     // Warning: (ae-incompatible-release-tags) The symbol "deployPackModule" is marked as @public, but its signature references "PackModule" which is marked as @beta
     deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
+    // Warning: (ae-forgotten-export) The symbol "SplitsModuleMetadata" needs to be exported by the entry point index.d.ts
     deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
-    // Warning: (ae-forgotten-export) The symbol "ModuleMetadataNoType" needs to be exported by the entry point index.d.ts
-    //
     // @internal (undocumented)
     getAllContractMetadata(addresses: string[]): Promise<ModuleMetadataNoType[]>;
     getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
@@ -179,14 +185,6 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> {
     transferFrom(from: string, to: string, args: INFTBundleBatchArgs, data?: BytesLike): Promise<TransactionReceipt>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "CommonModuleMetadata" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export class BundleModuleMetadata extends CommonModuleMetadata {
-    feeRecipient?: string;
-    sellerFeeBasisPoints: number;
-}
-
 // Warning: (ae-internal-missing-underscore) The name "ChainlinkInfo" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -204,7 +202,8 @@ export const ChainlinkVrf: Record<number, ChainlinkInfo>;
 
 // @public (undocumented)
 export class ClaimConditionFactory {
-    constructor();
+    constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>);
+    allSnapshots(): SnapshotInfo[];
     // @internal
     buildConditions(): PublicClaimCondition[];
     // Warning: (ae-incompatible-release-tags) The symbol "fromPublicClaimConditions" is marked as @public, but its signature references "PublicClaimCondition" which is marked as @beta
@@ -219,14 +218,23 @@ export class ClaimConditionFactory {
 
 // @public (undocumented)
 export class ClaimConditionPhase {
-    constructor();
+    constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>);
     // @internal
     buildPublicClaimCondition(): PublicMintCondition;
+    // @internal (undocumented)
+    getSnapshot(): SnapshotInfo | undefined;
     setConditionStartTime(when: Date | number): ClaimConditionPhase;
     setMaxQuantity(maxQuantity: BigNumberish_2): ClaimConditionPhase;
     setMaxQuantityPerTransaction(max: BigNumberish_2): ClaimConditionPhase;
     setMerkleRoot(root: string): ClaimConditionPhase;
     setPrice(price: BigNumberish_2, tokenAddress?: string): ClaimConditionPhase;
+    setSnapshot(addresses: string[]): Promise<ClaimConditionPhase>;
+}
+
+// @public
+export class ClaimProof {
+    address: string;
+    proof: string[];
 }
 
 // @public (undocumented)
@@ -248,6 +256,8 @@ export type CollectionModule = BundleModule;
 
 // @public
 export interface ContractMetadata {
+    // (undocumented)
+    [key: string]: any;
     // (undocumented)
     description?: string;
     // (undocumented)
@@ -350,11 +360,6 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     transferFromBatch(args: ITokenMintFromArgs[]): Promise<void>;
 }
 
-// @public (undocumented)
-export class CurrencyModuleMetadata extends CommonModuleMetadata {
-    symbol: string;
-}
-
 // @public
 export interface CurrencyValue extends Currency {
     // (undocumented)
@@ -381,10 +386,6 @@ export class DatastoreModule extends ModuleWithRoles<DataStore> {
     setUint(key: string, value: BigNumberish_2): Promise<TransactionReceipt>;
 }
 
-// @public (undocumented)
-export class DatastoreModuleMetadata extends CommonModuleMetadata {
-}
-
 // @beta
 export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
@@ -409,8 +410,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     getAllMintConditions(): Promise<PublicMintCondition[]>;
     // (undocumented)
     getAllUnclaimed(): Promise<NFTMetadataOwner[]>;
-    // (undocumented)
-    getMintConditionsFactory(): Promise<ClaimConditionFactory>;
+    getMintConditionsFactory(): ClaimConditionFactory;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
@@ -443,7 +443,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     setBaseTokenUri(uri: string): Promise<TransactionReceipt>;
     // (undocumented)
     setMaxTotalSupply(amount: BigNumberish_2): Promise<TransactionReceipt>;
-    setMintConditions(factory: ClaimConditionFactory): Promise<void>;
+    setMintConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // @deprecated (undocumented)
@@ -468,15 +468,9 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
 }
 
-// @public (undocumented)
-export class DropModuleMetadata extends CommonModuleMetadata {
-    baseTokenUri?: string | undefined;
-    feeRecipient?: string;
-    maxSupply: number;
-    primarySaleFeeBasisPoints?: number | undefined;
-    primarySaleRecipientAddress: string;
-    sellerFeeBasisPoints?: number | undefined;
-    symbol?: string;
+// @public
+export class DuplicateLeafsError extends Error {
+    constructor(message?: string);
 }
 
 // @public
@@ -486,9 +480,6 @@ export class FetchError extends Error {
     // (undocumented)
     innerError?: Error;
 }
-
-// @public (undocumented)
-export type FileOrBuffer = Buffer | File;
 
 // @public
 export type ForwardRequestMessage = {
@@ -548,6 +539,11 @@ export interface IAppModule {
     metadata?: ContractMetadata;
     // (undocumented)
     version: number;
+}
+
+// @public (undocumented)
+export interface IDropModule {
+    mintBatch(tokenMetadata: MetadataURIOrObject[]): Promise<void>;
 }
 
 // @public (undocumented)
@@ -662,6 +658,16 @@ export interface ISDKOptions {
 }
 
 // @public (undocumented)
+export interface IThirdwebSdk {
+    // @beta
+    createSnapshot(leafs: string[]): Promise<{
+        merkleRoot: string;
+        snapshotUri: string;
+        snapshot: Snapshot;
+    }>;
+}
+
+// @public (undocumented)
 export interface ITokenMintArgs {
     // (undocumented)
     address: string;
@@ -752,11 +758,6 @@ export class MarketModule extends ModuleWithRoles<Market> {
     unlistAll(listingId: string): Promise<void>;
 }
 
-// @public (undocumented)
-export class MarketModuleMetadata extends CommonModuleMetadata {
-    marketFeeBasisPoints: number;
-}
-
 // @public
 export type MetadataURIOrObject = string | Record<string, any>;
 
@@ -818,6 +819,14 @@ export interface ModuleMetadata extends ModuleMetadataNoType {
     type: ModuleType;
 }
 
+// @public @deprecated
+export interface ModuleMetadataNoType {
+    // (undocumented)
+    address: string;
+    // (undocumented)
+    metadata?: ContractMetadata;
+}
+
 // @public
 export enum ModuleType {
     // (undocumented)
@@ -853,6 +862,8 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
     protected getModuleRoles(): readonly Role[];
     getRoleMembers(role: Role): Promise<string[]>;
     grantRole(role: Role, address: string): Promise<TransactionReceipt>;
+    prepareBatchMetadata(metadata: MetadataURIOrObject[]): Promise<string[]>;
+    prepareMetadata(metadata: MetadataURIOrObject): Promise<string>;
     revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
 }
 
@@ -948,13 +959,6 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
 }
 
-// @public (undocumented)
-export class NftModuleMetadata extends CommonModuleMetadata {
-    feeRecipient?: string;
-    sellerFeeBasisPoints: number;
-    symbol?: string;
-}
-
 // @public
 export class NotFoundError extends Error {
     // @internal
@@ -1028,12 +1032,6 @@ export class PackModule extends ModuleWithRoles<Pack> {
 }
 
 // @public (undocumented)
-export class PackModuleMetadata extends CommonModuleMetadata {
-    feeRecipient?: string;
-    sellerFeeBasisPoints: number;
-}
-
-// @public (undocumented)
 export interface PackNFTMetadata {
     // (undocumented)
     metadata: NFTMetadata;
@@ -1091,24 +1089,36 @@ export type Role = keyof IRoles;
 // @internal (undocumented)
 export const RolesMap: IRoles;
 
+// @public (undocumented)
+export class Snapshot {
+    // (undocumented)
+    claims: ClaimProof[];
+    // (undocumented)
+    merkleRoot: string;
+}
+
+// @public (undocumented)
+export interface SnapshotInfo {
+    // (undocumented)
+    merkleRoot: string;
+    // (undocumented)
+    snapshot: Snapshot;
+    // (undocumented)
+    snapshotUri: string;
+}
+
 // @public
 export interface SplitRecipient {
     address: string;
     splitPercentage: number;
 }
 
-// @public (undocumented)
-export class SplitsModuleMetadata extends CommonModuleMetadata {
-    // Warning: (ae-forgotten-export) The symbol "NewSplitRecipient" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    recipientSplits: NewSplitRecipient[];
-}
-
 // @public
-export class ThirdwebSDK {
+export class ThirdwebSDK implements IThirdwebSdk {
     constructor(providerOrNetwork: ValidProviderInput, opts?: Partial<ISDKOptions>);
     createApp(metadata: MetadataURIOrObject): Promise<ContractReceipt>;
+    // (undocumented)
+    createSnapshot(leafs: string[]): Promise<SnapshotInfo>;
     // (undocumented)
     getAppModule(address: string): AppModule;
     getApps(): Promise<IAppModule[]>;
@@ -1165,6 +1175,8 @@ export class UploadError extends Error {
 // @internal (undocumented)
 export function uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
 
+// Warning: (ae-forgotten-export) The symbol "FileOrBuffer" needs to be exported by the entry point index.d.ts
+//
 // @public
 export function uploadToIPFS(data: string | File | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
 

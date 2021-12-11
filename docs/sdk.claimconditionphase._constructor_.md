@@ -9,5 +9,12 @@ Constructs a new instance of the `ClaimConditionPhase` class
 <b>Signature:</b>
 
 ```typescript
-constructor();
+constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>);
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  createSnapshotFunc | (leafs: string\[\]) =&gt; Promise&lt;[SnapshotInfo](./sdk.snapshotinfo.md)<!-- -->&gt; |  |
+

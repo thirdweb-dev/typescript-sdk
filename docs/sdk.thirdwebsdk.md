@@ -9,8 +9,9 @@ The entrypoint to the SDK.
 <b>Signature:</b>
 
 ```typescript
-export declare class ThirdwebSDK 
+export declare class ThirdwebSDK implements IThirdwebSdk 
 ```
+<b>Implements:</b> IThirdwebSdk
 
 ## Constructors
 
@@ -23,6 +24,7 @@ export declare class ThirdwebSDK
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [createApp(metadata)](./sdk.thirdwebsdk.createapp.md) |  | Call this to create a new app |
+|  [createSnapshot(leafs)](./sdk.thirdwebsdk.createsnapshot.md) |  |  |
 |  [getAppModule(address)](./sdk.thirdwebsdk.getappmodule.md) |  |  |
 |  [getApps()](./sdk.thirdwebsdk.getapps.md) |  | Call this to get the current apps. |
 |  [getBundleModule(address)](./sdk.thirdwebsdk.getbundlemodule.md) |  |  |
