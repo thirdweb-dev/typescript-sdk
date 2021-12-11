@@ -11,6 +11,7 @@ import {
   ProtocolControl,
   ProtocolControl__factory,
   Royalty__factory,
+  VotingGovernor__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -42,6 +43,7 @@ import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetada
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
+import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { BundleDropModule } from "./bundleDrop";
 import { CollectionModule } from "./collection";
@@ -52,6 +54,7 @@ import { NFTModule } from "./nft";
 import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
 import { CurrencyModule } from "./token";
+import { VoteModule } from "./vote";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
@@ -732,6 +735,7 @@ export class AppModule
   /**
    * Deploys a Datastore module
    *
+   * @alpha
    * @param metadata - The module metadata
    * @returns - The deployed Datastore module
    */
@@ -758,6 +762,62 @@ export class AppModule
     );
 
     return this.sdk.getDatastoreModule(address);
+  }
+
+  /**
+   * Deploys a Vote module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed vote module
+   */
+  public async deployVoteModule(
+    metadata: VoteModuleMetadata,
+  ): Promise<VoteModule> {
+    invariant(
+      metadata.votingTokenAddress !== "" &&
+        isAddress(metadata.votingTokenAddress),
+      "Voting Token Address must be a valid address",
+    );
+
+    // verify making sure that the voting token address is valid
+    try {
+      await Coin__factory.connect(
+        metadata.votingTokenAddress,
+        this.readOnlyContract.provider,
+      ).callStatic.getPastTotalSupply(0);
+    } catch (e) {
+      invariant(false, "Token is not compatible with the vote module");
+    }
+
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      VoteModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const address = await this._deployModule(
+      ModuleType.VOTE,
+      [
+        metadata.name,
+        metadata.votingTokenAddress,
+        metadata.votingDelay,
+        metadata.votingPeriod,
+        metadata.proposalTokenThreshold,
+        metadata.votingQuorumFraction,
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+      ],
+      VotingGovernor__factory,
+    );
+
+    return this.sdk.getVoteModule(address);
   }
 
   /**

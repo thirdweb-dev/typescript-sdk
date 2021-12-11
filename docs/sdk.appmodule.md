@@ -30,12 +30,12 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [deployBundleDropModule(metadata)](./sdk.appmodule.deploybundledropmodule.md) |  | Deploys a Bundle Drop module |
 |  [deployBundleModule(metadata)](./sdk.appmodule.deploybundlemodule.md) |  | Deploys a collection module. |
 |  [deployCurrencyModule(metadata)](./sdk.appmodule.deploycurrencymodule.md) |  | Deploys a currency module. |
-|  [deployDatastoreModule(metadata)](./sdk.appmodule.deploydatastoremodule.md) |  | Deploys a Datastore module |
 |  [deployDropModule(metadata)](./sdk.appmodule.deploydropmodule.md) |  | Deploys a Drop module |
 |  [deployMarketModule(metadata)](./sdk.appmodule.deploymarketmodule.md) |  | Deploys a Marketplace module |
 |  [deployNftModule(metadata)](./sdk.appmodule.deploynftmodule.md) |  | Deploys a NFT module. |
 |  [deployPackModule(metadata)](./sdk.appmodule.deploypackmodule.md) |  | Deploys a Pack module |
 |  [deploySplitsModule(metadata)](./sdk.appmodule.deploysplitsmodule.md) |  | Deploys a Splits module |
+|  [deployVoteModule(metadata)](./sdk.appmodule.deployvotemodule.md) |  | Deploys a Vote module |
 |  [getAllModuleMetadata(filterByModuleType)](./sdk.appmodule.getallmodulemetadata.md) |  | Method to get a list of all module metadata on a given app. |
 |  [getBundleModules()](./sdk.appmodule.getbundlemodules.md) |  |  |
 |  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get a list of Bundle module metadata. |

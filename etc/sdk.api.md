@@ -31,13 +31,19 @@ import { Registry } from '@3rdweb/contracts';
 import { Royalty } from '@3rdweb/contracts';
 import { Signer } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/providers';
+import { VotingGovernor } from '@3rdweb/contracts';
 
 // Warning: (ae-forgotten-export) The symbol "RegistryModule" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "SplitsModule" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "VoteModule" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
+<<<<<<< HEAD
 export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule | typeof BundleDropModule;
+=======
+export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule | typeof VoteModule;
+>>>>>>> first draft of vote
 
 // Warning: (ae-forgotten-export) The symbol "IAppModule" needs to be exported by the entry point index.d.ts
 //
@@ -55,7 +61,8 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     // Warning: (ae-forgotten-export) The symbol "CurrencyModuleMetadata" needs to be exported by the entry point index.d.ts
     deployCurrencyModule(metadata: CurrencyModuleMetadata): Promise<CurrencyModule>;
     // Warning: (ae-forgotten-export) The symbol "DatastoreModuleMetadata" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-incompatible-release-tags) The symbol "deployDatastoreModule" is marked as @public, but its signature references "DatastoreModule" which is marked as @alpha
+    //
+    // @alpha
     deployDatastoreModule(metadata: DatastoreModuleMetadata): Promise<DatastoreModule>;
     // Warning: (ae-forgotten-export) The symbol "DropModuleMetadata" needs to be exported by the entry point index.d.ts
     // Warning: (ae-incompatible-release-tags) The symbol "deployDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
@@ -69,6 +76,8 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
     // Warning: (ae-forgotten-export) The symbol "SplitsModuleMetadata" needs to be exported by the entry point index.d.ts
     deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
+    // Warning: (ae-forgotten-export) The symbol "VoteModuleMetadata" needs to be exported by the entry point index.d.ts
+    deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
     // @internal (undocumented)
     getAllContractMetadata(addresses: string[]): Promise<ModuleMetadataNoType[]>;
     getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
@@ -961,7 +970,9 @@ export enum ModuleType {
     // (undocumented)
     PACK = 5,
     // (undocumented)
-    SPLITS = 9
+    SPLITS = 9,
+    // (undocumented)
+    VOTE = 10
 }
 
 // @public
@@ -1271,6 +1282,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
     // @alpha (undocumented)
     getSplitsModule(address: string): SplitsModule;
     getStorage(): IStorage;
+    // @alpha (undocumented)
+    getVoteModule(address: string): VoteModule;
     // @internal
     invokeRoute(route: string, payload: Record<string, any>): any;
     // (undocumented)

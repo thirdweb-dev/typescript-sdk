@@ -29,6 +29,7 @@ import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule } from "../modules/token";
+import { VoteModule } from "../modules/vote";
 import IpfsStorage from "../storage/IpfsStorage";
 import { ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { ClaimProof, Snapshot, SnapshotInfo } from "../types/snapshots";
@@ -58,7 +59,8 @@ export type AnyContract =
   | typeof DropModule
   | typeof DatastoreModule
   | typeof SplitsModule
-  | typeof BundleDropModule;
+  | typeof BundleDropModule
+  | typeof VoteModule;
 
 /**
  * The entrypoint to the SDK.
@@ -346,6 +348,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
 
   /**
    * @alpha
+   *
    * @param address - The contract address of the given Datastore module.
    * @returns The Datastore Module.
    */
@@ -389,6 +392,16 @@ export class ThirdwebSDK implements IThirdwebSdk {
    */
   public getSplitsModule(address: string): SplitsModule {
     return this.getOrCreateModule(address, SplitsModule);
+  }
+
+  /**
+   * @alpha
+   *
+   * @param address - The contract address of the given Vote module.
+   * @returns The Vote Module.
+   */
+  public getVoteModule(address: string): VoteModule {
+    return this.getOrCreateModule(address, VoteModule);
   }
 
   /**
