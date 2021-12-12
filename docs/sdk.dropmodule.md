@@ -38,11 +38,10 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  [getActiveMintCondition()](./sdk.dropmodule.getactivemintcondition.md) |  | <b><i>(BETA)</i></b> |
 |  [getAll(queryParams)](./sdk.dropmodule.getall.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllClaimConditions()](./sdk.dropmodule.getallclaimconditions.md) |  | <b><i>(BETA)</i></b> |
-|  [getAllClaimed()](./sdk.dropmodule.getallclaimed.md) |  | <b><i>(BETA)</i></b> |
+|  [getAllClaimed(queryParams)](./sdk.dropmodule.getallclaimed.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllMintConditions()](./sdk.dropmodule.getallmintconditions.md) |  | <b><i>(BETA)</i></b> |
-|  [getAllUnclaimed()](./sdk.dropmodule.getallunclaimed.md) |  | <b><i>(BETA)</i></b> |
-|  [getClaimConditionsFactory()](./sdk.dropmodule.getclaimconditionsfactory.md) |  | <b><i>(BETA)</i></b> |
-|  [getMintConditionsFactory()](./sdk.dropmodule.getmintconditionsfactory.md) |  | <b><i>(BETA)</i></b> |
+|  [getAllUnclaimed(queryParams)](./sdk.dropmodule.getallunclaimed.md) |  | <b><i>(BETA)</i></b> |
+|  [getMintConditionsFactory()](./sdk.dropmodule.getmintconditionsfactory.md) |  | <b><i>(BETA)</i></b> Creates a claim condition factory |
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | <b><i>(BETA)</i></b> |
 |  [getRoyaltyBps()](./sdk.dropmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.dropmodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |

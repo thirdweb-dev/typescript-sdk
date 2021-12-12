@@ -12,7 +12,7 @@ Sets public mint conditions for the next minting using the claim condition facto
 <b>Signature:</b>
 
 ```typescript
-setClaimConditions(factory: ClaimConditionFactory): Promise<void>;
+setClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -23,5 +23,5 @@ setClaimConditions(factory: ClaimConditionFactory): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

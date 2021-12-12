@@ -17,7 +17,7 @@ getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  queryParams | [QueryAllParams](./sdk.queryallparams.md) |  |
+|  queryParams | QueryAllParams |  |
 
 <b>Returns:</b>
 
