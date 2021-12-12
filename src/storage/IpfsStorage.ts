@@ -45,6 +45,7 @@ export default class IpfsStorage implements IStorage {
   public async uploadBatch(
     files: Buffer[] | string[] | FileOrBuffer[] | File[],
     contractAddress?: string,
+    uploadFileStartIndex = 0,
   ): Promise<string> {
     const token = await this.getUploadToken(contractAddress || "");
     const metadata = {
@@ -54,12 +55,15 @@ export default class IpfsStorage implements IStorage {
     const data = new FormData();
 
     files.forEach((file, i) => {
+      const filepath = `files/${uploadFileStartIndex + i}`;
       data.append(
         `file`,
         file as any,
         typeof window === "undefined"
-          ? ({ filepath: `files/${i}` } as unknown as string)
-          : `files/${i}`,
+          ? ({
+              filepath,
+            } as unknown as string)
+          : filepath,
       );
     });
 
