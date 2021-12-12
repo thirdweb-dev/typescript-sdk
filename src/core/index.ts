@@ -21,6 +21,7 @@ import { ISDKOptions, IThirdwebSdk } from "../interfaces";
 import IStorage from "../interfaces/IStorage";
 import { AppModule } from "../modules/app";
 import { BundleModule } from "../modules/bundle";
+import { BundleDropModule } from "../modules/bundleDrop";
 import { CollectionModule } from "../modules/collection";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
@@ -54,7 +55,8 @@ export type AnyContract =
   | typeof RegistryModule
   | typeof DropModule
   | typeof DatastoreModule
-  | typeof SplitsModule;
+  | typeof SplitsModule
+  | typeof BundleDropModule;
 
 /**
  * The entrypoint to the SDK.
@@ -365,6 +367,16 @@ export class ThirdwebSDK implements IThirdwebSdk {
    */
   public getDropModule(address: string): DropModule {
     return this.getOrCreateModule(address, DropModule);
+  }
+
+  /**
+   * @beta
+   *
+   * @param address - The contract address of the given Drop module.
+   * @returns The Drop Module.
+   */
+  public getBundleDropModule(address: string): BundleDropModule {
+    return this.getOrCreateModule(address, BundleDropModule);
   }
 
   /**

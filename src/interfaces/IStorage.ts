@@ -76,4 +76,19 @@ export default interface IStorage {
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<string>;
+
+  /**
+   *
+   * Uploads metadata to IPFS
+   *
+   * @param metadata - The metadata to be uploaded.
+   * @param contractAddress - Optional. The contract address the data belongs to.
+   * @param signerAddress - Optional. The address of the signer.
+   */
+
+  uploadMetadataBatch(
+    metadata: MetadataURIOrObject,
+    contractAddress?: string,
+    fileStartNumber?: number,
+  ): Promise<string>;
 }

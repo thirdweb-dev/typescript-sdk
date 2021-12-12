@@ -1,5 +1,4 @@
 import {
-  ERC20__factory,
   LazyMintERC1155 as BundleDrop,
   LazyMintERC1155__factory as BundleDrop__factory,
 } from "@3rdweb/contracts";
@@ -8,8 +7,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
-import { invariant } from "../common/invariant";
-import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
+import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
@@ -40,7 +38,7 @@ export interface BundleDropMetadata {
  * @beta
  */
 export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
-  public static moduleType: ModuleType = ModuleType.DROP;
+  public static moduleType: ModuleType = ModuleType.BUNDLE_DROP;
   storage = this.sdk.getStorage();
 
   public static roles = [
@@ -126,15 +124,17 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     );
   }
 
-  public async getActiveClaimCondition(tokenId: BigNumberish): Promise<void> {
-    // TODO 1: this.contract.claimConditions(tokenId);
-    // TODO 2: this.contract.getClaimConditionAtIndex(tokenId, index);
-    // const index =
-    // await this.readOnlyContract.getLastStartedMintConditionIndex();
-    // return await this.readOnlyContract.mintConditions(index);
+  public async getActiveClaimCondition(tokenId: BigNumberish): Promise<any> {
+    const index = await this.readOnlyContract.getIndexOfActiveCondition(
+      tokenId,
+    );
+    return await this.readOnlyContract.getClaimConditionAtIndex(tokenId, index);
   }
 
   public async getAllClaimConditions(tokenId: BigNumberish): Promise<void[]> {
+    const claimCondition = await this.readOnlyContract.claimConditions(tokenId);
+    // TODO
+    // claimCondition.nextConditionIndex;
     return [];
   }
 
@@ -162,13 +162,11 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
 
   // write functions
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
-    const fileNameBaseIndex = await this.readOnlyContract.nextTokenIdToMint();
-    const baseUri = await this.storage.uploadBatch(
-      // TODO metadatas to buffer
-      [],
+    const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
+    const baseUri = await this.storage.uploadMetadataBatch(
+      metadatas,
       this.address,
-      // TODO: unsafe tonumber
-      fileNameBaseIndex.toNumber(),
+      startFileNumber.toNumber(),
     );
     await this.sendTransaction("lazyMint", [metadatas.length, baseUri]);
   }
