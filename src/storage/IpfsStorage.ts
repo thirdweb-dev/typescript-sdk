@@ -1,7 +1,7 @@
 import { FetchError, UploadError } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
 import IStorage from "../interfaces/IStorage";
-import { FileOrBuffer } from "../types";
+import FileOrBuffer from "../types/FileOrBuffer";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires

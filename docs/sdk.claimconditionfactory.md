@@ -14,12 +14,13 @@ declare class ClaimConditionFactory
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)()](./sdk.claimconditionfactory._constructor_.md) |  | Constructs a new instance of the <code>ClaimConditionFactory</code> class |
+|  [(constructor)(createSnapshotFunc)](./sdk.claimconditionfactory._constructor_.md) |  | Constructs a new instance of the <code>ClaimConditionFactory</code> class |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [allSnapshots()](./sdk.claimconditionfactory.allsnapshots.md) |  | Helper method fetches all snapshots from a factory. |
 |  [fromPublicClaimConditions(conditions)](./sdk.claimconditionfactory.frompublicclaimconditions.md) |  | Converts a set of generic <code>PublicClaimCondition</code>s into a <code>ClaimConditionFactory</code> |
 |  [newClaimPhase({ startTime, maxQuantity, maxQuantityPerTransaction, })](./sdk.claimconditionfactory.newclaimphase.md) |  | Creates a new claim 'phase' with its own set of claim conditions |
 |  [removeClaimPhase(index)](./sdk.claimconditionfactory.removeclaimphase.md) |  | Removes a claim condition phase from the factory. |

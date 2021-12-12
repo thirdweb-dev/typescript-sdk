@@ -14,7 +14,7 @@ export default class ClaimConditionPhase
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)()](./sdk.claimconditionphase._constructor_.md) |  | Constructs a new instance of the <code>ClaimConditionPhase</code> class |
+|  [(constructor)(createSnapshotFunc)](./sdk.claimconditionphase._constructor_.md) |  | Constructs a new instance of the <code>ClaimConditionPhase</code> class |
 
 ## Methods
 
@@ -25,4 +25,5 @@ export default class ClaimConditionPhase
 |  [setMaxQuantityPerTransaction(max)](./sdk.claimconditionphase.setmaxquantitypertransaction.md) |  | The max quantity of NFTs that can be claimed in a single transaction. |
 |  [setMerkleRoot(root)](./sdk.claimconditionphase.setmerkleroot.md) |  | Sets a merkle root hash for the claim condition. |
 |  [setPrice(price, tokenAddress)](./sdk.claimconditionphase.setprice.md) |  | Set the price claim condition for the drop. |
+|  [setSnapshot(addresses)](./sdk.claimconditionphase.setsnapshot.md) |  | Sets a snapshot for the claim condition. You can use a snapshot to verify a merkle tree condition. |
 
