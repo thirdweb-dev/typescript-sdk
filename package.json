@@ -67,7 +67,7 @@
     "ethers": "^5.4.6"
   },
   "dependencies": {
-    "@3rdweb/contracts": "^1.13.1",
+    "@3rdweb/contracts": "1.15.0-2",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/constants": "^5.5.0",

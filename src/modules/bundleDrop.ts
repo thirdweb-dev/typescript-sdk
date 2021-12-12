@@ -1,7 +1,7 @@
 import {
   ERC20__factory,
-  LazyNFT as Drop,
-  LazyNFT__factory as Drop__factory,
+  LazyMintERC1155 as BundleDrop,
+  LazyMintERC1155__factory as BundleDrop__factory,
 } from "@3rdweb/contracts";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
@@ -28,10 +28,18 @@ export interface CreatePublicMintCondition {
 }
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getDropModule}
  * @beta
  */
-export class DropModule extends ModuleWithRoles<Drop> {
+export interface BundleDropMetadata {
+  supply: BigNumber;
+  metadata: NFTMetadata;
+}
+
+/**
+ * Access this module by calling {@link ThirdwebSDK.getBundleDropModule}
+ * @beta
+ */
+export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   public static moduleType: ModuleType = ModuleType.DROP;
   storage = this.sdk.getStorage();
 
@@ -46,21 +54,21 @@ export class DropModule extends ModuleWithRoles<Drop> {
    * @internal
    */
   protected getModuleRoles(): readonly Role[] {
-    return DropModule.roles;
+    return BundleDropModule.roles;
   }
 
   /**
    * @internal
    */
-  protected connectContract(): Drop {
-    return Drop__factory.connect(this.address, this.providerOrSigner);
+  protected connectContract(): BundleDrop {
+    return BundleDrop__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**
    * @internal
    */
   protected getModuleType(): ModuleType {
-    return DropModule.moduleType;
+    return BundleDropModule.moduleType;
   }
 
   private async getTokenMetadata(tokenId: string): Promise<NFTMetadata> {
@@ -71,97 +79,74 @@ export class DropModule extends ModuleWithRoles<Drop> {
     );
   }
 
-  public async get(tokenId: string): Promise<NFTMetadataOwner> {
-    const [owner, metadata] = await Promise.all([
-      this.ownerOf(tokenId).catch(() => AddressZero),
+  public async get(tokenId: string): Promise<BundleDropMetadata> {
+    const [supply, metadata] = await Promise.all([
+      this.readOnlyContract.totalSupply(tokenId).catch(() => BigNumber.from(0)),
       this.getTokenMetadata(tokenId),
     ]);
 
-    return { owner, metadata };
+    return {
+      supply,
+      metadata,
+    };
   }
 
-  public async getAll(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
+  public async getAll(): Promise<BundleDropMetadata[]> {
+    const maxId = (await this.readOnlyContract.nextTokenIdToMint()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
   }
 
-  public async getAllUnclaimed(): Promise<NFTMetadataOwner[]> {
-    const maxId = await this.readOnlyContract.nextTokenId();
-    const unmintedId = await this.readOnlyContract.nextMintTokenId();
-    return await Promise.all(
-      Array.from(Array(maxId.sub(unmintedId).toNumber()).keys()).map((i) =>
-        this.get(unmintedId.add(i).toString()),
-      ),
-    );
-  }
-
-  public async getAllClaimed(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.readOnlyContract.nextMintTokenId()).toNumber();
-    return await Promise.all(
-      Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
-    );
-  }
-
-  public async ownerOf(tokenId: string): Promise<string> {
-    return await this.readOnlyContract.ownerOf(tokenId);
-  }
-
-  public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
+  /**
+   * `getOwned` is a convenience method for getting all owned tokens
+   * for a particular wallet.
+   *
+   * @param _address - The address to check for token ownership
+   * @returns An array of BundleMetadata objects that are owned by the address
+   */
+  public async getOwned(_address?: string): Promise<BundleDropMetadata[]> {
     const address = _address ? _address : await this.getSignerAddress();
-    const balance = await this.readOnlyContract.balanceOf(address);
-    const indices = Array.from(Array(balance.toNumber()).keys());
-    const tokenIds = await Promise.all(
-      indices.map((i) => this.readOnlyContract.tokenOfOwnerByIndex(address, i)),
+    const maxId = await this.readOnlyContract.nextTokenIdToMint();
+    const balances = await this.readOnlyContract.balanceOfBatch(
+      Array(maxId.toNumber()).fill(address),
+      Array.from(Array(maxId.toNumber()).keys()),
     );
+
+    const ownedBalances = balances
+      .map((b, i) => {
+        return {
+          tokenId: i,
+          balance: b,
+        };
+      })
+      .filter((b) => b.balance.gt(0));
     return await Promise.all(
-      tokenIds.map((tokenId) => this.get(tokenId.toString())),
+      ownedBalances.map(async (b) => await this.get(b.tokenId.toString())),
     );
   }
 
-  public async getActiveMintCondition(): Promise<PublicMintCondition> {
-    const index =
-      await this.readOnlyContract.getLastStartedMintConditionIndex();
-    return await this.readOnlyContract.mintConditions(index);
+  public async getActiveClaimCondition(tokenId: BigNumberish): Promise<void> {
+    // TODO 1: this.contract.claimConditions(tokenId);
+    // TODO 2: this.contract.getClaimConditionAtIndex(tokenId, index);
+    // const index =
+    // await this.readOnlyContract.getLastStartedMintConditionIndex();
+    // return await this.readOnlyContract.mintConditions(index);
   }
 
-  public async getAllMintConditions(): Promise<PublicMintCondition[]> {
-    const conditions = [];
-    for (let i = 0; ; i++) {
-      try {
-        conditions.push(await this.readOnlyContract.mintConditions(i));
-      } catch (e) {
-        break;
-      }
-    }
-    return conditions;
+  public async getAllClaimConditions(tokenId: BigNumberish): Promise<void[]> {
+    return [];
   }
 
-  public async totalSupply(): Promise<BigNumber> {
-    return await this.readOnlyContract.nextTokenId();
+  public async balanceOf(
+    address: string,
+    tokenId: BigNumberish,
+  ): Promise<BigNumber> {
+    return await this.readOnlyContract.balanceOf(address, tokenId);
   }
 
-  public async maxTotalSupply(): Promise<BigNumber> {
-    return await this.readOnlyContract.maxTotalSupply();
-  }
-
-  public async totalUnclaimedSupply(): Promise<BigNumber> {
-    return (await this.readOnlyContract.nextTokenId()).sub(
-      await this.totalClaimedSupply(),
-    );
-  }
-
-  public async totalClaimedSupply(): Promise<BigNumber> {
-    return await this.readOnlyContract.nextMintTokenId();
-  }
-
-  public async balanceOf(address: string): Promise<BigNumber> {
-    return await this.readOnlyContract.balanceOf(address);
-  }
-
-  public async balance(): Promise<BigNumber> {
-    return await this.balanceOf(await this.getSignerAddress());
+  public async balance(tokenId: BigNumberish): Promise<BigNumber> {
+    return await this.balanceOf(await this.getSignerAddress(), tokenId);
   }
   public async isApproved(address: string, operator: string): Promise<boolean> {
     return await this.readOnlyContract.isApprovedForAll(address, operator);
@@ -180,20 +165,15 @@ export class DropModule extends ModuleWithRoles<Drop> {
 
   public async transfer(
     to: string,
-    tokenId: string,
+    tokenId: BigNumberish,
+    amount: BigNumberish,
+    data: BytesLike = [0],
   ): Promise<TransactionReceipt> {
     const from = await this.getSignerAddress();
     return await this.sendTransaction(
       "safeTransferFrom(address,address,uint256)",
-      [from, to, tokenId],
+      [from, to, tokenId, amount, data],
     );
-  }
-
-  /**
-   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
-   */
-  public async lazyMint(metadata: MetadataURIOrObject) {
-    await this.lazyMintBatch([metadata]);
   }
 
   public async pinToIpfs(files: Buffer[]): Promise<string> {
@@ -201,29 +181,15 @@ export class DropModule extends ModuleWithRoles<Drop> {
   }
 
   /**
-   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
-   */
-  public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
-    const uris = await Promise.all(
-      metadatas.map((m) => this.storage.uploadMetadata(m)),
-    );
-    await this.sendTransaction("lazyMintBatch", [uris]);
-  }
-
-  /**
-   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
-   */
-  public async lazyMintAmount(amount: BigNumberish) {
-    await this.sendTransaction("lazyMintAmount", [amount]);
-  }
-
-  /**
-   * Sets public mint conditions for the next minting using the
+   * Sets public claim conditions for the next minting using the
    * claim condition factory.
    *
    * @param factory - The claim condition factory.
    */
-  public async setMintConditions(factory: ClaimConditionFactory) {
+  public async setClaimCondition(
+    tokenId: BigNumberish,
+    factory: ClaimConditionFactory,
+  ) {
     const conditions = factory.buildConditions();
 
     const merkleInfo: { [key: string]: string } = {};
@@ -241,7 +207,8 @@ export class DropModule extends ModuleWithRoles<Drop> {
       this.contract.interface.encodeFunctionData("setContractURI", [
         metatdataUri,
       ]),
-      this.contract.interface.encodeFunctionData("setPublicMintConditions", [
+      this.contract.interface.encodeFunctionData("setClaimConditions", [
+        tokenId,
         conditions,
       ]),
     ];
@@ -253,7 +220,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
    *
    * @returns - A new claim condition factory
    */
-  public getMintConditionsFactory(): ClaimConditionFactory {
+  public getClaimConditionFactory(): ClaimConditionFactory {
     const createSnapshotFunc = this.sdk.createSnapshot.bind(this.sdk);
     const factory = new ClaimConditionFactory(createSnapshotFunc);
     return factory;
@@ -263,6 +230,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
    * @deprecated - Use the ClaimConditionFactory instead.
    */
   public async setPublicMintConditions(
+    tokenId: BigNumberish,
     conditions: CreatePublicMintCondition[],
   ) {
     const _conditions = conditions.map((c) => ({
@@ -277,14 +245,15 @@ export class DropModule extends ModuleWithRoles<Drop> {
       currency: c.currency || AddressZero,
       merkleRoot: c.merkleRoot || hexZeroPad([0], 32),
     }));
-    await this.sendTransaction("setPublicMintConditions", [_conditions]);
+    await this.sendTransaction("setClaimConditions", [tokenId, _conditions]);
   }
 
   public async claim(
+    tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ) {
-    const mintCondition = await this.getActiveMintCondition();
+    const mintCondition = await this.getActiveMintCondition(tokenId);
     const overrides = (await this.getCallOverrides()) || {};
     if (mintCondition.pricePerToken > 0) {
       if (mintCondition.currency === AddressZero) {
@@ -311,19 +280,31 @@ export class DropModule extends ModuleWithRoles<Drop> {
         }
       }
     }
-    await this.sendTransaction("claim", [quantity, proofs], overrides);
+    await this.sendTransaction("claim", [tokenId, quantity, proofs], overrides);
   }
 
-  public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
-    return await this.sendTransaction("burn", [tokenId]);
+  public async burn(
+    tokenId: BigNumberish,
+    amount: BigNumberish,
+  ): Promise<TransactionReceipt> {
+    const account = await this.getSignerAddress();
+    return await this.sendTransaction("burn", [account, tokenId, amount]);
   }
 
   public async transferFrom(
     from: string,
     to: string,
     tokenId: BigNumberish,
+    amount: BigNumberish,
+    data: BytesLike = [0],
   ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("transferFrom", [from, to, tokenId]);
+    return await this.sendTransaction("transferFrom", [
+      from,
+      to,
+      tokenId,
+      amount,
+      data,
+    ]);
   }
 
   // owner functions
@@ -359,16 +340,6 @@ export class DropModule extends ModuleWithRoles<Drop> {
       this.contract.interface.encodeFunctionData("setContractURI", [uri]),
     );
     return await this.sendTransaction("multicall", [encoded]);
-  }
-
-  public async setBaseTokenUri(uri: string): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setBaseTokenURI", [uri]);
-  }
-
-  public async setMaxTotalSupply(
-    amount: BigNumberish,
-  ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setMaxTotalSupply", [amount]);
   }
 
   public async setRestrictedTransfer(

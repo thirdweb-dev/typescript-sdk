@@ -1,4 +1,9 @@
-import { LazyNFT, NFT, NFTCollection } from "@3rdweb/contracts";
+import {
+  LazyMintERC1155,
+  LazyNFT,
+  NFT,
+  NFTCollection,
+} from "@3rdweb/contracts";
 import { Contract } from "@ethersproject/contracts";
 import { JSONValue, ProviderOrSigner } from "../core/types";
 import { NotFoundError } from "./error";
@@ -73,7 +78,7 @@ export interface NFTMetadataOwner {
 /**
  * @internal
  */
-export type NFTContractTypes = NFT | NFTCollection | LazyNFT;
+export type NFTContractTypes = NFT | NFTCollection | LazyNFT | LazyMintERC1155;
 
 /**
 /* @internal
