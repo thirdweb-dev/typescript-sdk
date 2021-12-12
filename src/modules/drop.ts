@@ -351,10 +351,17 @@ export class DropModule extends ModuleWithRoles<Drop> {
    *
    * @returns - A new claim condition factory
    */
-  public getMintConditionsFactory(): ClaimConditionFactory {
+  public getClaimConditionsFactory(): ClaimConditionFactory {
     const createSnapshotFunc = this.sdk.createSnapshot.bind(this.sdk);
     const factory = new ClaimConditionFactory(createSnapshotFunc);
     return factory;
+  }
+
+  /**
+   * @deprecated - Use the {@link DropModule.getClaimConditionsFactory} instead.
+   */
+  public getMintConditionsFactory(): ClaimConditionFactory {
+    return this.getClaimConditionsFactory();
   }
 
   /**

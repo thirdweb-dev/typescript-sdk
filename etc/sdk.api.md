@@ -420,6 +420,8 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     getAllMintConditions(): Promise<PublicMintCondition[]>;
     // (undocumented)
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    getClaimConditionsFactory(): ClaimConditionFactory;
+    // @deprecated (undocumented)
     getMintConditionsFactory(): ClaimConditionFactory;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
