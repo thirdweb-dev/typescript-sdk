@@ -26,6 +26,7 @@ export interface ClaimCondition {
   quantityLimitPerTransaction: string;
   waitTimeSecondsLimitPerTransaction: string;
   price: BigNumber;
+  pricePerToken: BigNumber;
   currency: string;
   currencyContract: string;
   currencyMetadata: CurrencyValue | null;

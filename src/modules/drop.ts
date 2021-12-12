@@ -177,6 +177,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
       waitTimeSecondsLimitPerTransaction:
         pm.waitTimeSecondsLimitPerTransaction.toString(),
       price: BigNumber.from(pm.pricePerToken),
+      pricePerToken: BigNumber.from(pm.pricePerToken),
       currency: pm.currency,
       currencyContract: pm.currency,
       currencyMetadata: cv,
