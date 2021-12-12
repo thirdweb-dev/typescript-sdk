@@ -1,6 +1,7 @@
 import { MetadataURIOrObject } from "../core/types";
 import FileOrBuffer from "../types/FileOrBuffer";
 
+/* eslint-disable semi */
 export default interface IStorage {
   /**
    * Uploads a file to the storage.
@@ -23,12 +24,14 @@ export default interface IStorage {
    * @param path - The path to the folder containing the files to be uploaded.
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
+   * @param uploadFileStartNumber - Optional. The first file file name begins with.
    *
    * @returns - The CID of the uploaded folder.
    */
   uploadBatch(
     files: Buffer[] | string[] | FileOrBuffer[] | File[],
     contractAddress?: string,
+    uploadFileStartNumber?: number,
   ): Promise<string>;
 
   /**

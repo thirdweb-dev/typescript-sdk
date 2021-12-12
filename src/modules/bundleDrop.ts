@@ -146,19 +146,6 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     return saleRecipient;
   }
 
-  public async setSaleRecipient(
-    tokenId: BigNumberish,
-    recipient: string,
-  ): Promise<TransactionReceipt> {
-    return this.sendTransaction("setSaleRecipient", [tokenId, recipient]);
-  }
-
-  public async setDefaultSaleRecipient(
-    recipient: string,
-  ): Promise<TransactionReceipt> {
-    return this.sendTransaction("setDefaultSaleRecipient", [recipient]);
-  }
-
   public async balanceOf(
     address: string,
     tokenId: BigNumberish,
@@ -174,6 +161,30 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   }
 
   // write functions
+  public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
+    const fileNameBaseIndex = await this.readOnlyContract.nextTokenIdToMint();
+    const baseUri = await this.storage.uploadBatch(
+      // TODO metadatas to buffer
+      [],
+      this.address,
+      // TODO: unsafe tonumber
+      fileNameBaseIndex.toNumber(),
+    );
+    await this.sendTransaction("lazyMint", [metadatas.length, baseUri]);
+  }
+
+  public async setSaleRecipient(
+    tokenId: BigNumberish,
+    recipient: string,
+  ): Promise<TransactionReceipt> {
+    return this.sendTransaction("setSaleRecipient", [tokenId, recipient]);
+  }
+
+  public async setDefaultSaleRecipient(
+    recipient: string,
+  ): Promise<TransactionReceipt> {
+    return this.sendTransaction("setDefaultSaleRecipient", [recipient]);
+  }
   public async setApproval(
     operator: string,
     approved = true,
@@ -207,6 +218,8 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     tokenId: BigNumberish,
     factory: ClaimConditionFactory,
   ) {
+    /*
+    TODO
     const conditions = factory.buildConditions();
 
     const merkleInfo: { [key: string]: string } = {};
@@ -230,6 +243,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       ]),
     ];
     return await this.sendTransaction("multicall", [encoded]);
+    */
   }
 
   /**
@@ -269,7 +283,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ) {
-    const mintCondition = await this.getActiveMintCondition(tokenId);
+    /*
+    TODO
+    const mintCondition = await this.getActiveClaimCondition(tokenId);
     const overrides = (await this.getCallOverrides()) || {};
     if (mintCondition.pricePerToken > 0) {
       if (mintCondition.currency === AddressZero) {
@@ -297,6 +313,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       }
     }
     await this.sendTransaction("claim", [tokenId, quantity, proofs], overrides);
+    */
   }
 
   public async burn(
@@ -385,9 +402,4 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     }
     return "";
   }
-
-  // public async mintBatch(tokenMetadata: MetadataURIOrObject[]) {
-  // TODO: Upload all metadata to IPFS
-  // call lazyMintAmount(metadata.length - totalSupply) if totalSupply < metadata.length
-  // }
 }
