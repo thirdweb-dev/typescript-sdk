@@ -17,11 +17,11 @@ import ClaimConditionFactory from "../factories/ClaimConditionFactory";
 /**
  * @beta
  */
-export interface CreatePublicMintCondition {
-  startTimestampInSeconds?: BigNumberish;
-  maxMintSupply: BigNumberish;
+export interface BundleDropCreateClaimCondition {
+  startTimestamp?: BigNumberish;
+  maxClaimableSupply: BigNumberish;
   quantityLimitPerTransaction?: BigNumberish;
-  waitTimeSecondsLimitPerTransaction?: BigNumberish;
+  waitTimeInSecondsBetweenClaims?: BigNumberish;
   pricePerToken?: BigNumberish;
   currency?: string;
   merkleRoot?: BytesLike;
@@ -138,6 +138,27 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     return [];
   }
 
+  public async getSaleRecipient(tokenId: BigNumberish): Promise<string> {
+    const saleRecipient = await this.readOnlyContract.saleRecipient(tokenId);
+    if (saleRecipient === AddressZero) {
+      return this.readOnlyContract.defaultSaleRecipient();
+    }
+    return saleRecipient;
+  }
+
+  public async setSaleRecipient(
+    tokenId: BigNumberish,
+    recipient: string,
+  ): Promise<TransactionReceipt> {
+    return this.sendTransaction("setSaleRecipient", [tokenId, recipient]);
+  }
+
+  public async setDefaultSaleRecipient(
+    recipient: string,
+  ): Promise<TransactionReceipt> {
+    return this.sendTransaction("setDefaultSaleRecipient", [recipient]);
+  }
+
   public async balanceOf(
     address: string,
     tokenId: BigNumberish,
@@ -174,10 +195,6 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       "safeTransferFrom(address,address,uint256)",
       [from, to, tokenId, amount, data],
     );
-  }
-
-  public async pinToIpfs(files: Buffer[]): Promise<string> {
-    return await this.storage.uploadBatch(files, this.address);
   }
 
   /**
@@ -229,18 +246,17 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   /**
    * @deprecated - Use the ClaimConditionFactory instead.
    */
-  public async setPublicMintConditions(
+  public async setPublicClaimConditions(
     tokenId: BigNumberish,
-    conditions: CreatePublicMintCondition[],
+    conditions: BundleDropCreateClaimCondition[],
   ) {
     const _conditions = conditions.map((c) => ({
-      startTimestamp: c.startTimestampInSeconds || 0,
-      maxMintSupply: c.maxMintSupply,
-      currentMintSupply: 0,
+      startTimestamp: c.startTimestamp || 0,
+      maxClaimableSupply: c.maxClaimableSupply,
+      supplyClaimed: 0,
       quantityLimitPerTransaction:
-        c.quantityLimitPerTransaction || c.maxMintSupply,
-      waitTimeSecondsLimitPerTransaction:
-        c.waitTimeSecondsLimitPerTransaction || 0,
+        c.quantityLimitPerTransaction || c.maxClaimableSupply,
+      waitTimeInSecondsBetweenClaims: c.waitTimeInSecondsBetweenClaims || 0,
       pricePerToken: c.pricePerToken || 0,
       currency: c.currency || AddressZero,
       merkleRoot: c.merkleRoot || hexZeroPad([0], 32),
