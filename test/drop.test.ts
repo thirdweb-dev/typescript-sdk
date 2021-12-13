@@ -113,21 +113,28 @@ describe("Drop Module", async () => {
     const phase = factory.newClaimPhase({
       startTime: new Date(),
     });
-    await phase.setSnapshot([
+    const members = [
+      adminWallet.address,
       bobWallet.address,
       samWallet.address,
       abbyWallet.address,
-      "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-    ]);
+    ];
+    await phase.setSnapshot(members);
+
     console.log("Setting claim condition");
     await dropModule.setMintConditions(factory);
+
     console.log("Claim condition set");
-    console.log("Minting");
-    await dropModule.lazyMintAmount(1);
+    console.log("Minting 100");
+    await dropModule.lazyMintAmount(100);
+
     console.log("Minted");
     console.log("Claiming");
-    await dropModule.claim(1);
-    console.log("Claimed");
+
+    for (const member of members) {
+      await dropModule.claim(1, [], member);
+      console.log(`Address ${member} claimed successfully!`);
+    }
   });
 
   it.skip("should not allow claiming to someone not in the merkle tree", async () => {
