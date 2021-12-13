@@ -17,7 +17,7 @@ getBundleDropModule(address: string): BundleDropModule;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  address | string | The contract address of the given Drop module. |
+|  address | string | The contract address of the given BundleDrop module. |
 
 <b>Returns:</b>
 

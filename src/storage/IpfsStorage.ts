@@ -82,7 +82,7 @@ export default class IpfsStorage implements IStorage {
         throw new UploadError(`Failed to upload to IPFS: ${err}`);
       });
     const body = await res.json();
-    return body.IpfsHash;
+    return `ipfs://${body.IpfsHash}/`;
   }
 
   public async getUploadToken(contractAddress: string): Promise<string> {

@@ -372,7 +372,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
   /**
    * @beta
    *
-   * @param address - The contract address of the given Drop module.
+   * @param address - The contract address of the given BundleDrop module.
    * @returns The Drop Module.
    */
   public getBundleDropModule(address: string): BundleDropModule {
