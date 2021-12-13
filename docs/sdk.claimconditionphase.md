@@ -26,4 +26,5 @@ export default class ClaimConditionPhase
 |  [setMerkleRoot(root)](./sdk.claimconditionphase.setmerkleroot.md) |  | Sets a merkle root hash for the claim condition. |
 |  [setPrice(price, tokenAddress)](./sdk.claimconditionphase.setprice.md) |  | Set the price claim condition for the drop. |
 |  [setSnapshot(addresses)](./sdk.claimconditionphase.setsnapshot.md) |  | Sets a snapshot for the claim condition. You can use a snapshot to verify a merkle tree condition. |
+|  [setWaitTimeBetweenClaims(waitInSeconds)](./sdk.claimconditionphase.setwaittimebetweenclaims.md) |  | Wait time enforced after calling <code>claim</code> before the next <code>claim</code> can be called. |
 

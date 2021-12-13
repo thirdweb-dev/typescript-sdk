@@ -326,6 +326,7 @@ export class ClaimConditionPhase {
     setMerkleRoot(root: string): ClaimConditionPhase;
     setPrice(price: BigNumberish_2, tokenAddress?: string): ClaimConditionPhase;
     setSnapshot(addresses: string[]): Promise<ClaimConditionPhase>;
+    setWaitTimeBetweenClaims(waitInSeconds: BigNumberish_2): Promise<ClaimConditionPhase>;
 }
 
 // @public
