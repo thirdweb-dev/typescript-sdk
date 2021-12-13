@@ -146,9 +146,9 @@ export default class ClaimConditionPhase {
    *
    * @param waitInSeconds - The wait time in seconds.
    */
-  public async setWaitTimeBetweenClaims(
+  public setWaitTimeBetweenClaims(
     waitInSeconds: BigNumberish,
-  ): Promise<ClaimConditionPhase> {
+  ): ClaimConditionPhase {
     this._waitInSeconds = waitInSeconds;
     return this;
   }
