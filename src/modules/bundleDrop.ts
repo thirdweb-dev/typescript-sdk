@@ -8,7 +8,13 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
-import { getCurrencyValue, ModuleType, Role, RolesMap } from "../common";
+import {
+  getCurrencyValue,
+  ModuleType,
+  NATIVE_TOKEN_ADDRESS,
+  Role,
+  RolesMap,
+} from "../common";
 import { invariant } from "../common/invariant";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
@@ -268,7 +274,10 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       supplyClaimed: 0,
       quantityLimitPerTransaction: c.quantityLimitPerTransaction,
       waitTimeInSecondsBetweenClaims: c.waitTimeSecondsLimitPerTransaction,
-      pricePerToken: c.pricePerToken,
+      pricePerToken:
+        c.pricePerToken === AddressZero
+          ? NATIVE_TOKEN_ADDRESS
+          : c.pricePerToken,
       currency: c.currency,
       merkleRoot: c.merkleRoot,
     }));
