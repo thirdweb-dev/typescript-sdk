@@ -37,7 +37,7 @@ import { TransactionReceipt } from '@ethersproject/providers';
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule;
+export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule | typeof BundleDropModule;
 
 // Warning: (ae-forgotten-export) The symbol "IAppModule" needs to be exported by the entry point index.d.ts
 //
@@ -101,6 +101,95 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     setRoyaltyTreasury(treasury: string): Promise<TransactionReceipt>;
     // (undocumented)
     withdrawFunds(to: string, currency: string): Promise<TransactionReceipt>;
+}
+
+// @beta (undocumented)
+export interface BundleDropCreateClaimCondition {
+    // (undocumented)
+    currency?: string;
+    // (undocumented)
+    maxClaimableSupply: BigNumberish_2;
+    // (undocumented)
+    merkleRoot?: BytesLike;
+    // (undocumented)
+    pricePerToken?: BigNumberish_2;
+    // (undocumented)
+    quantityLimitPerTransaction?: BigNumberish_2;
+    // (undocumented)
+    startTimestamp?: BigNumberish_2;
+    // (undocumented)
+    waitTimeInSecondsBetweenClaims?: BigNumberish_2;
+}
+
+// @beta (undocumented)
+export interface BundleDropMetadata {
+    // (undocumented)
+    metadata: NFTMetadata;
+    // (undocumented)
+    supply: BigNumber_2;
+}
+
+// @beta
+export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
+    // (undocumented)
+    balance(tokenId: BigNumberish_2): Promise<BigNumber_2>;
+    // (undocumented)
+    balanceOf(address: string, tokenId: BigNumberish_2): Promise<BigNumber_2>;
+    // (undocumented)
+    burn(tokenId: BigNumberish_2, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    claim(tokenId: BigNumberish_2, quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
+    // @internal (undocumented)
+    protected connectContract(): LazyMintERC1155;
+    // (undocumented)
+    get(tokenId: string): Promise<BundleDropMetadata>;
+    // (undocumented)
+    getActiveClaimCondition(tokenId: BigNumberish_2): Promise<any>;
+    // (undocumented)
+    getAll(): Promise<BundleDropMetadata[]>;
+    // (undocumented)
+    getAllClaimConditions(tokenId: BigNumberish_2): Promise<any[]>;
+    getClaimConditionFactory(): ClaimConditionFactory;
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
+    getOwned(_address?: string): Promise<BundleDropMetadata[]>;
+    getRoyaltyBps(): Promise<BigNumberish_2>;
+    getRoyaltyRecipientAddress(): Promise<string>;
+    // (undocumented)
+    getSaleRecipient(tokenId: BigNumberish_2): Promise<string>;
+    // (undocumented)
+    isApproved(address: string, operator: string): Promise<boolean>;
+    // (undocumented)
+    lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
+    // (undocumented)
+    static moduleType: ModuleType;
+    // (undocumented)
+    static roles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
+    setClaimCondition(): Promise<void>;
+    // (undocumented)
+    setDefaultSaleRecipient(recipient: string): Promise<TransactionReceipt>;
+    // (undocumented)
+    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    // @deprecated (undocumented)
+    setPublicClaimConditions(tokenId: BigNumberish_2, conditions: BundleDropCreateClaimCondition[]): Promise<void>;
+    // (undocumented)
+    setRestrictedTransfer(restricted: boolean): Promise<TransactionReceipt>;
+    // (undocumented)
+    setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
+    // (undocumented)
+    setSaleRecipient(tokenId: BigNumberish_2, recipient: string): Promise<TransactionReceipt>;
+    // Warning: (ae-forgotten-export) The symbol "IStorage" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    storage: IStorage;
+    // (undocumented)
+    transfer(to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
+    // (undocumented)
+    transferFrom(from: string, to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
 }
 
 // @beta (undocumented)
@@ -453,8 +542,6 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     setRestrictedTransfer(restricted: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
-    // Warning: (ae-forgotten-export) The symbol "IStorage" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     storage: IStorage;
     // (undocumented)
@@ -1125,6 +1212,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
     // (undocumented)
     getAppModule(address: string): AppModule;
     getApps(): Promise<IAppModule[]>;
+    // @beta (undocumented)
+    getBundleDropModule(address: string): BundleDropModule;
     // Warning: (ae-incompatible-release-tags) The symbol "getBundleModule" is marked as @public, but its signature references "BundleModule" which is marked as @beta
     //
     // (undocumented)

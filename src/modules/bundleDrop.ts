@@ -1,4 +1,5 @@
 import {
+  ERC20__factory,
   LazyMintERC1155 as BundleDrop,
   LazyMintERC1155__factory as BundleDrop__factory,
 } from "@3rdweb/contracts";
@@ -131,11 +132,16 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     return await this.readOnlyContract.getClaimConditionAtIndex(tokenId, index);
   }
 
-  public async getAllClaimConditions(tokenId: BigNumberish): Promise<void[]> {
+  public async getAllClaimConditions(tokenId: BigNumberish): Promise<any[]> {
     const claimCondition = await this.readOnlyContract.claimConditions(tokenId);
-    // TODO
-    // claimCondition.nextConditionIndex;
-    return [];
+    const count = claimCondition.nextConditionIndex.toNumber();
+    const conditions = [];
+    for (let i = 0; i < count; i++) {
+      conditions.push(
+        await this.readOnlyContract.getClaimConditionAtIndex(tokenId, i),
+      );
+    }
+    return conditions;
   }
 
   public async getSaleRecipient(tokenId: BigNumberish): Promise<string> {
@@ -212,10 +218,8 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
    *
    * @param factory - The claim condition factory.
    */
-  public async setClaimCondition(
-    tokenId: BigNumberish,
-    factory: ClaimConditionFactory,
-  ) {
+  public async setClaimCondition() {
+    // factory: ClaimConditionFactory, //tokenId: BigNumberish,
     /*
     TODO
     const conditions = factory.buildConditions();
@@ -281,8 +285,6 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ) {
-    /*
-    TODO
     const mintCondition = await this.getActiveClaimCondition(tokenId);
     const overrides = (await this.getCallOverrides()) || {};
     if (mintCondition.pricePerToken > 0) {
@@ -311,7 +313,6 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       }
     }
     await this.sendTransaction("claim", [tokenId, quantity, proofs], overrides);
-    */
   }
 
   public async burn(

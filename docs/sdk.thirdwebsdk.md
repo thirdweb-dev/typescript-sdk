@@ -27,6 +27,7 @@ export declare class ThirdwebSDK implements IThirdwebSdk
 |  [createSnapshot(leafs)](./sdk.thirdwebsdk.createsnapshot.md) |  |  |
 |  [getAppModule(address)](./sdk.thirdwebsdk.getappmodule.md) |  |  |
 |  [getApps()](./sdk.thirdwebsdk.getapps.md) |  | Call this to get the current apps. |
+|  [getBundleDropModule(address)](./sdk.thirdwebsdk.getbundledropmodule.md) |  | <b><i>(BETA)</i></b> |
 |  [getBundleModule(address)](./sdk.thirdwebsdk.getbundlemodule.md) |  |  |
 |  [getCollectionModule(address)](./sdk.thirdwebsdk.getcollectionmodule.md) |  |  |
 |  [getContractMetadata(address)](./sdk.thirdwebsdk.getcontractmetadata.md) |  |  |
