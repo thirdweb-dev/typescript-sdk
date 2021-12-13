@@ -435,7 +435,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
   public async claim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ) {
+  ): Promise<NFTMetadataOwner[]> {
     const mintCondition = await this.getActiveClaimCondition();
     const { metadata } = await this.getMetadata();
 
@@ -485,7 +485,22 @@ export class DropModule extends ModuleWithRoles<Drop> {
         }
       }
     }
-    await this.sendTransaction("claim", [quantity, proofs], overrides);
+
+    const receipt = await this.sendTransaction(
+      "claim",
+      [quantity, proofs],
+      overrides,
+    );
+    const event = this.parseEventLogs("Claimed", receipt?.logs);
+    const startingIndex: BigNumber = event.startTokenId;
+    const endingIndex = startingIndex.add(quantity);
+    const tokenIds = [];
+    for (let i = startingIndex; i.lt(endingIndex); i = i.add(1)) {
+      tokenIds.push(BigNumber.from(i.toString()));
+    }
+    return await Promise.all(
+      tokenIds.map(async (t) => await this.get(t.toString())),
+    );
   }
 
   public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {

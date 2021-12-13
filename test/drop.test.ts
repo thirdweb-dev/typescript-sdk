@@ -227,4 +227,26 @@ describe("Drop Module", async () => {
       console.log("Leaf verified =", leaf, verified);
     }
   });
+
+  it("should return the newly claimed token", async () => {
+    const factory = dropModule.getMintConditionsFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await dropModule.setClaimConditions(factory);
+    await dropModule.lazyMintBatch([
+      {
+        name: "test 0",
+      },
+      {
+        name: "test 1",
+      },
+      {
+        name: "test 2",
+      },
+    ]);
+
+    const token = await dropModule.claim(2);
+    assert.lengthOf(token, 2);
+  });
 });
