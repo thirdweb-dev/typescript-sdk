@@ -47,6 +47,9 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     // @internal (undocumented)
     protected connectContract(): ProtocolControl;
+    // Warning: (ae-forgotten-export) The symbol "BundleDropModuleMetadata" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-incompatible-release-tags) The symbol "deployBundleDropModule" is marked as @public, but its signature references "BundleDropModule" which is marked as @beta
+    deployBundleDropModule(metadata: BundleDropModuleMetadata): Promise<BundleDropModule>;
     // Warning: (ae-forgotten-export) The symbol "BundleModuleMetadata" needs to be exported by the entry point index.d.ts
     deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
     // Warning: (ae-forgotten-export) The symbol "CurrencyModuleMetadata" needs to be exported by the entry point index.d.ts
