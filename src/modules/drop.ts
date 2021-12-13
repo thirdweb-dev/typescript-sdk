@@ -329,6 +329,12 @@ export class DropModule extends ModuleWithRoles<Drop> {
   public async setClaimConditions(factory: ClaimConditionFactory) {
     const conditions = factory.buildConditions();
 
+    if (factory.allSnapshots().length === 0) {
+      return await this.sendTransaction("setPublicMintConditions", [
+        conditions,
+      ]);
+    }
+
     const merkleInfo: { [key: string]: string } = {};
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
@@ -435,7 +441,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
 
     const addressToClaim = await this.getSignerAddress();
 
-    if (mintCondition.merkleRoot) {
+    if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
       const snapshot = await this.storage.get(
         metadata?.merkle[mintCondition.merkleRoot.toString()],
       );
@@ -479,9 +485,6 @@ export class DropModule extends ModuleWithRoles<Drop> {
         }
       }
     }
-
-    console.log("Type of proofs = ", typeof proofs);
-    console.log(`Claiming ${quantity} tokens with proofs: ${proofs}`);
     await this.sendTransaction("claim", [quantity, proofs], overrides);
   }
 
