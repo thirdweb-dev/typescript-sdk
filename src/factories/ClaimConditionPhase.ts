@@ -26,6 +26,8 @@ export default class ClaimConditionPhase {
 
   private createSnapshot: (leafs: string[]) => Promise<SnapshotInfo>;
 
+  private _waitInSeconds: BigNumberish = 0;
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>) {
     this.createSnapshot = createSnapshotFunc;
@@ -128,7 +130,7 @@ export default class ClaimConditionPhase {
       currency: this._currencyAddress || AddressZero,
       maxMintSupply: this._maxQuantity,
 
-      waitTimeSecondsLimitPerTransaction: 0,
+      waitTimeSecondsLimitPerTransaction: this._waitInSeconds,
 
       // TODO: I don't understand this default value
       quantityLimitPerTransaction: this._quantityLimitPerTransaction,
@@ -137,5 +139,17 @@ export default class ClaimConditionPhase {
         ? this._merkleCondition.merkleRoot
         : this._merkleRootHash,
     };
+  }
+
+  /**
+   * Wait time enforced after calling `claim` before the next `claim` can be called.
+   *
+   * @param waitInSeconds - The wait time in seconds.
+   */
+  public async setWaitTimeBetweenClaims(
+    waitInSeconds: BigNumberish,
+  ): Promise<ClaimConditionPhase> {
+    this._waitInSeconds = waitInSeconds;
+    return this;
   }
 }
