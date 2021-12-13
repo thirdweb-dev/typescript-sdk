@@ -9,6 +9,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { getCurrencyValue, ModuleType, Role, RolesMap } from "../common";
+import { invariant } from "../common/invariant";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -257,34 +258,29 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
    *
    * @param factory - The claim condition factory.
    */
-  public async setClaimCondition() {
-    // factory: ClaimConditionFactory, //tokenId: BigNumberish,
-    /*
-    TODO
-    const conditions = factory.buildConditions();
-
-    const merkleInfo: { [key: string]: string } = {};
-    factory.allSnapshots().forEach((s) => {
-      merkleInfo[s.merkleRoot] = s.snapshotUri;
-    });
+  public async setClaimCondition(
+    tokenId: BigNumberish,
+    factory: ClaimConditionFactory,
+  ) {
+    const conditions = factory.buildConditions().map((c) => ({
+      startTimestamp: c.startTimestamp,
+      maxClaimableSupply: c.maxMintSupply,
+      supplyClaimed: 0,
+      quantityLimitPerTransaction: c.quantityLimitPerTransaction,
+      waitTimeInSecondsBetweenClaims: c.waitTimeSecondsLimitPerTransaction,
+      pricePerToken: c.pricePerToken,
+      currency: c.currency,
+      merkleRoot: c.merkleRoot,
+    }));
+    const overrides = (await this.getCallOverrides()) || {};
 
     const { metadata } = await this.getMetadata();
     invariant(metadata, "Metadata is not set, this should never happen");
-    metadata["merkle"] = merkleInfo;
-
-    const metatdataUri = await this.storage.upload(JSON.stringify(metadata));
-
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metatdataUri,
-      ]),
-      this.contract.interface.encodeFunctionData("setClaimConditions", [
-        tokenId,
-        conditions,
-      ]),
-    ];
-    return await this.sendTransaction("multicall", [encoded]);
-    */
+    await this.sendTransaction(
+      "setClaimConditions",
+      [tokenId, conditions],
+      overrides,
+    );
   }
 
   /**
@@ -439,5 +435,11 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       return metadata.metadata.fee_recipient;
     }
     return "";
+  }
+
+  public getClaimConditionsFactory(): ClaimConditionFactory {
+    const createSnapshotFunc = this.sdk.createSnapshot.bind(this.sdk);
+    const factory = new ClaimConditionFactory(createSnapshotFunc);
+    return factory;
   }
 }

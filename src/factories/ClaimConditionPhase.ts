@@ -122,7 +122,6 @@ export default class ClaimConditionPhase {
    * @internal
    */
   public buildPublicClaimCondition(): PublicMintCondition {
-    console.log("condition merkle = ", this._merkleCondition?.merkleRoot);
     return {
       startTimestamp: BigNumber.from(this._conditionStartTime.toString()),
       pricePerToken: this._price,
