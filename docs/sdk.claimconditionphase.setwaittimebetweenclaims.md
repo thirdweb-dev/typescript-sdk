@@ -9,7 +9,7 @@ Wait time enforced after calling `claim` before the next `claim` can be called.
 <b>Signature:</b>
 
 ```typescript
-setWaitTimeBetweenClaims(waitInSeconds: BigNumberish): Promise<ClaimConditionPhase>;
+setWaitTimeBetweenClaims(waitInSeconds: BigNumberish): ClaimConditionPhase;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ setWaitTimeBetweenClaims(waitInSeconds: BigNumberish): Promise<ClaimConditionPha
 
 <b>Returns:</b>
 
-Promise&lt;ClaimConditionPhase&gt;
+ClaimConditionPhase
 

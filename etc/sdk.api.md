@@ -193,6 +193,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     //
     // (undocumented)
     storage: IStorage;
+    totalSupply(tokenId: BigNumberish_2): Promise<BigNumber_2>;
     // (undocumented)
     transfer(to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
@@ -326,7 +327,7 @@ export class ClaimConditionPhase {
     setMerkleRoot(root: string): ClaimConditionPhase;
     setPrice(price: BigNumberish_2, tokenAddress?: string): ClaimConditionPhase;
     setSnapshot(addresses: string[]): Promise<ClaimConditionPhase>;
-    setWaitTimeBetweenClaims(waitInSeconds: BigNumberish_2): Promise<ClaimConditionPhase>;
+    setWaitTimeBetweenClaims(waitInSeconds: BigNumberish_2): ClaimConditionPhase;
 }
 
 // @public

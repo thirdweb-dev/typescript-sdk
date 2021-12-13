@@ -52,6 +52,7 @@ export declare class BundleDropModule extends ModuleWithRoles<BundleDrop>
 |  [setRestrictedTransfer(restricted)](./sdk.bundledropmodule.setrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |
 |  [setRoyaltyBps(amount)](./sdk.bundledropmodule.setroyaltybps.md) |  | <b><i>(BETA)</i></b> |
 |  [setSaleRecipient(tokenId, recipient)](./sdk.bundledropmodule.setsalerecipient.md) |  | <b><i>(BETA)</i></b> |
+|  [totalSupply(tokenId)](./sdk.bundledropmodule.totalsupply.md) |  | <b><i>(BETA)</i></b> Returns the total supply of a specific token |
 |  [transfer(to, tokenId, amount, data)](./sdk.bundledropmodule.transfer.md) |  | <b><i>(BETA)</i></b> |
 |  [transferFrom(from, to, tokenId, amount, data)](./sdk.bundledropmodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
 
