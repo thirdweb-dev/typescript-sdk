@@ -1,7 +1,10 @@
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
 import { ClaimProof, Snapshot, ThirdwebSDK } from "../src/index";
 import chai = require("chai");
+
+import { appModule, sdk, signers } from "./before.test";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
@@ -13,7 +16,6 @@ const { expect, assert } = chai;
 global.fetch = require("node-fetch");
 
 describe("Snapshots", async () => {
-  let sdk: ThirdwebSDK;
   let snapshot: Snapshot;
   let uri: string;
   let merkleRoot: string;
@@ -25,14 +27,15 @@ describe("Snapshots", async () => {
     "0x14fb3a9B317612ddc6d6Cc3c907CD9F2Aa091eE7",
   ];
 
-  beforeEach(async () => {
-    sdk = new ThirdwebSDK(
-      new ethers.Wallet(
-        process.env.PKEY,
-        ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com"),
-      ),
-    );
+  let adminWallet: SignerWithAddress,
+    samWallet: SignerWithAddress,
+    bobWallet: SignerWithAddress;
 
+  beforeEach(async () => {
+    [adminWallet, samWallet, bobWallet] = signers;
+  });
+
+  beforeEach(async () => {
     const result = await sdk.createSnapshot(leafs);
     snapshot = result.snapshot;
     uri = result.snapshotUri;
@@ -42,7 +45,7 @@ describe("Snapshots", async () => {
   it("should generate a valid merkle root from a list of addresses", async () => {
     assert.equal(
       merkleRoot,
-      "0x0254c7a9a0ab177ed354914766f6ee9b0c4a767067d774fd274749bdd6ff06f3",
+      "0xed194a7138dce33f7dfbcfa95492f4eb414fae6cf51e8994ad70d209579a609d",
     );
   });
 

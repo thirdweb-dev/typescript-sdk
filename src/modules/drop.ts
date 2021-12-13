@@ -7,13 +7,19 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
-import { ModuleType, Role, RolesMap } from "../common";
+import { JsonConvert } from "json2typescript";
+import { getCurrencyValue, ModuleType, Role, RolesMap } from "../common";
 import { invariant } from "../common/invariant";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
-import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
+import {
+  ClaimCondition,
+  PublicMintCondition,
+} from "../types/claim-conditions/PublicMintCondition";
+import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
+import { Snapshot } from "../types/snapshots/Snapshot";
 
 /**
  * @beta
@@ -81,25 +87,58 @@ export class DropModule extends ModuleWithRoles<Drop> {
     return { owner, metadata };
   }
 
-  public async getAll(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
-    return await Promise.all(
-      Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTMetadataOwner[]> {
+    const start = BigNumber.from(queryParams?.start || 0).toNumber();
+    const count = BigNumber.from(
+      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
+    ).toNumber();
+    const maxId = Math.min(
+      (await this.readOnlyContract.nextTokenId()).toNumber(),
+      start + count,
     );
-  }
-
-  public async getAllUnclaimed(): Promise<NFTMetadataOwner[]> {
-    const maxId = await this.readOnlyContract.nextTokenId();
-    const unmintedId = await this.readOnlyContract.nextMintTokenId();
     return await Promise.all(
-      Array.from(Array(maxId.sub(unmintedId).toNumber()).keys()).map((i) =>
-        this.get(unmintedId.add(i).toString()),
+      Array.from(Array(maxId - start).keys()).map((i) =>
+        this.get((start + i).toString()),
       ),
     );
   }
 
-  public async getAllClaimed(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.readOnlyContract.nextMintTokenId()).toNumber();
+  public async getAllUnclaimed(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTMetadataOwner[]> {
+    const start = BigNumber.from(queryParams?.start || 0).toNumber();
+    const count = BigNumber.from(
+      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
+    ).toNumber();
+    const maxId = BigNumber.from(
+      Math.min(
+        (await this.readOnlyContract.nextTokenId()).toNumber(),
+        start + count,
+      ),
+    );
+    const unmintedId = await this.readOnlyContract.nextMintTokenId();
+    return (
+      await Promise.all(
+        Array.from(Array(maxId.sub(unmintedId).toNumber()).keys()).map((i) =>
+          this.getTokenMetadata(unmintedId.add(i).toString()),
+        ),
+      )
+    ).map((metadata) => ({ owner: AddressZero, metadata }));
+  }
+
+  public async getAllClaimed(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTMetadataOwner[]> {
+    const start = BigNumber.from(queryParams?.start || 0).toNumber();
+    const count = BigNumber.from(
+      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
+    ).toNumber();
+    const maxId = Math.min(
+      (await this.readOnlyContract.nextMintTokenId()).toNumber(),
+      start + count,
+    );
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
@@ -121,17 +160,70 @@ export class DropModule extends ModuleWithRoles<Drop> {
     );
   }
 
+  private async transformResultToClaimCondition(
+    pm: any,
+  ): Promise<ClaimCondition> {
+    const cv = await getCurrencyValue(
+      this.providerOrSigner,
+      pm.currency,
+      pm.pricePerToken,
+    );
+    return {
+      startTimestamp: new Date(pm.startTimestamp.toNumber() * 1000),
+      maxMintSupply: pm.maxMintSupply.toString(),
+      currentMintSupply: pm.currentMintSupply.toString(),
+      availableSupply: BigNumber.from(pm.maxMintSupply)
+        .sub(pm.currentMintSupply)
+        .toString(),
+      quantityLimitPerTransaction: pm.quantityLimitPerTransaction.toString(),
+      waitTimeSecondsLimitPerTransaction:
+        pm.waitTimeSecondsLimitPerTransaction.toString(),
+      price: BigNumber.from(pm.pricePerToken),
+      pricePerToken: BigNumber.from(pm.pricePerToken),
+      currency: pm.currency,
+      currencyContract: pm.currency,
+      currencyMetadata: cv,
+      merkleRoot: pm.merkleRoot,
+    };
+  }
+
+  /**
+   * @deprecated - Use {@link DropModule.getActiveClaimCondition} instead
+   */
   public async getActiveMintCondition(): Promise<PublicMintCondition> {
     const index =
       await this.readOnlyContract.getLastStartedMintConditionIndex();
     return await this.readOnlyContract.mintConditions(index);
   }
 
+  public async getActiveClaimCondition(): Promise<ClaimCondition> {
+    const index =
+      await this.readOnlyContract.getLastStartedMintConditionIndex();
+    const mc = await this.readOnlyContract.mintConditions(index);
+    return await this.transformResultToClaimCondition(mc);
+  }
+
+  /**
+   * @deprecated - Use {@link DropModule.getAllClaimConditions} instead
+   */
   public async getAllMintConditions(): Promise<PublicMintCondition[]> {
     const conditions = [];
     for (let i = 0; ; i++) {
       try {
         conditions.push(await this.readOnlyContract.mintConditions(i));
+      } catch (e) {
+        break;
+      }
+    }
+    return conditions;
+  }
+
+  public async getAllClaimConditions(): Promise<ClaimCondition[]> {
+    const conditions = [];
+    for (let i = 0; ; i++) {
+      try {
+        const mc = await this.readOnlyContract.mintConditions(i);
+        conditions.push(await this.transformResultToClaimCondition(mc));
       } catch (e) {
         break;
       }
@@ -219,12 +311,19 @@ export class DropModule extends ModuleWithRoles<Drop> {
   }
 
   /**
+   * @deprecated - Use {@link DropModule.setClaimConditions} instead
+   */
+  public async setMintConditions(factory: ClaimConditionFactory) {
+    return this.setClaimConditions(factory);
+  }
+
+  /**
    * Sets public mint conditions for the next minting using the
    * claim condition factory.
    *
    * @param factory - The claim condition factory.
    */
-  public async setMintConditions(factory: ClaimConditionFactory) {
+  public async setClaimConditions(factory: ClaimConditionFactory) {
     const conditions = factory.buildConditions();
 
     const merkleInfo: { [key: string]: string } = {};
@@ -254,14 +353,21 @@ export class DropModule extends ModuleWithRoles<Drop> {
    *
    * @returns - A new claim condition factory
    */
-  public getMintConditionsFactory(): ClaimConditionFactory {
+  public getClaimConditionsFactory(): ClaimConditionFactory {
     const createSnapshotFunc = this.sdk.createSnapshot.bind(this.sdk);
     const factory = new ClaimConditionFactory(createSnapshotFunc);
     return factory;
   }
 
   /**
-   * @deprecated - Use the ClaimConditionFactory instead.
+   * @deprecated - Use the {@link DropModule.getClaimConditionsFactory} instead.
+   */
+  public getMintConditionsFactory(): ClaimConditionFactory {
+    return this.getClaimConditionsFactory();
+  }
+
+  /**
+   * @deprecated - Use the {@link DropModule.setClaimConditions} instead.
    */
   public async setPublicMintConditions(
     conditions: CreatePublicMintCondition[],
@@ -281,11 +387,69 @@ export class DropModule extends ModuleWithRoles<Drop> {
     await this.sendTransaction("setPublicMintConditions", [_conditions]);
   }
 
+  public async canClaim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<boolean> {
+    try {
+      const mintCondition = await this.getActiveMintCondition();
+      const overrides = (await this.getCallOverrides()) || {};
+      if (mintCondition.pricePerToken > 0) {
+        if (mintCondition.currency === AddressZero) {
+          overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
+            quantity,
+          );
+        } else {
+          const erc20 = ERC20__factory.connect(
+            mintCondition.currency,
+            this.providerOrSigner,
+          );
+          const owner = await this.getSignerAddress();
+          const spender = this.address;
+          const allowance = await erc20.allowance(owner, spender);
+          const totalPrice = BigNumber.from(mintCondition.pricePerToken).mul(
+            BigNumber.from(quantity),
+          );
+
+          if (allowance.lt(totalPrice)) {
+            // TODO throw allowance error, maybe check balance?
+          }
+        }
+      }
+      await this.readOnlyContract.callStatic.claim(quantity, proofs, overrides);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
   public async claim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    address?: string,
   ) {
     const mintCondition = await this.getActiveMintCondition();
+    const { metadata } = await this.getMetadata();
+
+    const addressToClaim = address ? address : await this.getSignerAddress();
+
+    if (mintCondition.merkleRoot) {
+      const snapshot = await this.storage.get(
+        metadata?.merkle[mintCondition.merkleRoot.toString()],
+      );
+      const jsonConvert = new JsonConvert();
+      const snapshotData = jsonConvert.deserializeObject(
+        JSON.parse(snapshot),
+        Snapshot,
+      );
+      const item = snapshotData.claims.find(
+        (c) => c.address === addressToClaim,
+      );
+      if (item === undefined) {
+        throw new Error("No claim found for this address");
+      }
+      proofs = item.proof;
+    }
     const overrides = (await this.getCallOverrides()) || {};
     if (mintCondition.pricePerToken > 0) {
       if (mintCondition.currency === AddressZero) {
@@ -312,6 +476,9 @@ export class DropModule extends ModuleWithRoles<Drop> {
         }
       }
     }
+
+    console.log("Type of proofs = ", typeof proofs);
+    console.log(`Claiming ${quantity} tokens with proofs: ${proofs}`);
     await this.sendTransaction("claim", [quantity, proofs], overrides);
   }
 

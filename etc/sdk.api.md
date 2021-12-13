@@ -488,21 +488,33 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
+    canClaim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<boolean>;
+    // (undocumented)
     claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): LazyNFT;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
+    // Warning: (ae-forgotten-export) The symbol "ClaimCondition" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
+    getActiveClaimCondition(): Promise<ClaimCondition>;
+    // @deprecated (undocumented)
     getActiveMintCondition(): Promise<PublicMintCondition>;
+    // Warning: (ae-forgotten-export) The symbol "QueryAllParams" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    getAll(): Promise<NFTMetadataOwner[]>;
+    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     // (undocumented)
-    getAllClaimed(): Promise<NFTMetadataOwner[]>;
+    getAllClaimConditions(): Promise<ClaimCondition[]>;
     // (undocumented)
+    getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    // @deprecated (undocumented)
     getAllMintConditions(): Promise<PublicMintCondition[]>;
     // (undocumented)
-    getAllUnclaimed(): Promise<NFTMetadataOwner[]>;
+    getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    getClaimConditionsFactory(): ClaimConditionFactory;
+    // @deprecated (undocumented)
     getMintConditionsFactory(): ClaimConditionFactory;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
@@ -534,8 +546,10 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setBaseTokenUri(uri: string): Promise<TransactionReceipt>;
+    setClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
     setMaxTotalSupply(amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // @deprecated (undocumented)
     setMintConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
@@ -959,6 +973,11 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
     prepareMetadata(metadata: MetadataURIOrObject): Promise<string>;
     revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
 }
+
+// Warning: (ae-internal-missing-underscore) The name "NATIVE_TOKEN_ADDRESS" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
 //

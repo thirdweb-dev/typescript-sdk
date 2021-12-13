@@ -9,6 +9,7 @@
 
 > Warning: This API is now obsolete.
 > 
+> - use [PublicClaimCondition](./sdk.publicclaimcondition.md)
 > 
 
 <b>Signature:</b>
