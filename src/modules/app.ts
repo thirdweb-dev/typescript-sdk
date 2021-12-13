@@ -717,6 +717,10 @@ export class AppModule
         await this.sdk.getForwarderAddress(),
         nativeTokenWrapperAddress,
         metadata.primarySaleRecipientAddress,
+        metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+        metadata.primarySaleFeeBasisPoints
+          ? metadata.primarySaleFeeBasisPoints
+          : 0,
       ],
       LazyMintERC1155__factory,
     );

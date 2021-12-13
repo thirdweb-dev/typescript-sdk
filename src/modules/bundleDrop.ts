@@ -134,7 +134,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
 
   public async getAllClaimConditions(tokenId: BigNumberish): Promise<any[]> {
     const claimCondition = await this.readOnlyContract.claimConditions(tokenId);
-    const count = claimCondition.nextConditionIndex.toNumber();
+    const count = claimCondition.totalConditionCount.toNumber();
     const conditions = [];
     for (let i = 0; i < count; i++) {
       conditions.push(
