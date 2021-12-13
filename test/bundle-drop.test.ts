@@ -12,12 +12,17 @@ global.fetch = require("node-fetch");
 describe("Bundle Drop Module", async () => {
   let bdModule: BundleDropModule;
 
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+  let adminWallet,
+    samWallet,
+    abbyWallet,
+    bobWallet,
+    w1,
+    w2,
+    w3,
+    w4: SignerWithAddress;
 
   before(() => {
-    [adminWallet, samWallet, bobWallet] = signers;
+    [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
   });
 
   beforeEach(async () => {
@@ -46,5 +51,42 @@ describe("Bundle Drop Module", async () => {
 
     const conditions = await bdModule.getAllClaimConditions(0);
     assert.lengthOf(conditions, 1);
+  });
+
+  it("allow all addresses in the merkle tree to claim", async () => {
+    console.log("Claim condition set");
+    console.log("Minting 100");
+    await bdModule.lazyMintBatch([
+      {
+        name: "test",
+        description: "test",
+      },
+    ]);
+
+    const factory = bdModule.getClaimConditionFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+      maxQuantity: 1000,
+    });
+    const testWallets: SignerWithAddress[] = [
+      bobWallet,
+      samWallet,
+      abbyWallet,
+      w1,
+      w2,
+      w3,
+      w4,
+    ];
+    const members = testWallets.map((w) => w.address);
+    await phase.setSnapshot(members);
+
+    console.log("Setting claim condition");
+    await bdModule.setClaimCondition("0", factory);
+
+    for (const member of testWallets) {
+      await sdk.setProviderOrSigner(member);
+      await bdModule.claim("0", 1);
+      console.log(`Address ${member.address} claimed successfully!`);
+    }
   });
 });

@@ -8,6 +8,7 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
   ModuleType,
@@ -21,6 +22,7 @@ import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
 import { ClaimCondition } from "../types/claim-conditions/PublicMintCondition";
+import { Snapshot } from "../types/snapshots";
 
 /**
  * @beta
@@ -284,15 +286,27 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       currency: c.currency,
       merkleRoot: c.merkleRoot,
     }));
-    const overrides = (await this.getCallOverrides()) || {};
+
+    const merkleInfo: { [key: string]: string } = {};
+    factory.allSnapshots().forEach((s) => {
+      merkleInfo[s.merkleRoot] = s.snapshotUri;
+    });
 
     const { metadata } = await this.getMetadata();
     invariant(metadata, "Metadata is not set, this should never happen");
-    await this.sendTransaction(
-      "setClaimConditions",
-      [tokenId, conditions],
-      overrides,
-    );
+    metadata["merkle"] = merkleInfo;
+
+    const metadataUri = await this.storage.upload(JSON.stringify(metadata));
+    const encoded = [
+      this.contract.interface.encodeFunctionData("setContractURI", [
+        metadataUri,
+      ]),
+      this.contract.interface.encodeFunctionData("setClaimConditions", [
+        tokenId,
+        conditions,
+      ]),
+    ];
+    return await this.sendTransaction("multicall", [encoded]);
   }
 
   /**
@@ -334,6 +348,28 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   ) {
     const mintCondition = await this.getActiveClaimCondition(tokenId);
     const overrides = (await this.getCallOverrides()) || {};
+
+    const addressToClaim = await this.getSignerAddress();
+
+    const { metadata } = await this.getMetadata();
+    if (mintCondition.merkleRoot) {
+      const snapshot = await this.storage.get(
+        metadata?.merkle[mintCondition.merkleRoot.toString()],
+      );
+      const jsonConvert = new JsonConvert();
+      const snapshotData = jsonConvert.deserializeObject(
+        JSON.parse(snapshot),
+        Snapshot,
+      );
+      const item = snapshotData.claims.find(
+        (c) => c.address === addressToClaim,
+      );
+      if (item === undefined) {
+        throw new Error("No claim found for this address");
+      }
+      proofs = item.proof;
+    }
+
     if (mintCondition.pricePerToken.gt(0)) {
       if (mintCondition.currency === AddressZero) {
         overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
