@@ -49,7 +49,7 @@ describe("Drop Module", async () => {
     const merkles: { [key: string]: string } = metadata["merkle"];
 
     expect(merkles).have.property(
-      "0x887a9d7f2b1fca2ff8c07e1e02d906bc2cda73495a8da7494165adcd81875164",
+      "0x299933cac28b9df1ae6dbf7f5d9814b5fe409a67795ed15dea6135b5fe78c6e3",
     );
 
     expect(merkles).have.property(
