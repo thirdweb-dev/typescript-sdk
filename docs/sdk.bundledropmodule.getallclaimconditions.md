@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-getAllClaimConditions(tokenId: BigNumberish): Promise<any[]>;
+getAllClaimConditions(tokenId: BigNumberish): Promise<ClaimCondition[]>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ getAllClaimConditions(tokenId: BigNumberish): Promise<any[]>;
 
 <b>Returns:</b>
 
-Promise&lt;any\[\]&gt;
+Promise&lt;ClaimCondition\[\]&gt;
 

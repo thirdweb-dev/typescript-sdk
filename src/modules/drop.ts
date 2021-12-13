@@ -3,6 +3,7 @@ import {
   LazyNFT as Drop,
   LazyNFT__factory as Drop__factory,
 } from "@3rdweb/contracts";
+import { PublicMintConditionStruct } from "@3rdweb/contracts/dist/LazyNFT";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -161,7 +162,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
   }
 
   private async transformResultToClaimCondition(
-    pm: any,
+    pm: PublicMintConditionStruct,
   ): Promise<ClaimCondition> {
     const cv = await getCurrencyValue(
       this.providerOrSigner,
@@ -169,7 +170,9 @@ export class DropModule extends ModuleWithRoles<Drop> {
       pm.pricePerToken,
     );
     return {
-      startTimestamp: new Date(pm.startTimestamp.toNumber() * 1000),
+      startTimestamp: new Date(
+        BigNumber.from(pm.startTimestamp).toNumber() * 1000,
+      ),
       maxMintSupply: pm.maxMintSupply.toString(),
       currentMintSupply: pm.currentMintSupply.toString(),
       availableSupply: BigNumber.from(pm.maxMintSupply)
@@ -392,9 +395,9 @@ export class DropModule extends ModuleWithRoles<Drop> {
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<boolean> {
     try {
-      const mintCondition = await this.getActiveMintCondition();
+      const mintCondition = await this.getActiveClaimCondition();
       const overrides = (await this.getCallOverrides()) || {};
-      if (mintCondition.pricePerToken > 0) {
+      if (mintCondition.pricePerToken.gt(0)) {
         if (mintCondition.currency === AddressZero) {
           overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
             quantity,
@@ -427,7 +430,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ) {
-    const mintCondition = await this.getActiveMintCondition();
+    const mintCondition = await this.getActiveClaimCondition();
     const { metadata } = await this.getMetadata();
 
     const addressToClaim = await this.getSignerAddress();
@@ -449,8 +452,9 @@ export class DropModule extends ModuleWithRoles<Drop> {
       }
       proofs = item.proof;
     }
+
     const overrides = (await this.getCallOverrides()) || {};
-    if (mintCondition.pricePerToken > 0) {
+    if (mintCondition.pricePerToken.gt(0)) {
       if (mintCondition.currency === AddressZero) {
         overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
           quantity,

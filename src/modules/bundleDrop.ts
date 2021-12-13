@@ -3,15 +3,17 @@ import {
   LazyMintERC1155 as BundleDrop,
   LazyMintERC1155__factory as BundleDrop__factory,
 } from "@3rdweb/contracts";
+import { ClaimConditionStruct } from "@3rdweb/contracts/dist/LazyMintERC1155";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
-import { ModuleType, Role, RolesMap } from "../common";
+import { getCurrencyValue, ModuleType, Role, RolesMap } from "../common";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
+import { ClaimCondition } from "../types/claim-conditions/PublicMintCondition";
 
 /**
  * @beta
@@ -70,6 +72,35 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     return BundleDropModule.moduleType;
   }
 
+  private async transformResultToClaimCondition(
+    pm: ClaimConditionStruct,
+  ): Promise<ClaimCondition> {
+    const cv = await getCurrencyValue(
+      this.providerOrSigner,
+      pm.currency,
+      pm.pricePerToken,
+    );
+    return {
+      startTimestamp: new Date(
+        BigNumber.from(pm.startTimestamp).toNumber() * 1000,
+      ),
+      maxMintSupply: pm.maxClaimableSupply.toString(),
+      currentMintSupply: pm.supplyClaimed.toString(),
+      availableSupply: BigNumber.from(pm.maxClaimableSupply)
+        .sub(pm.supplyClaimed)
+        .toString(),
+      quantityLimitPerTransaction: pm.quantityLimitPerTransaction.toString(),
+      waitTimeSecondsLimitPerTransaction:
+        pm.waitTimeInSecondsBetweenClaims.toString(),
+      price: BigNumber.from(pm.pricePerToken),
+      pricePerToken: BigNumber.from(pm.pricePerToken),
+      currency: pm.currency,
+      currencyContract: pm.currency,
+      currencyMetadata: cv,
+      merkleRoot: pm.merkleRoot,
+    };
+  }
+
   private async getTokenMetadata(tokenId: string): Promise<NFTMetadata> {
     return await getTokenMetadata(
       this.readOnlyContract,
@@ -125,14 +156,20 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     );
   }
 
-  public async getActiveClaimCondition(tokenId: BigNumberish): Promise<any> {
+  public async getActiveClaimCondition(
+    tokenId: BigNumberish,
+  ): Promise<ClaimCondition> {
     const index = await this.readOnlyContract.getIndexOfActiveCondition(
       tokenId,
     );
-    return await this.readOnlyContract.getClaimConditionAtIndex(tokenId, index);
+    return this.transformResultToClaimCondition(
+      await this.readOnlyContract.getClaimConditionAtIndex(tokenId, index),
+    );
   }
 
-  public async getAllClaimConditions(tokenId: BigNumberish): Promise<any[]> {
+  public async getAllClaimConditions(
+    tokenId: BigNumberish,
+  ): Promise<ClaimCondition[]> {
     const claimCondition = await this.readOnlyContract.claimConditions(tokenId);
     const count = claimCondition.totalConditionCount.toNumber();
     const conditions = [];
@@ -141,7 +178,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
         await this.readOnlyContract.getClaimConditionAtIndex(tokenId, i),
       );
     }
-    return conditions;
+    return Promise.all(
+      conditions.map((c) => this.transformResultToClaimCondition(c)),
+    );
   }
 
   public async getSaleRecipient(tokenId: BigNumberish): Promise<string> {
@@ -287,7 +326,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   ) {
     const mintCondition = await this.getActiveClaimCondition(tokenId);
     const overrides = (await this.getCallOverrides()) || {};
-    if (mintCondition.pricePerToken > 0) {
+    if (mintCondition.pricePerToken.gt(0)) {
       if (mintCondition.currency === AddressZero) {
         overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
           quantity,

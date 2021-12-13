@@ -1,7 +1,7 @@
 import { ERC20__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { formatUnits } from "@ethersproject/units";
-import { BigNumber } from "ethers";
+import { BigNumberish } from "ethers";
 import { ProviderOrSigner } from "../core/types";
 
 /**
@@ -74,7 +74,7 @@ export async function getCurrencyMetadata(
 export async function getCurrencyValue(
   providerOrSigner: ProviderOrSigner,
   asset: string,
-  price: BigNumber,
+  price: BigNumberish,
 ): Promise<CurrencyValue> {
   const metadata = await getCurrencyMetadata(providerOrSigner, asset);
   return {

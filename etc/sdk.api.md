@@ -146,12 +146,14 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     protected connectContract(): LazyMintERC1155;
     // (undocumented)
     get(tokenId: string): Promise<BundleDropMetadata>;
+    // Warning: (ae-forgotten-export) The symbol "ClaimCondition" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    getActiveClaimCondition(tokenId: BigNumberish_2): Promise<any>;
+    getActiveClaimCondition(tokenId: BigNumberish_2): Promise<ClaimCondition>;
     // (undocumented)
     getAll(): Promise<BundleDropMetadata[]>;
     // (undocumented)
-    getAllClaimConditions(tokenId: BigNumberish_2): Promise<any[]>;
+    getAllClaimConditions(tokenId: BigNumberish_2): Promise<ClaimCondition[]>;
     getClaimConditionFactory(): ClaimConditionFactory;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
@@ -495,8 +497,6 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     protected connectContract(): LazyNFT;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
-    // Warning: (ae-forgotten-export) The symbol "ClaimCondition" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     getActiveClaimCondition(): Promise<ClaimCondition>;
     // @deprecated (undocumented)
@@ -609,7 +609,7 @@ export function getCurrencyMetadata(providerOrSigner: ProviderOrSigner, asset: s
 // Warning: (ae-internal-missing-underscore) The name "getCurrencyValue" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getCurrencyValue(providerOrSigner: ProviderOrSigner, asset: string, price: BigNumber_2): Promise<CurrencyValue>;
+export function getCurrencyValue(providerOrSigner: ProviderOrSigner, asset: string, price: BigNumberish_2): Promise<CurrencyValue>;
 
 // Warning: (ae-internal-missing-underscore) The name "getGasPriceForChain" should be prefixed with an underscore because the declaration is marked as @internal
 //
