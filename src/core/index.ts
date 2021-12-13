@@ -42,7 +42,8 @@ import {
 } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const keccak256 = require("keccak256");
+const keccak256 = ethers.utils.keccak256;
+// const keccak256 = require("keccak256");
 
 /**
  * @internal
