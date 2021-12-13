@@ -89,4 +89,45 @@ describe("Bundle Drop Module", async () => {
       console.log(`Address ${member.address} claimed successfully!`);
     }
   });
+
+  it("should return the newly minted tokens", async () => {
+    const tokens = [
+      {
+        name: "test 0",
+      },
+      {
+        name: "test 1",
+      },
+      {
+        name: "test 2",
+      },
+      {
+        name: "test 3",
+      },
+      {
+        name: "test 4",
+      },
+    ];
+    const result = await bdModule.lazyMintBatch(tokens);
+    assert.lengthOf(result, tokens.length);
+    for (const token of tokens) {
+      const found = result.find((t) => t.metadata.name === token.name);
+      assert.isDefined(found);
+    }
+
+    const moreTokens = [
+      {
+        name: "test 5",
+      },
+      {
+        name: "test 6",
+      },
+    ];
+    const moreResult = await bdModule.lazyMintBatch(moreTokens);
+    assert.lengthOf(moreResult, moreTokens.length);
+    for (const token of moreTokens) {
+      const found = moreResult.find((t) => t.metadata.name === token.name);
+      assert.isDefined(found);
+    }
+  });
 });

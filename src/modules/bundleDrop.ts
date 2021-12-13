@@ -215,14 +215,28 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   }
 
   // write functions
-  public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
+  public async lazyMintBatch(
+    metadatas: MetadataURIOrObject[],
+  ): Promise<BundleDropMetadata[]> {
     const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
     const baseUri = await this.storage.uploadMetadataBatch(
       metadatas,
       this.address,
       startFileNumber.toNumber(),
     );
-    await this.sendTransaction("lazyMint", [metadatas.length, baseUri]);
+    const receipt = await this.sendTransaction("lazyMint", [
+      metadatas.length,
+      baseUri,
+    ]);
+    const event = this.parseEventLogs("LazyMintedTokens", receipt?.logs);
+    const [startingIndex, endingIndex]: BigNumber[] = event;
+    const tokenIds = [];
+    for (let i = startingIndex; i.lte(endingIndex); i = i.add(1)) {
+      tokenIds.push(BigNumber.from(i.toString()));
+    }
+    return await Promise.all(
+      tokenIds.map(async (t) => await this.get(t.toString())),
+    );
   }
 
   public async setSaleRecipient(
