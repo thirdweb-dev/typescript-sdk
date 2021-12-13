@@ -7,6 +7,7 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { JsonConvert } from "json2typescript";
 import { getCurrencyValue, ModuleType, Role, RolesMap } from "../common";
 import { invariant } from "../common/invariant";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
@@ -18,6 +19,7 @@ import {
   PublicMintCondition,
 } from "../types/claim-conditions/PublicMintCondition";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
+import { Snapshot } from "../types/snapshots/Snapshot";
 
 /**
  * @beta
@@ -424,8 +426,30 @@ export class DropModule extends ModuleWithRoles<Drop> {
   public async claim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    address?: string,
   ) {
     const mintCondition = await this.getActiveMintCondition();
+    const { metadata } = await this.getMetadata();
+
+    const addressToClaim = address ? address : await this.getSignerAddress();
+
+    if (mintCondition.merkleRoot) {
+      const snapshot = await this.storage.get(
+        metadata?.merkle[mintCondition.merkleRoot.toString()],
+      );
+      const jsonConvert = new JsonConvert();
+      const snapshotData = jsonConvert.deserializeObject(
+        JSON.parse(snapshot),
+        Snapshot,
+      );
+      const item = snapshotData.claims.find(
+        (c) => c.address === addressToClaim,
+      );
+      if (item === undefined) {
+        throw new Error("No claim found for this address");
+      }
+      proofs = item.proof;
+    }
     const overrides = (await this.getCallOverrides()) || {};
     if (mintCondition.pricePerToken > 0) {
       if (mintCondition.currency === AddressZero) {
@@ -452,6 +476,9 @@ export class DropModule extends ModuleWithRoles<Drop> {
         }
       }
     }
+
+    console.log("Type of proofs = ", typeof proofs);
+    console.log(`Claiming ${quantity} tokens with proofs: ${proofs}`);
     await this.sendTransaction("claim", [quantity, proofs], overrides);
   }
 

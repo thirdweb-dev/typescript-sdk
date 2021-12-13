@@ -45,7 +45,7 @@ describe("Snapshots", async () => {
   it("should generate a valid merkle root from a list of addresses", async () => {
     assert.equal(
       merkleRoot,
-      "0x0254c7a9a0ab177ed354914766f6ee9b0c4a767067d774fd274749bdd6ff06f3",
+      "0xed194a7138dce33f7dfbcfa95492f4eb414fae6cf51e8994ad70d209579a609d",
     );
   });
 
