@@ -426,12 +426,11 @@ export class DropModule extends ModuleWithRoles<Drop> {
   public async claim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-    address?: string,
   ) {
     const mintCondition = await this.getActiveMintCondition();
     const { metadata } = await this.getMetadata();
 
-    const addressToClaim = address ? address : await this.getSignerAddress();
+    const addressToClaim = await this.getSignerAddress();
 
     if (mintCondition.merkleRoot) {
       const snapshot = await this.storage.get(

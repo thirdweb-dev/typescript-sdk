@@ -132,7 +132,7 @@ describe("Drop Module", async () => {
     console.log("Claiming");
 
     for (const member of members) {
-      await dropModule.claim(1, [], member);
+      await dropModule.claim(1, []);
       console.log(`Address ${member} claimed successfully!`);
     }
   });

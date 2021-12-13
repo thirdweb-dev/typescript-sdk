@@ -1,4 +1,4 @@
-import { keccak256 } from "@ethersproject/keccak256";
+import keccak256 from "keccak256";
 import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
@@ -43,7 +43,6 @@ import {
 } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const keccak256 = require("keccak256");
 
 /**
  * @internal
@@ -486,17 +485,14 @@ export class ThirdwebSDK implements IThirdwebSdk {
       throw new DuplicateLeafsError();
     }
 
-    const hashedLeafs = leafs.map((l) => keccak256(l));
-    const tree = new MerkleTree(hashedLeafs, keccak256, {
-      sort: true,
+    const tree = new MerkleTree(leafs, keccak256, {
+      sortPairs: true,
     });
 
     const snapshot: Snapshot = {
       merkleRoot: tree.getHexRoot(),
       claims: leafs.map((l): ClaimProof => {
-        const proof = tree
-          .getProof(keccak256(l))
-          .map((entry) => `0x${entry.data.toString("hex")}`);
+        const proof = tree.getHexProof(keccak256(l));
         return {
           address: l,
           proof,
