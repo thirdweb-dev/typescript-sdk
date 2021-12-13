@@ -155,6 +155,8 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     // (undocumented)
     getAllClaimConditions(tokenId: BigNumberish_2): Promise<ClaimCondition[]>;
     getClaimConditionFactory(): ClaimConditionFactory;
+    // (undocumented)
+    getClaimConditionsFactory(): ClaimConditionFactory;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
@@ -174,7 +176,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
-    setClaimCondition(): Promise<void>;
+    setClaimCondition(tokenId: BigNumberish_2, factory: ClaimConditionFactory): Promise<void>;
     // (undocumented)
     setDefaultSaleRecipient(recipient: string): Promise<TransactionReceipt>;
     // (undocumented)

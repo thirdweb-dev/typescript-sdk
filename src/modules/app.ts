@@ -1,4 +1,3 @@
-import { ChainId } from "./../common/chain";
 import {
   Coin__factory,
   DataStore__factory,

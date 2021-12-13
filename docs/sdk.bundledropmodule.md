@@ -37,6 +37,7 @@ export declare class BundleDropModule extends ModuleWithRoles<BundleDrop>
 |  [getAll()](./sdk.bundledropmodule.getall.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllClaimConditions(tokenId)](./sdk.bundledropmodule.getallclaimconditions.md) |  | <b><i>(BETA)</i></b> |
 |  [getClaimConditionFactory()](./sdk.bundledropmodule.getclaimconditionfactory.md) |  | <b><i>(BETA)</i></b> Creates a claim condition factory |
+|  [getClaimConditionsFactory()](./sdk.bundledropmodule.getclaimconditionsfactory.md) |  | <b><i>(BETA)</i></b> |
 |  [getOwned(\_address)](./sdk.bundledropmodule.getowned.md) |  | <b><i>(BETA)</i></b> <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
 |  [getRoyaltyBps()](./sdk.bundledropmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.bundledropmodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |
@@ -44,7 +45,7 @@ export declare class BundleDropModule extends ModuleWithRoles<BundleDrop>
 |  [isApproved(address, operator)](./sdk.bundledropmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
 |  [lazyMintBatch(metadatas)](./sdk.bundledropmodule.lazymintbatch.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.bundledropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
-|  [setClaimCondition()](./sdk.bundledropmodule.setclaimcondition.md) |  | <b><i>(BETA)</i></b> Sets public claim conditions for the next minting using the claim condition factory. |
+|  [setClaimCondition(tokenId, factory)](./sdk.bundledropmodule.setclaimcondition.md) |  | <b><i>(BETA)</i></b> Sets public claim conditions for the next minting using the claim condition factory. |
 |  [setDefaultSaleRecipient(recipient)](./sdk.bundledropmodule.setdefaultsalerecipient.md) |  | <b><i>(BETA)</i></b> |
 |  [setModuleMetadata(metadata)](./sdk.bundledropmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
 |  [setPublicClaimConditions(tokenId, conditions)](./sdk.bundledropmodule.setpublicclaimconditions.md) |  | <b><i>(BETA)</i></b> |
