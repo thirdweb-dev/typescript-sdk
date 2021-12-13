@@ -252,10 +252,13 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     data: BytesLike = [0],
   ): Promise<TransactionReceipt> {
     const from = await this.getSignerAddress();
-    return await this.sendTransaction(
-      "safeTransferFrom(address,address,uint256)",
-      [from, to, tokenId, amount, data],
-    );
+    return await this.sendTransaction("safeTransferFrom", [
+      from,
+      to,
+      tokenId,
+      amount,
+      data,
+    ]);
   }
 
   /**
