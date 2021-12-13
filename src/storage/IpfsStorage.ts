@@ -56,15 +56,13 @@ export default class IpfsStorage implements IStorage {
 
     files.forEach((file, i) => {
       const filepath = `files/${fileStartNumber + i}`;
-      data.append(
-        `file`,
-        file as any,
-        typeof window === "undefined"
-          ? ({
-              filepath,
-            } as unknown as string)
-          : filepath,
-      );
+      if (typeof window === "undefined") {
+        data.append("file", file as any, { filepath } as any);
+      } else {
+        // browser does blob things, filepath is parsed differently on browser vs node.
+        // pls pinata?
+        data.append("file", new Blob([file]), filepath);
+      }
     });
 
     data.append("pinataMetadata", JSON.stringify(metadata));
