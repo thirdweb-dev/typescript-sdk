@@ -1,4 +1,3 @@
-import { keccak256 } from "@ethersproject/keccak256";
 import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
@@ -482,9 +481,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     const snapshot: Snapshot = {
       merkleRoot: tree.getHexRoot(),
       claims: leafs.map((l): ClaimProof => {
-        const proof = tree
-          .getProof(keccak256(l))
-          .map((entry) => `0x${entry.data.toString("hex")}`);
+        const proof = tree.getHexProof(keccak256(l));
         return {
           address: l,
           proof,

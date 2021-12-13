@@ -448,7 +448,8 @@ export class DropModule extends ModuleWithRoles<Drop> {
       if (item === undefined) {
         throw new Error("No claim found for this address");
       }
-      proofs = item.proof;
+      proofs = item.proof.map((p) => p);
+      console.log("Merkle root =", snapshotData.merkleRoot);
     }
     const overrides = (await this.getCallOverrides()) || {};
     if (mintCondition.pricePerToken > 0) {

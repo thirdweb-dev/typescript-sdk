@@ -17,6 +17,7 @@
     // linter checks for common issues
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false,
     // noUnused* overlap with @typescript-eslint/no-unused-vars, can disable if duplicative
     "noUnusedLocals": true,
     "noUnusedParameters": true,

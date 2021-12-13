@@ -1,12 +1,12 @@
-import { CollectionModuleMetadata } from "..";
 import { ModuleType } from "../../common/module-type";
 import CommonModuleMetadata from "./CommonModuleMetadata";
+import BundleModuleMetadata from "./BundleModuleMetadata";
 
-export type AllModuleMetadata = CollectionModuleMetadata | CommonModuleMetadata;
+export type AllModuleMetadata = BundleModuleMetadata | CommonModuleMetadata;
 
 // TODO: Create metadata mapings for all modules
 export type ModuleMetadataMap = {
-  [ModuleType.COLLECTION]: CollectionModuleMetadata;
+  [ModuleType.COLLECTION]: BundleModuleMetadata;
   [ModuleType.ACCESS_NFT]: CommonModuleMetadata;
   [ModuleType.CURRENCY]: CommonModuleMetadata;
   [ModuleType.DATASTORE]: CommonModuleMetadata;

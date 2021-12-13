@@ -8,7 +8,9 @@
       "noImplicitAny": false,
       "removeComments": true,
       "inlineSourceMap": true,
-      "moduleResolution": "node"
+      "moduleResolution": "node",
+      "strict": false,
+      "allowSyntheticDefaultImports": true
     },
     "include": ["test/**/*.ts"]
   }
