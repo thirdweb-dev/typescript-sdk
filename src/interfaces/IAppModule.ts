@@ -1,6 +1,7 @@
 import { CollectionModule } from "../modules/collection";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
+import { BundleDropModule } from "../modules/bundleDrop";
 import { MarketModule } from "../modules/market";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
@@ -10,6 +11,7 @@ import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetada
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
 import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
 import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
+import BundleDropModuleMetadata from "../types/module-deployments/BundleDropModuleMetadata";
 import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetadata";
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
@@ -32,6 +34,10 @@ export default interface IAppModule {
   deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
 
   deployDropModule(metadata: DropModuleMetadata): Promise<DropModule>;
+
+  deployBundleDropModule(
+    metadata: BundleDropModuleMetadata,
+  ): Promise<BundleDropModule>;
 
   deployDatastoreModule(
     metadata: DatastoreModuleMetadata,

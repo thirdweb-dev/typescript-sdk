@@ -91,7 +91,7 @@ describe("IPFS Uploads", async () => {
     const serialized = sampleObjects.map((o) => Buffer.from(JSON.stringify(o)));
     const cid = await sdk.getStorage().uploadBatch(serialized);
     for (const object of sampleObjects) {
-      const fetched = await sdk.getStorage().get(`ipfs://${cid}/${object.id}`);
+      const fetched = await sdk.getStorage().get(`${cid}${object.id}`);
       const parsed = JSON.parse(fetched);
       assert.equal(parsed.description, object.description);
       assert.equal(parsed.id, object.id);

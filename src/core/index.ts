@@ -1,8 +1,9 @@
 import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
-import { SHA256 } from "crypto-js";
 import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
 import { JsonConvert } from "json2typescript";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+import * as keccak256 from "keccak256";
 import MerkleTree from "merkletreejs";
 import type { C } from "ts-toolbelt";
 import {
@@ -21,6 +22,7 @@ import { ISDKOptions, IThirdwebSdk } from "../interfaces";
 import IStorage from "../interfaces/IStorage";
 import { AppModule } from "../modules/app";
 import { BundleModule } from "../modules/bundle";
+import { BundleDropModule } from "../modules/bundleDrop";
 import { CollectionModule } from "../modules/collection";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
@@ -54,7 +56,8 @@ export type AnyContract =
   | typeof RegistryModule
   | typeof DropModule
   | typeof DatastoreModule
-  | typeof SplitsModule;
+  | typeof SplitsModule
+  | typeof BundleDropModule;
 
 /**
  * The entrypoint to the SDK.
@@ -368,6 +371,16 @@ export class ThirdwebSDK implements IThirdwebSdk {
   }
 
   /**
+   * @beta
+   *
+   * @param address - The contract address of the given BundleDrop module.
+   * @returns The Drop Module.
+   */
+  public getBundleDropModule(address: string): BundleDropModule {
+    return this.getOrCreateModule(address, BundleDropModule);
+  }
+
+  /**
    * @alpha
    *
    * @param address - The contract address of the given Royalty module.
@@ -471,17 +484,15 @@ export class ThirdwebSDK implements IThirdwebSdk {
       throw new DuplicateLeafsError();
     }
 
-    const hashedLeafs = leafs.map((l) => SHA256(l).toString());
-    const tree = new MerkleTree(hashedLeafs, SHA256, {
-      sortPairs: true,
+    const hashedLeafs = leafs.map((l) => keccak256(l));
+    const tree = new MerkleTree(hashedLeafs, keccak256, {
+      sort: true,
     });
 
     const snapshot: Snapshot = {
-      merkleRoot: tree.getRoot().toString("hex"),
+      merkleRoot: tree.getHexRoot(),
       claims: leafs.map((l): ClaimProof => {
-        const proof = tree
-          .getProof(SHA256(l).toString())
-          .map((p) => p.data.toString("hex") as string);
+        const proof = tree.getHexProof(keccak256(l));
         return {
           address: l,
           proof,
@@ -495,7 +506,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     const uri = await this.storage.upload(serializedSnapshot);
 
     return {
-      merkleRoot: `0x${tree.getRoot().toString("hex")}`,
+      merkleRoot: tree.getHexRoot(),
       snapshotUri: uri,
       snapshot,
     };

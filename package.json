@@ -1,6 +1,6 @@
 {
   "name": "@3rdweb/sdk",
-  "version": "1.24.0",
+  "version": "1.24.6-0",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -67,12 +67,11 @@
     "ethers": "^5.4.6"
   },
   "dependencies": {
-    "@3rdweb/contracts": "^1.13.1",
+    "@3rdweb/contracts": "1.15.0-5",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/constants": "^5.5.0",
     "@ethersproject/contracts": "^5.5.0",
-    "@ethersproject/keccak256": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
     "@web-std/file": "^3.0.0",
@@ -81,6 +80,7 @@
     "eth-permit": "^0.2.1",
     "form-data": "^4.0.0",
     "json2typescript": "^1.5.0-rc.0",
+    "keccak256": "^1.0.6",
     "merkletreejs": "^0.2.24",
     "node-fetch": "^2.6.5",
     "ts-enum-util": "^4.0.2",
