@@ -442,4 +442,14 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     const factory = new ClaimConditionFactory(createSnapshotFunc);
     return factory;
   }
+
+  /**
+   * Returns the total supply of a specific token
+   *
+   * @param tokenId - The token ID to get the total supply of
+   */
+
+  public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
+    return await this.readOnlyContract.totalSupply(tokenId);
+  }
 }
