@@ -485,9 +485,13 @@ export class ThirdwebSDK implements IThirdwebSdk {
       throw new DuplicateLeafsError();
     }
 
-    const tree = new MerkleTree(leafs, keccak256, {
-      sortPairs: true,
-    });
+    const tree = new MerkleTree(
+      leafs.map((l) => keccak256(l)),
+      keccak256,
+      {
+        sortPairs: true,
+      },
+    );
 
     const snapshot: Snapshot = {
       merkleRoot: tree.getHexRoot(),
