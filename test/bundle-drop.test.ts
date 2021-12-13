@@ -130,4 +130,26 @@ describe("Bundle Drop Module", async () => {
       assert.isDefined(found);
     }
   });
+
+  it("should allow a default claim condition to be used to claim", async () => {
+    await bdModule.lazyMintBatch([
+      {
+        name: "test 0",
+      },
+      {
+        name: "test 1",
+      },
+      {
+        name: "test 2",
+      },
+    ]);
+
+    const factory = bdModule.getClaimConditionFactory();
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await bdModule.setClaimCondition("0", factory);
+    const token = await bdModule.claim("0", 1);
+    console.log(token);
+  });
 });

@@ -301,6 +301,13 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       merkleRoot: c.merkleRoot,
     }));
 
+    if (factory.allSnapshots().length === 0) {
+      return await this.sendTransaction("setClaimConditions", [
+        tokenId,
+        conditions,
+      ]);
+    }
+
     const merkleInfo: { [key: string]: string } = {};
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
@@ -366,7 +373,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     const addressToClaim = await this.getSignerAddress();
 
     const { metadata } = await this.getMetadata();
-    if (mintCondition.merkleRoot) {
+    if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
       const snapshot = await this.storage.get(
         metadata?.merkle[mintCondition.merkleRoot.toString()],
       );
