@@ -286,6 +286,7 @@ export class AppModule
       ModuleType.MARKET,
       ModuleType.DROP,
       ModuleType.DATASTORE,
+      ModuleType.BUNDLE_DROP,
     ];
     return (
       await Promise.all(
