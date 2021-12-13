@@ -2,6 +2,7 @@ import {
   Coin__factory,
   DataStore__factory,
   ERC20__factory,
+  LazyMintERC1155__factory,
   LazyNFT__factory,
   Market__factory,
   NFTCollection__factory,
@@ -23,6 +24,7 @@ import {
   Role,
   RolesMap,
 } from "../common";
+import { getNativeTokenByChainId } from "../common/address";
 import { getContractMetadata } from "../common/contract";
 import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
@@ -703,10 +705,9 @@ export class AppModule
         await this.getSignerAddress(),
       );
 
-    const nativeTokenWrapperByChainId = {
-      1: "0x0000000000000000000000000000000000000000",
-    };
-    const nativeTokenWrapperAddress = nativeTokenWrapperByChainId[1];
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
 
     const address = await this._deployModule(
       ModuleType.BUNDLE_DROP,
@@ -717,7 +718,7 @@ export class AppModule
         nativeTokenWrapperAddress,
         metadata.primarySaleRecipientAddress,
       ],
-      LazyNFT__factory,
+      LazyMintERC1155__factory,
     );
 
     return this.sdk.getBundleDropModule(address);
