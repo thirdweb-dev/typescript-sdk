@@ -15,6 +15,6 @@ export interface ProposalExecution
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [data](./sdk.proposalexecution.data.md) | BytesLike |  |
-|  [to](./sdk.proposalexecution.to.md) | string |  |
-|  [value](./sdk.proposalexecution.value.md) | BigNumberish |  |
+|  [to](./sdk.proposalexecution.to.md) | string | The address of the contract that the proposal will execute a transaction on. If the proposal is sending a token to a wallet, this address should be the address of the wallet that will be receiving the tokens. |
+|  [value](./sdk.proposalexecution.value.md) | BigNumberish | The amount of a native that may be sent if a proposal is executing a token transfer. |
 

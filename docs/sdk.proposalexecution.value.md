@@ -4,6 +4,8 @@
 
 ## ProposalExecution.value property
 
+The amount of a native that may be sent if a proposal is executing a token transfer.
+
 <b>Signature:</b>
 
 ```typescript

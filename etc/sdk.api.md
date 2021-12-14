@@ -1195,9 +1195,7 @@ export interface Proposal {
 export interface ProposalExecution {
     // (undocumented)
     data: BytesLike;
-    // (undocumented)
     to: string;
-    // (undocumented)
     value: BigNumberish_2;
 }
 
@@ -1388,7 +1386,7 @@ export class VoteModule extends Module<VotingGovernor> {
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
-    propose(description: string, executions: ProposalExecution[]): Promise<void>;
+    propose(description: string, executions: ProposalExecution[]): Promise<BigNumber_2>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)

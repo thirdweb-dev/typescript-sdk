@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-propose(description: string, executions: ProposalExecution[]): Promise<void>;
+propose(description: string, executions: ProposalExecution[]): Promise<BigNumber>;
 ```
 
 ## Parameters
@@ -19,5 +19,5 @@ propose(description: string, executions: ProposalExecution[]): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;BigNumber&gt;
 
