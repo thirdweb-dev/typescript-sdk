@@ -1,7 +1,6 @@
-
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { RolesMap } from "../src/index";
-import { appModule, nftmodule, sdk, signers } from "./before.test";
+import { NFTModule, RolesMap } from "../src/index";
+import { appModule, sdk, signers } from "./before.test";
 
 import { expect, assert } from "chai";
 
@@ -9,8 +8,9 @@ global.fetch = require("node-fetch");
 
 const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
 
-
 describe("Roles Module", async () => {
+  let nftModule: NFTModule;
+
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -21,6 +21,14 @@ describe("Roles Module", async () => {
 
   beforeEach(async () => {
     sdk.setProviderOrSigner(adminWallet);
+  });
+  beforeEach(async () => {
+    sdk.setProviderOrSigner(adminWallet);
+
+    nftModule = await appModule.deployNftModule({
+      name: "NFT Module",
+      sellerFeeBasisPoints: 1000,
+    });
   });
 
   it("should return all assigned roles", async () => {
