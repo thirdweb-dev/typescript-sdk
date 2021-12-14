@@ -6,8 +6,6 @@ import { expect, assert } from "chai";
 
 global.fetch = require("node-fetch");
 
-const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
-
 describe("Roles Module", async () => {
   let nftModule: NFTModule;
 
@@ -25,10 +23,14 @@ describe("Roles Module", async () => {
   beforeEach(async () => {
     sdk.setProviderOrSigner(adminWallet);
 
-    nftModule = await appModule.deployNftModule({
-      name: "NFT Module",
-      sellerFeeBasisPoints: 1000,
-    });
+    nftModule = sdk.getNFTModule(
+      await appModule
+        .deployNftModule({
+          name: "NFT Module",
+          sellerFeeBasisPoints: 1000,
+        })
+        .then((m) => m.address),
+    );
   });
 
   it("should return all assigned roles", async () => {
@@ -54,7 +56,7 @@ describe("Roles Module", async () => {
 
   it("should override current roles in the contract", async () => {
     await nftModule.setAllRoleMembers({
-      admin: ["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"],
+      admin: [adminWallet.address],
       minter: [
         "0x553C5E856801b5876e80D32a192086b2035286C1",
         "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
@@ -90,7 +92,7 @@ describe("Roles Module", async () => {
   it("Replace all roles - confirm that all roles were replaced (not just added)", async () => {
     await nftModule.setAllRoleMembers({
       admin: [
-        "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+        adminWallet.address,
         "0x553C5E856801b5876e80D32a192086b2035286C1",
       ],
       minter: [
