@@ -21,7 +21,7 @@ import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { uploadMetadata } from "../common/ipfs";
 import { ModuleType } from "../common/module-type";
-import { getRoleHash, Role } from "../common/role";
+import { getRoleHash, Role, SetAllRoles } from "../common/role";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import { ThirdwebSDK } from "./index";
@@ -342,7 +342,6 @@ export class Module<TContract extends BaseContract = BaseContract> {
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<TransactionReceipt> {
-    // console.log("callOverrides", callOverrides);
     const signer = this.getSigner();
     invariant(
       signer,
@@ -540,6 +539,95 @@ export class ModuleWithRoles<
       roles[role] = await this.getRoleMembers(role);
     }
     return roles;
+  }
+  /**
+   * Call this to OVERWRITE the list of addresses that are members of specific roles.
+   *
+   * Every role in the list will be overwritten with the new list of addresses provided with them.
+   * If you want to add or remove addresses for a single address use {@link ModuleWithRoles.grantRole | grantRole} and {@link ModuleWithRoles.grantRole | revokeRole} respectively instead.
+   * @param rolesWithAddresses - A record of {@link Role}s to lists of addresses that should be members of the given role.
+   * @throws If you are requestiong a role that does not exist on the module this will throw an {@link InvariantError}.
+   * @example Say you want to overwrite the list of addresses that are members of the {@link IRoles.minter | minter} role.
+   * ```typescript
+   * const minterAddresses: string[] = await module.getRoleMemberList("minter");
+   * await module.setAllRoleMembers({
+   *  minter: []
+   * });
+   * console.log(await module.getRoleMemberList("minter")); // No matter what members had the role before, the new list will be set to []
+   * ```
+   * @public
+   *
+   * */
+  public async setAllRoleMembers(
+    rolesWithAddresses: SetAllRoles,
+  ): Promise<any> {
+    const roles = Object.keys(rolesWithAddresses);
+    invariant(roles.length, "you must provide at least one role to set");
+    invariant(
+      roles.every((role) => this.roles.includes(role as Role)),
+      "this module does not support the given role",
+    );
+    const currentRoles = await this.getAllRoleMembers();
+    const encoded: string[] = [];
+    roles.forEach(async (role) => {
+      const addresses = rolesWithAddresses[role as Role] || [];
+      const currentAddresses = currentRoles[role as Role] || [];
+      const toAdd = addresses.filter(
+        (address) => !currentAddresses.includes(address),
+      );
+      const toRemove = currentAddresses.filter(
+        (address) => !addresses.includes(address),
+      );
+      if (toAdd.length) {
+        toAdd.forEach((address) => {
+          encoded.push(
+            this.contract.interface.encodeFunctionData("grantRole", [
+              getRoleHash(role as Role),
+              address,
+            ]),
+          );
+        });
+      }
+      if (toRemove.length) {
+        toRemove.forEach((address) => {
+          encoded.push(
+            this.contract.interface.encodeFunctionData("revokeRole", [
+              getRoleHash(role as Role),
+              address,
+            ]),
+          );
+        });
+      }
+    });
+    return await this.sendTransaction("multicall", [encoded]);
+  }
+  /**
+   *
+   * Call this to revoke all roles given to a specific address.
+   * @param address - The address to revoke all roles for.
+   * @returns A list of roles that were revoked.
+   *
+   * @public
+   *
+   */
+
+  public async revokeAllRolesFromAddress(address: string): Promise<Role[]> {
+    const currentRoles = await this.getAllRoleMembers();
+    const encoded: string[] = [];
+    const rolesRemoved: Role[] = [];
+    Object.keys(currentRoles).forEach(async (role) => {
+      if (currentRoles[role as Role]?.includes(address)) {
+        encoded.push(
+          this.contract.interface.encodeFunctionData("revokeRole", [
+            getRoleHash(role as Role),
+            address,
+          ]),
+        );
+        rolesRemoved.push(role as Role);
+      }
+    });
+    await this.sendTransaction("multicall", [encoded]);
+    return rolesRemoved;
   }
 
   /**

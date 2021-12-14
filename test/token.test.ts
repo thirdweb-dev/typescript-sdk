@@ -25,7 +25,7 @@ describe("Token Module", async () => {
     });
   });
 
-  it("should mint a batch of tokens to the correct wallets", async () => {
+  it.skip("should mint a batch of tokens to the correct wallets", async () => {
     const batch = [
       {
         address: bobWallet.address,

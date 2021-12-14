@@ -24,7 +24,9 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [getAllRoleMembers()](./sdk.modulewithroles.getallrolemembers.md) |  | Call this to get get a list of addresses for all supported roles on the module. |
 |  [getRoleMembers(role)](./sdk.modulewithroles.getrolemembers.md) |  | Call this to get a list of addresses that are members of a specific role. |
 |  [grantRole(role, address)](./sdk.modulewithroles.grantrole.md) |  | Call this to grant a role to a specific address. |
+|  [revokeAllRolesFromAddress(address)](./sdk.modulewithroles.revokeallrolesfromaddress.md) |  | Call this to revoke all roles given to a specific address. |
 |  [prepareBatchMetadata(metadata)](./sdk.modulewithroles.preparebatchmetadata.md) |  | Prepares a list of metadata for uploading. |
 |  [prepareMetadata(metadata)](./sdk.modulewithroles.preparemetadata.md) |  | Prepares any set of metadata for uploading by recursively converting all Buffer\|Blob\|File objects into a hash of the object after its been uploaded to distributed storage (e.g. IPFS). After uploading any File\|Buffer\|Blob, the metadata is serialized to a string. |
 |  [revokeRole(role, address)](./sdk.modulewithroles.revokerole.md) |  | Call this to revoke a role from a specific address. |
+|  [setAllRoleMembers(rolesWithAddresses)](./sdk.modulewithroles.setallrolemembers.md) |  | Call this to OVERWRITE the list of addresses that are members of specific roles.<!-- -->Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use [grantRole](./sdk.modulewithroles.grantrole.md) and [revokeRole](./sdk.modulewithroles.grantrole.md) respectively instead. |
 

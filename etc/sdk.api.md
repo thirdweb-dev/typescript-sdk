@@ -973,9 +973,11 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
     protected getModuleRoles(): readonly Role[];
     getRoleMembers(role: Role): Promise<string[]>;
     grantRole(role: Role, address: string): Promise<TransactionReceipt>;
+    revokeAllRolesFromAddress(address: string): Promise<Role[]>;
     prepareBatchMetadata(metadata: MetadataURIOrObject[]): Promise<string[]>;
     prepareMetadata(metadata: MetadataURIOrObject): Promise<string>;
     revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
+    setAllRoleMembers(rolesWithAddresses: SetAllRoles): Promise<any>;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "NATIVE_TOKEN_ADDRESS" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1206,6 +1208,14 @@ export type Role = keyof IRoles;
 export const RolesMap: IRoles;
 
 // @public (undocumented)
+export type SetAllRoles = {
+    [key in keyof IRoles]?: string[];
+};
+
+// @public
+export interface SplitRecipient {
+    address: string;
+    splitPercentage: number;
 export class Snapshot {
     // (undocumented)
     claims: ClaimProof[];
