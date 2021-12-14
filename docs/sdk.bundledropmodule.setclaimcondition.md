@@ -12,7 +12,7 @@ Sets public claim conditions for the next minting using the claim condition fact
 <b>Signature:</b>
 
 ```typescript
-setClaimCondition(tokenId: BigNumberish, factory: ClaimConditionFactory): Promise<void>;
+setClaimCondition(tokenId: BigNumberish, factory: ClaimConditionFactory): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -24,5 +24,5 @@ setClaimCondition(tokenId: BigNumberish, factory: ClaimConditionFactory): Promis
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 

@@ -29,12 +29,18 @@ export default class IpfsStorage implements IStorage {
     };
     const formData = new FormData();
     formData.append("file", data as any);
-    const res = await fetch(`${thirdwebIpfsServerUrl}/upload`, {
-      method: "POST",
-      body: formData as any,
-      headers,
-    });
     try {
+      const res = await fetch(`${thirdwebIpfsServerUrl}/upload`, {
+        method: "POST",
+        body: formData as any,
+        headers,
+      });
+      if (res.status !== 200) {
+        throw new Error(
+          `Failed to upload to IPFS [status code = ${res.status}]`,
+        );
+      }
+
       const body = await res.json();
       return body.IpfsUri;
     } catch (e) {

@@ -169,14 +169,14 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
-    lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
+    lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<BundleDropMetadata[]>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
-    setClaimCondition(tokenId: BigNumberish_2, factory: ClaimConditionFactory): Promise<void>;
+    setClaimCondition(tokenId: BigNumberish_2, factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
     setDefaultSaleRecipient(recipient: string): Promise<TransactionReceipt>;
     // (undocumented)
@@ -496,7 +496,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     canClaim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<boolean>;
     // (undocumented)
-    claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
+    claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>;
     // @internal (undocumented)
     protected connectContract(): LazyNFT;
     // (undocumented)

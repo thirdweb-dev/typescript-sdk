@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
+lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<BundleDropMetadata[]>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;[BundleDropMetadata](./sdk.bundledropmetadata.md)<!-- -->\[\]&gt;
 

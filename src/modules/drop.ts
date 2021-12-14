@@ -333,10 +333,13 @@ export class DropModule extends ModuleWithRoles<Drop> {
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
-
     const { metadata } = await this.getMetadata();
     invariant(metadata, "Metadata is not set, this should never happen");
-    metadata["merkle"] = merkleInfo;
+    if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
+      metadata["merkle"] = {};
+    } else {
+      metadata["merkle"] = merkleInfo;
+    }
 
     const metatdataUri = await this.storage.upload(JSON.stringify(metadata));
 
@@ -429,13 +432,13 @@ export class DropModule extends ModuleWithRoles<Drop> {
   public async claim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ) {
+  ): Promise<NFTMetadataOwner[]> {
     const mintCondition = await this.getActiveClaimCondition();
     const { metadata } = await this.getMetadata();
 
     const addressToClaim = await this.getSignerAddress();
 
-    if (mintCondition.merkleRoot) {
+    if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
       const snapshot = await this.storage.get(
         metadata?.merkle[mintCondition.merkleRoot.toString()],
       );
@@ -480,9 +483,21 @@ export class DropModule extends ModuleWithRoles<Drop> {
       }
     }
 
-    console.log("Type of proofs = ", typeof proofs);
-    console.log(`Claiming ${quantity} tokens with proofs: ${proofs}`);
-    await this.sendTransaction("claim", [quantity, proofs], overrides);
+    const receipt = await this.sendTransaction(
+      "claim",
+      [quantity, proofs],
+      overrides,
+    );
+    const event = this.parseEventLogs("Claimed", receipt?.logs);
+    const startingIndex: BigNumber = event.startTokenId;
+    const endingIndex = startingIndex.add(quantity);
+    const tokenIds = [];
+    for (let i = startingIndex; i.lt(endingIndex); i = i.add(1)) {
+      tokenIds.push(BigNumber.from(i.toString()));
+    }
+    return await Promise.all(
+      tokenIds.map(async (t) => await this.get(t.toString())),
+    );
   }
 
   public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
