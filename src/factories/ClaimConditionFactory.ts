@@ -1,12 +1,16 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { PublicClaimCondition } from "../types/claim-conditions/PublicMintCondition";
+import { SnapshotInfo } from "../types/snapshots/SnapshotInfo";
 import ClaimConditionPhase from "./ClaimConditionPhase";
 
 class ClaimConditionFactory {
   private phases: ClaimConditionPhase[] = [];
+  private createSnapshot: (leafs: string[]) => Promise<SnapshotInfo>;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
+  constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>) {
+    this.createSnapshot = createSnapshotFunc;
+  }
 
   /**
    * Used internally when creating a drop module/updating
@@ -44,7 +48,7 @@ class ClaimConditionFactory {
   public fromPublicClaimConditions(conditions: PublicClaimCondition[]) {
     const phases = [];
     for (const condition of conditions) {
-      const phase = new ClaimConditionPhase();
+      const phase = new ClaimConditionPhase(this.createSnapshot);
 
       // If there's a price, there must also be an associated currency
       if (condition.currency) {
@@ -83,7 +87,7 @@ class ClaimConditionFactory {
     maxQuantity?: BigNumberish;
     maxQuantityPerTransaction?: BigNumberish;
   }): ClaimConditionPhase {
-    const condition = new ClaimConditionPhase();
+    const condition = new ClaimConditionPhase(this.createSnapshot);
 
     condition.setConditionStartTime(startTime);
     condition.setMaxQuantity(BigNumber.from(maxQuantity));
@@ -108,6 +112,17 @@ class ClaimConditionFactory {
     const sorted = this.buildConditions();
     const cleared = sorted.splice(index - 1, 1);
     this.fromPublicClaimConditions(cleared);
+  }
+
+  /**
+   * Helper method fetches all snapshots from a factory.
+   *
+   * @returns - All snapshots in the condition factory.
+   */
+  public allSnapshots(): SnapshotInfo[] {
+    return this.phases
+      .filter((p) => p.getSnapshot() !== undefined)
+      .map((p) => p.getSnapshot() as SnapshotInfo);
   }
 }
 

@@ -1,11 +1,12 @@
 import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
-import { signERC2612Permit } from "eth-permit";
 import {
+  JsonRpcProvider,
   JsonRpcSigner,
   Log,
   Provider,
   TransactionReceipt,
 } from "@ethersproject/providers";
+import { signERC2612Permit } from "eth-permit";
 import {
   BaseContract,
   BigNumber,
@@ -14,7 +15,6 @@ import {
   ethers,
   Signer,
 } from "ethers";
-import type { ISDKOptions, ThirdwebSDK } from ".";
 import { getContractMetadata, isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
@@ -22,7 +22,9 @@ import { invariant } from "../common/invariant";
 import { uploadMetadata } from "../common/ipfs";
 import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role, SetAllRoles } from "../common/role";
+import { ISDKOptions } from "../interfaces/ISdkOptions";
 import { ModuleMetadata } from "../types/ModuleMetadata";
+import { ThirdwebSDK } from "./index";
 import type {
   ForwardRequestMessage,
   MetadataURIOrObject,
@@ -404,11 +406,30 @@ export class Module<TContract extends BaseContract = BaseContract> {
       message = { to: contract.address, ...permit };
       signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
     } else {
-      signature = await (signer as JsonRpcSigner)._signTypedData(
-        domain,
-        types,
-        message,
-      );
+      try {
+        signature = await (signer as JsonRpcSigner)._signTypedData(
+          domain,
+          types,
+          message,
+        );
+      } catch (e) {
+        if (
+          typeof e === "string" &&
+          e.indexOf("The method eth_signTypedData_v4 does not exist") > -1
+        ) {
+          const payload = ethers.utils._TypedDataEncoder.getPayload(
+            domain,
+            types,
+            message,
+          );
+          signature = await (signer?.provider as JsonRpcProvider).send(
+            "eth_signTypedData",
+            [from.toLowerCase(), JSON.stringify(payload)],
+          );
+        } else {
+          throw new Error(`Failed to sign: ${e}`);
+        }
+      }
     }
 
     // await forwarder.verify(message, signature);
@@ -675,5 +696,57 @@ export class ModuleWithRoles<
         address,
       ]);
     }
+  }
+
+  /**
+   * Prepares any set of metadata for uploading by recursively converting all Buffer|Blob|File objects
+   * into a hash of the object after its been uploaded to distributed storage (e.g. IPFS). After uploading
+   * any File|Buffer|Blob, the metadata is serialized to a string.
+   *
+   * @param metadata - The list of metadata to prepare for upload.
+   * @returns - The serialized metadata object.
+   */
+  public async prepareMetadata(metadata: MetadataURIOrObject): Promise<string> {
+    if (typeof metadata === "string") {
+      return metadata;
+    }
+
+    const _fileHandler = async (object: any) => {
+      const keys = Object.keys(object);
+      for (const key in keys) {
+        const val = object[keys[key]];
+        const shouldUpload = val instanceof File || val instanceof Buffer;
+        if (shouldUpload) {
+          object[keys[key]] = await this.sdk
+            .getStorage()
+            .upload(object[keys[key]]);
+        }
+        if (shouldUpload && typeof object[keys[key]] !== "string") {
+          throw new Error("Upload to IPFS failed");
+        }
+        if (typeof val === "object") {
+          object[keys[key]] = await _fileHandler(object[keys[key]]);
+        }
+      }
+      return object;
+    };
+
+    metadata = await _fileHandler(metadata);
+    // TODO: use json2typescript to convert metadata to string
+    return JSON.stringify(metadata);
+  }
+
+  /**
+   * Prepares a list of metadata for uploading.
+   *
+   * @param metadata - List of metadata to prepare for upload.
+   * @returns - List of metadata prepared for upload.
+   */
+  public async prepareBatchMetadata(
+    metadata: MetadataURIOrObject[],
+  ): Promise<string[]> {
+    return await Promise.all(
+      metadata.map(async (m) => await this.prepareMetadata(m)),
+    );
   }
 }

@@ -11,7 +11,7 @@ The module metadata, includes the `address` and the [ModuleType](./sdk.moduletyp
 ```typescript
 export interface ModuleMetadata extends ModuleMetadataNoType 
 ```
-<b>Extends:</b> ModuleMetadataNoType
+<b>Extends:</b> [ModuleMetadataNoType](./sdk.modulemetadatanotype.md)
 
 ## Properties
 

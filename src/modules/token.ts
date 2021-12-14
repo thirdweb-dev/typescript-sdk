@@ -8,7 +8,6 @@ import {
   getCurrencyMetadata,
   getCurrencyValue,
 } from "../common/currency";
-import { uploadMetadata } from "../common/ipfs";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 
@@ -148,7 +147,7 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
   ): Promise<TransactionReceipt> {
-    const uri = await uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     return await this.sendTransaction("setContractURI", [uri]);
   }
 

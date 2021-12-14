@@ -9,8 +9,9 @@ The entrypoint to the SDK.
 <b>Signature:</b>
 
 ```typescript
-export declare class ThirdwebSDK 
+export declare class ThirdwebSDK implements IThirdwebSdk 
 ```
+<b>Implements:</b> IThirdwebSdk
 
 ## Constructors
 
@@ -23,8 +24,10 @@ export declare class ThirdwebSDK
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [createApp(metadata)](./sdk.thirdwebsdk.createapp.md) |  | Call this to create a new app |
+|  [createSnapshot(leafs)](./sdk.thirdwebsdk.createsnapshot.md) |  |  |
 |  [getAppModule(address)](./sdk.thirdwebsdk.getappmodule.md) |  |  |
 |  [getApps()](./sdk.thirdwebsdk.getapps.md) |  | Call this to get the current apps. |
+|  [getBundleDropModule(address)](./sdk.thirdwebsdk.getbundledropmodule.md) |  | <b><i>(BETA)</i></b> |
 |  [getBundleModule(address)](./sdk.thirdwebsdk.getbundlemodule.md) |  |  |
 |  [getCollectionModule(address)](./sdk.thirdwebsdk.getcollectionmodule.md) |  |  |
 |  [getContractMetadata(address)](./sdk.thirdwebsdk.getcontractmetadata.md) |  |  |
@@ -34,6 +37,8 @@ export declare class ThirdwebSDK
 |  [getMarketModule(address)](./sdk.thirdwebsdk.getmarketmodule.md) |  |  |
 |  [getNFTModule(address)](./sdk.thirdwebsdk.getnftmodule.md) |  |  |
 |  [getPackModule(address)](./sdk.thirdwebsdk.getpackmodule.md) |  |  |
+|  [getStorage()](./sdk.thirdwebsdk.getstorage.md) |  | Accessor for the storage instance used by the SDK |
 |  [isReadOnly()](./sdk.thirdwebsdk.isreadonly.md) |  |  |
+|  [overrideStorage(storage)](./sdk.thirdwebsdk.overridestorage.md) |  | Allows you to override the storage used across the SDK. |
 |  [setProviderOrSigner(providerOrSignerOrNetwork)](./sdk.thirdwebsdk.setproviderorsigner.md) |  |  |
 

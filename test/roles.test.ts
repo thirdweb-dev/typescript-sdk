@@ -1,34 +1,26 @@
-import * as chai from "chai";
-import { AppModule, NFTModule, RolesMap, ThirdwebSDK } from "../src/index";
-import { ethers } from "ethers";
+
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { RolesMap } from "../src/index";
+import { appModule, nftmodule, sdk, signers } from "./before.test";
+
+import { expect, assert } from "chai";
 
 global.fetch = require("node-fetch");
 
 const RPC_URL = "https://matic-mumbai.chainstacklabs.com";
 
-describe("Role Management", async () => {
-  let sdk: ThirdwebSDK;
-  let appModule: AppModule;
-  let nftModule: NFTModule;
+
+describe("Roles Module", async () => {
+  let adminWallet: SignerWithAddress,
+    samWallet: SignerWithAddress,
+    bobWallet: SignerWithAddress;
+
+  before(() => {
+    [adminWallet, samWallet, bobWallet] = signers;
+  });
 
   beforeEach(async () => {
-    sdk = new ThirdwebSDK(
-      new ethers.Wallet(
-        process.env.PKEY,
-        ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com"),
-      ),
-      {
-        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
-      },
-    );
-
-    /**
-     * This contract address *should* exist forever on mumbai
-     * It contains some test data with burned tokens and some tokens owned by
-     * the test address starting with 0xE79
-     */
-    appModule = sdk.getAppModule("0xA47220197e8c7F7ec462989Ca992b706747B77A8");
-    nftModule = sdk.getNFTModule("0x364A9b8f4382bB583C3833E484A44f7A189312a7");
+    sdk.setProviderOrSigner(adminWallet);
   });
 
   it("should return all assigned roles", async () => {
@@ -36,9 +28,9 @@ describe("Role Management", async () => {
      * This wallet owns only one token in the collection (that contains 6 tokens)
      */
     const roles = await appModule.getRoleMembers(RolesMap["admin"]);
-    chai.assert.include(
+    assert.include(
       roles,
-      "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+      adminWallet.address,
       "The app module should have a default admin",
     );
   });

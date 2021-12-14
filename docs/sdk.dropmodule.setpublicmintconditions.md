@@ -9,7 +9,7 @@
 
 > Warning: This API is now obsolete.
 > 
-> - Use the ClaimConditionFactory instead.
+> - Use the [DropModule.setClaimConditions()](./sdk.dropmodule.setclaimconditions.md) instead.
 > 
 
 <b>Signature:</b>

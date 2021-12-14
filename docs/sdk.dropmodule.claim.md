@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<void>;
+claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>;
 ```
 
 ## Parameters
@@ -22,5 +22,5 @@ claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt;
 

@@ -22,6 +22,7 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.dropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
 |  [roles](./sdk.dropmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] | <b><i>(BETA)</i></b> |
+|  [storage](./sdk.dropmodule.storage.md) |  | import("../interfaces/IStorage").default | <b><i>(BETA)</i></b> |
 
 ## Methods
 
@@ -30,13 +31,17 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  [balance()](./sdk.dropmodule.balance.md) |  | <b><i>(BETA)</i></b> |
 |  [balanceOf(address)](./sdk.dropmodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
 |  [burn(tokenId)](./sdk.dropmodule.burn.md) |  | <b><i>(BETA)</i></b> |
+|  [canClaim(quantity, proofs)](./sdk.dropmodule.canclaim.md) |  | <b><i>(BETA)</i></b> |
 |  [claim(quantity, proofs)](./sdk.dropmodule.claim.md) |  | <b><i>(BETA)</i></b> |
 |  [get(tokenId)](./sdk.dropmodule.get.md) |  | <b><i>(BETA)</i></b> |
+|  [getActiveClaimCondition()](./sdk.dropmodule.getactiveclaimcondition.md) |  | <b><i>(BETA)</i></b> |
 |  [getActiveMintCondition()](./sdk.dropmodule.getactivemintcondition.md) |  | <b><i>(BETA)</i></b> |
-|  [getAll()](./sdk.dropmodule.getall.md) |  | <b><i>(BETA)</i></b> |
-|  [getAllClaimed()](./sdk.dropmodule.getallclaimed.md) |  | <b><i>(BETA)</i></b> |
+|  [getAll(queryParams)](./sdk.dropmodule.getall.md) |  | <b><i>(BETA)</i></b> |
+|  [getAllClaimConditions()](./sdk.dropmodule.getallclaimconditions.md) |  | <b><i>(BETA)</i></b> |
+|  [getAllClaimed(queryParams)](./sdk.dropmodule.getallclaimed.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllMintConditions()](./sdk.dropmodule.getallmintconditions.md) |  | <b><i>(BETA)</i></b> |
-|  [getAllUnclaimed()](./sdk.dropmodule.getallunclaimed.md) |  | <b><i>(BETA)</i></b> |
+|  [getAllUnclaimed(queryParams)](./sdk.dropmodule.getallunclaimed.md) |  | <b><i>(BETA)</i></b> |
+|  [getClaimConditionsFactory()](./sdk.dropmodule.getclaimconditionsfactory.md) |  | <b><i>(BETA)</i></b> Creates a claim condition factory |
 |  [getMintConditionsFactory()](./sdk.dropmodule.getmintconditionsfactory.md) |  | <b><i>(BETA)</i></b> |
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | <b><i>(BETA)</i></b> |
 |  [getRoyaltyBps()](./sdk.dropmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
@@ -47,10 +52,12 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  | <b><i>(BETA)</i></b> |
 |  [maxTotalSupply()](./sdk.dropmodule.maxtotalsupply.md) |  | <b><i>(BETA)</i></b> |
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  | <b><i>(BETA)</i></b> |
+|  [pinToIpfs(files)](./sdk.dropmodule.pintoipfs.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
 |  [setBaseTokenUri(uri)](./sdk.dropmodule.setbasetokenuri.md) |  | <b><i>(BETA)</i></b> |
+|  [setClaimConditions(factory)](./sdk.dropmodule.setclaimconditions.md) |  | <b><i>(BETA)</i></b> Sets public mint conditions for the next minting using the claim condition factory. |
 |  [setMaxTotalSupply(amount)](./sdk.dropmodule.setmaxtotalsupply.md) |  | <b><i>(BETA)</i></b> |
-|  [setMintConditions(factory)](./sdk.dropmodule.setmintconditions.md) |  | <b><i>(BETA)</i></b> Sets public mint conditions for the next minting using the claim condition factory. |
+|  [setMintConditions(factory)](./sdk.dropmodule.setmintconditions.md) |  | <b><i>(BETA)</i></b> |
 |  [setModuleMetadata(metadata)](./sdk.dropmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
 |  [setPublicMintConditions(conditions)](./sdk.dropmodule.setpublicmintconditions.md) |  | <b><i>(BETA)</i></b> |
 |  [setRestrictedTransfer(restricted)](./sdk.dropmodule.setrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |

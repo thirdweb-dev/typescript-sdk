@@ -16,6 +16,7 @@ export interface ContractMetadata {
   external_link?: string;
   seller_fee_basis_points?: number;
   fee_recipient?: string;
+  [key: string]: any;
 }
 
 /**
@@ -56,13 +57,19 @@ export async function getContractMetadata(
   const uri = await contract.contractURI();
   const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
   const meta = await fetch(gatewayUrl);
-  const metadata = await meta.json();
-  const entity: ContractMetadata = {
-    ...metadata,
-    uri,
-    image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
-  };
-  return entity;
+  try {
+    const metadata = await meta.json();
+    const entity: ContractMetadata = {
+      ...metadata,
+      uri,
+      image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
+    };
+    return entity;
+  } catch (e) {
+    throw new Error(
+      `Gateway did not return metadata, instead returned:\n ${await meta.text()}`,
+    );
+  }
 }
 
 /**

@@ -10,8 +10,15 @@
 <b>Signature:</b>
 
 ```typescript
-getAllUnclaimed(): Promise<NFTMetadataOwner[]>;
+getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  queryParams | QueryAllParams |  |
+
 <b>Returns:</b>
 
 Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt;

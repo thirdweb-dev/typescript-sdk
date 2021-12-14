@@ -1,31 +1,20 @@
 import { AddressZero } from "@ethersproject/constants";
-import * as chai from "chai";
-import { BigNumber, ethers } from "ethers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { assert } from "chai";
+import { BigNumber } from "ethers";
 import { readFileSync } from "fs";
 import { JsonConvert } from "json2typescript";
-import path from "path";
-import { AppModule, BundleModuleMetadata, ThirdwebSDK } from "../src/index";
-
-global.fetch = require("node-fetch");
-
-const RPC_URL = "https://rpc-mumbai.maticvigil.com";
+import { BundleModuleMetadata, DropModule } from "../src/index";
+import { appModule, sdk, signers } from "./before.test";
 
 describe("App Module", async () => {
-  let sdk: ThirdwebSDK;
-  let appModule: AppModule;
+  let dropModule: DropModule;
+  let adminWallet: SignerWithAddress,
+    samWallet: SignerWithAddress,
+    bobWallet: SignerWithAddress;
 
   beforeEach(async () => {
-    if (process.env.PKEY) {
-      sdk = new ThirdwebSDK(
-        new ethers.Wallet(process.env.PKEY, ethers.getDefaultProvider(RPC_URL)),
-        { ipfsGatewayUrl: "https://ipfs.io/ipfs/" },
-      );
-    } else {
-      sdk = new ThirdwebSDK(RPC_URL, {
-        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
-      });
-    }
-    appModule = sdk.getAppModule("0xA47220197e8c7F7ec462989Ca992b706747B77A8");
+    [adminWallet, samWallet, bobWallet] = signers;
   });
 
   it.skip("should serialize metadata correctly", async () => {
@@ -82,11 +71,11 @@ describe("App Module", async () => {
     const jsonConvert = new JsonConvert();
     for (const test of tests) {
       const result = jsonConvert.serializeObject(test.test, test.type);
-      chai.assert.deepEqual(result, test.expected);
+      assert.deepEqual(result, test.expected);
     }
   });
 
-  it.skip("should deploy a collection module successfully", async () => {
+  it("should deploy a collection module successfully", async () => {
     const module = await appModule.deployBundleModule({
       name: "Testing module from SDK",
       sellerFeeBasisPoints: 1000,
@@ -95,7 +84,7 @@ describe("App Module", async () => {
     });
   });
 
-  it.skip("should deploy a splits module successfully", async () => {
+  it("should deploy a splits module successfully", async () => {
     const module = await appModule.deploySplitsModule({
       name: "Testing module from SDK",
       image:
@@ -112,19 +101,15 @@ describe("App Module", async () => {
         },
       ],
     });
-
-    console.log("DEPLOYED MODULE =", module);
   });
 
-  it.skip("Should return a valid splits module", async () => {
+  it("Should return a valid splits module", async () => {
     const module = await sdk.getSplitsModule(
       "0x255d57Be74C055Bdd29Dfb7c714EEfFdd2492163",
     );
-
-    console.log(await module.getAllRecipients());
   });
 
-  it.skip("should deploy an nft module with an image file successfully", async () => {
+  it("should deploy an nft module with an image file successfully", async () => {
     const filePath = `${__dirname}/3510820011_4f558b6dea_b.jpg`;
     const image = readFileSync(filePath);
     const module = await appModule.deployNftModule({
@@ -134,13 +119,13 @@ describe("App Module", async () => {
     });
 
     const metadata = await module.getMetadata();
-    chai.assert.isTrue(
+    assert.isTrue(
       metadata.metadata.image.includes("ipfs/"),
       `Image property = ${metadata.metadata.image}, should include ipfs/`,
     );
   });
 
-  it.skip("should deploy a currency module successfully", async () => {
+  it("should deploy a currency module successfully", async () => {
     const image =
       "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg";
     const module = await appModule.deployCurrencyModule({
@@ -150,14 +135,14 @@ describe("App Module", async () => {
     });
 
     const metadata = await module.getMetadata();
-    chai.assert.equal(
+    assert.equal(
       metadata.metadata.image,
       image,
       `Image property = ${metadata.metadata.image}, should include ipfs/`,
     );
   });
 
-  it.skip("should deploy a marketplace module successfully", async () => {
+  it("should deploy a marketplace module successfully", async () => {
     const result = await appModule.deployMarketModule({
       name: `Testing market from SDK - ${new Date().toLocaleString()}`,
       image:
@@ -167,7 +152,7 @@ describe("App Module", async () => {
     await sdk.getMarketModule(result.address);
   });
 
-  it.skip("should deploy a pack module successfully", async () => {
+  it("should deploy a pack module successfully", async () => {
     const result = await appModule.deployPackModule({
       name: `Testing pack from SDK - ${new Date().toLocaleString()}`,
       image:
@@ -177,7 +162,7 @@ describe("App Module", async () => {
     await sdk.getPackModule(result.address);
   });
 
-  it.skip("should deploy a drop module successfully", async () => {
+  it("should deploy a drop module successfully", async () => {
     const result = await appModule.deployDropModule({
       name: `Testing drop from SDK - ${new Date().toLocaleString()}`,
       image:
@@ -187,34 +172,59 @@ describe("App Module", async () => {
       baseTokenUri: "/test",
       primarySaleRecipientAddress: AddressZero,
     });
-    console.log("deplyed with address", result.address);
 
     const module = await sdk.getDropModule(result.address);
-    chai.assert.equal(
+    assert.equal(
       (await module.maxTotalSupply()).toNumber(),
       10,
       "The max supply should be 10",
     );
   });
 
-  it.skip("should deploy a datastore module successfully", async () => {
+  it("should deploy a datastore module successfully", async () => {
     const result = await appModule.deployDatastoreModule({
       name: `Testing drop from SDK - ${new Date().toLocaleString()}`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
     });
-    console.log("deplyed datastore with address", result.address);
 
     await sdk.getDatastoreModule(result.address);
   });
 
-  it.skip("should return the correct balance", async () => {
-    const nativeBalance = await appModule.balance();
-    chai.assert.equal(nativeBalance.toString(), "10000000000000000");
-
-    const testBalance = await appModule.balanceOfToken(
-      "0xf18feb8b2f58691d67c98db98b360840df340e74",
+  it("should properly parse metadata when image is string", async () => {
+    const metadata = {
+      name: "safe",
+      description: "",
+      image:
+        "ipfs://bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
+      sellerFeeBasisPoints: 0,
+      fee_recipient: "0xabE01399799888819f5dCE731F8C22f8E7e6AD26",
+      symbol: "",
+    };
+    const contract = await appModule.deployBundleModule(metadata);
+    const module = sdk.getBundleModule(contract.address);
+    const result = await module.getMetadata();
+    assert.equal(
+      result.metadata.image,
+      "https://ipfs.io/ipfs/bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
     );
-    chai.assert.equal(testBalance.displayValue, "100.0");
+  });
+
+  it("should upload to ipfs image is file", async () => {
+    const metadata = {
+      name: "safe",
+      description: "",
+      image: readFileSync(`${__dirname}/3510820011_4f558b6dea_b.jpg`),
+      sellerFeeBasisPoints: 0,
+      fee_recipient: "0xabE01399799888819f5dCE731F8C22f8E7e6AD26",
+      symbol: "",
+    };
+    const contract = await appModule.deployBundleModule(metadata);
+    const module = sdk.getBundleModule(contract.address);
+    const result = await module.getMetadata();
+    const regex = new RegExp(
+      /Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}/,
+    );
+    assert.match(result.metadata.image, regex);
   });
 });

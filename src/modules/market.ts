@@ -12,7 +12,6 @@ import { BigNumber, BigNumberish } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
 import { InterfaceId_IERC721 } from "../common/contract";
 import { CurrencyValue, getCurrencyValue } from "../common/currency";
-import { uploadMetadata } from "../common/ipfs";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -324,7 +323,7 @@ export class MarketModule extends ModuleWithRoles<Market> {
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
   ): Promise<TransactionReceipt> {
-    const uri = await uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     return await this.sendTransaction("setContractURI", [uri]);
   }
 
