@@ -39,8 +39,18 @@ export interface ProposalVote {
 }
 
 export interface ProposalExecution {
+  /**
+   * The address of the contract that the proposal will execute a transaction on.
+   * If the proposal is sending a token to a wallet, this address should be the address
+   * of the wallet that will be receiving the tokens.
+   */
   to: string;
+
+  /**
+   * The amount of a native that may be sent if a proposal is executing a token transfer.
+   */
   value: BigNumberish;
+
   data: BytesLike;
 }
 
@@ -185,11 +195,23 @@ export class VoteModule extends Module<VotingGovernor> {
     return results;
   }
 
-  public async propose(description: string, executions: ProposalExecution[]) {
+  public async propose(
+    description: string,
+    executions: ProposalExecution[],
+  ): Promise<BigNumber> {
     const tos = executions.map((p) => p.to);
     const values = executions.map((p) => p.value);
     const datas = executions.map((p) => p.data);
-    await this.sendTransaction("propose", [tos, values, datas, description]);
+    const receipt = await this.sendTransaction("propose", [
+      tos,
+      values,
+      datas,
+      description,
+    ]);
+
+    const event = this.parseEventLogs("ProposalCreated", receipt?.logs);
+    console.log(event);
+    return event.proposalId;
   }
 
   public async vote(proposalId: string, voteType: VoteType, reason = "") {
