@@ -88,12 +88,15 @@ Output
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
 |  [UploadError](./sdk.uploaderror.md) |  |
+|  [VoteModule](./sdk.votemodule.md) | Access this module by calling  |
 
 ## Enumerations
 
 |  Enumeration | Description |
 |  --- | --- |
 |  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
+|  [ProposalState](./sdk.proposalstate.md) |  |
+|  [VoteType](./sdk.votetype.md) |  |
 
 ## Functions
 
@@ -136,10 +139,14 @@ Output
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
+|  [Proposal](./sdk.proposal.md) |  |
+|  [ProposalExecution](./sdk.proposalexecution.md) |  |
+|  [ProposalVote](./sdk.proposalvote.md) |  |
 |  [PublicClaimCondition](./sdk.publicclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
+|  [VoteSettings](./sdk.votesettings.md) |  |
 
 ## Variables
 

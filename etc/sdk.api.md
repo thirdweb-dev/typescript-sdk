@@ -35,7 +35,6 @@ import { VotingGovernor } from '@3rdweb/contracts';
 
 // Warning: (ae-forgotten-export) The symbol "RegistryModule" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "SplitsModule" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "VoteModule" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1172,6 +1171,66 @@ export type PermitRequestMessage = {
     deadline: number | string;
 };
 
+// @public (undocumented)
+export interface Proposal {
+    // (undocumented)
+    description: string;
+    // (undocumented)
+    endBlock: BigNumber_2;
+    // (undocumented)
+    executions: ProposalExecution[];
+    // (undocumented)
+    proposalId: string;
+    // (undocumented)
+    proposer: string;
+    // (undocumented)
+    startBlock: BigNumber_2;
+    // (undocumented)
+    state: ProposalState;
+    // (undocumented)
+    votes: ProposalVote[];
+}
+
+// @public (undocumented)
+export interface ProposalExecution {
+    // (undocumented)
+    data: BytesLike;
+    // (undocumented)
+    to: string;
+    // (undocumented)
+    value: BigNumberish_2;
+}
+
+// @public (undocumented)
+export enum ProposalState {
+    // (undocumented)
+    Active = 1,
+    // (undocumented)
+    Canceled = 2,
+    // (undocumented)
+    Defeated = 3,
+    // (undocumented)
+    Executed = 7,
+    // (undocumented)
+    Expired = 6,
+    // (undocumented)
+    Pending = 0,
+    // (undocumented)
+    Queued = 5,
+    // (undocumented)
+    Succeeded = 4
+}
+
+// @public (undocumented)
+export interface ProposalVote {
+    // (undocumented)
+    count: BigNumber_2;
+    // (undocumented)
+    label: string;
+    // (undocumented)
+    type: VoteType;
+}
+
 // @public
 export type ProviderOrSigner = Provider | Signer;
 
@@ -1309,5 +1368,59 @@ export function uploadToIPFS(data: string | File | FileOrBuffer, contractAddress
 
 // @public
 export type ValidProviderInput = ProviderOrSigner | Network | string;
+
+// @public
+export class VoteModule extends Module<VotingGovernor> {
+    balance(): Promise<CurrencyValue>;
+    balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
+    // (undocumented)
+    canExecute(proposalId: string): Promise<boolean>;
+    // @internal (undocumented)
+    protected connectContract(): VotingGovernor;
+    // (undocumented)
+    execute(proposalId: string): Promise<void>;
+    // (undocumented)
+    get(proposalId: string): Promise<Proposal>;
+    // (undocumented)
+    getAll(): Promise<Proposal[]>;
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
+    // (undocumented)
+    static moduleType: ModuleType;
+    // (undocumented)
+    propose(description: string, executions: ProposalExecution[]): Promise<void>;
+    // (undocumented)
+    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    // (undocumented)
+    settings(): Promise<VoteSettings>;
+    // (undocumented)
+    vote(proposalId: string, voteType: VoteType, reason?: string): Promise<void>;
+}
+
+// @public (undocumented)
+export interface VoteSettings {
+    // (undocumented)
+    proposalTokenThreshold: string;
+    // (undocumented)
+    votingDelay: string;
+    // (undocumented)
+    votingPeriod: string;
+    // (undocumented)
+    votingQuorumFraction: string;
+    // (undocumented)
+    votingTokenAddress: string;
+    // (undocumented)
+    votingTokenMetadata: Currency;
+}
+
+// @public (undocumented)
+export enum VoteType {
+    // (undocumented)
+    Abstain = 2,
+    // (undocumented)
+    Against = 0,
+    // (undocumented)
+    For = 1
+}
 
 ```

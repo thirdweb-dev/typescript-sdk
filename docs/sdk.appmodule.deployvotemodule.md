@@ -20,7 +20,7 @@ deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
 
 <b>Returns:</b>
 
-Promise&lt;VoteModule&gt;
+Promise&lt;[VoteModule](./sdk.votemodule.md)<!-- -->&gt;
 
 - The deployed vote module
 
