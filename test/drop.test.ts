@@ -10,12 +10,7 @@ const keccak256 = require("keccak256");
 
 global.fetch = require("node-fetch");
 
-<<<<<<< multicall-roles
-describe.skip("Drop Module", async () => {
-  let sdk: ThirdwebSDK;
-=======
 describe("Drop Module", async () => {
->>>>>>> main
   let dropModule: DropModule;
   let adminWallet,
     samWallet,
