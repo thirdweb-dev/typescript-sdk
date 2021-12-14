@@ -1,5 +1,6 @@
 import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
 import {
+  JsonRpcProvider,
   JsonRpcSigner,
   Log,
   Provider,
@@ -406,11 +407,30 @@ export class Module<TContract extends BaseContract = BaseContract> {
       message = { to: contract.address, ...permit };
       signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
     } else {
-      signature = await (signer as JsonRpcSigner)._signTypedData(
-        domain,
-        types,
-        message,
-      );
+      try {
+        signature = await (signer as JsonRpcSigner)._signTypedData(
+          domain,
+          types,
+          message,
+        );
+      } catch (e) {
+        if (
+          typeof e === "string" &&
+          e.indexOf("The method eth_signTypedData_v4 does not exist") > -1
+        ) {
+          const payload = ethers.utils._TypedDataEncoder.getPayload(
+            domain,
+            types,
+            message,
+          );
+          signature = await (signer?.provider as JsonRpcProvider).send(
+            "eth_signTypedData",
+            [from.toLowerCase(), JSON.stringify(payload)],
+          );
+        } else {
+          throw e;
+        }
+      }
     }
 
     // await forwarder.verify(message, signature);
