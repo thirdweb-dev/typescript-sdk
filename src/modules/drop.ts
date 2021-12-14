@@ -329,20 +329,17 @@ export class DropModule extends ModuleWithRoles<Drop> {
   public async setClaimConditions(factory: ClaimConditionFactory) {
     const conditions = factory.buildConditions();
 
-    if (factory.allSnapshots().length === 0) {
-      return await this.sendTransaction("setPublicMintConditions", [
-        conditions,
-      ]);
-    }
-
     const merkleInfo: { [key: string]: string } = {};
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
-
     const { metadata } = await this.getMetadata();
     invariant(metadata, "Metadata is not set, this should never happen");
-    metadata["merkle"] = merkleInfo;
+    if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
+      metadata["merkle"] = {};
+    } else {
+      metadata["merkle"] = merkleInfo;
+    }
 
     const metatdataUri = await this.storage.upload(JSON.stringify(metadata));
 

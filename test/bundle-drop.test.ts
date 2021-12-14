@@ -1,10 +1,8 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { PackModule, BundleDropModule } from "../src/index";
-import { appModule, sdk, signers } from "./before.test";
-
-import { expect, assert } from "chai";
-import { AddressZero } from "@ethersproject/constants";
+import { assert } from "chai";
 import { BigNumber } from "ethers";
+import { BundleDropModule } from "../src/index";
+import { appModule, sdk, signers } from "./before.test";
 
 global.fetch = require("node-fetch");
 

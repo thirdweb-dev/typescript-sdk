@@ -301,21 +301,17 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       merkleRoot: c.merkleRoot,
     }));
 
-    if (factory.allSnapshots().length === 0) {
-      return await this.sendTransaction("setClaimConditions", [
-        tokenId,
-        conditions,
-      ]);
-    }
-
     const merkleInfo: { [key: string]: string } = {};
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
-
     const { metadata } = await this.getMetadata();
     invariant(metadata, "Metadata is not set, this should never happen");
-    metadata["merkle"] = merkleInfo;
+    if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
+      metadata["merkle"] = {};
+    } else {
+      metadata["merkle"] = merkleInfo;
+    }
 
     const metadataUri = await this.storage.upload(JSON.stringify(metadata));
     const encoded = [

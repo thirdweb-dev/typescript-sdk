@@ -1,11 +1,12 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { expect, assert, use } from "chai";
-import { DropModule } from "../src/index";
-// @ts-ignore
-import { appModule, sdk, signers } from "./before.test";
+import { assert, expect } from "chai";
 import { MerkleTree } from "merkletreejs";
-import * as keccak256 from "keccak256";
+import { DropModule } from "../src/index";
+import { appModule, sdk, signers } from "./before.test";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const keccak256 = require("keccak256");
 
 global.fetch = require("node-fetch");
 
@@ -22,7 +23,6 @@ describe("Drop Module", async () => {
 
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
-
     console.log("Creating drop module");
     await sdk.setProviderOrSigner(adminWallet);
     dropModule = await appModule.deployDropModule({
@@ -110,14 +110,14 @@ describe("Drop Module", async () => {
     newFactory.newClaimPhase({
       startTime: new Date(),
     });
-    await dropModule.setMintConditions(newFactory);
+    await dropModule.setClaimConditions(newFactory);
     const { metadata: newMetadata } = await dropModule.getMetadata();
     const newMerkles: { [key: string]: string } = newMetadata?.merkle;
     expect(JSON.stringify(newMerkles)).to.eq("{}");
   });
 
   it("allow all addresses in the merkle tree to claim", async () => {
-    const factory = dropModule.getMintConditionsFactory();
+    const factory = dropModule.getClaimConditionsFactory();
     const phase = factory.newClaimPhase({
       startTime: new Date(),
     });
@@ -134,11 +134,19 @@ describe("Drop Module", async () => {
     await phase.setSnapshot(members);
 
     console.log("Setting claim condition");
-    await dropModule.setMintConditions(factory);
+    await dropModule.setClaimConditions(factory);
 
     console.log("Claim condition set");
     console.log("Minting 100");
-    await dropModule.lazyMintAmount(100);
+
+    const metadata = [];
+    for (let i = 0; i < 10; i++) {
+      metadata.push({
+        name: `test ${i}`,
+      });
+    }
+    console.log("calling lazy mint batch");
+    await dropModule.lazyMintBatch(metadata);
 
     console.log("Minted");
     console.log("Claiming");
@@ -208,7 +216,6 @@ describe("Drop Module", async () => {
       sortLeaves: true,
       sortPairs: true,
     });
-    console.log("Root = ", tree.getHexRoot());
     const snapshot = await sdk.createSnapshot(members);
     for (const leaf of members) {
       const expectedProof = tree.getHexProof(keccak256(leaf));
