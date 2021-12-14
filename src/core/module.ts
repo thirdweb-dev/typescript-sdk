@@ -428,7 +428,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
             [from.toLowerCase(), JSON.stringify(payload)],
           );
         } else {
-          throw e;
+          throw new Error(`Failed to sign: ${e}`);
         }
       }
     }
