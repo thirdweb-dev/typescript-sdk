@@ -68,7 +68,7 @@ describe("Roles Module", async () => {
     const newRoles = await nftModule.getAllRoleMembers();
     assert.isTrue(
       newRoles.admin.length === 1 &&
-        newRoles.admin.includes("0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"),
+        newRoles.admin.includes(adminWallet.address),
     );
     assert.isTrue(
       newRoles.minter.length === 2 &&
@@ -105,7 +105,7 @@ describe("Roles Module", async () => {
     const newRoles = await nftModule.getAllRoleMembers();
     assert.isTrue(
       newRoles.admin.length === 2 &&
-        newRoles.admin.includes("0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803") &&
+        newRoles.admin.includes(adminWallet.address) &&
         newRoles.admin.includes("0x553C5E856801b5876e80D32a192086b2035286C1"),
     );
     assert.isTrue(
