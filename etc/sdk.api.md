@@ -973,9 +973,9 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
     protected getModuleRoles(): readonly Role[];
     getRoleMembers(role: Role): Promise<string[]>;
     grantRole(role: Role, address: string): Promise<TransactionReceipt>;
-    revokeAllRolesFromAddress(address: string): Promise<Role[]>;
     prepareBatchMetadata(metadata: MetadataURIOrObject[]): Promise<string[]>;
     prepareMetadata(metadata: MetadataURIOrObject): Promise<string>;
+    revokeAllRolesFromAddress(address: string): Promise<Role[]>;
     revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
     setAllRoleMembers(rolesWithAddresses: SetAllRoles): Promise<any>;
 }
@@ -1212,10 +1212,7 @@ export type SetAllRoles = {
     [key in keyof IRoles]?: string[];
 };
 
-// @public
-export interface SplitRecipient {
-    address: string;
-    splitPercentage: number;
+// @public (undocumented)
 export class Snapshot {
     // (undocumented)
     claims: ClaimProof[];
