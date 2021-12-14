@@ -5,7 +5,9 @@ import { DropModule } from "../src/index";
 // @ts-ignore
 import { appModule, sdk, signers } from "./before.test";
 import { MerkleTree } from "merkletreejs";
-import * as keccak256 from "keccak256";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const keccak256 = require("keccak256");
 
 global.fetch = require("node-fetch");
 

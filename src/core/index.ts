@@ -2,8 +2,6 @@ import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
 import { JsonConvert } from "json2typescript";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-import * as keccak256 from "keccak256";
 import MerkleTree from "merkletreejs";
 import type { C } from "ts-toolbelt";
 import {
@@ -42,6 +40,9 @@ import {
   ProviderOrSigner,
   ValidProviderInput,
 } from "./types";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const keccak256 = require("keccak256");
 
 /**
  * @internal
