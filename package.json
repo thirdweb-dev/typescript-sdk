@@ -72,6 +72,7 @@
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/constants": "^5.5.0",
     "@ethersproject/contracts": "^5.5.0",
+    "@ethersproject/hash": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
     "@web-std/file": "^3.0.0",

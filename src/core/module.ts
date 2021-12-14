@@ -1,10 +1,6 @@
 import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
-import {
-  JsonRpcSigner,
-  Log,
-  Provider,
-  TransactionReceipt,
-} from "@ethersproject/providers";
+import { Log, Provider, TransactionReceipt } from "@ethersproject/providers";
+import { _TypedDataEncoder } from "@ethersproject/hash";
 import { signERC2612Permit } from "eth-permit";
 import {
   BaseContract,
@@ -406,11 +402,16 @@ export class Module<TContract extends BaseContract = BaseContract> {
       message = { to: contract.address, ...permit };
       signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
     } else {
+      signature = await signer.signMessage(
+        JSON.stringify(_TypedDataEncoder.getPayload(domain, types, message)),
+      );
+      /*
       signature = await (signer as JsonRpcSigner)._signTypedData(
         domain,
         types,
         message,
       );
+      */
     }
 
     // await forwarder.verify(message, signature);
