@@ -75,8 +75,9 @@ export interface VoteSettings {
 }
 
 /**
- *
  * Access this module by calling {@link ThirdwebSDK.getVoteModule}
+ *
+ * @alpha
  * @public
  */
 export class VoteModule extends Module<VotingGovernor> {
