@@ -4,7 +4,7 @@ import {
   VotingGovernor__factory,
 } from "@3rdweb/contracts";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import {
   Currency,
   CurrencyValue,
@@ -14,56 +14,8 @@ import {
 } from "../common";
 import { Module } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
-
-export enum VoteType {
-  Against = 0,
-  For = 1,
-  Abstain = 2,
-}
-
-export enum ProposalState {
-  Pending,
-  Active,
-  Canceled,
-  Defeated,
-  Succeeded,
-  Queued,
-  Expired,
-  Executed,
-}
-
-export interface ProposalVote {
-  type: VoteType;
-  label: string;
-  count: BigNumber;
-}
-
-export interface ProposalExecution {
-  /**
-   * The address of the contract that the proposal will execute a transaction on.
-   * If the proposal is sending a token to a wallet, this address should be the address
-   * of the wallet that will be receiving the tokens.
-   */
-  to: string;
-
-  /**
-   * The amount of a native that may be sent if a proposal is executing a token transfer.
-   */
-  value: BigNumberish;
-
-  data: BytesLike;
-}
-
-export interface Proposal {
-  proposalId: string;
-  proposer: string;
-  description: string;
-  startBlock: BigNumber;
-  endBlock: BigNumber;
-  state: ProposalState;
-  votes: ProposalVote[];
-  executions: ProposalExecution[];
-}
+import { VoteType } from "../enums";
+import { Proposal, ProposalExecutable } from "../types/vote";
 
 export interface VoteSettings {
   votingDelay: string;
@@ -125,9 +77,15 @@ export class VoteModule extends Module<VotingGovernor> {
     };
   }
 
+  /**
+   * Get a proposal by id.
+   *
+   * @param proposalId - The proposal id to get.
+   * @returns - The proposal.
+   */
   public async get(proposalId: string): Promise<Proposal> {
-    // early error out if proposal doesn't exist
-    await this.readOnlyContract.state(proposalId);
+    await this.ensureExists(proposalId);
+
     const all = await this.getAll();
     const proposals = all.filter(
       (p) => p.proposalId.toLowerCase() === proposalId.toLowerCase(),
@@ -138,12 +96,17 @@ export class VoteModule extends Module<VotingGovernor> {
     return proposals[0];
   }
 
+  /**
+   * Returns all the proposals in the contract.
+   *
+   * @returns - All the proposals in the contract.
+   */
   public async getAll(): Promise<Proposal[]> {
     const proposals = await this.readOnlyContract.queryFilter(
       this.contract.filters.ProposalCreated(),
     );
 
-    const results = [];
+    const results: Proposal[] = [];
     const states = await Promise.all(
       proposals.map((p) => this.readOnlyContract.state(p.args.proposalId)),
     );
@@ -189,20 +152,31 @@ export class VoteModule extends Module<VotingGovernor> {
         endBlock: p.endBlock,
         state: s,
         votes: v,
-        executions: e,
+        executions: e.map((exec) => ({
+          toAddress: exec.to,
+          tokenValue: exec.value,
+          transactionData: exec.data,
+        })),
       });
     }
 
     return results;
   }
 
+  /**
+   * Create a new proposal.
+   *
+   * @param description - The description of the proposal.
+   * @param executions - A set of executable transactions that will be run if the proposal is passed and executed.
+   * @returns - The id of the created proposal.
+   */
   public async propose(
     description: string,
-    executions: ProposalExecution[],
+    executions: ProposalExecutable[],
   ): Promise<BigNumber> {
-    const tos = executions.map((p) => p.to);
-    const values = executions.map((p) => p.value);
-    const datas = executions.map((p) => p.data);
+    const tos = executions.map((p) => p.toAddress);
+    const values = executions.map((p) => p.tokenValue);
+    const datas = executions.map((p) => p.transactionData);
     const receipt = await this.sendTransaction("propose", [
       tos,
       values,
@@ -211,11 +185,19 @@ export class VoteModule extends Module<VotingGovernor> {
     ]);
 
     const event = this.parseEventLogs("ProposalCreated", receipt?.logs);
-    console.log(event);
     return event.proposalId;
   }
 
+  /**
+   * Vote on a proposal.
+   *
+   * @param proposalId - The proposal to cast a vote on.
+   * @param voteType - The position the voter is taking on their vote.
+   * @param reason - (optional) The reason for the vote.
+   */
   public async vote(proposalId: string, voteType: VoteType, reason = "") {
+    await this.ensureExists(proposalId);
+
     await this.sendTransaction("castVoteWithReason", [
       proposalId,
       voteType,
@@ -223,11 +205,18 @@ export class VoteModule extends Module<VotingGovernor> {
     ]);
   }
 
+  /**
+   * Once the voting period has ended, call this method to execute the executables in the proposal.
+   *
+   * @param proposalId - The proposal id to execute.
+   */
   public async execute(proposalId: string) {
+    await this.ensureExists(proposalId);
+
     const proposal = await this.get(proposalId);
-    const tos = proposal.executions.map((p) => p.to);
-    const values = proposal.executions.map((p) => p.value);
-    const datas = proposal.executions.map((p) => p.data);
+    const tos = proposal.executions.map((p) => p.toAddress);
+    const values = proposal.executions.map((p) => p.tokenValue);
+    const datas = proposal.executions.map((p) => p.transactionData);
     const descriptionHash = ethers.utils.id(proposal.description);
     await this.sendTransaction("execute", [
       tos,
@@ -237,11 +226,19 @@ export class VoteModule extends Module<VotingGovernor> {
     ]);
   }
 
+  /**
+   * Check to see if a proposal can be executed.
+   *
+   * @param proposalId - The proposal ID to check.
+   * @returns - True if the proposal can be executed, false otherwise.
+   */
   public async canExecute(proposalId: string): Promise<boolean> {
+    await this.ensureExists(proposalId);
+
     const proposal = await this.get(proposalId);
-    const tos = proposal.executions.map((p) => p.to);
-    const values = proposal.executions.map((p) => p.value);
-    const datas = proposal.executions.map((p) => p.data);
+    const tos = proposal.executions.map((p) => p.toAddress);
+    const values = proposal.executions.map((p) => p.tokenValue);
+    const datas = proposal.executions.map((p) => p.transactionData);
     const descriptionHash = ethers.utils.id(proposal.description);
     try {
       await this.readOnlyContract.callStatic.execute(
@@ -297,5 +294,15 @@ export class VoteModule extends Module<VotingGovernor> {
   ): Promise<TransactionReceipt> {
     const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     return await this.sendTransaction("setContractURI", [uri]);
+  }
+
+  /**
+   * Find a proposal by its id.
+   *
+   * @internal
+   * @param proposalId - Proposal to check for
+   */
+  private async ensureExists(proposalId: string): Promise<void> {
+    await this.readOnlyContract.state(proposalId);
   }
 }

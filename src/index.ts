@@ -68,6 +68,7 @@ export type { IAppModule } from "./core/registry";
 export * from "./core/types";
 export * from "./modules";
 export * from "./types";
+export * from "./enums";
 export * from "./factories";
 export * from "./interfaces";
 

@@ -814,7 +814,7 @@ export class AppModule
         metadata.votingTokenAddress,
         metadata.votingDelay,
         metadata.votingPeriod,
-        metadata.proposalTokenThreshold,
+        metadata.minimumNumberOfTokensNeededToPropose,
         metadata.votingQuorumFraction,
         await this.sdk.getForwarderAddress(),
         metadataUri,

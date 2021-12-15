@@ -1,10 +1,8 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { VoteModule, CurrencyModule } from "../src";
-import { appModule, sdk, signers } from "./before.test";
-
-import { expect, assert } from "chai";
+import { assert } from "chai";
 import { ethers } from "ethers";
-import { getNetwork } from "@ethersproject/providers";
+import { CurrencyModule, VoteModule } from "../src";
+import { appModule, sdk, signers } from "./before.test";
 
 global.fetch = require("node-fetch");
 
@@ -27,10 +25,9 @@ describe("Vote Module", async () => {
       name: "DAOToken #1",
       symbol: "DAO1",
     });
+
     voteModule = await appModule.deployVoteModule({
       name: "DAO #1",
-
-      // governance token address
       votingTokenAddress: currencyModule.address,
 
       // proposal start delay by block number. when can people start voting?
@@ -39,11 +36,11 @@ describe("Vote Module", async () => {
       // porposal end time in number of block. 1 minute block (1 minutes * 60 seconds / 2 block per sec). when do people stop voting and can start executing? 30 = 1 minute in mumbai
       votingPeriod: 1,
 
-      // quorum 1%, min 0%, max 100%
       votingQuorumFraction: 1,
 
-      // requires 1 whole govtoken to be able to create a proposal
-      proposalTokenThreshold: ethers.utils.parseUnits("1", 18).toString(),
+      minimumNumberOfTokensNeededToPropose: ethers.utils
+        .parseUnits("1", 18)
+        .toString(),
     });
 
     // step 1: mint 1000 governance tokens to my wallet
@@ -61,16 +58,16 @@ describe("Vote Module", async () => {
     await currencyModule.contract.delegate(samWallet.address);
   });
 
-  it.skip("should permit a proposal to be passed if it receives the right votes", async () => {
+  it("should permit a proposal to be passed if it receives the right votes", async () => {
     await sdk.setProviderOrSigner(samWallet);
     const proposalId = await voteModule.propose("Mint Tokens", [
       {
-        to: currencyModule.address,
-        value: 0,
-        data: currencyModule.contract.interface.encodeFunctionData("mint", [
-          bobWallet.address,
-          ethers.utils.parseUnits("1", 18),
-        ]),
+        toAddress: currencyModule.address,
+        tokenValue: 0,
+        transactionData: currencyModule.contract.interface.encodeFunctionData(
+          "mint",
+          [bobWallet.address, ethers.utils.parseUnits("1", 18)],
+        ),
       },
     ]);
 
@@ -99,14 +96,12 @@ describe("Vote Module", async () => {
     assert.equal(balanceOfBobsWallet.displayValue, "1.0");
   });
 
-  it("", async () => {
+  it.skip("", async () => {
     const blockTimes = [];
     const provider = ethers.getDefaultProvider();
 
     const latest = await provider.getBlock("latest");
     for (let i = 0; i <= 10; i++) {
-      console.log(provider.network);
-
       const current = await provider.getBlock(latest.number - i);
       const previous = await provider.getBlock(latest.number - i - 1);
       console.log(current.timestamp, previous.timestamp);
@@ -118,5 +113,23 @@ describe("Vote Module", async () => {
 
     const sum = blockTimes.reduce((result, a) => result + a, 0);
     console.log(sum / blockTimes.length);
+  });
+
+  it("should permit a proposal to be passed if it receives the right votes", async () => {
+    await sdk.setProviderOrSigner(samWallet);
+    const description = "Mint Tokens";
+    const proposalId = await voteModule.propose(description, [
+      {
+        toAddress: currencyModule.address,
+        tokenValue: 0,
+        transactionData: currencyModule.contract.interface.encodeFunctionData(
+          "mint",
+          [bobWallet.address, ethers.utils.parseUnits("1", 18)],
+        ),
+      },
+    ]);
+
+    const proposal = await voteModule.get(proposalId.toString());
+    assert.equal(proposal.description, description);
   });
 });
