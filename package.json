@@ -17,6 +17,7 @@
   ],
   "sideEffects": false,
   "scripts": {
+    "dev": "tsdx watch",
     "build:tsdx": "tsdx build",
     "format": "prettier src/ --write",
     "prepublishOnly": "yarn lint",
