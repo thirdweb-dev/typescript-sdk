@@ -350,7 +350,10 @@ export class Module<TContract extends BaseContract = BaseContract> {
     const to = this.address;
     const value = callOverrides?.value || 0;
     const data = contract.interface.encodeFunctionData(fn, args);
-    const gas = (await contract.estimateGas[fn](...args)).mul(2);
+    const gas = Math.max(
+      (await contract.estimateGas[fn](...args)).mul(2).toNumber(),
+      200000,
+    );
     const forwarderAddress = this.options.transactionRelayerForwarderAddress;
     const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
     const nonce = await getAndIncrementNonce(forwarder, from);
