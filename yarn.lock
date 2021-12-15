@@ -2,13 +2,10 @@
 # yarn lockfile v1
 
 
-"@3rdweb/contracts@1.15.0-5":
-  version "1.15.0-5"
-  resolved "https://registry.npmjs.org/@3rdweb/contracts/-/contracts-1.15.0-5.tgz"
-  integrity sha512-YyOh1Zlvh/VVIWj/0lwqn5iOU3HTGCD3N58x6xfKVIM6xvbh/pgl8HJCOfdN1f4jRZhusNB5o4U2SMvMohKVtw==
-  dependencies:
-    "@chainlink/contracts" "^0.2.2"
-    "@openzeppelin/contracts" "^4.3.3"
+"@3rdweb/contracts@^1.15.1-1":
+  version "1.15.1-1"
+  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.15.1-1.tgz#506ac118272db73f92826668dea7ffe2307151b1"
+  integrity sha512-nlmNE7SGhGm2BFL1LfMdUCoY1lcJ3m4dSxEDLSIZ5+ZGMglHoDojnc0wYcb1OpU9RgP5UZ03KSrNDwL+Z8n2/g==
 
 "@babel/code-frame@7.12.11", "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.5.5":
   version "7.12.11"
@@ -932,11 +929,6 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@chainlink/contracts@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.npmjs.org/@chainlink/contracts/-/contracts-0.2.2.tgz"
-  integrity sha512-wxXPbt7O3aZaUSG34ufFASC5amRSL6eeYCqsa+2gpqbB8Hk7B7FydEDCI5dqvAC444TlFskPHcVbizCZkRHPpw==
-
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.npmjs.org/@cnakazawa/watch/-/watch-1.0.4.tgz"
@@ -1658,11 +1650,6 @@
   version "2.0.3"
   resolved "https://registry.npmjs.org/@nomiclabs/hardhat-ethers/-/hardhat-ethers-2.0.3.tgz"
   integrity sha512-IJ0gBotVtO7YyLZyHNgbxzskUtFok+JkRlKPo8YELqj1ms9XL6Qm3vsfsGdZr22wnJeVEF5TQPotKuwQk21Dag==
-
-"@openzeppelin/contracts@^4.3.3":
-  version "4.3.3"
-  resolved "https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-4.3.3.tgz"
-  integrity sha512-tDBopO1c98Yk7Cv/PZlHqrvtVjlgK5R4J6jxLwoO7qxK4xqOiZG+zSkIvGFpPZ0ikc3QOED3plgdqjgNTnBc7g==
 
 "@rollup/plugin-babel@^5.1.0":
   version "5.3.0"
