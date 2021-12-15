@@ -896,8 +896,6 @@ export class Module<TContract extends BaseContract = BaseContract> {
     // @internal @virtual (undocumented)
     protected getModuleType(): ModuleType;
     // @internal (undocumented)
-    protected getProvider(): Promise<Provider | undefined>;
-    // @internal (undocumented)
     protected getSigner(): Signer | null;
     // @internal (undocumented)
     protected getSignerAddress(): Promise<string>;
@@ -981,7 +979,9 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
     grantRole(role: Role, address: string): Promise<TransactionReceipt>;
     prepareBatchMetadata(metadata: MetadataURIOrObject[]): Promise<string[]>;
     prepareMetadata(metadata: MetadataURIOrObject): Promise<string>;
+    revokeAllRolesFromAddress(address: string): Promise<Role[]>;
     revokeRole(role: Role, address: string): Promise<TransactionReceipt>;
+    setAllRoleMembers(rolesWithAddresses: SetAllRoles): Promise<any>;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "NATIVE_TOKEN_ADDRESS" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1268,6 +1268,11 @@ export type Role = keyof IRoles;
 //
 // @internal (undocumented)
 export const RolesMap: IRoles;
+
+// @public (undocumented)
+export type SetAllRoles = {
+    [key in keyof IRoles]?: string[];
+};
 
 // @public (undocumented)
 export class Snapshot {

@@ -1,6 +1,6 @@
 {
   "name": "@3rdweb/sdk",
-  "version": "1.25.2-0",
+  "version": "1.25.3",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   ],
   "sideEffects": false,
   "scripts": {
+    "dev": "tsdx watch",
     "build:tsdx": "tsdx build",
     "format": "prettier src/ --write",
     "prepublishOnly": "yarn lint",

@@ -42,9 +42,6 @@ import {
   ValidProviderInput,
 } from "./types";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const keccak256 = require("keccak256");
-
 /**
  * @internal
  */
@@ -497,6 +494,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
     if (hasDuplicates) {
       throw new DuplicateLeafsError();
     }
+
+    const { default: keccak256 } = await import("keccak256");
 
     const hashedLeafs = leafs.map((l) => keccak256(l));
     const tree = new MerkleTree(hashedLeafs, keccak256, {
