@@ -313,11 +313,8 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       metadata["merkle"] = merkleInfo;
     }
 
-    const metadataUri = await this.storage.upload(JSON.stringify(metadata));
+    // const metadataUri = await this.storage.upload(JSON.stringify(metadata));
     const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metadataUri,
-      ]),
       this.contract.interface.encodeFunctionData("setClaimConditions", [
         tokenId,
         conditions,
