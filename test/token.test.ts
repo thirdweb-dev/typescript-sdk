@@ -58,10 +58,19 @@ describe("Token Module", async () => {
       );
     }
   });
-  it("Should parse events properly", async () => {
+  it("should return the correct list of holders and their balances", async () => {
     const balance = parseInt((await currencyModule.balance()).value);
-    await currencyModule.mint(10);
-    const totest = await currencyModule.getAll();
-    chai.assert.equal(totest[adminWallet.address].toNumber(), balance + 10);
+    const addresses = [
+      bobWallet.address,
+      samWallet.address,
+      adminWallet.address,
+      "0xd8Ceb88D81a30e615024024E3fDeB711690EeD92",
+      "0x59AA5E78bbC415E2e00F78a5E713F0A99C7645af",
+    ];
+    addresses.forEach(async (address) => {
+      await currencyModule.mintTo(address, 10);
+      const totest = await currencyModule.balanceOf(address);
+      chai.assert.equal(totest.value, "10");
+    });
   });
 });
