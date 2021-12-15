@@ -1,38 +1,16 @@
-import { CollectionModule } from "../modules/collection";
-import { DatastoreModule } from "../modules/datastore";
-import { DropModule } from "../modules/drop";
-import { MarketModule } from "../modules/market";
-import { NFTModule } from "../modules/nft";
-import { PackModule } from "../modules/pack";
-import { SplitsModule } from "../modules/royalty";
-import { CurrencyModule } from "../modules/token";
-import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
-import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
-import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
-import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
-import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetadata";
-import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
-import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
-import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
+import { MetadataURIOrObject } from "../core/types";
 
-export default interface IAppModule {
-  deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
-
-  deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
-
-  deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
-
-  deployCurrencyModule(
-    metadata: CurrencyModuleMetadata,
-  ): Promise<CurrencyModule>;
-
-  deployMarketModule(metadata: MarketModuleMetadata): Promise<MarketModule>;
-
-  deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
-
-  deployDropModule(metadata: DropModuleMetadata): Promise<DropModule>;
-
-  deployDatastoreModule(
-    metadata: DatastoreModuleMetadata,
-  ): Promise<DatastoreModule>;
+export default interface IDropModule {
+  /**
+   * Allows you to mint a batch of tokens by passing in a list of metadata objects.
+   * The metadata objects will all be uploaded to a distributed file system in a folder format
+   * based on the storage provider set in the SDK.
+   *
+   * Its important to note that the metadata objects are allowed to contain nested File|Blob|Buffer
+   * objects as well as any other data types, so properties like the `image` can be unique for
+   * each token that will be minted.
+   *
+   * @param tokenMetadata - All token metadata objects to be minted.
+   */
+  mintBatch(tokenMetadata: MetadataURIOrObject[]): Promise<void>;
 }

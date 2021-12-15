@@ -16,6 +16,7 @@ export interface ContractMetadata {
   external_link?: string;
   seller_fee_basis_points?: number;
   fee_recipient?: string;
+  [key: string]: any;
 }
 
 /**

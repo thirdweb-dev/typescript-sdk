@@ -4,6 +4,7 @@ import * as chai from "chai";
 import { BigNumber, ethers } from "ethers";
 import ClaimConditionFactory from "../src/factories/ClaimConditionFactory";
 import { PublicMintCondition } from "../src/index";
+import { sdk } from "./before.test";
 
 global.fetch = require("node-fetch");
 
@@ -26,10 +27,13 @@ describe("ClaimConditionFactory", async () => {
   const phaseTwoCurrency = "0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72";
   const phaseTwoPrice: BigNumber = ethers.utils.parseUnits("100", 18);
   const phaseTwoMaxQuantityPerTransaction = 10;
+  const phaseTwoWaitTime = 100;
 
   beforeEach(async () => {
     // This will get the factory of an existing drop
-    factory = new ClaimConditionFactory();
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const createSnapshotFunc = sdk.createSnapshot.bind(sdk);
+    factory = new ClaimConditionFactory(createSnapshotFunc);
 
     // You can also instantiate the factory and import a modules existing
     // mint conditions like this:
@@ -45,7 +49,8 @@ describe("ClaimConditionFactory", async () => {
         startTime: phaseTwoStartTimeInSeconds,
         maxQuantityPerTransaction: phaseTwoMaxQuantityPerTransaction,
       })
-      .setPrice(phaseTwoPrice, phaseTwoCurrency);
+      .setPrice(phaseTwoPrice, phaseTwoCurrency)
+      .setWaitTimeBetweenClaims(phaseTwoWaitTime);
 
     // These conditions will apply on December 1st
     // You need 100 NATIVE tokens to claim a token
@@ -181,6 +186,22 @@ describe("ClaimConditionFactory", async () => {
       conditions[0].merkleRoot.toString(),
       phaseOneMerkleRoot,
       "Phase one `merkleRoot` should be set ",
+    );
+  });
+
+  it("should allow overriding `waitTimePerTransactions`", async () => {
+    chai.assert.equal(
+      conditions[1].waitTimeSecondsLimitPerTransaction.toString(),
+      phaseTwoWaitTime.toString(),
+      "Phase two `waitTime` should be set ",
+    );
+  });
+
+  it("should default `waitTimePerTransactions` to 0", async () => {
+    chai.assert.equal(
+      conditions[0].waitTimeSecondsLimitPerTransaction.toString(),
+      "0",
+      "Phase two `waitTime` should be set ",
     );
   });
 });

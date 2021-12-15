@@ -1,8 +1,14 @@
 import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
+import { JsonConvert } from "json2typescript";
+import MerkleTree from "merkletreejs";
 import type { C } from "ts-toolbelt";
-import { getContractMetadata, uploadMetadata } from "../common";
+import {
+  DuplicateLeafsError,
+  getContractMetadata,
+  uploadMetadata,
+} from "../common";
 import {
   FORWARDER_ADDRESS,
   getContractAddressByChainId,
@@ -10,9 +16,11 @@ import {
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
+import { ISDKOptions, IThirdwebSdk } from "../interfaces";
 import IStorage from "../interfaces/IStorage";
 import { AppModule } from "../modules/app";
 import { BundleModule } from "../modules/bundle";
+import { BundleDropModule } from "../modules/bundleDrop";
 import { CollectionModule } from "../modules/collection";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
@@ -23,6 +31,7 @@ import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule } from "../modules/token";
 import IpfsStorage from "../storage/IpfsStorage";
 import { ModuleMetadataNoType } from "../types/ModuleMetadata";
+import { ClaimProof, Snapshot, SnapshotInfo } from "../types/snapshots";
 import { IAppModule, RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,
@@ -31,56 +40,6 @@ import {
   ProviderOrSigner,
   ValidProviderInput,
 } from "./types";
-
-/**
- * The optional options that can be passed to the SDK.
- * @public
- */
-export interface ISDKOptions {
-  /**
-   * An optional IPFS Gateway. (Default: `https://cloudflare-ipfs.com/ipfs/`).
-   */
-  ipfsGatewayUrl: string;
-
-  /**
-   * Optional Registry Contract Address
-   */
-  registryContractAddress: string;
-
-  /**
-   * maxGasPrice for transactions
-   */
-  maxGasPriceInGwei: number;
-
-  /**
-   * Optional default speed setting for transactions
-   */
-  gasSpeed: string;
-
-  /**
-   * Optional relayer url to be used for gasless transaction
-   */
-  transactionRelayerUrl: string;
-
-  /**
-   * Optional function for sending transaction to relayer
-   * @returns transaction hash of relayed transaction.
-   */
-  transactionRelayerSendFunction: (
-    message: ForwardRequestMessage | PermitRequestMessage,
-    signature: BytesLike,
-  ) => Promise<string>;
-
-  /**
-   * Optional trusted forwarder address overwrite
-   */
-  transactionRelayerForwarderAddress: string;
-
-  /**
-   * Optional read only RPC url
-   */
-  readOnlyRpcUrl: string;
-}
 
 /**
  * @internal
@@ -95,13 +54,14 @@ export type AnyContract =
   | typeof RegistryModule
   | typeof DropModule
   | typeof DatastoreModule
-  | typeof SplitsModule;
+  | typeof SplitsModule
+  | typeof BundleDropModule;
 
 /**
  * The entrypoint to the SDK.
  * @public
  */
-export class ThirdwebSDK {
+export class ThirdwebSDK implements IThirdwebSdk {
   // default options
   private options: ISDKOptions;
   private defaultOptions: ISDKOptions = {
@@ -119,6 +79,7 @@ export class ThirdwebSDK {
 
   private _signer: Signer | null = null;
 
+  private _jsonConvert = new JsonConvert();
   private storage: IStorage;
 
   /**
@@ -151,6 +112,7 @@ export class ThirdwebSDK {
     };
     this.storage = new IpfsStorage(this.options.ipfsGatewayUrl);
   }
+
   private updateModuleSigners() {
     for (const [, _module] of this.modules) {
       if (this.isReadOnly()) {
@@ -407,6 +369,16 @@ export class ThirdwebSDK {
   }
 
   /**
+   * @beta
+   *
+   * @param address - The contract address of the given BundleDrop module.
+   * @returns The Drop Module.
+   */
+  public getBundleDropModule(address: string): BundleDropModule {
+    return this.getOrCreateModule(address, BundleDropModule);
+  }
+
+  /**
    * @alpha
    *
    * @param address - The contract address of the given Royalty module.
@@ -502,6 +474,42 @@ export class ThirdwebSDK {
       return result.txHash;
     }
     throw new Error("relay transaction failed");
+  }
+
+  public async createSnapshot(leafs: string[]): Promise<SnapshotInfo> {
+    const hasDuplicates = new Set(leafs).size < leafs.length;
+    if (hasDuplicates) {
+      throw new DuplicateLeafsError();
+    }
+
+    const { default: keccak256 } = await import("keccak256");
+
+    const hashedLeafs = leafs.map((l) => keccak256(l));
+    const tree = new MerkleTree(hashedLeafs, keccak256, {
+      sort: true,
+    });
+
+    const snapshot: Snapshot = {
+      merkleRoot: tree.getHexRoot(),
+      claims: leafs.map((l): ClaimProof => {
+        const proof = tree.getHexProof(keccak256(l));
+        return {
+          address: l,
+          proof,
+        };
+      }),
+    };
+
+    const serializedSnapshot = JSON.stringify(
+      this._jsonConvert.serializeObject(snapshot, Snapshot),
+    );
+    const uri = await this.storage.upload(serializedSnapshot);
+
+    return {
+      merkleRoot: tree.getHexRoot(),
+      snapshotUri: uri,
+      snapshot,
+    };
   }
 
   /**

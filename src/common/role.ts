@@ -45,6 +45,10 @@ export interface IRoles {
  */
 export type Role = keyof IRoles;
 
+export type SetAllRoles = {
+  [key in keyof IRoles]?: string[];
+};
+
 /**
  *
  * @internal
@@ -78,5 +82,5 @@ export function getRoleHash(role: Role): BytesLike {
   if (role === "admin") {
     return ethers.utils.hexZeroPad([0], 32);
   }
-  return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(_role[role]));
+  return ethers.utils.id(_role[role]);
 }

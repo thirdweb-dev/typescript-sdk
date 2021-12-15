@@ -1,49 +1,41 @@
-import { ethers } from "ethers";
-import { CurrencyModule, ThirdwebSDK } from "../src/index";
 import * as chai from "chai";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { CurrencyModule } from "../src";
+import { appModule, sdk, signers } from "./before.test";
+
+import { expect, assert } from "chai";
 
 global.fetch = require("node-fetch");
 
-const RPC_URL = "rinkeby";
-
 describe("Token Module", async () => {
-  let sdk: ThirdwebSDK;
   let currencyModule: CurrencyModule;
 
-  beforeEach(async () => {
-    if (process.env.PKEY) {
-      sdk = new ThirdwebSDK(
-        new ethers.Wallet(process.env.PKEY, ethers.getDefaultProvider(RPC_URL)),
-        {
-          ipfsGatewayUrl: "https://ipfs.io/ipfs/",
-        },
-      );
-    } else {
-      sdk = new ThirdwebSDK(RPC_URL, {
-        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
-      });
-    }
+  let adminWallet: SignerWithAddress,
+    samWallet: SignerWithAddress,
+    bobWallet: SignerWithAddress;
 
-    currencyModule = sdk.getCurrencyModule(
-      "0xea0b55CF85A41c03daeA88f99B7DdEb6e18DBE94",
-    );
+
+  before(() => {
+    [adminWallet, samWallet, bobWallet] = signers;
+  });
+
+  beforeEach(async () => {
+    sdk.setProviderOrSigner(adminWallet);
+    currencyModule = await appModule.deployCurrencyModule({
+      name: "Currency Module",
+      symbol: "TEST",
+    });
   });
 
   it.skip("should mint a batch of tokens to the correct wallets", async () => {
     const batch = [
       {
-        address: "0x4d36d531D9cB40b8694763123D52170FAE5e1195",
+        address: bobWallet.address,
         toMint: 10,
-        currencyBalance: await currencyModule.balanceOf(
-          "0x4d36d531D9cB40b8694763123D52170FAE5e1195",
-        ),
       },
       {
-        address: "0x99703159fbE079e1a48B53039a5e52e7b2d9E559",
+        address: samWallet.address,
         toMint: 10,
-        currencyBalance: await currencyModule.balanceOf(
-          "0x99703159fbE079e1a48B53039a5e52e7b2d9E559",
-        ),
       },
     ];
 
@@ -56,20 +48,16 @@ describe("Token Module", async () => {
       }),
     );
 
-    batch.forEach(async (b) => {
-      const newBalance = parseInt(
-        (await currencyModule.balanceOf(b.address)).displayValue,
-        10,
-      );
-      const expectedBalance =
-        parseInt(b.currencyBalance.displayValue, 10) + b.toMint;
+    for (const b of batch) {
+      const expectedBalance = 10;
+      const actualBalance = (await currencyModule.balanceOf(b.address)).value;
 
-      chai.assert.equal(
-        newBalance,
-        expectedBalance,
+      assert.equal(
+        actualBalance,
+        expectedBalance.toString(),
         `Wallet balance should increase by ${b.toMint}`,
       );
-    });
+    }
   });
   it("Should parse events properly", async () => {
     const balance = parseInt((await currencyModule.balance()).value);

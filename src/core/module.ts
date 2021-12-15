@@ -1,11 +1,13 @@
 import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
-import { signERC2612Permit } from "eth-permit";
 import {
+  ExternalProvider,
+  JsonRpcProvider,
   JsonRpcSigner,
   Log,
-  Provider,
   TransactionReceipt,
+  Web3Provider,
 } from "@ethersproject/providers";
+import { signERC2612Permit } from "eth-permit";
 import {
   BaseContract,
   BigNumber,
@@ -14,15 +16,16 @@ import {
   ethers,
   Signer,
 } from "ethers";
-import type { ISDKOptions, ThirdwebSDK } from ".";
 import { getContractMetadata, isContract } from "../common/contract";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { uploadMetadata } from "../common/ipfs";
 import { ModuleType } from "../common/module-type";
-import { getRoleHash, Role } from "../common/role";
+import { getRoleHash, Role, SetAllRoles } from "../common/role";
+import { ISDKOptions } from "../interfaces/ISdkOptions";
 import { ModuleMetadata } from "../types/ModuleMetadata";
+import { ThirdwebSDK } from "./index";
 import type {
   ForwardRequestMessage,
   MetadataURIOrObject,
@@ -134,9 +137,10 @@ export class Module<TContract extends BaseContract = BaseContract> {
     invariant(await this.exists(), "contract does not exist");
     const contract = this.connectContract();
     const type = this.getModuleType();
+
     return {
       metadata: await getContractMetadata(
-        this.getProviderOrSigner(),
+        await this.getProvider(),
         contract.address,
         this.options.ipfsGatewayUrl,
       ),
@@ -218,13 +222,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
   /**
    * @internal
    */
-  protected async getProvider(): Promise<Provider | undefined> {
-    const provider: Provider | undefined = Signer.isSigner(
-      this.getProviderOrSigner(),
-    )
-      ? (this.providerOrSigner as Signer).provider
-      : (this.providerOrSigner as Provider);
-    return provider;
+  private async getProvider() {
+    return this.readOnlyContract.provider;
   }
 
   /**
@@ -339,7 +338,6 @@ export class Module<TContract extends BaseContract = BaseContract> {
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<TransactionReceipt> {
-    // console.log("callOverrides", callOverrides);
     const signer = this.getSigner();
     invariant(
       signer,
@@ -352,14 +350,20 @@ export class Module<TContract extends BaseContract = BaseContract> {
     const to = this.address;
     const value = callOverrides?.value || 0;
     const data = contract.interface.encodeFunctionData(fn, args);
-    const gas = (await contract.estimateGas[fn](...args)).mul(2);
     const forwarderAddress = this.options.transactionRelayerForwarderAddress;
-    const forwarder = Forwarder__factory.connect(
-      forwarderAddress,
-      this.getProviderOrSigner(),
-    );
-    const nonce = await getAndIncrementNonce(forwarder, from);
+    const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
 
+    const gasEstimate = await contract.estimateGas[fn](...args);
+    let gas = gasEstimate.mul(2);
+
+    // in some cases WalletConnect doesn't properly gives an estimate for how much gas it would actually use.
+    // it'd estimate ~21740 on polygon.
+    // as a fix, we're setting it to a high arbitrary number (500k) as the gas limit that should cover for most function calls.
+    if (gasEstimate.lt(25000)) {
+      gas = BigNumber.from(500000);
+    }
+
+    const nonce = await getAndIncrementNonce(forwarder, from);
     const domain = {
       name: "GSNv2 Forwarder",
       version: "0.0.1",
@@ -404,11 +408,30 @@ export class Module<TContract extends BaseContract = BaseContract> {
       message = { to: contract.address, ...permit };
       signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
     } else {
-      signature = await (signer as JsonRpcSigner)._signTypedData(
-        domain,
-        types,
-        message,
-      );
+      // wallet connect special 🦋
+      if (
+        (
+          (signer?.provider as Web3Provider)?.provider as ExternalProvider & {
+            isWalletConnect?: boolean;
+          }
+        )?.isWalletConnect
+      ) {
+        const payload = ethers.utils._TypedDataEncoder.getPayload(
+          domain,
+          types,
+          message,
+        );
+        signature = await (signer?.provider as JsonRpcProvider).send(
+          "eth_signTypedData",
+          [from.toLowerCase(), JSON.stringify(payload)],
+        );
+      } else {
+        signature = await (signer as JsonRpcSigner)._signTypedData(
+          domain,
+          types,
+          message,
+        );
+      }
     }
 
     // await forwarder.verify(message, signature);
@@ -519,6 +542,95 @@ export class ModuleWithRoles<
     }
     return roles;
   }
+  /**
+   * Call this to OVERWRITE the list of addresses that are members of specific roles.
+   *
+   * Every role in the list will be overwritten with the new list of addresses provided with them.
+   * If you want to add or remove addresses for a single address use {@link ModuleWithRoles.grantRole | grantRole} and {@link ModuleWithRoles.grantRole | revokeRole} respectively instead.
+   * @param rolesWithAddresses - A record of {@link Role}s to lists of addresses that should be members of the given role.
+   * @throws If you are requestiong a role that does not exist on the module this will throw an {@link InvariantError}.
+   * @example Say you want to overwrite the list of addresses that are members of the {@link IRoles.minter | minter} role.
+   * ```typescript
+   * const minterAddresses: string[] = await module.getRoleMemberList("minter");
+   * await module.setAllRoleMembers({
+   *  minter: []
+   * });
+   * console.log(await module.getRoleMemberList("minter")); // No matter what members had the role before, the new list will be set to []
+   * ```
+   * @public
+   *
+   * */
+  public async setAllRoleMembers(
+    rolesWithAddresses: SetAllRoles,
+  ): Promise<any> {
+    const roles = Object.keys(rolesWithAddresses);
+    invariant(roles.length, "you must provide at least one role to set");
+    invariant(
+      roles.every((role) => this.roles.includes(role as Role)),
+      "this module does not support the given role",
+    );
+    const currentRoles = await this.getAllRoleMembers();
+    const encoded: string[] = [];
+    roles.forEach(async (role) => {
+      const addresses = rolesWithAddresses[role as Role] || [];
+      const currentAddresses = currentRoles[role as Role] || [];
+      const toAdd = addresses.filter(
+        (address) => !currentAddresses.includes(address),
+      );
+      const toRemove = currentAddresses.filter(
+        (address) => !addresses.includes(address),
+      );
+      if (toAdd.length) {
+        toAdd.forEach((address) => {
+          encoded.push(
+            this.contract.interface.encodeFunctionData("grantRole", [
+              getRoleHash(role as Role),
+              address,
+            ]),
+          );
+        });
+      }
+      if (toRemove.length) {
+        toRemove.forEach((address) => {
+          encoded.push(
+            this.contract.interface.encodeFunctionData("revokeRole", [
+              getRoleHash(role as Role),
+              address,
+            ]),
+          );
+        });
+      }
+    });
+    return await this.sendTransaction("multicall", [encoded]);
+  }
+  /**
+   *
+   * Call this to revoke all roles given to a specific address.
+   * @param address - The address to revoke all roles for.
+   * @returns A list of roles that were revoked.
+   *
+   * @public
+   *
+   */
+
+  public async revokeAllRolesFromAddress(address: string): Promise<Role[]> {
+    const currentRoles = await this.getAllRoleMembers();
+    const encoded: string[] = [];
+    const rolesRemoved: Role[] = [];
+    Object.keys(currentRoles).forEach(async (role) => {
+      if (currentRoles[role as Role]?.includes(address)) {
+        encoded.push(
+          this.contract.interface.encodeFunctionData("revokeRole", [
+            getRoleHash(role as Role),
+            address,
+          ]),
+        );
+        rolesRemoved.push(role as Role);
+      }
+    });
+    await this.sendTransaction("multicall", [encoded]);
+    return rolesRemoved;
+  }
 
   /**
    * Call this to grant a role to a specific address.
@@ -586,5 +698,57 @@ export class ModuleWithRoles<
         address,
       ]);
     }
+  }
+
+  /**
+   * Prepares any set of metadata for uploading by recursively converting all Buffer|Blob|File objects
+   * into a hash of the object after its been uploaded to distributed storage (e.g. IPFS). After uploading
+   * any File|Buffer|Blob, the metadata is serialized to a string.
+   *
+   * @param metadata - The list of metadata to prepare for upload.
+   * @returns - The serialized metadata object.
+   */
+  public async prepareMetadata(metadata: MetadataURIOrObject): Promise<string> {
+    if (typeof metadata === "string") {
+      return metadata;
+    }
+
+    const _fileHandler = async (object: any) => {
+      const keys = Object.keys(object);
+      for (const key in keys) {
+        const val = object[keys[key]];
+        const shouldUpload = val instanceof File || val instanceof Buffer;
+        if (shouldUpload) {
+          object[keys[key]] = await this.sdk
+            .getStorage()
+            .upload(object[keys[key]]);
+        }
+        if (shouldUpload && typeof object[keys[key]] !== "string") {
+          throw new Error("Upload to IPFS failed");
+        }
+        if (typeof val === "object") {
+          object[keys[key]] = await _fileHandler(object[keys[key]]);
+        }
+      }
+      return object;
+    };
+
+    metadata = await _fileHandler(metadata);
+    // TODO: use json2typescript to convert metadata to string
+    return JSON.stringify(metadata);
+  }
+
+  /**
+   * Prepares a list of metadata for uploading.
+   *
+   * @param metadata - List of metadata to prepare for upload.
+   * @returns - List of metadata prepared for upload.
+   */
+  public async prepareBatchMetadata(
+    metadata: MetadataURIOrObject[],
+  ): Promise<string[]> {
+    return await Promise.all(
+      metadata.map(async (m) => await this.prepareMetadata(m)),
+    );
   }
 }

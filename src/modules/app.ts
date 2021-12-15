@@ -2,6 +2,7 @@ import {
   Coin__factory,
   DataStore__factory,
   ERC20__factory,
+  LazyMintERC1155__factory,
   LazyNFT__factory,
   Market__factory,
   NFTCollection__factory,
@@ -23,6 +24,7 @@ import {
   Role,
   RolesMap,
 } from "../common";
+import { getNativeTokenByChainId } from "../common/address";
 import { getContractMetadata } from "../common/contract";
 import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
@@ -30,6 +32,7 @@ import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import IAppModule from "../interfaces/IAppModule";
 import FileOrBuffer from "../types/FileOrBuffer";
+import BundleDropModuleMetadata from "../types/module-deployments/BundleDropModuleMetadata";
 import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
 import CommonModuleMetadata from "../types/module-deployments/CommonModuleMetadata";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
@@ -40,6 +43,7 @@ import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
+import { BundleDropModule } from "./bundleDrop";
 import { CollectionModule } from "./collection";
 import { DatastoreModule } from "./datastore";
 import { DropModule } from "./drop";
@@ -282,6 +286,7 @@ export class AppModule
       ModuleType.MARKET,
       ModuleType.DROP,
       ModuleType.DATASTORE,
+      ModuleType.BUNDLE_DROP,
     ];
     return (
       await Promise.all(
@@ -671,6 +676,57 @@ export class AppModule
     );
 
     return this.sdk.getDropModule(address);
+  }
+
+  /**
+   * Deploys a Bundle Drop module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed Bundle Drop module
+   */
+  public async deployBundleDropModule(
+    metadata: BundleDropModuleMetadata,
+  ): Promise<BundleDropModule> {
+    invariant(
+      metadata.primarySaleRecipientAddress !== "" &&
+        isAddress(metadata.primarySaleRecipientAddress),
+      "Primary sale recipient address must be specified and must be a valid address",
+    );
+
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      DropModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
+
+    const address = await this._deployModule(
+      ModuleType.BUNDLE_DROP,
+      [
+        metadataUri,
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        nativeTokenWrapperAddress,
+        metadata.primarySaleRecipientAddress,
+        metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+        metadata.primarySaleFeeBasisPoints
+          ? metadata.primarySaleFeeBasisPoints
+          : 0,
+      ],
+      LazyMintERC1155__factory,
+    );
+
+    return this.sdk.getBundleDropModule(address);
   }
 
   /**

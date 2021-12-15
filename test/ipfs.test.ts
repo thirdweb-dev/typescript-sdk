@@ -1,23 +1,22 @@
-import * as chai from "chai";
-import { ethers } from "ethers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { readFileSync } from "fs";
-import { ThirdwebSDK } from "../src/index";
+import { sdk, signers } from "./before.test";
+
+import { expect, assert } from "chai";
 
 global.fetch = require("node-fetch");
 
 describe("IPFS Uploads", async () => {
-  let sdk: ThirdwebSDK;
+  let adminWallet: SignerWithAddress,
+    samWallet: SignerWithAddress,
+    bobWallet: SignerWithAddress;
+
+  before(() => {
+    [adminWallet, samWallet, bobWallet] = signers;
+  });
 
   beforeEach(async () => {
-    sdk = new ThirdwebSDK(
-      new ethers.Wallet(
-        process.env.PKEY,
-        ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com"),
-      ),
-      {
-        ipfsGatewayUrl: "https://ipfs.io/ipfs/",
-      },
-    );
+    sdk.setProviderOrSigner(adminWallet);
   });
 
   async function getFile(upload: string): Promise<Response> {
@@ -28,7 +27,7 @@ describe("IPFS Uploads", async () => {
         return res;
       })
       .catch((e) => {
-        chai.assert.fail(e);
+        assert.fail(e);
       });
     return response;
   }
@@ -49,9 +48,9 @@ describe("IPFS Uploads", async () => {
         .get("content-type")
         .toString();
 
-      chai.assert.equal(uploadTest, "image/jpeg");
+      assert.equal(uploadTest, "image/jpeg");
     } catch (err) {
-      chai.assert.fail(err);
+      assert.fail(err);
     }
   });
 
@@ -60,7 +59,7 @@ describe("IPFS Uploads", async () => {
       image:
         "ipfs://QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/face_parts/Asset%20331.svg",
     });
-    chai.assert.equal(
+    assert.equal(
       upload,
       "ipfs://bafkreifivlt2emsugvh7pbeluwneqtkxebn73qytd7ulsipsgzrkk2liiy",
     );
@@ -70,7 +69,7 @@ describe("IPFS Uploads", async () => {
     const upload = await sdk.getStorage().uploadMetadata({
       animation_url: readFileSync("test/test.mp4"),
     });
-    chai.assert.equal(
+    assert.equal(
       upload,
       "ipfs://bafkreih6i5vu3ods5zz3c7j3f6ad5nt7fkoamsmbxpypl54zwdm4vsu4ju",
     );
@@ -90,14 +89,12 @@ describe("IPFS Uploads", async () => {
       },
     ];
     const serialized = sampleObjects.map((o) => Buffer.from(JSON.stringify(o)));
-    console.log(serialized);
     const cid = await sdk.getStorage().uploadBatch(serialized);
-    console.log("OBJECTS CID ", cid);
     for (const object of sampleObjects) {
-      const fetched = await sdk.getStorage().get(`ipfs://${cid}/${object.id}`);
+      const fetched = await sdk.getStorage().get(`${cid}${object.id}`);
       const parsed = JSON.parse(fetched);
-      chai.assert.equal(parsed.description, object.description);
-      chai.assert.equal(parsed.id, object.id);
+      assert.equal(parsed.description, object.description);
+      assert.equal(parsed.id, object.id);
     }
   });
 
@@ -108,6 +105,5 @@ describe("IPFS Uploads", async () => {
       readFileSync("test/test.mp4"),
     ];
     const cid = await sdk.getStorage().uploadBatch(sampleObjects);
-    console.log(cid);
   });
 });
