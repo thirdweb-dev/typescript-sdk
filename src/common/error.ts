@@ -29,6 +29,35 @@ export class UploadError extends Error {
   }
 }
 
+export class NoTokenListed extends Error {
+  /** @internal */
+  constructor() {
+    super(`LIST ERROR: you must list at least one token.`);
+  }
+}
+
+export class NotOwner extends Error {
+  /** @internal */
+  constructor() {
+    super(`LIST ERROR: you should be the owner of the token to list it.`);
+  }
+}
+
+export class NotAuthorised extends Error {
+  /** @internal */
+  constructor() {
+    super(
+      `LIST ERROR: you do not have the permission to list in the marketplace`,
+    );
+  }
+}
+export class BuyLimit extends Error {
+  /** @internal */
+  constructor(message: string) {
+    super(`BUY ERROR: You cannot buy more tgan ${message} tokens`);
+  }
+}
+
 /**
  * Thrown when data fails to fetch from storage.
  */
