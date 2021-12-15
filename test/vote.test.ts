@@ -4,6 +4,7 @@ import { appModule, sdk, signers } from "./before.test";
 
 import { expect, assert } from "chai";
 import { ethers } from "ethers";
+import { getNetwork } from "@ethersproject/providers";
 
 global.fetch = require("node-fetch");
 
@@ -60,7 +61,7 @@ describe("Vote Module", async () => {
     await currencyModule.contract.delegate(samWallet.address);
   });
 
-  it("should permit a proposal to be passed if it receives the right votes", async () => {
+  it.skip("should permit a proposal to be passed if it receives the right votes", async () => {
     await sdk.setProviderOrSigner(samWallet);
     const proposalId = await voteModule.propose("Mint Tokens", [
       {
@@ -96,5 +97,26 @@ describe("Vote Module", async () => {
     );
 
     assert.equal(balanceOfBobsWallet.displayValue, "1.0");
+  });
+
+  it("", async () => {
+    const blockTimes = [];
+    const provider = ethers.getDefaultProvider();
+
+    const latest = await provider.getBlock("latest");
+    for (let i = 0; i <= 10; i++) {
+      console.log(provider.network);
+
+      const current = await provider.getBlock(latest.number - i);
+      const previous = await provider.getBlock(latest.number - i - 1);
+      console.log(current.timestamp, previous.timestamp);
+      console.log(current.timestamp - previous.timestamp);
+
+      const diff = current.timestamp - previous.timestamp;
+      blockTimes.push(diff);
+    }
+
+    const sum = blockTimes.reduce((result, a) => result + a, 0);
+    console.log(sum / blockTimes.length);
   });
 });
