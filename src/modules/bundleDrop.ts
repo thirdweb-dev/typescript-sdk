@@ -367,7 +367,6 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     const overrides = (await this.getCallOverrides()) || {};
 
     const addressToClaim = await this.getSignerAddress();
-
     const { metadata } = await this.getMetadata();
     if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
       const snapshot = await this.storage.get(

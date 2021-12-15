@@ -1,10 +1,11 @@
 import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
 import {
+  ExternalProvider,
   JsonRpcProvider,
   JsonRpcSigner,
   Log,
-  Provider,
   TransactionReceipt,
+  Web3Provider,
 } from "@ethersproject/providers";
 import { signERC2612Permit } from "eth-permit";
 import {
@@ -139,7 +140,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
 
     return {
       metadata: await getContractMetadata(
-        this.getProviderOrSigner(),
+        await this.getProvider(),
         contract.address,
         this.options.ipfsGatewayUrl,
       ),
@@ -221,13 +222,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
   /**
    * @internal
    */
-  protected async getProvider(): Promise<Provider | undefined> {
-    const provider: Provider | undefined = Signer.isSigner(
-      this.getProviderOrSigner(),
-    )
-      ? (this.providerOrSigner as Signer).provider
-      : (this.providerOrSigner as Provider);
-    return provider;
+  private async getProvider() {
+    return this.readOnlyContract.provider;
   }
 
   /**
@@ -354,14 +350,20 @@ export class Module<TContract extends BaseContract = BaseContract> {
     const to = this.address;
     const value = callOverrides?.value || 0;
     const data = contract.interface.encodeFunctionData(fn, args);
-    const gas = (await contract.estimateGas[fn](...args)).mul(2);
     const forwarderAddress = this.options.transactionRelayerForwarderAddress;
-    const forwarder = Forwarder__factory.connect(
-      forwarderAddress,
-      this.getProviderOrSigner(),
-    );
-    const nonce = await getAndIncrementNonce(forwarder, from);
+    const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
 
+    const gasEstimate = await contract.estimateGas[fn](...args);
+    let gas = gasEstimate.mul(2);
+
+    // in some cases WalletConnect doesn't properly gives an estimate for how much gas it would actually use.
+    // it'd estimate ~21740 on polygon.
+    // as a fix, we're setting it to a high arbitrary number (500k) as the gas limit that should cover for most function calls.
+    if (gasEstimate.lt(25000)) {
+      gas = BigNumber.from(500000);
+    }
+
+    const nonce = await getAndIncrementNonce(forwarder, from);
     const domain = {
       name: "GSNv2 Forwarder",
       version: "0.0.1",
@@ -406,29 +408,29 @@ export class Module<TContract extends BaseContract = BaseContract> {
       message = { to: contract.address, ...permit };
       signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
     } else {
-      try {
+      // wallet connect special 🦋
+      if (
+        (
+          (signer?.provider as Web3Provider)?.provider as ExternalProvider & {
+            isWalletConnect?: boolean;
+          }
+        )?.isWalletConnect
+      ) {
+        const payload = ethers.utils._TypedDataEncoder.getPayload(
+          domain,
+          types,
+          message,
+        );
+        signature = await (signer?.provider as JsonRpcProvider).send(
+          "eth_signTypedData",
+          [from.toLowerCase(), JSON.stringify(payload)],
+        );
+      } else {
         signature = await (signer as JsonRpcSigner)._signTypedData(
           domain,
           types,
           message,
         );
-      } catch (e) {
-        if (
-          typeof e === "string" &&
-          e.indexOf("The method eth_signTypedData_v4 does not exist") > -1
-        ) {
-          const payload = ethers.utils._TypedDataEncoder.getPayload(
-            domain,
-            types,
-            message,
-          );
-          signature = await (signer?.provider as JsonRpcProvider).send(
-            "eth_signTypedData",
-            [from.toLowerCase(), JSON.stringify(payload)],
-          );
-        } else {
-          throw new Error(`Failed to sign: ${e}`);
-        }
       }
     }
 
