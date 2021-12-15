@@ -892,8 +892,6 @@ export class Module<TContract extends BaseContract = BaseContract> {
     // @internal @virtual (undocumented)
     protected getModuleType(): ModuleType;
     // @internal (undocumented)
-    protected getProvider(): Promise<Provider | undefined>;
-    // @internal (undocumented)
     protected getSigner(): Signer | null;
     // @internal (undocumented)
     protected getSignerAddress(): Promise<string>;
