@@ -14,13 +14,20 @@ export const ForwardRequest = [
 ];
 
 const _nonces: Record<string, BigNumber> = {};
+const _noncesSyncTimestamp: Record<string, number> = {};
 
 export async function getAndIncrementNonce(
   forwarder: Forwarder,
   address: string,
 ): Promise<BigNumber> {
-  if (!(address in _nonces)) {
+  const timestamp = _noncesSyncTimestamp[address];
+  // if it's within 2 seconds we're optimistically increment the nonce
+  // should we always sync?
+  const shouldSync = Date.now() - timestamp >= 2000;
+
+  if (!(address in _nonces) || shouldSync) {
     _nonces[address] = await forwarder.getNonce(address);
+    _noncesSyncTimestamp[address] = Date.now();
   }
 
   const nonce = _nonces[address];
