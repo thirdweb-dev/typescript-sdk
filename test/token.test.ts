@@ -14,7 +14,6 @@ describe("Token Module", async () => {
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
 
-
   before(() => {
     [adminWallet, samWallet, bobWallet] = signers;
   });
@@ -63,9 +62,6 @@ describe("Token Module", async () => {
     const balance = parseInt((await currencyModule.balance()).value);
     await currencyModule.mint(10);
     const totest = await currencyModule.getAll();
-    chai.assert.equal(
-      totest["0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803"].toNumber(),
-      balance + 10,
-    );
+    chai.assert.equal(totest[adminWallet.address].toNumber(), balance + 10);
   });
 });
