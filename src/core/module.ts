@@ -350,14 +350,20 @@ export class Module<TContract extends BaseContract = BaseContract> {
     const to = this.address;
     const value = callOverrides?.value || 0;
     const data = contract.interface.encodeFunctionData(fn, args);
-    const gas = Math.max(
-      (await contract.estimateGas[fn](...args)).mul(2).toNumber(),
-      200000,
-    );
     const forwarderAddress = this.options.transactionRelayerForwarderAddress;
     const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
-    const nonce = await getAndIncrementNonce(forwarder, from);
 
+    const gasEstimate = await contract.estimateGas[fn](...args);
+    let gas = gasEstimate.mul(2);
+
+    // in some cases WalletConnect doesn't properly gives an estimate for how much gas it would actually use.
+    // it'd estimate ~21740 on polygon.
+    // as a fix, we're setting it to a high arbitrary number (500k) as the gas limit that should cover for most function calls.
+    if (gasEstimate.lt(25000)) {
+      gas = BigNumber.from(500000);
+    }
+
+    const nonce = await getAndIncrementNonce(forwarder, from);
     const domain = {
       name: "GSNv2 Forwarder",
       version: "0.0.1",
