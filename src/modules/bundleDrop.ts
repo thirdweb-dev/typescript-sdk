@@ -516,4 +516,20 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
     return await this.readOnlyContract.totalSupply(tokenId);
   }
+
+  /**
+   * Pulls the list of all addresses that have claimed a particular token
+   *
+   * @beta - This can be very slow for large numbers of nft holders
+   * @param queryParams - Optional query params
+   * @returns - A JSON object of all token holders and their corresponding balances
+   */
+  public async getAllClaimerAddresses(
+    tokenId: BigNumberish,
+  ): Promise<string[]> {
+    const a = await this.contract.queryFilter(
+      this.contract.filters.ClaimedTokens(null, BigNumber.from(tokenId)),
+    );
+    return a.map((b) => b.args.claimer);
+  }
 }
