@@ -533,7 +533,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
    * @beta - This can be very slow for large numbers of token holders
    *
    * @param tokenId - The token id to get the claimers of
-   * @returns - A list of addresses that claimed the token
+   * @returns - A unique list of addresses that claimed the token
    */
   public async getAllClaimerAddresses(
     tokenId: BigNumberish,
