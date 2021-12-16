@@ -20,6 +20,11 @@ export interface NewDirectListing {
   startTimeInSeconds: BigNumberish;
 
   /**
+   * The duration of the listing in seconds.
+   */
+  listingDurationInSeconds: BigNumberish;
+
+  /**
    * The quantity of tokens to include in the listing.
    *
    * For ERC721s, this value should always be 1 (and will be forced internally regardless of what is passed here).
