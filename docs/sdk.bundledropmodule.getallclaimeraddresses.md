@@ -9,7 +9,7 @@
 
 Pulls the list of all addresses that have claimed a particular token
 
-- This can be very slow for large numbers of nft holders
+- This can be very slow for large numbers of token holders
 
 <b>Signature:</b>
 
@@ -21,11 +21,11 @@ getAllClaimerAddresses(tokenId: BigNumberish): Promise<string[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  tokenId | BigNumberish |  |
+|  tokenId | BigNumberish | The token id to get the claimers of |
 
 <b>Returns:</b>
 
 Promise&lt;string\[\]&gt;
 
-- A JSON object of all token holders and their corresponding balances
+- A list of addresses that claimed the token
 

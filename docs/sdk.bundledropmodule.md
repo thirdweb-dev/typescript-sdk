@@ -37,7 +37,7 @@ export declare class BundleDropModule extends ModuleWithRoles<BundleDrop>
 |  [getActiveClaimCondition(tokenId)](./sdk.bundledropmodule.getactiveclaimcondition.md) |  | <b><i>(BETA)</i></b> |
 |  [getAll()](./sdk.bundledropmodule.getall.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllClaimConditions(tokenId)](./sdk.bundledropmodule.getallclaimconditions.md) |  | <b><i>(BETA)</i></b> |
-|  [getAllClaimerAddresses(tokenId)](./sdk.bundledropmodule.getallclaimeraddresses.md) |  | <b><i>(BETA)</i></b> Pulls the list of all addresses that have claimed a particular token<!-- -->- This can be very slow for large numbers of nft holders |
+|  [getAllClaimerAddresses(tokenId)](./sdk.bundledropmodule.getallclaimeraddresses.md) |  | <b><i>(BETA)</i></b> Pulls the list of all addresses that have claimed a particular token<!-- -->- This can be very slow for large numbers of token holders |
 |  [getClaimConditionFactory()](./sdk.bundledropmodule.getclaimconditionfactory.md) |  | <b><i>(BETA)</i></b> Creates a claim condition factory |
 |  [getClaimConditionsFactory()](./sdk.bundledropmodule.getclaimconditionsfactory.md) |  | <b><i>(BETA)</i></b> |
 |  [getOwned(\_address)](./sdk.bundledropmodule.getowned.md) |  | <b><i>(BETA)</i></b> <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
