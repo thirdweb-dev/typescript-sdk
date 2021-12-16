@@ -140,6 +140,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     balanceOf(address: string, tokenId: BigNumberish_2): Promise<BigNumber_2>;
     // (undocumented)
     burn(tokenId: BigNumberish_2, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    canClaim(tokenId: BigNumberish_2, quantity: BigNumberish_2): Promise<boolean>;
     // (undocumented)
     claim(tokenId: BigNumberish_2, quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
     // @internal (undocumented)
