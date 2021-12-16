@@ -1,3 +1,4 @@
+import { CurrencyValue } from "../../common/currency";
 import { BigNumberish } from "ethers";
 
 /**
@@ -20,6 +21,12 @@ export interface DirectListing {
   tokenId: BigNumberish;
 
   /**
+   * The asset being listed.
+   * // TODO: This should be a more strict type.
+   */
+  asset: any;
+
+  /**
    * The start time of the listing.
    */
   startTimeInSeconds: BigNumberish;
@@ -35,6 +42,11 @@ export interface DirectListing {
    * The address of the currency to accept for the listing.
    */
   currencyContractAddress: string;
+
+  /**
+   * The `CurrencyValue` of the listing. Useful for displaying the price information.
+   */
+  currencyValue: CurrencyValue;
 
   /**
    * The buyout price of the listing.
