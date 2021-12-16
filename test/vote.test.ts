@@ -68,7 +68,7 @@ describe("Vote Module", async () => {
     const proposalId = await voteModule.propose("Mint Tokens", [
       {
         toAddress: currencyModule.address,
-        tokenValue: 0,
+        nativeTokenValue: 0,
         transactionData: currencyModule.contract.interface.encodeFunctionData(
           "mint",
           [bobWallet.address, ethers.utils.parseUnits("1", 18)],
@@ -126,7 +126,7 @@ describe("Vote Module", async () => {
     const proposalId = await voteModule.propose(description, [
       {
         toAddress: currencyModule.address,
-        tokenValue: 0,
+        nativeTokenValue: 0,
         transactionData: currencyModule.contract.interface.encodeFunctionData(
           "mint",
           [bobWallet.address, ethers.utils.parseUnits("1", 18)],

@@ -175,7 +175,7 @@ export class VoteModule extends Module<VotingGovernor> {
     executions: ProposalExecutable[],
   ): Promise<BigNumber> {
     const tos = executions.map((p) => p.toAddress);
-    const values = executions.map((p) => p.tokenValue);
+    const values = executions.map((p) => p.nativeTokenValue);
     const datas = executions.map((p) => p.transactionData);
     const receipt = await this.sendTransaction("propose", [
       tos,
@@ -215,7 +215,7 @@ export class VoteModule extends Module<VotingGovernor> {
 
     const proposal = await this.get(proposalId);
     const tos = proposal.executions.map((p) => p.toAddress);
-    const values = proposal.executions.map((p) => p.tokenValue);
+    const values = proposal.executions.map((p) => p.nativeTokenValue);
     const datas = proposal.executions.map((p) => p.transactionData);
     const descriptionHash = ethers.utils.id(proposal.description);
     await this.sendTransaction("execute", [
@@ -237,7 +237,7 @@ export class VoteModule extends Module<VotingGovernor> {
 
     const proposal = await this.get(proposalId);
     const tos = proposal.executions.map((p) => p.toAddress);
-    const values = proposal.executions.map((p) => p.tokenValue);
+    const values = proposal.executions.map((p) => p.nativeTokenValue);
     const datas = proposal.executions.map((p) => p.transactionData);
     const descriptionHash = ethers.utils.id(proposal.description);
     try {
