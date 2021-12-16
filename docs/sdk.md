@@ -140,7 +140,7 @@ Output
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [Proposal](./sdk.proposal.md) |  |
-|  [ProposalExecution](./sdk.proposalexecution.md) |  |
+|  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
 |  [ProposalVote](./sdk.proposalvote.md) |  |
 |  [PublicClaimCondition](./sdk.publicclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |

@@ -4,6 +4,8 @@
 
 ## VoteModule.get() method
 
+Get a proposal by id.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,11 @@ get(proposalId: string): Promise<Proposal>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  proposalId | string |  |
+|  proposalId | string | The proposal id to get. |
 
 <b>Returns:</b>
 
 Promise&lt;[Proposal](./sdk.proposal.md)<!-- -->&gt;
+
+- The proposal.
 

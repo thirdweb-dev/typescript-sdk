@@ -4,6 +4,8 @@
 
 ## VoteModule.vote() method
 
+Vote on a proposal.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,9 @@ vote(proposalId: string, voteType: VoteType, reason?: string): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  proposalId | string |  |
-|  voteType | [VoteType](./sdk.votetype.md) |  |
-|  reason | string |  |
+|  proposalId | string | The proposal to cast a vote on. |
+|  voteType | [VoteType](./sdk.votetype.md) | The position the voter is taking on their vote. |
+|  reason | string | (optional) The reason for the vote. |
 
 <b>Returns:</b>
 

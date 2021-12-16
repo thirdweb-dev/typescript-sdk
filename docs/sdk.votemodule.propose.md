@@ -4,20 +4,24 @@
 
 ## VoteModule.propose() method
 
+Create a new proposal.
+
 <b>Signature:</b>
 
 ```typescript
-propose(description: string, executions: ProposalExecution[]): Promise<BigNumber>;
+propose(description: string, executions: ProposalExecutable[]): Promise<BigNumber>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  description | string |  |
-|  executions | [ProposalExecution](./sdk.proposalexecution.md)<!-- -->\[\] |  |
+|  description | string | The description of the proposal. |
+|  executions | [ProposalExecutable](./sdk.proposalexecutable.md)<!-- -->\[\] | A set of executable transactions that will be run if the proposal is passed and executed. |
 
 <b>Returns:</b>
 
 Promise&lt;BigNumber&gt;
+
+- The id of the created proposal.
 

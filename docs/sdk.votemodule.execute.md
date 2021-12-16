@@ -4,6 +4,8 @@
 
 ## VoteModule.execute() method
 
+Once the voting period has ended, call this method to execute the executables in the proposal.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,7 +16,7 @@ execute(proposalId: string): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  proposalId | string |  |
+|  proposalId | string | The proposal id to execute. |
 
 <b>Returns:</b>
 

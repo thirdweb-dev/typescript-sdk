@@ -4,6 +4,8 @@
 
 ## Proposal.votes property
 
+All votes that have been casted on the proposal.
+
 <b>Signature:</b>
 
 ```typescript

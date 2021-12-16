@@ -4,6 +4,8 @@
 
 ## VoteModule.canExecute() method
 
+Check to see if a proposal can be executed.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,11 @@ canExecute(proposalId: string): Promise<boolean>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  proposalId | string |  |
+|  proposalId | string | The proposal ID to check. |
 
 <b>Returns:</b>
 
 Promise&lt;boolean&gt;
+
+- True if the proposal can be executed, false otherwise.
 

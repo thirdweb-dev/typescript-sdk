@@ -25,12 +25,12 @@ export declare class VoteModule extends Module<VotingGovernor>
 |  --- | --- | --- |
 |  [balance()](./sdk.votemodule.balance.md) |  | Check the balance of the project wallet in the native token of the chain |
 |  [balanceOfToken(tokenAddress)](./sdk.votemodule.balanceoftoken.md) |  | Check the balance of the project wallet in a particular ERC20 token contract |
-|  [canExecute(proposalId)](./sdk.votemodule.canexecute.md) |  |  |
-|  [execute(proposalId)](./sdk.votemodule.execute.md) |  |  |
-|  [get(proposalId)](./sdk.votemodule.get.md) |  |  |
-|  [getAll()](./sdk.votemodule.getall.md) |  |  |
-|  [propose(description, executions)](./sdk.votemodule.propose.md) |  |  |
+|  [canExecute(proposalId)](./sdk.votemodule.canexecute.md) |  | Check to see if a proposal can be executed. |
+|  [execute(proposalId)](./sdk.votemodule.execute.md) |  | Once the voting period has ended, call this method to execute the executables in the proposal. |
+|  [get(proposalId)](./sdk.votemodule.get.md) |  | Get a proposal by id. |
+|  [getAll()](./sdk.votemodule.getall.md) |  | Returns all the proposals in the contract. |
+|  [propose(description, executions)](./sdk.votemodule.propose.md) |  | Create a new proposal. |
 |  [setModuleMetadata(metadata)](./sdk.votemodule.setmodulemetadata.md) |  |  |
 |  [settings()](./sdk.votemodule.settings.md) |  |  |
-|  [vote(proposalId, voteType, reason)](./sdk.votemodule.vote.md) |  |  |
+|  [vote(proposalId, voteType, reason)](./sdk.votemodule.vote.md) |  | Vote on a proposal. |
 

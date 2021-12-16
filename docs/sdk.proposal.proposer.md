@@ -4,6 +4,8 @@
 
 ## Proposal.proposer property
 
+The address of the wallet that created the proposal.
+
 <b>Signature:</b>
 
 ```typescript

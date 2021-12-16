@@ -4,6 +4,8 @@
 
 ## Proposal.proposalId property
 
+The unique identifier of the proposal.
+
 <b>Signature:</b>
 
 ```typescript

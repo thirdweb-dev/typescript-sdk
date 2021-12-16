@@ -4,6 +4,8 @@
 
 ## VoteModule.getAll() method
 
+Returns all the proposals in the contract.
+
 <b>Signature:</b>
 
 ```typescript
@@ -12,4 +14,6 @@ getAll(): Promise<Proposal[]>;
 <b>Returns:</b>
 
 Promise&lt;[Proposal](./sdk.proposal.md)<!-- -->\[\]&gt;
+
+- All the proposals in the contract.
 
