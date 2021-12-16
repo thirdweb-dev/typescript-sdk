@@ -31,7 +31,7 @@ export declare class CurrencyModule extends ModuleWithRoles<Coin>
 |  [burn(amount)](./sdk.currencymodule.burn.md) |  |  |
 |  [burnFrom(from, amount)](./sdk.currencymodule.burnfrom.md) |  |  |
 |  [get()](./sdk.currencymodule.get.md) |  |  |
-|  [getAll()](./sdk.currencymodule.getall.md) |  |  |
+|  [getAllHolderBalances()](./sdk.currencymodule.getallholderbalances.md) |  | <b><i>(BETA)</i></b> Lets you get a all token holders and their corresponding balances - This can be very slow for large numbers of token holders |
 |  [getValue(value)](./sdk.currencymodule.getvalue.md) |  |  |
 |  [mint(amount)](./sdk.currencymodule.mint.md) |  |  |
 |  [mintBatchTo(args)](./sdk.currencymodule.mintbatchto.md) |  |  |
