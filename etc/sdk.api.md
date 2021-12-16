@@ -1161,8 +1161,8 @@ export interface Proposal {
 
 // @public (undocumented)
 export interface ProposalExecutable {
+    nativeTokenValue: BigNumberish_2;
     toAddress: string;
-    tokenValue: BigNumberish_2;
     transactionData: BytesLike;
 }
 
