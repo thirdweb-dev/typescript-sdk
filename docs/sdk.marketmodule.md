@@ -33,6 +33,7 @@ export declare class MarketModule extends ModuleWithRoles<Market>
 |  [list(assetContract, tokenId, currencyContract, price, quantity, tokensPerBuyer, secondsUntilStart, secondsUntilEnd)](./sdk.marketmodule.list.md) |  |  |
 |  [setMarketFeeBps(fee)](./sdk.marketmodule.setmarketfeebps.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.marketmodule.setmodulemetadata.md) |  |  |
+|  [setRestrictedListerRoleOnly(restricted)](./sdk.marketmodule.setrestrictedlisterroleonly.md) |  |  |
 |  [unlist(listingId, quantity)](./sdk.marketmodule.unlist.md) |  |  |
 |  [unlistAll(listingId)](./sdk.marketmodule.unlistall.md) |  |  |
 
