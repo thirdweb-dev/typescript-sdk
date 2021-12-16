@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { AppModule, ThirdwebSDK } from "../src";
 import { deployRegistry } from "./setup/deployRegistry";
 import { ethers as hardhatEthers } from "hardhat";
+import { WETH9__factory } from "@3rdweb/contracts";
 
 const RPC_URL = "http://localhost:8545";
 
@@ -14,9 +15,22 @@ let sdk: ThirdwebSDK;
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 
+let wrappedNativeTokenAddress: string;
+
 before(async () => {
   signers = await hardhatEthers.getSigners();
   [signer] = signers;
+
+  const wTokenDeployer = await new ethers.ContractFactory(
+    WETH9__factory.abi,
+    WETH9__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy();
+
+  await wTokenDeployer.deployed();
+  wrappedNativeTokenAddress = wTokenDeployer.address;
+  console.log(wrappedNativeTokenAddress);
 
   jsonProvider.send("hardhat_reset", []);
   registryAddress = await deployRegistry(signer);
@@ -39,4 +53,4 @@ before(async () => {
   appModule = await sdk.getAppModule(address);
 });
 
-export { appModule, sdk, signers };
+export { appModule, sdk, signers, wrappedNativeTokenAddress };

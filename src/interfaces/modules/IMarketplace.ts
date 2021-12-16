@@ -1,4 +1,4 @@
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import {
   AuctionListing,
   DirectListing,
@@ -14,7 +14,7 @@ export interface IMarketplace {
    * @param listing - The new direct listing to create.
    * @returns - The ID of the newly created listing.
    */
-  createDirectListing(listing: NewDirectListing): Promise<BigNumberish>;
+  createDirectListing(listing: NewDirectListing): Promise<BigNumber>;
 
   /**
    * Creates a new auction listing on a marketplace.
@@ -22,7 +22,7 @@ export interface IMarketplace {
    * @param listing - The new auction listing to create.
    * @returns - The ID of the newly created listing.
    */
-  createAuctionListing(listing: NewAuctionListing): Promise<BigNumberish>;
+  createAuctionListing(listing: NewAuctionListing): Promise<BigNumber>;
 
   /**
    * Creates a new direct listing on a marketplace.
@@ -41,13 +41,14 @@ export interface IMarketplace {
    * @param quantityDesired - The quantity of tokens desired.
    * @param currencyContractAddress - The address of the currency contract.
    * @param tokenAmount - The amount of tokens to be offered.
+   * @returns - The ID of the newly created offer.
    */
   makeOffer(offer: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
-    tokenAmount: BigNumberish;
-  }): Promise<void>;
+    pricePerToken: BigNumberish;
+  }): Promise<BigNumber>;
 
   /**
    * Make an offer on an auction. The offer must be at least `current bid * (1 + bid buffer)` in order to be accepted.
@@ -114,6 +115,13 @@ export interface IMarketplace {
    * @param listingId - Id of the listing to get bids for.
    */
   getActiveBids(listingId: BigNumberish): Promise<Offer[]>;
+
+  /**
+   * Return all active offers for a direct listing.
+   *
+   * @param listingId - Id of the listing to get offers for.
+   */
+  getActiveOffers(listingId: BigNumberish): Promise<Offer[]>;
 
   /**
    * Accepts the winning bid for an auction and closes the listing,

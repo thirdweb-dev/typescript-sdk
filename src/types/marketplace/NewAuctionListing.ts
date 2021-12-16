@@ -4,6 +4,8 @@ import { BigNumberish } from "ethers";
  * Represents a new marketplace auction listing.
  */
 export interface NewAuctionListing {
+  type?: "NewAuctionListing";
+
   /**
    * The address of the asset being listed.
    */
@@ -20,9 +22,9 @@ export interface NewAuctionListing {
   startTimeInSeconds: BigNumberish;
 
   /**
-   * Number of seconds until the action expires.
+   * The duration of the listing in seconds.
    */
-  secondsUntilEnd: BigNumberish;
+  listingDurationInSeconds: BigNumberish;
 
   /**
    * The quantity of tokens to include in the listing.
@@ -37,12 +39,19 @@ export interface NewAuctionListing {
   currencyContractAddress: string;
 
   /**
-   * The reserve price is the minimum price that a bid must be in order to be accepted.
+   * The reserve price is the minimum price that a bid must be in order to be accepted,
+   * per token.
+   *
+   * So if the `quantity = 10` and the `reserve price = 1`, then the minimum bid
+   * is 10 coins (of the configured currency).
    */
-  reservePrice: BigNumberish;
+  reservePricePerToken: BigNumberish;
 
   /**
    * The buyout price of the listing.
+   *
+   * So if the `quantity = 10` and the `reserve price = 1`, then the buyout price
+   * is 10 coins (of the configured currency).
    */
-  buyoutPrice: BigNumberish;
+  buyoutPricePerToken: BigNumberish;
 }

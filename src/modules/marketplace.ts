@@ -1,17 +1,26 @@
-import { ListingType } from "./../enums/marketplace/ListingType";
+import { NATIVE_TOKEN_ADDRESS } from "./../common/currency";
+import { NewDirectListing } from "./../types/marketplace/NewDirectListing";
 import {
   ERC1155__factory,
   ERC165__factory,
+  ERC20__factory,
   ERC721__factory,
   Marketplace,
   Marketplace__factory,
 } from "@3rdweb/contracts";
 import { ListingParametersStruct } from "@3rdweb/contracts/dist/IMarketplace";
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { isAddress } from "ethers/lib/utils";
-import { InterfaceId_IERC721, ModuleType, Role, RolesMap } from "../common";
+import {
+  getCurrencyValue,
+  InterfaceId_IERC721,
+  ModuleType,
+  Role,
+  RolesMap,
+} from "../common";
 import { invariant } from "../common/invariant";
 import { ModuleWithRoles } from "../core/module";
+import { ListingType } from "../enums/marketplace/ListingType";
 import { IMarketplace } from "../interfaces/modules";
 import {
   AuctionListing,
@@ -61,11 +70,8 @@ export class MarketplaceModule
 
   public async createDirectListing(
     listing: NewDirectListing,
-  ): Promise<BigNumberish> {
-    invariant(
-      isAddress(listing.currencyContractAddress),
-      `Invalid currency contract address = ${listing.currencyContractAddress}`,
-    );
+  ): Promise<BigNumber> {
+    this.validateNewListingParam(listing);
 
     await this.handleTokenApproval(
       listing.assetContractAddress,
@@ -77,11 +83,11 @@ export class MarketplaceModule
       {
         assetContract: listing.assetContractAddress,
         tokenId: listing.tokenId,
-        buyoutPricePerToken: listing.buyoutPrice,
+        buyoutPricePerToken: listing.buyoutPricePerToken,
         currencyToAccept: listing.currencyContractAddress,
         listingType: ListingType.Direct,
         quantityToList: listing.quantity,
-        reservePricePerToken: listing.buyoutPrice,
+        reservePricePerToken: listing.buyoutPricePerToken,
         secondsUntilEndTime: listing.listingDurationInSeconds,
         startTime: listing.startTimeInSeconds,
       } as ListingParametersStruct,
@@ -93,8 +99,31 @@ export class MarketplaceModule
 
   public async createAuctionListing(
     listing: NewAuctionListing,
-  ): Promise<BigNumberish> {
-    throw new Error("Method not implemented.");
+  ): Promise<BigNumber> {
+    this.validateNewListingParam(listing);
+
+    await this.handleTokenApproval(
+      listing.assetContractAddress,
+      listing.tokenId,
+      await this.getSignerAddress(),
+    );
+
+    const receipt = await this.sendTransaction("createListing", [
+      {
+        assetContract: listing.assetContractAddress,
+        tokenId: listing.tokenId,
+        buyoutPricePerToken: listing.buyoutPricePerToken,
+        currencyToAccept: listing.currencyContractAddress,
+        listingType: ListingType.Auction,
+        quantityToList: listing.quantity,
+        reservePricePerToken: listing.reservePricePerToken,
+        secondsUntilEndTime: listing.listingDurationInSeconds,
+        startTime: listing.startTimeInSeconds,
+      } as ListingParametersStruct,
+    ]);
+
+    const event = this.parseEventLogs("NewListing", receipt?.logs);
+    return event.listingId;
   }
   updateDirectListing(listing: AuctionListing): Promise<DirectListing> {
     throw new Error("Method not implemented.");
@@ -102,14 +131,69 @@ export class MarketplaceModule
   updateAuctionListing(listing: AuctionListing): Promise<AuctionListing> {
     throw new Error("Method not implemented.");
   }
-  makeOffer(offer: {
+
+  public async makeOffer(offer: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
-    tokenAmount: BigNumberish;
-  }): Promise<void> {
-    throw new Error("Method not implemented.");
+    pricePerToken: BigNumberish;
+  }): Promise<BigNumber> {
+    try {
+      await this.getDirectListing(offer.listingId);
+    } catch (err) {
+      console.error(`Error getting the listing with id ${offer.listingId}`);
+      throw err;
+    }
+
+    const quantity = BigNumber.from(offer.quantityDesired);
+    const value = BigNumber.from(offer.pricePerToken).mul(quantity);
+
+    const overrides = (await this.getCallOverrides()) || {};
+    this.setAllowance(value, offer.currencyContractAddress, overrides);
+    console.log("Allowance set", overrides);
+
+    const receipt = await this.sendTransaction(
+      "offer",
+      [
+        offer.listingId,
+        offer.quantityDesired,
+        offer.currencyContractAddress,
+        offer.pricePerToken,
+      ],
+      overrides,
+    );
+
+    const event = this.parseEventLogs("NewOffer", receipt?.logs);
+    console.log(event);
+    return event.listingId;
   }
+
+  private async setAllowance(
+    value: BigNumber,
+    currencyAddress: string,
+    overrides: any,
+  ): Promise<any> {
+    if (currencyAddress === NATIVE_TOKEN_ADDRESS) {
+      overrides["value"] = value;
+    } else {
+      const erc20 = ERC20__factory.connect(
+        currencyAddress,
+        this.providerOrSigner,
+      );
+      const owner = await this.getSignerAddress();
+      const spender = this.address;
+      const allowance = await erc20.allowance(owner, spender);
+
+      if (allowance.lt(value)) {
+        await this.sendContractTransaction(erc20, "approve", [
+          spender,
+          allowance.add(value),
+        ]);
+      }
+      return overrides;
+    }
+  }
+
   makeBid(bid: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
@@ -149,9 +233,37 @@ export class MarketplaceModule
   ): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  getDirectListing(listingId: BigNumberish): Promise<DirectListing> {
-    throw new Error("Method not implemented.");
+
+  public async getDirectListing(
+    listingId: BigNumberish,
+  ): Promise<DirectListing> {
+    const listing = await this.readOnlyContract.listings(listingId);
+
+    if (listing.listingId.toString() !== listingId.toString()) {
+      throw new Error(`Listing with id ${listingId} not found`);
+    }
+
+    if (listing.listingType !== ListingType.Direct) {
+      throw new Error(`Listing ${listingId} is not a direct listing`);
+    }
+
+    return {
+      assetContractAddress: listing.assetContract,
+      buyoutPrice: listing.buyoutPricePerToken,
+      currencyContractAddress: listing.currency,
+      buyoutCurrencyValuePerToken: await getCurrencyValue(
+        this.providerOrSigner,
+        listing.currency,
+        listing.buyoutPricePerToken,
+      ),
+      id: listingId.toString(),
+      tokenId: listing.tokenId,
+      quantity: listing.quantity,
+      startTimeInSeconds: listing.startTime,
+      asset: undefined,
+    };
   }
+
   getAuctionListing(listingId: BigNumberish): Promise<AuctionListing> {
     throw new Error("Method not implemented.");
   }
@@ -199,6 +311,55 @@ export class MarketplaceModule
           this.address,
           true,
         ]);
+      }
+    }
+  }
+
+  public async getActiveOffers(listingId: BigNumberish): Promise<Offer[]> {
+    throw new Error("Method not implemented.");
+  }
+
+  /**
+   * Used to verify fields in new listing.
+   * @internal
+   */
+  private validateNewListingParam(param: NewDirectListing | NewAuctionListing) {
+    invariant(
+      param.assetContractAddress !== undefined &&
+        param.assetContractAddress !== null,
+      "Asset contract address is required",
+    );
+    invariant(
+      param.buyoutPricePerToken !== undefined &&
+        param.buyoutPricePerToken !== null,
+      "Buyout price is required",
+    );
+    invariant(
+      param.listingDurationInSeconds !== undefined &&
+        param.listingDurationInSeconds !== null,
+      "Listing duration is required",
+    );
+    invariant(
+      param.startTimeInSeconds !== undefined &&
+        param.startTimeInSeconds !== null,
+      "Start time is required",
+    );
+    invariant(
+      param.tokenId !== undefined && param.tokenId !== null,
+      "Token ID is required",
+    );
+    invariant(
+      param.quantity !== undefined && param.quantity !== null,
+      "Quantity is required",
+    );
+
+    switch (param.type) {
+      case "NewAuctionListing": {
+        invariant(
+          param.reservePricePerToken !== undefined &&
+            param.reservePricePerToken !== null,
+          "Reserve price is required",
+        );
       }
     }
   }

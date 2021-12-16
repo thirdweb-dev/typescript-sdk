@@ -130,7 +130,7 @@ const NATIVE_TOKENS: Record<SUPPORTED_CHAIN_ID | ChainId.Hardhat, NativeToken> =
       symbol: "ETH",
       decimals: 18,
       wrapped: {
-        address: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+        address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
         name: "Wrapped Ether",
         symbol: "WETH",
       },

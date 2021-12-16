@@ -46,7 +46,7 @@ export interface DirectListing {
   /**
    * The `CurrencyValue` of the listing. Useful for displaying the price information.
    */
-  currencyValue: CurrencyValue;
+  buyoutCurrencyValuePerToken: CurrencyValue;
 
   /**
    * The buyout price of the listing.
