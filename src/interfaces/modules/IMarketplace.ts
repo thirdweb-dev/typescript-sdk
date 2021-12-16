@@ -1,10 +1,10 @@
 import { BigNumberish } from "ethers";
 import {
   AuctionListing,
+  DirectListing,
   NewAuctionListing,
   NewDirectListing,
   Offer,
-  DirectListing,
 } from "../../types/marketplace";
 
 export interface IMarketplace {
@@ -141,5 +141,5 @@ export interface IMarketplace {
    *
    * @param listingId - Id of the listing to fetch.
    */
-  getAuctionListing(listingId: BigNumberish): Promise<DirectListing>;
+  getAuctionListing(listingId: BigNumberish): Promise<AuctionListing>;
 }
