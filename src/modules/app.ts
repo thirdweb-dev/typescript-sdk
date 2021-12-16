@@ -18,6 +18,7 @@ import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, ethers, Signer } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { JsonConvert } from "json2typescript";
+import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";
 import {
   ChainlinkVrf,
   CurrencyValue,
@@ -55,6 +56,7 @@ import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
 import { CurrencyModule } from "./token";
 import { VoteModule } from "./vote";
+import { SUPPORTED_CHAIN_ID } from "../common/chain";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
@@ -783,6 +785,20 @@ export class AppModule
         metadata.votingQuorumFraction <= 100,
       "Quofrum Fraction must be in the range of 0-100 representing percentage",
     );
+
+    const chainId = await this.getChainID();
+    const timeBetweenBlocks =
+      DEFAULT_BLOCK_TIMES_FALLBACK[chainId as SUPPORTED_CHAIN_ID];
+
+    const waitTimeInBlocks =
+      metadata.proposalStartWaitTimeInSeconds /
+      timeBetweenBlocks.secondsBetweenBlocks;
+    const votingTimeInBlocks =
+      metadata.proposalVotingTimeInSeconds /
+      timeBetweenBlocks.secondsBetweenBlocks;
+
+    metadata.votingDelay = waitTimeInBlocks;
+    metadata.votingPeriod = votingTimeInBlocks;
 
     // verify making sure that the voting token address is valid
     try {

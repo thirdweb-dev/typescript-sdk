@@ -1,7 +1,12 @@
+import { $enum } from "ts-enum-util";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { ethers } from "ethers";
-import { CurrencyModule, VoteModule } from "../src";
+import {
+  CurrencyModule,
+  DEFAULT_BLOCK_TIMES_FALLBACK,
+  VoteModule,
+} from "../src";
 import { appModule, sdk, signers } from "./before.test";
 
 global.fetch = require("node-fetch");
@@ -9,6 +14,9 @@ global.fetch = require("node-fetch");
 describe("Vote Module", async () => {
   let voteModule: VoteModule;
   let currencyModule: CurrencyModule;
+
+  const voteStartWaitTimeInSeconds = 60 * 60;
+  const voteWaitTimeInSeconds = 60 * 60;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -30,11 +38,8 @@ describe("Vote Module", async () => {
       name: "DAO #1",
       votingTokenAddress: currencyModule.address,
 
-      // proposal start delay by block number. when can people start voting?
-      votingDelay: 0,
-
-      // porposal end time in number of block. 1 minute block (1 minutes * 60 seconds / 2 block per sec). when do people stop voting and can start executing? 30 = 1 minute in mumbai
-      votingPeriod: 1,
+      proposalStartWaitTimeInSeconds: voteStartWaitTimeInSeconds,
+      proposalVotingTimeInSeconds: voteWaitTimeInSeconds,
 
       votingQuorumFraction: 1,
 

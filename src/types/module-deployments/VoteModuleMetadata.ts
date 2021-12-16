@@ -3,11 +3,34 @@ import CommonModuleMetadata from "./CommonModuleMetadata";
 
 @JsonObject("VoteModuleMetadata")
 export default class VoteModuleMetadata extends CommonModuleMetadata {
-  @JsonProperty("voting_delay", Number)
-  votingDelay = 0;
+  /**
+   * The wait time before a proposal can begin being voted on (seconds).
+   */
+  @JsonProperty("proposal_start_time_in_seconds", Number)
+  proposalStartWaitTimeInSeconds = 0;
 
+  /**
+   * How long a proposal is open for voting (seconds).
+   */
+  @JsonProperty("proposal_voting_time_in_seconds", Number)
+  proposalVotingTimeInSeconds = 0;
+
+  /**
+   * **Do not set this property directly. It will be set by the SDK. Unless you know what you're doing.**
+   *
+   * Every proposal will wait `votingDelay` number of blocks before it can be voted on.
+   */
+  @JsonProperty("voting_delay", Number)
+  votingDelay? = 0;
+
+  /**
+   * **Do not set this property directly. It will be set by the SDK. Unless you know what you're doing.**
+   *
+   * The voting period is the number of blocks that a proposal will be open for voting.
+   * This varies by chain.
+   */
   @JsonProperty("voting_period", Number)
-  votingPeriod = 0;
+  votingPeriod? = 0;
 
   /**
    * The ERC20 token address that is used in the voting process.

@@ -71,6 +71,7 @@ export * from "./types";
 export * from "./enums";
 export * from "./factories";
 export * from "./interfaces";
+export * from "./utils";
 
 if (!globalThis.fetch) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
