@@ -2,10 +2,9 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   MarketModule,
   NFTModule,
-  NotAuthorised,
   BuyLimit,
-  NoTokenListed,
   NotOwner,
+  MissingRoleError,
 } from "../src";
 import { appModule, sdk, signers } from "./before.test";
 
@@ -38,7 +37,7 @@ describe("Market Module", async () => {
     });
   });
 
-  it("should throw a NotAuthorised error when trying to list without a lister role", async () => {
+  it("should throw MissingRoleError when trying to list without a lister role", async () => {
     sdk.setProviderOrSigner(adminWallet);
     await nftModule.mintTo(bobWallet.address, {
       name: "Test",
@@ -57,29 +56,7 @@ describe("Market Module", async () => {
         1,
       );
     } catch (e) {
-      if (!(e instanceof NotAuthorised)) {
-        throw e;
-      }
-    }
-  });
-  it("should throw a NoTokenListed error when trying to list 0 as quantity.", async () => {
-    sdk.setProviderOrSigner(adminWallet);
-    await nftModule.mintTo(bobWallet.address, {
-      name: "Test",
-      description: "Test",
-    });
-    sdk.setProviderOrSigner(bobWallet);
-    try {
-      await marketModule.list(
-        nftModule.address,
-        "0",
-        "0x0000000000000000000000000000000000000000",
-        0,
-        0,
-        1,
-      );
-    } catch (e) {
-      if (!(e instanceof NoTokenListed)) {
+      if (!(e instanceof MissingRoleError)) {
         throw e;
       }
     }

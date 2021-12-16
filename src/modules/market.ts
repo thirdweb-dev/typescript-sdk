@@ -11,15 +11,15 @@ import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
 import {
   ModuleType,
-  NotAuthorised,
   BuyLimit,
-  NoTokenListed,
   NotOwner,
   Role,
   RolesMap,
+  MissingRoleError,
 } from "../common";
 import { InterfaceId_IERC721 } from "../common/contract";
 import { CurrencyValue, getCurrencyValue } from "../common/currency";
+import { invariant } from "../common/invariant";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -242,9 +242,7 @@ export class MarketModule extends ModuleWithRoles<Market> {
         assetContract,
         this.providerOrSigner,
       );
-      if (Number(quantity) <= 0) {
-        throw new NoTokenListed();
-      }
+      invariant(quantity > 0, "quantity must be greater than 0");
       // check for token approval
       const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
       if (isERC721) {
@@ -295,17 +293,17 @@ export class MarketModule extends ModuleWithRoles<Market> {
       const listing = event?.listing;
       return await this.transformResultToListing(listing);
     } catch (e) {
+      const signer = await this.getSignerAddress();
       if (
-        (await this.sdk.getNFTModule(assetContract).ownerOf(tokenId)) !==
-        (await this.getSignerAddress())
+        (await this.sdk.getNFTModule(assetContract).ownerOf(tokenId)) !== signer
       ) {
         throw new NotOwner();
       } else if (
         (await this.readOnlyContract.restrictedListerRoleOnly()) &&
-        !((await this.getSignerAddress()) in this.getRoleMembers("lister")) &&
-        !((await this.getSignerAddress()) in this.getRoleMembers("admin"))
+        !(signer in this.getRoleMembers("lister")) &&
+        !(signer in this.getRoleMembers("admin"))
       ) {
-        throw new NotAuthorised();
+        throw new MissingRoleError(signer, "lister");
       }
       throw e;
     }

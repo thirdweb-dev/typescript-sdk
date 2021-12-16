@@ -22,6 +22,22 @@ export class InvalidAddressError extends Error {
   }
 }
 
+export class MissingRoleError extends Error {
+  /** @internal */
+  /** @internal */
+  constructor(address: string, role: string) {
+    super(`MISSING ROLE: ${address} not have the ${role} for  role`);
+  }
+}
+
+export class AssetNotFoundError extends Error {
+  /** @internal */
+  /** @internal */
+  constructor(message = "The asset you're trying to use could not be found.") {
+    super(`message: ${message}`);
+  }
+}
+
 export class UploadError extends Error {
   /** @internal */
   constructor(message: string) {
@@ -29,10 +45,12 @@ export class UploadError extends Error {
   }
 }
 
-export class NoTokenListed extends Error {
+export class NotEnoughTokensError extends Error {
   /** @internal */
-  constructor() {
-    super(`LIST ERROR: you must list at least one token.`);
+  constructor(contractAddress: string, quantity: number, available: number) {
+    super(
+      `BALANCE ERROR: you do not have enough balance on contract ${contractAddress} to use ${quantity} tokens. You have ${available} tokens available.`,
+    );
   }
 }
 
@@ -43,18 +61,10 @@ export class NotOwner extends Error {
   }
 }
 
-export class NotAuthorised extends Error {
-  /** @internal */
-  constructor() {
-    super(
-      `LIST ERROR: you do not have the permission to list in the marketplace`,
-    );
-  }
-}
 export class BuyLimit extends Error {
   /** @internal */
-  constructor(message: string) {
-    super(`BUY ERROR: You cannot buy more tgan ${message} tokens`);
+  constructor(quantity: string) {
+    super(`BUY ERROR: You cannot buy more than ${quantity} tokens`);
   }
 }
 
