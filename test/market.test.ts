@@ -47,7 +47,6 @@ describe("Market Module", async () => {
     marketModule.setRestrictedListerRoleOnly(true);
 
     sdk.setProviderOrSigner(bobWallet);
-    console.log(await marketModule.getAllRoleMembers());
     try {
       await marketModule.list(
         nftModule.address,
@@ -57,7 +56,6 @@ describe("Market Module", async () => {
         1,
         1,
       );
-      console.log(await marketModule.getAll());
     } catch (e) {
       if (!(e instanceof NotAuthorised)) {
         throw e;
@@ -71,7 +69,6 @@ describe("Market Module", async () => {
       description: "Test",
     });
     sdk.setProviderOrSigner(bobWallet);
-    console.log(await marketModule.getAllRoleMembers());
     try {
       await marketModule.list(
         nftModule.address,
@@ -95,7 +92,6 @@ describe("Market Module", async () => {
     });
 
     sdk.setProviderOrSigner(bobWallet);
-    console.log(await marketModule.getAllRoleMembers());
     await marketModule.list(
       nftModule.address,
       "0",
@@ -104,7 +100,6 @@ describe("Market Module", async () => {
       1,
       1,
     );
-    console.log(await marketModule.getAll());
     try {
       await marketModule.buy((await marketModule.getAll())[0].id, 2);
     } catch (e) {
@@ -125,7 +120,6 @@ describe("Market Module", async () => {
       description: "Test",
     });
     sdk.setProviderOrSigner(bobWallet);
-    console.log(await marketModule.getAllRoleMembers());
     try {
       await marketModule.list(
         nftModule.address,
