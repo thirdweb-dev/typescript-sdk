@@ -154,7 +154,7 @@ export class VoteModule extends Module<VotingGovernor> {
         votes: v,
         executions: e.map((exec) => ({
           toAddress: exec.to,
-          tokenValue: exec.value,
+          nativeTokenValue: exec.value,
           transactionData: exec.data,
         })),
       });
