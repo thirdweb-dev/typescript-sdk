@@ -17,6 +17,7 @@ export enum ModuleType {
   DATASTORE = 8,
   SPLITS = 9,
   BUNDLE_DROP = 11,
+  MARKETPLACE = 12,
 }
 /**
  *

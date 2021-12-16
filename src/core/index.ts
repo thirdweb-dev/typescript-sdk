@@ -25,6 +25,7 @@ import { CollectionModule } from "../modules/collection";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
 import { MarketModule } from "../modules/market";
+import { MarketplaceModule } from "../modules/marketplace";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
@@ -55,7 +56,8 @@ export type AnyContract =
   | typeof DropModule
   | typeof DatastoreModule
   | typeof SplitsModule
-  | typeof BundleDropModule;
+  | typeof BundleDropModule
+  | typeof MarketplaceModule;
 
 /**
  * The entrypoint to the SDK.
@@ -376,6 +378,16 @@ export class ThirdwebSDK implements IThirdwebSdk {
    */
   public getBundleDropModule(address: string): BundleDropModule {
     return this.getOrCreateModule(address, BundleDropModule);
+  }
+
+  /**
+   * @beta
+   *
+   * @param address - The contract address of the given BundleDrop module.
+   * @returns The Drop Module.
+   */
+  public getMarketplaceModule(address: string): MarketplaceModule {
+    return this.getOrCreateModule(address, MarketplaceModule);
   }
 
   /**

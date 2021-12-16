@@ -11,6 +11,7 @@ import {
   ProtocolControl,
   ProtocolControl__factory,
   Royalty__factory,
+  Marketplace__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -52,6 +53,8 @@ import { NFTModule } from "./nft";
 import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
 import { CurrencyModule } from "./token";
+import { MarketplaceModule } from "./marketplace";
+import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceModuleMetadata";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
@@ -785,5 +788,40 @@ export class AppModule
       tokenAddress,
       await erc20.balanceOf(this.address),
     );
+  }
+
+  public async deployMarketplaceModule(
+    metadata: MarketplaceModuleMetadata,
+  ): Promise<MarketplaceModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      MarketplaceModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
+
+    const address = await this._deployModule(
+      ModuleType.MARKETPLACE,
+      [
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        nativeTokenWrapperAddress,
+        metadataUri,
+        metadata.marketFeeBasisPoints,
+      ],
+      Marketplace__factory,
+    );
+
+    return this.sdk.getMarketplaceModule(address);
   }
 }
