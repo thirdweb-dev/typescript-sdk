@@ -47,6 +47,8 @@ export interface ListingMetadata {
 /**
  * Access this module by calling {@link ThirdwebSDK.getMarketModule}
  * @public
+ *
+ * @deprecated
  */
 export class MarketModule extends ModuleWithRoles<Market> {
   public static moduleType: ModuleType = ModuleType.MARKET;
