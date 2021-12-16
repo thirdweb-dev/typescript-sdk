@@ -27,5 +27,5 @@ getAllClaimerAddresses(tokenId: BigNumberish): Promise<string[]>;
 
 Promise&lt;string\[\]&gt;
 
-- A list of addresses that claimed the token
+- A unique list of addresses that claimed the token
 
