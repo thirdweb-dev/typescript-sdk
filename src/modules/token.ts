@@ -1,4 +1,5 @@
 import { Coin, Coin__factory } from "@3rdweb/contracts";
+import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
 import { ModuleType, Role, RolesMap } from "../common";
@@ -123,6 +124,38 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
       );
     }
     await this.sendTransaction("multicall", [encoded]);
+  }
+  /**
+   * Lets you get a all token holders and their corresponding balances
+   * @beta - This can be very slow for large numbers of token holders
+   * @param queryParams - Optional query params
+   * @returns - A JSON object of all token holders and their corresponding balances
+   */
+  public async getAllHolderBalances(): Promise<Record<string, BigNumber>> {
+    const a = await this.contract.queryFilter(this.contract.filters.Transfer());
+    const txns = a.map((b) => b.args);
+    const balances: {
+      [key: string]: BigNumber;
+    } = {};
+    txns.forEach((item) => {
+      const from = item.from;
+      const to = item.to;
+      const amount = item.value;
+
+      if (!(from === AddressZero)) {
+        if (!(from in balances)) {
+          balances[from] = BigNumber.from(0);
+        }
+        balances[from] = balances[from].sub(amount);
+      }
+      if (!(to === AddressZero)) {
+        if (!(to in balances)) {
+          balances[to] = BigNumber.from(0);
+        }
+        balances[to] = balances[to].add(amount);
+      }
+    });
+    return balances;
   }
 
   public async burn(amount: BigNumberish): Promise<TransactionReceipt> {
