@@ -10,13 +10,19 @@ import {
 export interface IMarketplace {
   /**
    * Creates a new direct listing on a marketplace.
+   *
+   * @param listing - The new direct listing to create.
+   * @returns - The ID of the newly created listing.
    */
-  createDirectListing(listing: NewDirectListing): Promise<DirectListing>;
+  createDirectListing(listing: NewDirectListing): Promise<BigNumberish>;
 
   /**
    * Creates a new auction listing on a marketplace.
+   *
+   * @param listing - The new auction listing to create.
+   * @returns - The ID of the newly created listing.
    */
-  createAuctionListing(listing: NewAuctionListing): Promise<AuctionListing>;
+  createAuctionListing(listing: NewAuctionListing): Promise<BigNumberish>;
 
   /**
    * Creates a new direct listing on a marketplace.
