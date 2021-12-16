@@ -530,9 +530,10 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   /**
    * Pulls the list of all addresses that have claimed a particular token
    *
-   * @beta - This can be very slow for large numbers of nft holders
-   * @param queryParams - Optional query params
-   * @returns - A JSON object of all token holders and their corresponding balances
+   * @beta - This can be very slow for large numbers of token holders
+   *
+   * @param tokenId - The token id to get the claimers of
+   * @returns - A list of addresses that claimed the token
    */
   public async getAllClaimerAddresses(
     tokenId: BigNumberish,
