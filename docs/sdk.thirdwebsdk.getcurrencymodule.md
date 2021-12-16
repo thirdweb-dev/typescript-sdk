@@ -4,6 +4,11 @@
 
 ## ThirdwebSDK.getCurrencyModule() method
 
+> Warning: This API is now obsolete.
+> 
+> - see [TokenModule](./sdk.tokenmodule.md)
+> 
+
 <b>Signature:</b>
 
 ```typescript

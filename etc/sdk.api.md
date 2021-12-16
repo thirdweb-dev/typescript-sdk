@@ -71,6 +71,8 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
     // Warning: (ae-forgotten-export) The symbol "SplitsModuleMetadata" needs to be exported by the entry point index.d.ts
     deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
+    // Warning: (ae-forgotten-export) The symbol "TokenModuleMetadata" needs to be exported by the entry point index.d.ts
+    deployTokenModule(metadata: TokenModuleMetadata): Promise<TokenModule>;
     // Warning: (ae-forgotten-export) The symbol "VoteModuleMetadata" needs to be exported by the entry point index.d.ts
     deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
     // @internal (undocumented)
@@ -149,6 +151,8 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     // @internal (undocumented)
     protected connectContract(): LazyMintERC1155;
     // (undocumented)
+    createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
+    // (undocumented)
     get(tokenId: string): Promise<BundleDropMetadata>;
     // Warning: (ae-forgotten-export) The symbol "ClaimCondition" needs to be exported by the entry point index.d.ts
     //
@@ -158,6 +162,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     getAll(): Promise<BundleDropMetadata[]>;
     // (undocumented)
     getAllClaimConditions(tokenId: BigNumberish_2): Promise<ClaimCondition[]>;
+    getAllClaimerAddresses(tokenId: BigNumberish_2): Promise<string[]>;
     getClaimConditionFactory(): ClaimConditionFactory;
     // (undocumented)
     getClaimConditionsFactory(): ClaimConditionFactory;
@@ -411,58 +416,8 @@ export interface Currency {
     symbol: string;
 }
 
-// @public
-export class CurrencyModule extends ModuleWithRoles<Coin> {
-    // (undocumented)
-    allowance(spender: string): Promise<BigNumber_2>;
-    // (undocumented)
-    allowanceOf(owner: string, spender: string): Promise<BigNumber_2>;
-    // (undocumented)
-    balance(): Promise<CurrencyValue>;
-    // (undocumented)
-    balanceOf(address: string): Promise<CurrencyValue>;
-    // (undocumented)
-    burn(amount: BigNumberish_2): Promise<TransactionReceipt>;
-    // (undocumented)
-    burnFrom(from: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
-    // @internal (undocumented)
-    protected connectContract(): Coin;
-    // (undocumented)
-    get(): Promise<Currency>;
-    // (undocumented)
-    getAll(): Promise<Record<string, BigNumber_2>>;
-    // @internal @override (undocumented)
-    protected getModuleRoles(): readonly Role[];
-    // @internal (undocumented)
-    protected getModuleType(): ModuleType;
-    // (undocumented)
-    getValue(value: BigNumberish_2): Promise<CurrencyValue>;
-    // (undocumented)
-    mint(amount: BigNumberish_2): Promise<void>;
-    // (undocumented)
-    mintBatchTo(args: ITokenMintArgs[]): Promise<void>;
-    // (undocumented)
-    mintTo(to: string, amount: BigNumberish_2): Promise<void>;
-    // (undocumented)
-    static moduleType: ModuleType;
-    // (undocumented)
-    static roles: readonly ["admin", "minter", "pauser", "transfer"];
-    // (undocumented)
-    setAllowance(spender: string, amount: BigNumber_2): Promise<TransactionReceipt>;
-    // (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // (undocumented)
-    setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    totalSupply(): Promise<BigNumber_2>;
-    // (undocumented)
-    transfer(to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
-    // (undocumented)
-    transferBatch(args: ITokenMintArgs[]): Promise<void>;
-    // (undocumented)
-    transferFrom(from: string, to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
-    // (undocumented)
-    transferFromBatch(args: ITokenMintFromArgs[]): Promise<void>;
+// @public @deprecated (undocumented)
+export class CurrencyModule extends TokenModule {
 }
 
 // @public
@@ -490,6 +445,15 @@ export class DatastoreModule extends ModuleWithRoles<DataStore> {
     // (undocumented)
     setUint(key: string, value: BigNumberish_2): Promise<TransactionReceipt>;
 }
+
+// Warning: (ae-forgotten-export) The symbol "SUPPORTED_CHAIN_ID" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ChainId" needs to be exported by the entry point index.d.ts
+//
+// @public
+export const DEFAULT_BLOCK_TIMES_FALLBACK: Record<SUPPORTED_CHAIN_ID | ChainId.Hardhat, {
+    secondsBetweenBlocks: number;
+    synced: boolean;
+}>;
 
 // @beta
 export class DropModule extends ModuleWithRoles<LazyNFT> {
@@ -589,6 +553,9 @@ export class DuplicateLeafsError extends Error {
 }
 
 // @public
+export function estimateBlockAtTime(timeInEpochSeconds: number, provider: Provider): Promise<number>;
+
+// @public
 export class FetchError extends Error {
     // @internal
     constructor(message: string, innerError?: Error);
@@ -605,6 +572,9 @@ export type ForwardRequestMessage = {
     nonce: string;
     data: BytesLike;
 };
+
+// @public
+export function generateRoot(items: string[]): string;
 
 // Warning: (ae-internal-missing-underscore) The name "getContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -967,6 +937,8 @@ export enum ModuleType {
     // (undocumented)
     SPLITS = 9,
     // (undocumented)
+    TOKEN = 0,
+    // (undocumented)
     VOTE = 10
 }
 
@@ -1312,7 +1284,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     getCollectionModule(address: string): CollectionModule;
     // (undocumented)
     getContractMetadata(address: string): Promise<ModuleMetadataNoType>;
-    // (undocumented)
+    // @deprecated (undocumented)
     getCurrencyModule(address: string): CurrencyModule;
     // @alpha (undocumented)
     getDatastoreModule(address: string): DatastoreModule;
@@ -1335,6 +1307,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
     // @alpha (undocumented)
     getSplitsModule(address: string): SplitsModule;
     getStorage(): IStorage;
+    // (undocumented)
+    getTokenModule(address: string): TokenModule;
     // @alpha (undocumented)
     getVoteModule(address: string): VoteModule;
     // @internal
@@ -1346,6 +1320,60 @@ export class ThirdwebSDK implements IThirdwebSdk {
     setProviderOrSigner(providerOrSignerOrNetwork: ValidProviderInput): ProviderOrSigner;
     // @internal
     get signer(): Signer | null;
+}
+
+// @public
+export class TokenModule extends ModuleWithRoles<Coin> {
+    // (undocumented)
+    allowance(spender: string): Promise<BigNumber_2>;
+    // (undocumented)
+    allowanceOf(owner: string, spender: string): Promise<BigNumber_2>;
+    // (undocumented)
+    balance(): Promise<CurrencyValue>;
+    // (undocumented)
+    balanceOf(address: string): Promise<CurrencyValue>;
+    // (undocumented)
+    burn(amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    burnFrom(from: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // @internal (undocumented)
+    protected connectContract(): Coin;
+    // (undocumented)
+    get(): Promise<Currency>;
+    // @beta
+    getAllHolderBalances(): Promise<Record<string, BigNumber_2>>;
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
+    // (undocumented)
+    getValue(value: BigNumberish_2): Promise<CurrencyValue>;
+    // (undocumented)
+    mint(amount: BigNumberish_2): Promise<void>;
+    // (undocumented)
+    mintBatchTo(args: ITokenMintArgs[]): Promise<void>;
+    // (undocumented)
+    mintTo(to: string, amount: BigNumberish_2): Promise<void>;
+    // (undocumented)
+    static moduleType: ModuleType;
+    // (undocumented)
+    static roles: readonly ["admin", "minter", "pauser", "transfer"];
+    // (undocumented)
+    setAllowance(spender: string, amount: BigNumber_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    // (undocumented)
+    setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
+    // (undocumented)
+    totalSupply(): Promise<BigNumber_2>;
+    // (undocumented)
+    transfer(to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    transferBatch(args: ITokenMintArgs[]): Promise<void>;
+    // (undocumented)
+    transferFrom(from: string, to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    transferFromBatch(args: ITokenMintFromArgs[]): Promise<void>;
 }
 
 // @public (undocumented)
