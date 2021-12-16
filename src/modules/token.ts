@@ -23,10 +23,10 @@ export interface ITokenMintFromArgs extends ITokenMintArgs {
 
 /**
  *
- * Access this module by calling {@link ThirdwebSDK.getCurrencyModule}
+ * Access this module by calling {@link ThirdwebSDK.getTokenModule}
  * @public
  */
-export class CurrencyModule extends ModuleWithRoles<Coin> {
+export class TokenModule extends ModuleWithRoles<Coin> {
   public static moduleType: ModuleType = ModuleType.CURRENCY as const;
 
   public static roles = [
@@ -41,7 +41,7 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
    * @internal
    */
   protected getModuleRoles(): readonly Role[] {
-    return CurrencyModule.roles;
+    return TokenModule.roles;
   }
 
   /**
@@ -55,7 +55,7 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
    * @internal
    */
   protected getModuleType(): ModuleType {
-    return CurrencyModule.moduleType;
+    return TokenModule.moduleType;
   }
 
   public async get(): Promise<Currency> {
@@ -211,3 +211,8 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     await this.sendTransaction("multicall", [encoded]);
   }
 }
+
+/**
+ * @deprecated - see {@link TokenModule}
+ */
+export class CurrencyModule extends TokenModule {}

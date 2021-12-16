@@ -45,6 +45,7 @@ import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
+import TokenModuleMetadata from "../types/module-deployments/TokenModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { BundleDropModule } from "./bundleDrop";
 import { CollectionModule } from "./collection";
@@ -54,7 +55,7 @@ import { MarketModule } from "./market";
 import { NFTModule } from "./nft";
 import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
-import { CurrencyModule } from "./token";
+import { CurrencyModule, TokenModule } from "./token";
 import { VoteModule } from "./vote";
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 
@@ -287,7 +288,7 @@ export class AppModule
       ModuleType.NFT,
       ModuleType.BUNDLE,
       ModuleType.PACK,
-      ModuleType.CURRENCY,
+      ModuleType.TOKEN,
       ModuleType.MARKET,
       ModuleType.DROP,
       ModuleType.DATASTORE,
@@ -550,6 +551,43 @@ export class AppModule
     );
 
     return this.sdk.getCurrencyModule(address);
+  }
+
+  /**
+   * Deploys a token module.
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed currency module
+   */
+  public async deployTokenModule(
+    metadata: TokenModuleMetadata,
+  ): Promise<TokenModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      CurrencyModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const address = await this._deployModule(
+      ModuleType.CURRENCY,
+      [
+        this.address,
+        metadata.name,
+        metadata.symbol ? metadata.symbol : "",
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+      ],
+      Coin__factory,
+    );
+
+    return this.sdk.getTokenModule(address);
   }
 
   /**
