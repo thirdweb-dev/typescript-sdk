@@ -150,4 +150,28 @@ describe("Bundle Drop Module", async () => {
     const token = await bdModule.claim("0", 1);
     console.log(token);
   });
+
+  it("should return the correct status if a token can be claimed", async () => {
+    await bdModule.lazyMintBatch([
+      {
+        name: "test 0",
+      },
+    ]);
+
+    const factory = bdModule.getClaimConditionFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await phase.setSnapshot([w1.address]);
+    await bdModule.setClaimCondition("0", factory);
+
+    await sdk.setProviderOrSigner(w1);
+
+    const canClaimW1 = await bdModule.canClaim("0", 1);
+    assert.isTrue(canClaimW1, "w1 should be able to claimcan claim");
+
+    await sdk.setProviderOrSigner(w2);
+    const canClaimW2 = await bdModule.canClaim("0", 1);
+    assert.isFalse(canClaimW2, "w2 should not be able to claimcan claim");
+  });
 });
