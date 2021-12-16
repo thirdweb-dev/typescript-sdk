@@ -1338,16 +1338,24 @@ export class TokenModule extends ModuleWithRoles<Coin> {
     burnFrom(from: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): Coin;
+    // @alpha
+    delegateTo(delegateeAddress: string): Promise<TransactionReceipt>;
     // (undocumented)
     get(): Promise<Currency>;
     // @beta
     getAllHolderBalances(): Promise<Record<string, BigNumber_2>>;
+    getDelegation(): Promise<string>;
+    // (undocumented)
+    getDelegationOf(account: string): Promise<string>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
     getValue(value: BigNumberish_2): Promise<CurrencyValue>;
+    getVoteBalance(): Promise<BigNumber_2>;
+    // (undocumented)
+    getVoteBalanceOf(account: string): Promise<BigNumber_2>;
     // (undocumented)
     mint(amount: BigNumberish_2): Promise<void>;
     // (undocumented)

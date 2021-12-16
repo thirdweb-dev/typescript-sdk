@@ -32,7 +32,11 @@ export declare class TokenModule extends ModuleWithRoles<Coin>
 |  [burnFrom(from, amount)](./sdk.tokenmodule.burnfrom.md) |  |  |
 |  [get()](./sdk.tokenmodule.get.md) |  |  |
 |  [getAllHolderBalances()](./sdk.tokenmodule.getallholderbalances.md) |  | <b><i>(BETA)</i></b> Lets you get a all token holders and their corresponding balances - This can be very slow for large numbers of token holders |
+|  [getDelegation()](./sdk.tokenmodule.getdelegation.md) |  | Get your voting delegatee address |
+|  [getDelegationOf(account)](./sdk.tokenmodule.getdelegationof.md) |  |  |
 |  [getValue(value)](./sdk.tokenmodule.getvalue.md) |  |  |
+|  [getVoteBalance()](./sdk.tokenmodule.getvotebalance.md) |  | Get your wallet voting power for the current checkpoints |
+|  [getVoteBalanceOf(account)](./sdk.tokenmodule.getvotebalanceof.md) |  |  |
 |  [mint(amount)](./sdk.tokenmodule.mint.md) |  |  |
 |  [mintBatchTo(args)](./sdk.tokenmodule.mintbatchto.md) |  |  |
 |  [mintTo(to, amount)](./sdk.tokenmodule.mintto.md) |  |  |
