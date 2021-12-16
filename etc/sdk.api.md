@@ -1173,30 +1173,23 @@ export type PermitRequestMessage = {
 
 // @public (undocumented)
 export interface Proposal {
-    // (undocumented)
     description: string;
     // (undocumented)
     endBlock: BigNumber_2;
-    // (undocumented)
-    executions: ProposalExecution[];
-    // (undocumented)
+    executions: ProposalExecutable[];
     proposalId: string;
-    // (undocumented)
     proposer: string;
     // (undocumented)
     startBlock: BigNumber_2;
-    // (undocumented)
     state: ProposalState;
-    // (undocumented)
     votes: ProposalVote[];
 }
 
 // @public (undocumented)
-export interface ProposalExecution {
-    // (undocumented)
-    data: BytesLike;
-    to: string;
-    value: BigNumberish_2;
+export interface ProposalExecutable {
+    toAddress: string;
+    tokenValue: BigNumberish_2;
+    transactionData: BytesLike;
 }
 
 // @public (undocumented)
@@ -1376,27 +1369,21 @@ export type ValidProviderInput = ProviderOrSigner | Network | string;
 export class VoteModule extends Module<VotingGovernor> {
     balance(): Promise<CurrencyValue>;
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
-    // (undocumented)
     canExecute(proposalId: string): Promise<boolean>;
     // @internal (undocumented)
     protected connectContract(): VotingGovernor;
-    // (undocumented)
     execute(proposalId: string): Promise<void>;
-    // (undocumented)
     get(proposalId: string): Promise<Proposal>;
-    // (undocumented)
     getAll(): Promise<Proposal[]>;
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
     static moduleType: ModuleType;
-    // (undocumented)
-    propose(description: string, executions: ProposalExecution[]): Promise<BigNumber_2>;
+    propose(description: string, executions: ProposalExecutable[]): Promise<BigNumber_2>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
     settings(): Promise<VoteSettings>;
-    // (undocumented)
     vote(proposalId: string, voteType: VoteType, reason?: string): Promise<void>;
 }
 

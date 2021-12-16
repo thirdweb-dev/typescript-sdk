@@ -4,6 +4,8 @@
 
 ## Proposal.description property
 
+The description of the proposal.
+
 <b>Signature:</b>
 
 ```typescript

@@ -4,8 +4,10 @@
 
 ## Proposal.executions property
 
+All executions that have been proposed for the proposal.
+
 <b>Signature:</b>
 
 ```typescript
-executions: ProposalExecution[];
+executions: ProposalExecutable[];
 ```

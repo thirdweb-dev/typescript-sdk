@@ -4,6 +4,8 @@
 
 ## Proposal.state property
 
+The current state of the proposal.
+
 <b>Signature:</b>
 
 ```typescript

@@ -1,6 +1,6 @@
 {
   "name": "@3rdweb/sdk",
-  "version": "1.25.3",
+  "version": "1.25.5-0",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -68,7 +68,7 @@
     "events": "^3.3.0"
   },
   "dependencies": {
-    "@3rdweb/contracts": "1.16.0-0",
+    "@3rdweb/contracts": "^1.16.0",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/constants": "^5.5.0",
