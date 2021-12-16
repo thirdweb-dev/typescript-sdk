@@ -541,6 +541,6 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     const a = await this.contract.queryFilter(
       this.contract.filters.ClaimedTokens(null, BigNumber.from(tokenId)),
     );
-    return a.map((b) => b.args.claimer);
+    return [...new Set(a.map((b) => b.args.claimer))];
   }
 }
