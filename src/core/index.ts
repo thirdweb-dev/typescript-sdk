@@ -28,7 +28,7 @@ import { MarketModule } from "../modules/market";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
-import { CurrencyModule } from "../modules/token";
+import { CurrencyModule, TokenModule } from "../modules/token";
 import { VoteModule } from "../modules/vote";
 import IpfsStorage from "../storage/IpfsStorage";
 import { ModuleMetadataNoType } from "../types/ModuleMetadata";
@@ -338,9 +338,20 @@ export class ThirdwebSDK implements IThirdwebSdk {
    *
    * @param address - The contract address of the given Currency module.
    * @returns The Currency Module.
+   *
+   * @deprecated - see {@link TokenModule}
    */
   public getCurrencyModule(address: string): CurrencyModule {
     return this.getOrCreateModule(address, CurrencyModule);
+  }
+
+  /**
+   *
+   * @param address - The contract address of the given Token module.
+   * @returns The Token Module.
+   */
+  public getTokenModule(address: string): TokenModule {
+    return this.getOrCreateModule(address, TokenModule);
   }
 
   /**

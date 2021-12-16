@@ -215,9 +215,21 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   }
 
   // write functions
+
+  /*
+   *
+   * @deprecated - {@link BundleDropModule.mintBatch}
+   */
   public async lazyMintBatch(
     metadatas: MetadataURIOrObject[],
   ): Promise<BundleDropMetadata[]> {
+    const tokenIds = await this.createBatch(metadatas);
+    return await Promise.all(tokenIds.map((t) => this.get(t.toString())));
+  }
+
+  public async createBatch(
+    metadatas: MetadataURIOrObject[],
+  ): Promise<string[]> {
     const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
     const baseUri = await this.storage.uploadMetadataBatch(
       metadatas,
@@ -232,11 +244,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     const [startingIndex, endingIndex]: BigNumber[] = event;
     const tokenIds = [];
     for (let i = startingIndex; i.lte(endingIndex); i = i.add(1)) {
-      tokenIds.push(BigNumber.from(i.toString()));
+      tokenIds.push(i.toString());
     }
-    return await Promise.all(
-      tokenIds.map(async (t) => await this.get(t.toString())),
-    );
+    return tokenIds;
   }
 
   public async setSaleRecipient(
