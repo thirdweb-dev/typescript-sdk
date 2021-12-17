@@ -116,13 +116,13 @@ describe("Marketplace Module", async () => {
   ): Promise<BigNumber> => {
     return await marketplaceModule.createAuctionListing({
       assetContractAddress: contractAddress,
-      buyoutPricePerToken: ethers.utils.parseUnits("1"),
-      currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+      buyoutPricePerToken: ethers.utils.parseUnits("10"),
+      currencyContractAddress: tokenAddress,
       startTimeInSeconds: Math.floor(Date.now() / 1000),
       listingDurationInSeconds: 60 * 60 * 24,
       tokenId,
       quantity,
-      reservePricePerToken: 1,
+      reservePricePerToken: ethers.utils.parseUnits("1"),
     });
   };
 
@@ -195,6 +195,20 @@ describe("Marketplace Module", async () => {
       });
 
       const offers = await marketplaceModule.getActiveOffers(directListingId);
+    });
+
+    it("should allow bids to be made on auction listings", async () => {
+      console.log(
+        "Balance = ",
+        await customTokenModule.balanceOf(await sdk.signer.getAddress()),
+      );
+
+      await marketplaceModule.makeBid({
+        currencyContractAddress: tokenAddress,
+        listingId: auctionListingId,
+        quantityDesired: 1,
+        pricePerToken: ethers.utils.parseUnits("1"),
+      });
     });
   });
 

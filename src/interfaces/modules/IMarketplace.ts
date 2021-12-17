@@ -67,7 +67,7 @@ export interface IMarketplace {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
-    tokenAmount: BigNumberish;
+    pricePerToken: BigNumberish;
   }): Promise<void>;
 
   /**

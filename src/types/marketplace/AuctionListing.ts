@@ -32,7 +32,7 @@ export interface AuctionListing {
   startTimeInSeconds: BigNumberish;
 
   /**
-   * Number of seconds until the action expires.
+   * Number of seconds until the auction expires.
    */
   secondsUntilEnd: BigNumberish;
 
@@ -49,11 +49,6 @@ export interface AuctionListing {
   currencyContractAddress: string;
 
   /**
-   * The `CurrencyValue` of the listing. Useful for displaying the price information.
-   */
-  currencyValue: CurrencyValue;
-
-  /**
    * The reserve price is the minimum price that a bid must be in order to be accepted.
    */
   reservePrice: BigNumberish;
@@ -62,4 +57,16 @@ export interface AuctionListing {
    * The buyout price of the listing.
    */
   buyoutPrice: BigNumberish;
+
+  /**
+   * The `CurrencyValue` of the buyout price listing.
+   * Useful for displaying the price information.
+   */
+  buyoutCurrencyValuePerToken: CurrencyValue;
+
+  /**
+   * The `CurrencyValue` of the reserve price.
+   * Useful for displaying the price information.
+   */
+  reservePriceCurrencyValuePerToken: CurrencyValue;
 }

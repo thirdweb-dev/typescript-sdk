@@ -194,14 +194,44 @@ export class MarketplaceModule
     }
   }
 
-  makeBid(bid: {
+  public async makeBid(bid: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
-    tokenAmount: BigNumberish;
+    pricePerToken: BigNumberish;
   }): Promise<void> {
-    throw new Error("Method not implemented.");
+    try {
+      await this.getAuctionListing(bid.listingId);
+    } catch (err) {
+      console.error(`Error getting the listing with id ${bid.listingId}`);
+      throw err;
+    }
+    console.log("Making bid.......");
+
+    const quantity = BigNumber.from(bid.quantityDesired);
+    const value = BigNumber.from(bid.pricePerToken).mul(quantity);
+
+    const overrides = (await this.getCallOverrides()) || {};
+    this.setAllowance(value, bid.currencyContractAddress, overrides);
+    console.log("Allowance set", overrides);
+
+    const receipt = await this.sendTransaction(
+      "offer",
+      [
+        bid.listingId,
+        bid.quantityDesired,
+        bid.currencyContractAddress,
+        bid.pricePerToken,
+      ],
+      overrides,
+    );
+
+    console.log("Reciept = ", receipt);
+    const event = this.parseEventLogs("NewOffer", receipt?.logs);
+    console.log(event);
+    return event.listingId;
   }
+
   removeListing(listingId: BigNumberish): Promise<void> {
     throw new Error("Method not implemented.");
   }
@@ -261,11 +291,45 @@ export class MarketplaceModule
       quantity: listing.quantity,
       startTimeInSeconds: listing.startTime,
       asset: undefined,
+      secondsUntilEnd: listing.endTime,
     };
   }
 
-  getAuctionListing(listingId: BigNumberish): Promise<AuctionListing> {
-    throw new Error("Method not implemented.");
+  public async getAuctionListing(
+    listingId: BigNumberish,
+  ): Promise<AuctionListing> {
+    const listing = await this.readOnlyContract.listings(listingId);
+
+    if (listing.listingId.toString() !== listingId.toString()) {
+      throw new Error(`Listing with id ${listingId} not found`);
+    }
+
+    if (listing.listingType !== ListingType.Auction) {
+      throw new Error(`Listing ${listingId} is not an auction listing`);
+    }
+
+    return {
+      assetContractAddress: listing.assetContract,
+      buyoutPrice: listing.buyoutPricePerToken,
+      currencyContractAddress: listing.currency,
+      buyoutCurrencyValuePerToken: await getCurrencyValue(
+        this.providerOrSigner,
+        listing.currency,
+        listing.buyoutPricePerToken,
+      ),
+      id: listingId.toString(),
+      tokenId: listing.tokenId,
+      quantity: listing.quantity,
+      startTimeInSeconds: listing.startTime,
+      asset: undefined,
+      reservePriceCurrencyValuePerToken: await getCurrencyValue(
+        this.providerOrSigner,
+        listing.currency,
+        listing.reservePricePerToken,
+      ),
+      reservePrice: listing.reservePricePerToken,
+      secondsUntilEnd: listing.endTime,
+    };
   }
 
   private async handleTokenApproval(
