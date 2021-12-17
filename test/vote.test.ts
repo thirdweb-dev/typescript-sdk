@@ -2,6 +2,7 @@ import { $enum } from "ts-enum-util";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { ethers } from "ethers";
+import { ethers as hardhatEthers } from "hardhat";
 import {
   CurrencyModule,
   DEFAULT_BLOCK_TIMES_FALLBACK,
@@ -15,8 +16,8 @@ describe("Vote Module", async () => {
   let voteModule: VoteModule;
   let currencyModule: CurrencyModule;
 
-  const voteStartWaitTimeInSeconds = 60 * 60;
-  const voteWaitTimeInSeconds = 60 * 60;
+  const voteStartWaitTimeInSeconds = 0;
+  const voteWaitTimeInSeconds = 5;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -59,12 +60,15 @@ describe("Vote Module", async () => {
     await currencyModule.grantRole("minter", voteModule.address);
 
     await sdk.setProviderOrSigner(samWallet);
+
     // step 2: delegate the governance token to someone for voting. in this case, myself.
-    await currencyModule.contract.delegate(samWallet.address);
+    await currencyModule.delegateTo(samWallet.address);
   });
 
   it("should permit a proposal to be passed if it receives the right votes", async () => {
     await sdk.setProviderOrSigner(samWallet);
+    await currencyModule.delegateTo(samWallet.address);
+
     const proposalId = await voteModule.propose("Mint Tokens", [
       {
         toAddress: currencyModule.address,
@@ -76,11 +80,6 @@ describe("Vote Module", async () => {
       },
     ]);
 
-    assert.equal(
-      proposalId.toString(),
-      "115166484517756121908608683081211998978960859361848694763241328718561166784093",
-    );
-
     await voteModule.vote(
       proposalId.toString(),
 
@@ -90,6 +89,11 @@ describe("Vote Module", async () => {
       // optional reason, be mindful more character count = more gas.
       "Reason + Gas :)",
     );
+
+    // increment 10 blocks
+    for (let i = 0; i < 10; i++) {
+      await hardhatEthers.provider.send("evm_mine", []);
+    }
 
     // Step 3: Execute the proposal if it is expired and passed
     await voteModule.execute(proposalId.toString());
