@@ -14,41 +14,5 @@
 ```typescript
 export declare class CurrencyModule extends TokenModule 
 ```
-<<<<<<< HEAD
 <b>Extends:</b> [TokenModule](./sdk.tokenmodule.md)
-=======
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Coin&gt;
-
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [moduleType](./sdk.currencymodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.currencymodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
-
-## Methods
-
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [allowance(spender)](./sdk.currencymodule.allowance.md) |  |  |
-|  [allowanceOf(owner, spender)](./sdk.currencymodule.allowanceof.md) |  |  |
-|  [balance()](./sdk.currencymodule.balance.md) |  |  |
-|  [balanceOf(address)](./sdk.currencymodule.balanceof.md) |  |  |
-|  [burn(amount)](./sdk.currencymodule.burn.md) |  |  |
-|  [burnFrom(from, amount)](./sdk.currencymodule.burnfrom.md) |  |  |
-|  [get()](./sdk.currencymodule.get.md) |  |  |
-|  [getAllHolderBalances()](./sdk.currencymodule.getallholderbalances.md) |  | <b><i>(BETA)</i></b> Lets you get a all token holders and their corresponding balances - This can be very slow for large numbers of token holders |
-|  [getValue(value)](./sdk.currencymodule.getvalue.md) |  |  |
-|  [mint(amount)](./sdk.currencymodule.mint.md) |  |  |
-|  [mintBatchTo(args)](./sdk.currencymodule.mintbatchto.md) |  |  |
-|  [mintTo(to, amount)](./sdk.currencymodule.mintto.md) |  |  |
-|  [setAllowance(spender, amount)](./sdk.currencymodule.setallowance.md) |  |  |
-|  [setModuleMetadata(metadata)](./sdk.currencymodule.setmodulemetadata.md) |  |  |
-|  [setRestrictedTransfer(restricted)](./sdk.currencymodule.setrestrictedtransfer.md) |  |  |
-|  [totalSupply()](./sdk.currencymodule.totalsupply.md) |  |  |
-|  [transfer(to, amount)](./sdk.currencymodule.transfer.md) |  |  |
-|  [transferBatch(args)](./sdk.currencymodule.transferbatch.md) |  |  |
-|  [transferFrom(from, to, amount)](./sdk.currencymodule.transferfrom.md) |  |  |
-|  [transferFromBatch(args)](./sdk.currencymodule.transferfrombatch.md) |  |  |
->>>>>>> main
 
