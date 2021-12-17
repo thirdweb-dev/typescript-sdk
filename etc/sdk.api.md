@@ -146,6 +146,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     balanceOf(address: string, tokenId: BigNumberish_2): Promise<BigNumber_2>;
     // (undocumented)
     burn(tokenId: BigNumberish_2, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    canClaim(tokenId: BigNumberish_2, quantity: BigNumberish_2): Promise<boolean>;
     // (undocumented)
     claim(tokenId: BigNumberish_2, quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
     // @internal (undocumented)
@@ -416,8 +417,63 @@ export interface Currency {
     symbol: string;
 }
 
+<<<<<<< HEAD
 // @public @deprecated (undocumented)
 export class CurrencyModule extends TokenModule {
+=======
+// @public
+export class CurrencyModule extends ModuleWithRoles<Coin> {
+    // (undocumented)
+    allowance(spender: string): Promise<BigNumber_2>;
+    // (undocumented)
+    allowanceOf(owner: string, spender: string): Promise<BigNumber_2>;
+    // (undocumented)
+    balance(): Promise<CurrencyValue>;
+    // (undocumented)
+    balanceOf(address: string): Promise<CurrencyValue>;
+    // (undocumented)
+    burn(amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    burnFrom(from: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // @internal (undocumented)
+    protected connectContract(): Coin;
+    // (undocumented)
+    get(): Promise<Currency>;
+    // @beta
+    getAllHolderBalances(): Promise<Record<string, BigNumber_2>>;
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
+    // (undocumented)
+    getValue(value: BigNumberish_2): Promise<CurrencyValue>;
+    // (undocumented)
+    mint(amount: BigNumberish_2): Promise<void>;
+    // (undocumented)
+    mintBatchTo(args: ITokenMintArgs[]): Promise<void>;
+    // (undocumented)
+    mintTo(to: string, amount: BigNumberish_2): Promise<void>;
+    // (undocumented)
+    static moduleType: ModuleType;
+    // (undocumented)
+    static roles: readonly ["admin", "minter", "pauser", "transfer"];
+    // (undocumented)
+    setAllowance(spender: string, amount: BigNumber_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    // (undocumented)
+    setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
+    // (undocumented)
+    totalSupply(): Promise<BigNumber_2>;
+    // (undocumented)
+    transfer(to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    transferBatch(args: ITokenMintArgs[]): Promise<void>;
+    // (undocumented)
+    transferFrom(from: string, to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    transferFromBatch(args: ITokenMintFromArgs[]): Promise<void>;
+>>>>>>> main
 }
 
 // @public

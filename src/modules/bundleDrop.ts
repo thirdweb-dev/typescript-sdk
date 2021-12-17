@@ -543,4 +543,78 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     );
     return Array.from(new Set(a.map((b) => b.args.claimer)));
   }
+
+  /*
+   * Checks to see if the current signer can claim the specified number of tokens.
+   *
+   * @param tokenId - The id of the token to check.
+   * @param quantity - The quantity of tokens to check.
+   * @returns - True if the current signer can claim the specified number of tokens, false otherwise.
+   */
+  public async canClaim(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+  ): Promise<boolean> {
+    try {
+      const mintCondition = await this.getActiveClaimCondition(tokenId);
+      const proofs = await this.getClaimerProofs(
+        mintCondition.merkleRoot.toString(),
+      );
+
+      const overrides = (await this.getCallOverrides()) || {};
+      if (mintCondition.pricePerToken.gt(0)) {
+        if (mintCondition.currency === AddressZero) {
+          overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
+            quantity,
+          );
+        } else {
+          const erc20 = ERC20__factory.connect(
+            mintCondition.currency,
+            this.providerOrSigner,
+          );
+          const owner = await this.getSignerAddress();
+          const spender = this.address;
+          const allowance = await erc20.allowance(owner, spender);
+          const totalPrice = BigNumber.from(mintCondition.pricePerToken).mul(
+            BigNumber.from(quantity),
+          );
+
+          if (allowance.lt(totalPrice)) {
+            // TODO throw allowance error, maybe check balance?
+          }
+        }
+      }
+      await this.readOnlyContract.callStatic.claim(
+        tokenId,
+        quantity,
+        proofs,
+        overrides,
+      );
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  /**
+   * Fetches the proof for the current signer for a particular wallet.
+   *
+   * @param merkleRoot - The merkle root of the condition to check.
+   * @returns - The proof for the current signer for the specified condition.
+   */
+  private async getClaimerProofs(merkleRoot: string): Promise<string[]> {
+    const addressToClaim = await this.getSignerAddress();
+    const { metadata } = await this.getMetadata();
+    const snapshot = await this.storage.get(metadata?.merkle[merkleRoot]);
+    const jsonConvert = new JsonConvert();
+    const snapshotData = jsonConvert.deserializeObject(
+      JSON.parse(snapshot),
+      Snapshot,
+    );
+    const item = snapshotData.claims.find((c) => c.address === addressToClaim);
+    if (item === undefined) {
+      return [];
+    }
+    return item.proof;
+  }
 }
