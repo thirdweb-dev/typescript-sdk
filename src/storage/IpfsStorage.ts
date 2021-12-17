@@ -9,6 +9,7 @@ if (!globalThis.FormData) {
 }
 
 const thirdwebIpfsServerUrl = "https://upload.nftlabs.co";
+const pinataIpfsUrl = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 // const thirdwebIpfsServerUrl = "http://localhost:3002";
 
 export default class IpfsStorage implements IStorage {
@@ -57,7 +58,6 @@ export default class IpfsStorage implements IStorage {
     const metadata = {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
     };
-    const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
     const data = new FormData();
 
     files.forEach((file, i) => {
@@ -72,20 +72,17 @@ export default class IpfsStorage implements IStorage {
     });
 
     data.append("pinataMetadata", JSON.stringify(metadata));
-    const res = await fetch(url, {
+    const res = await fetch(pinataIpfsUrl, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
       },
       body: data as any,
-    })
-      .then((response) => {
-        return response;
-      })
-      .catch((err: any) => {
-        throw new UploadError(`Failed to upload to IPFS: ${err}`);
-      });
+    });
     const body = await res.json();
+    if (!res.ok) {
+      throw new UploadError("Failed to upload files to IPFS");
+    }
     return `ipfs://${body.IpfsHash}/`;
   }
 
@@ -97,12 +94,11 @@ export default class IpfsStorage implements IStorage {
       method: "GET",
       headers,
     });
-    try {
-      const body = await res.text();
-      return body;
-    } catch (e) {
-      throw new FetchError(`Failed to get upload token: ${e}`);
+    if (!res.ok) {
+      throw new FetchError(`Failed to get upload token`);
     }
+    const body = await res.text();
+    return body;
   }
 
   public async get(hash: string): Promise<string> {
