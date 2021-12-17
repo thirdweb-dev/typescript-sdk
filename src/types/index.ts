@@ -11,6 +11,8 @@ export * from "./module-deployments/MarketModuleMetadata";
 export * from "./module-deployments/NftModuleMetadata";
 export * from "./module-deployments/PackModuleMetadata";
 export * from "./module-deployments/SplitsModuleMetadata";
+export * from "./module-deployments/VoteModuleMetadata";
 export * from "./ModuleMetadata";
 export * from "./SplitRecipient";
 export * from "./snapshots";
+export * from "./vote";

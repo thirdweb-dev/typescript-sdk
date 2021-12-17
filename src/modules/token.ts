@@ -23,10 +23,10 @@ export interface ITokenMintFromArgs extends ITokenMintArgs {
 
 /**
  *
- * Access this module by calling {@link ThirdwebSDK.getCurrencyModule}
+ * Access this module by calling {@link ThirdwebSDK.getTokenModule}
  * @public
  */
-export class CurrencyModule extends ModuleWithRoles<Coin> {
+export class TokenModule extends ModuleWithRoles<Coin> {
   public static moduleType: ModuleType = ModuleType.CURRENCY as const;
 
   public static roles = [
@@ -41,7 +41,7 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
    * @internal
    */
   protected getModuleRoles(): readonly Role[] {
-    return CurrencyModule.roles;
+    return TokenModule.roles;
   }
 
   /**
@@ -55,7 +55,7 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
    * @internal
    */
   protected getModuleType(): ModuleType {
-    return CurrencyModule.moduleType;
+    return TokenModule.moduleType;
   }
 
   public async get(): Promise<Currency> {
@@ -89,6 +89,45 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
   public async allowanceOf(owner: string, spender: string): Promise<BigNumber> {
     return await this.readOnlyContract.allowance(owner, spender);
   }
+
+  /**
+   * Get your wallet voting power for the current checkpoints
+   *
+   * @returns the amount of voting power in tokens
+   */
+  public async getVoteBalance(): Promise<BigNumber> {
+    return await this.getVoteBalanceOf(await this.getSignerAddress());
+  }
+
+  public async getVoteBalanceOf(account: string): Promise<BigNumber> {
+    return await this.readOnlyContract.getVotes(account);
+  }
+
+  /**
+   * Get your voting delegatee address
+   *
+   * @returns the address of your vote delegatee
+   */
+  public async getDelegation(): Promise<string> {
+    return await this.getDelegationOf(await this.getSignerAddress());
+  }
+
+  public async getDelegationOf(account: string): Promise<string> {
+    return await this.readOnlyContract.delegates(account);
+  }
+
+  /**
+   * Lets you delegate your voting power to the delegateeAddress
+   *
+   * @param delegateeAddress - delegatee wallet address
+   * @alpha
+   */
+  public async delegateTo(
+    delegateeAddress: string,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("delegate", [delegateeAddress]);
+  }
+
   // write functions
   public async transfer(
     to: string,
@@ -125,6 +164,7 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     }
     await this.sendTransaction("multicall", [encoded]);
   }
+
   /**
    * Lets you get a all token holders and their corresponding balances
    * @beta - This can be very slow for large numbers of token holders
@@ -211,3 +251,8 @@ export class CurrencyModule extends ModuleWithRoles<Coin> {
     await this.sendTransaction("multicall", [encoded]);
   }
 }
+
+/**
+ * @deprecated - see {@link TokenModule}
+ */
+export class CurrencyModule extends TokenModule {}

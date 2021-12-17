@@ -6,6 +6,7 @@ import { $enum } from "ts-enum-util";
  */
 export enum ModuleType {
   CURRENCY = 0,
+  TOKEN = 0,
   COLLECTION = 1,
   BUNDLE = 1,
   NFT = 2,
@@ -16,6 +17,7 @@ export enum ModuleType {
   DROP = 7,
   DATASTORE = 8,
   SPLITS = 9,
+  VOTE = 10,
   BUNDLE_DROP = 11,
 }
 /**

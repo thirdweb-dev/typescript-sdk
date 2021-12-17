@@ -6,7 +6,8 @@ import { MarketModule } from "../modules/market";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
-import { CurrencyModule } from "../modules/token";
+import { CurrencyModule, TokenModule } from "../modules/token";
+import { VoteModule } from "../modules/vote";
 import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
 import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
@@ -16,6 +17,8 @@ import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetada
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
+import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
+import TokenModuleMetadata from "../types/module-deployments/TokenModuleMetadata";
 
 /* eslint-disable semi */
 export default interface IAppModule {
@@ -28,6 +31,8 @@ export default interface IAppModule {
   deployCurrencyModule(
     metadata: CurrencyModuleMetadata,
   ): Promise<CurrencyModule>;
+
+  deployTokenModule(metadata: TokenModuleMetadata): Promise<TokenModule>;
 
   deployMarketModule(metadata: MarketModuleMetadata): Promise<MarketModule>;
 
@@ -42,4 +47,6 @@ export default interface IAppModule {
   deployDatastoreModule(
     metadata: DatastoreModuleMetadata,
   ): Promise<DatastoreModule>;
+
+  deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
 }

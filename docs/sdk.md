@@ -73,7 +73,7 @@ Output
 |  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
 |  [ClaimConditionPhase](./sdk.claimconditionphase.md) |  |
 |  [ClaimProof](./sdk.claimproof.md) | The model for a claim proof. Currently we support only an address in the leaf of the merkle tree. |
-|  [CurrencyModule](./sdk.currencymodule.md) | Access this module by calling [ThirdwebSDK.getCurrencyModule()](./sdk.thirdwebsdk.getcurrencymodule.md) |
+|  [CurrencyModule](./sdk.currencymodule.md) |  |
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md) |
 |  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
 |  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
@@ -87,13 +87,17 @@ Output
 |  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.getpackmodule.md) |
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
+|  [TokenModule](./sdk.tokenmodule.md) | Access this module by calling [ThirdwebSDK.getTokenModule()](./sdk.thirdwebsdk.gettokenmodule.md) |
 |  [UploadError](./sdk.uploaderror.md) |  |
+|  [VoteModule](./sdk.votemodule.md) | Access this module by calling  |
 
 ## Enumerations
 
 |  Enumeration | Description |
 |  --- | --- |
 |  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
+|  [ProposalState](./sdk.proposalstate.md) |  |
+|  [VoteType](./sdk.votetype.md) |  |
 
 ## Functions
 
@@ -101,6 +105,8 @@ Output
 |  --- | --- |
 |  [convertModuleTypeToName(moduleType)](./sdk.convertmoduletypetoname.md) |  |
 |  [convertNameToModuleType(moduleName)](./sdk.convertnametomoduletype.md) |  |
+|  [estimateBlockAtTime(timeInEpochSeconds, provider)](./sdk.estimateblockattime.md) | Given a time in second, return the block number that the time is in. |
+|  [generateRoot(items)](./sdk.generateroot.md) | Convenience function to generate a merkle root from a list of strings. |
 |  [uploadToIPFS(data, contractAddress, signerAddress)](./sdk.uploadtoipfs.md) | A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri. |
 
 ## Interfaces
@@ -136,15 +142,20 @@ Output
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
+|  [Proposal](./sdk.proposal.md) |  |
+|  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
+|  [ProposalVote](./sdk.proposalvote.md) |  |
 |  [PublicClaimCondition](./sdk.publicclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
+|  [VoteSettings](./sdk.votesettings.md) |  |
 
 ## Variables
 
 |  Variable | Description |
 |  --- | --- |
+|  [DEFAULT\_BLOCK\_TIMES\_FALLBACK](./sdk.default_block_times_fallback.md) | Fallback map of default block mining times in seconds. |
 |  [NFTLabsSDK](./sdk.nftlabssdk.md) | Deprecated, please use ThirdwebSDK instead. |
 
 ## Type Aliases

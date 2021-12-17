@@ -7,8 +7,6 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
-Checks to see if the current signer can claim the specified number of tokens.
-
 <b>Signature:</b>
 
 ```typescript
@@ -19,12 +17,10 @@ canClaim(tokenId: BigNumberish, quantity: BigNumberish): Promise<boolean>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  tokenId | BigNumberish | The id of the token to check. |
-|  quantity | BigNumberish | The quantity of tokens to check. |
+|  tokenId | BigNumberish |  |
+|  quantity | BigNumberish |  |
 
 <b>Returns:</b>
 
 Promise&lt;boolean&gt;
-
-- True if the current signer can claim the specified number of tokens, false otherwise.
 
