@@ -290,9 +290,10 @@ export class AppModule
       ModuleType.PACK,
       ModuleType.TOKEN,
       ModuleType.MARKET,
-      ModuleType.DROP,
       ModuleType.DATASTORE,
+      ModuleType.DROP,
       ModuleType.BUNDLE_DROP,
+      ModuleType.VOTE,
     ];
     return (
       await Promise.all(
