@@ -106,15 +106,23 @@ export async function getTokenMetadata(
     throw new NotFoundError();
   }
   const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
-  const meta = await fetch(gatewayUrl);
-  const metadata = await meta.json();
-  const entity: NFTMetadata = {
-    ...metadata,
-    id: tokenId,
-    uri,
-    image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
-  };
-  return entity;
+  try {
+    const meta = await fetch(gatewayUrl);
+    const metadata = await meta.json();
+    const entity: NFTMetadata = {
+      ...metadata,
+      id: tokenId,
+      uri,
+      image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
+    };
+    return entity;
+  } catch (e) {
+    console.error("failed to fetch nft", e);
+    return {
+      id: tokenId,
+      uri,
+    };
+  }
 }
 
 /**
