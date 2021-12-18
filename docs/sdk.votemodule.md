@@ -29,6 +29,7 @@ export declare class VoteModule extends Module<VotingGovernor>
 |  [execute(proposalId)](./sdk.votemodule.execute.md) |  | Once the voting period has ended, call this method to execute the executables in the proposal. |
 |  [get(proposalId)](./sdk.votemodule.get.md) |  | Get a proposal by id. |
 |  [getAll()](./sdk.votemodule.getall.md) |  | Returns all the proposals in the contract. |
+|  [hasVoted(proposalId, account)](./sdk.votemodule.hasvoted.md) |  | Checks if an account has voted on a proposal |
 |  [propose(description, executions)](./sdk.votemodule.propose.md) |  | Create a new proposal. |
 |  [setModuleMetadata(metadata)](./sdk.votemodule.setmodulemetadata.md) |  |  |
 |  [settings()](./sdk.votemodule.settings.md) |  |  |
