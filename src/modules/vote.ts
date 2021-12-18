@@ -206,6 +206,23 @@ export class VoteModule extends Module<VotingGovernor> {
   }
 
   /**
+   * Checks if an account has voted on a proposal
+   *
+   * @param proposalId - The unique identifier of a proposal .
+   * @param account - (optional) wallet account address. Defaults to connected signer.
+   * @returns - True if the account has already voted on the proposal.
+   */
+  public async hasVoted(
+    proposalId: string,
+    account?: string,
+  ): Promise<boolean> {
+    if (!account) {
+      account = await this.getSignerAddress();
+    }
+    return this.readOnlyContract.hasVoted(proposalId, account);
+  }
+
+  /**
    * Once the voting period has ended, call this method to execute the executables in the proposal.
    *
    * @param proposalId - The proposal id to execute.
