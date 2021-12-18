@@ -1417,6 +1417,7 @@ export class VoteModule extends Module<VotingGovernor> {
     getAll(): Promise<Proposal[]>;
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
+    hasVoted(proposalId: string, account?: string): Promise<boolean>;
     // (undocumented)
     static moduleType: ModuleType;
     propose(description: string, executions: ProposalExecutable[]): Promise<BigNumber_2>;
