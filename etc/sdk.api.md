@@ -744,6 +744,11 @@ export interface ISDKOptions {
     transactionRelayerUrl: string;
 }
 
+// Warning: (ae-internal-missing-underscore) The name "isNativeToken" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function isNativeToken(tokenAddress: string): boolean;
+
 // @public (undocumented)
 export function isNativeToken(tokenAddress: string): boolean;
 
