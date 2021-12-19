@@ -209,4 +209,23 @@ describe("Bundle Drop Module", async () => {
     const canClaimW2 = await bdModule.canClaim("0", 1);
     assert.isFalse(canClaimW2, "w2 should not be able to claimcan claim");
   });
+
+  it("should work when the token has a price", async () => {
+    await bdModule.lazyMintBatch([
+      {
+        name: "test",
+        description: "test",
+      },
+    ]);
+    const factory = bdModule.getClaimConditionFactory();
+    const phase = factory
+      .newClaimPhase({
+        startTime: new Date(),
+      })
+      .setPrice(1);
+    await bdModule.setClaimCondition("0", factory);
+    console.log(await bdModule.getActiveClaimCondition("0"));
+    const token = await bdModule.claim("0", 1);
+    console.log(token);
+  });
 });

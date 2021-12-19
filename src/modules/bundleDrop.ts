@@ -11,6 +11,7 @@ import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
+  isNativeToken,
   ModuleType,
   NATIVE_TOKEN_ADDRESS,
   Role,
@@ -303,11 +304,8 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       supplyClaimed: 0,
       quantityLimitPerTransaction: c.quantityLimitPerTransaction,
       waitTimeInSecondsBetweenClaims: c.waitTimeSecondsLimitPerTransaction,
-      pricePerToken:
-        c.pricePerToken === AddressZero
-          ? NATIVE_TOKEN_ADDRESS
-          : c.pricePerToken,
-      currency: c.currency,
+      pricePerToken: c.pricePerToken,
+      currency: c.currency === AddressZero ? NATIVE_TOKEN_ADDRESS : c.currency,
       merkleRoot: c.merkleRoot,
     }));
 
@@ -395,9 +393,8 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       }
       proofs = item.proof;
     }
-
     if (mintCondition.pricePerToken.gt(0)) {
-      if (mintCondition.currency === AddressZero) {
+      if (isNativeToken(mintCondition.currency)) {
         overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
           quantity,
         );

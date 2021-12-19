@@ -83,3 +83,9 @@ export async function getCurrencyValue(
     displayValue: formatUnits(price, metadata.decimals),
   };
 }
+export function isNativeToken(tokenAddress: string): boolean {
+  return (
+    tokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS ||
+    tokenAddress.toLowerCase() === AddressZero
+  );
+}
