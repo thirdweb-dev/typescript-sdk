@@ -28,7 +28,7 @@ describe("Batch uploading", async () => {
     console.log("Created drop module at address: ", dropModule.address);
   });
 
-  it.skip("should upload bulk", async () => {
+  it("should upload bulk", async () => {
     const folder = await readdirSync("test/images");
     const filelist = [];
     folder.forEach((file) => {
@@ -38,7 +38,6 @@ describe("Batch uploading", async () => {
     const regex = new RegExp(
       /Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}/,
     );
-    console.log(ipfsUri);
     chai.assert.isTrue(regex.test(ipfsUri));
   });
 });
