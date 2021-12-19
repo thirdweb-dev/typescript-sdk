@@ -745,6 +745,9 @@ export interface ISDKOptions {
 }
 
 // @public (undocumented)
+export function isNativeToken(tokenAddress: string): boolean;
+
+// @public (undocumented)
 export interface IThirdwebSdk {
     // @beta
     createSnapshot(leafs: string[]): Promise<{
