@@ -38,7 +38,7 @@ describe("Bundle Drop Module", async () => {
   });
 
   // TODO: Move to royalty test suite
-  it.skip("should allow you to set claim conditions", async () => {
+  it("should allow you to set claim conditions", async () => {
     await bdModule.lazyMintBatch([
       { name: "test", description: "test" },
       { name: "test", description: "test" },
@@ -56,7 +56,7 @@ describe("Bundle Drop Module", async () => {
     assert.lengthOf(conditions, 1);
   });
 
-  it.skip("allow all addresses in the merkle tree to claim", async () => {
+  it("allow all addresses in the merkle tree to claim", async () => {
     console.log("Claim condition set");
     console.log("Minting 100");
     await bdModule.lazyMintBatch([
@@ -93,7 +93,7 @@ describe("Bundle Drop Module", async () => {
     }
   });
 
-  it.skip("should return the newly minted tokens", async () => {
+  it("should return the newly minted tokens", async () => {
     const tokens = [
       {
         name: "test 0",
@@ -134,7 +134,7 @@ describe("Bundle Drop Module", async () => {
     }
   });
 
-  it.skip("should allow a default claim condition to be used to claim", async () => {
+  it("should allow a default claim condition to be used to claim", async () => {
     await bdModule.lazyMintBatch([
       {
         name: "test 0",
@@ -156,7 +156,7 @@ describe("Bundle Drop Module", async () => {
     console.log(token);
   });
 
-  it.skip("should return addresses of all the claimers", async () => {
+  it("should return addresses of all the claimers", async () => {
     await bdModule.lazyMintBatch([
       {
         name: "test 0",
@@ -192,7 +192,7 @@ describe("Bundle Drop Module", async () => {
     expect(newClaimers).to.deep.equalInAnyOrder([w1.address, w2.address]);
   });
 
-  it.skip("should return the correct status if a token can be claimed", async () => {
+  it("should return the correct status if a token can be claimed", async () => {
     const factory = bdModule.getClaimConditionFactory();
     const phase = factory.newClaimPhase({
       startTime: new Date(),
