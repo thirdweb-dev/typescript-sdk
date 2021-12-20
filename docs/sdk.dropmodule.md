@@ -33,7 +33,7 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  [burn(tokenId)](./sdk.dropmodule.burn.md) |  | <b><i>(BETA)</i></b> |
 |  [canClaim(quantity, proofs)](./sdk.dropmodule.canclaim.md) |  | <b><i>(BETA)</i></b> |
 |  [claim(quantity, proofs)](./sdk.dropmodule.claim.md) |  | <b><i>(BETA)</i></b> |
-|  [createBatch(metadatas)](./sdk.dropmodule.createbatch.md) |  | <b><i>(BETA)</i></b> |
+|  [createBatch(metadatas)](./sdk.dropmodule.createbatch.md) |  | <b><i>(BETA)</i></b> Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per module at the moment. |
 |  [get(tokenId)](./sdk.dropmodule.get.md) |  | <b><i>(BETA)</i></b> |
 |  [getActiveClaimCondition()](./sdk.dropmodule.getactiveclaimcondition.md) |  | <b><i>(BETA)</i></b> |
 |  [getActiveMintCondition()](./sdk.dropmodule.getactivemintcondition.md) |  | <b><i>(BETA)</i></b> |

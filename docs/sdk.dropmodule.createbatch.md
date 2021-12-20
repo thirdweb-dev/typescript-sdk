@@ -7,6 +7,8 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
+Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per module at the moment.
+
 <b>Signature:</b>
 
 ```typescript
@@ -17,7 +19,7 @@ createBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadatas | [MetadataURIOrObject](./sdk.metadatauriorobject.md)<!-- -->\[\] |  |
+|  metadatas | [MetadataURIOrObject](./sdk.metadatauriorobject.md)<!-- -->\[\] | The metadata to include in the batch. |
 
 <b>Returns:</b>
 
