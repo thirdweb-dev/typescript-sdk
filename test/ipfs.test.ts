@@ -3,6 +3,7 @@ import { readFileSync } from "fs";
 import { sdk, signers } from "./before.test";
 
 import { expect, assert } from "chai";
+import IpfsStorage from "../src/storage/IpfsStorage";
 
 global.fetch = require("node-fetch");
 
@@ -105,5 +106,22 @@ describe("IPFS Uploads", async () => {
       readFileSync("test/test.mp4"),
     ];
     const cid = await sdk.getStorage().uploadBatch(sampleObjects);
+  });
+
+  it("should upload properties recursively in batch", async () => {
+    const sampleObjects: any[] = [
+      {
+        name: "test 0",
+        image: readFileSync("test/test.mp4"),
+      },
+      {
+        name: "test 1",
+        properties: {
+          image: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+        },
+      },
+    ];
+    const storage = (await sdk.getStorage()) as IpfsStorage;
+    console.log(await storage.uploadMetadataBatch(sampleObjects));
   });
 });
