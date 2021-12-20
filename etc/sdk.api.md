@@ -467,6 +467,8 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
     canClaim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<boolean>;
+    // @internal (undocumented)
+    canCreateBatch(): Promise<boolean>;
     // (undocumented)
     claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>;
     // @internal (undocumented)
@@ -501,8 +503,6 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
     getRoyaltyBps(): Promise<BigNumberish_2>;
     getRoyaltyRecipientAddress(): Promise<string>;
-    // @internal (undocumented)
-    hasCreatedBatch(): Promise<boolean>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // @deprecated (undocumented)
