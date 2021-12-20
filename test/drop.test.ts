@@ -253,6 +253,25 @@ describe("Drop Module", async () => {
       },
     ]);
 
+    try {
+      await dropModule.createBatch([
+        {
+          name: "test 0",
+        },
+        {
+          name: "test 1",
+        },
+        {
+          name: "test 2",
+        },
+      ]);
+    } catch (err) {
+      expect(err).to.have.property("message", "Batch already created!", "");
+    }
+
+    const batchAlreadyCreated = await dropModule.hasCreatedBatch();
+    assert.isTrue(batchAlreadyCreated);
+
     const token = await dropModule.claim(2);
     assert.lengthOf(token, 2);
   });

@@ -472,6 +472,8 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // @internal (undocumented)
     protected connectContract(): LazyNFT;
     // (undocumented)
+    createBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
+    // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
     // (undocumented)
     getActiveClaimCondition(): Promise<ClaimCondition>;

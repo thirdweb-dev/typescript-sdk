@@ -585,8 +585,19 @@ export class DropModule extends ModuleWithRoles<Drop> {
     return "";
   }
 
+  /**
+   * Create batch allows you to create a batch of tokens
+   * in one transaction. This function can only be called
+   * once per module at the moment.
+   *
+   * @beta
+   *
+   * @param metadatas - The metadata to include in the batch.
+   */
   public async createBatch(metadatas: MetadataURIOrObject[]): Promise<void> {
-    // TODO: Maybe => if already set, throw?
+    if (await this.hasCreatedBatch()) {
+      throw new Error("Batch already created!");
+    }
 
     const startFileNumber = await this.readOnlyContract.nextMintTokenId();
     const baseUri = await this.storage.uploadMetadataBatch(
@@ -601,5 +612,21 @@ export class DropModule extends ModuleWithRoles<Drop> {
       ]),
     ];
     await this.sendTransaction("multicall", [encoded]);
+  }
+
+  /**
+   * @internal
+   *
+   * @returns - True if the batch has been created, false otherwise.
+   */
+  public async hasCreatedBatch(): Promise<boolean> {
+    const a = await this.contract.queryFilter(
+      this.contract.filters.BaseTokenURIUpdated(),
+    );
+    let hasCreatedBatch = false;
+    const txns = a.forEach((b) => {
+      hasCreatedBatch = b.args.length > 0;
+    });
+    return hasCreatedBatch;
   }
 }
