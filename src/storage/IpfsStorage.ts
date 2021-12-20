@@ -194,6 +194,9 @@ export default class IpfsStorage implements IStorage {
    */
   public async batchUploadProperties(metadata: object): Promise<any> {
     const map = await this.buildFilePropertiesMap(metadata, {});
+    if (Object.keys(map).length === 0) {
+      return metadata;
+    }
     const cid = await this.uploadBatchWithCid(Object.values(map), "");
 
     let i = 0;
@@ -275,7 +278,6 @@ export default class IpfsStorage implements IStorage {
   ) {
     const finalMetadata: MetadataURIOrObject[] =
       await this.batchUploadProperties(metadatas);
-    console.log(finalMetadata);
     return await this.uploadBatch(
       finalMetadata.map((m) => JSON.stringify(m)),
       contractAddress,

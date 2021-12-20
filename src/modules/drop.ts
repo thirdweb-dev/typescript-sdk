@@ -286,7 +286,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
   }
 
   /**
-   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
+   * @deprecated - The function has been deprecated. Use `createBatch` instead.
    */
   public async lazyMint(metadata: MetadataURIOrObject) {
     await this.lazyMintBatch([metadata]);
@@ -585,8 +585,19 @@ export class DropModule extends ModuleWithRoles<Drop> {
     return "";
   }
 
-  // public async mintBatch(tokenMetadata: MetadataURIOrObject[]) {
-  // TODO: Upload all metadata to IPFS
-  // call lazyMintAmount(metadata.length - totalSupply) if totalSupply < metadata.length
-  // }
+  public async createBatch(metadatas: MetadataURIOrObject[]): Promise<void> {
+    const startFileNumber = await this.readOnlyContract.nextMintTokenId();
+    const baseUri = await this.storage.uploadMetadataBatch(
+      metadatas,
+      this.address,
+      startFileNumber.toNumber(),
+    );
+    const encoded = [
+      this.contract.interface.encodeFunctionData("setBaseTokenURI", [baseUri]),
+      this.contract.interface.encodeFunctionData("lazyMintAmount", [
+        metadatas.length,
+      ]),
+    ];
+    await this.sendTransaction("multicall", [encoded]);
+  }
 }

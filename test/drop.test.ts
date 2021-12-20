@@ -146,7 +146,7 @@ describe("Drop Module", async () => {
       });
     }
     console.log("calling lazy mint batch");
-    await dropModule.lazyMintBatch(metadata);
+    await dropModule.createBatch(metadata);
 
     console.log("Minted");
     console.log("Claiming");
@@ -241,7 +241,7 @@ describe("Drop Module", async () => {
       startTime: new Date(),
     });
     await dropModule.setClaimConditions(factory);
-    await dropModule.lazyMintBatch([
+    await dropModule.createBatch([
       {
         name: "test 0",
       },
