@@ -104,7 +104,19 @@ describe("Vote Module", async () => {
 
     assert.equal(balanceOfBobsWallet.displayValue, "1.0");
   });
+  it("should be able to execute proposal even when `executions` is not passed", async () => {
+    await sdk.setProviderOrSigner(samWallet);
+    await currencyModule.delegateTo(samWallet.address);
 
+    const proposalId = await voteModule.propose("Mint Tokens");
+    await voteModule.vote(proposalId.toString(), 1);
+
+    for (let i = 0; i < 10; i++) {
+      await hardhatEthers.provider.send("evm_mine", []);
+    }
+
+    await voteModule.execute(proposalId.toString());
+  });
   it.skip("", async () => {
     const blockTimes = [];
     const provider = ethers.getDefaultProvider();

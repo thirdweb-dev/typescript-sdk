@@ -172,8 +172,13 @@ export class VoteModule extends Module<VotingGovernor> {
    */
   public async propose(
     description: string,
-    executions: ProposalExecutable[],
+    executions?: ProposalExecutable[],
   ): Promise<BigNumber> {
+    if (!executions) {
+      executions = [
+        { toAddress: this.address, nativeTokenValue: 0, transactionData: "0x" },
+      ];
+    }
     const tos = executions.map((p) => p.toAddress);
     const values = executions.map((p) => p.nativeTokenValue);
     const datas = executions.map((p) => p.transactionData);
