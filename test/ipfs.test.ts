@@ -120,6 +120,15 @@ describe("IPFS Uploads", async () => {
           image: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
         },
       },
+      {
+        name: "test 1",
+        image: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+        properties: {
+          test: {
+            image: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+          },
+        },
+      },
     ];
     const storage = (await sdk.getStorage()) as IpfsStorage;
     console.log(await storage.uploadMetadataBatch(sampleObjects));

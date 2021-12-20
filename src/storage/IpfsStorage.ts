@@ -162,7 +162,7 @@ export default class IpfsStorage implements IStorage {
     object: any,
     files: (File | Buffer)[],
   ): Promise<(File | Buffer)[]> {
-    const keys = Object.keys(object);
+    const keys = Object.keys(object).sort();
     for (const key in keys) {
       const val = object[keys[key]];
       const shouldUpload = val instanceof File || val instanceof Buffer;
@@ -221,7 +221,7 @@ export default class IpfsStorage implements IStorage {
    * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
    */
   private async replaceFilePropertiesWithHashes(object: any, cids: string[]) {
-    const keys = Object.keys(object);
+    const keys = Object.keys(object).sort();
     for (const key in keys) {
       const val = object[keys[key]];
       const isFile = val instanceof File || val instanceof Buffer;
