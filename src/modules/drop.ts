@@ -586,6 +586,8 @@ export class DropModule extends ModuleWithRoles<Drop> {
   }
 
   public async createBatch(metadatas: MetadataURIOrObject[]): Promise<void> {
+    // TODO: Maybe => if already set, throw?
+
     const startFileNumber = await this.readOnlyContract.nextMintTokenId();
     const baseUri = await this.storage.uploadMetadataBatch(
       metadatas,
