@@ -3,9 +3,6 @@ import { MetadataURIOrObject } from "../core/types";
 import IStorage from "../interfaces/IStorage";
 import FileOrBuffer from "../types/FileOrBuffer";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Hash = require("ipfs-only-hash");
-
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   globalThis.FormData = require("form-data");
@@ -158,20 +155,19 @@ export default class IpfsStorage implements IStorage {
    * `Buffer` or `File` objects into the returned map.
    *
    * @param object - The object to recurse over
-   * @param files - The running map of hashes to files
+   * @param files - The running array of files or buffer to upload
    * @returns - The final map of all hashes to files
    */
   public async buildFilePropertiesMap(
     object: any,
-    files: { [hash: string]: File | Buffer } = {},
-  ): Promise<{ [hash: string]: File | Buffer }> {
+    files: (File | Buffer)[],
+  ): Promise<(File | Buffer)[]> {
     const keys = Object.keys(object);
     for (const key in keys) {
       const val = object[keys[key]];
       const shouldUpload = val instanceof File || val instanceof Buffer;
       if (shouldUpload) {
-        const hash = await Hash.of(val);
-        files[hash] = val;
+        files.push(val);
       }
 
       if (typeof val === "object") {
@@ -193,22 +189,21 @@ export default class IpfsStorage implements IStorage {
    * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
    */
   public async batchUploadProperties(metadata: object): Promise<any> {
-    const map = await this.buildFilePropertiesMap(metadata, {});
-    if (Object.keys(map).length === 0) {
+    const filesToUpload = await this.buildFilePropertiesMap(metadata, []);
+    if (filesToUpload.length === 0) {
       return metadata;
     }
-    const cid = await this.uploadBatchWithCid(Object.values(map), "");
+    const cid = await this.uploadBatchWithCid(filesToUpload, "");
+    const cids = [];
 
-    let i = 0;
-    const uriMap: { [hash: string]: string } = {};
-    for (const key of Object.keys(map)) {
-      uriMap[key] = `${cid}/${i}`;
-      i += 1;
+    // recurse ordered array
+    for (const index in filesToUpload) {
+      cids.push(`${cid}/${index}`);
     }
 
     const finalMetadata = await this.replaceFilePropertiesWithHashes(
       metadata,
-      uriMap,
+      cids,
     );
     return finalMetadata;
   }
@@ -222,30 +217,24 @@ export default class IpfsStorage implements IStorage {
    * @internal
    *
    * @param object - The object to recursively process
-   * @param uriMap - The map of file hashes to ipfs uris
+   * @param cids - The array of file hashes to ipfs uris in the recurse order
    * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
    */
-  private async replaceFilePropertiesWithHashes(
-    object: any,
-    uriMap: { [hash: string]: string },
-  ) {
+  private async replaceFilePropertiesWithHashes(object: any, cids: string[]) {
     const keys = Object.keys(object);
     for (const key in keys) {
       const val = object[keys[key]];
       const isFile = val instanceof File || val instanceof Buffer;
       if (typeof val === "object" && !isFile) {
-        await this.replaceFilePropertiesWithHashes(val, uriMap);
+        await this.replaceFilePropertiesWithHashes(val, cids);
         continue;
       }
+
       if (!isFile) {
         continue;
       }
 
-      const hash = await Hash.of(val);
-      if (!(hash in uriMap)) {
-        throw new Error("Missing hash");
-      }
-      object[keys[key]] = `ipfs://${uriMap[hash]}/`;
+      object[keys[key]] = `ipfs://${cids.splice(0, 1)[0]}`;
     }
     return object;
   }
