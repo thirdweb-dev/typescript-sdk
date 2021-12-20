@@ -624,7 +624,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
       this.contract.filters.BaseTokenURIUpdated(),
     );
     let hasCreatedBatch = false;
-    const txns = a.forEach((b) => {
+    a.forEach((b) => {
       hasCreatedBatch = b.args.length > 0;
     });
     return hasCreatedBatch;
