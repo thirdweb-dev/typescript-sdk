@@ -595,7 +595,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
    * @param metadatas - The metadata to include in the batch.
    */
   public async createBatch(metadatas: MetadataURIOrObject[]): Promise<void> {
-    if (await this.hasCreatedBatch()) {
+    if (await (await this.readOnlyContract.nextTokenId()).gt(0)) {
       throw new Error("Batch already created!");
     }
 
@@ -620,13 +620,6 @@ export class DropModule extends ModuleWithRoles<Drop> {
    * @returns - True if the batch has been created, false otherwise.
    */
   public async hasCreatedBatch(): Promise<boolean> {
-    const a = await this.contract.queryFilter(
-      this.contract.filters.BaseTokenURIUpdated(),
-    );
-    let hasCreatedBatch = false;
-    a.forEach((b) => {
-      hasCreatedBatch = b.args.length > 0;
-    });
-    return hasCreatedBatch;
+    return (await this.readOnlyContract.nextTokenId()).gt(0);
   }
 }
