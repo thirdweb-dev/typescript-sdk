@@ -9,7 +9,7 @@ Create a new proposal.
 <b>Signature:</b>
 
 ```typescript
-propose(description: string, executions: ProposalExecutable[]): Promise<BigNumber>;
+propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber>;
 ```
 
 ## Parameters
