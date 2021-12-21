@@ -37,16 +37,13 @@ export async function getCurrencyMetadata(
   asset: string,
 ): Promise<Currency> {
   try {
-    if (
-      asset.toLowerCase() === NATIVE_TOKEN_ADDRESS ||
-      asset.toLowerCase() === AddressZero
-    ) {
+    if (isNativeToken(asset)) {
       return {
         name: "",
         symbol: "",
         decimals: 18,
       };
-    } else if (asset.toLowerCase() !== AddressZero) {
+    } else {
       const erc20 = ERC20__factory.connect(asset, providerOrSigner);
       const [name, symbol, decimals] = await Promise.all([
         erc20.name(),
@@ -82,4 +79,14 @@ export async function getCurrencyValue(
     value: price.toString(),
     displayValue: formatUnits(price, metadata.decimals),
   };
+}
+
+/**
+ * @internal
+ */
+export function isNativeToken(tokenAddress: string): boolean {
+  return (
+    tokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS ||
+    tokenAddress.toLowerCase() === AddressZero
+  );
 }

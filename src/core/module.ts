@@ -132,8 +132,10 @@ export class Module<TContract extends BaseContract = BaseContract> {
   /**
    * @public
    * Get the metadata of the contract.
+   *
+   * @param resolveUrls - Whether to resolve the urls in the metadata to a gateway.
    */
-  public async getMetadata(): Promise<ModuleMetadata> {
+  public async getMetadata(resolveUrls = true): Promise<ModuleMetadata> {
     invariant(await this.exists(), "contract does not exist");
     const contract = this.connectContract();
     const type = this.getModuleType();
@@ -143,6 +145,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
         await this.getProvider(),
         contract.address,
         this.options.ipfsGatewayUrl,
+        resolveUrls,
       ),
       address: contract.address,
       type,
@@ -571,36 +574,42 @@ export class ModuleWithRoles<
     );
     const currentRoles = await this.getAllRoleMembers();
     const encoded: string[] = [];
-    roles.forEach(async (role) => {
-      const addresses = rolesWithAddresses[role as Role] || [];
-      const currentAddresses = currentRoles[role as Role] || [];
-      const toAdd = addresses.filter(
-        (address) => !currentAddresses.includes(address),
-      );
-      const toRemove = currentAddresses.filter(
-        (address) => !addresses.includes(address),
-      );
-      if (toAdd.length) {
-        toAdd.forEach((address) => {
-          encoded.push(
-            this.contract.interface.encodeFunctionData("grantRole", [
-              getRoleHash(role as Role),
+    // add / rmove admin role at the end so we don't revoke admin then grant
+    roles
+      .sort((role) => (role === "admin" ? 1 : -1))
+      .forEach(async (role) => {
+        const addresses = rolesWithAddresses[role as Role] || [];
+        const currentAddresses = currentRoles[role as Role] || [];
+        const toAdd = addresses.filter(
+          (address) => !currentAddresses.includes(address),
+        );
+        const toRemove = currentAddresses.filter(
+          (address) => !addresses.includes(address),
+        );
+        if (toAdd.length) {
+          toAdd.forEach((address) => {
+            encoded.push(
+              this.contract.interface.encodeFunctionData("grantRole", [
+                getRoleHash(role as Role),
+                address,
+              ]),
+            );
+          });
+        }
+        if (toRemove.length) {
+          toRemove.forEach(async (address) => {
+            const revokeFunctionName = (await this.getRevokeRoleFunctionName(
               address,
-            ]),
-          );
-        });
-      }
-      if (toRemove.length) {
-        toRemove.forEach((address) => {
-          encoded.push(
-            this.contract.interface.encodeFunctionData("revokeRole", [
-              getRoleHash(role as Role),
-              address,
-            ]),
-          );
-        });
-      }
-    });
+            )) as any;
+            encoded.push(
+              this.contract.interface.encodeFunctionData(revokeFunctionName, [
+                getRoleHash(role as Role),
+                address,
+              ]),
+            );
+          });
+        }
+      });
     return await this.sendTransaction("multicall", [encoded]);
   }
   /**
@@ -617,17 +626,23 @@ export class ModuleWithRoles<
     const currentRoles = await this.getAllRoleMembers();
     const encoded: string[] = [];
     const rolesRemoved: Role[] = [];
-    Object.keys(currentRoles).forEach(async (role) => {
-      if (currentRoles[role as Role]?.includes(address)) {
-        encoded.push(
-          this.contract.interface.encodeFunctionData("revokeRole", [
-            getRoleHash(role as Role),
+    // revoke / renounce admin role at the end
+    Object.keys(currentRoles)
+      .sort((role) => (role === "admin" ? 1 : -1))
+      .forEach(async (role) => {
+        if (currentRoles[role as Role]?.includes(address)) {
+          const revokeFunctionName = (await this.getRevokeRoleFunctionName(
             address,
-          ]),
-        );
-        rolesRemoved.push(role as Role);
-      }
-    });
+          )) as any;
+          encoded.push(
+            this.contract.interface.encodeFunctionData(revokeFunctionName, [
+              getRoleHash(role as Role),
+              address,
+            ]),
+          );
+          rolesRemoved.push(role as Role);
+        }
+      });
     await this.sendTransaction("multicall", [encoded]);
     return rolesRemoved;
   }
@@ -686,18 +701,19 @@ export class ModuleWithRoles<
       this.roles.includes(role),
       `this module does not support the "${role}" role`,
     );
+    const revokeFunctionName = await this.getRevokeRoleFunctionName(address);
+    return await this.sendTransaction(revokeFunctionName, [
+      getRoleHash(role),
+      address,
+    ]);
+  }
+
+  private async getRevokeRoleFunctionName(address: string): Promise<string> {
     const signerAddress = await this.getSignerAddress();
     if (signerAddress.toLowerCase() === address.toLowerCase()) {
-      return await this.sendTransaction("renounceRole", [
-        getRoleHash(role),
-        address,
-      ]);
-    } else {
-      return await this.sendTransaction("revokeRole", [
-        getRoleHash(role),
-        address,
-      ]);
+      return "renounceRole";
     }
+    return "revokeRole";
   }
 
   /**

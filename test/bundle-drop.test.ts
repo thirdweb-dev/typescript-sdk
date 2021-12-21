@@ -1,10 +1,15 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
+import { assert, expect, use } from "chai";
 import { BigNumber } from "ethers";
 import { BundleDropModule } from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
 
 global.fetch = require("node-fetch");
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const deepEqualInAnyOrder = require("deep-equal-in-any-order");
+
+use(deepEqualInAnyOrder);
 
 // TODO: Write some actual pack module tests
 describe("Bundle Drop Module", async () => {
@@ -151,13 +156,43 @@ describe("Bundle Drop Module", async () => {
     console.log(token);
   });
 
-  it("should return the correct status if a token can be claimed", async () => {
+  it("should return addresses of all the claimers", async () => {
     await bdModule.lazyMintBatch([
       {
         name: "test 0",
       },
+      {
+        name: "test 1",
+      },
     ]);
 
+    const factory = bdModule.getClaimConditionFactory();
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await bdModule.setClaimCondition("0", factory);
+    await bdModule.setClaimCondition("1", factory);
+    await bdModule.claim("0", 1);
+
+    await sdk.setProviderOrSigner(samWallet);
+    await bdModule.claim("0", 1);
+
+    const claimers = await bdModule.getAllClaimerAddresses("0");
+    expect(claimers).to.deep.equalInAnyOrder([
+      samWallet.address,
+      adminWallet.address,
+    ]);
+
+    await sdk.setProviderOrSigner(w1);
+    await bdModule.claim("1", 1);
+    await sdk.setProviderOrSigner(w2);
+    await bdModule.claim("1", 1);
+
+    const newClaimers = await bdModule.getAllClaimerAddresses("1");
+    expect(newClaimers).to.deep.equalInAnyOrder([w1.address, w2.address]);
+  });
+
+  it("should return the correct status if a token can be claimed", async () => {
     const factory = bdModule.getClaimConditionFactory();
     const phase = factory.newClaimPhase({
       startTime: new Date(),
@@ -173,5 +208,24 @@ describe("Bundle Drop Module", async () => {
     await sdk.setProviderOrSigner(w2);
     const canClaimW2 = await bdModule.canClaim("0", 1);
     assert.isFalse(canClaimW2, "w2 should not be able to claimcan claim");
+  });
+
+  it("should work when the token has a price", async () => {
+    await bdModule.lazyMintBatch([
+      {
+        name: "test",
+        description: "test",
+      },
+    ]);
+    const factory = bdModule.getClaimConditionFactory();
+    const phase = factory
+      .newClaimPhase({
+        startTime: new Date(),
+      })
+      .setPrice(1);
+    await bdModule.setClaimCondition("0", factory);
+    console.log(await bdModule.getActiveClaimCondition("0"));
+    const token = await bdModule.claim("0", 1);
+    console.log(token);
   });
 });

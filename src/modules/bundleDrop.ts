@@ -11,6 +11,7 @@ import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
+  isNativeToken,
   ModuleType,
   NATIVE_TOKEN_ADDRESS,
   Role,
@@ -215,9 +216,21 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   }
 
   // write functions
+
+  /*
+   *
+   * @deprecated - {@link BundleDropModule.mintBatch}
+   */
   public async lazyMintBatch(
     metadatas: MetadataURIOrObject[],
   ): Promise<BundleDropMetadata[]> {
+    const tokenIds = await this.createBatch(metadatas);
+    return await Promise.all(tokenIds.map((t) => this.get(t.toString())));
+  }
+
+  public async createBatch(
+    metadatas: MetadataURIOrObject[],
+  ): Promise<string[]> {
     const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
     const baseUri = await this.storage.uploadMetadataBatch(
       metadatas,
@@ -232,11 +245,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     const [startingIndex, endingIndex]: BigNumber[] = event;
     const tokenIds = [];
     for (let i = startingIndex; i.lte(endingIndex); i = i.add(1)) {
-      tokenIds.push(BigNumber.from(i.toString()));
+      tokenIds.push(i.toString());
     }
-    return await Promise.all(
-      tokenIds.map(async (t) => await this.get(t.toString())),
-    );
+    return tokenIds;
   }
 
   public async setSaleRecipient(
@@ -293,11 +304,8 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       supplyClaimed: 0,
       quantityLimitPerTransaction: c.quantityLimitPerTransaction,
       waitTimeInSecondsBetweenClaims: c.waitTimeSecondsLimitPerTransaction,
-      pricePerToken:
-        c.pricePerToken === AddressZero
-          ? NATIVE_TOKEN_ADDRESS
-          : c.pricePerToken,
-      currency: c.currency,
+      pricePerToken: c.pricePerToken,
+      currency: c.currency === AddressZero ? NATIVE_TOKEN_ADDRESS : c.currency,
       merkleRoot: c.merkleRoot,
     }));
 
@@ -305,7 +313,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
-    const { metadata } = await this.getMetadata();
+    const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
@@ -385,9 +393,8 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       }
       proofs = item.proof;
     }
-
     if (mintCondition.pricePerToken.gt(0)) {
-      if (mintCondition.currency === AddressZero) {
+      if (isNativeToken(mintCondition.currency)) {
         overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
           quantity,
         );
@@ -518,6 +525,23 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   }
 
   /**
+   * Pulls the list of all addresses that have claimed a particular token
+   *
+   * @beta - This can be very slow for large numbers of token holders
+   *
+   * @param tokenId - The token id to get the claimers of
+   * @returns - A unique list of addresses that claimed the token
+   */
+  public async getAllClaimerAddresses(
+    tokenId: BigNumberish,
+  ): Promise<string[]> {
+    const a = await this.contract.queryFilter(
+      this.contract.filters.ClaimedTokens(null, BigNumber.from(tokenId)),
+    );
+    return Array.from(new Set(a.map((b) => b.args.claimer)));
+  }
+
+  /*
    * Checks to see if the current signer can claim the specified number of tokens.
    *
    * @param tokenId - The id of the token to check.

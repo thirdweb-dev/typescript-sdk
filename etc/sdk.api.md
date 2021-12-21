@@ -31,13 +31,14 @@ import { Registry } from '@3rdweb/contracts';
 import { Royalty } from '@3rdweb/contracts';
 import { Signer } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/providers';
+import { VotingGovernor } from '@3rdweb/contracts';
 
 // Warning: (ae-forgotten-export) The symbol "RegistryModule" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "SplitsModule" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule | typeof BundleDropModule;
+export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule | typeof BundleDropModule | typeof VoteModule;
 
 // Warning: (ae-forgotten-export) The symbol "IAppModule" needs to be exported by the entry point index.d.ts
 //
@@ -55,7 +56,8 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     // Warning: (ae-forgotten-export) The symbol "CurrencyModuleMetadata" needs to be exported by the entry point index.d.ts
     deployCurrencyModule(metadata: CurrencyModuleMetadata): Promise<CurrencyModule>;
     // Warning: (ae-forgotten-export) The symbol "DatastoreModuleMetadata" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-incompatible-release-tags) The symbol "deployDatastoreModule" is marked as @public, but its signature references "DatastoreModule" which is marked as @alpha
+    //
+    // @alpha
     deployDatastoreModule(metadata: DatastoreModuleMetadata): Promise<DatastoreModule>;
     // Warning: (ae-forgotten-export) The symbol "DropModuleMetadata" needs to be exported by the entry point index.d.ts
     // Warning: (ae-incompatible-release-tags) The symbol "deployDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
@@ -69,6 +71,10 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
     // Warning: (ae-forgotten-export) The symbol "SplitsModuleMetadata" needs to be exported by the entry point index.d.ts
     deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
+    // Warning: (ae-forgotten-export) The symbol "TokenModuleMetadata" needs to be exported by the entry point index.d.ts
+    deployTokenModule(metadata: TokenModuleMetadata): Promise<TokenModule>;
+    // Warning: (ae-forgotten-export) The symbol "VoteModuleMetadata" needs to be exported by the entry point index.d.ts
+    deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
     // @internal (undocumented)
     getAllContractMetadata(addresses: string[]): Promise<ModuleMetadataNoType[]>;
     getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
@@ -140,11 +146,14 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     balanceOf(address: string, tokenId: BigNumberish_2): Promise<BigNumber_2>;
     // (undocumented)
     burn(tokenId: BigNumberish_2, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
     canClaim(tokenId: BigNumberish_2, quantity: BigNumberish_2): Promise<boolean>;
     // (undocumented)
     claim(tokenId: BigNumberish_2, quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): LazyMintERC1155;
+    // (undocumented)
+    createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
     // (undocumented)
     get(tokenId: string): Promise<BundleDropMetadata>;
     // Warning: (ae-forgotten-export) The symbol "ClaimCondition" needs to be exported by the entry point index.d.ts
@@ -155,6 +164,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     getAll(): Promise<BundleDropMetadata[]>;
     // (undocumented)
     getAllClaimConditions(tokenId: BigNumberish_2): Promise<ClaimCondition[]>;
+    getAllClaimerAddresses(tokenId: BigNumberish_2): Promise<string[]>;
     getClaimConditionFactory(): ClaimConditionFactory;
     // (undocumented)
     getClaimConditionsFactory(): ClaimConditionFactory;
@@ -408,58 +418,8 @@ export interface Currency {
     symbol: string;
 }
 
-// @public
-export class CurrencyModule extends ModuleWithRoles<Coin> {
-    // (undocumented)
-    allowance(spender: string): Promise<BigNumber_2>;
-    // (undocumented)
-    allowanceOf(owner: string, spender: string): Promise<BigNumber_2>;
-    // (undocumented)
-    balance(): Promise<CurrencyValue>;
-    // (undocumented)
-    balanceOf(address: string): Promise<CurrencyValue>;
-    // (undocumented)
-    burn(amount: BigNumberish_2): Promise<TransactionReceipt>;
-    // (undocumented)
-    burnFrom(from: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
-    // @internal (undocumented)
-    protected connectContract(): Coin;
-    // (undocumented)
-    get(): Promise<Currency>;
-    // @beta
-    getAllHolderBalances(): Promise<Record<string, BigNumber_2>>;
-    // @internal @override (undocumented)
-    protected getModuleRoles(): readonly Role[];
-    // @internal (undocumented)
-    protected getModuleType(): ModuleType;
-    // (undocumented)
-    getValue(value: BigNumberish_2): Promise<CurrencyValue>;
-    // (undocumented)
-    mint(amount: BigNumberish_2): Promise<void>;
-    // (undocumented)
-    mintBatchTo(args: ITokenMintArgs[]): Promise<void>;
-    // (undocumented)
-    mintTo(to: string, amount: BigNumberish_2): Promise<void>;
-    // (undocumented)
-    static moduleType: ModuleType;
-    // (undocumented)
-    static roles: readonly ["admin", "minter", "pauser", "transfer"];
-    // (undocumented)
-    setAllowance(spender: string, amount: BigNumber_2): Promise<TransactionReceipt>;
-    // (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // (undocumented)
-    setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    totalSupply(): Promise<BigNumber_2>;
-    // (undocumented)
-    transfer(to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
-    // (undocumented)
-    transferBatch(args: ITokenMintArgs[]): Promise<void>;
-    // (undocumented)
-    transferFrom(from: string, to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
-    // (undocumented)
-    transferFromBatch(args: ITokenMintFromArgs[]): Promise<void>;
+// @public @deprecated (undocumented)
+export class CurrencyModule extends TokenModule {
 }
 
 // @public
@@ -488,6 +448,15 @@ export class DatastoreModule extends ModuleWithRoles<DataStore> {
     setUint(key: string, value: BigNumberish_2): Promise<TransactionReceipt>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "SUPPORTED_CHAIN_ID" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ChainId" needs to be exported by the entry point index.d.ts
+//
+// @public
+export const DEFAULT_BLOCK_TIMES_FALLBACK: Record<SUPPORTED_CHAIN_ID | ChainId.Hardhat, {
+    secondsBetweenBlocks: number;
+    synced: boolean;
+}>;
+
 // @beta
 export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
@@ -498,10 +467,13 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
     canClaim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<boolean>;
+    // @internal (undocumented)
+    canCreateBatch(): Promise<boolean>;
     // (undocumented)
     claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>;
     // @internal (undocumented)
     protected connectContract(): LazyNFT;
+    createBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
     // (undocumented)
@@ -586,6 +558,9 @@ export class DuplicateLeafsError extends Error {
 }
 
 // @public
+export function estimateBlockAtTime(timeInEpochSeconds: number, provider: Provider): Promise<number>;
+
+// @public
 export class FetchError extends Error {
     // @internal
     constructor(message: string, innerError?: Error);
@@ -603,10 +578,13 @@ export type ForwardRequestMessage = {
     data: BytesLike;
 };
 
+// @public
+export function generateRoot(items: string[]): string;
+
 // Warning: (ae-internal-missing-underscore) The name "getContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getContractMetadata(provider: ProviderOrSigner, address: string, ipfsGatewayUrl: string): Promise<ContractMetadata>;
+export function getContractMetadata(provider: ProviderOrSigner, address: string, ipfsGatewayUrl: string, resolveGateway?: boolean): Promise<ContractMetadata>;
 
 // Warning: (ae-internal-missing-underscore) The name "getCurrencyMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -769,6 +747,11 @@ export interface ISDKOptions {
     transactionRelayerUrl: string;
 }
 
+// Warning: (ae-internal-missing-underscore) The name "isNativeToken" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function isNativeToken(tokenAddress: string): boolean;
+
 // @public (undocumented)
 export interface IThirdwebSdk {
     // @beta
@@ -891,7 +874,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     protected getCallOverrides(): Promise<CallOverrides>;
     // @internal (undocumented)
     protected getChainID(): Promise<number>;
-    getMetadata(): Promise<ModuleMetadata>;
+    getMetadata(resolveUrls?: boolean): Promise<ModuleMetadata>;
     // @internal @virtual (undocumented)
     protected getModuleType(): ModuleType;
     // @internal (undocumented)
@@ -962,7 +945,11 @@ export enum ModuleType {
     // (undocumented)
     PACK = 5,
     // (undocumented)
-    SPLITS = 9
+    SPLITS = 9,
+    // (undocumented)
+    TOKEN = 0,
+    // (undocumented)
+    VOTE = 10
 }
 
 // @public
@@ -1168,6 +1155,57 @@ export type PermitRequestMessage = {
     deadline: number | string;
 };
 
+// @public (undocumented)
+export interface Proposal {
+    description: string;
+    // (undocumented)
+    endBlock: BigNumber_2;
+    executions: ProposalExecutable[];
+    proposalId: string;
+    proposer: string;
+    // (undocumented)
+    startBlock: BigNumber_2;
+    state: ProposalState;
+    votes: ProposalVote[];
+}
+
+// @public (undocumented)
+export interface ProposalExecutable {
+    nativeTokenValue: BigNumberish_2;
+    toAddress: string;
+    transactionData: BytesLike;
+}
+
+// @public (undocumented)
+export enum ProposalState {
+    // (undocumented)
+    Active = 1,
+    // (undocumented)
+    Canceled = 2,
+    // (undocumented)
+    Defeated = 3,
+    // (undocumented)
+    Executed = 7,
+    // (undocumented)
+    Expired = 6,
+    // (undocumented)
+    Pending = 0,
+    // (undocumented)
+    Queued = 5,
+    // (undocumented)
+    Succeeded = 4
+}
+
+// @public (undocumented)
+export interface ProposalVote {
+    // (undocumented)
+    count: BigNumber_2;
+    // (undocumented)
+    label: string;
+    // (undocumented)
+    type: VoteType;
+}
+
 // @public
 export type ProviderOrSigner = Provider | Signer;
 
@@ -1194,6 +1232,9 @@ export interface PublicClaimCondition {
 // @beta @deprecated (undocumented)
 export interface PublicMintCondition extends PublicClaimCondition {
 }
+
+// @public (undocumented)
+export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string): any;
 
 // Warning: (ae-internal-missing-underscore) The name "replaceIpfsWithGateway" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -1256,7 +1297,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     getCollectionModule(address: string): CollectionModule;
     // (undocumented)
     getContractMetadata(address: string): Promise<ModuleMetadataNoType>;
-    // (undocumented)
+    // @deprecated (undocumented)
     getCurrencyModule(address: string): CurrencyModule;
     // @alpha (undocumented)
     getDatastoreModule(address: string): DatastoreModule;
@@ -1279,6 +1320,10 @@ export class ThirdwebSDK implements IThirdwebSdk {
     // @alpha (undocumented)
     getSplitsModule(address: string): SplitsModule;
     getStorage(): IStorage;
+    // (undocumented)
+    getTokenModule(address: string): TokenModule;
+    // @alpha (undocumented)
+    getVoteModule(address: string): VoteModule;
     // @internal
     invokeRoute(route: string, payload: Record<string, any>): any;
     // (undocumented)
@@ -1288,6 +1333,68 @@ export class ThirdwebSDK implements IThirdwebSdk {
     setProviderOrSigner(providerOrSignerOrNetwork: ValidProviderInput): ProviderOrSigner;
     // @internal
     get signer(): Signer | null;
+}
+
+// @public
+export class TokenModule extends ModuleWithRoles<Coin> {
+    // (undocumented)
+    allowance(spender: string): Promise<BigNumber_2>;
+    // (undocumented)
+    allowanceOf(owner: string, spender: string): Promise<BigNumber_2>;
+    // (undocumented)
+    balance(): Promise<CurrencyValue>;
+    // (undocumented)
+    balanceOf(address: string): Promise<CurrencyValue>;
+    // (undocumented)
+    burn(amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    burnFrom(from: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // @internal (undocumented)
+    protected connectContract(): Coin;
+    // @alpha
+    delegateTo(delegateeAddress: string): Promise<TransactionReceipt>;
+    // (undocumented)
+    get(): Promise<Currency>;
+    // @beta
+    getAllHolderBalances(): Promise<Record<string, BigNumber_2>>;
+    getDelegation(): Promise<string>;
+    // (undocumented)
+    getDelegationOf(account: string): Promise<string>;
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
+    // (undocumented)
+    getValue(value: BigNumberish_2): Promise<CurrencyValue>;
+    getVoteBalance(): Promise<BigNumber_2>;
+    // (undocumented)
+    getVoteBalanceOf(account: string): Promise<BigNumber_2>;
+    // (undocumented)
+    mint(amount: BigNumberish_2): Promise<void>;
+    // (undocumented)
+    mintBatchTo(args: ITokenMintArgs[]): Promise<void>;
+    // (undocumented)
+    mintTo(to: string, amount: BigNumberish_2): Promise<void>;
+    // (undocumented)
+    static moduleType: ModuleType;
+    // (undocumented)
+    static roles: readonly ["admin", "minter", "pauser", "transfer"];
+    // (undocumented)
+    setAllowance(spender: string, amount: BigNumber_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    // (undocumented)
+    setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
+    // (undocumented)
+    totalSupply(): Promise<BigNumber_2>;
+    // (undocumented)
+    transfer(to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    transferBatch(args: ITokenMintArgs[]): Promise<void>;
+    // (undocumented)
+    transferFrom(from: string, to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    transferFromBatch(args: ITokenMintFromArgs[]): Promise<void>;
 }
 
 // @public (undocumented)
@@ -1308,5 +1415,54 @@ export function uploadToIPFS(data: string | File | FileOrBuffer, contractAddress
 
 // @public
 export type ValidProviderInput = ProviderOrSigner | Network | string;
+
+// @public
+export class VoteModule extends Module<VotingGovernor> {
+    balance(): Promise<CurrencyValue>;
+    balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
+    canExecute(proposalId: string): Promise<boolean>;
+    // @internal (undocumented)
+    protected connectContract(): VotingGovernor;
+    execute(proposalId: string): Promise<void>;
+    get(proposalId: string): Promise<Proposal>;
+    getAll(): Promise<Proposal[]>;
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
+    hasVoted(proposalId: string, account?: string): Promise<boolean>;
+    // (undocumented)
+    static moduleType: ModuleType;
+    propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber_2>;
+    // (undocumented)
+    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    // (undocumented)
+    settings(): Promise<VoteSettings>;
+    vote(proposalId: string, voteType: VoteType, reason?: string): Promise<void>;
+}
+
+// @public (undocumented)
+export interface VoteSettings {
+    // (undocumented)
+    proposalTokenThreshold: string;
+    // (undocumented)
+    votingDelay: string;
+    // (undocumented)
+    votingPeriod: string;
+    // (undocumented)
+    votingQuorumFraction: string;
+    // (undocumented)
+    votingTokenAddress: string;
+    // (undocumented)
+    votingTokenMetadata: Currency;
+}
+
+// @public (undocumented)
+export enum VoteType {
+    // (undocumented)
+    Abstain = 2,
+    // (undocumented)
+    Against = 0,
+    // (undocumented)
+    For = 1
+}
 
 ```

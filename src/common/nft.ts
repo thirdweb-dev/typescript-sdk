@@ -7,7 +7,7 @@ import {
 import { Contract } from "@ethersproject/contracts";
 import { JSONValue, ProviderOrSigner } from "../core/types";
 import { NotFoundError } from "./error";
-import { replaceIpfsWithGateway } from "./ipfs";
+import { recursiveResolveGatewayUrl, replaceIpfsWithGateway } from "./ipfs";
 
 // support erc721 and erc1155
 const tokenUriABI = [
@@ -106,15 +106,23 @@ export async function getTokenMetadata(
     throw new NotFoundError();
   }
   const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
-  const meta = await fetch(gatewayUrl);
-  const metadata = await meta.json();
-  const entity: NFTMetadata = {
-    ...metadata,
-    id: tokenId,
-    uri,
-    image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
-  };
-  return entity;
+  try {
+    const meta = await fetch(gatewayUrl);
+    let json = await meta.json();
+    json = recursiveResolveGatewayUrl(json, ipfsGatewayUrl);
+    const entity: NFTMetadata = {
+      ...json,
+      id: tokenId,
+      uri,
+    };
+    return entity;
+  } catch (e) {
+    console.error("failed to fetch nft", e);
+    return {
+      id: tokenId,
+      uri,
+    };
+  }
 }
 
 /**

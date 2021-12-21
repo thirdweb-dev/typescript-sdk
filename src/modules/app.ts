@@ -12,12 +12,14 @@ import {
   ProtocolControl__factory,
   Royalty__factory,
   Marketplace__factory,
+  VotingGovernor__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, ethers, Signer } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { JsonConvert } from "json2typescript";
+import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";
 import {
   ChainlinkVrf,
   CurrencyValue,
@@ -43,6 +45,8 @@ import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetada
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
+import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
+import TokenModuleMetadata from "../types/module-deployments/TokenModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { BundleDropModule } from "./bundleDrop";
 import { CollectionModule } from "./collection";
@@ -52,9 +56,11 @@ import { MarketModule } from "./market";
 import { NFTModule } from "./nft";
 import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
-import { CurrencyModule } from "./token";
 import { MarketplaceModule } from "./marketplace";
 import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceModuleMetadata";
+import { CurrencyModule, TokenModule } from "./token";
+import { VoteModule } from "./vote";
+import { SUPPORTED_CHAIN_ID } from "../common/chain";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
@@ -156,6 +162,7 @@ export class AppModule
           this.providerOrSigner,
           address,
           this.ipfsGatewayUrl,
+          true,
         ),
       ),
     );
@@ -285,11 +292,12 @@ export class AppModule
       ModuleType.NFT,
       ModuleType.BUNDLE,
       ModuleType.PACK,
-      ModuleType.CURRENCY,
+      ModuleType.TOKEN,
       ModuleType.MARKET,
-      ModuleType.DROP,
       ModuleType.DATASTORE,
+      ModuleType.DROP,
       ModuleType.BUNDLE_DROP,
+      ModuleType.VOTE,
     ];
     return (
       await Promise.all(
@@ -551,6 +559,43 @@ export class AppModule
   }
 
   /**
+   * Deploys a token module.
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed currency module
+   */
+  public async deployTokenModule(
+    metadata: TokenModuleMetadata,
+  ): Promise<TokenModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      CurrencyModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const address = await this._deployModule(
+      ModuleType.CURRENCY,
+      [
+        this.address,
+        metadata.name,
+        metadata.symbol ? metadata.symbol : "",
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+      ],
+      Coin__factory,
+    );
+
+    return this.sdk.getTokenModule(address);
+  }
+
+  /**
    * Deploys a Marketplace module
    *
    * @param metadata - The module metadata
@@ -735,6 +780,7 @@ export class AppModule
   /**
    * Deploys a Datastore module
    *
+   * @alpha
    * @param metadata - The module metadata
    * @returns - The deployed Datastore module
    */
@@ -761,6 +807,81 @@ export class AppModule
     );
 
     return this.sdk.getDatastoreModule(address);
+  }
+
+  /**
+   * Deploys a Vote module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed vote module
+   */
+  public async deployVoteModule(
+    metadata: VoteModuleMetadata,
+  ): Promise<VoteModule> {
+    invariant(
+      metadata.votingTokenAddress !== "" &&
+        isAddress(metadata.votingTokenAddress),
+      "Voting Token Address must be a valid address",
+    );
+    invariant(
+      metadata.votingQuorumFraction >= 0 &&
+        metadata.votingQuorumFraction <= 100,
+      "Quofrum Fraction must be in the range of 0-100 representing percentage",
+    );
+
+    const chainId = await this.getChainID();
+    const timeBetweenBlocks =
+      DEFAULT_BLOCK_TIMES_FALLBACK[chainId as SUPPORTED_CHAIN_ID];
+
+    const waitTimeInBlocks =
+      metadata.proposalStartWaitTimeInSeconds /
+      timeBetweenBlocks.secondsBetweenBlocks;
+    const votingTimeInBlocks =
+      metadata.proposalVotingTimeInSeconds /
+      timeBetweenBlocks.secondsBetweenBlocks;
+
+    metadata.votingDelay = waitTimeInBlocks;
+    metadata.votingPeriod = votingTimeInBlocks;
+
+    // verify making sure that the voting token address is valid
+    try {
+      await Coin__factory.connect(
+        metadata.votingTokenAddress,
+        this.readOnlyContract.provider,
+      ).callStatic.getPastTotalSupply(0);
+    } catch (e) {
+      invariant(false, "Token is not compatible with the vote module");
+    }
+
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      VoteModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const address = await this._deployModule(
+      ModuleType.VOTE,
+      [
+        metadata.name,
+        metadata.votingTokenAddress,
+        metadata.votingDelay,
+        metadata.votingPeriod,
+        metadata.minimumNumberOfTokensNeededToPropose,
+        metadata.votingQuorumFraction,
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+      ],
+      VotingGovernor__factory,
+    );
+
+    return this.sdk.getVoteModule(address);
   }
 
   /**

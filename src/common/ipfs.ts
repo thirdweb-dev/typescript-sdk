@@ -28,6 +28,22 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
   }
   return ipfsUrl.replace("ipfs://", gatewayUrl);
 }
+export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string) {
+  if (typeof json === "object") {
+    const keylist = Object.keys(json);
+    keylist.forEach((key: string) => {
+      if (typeof json[key] === "object") {
+        json[key] = recursiveResolveGatewayUrl(json[key], ipfsGatewayUrl);
+      } else if (
+        typeof json[key] === "string" &&
+        json[key].startsWith("ipfs://")
+      ) {
+        json[key] = replaceIpfsWithGateway(json[key], ipfsGatewayUrl);
+      }
+    });
+  }
+  return json;
+}
 
 /**
  * A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri.

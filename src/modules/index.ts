@@ -9,3 +9,4 @@ export * from "./pack";
 export * from "./token";
 export * from "./bundleDrop";
 export * from "./marketplace";
+export * from "./vote";

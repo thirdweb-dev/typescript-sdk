@@ -146,7 +146,7 @@ describe("Drop Module", async () => {
       });
     }
     console.log("calling lazy mint batch");
-    await dropModule.lazyMintBatch(metadata);
+    await dropModule.createBatch(metadata);
 
     console.log("Minted");
     console.log("Claiming");
@@ -241,7 +241,7 @@ describe("Drop Module", async () => {
       startTime: new Date(),
     });
     await dropModule.setClaimConditions(factory);
-    await dropModule.lazyMintBatch([
+    await dropModule.createBatch([
       {
         name: "test 0",
       },
@@ -252,6 +252,22 @@ describe("Drop Module", async () => {
         name: "test 2",
       },
     ]);
+
+    try {
+      await dropModule.createBatch([
+        {
+          name: "test 0",
+        },
+        {
+          name: "test 1",
+        },
+        {
+          name: "test 2",
+        },
+      ]);
+    } catch (err) {
+      expect(err).to.have.property("message", "Batch already created!", "");
+    }
 
     const token = await dropModule.claim(2);
     assert.lengthOf(token, 2);
