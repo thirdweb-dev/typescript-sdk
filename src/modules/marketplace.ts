@@ -125,12 +125,6 @@ export class MarketplaceModule
     const event = this.parseEventLogs("NewListing", receipt?.logs);
     return event.listingId;
   }
-  updateDirectListing(listing: AuctionListing): Promise<DirectListing> {
-    throw new Error("Method not implemented.");
-  }
-  updateAuctionListing(listing: AuctionListing): Promise<AuctionListing> {
-    throw new Error("Method not implemented.");
-  }
 
   public async makeOffer(offer: {
     listingId: BigNumberish;
@@ -216,38 +210,6 @@ export class MarketplaceModule
       ],
       overrides,
     );
-  }
-
-  removeListing(listingId: BigNumberish): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  buyoutAuction(buyout: {
-    listingId: BigNumberish;
-    quantityDesired: BigNumberish;
-    currencyContractAddress: string;
-    tokenAmount: BigNumberish;
-  }): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  buyDirectListing(buyout: {
-    listingId: BigNumberish;
-    quantityDesired: BigNumberish;
-    currencyContractAddress: string;
-    tokenAmount: BigNumberish;
-  }): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  getActiveBids(listingId: BigNumberish): Promise<Offer[]> {
-    throw new Error("Method not implemented.");
-  }
-  acceptWinningBid(listingId: BigNumberish): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  acceptDirectListingOffer(
-    listingId: BigNumberish,
-    addressOfOfferor: string,
-  ): Promise<void> {
-    throw new Error("Method not implemented.");
   }
 
   public async getDirectListing(
@@ -516,5 +478,43 @@ export class MarketplaceModule
 
   public async getTimeBufferInSeconds(): Promise<BigNumber> {
     return await this.readOnlyContract.timeBuffer();
+  }
+
+  removeListing(listingId: BigNumberish): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  buyoutAuction(buyout: {
+    listingId: BigNumberish;
+    quantityDesired: BigNumberish;
+    currencyContractAddress: string;
+    tokenAmount: BigNumberish;
+  }): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  buyDirectListing(buyout: {
+    listingId: BigNumberish;
+    quantityDesired: BigNumberish;
+    currencyContractAddress: string;
+    tokenAmount: BigNumberish;
+  }): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  getActiveBids(listingId: BigNumberish): Promise<Offer[]> {
+    throw new Error("Method not implemented.");
+  }
+  acceptWinningBid(listingId: BigNumberish): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  acceptDirectListingOffer(
+    listingId: BigNumberish,
+    addressOfOfferor: string,
+  ): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  updateDirectListing(listing: AuctionListing): Promise<DirectListing> {
+    throw new Error("Method not implemented.");
+  }
+  updateAuctionListing(listing: AuctionListing): Promise<AuctionListing> {
+    throw new Error("Method not implemented.");
   }
 }
