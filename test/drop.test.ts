@@ -269,9 +269,6 @@ describe("Drop Module", async () => {
       expect(err).to.have.property("message", "Batch already created!", "");
     }
 
-    const batchAlreadyCreated = await dropModule.hasCreatedBatch();
-    assert.isTrue(batchAlreadyCreated);
-
     const token = await dropModule.claim(2);
     assert.lengthOf(token, 2);
   });
