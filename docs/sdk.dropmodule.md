@@ -12,9 +12,13 @@ Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.ge
 <b>Signature:</b>
 
 ```typescript
-export declare class DropModule extends ModuleWithRoles<Drop> 
+export declare class DropModule extends ModuleWithRoles<DropV2> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Drop&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;DropV2&gt;
+
+## Remarks
+
+The constructor for this class is marked as internal. Third-party code should not call the constructor directly or create subclasses that extend the `DropModule` class.
 
 ## Properties
 
@@ -48,12 +52,11 @@ export declare class DropModule extends ModuleWithRoles<Drop>
 |  [getRoyaltyBps()](./sdk.dropmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.dropmodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |
 |  [isApproved(address, operator)](./sdk.dropmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
+|  [isV1()](./sdk.dropmodule.isv1.md) |  | <b><i>(BETA)</i></b> Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract. |
 |  [lazyMint(metadata)](./sdk.dropmodule.lazymint.md) |  | <b><i>(BETA)</i></b> |
 |  [lazyMintAmount(amount)](./sdk.dropmodule.lazymintamount.md) |  | <b><i>(BETA)</i></b> |
 |  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  | <b><i>(BETA)</i></b> |
-|  [maxTotalSupply()](./sdk.dropmodule.maxtotalsupply.md) |  | <b><i>(BETA)</i></b> |
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  | <b><i>(BETA)</i></b> |
-|  [pinToIpfs(files)](./sdk.dropmodule.pintoipfs.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
 |  [setBaseTokenUri(uri)](./sdk.dropmodule.setbasetokenuri.md) |  | <b><i>(BETA)</i></b> |
 |  [setClaimConditions(factory)](./sdk.dropmodule.setclaimconditions.md) |  | <b><i>(BETA)</i></b> Sets public mint conditions for the next minting using the claim condition factory. |

@@ -459,7 +459,9 @@ export const DEFAULT_BLOCK_TIMES_FALLBACK: Record<SUPPORTED_CHAIN_ID | ChainId.H
 }>;
 
 // @beta
-export class DropModule extends ModuleWithRoles<LazyNFT> {
+export class DropModule extends ModuleWithRoles<LazyMintERC721> {
+    // @internal
+    constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     // (undocumented)
     balance(): Promise<BigNumber_2>;
     // (undocumented)
@@ -473,8 +475,8 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>;
     // @internal (undocumented)
-    protected connectContract(): LazyNFT;
-    createBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
+    protected connectContract(): LazyMintERC721;
+    createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
     // (undocumented)
@@ -506,20 +508,19 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
+    isV1(): Promise<boolean>;
     // @deprecated (undocumented)
-    lazyMint(metadata: MetadataURIOrObject): Promise<void>;
+    lazyMint(metadata: MetadataURIOrObject): Promise<string[]>;
     // @deprecated (undocumented)
     lazyMintAmount(amount: BigNumberish_2): Promise<void>;
     // @deprecated (undocumented)
-    lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
-    // (undocumented)
+    lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
+    // @internal (undocumented)
     maxTotalSupply(): Promise<BigNumber_2>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
-    // (undocumented)
-    pinToIpfs(files: Buffer[]): Promise<string>;
     // (undocumented)
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
@@ -533,6 +534,8 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     setMintConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    // @internal (undocumented)
+    setProviderOrSigner(providerOrSigner: ProviderOrSigner): void;
     // @deprecated (undocumented)
     setPublicMintConditions(conditions: CreatePublicMintCondition[]): Promise<void>;
     // (undocumented)

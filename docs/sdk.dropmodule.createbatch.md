@@ -12,7 +12,7 @@ Create batch allows you to create a batch of tokens in one transaction. This fun
 <b>Signature:</b>
 
 ```typescript
-createBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
+createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
 ```
 
 ## Parameters
@@ -23,5 +23,5 @@ createBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;string\[\]&gt;
 
