@@ -283,6 +283,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
         this.providerOrSigner,
         address,
         this.options.ipfsGatewayUrl,
+        true,
       )),
       address,
     };

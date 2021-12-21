@@ -52,6 +52,7 @@ export async function getContractMetadata(
   provider: ProviderOrSigner,
   address: string,
   ipfsGatewayUrl: string,
+  resolveGateway = false,
 ): Promise<ContractMetadata> {
   const contract = new Contract(address, contractUriABI, provider);
   const uri = await contract.contractURI();
@@ -62,7 +63,9 @@ export async function getContractMetadata(
     const entity: ContractMetadata = {
       ...metadata,
       uri,
-      image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
+      image: resolveGateway
+        ? replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl)
+        : metadata.image,
     };
     return entity;
   } catch (e) {

@@ -132,8 +132,10 @@ export class Module<TContract extends BaseContract = BaseContract> {
   /**
    * @public
    * Get the metadata of the contract.
+   *
+   * @param resolveUrls - Whether to resolve the urls in the metadata to a gateway.
    */
-  public async getMetadata(): Promise<ModuleMetadata> {
+  public async getMetadata(resolveUrls = true): Promise<ModuleMetadata> {
     invariant(await this.exists(), "contract does not exist");
     const contract = this.connectContract();
     const type = this.getModuleType();
@@ -143,6 +145,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
         await this.getProvider(),
         contract.address,
         this.options.ipfsGatewayUrl,
+        resolveUrls,
       ),
       address: contract.address,
       type,

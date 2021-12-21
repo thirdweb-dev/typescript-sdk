@@ -159,6 +159,7 @@ export class AppModule
           this.providerOrSigner,
           address,
           this.ipfsGatewayUrl,
+          true,
         ),
       ),
     );
