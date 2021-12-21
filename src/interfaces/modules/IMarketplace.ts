@@ -136,6 +136,14 @@ export interface IMarketplace {
   ): Promise<Offer | undefined>;
 
   /**
+   * If there's a winning big on the listing,
+   * this method will return it.
+   *
+   * @param listingId - Id of the listing to get the bid for.
+   */
+  getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
+
+  /**
    * Accepts the winning bid for an auction and closes the listing,
    * resulting in the sale of the tokens to the buyer.
    *
@@ -168,4 +176,19 @@ export interface IMarketplace {
    * @param listingId - Id of the listing to fetch.
    */
   getAuctionListing(listingId: BigNumberish): Promise<AuctionListing>;
+
+  /**
+   * Fetch the current bid buffer on the marketplace contract.
+   * The bid buffer is represented in basis points.
+   *
+   * @returns - The bid buffer in basis points.
+   */
+  getBidBufferBps(): Promise<BigNumber>;
+
+  /**
+   * Fetch the current time buffer on the marketplace contract.
+   *
+   * @returns - The time buffer in seconds.
+   */
+  getTimeBufferInSeconds(): Promise<BigNumber>;
 }

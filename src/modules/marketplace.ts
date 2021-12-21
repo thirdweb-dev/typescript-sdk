@@ -199,16 +199,14 @@ export class MarketplaceModule
     pricePerToken: BigNumberish;
   }): Promise<void> {
     this.validateAuctionListing(BigNumber.from(bid.listingId));
-    console.log("Making bid.......");
 
     const quantity = BigNumber.from(bid.quantityDesired);
     const value = BigNumber.from(bid.pricePerToken).mul(quantity);
 
     const overrides = (await this.getCallOverrides()) || {};
     await this.setAllowance(value, bid.currencyContractAddress, overrides);
-    console.log("Allowance set", overrides);
 
-    const receipt = await this.sendTransaction(
+    await this.sendTransaction(
       "offer",
       [
         bid.listingId,
@@ -218,11 +216,6 @@ export class MarketplaceModule
       ],
       overrides,
     );
-
-    console.log("Reciept = ", receipt);
-    const event = this.parseEventLogs("NewOffer", receipt?.logs);
-    console.log(event);
-    return event.listingId;
   }
 
   removeListing(listingId: BigNumberish): Promise<void> {
@@ -497,11 +490,31 @@ export class MarketplaceModule
     listingId: BigNumberish,
     address: string,
   ): Promise<Offer | undefined> {
+    this.validateDirectListing(BigNumber.from(listingId));
     invariant(isAddress(address), "Address must be a valid address");
     const offers = await this.readOnlyContract.offers(listingId, address);
     if (offers.offeror === AddressZero) {
       return undefined;
     }
     return await this.mapOffer(BigNumber.from(listingId), offers);
+  }
+
+  public async getWinningBid(
+    listingId: BigNumberish,
+  ): Promise<Offer | undefined> {
+    this.validateAuctionListing(BigNumber.from(listingId));
+    const offers = await this.readOnlyContract.winningBid(listingId);
+    if (offers.offeror === AddressZero) {
+      return undefined;
+    }
+    return await this.mapOffer(BigNumber.from(listingId), offers);
+  }
+
+  public async getBidBufferBps(): Promise<BigNumber> {
+    return this.readOnlyContract.bidBufferBps();
+  }
+
+  public async getTimeBufferInSeconds(): Promise<BigNumber> {
+    return await this.readOnlyContract.timeBuffer();
   }
 }

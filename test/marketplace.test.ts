@@ -228,12 +228,45 @@ describe("Marketplace Module", async () => {
     });
 
     it("should allow bids to be made on auction listings", async () => {
+      await sdk.setProviderOrSigner(bobWallet);
       await marketplaceModule.makeBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
         quantityDesired: 1,
         pricePerToken: ethers.utils.parseUnits("1"),
       });
+
+      let winningBid = await marketplaceModule.getWinningBid(auctionListingId);
+
+      assert.equal(winningBid.buyerAddress, bobWallet.address);
+      assert.equal(
+        winningBid.pricePerToken.toString(),
+        ethers.utils.parseUnits("1").toString(),
+      );
+      assert.equal(
+        winningBid.listingId.toString(),
+        auctionListingId.toString(),
+      );
+
+      // Make a higher winning bid
+      await sdk.setProviderOrSigner(samWallet);
+      await marketplaceModule.makeBid({
+        currencyContractAddress: tokenAddress,
+        listingId: auctionListingId,
+        quantityDesired: 1,
+        pricePerToken: ethers.utils.parseUnits("2"),
+      });
+
+      winningBid = await marketplaceModule.getWinningBid(auctionListingId);
+      assert.equal(winningBid.buyerAddress, samWallet.address);
+      assert.equal(
+        winningBid.pricePerToken.toString(),
+        ethers.utils.parseUnits("2").toString(),
+      );
+      assert.equal(
+        winningBid.listingId.toString(),
+        auctionListingId.toString(),
+      );
     });
   });
 
