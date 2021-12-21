@@ -355,6 +355,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
   public async balance(): Promise<BigNumber> {
     return await this.balanceOf(await this.getSignerAddress());
   }
+
   public async isApproved(address: string, operator: string): Promise<boolean> {
     return await this.readOnlyContract.isApprovedForAll(address, operator);
   }
@@ -746,6 +747,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
       } catch (e) {
         this._isV1 = true;
       }
+      this._shouldCheckVersion = false;
     }
     return this._isV1;
   }
