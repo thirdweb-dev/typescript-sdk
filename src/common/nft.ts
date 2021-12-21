@@ -7,7 +7,7 @@ import {
 import { Contract } from "@ethersproject/contracts";
 import { JSONValue, ProviderOrSigner } from "../core/types";
 import { NotFoundError } from "./error";
-import { recursiveResolve, replaceIpfsWithGateway } from "./ipfs";
+import { recursiveResolveGatewayUrl, replaceIpfsWithGateway } from "./ipfs";
 
 // support erc721 and erc1155
 const tokenUriABI = [
@@ -109,7 +109,7 @@ export async function getTokenMetadata(
   try {
     const meta = await fetch(gatewayUrl);
     let json = await meta.json();
-    json = recursiveResolve(json, ipfsGatewayUrl);
+    json = recursiveResolveGatewayUrl(json, ipfsGatewayUrl);
     const entity: NFTMetadata = {
       ...json,
       id: tokenId,

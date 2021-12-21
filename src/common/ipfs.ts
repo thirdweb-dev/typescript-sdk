@@ -28,12 +28,12 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
   }
   return ipfsUrl.replace("ipfs://", gatewayUrl);
 }
-export function recursiveResolve(json: any, ipfsGatewayUrl: string) {
+export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string) {
   if (typeof json === "object") {
     const keylist = Object.keys(json);
     keylist.forEach((key: string) => {
       if (typeof json[key] === "object") {
-        json[key] = recursiveResolve(json[key], ipfsGatewayUrl);
+        json[key] = recursiveResolveGatewayUrl(json[key], ipfsGatewayUrl);
       } else if (
         typeof json[key] === "string" &&
         json[key].startsWith("ipfs://")
