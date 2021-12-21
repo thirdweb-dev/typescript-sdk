@@ -52,7 +52,11 @@ class ClaimConditionFactory {
       .map((c) => c.buildPublicClaimCondition())
       .map((c) => ({
         ...c,
-        startTimestamp: c.startTimestamp.sub(Math.floor(Date.now() / 1000)),
+        startTimestamp: c.startTimestamp
+          .sub(Math.floor(Date.now() / 1000))
+          .isNegative()
+          ? BigNumber.from(0)
+          : c.startTimestamp.sub(Math.floor(Date.now() / 1000)),
       }));
 
     // TODO: write test to ensure they're sorted by start time, earliest first
