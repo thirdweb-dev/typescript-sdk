@@ -82,7 +82,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
    */
   public setProviderOrSigner(providerOrSigner: ProviderOrSigner) {
     super.setProviderOrSigner(providerOrSigner);
-    this.v1Module.setProviderOrSigner(providerOrSigner);
+    this.v1Module?.setProviderOrSigner(providerOrSigner);
   }
 
   /**
@@ -391,13 +391,6 @@ export class DropModule extends ModuleWithRoles<DropV2> {
   }
 
   /**
-   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
-   */
-  public async lazyMintAmount(amount: BigNumberish) {
-    await this.sendTransaction("lazyMintAmount", [amount]);
-  }
-
-  /**
    * @deprecated - Use {@link DropModule.setClaimConditions} instead
    */
   public async setMintConditions(factory: ClaimConditionFactory) {
@@ -474,19 +467,19 @@ export class DropModule extends ModuleWithRoles<DropV2> {
   public async setPublicMintConditions(
     conditions: CreatePublicMintCondition[],
   ) {
+    const now = BigNumber.from(Date.now()).div(1000);
     const _conditions = conditions.map((c) => ({
-      startTimestamp: c.startTimestampInSeconds || 0,
-      maxMintSupply: c.maxMintSupply,
-      currentMintSupply: 0,
+      startTimestamp: now.add(c.startTimestampInSeconds || 0),
+      maxClaimableSupply: c.maxMintSupply,
+      supplyClaimed: 0,
       quantityLimitPerTransaction:
         c.quantityLimitPerTransaction || c.maxMintSupply,
-      waitTimeSecondsLimitPerTransaction:
-        c.waitTimeSecondsLimitPerTransaction || 0,
+      waitTimeInSecondsBetweenClaims: c.waitTimeSecondsLimitPerTransaction || 0,
       pricePerToken: c.pricePerToken || 0,
       currency: c.currency || AddressZero,
       merkleRoot: c.merkleRoot || hexZeroPad([0], 32),
     }));
-    await this.sendTransaction("setPublicMintConditions", [_conditions]);
+    await this.sendTransaction("setClaimConditions", [_conditions]);
   }
 
   public async canClaim(
@@ -584,7 +577,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
       [quantity, proofs],
       overrides,
     );
-    const event = this.parseEventLogs("Claimed", receipt?.logs);
+    const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
     const startingIndex: BigNumber = event.startTokenId;
     const endingIndex = startingIndex.add(quantity);
     const tokenIds = [];
