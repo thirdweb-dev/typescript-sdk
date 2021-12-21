@@ -183,9 +183,9 @@ export class MarketplaceModule
       const allowance = await erc20.allowance(owner, spender);
 
       if (allowance.lt(value)) {
-        await this.sendContractTransaction(erc20, "approve", [
+        await this.sendContractTransaction(erc20, "increaseAllowance", [
           spender,
-          allowance.add(value),
+          value.sub(allowance),
         ]);
       }
       return overrides;
@@ -205,7 +205,7 @@ export class MarketplaceModule
     const value = BigNumber.from(bid.pricePerToken).mul(quantity);
 
     const overrides = (await this.getCallOverrides()) || {};
-    this.setAllowance(value, bid.currencyContractAddress, overrides);
+    await this.setAllowance(value, bid.currencyContractAddress, overrides);
     console.log("Allowance set", overrides);
 
     const receipt = await this.sendTransaction(
