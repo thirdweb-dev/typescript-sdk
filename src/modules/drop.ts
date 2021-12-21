@@ -128,6 +128,10 @@ export class DropModule extends ModuleWithRoles<DropV2> {
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
+    // if v1 module then use v1
+    if (await this.isV1()) {
+      return this.v1Module.getAll(queryParams);
+    }
     const start = BigNumber.from(queryParams?.start || 0).toNumber();
     const count = BigNumber.from(
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
