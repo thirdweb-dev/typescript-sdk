@@ -1,5 +1,5 @@
 import { recursiveResolve } from "../src/common/ipfs";
-import { expect, assert } from "chai";
+import { assert } from "chai";
 
 const ipfsGatewayUrl = "https://ipfs.infura.io/ipfs/";
 
