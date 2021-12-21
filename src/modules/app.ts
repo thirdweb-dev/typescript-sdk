@@ -3,7 +3,7 @@ import {
   DataStore__factory,
   ERC20__factory,
   LazyMintERC1155__factory,
-  LazyNFT__factory,
+  LazyMintERC721__factory,
   Market__factory,
   NFTCollection__factory,
   NFT__factory,
@@ -680,7 +680,6 @@ export class AppModule
   public async deployDropModule(
     metadata: DropModuleMetadata,
   ): Promise<DropModule> {
-    invariant(metadata.maxSupply !== undefined, "Max supply must be specified");
     invariant(
       metadata.primarySaleRecipientAddress !== "" &&
         isAddress(metadata.primarySaleRecipientAddress),
@@ -700,23 +699,26 @@ export class AppModule
         await this.getSignerAddress(),
       );
 
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
+
     const address = await this._deployModule(
       ModuleType.DROP,
       [
-        this.address,
         metadata.name,
         metadata.symbol ? metadata.symbol : "",
-        await this.sdk.getForwarderAddress(),
         metadataUri,
-        metadata.baseTokenUri ? metadata.baseTokenUri : "",
-        metadata.maxSupply,
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        nativeTokenWrapperAddress,
+        metadata.primarySaleRecipientAddress,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
         metadata.primarySaleFeeBasisPoints
           ? metadata.primarySaleFeeBasisPoints
           : 0,
-        metadata.primarySaleRecipientAddress,
       ],
-      LazyNFT__factory,
+      LazyMintERC721__factory,
     );
 
     return this.sdk.getDropModule(address);

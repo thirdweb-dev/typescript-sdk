@@ -18,6 +18,7 @@ import { Coin } from '@3rdweb/contracts';
 import { ContractReceipt } from 'ethers';
 import { DataStore } from '@3rdweb/contracts';
 import { LazyMintERC1155 } from '@3rdweb/contracts';
+import { LazyMintERC721 } from '@3rdweb/contracts';
 import { LazyNFT } from '@3rdweb/contracts';
 import { Log } from '@ethersproject/providers';
 import { Market } from '@3rdweb/contracts';
@@ -973,7 +974,7 @@ export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type NFTContractTypes = NFT | NFTCollection | LazyNFT | LazyMintERC1155;
+export type NFTContractTypes = NFT | NFTCollection | LazyNFT | LazyMintERC721 | LazyMintERC1155;
 
 // @public @deprecated
 export const NFTLabsSDK: typeof ThirdwebSDK;

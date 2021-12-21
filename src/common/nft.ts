@@ -1,5 +1,6 @@
 import {
   LazyMintERC1155,
+  LazyMintERC721,
   LazyNFT,
   NFT,
   NFTCollection,
@@ -78,7 +79,12 @@ export interface NFTMetadataOwner {
 /**
  * @internal
  */
-export type NFTContractTypes = NFT | NFTCollection | LazyNFT | LazyMintERC1155;
+export type NFTContractTypes =
+  | NFT
+  | NFTCollection
+  | LazyNFT
+  | LazyMintERC721
+  | LazyMintERC1155;
 
 /**
 /* @internal
