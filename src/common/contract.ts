@@ -58,11 +58,11 @@ export async function getContractMetadata(
   const uri = await contract.contractURI();
   const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
   const meta = await fetch(gatewayUrl);
-  let json = await meta.json();
-  if (resolveGateway) {
-    json = recursiveResolveGatewayUrl(json, ipfsGatewayUrl);
-  }
   try {
+    let json = await meta.json();
+    if (resolveGateway) {
+      json = recursiveResolveGatewayUrl(json, ipfsGatewayUrl);
+    }
     const entity: ContractMetadata = {
       ...json,
     };
