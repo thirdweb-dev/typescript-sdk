@@ -271,6 +271,109 @@ describe("Marketplace Module", async () => {
   });
 
   describe("Validators", () => {
-    it("should throw an error when an auction ID is used in place of a direct listing", async () => {});
+    let directListingId: BigNumber;
+    let auctionListingId: BigNumber;
+
+    beforeEach(async () => {
+      await sdk.setProviderOrSigner(adminWallet);
+      directListingId = await createDirectListing(dummyNftModule.address, 0);
+      auctionListingId = await createAuctionListing(dummyNftModule.address, 1);
+    });
+
+    it("should throw an error trying to fetch a listing of the wrong type", async () => {
+      try {
+        await marketplaceModule.getDirectListing(auctionListingId);
+      } catch (err) {
+        expect(err).to.have.property(
+          "message",
+          `Listing ${auctionListingId.toString()} is not a direct listing`,
+          "",
+        );
+      }
+
+      try {
+        await marketplaceModule.getAuctionListing(directListingId);
+      } catch (err) {
+        expect(err).to.have.property(
+          "message",
+          `Listing ${directListingId.toString()} is not an auction listing`,
+          "",
+        );
+      }
+    });
+
+    it("should throw an error if a bid being placed is not a winning bid", async () => {});
+  });
+
+  describe("Winning Bids", () => {
+    let directListingId: BigNumber;
+    let auctionListingId: BigNumber;
+
+    beforeEach(async () => {
+      await sdk.setProviderOrSigner(adminWallet);
+      directListingId = await createDirectListing(dummyNftModule.address, 0);
+      auctionListingId = await createAuctionListing(dummyNftModule.address, 1);
+    });
+
+    it("should automatically award a buyout", async () => {
+      await sdk.setProviderOrSigner(bobWallet);
+      const currentBalance = await dummyNftModule.balanceOf(bobWallet.address);
+      assert.equal(
+        currentBalance.toString(),
+        "0",
+        "The buyer should start with no tokens",
+      );
+      await marketplaceModule.makeBid({
+        currencyContractAddress: tokenAddress,
+        listingId: auctionListingId,
+        quantityDesired: 1,
+        pricePerToken: ethers.utils.parseUnits("20"),
+      });
+
+      const balance = await dummyNftModule.balanceOf(bobWallet.address);
+      assert.equal(
+        balance.toString(),
+        "1",
+        "The buyer should have been awarded token",
+      );
+    });
+
+    it("should allow the seller to accept the winning bid", async () => {
+      await sdk.setProviderOrSigner(bobWallet);
+      const currentBalance = await dummyNftModule.balanceOf(bobWallet.address);
+      assert.equal(
+        currentBalance.toString(),
+        "0",
+        "The buyer should start with no tokens",
+      );
+      await marketplaceModule.makeBid({
+        currencyContractAddress: tokenAddress,
+        listingId: auctionListingId,
+        quantityDesired: 1,
+        pricePerToken: ethers.utils.parseUnits("2"),
+      });
+
+      const winningBid = await marketplaceModule.getWinningBid(
+        auctionListingId,
+      );
+
+      assert.equal(
+        winningBid.buyerAddress,
+        bobWallet.address,
+        "Bob should be the winning bidder",
+      );
+
+      await sdk.setProviderOrSigner(adminWallet);
+      await marketplaceModule.acceptWinningBid(auctionListingId);
+
+      const balance = await dummyNftModule.balanceOf(bobWallet.address);
+      assert.equal(
+        balance.toString(),
+        "1",
+        "The buyer should have been awarded token",
+      );
+    });
+
+    it("should throw an error if a bid being placed is not a winning bid", async () => {});
   });
 });
