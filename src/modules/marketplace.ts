@@ -480,6 +480,26 @@ export class MarketplaceModule
     return await this.readOnlyContract.timeBuffer();
   }
 
+  public async acceptWinningBid(listingId: BigNumberish): Promise<void> {
+    this.validateAuctionListing(BigNumber.from(listingId));
+
+    const winningBid = await this.getWinningBid(listingId);
+    invariant(winningBid !== undefined, "No winning bid found");
+
+    await this.sendTransaction("closeAuction", [
+      listingId,
+      winningBid.buyerAddress,
+    ]);
+  }
+
+  public async acceptDirectListingOffer(
+    listingId: BigNumberish,
+    addressOfOfferor: string,
+  ): Promise<void> {
+    this.validateDirectListing(BigNumber.from(listingId));
+    await this.sendTransaction("acceptOffer", [listingId, addressOfOfferor]);
+  }
+
   removeListing(listingId: BigNumberish): Promise<void> {
     throw new Error("Method not implemented.");
   }
@@ -489,6 +509,8 @@ export class MarketplaceModule
     currencyContractAddress: string;
     tokenAmount: BigNumberish;
   }): Promise<void> {
+    // TODO: invariant that checks to see if the offer will actually
+    // trigger a buyout (based on buyout price)
     throw new Error("Method not implemented.");
   }
   buyDirectListing(buyout: {
@@ -502,15 +524,7 @@ export class MarketplaceModule
   getActiveBids(listingId: BigNumberish): Promise<Offer[]> {
     throw new Error("Method not implemented.");
   }
-  acceptWinningBid(listingId: BigNumberish): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  acceptDirectListingOffer(
-    listingId: BigNumberish,
-    addressOfOfferor: string,
-  ): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
+
   updateDirectListing(listing: AuctionListing): Promise<DirectListing> {
     throw new Error("Method not implemented.");
   }
