@@ -319,7 +319,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     if (await this.isV1()) {
       return this.v1Module.totalSupply();
     }
-    return await this.readOnlyContract.totalSupply();
+    return await this.readOnlyContract.nextTokenIdToMint();
   }
 
   /**
@@ -329,7 +329,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     if (await this.isV1()) {
       return this.v1Module.maxTotalSupply();
     }
-    return await this.readOnlyContract.totalSupply();
+    return await this.readOnlyContract.nextTokenIdToMint();
   }
 
   public async totalUnclaimedSupply(): Promise<BigNumber> {
