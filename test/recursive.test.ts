@@ -1,20 +1,20 @@
 import { recursiveResolve } from "../src/common/ipfs";
 import { assert } from "chai";
 
-const ipfsGatewayUrl = "https://ipfs.infura.io/ipfs/";
+const ipfsGatewayUrl = "https://ipfs.thirdweb.com/ipfs/";
 
 describe("Recursive Testing", async () => {
   let json;
   beforeEach(async () => {
     json = {
       test: "test",
-      test2: "ipfs://QmWq3Z9w6Z6Y5YQ7NxZb1x3uQ5ZqxqQjzXWqZKXZ7YXoZu",
+      test2: "ipfs://QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
       test3: {
         test: "test",
-        test2: "ipfs://QmWq3Z9w6Z6Y5YQ7NxZb1x3uQ5ZqxqQjzXWqZKXZ7YXoZu",
+        test2: "ipfs://QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
         test3: {
           test: "test",
-          test2: "ipfs://QmWq3Z9w6Z6Y5YQ7NxZb1x3uQ5ZqxqQjzXWqZKXZ7YXoZu",
+          test2: "ipfs://QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
         },
       },
     };
@@ -26,15 +26,15 @@ describe("Recursive Testing", async () => {
     }
     assert.notStrictEqual(json, {
       test2:
-        "https://ipfs.infura.io/ipfs/QmWq3Z9w6Z6Y5YQ7NxZb1x3uQ5ZqxqQjzXWqZKXZ7YXoZu",
+        "https://ipfs.thirdweb.com/ipfs/QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
       test3: {
         test: "test",
         test2:
-          "https://ipfs.infura.io/ipfs/QmWq3Z9w6Z6Y5YQ7NxZb1x3uQ5ZqxqQjzXWqZKXZ7YXoZu",
+          "https://ipfs.thirdweb.com/ipfs/QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
         test3: {
           test: "test",
           test2:
-            "https://ipfs.infura.io/ipfs/QmWq3Z9w6Z6Y5YQ7NxZb1x3uQ5ZqxqQjzXWqZKXZ7YXoZu",
+            "https://ipfs.thirdweb.com/ipfs/QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
         },
       },
     });
@@ -46,13 +46,13 @@ describe("Recursive Testing", async () => {
     }
     assert.notStrictEqual(json, {
       test: "test",
-      test2: "ipfs://QmWq3Z9w6Z6Y5YQ7NxZb1x3uQ5ZqxqQjzXWqZKXZ7YXoZu",
+      test2: "ipfs://QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
       test3: {
         test: "test",
-        test2: "ipfs://QmWq3Z9w6Z6Y5YQ7NxZb1x3uQ5ZqxqQjzXWqZKXZ7YXoZu",
+        test2: "ipfs://QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
         test3: {
           test: "test",
-          test2: "ipfs://QmWq3Z9w6Z6Y5YQ7NxZb1x3uQ5ZqxqQjzXWqZKXZ7YXoZu",
+          test2: "ipfs://QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
         },
       },
     });
