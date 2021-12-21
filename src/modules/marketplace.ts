@@ -1,5 +1,3 @@
-import { NATIVE_TOKEN_ADDRESS } from "./../common/currency";
-import { NewDirectListing } from "./../types/marketplace/NewDirectListing";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -9,8 +7,8 @@ import {
   Marketplace__factory,
 } from "@3rdweb/contracts";
 import { ListingParametersStruct } from "@3rdweb/contracts/dist/IMarketplace";
+import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish } from "ethers";
-import { isAddress } from "ethers/lib/utils";
 import {
   getCurrencyValue,
   InterfaceId_IERC721,
@@ -18,17 +16,18 @@ import {
   Role,
   RolesMap,
 } from "../common";
+import { NATIVE_TOKEN_ADDRESS } from "../common/currency";
 import { invariant } from "../common/invariant";
 import { ModuleWithRoles } from "../core/module";
 import { ListingType } from "../enums/marketplace/ListingType";
 import { IMarketplace } from "../interfaces/modules";
 import {
   AuctionListing,
-  DirectListing,
   NewAuctionListing,
   NewDirectListing,
   Offer,
 } from "../types";
+import { DirectListing } from "../types/marketplace/DirectListing";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getMarketplaceModule}
@@ -141,16 +140,15 @@ export class MarketplaceModule
     try {
       await this.getDirectListing(offer.listingId);
     } catch (err) {
-      console.error(`Error getting the listing with id ${offer.listingId}`);
-      throw err;
+      console.error("Failed to get listing, err =", err);
+      throw new Error(`Error getting the listing with id ${offer.listingId}`);
     }
 
     const quantity = BigNumber.from(offer.quantityDesired);
     const value = BigNumber.from(offer.pricePerToken).mul(quantity);
 
     const overrides = (await this.getCallOverrides()) || {};
-    this.setAllowance(value, offer.currencyContractAddress, overrides);
-    console.log("Allowance set", overrides);
+    await this.setAllowance(value, offer.currencyContractAddress, overrides);
 
     const receipt = await this.sendTransaction(
       "offer",
@@ -173,7 +171,10 @@ export class MarketplaceModule
     currencyAddress: string,
     overrides: any,
   ): Promise<any> {
-    if (currencyAddress === NATIVE_TOKEN_ADDRESS) {
+    if (
+      currencyAddress === NATIVE_TOKEN_ADDRESS ||
+      currencyAddress === AddressZero
+    ) {
       overrides["value"] = value;
     } else {
       const erc20 = ERC20__factory.connect(
@@ -200,12 +201,7 @@ export class MarketplaceModule
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
   }): Promise<void> {
-    try {
-      await this.getAuctionListing(bid.listingId);
-    } catch (err) {
-      console.error(`Error getting the listing with id ${bid.listingId}`);
-      throw err;
-    }
+    this.validateAuctionListing(BigNumber.from(bid.listingId));
     console.log("Making bid.......");
 
     const quantity = BigNumber.from(bid.quantityDesired);
@@ -379,8 +375,40 @@ export class MarketplaceModule
     }
   }
 
+  /**
+   * @beta - This method is not yet complete.
+   *
+   * @param listingId
+   * @returns
+   */
   public async getActiveOffers(listingId: BigNumberish): Promise<Offer[]> {
-    throw new Error("Method not implemented.");
+    const listing = await this.validateDirectListing(BigNumber.from(listingId));
+
+    const offers = await this.readOnlyContract.offers(listing.id, "");
+    console.log("offers =", offers);
+
+    return await Promise.all(
+      offers.map(async (offer: any) => {
+        console.log("Offer = ", offer);
+        console.log("Offer currency = ", offer.currency);
+        return {
+          quantity: offer.quantityDesired,
+          pricePerToken: offer.pricePerToken,
+          currencyContractAddress: offer.currency,
+          buyerAddress: offer.offeror,
+          quantityDesired: offer.quantityWanted,
+          currencyValue: await getCurrencyValue(
+            this.providerOrSigner,
+            offer.currency,
+            (offer.quantityWanted as BigNumber).mul(
+              offer.totalOfferAmount as BigNumber,
+            ),
+          ),
+          listingId: listing.id,
+          coinsPerToken: offer.totalOfferAmount,
+        } as Offer;
+      }),
+    );
   }
 
   /**
@@ -425,6 +453,38 @@ export class MarketplaceModule
           "Reserve price is required",
         );
       }
+    }
+  }
+
+  /**
+   * Throws error if listing could not be found
+   *
+   * @param listingId - Listing to check for
+   */
+  private async validateDirectListing(
+    listingId: BigNumber,
+  ): Promise<DirectListing> {
+    try {
+      return await this.getDirectListing(listingId);
+    } catch (err) {
+      console.error(`Error getting the listing with id ${listingId}`);
+      throw err;
+    }
+  }
+
+  /**
+   * Throws error if listing could not be found
+   *
+   * @param listingId - Listing to check for
+   */
+  private async validateAuctionListing(
+    listingId: BigNumber,
+  ): Promise<AuctionListing> {
+    try {
+      return await this.getAuctionListing(listingId);
+    } catch (err) {
+      console.error(`Error getting the listing with id ${listingId}`);
+      throw err;
     }
   }
 }

@@ -18,9 +18,9 @@ export interface Offer {
   quantityDesired: BigNumberish;
 
   /**
-   * The amount of tokens offered.
+   * The amount of coins offered per token.
    */
-  tokens: BigNumber;
+  coinsPerToken: BigNumber;
 
   /**
    * The `CurrencyValue` of the listing. Useful for displaying the price information.

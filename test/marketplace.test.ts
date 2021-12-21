@@ -27,9 +27,6 @@ describe("Marketplace Module", async () => {
   let dummyBundleModule: BundleModule;
   let customTokenModule: TokenModule;
 
-  const sample721Id = "0";
-  const sample1155Id = "0";
-
   let adminWallet,
     samWallet,
     abbyWallet,
@@ -79,15 +76,15 @@ describe("Marketplace Module", async () => {
     await customTokenModule.mintBatchTo([
       {
         address: bobWallet.address,
-        amount: ethers.utils.parseUnits("10000000"),
+        amount: ethers.utils.parseUnits("1000000000000000000000"),
       },
       {
         address: samWallet.address,
-        amount: ethers.utils.parseUnits("10000000"),
+        amount: ethers.utils.parseUnits("100000000000000000000"),
       },
       {
         address: adminWallet.address,
-        amount: ethers.utils.parseUnits("10000000"),
+        amount: ethers.utils.parseUnits("100000000000000000000"),
       },
     ]);
     tokenAddress = customTokenModule.address;
@@ -178,11 +175,10 @@ describe("Marketplace Module", async () => {
         0,
         10,
       );
-
-      await sdk.setProviderOrSigner(bobWallet);
     });
 
     it("should allow offers to be made on direct listings", async () => {
+      await sdk.setProviderOrSigner(bobWallet);
       console.log(
         "Balance = ",
         await customTokenModule.balanceOf(await sdk.signer.getAddress()),
@@ -191,10 +187,10 @@ describe("Marketplace Module", async () => {
         currencyContractAddress: tokenAddress,
         listingId: directListingId,
         quantityDesired: 1,
-        pricePerToken: 1,
+        pricePerToken: ethers.utils.parseUnits("1"),
       });
 
-      const offers = await marketplaceModule.getActiveOffers(directListingId);
+      const offer = await marketplaceModule.getActiveOffers(directListingId);
     });
 
     it("should allow bids to be made on auction listings", async () => {
