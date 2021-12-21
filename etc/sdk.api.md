@@ -1428,7 +1428,7 @@ export class VoteModule extends Module<VotingGovernor> {
     hasVoted(proposalId: string, account?: string): Promise<boolean>;
     // (undocumented)
     static moduleType: ModuleType;
-    propose(description: string, executions: ProposalExecutable[]): Promise<BigNumber_2>;
+    propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber_2>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
