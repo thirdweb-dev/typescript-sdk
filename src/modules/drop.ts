@@ -124,6 +124,14 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     return { owner, metadata };
   }
 
+  /**
+   * @internal
+   * @deprecated - No longer applicable, use Storage.
+   */
+  public async pinToIpfs(files: Buffer[]): Promise<string> {
+    return await this.storage.uploadBatch(files, this.address);
+  }
+
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
