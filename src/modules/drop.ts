@@ -467,6 +467,9 @@ export class DropModule extends ModuleWithRoles<DropV2> {
   public async setPublicMintConditions(
     conditions: CreatePublicMintCondition[],
   ) {
+    if (await this.isV1()) {
+      return this.v1Module.setPublicMintConditions(conditions);
+    }
     const now = BigNumber.from(Date.now()).div(1000);
     const _conditions = conditions.map((c) => ({
       startTimestamp: now.add(c.startTimestampInSeconds || 0),
@@ -486,6 +489,9 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<boolean> {
+    if (await this.isV1()) {
+      return this.v1Module.canClaim(quantity, proofs);
+    }
     try {
       const mintCondition = await this.getActiveClaimCondition();
       const overrides = (await this.getCallOverrides()) || {};
@@ -522,6 +528,9 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<NFTMetadataOwner[]> {
+    if (await this.isV1()) {
+      return this.v1Module.claim(quantity, proofs);
+    }
     const mintCondition = await this.getActiveClaimCondition();
     const { metadata } = await this.getMetadata();
 
@@ -676,6 +685,9 @@ export class DropModule extends ModuleWithRoles<DropV2> {
   public async createBatch(
     metadatas: MetadataURIOrObject[],
   ): Promise<string[]> {
+    if (await this.isV1()) {
+      return this.v1Module.createBatch(metadatas);
+    }
     const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
     const baseUri = await this.storage.uploadMetadataBatch(
       metadatas,
@@ -701,6 +713,9 @@ export class DropModule extends ModuleWithRoles<DropV2> {
    * @returns - True if the batch has been created, false otherwise.
    */
   public async canCreateBatch(): Promise<boolean> {
+    if (await this.isV1()) {
+      return this.v1Module.canCreateBatch();
+    }
     return true;
   }
 
@@ -1279,7 +1294,9 @@ class DropV1Module extends ModuleWithRoles<Drop> {
    *
    * @param metadatas - The metadata to include in the batch.
    */
-  public async createBatch(metadatas: MetadataURIOrObject[]): Promise<void> {
+  public async createBatch(
+    metadatas: MetadataURIOrObject[],
+  ): Promise<string[]> {
     if (!(await this.canCreateBatch())) {
       throw new Error("Batch already created!");
     }
@@ -1297,6 +1314,7 @@ class DropV1Module extends ModuleWithRoles<Drop> {
       ]),
     ];
     await this.sendTransaction("multicall", [encoded]);
+    return [];
   }
 
   /**

@@ -4,6 +4,7 @@ import {
   ERC20__factory,
   LazyMintERC1155__factory,
   LazyMintERC721__factory,
+  LazyNFT__factory,
   Market__factory,
   NFTCollection__factory,
   NFT__factory,
@@ -908,5 +909,54 @@ export class AppModule
       tokenAddress,
       await erc20.balanceOf(this.address),
     );
+  }
+
+  /**
+   * @internal
+   * @deprecated - See {@link AppModule.deployDropModule}
+   */
+  public async __deployDropV1Module(
+    metadata: DropModuleMetadata,
+  ): Promise<DropModule> {
+    invariant(metadata.maxSupply !== undefined, "Max supply must be specified");
+    invariant(
+      metadata.primarySaleRecipientAddress !== "" &&
+        isAddress(metadata.primarySaleRecipientAddress),
+      "Primary sale recipient address must be specified and must be a valid address",
+    );
+
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      DropModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const address = await this._deployModule(
+      ModuleType.DROP,
+      [
+        this.address,
+        metadata.name,
+        metadata.symbol ? metadata.symbol : "",
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+        metadata.baseTokenUri ? metadata.baseTokenUri : "",
+        metadata.maxSupply,
+        metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+        metadata.primarySaleFeeBasisPoints
+          ? metadata.primarySaleFeeBasisPoints
+          : 0,
+        metadata.primarySaleRecipientAddress,
+      ],
+      LazyNFT__factory,
+    );
+
+    return this.sdk.getDropModule(address);
   }
 }
