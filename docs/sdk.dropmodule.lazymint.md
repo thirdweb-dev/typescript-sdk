@@ -9,7 +9,7 @@
 
 > Warning: This API is now obsolete.
 > 
-> - The function has been deprecated. Use `mintBatch` instead.
+> - The function has been deprecated. Use `createBatch` instead.
 > 
 
 <b>Signature:</b>
