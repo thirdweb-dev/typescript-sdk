@@ -54,13 +54,10 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [isApproved(address, operator)](./sdk.dropmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
 |  [isV1()](./sdk.dropmodule.isv1.md) |  | <b><i>(BETA)</i></b> Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract. |
 |  [lazyMint(metadata)](./sdk.dropmodule.lazymint.md) |  | <b><i>(BETA)</i></b> |
-|  [lazyMintAmount(amount)](./sdk.dropmodule.lazymintamount.md) |  | <b><i>(BETA)</i></b> |
 |  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  | <b><i>(BETA)</i></b> |
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
-|  [setBaseTokenUri(uri)](./sdk.dropmodule.setbasetokenuri.md) |  | <b><i>(BETA)</i></b> |
 |  [setClaimConditions(factory)](./sdk.dropmodule.setclaimconditions.md) |  | <b><i>(BETA)</i></b> Sets public mint conditions for the next minting using the claim condition factory. |
-|  [setMaxTotalSupply(amount)](./sdk.dropmodule.setmaxtotalsupply.md) |  | <b><i>(BETA)</i></b> |
 |  [setMintConditions(factory)](./sdk.dropmodule.setmintconditions.md) |  | <b><i>(BETA)</i></b> |
 |  [setModuleMetadata(metadata)](./sdk.dropmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
 |  [setPublicMintConditions(conditions)](./sdk.dropmodule.setpublicmintconditions.md) |  | <b><i>(BETA)</i></b> |

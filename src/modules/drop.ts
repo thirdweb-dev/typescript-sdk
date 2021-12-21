@@ -124,14 +124,6 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     return { owner, metadata };
   }
 
-  /**
-   * @internal
-   * @deprecated - No longer applicable, use Storage.
-   */
-  public async pinToIpfs(files: Buffer[]): Promise<string> {
-    return await this.storage.uploadBatch(files, this.address);
-  }
-
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
@@ -642,16 +634,6 @@ export class DropModule extends ModuleWithRoles<DropV2> {
       this.contract.interface.encodeFunctionData("setContractURI", [uri]),
     );
     return await this.sendTransaction("multicall", [encoded]);
-  }
-
-  public async setBaseTokenUri(uri: string): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setBaseTokenURI", [uri]);
-  }
-
-  public async setMaxTotalSupply(
-    amount: BigNumberish,
-  ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setMaxTotalSupply", [amount]);
   }
 
   public async setRestrictedTransfer(

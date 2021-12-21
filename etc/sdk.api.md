@@ -512,8 +512,6 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> {
     // @deprecated (undocumented)
     lazyMint(metadata: MetadataURIOrObject): Promise<string[]>;
     // @deprecated (undocumented)
-    lazyMintAmount(amount: BigNumberish_2): Promise<void>;
-    // @deprecated (undocumented)
     lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
     // @internal (undocumented)
     maxTotalSupply(): Promise<BigNumber_2>;
@@ -525,11 +523,7 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> {
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    setBaseTokenUri(uri: string): Promise<TransactionReceipt>;
     setClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
-    // (undocumented)
-    setMaxTotalSupply(amount: BigNumberish_2): Promise<TransactionReceipt>;
     // @deprecated (undocumented)
     setMintConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
