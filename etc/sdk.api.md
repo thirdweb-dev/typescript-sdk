@@ -514,9 +514,9 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> {
     isApproved(address: string, operator: string): Promise<boolean>;
     isV1(): Promise<boolean>;
     // @deprecated (undocumented)
-    lazyMint(metadata: MetadataURIOrObject): Promise<string[]>;
+    lazyMint(metadata: MetadataURIOrObject): Promise<void>;
     // @deprecated (undocumented)
-    lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
+    lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
     // @internal (undocumented)
     maxTotalSupply(): Promise<BigNumber_2>;
     // (undocumented)

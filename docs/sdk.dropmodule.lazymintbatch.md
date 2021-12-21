@@ -15,7 +15,7 @@
 <b>Signature:</b>
 
 ```typescript
-lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
+lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
 ```
 
 ## Parameters
@@ -26,5 +26,5 @@ lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
 
 <b>Returns:</b>
 
-Promise&lt;string\[\]&gt;
+Promise&lt;void&gt;
 

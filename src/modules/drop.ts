@@ -385,20 +385,31 @@ export class DropModule extends ModuleWithRoles<DropV2> {
    * @deprecated - The function has been deprecated. Use `createBatch` instead.
    */
   public async lazyMint(metadata: MetadataURIOrObject) {
-    return await this.lazyMintBatch([metadata]);
+    if (await this.isV1()) {
+      await this.v1Module.lazyMint(metadata);
+      return;
+    }
+    await this.lazyMintBatch([metadata]);
   }
 
   /**
    * @deprecated - The function has been deprecated. Use `mintBatch` instead.
    */
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
-    return await this.createBatch(metadatas);
+    if (await this.isV1()) {
+      await this.v1Module.lazyMintBatch(metadatas);
+      return;
+    }
+    await this.createBatch(metadatas);
   }
 
   /**
    * @deprecated - Use {@link DropModule.setClaimConditions} instead
    */
   public async setMintConditions(factory: ClaimConditionFactory) {
+    if (await this.isV1()) {
+      return this.v1Module.setMintConditions(factory);
+    }
     return this.setClaimConditions(factory);
   }
 

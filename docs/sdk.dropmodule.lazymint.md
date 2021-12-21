@@ -15,7 +15,7 @@
 <b>Signature:</b>
 
 ```typescript
-lazyMint(metadata: MetadataURIOrObject): Promise<string[]>;
+lazyMint(metadata: MetadataURIOrObject): Promise<void>;
 ```
 
 ## Parameters
@@ -26,5 +26,5 @@ lazyMint(metadata: MetadataURIOrObject): Promise<string[]>;
 
 <b>Returns:</b>
 
-Promise&lt;string\[\]&gt;
+Promise&lt;void&gt;
 
