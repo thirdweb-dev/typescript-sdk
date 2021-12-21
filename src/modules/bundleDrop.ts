@@ -313,7 +313,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
-    const { metadata } = await this.getMetadata();
+    const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
