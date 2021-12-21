@@ -20,7 +20,7 @@ export interface Offer {
   /**
    * The amount of coins offered per token.
    */
-  coinsPerToken: BigNumber;
+  pricePerToken: BigNumber;
 
   /**
    * The `CurrencyValue` of the listing. Useful for displaying the price information.

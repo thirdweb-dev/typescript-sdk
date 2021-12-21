@@ -41,14 +41,13 @@ export interface IMarketplace {
    * @param quantityDesired - The quantity of tokens desired.
    * @param currencyContractAddress - The address of the currency contract.
    * @param tokenAmount - The amount of tokens to be offered.
-   * @returns - The ID of the newly created offer.
    */
   makeOffer(offer: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
-  }): Promise<BigNumber>;
+  }): Promise<void>;
 
   /**
    * Make an offer on an auction. The offer must be at least `current bid * (1 + bid buffer)` in order to be accepted.
@@ -122,6 +121,19 @@ export interface IMarketplace {
    * @param listingId - Id of the listing to get offers for.
    */
   getActiveOffers(listingId: BigNumberish): Promise<Offer[]>;
+
+  /**
+   * If the `address` has made an offer to the specified listing,
+   * this method will fetch the offer and return it. If no
+   * offer has been made, this method will return `undefined`.
+   *
+   * @param listingId - Id of the listing to get offers for.
+   * @param address - Address of the buyer.
+   */
+  getActiveOffer(
+    listingId: BigNumberish,
+    address: string,
+  ): Promise<Offer | undefined>;
 
   /**
    * Accepts the winning bid for an auction and closes the listing,

@@ -179,10 +179,6 @@ describe("Marketplace Module", async () => {
 
     it("should allow offers to be made on direct listings", async () => {
       await sdk.setProviderOrSigner(bobWallet);
-      console.log(
-        "Balance = ",
-        await customTokenModule.balanceOf(await sdk.signer.getAddress()),
-      );
       await marketplaceModule.makeOffer({
         currencyContractAddress: tokenAddress,
         listingId: directListingId,
@@ -190,15 +186,48 @@ describe("Marketplace Module", async () => {
         pricePerToken: ethers.utils.parseUnits("1"),
       });
 
-      const offer = await marketplaceModule.getActiveOffers(directListingId);
+      const offer = await marketplaceModule.getActiveOffer(
+        directListingId,
+        bobWallet.address,
+      );
+
+      assert.equal(offer.buyerAddress, bobWallet.address);
+      assert.equal(
+        offer.pricePerToken.toString(),
+        ethers.utils.parseUnits("1").toString(),
+      );
+      assert.equal(offer.listingId.toString(), directListingId.toString());
+
+      await sdk.setProviderOrSigner(samWallet);
+      await marketplaceModule.makeOffer({
+        currencyContractAddress: tokenAddress,
+        listingId: directListingId,
+        quantityDesired: 1,
+        pricePerToken: ethers.utils.parseUnits("1"),
+      });
+
+      const secondOffer = await marketplaceModule.getActiveOffer(
+        directListingId,
+        samWallet.address,
+      );
+
+      assert.equal(secondOffer.buyerAddress, samWallet.address);
+      assert.equal(
+        offer.pricePerToken.toString(),
+        ethers.utils.parseUnits("1").toString(),
+      );
+      assert.equal(offer.listingId.toString(), directListingId.toString());
+    });
+
+    it("should return undefined when checking offers on an address that hasn't made any", async () => {
+      const offer = await marketplaceModule.getActiveOffer(
+        directListingId,
+        adminWallet.address,
+      );
+      assert.isUndefined(offer);
     });
 
     it("should allow bids to be made on auction listings", async () => {
-      console.log(
-        "Balance = ",
-        await customTokenModule.balanceOf(await sdk.signer.getAddress()),
-      );
-
       await marketplaceModule.makeBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,

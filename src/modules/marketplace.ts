@@ -1,3 +1,4 @@
+import { isAddress } from "ethers/lib/utils";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -136,7 +137,7 @@ export class MarketplaceModule
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
-  }): Promise<BigNumber> {
+  }): Promise<void> {
     try {
       await this.getDirectListing(offer.listingId);
     } catch (err) {
@@ -150,7 +151,7 @@ export class MarketplaceModule
     const overrides = (await this.getCallOverrides()) || {};
     await this.setAllowance(value, offer.currencyContractAddress, overrides);
 
-    const receipt = await this.sendTransaction(
+    await this.sendTransaction(
       "offer",
       [
         offer.listingId,
@@ -160,10 +161,6 @@ export class MarketplaceModule
       ],
       overrides,
     );
-
-    const event = this.parseEventLogs("NewOffer", receipt?.logs);
-    console.log(event);
-    return event.listingId;
   }
 
   private async setAllowance(
@@ -389,24 +386,7 @@ export class MarketplaceModule
 
     return await Promise.all(
       offers.map(async (offer: any) => {
-        console.log("Offer = ", offer);
-        console.log("Offer currency = ", offer.currency);
-        return {
-          quantity: offer.quantityDesired,
-          pricePerToken: offer.pricePerToken,
-          currencyContractAddress: offer.currency,
-          buyerAddress: offer.offeror,
-          quantityDesired: offer.quantityWanted,
-          currencyValue: await getCurrencyValue(
-            this.providerOrSigner,
-            offer.currency,
-            (offer.quantityWanted as BigNumber).mul(
-              offer.totalOfferAmount as BigNumber,
-            ),
-          ),
-          listingId: listing.id,
-          coinsPerToken: offer.totalOfferAmount,
-        } as Offer;
+        return await this.mapOffer(BigNumber.from(listingId), offer);
       }),
     );
   }
@@ -486,5 +466,42 @@ export class MarketplaceModule
       console.error(`Error getting the listing with id ${listingId}`);
       throw err;
     }
+  }
+
+  /**
+   * Maps a contract offer to the strict interface
+   *
+   * @internal
+   * @param offer
+   * @returns - An `Offer` object
+   */
+  private async mapOffer(listingId: BigNumber, offer: any): Promise<Offer> {
+    return {
+      quantity: offer.quantityDesired,
+      pricePerToken: offer.pricePerToken,
+      currencyContractAddress: offer.currency,
+      buyerAddress: offer.offeror,
+      quantityDesired: offer.quantityWanted,
+      currencyValue: await getCurrencyValue(
+        this.providerOrSigner,
+        offer.currency,
+        (offer.quantityWanted as BigNumber).mul(
+          offer.pricePerToken as BigNumber,
+        ),
+      ),
+      listingId,
+    } as Offer;
+  }
+
+  public async getActiveOffer(
+    listingId: BigNumberish,
+    address: string,
+  ): Promise<Offer | undefined> {
+    invariant(isAddress(address), "Address must be a valid address");
+    const offers = await this.readOnlyContract.offers(listingId, address);
+    if (offers.offeror === AddressZero) {
+      return undefined;
+    }
+    return await this.mapOffer(BigNumber.from(listingId), offers);
   }
 }
