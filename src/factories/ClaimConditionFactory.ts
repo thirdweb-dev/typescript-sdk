@@ -48,6 +48,8 @@ class ClaimConditionFactory {
    * @returns - The claim conditions that will be used when validating a users claim transaction.
    */
   public buildConditionsForDropV1(): PublicClaimCondition[] {
+    // v1 startTimestamp takes seconds from now.
+    // v2 takes unix timestamp in seconds.
     const publicClaimConditions = this.phases
       .map((c) => c.buildPublicClaimCondition())
       .map((c) => {

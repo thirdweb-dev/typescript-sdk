@@ -82,7 +82,7 @@ describe("Drop Module", async () => {
     ]);
 
     const secondPhase = factory.newClaimPhase({
-      startTime: new Date(),
+      startTime: Math.floor(new Date().getTime() / 1000) + 1000,
     });
     await secondPhase.setSnapshot([bobWallet.address]);
 
