@@ -40,6 +40,36 @@ class ClaimConditionFactory {
   }
 
   /**
+   * Used internally when creating a drop module/updating
+   * the claim conditions of a drop module.
+   *
+   * @internal
+   *
+   * @returns - The claim conditions that will be used when validating a users claim transaction.
+   */
+  public buildConditionsForDropV1(): PublicClaimCondition[] {
+    const publicClaimConditions = this.phases
+      .map((c) => c.buildPublicClaimCondition())
+      .map((c) => ({
+        ...c,
+        startTimestamp: c.startTimestamp.sub(Math.floor(Date.now() / 1000)),
+      }));
+
+    // TODO: write test to ensure they're sorted by start time, earliest first
+    const sorted = publicClaimConditions.sort((a, b) => {
+      if (a.startTimestamp.eq(b.startTimestamp)) {
+        return 0;
+      } else if (a.startTimestamp.gt(b.startTimestamp)) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+
+    return sorted;
+  }
+
+  /**
    * Converts a set of generic `PublicClaimCondition`s into a `ClaimConditionFactory`
    *
    * @param conditions - The conditions to load, should be returned directly from the contract.

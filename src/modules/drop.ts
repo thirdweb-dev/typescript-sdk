@@ -14,6 +14,7 @@ import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
+  isNativeToken,
   ModuleType,
   NATIVE_TOKEN_ADDRESS,
   Role,
@@ -496,7 +497,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
       const mintCondition = await this.getActiveClaimCondition();
       const overrides = (await this.getCallOverrides()) || {};
       if (mintCondition.pricePerToken.gt(0)) {
-        if (mintCondition.currency === AddressZero) {
+        if (isNativeToken(mintCondition.currency)) {
           overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
             quantity,
           );
@@ -556,7 +557,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
 
     const overrides = (await this.getCallOverrides()) || {};
     if (mintCondition.pricePerToken.gt(0)) {
-      if (mintCondition.currency === AddressZero) {
+      if (isNativeToken(mintCondition.currency)) {
         overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
           quantity,
         );
@@ -1027,7 +1028,7 @@ class DropV1Module extends ModuleWithRoles<Drop> {
    * @param factory - The claim condition factory.
    */
   public async setClaimConditions(factory: ClaimConditionFactory) {
-    const conditions = factory.buildConditions();
+    const conditions = factory.buildConditionsForDropV1();
 
     const merkleInfo: { [key: string]: string } = {};
     factory.allSnapshots().forEach((s) => {
@@ -1326,3 +1327,4 @@ class DropV1Module extends ModuleWithRoles<Drop> {
     return (await this.readOnlyContract.nextTokenId()).eq(0);
   }
 }
+// This is a deprecated class, DropV1, see above

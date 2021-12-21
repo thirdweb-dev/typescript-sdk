@@ -318,6 +318,8 @@ export class ClaimConditionFactory {
     allSnapshots(): SnapshotInfo[];
     // @internal
     buildConditions(): PublicClaimCondition[];
+    // @internal
+    buildConditionsForDropV1(): PublicClaimCondition[];
     // Warning: (ae-incompatible-release-tags) The symbol "fromPublicClaimConditions" is marked as @public, but its signature references "PublicClaimCondition" which is marked as @beta
     fromPublicClaimConditions(conditions: PublicClaimCondition[]): this;
     newClaimPhase({ startTime, maxQuantity, maxQuantityPerTransaction, }: {
