@@ -496,6 +496,11 @@ export class MarketplaceModule
     listingId: BigNumberish,
     addressOfOfferor: string,
   ): Promise<void> {
+    /**
+     * TODO:
+     * - Provide better error handling if offer is too lower.
+     */
+
     this.validateDirectListing(BigNumber.from(listingId));
     await this.sendTransaction("acceptOffer", [listingId, addressOfOfferor]);
   }
