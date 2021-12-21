@@ -50,14 +50,15 @@ class ClaimConditionFactory {
   public buildConditionsForDropV1(): PublicClaimCondition[] {
     const publicClaimConditions = this.phases
       .map((c) => c.buildPublicClaimCondition())
-      .map((c) => ({
-        ...c,
-        startTimestamp: c.startTimestamp
-          .sub(Math.floor(Date.now() / 1000))
-          .isNegative()
-          ? BigNumber.from(0)
-          : c.startTimestamp.sub(Math.floor(Date.now() / 1000)),
-      }));
+      .map((c) => {
+        const now = Math.floor(Date.now() / 1000);
+        return {
+          ...c,
+          startTimestamp: c.startTimestamp.lt(now)
+            ? BigNumber.from(0)
+            : c.startTimestamp.sub(now),
+        };
+      });
 
     // TODO: write test to ensure they're sorted by start time, earliest first
     const sorted = publicClaimConditions.sort((a, b) => {
