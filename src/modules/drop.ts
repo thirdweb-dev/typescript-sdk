@@ -286,7 +286,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
   }
 
   /**
-   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
+   * @deprecated - The function has been deprecated. Use `createBatch` instead.
    */
   public async lazyMint(metadata: MetadataURIOrObject) {
     await this.lazyMintBatch([metadata]);
@@ -333,7 +333,7 @@ export class DropModule extends ModuleWithRoles<Drop> {
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
-    const { metadata } = await this.getMetadata();
+    const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
@@ -585,8 +585,41 @@ export class DropModule extends ModuleWithRoles<Drop> {
     return "";
   }
 
-  // public async mintBatch(tokenMetadata: MetadataURIOrObject[]) {
-  // TODO: Upload all metadata to IPFS
-  // call lazyMintAmount(metadata.length - totalSupply) if totalSupply < metadata.length
-  // }
+  /**
+   * Create batch allows you to create a batch of tokens
+   * in one transaction. This function can only be called
+   * once per module at the moment.
+   *
+   * @beta
+   *
+   * @param metadatas - The metadata to include in the batch.
+   */
+  public async createBatch(metadatas: MetadataURIOrObject[]): Promise<void> {
+    if (!(await this.canCreateBatch())) {
+      throw new Error("Batch already created!");
+    }
+
+    const startFileNumber = await this.readOnlyContract.nextMintTokenId();
+    const baseUri = await this.storage.uploadMetadataBatch(
+      metadatas,
+      this.address,
+      startFileNumber.toNumber(),
+    );
+    const encoded = [
+      this.contract.interface.encodeFunctionData("setBaseTokenURI", [baseUri]),
+      this.contract.interface.encodeFunctionData("lazyMintAmount", [
+        metadatas.length,
+      ]),
+    ];
+    await this.sendTransaction("multicall", [encoded]);
+  }
+
+  /**
+   * @internal
+   *
+   * @returns - True if the batch has been created, false otherwise.
+   */
+  public async canCreateBatch(): Promise<boolean> {
+    return (await this.readOnlyContract.nextTokenId()).eq(0);
+  }
 }

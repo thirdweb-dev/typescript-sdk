@@ -468,10 +468,13 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
     canClaim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<boolean>;
+    // @internal (undocumented)
+    canCreateBatch(): Promise<boolean>;
     // (undocumented)
     claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>;
     // @internal (undocumented)
     protected connectContract(): LazyNFT;
+    createBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
     // (undocumented)
@@ -582,7 +585,7 @@ export function generateRoot(items: string[]): string;
 // Warning: (ae-internal-missing-underscore) The name "getContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getContractMetadata(provider: ProviderOrSigner, address: string, ipfsGatewayUrl: string): Promise<ContractMetadata>;
+export function getContractMetadata(provider: ProviderOrSigner, address: string, ipfsGatewayUrl: string, resolveGateway?: boolean): Promise<ContractMetadata>;
 
 // Warning: (ae-internal-missing-underscore) The name "getCurrencyMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -872,7 +875,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     protected getCallOverrides(): Promise<CallOverrides>;
     // @internal (undocumented)
     protected getChainID(): Promise<number>;
-    getMetadata(): Promise<ModuleMetadata>;
+    getMetadata(resolveUrls?: boolean): Promise<ModuleMetadata>;
     // @internal @virtual (undocumented)
     protected getModuleType(): ModuleType;
     // @internal (undocumented)
