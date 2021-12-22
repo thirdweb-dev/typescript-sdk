@@ -902,11 +902,11 @@ export class AppModule
    * @returns - The balance of the project in the native token of the chain
    */
   public async balanceOfToken(tokenAddress: string): Promise<CurrencyValue> {
-    const balance = await ERC20__factory.connect(
+    const erc20 = ERC20__factory.connect(tokenAddress, this.providerOrSigner);
+    return await getCurrencyValue(
+      this.providerOrSigner,
       tokenAddress,
-      await this.getProvider(),
-    ).balanceOf(this.address);
-    console.log(this.address);
-    return await getCurrencyValue(this.providerOrSigner, tokenAddress, balance);
+      await erc20.balanceOf(this.address),
+    );
   }
 }
