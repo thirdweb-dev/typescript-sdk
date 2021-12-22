@@ -349,7 +349,7 @@ export class ClaimConditionPhase {
 // @public (undocumented)
 export enum ClaimEligibility {
     // (undocumented)
-    AddressNotWhitelisted = "This address is not whitelisted.",
+    AddressNotAllowed = "This address is not on the allowlist.",
     // (undocumented)
     NoActiveClaimPhase = "There is no active claim phase at the moment. Please check back in later.",
     // (undocumented)
