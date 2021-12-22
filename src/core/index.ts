@@ -17,7 +17,7 @@ import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { ISDKOptions, IThirdwebSdk } from "../interfaces";
-import IStorage from "../interfaces/IStorage";
+import { IStorage } from "../interfaces/IStorage";
 import { AppModule } from "../modules/app";
 import { BundleModule } from "../modules/bundle";
 import { BundleDropModule } from "../modules/bundleDrop";
