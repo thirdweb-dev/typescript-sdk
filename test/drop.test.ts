@@ -82,7 +82,7 @@ describe("Drop Module", async () => {
     ]);
 
     const secondPhase = factory.newClaimPhase({
-      startTime: new Date(),
+      startTime: Math.floor(new Date().getTime() / 1000) + 1000,
     });
     await secondPhase.setSnapshot([bobWallet.address]);
 
@@ -176,7 +176,7 @@ describe("Drop Module", async () => {
     await dropModule.setMintConditions(factory);
     console.log("Claim condition set");
     console.log("Minting");
-    await dropModule.lazyMintAmount(1);
+    await dropModule.lazyMint({ name: "name", description: "description" });
     console.log("Minted");
 
     await sdk.setProviderOrSigner(w1);
@@ -195,8 +195,9 @@ describe("Drop Module", async () => {
   });
 
   it("should allow claims with default settings", async () => {
-    dropModule.lazyMintAmount(1);
-    dropModule.claim(1);
+    await dropModule.lazyMint({ name: "name", description: "description" });
+    await dropModule.setPublicMintConditions([{ maxMintSupply: 100 }]);
+    await dropModule.claim(1);
   });
 
   it("should generate valid proofs", async () => {

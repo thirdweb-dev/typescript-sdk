@@ -8,8 +8,8 @@ import { PublicMintCondition } from "../types/claim-conditions/PublicMintConditi
 import { SnapshotInfo } from "../types/snapshots/SnapshotInfo";
 
 export default class ClaimConditionPhase {
-  // TODO: Should this be in seconds? Or milliseconds? [seconds, please update]
-  private _conditionStartTime = Date.now();
+  // In seconds
+  private _conditionStartTime = Math.floor(Date.now() / 1000);
 
   private _currencyAddress = "";
 
@@ -62,9 +62,8 @@ export default class ClaimConditionPhase {
     if (typeof when === "number") {
       this._conditionStartTime = Math.floor(when);
     } else {
-      const secondsUntil = Math.floor((when.getTime() - Date.now()) / 1000);
       // if its starting in the past, just set it to now
-      this._conditionStartTime = secondsUntil >= 0 ? secondsUntil : 0;
+      this._conditionStartTime = Math.floor(when.getTime() / 1000);
     }
     return this;
   }
@@ -129,10 +128,7 @@ export default class ClaimConditionPhase {
       pricePerToken: this._price,
       currency: this._currencyAddress || AddressZero,
       maxMintSupply: this._maxQuantity,
-
       waitTimeSecondsLimitPerTransaction: this._waitInSeconds,
-
-      // TODO: I don't understand this default value
       quantityLimitPerTransaction: this._quantityLimitPerTransaction,
       currentMintSupply: 0,
       merkleRoot: this._merkleCondition?.merkleRoot

@@ -18,6 +18,7 @@ import { Coin } from '@3rdweb/contracts';
 import { ContractReceipt } from 'ethers';
 import { DataStore } from '@3rdweb/contracts';
 import { LazyMintERC1155 } from '@3rdweb/contracts';
+import { LazyMintERC721 } from '@3rdweb/contracts';
 import { LazyNFT } from '@3rdweb/contracts';
 import { Log } from '@ethersproject/providers';
 import { Market } from '@3rdweb/contracts';
@@ -315,6 +316,8 @@ export class ClaimConditionFactory {
     allSnapshots(): SnapshotInfo[];
     // @internal
     buildConditions(): PublicClaimCondition[];
+    // @internal
+    buildConditionsForDropV1(): PublicClaimCondition[];
     // Warning: (ae-incompatible-release-tags) The symbol "fromPublicClaimConditions" is marked as @public, but its signature references "PublicClaimCondition" which is marked as @beta
     fromPublicClaimConditions(conditions: PublicClaimCondition[]): this;
     newClaimPhase({ startTime, maxQuantity, maxQuantityPerTransaction, }: {
@@ -458,7 +461,9 @@ export const DEFAULT_BLOCK_TIMES_FALLBACK: Record<SUPPORTED_CHAIN_ID | ChainId.H
 }>;
 
 // @beta
-export class DropModule extends ModuleWithRoles<LazyNFT> {
+export class DropModule extends ModuleWithRoles<LazyMintERC721> {
+    // @internal
+    constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     // (undocumented)
     balance(): Promise<BigNumber_2>;
     // (undocumented)
@@ -472,8 +477,8 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>;
     // @internal (undocumented)
-    protected connectContract(): LazyNFT;
-    createBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
+    protected connectContract(): LazyMintERC721;
+    createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
     // (undocumented)
@@ -505,33 +510,28 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
+    isV1(): Promise<boolean>;
     // @deprecated (undocumented)
     lazyMint(metadata: MetadataURIOrObject): Promise<void>;
     // @deprecated (undocumented)
-    lazyMintAmount(amount: BigNumberish_2): Promise<void>;
-    // @deprecated (undocumented)
     lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
-    // (undocumented)
+    // @internal (undocumented)
     maxTotalSupply(): Promise<BigNumber_2>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
-    pinToIpfs(files: Buffer[]): Promise<string>;
-    // (undocumented)
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    setBaseTokenUri(uri: string): Promise<TransactionReceipt>;
     setClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
-    // (undocumented)
-    setMaxTotalSupply(amount: BigNumberish_2): Promise<TransactionReceipt>;
     // @deprecated (undocumented)
     setMintConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    // @internal (undocumented)
+    setProviderOrSigner(providerOrSigner: ProviderOrSigner): void;
     // @deprecated (undocumented)
     setPublicMintConditions(conditions: CreatePublicMintCondition[]): Promise<void>;
     // (undocumented)
@@ -976,7 +976,7 @@ export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type NFTContractTypes = NFT | NFTCollection | LazyNFT | LazyMintERC1155;
+export type NFTContractTypes = NFT | NFTCollection | LazyNFT | LazyMintERC721 | LazyMintERC1155;
 
 // @public @deprecated
 export const NFTLabsSDK: typeof ThirdwebSDK;

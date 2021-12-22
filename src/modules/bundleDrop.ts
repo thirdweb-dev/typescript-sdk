@@ -560,7 +560,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
 
       const overrides = (await this.getCallOverrides()) || {};
       if (mintCondition.pricePerToken.gt(0)) {
-        if (mintCondition.currency === AddressZero) {
+        if (isNativeToken(mintCondition.currency)) {
           overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
             quantity,
           );
