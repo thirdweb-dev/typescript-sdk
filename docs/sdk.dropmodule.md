@@ -47,6 +47,7 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [getAllMintConditions()](./sdk.dropmodule.getallmintconditions.md) |  | <b><i>(BETA)</i></b> |
 |  [getAllUnclaimed(queryParams)](./sdk.dropmodule.getallunclaimed.md) |  | <b><i>(BETA)</i></b> |
 |  [getClaimConditionsFactory()](./sdk.dropmodule.getclaimconditionsfactory.md) |  | <b><i>(BETA)</i></b> Creates a claim condition factory |
+|  [getClaimIneligibilityReasons(quantity, addressToCheck)](./sdk.dropmodule.getclaimineligibilityreasons.md) |  | <b><i>(BETA)</i></b> For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user. |
 |  [getMintConditionsFactory()](./sdk.dropmodule.getmintconditionsfactory.md) |  | <b><i>(BETA)</i></b> |
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | <b><i>(BETA)</i></b> |
 |  [getRoyaltyBps()](./sdk.dropmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |

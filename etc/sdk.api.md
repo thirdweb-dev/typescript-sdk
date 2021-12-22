@@ -170,6 +170,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     getClaimConditionFactory(): ClaimConditionFactory;
     // (undocumented)
     getClaimConditionsFactory(): ClaimConditionFactory;
+    getClaimIneligibilityReasons(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
@@ -345,6 +346,20 @@ export class ClaimConditionPhase {
     setWaitTimeBetweenClaims(waitInSeconds: BigNumberish_2): ClaimConditionPhase;
 }
 
+// @public (undocumented)
+export enum ClaimEligibility {
+    // (undocumented)
+    AddressNotWhitelisted = "This address is not whitelisted.",
+    // (undocumented)
+    NoActiveClaimPhase = "There is no active claim phase at the moment. Please check back in later.",
+    // (undocumented)
+    NotEnoughSupply = "There is not enough supply to claim.",
+    // (undocumented)
+    NotEnoughTokens = "There are not enough tokens in the wallet to pay for the claim.",
+    // (undocumented)
+    WaitBeforeNextClaimTransaction = "Not enough time since last claim transaction. Please wait."
+}
+
 // @public
 export class ClaimProof {
     address: string;
@@ -498,6 +513,7 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> {
     // (undocumented)
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getClaimConditionsFactory(): ClaimConditionFactory;
+    getClaimIneligibilityReasons(quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // @deprecated (undocumented)
     getMintConditionsFactory(): ClaimConditionFactory;
     // @internal @override (undocumented)
