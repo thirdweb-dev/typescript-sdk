@@ -30,7 +30,7 @@ import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule, TokenModule } from "../modules/token";
 import { VoteModule } from "../modules/vote";
-import IpfsStorage from "../storage/IpfsStorage";
+import { IpfsStorage } from "../storage/IpfsStorage";
 import { ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { ClaimProof, Snapshot, SnapshotInfo } from "../types/snapshots";
 import { IAppModule, RegistryModule } from "./registry";
