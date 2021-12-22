@@ -616,6 +616,9 @@ export function getGasPriceForChain(chainId: number, speed: string, maxGasPrice:
 // @internal
 export function getMetadataWithoutContract(provider: ProviderOrSigner, contractAddress: string, tokenId: string, ipfsGatewayUrl: string): Promise<NFTMetadata>;
 
+// @public (undocumented)
+export function getNativeTokenByChainId(chainId: ChainId): NativeToken;
+
 // Warning: (ae-internal-missing-underscore) The name "getRoleHash" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1019,6 +1022,16 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
 //
 // @internal (undocumented)
 export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+
+// @public (undocumented)
+export interface NativeToken extends Currency {
+    // (undocumented)
+    wrapped: {
+        address: string;
+        name: string;
+        symbol: string;
+    };
+}
 
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
 //
