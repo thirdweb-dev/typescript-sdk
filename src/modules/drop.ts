@@ -12,6 +12,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
+import { ClaimEligibility } from "..";
 import {
   getCurrencyValue,
   isNativeToken,
@@ -503,6 +504,88 @@ export class DropModule extends ModuleWithRoles<DropV2> {
   }
 
   /**
+   * For any claim conditions that a particular wallet is violating,
+   * this function returns human readable information about the
+   * breaks in the condition that can be used to inform the user.
+   *
+   * @param quantity - The desired quantity that would be claimed.
+   *
+   */
+  public async getClaimIneligibilityReasons(
+    quantity: BigNumberish,
+    addressToCheck?: string,
+  ): Promise<ClaimEligibility[]> {
+    const reasons: ClaimEligibility[] = [];
+    let activeConditionIndex: BigNumber;
+    let claimCondition: ClaimCondition;
+
+    if (addressToCheck === undefined) {
+      throw new Error("addressToCheck is required");
+    }
+
+    try {
+      [activeConditionIndex, claimCondition] = await Promise.all([
+        this.readOnlyContract.getIndexOfActiveCondition(),
+        this.getActiveClaimCondition(),
+      ]);
+    } catch (err) {
+      console.error("Failed to get active claim condition", err);
+      throw new Error("Failed to get active claim condition");
+    }
+
+    if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
+      reasons.push(ClaimEligibility.NotEnoughSupply);
+    }
+
+    // check for merkle root inclusion
+    const merkleRootArray = ethers.utils.stripZeros(claimCondition.merkleRoot);
+    if (merkleRootArray.length > 0) {
+      const proofs = await this.getClaimerProofs(
+        claimCondition.merkleRoot.toString(),
+        addressToCheck,
+      );
+      if (proofs.length === 0) {
+        reasons.push(ClaimEligibility.AddressNotWhitelisted);
+      }
+      // TODO: compute proofs to root, need browser compatibility
+    }
+
+    // check for claim timestamp between claims
+    const timestampForNextClaim =
+      await this.readOnlyContract.getTimestampForNextValidClaim(
+        activeConditionIndex,
+        addressToCheck,
+      );
+    const now = BigNumber.from(Date.now()).div(1000);
+    if (now.lt(timestampForNextClaim)) {
+      reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+    }
+
+    // check for wallet balance
+    if (claimCondition.pricePerToken.gt(0)) {
+      const totalPrice = claimCondition.pricePerToken.mul(quantity);
+      if (isNativeToken(claimCondition.currency)) {
+        const provider = await this.getProvider();
+        const balance = await provider.getBalance(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+        }
+      } else {
+        const provider = await this.getProvider();
+        const balance = await ERC20__factory.connect(
+          claimCondition.currency,
+          provider,
+        ).balanceOf(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+        }
+      }
+    }
+
+    return reasons;
+  }
+
+  /**
    * @beta - Parameters interface may change, proofs parameter is ignored.
    */
   public async canClaim(
@@ -513,68 +596,10 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     if (await this.isV1()) {
       return this.v1Module.canClaim(quantity, proofs);
     }
-    try {
-      // check to see if there's an active condition
-      const [activeConditionIndex, mintCondition] = await Promise.all([
-        this.readOnlyContract.getIndexOfActiveCondition(),
-        this.getActiveClaimCondition(),
-      ]);
-
-      // check for available supply
-      if (BigNumber.from(mintCondition.availableSupply).lt(quantity)) {
-        // out of supply
-        return false;
-      }
-
-      // check for merkle root inclusion
-      const merkleRootArray = ethers.utils.stripZeros(mintCondition.merkleRoot);
-      if (merkleRootArray.length > 0) {
-        proofs = await this.getClaimerProofs(
-          mintCondition.merkleRoot.toString(),
-          addressToCheck,
-        );
-        if (proofs.length === 0) {
-          return false;
-        }
-        // TODO: compute proofs to root, need browser compatibility
-      }
-
-      // check for claim timestamp between claims
-      const timestampForNextClaim =
-        await this.readOnlyContract.getTimestampForNextValidClaim(
-          activeConditionIndex,
-          addressToCheck,
-        );
-      const now = BigNumber.from(Date.now()).div(1000);
-      if (now.lt(timestampForNextClaim)) {
-        return false;
-      }
-
-      // check for wallet balance
-      if (mintCondition.pricePerToken.gt(0)) {
-        const totalPrice = mintCondition.pricePerToken.mul(quantity);
-        if (isNativeToken(mintCondition.currency)) {
-          const provider = await this.getProvider();
-          const balance = await provider.getBalance(addressToCheck);
-          if (balance.lt(totalPrice)) {
-            return false;
-          }
-        } else {
-          const provider = await this.getProvider();
-          const balance = await ERC20__factory.connect(
-            mintCondition.currency,
-            provider,
-          ).balanceOf(addressToCheck);
-          if (balance.lt(totalPrice)) {
-            return false;
-          }
-        }
-      }
-
-      return true;
-    } catch (err) {
-      return false;
-    }
+    return (
+      (await this.getClaimIneligibilityReasons(quantity, addressToCheck))
+        .length === 0
+    );
   }
 
   public async claim(

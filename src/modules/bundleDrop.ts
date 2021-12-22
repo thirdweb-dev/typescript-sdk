@@ -21,6 +21,7 @@ import { invariant } from "../common/invariant";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
 import { ClaimCondition } from "../types/claim-conditions/PublicMintCondition";
 import { Snapshot } from "../types/snapshots";
@@ -541,6 +542,98 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     return Array.from(new Set(a.map((b) => b.args.claimer)));
   }
 
+  /**
+   * For any claim conditions that a particular wallet is violating,
+   * this function returns human readable information about the
+   * breaks in the condition that can be used to inform the user.
+   *
+   * @param tokenId - The token id that would be claimed.
+   * @param quantity - The desired quantity that would be claimed.
+   * @param addressToCheck - The address that would be claiming the token.
+   */
+  public async getClaimIneligibilityReasons(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    addressToCheck?: string,
+  ): Promise<ClaimEligibility[]> {
+    const reasons: ClaimEligibility[] = [];
+    let activeConditionIndex: BigNumber;
+    let claimCondition: ClaimCondition;
+
+    if (addressToCheck === undefined) {
+      throw new Error("addressToCheck is required");
+    }
+
+    try {
+      [activeConditionIndex, claimCondition] = await Promise.all([
+        this.readOnlyContract.getIndexOfActiveCondition(tokenId),
+        this.getActiveClaimCondition(tokenId),
+      ]);
+    } catch (err: any) {
+      if ((err.message as string).includes("no public mint condition.")) {
+        reasons.push(ClaimEligibility.NoActiveClaimPhase);
+        return reasons;
+      }
+      console.error("Failed to get active claim condition", err);
+      throw new Error("Failed to get active claim condition");
+    }
+
+    if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
+      reasons.push(ClaimEligibility.NotEnoughSupply);
+    }
+
+    // check for merkle root inclusion
+    const merkleRootArray = ethers.utils.stripZeros(claimCondition.merkleRoot);
+    if (merkleRootArray.length > 0) {
+      const merkleLower = claimCondition.merkleRoot.toString();
+      const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
+      if (proofs.length === 0) {
+        const hashedAddress = ethers.utils
+          .keccak256(addressToCheck)
+          .toLowerCase();
+        if (hashedAddress !== merkleLower) {
+          reasons.push(ClaimEligibility.AddressNotWhitelisted);
+        }
+      }
+      // TODO: compute proofs to root, need browser compatibility
+    }
+
+    // check for claim timestamp between claims
+    const timestampForNextClaim =
+      await this.readOnlyContract.getTimestampForNextValidClaim(
+        tokenId,
+        activeConditionIndex,
+        addressToCheck,
+      );
+    const now = BigNumber.from(Date.now()).div(1000);
+    if (now.lt(timestampForNextClaim)) {
+      reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+    }
+
+    // check for wallet balance
+    if (claimCondition.pricePerToken.gt(0)) {
+      const totalPrice = claimCondition.pricePerToken.mul(quantity);
+      if (isNativeToken(claimCondition.currency)) {
+        const provider = await this.getProvider();
+        const balance = await provider.getBalance(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.NotEnoughTokens);
+        }
+      } else {
+        const provider = await this.getProvider();
+        const balance = await ERC20__factory.connect(
+          claimCondition.currency,
+          provider,
+        ).balanceOf(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.NotEnoughTokens);
+        }
+      }
+    }
+
+    return reasons;
+  }
+
   /*
    * Checks to see if the current signer can claim the specified number of tokens.
    *
@@ -557,72 +650,15 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     if (!addressToCheck) {
       addressToCheck = await this.getSignerAddress();
     }
-    try {
-      // check to see if there's an active condition
-      const [activeConditionIndex, mintCondition] = await Promise.all([
-        this.readOnlyContract.getIndexOfActiveCondition(tokenId),
-        this.getActiveClaimCondition(tokenId),
-      ]);
-
-      // check for available supply
-      if (BigNumber.from(mintCondition.availableSupply).lt(quantity)) {
-        // out of supply
-        return false;
-      }
-
-      // check for merkle root inclusion
-      const merkleRootArray = ethers.utils.stripZeros(mintCondition.merkleRoot);
-      if (merkleRootArray.length > 0) {
-        const merkleLower = mintCondition.merkleRoot.toString();
-        const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
-        if (proofs.length === 0) {
-          const hashedAddress = ethers.utils
-            .keccak256(addressToCheck)
-            .toLowerCase();
-          if (hashedAddress !== merkleLower) {
-            return false;
-          }
-        }
-        // TODO: compute proofs to root, need browser compatibility
-      }
-
-      // check for claim timestamp between claims
-      const timestampForNextClaim =
-        await this.readOnlyContract.getTimestampForNextValidClaim(
+    return (
+      (
+        await this.getClaimIneligibilityReasons(
           tokenId,
-          activeConditionIndex,
+          quantity,
           addressToCheck,
-        );
-      const now = BigNumber.from(Date.now()).div(1000);
-      if (now.lt(timestampForNextClaim)) {
-        return false;
-      }
-
-      // check for wallet balance
-      if (mintCondition.pricePerToken.gt(0)) {
-        const totalPrice = mintCondition.pricePerToken.mul(quantity);
-        if (isNativeToken(mintCondition.currency)) {
-          const provider = await this.getProvider();
-          const balance = await provider.getBalance(addressToCheck);
-          if (balance.lt(totalPrice)) {
-            return false;
-          }
-        } else {
-          const provider = await this.getProvider();
-          const balance = await ERC20__factory.connect(
-            mintCondition.currency,
-            provider,
-          ).balanceOf(addressToCheck);
-          if (balance.lt(totalPrice)) {
-            return false;
-          }
-        }
-      }
-
-      return true;
-    } catch (err) {
-      return false;
-    }
+        )
+      ).length === 0
+    );
   }
 
   /**

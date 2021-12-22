@@ -1,7 +1,11 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";
-import { BigNumber } from "ethers";
-import { BundleDropModule } from "../src/index";
+import { BigNumber, ethers } from "ethers";
+import {
+  BundleDropModule,
+  ClaimEligibility,
+  NATIVE_TOKEN_ADDRESS,
+} from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
 
 global.fetch = require("node-fetch");
@@ -218,7 +222,7 @@ describe("Bundle Drop Module", async () => {
       },
     ]);
     const factory = bdModule.getClaimConditionFactory();
-    const phase = factory
+    factory
       .newClaimPhase({
         startTime: new Date(),
       })
@@ -227,5 +231,158 @@ describe("Bundle Drop Module", async () => {
     console.log(await bdModule.getActiveClaimCondition("0"));
     const token = await bdModule.claim("0", 1);
     console.log(token);
+  });
+
+  describe("eligibility", () => {
+    beforeEach(async () => {
+      await bdModule.lazyMintBatch([
+        {
+          name: "test",
+          description: "test",
+        },
+      ]);
+    });
+
+    it("should return false if there isn't an active claim condition", async () => {
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "0",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(ClaimEligibility.NoActiveClaimPhase);
+      assert.lengthOf(reasons, 1);
+    });
+
+    it("should check for the total supply", async () => {
+      const factory = bdModule.getClaimConditionFactory();
+      factory.newClaimPhase({
+        startTime: new Date(),
+        maxQuantity: 1,
+      });
+      await bdModule.setClaimCondition("0", factory);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "2",
+        w1.address,
+      );
+      expect(reasons).to.include(ClaimEligibility.NotEnoughSupply);
+    });
+
+    it("should check if an address has valid merkle proofs", async () => {
+      const factory = bdModule.getClaimConditionFactory();
+      const phase = factory.newClaimPhase({
+        startTime: new Date(),
+        maxQuantity: 1,
+      });
+      await phase.setSnapshot([w2.address, adminWallet.address]);
+      await bdModule.setClaimCondition("0", factory);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "1",
+        w1.address,
+      );
+      expect(reasons).to.include(ClaimEligibility.AddressNotWhitelisted);
+    });
+
+    it("should check if its been long enough since the last claim", async () => {
+      const factory = bdModule.getClaimConditionFactory();
+      factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setWaitTimeBetweenClaims(24 * 60 * 60);
+      await bdModule.setClaimCondition("0", factory);
+      await sdk.setProviderOrSigner(bobWallet);
+      await bdModule.claim("0", 1);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "1",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(
+        ClaimEligibility.WaitBeforeNextClaimTransaction,
+      );
+    });
+
+    it("should check if an address has enough native currency", async () => {
+      const factory = bdModule.getClaimConditionFactory();
+      factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setPrice(
+          ethers.utils.parseUnits("1000000000000000"),
+          NATIVE_TOKEN_ADDRESS,
+        );
+      await bdModule.setClaimCondition("0", factory);
+      await sdk.setProviderOrSigner(bobWallet);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "1",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
+    });
+
+    it("should check if an address has enough erc20 currency", async () => {
+      const currency = await appModule.deployCurrencyModule({
+        name: "test",
+        symbol: "test",
+      });
+
+      const factory = bdModule.getClaimConditionFactory();
+      factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setPrice(
+          ethers.utils.parseUnits("1000000000000000"),
+          currency.address,
+        );
+      await bdModule.setClaimCondition("0", factory);
+      await sdk.setProviderOrSigner(bobWallet);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "1",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
+    });
+
+    it("should return nothing if the claim is eligible", async () => {
+      const currency = await appModule.deployCurrencyModule({
+        name: "test",
+        symbol: "test",
+      });
+
+      const factory = bdModule.getClaimConditionFactory();
+      const phase = factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setPrice(ethers.utils.parseUnits("100"), currency.address);
+      await phase.setSnapshot([w1.address, w2.address, w3.address]);
+      await bdModule.setClaimCondition("0", factory);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "1",
+        w1.address,
+      );
+      expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
+    });
   });
 });
