@@ -18,7 +18,6 @@ import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, ethers, Signer } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { JsonConvert } from "json2typescript";
-import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";
 import {
   ChainlinkVrf,
   CurrencyValue,
@@ -27,6 +26,7 @@ import {
   RolesMap,
 } from "../common";
 import { getNativeTokenByChainId } from "../common/address";
+import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getContractMetadata } from "../common/contract";
 import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
@@ -44,9 +44,10 @@ import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetada
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
-import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
 import TokenModuleMetadata from "../types/module-deployments/TokenModuleMetadata";
+import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
+import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";
 import { BundleDropModule } from "./bundleDrop";
 import { CollectionModule } from "./collection";
 import { DatastoreModule } from "./datastore";
@@ -57,7 +58,6 @@ import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
 import { CurrencyModule, TokenModule } from "./token";
 import { VoteModule } from "./vote";
-import { SUPPORTED_CHAIN_ID } from "../common/chain";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}

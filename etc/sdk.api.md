@@ -17,6 +17,7 @@ import { CallOverrides } from 'ethers';
 import { Coin } from '@3rdweb/contracts';
 import { ContractReceipt } from 'ethers';
 import { DataStore } from '@3rdweb/contracts';
+import { ethers } from 'ethers';
 import { LazyMintERC1155 } from '@3rdweb/contracts';
 import { LazyMintERC721 } from '@3rdweb/contracts';
 import { LazyNFT } from '@3rdweb/contracts';
@@ -148,7 +149,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     // (undocumented)
     burn(tokenId: BigNumberish_2, amount: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
-    canClaim(tokenId: BigNumberish_2, quantity: BigNumberish_2): Promise<boolean>;
+    canClaim(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToCheck?: string): Promise<boolean>;
     // (undocumented)
     claim(tokenId: BigNumberish_2, quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
     // @internal (undocumented)
@@ -169,6 +170,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     getClaimConditionFactory(): ClaimConditionFactory;
     // (undocumented)
     getClaimConditionsFactory(): ClaimConditionFactory;
+    getClaimIneligibilityReasons(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
@@ -344,6 +346,20 @@ export class ClaimConditionPhase {
     setWaitTimeBetweenClaims(waitInSeconds: BigNumberish_2): ClaimConditionPhase;
 }
 
+// @public (undocumented)
+export enum ClaimEligibility {
+    // (undocumented)
+    AddressNotWhitelisted = "This address is not whitelisted.",
+    // (undocumented)
+    NoActiveClaimPhase = "There is no active claim phase at the moment. Please check back in later.",
+    // (undocumented)
+    NotEnoughSupply = "There is not enough supply to claim.",
+    // (undocumented)
+    NotEnoughTokens = "There are not enough tokens in the wallet to pay for the claim.",
+    // (undocumented)
+    WaitBeforeNextClaimTransaction = "Not enough time since last claim transaction. Please wait."
+}
+
 // @public
 export class ClaimProof {
     address: string;
@@ -470,8 +486,7 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> {
     balanceOf(address: string): Promise<BigNumber_2>;
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
-    // (undocumented)
-    canClaim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<boolean>;
+    canClaim(quantity: BigNumberish_2, addressToCheck?: string): Promise<boolean>;
     // @internal (undocumented)
     canCreateBatch(): Promise<boolean>;
     // (undocumented)
@@ -498,6 +513,7 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> {
     // (undocumented)
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getClaimConditionsFactory(): ClaimConditionFactory;
+    getClaimIneligibilityReasons(quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // @deprecated (undocumented)
     getMintConditionsFactory(): ClaimConditionFactory;
     // @internal @override (undocumented)
@@ -877,6 +893,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
     getMetadata(resolveUrls?: boolean): Promise<ModuleMetadata>;
     // @internal @virtual (undocumented)
     protected getModuleType(): ModuleType;
+    // @internal (undocumented)
+    protected getProvider(): Promise<ethers.providers.Provider>;
     // @internal (undocumented)
     protected getSigner(): Signer | null;
     // @internal (undocumented)

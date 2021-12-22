@@ -225,7 +225,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
   /**
    * @internal
    */
-  private async getProvider() {
+  protected async getProvider() {
     return this.readOnlyContract.provider;
   }
 

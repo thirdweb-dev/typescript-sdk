@@ -95,6 +95,7 @@ Output
 
 |  Enumeration | Description |
 |  --- | --- |
+|  [ClaimEligibility](./sdk.claimeligibility.md) |  |
 |  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
 |  [ProposalState](./sdk.proposalstate.md) |  |
 |  [VoteType](./sdk.votetype.md) |  |

@@ -10,8 +10,9 @@ import { PublicMintConditionStruct } from "@3rdweb/contracts/dist/LazyNFT";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
+import { ClaimEligibility } from "..";
 import {
   getCurrencyValue,
   isNativeToken,
@@ -502,43 +503,109 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     await this.sendTransaction("setClaimConditions", [_conditions]);
   }
 
-  public async canClaim(
+  /**
+   * For any claim conditions that a particular wallet is violating,
+   * this function returns human readable information about the
+   * breaks in the condition that can be used to inform the user.
+   *
+   * @param quantity - The desired quantity that would be claimed.
+   *
+   */
+  public async getClaimIneligibilityReasons(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ): Promise<boolean> {
-    if (await this.isV1()) {
-      return this.v1Module.canClaim(quantity, proofs);
-    }
-    try {
-      const mintCondition = await this.getActiveClaimCondition();
-      const overrides = (await this.getCallOverrides()) || {};
-      if (mintCondition.pricePerToken.gt(0)) {
-        if (isNativeToken(mintCondition.currency)) {
-          overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
-            quantity,
-          );
-        } else {
-          const erc20 = ERC20__factory.connect(
-            mintCondition.currency,
-            this.providerOrSigner,
-          );
-          const owner = await this.getSignerAddress();
-          const spender = this.address;
-          const allowance = await erc20.allowance(owner, spender);
-          const totalPrice = BigNumber.from(mintCondition.pricePerToken).mul(
-            BigNumber.from(quantity),
-          );
+    addressToCheck?: string,
+  ): Promise<ClaimEligibility[]> {
+    const reasons: ClaimEligibility[] = [];
+    let activeConditionIndex: BigNumber;
+    let claimCondition: ClaimCondition;
 
-          if (allowance.lt(totalPrice)) {
-            // TODO throw allowance error, maybe check balance?
-          }
+    if (addressToCheck === undefined) {
+      throw new Error("addressToCheck is required");
+    }
+
+    try {
+      [activeConditionIndex, claimCondition] = await Promise.all([
+        this.readOnlyContract.getIndexOfActiveCondition(),
+        this.getActiveClaimCondition(),
+      ]);
+    } catch (err: any) {
+      if ((err.message as string).includes("no public mint condition.")) {
+        reasons.push(ClaimEligibility.NoActiveClaimPhase);
+        return reasons;
+      }
+      console.error("Failed to get active claim condition", err);
+      throw new Error("Failed to get active claim condition");
+    }
+
+    if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
+      reasons.push(ClaimEligibility.NotEnoughSupply);
+    }
+
+    // check for merkle root inclusion
+    const merkleRootArray = ethers.utils.stripZeros(claimCondition.merkleRoot);
+    if (merkleRootArray.length > 0) {
+      const proofs = await this.getClaimerProofs(
+        claimCondition.merkleRoot.toString(),
+        addressToCheck,
+      );
+      if (proofs.length === 0) {
+        reasons.push(ClaimEligibility.AddressNotAllowed);
+      }
+      // TODO: compute proofs to root, need browser compatibility
+    }
+
+    // check for claim timestamp between claims
+    const timestampForNextClaim =
+      await this.readOnlyContract.getTimestampForNextValidClaim(
+        activeConditionIndex,
+        addressToCheck,
+      );
+    const now = BigNumber.from(Date.now()).div(1000);
+    if (now.lt(timestampForNextClaim)) {
+      reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+    }
+
+    // check for wallet balance
+    if (claimCondition.pricePerToken.gt(0)) {
+      const totalPrice = claimCondition.pricePerToken.mul(quantity);
+      if (isNativeToken(claimCondition.currency)) {
+        const provider = await this.getProvider();
+        const balance = await provider.getBalance(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.NotEnoughTokens);
+        }
+      } else {
+        const provider = await this.getProvider();
+        const balance = await ERC20__factory.connect(
+          claimCondition.currency,
+          provider,
+        ).balanceOf(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       }
-      await this.readOnlyContract.callStatic.claim(quantity, proofs, overrides);
-      return true;
-    } catch (err) {
-      return false;
     }
+
+    return reasons;
+  }
+
+  /**
+   * @beta - Parameters interface may change, proofs parameter is ignored.
+   */
+  public async canClaim(
+    quantity: BigNumberish,
+    addressToCheck?: string,
+  ): Promise<boolean> {
+    if (addressToCheck === undefined) {
+      addressToCheck = await this.getSignerAddress();
+    }
+    if (await this.isV1()) {
+      return this.v1Module.canClaim(quantity, []);
+    }
+    return (
+      (await this.getClaimIneligibilityReasons(quantity, addressToCheck))
+        .length === 0
+    );
   }
 
   public async claim(
@@ -750,6 +817,33 @@ export class DropModule extends ModuleWithRoles<DropV2> {
       this._shouldCheckVersion = false;
     }
     return this._isV1;
+  }
+
+  /**
+   * Fetches the proof for the current signer for a particular wallet.
+   *
+   * @param merkleRoot - The merkle root of the condition to check.
+   * @returns - The proof for the current signer for the specified condition.
+   */
+  private async getClaimerProofs(
+    merkleRoot: string,
+    addressToClaim?: string,
+  ): Promise<string[]> {
+    if (!addressToClaim) {
+      addressToClaim = await this.getSignerAddress();
+    }
+    const { metadata } = await this.getMetadata();
+    const snapshot = await this.storage.get(metadata?.merkle[merkleRoot]);
+    const jsonConvert = new JsonConvert();
+    const snapshotData = jsonConvert.deserializeObject(
+      JSON.parse(snapshot),
+      Snapshot,
+    );
+    const item = snapshotData.claims.find((c) => c.address === addressToClaim);
+    if (item === undefined) {
+      return [];
+    }
+    return item.proof;
   }
 }
 
@@ -1118,6 +1212,15 @@ class DropV1Module extends ModuleWithRoles<Drop> {
     try {
       const mintCondition = await this.getActiveClaimCondition();
       const overrides = (await this.getCallOverrides()) || {};
+
+      const owner = await this.getSignerAddress();
+      if (mintCondition.merkleRoot) {
+        proofs = await this.getClaimerProofs(
+          mintCondition?.merkleRoot as string,
+          owner,
+        );
+      }
+
       if (mintCondition.pricePerToken.gt(0)) {
         if (mintCondition.currency === AddressZero) {
           overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
@@ -1145,6 +1248,33 @@ class DropV1Module extends ModuleWithRoles<Drop> {
     } catch (err) {
       return false;
     }
+  }
+
+  /**
+   * Fetches the proof for the current signer for a particular wallet.
+   *
+   * @param merkleRoot - The merkle root of the condition to check.
+   * @returns - The proof for the current signer for the specified condition.
+   */
+  private async getClaimerProofs(
+    merkleRoot: string,
+    addressToClaim?: string,
+  ): Promise<string[]> {
+    if (!addressToClaim) {
+      addressToClaim = await this.getSignerAddress();
+    }
+    const { metadata } = await this.getMetadata();
+    const snapshot = await this.storage.get(metadata?.merkle[merkleRoot]);
+    const jsonConvert = new JsonConvert();
+    const snapshotData = jsonConvert.deserializeObject(
+      JSON.parse(snapshot),
+      Snapshot,
+    );
+    const item = snapshotData.claims.find((c) => c.address === addressToClaim);
+    if (item === undefined) {
+      return [];
+    }
+    return item.proof;
   }
 
   public async claim(

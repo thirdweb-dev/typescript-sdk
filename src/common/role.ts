@@ -12,7 +12,7 @@ export interface IRoles {
   admin: "admin";
   /**
    * The minter role allows the wallet to mint new assets.
-   * ({@link NFTModule.mint | NFTs}, {@link CurrencyModule.mint | Tokens}, {@link PackModule.create | Packs}, etc)
+   * ({@link NFTModule.mint | NFTs}, {@link TokenModule.mint | Tokens}, {@link PackModule.create | Packs}, etc)
    * @public
    */
   minter: "minter";
