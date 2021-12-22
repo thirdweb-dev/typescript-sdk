@@ -186,10 +186,10 @@ export class ThirdwebSDK implements IThirdwebSdk {
    * Call this to get the current apps.
    * @returns All currently registered apps for the connected wallet
    */
-  public async getApps(): Promise<IAppModule[]> {
+  public async getApps(address?: string): Promise<IAppModule[]> {
     return (
       this.registry || (await this.getRegistryModule())
-    ).getProtocolContracts();
+    ).getProtocolContracts(address);
   }
 
   /**
