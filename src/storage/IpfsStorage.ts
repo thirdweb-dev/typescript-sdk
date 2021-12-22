@@ -1,6 +1,6 @@
 import { FetchError, UploadError } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
-import IStorage from "../interfaces/IStorage";
+import { IStorage } from "../interfaces/IStorage";
 import FileOrBuffer from "../types/FileOrBuffer";
 
 if (!globalThis.FormData) {
