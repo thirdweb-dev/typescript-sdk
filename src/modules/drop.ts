@@ -1,9 +1,9 @@
 import {
   ERC20__factory,
-  LazyNFT as Drop,
-  LazyNFT__factory as Drop__factory,
   LazyMintERC721 as DropV2,
   LazyMintERC721__factory as DropV2__factory,
+  LazyNFT as Drop,
+  LazyNFT__factory as Drop__factory,
 } from "@3rdweb/contracts";
 import { ClaimConditionStructOutput } from "@3rdweb/contracts/dist/LazyMintERC721";
 import { PublicMintConditionStruct } from "@3rdweb/contracts/dist/LazyNFT";
@@ -12,7 +12,6 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
-import { ClaimEligibility } from "..";
 import {
   getCurrencyValue,
   isNativeToken,
@@ -26,6 +25,7 @@ import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ThirdwebSDK } from "../core";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject, ProviderOrSigner } from "../core/types";
+import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
 import {
@@ -58,7 +58,6 @@ export class DropModule extends ModuleWithRoles<DropV2> {
   private v1Module: DropV1Module;
 
   public static moduleType: ModuleType = ModuleType.DROP;
-  storage = this.sdk.getStorage();
 
   public static roles = [
     RolesMap.admin,
@@ -448,7 +447,9 @@ export class DropModule extends ModuleWithRoles<DropV2> {
       metadata["merkle"] = merkleInfo;
     }
 
-    const metatdataUri = await this.storage.upload(JSON.stringify(metadata));
+    const metatdataUri = await this.sdk
+      .getStorage()
+      .upload(JSON.stringify(metadata));
 
     const encoded = [
       this.contract.interface.encodeFunctionData("setContractURI", [
@@ -621,9 +622,9 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     const addressToClaim = await this.getSignerAddress();
 
     if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
-      const snapshot = await this.storage.get(
-        metadata?.merkle[mintCondition.merkleRoot.toString()],
-      );
+      const snapshot = await this.sdk
+        .getStorage()
+        .get(metadata?.merkle[mintCondition.merkleRoot.toString()]);
       const jsonConvert = new JsonConvert();
       const snapshotData = jsonConvert.deserializeObject(
         JSON.parse(snapshot),
@@ -698,7 +699,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
   ): Promise<TransactionReceipt> {
-    const uri = await this.storage.uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     return await this.sendTransaction("setContractURI", [uri]);
   }
 
@@ -713,7 +714,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     }
 
     metadata.seller_fee_basis_points = amount;
-    const uri = await this.storage.uploadMetadata(
+    const uri = await this.sdk.getStorage().uploadMetadata(
       {
         ...metadata,
       },
@@ -773,11 +774,9 @@ export class DropModule extends ModuleWithRoles<DropV2> {
       return this.v1Module.createBatch(metadatas);
     }
     const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
-    const baseUri = await this.storage.uploadMetadataBatch(
-      metadatas,
-      this.address,
-      startFileNumber.toNumber(),
-    );
+    const baseUri = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
     const receipt = await this.sendTransaction("lazyMint", [
       metadatas.length,
       baseUri,
@@ -833,7 +832,9 @@ export class DropModule extends ModuleWithRoles<DropV2> {
       addressToClaim = await this.getSignerAddress();
     }
     const { metadata } = await this.getMetadata();
-    const snapshot = await this.storage.get(metadata?.merkle[merkleRoot]);
+    const snapshot = await this.sdk
+      .getStorage()
+      .get(metadata?.merkle[merkleRoot]);
     const jsonConvert = new JsonConvert();
     const snapshotData = jsonConvert.deserializeObject(
       JSON.parse(snapshot),
