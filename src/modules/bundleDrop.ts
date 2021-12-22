@@ -53,7 +53,6 @@ export interface BundleDropMetadata {
  */
 export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   public static moduleType: ModuleType = ModuleType.BUNDLE_DROP;
-  storage = this.sdk.getStorage();
 
   public static roles = [
     RolesMap.admin,
@@ -233,11 +232,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     metadatas: MetadataURIOrObject[],
   ): Promise<string[]> {
     const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
-    const baseUri = await this.storage.uploadMetadataBatch(
-      metadatas,
-      this.address,
-      startFileNumber.toNumber(),
-    );
+    const baseUri = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
     const receipt = await this.sendTransaction("lazyMint", [
       metadatas.length,
       baseUri,
@@ -322,7 +319,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       metadata["merkle"] = merkleInfo;
     }
 
-    const metadataUri = await this.storage.upload(JSON.stringify(metadata));
+    const metadataUri = await this.sdk
+      .getStorage()
+      .upload(JSON.stringify(metadata));
     const encoded = [
       this.contract.interface.encodeFunctionData("setContractURI", [
         metadataUri,
@@ -378,9 +377,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     const addressToClaim = await this.getSignerAddress();
     const { metadata } = await this.getMetadata();
     if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
-      const snapshot = await this.storage.get(
-        metadata?.merkle[mintCondition.merkleRoot.toString()],
-      );
+      const snapshot = await this.sdk
+        .getStorage()
+        .get(metadata?.merkle[mintCondition.merkleRoot.toString()]);
       const jsonConvert = new JsonConvert();
       const snapshotData = jsonConvert.deserializeObject(
         JSON.parse(snapshot),
@@ -450,7 +449,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
   ): Promise<TransactionReceipt> {
-    const uri = await this.storage.uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     return await this.sendTransaction("setContractURI", [uri]);
   }
 
@@ -465,7 +464,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     }
 
     metadata.seller_fee_basis_points = amount;
-    const uri = await this.storage.uploadMetadata(
+    const uri = await this.sdk.getStorage().uploadMetadata(
       {
         ...metadata,
       },
@@ -675,7 +674,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       addressToClaim = await this.getSignerAddress();
     }
     const { metadata } = await this.getMetadata();
-    const snapshot = await this.storage.get(metadata?.merkle[merkleRoot]);
+    const snapshot = await this.sdk
+      .getStorage()
+      .get(metadata?.merkle[merkleRoot]);
     const jsonConvert = new JsonConvert();
     const snapshotData = jsonConvert.deserializeObject(
       JSON.parse(snapshot),
