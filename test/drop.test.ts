@@ -412,18 +412,13 @@ describe("Drop Module", async () => {
     });
 
     it("should return nothing if the claim is eligible", async () => {
-      const currency = await appModule.deployCurrencyModule({
-        name: "test",
-        symbol: "test",
-      });
-
       const factory = dropModule.getClaimConditionsFactory();
       const phase = factory
         .newClaimPhase({
           startTime: new Date(),
           maxQuantity: 10,
         })
-        .setPrice(ethers.utils.parseUnits("100"), currency.address);
+        .setPrice(ethers.utils.parseUnits("100"), NATIVE_TOKEN_ADDRESS);
       await phase.setSnapshot([w1.address, w2.address, w3.address]);
       await dropModule.setClaimConditions(factory);
 
@@ -431,9 +426,9 @@ describe("Drop Module", async () => {
         "1",
         w1.address,
       );
-      expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
+      assert.lengthOf(reasons, 0);
 
-      const canClaim = await dropModule.canClaim(w1.address);
+      const canClaim = await dropModule.canClaim("1", w1.address);
       assert.isTrue(canClaim);
     });
   });

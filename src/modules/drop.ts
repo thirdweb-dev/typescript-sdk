@@ -594,11 +594,13 @@ export class DropModule extends ModuleWithRoles<DropV2> {
    */
   public async canClaim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    addressToCheck?: string,
   ): Promise<boolean> {
-    const addressToCheck = await this.getSignerAddress();
+    if (addressToCheck === undefined) {
+      addressToCheck = await this.getSignerAddress();
+    }
     if (await this.isV1()) {
-      return this.v1Module.canClaim(quantity, proofs);
+      return this.v1Module.canClaim(quantity, []);
     }
     return (
       (await this.getClaimIneligibilityReasons(quantity, addressToCheck))
@@ -1210,6 +1212,15 @@ class DropV1Module extends ModuleWithRoles<Drop> {
     try {
       const mintCondition = await this.getActiveClaimCondition();
       const overrides = (await this.getCallOverrides()) || {};
+
+      const owner = await this.getSignerAddress();
+      if (mintCondition.merkleRoot) {
+        proofs = await this.getClaimerProofs(
+          mintCondition?.merkleRoot as string,
+          owner,
+        );
+      }
+
       if (mintCondition.pricePerToken.gt(0)) {
         if (mintCondition.currency === AddressZero) {
           overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
@@ -1237,6 +1248,33 @@ class DropV1Module extends ModuleWithRoles<Drop> {
     } catch (err) {
       return false;
     }
+  }
+
+  /**
+   * Fetches the proof for the current signer for a particular wallet.
+   *
+   * @param merkleRoot - The merkle root of the condition to check.
+   * @returns - The proof for the current signer for the specified condition.
+   */
+  private async getClaimerProofs(
+    merkleRoot: string,
+    addressToClaim?: string,
+  ): Promise<string[]> {
+    if (!addressToClaim) {
+      addressToClaim = await this.getSignerAddress();
+    }
+    const { metadata } = await this.getMetadata();
+    const snapshot = await this.storage.get(metadata?.merkle[merkleRoot]);
+    const jsonConvert = new JsonConvert();
+    const snapshotData = jsonConvert.deserializeObject(
+      JSON.parse(snapshot),
+      Snapshot,
+    );
+    const item = snapshotData.claims.find((c) => c.address === addressToClaim);
+    if (item === undefined) {
+      return [];
+    }
+    return item.proof;
   }
 
   public async claim(
