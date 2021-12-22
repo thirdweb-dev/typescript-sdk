@@ -1304,7 +1304,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     createSnapshot(leafs: string[]): Promise<SnapshotInfo>;
     // (undocumented)
     getAppModule(address: string): AppModule;
-    getApps(): Promise<IAppModule[]>;
+    getApps(address?: string): Promise<IAppModule[]>;
     // @beta (undocumented)
     getBundleDropModule(address: string): BundleDropModule;
     // Warning: (ae-incompatible-release-tags) The symbol "getBundleModule" is marked as @public, but its signature references "BundleModule" which is marked as @beta
