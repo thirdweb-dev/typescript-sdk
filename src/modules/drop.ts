@@ -1231,7 +1231,6 @@ class DropV1Module extends ModuleWithRoles<Drop> {
             mintCondition.currency,
             this.providerOrSigner,
           );
-          const owner = await this.getSignerAddress();
           const spender = this.address;
           const allowance = await erc20.allowance(owner, spender);
           const totalPrice = BigNumber.from(mintCondition.pricePerToken).mul(
