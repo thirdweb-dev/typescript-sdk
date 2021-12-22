@@ -329,7 +329,7 @@ describe("Drop Module", async () => {
         "1",
         w1.address,
       );
-      expect(reasons).to.include(ClaimEligibility.AddressNotWhitelisted);
+      expect(reasons).to.include(ClaimEligibility.AddressNotAllowed);
       const canClaim = await dropModule.canClaim(w1.address);
       assert.isFalse(canClaim);
     });

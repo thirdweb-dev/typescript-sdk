@@ -549,7 +549,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
         addressToCheck,
       );
       if (proofs.length === 0) {
-        reasons.push(ClaimEligibility.AddressNotWhitelisted);
+        reasons.push(ClaimEligibility.AddressNotAllowed);
       }
       // TODO: compute proofs to root, need browser compatibility
     }

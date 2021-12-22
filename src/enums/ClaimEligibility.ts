@@ -1,7 +1,7 @@
 export enum ClaimEligibility {
   NotEnoughSupply = "There is not enough supply to claim.",
 
-  AddressNotWhitelisted = "This address is not whitelisted.",
+  AddressNotAllowed = "This address is not on the allowlist.",
 
   WaitBeforeNextClaimTransaction = "Not enough time since last claim transaction. Please wait.",
 

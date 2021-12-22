@@ -592,7 +592,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
           .keccak256(addressToCheck)
           .toLowerCase();
         if (hashedAddress !== merkleLower) {
-          reasons.push(ClaimEligibility.AddressNotWhitelisted);
+          reasons.push(ClaimEligibility.AddressNotAllowed);
         }
       }
       // TODO: compute proofs to root, need browser compatibility
