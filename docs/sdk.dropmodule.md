@@ -26,7 +26,6 @@ The constructor for this class is marked as internal. Third-party code should no
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.dropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
 |  [roles](./sdk.dropmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] | <b><i>(BETA)</i></b> |
-|  [storage](./sdk.dropmodule.storage.md) |  | import("../interfaces/IStorage").default | <b><i>(BETA)</i></b> |
 
 ## Methods
 

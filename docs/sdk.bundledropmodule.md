@@ -22,7 +22,6 @@ export declare class BundleDropModule extends ModuleWithRoles<BundleDrop>
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.bundledropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
 |  [roles](./sdk.bundledropmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] | <b><i>(BETA)</i></b> |
-|  [storage](./sdk.bundledropmodule.storage.md) |  | import("../interfaces/IStorage").default | <b><i>(BETA)</i></b> |
 
 ## Methods
 
