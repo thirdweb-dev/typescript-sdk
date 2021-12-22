@@ -1,6 +1,6 @@
 import { FetchError, UploadError } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
-import IStorage from "../interfaces/IStorage";
+import { IStorage } from "../interfaces/IStorage";
 import FileOrBuffer from "../types/FileOrBuffer";
 
 if (!globalThis.FormData) {
@@ -12,7 +12,7 @@ const thirdwebIpfsServerUrl = "https://upload.nftlabs.co";
 const pinataIpfsUrl = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 // const thirdwebIpfsServerUrl = "http://localhost:3002";
 
-export default class IpfsStorage implements IStorage {
+export class IpfsStorage implements IStorage {
   private gatewayUrl: string;
 
   constructor(gatewayUrl: string) {

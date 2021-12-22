@@ -13,7 +13,7 @@ getStorage(): IStorage;
 ```
 <b>Returns:</b>
 
-IStorage
+[IStorage](./sdk.istorage.md)
 
 - The Storage instance.
 

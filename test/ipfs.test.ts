@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { sdk, signers } from "./before.test";
 
 import { expect, assert } from "chai";
-import IpfsStorage from "../src/storage/IpfsStorage";
+import { IpfsStorage } from "../src/storage/IpfsStorage";
 
 global.fetch = require("node-fetch");
 

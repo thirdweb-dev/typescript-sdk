@@ -2,7 +2,7 @@ import { MetadataURIOrObject } from "../core/types";
 import FileOrBuffer from "../types/FileOrBuffer";
 
 /* eslint-disable semi */
-export default interface IStorage {
+export interface IStorage {
   /**
    * Uploads a file to the storage.
    *
