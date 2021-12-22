@@ -1235,6 +1235,9 @@ export interface PublicClaimCondition {
 export interface PublicMintCondition extends PublicClaimCondition {
 }
 
+// @public (undocumented)
+export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string): any;
+
 // Warning: (ae-internal-missing-underscore) The name "replaceIpfsWithGateway" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
