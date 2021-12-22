@@ -7,7 +7,7 @@ import { ClaimConditionStruct } from "@3rdweb/contracts/dist/LazyMintERC1155";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
@@ -546,47 +546,76 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
    *
    * @param tokenId - The id of the token to check.
    * @param quantity - The quantity of tokens to check.
+   * @param addressToCheck - The wallet address to check.
    * @returns - True if the current signer can claim the specified number of tokens, false otherwise.
    */
   public async canClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
+    addressToCheck?: string,
   ): Promise<boolean> {
+    if (!addressToCheck) {
+      addressToCheck = await this.getSignerAddress();
+    }
     try {
-      const mintCondition = await this.getActiveClaimCondition(tokenId);
-      const proofs = await this.getClaimerProofs(
-        mintCondition.merkleRoot.toString(),
-      );
+      // check to see if there's an active condition
+      const [activeConditionIndex, mintCondition] = await Promise.all([
+        this.readOnlyContract.getIndexOfActiveCondition(tokenId),
+        this.getActiveClaimCondition(tokenId),
+      ]);
 
-      const overrides = (await this.getCallOverrides()) || {};
+      // check for available supply
+      if (BigNumber.from(mintCondition.availableSupply).lt(quantity)) {
+        // out of supply
+        return false;
+      }
+
+      // check for merkle root inclusion
+      const merkleRootArray = ethers.utils.stripZeros(mintCondition.merkleRoot);
+      if (merkleRootArray.length > 0) {
+        const proofs = await this.getClaimerProofs(
+          mintCondition.merkleRoot.toString(),
+          addressToCheck,
+        );
+        if (proofs.length === 0) {
+          return false;
+        }
+        // TODO: compute proofs to root, need browser compatibility
+      }
+
+      // check for claim timestamp between claims
+      const timestampForNextClaim =
+        await this.readOnlyContract.getTimestampForNextValidClaim(
+          tokenId,
+          activeConditionIndex,
+          addressToCheck,
+        );
+      const now = BigNumber.from(Date.now()).div(1000);
+      if (now.lt(timestampForNextClaim)) {
+        return false;
+      }
+
+      // check for wallet balance
       if (mintCondition.pricePerToken.gt(0)) {
+        const totalPrice = mintCondition.pricePerToken.mul(quantity);
         if (isNativeToken(mintCondition.currency)) {
-          overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
-            quantity,
-          );
+          const provider = await this.getProvider();
+          const balance = await provider.getBalance(addressToCheck);
+          if (balance.lt(totalPrice)) {
+            return false;
+          }
         } else {
-          const erc20 = ERC20__factory.connect(
+          const provider = await this.getProvider();
+          const balance = await ERC20__factory.connect(
             mintCondition.currency,
-            this.providerOrSigner,
-          );
-          const owner = await this.getSignerAddress();
-          const spender = this.address;
-          const allowance = await erc20.allowance(owner, spender);
-          const totalPrice = BigNumber.from(mintCondition.pricePerToken).mul(
-            BigNumber.from(quantity),
-          );
-
-          if (allowance.lt(totalPrice)) {
-            // TODO throw allowance error, maybe check balance?
+            provider,
+          ).balanceOf(addressToCheck);
+          if (balance.lt(totalPrice)) {
+            return false;
           }
         }
       }
-      await this.readOnlyContract.callStatic.claim(
-        tokenId,
-        quantity,
-        proofs,
-        overrides,
-      );
+
       return true;
     } catch (err) {
       return false;
@@ -599,8 +628,13 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
    * @param merkleRoot - The merkle root of the condition to check.
    * @returns - The proof for the current signer for the specified condition.
    */
-  private async getClaimerProofs(merkleRoot: string): Promise<string[]> {
-    const addressToClaim = await this.getSignerAddress();
+  private async getClaimerProofs(
+    merkleRoot: string,
+    addressToClaim?: string,
+  ): Promise<string[]> {
+    if (!addressToClaim) {
+      addressToClaim = await this.getSignerAddress();
+    }
     const { metadata } = await this.getMetadata();
     const snapshot = await this.storage.get(metadata?.merkle[merkleRoot]);
     const jsonConvert = new JsonConvert();

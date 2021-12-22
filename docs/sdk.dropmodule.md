@@ -35,7 +35,7 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [balance()](./sdk.dropmodule.balance.md) |  | <b><i>(BETA)</i></b> |
 |  [balanceOf(address)](./sdk.dropmodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
 |  [burn(tokenId)](./sdk.dropmodule.burn.md) |  | <b><i>(BETA)</i></b> |
-|  [canClaim(quantity, proofs)](./sdk.dropmodule.canclaim.md) |  | <b><i>(BETA)</i></b> |
+|  [canClaim(quantity, proofs)](./sdk.dropmodule.canclaim.md) |  | <b><i>(BETA)</i></b> - Parameters interface may change, proofs parameter is ignored. |
 |  [claim(quantity, proofs)](./sdk.dropmodule.claim.md) |  | <b><i>(BETA)</i></b> |
 |  [createBatch(metadatas)](./sdk.dropmodule.createbatch.md) |  | <b><i>(BETA)</i></b> Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per module at the moment. |
 |  [get(tokenId)](./sdk.dropmodule.get.md) |  | <b><i>(BETA)</i></b> |

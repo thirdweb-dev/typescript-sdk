@@ -10,7 +10,7 @@
 <b>Signature:</b>
 
 ```typescript
-canClaim(tokenId: BigNumberish, quantity: BigNumberish): Promise<boolean>;
+canClaim(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
 ```
 
 ## Parameters
@@ -19,6 +19,7 @@ canClaim(tokenId: BigNumberish, quantity: BigNumberish): Promise<boolean>;
 |  --- | --- | --- |
 |  tokenId | BigNumberish |  |
 |  quantity | BigNumberish |  |
+|  addressToCheck | string |  |
 
 <b>Returns:</b>
 
