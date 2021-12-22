@@ -48,8 +48,8 @@ export interface IPackCreateArgs {
     tokenId: BigNumberish;
     amount: BigNumberish;
   }[];
-  secondsUntilOpenStart?: number;
-  rewardsPerOpen?: number;
+  secondsUntilOpenStart?: BigNumberish;
+  rewardsPerOpen?: BigNumberish;
 }
 
 /**
