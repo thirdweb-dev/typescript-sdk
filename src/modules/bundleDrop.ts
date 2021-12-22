@@ -573,12 +573,15 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       // check for merkle root inclusion
       const merkleRootArray = ethers.utils.stripZeros(mintCondition.merkleRoot);
       if (merkleRootArray.length > 0) {
-        const proofs = await this.getClaimerProofs(
-          mintCondition.merkleRoot.toString(),
-          addressToCheck,
-        );
+        const merkleLower = mintCondition.merkleRoot.toString();
+        const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
         if (proofs.length === 0) {
-          return false;
+          const hashedAddress = ethers.utils
+            .keccak256(addressToCheck)
+            .toLowerCase();
+          if (hashedAddress !== merkleLower) {
+            return false;
+          }
         }
         // TODO: compute proofs to root, need browser compatibility
       }
