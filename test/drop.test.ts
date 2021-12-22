@@ -295,6 +295,8 @@ describe("Drop Module", async () => {
 
       expect(reasons).to.include(ClaimEligibility.NoActiveClaimPhase);
       assert.lengthOf(reasons, 1);
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
     });
 
     it("should check for the total supply", async () => {
@@ -310,6 +312,8 @@ describe("Drop Module", async () => {
         w1.address,
       );
       expect(reasons).to.include(ClaimEligibility.NotEnoughSupply);
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
     });
 
     it("should check if an address has valid merkle proofs", async () => {
@@ -326,6 +330,8 @@ describe("Drop Module", async () => {
         w1.address,
       );
       expect(reasons).to.include(ClaimEligibility.AddressNotWhitelisted);
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
     });
 
     it("should check if its been long enough since the last claim", async () => {
@@ -348,6 +354,8 @@ describe("Drop Module", async () => {
       expect(reasons).to.include(
         ClaimEligibility.WaitBeforeNextClaimTransaction,
       );
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
     });
 
     it("should check if an address has enough native currency", async () => {
@@ -370,6 +378,8 @@ describe("Drop Module", async () => {
       );
 
       expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
     });
 
     it("should check if an address has enough erc20 currency", async () => {
@@ -397,6 +407,8 @@ describe("Drop Module", async () => {
       );
 
       expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
     });
 
     it("should return nothing if the claim is eligible", async () => {
@@ -420,6 +432,9 @@ describe("Drop Module", async () => {
         w1.address,
       );
       expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
+
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isTrue(canClaim);
     });
   });
 });
