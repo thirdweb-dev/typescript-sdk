@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-storage: import("../interfaces/IStorage").default;
+storage: import("..").IStorage;
 ```

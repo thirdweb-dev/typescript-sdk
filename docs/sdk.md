@@ -79,6 +79,7 @@ Output
 |  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
+|  [IpfsStorage](./sdk.ipfsstorage.md) |  |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
 |  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality. |
@@ -133,6 +134,7 @@ Output
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) | <b><i>(BETA)</i></b> |
 |  [IRoles](./sdk.iroles.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
+|  [IStorage](./sdk.istorage.md) |  |
 |  [IThirdwebSdk](./sdk.ithirdwebsdk.md) |  |
 |  [ITokenMintArgs](./sdk.itokenmintargs.md) |  |
 |  [ITokenMintFromArgs](./sdk.itokenmintfromargs.md) |  |

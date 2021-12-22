@@ -203,8 +203,6 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
     setSaleRecipient(tokenId: BigNumberish_2, recipient: string): Promise<TransactionReceipt>;
-    // Warning: (ae-forgotten-export) The symbol "IStorage" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     storage: IStorage;
     totalSupply(tokenId: BigNumberish_2): Promise<BigNumber_2>;
@@ -735,6 +733,30 @@ export interface IPackCreateArgs {
     secondsUntilOpenStart?: number;
 }
 
+// @public (undocumented)
+export class IpfsStorage implements IStorage {
+    constructor(gatewayUrl: string);
+    // @internal
+    batchUploadProperties(metadata: object): Promise<any>;
+    buildFilePropertiesMap(object: any, files: (File | Buffer)[]): Promise<(File | Buffer)[]>;
+    // (undocumented)
+    get(hash: string): Promise<string>;
+    // (undocumented)
+    getUploadToken(contractAddress: string): Promise<string>;
+    // @internal
+    resolveFullUrl(ipfsHash: string): string;
+    // Warning: (ae-forgotten-export) The symbol "FileOrBuffer" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
+    // (undocumented)
+    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
+    // (undocumented)
+    uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
+    // @internal (undocumented)
+    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, startFileNumber?: number): Promise<string>;
+}
+
 // @public
 export interface IRoles {
     admin: "admin";
@@ -767,6 +789,17 @@ export interface ISDKOptions {
 //
 // @internal (undocumented)
 export function isNativeToken(tokenAddress: string): boolean;
+
+// @public (undocumented)
+export interface IStorage {
+    get(hash: string): Promise<string>;
+    getUploadToken(contractAddress: string): Promise<string>;
+    resolveFullUrl(hash: string): string;
+    upload(data: string | File | FileOrBuffer | Buffer, contractAddress?: string, signerAddress?: string): Promise<string>;
+    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
+    uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
+    uploadMetadataBatch(metadata: MetadataURIOrObject, contractAddress?: string, fileStartNumber?: number): Promise<string>;
+}
 
 // @public (undocumented)
 export interface IThirdwebSdk {
@@ -1426,8 +1459,6 @@ export class UploadError extends Error {
 // @internal (undocumented)
 export function uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
 
-// Warning: (ae-forgotten-export) The symbol "FileOrBuffer" needs to be exported by the entry point index.d.ts
-//
 // @public
 export function uploadToIPFS(data: string | File | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
 
