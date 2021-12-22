@@ -300,8 +300,8 @@ export class MarketModule extends ModuleWithRoles<Market> {
         throw new NotOwner();
       } else if (
         (await this.readOnlyContract.restrictedListerRoleOnly()) &&
-        !(signer in this.getRoleMembers("lister")) &&
-        !(signer in this.getRoleMembers("admin"))
+        !(signer in (await this.getRoleMembers("lister"))) &&
+        !(signer in (await this.getRoleMembers("admin")))
       ) {
         throw new MissingRoleError(signer, "lister");
       }
