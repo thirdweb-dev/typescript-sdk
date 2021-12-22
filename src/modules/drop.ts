@@ -528,7 +528,11 @@ export class DropModule extends ModuleWithRoles<DropV2> {
         this.readOnlyContract.getIndexOfActiveCondition(),
         this.getActiveClaimCondition(),
       ]);
-    } catch (err) {
+    } catch (err: any) {
+      if ((err.message as string).includes("no public mint condition.")) {
+        reasons.push(ClaimEligibility.NoActiveClaimPhase);
+        return reasons;
+      }
       console.error("Failed to get active claim condition", err);
       throw new Error("Failed to get active claim condition");
     }
@@ -568,7 +572,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
         const provider = await this.getProvider();
         const balance = await provider.getBalance(addressToCheck);
         if (balance.lt(totalPrice)) {
-          reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+          reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       } else {
         const provider = await this.getProvider();
@@ -577,7 +581,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
           provider,
         ).balanceOf(addressToCheck);
         if (balance.lt(totalPrice)) {
-          reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+          reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       }
     }
