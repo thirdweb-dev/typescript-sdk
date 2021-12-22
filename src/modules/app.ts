@@ -343,6 +343,9 @@ export class AppModule
     to: string,
     currency: string,
   ): Promise<TransactionReceipt> {
+    if (isNativeToken(currency)) {
+      currency = ethers.constants.AddressZero;
+    }
     return await this.sendTransaction("withdrawFunds", [to, currency]);
   }
 
