@@ -505,9 +505,8 @@ export class MarketplaceModule
     await this.sendTransaction("acceptOffer", [listingId, addressOfOfferor]);
   }
 
-  removeListing(listingId: BigNumberish): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
+  public async removeListing(listingId: BigNumberish): Promise<void> {}
+
   buyoutAuction(buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
