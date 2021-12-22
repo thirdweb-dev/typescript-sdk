@@ -486,7 +486,7 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> {
     balanceOf(address: string): Promise<BigNumber_2>;
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
-    canClaim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<boolean>;
+    canClaim(quantity: BigNumberish_2, addressToCheck?: string): Promise<boolean>;
     // @internal (undocumented)
     canCreateBatch(): Promise<boolean>;
     // (undocumented)

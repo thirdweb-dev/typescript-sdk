@@ -12,7 +12,7 @@
 <b>Signature:</b>
 
 ```typescript
-canClaim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<boolean>;
+canClaim(quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ canClaim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<boolean>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  quantity | BigNumberish |  |
-|  proofs | BytesLike\[\] |  |
+|  addressToCheck | string |  |
 
 <b>Returns:</b>
 
