@@ -45,8 +45,6 @@ export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTMod
 //
 // @public
 export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppModule_2 {
-    // @internal @deprecated (undocumented)
-    __deployDropV1Module(metadata: DropModuleMetadata): Promise<DropModule>;
     balance(): Promise<BigNumber_2>;
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     // @internal (undocumented)
