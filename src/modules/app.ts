@@ -22,10 +22,11 @@ import {
   ChainlinkVrf,
   CurrencyValue,
   getCurrencyValue,
+  isNativeToken,
   Role,
   RolesMap,
 } from "../common";
-import { getNativeTokenByChainId } from "../common/address";
+import { getNativeTokenByChainId } from "../common/currency";
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getContractMetadata } from "../common/contract";
 import { invariant } from "../common/invariant";
@@ -342,6 +343,9 @@ export class AppModule
     to: string,
     currency: string,
   ): Promise<TransactionReceipt> {
+    if (isNativeToken(currency)) {
+      currency = ethers.constants.AddressZero;
+    }
     return await this.sendTransaction("withdrawFunds", [to, currency]);
   }
 
@@ -902,11 +906,22 @@ export class AppModule
    * @returns - The balance of the project in the native token of the chain
    */
   public async balanceOfToken(tokenAddress: string): Promise<CurrencyValue> {
-    const erc20 = ERC20__factory.connect(tokenAddress, this.providerOrSigner);
-    return await getCurrencyValue(
-      this.providerOrSigner,
-      tokenAddress,
-      await erc20.balanceOf(this.address),
-    );
+    let balance: BigNumber;
+    if (isNativeToken(tokenAddress)) {
+      balance = await this.balance();
+    } else {
+      const erc20 = ERC20__factory.connect(
+        tokenAddress,
+        this.readOnlyContract.provider,
+      );
+      try {
+        balance = await erc20.balanceOf(this.address);
+      } catch (e) {
+        console.error(tokenAddress, e);
+        balance = BigNumber.from(0);
+      }
+    }
+
+    return await getCurrencyValue(this.providerOrSigner, tokenAddress, balance);
   }
 }
