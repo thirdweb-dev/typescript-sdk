@@ -43,6 +43,12 @@ export default class BundleDropModuleMetadata extends CommonModuleMetadata {
   primarySaleFeeBasisPoints? = 0;
 
   /**
+   * The address of the royalty recipient. All royalties will be sent
+   * to this address.
+   */
+  @JsonProperty("fee_recipient", String, PropertyConvertingMode.IGNORE_NULLABLE)
+  feeRecipient?: string = undefined;
+  /**
    * The address of the receiver of the initial sale.You can use this field to
    * distribute the initial sale proceeds. All drop contracts are required to set this field,
    * even if the tokens are planned to be free. If you plan to do a free drop, you can set this
