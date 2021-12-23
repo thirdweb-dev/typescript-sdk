@@ -797,7 +797,7 @@ export interface IStorage {
     upload(data: string | File | FileOrBuffer | Buffer, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
     uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadataBatch(metadata: MetadataURIOrObject, contractAddress?: string, fileStartNumber?: number): Promise<string>;
+    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
 }
 
 // @public (undocumented)
