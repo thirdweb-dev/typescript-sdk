@@ -202,7 +202,7 @@ describe("App Module", async () => {
     const result = await module.getMetadata();
     assert.equal(
       result.metadata.image,
-      "https://ipfs.io/ipfs/bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
+      "https://ipfs.thirdweb.com/ipfs/bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
     );
   });
 
