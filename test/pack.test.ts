@@ -1,14 +1,14 @@
+import { INFTBundleCreateArgs } from "./../src/modules/bundle";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { PackModule } from "../src/index";
+import { BundleModule, PackModule } from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
-
-import { expect, assert } from "chai";
 
 global.fetch = require("node-fetch");
 
 // TODO: Write some actual pack module tests
 describe("Pack Module", async () => {
   let packModule: PackModule;
+  let bundleModule: BundleModule;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -25,25 +25,58 @@ describe("Pack Module", async () => {
       sellerFeeBasisPoints: 1000,
       feeRecipient: samWallet.address,
     });
+
+    bundleModule = await appModule.deployBundleModule({
+      name: "NFT Module",
+      sellerFeeBasisPoints: 1000,
+    });
   });
 
-  // TODO: Move to royalty test suite
-  it("should return the correct royalty recipient", async () => {
-    const recipient = await packModule.getRoyaltyRecipientAddress();
-    assert.equal(
-      recipient,
-      samWallet.address,
-      "The default royalty recipient should be the project address",
-    );
-  });
+  describe("Creating Packs", () => {
+    beforeEach(async () => {
+      const batch: INFTBundleCreateArgs[] = [];
+      for (let i = 0; i < 5; i++) {
+        batch.push({
+          metadata: {
+            name: `Test ${i}`,
+          },
+          supply: 1000,
+        });
+      }
 
-  // TODO: Move to royalty test suite
-  it("should return the correct royalty BPS", async () => {
-    const bps = await packModule.getRoyaltyBps();
-    assert.equal(
-      "1000",
-      bps.toString(),
-      "The royalty BPS should be 10000 (10%)",
-    );
+      await bundleModule.createAndMintBatch(batch);
+    });
+
+    it("should allow you to create a batch of packs", async () => {
+      console.log("Creating packs");
+      await packModule.createPack({
+        assetContract: bundleModule.address,
+        assets: [
+          {
+            tokenId: "0",
+            amount: 10,
+          },
+          {
+            tokenId: "1",
+            amount: 10,
+          },
+        ],
+        metadata: {
+          name: "Test Pack",
+        },
+      });
+
+      let attempts = 0;
+      while (attempts < 10) {
+        try {
+          const pack = await packModule.getAll();
+          console.log(pack);
+          break;
+        } catch (err) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          attempts += 1;
+        }
+      }
+    });
   });
 });

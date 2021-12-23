@@ -213,7 +213,24 @@ export class PackModule extends ModuleWithRoles<PackContract> {
   }
 
   // owner functions
+  /**
+   * Create a pack from a set of assets.
+   *
+   * @param args - Args for the pack creation
+   * @returns - The newly created pack metadata
+   *
+   * @deprecated - use {@link PackModule.createPack} instead
+   */
   public async create(args: IPackCreateArgs): Promise<PackMetadata> {
+    const receipt = await this.createPack(args);
+    const event = receipt?.events?.find((e) => e.event === "PackCreated");
+    const packId = event?.args?.packId;
+    return await this.get(packId);
+  }
+
+  public async createPack(
+    args: IPackCreateArgs,
+  ): Promise<ethers.ContractReceipt> {
     const asset = ERC1155__factory.connect(
       args.assetContract,
       this.providerOrSigner,
@@ -232,7 +249,7 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     // TODO: make it gasless
     const tx = await asset.safeBatchTransferFrom(
       from,
-      this.address,
+      args.assetContract,
       ids,
       amounts,
       packParams,
@@ -240,9 +257,7 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     );
 
     const receipt = await tx.wait();
-    const event = receipt?.events?.find((e) => e.event === "PackCreated");
-    const packId = event?.args?.packId;
-    return await this.get(packId);
+    return receipt;
   }
 
   public async transferFrom(
