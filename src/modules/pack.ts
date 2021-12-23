@@ -218,19 +218,8 @@ export class PackModule extends ModuleWithRoles<PackContract> {
    *
    * @param args - Args for the pack creation
    * @returns - The newly created pack metadata
-   *
-   * @deprecated - use {@link PackModule.createPack} instead
    */
   public async create(args: IPackCreateArgs): Promise<PackMetadata> {
-    const receipt = await this.createPack(args);
-    const event = receipt?.events?.find((e) => e.event === "PackCreated");
-    const packId = event?.args?.packId;
-    return await this.get(packId);
-  }
-
-  public async createPack(
-    args: IPackCreateArgs,
-  ): Promise<ethers.ContractReceipt> {
     const asset = ERC1155__factory.connect(
       args.assetContract,
       this.providerOrSigner,
@@ -249,7 +238,7 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     // TODO: make it gasless
     const tx = await asset.safeBatchTransferFrom(
       from,
-      args.assetContract,
+      this.address,
       ids,
       amounts,
       packParams,
@@ -257,7 +246,16 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     );
 
     const receipt = await tx.wait();
-    return receipt;
+    const topic = this.contract.interface.getEventTopic("PackCreated");
+
+    const log = receipt.logs.find((x) => x.topics.indexOf(topic) >= 0);
+    if (log === undefined) {
+      throw new Error("PackCreated event not found");
+    }
+
+    const event = this.contract.interface.parseLog(log);
+    const packId = event?.args?.packId;
+    return await this.get(packId);
   }
 
   public async transferFrom(

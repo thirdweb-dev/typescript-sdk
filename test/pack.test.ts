@@ -1,7 +1,9 @@
-import { INFTBundleCreateArgs } from "./../src/modules/bundle";
+import { INFTBundleCreateArgs } from "../src/modules/bundle";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BundleModule, PackModule } from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
+
+import { assert, expect } from "chai";
 
 global.fetch = require("node-fetch");
 
@@ -49,7 +51,7 @@ describe("Pack Module", async () => {
 
     it("should allow you to create a batch of packs", async () => {
       console.log("Creating packs");
-      await packModule.createPack({
+      const pack = await packModule.create({
         assetContract: bundleModule.address,
         assets: [
           {
@@ -66,17 +68,46 @@ describe("Pack Module", async () => {
         },
       });
 
-      let attempts = 0;
-      while (attempts < 10) {
-        try {
-          const pack = await packModule.getAll();
-          console.log(pack);
-          break;
-        } catch (err) {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          attempts += 1;
-        }
-      }
+      assert.equal(pack.creator, adminWallet.address);
+      assert.equal(pack.id.toString(), "0");
+      assert.equal(pack.metadata.name, "Test Pack");
+    });
+
+    it("should return the correct rewards", async () => {
+      const pack = await packModule.create({
+        assetContract: bundleModule.address,
+        assets: [
+          {
+            tokenId: "0",
+            amount: 10,
+          },
+          {
+            tokenId: "1",
+            amount: 20,
+          },
+        ],
+        metadata: {
+          name: "Test Pack",
+        },
+      });
+
+      const rewards = await packModule.getNFTs(pack.id);
+
+      const foundFirst = rewards.find(
+        (r) =>
+          r.metadata.id === "0" &&
+          r.supply.toNumber() === 10 &&
+          r.metadata.name === "Test 0",
+      );
+      assert.isTrue(foundFirst !== undefined, "First NFT not found");
+
+      const foundSecond = rewards.find(
+        (r) =>
+          r.metadata.id === "1" &&
+          r.supply.toNumber() === 20 &&
+          r.metadata.name === "Test 1",
+      );
+      assert.isTrue(foundSecond !== undefined, "Second NFT not found");
     });
   });
 });
