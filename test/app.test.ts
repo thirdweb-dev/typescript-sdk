@@ -230,7 +230,7 @@ describe("App Module", async () => {
       image:
         "ipfs://bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
       sellerFeeBasisPoints: 0,
-      feeRecipient: "0xabE01399799888819f5dCE731F8C22f8E7e6AD26",
+      feeRecipient: samWallet.address,
       symbol: "",
     };
     const contract = await appModule.deployBundleModule(metadata);

@@ -524,7 +524,12 @@ export class AppModule
       ],
       NFT__factory,
     );
-
+    if (
+      metadata.feeRecipient !== undefined &&
+      metadata.feeRecipient !== address
+    ) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getNFTModule(address);
   }
 
@@ -678,7 +683,12 @@ export class AppModule
       ],
       Pack__factory,
     );
-
+    if (
+      metadata.feeRecipient !== undefined &&
+      metadata.feeRecipient !== address
+    ) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getPackModule(address);
   }
 
@@ -731,7 +741,12 @@ export class AppModule
       ],
       LazyMintERC721__factory,
     );
-
+    if (
+      metadata.feeRecipient !== undefined &&
+      metadata.feeRecipient !== address
+    ) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getDropModule(address);
   }
 
