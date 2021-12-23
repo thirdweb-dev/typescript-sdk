@@ -445,7 +445,7 @@ export class AppModule
     );
     if (
       metadata.feeRecipient !== undefined &&
-      metadata.feeRecipient !== address
+      metadata.feeRecipient !== this.address
     ) {
       this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
@@ -526,7 +526,7 @@ export class AppModule
     );
     if (
       metadata.feeRecipient !== undefined &&
-      metadata.feeRecipient !== address
+      metadata.feeRecipient !== this.address
     ) {
       this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
@@ -743,7 +743,7 @@ export class AppModule
     );
     if (
       metadata.feeRecipient !== undefined &&
-      metadata.feeRecipient !== address
+      metadata.feeRecipient !== this.address
     ) {
       this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
