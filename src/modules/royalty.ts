@@ -134,6 +134,26 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     return recipients;
   }
 
+  public async getAllRecipientsWithBalance() {
+    const recipients = await this.getAllRecipients();
+    const balances: { [key: string]: BigNumber } = {};
+    recipients.forEach(async (recipient) => {
+      balances[recipient.address] = await this.balanceOf(recipient.address);
+    });
+    return balances;
+  }
+
+  public async getAllRecipientsWithTokenBalance(tokenAddress: string) {
+    const recipients = await this.getAllRecipients();
+    const balances: { [key: string]: CurrencyValue } = {};
+    recipients.forEach(async (recipient) => {
+      balances[recipient.address] = await this.balanceOfToken(
+        recipient.address,
+        tokenAddress,
+      );
+    });
+    return balances;
+  }
   public async getRecipientSplitPercentage(
     address: string,
   ): Promise<SplitRecipient> {
