@@ -443,8 +443,14 @@ export class AppModule
       ],
       NFTCollection__factory,
     );
+    if (
+      metadata.feeRecipient !== undefined &&
+      metadata.feeRecipient !== address
+    ) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
 
-    return this.sdk.getCollectionModule(address);
+    return this.sdk.getBundleModule(address);
   }
 
   /**
