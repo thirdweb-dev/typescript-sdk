@@ -4,6 +4,8 @@ import {
   Pack as PackContract,
   Pack__factory,
 } from "@3rdweb/contracts";
+
+import { PackCreatedEvent } from "@3rdweb/contracts/dist/Pack";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import {
@@ -246,16 +248,15 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     );
 
     const receipt = await tx.wait();
-    const topic = this.contract.interface.getEventTopic("PackCreated");
-
-    const log = receipt.logs.find((x) => x.topics.indexOf(topic) >= 0);
-    if (log === undefined) {
+    const log = await this.parseLogs<PackCreatedEvent>(
+      "PackCreated",
+      receipt.logs,
+    );
+    if (log.length === 0) {
       throw new Error("PackCreated event not found");
     }
-
-    const event = this.contract.interface.parseLog(log);
-    const packId = event?.args?.packId;
-    return await this.get(packId);
+    const packId = log[0].args.packId;
+    return await this.get(packId.toString());
   }
 
   public async transferFrom(
