@@ -213,10 +213,10 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
   public async createAndMintBatch(
     metadataWithSupply: INFTBundleCreateArgs[],
   ): Promise<BundleMetadata[]> {
-    const uris = await Promise.all(
-      metadataWithSupply
-        .map((a) => a.metadata)
-        .map((a) => this.sdk.getStorage().uploadMetadata(a)),
+    const metadatas = metadataWithSupply.map((a) => a.metadata);
+    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
+    const uris = Array.from(Array(metadatas.length).keys()).map(
+      (i) => `${baseUri}${i}/`,
     );
     const supplies = metadataWithSupply.map((a) => a.supply);
     const to = await this.getSignerAddress();
