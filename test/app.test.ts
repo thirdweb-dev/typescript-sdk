@@ -246,16 +246,4 @@ describe("App Module", async () => {
     );
     assert.match(result.metadata.image, regex);
   });
-  it("should properly set the royalty recipient when deploying a bundle module", async () => {
-    const metadata = {
-      name: "test",
-      sellerFeeBasisPoints: 0,
-      feeRecipient: samWallet.address,
-    };
-    const contract = await appModule.deployBundleModule(metadata);
-    assert.equal(
-      await contract.getRoyaltyRecipientAddress(),
-      metadata.feeRecipient,
-    );
-  });
 });
