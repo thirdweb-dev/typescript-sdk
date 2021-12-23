@@ -109,15 +109,14 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     const recipients: SplitRecipient[] = [];
 
     let index = BigNumber.from(0);
+    const totalRecipients = await this.readOnlyContract.payeeCount();
     // eslint-disable-next-line no-constant-condition
-    while (true) {
+    while (index.lt(totalRecipients)) {
       try {
-        console.log(index);
         const recipientAddress = await this.readOnlyContract.payee(index);
         recipients.push(
           await this.getRecipientSplitPercentage(recipientAddress),
         );
-        console.log(recipients);
         index = index.add(1);
       } catch (err: any) {
         // The only way we know how to detect that we've found all recipients
@@ -139,21 +138,21 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
   public async balanceOfAllRecipients() {
     const recipients = await this.getAllRecipients();
     const balances: { [key: string]: BigNumber } = {};
-    recipients.forEach(async (recipient) => {
+    for (const recipient of recipients) {
       balances[recipient.address] = await this.balanceOf(recipient.address);
-    });
+    }
     return balances;
   }
 
   public async balanceOfTokenAllRecipients(tokenAddress: string) {
     const recipients = await this.getAllRecipients();
     const balances: { [key: string]: CurrencyValue } = {};
-    recipients.forEach(async (recipient) => {
+    for (const recipient of recipients) {
       balances[recipient.address] = await this.balanceOfToken(
         recipient.address,
         tokenAddress,
       );
-    });
+    }
     return balances;
   }
   public async getRecipientSplitPercentage(
