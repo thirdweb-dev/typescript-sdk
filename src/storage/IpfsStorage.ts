@@ -2,6 +2,7 @@ import { FetchError, UploadError } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
 import { IStorage } from "../interfaces/IStorage";
 import FileOrBuffer from "../types/FileOrBuffer";
+import FileOrBufferWithNames from "../types/FireOrBufferWithNames";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -61,6 +62,42 @@ export class IpfsStorage implements IStorage {
     );
 
     return `ipfs://${cid}/`;
+  }
+
+  public async uploadBatchWithFileNames(
+    files: FileOrBufferWithNames[],
+    contractAddress?: string,
+  ): Promise<string> {
+    const token = await this.getUploadToken(contractAddress || "");
+    const metadata = {
+      name: `CONSOLE-TS-SDK-${contractAddress}`,
+    };
+    const data = new FormData();
+
+    files.forEach((file) => {
+      const filepath = `files/${file.name}`;
+      if (typeof window === "undefined") {
+        data.append("file", file as any, { filepath } as any);
+      } else {
+        // browser does blob things, filepath is parsed differently on browser vs node.
+        // pls pinata?
+        data.append("file", new Blob([file.file]), filepath);
+      }
+    });
+
+    data.append("pinataMetadata", JSON.stringify(metadata));
+    const res = await fetch(pinataIpfsUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: data as any,
+    });
+    const body = await res.json();
+    if (!res.ok) {
+      throw new UploadError("Failed to upload files to IPFS");
+    }
+    return body.IpfsHash;
   }
 
   private async uploadBatchWithCid(
