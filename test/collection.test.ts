@@ -115,4 +115,27 @@ describe("Bundle Module (aka Collection Module)", async () => {
       "Fetching the BPS with the tx should return 100",
     );
   });
+  it("should correctly upload nft metadata", async () => {
+    await bundleModule.createAndMintBatch([
+      {
+        metadata: {
+          name: "Test1",
+        },
+        supply: 5,
+      },
+      {
+        metadata: {
+          name: "Test2",
+        },
+        supply: 5,
+      },
+    ]);
+    const nfts = await bundleModule.getAll();
+    expect(nfts).to.be.an("array").length(2);
+    let i = 0;
+    nfts.forEach(async (nft) => {
+      expect(nft.metadata.name).to.be.equal(`Test${i}`);
+      i
+    });
+  });
 });

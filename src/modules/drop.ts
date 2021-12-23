@@ -1114,7 +1114,9 @@ class DropV1Module extends ModuleWithRoles<Drop> {
    */
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
     const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
-    const uris = Array.from(Array(10).keys()).map((i) => `${baseUri}${i}/`);
+    const uris = Array.from(Array(metadatas.length).keys()).map(
+      (i) => `${baseUri}${i}/`,
+    );
     await this.sendTransaction("lazyMintBatch", [uris]);
   }
 

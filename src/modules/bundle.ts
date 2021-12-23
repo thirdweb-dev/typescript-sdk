@@ -215,7 +215,9 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
   ): Promise<BundleMetadata[]> {
     const metadatas = metadataWithSupply.map((a) => a.metadata);
     const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
-    const uris = Array.from(Array(10).keys()).map((i) => `${baseUri}${i}/`);
+    const uris = Array.from(Array(metadatas.length).keys()).map(
+      (i) => `${baseUri}${i}/`,
+    );
     const supplies = metadataWithSupply.map((a) => a.supply);
     const to = await this.getSignerAddress();
     const receipt = await this.sendTransaction("createNativeTokens", [
