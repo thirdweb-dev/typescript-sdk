@@ -1,6 +1,6 @@
 import { INFTBundleCreateArgs } from "../src/modules/bundle";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BundleModule, PackModule } from "../src/index";
+import { BundleModule, PackMetadata, PackModule } from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
 
 import { assert, expect } from "chai";
@@ -34,39 +34,58 @@ describe("Pack Module", async () => {
     });
   });
 
+  const createBundles = async () => {
+    const batch: INFTBundleCreateArgs[] = [];
+    for (let i = 0; i < 5; i++) {
+      batch.push({
+        metadata: {
+          name: `Test ${i}`,
+        },
+        supply: 1000,
+      });
+    }
+
+    await bundleModule.createAndMintBatch(batch);
+  };
+
+  const createPacks = async (): Promise<PackMetadata> => {
+    const pack = await packModule.create({
+      assetContract: bundleModule.address,
+      assets: [
+        {
+          tokenId: "0",
+          amount: 10,
+        },
+        {
+          tokenId: "1",
+          amount: 20,
+        },
+      ],
+      metadata: {
+        name: "Test Pack",
+      },
+    });
+    return pack;
+  };
+
+  describe("Buying Packs", () => {
+    beforeEach(async () => {
+      await createBundles();
+    });
+
+    it("should allow you to buy a pack", async () => {
+      const pack = await createPacks();
+    });
+  });
+
   describe("Creating Packs", () => {
     beforeEach(async () => {
-      const batch: INFTBundleCreateArgs[] = [];
-      for (let i = 0; i < 5; i++) {
-        batch.push({
-          metadata: {
-            name: `Test ${i}`,
-          },
-          supply: 1000,
-        });
-      }
-
-      await bundleModule.createAndMintBatch(batch);
+      await createBundles();
     });
 
     it("should allow you to create a batch of packs", async () => {
       console.log("Creating packs");
-      const pack = await packModule.create({
-        assetContract: bundleModule.address,
-        assets: [
-          {
-            tokenId: "0",
-            amount: 10,
-          },
-          {
-            tokenId: "1",
-            amount: 10,
-          },
-        ],
-        metadata: {
-          name: "Test Pack",
-        },
-      });
+      const pack = await createPacks();
 
       assert.equal(pack.creator, adminWallet.address);
       assert.equal(pack.id.toString(), "0");
@@ -74,22 +93,7 @@ describe("Pack Module", async () => {
     });
 
     it("should return the correct rewards", async () => {
-      const pack = await packModule.create({
-        assetContract: bundleModule.address,
-        assets: [
-          {
-            tokenId: "0",
-            amount: 10,
-          },
-          {
-            tokenId: "1",
-            amount: 20,
-          },
-        ],
-        metadata: {
-          name: "Test Pack",
-        },
-      });
+      const pack = await createPacks();
 
       const rewards = await packModule.getNFTs(pack.id);
 
