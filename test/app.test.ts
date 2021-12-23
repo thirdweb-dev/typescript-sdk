@@ -116,12 +116,18 @@ describe("App Module", async () => {
       name: "Testing module from SDK",
       sellerFeeBasisPoints: 0,
       image,
+      feeRecipient: samWallet.address,
     });
 
     const metadata = await module.getMetadata();
     assert.isTrue(
       metadata.metadata.image.includes("ipfs/"),
       `Image property = ${metadata.metadata.image}, should include ipfs/`,
+    );
+    assert.equal(
+      await module.getRoyaltyRecipientAddress(),
+      samWallet.address,
+      "Royalty recipient address was not updated",
     );
   });
 
@@ -158,8 +164,14 @@ describe("App Module", async () => {
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       sellerFeeBasisPoints: 100,
+      feeRecipient: samWallet.address,
     });
-    await sdk.getPackModule(result.address);
+    const contract = await sdk.getPackModule(result.address);
+    assert.equal(
+      await contract.getRoyaltyRecipientAddress(),
+      samWallet.address,
+      "Royalty recipient address was not updated",
+    );
   });
 
   it("should deploy a drop module successfully", async () => {
@@ -171,10 +183,16 @@ describe("App Module", async () => {
       maxSupply: 10,
       baseTokenUri: "/test",
       primarySaleRecipientAddress: AddressZero,
+      feeRecipient: samWallet.address,
     });
 
     const module = sdk.getDropModule(result.address);
     assert.isNotEmpty(module.address, "The max supply should be 10");
+    assert.equal(
+      await module.getRoyaltyRecipientAddress(),
+      samWallet.address,
+      "Royalty recipient address was not updated",
+    );
   });
 
   it("should deploy a datastore module successfully", async () => {
@@ -204,6 +222,11 @@ describe("App Module", async () => {
       result.metadata.image,
       "https://ipfs.thirdweb.com/ipfs/bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
     );
+    assert.equal(
+      await contract.getRoyaltyRecipientAddress(),
+      samWallet.address,
+      "Royalty recipient address was not updated",
+    );
   });
 
   it("should upload to ipfs image is file", async () => {
@@ -225,13 +248,9 @@ describe("App Module", async () => {
   });
   it("should properly set the royalty recipient when deploying a bundle module", async () => {
     const metadata = {
-      name: "safe",
-      description: "",
-      image:
-        "ipfs://bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
+      name: "test",
       sellerFeeBasisPoints: 0,
       feeRecipient: samWallet.address,
-      symbol: "",
     };
     const contract = await appModule.deployBundleModule(metadata);
     assert.equal(
