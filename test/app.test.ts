@@ -228,7 +228,22 @@ describe("App Module", async () => {
       "Royalty recipient address was not updated",
     );
   });
-
+  it("should deploy a bundle drop module correctly", async () => {
+    const contract = await appModule.deployBundleDropModule({
+      name: `Testing bundle drop from SDK - ${new Date().toLocaleString()}`,
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      sellerFeeBasisPoints: 100,
+      feeRecipient: samWallet.address,
+      primarySaleRecipientAddress: AddressZero,
+    });
+    const module = sdk.getBundleDropModule(contract.address);
+    assert.equal(
+      await module.getRoyaltyRecipientAddress(),
+      samWallet.address,
+      "Royalty recipient address was not updated",
+    );
+  });
   it("should upload to ipfs image is file", async () => {
     const metadata = {
       name: "safe",
