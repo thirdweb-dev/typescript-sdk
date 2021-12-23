@@ -785,14 +785,8 @@ export class AppModule
       ],
       LazyMintERC1155__factory,
     );
-    if (
-      metadata.primarySaleRecipientAddress &&
-      metadata.primarySaleRecipientAddress !== this.address
-    ) {
-      this.setModuleRoyaltyTreasury(
-        address,
-        metadata.primarySaleRecipientAddress,
-      );
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getBundleDropModule(address);
   }
