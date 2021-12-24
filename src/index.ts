@@ -66,12 +66,12 @@ export * from "./core";
 export type { Module, ModuleWithRoles } from "./core/module";
 export type { IAppModule } from "./core/registry";
 export * from "./core/types";
-export * from "./modules";
-export * from "./types";
 export * from "./enums";
 export * from "./factories";
 export * from "./interfaces";
-export * from "./enums";
+export * from "./modules";
+export * from "./storage";
+export * from "./types";
 export * from "./utils";
 
 if (!globalThis.fetch) {

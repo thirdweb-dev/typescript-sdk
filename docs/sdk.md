@@ -68,6 +68,7 @@ Output
 |  Class | Description |
 |  --- | --- |
 |  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
+|  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [BundleDropModule](./sdk.bundledropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleDropModule()](./sdk.thirdwebsdk.getbundledropmodule.md) |
 |  [BundleModule](./sdk.bundlemodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md) |
 |  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
@@ -79,12 +80,17 @@ Output
 |  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
+|  [IpfsStorage](./sdk.ipfsstorage.md) |  |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
+|  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
+|  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
 |  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality. |
 |  [NFTModule](./sdk.nftmodule.md) | Access this module by calling [ThirdwebSDK.getNFTModule()](./sdk.thirdwebsdk.getnftmodule.md) |
+|  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.getpackmodule.md) |
+|  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
 |  [TokenModule](./sdk.tokenmodule.md) | Access this module by calling [ThirdwebSDK.getTokenModule()](./sdk.thirdwebsdk.gettokenmodule.md) |
@@ -95,6 +101,7 @@ Output
 
 |  Enumeration | Description |
 |  --- | --- |
+|  [ClaimEligibility](./sdk.claimeligibility.md) |  |
 |  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
 |  [ProposalState](./sdk.proposalstate.md) |  |
 |  [VoteType](./sdk.votetype.md) |  |
@@ -107,6 +114,7 @@ Output
 |  [convertNameToModuleType(moduleName)](./sdk.convertnametomoduletype.md) |  |
 |  [estimateBlockAtTime(timeInEpochSeconds, provider)](./sdk.estimateblockattime.md) | Given a time in second, return the block number that the time is in. |
 |  [generateRoot(items)](./sdk.generateroot.md) | Convenience function to generate a merkle root from a list of strings. |
+|  [getNativeTokenByChainId(chainId)](./sdk.getnativetokenbychainid.md) |  |
 |  [recursiveResolveGatewayUrl(json, ipfsGatewayUrl)](./sdk.recursiveresolvegatewayurl.md) |  |
 |  [uploadToIPFS(data, contractAddress, signerAddress)](./sdk.uploadtoipfs.md) | A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri. |
 
@@ -132,6 +140,7 @@ Output
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) | <b><i>(BETA)</i></b> |
 |  [IRoles](./sdk.iroles.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
+|  [IStorage](./sdk.istorage.md) |  |
 |  [IThirdwebSdk](./sdk.ithirdwebsdk.md) |  |
 |  [ITokenMintArgs](./sdk.itokenmintargs.md) |  |
 |  [ITokenMintFromArgs](./sdk.itokenmintfromargs.md) |  |
@@ -139,6 +148,7 @@ Output
 |  [ListingMetadata](./sdk.listingmetadata.md) | Metadata for items listed on a Market module. |
 |  [ModuleMetadata](./sdk.modulemetadata.md) | The module metadata, includes the <code>address</code> and the [ModuleType](./sdk.moduletype.md)<!-- -->. |
 |  [ModuleMetadataNoType](./sdk.modulemetadatanotype.md) | The module metadata, but missing the ModuleType. |
+|  [NativeToken](./sdk.nativetoken.md) |  |
 |  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |

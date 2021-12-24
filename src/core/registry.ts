@@ -26,8 +26,8 @@ export class RegistryModule extends Module<Registry> {
   /**
    * @internal
    */
-  public async getProtocolContracts(): Promise<IAppModule[]> {
-    const deployer = await this.getSignerAddress();
+  public async getProtocolContracts(address?: string): Promise<IAppModule[]> {
+    const deployer = address || (await this.getSignerAddress());
     const maxVersion = await this.readOnlyContract.getProtocolControlCount(
       deployer,
     );
@@ -38,10 +38,10 @@ export class RegistryModule extends Module<Registry> {
       ),
     );
     const metadatas = await Promise.all(
-      addresses.map((address) =>
+      addresses.map((addr) =>
         getContractMetadata(
           this.providerOrSigner,
-          address,
+          addr,
           this.ipfsGatewayUrl,
         ).catch(() => undefined),
       ),

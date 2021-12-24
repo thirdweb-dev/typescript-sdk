@@ -52,6 +52,30 @@ describe("Splits Module", async () => {
     );
   });
 
+  it("should return all the recipients along with their balances", async () => {
+    const balances = await splitsModule.balanceOfAllRecipients();
+    assert.equal(
+      Object.keys(balances).length,
+      2,
+      "There should be 3 recipients",
+    );
+  });
+  it("should return all the recipients along with their token balances", async () => {
+    const balances = await splitsModule.balanceOfTokenAllRecipients(
+      await appModule
+        .deployTokenModule({
+          name: "Test Token",
+          symbol: "TST",
+        })
+        .then((tokenModule) => tokenModule.address),
+    );
+    assert.equal(
+      Object.keys(balances).length,
+      2,
+      "There should be 3 recipients",
+    );
+  });
+
   /**
    * TODO: Write the following tests
    *

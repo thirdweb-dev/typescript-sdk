@@ -225,7 +225,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
   /**
    * @internal
    */
-  private async getProvider() {
+  protected async getProvider() {
     return this.readOnlyContract.provider;
   }
 
@@ -325,7 +325,11 @@ export class Module<TContract extends BaseContract = BaseContract> {
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<TransactionReceipt> {
-    const tx = await contract.functions[fn](...args, callOverrides);
+    const func = contract.functions[fn];
+    if (!func) {
+      throw new Error("invalid function");
+    }
+    const tx = await func(...args, callOverrides);
     if (tx.wait) {
       return await tx.wait();
     }

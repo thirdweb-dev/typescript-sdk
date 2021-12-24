@@ -7,10 +7,12 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
+- Parameters interface may change, proofs parameter is ignored.
+
 <b>Signature:</b>
 
 ```typescript
-canClaim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<boolean>;
+canClaim(quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
 ```
 
 ## Parameters
@@ -18,7 +20,7 @@ canClaim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<boolean>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  quantity | BigNumberish |  |
-|  proofs | BytesLike\[\] |  |
+|  addressToCheck | string |  |
 
 <b>Returns:</b>
 

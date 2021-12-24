@@ -22,10 +22,49 @@ export class InvalidAddressError extends Error {
   }
 }
 
+export class MissingRoleError extends Error {
+  /** @internal */
+  /** @internal */
+  constructor(address: string, role: string) {
+    super(`MISSING ROLE: ${address} not have the ${role} for  role`);
+  }
+}
+
+export class AssetNotFoundError extends Error {
+  /** @internal */
+  /** @internal */
+  constructor(message = "The asset you're trying to use could not be found.") {
+    super(`message: ${message}`);
+  }
+}
+
 export class UploadError extends Error {
   /** @internal */
   constructor(message: string) {
     super(`UPLOAD_FAILED: ${message}`);
+  }
+}
+
+export class NotEnoughTokensError extends Error {
+  /** @internal */
+  constructor(contractAddress: string, quantity: number, available: number) {
+    super(
+      `BALANCE ERROR: you do not have enough balance on contract ${contractAddress} to use ${quantity} tokens. You have ${available} tokens available.`,
+    );
+  }
+}
+
+export class MissingOwnerRoleError extends Error {
+  /** @internal */
+  constructor() {
+    super(`LIST ERROR: you should be the owner of the token to list it.`);
+  }
+}
+
+export class QuantityAboveLimitError extends Error {
+  /** @internal */
+  constructor(quantity: string) {
+    super(`BUY ERROR: You cannot buy more than ${quantity} tokens`);
   }
 }
 

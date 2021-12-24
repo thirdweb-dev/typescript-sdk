@@ -87,7 +87,7 @@ module.exports = {
     "valid-typeof": "error",
     semi: ["warn", "always"],
     // Inclusive
-    "inclusive-language/use-inclusive-words": "error",
+    "inclusive-language/use-inclusive-words": "off",
   },
   parser: "@typescript-eslint/parser",
   plugins: [

@@ -7,7 +7,7 @@ import { ClaimConditionStruct } from "@3rdweb/contracts/dist/LazyMintERC1155";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
@@ -21,6 +21,7 @@ import { invariant } from "../common/invariant";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
 import { ClaimCondition } from "../types/claim-conditions/PublicMintCondition";
 import { Snapshot } from "../types/snapshots";
@@ -52,7 +53,6 @@ export interface BundleDropMetadata {
  */
 export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   public static moduleType: ModuleType = ModuleType.BUNDLE_DROP;
-  storage = this.sdk.getStorage();
 
   public static roles = [
     RolesMap.admin,
@@ -232,11 +232,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     metadatas: MetadataURIOrObject[],
   ): Promise<string[]> {
     const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
-    const baseUri = await this.storage.uploadMetadataBatch(
-      metadatas,
-      this.address,
-      startFileNumber.toNumber(),
-    );
+    const baseUri = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
     const receipt = await this.sendTransaction("lazyMint", [
       metadatas.length,
       baseUri,
@@ -321,7 +319,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       metadata["merkle"] = merkleInfo;
     }
 
-    const metadataUri = await this.storage.upload(JSON.stringify(metadata));
+    const metadataUri = await this.sdk
+      .getStorage()
+      .upload(JSON.stringify(metadata));
     const encoded = [
       this.contract.interface.encodeFunctionData("setContractURI", [
         metadataUri,
@@ -377,9 +377,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     const addressToClaim = await this.getSignerAddress();
     const { metadata } = await this.getMetadata();
     if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
-      const snapshot = await this.storage.get(
-        metadata?.merkle[mintCondition.merkleRoot.toString()],
-      );
+      const snapshot = await this.sdk
+        .getStorage()
+        .get(metadata?.merkle[mintCondition.merkleRoot.toString()]);
       const jsonConvert = new JsonConvert();
       const snapshotData = jsonConvert.deserializeObject(
         JSON.parse(snapshot),
@@ -449,7 +449,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   public async setModuleMetadata(
     metadata: MetadataURIOrObject,
   ): Promise<TransactionReceipt> {
-    const uri = await this.storage.uploadMetadata(metadata);
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     return await this.sendTransaction("setContractURI", [uri]);
   }
 
@@ -464,7 +464,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     }
 
     metadata.seller_fee_basis_points = amount;
-    const uri = await this.storage.uploadMetadata(
+    const uri = await this.sdk.getStorage().uploadMetadata(
       {
         ...metadata,
       },
@@ -541,56 +541,123 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     return Array.from(new Set(a.map((b) => b.args.claimer)));
   }
 
+  /**
+   * For any claim conditions that a particular wallet is violating,
+   * this function returns human readable information about the
+   * breaks in the condition that can be used to inform the user.
+   *
+   * @param tokenId - The token id that would be claimed.
+   * @param quantity - The desired quantity that would be claimed.
+   * @param addressToCheck - The address that would be claiming the token.
+   */
+  public async getClaimIneligibilityReasons(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    addressToCheck?: string,
+  ): Promise<ClaimEligibility[]> {
+    const reasons: ClaimEligibility[] = [];
+    let activeConditionIndex: BigNumber;
+    let claimCondition: ClaimCondition;
+
+    if (addressToCheck === undefined) {
+      throw new Error("addressToCheck is required");
+    }
+
+    try {
+      [activeConditionIndex, claimCondition] = await Promise.all([
+        this.readOnlyContract.getIndexOfActiveCondition(tokenId),
+        this.getActiveClaimCondition(tokenId),
+      ]);
+    } catch (err: any) {
+      if ((err.message as string).includes("no public mint condition.")) {
+        reasons.push(ClaimEligibility.NoActiveClaimPhase);
+        return reasons;
+      }
+      console.error("Failed to get active claim condition", err);
+      throw new Error("Failed to get active claim condition");
+    }
+
+    if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
+      reasons.push(ClaimEligibility.NotEnoughSupply);
+    }
+
+    // check for merkle root inclusion
+    const merkleRootArray = ethers.utils.stripZeros(claimCondition.merkleRoot);
+    if (merkleRootArray.length > 0) {
+      const merkleLower = claimCondition.merkleRoot.toString();
+      const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
+      if (proofs.length === 0) {
+        const hashedAddress = ethers.utils
+          .keccak256(addressToCheck)
+          .toLowerCase();
+        if (hashedAddress !== merkleLower) {
+          reasons.push(ClaimEligibility.AddressNotAllowed);
+        }
+      }
+      // TODO: compute proofs to root, need browser compatibility
+    }
+
+    // check for claim timestamp between claims
+    const timestampForNextClaim =
+      await this.readOnlyContract.getTimestampForNextValidClaim(
+        tokenId,
+        activeConditionIndex,
+        addressToCheck,
+      );
+    const now = BigNumber.from(Date.now()).div(1000);
+    if (now.lt(timestampForNextClaim)) {
+      reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+    }
+
+    // check for wallet balance
+    if (claimCondition.pricePerToken.gt(0)) {
+      const totalPrice = claimCondition.pricePerToken.mul(quantity);
+      if (isNativeToken(claimCondition.currency)) {
+        const provider = await this.getProvider();
+        const balance = await provider.getBalance(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.NotEnoughTokens);
+        }
+      } else {
+        const provider = await this.getProvider();
+        const balance = await ERC20__factory.connect(
+          claimCondition.currency,
+          provider,
+        ).balanceOf(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.NotEnoughTokens);
+        }
+      }
+    }
+
+    return reasons;
+  }
+
   /*
    * Checks to see if the current signer can claim the specified number of tokens.
    *
    * @param tokenId - The id of the token to check.
    * @param quantity - The quantity of tokens to check.
+   * @param addressToCheck - The wallet address to check.
    * @returns - True if the current signer can claim the specified number of tokens, false otherwise.
    */
   public async canClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
+    addressToCheck?: string,
   ): Promise<boolean> {
-    try {
-      const mintCondition = await this.getActiveClaimCondition(tokenId);
-      const proofs = await this.getClaimerProofs(
-        mintCondition.merkleRoot.toString(),
-      );
-
-      const overrides = (await this.getCallOverrides()) || {};
-      if (mintCondition.pricePerToken.gt(0)) {
-        if (mintCondition.currency === AddressZero) {
-          overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
-            quantity,
-          );
-        } else {
-          const erc20 = ERC20__factory.connect(
-            mintCondition.currency,
-            this.providerOrSigner,
-          );
-          const owner = await this.getSignerAddress();
-          const spender = this.address;
-          const allowance = await erc20.allowance(owner, spender);
-          const totalPrice = BigNumber.from(mintCondition.pricePerToken).mul(
-            BigNumber.from(quantity),
-          );
-
-          if (allowance.lt(totalPrice)) {
-            // TODO throw allowance error, maybe check balance?
-          }
-        }
-      }
-      await this.readOnlyContract.callStatic.claim(
-        tokenId,
-        quantity,
-        proofs,
-        overrides,
-      );
-      return true;
-    } catch (err) {
-      return false;
+    if (!addressToCheck) {
+      addressToCheck = await this.getSignerAddress();
     }
+    return (
+      (
+        await this.getClaimIneligibilityReasons(
+          tokenId,
+          quantity,
+          addressToCheck,
+        )
+      ).length === 0
+    );
   }
 
   /**
@@ -599,10 +666,17 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
    * @param merkleRoot - The merkle root of the condition to check.
    * @returns - The proof for the current signer for the specified condition.
    */
-  private async getClaimerProofs(merkleRoot: string): Promise<string[]> {
-    const addressToClaim = await this.getSignerAddress();
+  private async getClaimerProofs(
+    merkleRoot: string,
+    addressToClaim?: string,
+  ): Promise<string[]> {
+    if (!addressToClaim) {
+      addressToClaim = await this.getSignerAddress();
+    }
     const { metadata } = await this.getMetadata();
-    const snapshot = await this.storage.get(metadata?.merkle[merkleRoot]);
+    const snapshot = await this.sdk
+      .getStorage()
+      .get(metadata?.merkle[merkleRoot]);
     const jsonConvert = new JsonConvert();
     const snapshotData = jsonConvert.deserializeObject(
       JSON.parse(snapshot),

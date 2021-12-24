@@ -17,7 +17,9 @@ import { CallOverrides } from 'ethers';
 import { Coin } from '@3rdweb/contracts';
 import { ContractReceipt } from 'ethers';
 import { DataStore } from '@3rdweb/contracts';
+import { ethers } from 'ethers';
 import { LazyMintERC1155 } from '@3rdweb/contracts';
+import { LazyMintERC721 } from '@3rdweb/contracts';
 import { LazyNFT } from '@3rdweb/contracts';
 import { Log } from '@ethersproject/providers';
 import { Market } from '@3rdweb/contracts';
@@ -112,6 +114,12 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     withdrawFunds(to: string, currency: string): Promise<TransactionReceipt>;
 }
 
+// @public (undocumented)
+export class AssetNotFoundError extends Error {
+    // @internal
+    constructor(message?: string);
+}
+
 // @beta (undocumented)
 export interface BundleDropCreateClaimCondition {
     // (undocumented)
@@ -147,7 +155,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     // (undocumented)
     burn(tokenId: BigNumberish_2, amount: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
-    canClaim(tokenId: BigNumberish_2, quantity: BigNumberish_2): Promise<boolean>;
+    canClaim(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToCheck?: string): Promise<boolean>;
     // (undocumented)
     claim(tokenId: BigNumberish_2, quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
     // @internal (undocumented)
@@ -168,6 +176,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     getClaimConditionFactory(): ClaimConditionFactory;
     // (undocumented)
     getClaimConditionsFactory(): ClaimConditionFactory;
+    getClaimIneligibilityReasons(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
@@ -200,10 +209,6 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
     setSaleRecipient(tokenId: BigNumberish_2, recipient: string): Promise<TransactionReceipt>;
-    // Warning: (ae-forgotten-export) The symbol "IStorage" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    storage: IStorage;
     totalSupply(tokenId: BigNumberish_2): Promise<BigNumber_2>;
     // (undocumented)
     transfer(to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
@@ -315,6 +320,8 @@ export class ClaimConditionFactory {
     allSnapshots(): SnapshotInfo[];
     // @internal
     buildConditions(): PublicClaimCondition[];
+    // @internal
+    buildConditionsForDropV1(): PublicClaimCondition[];
     // Warning: (ae-incompatible-release-tags) The symbol "fromPublicClaimConditions" is marked as @public, but its signature references "PublicClaimCondition" which is marked as @beta
     fromPublicClaimConditions(conditions: PublicClaimCondition[]): this;
     newClaimPhase({ startTime, maxQuantity, maxQuantityPerTransaction, }: {
@@ -339,6 +346,20 @@ export class ClaimConditionPhase {
     setPrice(price: BigNumberish_2, tokenAddress?: string): ClaimConditionPhase;
     setSnapshot(addresses: string[]): Promise<ClaimConditionPhase>;
     setWaitTimeBetweenClaims(waitInSeconds: BigNumberish_2): ClaimConditionPhase;
+}
+
+// @public (undocumented)
+export enum ClaimEligibility {
+    // (undocumented)
+    AddressNotAllowed = "This address is not on the allowlist.",
+    // (undocumented)
+    NoActiveClaimPhase = "There is no active claim phase at the moment. Please check back in later.",
+    // (undocumented)
+    NotEnoughSupply = "There is not enough supply to claim.",
+    // (undocumented)
+    NotEnoughTokens = "There are not enough tokens in the wallet to pay for the claim.",
+    // (undocumented)
+    WaitBeforeNextClaimTransaction = "Not enough time since last claim transaction. Please wait."
 }
 
 // @public
@@ -458,22 +479,23 @@ export const DEFAULT_BLOCK_TIMES_FALLBACK: Record<SUPPORTED_CHAIN_ID | ChainId.H
 }>;
 
 // @beta
-export class DropModule extends ModuleWithRoles<LazyNFT> {
+export class DropModule extends ModuleWithRoles<LazyMintERC721> {
+    // @internal
+    constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     // (undocumented)
     balance(): Promise<BigNumber_2>;
     // (undocumented)
     balanceOf(address: string): Promise<BigNumber_2>;
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
-    // (undocumented)
-    canClaim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<boolean>;
+    canClaim(quantity: BigNumberish_2, addressToCheck?: string): Promise<boolean>;
     // @internal (undocumented)
     canCreateBatch(): Promise<boolean>;
     // (undocumented)
     claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>;
     // @internal (undocumented)
-    protected connectContract(): LazyNFT;
-    createBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
+    protected connectContract(): LazyMintERC721;
+    createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
     // (undocumented)
@@ -493,6 +515,7 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     // (undocumented)
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getClaimConditionsFactory(): ClaimConditionFactory;
+    getClaimIneligibilityReasons(quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // @deprecated (undocumented)
     getMintConditionsFactory(): ClaimConditionFactory;
     // @internal @override (undocumented)
@@ -505,41 +528,34 @@ export class DropModule extends ModuleWithRoles<LazyNFT> {
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
+    isV1(): Promise<boolean>;
     // @deprecated (undocumented)
     lazyMint(metadata: MetadataURIOrObject): Promise<void>;
     // @deprecated (undocumented)
-    lazyMintAmount(amount: BigNumberish_2): Promise<void>;
-    // @deprecated (undocumented)
     lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
-    // (undocumented)
+    // @internal (undocumented)
     maxTotalSupply(): Promise<BigNumber_2>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
-    pinToIpfs(files: Buffer[]): Promise<string>;
-    // (undocumented)
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    setBaseTokenUri(uri: string): Promise<TransactionReceipt>;
     setClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
-    // (undocumented)
-    setMaxTotalSupply(amount: BigNumberish_2): Promise<TransactionReceipt>;
     // @deprecated (undocumented)
     setMintConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    // @internal (undocumented)
+    setProviderOrSigner(providerOrSigner: ProviderOrSigner): void;
     // @deprecated (undocumented)
     setPublicMintConditions(conditions: CreatePublicMintCondition[]): Promise<void>;
     // (undocumented)
     setRestrictedTransfer(restricted: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
-    // (undocumented)
-    storage: IStorage;
     // (undocumented)
     totalClaimedSupply(): Promise<BigNumber_2>;
     // (undocumented)
@@ -605,6 +621,9 @@ export function getGasPriceForChain(chainId: number, speed: string, maxGasPrice:
 //
 // @internal
 export function getMetadataWithoutContract(provider: ProviderOrSigner, contractAddress: string, tokenId: string, ipfsGatewayUrl: string): Promise<NFTMetadata>;
+
+// @public (undocumented)
+export function getNativeTokenByChainId(chainId: ChainId): NativeToken;
 
 // Warning: (ae-internal-missing-underscore) The name "getRoleHash" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -719,6 +738,30 @@ export interface IPackCreateArgs {
     secondsUntilOpenStart?: number;
 }
 
+// @public (undocumented)
+export class IpfsStorage implements IStorage {
+    constructor(gatewayUrl: string);
+    // @internal
+    batchUploadProperties(metadata: object): Promise<any>;
+    buildFilePropertiesMap(object: any, files: (File | Buffer)[]): Promise<(File | Buffer)[]>;
+    // (undocumented)
+    get(hash: string): Promise<string>;
+    // (undocumented)
+    getUploadToken(contractAddress: string): Promise<string>;
+    // @internal
+    resolveFullUrl(ipfsHash: string): string;
+    // Warning: (ae-forgotten-export) The symbol "FileOrBuffer" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
+    // (undocumented)
+    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
+    // (undocumented)
+    uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
+    // @internal (undocumented)
+    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, startFileNumber?: number): Promise<string>;
+}
+
 // @public
 export interface IRoles {
     admin: "admin";
@@ -751,6 +794,17 @@ export interface ISDKOptions {
 //
 // @internal (undocumented)
 export function isNativeToken(tokenAddress: string): boolean;
+
+// @public (undocumented)
+export interface IStorage {
+    get(hash: string): Promise<string>;
+    getUploadToken(contractAddress: string): Promise<string>;
+    resolveFullUrl(hash: string): string;
+    upload(data: string | File | FileOrBuffer | Buffer, contractAddress?: string, signerAddress?: string): Promise<string>;
+    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
+    uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
+    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
+}
 
 // @public (undocumented)
 export interface IThirdwebSdk {
@@ -815,6 +869,8 @@ export interface ListingMetadata {
     tokenId: string;
     // (undocumented)
     tokenMetadata?: NFTMetadata;
+    // (undocumented)
+    tokensPerBuyer: BigNumber_2;
 }
 
 // @public
@@ -848,6 +904,8 @@ export class MarketModule extends ModuleWithRoles<Market> {
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
+    setRestrictedListerRoleOnly(restricted: boolean): Promise<void>;
+    // (undocumented)
     unlist(listingId: string, quantity: BigNumberish_2): Promise<void>;
     // (undocumented)
     unlistAll(listingId: string): Promise<void>;
@@ -855,6 +913,18 @@ export class MarketModule extends ModuleWithRoles<Market> {
 
 // @public
 export type MetadataURIOrObject = string | Record<string, any>;
+
+// @public (undocumented)
+export class MissingOwnerRoleError extends Error {
+    // @internal
+    constructor();
+}
+
+// @public (undocumented)
+export class MissingRoleError extends Error {
+    // @internal
+    constructor(address: string, role: string);
+}
 
 // @public
 export class Module<TContract extends BaseContract = BaseContract> {
@@ -877,6 +947,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
     getMetadata(resolveUrls?: boolean): Promise<ModuleMetadata>;
     // @internal @virtual (undocumented)
     protected getModuleType(): ModuleType;
+    // @internal (undocumented)
+    protected getProvider(): Promise<ethers.providers.Provider>;
     // @internal (undocumented)
     protected getSigner(): Signer | null;
     // @internal (undocumented)
@@ -973,10 +1045,20 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
 // @internal (undocumented)
 export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
+// @public (undocumented)
+export interface NativeToken extends Currency {
+    // (undocumented)
+    wrapped: {
+        address: string;
+        name: string;
+        symbol: string;
+    };
+}
+
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type NFTContractTypes = NFT | NFTCollection | LazyNFT | LazyMintERC1155;
+export type NFTContractTypes = NFT | NFTCollection | LazyNFT | LazyMintERC721 | LazyMintERC1155;
 
 // @public @deprecated
 export const NFTLabsSDK: typeof ThirdwebSDK;
@@ -1063,6 +1145,12 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
+}
+
+// @public (undocumented)
+export class NotEnoughTokensError extends Error {
+    // @internal
+    constructor(contractAddress: string, quantity: number, available: number);
 }
 
 // @public
@@ -1234,6 +1322,12 @@ export interface PublicMintCondition extends PublicClaimCondition {
 }
 
 // @public (undocumented)
+export class QuantityAboveLimitError extends Error {
+    // @internal
+    constructor(quantity: string);
+}
+
+// @public (undocumented)
 export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string): any;
 
 // Warning: (ae-internal-missing-underscore) The name "replaceIpfsWithGateway" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1286,7 +1380,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     createSnapshot(leafs: string[]): Promise<SnapshotInfo>;
     // (undocumented)
     getAppModule(address: string): AppModule;
-    getApps(): Promise<IAppModule[]>;
+    getApps(address?: string): Promise<IAppModule[]>;
     // @beta (undocumented)
     getBundleDropModule(address: string): BundleDropModule;
     // Warning: (ae-incompatible-release-tags) The symbol "getBundleModule" is marked as @public, but its signature references "BundleModule" which is marked as @beta
@@ -1408,8 +1502,6 @@ export class UploadError extends Error {
 // @internal (undocumented)
 export function uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
 
-// Warning: (ae-forgotten-export) The symbol "FileOrBuffer" needs to be exported by the entry point index.d.ts
-//
 // @public
 export function uploadToIPFS(data: string | File | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
 

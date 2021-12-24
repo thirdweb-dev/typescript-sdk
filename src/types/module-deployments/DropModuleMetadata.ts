@@ -56,7 +56,9 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
   symbol?: string;
 
   /**
-   * The max supply (required)
+   * The max supply
+   *
+   * @deprecated - No longer applicable. This value is ignored.
    */
   @JsonProperty("max_supply", Number, PropertyConvertingMode.IGNORE_NULLABLE)
   maxSupply = 1;
@@ -86,6 +88,8 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
    * so they can be lazy minted later
    *
    * e.g. if a Drop Collection has a token URI of /ipfs/BOREDAPES/TOKEN1, then the IPFS base URI is /BOREDAPES/
+   *
+   * @deprecated - No longer applicable. This value is ignored.
    */
   @JsonProperty(
     "base_token_uri",

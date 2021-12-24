@@ -3,7 +3,7 @@ import {
   DataStore__factory,
   ERC20__factory,
   LazyMintERC1155__factory,
-  LazyNFT__factory,
+  LazyMintERC721__factory,
   Market__factory,
   NFTCollection__factory,
   NFT__factory,
@@ -19,15 +19,16 @@ import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, ethers, Signer } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { JsonConvert } from "json2typescript";
-import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";
 import {
   ChainlinkVrf,
   CurrencyValue,
   getCurrencyValue,
+  isNativeToken,
   Role,
   RolesMap,
 } from "../common";
-import { getNativeTokenByChainId } from "../common/address";
+import { getNativeTokenByChainId } from "../common/currency";
+import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getContractMetadata } from "../common/contract";
 import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
@@ -45,9 +46,10 @@ import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetada
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
-import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
 import TokenModuleMetadata from "../types/module-deployments/TokenModuleMetadata";
+import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
+import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";
 import { BundleDropModule } from "./bundleDrop";
 import { CollectionModule } from "./collection";
 import { DatastoreModule } from "./datastore";
@@ -60,7 +62,6 @@ import { MarketplaceModule } from "./marketplace";
 import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceModuleMetadata";
 import { CurrencyModule, TokenModule } from "./token";
 import { VoteModule } from "./vote";
-import { SUPPORTED_CHAIN_ID } from "../common/chain";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
@@ -345,6 +346,9 @@ export class AppModule
     to: string,
     currency: string,
   ): Promise<TransactionReceipt> {
+    if (isNativeToken(currency)) {
+      currency = ethers.constants.AddressZero;
+    }
     return await this.sendTransaction("withdrawFunds", [to, currency]);
   }
 
@@ -442,8 +446,11 @@ export class AppModule
       ],
       NFTCollection__factory,
     );
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
 
-    return this.sdk.getCollectionModule(address);
+    return this.sdk.getBundleModule(address);
   }
 
   /**
@@ -517,7 +524,9 @@ export class AppModule
       ],
       NFT__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getNFTModule(address);
   }
 
@@ -671,7 +680,9 @@ export class AppModule
       ],
       Pack__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getPackModule(address);
   }
 
@@ -684,7 +695,6 @@ export class AppModule
   public async deployDropModule(
     metadata: DropModuleMetadata,
   ): Promise<DropModule> {
-    invariant(metadata.maxSupply !== undefined, "Max supply must be specified");
     invariant(
       metadata.primarySaleRecipientAddress !== "" &&
         isAddress(metadata.primarySaleRecipientAddress),
@@ -704,25 +714,30 @@ export class AppModule
         await this.getSignerAddress(),
       );
 
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
+
     const address = await this._deployModule(
       ModuleType.DROP,
       [
-        this.address,
         metadata.name,
         metadata.symbol ? metadata.symbol : "",
-        await this.sdk.getForwarderAddress(),
         metadataUri,
-        metadata.baseTokenUri ? metadata.baseTokenUri : "",
-        metadata.maxSupply,
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        nativeTokenWrapperAddress,
+        metadata.primarySaleRecipientAddress,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
         metadata.primarySaleFeeBasisPoints
           ? metadata.primarySaleFeeBasisPoints
           : 0,
-        metadata.primarySaleRecipientAddress,
       ],
-      LazyNFT__factory,
+      LazyMintERC721__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getDropModule(address);
   }
 
@@ -773,7 +788,9 @@ export class AppModule
       ],
       LazyMintERC1155__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getBundleDropModule(address);
   }
 
@@ -903,12 +920,23 @@ export class AppModule
    * @returns - The balance of the project in the native token of the chain
    */
   public async balanceOfToken(tokenAddress: string): Promise<CurrencyValue> {
-    const erc20 = ERC20__factory.connect(tokenAddress, this.providerOrSigner);
-    return await getCurrencyValue(
-      this.providerOrSigner,
-      tokenAddress,
-      await erc20.balanceOf(this.address),
-    );
+    let balance: BigNumber;
+    if (isNativeToken(tokenAddress)) {
+      balance = await this.balance();
+    } else {
+      const erc20 = ERC20__factory.connect(
+        tokenAddress,
+        this.readOnlyContract.provider,
+      );
+      try {
+        balance = await erc20.balanceOf(this.address);
+      } catch (e) {
+        console.error(tokenAddress, e);
+        balance = BigNumber.from(0);
+      }
+    }
+
+    return await getCurrencyValue(this.providerOrSigner, tokenAddress, balance);
   }
 
   public async deployMarketplaceModule(
