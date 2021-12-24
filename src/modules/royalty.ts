@@ -134,7 +134,12 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
 
     return recipients;
   }
-
+  /**
+   *
+   * Returns all the recipients and their balances in the native currency.
+   * @returns A map of recipient addresses to their balances in the native currency.
+   *
+   */
   public async balanceOfAllRecipients() {
     const recipients = await this.getAllRecipients();
     const balances: { [key: string]: BigNumber } = {};
@@ -143,7 +148,13 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     }
     return balances;
   }
-
+  /**
+   *
+   * Returns all the recipients and their balances in a non-native currency.
+   * @param tokenAddress - The address of the currency to check the balances in.
+   * @returns A map of recipient addresses to their balances in the specified currency.
+   *
+   */
   public async balanceOfTokenAllRecipients(tokenAddress: string) {
     const recipients = await this.getAllRecipients();
     const balances: { [key: string]: CurrencyValue } = {};
