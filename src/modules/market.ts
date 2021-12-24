@@ -11,8 +11,8 @@ import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
 import {
   ModuleType,
-  BuyLimit,
-  NotOwner,
+  QuantityAboveLimitError,
+  MissingOwnerRoleError,
   Role,
   RolesMap,
   MissingRoleError,
@@ -297,7 +297,7 @@ export class MarketModule extends ModuleWithRoles<Market> {
       if (
         (await this.sdk.getNFTModule(assetContract).ownerOf(tokenId)) !== signer
       ) {
-        throw new NotOwner();
+        throw new MissingOwnerRoleError();
       } else if (
         (await this.readOnlyContract.restrictedListerRoleOnly()) &&
         !(signer in (await this.getRoleMembers("lister"))) &&
@@ -356,7 +356,7 @@ export class MarketModule extends ModuleWithRoles<Market> {
         await this.get(listingId)
       ).tokensPerBuyer.toNumber();
       if (quantity > tokensPerBuyer) {
-        throw new BuyLimit(tokensPerBuyer.toString());
+        throw new QuantityAboveLimitError(tokensPerBuyer.toString());
       }
       throw e;
     }

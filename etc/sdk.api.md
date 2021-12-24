@@ -289,12 +289,6 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> {
     transferFrom(from: string, to: string, args: INFTBundleBatchArgs, data?: BytesLike): Promise<TransactionReceipt>;
 }
 
-// @public (undocumented)
-export class BuyLimit extends Error {
-    // @internal
-    constructor(quantity: string);
-}
-
 // Warning: (ae-internal-missing-underscore) The name "ChainlinkInfo" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -887,6 +881,12 @@ export class MarketModule extends ModuleWithRoles<Market> {
 export type MetadataURIOrObject = string | Record<string, any>;
 
 // @public (undocumented)
+export class MissingOwnerRoleError extends Error {
+    // @internal
+    constructor();
+}
+
+// @public (undocumented)
 export class MissingRoleError extends Error {
     // @internal
     constructor(address: string, role: string);
@@ -1109,12 +1109,6 @@ export class NotFoundError extends Error {
     constructor();
 }
 
-// @public (undocumented)
-export class NotOwner extends Error {
-    // @internal
-    constructor();
-}
-
 // @beta (undocumented)
 export interface PackMetadata {
     // (undocumented)
@@ -1224,6 +1218,12 @@ export interface PublicClaimCondition {
 
 // @beta @deprecated (undocumented)
 export interface PublicMintCondition extends PublicClaimCondition {
+}
+
+// @public (undocumented)
+export class QuantityAboveLimitError extends Error {
+    // @internal
+    constructor(quantity: string);
 }
 
 // Warning: (ae-internal-missing-underscore) The name "replaceIpfsWithGateway" should be prefixed with an underscore because the declaration is marked as @internal

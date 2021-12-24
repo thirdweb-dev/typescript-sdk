@@ -2,8 +2,8 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   MarketModule,
   NFTModule,
-  BuyLimit,
-  NotOwner,
+  QuantityAboveLimitError,
+  MissingOwnerRoleError,
   MissingRoleError,
 } from "../src";
 import { appModule, sdk, signers } from "./before.test";
@@ -61,7 +61,7 @@ describe("Market Module", async () => {
       }
     }
   });
-  it("should throw a BuyLimit error when trying to buy more than the tokensPerBuy specified", async () => {
+  it("should throw a QuantityAboveLimitError error when trying to buy more than the tokensPerBuy specified", async () => {
     sdk.setProviderOrSigner(adminWallet);
     await nftModule.mintTo(bobWallet.address, {
       name: "Test",
@@ -80,7 +80,7 @@ describe("Market Module", async () => {
     try {
       await marketModule.buy((await marketModule.getAll())[0].id, 2);
     } catch (e) {
-      if (!(e instanceof BuyLimit)) {
+      if (!(e instanceof QuantityAboveLimitError)) {
         throw e;
       }
     }
@@ -107,7 +107,7 @@ describe("Market Module", async () => {
         1,
       );
     } catch (e) {
-      if (!(e instanceof NotOwner)) {
+      if (!(e instanceof MissingOwnerRoleError)) {
         throw e;
       }
     }

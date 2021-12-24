@@ -54,14 +54,14 @@ export class NotEnoughTokensError extends Error {
   }
 }
 
-export class NotOwner extends Error {
+export class MissingOwnerRoleError extends Error {
   /** @internal */
   constructor() {
     super(`LIST ERROR: you should be the owner of the token to list it.`);
   }
 }
 
-export class BuyLimit extends Error {
+export class QuantityAboveLimitError extends Error {
   /** @internal */
   constructor(quantity: string) {
     super(`BUY ERROR: You cannot buy more than ${quantity} tokens`);
