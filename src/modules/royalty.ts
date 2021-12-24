@@ -109,8 +109,9 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     const recipients: SplitRecipient[] = [];
 
     let index = BigNumber.from(0);
+    const totalRecipients = await this.readOnlyContract.payeeCount();
     // eslint-disable-next-line no-constant-condition
-    while (true) {
+    while (index.lt(totalRecipients)) {
       try {
         const recipientAddress = await this.readOnlyContract.payee(index);
         recipients.push(
@@ -133,7 +134,38 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
 
     return recipients;
   }
-
+  /**
+   *
+   * Returns all the recipients and their balances in the native currency.
+   * @returns A map of recipient addresses to their balances in the native currency.
+   *
+   */
+  public async balanceOfAllRecipients() {
+    const recipients = await this.getAllRecipients();
+    const balances: { [key: string]: BigNumber } = {};
+    for (const recipient of recipients) {
+      balances[recipient.address] = await this.balanceOf(recipient.address);
+    }
+    return balances;
+  }
+  /**
+   *
+   * Returns all the recipients and their balances in a non-native currency.
+   * @param tokenAddress - The address of the currency to check the balances in.
+   * @returns A map of recipient addresses to their balances in the specified currency.
+   *
+   */
+  public async balanceOfTokenAllRecipients(tokenAddress: string) {
+    const recipients = await this.getAllRecipients();
+    const balances: { [key: string]: CurrencyValue } = {};
+    for (const recipient of recipients) {
+      balances[recipient.address] = await this.balanceOfToken(
+        recipient.address,
+        tokenAddress,
+      );
+    }
+    return balances;
+  }
   public async getRecipientSplitPercentage(
     address: string,
   ): Promise<SplitRecipient> {
