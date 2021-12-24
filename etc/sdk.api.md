@@ -114,6 +114,12 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     withdrawFunds(to: string, currency: string): Promise<TransactionReceipt>;
 }
 
+// @public (undocumented)
+export class AssetNotFoundError extends Error {
+    // @internal
+    constructor(message?: string);
+}
+
 // @beta (undocumented)
 export interface BundleDropCreateClaimCondition {
     // (undocumented)
@@ -863,6 +869,8 @@ export interface ListingMetadata {
     tokenId: string;
     // (undocumented)
     tokenMetadata?: NFTMetadata;
+    // (undocumented)
+    tokensPerBuyer: BigNumber_2;
 }
 
 // @public
@@ -896,6 +904,8 @@ export class MarketModule extends ModuleWithRoles<Market> {
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
+    setRestrictedListerRoleOnly(restricted: boolean): Promise<void>;
+    // (undocumented)
     unlist(listingId: string, quantity: BigNumberish_2): Promise<void>;
     // (undocumented)
     unlistAll(listingId: string): Promise<void>;
@@ -903,6 +913,18 @@ export class MarketModule extends ModuleWithRoles<Market> {
 
 // @public
 export type MetadataURIOrObject = string | Record<string, any>;
+
+// @public (undocumented)
+export class MissingOwnerRoleError extends Error {
+    // @internal
+    constructor();
+}
+
+// @public (undocumented)
+export class MissingRoleError extends Error {
+    // @internal
+    constructor(address: string, role: string);
+}
 
 // @public
 export class Module<TContract extends BaseContract = BaseContract> {
@@ -1125,6 +1147,12 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
 }
 
+// @public (undocumented)
+export class NotEnoughTokensError extends Error {
+    // @internal
+    constructor(contractAddress: string, quantity: number, available: number);
+}
+
 // @public
 export class NotFoundError extends Error {
     // @internal
@@ -1294,6 +1322,10 @@ export interface PublicMintCondition extends PublicClaimCondition {
 }
 
 // @public (undocumented)
+export class QuantityAboveLimitError extends Error {
+    // @internal
+    constructor(quantity: string);
+}
 export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string): any;
 
 // Warning: (ae-internal-missing-underscore) The name "replaceIpfsWithGateway" should be prefixed with an underscore because the declaration is marked as @internal

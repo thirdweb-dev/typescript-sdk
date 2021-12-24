@@ -19,9 +19,6 @@ describe("Roles Module", async () => {
 
   beforeEach(async () => {
     sdk.setProviderOrSigner(adminWallet);
-  });
-  beforeEach(async () => {
-    sdk.setProviderOrSigner(adminWallet);
 
     nftModule = sdk.getNFTModule(
       await appModule
