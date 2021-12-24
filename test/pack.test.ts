@@ -75,6 +75,9 @@ describe("Pack Module", async () => {
 
     it("should allow you to buy a pack", async () => {
       const pack = await createPacks();
+
+      const opened = await packModule.open("0");
+      console.log(opened);
     });
   });
 

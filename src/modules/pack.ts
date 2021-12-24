@@ -5,7 +5,10 @@ import {
   Pack__factory,
 } from "@3rdweb/contracts";
 
-import { PackCreatedEvent } from "@3rdweb/contracts/dist/Pack";
+import {
+  PackCreatedEvent,
+  PackOpenRequestEvent,
+} from "@3rdweb/contracts/dist/Pack";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import {
@@ -100,9 +103,19 @@ export class PackModule extends ModuleWithRoles<PackContract> {
 
   public async open(packId: string): Promise<NFTMetadata[]> {
     const receipt = await this.sendTransaction("openPack", [packId]);
-    const event = this.parseEventLogs("PackOpenRequest", receipt?.logs);
-    const requestId = event.requestId;
-    const opener = event.opener;
+    const logs = this.parseLogs<PackOpenRequestEvent>(
+      "PackOpenRequest",
+      receipt?.logs,
+    );
+    if (logs.length === 0) {
+      throw new Error("Failed to open pack");
+    }
+    const event = logs[0];
+
+    const requestId = event.args.requestId;
+    const opener = event.args.opener;
+
+    console.log("Opener =", opener);
 
     const fulfillEvent: any = await new Promise((resolve) => {
       this.readOnlyContract.once(
