@@ -203,7 +203,9 @@ export class NFTModule extends ModuleWithRoles<NFT> {
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
-
+  public async isRestrictedTransfer(): Promise<boolean> {
+    return await this.readOnlyContract.transfersRestricted();
+  }
   public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
     // TODO: reduce this duplication and provide common functions around
     // royalties through an interface. Currently this function is

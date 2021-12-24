@@ -420,7 +420,9 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
-
+  public async isRestrictedTransfer(): Promise<boolean> {
+    return await this.readOnlyContract.transfersRestricted();
+  }
   /**
    * `getOwned` is a convenience method for getting all owned tokens
    * for a particular wallet.

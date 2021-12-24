@@ -485,7 +485,9 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
-
+  public async isRestrictedTransfer(): Promise<boolean> {
+    return await this.readOnlyContract.transfersRestricted();
+  }
   /**
    * Gets the royalty BPS (basis points) of the contract
    *

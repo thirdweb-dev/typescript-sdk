@@ -735,7 +735,9 @@ export class DropModule extends ModuleWithRoles<DropV2> {
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
-
+  public async isRestrictedTransfer(): Promise<boolean> {
+    return await this.readOnlyContract.transfersRestricted();
+  }
   /**
    * Gets the royalty BPS (basis points) of the contract
    *
@@ -1404,12 +1406,6 @@ class DropV1Module extends ModuleWithRoles<Drop> {
     amount: BigNumberish,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setMaxTotalSupply", [amount]);
-  }
-
-  public async setRestrictedTransfer(
-    restricted: boolean,
-  ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 
   /**

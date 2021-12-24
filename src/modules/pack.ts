@@ -347,7 +347,9 @@ export class PackModule extends ModuleWithRoles<PackContract> {
   public async setRestrictedTransfer(restricted = false): Promise<void> {
     await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
-
+  public async isRestrictedTransfer(): Promise<boolean> {
+    return await this.readOnlyContract.transfersRestricted();
+  }
   /**
    * Gets the royalty BPS (basis points) of the contract
    *

@@ -229,7 +229,9 @@ export class TokenModule extends ModuleWithRoles<Coin> {
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
-
+  public async isRestrictedTransfer(): Promise<boolean> {
+    return await this.readOnlyContract.transfersRestricted();
+  }
   public async transferBatch(args: ITokenMintArgs[]) {
     const encoded = args.map((arg) =>
       this.contract.interface.encodeFunctionData("transfer", [
