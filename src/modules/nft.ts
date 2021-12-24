@@ -173,8 +173,9 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     to: string,
     metadatas: MetadataURIOrObject[],
   ): Promise<NFTMetadata[]> {
-    const uris = await Promise.all(
-      metadatas.map((m) => this.sdk.getStorage().uploadMetadata(m)),
+    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
+    const uris = Array.from(Array(metadatas.length).keys()).map(
+      (i) => `${baseUri}${i}/`,
     );
     const receipt = await this.sendTransaction("mintNFTBatch", [to, uris]);
     const event = this.parseEventLogs("MintedBatch", receipt?.logs);

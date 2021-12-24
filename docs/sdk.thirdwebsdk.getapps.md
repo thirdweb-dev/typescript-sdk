@@ -9,8 +9,15 @@ Call this to get the current apps.
 <b>Signature:</b>
 
 ```typescript
-getApps(): Promise<IAppModule[]>;
+getApps(address?: string): Promise<IAppModule[]>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  address | string |  |
+
 <b>Returns:</b>
 
 Promise&lt;[IAppModule](./sdk.iappmodule.md)<!-- -->\[\]&gt;

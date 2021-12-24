@@ -4,7 +4,7 @@
 
 ## IRoles.minter property
 
-The minter role allows the wallet to mint new assets. ([NFTs](./sdk.nftmodule.mint.md)<!-- -->, [Tokens](./sdk.currencymodule.mint.md)<!-- -->, [Packs](./sdk.packmodule.create.md)<!-- -->, etc)
+The minter role allows the wallet to mint new assets. ([NFTs](./sdk.nftmodule.mint.md)<!-- -->, [Tokens](./sdk.tokenmodule.mint.md)<!-- -->, [Packs](./sdk.packmodule.create.md)<!-- -->, etc)
 
 <b>Signature:</b>
 

@@ -1,6 +1,6 @@
 import { FetchError, UploadError } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
-import IStorage from "../interfaces/IStorage";
+import { IStorage } from "../interfaces/IStorage";
 import FileOrBuffer from "../types/FileOrBuffer";
 
 if (!globalThis.FormData) {
@@ -9,9 +9,10 @@ if (!globalThis.FormData) {
 }
 
 const thirdwebIpfsServerUrl = "https://upload.nftlabs.co";
+const pinataIpfsUrl = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 // const thirdwebIpfsServerUrl = "http://localhost:3002";
 
-export default class IpfsStorage implements IStorage {
+export class IpfsStorage implements IStorage {
   private gatewayUrl: string;
 
   constructor(gatewayUrl: string) {
@@ -53,11 +54,24 @@ export default class IpfsStorage implements IStorage {
     contractAddress?: string,
     fileStartNumber = 0,
   ): Promise<string> {
+    const cid = await this.uploadBatchWithCid(
+      files,
+      contractAddress,
+      fileStartNumber,
+    );
+
+    return `ipfs://${cid}/`;
+  }
+
+  private async uploadBatchWithCid(
+    files: Buffer[] | string[] | FileOrBuffer[] | File[],
+    contractAddress?: string,
+    fileStartNumber = 0,
+  ): Promise<string> {
     const token = await this.getUploadToken(contractAddress || "");
     const metadata = {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
     };
-    const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
     const data = new FormData();
 
     files.forEach((file, i) => {
@@ -72,21 +86,18 @@ export default class IpfsStorage implements IStorage {
     });
 
     data.append("pinataMetadata", JSON.stringify(metadata));
-    const res = await fetch(url, {
+    const res = await fetch(pinataIpfsUrl, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
       },
       body: data as any,
-    })
-      .then((response) => {
-        return response;
-      })
-      .catch((err: any) => {
-        throw new UploadError(`Failed to upload to IPFS: ${err}`);
-      });
+    });
     const body = await res.json();
-    return `ipfs://${body.IpfsHash}/`;
+    if (!res.ok) {
+      throw new UploadError("Failed to upload files to IPFS");
+    }
+    return body.IpfsHash;
   }
 
   public async getUploadToken(contractAddress: string): Promise<string> {
@@ -97,12 +108,11 @@ export default class IpfsStorage implements IStorage {
       method: "GET",
       headers,
     });
-    try {
-      const body = await res.text();
-      return body;
-    } catch (e) {
-      throw new FetchError(`Failed to get upload token: ${e}`);
+    if (!res.ok) {
+      throw new FetchError(`Failed to get upload token`);
     }
+    const body = await res.text();
+    return body;
   }
 
   public async get(hash: string): Promise<string> {
@@ -140,6 +150,95 @@ export default class IpfsStorage implements IStorage {
     return object;
   }
 
+  /**
+   * This function recurisely traverses an object and hashes any
+   * `Buffer` or `File` objects into the returned map.
+   *
+   * @param object - The object to recurse over
+   * @param files - The running array of files or buffer to upload
+   * @returns - The final map of all hashes to files
+   */
+  public async buildFilePropertiesMap(
+    object: any,
+    files: (File | Buffer)[],
+  ): Promise<(File | Buffer)[]> {
+    const keys = Object.keys(object).sort();
+    for (const key in keys) {
+      const val = object[keys[key]];
+      const shouldUpload = val instanceof File || val instanceof Buffer;
+      if (shouldUpload) {
+        files.push(val);
+      }
+
+      if (typeof val === "object") {
+        await this.buildFilePropertiesMap(val, files);
+      }
+    }
+    return files;
+  }
+
+  /**
+   * Pre-processes metadata and uploads all file properties
+   * to storage in *bulk*, then performs a string replacement of
+   * all file properties -> the resulting ipfs uri. This is
+   * called internally by `uploadMetadataBatch`.
+   *
+   * @internal
+   *
+   * @param metadata - The metadata to recursively process
+   * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
+   */
+  public async batchUploadProperties(metadata: object): Promise<any> {
+    const filesToUpload = await this.buildFilePropertiesMap(metadata, []);
+    if (filesToUpload.length === 0) {
+      return metadata;
+    }
+    const cid = await this.uploadBatchWithCid(filesToUpload, "");
+    const cids = [];
+
+    // recurse ordered array
+    for (const index in filesToUpload) {
+      cids.push(`${cid}/${index}`);
+    }
+
+    const finalMetadata = await this.replaceFilePropertiesWithHashes(
+      metadata,
+      cids,
+    );
+    return finalMetadata;
+  }
+
+  /**
+   * Given a map of file hashes to ipfs uris, this function will hash
+   * all properties recursively and replace them with the ipfs uris
+   * from the map passed in. If a hash is missing from the map, the function
+   * will throw an error.
+   *
+   * @internal
+   *
+   * @param object - The object to recursively process
+   * @param cids - The array of file hashes to ipfs uris in the recurse order
+   * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
+   */
+  private async replaceFilePropertiesWithHashes(object: any, cids: string[]) {
+    const keys = Object.keys(object).sort();
+    for (const key in keys) {
+      const val = object[keys[key]];
+      const isFile = val instanceof File || val instanceof Buffer;
+      if (typeof val === "object" && !isFile) {
+        await this.replaceFilePropertiesWithHashes(val, cids);
+        continue;
+      }
+
+      if (!isFile) {
+        continue;
+      }
+
+      object[keys[key]] = `ipfs://${cids.splice(0, 1)[0]}`;
+    }
+    return object;
+  }
+
   public async uploadMetadata(
     metadata: MetadataURIOrObject,
     contractAddress?: string,
@@ -166,15 +265,8 @@ export default class IpfsStorage implements IStorage {
     contractAddress?: string,
     startFileNumber?: number,
   ) {
-    const finalMetadata = await Promise.all(
-      metadatas.map((m) => {
-        if (typeof m === "string") {
-          return m;
-        } else {
-          return this.uploadFileHandler(m);
-        }
-      }),
-    );
+    const finalMetadata: MetadataURIOrObject[] =
+      await this.batchUploadProperties(metadatas);
     return await this.uploadBatch(
       finalMetadata.map((m) => JSON.stringify(m)),
       contractAddress,

@@ -17,7 +17,7 @@ import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { ISDKOptions, IThirdwebSdk } from "../interfaces";
-import IStorage from "../interfaces/IStorage";
+import { IStorage } from "../interfaces/IStorage";
 import { AppModule } from "../modules/app";
 import { BundleModule } from "../modules/bundle";
 import { BundleDropModule } from "../modules/bundleDrop";
@@ -28,8 +28,9 @@ import { MarketModule } from "../modules/market";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
-import { CurrencyModule } from "../modules/token";
-import IpfsStorage from "../storage/IpfsStorage";
+import { CurrencyModule, TokenModule } from "../modules/token";
+import { VoteModule } from "../modules/vote";
+import { IpfsStorage } from "../storage/IpfsStorage";
 import { ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { ClaimProof, Snapshot, SnapshotInfo } from "../types/snapshots";
 import { IAppModule, RegistryModule } from "./registry";
@@ -55,7 +56,8 @@ export type AnyContract =
   | typeof DropModule
   | typeof DatastoreModule
   | typeof SplitsModule
-  | typeof BundleDropModule;
+  | typeof BundleDropModule
+  | typeof VoteModule;
 
 /**
  * The entrypoint to the SDK.
@@ -184,10 +186,10 @@ export class ThirdwebSDK implements IThirdwebSdk {
    * Call this to get the current apps.
    * @returns All currently registered apps for the connected wallet
    */
-  public async getApps(): Promise<IAppModule[]> {
+  public async getApps(address?: string): Promise<IAppModule[]> {
     return (
       this.registry || (await this.getRegistryModule())
-    ).getProtocolContracts();
+    ).getProtocolContracts(address);
   }
 
   /**
@@ -281,6 +283,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
         this.providerOrSigner,
         address,
         this.options.ipfsGatewayUrl,
+        true,
       )),
       address,
     };
@@ -336,13 +339,25 @@ export class ThirdwebSDK implements IThirdwebSdk {
    *
    * @param address - The contract address of the given Currency module.
    * @returns The Currency Module.
+   *
+   * @deprecated - see {@link TokenModule}
    */
   public getCurrencyModule(address: string): CurrencyModule {
     return this.getOrCreateModule(address, CurrencyModule);
   }
 
   /**
+   *
+   * @param address - The contract address of the given Token module.
+   * @returns The Token Module.
+   */
+  public getTokenModule(address: string): TokenModule {
+    return this.getOrCreateModule(address, TokenModule);
+  }
+
+  /**
    * @alpha
+   *
    * @param address - The contract address of the given Datastore module.
    * @returns The Datastore Module.
    */
@@ -386,6 +401,16 @@ export class ThirdwebSDK implements IThirdwebSdk {
    */
   public getSplitsModule(address: string): SplitsModule {
     return this.getOrCreateModule(address, SplitsModule);
+  }
+
+  /**
+   * @alpha
+   *
+   * @param address - The contract address of the given Vote module.
+   * @returns The Vote Module.
+   */
+  public getVoteModule(address: string): VoteModule {
+    return this.getOrCreateModule(address, VoteModule);
   }
 
   /**

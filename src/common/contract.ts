@@ -2,7 +2,7 @@ import { arrayify } from "@ethersproject/bytes";
 import { Contract } from "@ethersproject/contracts";
 import { Provider } from "@ethersproject/providers";
 import { ProviderOrSigner } from "../core/types";
-import { replaceIpfsWithGateway } from "./ipfs";
+import { replaceIpfsWithGateway, recursiveResolveGatewayUrl } from "./ipfs";
 
 /**
  * The typical contract metadata found on the modules.
@@ -52,17 +52,19 @@ export async function getContractMetadata(
   provider: ProviderOrSigner,
   address: string,
   ipfsGatewayUrl: string,
+  resolveGateway = false,
 ): Promise<ContractMetadata> {
   const contract = new Contract(address, contractUriABI, provider);
   const uri = await contract.contractURI();
   const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
   const meta = await fetch(gatewayUrl);
   try {
-    const metadata = await meta.json();
+    let json = await meta.json();
+    if (resolveGateway) {
+      json = recursiveResolveGatewayUrl(json, ipfsGatewayUrl);
+    }
     const entity: ContractMetadata = {
-      ...metadata,
-      uri,
-      image: replaceIpfsWithGateway(metadata.image, ipfsGatewayUrl),
+      ...json,
     };
     return entity;
   } catch (e) {

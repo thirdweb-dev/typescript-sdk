@@ -23,7 +23,7 @@ before(async () => {
   console.log("Deployed registry at address: ", registryAddress);
 
   sdk = new ThirdwebSDK(signer, {
-    ipfsGatewayUrl: "https://ipfs.io/ipfs/",
+    ipfsGatewayUrl: "https://ipfs.thirdweb.com/ipfs/",
     registryContractAddress: registryAddress,
     maxGasPriceInGwei: 10000,
   });

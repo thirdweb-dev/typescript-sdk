@@ -1,10 +1,19 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
-import { BigNumber } from "ethers";
-import { BundleDropModule } from "../src/index";
+import { assert, expect, use } from "chai";
+import { BigNumber, ethers } from "ethers";
+import {
+  BundleDropModule,
+  ClaimEligibility,
+  NATIVE_TOKEN_ADDRESS,
+} from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
 
 global.fetch = require("node-fetch");
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const deepEqualInAnyOrder = require("deep-equal-in-any-order");
+
+use(deepEqualInAnyOrder);
 
 // TODO: Write some actual pack module tests
 describe("Bundle Drop Module", async () => {
@@ -149,5 +158,241 @@ describe("Bundle Drop Module", async () => {
     await bdModule.setClaimCondition("0", factory);
     const token = await bdModule.claim("0", 1);
     console.log(token);
+  });
+
+  it("should return addresses of all the claimers", async () => {
+    await bdModule.lazyMintBatch([
+      {
+        name: "test 0",
+      },
+      {
+        name: "test 1",
+      },
+    ]);
+
+    const factory = bdModule.getClaimConditionFactory();
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await bdModule.setClaimCondition("0", factory);
+    await bdModule.setClaimCondition("1", factory);
+    await bdModule.claim("0", 1);
+
+    await sdk.setProviderOrSigner(samWallet);
+    await bdModule.claim("0", 1);
+
+    const claimers = await bdModule.getAllClaimerAddresses("0");
+    expect(claimers).to.deep.equalInAnyOrder([
+      samWallet.address,
+      adminWallet.address,
+    ]);
+
+    await sdk.setProviderOrSigner(w1);
+    await bdModule.claim("1", 1);
+    await sdk.setProviderOrSigner(w2);
+    await bdModule.claim("1", 1);
+
+    const newClaimers = await bdModule.getAllClaimerAddresses("1");
+    expect(newClaimers).to.deep.equalInAnyOrder([w1.address, w2.address]);
+  });
+
+  it("should return the correct status if a token can be claimed", async () => {
+    const factory = bdModule.getClaimConditionFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await phase.setSnapshot([w1.address]);
+    await bdModule.setClaimCondition("0", factory);
+
+    await sdk.setProviderOrSigner(w1);
+
+    const canClaimW1 = await bdModule.canClaim("0", 1);
+    assert.isTrue(canClaimW1, "w1 should be able to claimcan claim");
+
+    await sdk.setProviderOrSigner(w2);
+    const canClaimW2 = await bdModule.canClaim("0", 1);
+    assert.isFalse(canClaimW2, "w2 should not be able to claimcan claim");
+  });
+
+  it("should work when the token has a price", async () => {
+    await bdModule.lazyMintBatch([
+      {
+        name: "test",
+        description: "test",
+      },
+    ]);
+    const factory = bdModule.getClaimConditionFactory();
+    factory
+      .newClaimPhase({
+        startTime: new Date(),
+      })
+      .setPrice(1);
+    await bdModule.setClaimCondition("0", factory);
+    console.log(await bdModule.getActiveClaimCondition("0"));
+    const token = await bdModule.claim("0", 1);
+    console.log(token);
+  });
+
+  describe("eligibility", () => {
+    beforeEach(async () => {
+      await bdModule.lazyMintBatch([
+        {
+          name: "test",
+          description: "test",
+        },
+      ]);
+    });
+
+    it("should return false if there isn't an active claim condition", async () => {
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "0",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(ClaimEligibility.NoActiveClaimPhase);
+      assert.lengthOf(reasons, 1);
+      const canClaim = await bdModule.canClaim("0", "1", w1.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should check for the total supply", async () => {
+      const factory = bdModule.getClaimConditionFactory();
+      factory.newClaimPhase({
+        startTime: new Date(),
+        maxQuantity: 1,
+      });
+      await bdModule.setClaimCondition("0", factory);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "2",
+        w1.address,
+      );
+      expect(reasons).to.include(ClaimEligibility.NotEnoughSupply);
+      const canClaim = await bdModule.canClaim("0", "2", w1.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should check if an address has valid merkle proofs", async () => {
+      const factory = bdModule.getClaimConditionFactory();
+      const phase = factory.newClaimPhase({
+        startTime: new Date(),
+        maxQuantity: 1,
+      });
+      await phase.setSnapshot([w2.address, adminWallet.address]);
+      await bdModule.setClaimCondition("0", factory);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "1",
+        w1.address,
+      );
+      expect(reasons).to.include(ClaimEligibility.AddressNotAllowed);
+      const canClaim = await bdModule.canClaim("0", "1", w1.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should check if its been long enough since the last claim", async () => {
+      const factory = bdModule.getClaimConditionFactory();
+      factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setWaitTimeBetweenClaims(24 * 60 * 60);
+      await bdModule.setClaimCondition("0", factory);
+      await sdk.setProviderOrSigner(bobWallet);
+      await bdModule.claim("0", 1);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "1",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(
+        ClaimEligibility.WaitBeforeNextClaimTransaction,
+      );
+      const canClaim = await bdModule.canClaim("0", "1", bobWallet.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should check if an address has enough native currency", async () => {
+      const factory = bdModule.getClaimConditionFactory();
+      factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setPrice(
+          ethers.utils.parseUnits("1000000000000000"),
+          NATIVE_TOKEN_ADDRESS,
+        );
+      await bdModule.setClaimCondition("0", factory);
+      await sdk.setProviderOrSigner(bobWallet);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "1",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
+      const canClaim = await bdModule.canClaim("0", "1", w1.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should check if an address has enough erc20 currency", async () => {
+      const currency = await appModule.deployCurrencyModule({
+        name: "test",
+        symbol: "test",
+      });
+
+      const factory = bdModule.getClaimConditionFactory();
+      factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setPrice(
+          ethers.utils.parseUnits("1000000000000000"),
+          currency.address,
+        );
+      await bdModule.setClaimCondition("0", factory);
+      await sdk.setProviderOrSigner(bobWallet);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "1",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
+      const canClaim = await bdModule.canClaim("0", "1", w1.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should return nothing if the claim is eligible", async () => {
+      const factory = bdModule.getClaimConditionFactory();
+      const phase = factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setPrice(ethers.utils.parseUnits("100"), NATIVE_TOKEN_ADDRESS);
+      await phase.setSnapshot([w1.address, w2.address, w3.address]);
+      await bdModule.setClaimCondition("0", factory);
+
+      const reasons = await bdModule.getClaimIneligibilityReasons(
+        "0",
+        "1",
+        w1.address,
+      );
+      assert.lengthOf(reasons, 0);
+
+      const canClaim = await bdModule.canClaim("0", "1", w1.address);
+      assert.isTrue(canClaim);
+    });
   });
 });

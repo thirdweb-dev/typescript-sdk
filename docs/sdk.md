@@ -74,12 +74,13 @@ Output
 |  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
 |  [ClaimConditionPhase](./sdk.claimconditionphase.md) |  |
 |  [ClaimProof](./sdk.claimproof.md) | The model for a claim proof. Currently we support only an address in the leaf of the merkle tree. |
-|  [CurrencyModule](./sdk.currencymodule.md) | Access this module by calling [ThirdwebSDK.getCurrencyModule()](./sdk.thirdwebsdk.getcurrencymodule.md) |
+|  [CurrencyModule](./sdk.currencymodule.md) |  |
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md) |
 |  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
 |  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
+|  [IpfsStorage](./sdk.ipfsstorage.md) |  |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
@@ -92,13 +93,18 @@ Output
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
+|  [TokenModule](./sdk.tokenmodule.md) | Access this module by calling [ThirdwebSDK.getTokenModule()](./sdk.thirdwebsdk.gettokenmodule.md) |
 |  [UploadError](./sdk.uploaderror.md) |  |
+|  [VoteModule](./sdk.votemodule.md) | Access this module by calling  |
 
 ## Enumerations
 
 |  Enumeration | Description |
 |  --- | --- |
+|  [ClaimEligibility](./sdk.claimeligibility.md) |  |
 |  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
+|  [ProposalState](./sdk.proposalstate.md) |  |
+|  [VoteType](./sdk.votetype.md) |  |
 
 ## Functions
 
@@ -106,6 +112,10 @@ Output
 |  --- | --- |
 |  [convertModuleTypeToName(moduleType)](./sdk.convertmoduletypetoname.md) |  |
 |  [convertNameToModuleType(moduleName)](./sdk.convertnametomoduletype.md) |  |
+|  [estimateBlockAtTime(timeInEpochSeconds, provider)](./sdk.estimateblockattime.md) | Given a time in second, return the block number that the time is in. |
+|  [generateRoot(items)](./sdk.generateroot.md) | Convenience function to generate a merkle root from a list of strings. |
+|  [getNativeTokenByChainId(chainId)](./sdk.getnativetokenbychainid.md) |  |
+|  [recursiveResolveGatewayUrl(json, ipfsGatewayUrl)](./sdk.recursiveresolvegatewayurl.md) |  |
 |  [uploadToIPFS(data, contractAddress, signerAddress)](./sdk.uploadtoipfs.md) | A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri. |
 
 ## Interfaces
@@ -130,6 +140,7 @@ Output
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) | <b><i>(BETA)</i></b> |
 |  [IRoles](./sdk.iroles.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
+|  [IStorage](./sdk.istorage.md) |  |
 |  [IThirdwebSdk](./sdk.ithirdwebsdk.md) |  |
 |  [ITokenMintArgs](./sdk.itokenmintargs.md) |  |
 |  [ITokenMintFromArgs](./sdk.itokenmintfromargs.md) |  |
@@ -137,19 +148,25 @@ Output
 |  [ListingMetadata](./sdk.listingmetadata.md) | Metadata for items listed on a Market module. |
 |  [ModuleMetadata](./sdk.modulemetadata.md) | The module metadata, includes the <code>address</code> and the [ModuleType](./sdk.moduletype.md)<!-- -->. |
 |  [ModuleMetadataNoType](./sdk.modulemetadatanotype.md) | The module metadata, but missing the ModuleType. |
+|  [NativeToken](./sdk.nativetoken.md) |  |
 |  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
+|  [Proposal](./sdk.proposal.md) |  |
+|  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
+|  [ProposalVote](./sdk.proposalvote.md) |  |
 |  [PublicClaimCondition](./sdk.publicclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
+|  [VoteSettings](./sdk.votesettings.md) |  |
 
 ## Variables
 
 |  Variable | Description |
 |  --- | --- |
+|  [DEFAULT\_BLOCK\_TIMES\_FALLBACK](./sdk.default_block_times_fallback.md) | Fallback map of default block mining times in seconds. |
 |  [NFTLabsSDK](./sdk.nftlabssdk.md) | Deprecated, please use ThirdwebSDK instead. |
 
 ## Type Aliases

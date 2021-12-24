@@ -1,8 +1,13 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
+import { ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
-import { DropModule } from "../src/index";
+import {
+  ClaimEligibility,
+  DropModule,
+  NATIVE_TOKEN_ADDRESS,
+} from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -23,14 +28,12 @@ describe("Drop Module", async () => {
 
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
-    console.log("Creating drop module");
     await sdk.setProviderOrSigner(adminWallet);
     dropModule = await appModule.deployDropModule({
       name: "Test Drop",
       maxSupply: 1000,
       primarySaleRecipientAddress: AddressZero,
     });
-    console.log("Created drop module at address: ", dropModule.address);
   });
 
   it("should allow a snapshot to be set", async () => {
@@ -82,7 +85,7 @@ describe("Drop Module", async () => {
     ]);
 
     const secondPhase = factory.newClaimPhase({
-      startTime: new Date(),
+      startTime: Math.floor(new Date().getTime() / 1000) + 1000,
     });
     await secondPhase.setSnapshot([bobWallet.address]);
 
@@ -146,7 +149,7 @@ describe("Drop Module", async () => {
       });
     }
     console.log("calling lazy mint batch");
-    await dropModule.lazyMintBatch(metadata);
+    await dropModule.createBatch(metadata);
 
     console.log("Minted");
     console.log("Claiming");
@@ -160,6 +163,23 @@ describe("Drop Module", async () => {
       await dropModule.claim(1);
       console.log(`Address ${member.address} claimed successfully!`);
     }
+  });
+
+  it("should correctly upload metadata for each nft", async () => {
+    const metadatas = [];
+    for (let i = 0; i < 10; i++) {
+      metadatas.push({
+        name: `test ${i}`,
+      });
+    }
+    await dropModule.lazyMintBatch(metadatas);
+    const nfts = await dropModule.getAll();
+    expect(nfts.length).to.eq(10);
+    let i = 0;
+    nfts.forEach((nft) => {
+      expect(nft.metadata.name).to.be.equal(`test ${i}`);
+      i++;
+    });
   });
 
   it("should not allow claiming to someone not in the merkle tree", async () => {
@@ -176,7 +196,7 @@ describe("Drop Module", async () => {
     await dropModule.setMintConditions(factory);
     console.log("Claim condition set");
     console.log("Minting");
-    await dropModule.lazyMintAmount(1);
+    await dropModule.lazyMint({ name: "name", description: "description" });
     console.log("Minted");
 
     await sdk.setProviderOrSigner(w1);
@@ -195,8 +215,9 @@ describe("Drop Module", async () => {
   });
 
   it("should allow claims with default settings", async () => {
-    dropModule.lazyMintAmount(1);
-    dropModule.claim(1);
+    await dropModule.lazyMint({ name: "name", description: "description" });
+    await dropModule.setPublicMintConditions([{ maxMintSupply: 100 }]);
+    await dropModule.claim(1);
   });
 
   it("should generate valid proofs", async () => {
@@ -241,7 +262,7 @@ describe("Drop Module", async () => {
       startTime: new Date(),
     });
     await dropModule.setClaimConditions(factory);
-    await dropModule.lazyMintBatch([
+    await dropModule.createBatch([
       {
         name: "test 0",
       },
@@ -253,7 +274,179 @@ describe("Drop Module", async () => {
       },
     ]);
 
+    try {
+      await dropModule.createBatch([
+        {
+          name: "test 0",
+        },
+        {
+          name: "test 1",
+        },
+        {
+          name: "test 2",
+        },
+      ]);
+    } catch (err) {
+      expect(err).to.have.property("message", "Batch already created!", "");
+    }
+
     const token = await dropModule.claim(2);
     assert.lengthOf(token, 2);
+  });
+
+  describe("eligibility", () => {
+    beforeEach(async () => {
+      await dropModule.createBatch([
+        {
+          name: "test",
+          description: "test",
+        },
+      ]);
+    });
+
+    it("should return false if there isn't an active claim condition", async () => {
+      const reasons = await dropModule.getClaimIneligibilityReasons(
+        "1",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(ClaimEligibility.NoActiveClaimPhase);
+      assert.lengthOf(reasons, 1);
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should check for the total supply", async () => {
+      const factory = dropModule.getClaimConditionsFactory();
+      factory.newClaimPhase({
+        startTime: new Date(),
+        maxQuantity: 1,
+      });
+      await dropModule.setClaimConditions(factory);
+
+      const reasons = await dropModule.getClaimIneligibilityReasons(
+        "2",
+        w1.address,
+      );
+      expect(reasons).to.include(ClaimEligibility.NotEnoughSupply);
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should check if an address has valid merkle proofs", async () => {
+      const factory = dropModule.getClaimConditionsFactory();
+      const phase = factory.newClaimPhase({
+        startTime: new Date(),
+        maxQuantity: 1,
+      });
+      await phase.setSnapshot([w2.address, adminWallet.address]);
+      await dropModule.setClaimConditions(factory);
+
+      const reasons = await dropModule.getClaimIneligibilityReasons(
+        "1",
+        w1.address,
+      );
+      expect(reasons).to.include(ClaimEligibility.AddressNotAllowed);
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should check if its been long enough since the last claim", async () => {
+      const factory = dropModule.getClaimConditionsFactory();
+      factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setWaitTimeBetweenClaims(24 * 60 * 60);
+      await dropModule.setClaimConditions(factory);
+      await sdk.setProviderOrSigner(bobWallet);
+      await dropModule.claim(1);
+
+      const reasons = await dropModule.getClaimIneligibilityReasons(
+        "1",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(
+        ClaimEligibility.WaitBeforeNextClaimTransaction,
+      );
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should check if an address has enough native currency", async () => {
+      const factory = dropModule.getClaimConditionsFactory();
+      factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setPrice(
+          ethers.utils.parseUnits("1000000000000000"),
+          NATIVE_TOKEN_ADDRESS,
+        );
+      await dropModule.setClaimConditions(factory);
+      await sdk.setProviderOrSigner(bobWallet);
+
+      const reasons = await dropModule.getClaimIneligibilityReasons(
+        "1",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should check if an address has enough erc20 currency", async () => {
+      const currency = await appModule.deployCurrencyModule({
+        name: "test",
+        symbol: "test",
+      });
+
+      const factory = dropModule.getClaimConditionsFactory();
+      factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setPrice(
+          ethers.utils.parseUnits("1000000000000000"),
+          currency.address,
+        );
+      await dropModule.setClaimConditions(factory);
+      await sdk.setProviderOrSigner(bobWallet);
+
+      const reasons = await dropModule.getClaimIneligibilityReasons(
+        "1",
+        bobWallet.address,
+      );
+
+      expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
+      const canClaim = await dropModule.canClaim(w1.address);
+      assert.isFalse(canClaim);
+    });
+
+    it("should return nothing if the claim is eligible", async () => {
+      const factory = dropModule.getClaimConditionsFactory();
+      const phase = factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: 10,
+        })
+        .setPrice(ethers.utils.parseUnits("100"), NATIVE_TOKEN_ADDRESS);
+      await phase.setSnapshot([w1.address, w2.address, w3.address]);
+      await dropModule.setClaimConditions(factory);
+
+      const reasons = await dropModule.getClaimIneligibilityReasons(
+        "1",
+        w1.address,
+      );
+      assert.lengthOf(reasons, 0);
+
+      const canClaim = await dropModule.canClaim("1", w1.address);
+      assert.isTrue(canClaim);
+    });
   });
 });

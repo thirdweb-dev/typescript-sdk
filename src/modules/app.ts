@@ -3,7 +3,7 @@ import {
   DataStore__factory,
   ERC20__factory,
   LazyMintERC1155__factory,
-  LazyNFT__factory,
+  LazyMintERC721__factory,
   Market__factory,
   NFTCollection__factory,
   NFT__factory,
@@ -11,6 +11,7 @@ import {
   ProtocolControl,
   ProtocolControl__factory,
   Royalty__factory,
+  VotingGovernor__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -21,10 +22,12 @@ import {
   ChainlinkVrf,
   CurrencyValue,
   getCurrencyValue,
+  isNativeToken,
   Role,
   RolesMap,
 } from "../common";
-import { getNativeTokenByChainId } from "../common/address";
+import { getNativeTokenByChainId } from "../common/currency";
+import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getContractMetadata } from "../common/contract";
 import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
@@ -42,7 +45,10 @@ import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetada
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
+import TokenModuleMetadata from "../types/module-deployments/TokenModuleMetadata";
+import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
+import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";
 import { BundleDropModule } from "./bundleDrop";
 import { CollectionModule } from "./collection";
 import { DatastoreModule } from "./datastore";
@@ -51,7 +57,8 @@ import { MarketModule } from "./market";
 import { NFTModule } from "./nft";
 import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
-import { CurrencyModule } from "./token";
+import { CurrencyModule, TokenModule } from "./token";
+import { VoteModule } from "./vote";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
@@ -153,6 +160,7 @@ export class AppModule
           this.providerOrSigner,
           address,
           this.ipfsGatewayUrl,
+          true,
         ),
       ),
     );
@@ -282,11 +290,12 @@ export class AppModule
       ModuleType.NFT,
       ModuleType.BUNDLE,
       ModuleType.PACK,
-      ModuleType.CURRENCY,
+      ModuleType.TOKEN,
       ModuleType.MARKET,
-      ModuleType.DROP,
       ModuleType.DATASTORE,
+      ModuleType.DROP,
       ModuleType.BUNDLE_DROP,
+      ModuleType.VOTE,
     ];
     return (
       await Promise.all(
@@ -334,6 +343,9 @@ export class AppModule
     to: string,
     currency: string,
   ): Promise<TransactionReceipt> {
+    if (isNativeToken(currency)) {
+      currency = ethers.constants.AddressZero;
+    }
     return await this.sendTransaction("withdrawFunds", [to, currency]);
   }
 
@@ -431,8 +443,11 @@ export class AppModule
       ],
       NFTCollection__factory,
     );
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
 
-    return this.sdk.getCollectionModule(address);
+    return this.sdk.getBundleModule(address);
   }
 
   /**
@@ -506,7 +521,9 @@ export class AppModule
       ],
       NFT__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getNFTModule(address);
   }
 
@@ -545,6 +562,43 @@ export class AppModule
     );
 
     return this.sdk.getCurrencyModule(address);
+  }
+
+  /**
+   * Deploys a token module.
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed currency module
+   */
+  public async deployTokenModule(
+    metadata: TokenModuleMetadata,
+  ): Promise<TokenModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      CurrencyModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const address = await this._deployModule(
+      ModuleType.CURRENCY,
+      [
+        this.address,
+        metadata.name,
+        metadata.symbol ? metadata.symbol : "",
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+      ],
+      Coin__factory,
+    );
+
+    return this.sdk.getTokenModule(address);
   }
 
   /**
@@ -623,7 +677,9 @@ export class AppModule
       ],
       Pack__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getPackModule(address);
   }
 
@@ -636,7 +692,6 @@ export class AppModule
   public async deployDropModule(
     metadata: DropModuleMetadata,
   ): Promise<DropModule> {
-    invariant(metadata.maxSupply !== undefined, "Max supply must be specified");
     invariant(
       metadata.primarySaleRecipientAddress !== "" &&
         isAddress(metadata.primarySaleRecipientAddress),
@@ -656,25 +711,30 @@ export class AppModule
         await this.getSignerAddress(),
       );
 
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
+
     const address = await this._deployModule(
       ModuleType.DROP,
       [
-        this.address,
         metadata.name,
         metadata.symbol ? metadata.symbol : "",
-        await this.sdk.getForwarderAddress(),
         metadataUri,
-        metadata.baseTokenUri ? metadata.baseTokenUri : "",
-        metadata.maxSupply,
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        nativeTokenWrapperAddress,
+        metadata.primarySaleRecipientAddress,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
         metadata.primarySaleFeeBasisPoints
           ? metadata.primarySaleFeeBasisPoints
           : 0,
-        metadata.primarySaleRecipientAddress,
       ],
-      LazyNFT__factory,
+      LazyMintERC721__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getDropModule(address);
   }
 
@@ -725,13 +785,16 @@ export class AppModule
       ],
       LazyMintERC1155__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getBundleDropModule(address);
   }
 
   /**
    * Deploys a Datastore module
    *
+   * @alpha
    * @param metadata - The module metadata
    * @returns - The deployed Datastore module
    */
@@ -761,6 +824,81 @@ export class AppModule
   }
 
   /**
+   * Deploys a Vote module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed vote module
+   */
+  public async deployVoteModule(
+    metadata: VoteModuleMetadata,
+  ): Promise<VoteModule> {
+    invariant(
+      metadata.votingTokenAddress !== "" &&
+        isAddress(metadata.votingTokenAddress),
+      "Voting Token Address must be a valid address",
+    );
+    invariant(
+      metadata.votingQuorumFraction >= 0 &&
+        metadata.votingQuorumFraction <= 100,
+      "Quofrum Fraction must be in the range of 0-100 representing percentage",
+    );
+
+    const chainId = await this.getChainID();
+    const timeBetweenBlocks =
+      DEFAULT_BLOCK_TIMES_FALLBACK[chainId as SUPPORTED_CHAIN_ID];
+
+    const waitTimeInBlocks =
+      metadata.proposalStartWaitTimeInSeconds /
+      timeBetweenBlocks.secondsBetweenBlocks;
+    const votingTimeInBlocks =
+      metadata.proposalVotingTimeInSeconds /
+      timeBetweenBlocks.secondsBetweenBlocks;
+
+    metadata.votingDelay = waitTimeInBlocks;
+    metadata.votingPeriod = votingTimeInBlocks;
+
+    // verify making sure that the voting token address is valid
+    try {
+      await Coin__factory.connect(
+        metadata.votingTokenAddress,
+        this.readOnlyContract.provider,
+      ).callStatic.getPastTotalSupply(0);
+    } catch (e) {
+      invariant(false, "Token is not compatible with the vote module");
+    }
+
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      VoteModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const address = await this._deployModule(
+      ModuleType.VOTE,
+      [
+        metadata.name,
+        metadata.votingTokenAddress,
+        metadata.votingDelay,
+        metadata.votingPeriod,
+        metadata.minimumNumberOfTokensNeededToPropose,
+        metadata.votingQuorumFraction,
+        await this.sdk.getForwarderAddress(),
+        metadataUri,
+      ],
+      VotingGovernor__factory,
+    );
+
+    return this.sdk.getVoteModule(address);
+  }
+
+  /**
    * Check the balance of the project wallet in the native token of the chain
    *
    * @returns - The balance of the project in the native token of the chain
@@ -779,11 +917,22 @@ export class AppModule
    * @returns - The balance of the project in the native token of the chain
    */
   public async balanceOfToken(tokenAddress: string): Promise<CurrencyValue> {
-    const erc20 = ERC20__factory.connect(tokenAddress, this.providerOrSigner);
-    return await getCurrencyValue(
-      this.providerOrSigner,
-      tokenAddress,
-      await erc20.balanceOf(this.address),
-    );
+    let balance: BigNumber;
+    if (isNativeToken(tokenAddress)) {
+      balance = await this.balance();
+    } else {
+      const erc20 = ERC20__factory.connect(
+        tokenAddress,
+        this.readOnlyContract.provider,
+      );
+      try {
+        balance = await erc20.balanceOf(this.address);
+      } catch (e) {
+        console.error(tokenAddress, e);
+        balance = BigNumber.from(0);
+      }
+    }
+
+    return await getCurrencyValue(this.providerOrSigner, tokenAddress, balance);
   }
 }
