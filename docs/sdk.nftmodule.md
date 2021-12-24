@@ -36,6 +36,7 @@ export declare class NFTModule extends ModuleWithRoles<NFT>
 |  [getRoyaltyRecipientAddress()](./sdk.nftmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
 |  [getWithOwner(tokenId)](./sdk.nftmodule.getwithowner.md) |  |  |
 |  [isApproved(address, operator)](./sdk.nftmodule.isapproved.md) |  |  |
+|  [isRestrictedTransfer()](./sdk.nftmodule.isrestrictedtransfer.md) |  |  |
 |  [mint(metadata)](./sdk.nftmodule.mint.md) |  |  |
 |  [mintBatch(metadatas)](./sdk.nftmodule.mintbatch.md) |  |  |
 |  [mintBatchTo(to, metadatas)](./sdk.nftmodule.mintbatchto.md) |  |  |
