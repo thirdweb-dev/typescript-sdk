@@ -1326,6 +1326,8 @@ export class QuantityAboveLimitError extends Error {
     // @internal
     constructor(quantity: string);
 }
+
+// @public (undocumented)
 export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string): any;
 
 // Warning: (ae-internal-missing-underscore) The name "replaceIpfsWithGateway" should be prefixed with an underscore because the declaration is marked as @internal
