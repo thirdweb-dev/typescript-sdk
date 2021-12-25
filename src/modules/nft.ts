@@ -1,10 +1,9 @@
-import { readdirSync } from "fs";
 /* eslint-disable new-cap */
 import { NFT, NFT__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
-import { ModuleType, Role, RolesMap } from "../common";
+import { ModuleType, RestrictedTransferError, Role, RolesMap } from "../common";
 import { NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -142,6 +141,10 @@ export class NFTModule extends ModuleWithRoles<NFT> implements ITransferable {
     to: string,
     tokenId: string,
   ): Promise<TransactionReceipt> {
+    if (await this.isTransferRestricted()) {
+      throw new RestrictedTransferError(this.address);
+    }
+
     const from = await this.getSignerAddress();
     return await this.sendTransaction(
       "safeTransferFrom(address,address,uint256)",
@@ -262,6 +265,7 @@ export class NFTModule extends ModuleWithRoles<NFT> implements ITransferable {
   public async setRestrictedTransfer(
     restricted = false,
   ): Promise<TransactionReceipt> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }
