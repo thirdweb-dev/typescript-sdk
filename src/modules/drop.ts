@@ -27,6 +27,7 @@ import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject, ProviderOrSigner } from "../core/types";
 import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
+import { ITransferable } from "../interfaces/contracts/ITransferable";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
 import {
   ClaimCondition,
@@ -52,7 +53,10 @@ export interface CreatePublicMintCondition {
  * Access this module by calling {@link ThirdwebSDK.getDropModule}
  * @beta
  */
-export class DropModule extends ModuleWithRoles<DropV2> {
+export class DropModule
+  extends ModuleWithRoles<DropV2>
+  implements ITransferable
+{
   private _shouldCheckVersion = true;
   private _isV1 = false;
   private v1Module: DropV1Module;
@@ -730,14 +734,6 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     return await this.sendTransaction("multicall", [encoded]);
   }
 
-  public async setRestrictedTransfer(
-    restricted: boolean,
-  ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
-  }
-  public async isRestrictedTransfer(): Promise<boolean> {
-    return await this.readOnlyContract.transfersRestricted();
-  }
   /**
    * Gets the royalty BPS (basis points) of the contract
    *
@@ -848,13 +844,23 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     }
     return item.proof;
   }
+
+  public async isTransferRestricted(): Promise<boolean> {
+    return this.readOnlyContract.transfersRestricted();
+  }
+
+  public async setRestrictedTransfer(
+    restricted = false,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
 }
 
 /**
  * @internal
  * @deprecated - Should use DropV2
  */
-class DropV1Module extends ModuleWithRoles<Drop> {
+class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
   public static moduleType: ModuleType = ModuleType.DROP;
   storage = this.sdk.getStorage();
 
@@ -1469,6 +1475,16 @@ class DropV1Module extends ModuleWithRoles<Drop> {
    */
   public async canCreateBatch(): Promise<boolean> {
     return (await this.readOnlyContract.nextTokenId()).eq(0);
+  }
+
+  public async isTransferRestricted(): Promise<boolean> {
+    return this.readOnlyContract.transfersRestricted();
+  }
+
+  public async setRestrictedTransfer(
+    restricted = false,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }
 // This is a deprecated class, DropV1, see above

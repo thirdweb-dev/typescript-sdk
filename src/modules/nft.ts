@@ -1,3 +1,4 @@
+import { readdirSync } from "fs";
 /* eslint-disable new-cap */
 import { NFT, NFT__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
@@ -7,12 +8,13 @@ import { ModuleType, Role, RolesMap } from "../common";
 import { NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import { ITransferable } from "../interfaces/contracts/ITransferable";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getNFTModule}
  * @public
  */
-export class NFTModule extends ModuleWithRoles<NFT> {
+export class NFTModule extends ModuleWithRoles<NFT> implements ITransferable {
   public static moduleType: ModuleType = ModuleType.NFT;
 
   public static roles = [
@@ -197,15 +199,6 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     return await this.sendTransaction("transferFrom", [from, to, tokenId]);
   }
 
-  // owner functions
-  public async setRestrictedTransfer(
-    restricted = false,
-  ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
-  }
-  public async isRestrictedTransfer(): Promise<boolean> {
-    return await this.readOnlyContract.transfersRestricted();
-  }
   public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
     // TODO: reduce this duplication and provide common functions around
     // royalties through an interface. Currently this function is
@@ -260,5 +253,15 @@ export class NFTModule extends ModuleWithRoles<NFT> {
       return metadata.metadata.fee_recipient;
     }
     return "";
+  }
+
+  public async isTransferRestricted(): Promise<boolean> {
+    return this.readOnlyContract.transfersRestricted();
+  }
+
+  public async setRestrictedTransfer(
+    restricted = false,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }

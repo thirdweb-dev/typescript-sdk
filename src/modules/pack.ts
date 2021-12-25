@@ -18,6 +18,7 @@ import { NotFoundError } from "../common/error";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import { ITransferable } from "../interfaces/contracts/ITransferable";
 
 /**
  * @beta
@@ -64,7 +65,10 @@ export interface IPackBatchArgs {
  * Access this module by calling {@link ThirdwebSDK.getPackModule}
  * @beta
  */
-export class PackModule extends ModuleWithRoles<PackContract> {
+export class PackModule
+  extends ModuleWithRoles<PackContract>
+  implements ITransferable
+{
   public static moduleType: ModuleType = ModuleType.PACK;
 
   public static roles = [
@@ -344,12 +348,6 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     await this.sendTransaction("setContractURI", [uri]);
   }
 
-  public async setRestrictedTransfer(restricted = false): Promise<void> {
-    await this.sendTransaction("setRestrictedTransfer", [restricted]);
-  }
-  public async isRestrictedTransfer(): Promise<boolean> {
-    return await this.readOnlyContract.transfersRestricted();
-  }
   /**
    * Gets the royalty BPS (basis points) of the contract
    *
@@ -370,5 +368,15 @@ export class PackModule extends ModuleWithRoles<PackContract> {
       return metadata.metadata.fee_recipient;
     }
     return "";
+  }
+
+  public async isTransferRestricted(): Promise<boolean> {
+    return this.readOnlyContract.transfersRestricted();
+  }
+
+  public async setRestrictedTransfer(
+    restricted = false,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }
