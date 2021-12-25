@@ -17,6 +17,7 @@ import {
   Signer,
 } from "ethers";
 import { getContractMetadata, isContract } from "../common/contract";
+import { MissingRoleError } from "../common/error";
 import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
@@ -325,7 +326,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<TransactionReceipt> {
-    const func = contract.functions[fn];
+    const func: ethers.ContractFunction = contract.functions[fn];
     if (!func) {
       throw new Error("invalid function");
     }
@@ -780,6 +781,25 @@ export class ModuleWithRoles<
   ): Promise<string[]> {
     return await Promise.all(
       metadata.map(async (m) => await this.prepareMetadata(m)),
+    );
+  }
+
+  /**
+   * Throws an error if an address is missing the roles specified.
+   *
+   * @param roles - The roles to check
+   * @param address - The address to check
+   */
+  protected async onlyRoles(roles: Role[], address: string): Promise<void> {
+    await Promise.all(
+      roles.map(async (role) => {
+        const members = await this.getRoleMembers(role);
+        if (
+          !members.map((a) => a.toLowerCase()).includes(address.toLowerCase())
+        ) {
+          throw new MissingRoleError(address, role);
+        }
+      }),
     );
   }
 }
