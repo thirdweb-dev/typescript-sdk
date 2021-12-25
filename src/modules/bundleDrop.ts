@@ -23,9 +23,9 @@ import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
+import { ITransferable } from "../interfaces/contracts/ITransferable";
 import { ClaimCondition } from "../types/claim-conditions/PublicMintCondition";
 import { Snapshot } from "../types/snapshots";
-import { ITransferable } from "./../interfaces/contracts/ITransferable";
 
 /**
  * @beta
