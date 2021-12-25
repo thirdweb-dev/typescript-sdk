@@ -194,6 +194,19 @@ export class MarketplaceModule
   }): Promise<void> {
     this.validateAuctionListing(BigNumber.from(bid.listingId));
 
+    const bidBuffer = await this.getBidBufferBps();
+    console.log("bidBuffer =", bidBuffer);
+
+    const winningBid = await this.getWinningBid(bid.listingId);
+    if (winningBid) {
+      const minBet = winningBid?.pricePerToken.mul(10000).mul(bidBuffer);
+      bid.pricePerToken = BigNumber.from(bid.pricePerToken);
+      invariant(
+        bid.pricePerToken.mul(10000).gt(minBet),
+        "Bid price is too low",
+      );
+    }
+
     const quantity = BigNumber.from(bid.quantityDesired);
     const value = BigNumber.from(bid.pricePerToken).mul(quantity);
 

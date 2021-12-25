@@ -332,8 +332,6 @@ describe("Marketplace Module", async () => {
         );
       }
     });
-
-    it("should throw an error if a bid being placed is not a winning bid", async () => {});
   });
 
   describe("Winning Bids", () => {
@@ -404,8 +402,6 @@ describe("Marketplace Module", async () => {
         "The buyer should have been awarded token",
       );
     });
-
-    it("should throw an error if a bid being placed is not a winning bid", async () => {});
   });
 
   describe("Closing listings", () => {
@@ -462,6 +458,30 @@ describe("Marketplace Module", async () => {
       );
     });
 
-    it("should throw an error if a bid being placed is not a winning bid", async () => {});
+    it("should throw an error if a bid being placed is not a winning bid", async () => {
+      await sdk.setProviderOrSigner(bobWallet);
+      const currentBalance = await dummyNftModule.balanceOf(bobWallet.address);
+      assert.equal(
+        currentBalance.toString(),
+        "0",
+        "The buyer should start with no tokens",
+      );
+      await marketplaceModule.makeBid({
+        currencyContractAddress: tokenAddress,
+        listingId: auctionListingId,
+        quantityDesired: 1,
+        pricePerToken: ethers.utils.parseUnits("2"),
+      });
+      try {
+        await marketplaceModule.makeBid({
+          currencyContractAddress: tokenAddress,
+          listingId: auctionListingId,
+          quantityDesired: 1,
+          pricePerToken: ethers.utils.parseUnits("2.01"),
+        });
+      } catch (err) {
+        console.error("error", err);
+      }
+    });
   });
 });
