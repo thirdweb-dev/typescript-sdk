@@ -39,7 +39,7 @@ describe("Pack Module", async () => {
     for (let i = 0; i < 5; i++) {
       batch.push({
         metadata: {
-          name: `Test ${i}`,
+          name: `NFT ${i}`,
         },
         supply: 1000,
       });
@@ -54,40 +54,30 @@ describe("Pack Module", async () => {
       assets: [
         {
           tokenId: "0",
-          amount: 10,
+          amount: 50,
         },
         {
           tokenId: "1",
-          amount: 20,
+          amount: 50,
+        },
+        {
+          tokenId: "2",
+          amount: 50,
         },
       ],
       metadata: {
-        name: "Test Pack",
+        name: "Pack",
       },
     });
     return pack;
   };
 
-  describe("Buying Packs", () => {
-    beforeEach(async () => {
-      await createBundles();
-    });
-
-    it("should allow you to open a pack", async () => {
-      const pack = await createPacks();
-
-      const opened = await packModule.open("0");
-      console.log(opened);
-    });
-  });
-
-  describe("Creating Packs", () => {
+  describe("Pack Creation", () => {
     beforeEach(async () => {
       await createBundles();
     });
 
     it("should allow you to create a batch of packs", async () => {
-      console.log("Creating packs");
       const pack = await createPacks();
 
       assert.equal(pack.creator, adminWallet.address);
@@ -97,24 +87,37 @@ describe("Pack Module", async () => {
 
     it("should return the correct rewards", async () => {
       const pack = await createPacks();
-
       const rewards = await packModule.getNFTs(pack.id);
 
-      const foundFirst = rewards.find(
-        (r) =>
-          r.metadata.id === "0" &&
-          r.supply.toNumber() === 10 &&
-          r.metadata.name === "Test 0",
+      const first = rewards.find(
+        (reward) =>
+          reward.metadata.id === "0" &&
+          reward.supply.toNumber() === 50 &&
+          reward.metadata.name === "NFT 1",
       );
-      assert.isTrue(foundFirst !== undefined, "First NFT not found");
 
-      const foundSecond = rewards.find(
-        (r) =>
-          r.metadata.id === "1" &&
-          r.supply.toNumber() === 20 &&
-          r.metadata.name === "Test 1",
+      const second = rewards.find(
+        (reward) =>
+          reward.metadata.id === "1" &&
+          reward.supply.toNumber() === 50 &&
+          reward.metadata.name === "NFT 2",
       );
-      assert.isTrue(foundSecond !== undefined, "Second NFT not found");
+
+      const third = rewards.find(
+        (reward) =>
+          reward.metadata.id === "2" &&
+          reward.supply.toNumber() === 50 &&
+          reward.metadata.name === "NFT 3",
+      );
+
+      assert.isDefined(first, "First NFT not found");
+      assert.isDefined(second, "Second NFT not found");
+      assert.isDefined(third, "Third NFT not found");
+    });
+
+    it("should return correct pack supply", async () => {
+      const pack = await createPacks();
+      assert.equal("150", pack.currentSupply.toString());
     });
   });
 });
