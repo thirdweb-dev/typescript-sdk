@@ -260,10 +260,7 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     );
 
     const receipt = await tx.wait();
-    const log = await this.parseLogs<PackCreatedEvent>(
-      "PackCreated",
-      receipt.logs,
-    );
+    const log = this.parseLogs<PackCreatedEvent>("PackCreated", receipt.logs);
     if (log.length === 0) {
       throw new Error("PackCreated event not found");
     }
