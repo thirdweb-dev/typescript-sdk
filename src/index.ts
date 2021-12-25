@@ -26,7 +26,7 @@
  *  6 |
  *  7 | const sdk = new ThirdwebSDK();
  *  8 |
- *  9 | const nftModule: NFTModule = sdk.getNftModule(contractAddress);
+ *  9 | const nftModule: NFTModule = sdk.getNFTModule(contractAddress);
  * 10 |
  * 11 | const nftListWithOwnerAddress: NFTMetadataOwner[] = await nftModule.getAllWithOwner();
  * 12 |
