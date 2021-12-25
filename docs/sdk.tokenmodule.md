@@ -9,9 +9,11 @@ Access this module by calling [ThirdwebSDK.getTokenModule()](./sdk.thirdwebsdk.g
 <b>Signature:</b>
 
 ```typescript
-export declare class TokenModule extends ModuleWithRoles<Coin> 
+export declare class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
 ```
 <b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Coin&gt;
+
+<b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 
 ## Properties
 
@@ -37,7 +39,7 @@ export declare class TokenModule extends ModuleWithRoles<Coin>
 |  [getValue(value)](./sdk.tokenmodule.getvalue.md) |  |  |
 |  [getVoteBalance()](./sdk.tokenmodule.getvotebalance.md) |  | Get your wallet voting power for the current checkpoints |
 |  [getVoteBalanceOf(account)](./sdk.tokenmodule.getvotebalanceof.md) |  |  |
-|  [isRestrictedTransfer()](./sdk.tokenmodule.isrestrictedtransfer.md) |  |  |
+|  [isTransferRestricted()](./sdk.tokenmodule.istransferrestricted.md) |  |  |
 |  [mint(amount)](./sdk.tokenmodule.mint.md) |  |  |
 |  [mintBatchTo(args)](./sdk.tokenmodule.mintbatchto.md) |  |  |
 |  [mintTo(to, amount)](./sdk.tokenmodule.mintto.md) |  |  |
