@@ -29,7 +29,7 @@ export declare class PackModule extends ModuleWithRoles<PackContract>
 |  --- | --- | --- |
 |  [balance(tokenId)](./sdk.packmodule.balance.md) |  | <b><i>(BETA)</i></b> |
 |  [balanceOf(address, tokenId)](./sdk.packmodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
-|  [create(args)](./sdk.packmodule.create.md) |  | <b><i>(BETA)</i></b> |
+|  [create(args)](./sdk.packmodule.create.md) |  | <b><i>(BETA)</i></b> Create a pack from a set of assets. |
 |  [depositLink(amount)](./sdk.packmodule.depositlink.md) |  | <b><i>(BETA)</i></b> |
 |  [get(packId)](./sdk.packmodule.get.md) |  | <b><i>(BETA)</i></b> |
 |  [getAll()](./sdk.packmodule.getall.md) |  | <b><i>(BETA)</i></b> |
