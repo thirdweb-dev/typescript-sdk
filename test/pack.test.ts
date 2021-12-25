@@ -73,7 +73,7 @@ describe("Pack Module", async () => {
       await createBundles();
     });
 
-    it("should allow you to buy a pack", async () => {
+    it("should allow you to open a pack", async () => {
       const pack = await createPacks();
 
       const opened = await packModule.open("0");
