@@ -37,19 +37,43 @@ describe("ITransferable", async () => {
 
   it("should restrict nft transfers", async () => {
     const module = await appModule.deployNftModule({
-      name: "Token Module",
+      name: "Nft Module",
       sellerFeeBasisPoints: 100,
     });
 
     const nft = await module.mint({ name: "test" });
 
-    await sdk.setProviderOrSigner(samWallet);
     await module.setRestrictedTransfer(true);
     const isRestricted = await module.isTransferRestricted();
     assert.isTrue(isRestricted);
 
     try {
       await module.transfer(bobWallet.address, nft.id);
+    } catch (err) {
+      if (err instanceof RestrictedTransferError) {
+        return;
+      }
+      throw err;
+    }
+  });
+
+  it("should restrict bundle transfers", async () => {
+    const module = await appModule.deployBundleModule({
+      name: "Bundle Module",
+      sellerFeeBasisPoints: 100,
+    });
+
+    await module.createAndMint({
+      metadata: { name: "test" },
+      supply: 100,
+    });
+
+    await module.setRestrictedTransfer(true);
+    const isRestricted = await module.isTransferRestricted();
+    assert.isTrue(isRestricted);
+
+    try {
+      await module.transfer(bobWallet.address, "0", 1);
     } catch (err) {
       if (err instanceof RestrictedTransferError) {
         return;

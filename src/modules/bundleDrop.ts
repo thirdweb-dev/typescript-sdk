@@ -694,6 +694,7 @@ export class BundleDropModule
   public async setRestrictedTransfer(
     restricted = false,
   ): Promise<TransactionReceipt> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }

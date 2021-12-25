@@ -852,6 +852,7 @@ export class DropModule
   public async setRestrictedTransfer(
     restricted = false,
   ): Promise<TransactionReceipt> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }
@@ -1484,6 +1485,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
   public async setRestrictedTransfer(
     restricted = false,
   ): Promise<TransactionReceipt> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }
