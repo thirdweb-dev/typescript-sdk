@@ -9,8 +9,10 @@ import {
   getCurrencyMetadata,
   getCurrencyValue,
 } from "../common/currency";
+import { RestrictedTransferError } from "../common/error";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import { ITransferable } from "../interfaces/contracts/ITransferable";
 
 export interface ITokenMintArgs {
   address: string;
@@ -26,7 +28,10 @@ export interface ITokenMintFromArgs extends ITokenMintArgs {
  * Access this module by calling {@link ThirdwebSDK.getTokenModule}
  * @public
  */
-export class TokenModule extends ModuleWithRoles<Coin> {
+export class TokenModule
+  extends ModuleWithRoles<Coin>
+  implements ITransferable
+{
   public static moduleType: ModuleType = ModuleType.CURRENCY as const;
 
   public static roles = [
@@ -133,6 +138,10 @@ export class TokenModule extends ModuleWithRoles<Coin> {
     to: string,
     amount: BigNumberish,
   ): Promise<TransactionReceipt> {
+    if (await this.isTransferRestricted()) {
+      throw new RestrictedTransferError(this.address);
+    }
+
     return await this.sendTransaction("transfer", [to, amount]);
   }
 
@@ -224,12 +233,6 @@ export class TokenModule extends ModuleWithRoles<Coin> {
     return await this.sendTransaction("setContractURI", [uri]);
   }
 
-  public async setRestrictedTransfer(
-    restricted = false,
-  ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
-  }
-
   public async transferBatch(args: ITokenMintArgs[]) {
     const encoded = args.map((arg) =>
       this.contract.interface.encodeFunctionData("transfer", [
@@ -249,6 +252,17 @@ export class TokenModule extends ModuleWithRoles<Coin> {
       ]),
     );
     await this.sendTransaction("multicall", [encoded]);
+  }
+
+  public async isTransferRestricted(): Promise<boolean> {
+    return this.readOnlyContract.transfersRestricted();
+  }
+
+  public async setRestrictedTransfer(
+    restricted = false,
+  ): Promise<TransactionReceipt> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }
 

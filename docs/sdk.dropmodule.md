@@ -52,6 +52,7 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [getRoyaltyBps()](./sdk.dropmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.dropmodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |
 |  [isApproved(address, operator)](./sdk.dropmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
+|  [isRestrictedTransfer()](./sdk.dropmodule.isrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |
 |  [isV1()](./sdk.dropmodule.isv1.md) |  | <b><i>(BETA)</i></b> Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract. |
 |  [lazyMint(metadata)](./sdk.dropmodule.lazymint.md) |  | <b><i>(BETA)</i></b> |
 |  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  | <b><i>(BETA)</i></b> |

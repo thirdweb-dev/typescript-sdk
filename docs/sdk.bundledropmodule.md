@@ -46,6 +46,7 @@ export declare class BundleDropModule extends ModuleWithRoles<BundleDrop>
 |  [getRoyaltyRecipientAddress()](./sdk.bundledropmodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |
 |  [getSaleRecipient(tokenId)](./sdk.bundledropmodule.getsalerecipient.md) |  | <b><i>(BETA)</i></b> |
 |  [isApproved(address, operator)](./sdk.bundledropmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
+|  [isRestrictedTransfer()](./sdk.bundledropmodule.isrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |
 |  [lazyMintBatch(metadatas)](./sdk.bundledropmodule.lazymintbatch.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.bundledropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
 |  [setClaimCondition(tokenId, factory)](./sdk.bundledropmodule.setclaimcondition.md) |  | <b><i>(BETA)</i></b> Sets public claim conditions for the next minting using the claim condition factory. |

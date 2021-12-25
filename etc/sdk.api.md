@@ -189,6 +189,8 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
+    isRestrictedTransfer(): Promise<boolean>;
+    // (undocumented)
     lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<BundleDropMetadata[]>;
     // (undocumented)
     static moduleType: ModuleType;
@@ -271,6 +273,8 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> {
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string, assetContract?: string, assetId?: BigNumberish): Promise<boolean>;
+    // (undocumented)
+    isRestrictedTransfer(): Promise<boolean>;
     // (undocumented)
     mint(args: INFTBundleBatchArgs): Promise<void>;
     // (undocumented)
@@ -528,6 +532,8 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> {
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
+    // (undocumented)
+    isRestrictedTransfer(): Promise<boolean>;
     isV1(): Promise<boolean>;
     // @deprecated (undocumented)
     lazyMint(metadata: MetadataURIOrObject): Promise<void>;
@@ -1121,6 +1127,8 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
+    isRestrictedTransfer(): Promise<boolean>;
+    // (undocumented)
     mint(metadata: MetadataURIOrObject): Promise<NFTMetadata>;
     // (undocumented)
     mintBatch(metadatas: MetadataURIOrObject[]): Promise<NFTMetadata[]>;
@@ -1202,6 +1210,8 @@ export class PackModule extends ModuleWithRoles<Pack> {
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
+    // (undocumented)
+    isRestrictedTransfer(): Promise<boolean>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
@@ -1464,6 +1474,8 @@ export class TokenModule extends ModuleWithRoles<Coin> {
     getVoteBalance(): Promise<BigNumber_2>;
     // (undocumented)
     getVoteBalanceOf(account: string): Promise<BigNumber_2>;
+    // (undocumented)
+    isRestrictedTransfer(): Promise<boolean>;
     // (undocumented)
     mint(amount: BigNumberish_2): Promise<void>;
     // (undocumented)

@@ -37,6 +37,7 @@ export declare class TokenModule extends ModuleWithRoles<Coin>
 |  [getValue(value)](./sdk.tokenmodule.getvalue.md) |  |  |
 |  [getVoteBalance()](./sdk.tokenmodule.getvotebalance.md) |  | Get your wallet voting power for the current checkpoints |
 |  [getVoteBalanceOf(account)](./sdk.tokenmodule.getvotebalanceof.md) |  |  |
+|  [isRestrictedTransfer()](./sdk.tokenmodule.isrestrictedtransfer.md) |  |  |
 |  [mint(amount)](./sdk.tokenmodule.mint.md) |  |  |
 |  [mintBatchTo(args)](./sdk.tokenmodule.mintbatchto.md) |  |  |
 |  [mintTo(to, amount)](./sdk.tokenmodule.mintto.md) |  |  |

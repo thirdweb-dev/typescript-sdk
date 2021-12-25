@@ -25,6 +25,7 @@ import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
 import { ClaimCondition } from "../types/claim-conditions/PublicMintCondition";
 import { Snapshot } from "../types/snapshots";
+import { ITransferable } from "./../interfaces/contracts/ITransferable";
 
 /**
  * @beta
@@ -51,7 +52,10 @@ export interface BundleDropMetadata {
  * Access this module by calling {@link ThirdwebSDK.getBundleDropModule}
  * @beta
  */
-export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
+export class BundleDropModule
+  extends ModuleWithRoles<BundleDrop>
+  implements ITransferable
+{
   public static moduleType: ModuleType = ModuleType.BUNDLE_DROP;
 
   public static roles = [
@@ -480,12 +484,6 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     return await this.sendTransaction("multicall", [encoded]);
   }
 
-  public async setRestrictedTransfer(
-    restricted: boolean,
-  ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
-  }
-
   /**
    * Gets the royalty BPS (basis points) of the contract
    *
@@ -687,5 +685,16 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       return [];
     }
     return item.proof;
+  }
+
+  public async isTransferRestricted(): Promise<boolean> {
+    return this.readOnlyContract.transfersRestricted();
+  }
+
+  public async setRestrictedTransfer(
+    restricted = false,
+  ): Promise<TransactionReceipt> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }

@@ -1,8 +1,8 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "ethers";
+import { ethers as hardhatEthers } from "hardhat";
 import { AppModule, ThirdwebSDK } from "../src";
 import { deployRegistry } from "./setup/deployRegistry";
-import { ethers as hardhatEthers } from "hardhat";
 
 const RPC_URL = "http://localhost:8545";
 
