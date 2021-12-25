@@ -35,6 +35,11 @@ import { Signer } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/providers';
 import { VotingGovernor } from '@3rdweb/contracts';
 
+// @public
+export class AdminRoleMissingError extends Error {
+    constructor(address?: string, contractAddress?: string, message?: string);
+}
+
 // Warning: (ae-forgotten-export) The symbol "RegistryModule" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "SplitsModule" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
@@ -147,7 +152,7 @@ export interface BundleDropMetadata {
 }
 
 // @beta
-export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
+export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implements ITransferable {
     // (undocumented)
     balance(tokenId: BigNumberish_2): Promise<BigNumber_2>;
     // (undocumented)
@@ -189,7 +194,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
-    isRestrictedTransfer(): Promise<boolean>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<BundleDropMetadata[]>;
     // (undocumented)
@@ -206,7 +211,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> {
     // @deprecated (undocumented)
     setPublicClaimConditions(tokenId: BigNumberish_2, conditions: BundleDropCreateClaimCondition[]): Promise<void>;
     // (undocumented)
-    setRestrictedTransfer(restricted: boolean): Promise<TransactionReceipt>;
+    setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
@@ -231,7 +236,7 @@ export interface BundleMetadata {
 }
 
 // @beta
-export class BundleModule extends ModuleWithRoles<NFTCollection> {
+export class BundleModule extends ModuleWithRoles<NFTCollection> implements ITransferable {
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber>;
     // (undocumented)
@@ -274,7 +279,7 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> {
     // (undocumented)
     isApproved(address: string, operator: string, assetContract?: string, assetId?: BigNumberish): Promise<boolean>;
     // (undocumented)
-    isRestrictedTransfer(): Promise<boolean>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     mint(args: INFTBundleBatchArgs): Promise<void>;
     // (undocumented)
@@ -483,7 +488,7 @@ export const DEFAULT_BLOCK_TIMES_FALLBACK: Record<SUPPORTED_CHAIN_ID | ChainId.H
 }>;
 
 // @beta
-export class DropModule extends ModuleWithRoles<LazyMintERC721> {
+export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITransferable {
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     // (undocumented)
@@ -533,7 +538,7 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> {
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
-    isRestrictedTransfer(): Promise<boolean>;
+    isTransferRestricted(): Promise<boolean>;
     isV1(): Promise<boolean>;
     // @deprecated (undocumented)
     lazyMint(metadata: MetadataURIOrObject): Promise<void>;
@@ -559,7 +564,7 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> {
     // @deprecated (undocumented)
     setPublicMintConditions(conditions: CreatePublicMintCondition[]): Promise<void>;
     // (undocumented)
-    setRestrictedTransfer(restricted: boolean): Promise<TransactionReceipt>;
+    setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
@@ -836,6 +841,12 @@ export interface ITokenMintFromArgs extends ITokenMintArgs {
     fromAddress: string;
 }
 
+// @public (undocumented)
+export interface ITransferable {
+    isTransferRestricted(): Promise<boolean>;
+    setRestrictedTransfer(restrict: boolean): Promise<TransactionReceipt>;
+}
+
 // @public
 export type JSONValue = string | number | null | boolean | JSONValue[] | {
     [key: string]: JSONValue;
@@ -1041,6 +1052,7 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
     protected getModuleRoles(): readonly Role[];
     getRoleMembers(role: Role): Promise<string[]>;
     grantRole(role: Role, address: string): Promise<TransactionReceipt>;
+    protected onlyRoles(roles: Role[], address: string): Promise<void>;
     prepareBatchMetadata(metadata: MetadataURIOrObject[]): Promise<string[]>;
     prepareMetadata(metadata: MetadataURIOrObject): Promise<string>;
     revokeAllRolesFromAddress(address: string): Promise<Role[]>;
@@ -1100,7 +1112,7 @@ export interface NFTMetadataOwner {
 }
 
 // @public
-export class NFTModule extends ModuleWithRoles<NFT> {
+export class NFTModule extends ModuleWithRoles<NFT> implements ITransferable {
     // (undocumented)
     balance(): Promise<BigNumber_2>;
     // (undocumented)
@@ -1127,7 +1139,7 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
-    isRestrictedTransfer(): Promise<boolean>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     mint(metadata: MetadataURIOrObject): Promise<NFTMetadata>;
     // (undocumented)
@@ -1184,7 +1196,7 @@ export interface PackMetadata {
 }
 
 // @beta
-export class PackModule extends ModuleWithRoles<Pack> {
+export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber_2>;
     // (undocumented)
@@ -1211,7 +1223,7 @@ export class PackModule extends ModuleWithRoles<Pack> {
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
-    isRestrictedTransfer(): Promise<boolean>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
@@ -1223,7 +1235,7 @@ export class PackModule extends ModuleWithRoles<Pack> {
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<void>;
     // (undocumented)
-    setRestrictedTransfer(restricted?: boolean): Promise<void>;
+    setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
@@ -1347,6 +1359,11 @@ export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string): a
 export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string): string;
 
 // @public
+export class RestrictedTransferError extends Error {
+    constructor(assetAddress?: string);
+}
+
+// @public
 export type Role = keyof IRoles;
 
 // Warning: (ae-internal-missing-underscore) The name "RolesMap" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1441,7 +1458,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
 }
 
 // @public
-export class TokenModule extends ModuleWithRoles<Coin> {
+export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable {
     // (undocumented)
     allowance(spender: string): Promise<BigNumber_2>;
     // (undocumented)
@@ -1475,7 +1492,7 @@ export class TokenModule extends ModuleWithRoles<Coin> {
     // (undocumented)
     getVoteBalanceOf(account: string): Promise<BigNumber_2>;
     // (undocumented)
-    isRestrictedTransfer(): Promise<boolean>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     mint(amount: BigNumberish_2): Promise<void>;
     // (undocumented)

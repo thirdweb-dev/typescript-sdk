@@ -12,9 +12,11 @@ Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.ge
 <b>Signature:</b>
 
 ```typescript
-export declare class PackModule extends ModuleWithRoles<PackContract> 
+export declare class PackModule extends ModuleWithRoles<PackContract> implements ITransferable 
 ```
 <b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;PackContract&gt;
+
+<b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 
 ## Properties
 
@@ -38,7 +40,7 @@ export declare class PackModule extends ModuleWithRoles<PackContract>
 |  [getRoyaltyBps()](./sdk.packmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.packmodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |
 |  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
-|  [isRestrictedTransfer()](./sdk.packmodule.isrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |
+|  [isTransferRestricted()](./sdk.packmodule.istransferrestricted.md) |  | <b><i>(BETA)</i></b> |
 |  [open(packId)](./sdk.packmodule.open.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.packmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
 |  [setModuleMetadata(metadata)](./sdk.packmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
