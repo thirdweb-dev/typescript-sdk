@@ -4,6 +4,11 @@ import {
   Pack as PackContract,
   Pack__factory,
 } from "@3rdweb/contracts";
+
+import {
+  PackCreatedEvent,
+  PackOpenRequestEvent,
+} from "@3rdweb/contracts/dist/Pack";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import {
@@ -48,8 +53,8 @@ export interface IPackCreateArgs {
     tokenId: BigNumberish;
     amount: BigNumberish;
   }[];
-  secondsUntilOpenStart?: number;
-  rewardsPerOpen?: number;
+  secondsUntilOpenStart?: BigNumberish;
+  rewardsPerOpen?: BigNumberish;
 }
 
 /**
@@ -98,9 +103,17 @@ export class PackModule extends ModuleWithRoles<PackContract> {
 
   public async open(packId: string): Promise<NFTMetadata[]> {
     const receipt = await this.sendTransaction("openPack", [packId]);
-    const event = this.parseEventLogs("PackOpenRequest", receipt?.logs);
-    const requestId = event.requestId;
-    const opener = event.opener;
+    const logs = this.parseLogs<PackOpenRequestEvent>(
+      "PackOpenRequest",
+      receipt?.logs,
+    );
+    if (logs.length === 0) {
+      throw new Error("Failed to open pack");
+    }
+    const event = logs[0];
+
+    const requestId = event.args.requestId;
+    const opener = event.args.opener;
 
     const fulfillEvent: any = await new Promise((resolve) => {
       this.readOnlyContract.once(
@@ -119,12 +132,13 @@ export class PackModule extends ModuleWithRoles<PackContract> {
         },
       );
     });
-    const { rewardIds } = fulfillEvent;
+
+    const { rewardIds, rewardContract } = fulfillEvent;
     return await Promise.all(
       rewardIds.map((rewardId: BigNumber) =>
         getMetadataWithoutContract(
           this.providerOrSigner,
-          this.address,
+          rewardContract,
           rewardId.toString(),
           this.ipfsGatewayUrl,
         ),
@@ -213,6 +227,12 @@ export class PackModule extends ModuleWithRoles<PackContract> {
   }
 
   // owner functions
+  /**
+   * Create a pack from a set of assets.
+   *
+   * @param args - Args for the pack creation
+   * @returns - The newly created pack metadata
+   */
   public async create(args: IPackCreateArgs): Promise<PackMetadata> {
     const asset = ERC1155__factory.connect(
       args.assetContract,
@@ -240,9 +260,12 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     );
 
     const receipt = await tx.wait();
-    const event = receipt?.events?.find((e) => e.event === "PackCreated");
-    const packId = event?.args?.packId;
-    return await this.get(packId);
+    const log = this.parseLogs<PackCreatedEvent>("PackCreated", receipt.logs);
+    if (log.length === 0) {
+      throw new Error("PackCreated event not found");
+    }
+    const packId = log[0].args.packId;
+    return await this.get(packId.toString());
   }
 
   public async transferFrom(

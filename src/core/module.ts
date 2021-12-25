@@ -468,6 +468,17 @@ export class Module<TContract extends BaseContract = BaseContract> {
     }
     return null;
   }
+
+  protected parseLogs<T = any>(eventName: string, logs?: Log[]): T[] {
+    if (!logs || logs.length === 0) {
+      return [];
+    }
+    const topic = this.contract.interface.getEventTopic(eventName);
+    const parsedLogs = logs.filter((x) => x.topics.indexOf(topic) >= 0);
+    return parsedLogs.map(
+      (l) => this.contract.interface.parseLog(l) as unknown as T,
+    );
+  }
 }
 
 /**
