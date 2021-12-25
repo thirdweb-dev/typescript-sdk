@@ -1,5 +1,4 @@
-name: Build
-description: "Builds the project to ensure there are no compilation errors"
+name: yarn build
 
 on: [push]
 
