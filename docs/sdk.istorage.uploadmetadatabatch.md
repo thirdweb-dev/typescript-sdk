@@ -9,14 +9,14 @@ Uploads metadata to IPFS
 <b>Signature:</b>
 
 ```typescript
-uploadMetadataBatch(metadata: MetadataURIOrObject, contractAddress?: string, fileStartNumber?: number): Promise<string>;
+uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | [MetadataURIOrObject](./sdk.metadatauriorobject.md) | The metadata to be uploaded. |
+|  metadatas | [MetadataURIOrObject](./sdk.metadatauriorobject.md)<!-- -->\[\] |  |
 |  contractAddress | string | Optional. The contract address the data belongs to. |
 |  fileStartNumber | number |  |
 

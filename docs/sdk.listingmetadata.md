@@ -27,4 +27,5 @@ export interface ListingMetadata
 |  [tokenContract](./sdk.listingmetadata.tokencontract.md) | string |  |
 |  [tokenId](./sdk.listingmetadata.tokenid.md) | string |  |
 |  [tokenMetadata?](./sdk.listingmetadata.tokenmetadata.md) | [NFTMetadata](./sdk.nftmetadata.md) | <i>(Optional)</i> |
+|  [tokensPerBuyer](./sdk.listingmetadata.tokensperbuyer.md) | BigNumber |  |
 

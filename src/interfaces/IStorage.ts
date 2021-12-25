@@ -87,7 +87,7 @@ export interface IStorage {
    */
 
   uploadMetadataBatch(
-    metadata: MetadataURIOrObject,
+    metadatas: MetadataURIOrObject[],
     contractAddress?: string,
     fileStartNumber?: number,
   ): Promise<string>;

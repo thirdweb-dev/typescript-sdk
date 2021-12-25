@@ -1113,8 +1113,9 @@ class DropV1Module extends ModuleWithRoles<Drop> {
    * @deprecated - The function has been deprecated. Use `mintBatch` instead.
    */
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
-    const uris = await Promise.all(
-      metadatas.map((m) => this.storage.uploadMetadata(m)),
+    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
+    const uris = Array.from(Array(metadatas.length).keys()).map(
+      (i) => `${baseUri}${i}/`,
     );
     await this.sendTransaction("lazyMintBatch", [uris]);
   }

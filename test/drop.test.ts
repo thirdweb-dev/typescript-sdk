@@ -165,6 +165,23 @@ describe("Drop Module", async () => {
     }
   });
 
+  it("should correctly upload metadata for each nft", async () => {
+    const metadatas = [];
+    for (let i = 0; i < 10; i++) {
+      metadatas.push({
+        name: `test ${i}`,
+      });
+    }
+    await dropModule.lazyMintBatch(metadatas);
+    const nfts = await dropModule.getAll();
+    expect(nfts.length).to.eq(10);
+    let i = 0;
+    nfts.forEach((nft) => {
+      expect(nft.metadata.name).to.be.equal(`test ${i}`);
+      i++;
+    });
+  });
+
   it("should not allow claiming to someone not in the merkle tree", async () => {
     const factory = dropModule.getMintConditionsFactory();
     const phase = factory.newClaimPhase({
