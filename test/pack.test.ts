@@ -49,8 +49,8 @@ describe("Pack Module", async () => {
     await bundleModule.createAndMintBatch(batch);
   };
 
-  const createPacks = async (): Promise<PackMetadata> => {
-    const pack = await packModule.create({
+  const createPacks = async (): Promise<PackMetadata[]> => {
+    const packOne = await packModule.create({
       assetContract: bundleModule.address,
       assets: [
         {
@@ -70,7 +70,30 @@ describe("Pack Module", async () => {
         name: "Pack",
       },
     });
-    return pack;
+
+    const packTwo = await packModule.create({
+      assetContract: bundleModule.address,
+      assets: [
+        {
+          tokenId: "0",
+          amount: BigNumber.from(50),
+        },
+        {
+          tokenId: "1",
+          amount: BigNumber.from(50),
+        },
+        {
+          tokenId: "2",
+          amount: BigNumber.from(50),
+        },
+      ],
+      metadata: {
+        name: "Pack",
+      },
+      rewardsPerOpen: BigNumber.from(2),
+    });
+
+    return [packOne, packTwo];
   };
 
   describe("Pack Creation", () => {
@@ -79,7 +102,7 @@ describe("Pack Module", async () => {
     });
 
     it("should allow you to create a batch of packs", async () => {
-      const pack = await createPacks();
+      const [pack] = await createPacks();
 
       assert.equal(pack.creator, adminWallet.address);
       assert.equal(pack.id.toString(), "0");
@@ -87,7 +110,7 @@ describe("Pack Module", async () => {
     });
 
     it("should return the correct rewards", async () => {
-      const pack = await createPacks();
+      const [pack] = await createPacks();
       const rewards = await packModule.getNFTs(pack.id);
 
       const first = rewards.find(
@@ -117,11 +140,14 @@ describe("Pack Module", async () => {
     });
 
     it("should return correct pack supply", async () => {
-      const pack = await createPacks();
-      const balance = await packModule.balance(pack.id);
+      const [packOne, packTwo] = await createPacks();
+      const balanceOne = await packModule.balance(packOne.id);
+      const balanceTwo = await packModule.balance(packTwo.id);
 
-      assert.equal("150", pack.currentSupply.toString());
-      assert.equal("150", balance.toString());
+      assert.equal("150", packOne.currentSupply.toString());
+      assert.equal("150", balanceOne.toString());
+      assert.equal("75", packTwo.currentSupply.toString());
+      assert.equal("75", balanceTwo.toString());
     });
   });
 
