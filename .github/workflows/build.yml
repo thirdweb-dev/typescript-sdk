@@ -1,5 +1,5 @@
 name: Build
-description: Builds the project to ensure there are no compilation errors
+description: "Builds the project to ensure there are no compilation errors"
 
 on: [push]
 
