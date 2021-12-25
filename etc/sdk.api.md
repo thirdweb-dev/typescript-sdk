@@ -733,9 +733,9 @@ export interface IPackCreateArgs {
     // (undocumented)
     metadata: MetadataURIOrObject;
     // (undocumented)
-    rewardsPerOpen?: number;
+    rewardsPerOpen?: BigNumberish_2;
     // (undocumented)
-    secondsUntilOpenStart?: number;
+    secondsUntilOpenStart?: BigNumberish_2;
 }
 
 // @public (undocumented)
@@ -961,6 +961,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
     protected readonly options: ISDKOptions;
     // (undocumented)
     protected parseEventLogs(eventName: string, logs?: Log[]): any;
+    // (undocumented)
+    protected parseLogs<T = any>(eventName: string, logs?: Log[]): T[];
     // @internal (undocumented)
     protected get providerOrSigner(): ProviderOrSigner;
     // @internal
@@ -1181,7 +1183,6 @@ export class PackModule extends ModuleWithRoles<Pack> {
     balanceOf(address: string, tokenId: string): Promise<BigNumber_2>;
     // @internal (undocumented)
     protected connectContract(): Pack;
-    // (undocumented)
     create(args: IPackCreateArgs): Promise<PackMetadata>;
     // (undocumented)
     depositLink(amount: BigNumberish_2): Promise<void>;
