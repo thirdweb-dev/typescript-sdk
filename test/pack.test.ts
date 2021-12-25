@@ -4,6 +4,7 @@ import { BundleModule, PackMetadata, PackModule } from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
 
 import { assert, expect } from "chai";
+import { BigNumber } from "ethers";
 
 global.fetch = require("node-fetch");
 
@@ -54,15 +55,15 @@ describe("Pack Module", async () => {
       assets: [
         {
           tokenId: "0",
-          amount: 50,
+          amount: BigNumber.from(50),
         },
         {
           tokenId: "1",
-          amount: 50,
+          amount: BigNumber.from(50),
         },
         {
           tokenId: "2",
-          amount: 50,
+          amount: BigNumber.from(50),
         },
       ],
       metadata: {
@@ -82,7 +83,7 @@ describe("Pack Module", async () => {
 
       assert.equal(pack.creator, adminWallet.address);
       assert.equal(pack.id.toString(), "0");
-      assert.equal(pack.metadata.name, "Test Pack");
+      assert.equal(pack.metadata.name, "Pack");
     });
 
     it("should return the correct rewards", async () => {
@@ -93,21 +94,21 @@ describe("Pack Module", async () => {
         (reward) =>
           reward.metadata.id === "0" &&
           reward.supply.toNumber() === 50 &&
-          reward.metadata.name === "NFT 1",
+          reward.metadata.name === "NFT 0",
       );
 
       const second = rewards.find(
         (reward) =>
           reward.metadata.id === "1" &&
           reward.supply.toNumber() === 50 &&
-          reward.metadata.name === "NFT 2",
+          reward.metadata.name === "NFT 1",
       );
 
       const third = rewards.find(
         (reward) =>
           reward.metadata.id === "2" &&
           reward.supply.toNumber() === 50 &&
-          reward.metadata.name === "NFT 3",
+          reward.metadata.name === "NFT 2",
       );
 
       assert.isDefined(first, "First NFT not found");
@@ -117,7 +118,20 @@ describe("Pack Module", async () => {
 
     it("should return correct pack supply", async () => {
       const pack = await createPacks();
+      const balance = await packModule.balance(pack.id);
+
       assert.equal("150", pack.currentSupply.toString());
+      assert.equal("150", balance.toString());
+    });
+  });
+
+  describe("Open Pack", async () => {
+    beforeEach(async () => {
+      await createBundles();
+    });
+
+    it("pack open returns valid reward", async () => {
+      const pack = await createPacks();
     });
   });
 });

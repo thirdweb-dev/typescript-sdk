@@ -115,8 +115,6 @@ export class PackModule extends ModuleWithRoles<PackContract> {
     const requestId = event.args.requestId;
     const opener = event.args.opener;
 
-    console.log("Opener =", opener);
-
     const fulfillEvent: any = await new Promise((resolve) => {
       this.readOnlyContract.once(
         // eslint-disable-next-line new-cap
@@ -134,12 +132,13 @@ export class PackModule extends ModuleWithRoles<PackContract> {
         },
       );
     });
-    const { rewardIds } = fulfillEvent;
+
+    const { rewardIds, rewardContract } = fulfillEvent;
     return await Promise.all(
       rewardIds.map((rewardId: BigNumber) =>
         getMetadataWithoutContract(
           this.providerOrSigner,
-          this.address,
+          rewardContract,
           rewardId.toString(),
           this.ipfsGatewayUrl,
         ),
