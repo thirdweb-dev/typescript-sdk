@@ -92,21 +92,22 @@ export class IpfsStorage implements IStorage {
     const data = new FormData();
 
     files.forEach((file, i) => {
-      if (!withFileNames && typeof file !== "string") {
+      if (!withFileNames) {
         file = {
-          file: file as FileOrBuffer,
+          file: file as any,
           name: `files/${fileStartNumber + i}`,
         } as FileOrBufferWithNames;
-      } else {
-        file = file as FileOrBufferWithNames;
       }
-      const filepath = file.name;
+
+      const fileWithName = file as FileOrBufferWithNames;
+
+      const filepath = fileWithName.name;
       if (typeof window === "undefined") {
-        data.append("file", file.file as any, { filepath } as any);
+        data.append("file", fileWithName.file as any, { filepath } as any);
       } else {
         // browser does blob things, filepath is parsed differently on browser vs node.
         // pls pinata?
-        data.append("file", new Blob([file.file]), filepath);
+        data.append("file", new Blob([fileWithName.file]), filepath);
       }
     });
 
