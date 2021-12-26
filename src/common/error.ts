@@ -26,7 +26,7 @@ export class MissingRoleError extends Error {
   /** @internal */
   /** @internal */
   constructor(address: string, role: string) {
-    super(`MISSING ROLE: ${address} not have the ${role} for  role`);
+    super(`MISSING ROLE: ${address} does not have the '${role}' role`);
   }
 }
 
@@ -132,6 +132,36 @@ export class WrongListingTypeError extends Error {
       }${listingId ? ` listing id: ${listingId}` : ""}${
         expectedType ? ` expected type: ${expectedType}` : ""
       }${actualType ? ` actual type: ${actualType}` : ""}`,
+    );
+  }
+}
+
+/**
+ * Thrown when attempting to transfer an asset that has restricted transferability
+ */
+export class RestrictedTransferError extends Error {
+  constructor(assetAddress?: string) {
+    super(
+      `Failed to transfer asset, transfer is restricted.${
+        assetAddress ? ` Address : ${assetAddress}` : ""
+      }`,
+    );
+  }
+}
+
+/**
+ * Thrown when attempting to execute an admin-role function.
+ */
+export class AdminRoleMissingError extends Error {
+  constructor(
+    address?: string,
+    contractAddress?: string,
+    message = "Failed to execute transaction",
+  ) {
+    super(
+      `${message}, admin role is missing${
+        address ? ` on address: ${address}` : ""
+      }${contractAddress ? ` on contract: ${contractAddress}` : ""}`,
     );
   }
 }

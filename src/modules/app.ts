@@ -27,9 +27,9 @@ import {
   Role,
   RolesMap,
 } from "../common";
-import { getNativeTokenByChainId } from "../common/currency";
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getContractMetadata } from "../common/contract";
+import { getNativeTokenByChainId } from "../common/currency";
 import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
@@ -391,6 +391,7 @@ export class AppModule
     args: any[],
     factory: any,
   ): Promise<string> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
     const gasPrice = await this.sdk.getGasPrice();
     const txOpts = gasPrice
       ? { gasPrice: ethers.utils.parseUnits(gasPrice.toString(), "gwei") }

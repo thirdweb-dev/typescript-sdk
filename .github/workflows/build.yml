@@ -1,9 +1,9 @@
-name: Run Tests
+name: yarn build
 
 on: [push]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     env:
       PKEY: ${{ secrets.PKEY }}
@@ -20,4 +20,4 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn install
-    - run: make test
+    - run: yarn run build

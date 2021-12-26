@@ -1,9 +1,9 @@
+import { WETH9__factory } from "@3rdweb/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "ethers";
+import { ethers as hardhatEthers } from "hardhat";
 import { AppModule, ThirdwebSDK } from "../src";
 import { deployRegistry } from "./setup/deployRegistry";
-import { ethers as hardhatEthers } from "hardhat";
-import { WETH9__factory } from "@3rdweb/contracts";
 
 const RPC_URL = "http://localhost:8545";
 

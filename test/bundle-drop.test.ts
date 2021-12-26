@@ -156,8 +156,7 @@ describe("Bundle Drop Module", async () => {
       startTime: new Date(),
     });
     await bdModule.setClaimCondition("0", factory);
-    const token = await bdModule.claim("0", 1);
-    console.log(token);
+    await bdModule.claim("0", 1);
   });
 
   it("should return addresses of all the claimers", async () => {
@@ -228,9 +227,7 @@ describe("Bundle Drop Module", async () => {
       })
       .setPrice(1);
     await bdModule.setClaimCondition("0", factory);
-    console.log(await bdModule.getActiveClaimCondition("0"));
-    const token = await bdModule.claim("0", 1);
-    console.log(token);
+    await bdModule.claim("0", 1);
   });
 
   describe("eligibility", () => {

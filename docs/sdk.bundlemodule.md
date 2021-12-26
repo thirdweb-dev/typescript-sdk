@@ -12,9 +12,11 @@ Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.
 <b>Signature:</b>
 
 ```typescript
-export declare class BundleModule extends ModuleWithRoles<NFTBundleContract> 
+export declare class BundleModule extends ModuleWithRoles<NFTBundleContract> implements ITransferable 
 ```
 <b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;NFTBundleContract&gt;
+
+<b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 
 ## Properties
 
@@ -47,6 +49,7 @@ export declare class BundleModule extends ModuleWithRoles<NFTBundleContract>
 |  [getRoyaltyBps()](./sdk.bundlemodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.bundlemodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |
 |  [isApproved(address, operator, assetContract, assetId)](./sdk.bundlemodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
+|  [isTransferRestricted()](./sdk.bundlemodule.istransferrestricted.md) |  | <b><i>(BETA)</i></b> |
 |  [mint(args)](./sdk.bundlemodule.mint.md) |  | <b><i>(BETA)</i></b> |
 |  [mintBatch(args)](./sdk.bundlemodule.mintbatch.md) |  | <b><i>(BETA)</i></b> |
 |  [mintBatchTo(to, args, data)](./sdk.bundlemodule.mintbatchto.md) |  | <b><i>(BETA)</i></b> |
