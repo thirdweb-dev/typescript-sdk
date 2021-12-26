@@ -69,34 +69,9 @@ export class IpfsStorage implements IStorage {
     files: FileOrBufferWithNames[],
     contractAddress?: string,
   ): Promise<string> {
-    const token = await this.getUploadToken(contractAddress || "");
-    const metadata = {
-      name: `CONSOLE-TS-SDK-${contractAddress}`,
-    };
-    const data = new FormData();
+    const cid = await this.uploadBatchWithCid(true, files, contractAddress);
 
-    files.forEach((file) => {
-      const filepath = `files/${file.name}`;
-      if (typeof window === "undefined") {
-        data.append("file", file as any, { filepath } as any);
-      } else {
-        data.append("file", new Blob([file.file]), filepath);
-      }
-    });
-
-    data.append("pinataMetadata", JSON.stringify(metadata));
-    const res = await fetch(pinataIpfsUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: data as any,
-    });
-    const body = await res.json();
-    if (!res.ok) {
-      throw new UploadError("Failed to upload files to IPFS");
-    }
-    return body.IpfsHash;
+    return `ipfs://${cid}/`;
   }
 
   private async uploadBatchWithCid(
@@ -117,26 +92,21 @@ export class IpfsStorage implements IStorage {
     const data = new FormData();
 
     files.forEach((file, i) => {
-      if (withFileNames) {
-        file = file as FileOrBuffer;
-        const filepath = `files/${fileStartNumber + i}`;
-        if (typeof window === "undefined") {
-          data.append("file", file as any, { filepath } as any);
-        } else {
-          // browser does blob things, filepath is parsed differently on browser vs node.
-          // pls pinata?
-          data.append("file", new Blob([file]), filepath);
-        }
+      if (!withFileNames && typeof file !== "string") {
+        file = {
+          file: file as FileOrBuffer,
+          name: `files/${fileStartNumber + i}`,
+        } as FileOrBufferWithNames;
       } else {
         file = file as FileOrBufferWithNames;
-        const filepath = `files/${file.name}`;
-        if (typeof window === "undefined") {
-          data.append("file", file.file as any, { filepath } as any);
-        } else {
-          // browser does blob things, filepath is parsed differently on browser vs node.
-          // pls pinata?
-          data.append("file", new Blob([file.file]), filepath);
-        }
+      }
+      const filepath = file.name;
+      if (typeof window === "undefined") {
+        data.append("file", file.file as any, { filepath } as any);
+      } else {
+        // browser does blob things, filepath is parsed differently on browser vs node.
+        // pls pinata?
+        data.append("file", new Blob([file.file]), filepath);
       }
     });
 
