@@ -1,16 +1,18 @@
-import { ListingNotFoundError } from "../src/common/error";
-import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { assert, expect } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
+import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
 import {
+  ListingNotFoundError,
+  WrongListingTypeError,
+} from "../src/common/error";
+import {
+  BundleModule,
   MarketplaceModule,
   NFTModule,
-  BundleModule,
   TokenModule,
 } from "../src/modules";
 import { appModule, sdk, signers } from "./before.test";
-
-import { expect, assert, should } from "chai";
 
 global.fetch = require("node-fetch");
 
@@ -315,12 +317,11 @@ describe("Marketplace Module", async () => {
     it("should throw an error trying to fetch a listing of the wrong type", async () => {
       try {
         await marketplaceModule.getDirectListing(auctionListingId);
+        assert.fail("Should have thrown an error");
       } catch (err) {
-        expect(err).to.have.property(
-          "message",
-          `Listing ${auctionListingId.toString()} is not a direct listing`,
-          "",
-        );
+        if (!(err instanceof WrongListingTypeError)) {
+          throw err;
+        }
       }
 
       try {
