@@ -1,4 +1,3 @@
-import { isAddress } from "ethers/lib/utils";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -10,6 +9,7 @@ import {
 import { ListingParametersStruct } from "@3rdweb/contracts/dist/IMarketplace";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish } from "ethers";
+import { isAddress } from "ethers/lib/utils";
 import {
   getCurrencyValue,
   InterfaceId_IERC721,
@@ -518,9 +518,17 @@ export class MarketplaceModule
     await this.sendTransaction("acceptOffer", [listingId, addressOfOfferor]);
   }
 
-  public async removeListing(listingId: BigNumberish): Promise<void> {}
+  /**
+   *
+   * @beta - This method is not yet ready for production use
+   */
+  private async removeListing(listingId: BigNumberish): Promise<void> {}
 
-  buyoutAuction(buyout: {
+  /**
+   *
+   * @beta - This method is not yet ready for production use
+   */
+  private async buyoutAuction(buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
@@ -530,7 +538,12 @@ export class MarketplaceModule
     // trigger a buyout (based on buyout price)
     throw new Error("Method not implemented.");
   }
-  buyDirectListing(buyout: {
+
+  /**
+   *
+   * @beta - This method is not yet ready for production use
+   */
+  private async buyDirectListing(buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
@@ -538,14 +551,39 @@ export class MarketplaceModule
   }): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  getActiveBids(listingId: BigNumberish): Promise<Offer[]> {
+
+  /**
+   *
+   * @beta - This method is not yet ready for production use
+   *
+   * @param listingId - The listing ID to get active bids for
+   */
+  private async getActiveBids(listingId: BigNumberish): Promise<Offer[]> {
     throw new Error("Method not implemented.");
   }
 
-  updateDirectListing(listing: AuctionListing): Promise<DirectListing> {
-    throw new Error("Method not implemented.");
+  public async updateDirectListing(listing: DirectListing): Promise<void> {
+    await this.sendTransaction("updateListing", [
+      listing.id,
+      listing.quantity,
+      // eslint-disable-next-line line-comment-position
+      listing.buyoutPrice, // reserve price, doesn't matter for direct listing
+      listing.buyoutPrice,
+      listing.currencyContractAddress,
+      listing.startTimeInSeconds,
+      listing.secondsUntilEnd,
+    ]);
   }
-  updateAuctionListing(listing: AuctionListing): Promise<AuctionListing> {
-    throw new Error("Method not implemented.");
+
+  public async updateAuctionListing(listing: AuctionListing): Promise<void> {
+    await this.sendTransaction("updateListing", [
+      listing.id,
+      listing.quantity,
+      listing.reservePrice,
+      listing.buyoutPrice,
+      listing.currencyContractAddress,
+      listing.startTimeInSeconds,
+      listing.secondsUntilEnd,
+    ]);
   }
 }
