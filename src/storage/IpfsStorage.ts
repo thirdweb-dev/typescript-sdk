@@ -79,8 +79,6 @@ export class IpfsStorage implements IStorage {
       if (typeof window === "undefined") {
         data.append("file", file as any, { filepath } as any);
       } else {
-        // browser does blob things, filepath is parsed differently on browser vs node.
-        // pls pinata?
         data.append("file", new Blob([file.file]), filepath);
       }
     });
