@@ -1,4 +1,3 @@
-import { DirectListing } from "./../types/marketplace/DirectListing";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -35,6 +34,8 @@ import {
   Offer,
 } from "../types";
 import { DirectListing } from "../types/marketplace/DirectListing";
+
+const MAX_BPS = 10000;
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getMarketplaceModule}
@@ -198,18 +199,29 @@ export class MarketplaceModule
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
   }): Promise<void> {
-    this.validateAuctionListing(BigNumber.from(bid.listingId));
+    const listing = await this.validateAuctionListing(
+      BigNumber.from(bid.listingId),
+    );
 
     const bidBuffer = await this.getBidBufferBps();
-    console.log("bidBuffer =", bidBuffer);
-
     const winningBid = await this.getWinningBid(bid.listingId);
     if (winningBid) {
-      const minBet = winningBid?.pricePerToken.mul(10000).mul(bidBuffer);
-      bid.pricePerToken = BigNumber.from(bid.pricePerToken);
+      const isWinningBid = await this.isWinningBid(
+        winningBid.pricePerToken,
+        bid.pricePerToken,
+        bidBuffer,
+      );
+
       invariant(
-        bid.pricePerToken.mul(10000).gt(minBet),
-        "Bid price is too low",
+        isWinningBid,
+        "Bid price is too low based on the current winning bid and the bid buffer",
+      );
+    } else {
+      const pricePerToken = BigNumber.from(bid.pricePerToken);
+      const reservePrice = BigNumber.from(listing.reservePrice);
+      invariant(
+        pricePerToken.gte(reservePrice),
+        "Bid price is too low based on reserve price",
       );
     }
 
@@ -229,6 +241,18 @@ export class MarketplaceModule
       ],
       overrides,
     );
+  }
+
+  public async isWinningBid(
+    winningPrice: BigNumberish,
+    newBidPrice: BigNumberish,
+    bidBuffer: BigNumberish,
+  ): Promise<boolean> {
+    bidBuffer = BigNumber.from(bidBuffer);
+    winningPrice = BigNumber.from(winningPrice);
+    newBidPrice = BigNumber.from(newBidPrice);
+    const buffer = newBidPrice.sub(winningPrice).mul(MAX_BPS).div(winningPrice);
+    return buffer.gt(bidBuffer);
   }
 
   public async getDirectListing(
@@ -366,7 +390,6 @@ export class MarketplaceModule
     const listing = await this.validateDirectListing(BigNumber.from(listingId));
 
     const offers = await this.readOnlyContract.offers(listing.id, "");
-    console.log("offers =", offers);
 
     return await Promise.all(
       offers.map(async (offer: any) => {
@@ -538,7 +561,7 @@ export class MarketplaceModule
    *
    * @beta - This method is not yet ready for production use
    */
-  private async buyoutAuction(buyout: {
+  public async buyoutAuction(buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
   }): Promise<void> {
@@ -549,7 +572,7 @@ export class MarketplaceModule
    *
    * @beta - This method is not yet ready for production use
    */
-  private async buyDirectListing(buyout: {
+  public async buyDirectListing(buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
