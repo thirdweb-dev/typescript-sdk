@@ -25,7 +25,7 @@ import { MetadataURIOrObject } from "../core/types";
 export interface PackMetadata {
   id: string;
   creator: string;
-  currentSupply: BigNumber;
+  currentSupply: BigNumberish;
   openStart: Date | null;
   metadata: NFTMetadata;
 }
@@ -34,7 +34,7 @@ export interface PackMetadata {
  * @public
  */
 export interface PackNFTMetadata {
-  supply: BigNumber;
+  supply: BigNumberish;
   metadata: NFTMetadata;
 }
 

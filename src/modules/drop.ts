@@ -566,6 +566,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
       reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
     }
 
+    claimCondition.pricePerToken = BigNumber.from(claimCondition.pricePerToken);
     // check for wallet balance
     if (claimCondition.pricePerToken.gt(0)) {
       const totalPrice = claimCondition.pricePerToken.mul(quantity);
@@ -640,6 +641,7 @@ export class DropModule extends ModuleWithRoles<DropV2> {
     }
 
     const overrides = (await this.getCallOverrides()) || {};
+    mintCondition.pricePerToken = BigNumber.from(mintCondition.pricePerToken);
     if (mintCondition.pricePerToken.gt(0)) {
       if (isNativeToken(mintCondition.currency)) {
         overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
@@ -1223,6 +1225,7 @@ class DropV1Module extends ModuleWithRoles<Drop> {
         );
       }
 
+      mintCondition.pricePerToken = BigNumber.from(mintCondition.pricePerToken);
       if (mintCondition.pricePerToken.gt(0)) {
         if (mintCondition.currency === AddressZero) {
           overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
@@ -1306,6 +1309,7 @@ class DropV1Module extends ModuleWithRoles<Drop> {
     }
 
     const overrides = (await this.getCallOverrides()) || {};
+    mintCondition.pricePerToken = BigNumber.from(mintCondition.pricePerToken);
     if (mintCondition.pricePerToken.gt(0)) {
       if (mintCondition.currency === AddressZero) {
         overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(

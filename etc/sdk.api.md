@@ -143,7 +143,7 @@ export interface BundleDropMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    supply: BigNumber_2;
+    supply: BigNumberish_2;
 }
 
 // @beta
@@ -225,7 +225,7 @@ export interface BundleMetadata {
     // (undocumented)
     ownedByAddress: number;
     // (undocumented)
-    supply: BigNumber;
+    supply: BigNumberish;
 }
 
 // @beta
@@ -306,7 +306,7 @@ export type ChainlinkInfo = {
     vrfCoordinator: string;
     linkTokenAddress: string;
     keyHash: string;
-    fees: BigNumber_2;
+    fees: BigNumberish_2;
 };
 
 // Warning: (ae-internal-missing-underscore) The name "ChainlinkVrf" should be prefixed with an underscore because the declaration is marked as @internal
@@ -377,7 +377,7 @@ export interface CollectionMetadata {
     // (undocumented)
     ownedByAddress: number;
     // (undocumented)
-    supply: BigNumber;
+    supply: BigNumberish;
 }
 
 // Warning: (ae-incompatible-release-tags) The symbol "CollectionModule" is marked as @public, but its signature references "BundleModule" which is marked as @beta
@@ -854,9 +854,9 @@ export interface ListingMetadata {
     // (undocumented)
     id: string;
     // (undocumented)
-    price: BigNumber_2;
+    price: BigNumberish_2;
     // (undocumented)
-    quantity: BigNumber_2;
+    quantity: BigNumberish_2;
     // (undocumented)
     saleEnd: Date | null;
     // (undocumented)
@@ -870,7 +870,7 @@ export interface ListingMetadata {
     // (undocumented)
     tokenMetadata?: NFTMetadata;
     // (undocumented)
-    tokensPerBuyer: BigNumber_2;
+    tokensPerBuyer: BigNumberish_2;
 }
 
 // @public
@@ -1164,7 +1164,7 @@ export interface PackMetadata {
     // (undocumented)
     creator: string;
     // (undocumented)
-    currentSupply: BigNumber_2;
+    currentSupply: BigNumberish_2;
     // (undocumented)
     id: string;
     // (undocumented)
@@ -1230,7 +1230,7 @@ export interface PackNFTMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    supply: BigNumber_2;
+    supply: BigNumberish_2;
 }
 
 // @public
@@ -1247,12 +1247,12 @@ export type PermitRequestMessage = {
 export interface Proposal {
     description: string;
     // (undocumented)
-    endBlock: BigNumber_2;
+    endBlock: BigNumberish_2;
     executions: ProposalExecutable[];
     proposalId: string;
     proposer: string;
     // (undocumented)
-    startBlock: BigNumber_2;
+    startBlock: BigNumberish_2;
     state: ProposalState;
     votes: ProposalVote[];
 }
@@ -1287,7 +1287,7 @@ export enum ProposalState {
 // @public (undocumented)
 export interface ProposalVote {
     // (undocumented)
-    count: BigNumber_2;
+    count: BigNumberish_2;
     // (undocumented)
     label: string;
     // (undocumented)
@@ -1312,7 +1312,7 @@ export interface PublicClaimCondition {
     // (undocumented)
     quantityLimitPerTransaction: BigNumberish_2;
     // (undocumented)
-    startTimestamp: BigNumber_2;
+    startTimestamp: BigNumberish_2;
     // (undocumented)
     waitTimeSecondsLimitPerTransaction: BigNumberish_2;
 }

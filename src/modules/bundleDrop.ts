@@ -43,7 +43,7 @@ export interface BundleDropCreateClaimCondition {
  * @beta
  */
 export interface BundleDropMetadata {
-  supply: BigNumber;
+  supply: BigNumberish;
   metadata: NFTMetadata;
 }
 
@@ -393,6 +393,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
       }
       proofs = item.proof;
     }
+    mintCondition.pricePerToken = BigNumber.from(mintCondition.pricePerToken);
     if (mintCondition.pricePerToken.gt(0)) {
       if (isNativeToken(mintCondition.currency)) {
         overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
@@ -608,6 +609,7 @@ export class BundleDropModule extends ModuleWithRoles<BundleDrop> {
     if (now.lt(timestampForNextClaim)) {
       reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
     }
+    claimCondition.pricePerToken = BigNumber.from(claimCondition.pricePerToken);
 
     // check for wallet balance
     if (claimCondition.pricePerToken.gt(0)) {

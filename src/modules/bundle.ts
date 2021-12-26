@@ -18,13 +18,13 @@ import { MetadataURIOrObject } from "../core/types";
 
 export interface BundleMetadata {
   creator: string;
-  supply: BigNumber;
+  supply: BigNumberish;
   metadata: NFTMetadata;
   ownedByAddress: number;
 }
 export interface CollectionMetadata {
   creator: string;
-  supply: BigNumber;
+  supply: BigNumberish;
   metadata: NFTMetadata;
   ownedByAddress: number;
 }

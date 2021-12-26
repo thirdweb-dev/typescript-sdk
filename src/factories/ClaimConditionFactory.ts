@@ -27,6 +27,7 @@ class ClaimConditionFactory {
 
     // TODO: write test to ensure they're sorted by start time, earliest first
     const sorted = publicClaimConditions.sort((a, b) => {
+      a.startTimestamp = BigNumber.from(a.startTimestamp);
       if (a.startTimestamp.eq(b.startTimestamp)) {
         return 0;
       } else if (a.startTimestamp.gt(b.startTimestamp)) {
@@ -53,6 +54,7 @@ class ClaimConditionFactory {
     const publicClaimConditions = this.phases
       .map((c) => c.buildPublicClaimCondition())
       .map((c) => {
+        c.startTimestamp = BigNumber.from(c.startTimestamp);
         const now = Math.floor(Date.now() / 1000);
         return {
           ...c,
@@ -95,6 +97,7 @@ class ClaimConditionFactory {
       if (condition.maxMintSupply) {
         phase.setMaxQuantity(condition.maxMintSupply);
       }
+      condition.startTimestamp = BigNumber.from(condition.startTimestamp);
 
       phase.setConditionStartTime(
         new Date(condition.startTimestamp.toNumber() * 1000),

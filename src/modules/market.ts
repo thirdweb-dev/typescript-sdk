@@ -44,11 +44,11 @@ export interface ListingMetadata {
   tokenContract: string;
   tokenId: string;
   tokenMetadata?: NFTMetadata;
-  quantity: BigNumber;
-  tokensPerBuyer: BigNumber;
+  quantity: BigNumberish;
+  tokensPerBuyer: BigNumberish;
   currencyContract: string;
   currencyMetadata: CurrencyValue | null;
-  price: BigNumber;
+  price: BigNumberish;
   saleStart: Date | null;
   saleEnd: Date | null;
 }
@@ -326,10 +326,12 @@ export class MarketModule extends ModuleWithRoles<Market> {
     listingId: string,
     quantity: BigNumberish,
   ): Promise<ListingMetadata> {
+    quantity = BigNumber.from(quantity);
     try {
       const listing = await this.get(listingId);
       const owner = await this.getSignerAddress();
       const spender = this.address;
+      listing.price = BigNumber.from(listing.price);
       const totalPrice = listing.price.mul(BigNumber.from(quantity));
       if (
         listing.currencyContract &&
@@ -352,10 +354,10 @@ export class MarketModule extends ModuleWithRoles<Market> {
       const event = this.parseEventLogs("NewSale", receipt?.logs);
       return await this.transformResultToListing(event?.listing);
     } catch (e) {
-      const tokensPerBuyer = (
-        await this.get(listingId)
-      ).tokensPerBuyer.toNumber();
-      if (quantity > tokensPerBuyer) {
+      const tokensPerBuyer = BigNumber.from(
+        (await this.get(listingId)).tokensPerBuyer,
+      ).toNumber();
+      if (quantity.toNumber() > tokensPerBuyer) {
         throw new QuantityAboveLimitError(tokensPerBuyer.toString());
       }
       throw e;

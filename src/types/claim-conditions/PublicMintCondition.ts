@@ -1,11 +1,11 @@
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { BigNumberish, BytesLike } from "ethers";
 import { CurrencyValue } from "../../common/currency";
 
 /**
  * @beta
  */
 export interface PublicClaimCondition {
-  startTimestamp: BigNumber;
+  startTimestamp: BigNumberish;
   maxMintSupply: BigNumberish;
   currentMintSupply: BigNumberish;
   quantityLimitPerTransaction: BigNumberish;
@@ -25,8 +25,8 @@ export interface ClaimCondition {
   availableSupply: string;
   quantityLimitPerTransaction: string;
   waitTimeSecondsLimitPerTransaction: string;
-  price: BigNumber;
-  pricePerToken: BigNumber;
+  price: BigNumberish;
+  pricePerToken: BigNumberish;
   currency: string;
   currencyContract: string;
   currencyMetadata: CurrencyValue | null;

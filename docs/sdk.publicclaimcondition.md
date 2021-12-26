@@ -24,6 +24,6 @@ export interface PublicClaimCondition
 |  [merkleRoot](./sdk.publicclaimcondition.merkleroot.md) | BytesLike | <b><i>(BETA)</i></b> |
 |  [pricePerToken](./sdk.publicclaimcondition.pricepertoken.md) | BigNumberish | <b><i>(BETA)</i></b> |
 |  [quantityLimitPerTransaction](./sdk.publicclaimcondition.quantitylimitpertransaction.md) | BigNumberish | <b><i>(BETA)</i></b> |
-|  [startTimestamp](./sdk.publicclaimcondition.starttimestamp.md) | BigNumber | <b><i>(BETA)</i></b> |
+|  [startTimestamp](./sdk.publicclaimcondition.starttimestamp.md) | BigNumberish | <b><i>(BETA)</i></b> |
 |  [waitTimeSecondsLimitPerTransaction](./sdk.publicclaimcondition.waittimesecondslimitpertransaction.md) | BigNumberish | <b><i>(BETA)</i></b> |
 

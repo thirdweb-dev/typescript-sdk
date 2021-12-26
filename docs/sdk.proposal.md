@@ -15,11 +15,11 @@ export interface Proposal
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [description](./sdk.proposal.description.md) | string | The description of the proposal. |
-|  [endBlock](./sdk.proposal.endblock.md) | BigNumber |  |
+|  [endBlock](./sdk.proposal.endblock.md) | BigNumberish |  |
 |  [executions](./sdk.proposal.executions.md) | [ProposalExecutable](./sdk.proposalexecutable.md)<!-- -->\[\] | All executions that have been proposed for the proposal. |
 |  [proposalId](./sdk.proposal.proposalid.md) | string | The unique identifier of the proposal. |
 |  [proposer](./sdk.proposal.proposer.md) | string | The address of the wallet that created the proposal. |
-|  [startBlock](./sdk.proposal.startblock.md) | BigNumber |  |
+|  [startBlock](./sdk.proposal.startblock.md) | BigNumberish |  |
 |  [state](./sdk.proposal.state.md) | [ProposalState](./sdk.proposalstate.md) | The current state of the proposal. |
 |  [votes](./sdk.proposal.votes.md) | [ProposalVote](./sdk.proposalvote.md)<!-- -->\[\] | All votes that have been casted on the proposal. |
 

@@ -16,5 +16,5 @@ export interface PackNFTMetadata
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [metadata](./sdk.packnftmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) |  |
-|  [supply](./sdk.packnftmetadata.supply.md) | BigNumber |  |
+|  [supply](./sdk.packnftmetadata.supply.md) | BigNumberish |  |
 

@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 import { ChainId } from "./chain";
 
 /**
@@ -9,7 +9,7 @@ export type ChainlinkInfo = {
   vrfCoordinator: string;
   linkTokenAddress: string;
   keyHash: string;
-  fees: BigNumber;
+  fees: BigNumberish;
 };
 
 /**

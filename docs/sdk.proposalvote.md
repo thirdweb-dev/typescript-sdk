@@ -14,7 +14,7 @@ export interface ProposalVote
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [count](./sdk.proposalvote.count.md) | BigNumber |  |
+|  [count](./sdk.proposalvote.count.md) | BigNumberish |  |
 |  [label](./sdk.proposalvote.label.md) | string |  |
 |  [type](./sdk.proposalvote.type.md) | [VoteType](./sdk.votetype.md) |  |
 
