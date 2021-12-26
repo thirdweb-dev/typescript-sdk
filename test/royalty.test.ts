@@ -1,8 +1,8 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { assert } from "chai";
+import { PackModule } from "../src/modules/pack";
 import { SplitsModule } from "../src/modules/royalty";
 import { appModule, sdk, signers } from "./before.test";
-
-import { expect, assert } from "chai";
 
 global.fetch = require("node-fetch");
 
@@ -11,6 +11,7 @@ const thirdwebRoyaltyAddress = "0xE00994EBDB59f70350E2cdeb897796F732331562";
 
 describe("Splits Module", async () => {
   let splitsModule: SplitsModule;
+  let packModule: PackModule;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -30,6 +31,12 @@ describe("Splits Module", async () => {
           shares: 1,
         },
       ],
+    });
+
+    packModule = await appModule.deployPackModule({
+      name: "Pack Module",
+      sellerFeeBasisPoints: 1000,
+      feeRecipient: samWallet.address,
     });
   });
 
@@ -52,6 +59,30 @@ describe("Splits Module", async () => {
     );
   });
 
+  it("should return all the recipients along with their balances", async () => {
+    const balances = await splitsModule.balanceOfAllRecipients();
+    assert.equal(
+      Object.keys(balances).length,
+      2,
+      "There should be 3 recipients",
+    );
+  });
+  it("should return all the recipients along with their token balances", async () => {
+    const balances = await splitsModule.balanceOfTokenAllRecipients(
+      await appModule
+        .deployTokenModule({
+          name: "Test Token",
+          symbol: "TST",
+        })
+        .then((tokenModule) => tokenModule.address),
+    );
+    assert.equal(
+      Object.keys(balances).length,
+      2,
+      "There should be 3 recipients",
+    );
+  });
+
   /**
    * TODO: Write the following tests
    *
@@ -59,4 +90,24 @@ describe("Splits Module", async () => {
    * 2. Checking balances
    * 3. Funds are received when a module uses a splits address as a royalty recipient
    */
+
+  // TODO: Move to royalty test suite
+  it("should return the correct royalty recipient", async () => {
+    const recipient = await packModule.getRoyaltyRecipientAddress();
+    assert.equal(
+      recipient,
+      samWallet.address,
+      "The default royalty recipient should be the project address",
+    );
+  });
+
+  // TODO: Move to royalty test suite
+  it("should return the correct royalty BPS", async () => {
+    const bps = await packModule.getRoyaltyBps();
+    assert.equal(
+      "1000",
+      bps.toString(),
+      "The royalty BPS should be 10000 (10%)",
+    );
+  });
 });

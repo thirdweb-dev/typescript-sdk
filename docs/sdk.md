@@ -67,7 +67,9 @@ Output
 
 |  Class | Description |
 |  --- | --- |
+|  [AdminRoleMissingError](./sdk.adminrolemissingerror.md) | Thrown when attempting to execute an admin-role function. |
 |  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
+|  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [BundleDropModule](./sdk.bundledropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleDropModule()](./sdk.thirdwebsdk.getbundledropmodule.md) |
 |  [BundleModule](./sdk.bundlemodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md) |
 |  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
@@ -81,11 +83,16 @@ Output
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [IpfsStorage](./sdk.ipfsstorage.md) |  |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
+|  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
+|  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
 |  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality. |
 |  [NFTModule](./sdk.nftmodule.md) | Access this module by calling [ThirdwebSDK.getNFTModule()](./sdk.thirdwebsdk.getnftmodule.md) |
+|  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.getpackmodule.md) |
+|  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
+|  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
 |  [TokenModule](./sdk.tokenmodule.md) | Access this module by calling [ThirdwebSDK.getTokenModule()](./sdk.thirdwebsdk.gettokenmodule.md) |
@@ -139,6 +146,7 @@ Output
 |  [IThirdwebSdk](./sdk.ithirdwebsdk.md) |  |
 |  [ITokenMintArgs](./sdk.itokenmintargs.md) |  |
 |  [ITokenMintFromArgs](./sdk.itokenmintfromargs.md) |  |
+|  [ITransferable](./sdk.itransferable.md) |  |
 |  [ListingFilter](./sdk.listingfilter.md) | Filter options for the Market module. |
 |  [ListingMetadata](./sdk.listingmetadata.md) | Metadata for items listed on a Market module. |
 |  [ModuleMetadata](./sdk.modulemetadata.md) | The module metadata, includes the <code>address</code> and the [ModuleType](./sdk.moduletype.md)<!-- -->. |

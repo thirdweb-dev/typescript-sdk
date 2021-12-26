@@ -7,6 +7,8 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
+Create a pack from a set of assets.
+
 <b>Signature:</b>
 
 ```typescript
@@ -17,9 +19,11 @@ create(args: IPackCreateArgs): Promise<PackMetadata>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
+|  args | [IPackCreateArgs](./sdk.ipackcreateargs.md) | Args for the pack creation |
 
 <b>Returns:</b>
 
 Promise&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->&gt;
+
+- The newly created pack metadata
 

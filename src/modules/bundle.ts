@@ -11,6 +11,7 @@ import { ModuleType, Role, RolesMap } from "../common";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import { ITransferable } from "../interfaces/contracts/ITransferable";
 
 /**
  * @beta
@@ -60,7 +61,10 @@ export interface INFTBundleBatchArgs {
  * Access this module by calling {@link ThirdwebSDK.getBundleModule}
  * @beta
  */
-export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
+export class BundleModule
+  extends ModuleWithRoles<NFTBundleContract>
+  implements ITransferable
+{
   public static moduleType: ModuleType = ModuleType.BUNDLE;
 
   public static roles = [
@@ -213,10 +217,10 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
   public async createAndMintBatch(
     metadataWithSupply: INFTBundleCreateArgs[],
   ): Promise<BundleMetadata[]> {
-    const uris = await Promise.all(
-      metadataWithSupply
-        .map((a) => a.metadata)
-        .map((a) => this.sdk.getStorage().uploadMetadata(a)),
+    const metadatas = metadataWithSupply.map((a) => a.metadata);
+    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
+    const uris = Array.from(Array(metadatas.length).keys()).map(
+      (i) => `${baseUri}${i}/`,
     );
     const supplies = metadataWithSupply.map((a) => a.supply);
     const to = await this.getSignerAddress();
@@ -415,12 +419,6 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     return await this.sendTransaction("setContractURI", [uri]);
   }
 
-  public async setRestrictedTransfer(
-    restricted = false,
-  ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
-  }
-
   /**
    * `getOwned` is a convenience method for getting all owned tokens
    * for a particular wallet.
@@ -469,5 +467,16 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
       return metadata.metadata.fee_recipient;
     }
     return "";
+  }
+
+  public async isTransferRestricted(): Promise<boolean> {
+    return this.readOnlyContract.transfersRestricted();
+  }
+
+  public async setRestrictedTransfer(
+    restricted = false,
+  ): Promise<TransactionReceipt> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }

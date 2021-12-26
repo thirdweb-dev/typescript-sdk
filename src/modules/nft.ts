@@ -3,16 +3,17 @@ import { NFT, NFT__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish } from "ethers";
-import { ModuleType, Role, RolesMap } from "../common";
+import { ModuleType, RestrictedTransferError, Role, RolesMap } from "../common";
 import { NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
+import { ITransferable } from "../interfaces/contracts/ITransferable";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getNFTModule}
  * @public
  */
-export class NFTModule extends ModuleWithRoles<NFT> {
+export class NFTModule extends ModuleWithRoles<NFT> implements ITransferable {
   public static moduleType: ModuleType = ModuleType.NFT;
 
   public static roles = [
@@ -140,6 +141,10 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     to: string,
     tokenId: string,
   ): Promise<TransactionReceipt> {
+    if (await this.isTransferRestricted()) {
+      throw new RestrictedTransferError(this.address);
+    }
+
     const from = await this.getSignerAddress();
     return await this.sendTransaction(
       "safeTransferFrom(address,address,uint256)",
@@ -173,8 +178,9 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     to: string,
     metadatas: MetadataURIOrObject[],
   ): Promise<NFTMetadata[]> {
-    const uris = await Promise.all(
-      metadatas.map((m) => this.sdk.getStorage().uploadMetadata(m)),
+    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
+    const uris = Array.from(Array(metadatas.length).keys()).map(
+      (i) => `${baseUri}${i}/`,
     );
     const receipt = await this.sendTransaction("mintNFTBatch", [to, uris]);
     const event = this.parseEventLogs("MintedBatch", receipt?.logs);
@@ -194,13 +200,6 @@ export class NFTModule extends ModuleWithRoles<NFT> {
     tokenId: BigNumberish,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("transferFrom", [from, to, tokenId]);
-  }
-
-  // owner functions
-  public async setRestrictedTransfer(
-    restricted = false,
-  ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 
   public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
@@ -257,5 +256,16 @@ export class NFTModule extends ModuleWithRoles<NFT> {
       return metadata.metadata.fee_recipient;
     }
     return "";
+  }
+
+  public async isTransferRestricted(): Promise<boolean> {
+    return this.readOnlyContract.transfersRestricted();
+  }
+
+  public async setRestrictedTransfer(
+    restricted = false,
+  ): Promise<TransactionReceipt> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }

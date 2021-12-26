@@ -20,5 +20,5 @@ export interface IStorage
 |  [upload(data, contractAddress, signerAddress)](./sdk.istorage.upload.md) | Uploads a file to the storage. |
 |  [uploadBatch(files, contractAddress, uploadFileStartNumber)](./sdk.istorage.uploadbatch.md) | Uploads a folder to storage. |
 |  [uploadMetadata(metadata, contractAddress, signerAddress)](./sdk.istorage.uploadmetadata.md) | Uploads metadata to IPFS |
-|  [uploadMetadataBatch(metadata, contractAddress, fileStartNumber)](./sdk.istorage.uploadmetadatabatch.md) | Uploads metadata to IPFS |
+|  [uploadMetadataBatch(metadatas, contractAddress, fileStartNumber)](./sdk.istorage.uploadmetadatabatch.md) | Uploads metadata to IPFS |
 

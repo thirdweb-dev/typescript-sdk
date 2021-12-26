@@ -26,9 +26,9 @@ import {
   Role,
   RolesMap,
 } from "../common";
-import { getNativeTokenByChainId } from "../common/currency";
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getContractMetadata } from "../common/contract";
+import { getNativeTokenByChainId } from "../common/currency";
 import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
@@ -388,6 +388,7 @@ export class AppModule
     args: any[],
     factory: any,
   ): Promise<string> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
     const gasPrice = await this.sdk.getGasPrice();
     const txOpts = gasPrice
       ? { gasPrice: ethers.utils.parseUnits(gasPrice.toString(), "gwei") }
@@ -443,8 +444,11 @@ export class AppModule
       ],
       NFTCollection__factory,
     );
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
 
-    return this.sdk.getCollectionModule(address);
+    return this.sdk.getBundleModule(address);
   }
 
   /**
@@ -518,7 +522,9 @@ export class AppModule
       ],
       NFT__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getNFTModule(address);
   }
 
@@ -672,7 +678,9 @@ export class AppModule
       ],
       Pack__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getPackModule(address);
   }
 
@@ -725,7 +733,9 @@ export class AppModule
       ],
       LazyMintERC721__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getDropModule(address);
   }
 
@@ -776,7 +786,9 @@ export class AppModule
       ],
       LazyMintERC1155__factory,
     );
-
+    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
     return this.sdk.getBundleDropModule(address);
   }
 

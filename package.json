@@ -1,6 +1,6 @@
 {
   "name": "@3rdweb/sdk",
-  "version": "1.29.4",
+  "version": "1.29.7",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -29,7 +29,8 @@
     "generate-md-docs": "yarn api-documenter markdown -i ./temp -o ./docs",
     "generate-docs": "yarn full-build && yarn generate-md-docs",
     "build": "yarn generate-docs",
-    "test": "ts-mocha -t 120000 -r esm -p tsconfig.testing.json test/**/*.test.ts"
+    "test": "echo \"\nUse 'yarn run test:all' to run all tests\nPass a test file pattern from ./test to run\n\n\t$ yarn run test test/pack.test.ts\" && ts-mocha -t 120000 -r esm -p tsconfig.testing.json",
+    "test:all": "ts-mocha -t 120000 -r esm -p tsconfig.testing.json test/**/*.test.ts"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.1",
