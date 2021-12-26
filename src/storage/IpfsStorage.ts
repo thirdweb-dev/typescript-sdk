@@ -56,6 +56,7 @@ export class IpfsStorage implements IStorage {
     fileStartNumber = 0,
   ): Promise<string> {
     const cid = await this.uploadBatchWithCid(
+      false,
       files,
       contractAddress,
       fileStartNumber,
@@ -99,7 +100,13 @@ export class IpfsStorage implements IStorage {
   }
 
   private async uploadBatchWithCid(
-    files: Buffer[] | string[] | FileOrBuffer[] | File[],
+    withFileNames = false,
+    files:
+      | Buffer[]
+      | string[]
+      | FileOrBuffer[]
+      | File[]
+      | FileOrBufferWithNames[],
     contractAddress?: string,
     fileStartNumber = 0,
   ): Promise<string> {
@@ -110,13 +117,26 @@ export class IpfsStorage implements IStorage {
     const data = new FormData();
 
     files.forEach((file, i) => {
-      const filepath = `files/${fileStartNumber + i}`;
-      if (typeof window === "undefined") {
-        data.append("file", file as any, { filepath } as any);
+      if (withFileNames) {
+        file = file as FileOrBuffer;
+        const filepath = `files/${fileStartNumber + i}`;
+        if (typeof window === "undefined") {
+          data.append("file", file as any, { filepath } as any);
+        } else {
+          // browser does blob things, filepath is parsed differently on browser vs node.
+          // pls pinata?
+          data.append("file", new Blob([file]), filepath);
+        }
       } else {
-        // browser does blob things, filepath is parsed differently on browser vs node.
-        // pls pinata?
-        data.append("file", new Blob([file]), filepath);
+        file = file as FileOrBufferWithNames;
+        const filepath = `files/${file.name}`;
+        if (typeof window === "undefined") {
+          data.append("file", file.file as any, { filepath } as any);
+        } else {
+          // browser does blob things, filepath is parsed differently on browser vs node.
+          // pls pinata?
+          data.append("file", new Blob([file.file]), filepath);
+        }
       }
     });
 
@@ -228,7 +248,7 @@ export class IpfsStorage implements IStorage {
     if (filesToUpload.length === 0) {
       return metadata;
     }
-    const cid = await this.uploadBatchWithCid(filesToUpload, "");
+    const cid = await this.uploadBatchWithCid(false, filesToUpload, "");
     const cids = [];
 
     // recurse ordered array
