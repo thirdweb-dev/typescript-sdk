@@ -1,3 +1,4 @@
+import { ListingNotFoundError } from "../src/common/error";
 import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -440,11 +441,35 @@ describe("Marketplace Module", async () => {
       auctionListingId = await createAuctionListing(dummyNftModule.address, 1);
     });
 
-    it("should allow a seller to close an auction", async () => {
-      // await marketplaceModule.removeListing(auctionListingId);
-      // const listing = await marketplaceModule.getAuctionListing(
-      //   auctionListingId,
-      // );
+    it("should allow a seller to close an auction that hasn't started yet", async () => {
+      const id = await marketplaceModule.createAuctionListing({
+        assetContractAddress: dummyNftModule.address,
+        buyoutPricePerToken: ethers.utils.parseUnits("10"),
+        currencyContractAddress: tokenAddress,
+        // to start tomorrow so we can update it
+        startTimeInSeconds: Math.floor(Date.now() / 1000 + 60 * 60 * 24),
+        listingDurationInSeconds: 60 * 60 * 24,
+        tokenId: "0",
+        quantity: 1,
+        reservePricePerToken: ethers.utils.parseUnits("1"),
+      });
+      await marketplaceModule.cancelAuctionListing(id);
+
+      try {
+        const listing = await marketplaceModule.getAuctionListing(id);
+      } catch (err) {
+        if (!(err instanceof ListingNotFoundError)) {
+          throw err;
+        }
+      }
+    });
+
+    it("should throw an error when trying to close an auction that already started", async () => {
+      try {
+        await marketplaceModule.cancelAuctionListing(auctionListingId);
+        assert.fail("should have thrown an error");
+        // eslint-disable-next-line no-empty
+      } catch (err) {}
     });
 
     it("should correctly close a direct listing", async () => {

@@ -89,3 +89,49 @@ export class DuplicateLeafsError extends Error {
     super(`DUPLICATE_LEAFS${message ? ` : ${message}` : ""}`);
   }
 }
+
+/**
+ * Thrown when attempting to update/cancel an auction that already started
+ */
+export class AuctionAlreadyStartedError extends Error {
+  constructor(id?: string) {
+    super(`Auction already started${id ? `, id: ${id}` : ""}`);
+  }
+}
+
+/**
+ * Thrown when trying to retrieve a listing from a marketplace that doesn't exist
+ */
+export class ListingNotFoundError extends Error {
+  constructor(marketplaceContractAddress: string, listingId?: string) {
+    super(
+      `Could not find listing.${
+        marketplaceContractAddress
+          ? ` marketplace address: ${marketplaceContractAddress}`
+          : ""
+      }${listingId ? ` listing id: ${listingId}` : ""}`,
+    );
+  }
+}
+
+/**
+ * Thrown when trying to retrieve a listing of the wrong type
+ */
+export class WrongListingTypeError extends Error {
+  constructor(
+    marketplaceContractAddress: string,
+    listingId?: string,
+    actualType?: string,
+    expectedType?: string,
+  ) {
+    super(
+      `Incorrect listing type. Are you sure you're using the right method?.${
+        marketplaceContractAddress
+          ? ` marketplace address: ${marketplaceContractAddress}`
+          : ""
+      }${listingId ? ` listing id: ${listingId}` : ""}${
+        expectedType ? ` expected type: ${expectedType}` : ""
+      }${actualType ? ` actual type: ${actualType}` : ""}`,
+    );
+  }
+}

@@ -1,3 +1,4 @@
+import { DirectListing } from "./../types/marketplace/DirectListing";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -18,6 +19,11 @@ import {
   RolesMap,
 } from "../common";
 import { NATIVE_TOKEN_ADDRESS } from "../common/currency";
+import {
+  AuctionAlreadyStartedError,
+  ListingNotFoundError,
+  WrongListingTypeError,
+} from "../common/error";
 import { invariant } from "../common/invariant";
 import { ModuleWithRoles } from "../core/module";
 import { ListingType } from "../enums/marketplace/ListingType";
@@ -231,11 +237,16 @@ export class MarketplaceModule
     const listing = await this.readOnlyContract.listings(listingId);
 
     if (listing.listingId.toString() !== listingId.toString()) {
-      throw new Error(`Listing with id ${listingId} not found`);
+      throw new ListingNotFoundError(this.address, listingId.toString());
     }
 
     if (listing.listingType !== ListingType.Direct) {
-      throw new Error(`Listing ${listingId} is not a direct listing`);
+      throw new WrongListingTypeError(
+        this.address,
+        listingId.toString(),
+        "Auction",
+        "Direct",
+      );
     }
 
     return {
@@ -262,11 +273,16 @@ export class MarketplaceModule
     const listing = await this.readOnlyContract.listings(listingId);
 
     if (listing.listingId.toString() !== listingId.toString()) {
-      throw new Error(`Listing with id ${listingId} not found`);
+      throw new ListingNotFoundError(this.address, listingId.toString());
     }
 
     if (listing.listingType !== ListingType.Auction) {
-      throw new Error(`Listing ${listingId} is not an auction listing`);
+      throw new WrongListingTypeError(
+        this.address,
+        listingId.toString(),
+        "Direct",
+        "Auction",
+      );
     }
 
     return {
@@ -522,38 +538,11 @@ export class MarketplaceModule
    *
    * @beta - This method is not yet ready for production use
    */
-  private async removeListing(listingId: BigNumberish): Promise<void> {}
-
-  /**
-   *
-   * @beta - This method is not yet ready for production use
-   */
   private async buyoutAuction(buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
   }): Promise<void> {
-    const listing = await this.validateAuctionListing(
-      BigNumber.from(buyout.listingId),
-    );
-
-    const quantity = BigNumber.from(buyout.quantityDesired);
-    const value = BigNumber.from(listing.buyoutPrice).mul(
-      buyout.quantityDesired,
-    );
-
-    const overrides = (await this.getCallOverrides()) || {};
-    await this.setAllowance(value, offer.currencyContractAddress, overrides);
-
-    await this.sendTransaction(
-      "offer",
-      [
-        offer.listingId,
-        offer.quantityDesired,
-        offer.currencyContractAddress,
-        offer.pricePerToken,
-      ],
-      overrides,
-    );
+    throw new Error("Method not implemented.");
   }
 
   /**
@@ -608,5 +597,23 @@ export class MarketplaceModule
     const listing = await this.validateDirectListing(BigNumber.from(listingId));
     listing.quantity = 0;
     await this.updateDirectListing(listing);
+  }
+
+  public async cancelAuctionListing(listingId: BigNumberish): Promise<void> {
+    const listing = await this.validateAuctionListing(
+      BigNumber.from(listingId),
+    );
+
+    const now = BigNumber.from(Math.floor(Date.now() / 1000));
+    const startTime = BigNumber.from(listing.startTimeInSeconds);
+
+    if (now.gt(startTime)) {
+      throw new AuctionAlreadyStartedError(listingId.toString());
+    }
+
+    await this.sendTransaction("closeAuction", [
+      BigNumber.from(listingId),
+      await this.getSignerAddress(),
+    ]);
   }
 }
