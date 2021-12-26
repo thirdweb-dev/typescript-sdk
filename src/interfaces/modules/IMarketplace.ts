@@ -77,6 +77,13 @@ export interface IMarketplace {
   removeListing(listingId: BigNumberish): Promise<void>;
 
   /**
+   * Cancels a direct listing by updating the quantity to be sold to 0.
+   *
+   * @param listingId - Id of the listing to remove.
+   */
+  cancelDirectListing(listingId: BigNumberish): Promise<void>;
+
+  /**
    * Buyout the listing based on the buyout price.
    *
    * The offer must be higher as high as the buyout price in order

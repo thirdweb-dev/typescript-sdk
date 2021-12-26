@@ -531,12 +531,29 @@ export class MarketplaceModule
   private async buyoutAuction(buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
-    currencyContractAddress: string;
-    tokenAmount: BigNumberish;
   }): Promise<void> {
-    // TODO: invariant that checks to see if the offer will actually
-    // trigger a buyout (based on buyout price)
-    throw new Error("Method not implemented.");
+    const listing = await this.validateAuctionListing(
+      BigNumber.from(buyout.listingId),
+    );
+
+    const quantity = BigNumber.from(buyout.quantityDesired);
+    const value = BigNumber.from(listing.buyoutPrice).mul(
+      buyout.quantityDesired,
+    );
+
+    const overrides = (await this.getCallOverrides()) || {};
+    await this.setAllowance(value, offer.currencyContractAddress, overrides);
+
+    await this.sendTransaction(
+      "offer",
+      [
+        offer.listingId,
+        offer.quantityDesired,
+        offer.currencyContractAddress,
+        offer.pricePerToken,
+      ],
+      overrides,
+    );
   }
 
   /**
@@ -585,5 +602,11 @@ export class MarketplaceModule
       listing.startTimeInSeconds,
       listing.secondsUntilEnd,
     ]);
+  }
+
+  public async cancelDirectListing(listingId: BigNumberish): Promise<void> {
+    const listing = await this.validateDirectListing(BigNumber.from(listingId));
+    listing.quantity = 0;
+    await this.updateDirectListing(listing);
   }
 }

@@ -334,7 +334,7 @@ describe("Marketplace Module", async () => {
     });
   });
 
-  describe("Winning Bids", () => {
+  describe("Bidding", () => {
     let directListingId: BigNumber;
     let auctionListingId: BigNumber;
 
@@ -402,60 +402,6 @@ describe("Marketplace Module", async () => {
         "The buyer should have been awarded token",
       );
     });
-  });
-
-  describe("Closing listings", () => {
-    let directListingId: BigNumber;
-    let auctionListingId: BigNumber;
-
-    beforeEach(async () => {
-      await sdk.setProviderOrSigner(adminWallet);
-      directListingId = await createDirectListing(dummyNftModule.address, 0);
-      auctionListingId = await createAuctionListing(dummyNftModule.address, 1);
-    });
-
-    it("should allow a seller to close an auction", async () => {
-      // await marketplaceModule.removeListing(auctionListingId);
-      // const listing = await marketplaceModule.getAuctionListing(
-      //   auctionListingId,
-      // );
-    });
-
-    it("should allow the seller to accept the winning bid", async () => {
-      await sdk.setProviderOrSigner(bobWallet);
-      const currentBalance = await dummyNftModule.balanceOf(bobWallet.address);
-      assert.equal(
-        currentBalance.toString(),
-        "0",
-        "The buyer should start with no tokens",
-      );
-      await marketplaceModule.makeBid({
-        currencyContractAddress: tokenAddress,
-        listingId: auctionListingId,
-        quantityDesired: 1,
-        pricePerToken: ethers.utils.parseUnits("2"),
-      });
-
-      const winningBid = await marketplaceModule.getWinningBid(
-        auctionListingId,
-      );
-
-      assert.equal(
-        winningBid.buyerAddress,
-        bobWallet.address,
-        "Bob should be the winning bidder",
-      );
-
-      await sdk.setProviderOrSigner(adminWallet);
-      await marketplaceModule.acceptWinningBid(auctionListingId);
-
-      const balance = await dummyNftModule.balanceOf(bobWallet.address);
-      assert.equal(
-        balance.toString(),
-        "1",
-        "The buyer should have been awarded token",
-      );
-    });
 
     it("should throw an error if a bid being placed is not a winning bid", async () => {
       await sdk.setProviderOrSigner(bobWallet);
@@ -481,6 +427,32 @@ describe("Marketplace Module", async () => {
       } catch (err) {
         console.error("error", err);
       }
+    });
+  });
+
+  describe("Closing listings", () => {
+    let directListingId: BigNumber;
+    let auctionListingId: BigNumber;
+
+    beforeEach(async () => {
+      await sdk.setProviderOrSigner(adminWallet);
+      directListingId = await createDirectListing(dummyNftModule.address, 0);
+      auctionListingId = await createAuctionListing(dummyNftModule.address, 1);
+    });
+
+    it("should allow a seller to close an auction", async () => {
+      // await marketplaceModule.removeListing(auctionListingId);
+      // const listing = await marketplaceModule.getAuctionListing(
+      //   auctionListingId,
+      // );
+    });
+
+    it("should correctly close a direct listing", async () => {
+      let listing = await marketplaceModule.getDirectListing(directListingId);
+      assert.equal(listing.quantity.toString(), "1");
+      await marketplaceModule.cancelDirectListing(directListingId);
+      listing = await marketplaceModule.getDirectListing(directListingId);
+      assert.equal(listing.quantity.toString(), "0");
     });
   });
 
