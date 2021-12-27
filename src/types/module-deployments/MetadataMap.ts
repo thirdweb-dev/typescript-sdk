@@ -1,5 +1,5 @@
-import { CollectionModuleMetadata } from "..";
 import { ModuleType } from "../../common/module-type";
+import { CollectionModuleMetadata } from "./BundleModuleMetadata";
 import CommonModuleMetadata from "./CommonModuleMetadata";
 
 export type AllModuleMetadata = CollectionModuleMetadata | CommonModuleMetadata;

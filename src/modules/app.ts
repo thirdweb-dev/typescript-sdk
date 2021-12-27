@@ -35,18 +35,20 @@ import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import IAppModule from "../interfaces/IAppModule";
 import FileOrBuffer from "../types/FileOrBuffer";
-import BundleDropModuleMetadata from "../types/module-deployments/BundleDropModuleMetadata";
-import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
-import CommonModuleMetadata from "../types/module-deployments/CommonModuleMetadata";
-import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
-import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
-import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
-import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetadata";
-import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
-import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
-import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
-import TokenModuleMetadata from "../types/module-deployments/TokenModuleMetadata";
-import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
+import {
+  BundleDropModuleMetadata,
+  BundleModuleMetadata,
+  CommonModuleMetadata,
+  CurrencyModuleMetadata,
+  DatastoreModuleMetadata,
+  DropModuleMetadata,
+  MarketModuleMetadata,
+  NftModuleMetadata,
+  PackModuleMetadata,
+  SplitsModuleMetadata,
+  TokenModuleMetadata,
+  VoteModuleMetadata,
+} from "../types/module-deployments";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";
 import { BundleDropModule } from "./bundleDrop";
