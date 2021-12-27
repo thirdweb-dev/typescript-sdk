@@ -176,7 +176,11 @@ export class VoteModule extends Module<VotingGovernor> {
   ): Promise<BigNumber> {
     if (!executions) {
       executions = [
-        { toAddress: this.address, nativeTokenValue: 0, transactionData: "0x" },
+        {
+          toAddress: this.address,
+          nativeTokenValue: BigNumber.from(0),
+          transactionData: "0x",
+        },
       ];
     }
     const tos = executions.map((p) => p.toAddress);
