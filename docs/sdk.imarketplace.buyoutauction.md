@@ -14,8 +14,6 @@ The offer must be higher as high as the buyout price in order for this buyout to
 buyoutAuction(buyout: {
         listingId: BigNumberish;
         quantityDesired: BigNumberish;
-        currencyContractAddress: string;
-        tokenAmount: BigNumberish;
     }): Promise<void>;
 ```
 
@@ -23,7 +21,7 @@ buyoutAuction(buyout: {
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  buyout | { listingId: BigNumberish; quantityDesired: BigNumberish; currencyContractAddress: string; tokenAmount: BigNumberish; } |  |
+|  buyout | { listingId: BigNumberish; quantityDesired: BigNumberish; } |  |
 
 <b>Returns:</b>
 

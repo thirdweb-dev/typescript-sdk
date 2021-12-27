@@ -16,10 +16,11 @@ export interface IMarketplace
 |  --- | --- |
 |  [acceptDirectListingOffer(listingId, addressOfOfferor)](./sdk.imarketplace.acceptdirectlistingoffer.md) | Accepts the offer of the specified wallet in <code>addressofOfferor</code>. |
 |  [acceptWinningBid(listingId)](./sdk.imarketplace.acceptwinningbid.md) | Accepts the winning bid for an auction and closes the listing, resulting in the sale of the tokens to the buyer. |
-|  [buyDirectListing(buyout)](./sdk.imarketplace.buydirectlisting.md) | Buyout the listing based on the buyout price.<!-- -->The offer must be higher as high as the buyout price in order for this buyout to succeed. If the buyout is too low, the method will throw an error. |
 |  [buyoutAuction(buyout)](./sdk.imarketplace.buyoutauction.md) | Buyout the listing based on the buyout price.<!-- -->The offer must be higher as high as the buyout price in order for this buyout to succeed. If the buyout is too low, the method will throw an error. |
+|  [buyoutDirectListing(buyout)](./sdk.imarketplace.buyoutdirectlisting.md) | Buyout the listing based on the buyout price.<!-- -->The offer must be higher as high as the buyout price in order for this buyout to succeed. If the buyout is too low, the method will throw an error. |
 |  [cancelAuctionListing(listingId)](./sdk.imarketplace.cancelauctionlisting.md) | Cancels an auction listing. You can only cancel the listing if it has not started yet. |
 |  [cancelDirectListing(listingId)](./sdk.imarketplace.canceldirectlisting.md) | Cancels a direct listing by updating the quantity to be sold to 0. |
+|  [closeAuctionListing(listingId)](./sdk.imarketplace.closeauctionlisting.md) | Closes an auction listing and distributes the payment/assets. You can only cancel the listing after it has already ended. |
 |  [createAuctionListing(listing)](./sdk.imarketplace.createauctionlisting.md) | Creates a new auction listing on a marketplace. |
 |  [createDirectListing(listing)](./sdk.imarketplace.createdirectlisting.md) | Creates a new direct listing on a marketplace. |
 |  [getActiveBids(listingId)](./sdk.imarketplace.getactivebids.md) | Return all active bids for an auction. |

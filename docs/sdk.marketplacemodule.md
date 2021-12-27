@@ -28,10 +28,11 @@ export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> impl
 |  --- | --- | --- |
 |  [acceptDirectListingOffer(listingId, addressOfOfferor)](./sdk.marketplacemodule.acceptdirectlistingoffer.md) |  |  |
 |  [acceptWinningBid(listingId)](./sdk.marketplacemodule.acceptwinningbid.md) |  |  |
-|  [buyDirectListing(\_buyout)](./sdk.marketplacemodule.buydirectlisting.md) |  | <b><i>(BETA)</i></b> - This method is not yet ready for production use |
 |  [buyoutAuction(\_buyout)](./sdk.marketplacemodule.buyoutauction.md) |  | <b><i>(BETA)</i></b> - This method is not yet ready for production use |
+|  [buyoutDirectListing(\_buyout)](./sdk.marketplacemodule.buyoutdirectlisting.md) |  |  |
 |  [cancelAuctionListing(listingId)](./sdk.marketplacemodule.cancelauctionlisting.md) |  |  |
 |  [cancelDirectListing(listingId)](./sdk.marketplacemodule.canceldirectlisting.md) |  |  |
+|  [closeAuctionListing(\_listingId)](./sdk.marketplacemodule.closeauctionlisting.md) |  |  |
 |  [createAuctionListing(listing)](./sdk.marketplacemodule.createauctionlisting.md) |  |  |
 |  [createDirectListing(listing)](./sdk.marketplacemodule.createdirectlisting.md) |  |  |
 |  [getActiveBids(\_listingId)](./sdk.marketplacemodule.getactivebids.md) |  | <b><i>(BETA)</i></b> - This method is not yet ready for production use |

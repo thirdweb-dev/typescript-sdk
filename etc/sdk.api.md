@@ -710,20 +710,17 @@ export interface IDropModule {
 export interface IMarketplace {
     acceptDirectListingOffer(listingId: BigNumberish_2, addressOfOfferor: string): Promise<void>;
     acceptWinningBid(listingId: BigNumberish_2): Promise<void>;
-    buyDirectListing(buyout: {
-        listingId: BigNumberish_2;
-        quantityDesired: BigNumberish_2;
-        currencyContractAddress: string;
-        tokenAmount: BigNumberish_2;
-    }): Promise<void>;
     buyoutAuction(buyout: {
         listingId: BigNumberish_2;
         quantityDesired: BigNumberish_2;
-        currencyContractAddress: string;
-        tokenAmount: BigNumberish_2;
+    }): Promise<void>;
+    buyoutDirectListing(buyout: {
+        listingId: BigNumberish_2;
+        quantityDesired: BigNumberish_2;
     }): Promise<void>;
     cancelAuctionListing(listingId: BigNumberish_2): Promise<void>;
     cancelDirectListing(listingId: BigNumberish_2): Promise<void>;
+    closeAuctionListing(listingId: BigNumberish_2): Promise<void>;
     createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
     createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
     getActiveBids(listingId: BigNumberish_2): Promise<Offer[]>;
@@ -1032,14 +1029,12 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     // (undocumented)
     acceptWinningBid(listingId: BigNumberish_2): Promise<void>;
     // @beta
-    buyDirectListing(_buyout: {
+    buyoutAuction(_buyout: {
         listingId: BigNumberish_2;
         quantityDesired: BigNumberish_2;
-        currencyContractAddress: string;
-        tokenAmount: BigNumberish_2;
     }): Promise<void>;
-    // @beta
-    buyoutAuction(_buyout: {
+    // (undocumented)
+    buyoutDirectListing(_buyout: {
         listingId: BigNumberish_2;
         quantityDesired: BigNumberish_2;
     }): Promise<void>;
@@ -1047,6 +1042,8 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     cancelAuctionListing(listingId: BigNumberish_2): Promise<void>;
     // (undocumented)
     cancelDirectListing(listingId: BigNumberish_2): Promise<void>;
+    // (undocumented)
+    closeAuctionListing(_listingId: BigNumberish_2): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): Marketplace;
     // (undocumented)
