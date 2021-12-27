@@ -32,6 +32,7 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [deployCurrencyModule(metadata)](./sdk.appmodule.deploycurrencymodule.md) |  | Deploys a currency module. |
 |  [deployDropModule(metadata)](./sdk.appmodule.deploydropmodule.md) |  | Deploys a Drop module |
 |  [deployMarketModule(metadata)](./sdk.appmodule.deploymarketmodule.md) |  | Deploys a Marketplace module |
+|  [deployMarketplaceModule(metadata)](./sdk.appmodule.deploymarketplacemodule.md) |  |  |
 |  [deployNftModule(metadata)](./sdk.appmodule.deploynftmodule.md) |  | Deploys a NFT module. |
 |  [deployPackModule(metadata)](./sdk.appmodule.deploypackmodule.md) |  | Deploys a Pack module |
 |  [deploySplitsModule(metadata)](./sdk.appmodule.deploysplitsmodule.md) |  | Deploys a Splits module |
