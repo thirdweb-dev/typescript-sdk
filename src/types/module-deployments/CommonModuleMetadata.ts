@@ -9,7 +9,7 @@ import FileOrBuffer from "../FileOrBuffer";
  * CommonModuleMetadata defines the common properties of a module deployment.
  */
 @JsonObject("CommonModuleMetadata")
-export default class CommonModuleMetadata {
+export class CommonModuleMetadata {
   /**
    * The name of the module.
    */
@@ -38,3 +38,5 @@ export default class CommonModuleMetadata {
   @JsonProperty("external_link", String, PropertyConvertingMode.IGNORE_NULLABLE)
   externalLink?: string = undefined;
 }
+
+export default CommonModuleMetadata;

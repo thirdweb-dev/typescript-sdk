@@ -3,10 +3,10 @@ import {
   JsonProperty,
   PropertyConvertingMode,
 } from "json2typescript";
-import CommonModuleMetadata from "./CommonModuleMetadata";
+import { CommonModuleMetadata } from "./CommonModuleMetadata";
 
 @JsonObject("DropModuleMetadata")
-export default class DropModuleMetadata extends CommonModuleMetadata {
+export class DropModuleMetadata extends CommonModuleMetadata {
   /**
    * The amount of royalty collected on all royalties represented as basis points.
    * The default is 0 (no royalties).
@@ -98,3 +98,5 @@ export default class DropModuleMetadata extends CommonModuleMetadata {
   )
   baseTokenUri? = "";
 }
+
+export default DropModuleMetadata;
