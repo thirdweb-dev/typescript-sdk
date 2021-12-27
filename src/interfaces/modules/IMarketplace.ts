@@ -85,6 +85,14 @@ export interface IMarketplace {
   cancelAuctionListing(listingId: BigNumberish): Promise<void>;
 
   /**
+   * Closes an auction listing and distributes the payment/assets.
+   * You can only cancel the listing after it has already ended.
+   *
+   * @param listingId - Id of the listing to remove.
+   */
+  closeAuctionListing(listingId: BigNumberish): Promise<void>;
+
+  /**
    * Buyout the listing based on the buyout price.
    *
    * The offer must be higher as high as the buyout price in order

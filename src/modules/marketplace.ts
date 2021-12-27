@@ -639,4 +639,8 @@ export class MarketplaceModule
       await this.getSignerAddress(),
     ]);
   }
+
+  public async closeAuctionListing(_listingId: BigNumberish): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
 }
