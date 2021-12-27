@@ -52,7 +52,7 @@ export interface INFTCollectionBatchArgs {
 }
 
 export interface INFTBundleBatchArgs {
-  tokenId: BigNumber;
+  tokenId: string;
   amount: BigNumber;
 }
 
@@ -181,6 +181,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
     tokenId: string,
     amount: BigNumberish,
   ): Promise<TransactionReceipt> {
+    amount = BigNumber.from(amount);
     return await this.transferFrom(
       await this.getSignerAddress(),
       to,
@@ -199,7 +200,7 @@ export class BundleModule extends ModuleWithRoles<NFTBundleContract> {
   ): Promise<BundleMetadata[]> {
     const metadataWithSupply = metadatas.map((m) => ({
       metadata: m,
-      supply: 0,
+      supply: BigNumber.from(0),
     }));
     return this.createAndMintBatch(metadataWithSupply);
   }
