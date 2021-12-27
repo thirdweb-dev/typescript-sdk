@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-pricePerToken?: BigNumberish;
+pricePerToken?: BigNumber;
 ```

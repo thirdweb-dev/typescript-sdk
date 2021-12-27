@@ -18,6 +18,6 @@ export interface IPackBatchArgs
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [amount](./sdk.ipackbatchargs.amount.md) | BigNumberish | <b><i>(BETA)</i></b> |
-|  [tokenId](./sdk.ipackbatchargs.tokenid.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [amount](./sdk.ipackbatchargs.amount.md) | BigNumber | <b><i>(BETA)</i></b> |
+|  [tokenId](./sdk.ipackbatchargs.tokenid.md) | BigNumber | <b><i>(BETA)</i></b> |
 

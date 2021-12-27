@@ -19,10 +19,10 @@ export interface BundleDropCreateClaimCondition
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [currency?](./sdk.bundledropcreateclaimcondition.currency.md) | string | <b><i>(BETA)</i></b> <i>(Optional)</i> |
-|  [maxClaimableSupply](./sdk.bundledropcreateclaimcondition.maxclaimablesupply.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [maxClaimableSupply](./sdk.bundledropcreateclaimcondition.maxclaimablesupply.md) | BigNumber | <b><i>(BETA)</i></b> |
 |  [merkleRoot?](./sdk.bundledropcreateclaimcondition.merkleroot.md) | BytesLike | <b><i>(BETA)</i></b> <i>(Optional)</i> |
-|  [pricePerToken?](./sdk.bundledropcreateclaimcondition.pricepertoken.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
-|  [quantityLimitPerTransaction?](./sdk.bundledropcreateclaimcondition.quantitylimitpertransaction.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
-|  [startTimestamp?](./sdk.bundledropcreateclaimcondition.starttimestamp.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
-|  [waitTimeInSecondsBetweenClaims?](./sdk.bundledropcreateclaimcondition.waittimeinsecondsbetweenclaims.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [pricePerToken?](./sdk.bundledropcreateclaimcondition.pricepertoken.md) | BigNumber | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [quantityLimitPerTransaction?](./sdk.bundledropcreateclaimcondition.quantitylimitpertransaction.md) | BigNumber | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [startTimestamp?](./sdk.bundledropcreateclaimcondition.starttimestamp.md) | BigNumber | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [waitTimeInSecondsBetweenClaims?](./sdk.bundledropcreateclaimcondition.waittimeinsecondsbetweenclaims.md) | BigNumber | <b><i>(BETA)</i></b> <i>(Optional)</i> |
 

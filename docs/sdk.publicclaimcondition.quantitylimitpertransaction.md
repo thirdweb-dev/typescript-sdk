@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-quantityLimitPerTransaction: BigNumberish;
+quantityLimitPerTransaction: BigNumber;
 ```

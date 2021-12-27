@@ -11,7 +11,7 @@
 
 ```typescript
 assets: {
-        tokenId: BigNumberish;
-        amount: BigNumberish;
+        tokenId: BigNumber;
+        amount: BigNumber;
     }[];
 ```

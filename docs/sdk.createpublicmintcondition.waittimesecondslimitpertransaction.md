@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-waitTimeSecondsLimitPerTransaction?: BigNumberish;
+waitTimeSecondsLimitPerTransaction?: BigNumber;
 ```

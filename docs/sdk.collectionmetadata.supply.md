@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-supply: BigNumberish;
+supply: BigNumber;
 ```

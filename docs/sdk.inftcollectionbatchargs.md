@@ -18,6 +18,6 @@ export interface INFTCollectionBatchArgs
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [amount](./sdk.inftcollectionbatchargs.amount.md) | BigNumberish | <b><i>(BETA)</i></b> |
-|  [tokenId](./sdk.inftcollectionbatchargs.tokenid.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [amount](./sdk.inftcollectionbatchargs.amount.md) | BigNumber | <b><i>(BETA)</i></b> |
+|  [tokenId](./sdk.inftcollectionbatchargs.tokenid.md) | BigNumber | <b><i>(BETA)</i></b> |
 

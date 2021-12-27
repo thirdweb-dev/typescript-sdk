@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-maxClaimableSupply: BigNumberish;
+maxClaimableSupply: BigNumber;
 ```

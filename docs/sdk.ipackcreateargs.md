@@ -19,7 +19,7 @@ export interface IPackCreateArgs
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [assetContract](./sdk.ipackcreateargs.assetcontract.md) | string | <b><i>(BETA)</i></b> |
-|  [assets](./sdk.ipackcreateargs.assets.md) | { tokenId: BigNumberish; amount: BigNumberish; }\[\] | <b><i>(BETA)</i></b> |
+|  [assets](./sdk.ipackcreateargs.assets.md) | { tokenId: BigNumber; amount: BigNumber; }\[\] | <b><i>(BETA)</i></b> |
 |  [metadata](./sdk.ipackcreateargs.metadata.md) | [MetadataURIOrObject](./sdk.metadatauriorobject.md) | <b><i>(BETA)</i></b> |
 |  [rewardsPerOpen?](./sdk.ipackcreateargs.rewardsperopen.md) | number | <b><i>(BETA)</i></b> <i>(Optional)</i> |
 |  [secondsUntilOpenStart?](./sdk.ipackcreateargs.secondsuntilopenstart.md) | number | <b><i>(BETA)</i></b> <i>(Optional)</i> |

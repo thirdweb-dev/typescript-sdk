@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-maxMintSupply: BigNumberish;
+maxMintSupply: BigNumber;
 ```

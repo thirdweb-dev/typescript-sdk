@@ -19,5 +19,5 @@ export interface INFTBundleCreateArgs
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [metadata](./sdk.inftbundlecreateargs.metadata.md) | [MetadataURIOrObject](./sdk.metadatauriorobject.md) | <b><i>(BETA)</i></b> |
-|  [supply](./sdk.inftbundlecreateargs.supply.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [supply](./sdk.inftbundlecreateargs.supply.md) | BigNumber | <b><i>(BETA)</i></b> |
 

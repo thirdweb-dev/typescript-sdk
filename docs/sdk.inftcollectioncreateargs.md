@@ -15,5 +15,5 @@ export interface INFTCollectionCreateArgs
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [metadata](./sdk.inftcollectioncreateargs.metadata.md) | [MetadataURIOrObject](./sdk.metadatauriorobject.md) |  |
-|  [supply](./sdk.inftcollectioncreateargs.supply.md) | BigNumberish |  |
+|  [supply](./sdk.inftcollectioncreateargs.supply.md) | BigNumber |  |
 

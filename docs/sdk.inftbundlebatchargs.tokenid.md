@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-tokenId: BigNumberish;
+tokenId: string;
 ```

@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-currentSupply: BigNumberish;
+currentSupply: BigNumber;
 ```

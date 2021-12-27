@@ -19,10 +19,10 @@ export interface CreatePublicMintCondition
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [currency?](./sdk.createpublicmintcondition.currency.md) | string | <b><i>(BETA)</i></b> <i>(Optional)</i> |
-|  [maxMintSupply](./sdk.createpublicmintcondition.maxmintsupply.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [maxMintSupply](./sdk.createpublicmintcondition.maxmintsupply.md) | BigNumber | <b><i>(BETA)</i></b> |
 |  [merkleRoot?](./sdk.createpublicmintcondition.merkleroot.md) | BytesLike | <b><i>(BETA)</i></b> <i>(Optional)</i> |
-|  [pricePerToken?](./sdk.createpublicmintcondition.pricepertoken.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
-|  [quantityLimitPerTransaction?](./sdk.createpublicmintcondition.quantitylimitpertransaction.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
-|  [startTimestampInSeconds?](./sdk.createpublicmintcondition.starttimestampinseconds.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
-|  [waitTimeSecondsLimitPerTransaction?](./sdk.createpublicmintcondition.waittimesecondslimitpertransaction.md) | BigNumberish | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [pricePerToken?](./sdk.createpublicmintcondition.pricepertoken.md) | BigNumber | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [quantityLimitPerTransaction?](./sdk.createpublicmintcondition.quantitylimitpertransaction.md) | BigNumber | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [startTimestampInSeconds?](./sdk.createpublicmintcondition.starttimestampinseconds.md) | BigNumber | <b><i>(BETA)</i></b> <i>(Optional)</i> |
+|  [waitTimeSecondsLimitPerTransaction?](./sdk.createpublicmintcondition.waittimesecondslimitpertransaction.md) | BigNumber | <b><i>(BETA)</i></b> <i>(Optional)</i> |
 

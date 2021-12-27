@@ -19,5 +19,5 @@ export interface BundleDropMetadata
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [metadata](./sdk.bundledropmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) | <b><i>(BETA)</i></b> |
-|  [supply](./sdk.bundledropmetadata.supply.md) | BigNumberish | <b><i>(BETA)</i></b> |
+|  [supply](./sdk.bundledropmetadata.supply.md) | BigNumber | <b><i>(BETA)</i></b> |
 

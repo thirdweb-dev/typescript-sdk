@@ -19,13 +19,13 @@ export interface ListingMetadata
 |  [currencyContract](./sdk.listingmetadata.currencycontract.md) | string |  |
 |  [currencyMetadata](./sdk.listingmetadata.currencymetadata.md) | [CurrencyValue](./sdk.currencyvalue.md) \| null |  |
 |  [id](./sdk.listingmetadata.id.md) | string |  |
-|  [price](./sdk.listingmetadata.price.md) | BigNumberish |  |
-|  [quantity](./sdk.listingmetadata.quantity.md) | BigNumberish |  |
+|  [price](./sdk.listingmetadata.price.md) | BigNumber |  |
+|  [quantity](./sdk.listingmetadata.quantity.md) | BigNumber |  |
 |  [saleEnd](./sdk.listingmetadata.saleend.md) | Date \| null |  |
 |  [saleStart](./sdk.listingmetadata.salestart.md) | Date \| null |  |
 |  [seller](./sdk.listingmetadata.seller.md) | string |  |
 |  [tokenContract](./sdk.listingmetadata.tokencontract.md) | string |  |
 |  [tokenId](./sdk.listingmetadata.tokenid.md) | string |  |
 |  [tokenMetadata?](./sdk.listingmetadata.tokenmetadata.md) | [NFTMetadata](./sdk.nftmetadata.md) | <i>(Optional)</i> |
-|  [tokensPerBuyer](./sdk.listingmetadata.tokensperbuyer.md) | BigNumberish |  |
+|  [tokensPerBuyer](./sdk.listingmetadata.tokensperbuyer.md) | BigNumber |  |
 

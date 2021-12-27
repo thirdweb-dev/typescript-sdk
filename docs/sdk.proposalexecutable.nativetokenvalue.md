@@ -9,5 +9,5 @@ The amount of a native token that may be sent if a proposal is executing a token
 <b>Signature:</b>
 
 ```typescript
-nativeTokenValue: BigNumberish;
+nativeTokenValue: BigNumber;
 ```

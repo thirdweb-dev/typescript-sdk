@@ -14,6 +14,6 @@ export interface INFTBundleBatchArgs
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [amount](./sdk.inftbundlebatchargs.amount.md) | BigNumberish |  |
-|  [tokenId](./sdk.inftbundlebatchargs.tokenid.md) | BigNumberish |  |
+|  [amount](./sdk.inftbundlebatchargs.amount.md) | BigNumber |  |
+|  [tokenId](./sdk.inftbundlebatchargs.tokenid.md) | string |  |
 

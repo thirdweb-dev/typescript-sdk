@@ -125,17 +125,17 @@ export interface BundleDropCreateClaimCondition {
     // (undocumented)
     currency?: string;
     // (undocumented)
-    maxClaimableSupply: BigNumberish_2;
+    maxClaimableSupply: BigNumber_2;
     // (undocumented)
     merkleRoot?: BytesLike;
     // (undocumented)
-    pricePerToken?: BigNumberish_2;
+    pricePerToken?: BigNumber_2;
     // (undocumented)
-    quantityLimitPerTransaction?: BigNumberish_2;
+    quantityLimitPerTransaction?: BigNumber_2;
     // (undocumented)
-    startTimestamp?: BigNumberish_2;
+    startTimestamp?: BigNumber_2;
     // (undocumented)
-    waitTimeInSecondsBetweenClaims?: BigNumberish_2;
+    waitTimeInSecondsBetweenClaims?: BigNumber_2;
 }
 
 // @beta (undocumented)
@@ -143,7 +143,7 @@ export interface BundleDropMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    supply: BigNumberish_2;
+    supply: BigNumber_2;
 }
 
 // @beta
@@ -225,7 +225,7 @@ export interface BundleMetadata {
     // (undocumented)
     ownedByAddress: number;
     // (undocumented)
-    supply: BigNumberish;
+    supply: BigNumber;
 }
 
 // @beta
@@ -377,7 +377,7 @@ export interface CollectionMetadata {
     // (undocumented)
     ownedByAddress: number;
     // (undocumented)
-    supply: BigNumberish;
+    supply: BigNumber;
 }
 
 // Warning: (ae-incompatible-release-tags) The symbol "CollectionModule" is marked as @public, but its signature references "BundleModule" which is marked as @beta
@@ -416,17 +416,17 @@ export interface CreatePublicMintCondition {
     // (undocumented)
     currency?: string;
     // (undocumented)
-    maxMintSupply: BigNumberish_2;
+    maxMintSupply: BigNumber_2;
     // (undocumented)
     merkleRoot?: BytesLike;
     // (undocumented)
-    pricePerToken?: BigNumberish_2;
+    pricePerToken?: BigNumber_2;
     // (undocumented)
-    quantityLimitPerTransaction?: BigNumberish_2;
+    quantityLimitPerTransaction?: BigNumber_2;
     // (undocumented)
-    startTimestampInSeconds?: BigNumberish_2;
+    startTimestampInSeconds?: BigNumber_2;
     // (undocumented)
-    waitTimeSecondsLimitPerTransaction?: BigNumberish_2;
+    waitTimeSecondsLimitPerTransaction?: BigNumber_2;
 }
 
 // @public
@@ -658,9 +658,9 @@ export interface IDropModule {
 // @public (undocumented)
 export interface INFTBundleBatchArgs {
     // (undocumented)
-    amount: BigNumberish;
+    amount: BigNumber;
     // (undocumented)
-    tokenId: BigNumberish;
+    tokenId: string;
 }
 
 // @beta (undocumented)
@@ -668,15 +668,15 @@ export interface INFTBundleCreateArgs {
     // (undocumented)
     metadata: MetadataURIOrObject;
     // (undocumented)
-    supply: BigNumberish;
+    supply: BigNumber;
 }
 
 // @beta (undocumented)
 export interface INFTCollectionBatchArgs {
     // (undocumented)
-    amount: BigNumberish;
+    amount: BigNumber;
     // (undocumented)
-    tokenId: BigNumberish;
+    tokenId: BigNumber;
 }
 
 // @public (undocumented)
@@ -684,7 +684,7 @@ export interface INFTCollectionCreateArgs {
     // (undocumented)
     metadata: MetadataURIOrObject;
     // (undocumented)
-    supply: BigNumberish;
+    supply: BigNumber;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "InterfaceId_IERC1155" should be prefixed with an underscore because the declaration is marked as @internal
@@ -716,9 +716,9 @@ export class InvariantError extends Error {
 // @beta (undocumented)
 export interface IPackBatchArgs {
     // (undocumented)
-    amount: BigNumberish_2;
+    amount: BigNumber_2;
     // (undocumented)
-    tokenId: BigNumberish_2;
+    tokenId: BigNumber_2;
 }
 
 // @beta (undocumented)
@@ -727,8 +727,8 @@ export interface IPackCreateArgs {
     assetContract: string;
     // (undocumented)
     assets: {
-        tokenId: BigNumberish_2;
-        amount: BigNumberish_2;
+        tokenId: BigNumber_2;
+        amount: BigNumber_2;
     }[];
     // (undocumented)
     metadata: MetadataURIOrObject;
@@ -854,9 +854,9 @@ export interface ListingMetadata {
     // (undocumented)
     id: string;
     // (undocumented)
-    price: BigNumberish_2;
+    price: BigNumber_2;
     // (undocumented)
-    quantity: BigNumberish_2;
+    quantity: BigNumber_2;
     // (undocumented)
     saleEnd: Date | null;
     // (undocumented)
@@ -870,7 +870,7 @@ export interface ListingMetadata {
     // (undocumented)
     tokenMetadata?: NFTMetadata;
     // (undocumented)
-    tokensPerBuyer: BigNumberish_2;
+    tokensPerBuyer: BigNumber_2;
 }
 
 // @public
@@ -1164,7 +1164,7 @@ export interface PackMetadata {
     // (undocumented)
     creator: string;
     // (undocumented)
-    currentSupply: BigNumberish_2;
+    currentSupply: BigNumber_2;
     // (undocumented)
     id: string;
     // (undocumented)
@@ -1230,7 +1230,7 @@ export interface PackNFTMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    supply: BigNumberish_2;
+    supply: BigNumber_2;
 }
 
 // @public
@@ -1247,19 +1247,19 @@ export type PermitRequestMessage = {
 export interface Proposal {
     description: string;
     // (undocumented)
-    endBlock: BigNumberish_2;
+    endBlock: BigNumber_2;
     executions: ProposalExecutable[];
     proposalId: string;
     proposer: string;
     // (undocumented)
-    startBlock: BigNumberish_2;
+    startBlock: BigNumber_2;
     state: ProposalState;
     votes: ProposalVote[];
 }
 
 // @public (undocumented)
 export interface ProposalExecutable {
-    nativeTokenValue: BigNumberish_2;
+    nativeTokenValue: BigNumber_2;
     toAddress: string;
     transactionData: BytesLike;
 }
@@ -1287,7 +1287,7 @@ export enum ProposalState {
 // @public (undocumented)
 export interface ProposalVote {
     // (undocumented)
-    count: BigNumberish_2;
+    count: BigNumber_2;
     // (undocumented)
     label: string;
     // (undocumented)
@@ -1302,19 +1302,19 @@ export interface PublicClaimCondition {
     // (undocumented)
     currency: string;
     // (undocumented)
-    currentMintSupply: BigNumberish_2;
+    currentMintSupply: BigNumber_2;
     // (undocumented)
-    maxMintSupply: BigNumberish_2;
+    maxMintSupply: BigNumber_2;
     // (undocumented)
     merkleRoot: BytesLike;
     // (undocumented)
-    pricePerToken: BigNumberish_2;
+    pricePerToken: BigNumber_2;
     // (undocumented)
-    quantityLimitPerTransaction: BigNumberish_2;
+    quantityLimitPerTransaction: BigNumber_2;
     // (undocumented)
-    startTimestamp: BigNumberish_2;
+    startTimestamp: BigNumber_2;
     // (undocumented)
-    waitTimeSecondsLimitPerTransaction: BigNumberish_2;
+    waitTimeSecondsLimitPerTransaction: BigNumber_2;
 }
 
 // @beta @deprecated (undocumented)
