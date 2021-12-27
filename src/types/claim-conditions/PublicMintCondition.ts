@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BytesLike } from "ethers";
 import { CurrencyValue } from "../../common/currency";
 
 /**
