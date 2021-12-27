@@ -587,7 +587,7 @@ export class MarketplaceModule
    *
    * @param listingId - The listing ID to get active bids for
    */
-  private async getActiveBids(listingId: BigNumberish): Promise<Offer[]> {
+  public async getActiveBids(listingId: BigNumberish): Promise<Offer[]> {
     throw new Error("Method not implemented.");
   }
 
