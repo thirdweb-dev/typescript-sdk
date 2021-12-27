@@ -30,11 +30,11 @@ import { Snapshot } from "../types/snapshots";
  * @beta
  */
 export interface BundleDropCreateClaimCondition {
-  startTimestamp?: BigNumberish;
-  maxClaimableSupply: BigNumberish;
-  quantityLimitPerTransaction?: BigNumberish;
-  waitTimeInSecondsBetweenClaims?: BigNumberish;
-  pricePerToken?: BigNumberish;
+  startTimestamp?: BigNumber;
+  maxClaimableSupply: BigNumber;
+  quantityLimitPerTransaction?: BigNumber;
+  waitTimeInSecondsBetweenClaims?: BigNumber;
+  pricePerToken?: BigNumber;
   currency?: string;
   merkleRoot?: BytesLike;
 }
@@ -43,7 +43,7 @@ export interface BundleDropCreateClaimCondition {
  * @beta
  */
 export interface BundleDropMetadata {
-  supply: BigNumberish;
+  supply: BigNumber;
   metadata: NFTMetadata;
 }
 

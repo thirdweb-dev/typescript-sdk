@@ -1,4 +1,4 @@
-import { BigNumberish } from "ethers";
+import { BigNumber } from "ethers";
 import { ProposalExecutable } from "./ProposalExecutable";
 import { ProposalState } from "../../enums/vote";
 import { ProposalVote } from "./ProposalVote";
@@ -19,8 +19,8 @@ export interface Proposal {
    */
   description: string;
 
-  startBlock: BigNumberish;
-  endBlock: BigNumberish;
+  startBlock: BigNumber;
+  endBlock: BigNumber;
 
   /**
    * The current state of the proposal.

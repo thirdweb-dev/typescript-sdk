@@ -25,7 +25,7 @@ import { MetadataURIOrObject } from "../core/types";
 export interface PackMetadata {
   id: string;
   creator: string;
-  currentSupply: BigNumberish;
+  currentSupply: BigNumber;
   openStart: Date | null;
   metadata: NFTMetadata;
 }
@@ -34,7 +34,7 @@ export interface PackMetadata {
  * @public
  */
 export interface PackNFTMetadata {
-  supply: BigNumberish;
+  supply: BigNumber;
   metadata: NFTMetadata;
 }
 
@@ -45,8 +45,8 @@ export interface IPackCreateArgs {
   assetContract: string;
   metadata: MetadataURIOrObject;
   assets: {
-    tokenId: BigNumberish;
-    amount: BigNumberish;
+    tokenId: BigNumber;
+    amount: BigNumber;
   }[];
   secondsUntilOpenStart?: number;
   rewardsPerOpen?: number;
@@ -56,8 +56,8 @@ export interface IPackCreateArgs {
  * @beta
  */
 export interface IPackBatchArgs {
-  tokenId: BigNumberish;
-  amount: BigNumberish;
+  tokenId: BigNumber;
+  amount: BigNumber;
 }
 
 /**

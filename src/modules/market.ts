@@ -44,11 +44,11 @@ export interface ListingMetadata {
   tokenContract: string;
   tokenId: string;
   tokenMetadata?: NFTMetadata;
-  quantity: BigNumberish;
-  tokensPerBuyer: BigNumberish;
+  quantity: BigNumber;
+  tokensPerBuyer: BigNumber;
   currencyContract: string;
   currencyMetadata: CurrencyValue | null;
-  price: BigNumberish;
+  price: BigNumber;
   saleStart: Date | null;
   saleEnd: Date | null;
 }

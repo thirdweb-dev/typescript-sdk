@@ -1,4 +1,4 @@
-import { BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BytesLike } from "ethers";
 
 export interface ProposalExecutable {
   /**
@@ -11,7 +11,7 @@ export interface ProposalExecutable {
   /**
    * The amount of a native token that may be sent if a proposal is executing a token transfer.
    */
-  nativeTokenValue: BigNumberish;
+  nativeTokenValue: BigNumber;
 
   /**
    * The transaction payload that will be executed if the proposal is approved.

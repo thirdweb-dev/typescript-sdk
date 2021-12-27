@@ -18,13 +18,13 @@ import { MetadataURIOrObject } from "../core/types";
 
 export interface BundleMetadata {
   creator: string;
-  supply: BigNumberish;
+  supply: BigNumber;
   metadata: NFTMetadata;
   ownedByAddress: number;
 }
 export interface CollectionMetadata {
   creator: string;
-  supply: BigNumberish;
+  supply: BigNumber;
   metadata: NFTMetadata;
   ownedByAddress: number;
 }
@@ -35,11 +35,11 @@ export interface CollectionMetadata {
 
 export interface INFTBundleCreateArgs {
   metadata: MetadataURIOrObject;
-  supply: BigNumberish;
+  supply: BigNumber;
 }
 export interface INFTCollectionCreateArgs {
   metadata: MetadataURIOrObject;
-  supply: BigNumberish;
+  supply: BigNumber;
 }
 
 /**
@@ -47,13 +47,13 @@ export interface INFTCollectionCreateArgs {
  */
 
 export interface INFTCollectionBatchArgs {
-  tokenId: BigNumberish;
-  amount: BigNumberish;
+  tokenId: BigNumber;
+  amount: BigNumber;
 }
 
 export interface INFTBundleBatchArgs {
-  tokenId: BigNumberish;
-  amount: BigNumberish;
+  tokenId: BigNumber;
+  amount: BigNumber;
 }
 
 /**

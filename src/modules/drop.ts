@@ -39,11 +39,11 @@ import { Snapshot } from "../types/snapshots/Snapshot";
  * @beta
  */
 export interface CreatePublicMintCondition {
-  startTimestampInSeconds?: BigNumberish;
-  maxMintSupply: BigNumberish;
-  quantityLimitPerTransaction?: BigNumberish;
-  waitTimeSecondsLimitPerTransaction?: BigNumberish;
-  pricePerToken?: BigNumberish;
+  startTimestampInSeconds?: BigNumber;
+  maxMintSupply: BigNumber;
+  quantityLimitPerTransaction?: BigNumber;
+  waitTimeSecondsLimitPerTransaction?: BigNumber;
+  pricePerToken?: BigNumber;
   currency?: string;
   merkleRoot?: BytesLike;
 }

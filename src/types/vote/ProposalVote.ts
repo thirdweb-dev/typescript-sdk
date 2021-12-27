@@ -4,5 +4,5 @@ import { VoteType } from "../../enums/vote";
 export interface ProposalVote {
   type: VoteType;
   label: string;
-  count: BigNumberish;
+  count: BigNumber;
 }
