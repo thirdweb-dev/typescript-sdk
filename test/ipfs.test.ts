@@ -4,6 +4,7 @@ import { sdk, signers } from "./before.test";
 
 import { expect, assert } from "chai";
 import { IpfsStorage } from "../src/storage/IpfsStorage";
+import FileOrBufferWithNames from "../src/types/FireOrBufferWithNames";
 
 global.fetch = require("node-fetch");
 
@@ -106,6 +107,21 @@ describe("IPFS Uploads", async () => {
       readFileSync("test/test.mp4"),
     ];
     const cid = await sdk.getStorage().uploadBatch(sampleObjects);
+  });
+
+  it("should upload files with filenames correctly", async () => {
+    const sampleObjects: FileOrBufferWithNames[] = [
+      {
+        file: readFileSync("test/test.mp4"),
+        name: "test.mp4",
+      },
+      { file: readFileSync("test/test.mp4"), name: "test.mp4" },
+      {
+        file: readFileSync("test/test.mp4"),
+        name: "test.mp4",
+      },
+    ];
+    const cid = await sdk.getStorage().uploadBatchWithFileNames(sampleObjects);
   });
 
   it("should upload properties recursively in batch", async () => {

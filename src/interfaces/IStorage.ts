@@ -1,5 +1,6 @@
 import { MetadataURIOrObject } from "../core/types";
 import FileOrBuffer from "../types/FileOrBuffer";
+import FileOrBufferWithNames from "../types/FireOrBufferWithNames";
 
 /* eslint-disable semi */
 export interface IStorage {
@@ -90,5 +91,10 @@ export interface IStorage {
     metadatas: MetadataURIOrObject[],
     contractAddress?: string,
     fileStartNumber?: number,
+  ): Promise<string>;
+
+  uploadBatchWithFileNames(
+    files: FileOrBufferWithNames[],
+    contractAddress?: string,
   ): Promise<string>;
 }
