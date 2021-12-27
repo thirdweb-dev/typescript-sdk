@@ -33,7 +33,7 @@ npm install @3rdweb/sdk
  6 |
  7 | const sdk = new ThirdwebSDK();
  8 |
- 9 | const nftModule: NFTModule = sdk.getNftModule(contractAddress);
+ 9 | const nftModule: NFTModule = sdk.getNFTModule(contractAddress);
 10 |
 11 | const nftListWithOwnerAddress: NFTMetadataOwner[] = await nftModule.getAllWithOwner();
 12 |
@@ -71,33 +71,45 @@ Output
 |  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [BundleDropModule](./sdk.bundledropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleDropModule()](./sdk.thirdwebsdk.getbundledropmodule.md) |
+|  [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md) |  |
 |  [BundleModule](./sdk.bundlemodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md) |
+|  [BundleModuleMetadata](./sdk.bundlemodulemetadata.md) |  |
 |  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
 |  [ClaimConditionPhase](./sdk.claimconditionphase.md) |  |
 |  [ClaimProof](./sdk.claimproof.md) | The model for a claim proof. Currently we support only an address in the leaf of the merkle tree. |
+|  [CommonModuleMetadata](./sdk.commonmodulemetadata.md) | CommonModuleMetadata defines the common properties of a module deployment. |
 |  [CurrencyModule](./sdk.currencymodule.md) |  |
+|  [CurrencyModuleMetadata](./sdk.currencymodulemetadata.md) |  |
+|  [DatastoreModuleMetadata](./sdk.datastoremodulemetadata.md) |  |
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md) |
+|  [DropModuleMetadata](./sdk.dropmodulemetadata.md) |  |
 |  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
 |  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [IpfsStorage](./sdk.ipfsstorage.md) |  |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
+|  [MarketModuleMetadata](./sdk.marketmodulemetadata.md) |  |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
 |  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality. |
 |  [NFTModule](./sdk.nftmodule.md) | Access this module by calling [ThirdwebSDK.getNFTModule()](./sdk.thirdwebsdk.getnftmodule.md) |
+|  [NftModuleMetadata](./sdk.nftmodulemetadata.md) |  |
 |  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.getpackmodule.md) |
+|  [PackModuleMetadata](./sdk.packmodulemetadata.md) |  |
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
 |  [Snapshot](./sdk.snapshot.md) |  |
+|  [SplitsModuleMetadata](./sdk.splitsmodulemetadata.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
 |  [TokenModule](./sdk.tokenmodule.md) | Access this module by calling [ThirdwebSDK.getTokenModule()](./sdk.thirdwebsdk.gettokenmodule.md) |
+|  [TokenModuleMetadata](./sdk.tokenmodulemetadata.md) |  |
 |  [UploadError](./sdk.uploaderror.md) |  |
 |  [VoteModule](./sdk.votemodule.md) | Access this module by calling  |
+|  [VoteModuleMetadata](./sdk.votemodulemetadata.md) |  |
 
 ## Enumerations
 
@@ -152,6 +164,7 @@ Output
 |  [ModuleMetadata](./sdk.modulemetadata.md) | The module metadata, includes the <code>address</code> and the [ModuleType](./sdk.moduletype.md)<!-- -->. |
 |  [ModuleMetadataNoType](./sdk.modulemetadatanotype.md) | The module metadata, but missing the ModuleType. |
 |  [NativeToken](./sdk.nativetoken.md) |  |
+|  [NewSplitRecipient](./sdk.newsplitrecipient.md) | The NewSplitRecipient interface describes the structure of a new split recipient. The <code>shares</code> property is important for the calculation of the the total split.<!-- -->If there are two recipients each with 10 shares, they each will receive 50% of the total royalties.<!-- -->If there are two recipients each with 1 share, they each will receive 50% of the total royalties.<!-- -->I.e. the total number of shares is used to calculate the percentage of the total royalties that is allocated to each recipient. |
 |  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
@@ -176,10 +189,13 @@ Output
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [AllModuleMetadata](./sdk.allmodulemetadata.md) |  |
 |  [CollectionModule](./sdk.collectionmodule.md) |  |
+|  [CollectionModuleMetadata](./sdk.collectionmodulemetadata.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |
 |  [MetadataURIOrObject](./sdk.metadatauriorobject.md) | A valid URI string or metadata object |
+|  [ModuleMetadataMap](./sdk.modulemetadatamap.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [ProviderOrSigner](./sdk.providerorsigner.md) | A valid "ethers" Provider or Signer. |
 |  [Role](./sdk.role.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |
