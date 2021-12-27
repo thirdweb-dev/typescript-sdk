@@ -561,7 +561,7 @@ export class MarketplaceModule
    *
    * @beta - This method is not yet ready for production use
    */
-  public async buyoutAuction(buyout: {
+  public async buyoutAuction(_buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
   }): Promise<void> {
@@ -572,7 +572,7 @@ export class MarketplaceModule
    *
    * @beta - This method is not yet ready for production use
    */
-  public async buyDirectListing(buyout: {
+  public async buyDirectListing(_buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
@@ -585,9 +585,9 @@ export class MarketplaceModule
    *
    * @beta - This method is not yet ready for production use
    *
-   * @param listingId - The listing ID to get active bids for
+   * @param _listingId - The listing ID to get active bids for
    */
-  public async getActiveBids(listingId: BigNumberish): Promise<Offer[]> {
+  public async getActiveBids(_listingId: BigNumberish): Promise<Offer[]> {
     throw new Error("Method not implemented.");
   }
 
