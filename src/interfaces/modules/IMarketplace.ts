@@ -104,8 +104,6 @@ export interface IMarketplace {
   buyoutAuction(buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
-    currencyContractAddress: string;
-    tokenAmount: BigNumberish;
   }): Promise<void>;
 
   /**
@@ -117,11 +115,9 @@ export interface IMarketplace {
    *
    * @param listingId - Id of the listing to buyout.
    */
-  buyDirectListing(buyout: {
+  buyoutDirectListing(buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
-    currencyContractAddress: string;
-    tokenAmount: BigNumberish;
   }): Promise<void>;
 
   /**

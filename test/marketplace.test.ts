@@ -211,6 +211,27 @@ describe("Marketplace Module", async () => {
       );
     });
 
+    it("should allow a buyer to buyout a direct listing", async () => {
+      await sdk.setProviderOrSigner(bobWallet);
+
+      const currentBalance = await dummyNftModule.balanceOf(bobWallet.address);
+      assert.equal(
+        currentBalance.toString(),
+        "0",
+        "The buyer should start with no tokens",
+      );
+      await marketplaceModule.buyoutDirectListing({
+        listingId: directListingId,
+        quantityDesired: 1,
+      });
+      const balance = await dummyNftModule.balanceOf(bobWallet.address);
+      assert.equal(
+        balance.toString(),
+        "1",
+        "The buyer should have been awarded token",
+      );
+    });
+
     it("should allow offers to be made on direct listings", async () => {
       await sdk.setProviderOrSigner(bobWallet);
       await marketplaceModule.makeOffer({

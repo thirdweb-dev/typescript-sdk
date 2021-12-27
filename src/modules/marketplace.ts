@@ -148,7 +148,6 @@ export class MarketplaceModule
 
     const quantity = BigNumber.from(offer.quantityDesired);
     const value = BigNumber.from(offer.pricePerToken).mul(quantity);
-
     const overrides = (await this.getCallOverrides()) || {};
     await this.setAllowance(value, offer.currencyContractAddress, overrides);
 
@@ -568,17 +567,19 @@ export class MarketplaceModule
     throw new Error("Method not implemented.");
   }
 
-  /**
-   *
-   * @beta - This method is not yet ready for production use
-   */
-  public async buyDirectListing(_buyout: {
+  public async buyoutDirectListing(_buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
-    currencyContractAddress: string;
-    tokenAmount: BigNumberish;
   }): Promise<void> {
-    throw new Error("Method not implemented.");
+    const listing = await this.validateDirectListing(
+      BigNumber.from(_buyout.listingId),
+    );
+
+    const quantity = BigNumber.from(_buyout.quantityDesired);
+    const value = BigNumber.from(listing.buyoutPrice).mul(quantity);
+    const overrides = (await this.getCallOverrides()) || {};
+    await this.setAllowance(value, listing.currencyContractAddress, overrides);
+    await this.sendTransaction("buy", [_buyout.listingId, quantity], overrides);
   }
 
   /**
