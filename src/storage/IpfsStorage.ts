@@ -97,6 +97,11 @@ export class IpfsStorage implements IStorage {
           file: file as any,
           name: `files/${fileStartNumber + i}`,
         } as FileOrBufferWithNames;
+      } else {
+        file = {
+          file: file as any,
+          name: `files/${(file as FileOrBufferWithNames).name}`,
+        };
       }
 
       const fileWithName = file as FileOrBufferWithNames;
@@ -121,6 +126,7 @@ export class IpfsStorage implements IStorage {
     });
     const body = await res.json();
     if (!res.ok) {
+      console.log(body);
       throw new UploadError("Failed to upload files to IPFS");
     }
     return body.IpfsHash;
