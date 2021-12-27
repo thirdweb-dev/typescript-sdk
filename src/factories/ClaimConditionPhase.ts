@@ -125,12 +125,14 @@ export default class ClaimConditionPhase {
   public buildPublicClaimCondition(): PublicMintCondition {
     return {
       startTimestamp: BigNumber.from(this._conditionStartTime.toString()),
-      pricePerToken: this._price,
+      pricePerToken: BigNumber.from(this._price),
       currency: this._currencyAddress || AddressZero,
-      maxMintSupply: this._maxQuantity,
-      waitTimeSecondsLimitPerTransaction: this._waitInSeconds,
-      quantityLimitPerTransaction: this._quantityLimitPerTransaction,
-      currentMintSupply: 0,
+      maxMintSupply: BigNumber.from(this._maxQuantity),
+      waitTimeSecondsLimitPerTransaction: BigNumber.from(this._waitInSeconds),
+      quantityLimitPerTransaction: BigNumber.from(
+        this._quantityLimitPerTransaction,
+      ),
+      currentMintSupply: BigNumber.from(0),
       merkleRoot: this._merkleCondition?.merkleRoot
         ? this._merkleCondition.merkleRoot
         : this._merkleRootHash,
