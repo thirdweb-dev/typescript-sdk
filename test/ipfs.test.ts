@@ -113,15 +113,16 @@ describe("IPFS Uploads", async () => {
     const sampleObjects: FileOrBufferWithNames[] = [
       {
         file: readFileSync("test/test.mp4"),
-        name: "test.mp4",
+        name: "test2.mp4",
       },
-      { file: readFileSync("test/test.mp4"), name: "test.mp4" },
+      { file: readFileSync("test/test.mp4"), name: "test3.mp4" },
       {
         file: readFileSync("test/test.mp4"),
-        name: "test.mp4",
+        name: "test1.mp4",
       },
     ];
     const cid = await sdk.getStorage().uploadBatchWithFileNames(sampleObjects);
+    console.log(cid);
   });
 
   it("should upload properties recursively in batch", async () => {
