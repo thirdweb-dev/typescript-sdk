@@ -19,7 +19,7 @@ export type ChainlinkInfo = {
 export const ChainlinkVrf: Record<number, ChainlinkInfo> = {
   [ChainId.Polygon]: {
     vrfCoordinator: "0x3d2341ADb2D31f1c5530cDC622016af293177AE0",
-    linkTokenAddress: "0xb0897686c545045aFc77CF20eC7A532E3120E0F1",
+    linkTokenAddress: "0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39",
     keyHash:
       "0xf86195cf7690c55907b2b611ebb7343a6f649bff128701cc542f0569e2c549da",
     fees: ethers.utils.parseEther("0.0001"),
@@ -33,7 +33,7 @@ export const ChainlinkVrf: Record<number, ChainlinkInfo> = {
   },
   [ChainId.Rinkeby]: {
     vrfCoordinator: "0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B",
-    linkTokenAddress: "0x01be23585060835e02b77ef475b0cc51aa1e0709",
+    linkTokenAddress: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
     keyHash:
       "0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311",
     fees: ethers.utils.parseEther("0.1"),
