@@ -4,7 +4,7 @@ import { sdk, signers } from "./before.test";
 
 import { expect, assert } from "chai";
 import { IpfsStorage } from "../src/storage/IpfsStorage";
-import FileOrBufferWithNames from "../src/types/FireOrBufferWithNames";
+import { FileOrBufferWithNames } from "../src/types/FireOrBufferWithNames";
 
 global.fetch = require("node-fetch");
 

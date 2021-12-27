@@ -1,6 +1,6 @@
 import { MetadataURIOrObject } from "../core/types";
 import FileOrBuffer from "../types/FileOrBuffer";
-import FileOrBufferWithNames from "../types/FireOrBufferWithNames";
+import { FileOrBufferWithNames } from "../types/FireOrBufferWithNames";
 
 /* eslint-disable semi */
 export interface IStorage {
