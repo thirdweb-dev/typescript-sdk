@@ -153,4 +153,54 @@ describe("Vote Module", async () => {
     const proposal = await voteModule.get(proposalId.toString());
     assert.equal(proposal.description, description);
   });
+
+  it("should permit a proposal with native token values to be passed if it receives the right votes", async () => {
+    await sdk.setProviderOrSigner(samWallet);
+    await currencyModule.delegateTo(samWallet.address);
+
+    await samWallet.sendTransaction({
+      to: voteModule.address,
+      value: ethers.utils.parseUnits("2", 18),
+    });
+
+    assert.equal(
+      (await samWallet.provider.getBalance(voteModule.address)).toString(),
+      ethers.utils.parseUnits("2", 18).toString(),
+    );
+
+    const proposalId = await voteModule.propose("Transfer 1 ETH", [
+      {
+        toAddress: bobWallet.address,
+        nativeTokenValue: ethers.utils.parseUnits("1", 18),
+        transactionData: "0x",
+      },
+    ]);
+
+    await voteModule.vote(
+      proposalId.toString(),
+
+      // 0 = Against, 1 = For, 2 = Abstain
+      1,
+
+      // optional reason, be mindful more character count = more gas.
+      "Reason + Gas :)",
+    );
+
+    // increment 10 blocks
+    for (let i = 0; i < 10; i++) {
+      await hardhatEthers.provider.send("evm_mine", []);
+    }
+
+    const balanceOfBobsWalletBefore = await bobWallet.getBalance();
+
+    // Step 3: Execute the proposal if it is expired and passed
+    await voteModule.execute(proposalId.toString());
+
+    const balanceOfBobsWallet = await bobWallet.getBalance();
+
+    assert.equal(
+      balanceOfBobsWallet.sub(balanceOfBobsWalletBefore).toString(),
+      ethers.utils.parseUnits("1", 18).toString(),
+    );
+  });
 });
