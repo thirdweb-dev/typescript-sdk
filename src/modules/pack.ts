@@ -336,7 +336,19 @@ export class PackModule
   }
 
   public async withdrawLink(to: string, amount: BigNumberish) {
-    await this.sendTransaction("transferLink", [to, amount]);
+    try {
+      // old version of the contract
+      await this.sendTransaction("transferLink", [to, amount]);
+    } catch (e) {
+      // new version of the contract
+      const chainId = await this.getChainID();
+      const chainlink = ChainlinkVrf[chainId];
+      await this.sendTransaction("transferERC20", [
+        chainlink.linkTokenAddress,
+        to,
+        amount,
+      ]);
+    }
   }
 
   public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
