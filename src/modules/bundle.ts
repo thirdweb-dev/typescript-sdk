@@ -25,6 +25,7 @@ export interface BundleMetadata {
   ownedByAddress: number;
   underlyingType: UnderlyingType;
 }
+
 export interface CollectionMetadata {
   creator: string;
   supply: BigNumber;
@@ -105,21 +106,20 @@ export class BundleModule
    * @returns A promise that resolves to a `BundleMetadata`.
    */
   public async get(tokenId: string, address?: string): Promise<BundleMetadata> {
-    const [metadata, creator, supply, ownedByAddress] = await Promise.all([
+    const [metadata, supply, ownedByAddress, state] = await Promise.all([
       getTokenMetadata(this.readOnlyContract, tokenId, this.ipfsGatewayUrl),
-      this.readOnlyContract.creator(tokenId),
       this.readOnlyContract
         .totalSupply(tokenId)
         .catch(() => BigNumber.from("0")),
       address ? (await this.balanceOf(address, tokenId)).toNumber() : 0,
+      this.readOnlyContract.tokenState(tokenId),
     ]);
     return {
-      creator,
+      creator: state.creator,
       supply,
       metadata,
       ownedByAddress,
-      underlyingType: (await this.readOnlyContract.tokenState(tokenId))
-        .underlyingType as UnderlyingType,
+      underlyingType: state.underlyingType,
     };
   }
 
