@@ -119,7 +119,7 @@ export class BundleModule
       metadata,
       ownedByAddress,
       underlyingType: (await this.readOnlyContract.tokenState(tokenId))
-        .underlyingType,
+        .underlyingType as UnderlyingType,
     };
   }
 

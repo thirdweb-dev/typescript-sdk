@@ -170,4 +170,14 @@ describe("Bundle Module (aka Collection Module)", async () => {
       i++;
     });
   });
+  it("should correctly upload nft metadata", async () => {
+    await bundleModule.createAndMint({
+      metadata: {
+        name: "Test1",
+      },
+      supply: 5,
+    });
+    const nft = await bundleModule.get("0");
+    expect(typeof nft.underlyingType).to.be.equal("number");
+  });
 });
