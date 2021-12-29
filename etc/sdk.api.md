@@ -305,6 +305,10 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> implements ITra
     transferBatchFrom(from: string, to: string, args: INFTBundleBatchArgs[], data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, args: INFTBundleBatchArgs, data?: BytesLike): Promise<TransactionReceipt>;
+    // (undocumented)
+    unwrapNFT(tokenId: BigNumberish): Promise<TransactionReceipt>;
+    // (undocumented)
+    unwrapToken(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionReceipt>;
 }
 
 // @public (undocumented)
