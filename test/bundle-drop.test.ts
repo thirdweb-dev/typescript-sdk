@@ -411,7 +411,7 @@ describe("Bundle Drop Module", async () => {
     factory.newClaimPhase({
       startTime: new Date(),
     });
-    await bdModule.updateClaimCondition(BigNumber.from("0"), factory);
+    await bdModule.updateClaimConditions(BigNumber.from("0"), factory);
     assert.lengthOf(conditions, 1);
   });
 });

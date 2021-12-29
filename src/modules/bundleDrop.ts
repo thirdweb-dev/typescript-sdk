@@ -337,7 +337,7 @@ export class BundleDropModule
     ];
     return await this.sendTransaction("multicall", [encoded]);
   }
-  public async updateClaimCondition(
+  public async updateClaimConditions(
     tokenId: BigNumberish,
     factory: ClaimConditionFactory,
   ) {
