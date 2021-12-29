@@ -170,7 +170,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
       i++;
     });
   });
-  it("should correctly upload nft metadata", async () => {
+  it("should return underlying type", async () => {
     await bundleModule.createAndMint({
       metadata: {
         name: "Test1",
