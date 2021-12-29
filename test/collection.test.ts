@@ -93,6 +93,38 @@ describe("Bundle Module (aka Collection Module)", async () => {
     expect(nfts).to.be.an("array").length(1);
   });
 
+  it("should properly unwrap ERC721 token", async () => {
+    const token = await nftModule.mint({
+      name: "test",
+    });
+
+    try {
+      await collectionModule.createWithERC721(nftModule.address, token.id, {
+        name: "TEST NFT",
+      });
+    } catch (err) {
+      assert.fail(err);
+    }
+
+    await collectionModule.unWrapERC721(0);
+  });
+  it("should properly unwrap ERC20 token", async () => {
+    await currencyModule.mint(100);
+
+    try {
+      await collectionModule.createWithToken(currencyModule.address, 100, {
+        metadata: {
+          name: "test",
+        },
+        supply: 1,
+      });
+    } catch (err) {
+      assert.fail(err);
+    }
+
+    await collectionModule.unWrapERC20(0, 1);
+  });
+
   // TODO: This test should move to the royalty suite
   it("updates the bps in both the metadata and on-chain", async () => {
     const currentBps = await bundleModule.getRoyaltyBps();
@@ -135,7 +167,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
     let i = 0;
     nfts.forEach(async (nft) => {
       expect(nft.metadata.name).to.be.equal(`Test${i}`);
-      i
+      i++;
     });
   });
 });
