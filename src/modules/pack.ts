@@ -43,7 +43,11 @@ export interface PackNFTMetadata {
   supply: BigNumber;
   metadata: NFTMetadata;
 }
-
+export enum UnderlyingType {
+  None = 0,
+  ERC20 = 1,
+  ERC721 = 2,
+}
 /**
  * @beta
  */

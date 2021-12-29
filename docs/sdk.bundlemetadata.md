@@ -22,4 +22,5 @@ export interface BundleMetadata
 |  [metadata](./sdk.bundlemetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) | <b><i>(BETA)</i></b> |
 |  [ownedByAddress](./sdk.bundlemetadata.ownedbyaddress.md) | number | <b><i>(BETA)</i></b> |
 |  [supply](./sdk.bundlemetadata.supply.md) | BigNumber | <b><i>(BETA)</i></b> |
+|  [underlyingType](./sdk.bundlemetadata.underlyingtype.md) | [UnderlyingType](./sdk.underlyingtype.md) | <b><i>(BETA)</i></b> |
 

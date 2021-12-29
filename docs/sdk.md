@@ -118,6 +118,7 @@ Output
 |  [ClaimEligibility](./sdk.claimeligibility.md) |  |
 |  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
 |  [ProposalState](./sdk.proposalstate.md) |  |
+|  [UnderlyingType](./sdk.underlyingtype.md) |  |
 |  [VoteType](./sdk.votetype.md) |  |
 
 ## Functions
