@@ -61,5 +61,5 @@ export declare class BundleDropModule extends ModuleWithRoles<BundleDrop> implem
 |  [totalSupply(tokenId)](./sdk.bundledropmodule.totalsupply.md) |  | <b><i>(BETA)</i></b> Returns the total supply of a specific token |
 |  [transfer(to, tokenId, amount, data)](./sdk.bundledropmodule.transfer.md) |  | <b><i>(BETA)</i></b> |
 |  [transferFrom(from, to, tokenId, amount, data)](./sdk.bundledropmodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
-|  [updateClaimCondition(tokenId, factory)](./sdk.bundledropmodule.updateclaimcondition.md) |  | <b><i>(BETA)</i></b> |
+|  [updateClaimConditions(tokenId, factory)](./sdk.bundledropmodule.updateclaimconditions.md) |  | <b><i>(BETA)</i></b> |
 

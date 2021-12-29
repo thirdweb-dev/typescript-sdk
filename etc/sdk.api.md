@@ -213,7 +213,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
-    updateClaimCondition(tokenId: BigNumberish_2, factory: ClaimConditionFactory): Promise<TransactionReceipt>;
+    updateClaimConditions(tokenId: BigNumberish_2, factory: ClaimConditionFactory): Promise<TransactionReceipt>;
 }
 
 // @public (undocumented)
