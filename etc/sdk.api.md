@@ -232,6 +232,8 @@ export interface BundleMetadata {
     ownedByAddress: number;
     // (undocumented)
     supply: BigNumber;
+    // (undocumented)
+    underlyingType: UnderlyingType;
 }
 
 // @beta
@@ -1609,6 +1611,16 @@ export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
 // @public (undocumented)
 export class TokenModuleMetadata extends CommonModuleMetadata {
     symbol: string;
+}
+
+// @public (undocumented)
+export enum UnderlyingType {
+    // (undocumented)
+    ERC20 = 1,
+    // (undocumented)
+    ERC721 = 2,
+    // (undocumented)
+    None = 0
 }
 
 // @public (undocumented)
