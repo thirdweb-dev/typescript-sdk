@@ -12,6 +12,7 @@ import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
+import { UnderlyingType } from "./pack";
 
 /**
  * @beta
@@ -22,6 +23,7 @@ export interface BundleMetadata {
   supply: BigNumber;
   metadata: NFTMetadata;
   ownedByAddress: number;
+  underlyingType: UnderlyingType;
 }
 export interface CollectionMetadata {
   creator: string;
@@ -116,6 +118,8 @@ export class BundleModule
       supply,
       metadata,
       ownedByAddress,
+      underlyingType: (await this.readOnlyContract.tokenState(tokenId))
+        .underlyingType,
     };
   }
 
