@@ -106,7 +106,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
       assert.fail(err);
     }
 
-    await collectionModule.unWrapERC721(0);
+    await collectionModule.unWrapNFT(0);
   });
   it("should properly unwrap ERC20 token", async () => {
     await currencyModule.mint(100);
@@ -122,7 +122,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
       assert.fail(err);
     }
 
-    await collectionModule.unWrapERC20(0, 1);
+    await collectionModule.unWrapToken(0, 1);
   });
 
   // TODO: This test should move to the royalty suite
