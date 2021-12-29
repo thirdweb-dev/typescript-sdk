@@ -487,24 +487,29 @@ export class DropModule
     });
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
+    const oldMetadata = metadata;
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
     }
 
-    const metatdataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
-
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metatdataUri,
-      ]),
+    const encoded = [];
+    if (oldMetadata !== metadata) {
+      const metatdataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metatdataUri,
+        ]),
+      );
+    }
+    encoded.push(
       this.contract.interface.encodeFunctionData("updateClaimConditions", [
         conditions,
       ]),
-    ];
+    );
     return await this.sendTransaction("multicall", [encoded]);
   }
   /**
