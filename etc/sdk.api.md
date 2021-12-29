@@ -212,6 +212,8 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     transfer(to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
+    // (undocumented)
+    updateClaimCondition(tokenId: BigNumberish_2, factory: ClaimConditionFactory): Promise<TransactionReceipt>;
 }
 
 // @public (undocumented)
@@ -607,6 +609,8 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    updateClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
 }
 
 // @public (undocumented)
