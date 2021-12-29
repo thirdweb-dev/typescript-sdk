@@ -289,6 +289,16 @@ export class BundleModule
     const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     await this.sendTransaction("wrapERC721", [tokenContract, tokenId, uri]);
   }
+  public async unwrapNFT(tokenId: BigNumberish): Promise<TransactionReceipt> {
+    return await this.sendTransaction("redeemERC721", [tokenId]);
+  }
+  public async unwrapToken(
+    tokenId: BigNumberish,
+    amount: BigNumberish,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("redeemERC20", [tokenId, amount]);
+  }
+
   public async createWithERC721(
     tokenContract: string,
     tokenId: BigNumberish,
