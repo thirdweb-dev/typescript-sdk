@@ -86,7 +86,7 @@ export interface IMarketplace {
 
   /**
    * Closes an auction listing and distributes the payment/assets.
-   * You can only cancel the listing after it has already ended.
+   * You can only close the listing after it has already ended.
    *
    * @param listingId - Id of the listing to remove.
    */
