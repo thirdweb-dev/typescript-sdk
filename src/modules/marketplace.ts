@@ -533,18 +533,6 @@ export class MarketplaceModule
     return await this.readOnlyContract.timeBuffer();
   }
 
-  public async acceptWinningBid(listingId: BigNumberish): Promise<void> {
-    this.validateAuctionListing(BigNumber.from(listingId));
-
-    const winningBid = await this.getWinningBid(listingId);
-    invariant(winningBid !== undefined, "No winning bid found");
-
-    await this.sendTransaction("closeAuction", [
-      listingId,
-      winningBid.buyerAddress,
-    ]);
-  }
-
   public async acceptDirectListingOffer(
     listingId: BigNumberish,
     addressOfOfferor: string,

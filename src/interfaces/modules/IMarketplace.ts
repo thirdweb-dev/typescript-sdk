@@ -166,15 +166,6 @@ export interface IMarketplace {
   getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
 
   /**
-   * Accepts the winning bid for an auction and closes the listing,
-   * resulting in the sale of the tokens to the buyer.
-   *
-   * @param listingId - The listing id.
-   * @param buyerAddress - The address of the buyer who's bid will be accepted.
-   */
-  acceptWinningBid(listingId: BigNumberish): Promise<void>;
-
-  /**
    * Accepts the offer of the specified wallet in `addressofOfferor`.
    *
    * @param listingId - The listing Id to accept the offer for.
