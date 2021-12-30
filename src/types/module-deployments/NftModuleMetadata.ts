@@ -6,7 +6,7 @@ import {
 import CommonModuleMetadata from "./CommonModuleMetadata";
 
 @JsonObject("NftModuleMetadata")
-export default class NftModuleMetadata extends CommonModuleMetadata {
+export class NftModuleMetadata extends CommonModuleMetadata {
   /**
    * The amount of royalty collected on all royalties represented as basis points.
    * The default is 0 (no royalties).
@@ -35,3 +35,5 @@ export default class NftModuleMetadata extends CommonModuleMetadata {
   @JsonProperty("symbol", String, PropertyConvertingMode.IGNORE_NULLABLE)
   symbol?: string;
 }
+
+export default NftModuleMetadata;

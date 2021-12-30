@@ -16,7 +16,7 @@ deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | PackModuleMetadata | The module metadata |
+|  metadata | [PackModuleMetadata](./sdk.packmodulemetadata.md) | The module metadata |
 
 <b>Returns:</b>
 

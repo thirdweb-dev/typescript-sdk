@@ -16,7 +16,7 @@ deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | BundleModuleMetadata | Metadata about the module. |
+|  metadata | [BundleModuleMetadata](./sdk.bundlemodulemetadata.md) | Metadata about the module. |
 
 <b>Returns:</b>
 

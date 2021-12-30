@@ -6,7 +6,7 @@ import {
 import CommonModuleMetadata from "./CommonModuleMetadata";
 
 @JsonObject("MarketModuleMetadata")
-export default class MarketModuleMetadata extends CommonModuleMetadata {
+export class MarketModuleMetadata extends CommonModuleMetadata {
   /**
    * The fee collected on all sales out of this marketplace. This fee
    * only applies to items sold from the marketplace and does not
@@ -24,3 +24,5 @@ export default class MarketModuleMetadata extends CommonModuleMetadata {
   )
   marketFeeBasisPoints = 0;
 }
+
+export default MarketModuleMetadata;

@@ -6,7 +6,7 @@ import {
 import CommonModuleMetadata from "./CommonModuleMetadata";
 
 @JsonObject("CollectionModuleMetadata")
-export default class BundleModuleMetadata extends CommonModuleMetadata {
+export class BundleModuleMetadata extends CommonModuleMetadata {
   /**
    * The amount of royalty collected on all royalties represented as basis points.
    * The default is 0 (no royalties).
@@ -29,3 +29,7 @@ export default class BundleModuleMetadata extends CommonModuleMetadata {
   @JsonProperty("fee_recipient", String, PropertyConvertingMode.IGNORE_NULLABLE)
   feeRecipient?: string = undefined;
 }
+
+export type CollectionModuleMetadata = BundleModuleMetadata;
+
+export default BundleModuleMetadata;
