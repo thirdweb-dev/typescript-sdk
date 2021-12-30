@@ -88,6 +88,14 @@ export interface IMarketplace {
    * Closes an auction listing and distributes the payment/assets.
    * You can only close the listing after it has already ended.
    *
+   * This method must be called by both the buyer and the seller.
+   *
+   * When the buyer calls this method, the tokens they purchased will
+   * be distributed to the buyers wallet.
+   *
+   * When the seller calls this method, the winning bid will be
+   * distributed to the sellers wallet.
+   *
    * @param listingId - Id of the listing to remove.
    */
   closeAuctionListing(listingId: BigNumberish): Promise<void>;
