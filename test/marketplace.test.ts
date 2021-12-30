@@ -1,3 +1,4 @@
+import { AuctionAlreadyStartedError } from "./../src/common/error";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -58,6 +59,12 @@ describe("Marketplace Module", async () => {
       {
         name: "Test 2",
       },
+      {
+        name: "Test 2",
+      },
+      {
+        name: "Test 2",
+      },
     ]);
     dummyBundleModule = await appModule.deployBundleModule({
       name: "TEST BUNDLE",
@@ -113,12 +120,13 @@ describe("Marketplace Module", async () => {
     contractAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish = 1,
+    startTime: number = Math.floor(Date.now() / 1000),
   ): Promise<BigNumber> => {
     return await marketplaceModule.createAuctionListing({
       assetContractAddress: contractAddress,
       buyoutPricePerToken: ethers.utils.parseUnits("10"),
       currencyContractAddress: tokenAddress,
-      startTimeInSeconds: Math.floor(Date.now() / 1000),
+      startTimeInSeconds: startTime,
       listingDurationInSeconds: 60 * 60 * 24,
       tokenId,
       quantity,
@@ -492,7 +500,11 @@ describe("Marketplace Module", async () => {
         await marketplaceModule.cancelAuctionListing(auctionListingId);
         assert.fail("should have thrown an error");
         // eslint-disable-next-line no-empty
-      } catch (err) {}
+      } catch (err) {
+        if (!(err instanceof AuctionAlreadyStartedError)) {
+          throw err;
+        }
+      }
     });
 
     it("should correctly close a direct listing", async () => {
@@ -501,6 +513,34 @@ describe("Marketplace Module", async () => {
       await marketplaceModule.cancelDirectListing(directListingId);
       listing = await marketplaceModule.getDirectListing(directListingId);
       assert.equal(listing.quantity.toString(), "0");
+    });
+
+    it("should allow the seller to cancel an auction that has started as long as there are no active bids", async () => {
+      const startTime = Math.floor(Date.now() / 1000) - 10000;
+      const listingId = await createAuctionListing(
+        dummyNftModule.address,
+        2,
+        1,
+        startTime,
+      );
+
+      console.log("Start time at creation: ", startTime);
+
+      const listing = await marketplaceModule.getAuctionListing(listingId);
+      console.log(listing, Math.floor(Date.now() / 1000));
+
+      const winningBid = await marketplaceModule.getWinningBid(listingId);
+      console.log(`Winning bid: ${winningBid}`);
+
+      try {
+        await marketplaceModule.cancelAuctionListing(auctionListingId);
+        // eslint-disable-next-line no-empty
+      } catch (err) {
+        console.error("failed to cancel listing", err);
+        assert.fail(
+          "The seller should be able to cancel the auction if there are no active bids",
+        );
+      }
     });
   });
 
@@ -629,6 +669,16 @@ describe("Marketplace Module", async () => {
           `should be valid: ${JSON.stringify(testCase)}`,
         );
       }
+    });
+  });
+
+  describe("Setting Buffers", () => {
+    it("should allow you to set the bid buffer", async () => {
+      assert.fail("not done");
+    });
+
+    it("should allow you to set the time buffer", async () => {
+      assert.fail("not done");
     });
   });
 });

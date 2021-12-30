@@ -320,7 +320,7 @@ export class MarketplaceModule
       id: listingId.toString(),
       tokenId: listing.tokenId,
       quantity: listing.quantity,
-      startTimeInSeconds: listing.startTime,
+      startTimeInEpochSeconds: listing.startTime,
       asset: undefined,
       reservePriceCurrencyValuePerToken: await getCurrencyValue(
         this.providerOrSigner,
@@ -328,7 +328,7 @@ export class MarketplaceModule
         listing.reservePricePerToken,
       ),
       reservePrice: listing.reservePricePerToken,
-      secondsUntilEnd: listing.endTime,
+      endTimeInEpochSeconds: listing.endTime,
     };
   }
 
@@ -614,8 +614,8 @@ export class MarketplaceModule
       listing.reservePrice,
       listing.buyoutPrice,
       listing.currencyContractAddress,
-      listing.startTimeInSeconds,
-      listing.secondsUntilEnd,
+      listing.startTimeInEpochSeconds,
+      listing.endTimeInEpochSeconds,
     ]);
   }
 
@@ -631,9 +631,10 @@ export class MarketplaceModule
     );
 
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
-    const startTime = BigNumber.from(listing.startTimeInSeconds);
+    const startTime = BigNumber.from(listing.startTimeInEpochSeconds);
 
-    if (now.gt(startTime)) {
+    const winningBid = await this.getWinningBid(listingId);
+    if (now.gt(startTime) && winningBid !== undefined) {
       throw new AuctionAlreadyStartedError(listingId.toString());
     }
 
@@ -645,5 +646,27 @@ export class MarketplaceModule
 
   public async closeAuctionListing(_listingId: BigNumberish): Promise<void> {
     throw new Error("Method not implemented.");
+  }
+
+  public async setBidBufferBps(buffer: BigNumberish): Promise<void> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
+
+    const timeBuffer = await this.getTimeBufferInSeconds();
+    await this.sendTransaction("setAuctionBuffers", [
+      timeBuffer,
+      BigNumber.from(buffer),
+      await this.getSignerAddress(),
+    ]);
+  }
+
+  public async setTimeBufferInSeconds(buffer: BigNumberish): Promise<void> {
+    await this.onlyRoles(["admin"], await this.getSignerAddress());
+
+    const bidBuffer = await this.getBidBufferBps();
+    await this.sendTransaction("setAuctionBuffers", [
+      BigNumber.from(buffer),
+      bidBuffer,
+      await this.getSignerAddress(),
+    ]);
   }
 }

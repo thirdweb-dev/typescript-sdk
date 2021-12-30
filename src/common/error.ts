@@ -95,7 +95,9 @@ export class DuplicateLeafsError extends Error {
  */
 export class AuctionAlreadyStartedError extends Error {
   constructor(id?: string) {
-    super(`Auction already started${id ? `, id: ${id}` : ""}`);
+    super(
+      `Auction already started with existing bid${id ? `, id: ${id}` : ""}`,
+    );
   }
 }
 

@@ -204,4 +204,19 @@ export interface IMarketplace {
    * @returns - The time buffer in seconds.
    */
   getTimeBufferInSeconds(): Promise<BigNumber>;
+
+  /**
+   * Sets the bid buffer on the marketplace contract.
+   * The bid buffer is represented in basis points.
+   *
+   * @param buffer - The bid buffer in basis points.
+   */
+  setBidBufferBps(buffer: BigNumberish): Promise<void>;
+
+  /**
+   * Sets the current time buffer on the marketplace contract.
+   *
+   * @param buffer - The time buffer in seconds.
+   */
+  setTimeBufferInSeconds(buffer: BigNumberish): Promise<void>;
 }

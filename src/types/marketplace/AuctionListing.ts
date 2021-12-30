@@ -29,12 +29,12 @@ export interface AuctionListing {
   /**
    * The start time of the listing.
    */
-  startTimeInSeconds: BigNumberish;
+  startTimeInEpochSeconds: BigNumberish;
 
   /**
    * Number of seconds until the auction expires.
    */
-  secondsUntilEnd: BigNumberish;
+  endTimeInEpochSeconds: BigNumberish;
 
   /**
    * The quantity of tokens to include in the listing.
