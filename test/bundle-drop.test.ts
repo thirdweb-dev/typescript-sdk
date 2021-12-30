@@ -392,4 +392,26 @@ describe("Bundle Drop Module", async () => {
       assert.isTrue(canClaim);
     });
   });
+  it("should allow you to update claim conditions", async () => {
+    await bdModule.lazyMintBatch([
+      { name: "test", description: "test" },
+      { name: "test", description: "test" },
+    ]);
+
+    let factory = bdModule.getClaimConditionsFactory();
+
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+
+    await bdModule.setClaimCondition(BigNumber.from("0"), factory);
+
+    const conditions = await bdModule.getAllClaimConditions(0);
+    factory = bdModule.getClaimConditionsFactory();
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await bdModule.updateClaimConditions(BigNumber.from("0"), factory);
+    assert.lengthOf(conditions, 1);
+  });
 });
