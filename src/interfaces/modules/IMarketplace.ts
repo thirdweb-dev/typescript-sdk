@@ -99,12 +99,13 @@ export interface IMarketplace {
    * for this buyout to succeed. If the buyout is too low, the
    * method will throw an error.
    *
+   * Buying out an auction listing will purchase all tokens
+   * regardless of the quantity. There is no way to buy
+   * a partial amount of the tokens.
+   *
    * @param listingId - Id of the listing to buyout.
    */
-  buyoutAuctionListing(buyout: {
-    listingId: BigNumberish;
-    quantityDesired: BigNumberish;
-  }): Promise<void>;
+  buyoutAuctionListing(buyout: { listingId: BigNumberish }): Promise<void>;
 
   /**
    * Buyout the listing based on the buyout price.

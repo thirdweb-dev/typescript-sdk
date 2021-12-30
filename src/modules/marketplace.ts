@@ -563,7 +563,6 @@ export class MarketplaceModule
    */
   public async buyoutAuctionListing(_buyout: {
     listingId: BigNumberish;
-    quantityDesired: BigNumberish;
   }): Promise<void> {
     throw new Error("Method not implemented.");
   }
