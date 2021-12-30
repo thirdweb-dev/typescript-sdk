@@ -561,7 +561,7 @@ export class MarketplaceModule
    *
    * @beta - This method is not yet ready for production use
    */
-  public async buyoutAuction(_buyout: {
+  public async buyoutAuctionListing(_buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
   }): Promise<void> {

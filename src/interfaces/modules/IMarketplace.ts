@@ -101,7 +101,7 @@ export interface IMarketplace {
    *
    * @param listingId - Id of the listing to buyout.
    */
-  buyoutAuction(buyout: {
+  buyoutAuctionListing(buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
   }): Promise<void>;
