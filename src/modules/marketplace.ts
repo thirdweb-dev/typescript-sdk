@@ -1,3 +1,4 @@
+import { AuctionHasNotEndedError } from "./../common/error";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -637,14 +638,33 @@ export class MarketplaceModule
       throw new AuctionAlreadyStartedError(listingId.toString());
     }
 
+    // Assuming the two conditions above are true, calling `closeAuction`
+    // will cancel the auction.
     await this.sendTransaction("closeAuction", [
       BigNumber.from(listingId),
       await this.getSignerAddress(),
     ]);
   }
 
-  public async closeAuctionListing(_listingId: BigNumberish): Promise<void> {
-    throw new Error("Method not implemented.");
+  public async closeAuctionListing(listingId: BigNumberish): Promise<void> {
+    const listing = await this.validateAuctionListing(
+      BigNumber.from(listingId),
+    );
+
+    const now = BigNumber.from(Math.floor(Date.now() / 1000));
+    const endTime = BigNumber.from(listing.endTimeInEpochSeconds);
+
+    if (now.lt(endTime)) {
+      throw new AuctionHasNotEndedError(
+        listingId.toString(),
+        endTime.toString(),
+      );
+    }
+
+    await this.sendTransaction("closeAuction", [
+      BigNumber.from(listingId),
+      await this.getSignerAddress(),
+    ]);
   }
 
   public async setBidBufferBps(buffer: BigNumberish): Promise<void> {

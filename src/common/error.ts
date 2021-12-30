@@ -1,3 +1,4 @@
+import { BigNumberish } from "ethers";
 /**
  * Error that may get thrown if IPFS returns nothing for a given uri.
  * @public
@@ -164,6 +165,19 @@ export class AdminRoleMissingError extends Error {
       `${message}, admin role is missing${
         address ? ` on address: ${address}` : ""
       }${contractAddress ? ` on contract: ${contractAddress}` : ""}`,
+    );
+  }
+}
+
+/**
+ * Thrown when attempting to close an auction that has not ended
+ */
+export class AuctionHasNotEndedError extends Error {
+  constructor(id?: string, endTime?: BigNumberish) {
+    super(
+      `Auction has not ended yet${id ? `, id: ${id}` : ""}${
+        endTime ? `, end time: ${endTime.toString()}` : ""
+      }`,
     );
   }
 }
