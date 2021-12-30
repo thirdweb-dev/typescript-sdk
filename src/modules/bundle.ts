@@ -287,14 +287,16 @@ export class BundleModule
         (await asset.getApproved(tokenId)).toLowerCase() ===
         this.address.toLowerCase();
       if (!isTokenApproved) {
-        asset.setApprovalForAll(this.address, true).then(async () => {
-          const uri = await this.sdk.getStorage().uploadMetadata(metadata);
-          await this.sendTransaction("wrapERC721", [
-            tokenContract,
-            tokenId,
-            uri,
-          ]);
-        });
+        await (await asset.setApprovalForAll(this.address, true))
+          .wait()
+          .then(async () => {
+            const uri = await this.sdk.getStorage().uploadMetadata(metadata);
+            await this.sendTransaction("wrapERC721", [
+              tokenContract,
+              tokenId,
+              uri,
+            ]);
+          });
       } else {
         const uri = await this.sdk.getStorage().uploadMetadata(metadata);
         await this.sendTransaction("wrapERC721", [tokenContract, tokenId, uri]);
