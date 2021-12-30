@@ -120,19 +120,20 @@ export interface IMarketplace {
     quantityDesired: BigNumberish;
   }): Promise<void>;
 
-  /**
-   * Return all active bids for an auction.
-   *
-   * @param listingId - Id of the listing to get bids for.
-   */
-  getActiveBids(listingId: BigNumberish): Promise<Offer[]>;
+  // TODO: Implement these with subgraph
+  // /**
+  //  * Return all active bids for an auction.
+  //  *
+  //  * @param listingId - Id of the listing to get bids for.
+  //  */
+  // getActiveBids(listingId: BigNumberish): Promise<Offer[]>;
 
-  /**
-   * Return all active offers for a direct listing.
-   *
-   * @param listingId - Id of the listing to get offers for.
-   */
-  getActiveOffers(listingId: BigNumberish): Promise<Offer[]>;
+  // /**
+  //  * Return all active offers for a direct listing.
+  //  *
+  //  * @param listingId - Id of the listing to get offers for.
+  //  */
+  // getActiveOffers(listingId: BigNumberish): Promise<Offer[]>;
 
   /**
    * If the `address` has made an offer to the specified listing,

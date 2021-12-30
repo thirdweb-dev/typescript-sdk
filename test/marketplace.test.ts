@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert, expect } from "chai";
+import { assert } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
 import {

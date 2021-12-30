@@ -379,23 +379,24 @@ export class MarketplaceModule
     }
   }
 
-  /**
-   * @beta - This method is not yet complete.
-   *
-   * @param listingId
-   * @returns
-   */
-  public async getActiveOffers(listingId: BigNumberish): Promise<Offer[]> {
-    const listing = await this.validateDirectListing(BigNumber.from(listingId));
+  // TODO: Complete method implementation with subgraph
+  // /**
+  //  * @beta - This method is not yet complete.
+  //  *
+  //  * @param listingId
+  //  * @returns
+  //  */
+  // public async getActiveOffers(listingId: BigNumberish): Promise<Offer[]> {
+  //   const listing = await this.validateDirectListing(BigNumber.from(listingId));
 
-    const offers = await this.readOnlyContract.offers(listing.id, "");
+  //   const offers = await this.readOnlyContract.offers(listing.id, "");
 
-    return await Promise.all(
-      offers.map(async (offer: any) => {
-        return await this.mapOffer(BigNumber.from(listingId), offer);
-      }),
-    );
-  }
+  //   return await Promise.all(
+  //     offers.map(async (offer: any) => {
+  //       return await this.mapOffer(BigNumber.from(listingId), offer);
+  //     }),
+  //   );
+  // }
 
   /**
    * Used to verify fields in new listing.
@@ -582,15 +583,16 @@ export class MarketplaceModule
     await this.sendTransaction("buy", [_buyout.listingId, quantity], overrides);
   }
 
-  /**
-   *
-   * @beta - This method is not yet ready for production use
-   *
-   * @param _listingId - The listing ID to get active bids for
-   */
-  public async getActiveBids(_listingId: BigNumberish): Promise<Offer[]> {
-    throw new Error("Method not implemented.");
-  }
+  // TODO: Complete method implementation with subgraph
+  // /**
+  //  *
+  //  * @beta - This method is not yet ready for production use
+  //  *
+  //  * @param _listingId - The listing ID to get active bids for
+  //  */
+  // public async getActiveBids(_listingId: BigNumberish): Promise<Offer[]> {
+  //   throw new Error("Method not implemented.");
+  // }
 
   public async updateDirectListing(listing: DirectListing): Promise<void> {
     await this.sendTransaction("updateListing", [
