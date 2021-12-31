@@ -1,4 +1,4 @@
-export function isMetadataEqual(old: any, changed: any) {
+export function isMetadataEqual(old: any, changed: any): boolean {
   if (typeof old === "object" && typeof changed === "object") {
     const oldKeys = Object.keys(old).sort();
     const changedKeys = Object.keys(changed).sort();
@@ -10,7 +10,6 @@ export function isMetadataEqual(old: any, changed: any) {
       }
       return true;
     }
-  } else {
-    return old === changed;
   }
+  return old === changed;
 }
