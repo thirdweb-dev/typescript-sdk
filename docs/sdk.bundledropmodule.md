@@ -34,6 +34,7 @@ export declare class BundleDropModule extends ModuleWithRoles<BundleDrop> implem
 |  [burn(tokenId, amount)](./sdk.bundledropmodule.burn.md) |  | <b><i>(BETA)</i></b> |
 |  [canClaim(tokenId, quantity, addressToCheck)](./sdk.bundledropmodule.canclaim.md) |  | <b><i>(BETA)</i></b> |
 |  [claim(tokenId, quantity, proofs)](./sdk.bundledropmodule.claim.md) |  | <b><i>(BETA)</i></b> |
+|  [claimTo(tokenId, quantity, to, proofs, data)](./sdk.bundledropmodule.claimto.md) |  | <b><i>(BETA)</i></b> |
 |  [createBatch(metadatas)](./sdk.bundledropmodule.createbatch.md) |  | <b><i>(BETA)</i></b> |
 |  [get(tokenId)](./sdk.bundledropmodule.get.md) |  | <b><i>(BETA)</i></b> |
 |  [getActiveClaimCondition(tokenId)](./sdk.bundledropmodule.getactiveclaimcondition.md) |  | <b><i>(BETA)</i></b> |

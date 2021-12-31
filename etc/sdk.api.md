@@ -153,7 +153,9 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     // (undocumented)
     canClaim(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToCheck?: string): Promise<boolean>;
     // (undocumented)
-    claim(tokenId: BigNumberish_2, quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
+    claim(tokenId: BigNumberish_2, quantity: BigNumberish_2, proofs: BytesLike[]): Promise<void>;
+    // (undocumented)
+    claimTo(tokenId: BigNumberish_2, quantity: BigNumberish_2, to: string, proofs: BytesLike[], data?: BytesLike): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): LazyMintERC1155;
     // (undocumented)
@@ -532,6 +534,8 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     canCreateBatch(): Promise<boolean>;
     // (undocumented)
     claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>;
+    // (undocumented)
+    claimTo(quantity: BigNumberish_2, addressToClaim: string, proofs?: BytesLike[]): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): LazyMintERC721;
     createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;

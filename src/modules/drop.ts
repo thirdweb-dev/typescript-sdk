@@ -669,7 +669,10 @@ export class DropModule
         }
       }
     }
-    return overrides;
+    return {
+      overrides,
+      proofs,
+    };
   }
 
   public async claimTo(
@@ -677,10 +680,10 @@ export class DropModule
     addressToClaim: string,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionReceipt> {
-    const overrides = await this.prepareClaim(quantity, proofs);
+    const claimData = await this.prepareClaim(quantity, proofs);
     const encoded = [];
     encoded.push(
-      this.contract.interface.encodeFunctionData("claim", [quantity, proofs]),
+      this.contract.interface.encodeFunctionData("claim", [quantity, claimData.proofs]),
     );
     encoded.push(
       this.contract.interface.encodeFunctionData("safeTransferFrom", [
@@ -689,17 +692,17 @@ export class DropModule
         (await this.readOnlyContract.nextTokenIdToClaim()).sub(1),
       ]),
     );
-    return await this.sendTransaction("multicall", [encoded], overrides);
+    return await this.sendTransaction("multicall", [encoded], claimData.overrides);
   }
   public async claim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<NFTMetadataOwner[]> {
-    const overrides = await this.prepareClaim(quantity, proofs);
+    const claimData = await this.prepareClaim(quantity, proofs);
     const receipt = await this.sendTransaction(
       "claim",
-      [quantity, proofs],
-      overrides,
+      [quantity, claimData.proofs],
+      claimData.overrides,
     );
     const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
     const startingIndex: BigNumber = event.startTokenId;

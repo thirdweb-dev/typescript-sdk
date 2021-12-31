@@ -422,7 +422,10 @@ export class BundleDropModule
         }
       }
     }
-    return overrides;
+    return {
+      overrides,
+      proofs,
+    };
   }
 
   public async claim(
@@ -430,8 +433,13 @@ export class BundleDropModule
     quantity: BigNumberish,
     proofs: BytesLike[],
   ) {
-    const overrides = await this.prepareClaim(tokenId, quantity, proofs);
-    await this.sendTransaction("claim", [tokenId, quantity, proofs], overrides);
+    const claimData = await this.prepareClaim(tokenId, quantity, proofs);
+
+    await this.sendTransaction(
+      "claim",
+      [tokenId, quantity, claimData.proofs],
+      claimData.overrides,
+    );
   }
   public async claimTo(
     tokenId: BigNumberish,
@@ -440,13 +448,8 @@ export class BundleDropModule
     proofs: BytesLike[],
     data: BytesLike = [0],
   ) {
-    const overrides = await this.prepareClaim(tokenId, quantity, proofs);
+    const claimData = await this.prepareClaim(tokenId, quantity, proofs);
     const encoded = [];
-    await this.sendTransaction(
-      "claimTo",
-      [tokenId, quantity, to, proofs],
-      overrides,
-    );
     encoded.push(
       this.contract.interface.encodeFunctionData("claim", [
         tokenId,
@@ -463,7 +466,7 @@ export class BundleDropModule
         data,
       ]),
     );
-    await this.sendTransaction("multicall", [encoded], overrides);
+    await this.sendTransaction("multicall", [encoded], claimData.overrides);
   }
 
   public async burn(
