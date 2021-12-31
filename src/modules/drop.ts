@@ -654,17 +654,16 @@ export class DropModule
     );
   }
 
-  public async claim(
+  private async performClaim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    addressToClaim: string,
   ): Promise<NFTMetadataOwner[]> {
     if (await this.isV1()) {
       return this.v1Module.claim(quantity, proofs);
     }
     const mintCondition = await this.getActiveClaimCondition();
     const { metadata } = await this.getMetadata();
-
-    const addressToClaim = await this.getSignerAddress();
 
     if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
       const snapshot = await this.sdk
@@ -726,6 +725,25 @@ export class DropModule
     return await Promise.all(
       tokenIds.map(async (t) => await this.get(t.toString())),
     );
+  }
+
+  public async claim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<NFTMetadataOwner[]> {
+    return await this.performClaim(
+      quantity,
+      proofs,
+      await this.getSignerAddress(),
+    );
+  }
+
+  public async claimTo(
+    quantity: BigNumberish,
+    addressToClaim: string,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<NFTMetadataOwner[]> {
+    return await this.performClaim(quantity, proofs, addressToClaim);
   }
 
   public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
