@@ -630,12 +630,17 @@ export class MarketplaceModule
     ]);
   }
 
-  public async closeAuctionListing(listingId: BigNumberish): Promise<void> {
+  public async closeAuctionListing(
+    listingId: BigNumberish,
+    closeFor?: string,
+  ): Promise<void> {
+    if (!closeFor) {
+      closeFor = await this.getSignerAddress();
+    }
+
     const listing = await this.validateAuctionListing(
       BigNumber.from(listingId),
     );
-
-    const closeFor = await this.getSignerAddress();
 
     try {
       await this.sendTransaction("closeAuction", [

@@ -95,8 +95,12 @@ export interface IMarketplace {
    * distributed to the sellers wallet.
    *
    * @param listingId - Id of the listing to remove.
+   * @param closeFor - The address of the wallet to close the sale for (buyer or seller).
    */
-  closeAuctionListing(listingId: BigNumberish): Promise<void>;
+  closeAuctionListing(
+    listingId: BigNumberish,
+    closeFor?: string,
+  ): Promise<void>;
 
   /**
    * Buyout the listing based on the buyout price.

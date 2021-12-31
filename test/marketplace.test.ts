@@ -52,7 +52,7 @@ describe("Marketplace Module", async () => {
     await sdk.setProviderOrSigner(adminWallet);
     marketplaceModule = await appModule.deployMarketplaceModule({
       name: "Test Marketplace",
-      marketFeeBasisPoints: 100,
+      marketFeeBasisPoints: 0,
     });
     dummyNftModule = await appModule.deployNftModule({
       name: "TEST NFT",
@@ -301,7 +301,6 @@ describe("Marketplace Module", async () => {
       await marketplaceModule.makeBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
-        quantityDesired: 1,
         pricePerToken: ethers.utils.parseUnits("1"),
       });
 
@@ -322,7 +321,6 @@ describe("Marketplace Module", async () => {
       await marketplaceModule.makeBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
-        quantityDesired: 1,
         pricePerToken: ethers.utils.parseUnits("2"),
       });
 
@@ -391,7 +389,6 @@ describe("Marketplace Module", async () => {
       await marketplaceModule.makeBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
-        quantityDesired: 1,
         pricePerToken: ethers.utils.parseUnits("20"),
       });
 
@@ -417,7 +414,6 @@ describe("Marketplace Module", async () => {
       await marketplaceModule.makeBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
-        quantityDesired: 1,
         pricePerToken: ethers.utils.parseUnits("2"),
       });
 
@@ -454,14 +450,12 @@ describe("Marketplace Module", async () => {
       await marketplaceModule.makeBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
-        quantityDesired: 1,
         pricePerToken: ethers.utils.parseUnits("2"),
       });
       try {
         await marketplaceModule.makeBid({
           currencyContractAddress: tokenAddress,
           listingId: auctionListingId,
-          quantityDesired: 1,
           pricePerToken: ethers.utils.parseUnits("2.01"),
         });
         // eslint-disable-next-line no-empty
@@ -506,9 +500,13 @@ describe("Marketplace Module", async () => {
       try {
         await marketplaceModule.cancelAuctionListing(auctionListingId);
         assert.fail("should have thrown an error");
-        // eslint-disable-next-line no-empty
-      } catch (err) {
-        if (!(err instanceof AuctionAlreadyStartedError)) {
+      } catch (err: any) {
+        if (
+          !(err instanceof AuctionAlreadyStartedError) &&
+          !(err.message as string).includes(
+            "cannot close auction before it has ended",
+          )
+        ) {
           throw err;
         }
       }
@@ -552,13 +550,15 @@ describe("Marketplace Module", async () => {
       }
     });
 
-    it("should distribute the sellers tokens when a listing closes", async () => {
+    it("should distribute the tokens when a listing closes", async () => {
+      const now = Math.floor(Date.now() / 1000);
+      await sdk.setProviderOrSigner(adminWallet);
       const listingId = await marketplaceModule.createAuctionListing({
         assetContractAddress: dummyNftModule.address,
         buyoutPricePerToken: ethers.utils.parseUnits("10"),
         currencyContractAddress: tokenAddress,
-        startTimeInSeconds: Math.floor(Date.now() / 1000),
-        listingDurationInSeconds: 60 * 60 * 24,
+        startTimeInSeconds: now,
+        listingDurationInSeconds: 60,
         tokenId: "2",
         quantity: "1",
         reservePricePerToken: ethers.utils.parseUnits("1"),
@@ -570,11 +570,9 @@ describe("Marketplace Module", async () => {
         currencyContractAddress: tokenAddress,
         listingId,
         pricePerToken: ethers.utils.parseUnits("2"),
-        quantityDesired: 1,
       });
 
-      // fast forward 48 hours
-      await fastForwardTime(48 * 60 * 60);
+      await fastForwardTime(60 * 60);
 
       /**
        * Buyer
@@ -594,6 +592,8 @@ describe("Marketplace Module", async () => {
         "The buyer should have been awarded token",
       );
 
+      console.log("Checking seller");
+
       /**
        * Seller
        */
@@ -606,7 +606,14 @@ describe("Marketplace Module", async () => {
         ethers.utils.parseUnits("100000000000000000000").toString(),
         "The buyer should have 100000000000000000000 tokens to start",
       );
+
       await marketplaceModule.closeAuctionListing(listingId);
+      console.log("Closed for seller");
+
+      console.log(
+        "Balance of contract = ",
+        await customTokenModule.balanceOf(marketplaceModule.address),
+      );
 
       const newTokenBalance = await customTokenModule.balanceOf(
         adminWallet.address,
@@ -751,6 +758,10 @@ describe("Marketplace Module", async () => {
   });
 
   describe("Setting Buffers", () => {
+    beforeEach(async () => {
+      await sdk.setProviderOrSigner(adminWallet);
+    });
+
     it("should allow you to set the bid buffer", async () => {
       assert.fail("not done");
     });
