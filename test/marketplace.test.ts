@@ -13,7 +13,13 @@ import {
   NFTModule,
   TokenModule,
 } from "../src/modules";
-import { appModule, sdk, signers } from "./before.test";
+import {
+  appModule,
+  fastForwardTime,
+  jsonProvider,
+  sdk,
+  signers,
+} from "./before.test";
 
 global.fetch = require("node-fetch");
 
@@ -425,15 +431,16 @@ describe("Marketplace Module", async () => {
         "Bob should be the winning bidder",
       );
 
-      await sdk.setProviderOrSigner(adminWallet);
-      await marketplaceModule.acceptWinningBid(auctionListingId);
-
+      await sdk.setProviderOrSigner(bobWallet);
+      await marketplaceModule.closeAuctionListing(auctionListingId);
       const balance = await dummyNftModule.balanceOf(bobWallet.address);
       assert.equal(
         balance.toString(),
         "1",
         "The buyer should have been awarded token",
       );
+
+      // TODO: write test for calling closeAuctionListing with sellers wallet
     });
 
     it("should throw an error if a bid being placed is not a winning bid", async () => {
@@ -515,7 +522,9 @@ describe("Marketplace Module", async () => {
       assert.equal(listing.quantity.toString(), "0");
     });
 
-    it("should allow the seller to cancel an auction that has started as long as there are no active bids", async () => {
+    // Skipping until decision is made on this:
+    // https://github.com/nftlabs/nftlabs-sdk-ts/issues/119#issuecomment-1003199128
+    it.skip("should allow the seller to cancel an auction that has started as long as there are no active bids", async () => {
       const startTime = Math.floor(Date.now() / 1000) - 10000;
       const listingId = await createAuctionListing(
         dummyNftModule.address,
@@ -541,6 +550,75 @@ describe("Marketplace Module", async () => {
           "The seller should be able to cancel the auction if there are no active bids",
         );
       }
+    });
+
+    it("should distribute the sellers tokens when a listing closes", async () => {
+      const listingId = await marketplaceModule.createAuctionListing({
+        assetContractAddress: dummyNftModule.address,
+        buyoutPricePerToken: ethers.utils.parseUnits("10"),
+        currencyContractAddress: tokenAddress,
+        startTimeInSeconds: Math.floor(Date.now() / 1000),
+        listingDurationInSeconds: 60 * 60 * 24,
+        tokenId: "2",
+        quantity: "1",
+        reservePricePerToken: ethers.utils.parseUnits("1"),
+      });
+
+      await sdk.setProviderOrSigner(bobWallet);
+
+      await marketplaceModule.makeBid({
+        currencyContractAddress: tokenAddress,
+        listingId,
+        pricePerToken: ethers.utils.parseUnits("2"),
+        quantityDesired: 1,
+      });
+
+      // fast forward 48 hours
+      await fastForwardTime(48 * 60 * 60);
+
+      /**
+       * Buyer
+       */
+      const oldBalance = await dummyNftModule.balanceOf(bobWallet.address);
+      assert.equal(
+        oldBalance.toString(),
+        "0",
+        "The buyer should have no tokens to start",
+      );
+      await marketplaceModule.closeAuctionListing(listingId);
+
+      const balance = await dummyNftModule.balanceOf(bobWallet.address);
+      assert.equal(
+        balance.toString(),
+        "1",
+        "The buyer should have been awarded token",
+      );
+
+      /**
+       * Seller
+       */
+      await sdk.setProviderOrSigner(adminWallet);
+      const oldTokenBalance = await customTokenModule.balanceOf(
+        adminWallet.address,
+      );
+      assert.equal(
+        oldTokenBalance.value,
+        ethers.utils.parseUnits("100000000000000000000").toString(),
+        "The buyer should have 100000000000000000000 tokens to start",
+      );
+      await marketplaceModule.closeAuctionListing(listingId);
+
+      const newTokenBalance = await customTokenModule.balanceOf(
+        adminWallet.address,
+      );
+      assert.equal(
+        newTokenBalance.value,
+        ethers.utils
+          .parseUnits("100000000000000000000")
+          .add(ethers.utils.parseUnits("2"))
+          .toString(),
+        "The buyer should have two additional tokens after the listing closes",
+      );
     });
   });
 

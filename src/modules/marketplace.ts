@@ -649,9 +649,11 @@ export class MarketplaceModule
       );
     }
 
+    const closeFor = await this.getSignerAddress();
+    console.log("closeFor", closeFor);
     await this.sendTransaction("closeAuction", [
       BigNumber.from(listingId),
-      await this.getSignerAddress(),
+      closeFor,
     ]);
   }
 

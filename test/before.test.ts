@@ -17,6 +17,10 @@ let signers: SignerWithAddress[];
 
 let wrappedNativeTokenAddress: string;
 
+const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
+  await jsonProvider.send("evm_increaseTime", [timeInSeconds]);
+};
+
 before(async () => {
   signers = await hardhatEthers.getSigners();
   [signer] = signers;
@@ -53,4 +57,11 @@ before(async () => {
   appModule = await sdk.getAppModule(address);
 });
 
-export { appModule, sdk, signers, wrappedNativeTokenAddress };
+export {
+  appModule,
+  sdk,
+  signers,
+  wrappedNativeTokenAddress,
+  jsonProvider,
+  fastForwardTime,
+};
