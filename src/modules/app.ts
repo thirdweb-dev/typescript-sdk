@@ -956,9 +956,12 @@ export class AppModule
       this.address,
     );
     if (!(await this.requireUpgrade())) {
-      const treasuryBalance = await this.readOnlyContract.provider.getBalance(
-        await this.getRoyaltyTreasury(),
-      );
+      let treasuryBalance = BigNumber.from(0);
+      if ((await this.getRoyaltyTreasury()) !== this.address) {
+        treasuryBalance = await this.readOnlyContract.provider.getBalance(
+          await this.getRoyaltyTreasury(),
+        );
+      }
 
       return walletBalance.add(treasuryBalance);
     }
