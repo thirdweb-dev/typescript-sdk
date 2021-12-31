@@ -613,10 +613,10 @@ export class DropModule
     );
   }
 
-  public async claim(
+  private async prepareClaim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ): Promise<NFTMetadataOwner[]> {
+  ): Promise<any> {
     if (await this.isV1()) {
       return this.v1Module.claim(quantity, proofs);
     }
@@ -669,7 +669,33 @@ export class DropModule
         }
       }
     }
+    return overrides;
+  }
 
+  public async claimTo(
+    quantity: BigNumberish,
+    addressToClaim: string,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<TransactionReceipt> {
+    const overrides = await this.prepareClaim(quantity, proofs);
+    const encoded = [];
+    encoded.push(
+      this.contract.interface.encodeFunctionData("claim", [quantity, proofs]),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("safeTransferFrom", [
+        await this.getSignerAddress(),
+        addressToClaim,
+        (await this.readOnlyContract.nextTokenIdToClaim()).sub(1),
+      ]),
+    );
+    return await this.sendTransaction("multicall", [encoded], overrides);
+  }
+  public async claim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<NFTMetadataOwner[]> {
+    const overrides = await this.prepareClaim(quantity, proofs);
     const receipt = await this.sendTransaction(
       "claim",
       [quantity, proofs],
@@ -686,7 +712,6 @@ export class DropModule
       tokenIds.map(async (t) => await this.get(t.toString())),
     );
   }
-
   public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [tokenId]);
   }

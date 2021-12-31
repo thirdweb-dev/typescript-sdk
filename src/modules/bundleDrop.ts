@@ -370,7 +370,7 @@ export class BundleDropModule
     await this.sendTransaction("setClaimConditions", [tokenId, _conditions]);
   }
 
-  public async claim(
+  private async prepareClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
@@ -422,7 +422,47 @@ export class BundleDropModule
         }
       }
     }
+    return overrides;
+  }
+
+  public async claim(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    proofs: BytesLike[],
+  ) {
+    const overrides = await this.prepareClaim(tokenId, quantity, proofs);
     await this.sendTransaction("claim", [tokenId, quantity, proofs], overrides);
+  }
+  public async claimTo(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    to: string,
+    proofs: BytesLike[],
+  ) {
+    const overrides = await this.prepareClaim(tokenId, quantity, proofs);
+    const encoded = [];
+    await this.sendTransaction(
+      "claimTo",
+      [tokenId, quantity, to, proofs],
+      overrides,
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("claim", [
+        tokenId,
+        quantity,
+        proofs,
+      ]),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("safeTransferFrom", [
+        await this.getSignerAddress(),
+        to,
+        tokenId,
+        quantity,
+        [0],
+      ]),
+    );
+    await this.sendTransaction("multicall", [encoded], overrides);
   }
 
   public async burn(
