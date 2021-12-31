@@ -285,8 +285,10 @@ export class MarketplaceModule
       tokenId: listing.tokenId,
       quantity: listing.quantity,
       startTimeInSeconds: listing.startTime,
+      // TODO: fetch the asset
       asset: undefined,
       secondsUntilEnd: listing.endTime,
+      sellerAddress: listing.tokenOwner,
     };
   }
 
@@ -321,6 +323,7 @@ export class MarketplaceModule
       tokenId: listing.tokenId,
       quantity: listing.quantity,
       startTimeInEpochSeconds: listing.startTime,
+      // TODO: fetch the asset
       asset: undefined,
       reservePriceCurrencyValuePerToken: await getCurrencyValue(
         this.providerOrSigner,
@@ -329,6 +332,7 @@ export class MarketplaceModule
       ),
       reservePrice: listing.reservePricePerToken,
       endTimeInEpochSeconds: listing.endTime,
+      sellerAddress: listing.tokenOwner,
     };
   }
 
@@ -666,7 +670,6 @@ export class MarketplaceModule
     await this.sendTransaction("setAuctionBuffers", [
       timeBuffer,
       BigNumber.from(buffer),
-      await this.getSignerAddress(),
     ]);
   }
 
@@ -677,7 +680,6 @@ export class MarketplaceModule
     await this.sendTransaction("setAuctionBuffers", [
       BigNumber.from(buffer),
       bidBuffer,
-      await this.getSignerAddress(),
     ]);
   }
 }

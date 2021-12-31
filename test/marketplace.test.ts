@@ -757,17 +757,31 @@ describe("Marketplace Module", async () => {
     });
   });
 
-  describe("Setting Buffers", () => {
+  describe("Buffers", () => {
     beforeEach(async () => {
       await sdk.setProviderOrSigner(adminWallet);
     });
 
+    it("should set the correct bid buffer default of 500 bps", async () => {
+      const buffer = await marketplaceModule.getTimeBufferInSeconds();
+      assert.equal(buffer.toNumber(), 15 * 60);
+    });
+
+    it("should set the correct time buffer default of 15 minutes", async () => {
+      const buffer = await marketplaceModule.getBidBufferBps();
+      assert.equal(buffer.toNumber(), 500);
+    });
+
     it("should allow you to set the bid buffer", async () => {
-      assert.fail("not done");
+      await marketplaceModule.setBidBufferBps(1000);
+      const buffer = await marketplaceModule.getBidBufferBps();
+      assert.equal(buffer.toNumber(), 1000);
     });
 
     it("should allow you to set the time buffer", async () => {
-      assert.fail("not done");
+      await marketplaceModule.setTimeBufferInSeconds(1000);
+      const buffer = await marketplaceModule.getTimeBufferInSeconds();
+      assert.equal(buffer.toNumber(), 1000);
     });
   });
 });

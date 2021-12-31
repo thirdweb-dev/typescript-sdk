@@ -69,4 +69,9 @@ export interface AuctionListing {
    * Useful for displaying the price information.
    */
   reservePriceCurrencyValuePerToken: CurrencyValue;
+
+  /**
+   * The address of the seller.
+   */
+  sellerAddress: string;
 }

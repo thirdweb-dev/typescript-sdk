@@ -57,4 +57,9 @@ export interface DirectListing {
    * The buyout price of the listing.
    */
   buyoutPrice: BigNumberish;
+
+  /**
+   * The address of the seller.
+   */
+  sellerAddress: string;
 }
