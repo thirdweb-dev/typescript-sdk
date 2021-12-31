@@ -411,15 +411,15 @@ export class BundleDropModule
     await this.sendTransaction("setClaimConditions", [tokenId, _conditions]);
   }
 
-  public async claim(
+  private async performClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    addressToClaim: string,
   ) {
     const mintCondition = await this.getActiveClaimCondition(tokenId);
     const overrides = (await this.getCallOverrides()) || {};
 
-    const addressToClaim = await this.getSignerAddress();
     const { metadata } = await this.getMetadata();
     if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
       const snapshot = await this.sdk
@@ -464,6 +464,28 @@ export class BundleDropModule
       }
     }
     await this.sendTransaction("claim", [tokenId, quantity, proofs], overrides);
+  }
+
+  public async claim(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ) {
+    await this.performClaim(
+      tokenId,
+      quantity,
+      proofs,
+      await this.getSignerAddress(),
+    );
+  }
+
+  public async claimTo(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    addressToClaim: string,
+  ) {
+    await this.performClaim(tokenId, quantity, proofs, addressToClaim);
   }
 
   public async burn(
