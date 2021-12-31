@@ -438,6 +438,7 @@ export class BundleDropModule
     quantity: BigNumberish,
     to: string,
     proofs: BytesLike[],
+    data: BytesLike = [0],
   ) {
     const overrides = await this.prepareClaim(tokenId, quantity, proofs);
     const encoded = [];
@@ -459,7 +460,7 @@ export class BundleDropModule
         to,
         tokenId,
         quantity,
-        [0],
+        data,
       ]),
     );
     await this.sendTransaction("multicall", [encoded], overrides);
