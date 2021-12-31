@@ -445,24 +445,27 @@ export class DropModule
     });
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
+    const encoded = [];
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
+      const metadataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metadataUri,
+        ]),
+      );
     }
 
-    const metatdataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
-
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metatdataUri,
-      ]),
+    encoded.push(
       this.contract.interface.encodeFunctionData("setClaimConditions", [
         conditions,
       ]),
-    ];
+    );
+
     return await this.sendTransaction("multicall", [encoded]);
   }
 
@@ -487,24 +490,27 @@ export class DropModule
     });
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
+    const encoded = [];
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
+      const metadataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metadataUri,
+        ]),
+      );
     }
 
-    const metatdataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
-
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metatdataUri,
-      ]),
+    encoded.push(
       this.contract.interface.encodeFunctionData("updateClaimConditions", [
         conditions,
       ]),
-    ];
+    );
+
     return await this.sendTransaction("multicall", [encoded]);
   }
   /**
