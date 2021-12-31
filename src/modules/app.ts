@@ -344,11 +344,33 @@ export class AppModule
   public async withdrawFunds(
     to: string,
     currency: string,
-  ): Promise<TransactionReceipt> {
+  ): Promise<TransactionReceipt | void> {
     if (isNativeToken(currency)) {
       currency = ethers.constants.AddressZero;
     }
-    return await this.sendTransaction("withdrawFunds", [to, currency]);
+    if (!BigNumber.from((await this.balanceOfToken(currency)).value).isZero()) {
+      return await this.sendTransaction("withdrawFunds", [to, currency]);
+    }
+    const erc20 = ERC20__factory.connect(
+      currency,
+      this.readOnlyContract.provider,
+    );
+    const treasury = await this.getRoyaltyTreasury();
+    if (
+      !(await erc20.balanceOf(treasury)).isZero() &&
+      treasury !== this.address
+    ) {
+      const royalty = Royalty__factory.connect(
+        treasury,
+        this.readOnlyContract.provider,
+      );
+      return await this.sendContractTransaction(
+        royalty,
+        "distribute(address)",
+        [currency],
+      );
+    }
+    return;
   }
 
   /**
