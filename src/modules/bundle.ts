@@ -314,7 +314,7 @@ export class BundleModule
   }
 
   public async mint(args: INFTBundleBatchArgs) {
-    await this.mintTo(await this.getSignerAddress(), args);
+    return this.mintTo(await this.getSignerAddress(), args);
   }
 
   public async mintTo(
@@ -322,11 +322,11 @@ export class BundleModule
     args: INFTBundleBatchArgs,
     data: BytesLike = [0],
   ) {
-    await this.sendTransaction("mint", [to, args.tokenId, args.amount, data]);
+    return this.sendTransaction("mint", [to, args.tokenId, args.amount, data]);
   }
 
   public async mintBatch(args: INFTBundleBatchArgs[]) {
-    await this.mintBatchTo(await this.getSignerAddress(), args);
+    return this.mintBatchTo(await this.getSignerAddress(), args);
   }
 
   public async mintBatchTo(
@@ -336,7 +336,7 @@ export class BundleModule
   ) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
-    await this.sendTransaction("mintBatch", [to, ids, amounts, data]);
+    return this.sendTransaction("mintBatch", [to, ids, amounts, data]);
   }
 
   public async burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt> {

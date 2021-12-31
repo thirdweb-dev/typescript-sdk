@@ -463,7 +463,7 @@ export class BundleDropModule
         }
       }
     }
-    await this.sendTransaction("claim", [tokenId, quantity, proofs], overrides);
+    return this.sendTransaction("claim", [tokenId, quantity, proofs], overrides);
   }
 
   public async burn(
