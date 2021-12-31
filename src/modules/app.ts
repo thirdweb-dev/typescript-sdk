@@ -955,10 +955,14 @@ export class AppModule
     const walletBalance = await this.readOnlyContract.provider.getBalance(
       this.address,
     );
-    const treasuryBalance = await this.readOnlyContract.provider.getBalance(
-      await this.getRoyaltyTreasury(),
-    );
-    return walletBalance.add(treasuryBalance);
+    if (!(await this.requireUpgrade())) {
+      const treasuryBalance = await this.readOnlyContract.provider.getBalance(
+        await this.getRoyaltyTreasury(),
+      );
+
+      return walletBalance.add(treasuryBalance);
+    }
+    return walletBalance;
   }
 
   /**
