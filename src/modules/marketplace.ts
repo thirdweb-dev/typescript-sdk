@@ -195,7 +195,6 @@ export class MarketplaceModule
 
   public async makeBid(bid: {
     listingId: BigNumberish;
-    quantityDesired: BigNumberish;
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
   }): Promise<void> {
@@ -225,7 +224,7 @@ export class MarketplaceModule
       );
     }
 
-    const quantity = BigNumber.from(bid.quantityDesired);
+    const quantity = BigNumber.from(listing.quantity);
     const value = BigNumber.from(bid.pricePerToken).mul(quantity);
 
     const overrides = (await this.getCallOverrides()) || {};
@@ -235,7 +234,7 @@ export class MarketplaceModule
       "offer",
       [
         bid.listingId,
-        bid.quantityDesired,
+        listing.quantity,
         bid.currencyContractAddress,
         bid.pricePerToken,
       ],
@@ -621,13 +620,10 @@ export class MarketplaceModule
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
     const startTime = BigNumber.from(listing.startTimeInEpochSeconds);
 
-    const winningBid = await this.getWinningBid(listingId);
-    if (now.gt(startTime) && winningBid !== undefined) {
+    if (now.gt(startTime)) {
       throw new AuctionAlreadyStartedError(listingId.toString());
     }
 
-    // Assuming the two conditions above are true, calling `closeAuction`
-    // will cancel the auction.
     await this.sendTransaction("closeAuction", [
       BigNumber.from(listingId),
       await this.getSignerAddress(),
@@ -639,22 +635,23 @@ export class MarketplaceModule
       BigNumber.from(listingId),
     );
 
-    const now = BigNumber.from(Math.floor(Date.now() / 1000));
-    const endTime = BigNumber.from(listing.endTimeInEpochSeconds);
-
-    if (now.lt(endTime)) {
-      throw new AuctionHasNotEndedError(
-        listingId.toString(),
-        endTime.toString(),
-      );
-    }
-
     const closeFor = await this.getSignerAddress();
-    console.log("closeFor", closeFor);
-    await this.sendTransaction("closeAuction", [
-      BigNumber.from(listingId),
-      closeFor,
-    ]);
+
+    try {
+      await this.sendTransaction("closeAuction", [
+        BigNumber.from(listingId),
+        closeFor,
+      ]);
+    } catch (err: any) {
+      if (err.message.includes("cannot close auction before it has ended")) {
+        throw new AuctionHasNotEndedError(
+          listingId.toString(),
+          listing.endTimeInEpochSeconds.toString(),
+        );
+      } else {
+        throw err;
+      }
+    }
   }
 
   public async setBidBufferBps(buffer: BigNumberish): Promise<void> {

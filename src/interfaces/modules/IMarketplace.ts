@@ -50,7 +50,7 @@ export interface IMarketplace {
   }): Promise<void>;
 
   /**
-   * Make an offer on an auction. The offer must be at least `current bid * (1 + bid buffer)` in order to be accepted.
+   * Make an offer on an auction. The offer must be at least `current bid * bid buffer %)` in order to be accepted.
    *
    * Bid buffer is configured on the Marketplace contract.
    *
@@ -58,13 +58,11 @@ export interface IMarketplace {
    * the listing and the sale will be executed.
    *
    * @param listingId - The listing id.
-   * @param quantityDesired - The quantity of tokens desired.
    * @param currencyContractAddress - The address of the currency contract.
    * @param tokenAmount - The amount of tokens to be offered.
    */
   makeBid(bid: {
     listingId: BigNumberish;
-    quantityDesired: BigNumberish;
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
   }): Promise<void>;
