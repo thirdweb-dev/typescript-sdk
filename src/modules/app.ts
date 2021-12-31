@@ -906,7 +906,10 @@ export class AppModule
       await this.readOnlyContract.callStatic.version();
       return false;
     } catch (e) {
-      return true;
+      if ((await this.getRoyaltyTreasury()) === this.address) {
+        return true;
+      }
+      return false;
     }
   }
 
