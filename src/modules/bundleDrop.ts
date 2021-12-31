@@ -480,10 +480,10 @@ export class BundleDropModule
   }
 
   public async claimTo(
+    addressToClaim: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-    addressToClaim: string,
   ) {
     await this.performClaim(tokenId, quantity, proofs, addressToClaim);
   }

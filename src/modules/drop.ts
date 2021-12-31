@@ -739,8 +739,8 @@ export class DropModule
   }
 
   public async claimTo(
-    quantity: BigNumberish,
     addressToClaim: string,
+    quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<NFTMetadataOwner[]> {
     return await this.performClaim(quantity, proofs, addressToClaim);
