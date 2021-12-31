@@ -901,6 +901,26 @@ export class AppModule
     return this.sdk.getVoteModule(address);
   }
 
+  public async requireUpgrade(): Promise<boolean> {
+    try {
+      await this.readOnlyContract.callStatic.version();
+      return false;
+    } catch (e) {
+      return true;
+    }
+  }
+
+  public async upgrade(): Promise<void> {
+    if (!(await this.requireUpgrade())) {
+      return;
+    }
+    const metadata = (await this.getMetadata()).metadata;
+    const splitModule = await this.deploySplitsModule({
+      name: `${metadata?.name} Royalty Treasury`,
+      recipientSplits: [],
+    });
+    await this.setRoyaltyTreasury(splitModule.address);
+  }
   /**
    * Check the balance of the project wallet in the native token of the chain
    *
