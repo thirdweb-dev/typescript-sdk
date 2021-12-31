@@ -21,6 +21,7 @@ import {
   RolesMap,
 } from "../common";
 import { invariant } from "../common/invariant";
+import { isMetadataEqual } from "../common/isMetadataEqual";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ThirdwebSDK } from "../core";
 import { ModuleWithRoles } from "../core/module";
@@ -444,6 +445,7 @@ export class DropModule
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
     const { metadata } = await this.getMetadata(false);
+    const oldMetadata = metadata;
     invariant(metadata, "Metadata is not set, this should never happen");
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
@@ -451,18 +453,23 @@ export class DropModule
       metadata["merkle"] = merkleInfo;
     }
 
-    const metatdataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
-
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metatdataUri,
-      ]),
+    const encoded = [];
+    if (!isMetadataEqual(oldMetadata, metadata)) {
+      const metadataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metadataUri,
+        ]),
+      );
+    }
+    encoded.push(
       this.contract.interface.encodeFunctionData("setClaimConditions", [
         conditions,
       ]),
-    ];
+    );
+
     return await this.sendTransaction("multicall", [encoded]);
   }
 
@@ -470,6 +477,7 @@ export class DropModule
     if (await this.isV1()) {
       return this.v1Module.setClaimConditions(factory);
     }
+
     const conditions = factory.buildConditions().map((c) => ({
       startTimestamp: c.startTimestamp,
       maxClaimableSupply: c.maxMintSupply,
@@ -486,25 +494,29 @@ export class DropModule
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
     const { metadata } = await this.getMetadata(false);
+    const oldMetadata = metadata;
     invariant(metadata, "Metadata is not set, this should never happen");
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
     }
-
-    const metatdataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
-
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metatdataUri,
-      ]),
+    const encoded = [];
+    if (!isMetadataEqual(oldMetadata, metadata)) {
+      const metadataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metadataUri,
+        ]),
+      );
+    }
+    encoded.push(
       this.contract.interface.encodeFunctionData("updateClaimConditions", [
         conditions,
       ]),
-    ];
+    );
     return await this.sendTransaction("multicall", [encoded]);
   }
   /**

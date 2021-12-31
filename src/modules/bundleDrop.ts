@@ -317,25 +317,32 @@ export class BundleDropModule
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
     const { metadata } = await this.getMetadata(false);
+    const oldMetadata = metadata;
     invariant(metadata, "Metadata is not set, this should never happen");
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
     }
+    const encoded = [];
+    if (!isMetadataEqual(oldMetadata, metadata)) {
+      const metadataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metadataUri,
+        ]),
+      );
+    }
 
-    const metadataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metadataUri,
-      ]),
+    encoded.push(
       this.contract.interface.encodeFunctionData("setClaimConditions", [
         tokenId,
         conditions,
       ]),
-    ];
+    );
+
     return await this.sendTransaction("multicall", [encoded]);
   }
   public async updateClaimConditions(
