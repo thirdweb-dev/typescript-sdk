@@ -930,7 +930,10 @@ export class AppModule
     const walletBalance = await this.readOnlyContract.provider.getBalance(
       this.address,
     );
-    return walletBalance;
+    const treasuryBalance = await this.readOnlyContract.provider.getBalance(
+      await this.getRoyaltyTreasury(),
+    );
+    return walletBalance.add(treasuryBalance);
   }
 
   /**
