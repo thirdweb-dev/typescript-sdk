@@ -12,6 +12,7 @@ import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
+import { UnderlyingType } from "./pack";
 
 /**
  * @beta
@@ -22,7 +23,9 @@ export interface BundleMetadata {
   supply: BigNumber;
   metadata: NFTMetadata;
   ownedByAddress: number;
+  underlyingType: UnderlyingType;
 }
+
 export interface CollectionMetadata {
   creator: string;
   supply: BigNumber;
@@ -103,19 +106,20 @@ export class BundleModule
    * @returns A promise that resolves to a `BundleMetadata`.
    */
   public async get(tokenId: string, address?: string): Promise<BundleMetadata> {
-    const [metadata, creator, supply, ownedByAddress] = await Promise.all([
+    const [metadata, supply, ownedByAddress, state] = await Promise.all([
       getTokenMetadata(this.readOnlyContract, tokenId, this.ipfsGatewayUrl),
-      this.readOnlyContract.creator(tokenId),
       this.readOnlyContract
         .totalSupply(tokenId)
         .catch(() => BigNumber.from("0")),
       address ? (await this.balanceOf(address, tokenId)).toNumber() : 0,
+      this.readOnlyContract.tokenState(tokenId),
     ]);
     return {
-      creator,
+      creator: state.creator,
       supply,
       metadata,
       ownedByAddress,
+      underlyingType: state.underlyingType,
     };
   }
 
@@ -283,7 +287,9 @@ export class BundleModule
         (await asset.getApproved(tokenId)).toLowerCase() ===
         this.address.toLowerCase();
       if (!isTokenApproved) {
-        await asset.setApprovalForAll(this.address, true);
+        await this.sendContractTransaction(asset, "setApprovalForAll", [
+          this.address,
+        ]);
       }
     }
     const uri = await this.sdk.getStorage().uploadMetadata(metadata);

@@ -72,4 +72,5 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [totalUnclaimedSupply()](./sdk.dropmodule.totalunclaimedsupply.md) |  | <b><i>(BETA)</i></b> |
 |  [transfer(to, tokenId)](./sdk.dropmodule.transfer.md) |  | <b><i>(BETA)</i></b> |
 |  [transferFrom(from, to, tokenId)](./sdk.dropmodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
+|  [updateClaimConditions(factory)](./sdk.dropmodule.updateclaimconditions.md) |  | <b><i>(BETA)</i></b> |
 
