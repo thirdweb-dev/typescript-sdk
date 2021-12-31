@@ -18,7 +18,6 @@ import {
   RolesMap,
 } from "../common";
 import { invariant } from "../common/invariant";
-import { isMetadataEqual } from "../common/isMetadataEqual";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -358,15 +357,13 @@ export class BundleDropModule
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
     const { metadata } = await this.getMetadata(false);
-    const oldMetadata = metadata;
     invariant(metadata, "Metadata is not set, this should never happen");
+    const encoded = [];
+
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
-    }
-    const encoded = [];
-    if (!isMetadataEqual(oldMetadata, metadata)) {
       const metadataUri = await this.sdk
         .getStorage()
         .upload(JSON.stringify(metadata));
@@ -376,6 +373,7 @@ export class BundleDropModule
         ]),
       );
     }
+
     encoded.push(
       this.contract.interface.encodeFunctionData("updateClaimConditions", [
         tokenId,
