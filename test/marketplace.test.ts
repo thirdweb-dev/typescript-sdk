@@ -531,13 +531,9 @@ describe("Marketplace Module", async () => {
         startTime,
       );
 
-      console.log("Start time at creation: ", startTime);
-
       const listing = await marketplaceModule.getAuctionListing(listingId);
-      console.log(listing, Math.floor(Date.now() / 1000));
 
       const winningBid = await marketplaceModule.getWinningBid(listingId);
-      console.log(`Winning bid: ${winningBid}`);
 
       try {
         await marketplaceModule.cancelAuctionListing(auctionListingId);
@@ -592,8 +588,6 @@ describe("Marketplace Module", async () => {
         "The buyer should have been awarded token",
       );
 
-      console.log("Checking seller");
-
       /**
        * Seller
        */
@@ -608,12 +602,6 @@ describe("Marketplace Module", async () => {
       );
 
       await marketplaceModule.closeAuctionListing(listingId);
-      console.log("Closed for seller");
-
-      console.log(
-        "Balance of contract = ",
-        await customTokenModule.balanceOf(marketplaceModule.address),
-      );
 
       const newTokenBalance = await customTokenModule.balanceOf(
         adminWallet.address,
@@ -622,7 +610,8 @@ describe("Marketplace Module", async () => {
         newTokenBalance.value,
         ethers.utils
           .parseUnits("100000000000000000000")
-          .add(ethers.utils.parseUnits("2"))
+          // eslint-disable-next-line line-comment-position
+          .add(ethers.utils.parseUnits("1.98")) // 2% taken out for royalties
           .toString(),
         "The buyer should have two additional tokens after the listing closes",
       );
