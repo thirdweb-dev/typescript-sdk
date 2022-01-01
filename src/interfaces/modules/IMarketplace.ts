@@ -113,9 +113,13 @@ export interface IMarketplace {
    * regardless of the quantity. There is no way to buy
    * a partial amount of the tokens.
    *
+   * Assuming this transaction is successful, the buyer will
+   * instantly have access to the tokens and does not need
+   * to call `closeAuctionListing`.
+   *
    * @param listingId - Id of the listing to buyout.
    */
-  buyoutAuctionListing(buyout: { listingId: BigNumberish }): Promise<void>;
+  buyoutAuctionListing(listingId: BigNumberish): Promise<void>;
 
   /**
    * Buyout the listing based on the buyout price.

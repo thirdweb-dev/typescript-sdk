@@ -549,14 +549,16 @@ export class MarketplaceModule
     await this.sendTransaction("acceptOffer", [listingId, addressOfOfferor]);
   }
 
-  /**
-   *
-   * @beta - This method is not yet ready for production use
-   */
-  public async buyoutAuctionListing(_buyout: {
-    listingId: BigNumberish;
-  }): Promise<void> {
-    throw new Error("Method not implemented.");
+  public async buyoutAuctionListing(listingId: BigNumberish): Promise<void> {
+    const listing = await this.validateAuctionListing(
+      BigNumber.from(listingId),
+    );
+
+    await this.makeBid({
+      listingId,
+      currencyContractAddress: listing.currencyContractAddress,
+      pricePerToken: listing.buyoutPrice,
+    });
   }
 
   public async buyoutDirectListing(_buyout: {

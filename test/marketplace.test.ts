@@ -66,10 +66,10 @@ describe("Marketplace Module", async () => {
         name: "Test 2",
       },
       {
-        name: "Test 2",
+        name: "Test 3",
       },
       {
-        name: "Test 2",
+        name: "Test 4",
       },
     ]);
     dummyBundleModule = await appModule.deployBundleModule({
@@ -80,6 +80,12 @@ describe("Marketplace Module", async () => {
       {
         metadata: {
           name: "Test 0",
+        },
+        supply: 100000,
+      },
+      {
+        metadata: {
+          name: "Test 1",
         },
         supply: 100000,
       },
@@ -460,6 +466,29 @@ describe("Marketplace Module", async () => {
         });
         // eslint-disable-next-line no-empty
       } catch (err) {}
+    });
+
+    it("should allow an auction buyout", async () => {
+      const id = await marketplaceModule.createAuctionListing({
+        assetContractAddress: dummyBundleModule.address,
+        buyoutPricePerToken: ethers.utils.parseUnits("10"),
+        currencyContractAddress: tokenAddress,
+        // to start tomorrow so we can update it
+        startTimeInSeconds: Math.floor(Date.now() / 1000),
+        listingDurationInSeconds: 60 * 60 * 24,
+        tokenId: "1",
+        quantity: 2,
+        reservePricePerToken: ethers.utils.parseUnits("1"),
+      });
+      await sdk.setProviderOrSigner(bobWallet);
+      await marketplaceModule.buyoutAuctionListing(id);
+
+      const balance = await dummyBundleModule.balanceOf(bobWallet.address, "1");
+      assert.equal(
+        balance.toString(),
+        "2",
+        "The buyer should have no tokens to start",
+      );
     });
   });
 
