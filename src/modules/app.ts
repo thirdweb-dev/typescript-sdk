@@ -345,8 +345,10 @@ export class AppModule
     to: string,
     currency: string,
   ): Promise<TransactionReceipt | void> {
+    let isNative = false;
     if (isNativeToken(currency)) {
       currency = ethers.constants.AddressZero;
+      isNative = true;
     }
     if (!BigNumber.from((await this.balanceOfToken(currency)).value).isZero()) {
       return await this.sendTransaction("withdrawFunds", [to, currency]);
@@ -364,12 +366,16 @@ export class AppModule
         treasury,
         this.readOnlyContract.provider,
       );
-      return await this.sendContractTransaction(
-        royalty,
-        "distribute(address)",
-        [currency],
-      );
+      if (!isNative) {
+        return await this.sendContractTransaction(
+          royalty,
+          "distribute(address)",
+          [currency],
+        );
+      }
+      return await this.sendContractTransaction(royalty, "distribute()", []);
     }
+
     return;
   }
 
