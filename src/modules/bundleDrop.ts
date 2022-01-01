@@ -472,7 +472,7 @@ export class BundleDropModule
   public async claim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    proofs: BytesLike[],
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ) {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
 
@@ -486,7 +486,7 @@ export class BundleDropModule
     tokenId: BigNumberish,
     quantity: BigNumberish,
     to: string,
-    proofs: BytesLike[],
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
     data: BytesLike = [0],
   ) {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
