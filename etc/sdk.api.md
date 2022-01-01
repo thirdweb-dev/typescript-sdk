@@ -589,6 +589,8 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     setClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
+    // (undocumented)
+    setDefaultSaleRecipient(recipient: string): Promise<TransactionReceipt>;
     // @deprecated (undocumented)
     setMintConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
