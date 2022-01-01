@@ -942,7 +942,12 @@ export class AppModule
     const metadata = (await this.getMetadata()).metadata;
     const splitModule = await this.deploySplitsModule({
       name: `${metadata?.name} Royalty Treasury`,
-      recipientSplits: [],
+      recipientSplits: [
+        {
+          address: await this.getSignerAddress(),
+          shares: 1,
+        },
+      ],
     });
     await this.setRoyaltyTreasury(splitModule.address);
   }
