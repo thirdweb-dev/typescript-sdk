@@ -962,9 +962,10 @@ export class AppModule
     );
     if (!(await this.requireUpgrade())) {
       let treasuryBalance = BigNumber.from(0);
-      if ((await this.getRoyaltyTreasury()) !== this.address) {
+      const treasury = await this.getRoyaltyTreasury();
+      if (treasury !== this.address) {
         treasuryBalance = await this.readOnlyContract.provider.getBalance(
-          await this.getRoyaltyTreasury(),
+          treasury,
         );
       }
 
@@ -993,6 +994,15 @@ export class AppModule
       } catch (e) {
         console.error(tokenAddress, e);
         balance = BigNumber.from(0);
+      }
+      if (!(await this.requireUpgrade())) {
+        let treasuryBalance = BigNumber.from(0);
+        const treasury = await this.getRoyaltyTreasury();
+        if (treasury !== this.address) {
+          treasuryBalance = balance = await erc20.balanceOf(treasury);
+        }
+
+        balance = balance.add(treasuryBalance);
       }
     }
 
