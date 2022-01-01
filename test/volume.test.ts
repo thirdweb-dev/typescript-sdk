@@ -16,7 +16,8 @@ describe("Bundle Module (aka Collection Module)", async () => {
 
   let adminWallet: SignerWithAddress;
   let testSigners: SignerWithAddress[];
-  before(() => {
+
+  it.skip("should be able to claim using 15000 addresses", async () => {
     [adminWallet] = signers;
     testSigners = [];
     console.time("wallet");
@@ -26,9 +27,6 @@ describe("Bundle Module (aka Collection Module)", async () => {
     }
     console.log("===WALLETS CREATED===");
     console.timeEnd("wallet");
-  });
-
-  it.skip("should be able to claim using 15000 addresses", async () => {
     const token = await appModule.deployCurrencyModule({
       name: "Test Token",
       symbol: "TST",
