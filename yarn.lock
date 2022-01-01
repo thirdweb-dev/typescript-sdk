@@ -3,9 +3,9 @@
 
 
 "@3rdweb/contracts@^1.17.2":
-  version "1.18.0"
-  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.18.0.tgz#0acbeacc57d248b476ad9f183c76b5fb0771e858"
-  integrity sha512-v6I9QEYxizUHnL0e3fap8Yaux6J4iTyrntZNQJpDbRrlvyuBC/5ST1D51F4RS+pD3FR2IPtyAh0zprUZw2yJeQ==
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.19.0.tgz#e52ba5512b15e29df2b52ee8594a255bd4877c47"
+  integrity sha512-bVrqiwncCRqyhpbbb7plLDbflmr3dKtxEPgVAVQnyu+E1zZsrhll+TquSFX2AhtV3p6Jx8a/pusTt0woJYb00g==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
