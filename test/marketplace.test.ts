@@ -735,14 +735,12 @@ describe("Marketplace Module", async () => {
     it("should allow you to update an auction listing", async () => {
       const buyoutPrice = ethers.utils.parseUnits("10");
 
-      await fastForwardTime(60);
-
       const id = await marketplaceModule.createAuctionListing({
         assetContractAddress: dummyNftModule.address,
         buyoutPricePerToken: ethers.utils.parseUnits("10"),
         currencyContractAddress: tokenAddress,
         // to start tomorrow so we can update it
-        startTimeInSeconds: Math.floor(Date.now() / 1000 + 60 * 60 * 24),
+        startTimeInSeconds: Math.floor(Date.now() / 1000 + 60 * 60 * 100000),
         listingDurationInSeconds: 60 * 60 * 24,
         tokenId: "0",
         quantity: 1,
