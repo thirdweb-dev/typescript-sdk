@@ -15,7 +15,6 @@ import { BigNumber, BigNumberish } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import {
   getCurrencyValue,
-  getTokenMetadata,
   getTokenMetadataUsingStorage,
   InterfaceId_IERC721,
   ModuleType,
