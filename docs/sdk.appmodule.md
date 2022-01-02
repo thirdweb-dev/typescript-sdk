@@ -51,7 +51,7 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [setRoyaltyTreasury(treasury)](./sdk.appmodule.setroyaltytreasury.md) |  |  |
 |  [shouldUpgradeModuleList()](./sdk.appmodule.shouldupgrademodulelist.md) |  |  |
 |  [shouldUpgradeToV2()](./sdk.appmodule.shouldupgradetov2.md) |  |  |
-|  [upgradeModule(moduleAddresses)](./sdk.appmodule.upgrademodule.md) |  |  |
+|  [upgradeModuleList(moduleAddresses)](./sdk.appmodule.upgrademodulelist.md) |  |  |
 |  [upgradeToV2(upgradeOptions)](./sdk.appmodule.upgradetov2.md) |  | Upgrades the protocol control to v2. In v2, the royalty treasury needs to be set to be set to a splits contract. |
 |  [withdrawFunds(to, currency)](./sdk.appmodule.withdrawfunds.md) |  |  |
 

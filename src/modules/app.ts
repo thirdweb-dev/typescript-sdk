@@ -988,8 +988,8 @@ export class AppModule
     );
   }
 
-  public async upgradeModule(moduleAddresses: string[]): Promise<void> {
-    console.log(moduleAddresses)
+  public async upgradeModuleList(moduleAddresses: string[]): Promise<void> {
+    console.log(moduleAddresses);
     // no upgrade needed
     if (!(await this.isV1())) {
       return;

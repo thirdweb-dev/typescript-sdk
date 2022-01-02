@@ -115,7 +115,7 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     // (undocumented)
     shouldUpgradeToV2(): Promise<boolean>;
     // (undocumented)
-    upgradeModule(moduleAddresses: string[]): Promise<void>;
+    upgradeModuleList(moduleAddresses: string[]): Promise<void>;
     upgradeToV2(upgradeOptions: {
         splitsModuleAddress?: string;
         splitsRecipients?: NewSplitRecipient[];
@@ -185,6 +185,8 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     // (undocumented)
     getClaimConditionsFactory(): ClaimConditionFactory;
     getClaimIneligibilityReasons(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    // (undocumented)
+    getDefaultSaleRecipient(): Promise<string>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
@@ -599,6 +601,8 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getClaimConditionsFactory(): ClaimConditionFactory;
     getClaimIneligibilityReasons(quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    // (undocumented)
+    getDefaultSaleRecipient(): Promise<string>;
     // @deprecated (undocumented)
     getMintConditionsFactory(): ClaimConditionFactory;
     // @internal @override (undocumented)

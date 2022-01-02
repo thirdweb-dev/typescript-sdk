@@ -197,6 +197,10 @@ export class BundleDropModule
     );
   }
 
+  public async getDefaultSaleRecipient(): Promise<string> {
+    return await this.readOnlyContract.defaultSaleRecipient();
+  }
+
   public async getSaleRecipient(tokenId: BigNumberish): Promise<string> {
     const saleRecipient = await this.readOnlyContract.saleRecipient(tokenId);
     if (saleRecipient === AddressZero) {
@@ -264,6 +268,7 @@ export class BundleDropModule
   ): Promise<TransactionReceipt> {
     return this.sendTransaction("setDefaultSaleRecipient", [recipient]);
   }
+
   public async setApproval(
     operator: string,
     approved = true,
