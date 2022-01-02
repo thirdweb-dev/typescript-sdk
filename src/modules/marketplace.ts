@@ -1,4 +1,3 @@
-import { ListingType } from "./../enums/marketplace/ListingType";
 import {
   ERC1155__factory,
   ERC165__factory,

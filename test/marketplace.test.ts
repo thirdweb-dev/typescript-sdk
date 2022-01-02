@@ -1,25 +1,21 @@
-import { AuctionAlreadyStartedError } from "./../src/common/error";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
 import {
+  AuctionAlreadyStartedError,
   ListingNotFoundError,
   WrongListingTypeError,
 } from "../src/common/error";
+import { ListingType } from "../src/enums/marketplace";
 import {
   BundleModule,
   MarketplaceModule,
   NFTModule,
   TokenModule,
 } from "../src/modules";
-import {
-  appModule,
-  fastForwardTime,
-  jsonProvider,
-  sdk,
-  signers,
-} from "./before.test";
+import { AuctionListing, DirectListing } from "../src/types/marketplace";
+import { appModule, fastForwardTime, sdk, signers } from "./before.test";
 
 global.fetch = require("node-fetch");
 
@@ -173,6 +169,47 @@ describe("Marketplace Module", async () => {
         10,
       );
       assert.isDefined(listingId);
+    });
+  });
+
+  describe("Get Listing", () => {
+    let directListingId: BigNumber;
+    let auctionListingId: BigNumber;
+
+    beforeEach(async () => {
+      await sdk.setProviderOrSigner(adminWallet);
+      directListingId = await createDirectListing(dummyNftModule.address, 0);
+      auctionListingId = await createAuctionListing(dummyNftModule.address, 1);
+    });
+
+    it("should return an auction listing", async () => {
+      const listing = (await marketplaceModule.getListing(
+        auctionListingId,
+      )) as AuctionListing;
+      assert.equal(listing.type.toString(), ListingType.Auction.toString());
+      assert.equal(listing.tokenId.toString(), "1");
+    });
+
+    it("should return a direct listing", async () => {
+      const listing = (await marketplaceModule.getListing(
+        directListingId,
+      )) as DirectListing;
+      assert.equal(listing.type.toString(), ListingType.Direct.toString());
+      assert.equal(listing.tokenId.toString(), "0");
+    });
+
+    it("should return a direct listing using getDirectListing", async () => {
+      const listing = await marketplaceModule.getDirectListing(directListingId);
+      assert.equal(listing.type.toString(), ListingType.Direct.toString());
+      assert.equal(listing.tokenId.toString(), "0");
+    });
+
+    it("should return a direct listing using getAuctionListing", async () => {
+      const listing = await marketplaceModule.getAuctionListing(
+        auctionListingId,
+      );
+      assert.equal(listing.type.toString(), ListingType.Auction.toString());
+      assert.equal(listing.tokenId.toString(), "1");
     });
   });
 
