@@ -969,6 +969,43 @@ export class AppModule
     return false;
   }
 
+  public async shouldUpgradeModuleList(): Promise<ModuleMetadata[]> {
+    // if it's v1, we don't want module's fee_recipient to be set to protocol control
+    // it should be set to protocol control's `this.getRoyaltyTreasury()`
+    if (!(await this.isV1())) {
+      return [];
+    }
+    const modules = await this.getAllModuleMetadata([
+      ModuleType.NFT,
+      ModuleType.BUNDLE,
+      ModuleType.PACK,
+      ModuleType.DROP,
+      ModuleType.BUNDLE_DROP,
+    ]);
+    return modules.filter(
+      (m) =>
+        m.metadata?.fee_recipient?.toLowerCase() === this.address.toLowerCase(),
+    );
+  }
+
+  public async upgradeModule(moduleAddresses: string[]): Promise<void> {
+    // no upgrade needed
+    if (!(await this.isV1())) {
+      return;
+    }
+
+    // not ready for upgrade yet. need to upgrade app first.
+    if ((await this.getRoyaltyTreasury()) === this.address) {
+      return;
+    }
+
+    // TODO:
+    // module.getMetadata
+    // // replace fee_recipient to getRoyaltyTreasury() if fee_recipient === this.address
+    // uploadMetadata
+    // module.setContractURI();
+  }
+
   /**
    * Upgrades the protocol control to v2. In v2, the royalty treasury needs to be set to be set to a splits contract.
    *
