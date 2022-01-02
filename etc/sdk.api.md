@@ -98,6 +98,10 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     getPackModules(): Promise<ModuleMetadata[]>;
     // (undocumented)
     getRoyaltyTreasury(address?: string): Promise<string>;
+    // @internal
+    isV1(): Promise<boolean>;
+    // @internal (undocumented)
+    isV1UpgradedOrV2(): Promise<boolean>;
     // (undocumented)
     static roles: readonly ["admin"];
     // @deprecated (undocumented)
@@ -106,6 +110,12 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     setModuleRoyaltyTreasury(moduleAddress: string, treasury: string): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyTreasury(treasury: string): Promise<TransactionReceipt>;
+    // (undocumented)
+    shouldUpgradeToV2(): Promise<boolean>;
+    upgradeToV2(upgradeOptions: {
+        splitsModuleAddress?: string;
+        splitsRecipients?: NewSplitRecipient[];
+    }): Promise<void>;
     // (undocumented)
     withdrawFunds(to: string, currency: string): Promise<TransactionReceipt>;
 }
@@ -160,8 +170,6 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
     // (undocumented)
     get(tokenId: string): Promise<BundleDropMetadata>;
-    // Warning: (ae-forgotten-export) The symbol "ClaimCondition" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     getActiveClaimCondition(tokenId: BigNumberish_2): Promise<ClaimCondition>;
     // (undocumented)
@@ -335,6 +343,34 @@ export type ChainlinkInfo = {
 //
 // @internal (undocumented)
 export const ChainlinkVrf: Record<number, ChainlinkInfo>;
+
+// @beta (undocumented)
+export interface ClaimCondition {
+    // (undocumented)
+    availableSupply: string;
+    // (undocumented)
+    currency: string;
+    // (undocumented)
+    currencyContract: string;
+    // (undocumented)
+    currencyMetadata: CurrencyValue | null;
+    // (undocumented)
+    currentMintSupply: string;
+    // (undocumented)
+    maxMintSupply: string;
+    // (undocumented)
+    merkleRoot: BytesLike;
+    // (undocumented)
+    price: BigNumber_2;
+    // (undocumented)
+    pricePerToken: BigNumber_2;
+    // (undocumented)
+    quantityLimitPerTransaction: string;
+    // (undocumented)
+    startTimestamp: Date;
+    // (undocumented)
+    waitTimeSecondsLimitPerTransaction: string;
+}
 
 // @public (undocumented)
 export class ClaimConditionFactory {
@@ -663,6 +699,11 @@ export function generateRoot(items: string[]): string;
 //
 // @internal (undocumented)
 export function getContractMetadata(provider: ProviderOrSigner, address: string, ipfsGatewayUrl: string, resolveGateway?: boolean): Promise<ContractMetadata>;
+
+// Warning: (ae-internal-missing-underscore) The name "getCurrencyBalance" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getCurrencyBalance(providerOrSigner: ProviderOrSigner, tokenAddress: string, walletAddress: string): Promise<CurrencyValue>;
 
 // Warning: (ae-internal-missing-underscore) The name "getCurrencyMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
