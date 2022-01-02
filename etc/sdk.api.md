@@ -44,7 +44,6 @@ export class AdminRoleMissingError extends Error {
 export type AllModuleMetadata = CollectionModuleMetadata | CommonModuleMetadata;
 
 // Warning: (ae-forgotten-export) The symbol "RegistryModule" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "SplitsModule" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -70,6 +69,7 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
     // Warning: (ae-incompatible-release-tags) The symbol "deployPackModule" is marked as @public, but its signature references "PackModule" which is marked as @beta
     deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deploySplitsModule" is marked as @public, but its signature references "SplitsModule" which is marked as @alpha
     deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
     deployTokenModule(metadata: TokenModuleMetadata): Promise<TokenModule>;
     deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
@@ -856,6 +856,18 @@ export interface ISDKOptions {
 export function isNativeToken(tokenAddress: string): boolean;
 
 // @public (undocumented)
+export interface ISplitsModule {
+    balanceOf(address: string): Promise<BigNumber_2>;
+    balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyValue>;
+    distribute(): Promise<void>;
+    distributeToken(tokenAddress: string): Promise<void>;
+    getAllRecipients(): Promise<SplitRecipient[]>;
+    getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
+    withdraw(address: string): Promise<void>;
+    withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;
+}
+
+// @public (undocumented)
 export interface IStorage {
     get(hash: string): Promise<string>;
     getUploadToken(contractAddress: string): Promise<string>;
@@ -1485,6 +1497,40 @@ export interface SnapshotInfo {
 export interface SplitRecipient {
     address: string;
     splitPercentage: number;
+}
+
+// @alpha
+export class SplitsModule extends Module<Royalty> implements ISplitsModule {
+    // (undocumented)
+    balanceOf(address: string): Promise<BigNumber_2>;
+    balanceOfAllRecipients(): Promise<{
+        [key: string]: BigNumber_2;
+    }>;
+    // (undocumented)
+    balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyValue>;
+    balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
+        [key: string]: CurrencyValue;
+    }>;
+    // @internal (undocumented)
+    protected connectContract(): Royalty;
+    // (undocumented)
+    distribute(): Promise<void>;
+    // (undocumented)
+    distributeToken(tokenAddress: string): Promise<void>;
+    // (undocumented)
+    get(): Promise<Currency>;
+    // (undocumented)
+    getAllRecipients(): Promise<SplitRecipient[]>;
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
+    // (undocumented)
+    getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
+    // (undocumented)
+    static moduleType: ModuleType;
+    // (undocumented)
+    withdraw(address: string): Promise<void>;
+    // (undocumented)
+    withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;
 }
 
 // @public (undocumented)
