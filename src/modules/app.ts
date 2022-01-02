@@ -28,7 +28,10 @@ import {
 } from "../common";
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getContractMetadata } from "../common/contract";
-import { getNativeTokenByChainId } from "../common/currency";
+import {
+  getCurrencyBalance,
+  getNativeTokenByChainId,
+} from "../common/currency";
 import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
@@ -43,6 +46,7 @@ import {
   DatastoreModuleMetadata,
   DropModuleMetadata,
   MarketModuleMetadata,
+  NewSplitRecipient,
   NftModuleMetadata,
   PackModuleMetadata,
   SplitsModuleMetadata,
@@ -70,6 +74,8 @@ export class AppModule
   extends ModuleWithRoles<ProtocolControl>
   implements IAppModule
 {
+  private _shouldCheckVersion = true;
+  private _isV1 = false;
   private jsonConvert = new JsonConvert();
 
   public static roles = [RolesMap.admin] as const;
@@ -345,31 +351,63 @@ export class AppModule
     to: string,
     currency: string,
   ): Promise<TransactionReceipt> {
-    let isNative = false;
-    if (isNativeToken(currency)) {
+    const provider = this.readOnlyContract.provider;
+    let lastTransaction: TransactionReceipt | null = null;
+    const isNative = isNativeToken(currency);
+    if (isNative) {
       currency = ethers.constants.AddressZero;
-      isNative = true;
     }
-    if (!BigNumber.from((await this.balanceOfToken(currency)).value).isZero()) {
-      return await this.sendTransaction("withdrawFunds", [to, currency]);
-    }
-    const treasury = await this.getRoyaltyTreasury();
-    if (await this.requireUpgrade()) {
-      const royalty = Royalty__factory.connect(
-        treasury,
-        this.readOnlyContract.provider,
-      );
-      if (!isNative) {
-        return await this.sendContractTransaction(
-          royalty,
-          "distribute(address)",
-          [currency],
-        );
+
+    // should fetch for contract only, not treasury
+    const balance = await getCurrencyBalance(provider, currency, this.address);
+    const bn = BigNumber.from(balance.value);
+
+    // tries to withdraw from the project
+    if (bn.gt(0)) {
+      // v1 erc20 doesn't work, so check for v2 or native
+      const isV2 = !(await this.isV1());
+      if (isV2 || isNative) {
+        lastTransaction = await this.sendTransaction("withdrawFunds", [
+          to,
+          currency,
+        ]);
       }
-      return await this.sendContractTransaction(royalty, "distribute()", []);
     }
-    // preserving legacy return type. should throw error in future
-    return await this.sendTransaction("withdrawFunds", [to, currency]);
+
+    // tries to withdraw from the splits
+    const treasury = await this.getRoyaltyTreasury();
+    if (treasury !== this.address) {
+      const treasuryBalance = await getCurrencyBalance(
+        provider,
+        currency,
+        treasury,
+      );
+      if (BigNumber.from(treasuryBalance.value).gt(0)) {
+        const royalty = Royalty__factory.connect(
+          treasury,
+          this.readOnlyContract.provider,
+        );
+        if (isNative) {
+          lastTransaction = await this.sendContractTransaction(
+            royalty,
+            "distribute()",
+            [],
+          );
+        } else {
+          lastTransaction = await this.sendContractTransaction(
+            royalty,
+            "distribute(address)",
+            [currency],
+          );
+        }
+      }
+    }
+
+    if (!lastTransaction) {
+      throw new Error("no funds to withdraw");
+    }
+
+    return lastTransaction;
   }
 
   /**
@@ -922,55 +960,73 @@ export class AppModule
     return this.sdk.getVoteModule(address);
   }
 
-  public async requireUpgrade(): Promise<boolean> {
-    try {
-      await this.readOnlyContract.callStatic.version();
-      return false;
-    } catch (e) {
-      if ((await this.getRoyaltyTreasury()) === this.address) {
+  public async shouldUpgradeToV2(): Promise<boolean> {
+    if (await this.isV1()) {
+      if ((await this.getRoyaltyTreasury()) !== this.address) {
         return true;
       }
-      return false;
     }
+    return false;
   }
 
-  public async upgrade(): Promise<void> {
-    if (!(await this.requireUpgrade())) {
+  /**
+   * Upgrades the protocol control to v2. In v2, the royalty treasury needs to be set to be set to a splits contract.
+   *
+   * @param splitsModuleAddress - Optional. By default, it automatically creates a Splits for the project.
+   * @param splitsRecipients - Optiional. By default, it is the signer who upgrades.
+   */
+  public async upgradeToV2(upgradeOptions: {
+    splitsModuleAddress?: string;
+    splitsRecipients?: NewSplitRecipient[];
+  }): Promise<void> {
+    if (await this.isV1UpgradedOrV2()) {
       return;
     }
-    const metadata = (await this.getMetadata()).metadata;
-    const splitModule = await this.deploySplitsModule({
-      name: `${metadata?.name} Royalty Treasury`,
-      recipientSplits: [
-        {
-          address: await this.getSignerAddress(),
-          shares: 1,
-        },
-      ],
-    });
-    await this.setRoyaltyTreasury(splitModule.address);
+
+    let splitsAddress = "";
+    if (upgradeOptions.splitsModuleAddress) {
+      splitsAddress = upgradeOptions.splitsModuleAddress;
+    } else {
+      if (!upgradeOptions.splitsRecipients) {
+        upgradeOptions.splitsRecipients = [
+          {
+            address: await this.getSignerAddress(),
+            shares: 100,
+          },
+        ];
+      }
+
+      const metadata = (await this.getMetadata()).metadata;
+      splitsAddress = (
+        await this.deploySplitsModule({
+          name: `${metadata?.name} Treasury`,
+          recipientSplits: upgradeOptions.splitsRecipients,
+        })
+      ).address;
+    }
+
+    await this.setRoyaltyTreasury(splitsAddress);
   }
+
   /**
    * Check the balance of the project wallet in the native token of the chain
    *
    * @returns - The balance of the project in the native token of the chain
    */
   public async balance(): Promise<BigNumber> {
-    const walletBalance = await this.readOnlyContract.provider.getBalance(
+    const projectBalance = await this.readOnlyContract.provider.getBalance(
       this.address,
     );
-    if (!(await this.requireUpgrade())) {
-      let treasuryBalance = BigNumber.from(0);
-      const treasury = await this.getRoyaltyTreasury();
-      if (treasury !== this.address) {
-        treasuryBalance = await this.readOnlyContract.provider.getBalance(
-          treasury,
-        );
-      }
 
-      return walletBalance.add(treasuryBalance);
+    let treasuryBalance = BigNumber.from(0);
+    const treasury = await this.getRoyaltyTreasury();
+    if (treasury !== this.address) {
+      treasuryBalance = await this.readOnlyContract.provider.getBalance(
+        treasury,
+      );
     }
-    return walletBalance;
+
+    return projectBalance.add(treasuryBalance);
   }
 
   /**
@@ -980,7 +1036,7 @@ export class AppModule
    * @returns - The balance of the project in the native token of the chain
    */
   public async balanceOfToken(tokenAddress: string): Promise<CurrencyValue> {
-    let balance: BigNumber;
+    let balance = BigNumber.from(0);
     if (isNativeToken(tokenAddress)) {
       balance = await this.balance();
     } else {
@@ -988,23 +1044,49 @@ export class AppModule
         tokenAddress,
         this.readOnlyContract.provider,
       );
-      try {
-        balance = await erc20.balanceOf(this.address);
-      } catch (e) {
-        console.error(tokenAddress, e);
-        balance = BigNumber.from(0);
-      }
-      if (!(await this.requireUpgrade())) {
-        let treasuryBalance = BigNumber.from(0);
-        const treasury = await this.getRoyaltyTreasury();
-        if (treasury !== this.address) {
-          treasuryBalance = balance = await erc20.balanceOf(treasury);
-        }
 
-        balance = balance.add(treasuryBalance);
+      // TODO: multicall :)
+      if (await this.isV1UpgradedOrV2()) {
+        try {
+          balance = await erc20.balanceOf(this.address);
+        } catch (e) {
+          // invalid token address
+          console.error(e);
+          throw new Error("invalid token address");
+        }
+      }
+
+      // if it's not upgraded or v2, erc20 balance wont show up
+      const treasury = await this.getRoyaltyTreasury();
+      if (treasury !== this.address) {
+        balance.add(await erc20.balanceOf(treasury));
       }
     }
 
     return await getCurrencyValue(this.providerOrSigner, tokenAddress, balance);
+  }
+
+  /**
+   * @internal
+   * Check if contract is v1 or v2. If the contract doesn't have version = v1 contract.
+   */
+  async isV1(): Promise<boolean> {
+    if (this._shouldCheckVersion) {
+      try {
+        await this.readOnlyContract.callStatic.version();
+        this._isV1 = false;
+      } catch (e) {
+        this._isV1 = true;
+      }
+      this._shouldCheckVersion = false;
+    }
+    return this._isV1;
+  }
+
+  /**
+   * @internal
+   */
+  async isV1UpgradedOrV2(): Promise<boolean> {
+    return !(await this.isV1()) || !(await this.shouldUpgradeToV2());
   }
 }

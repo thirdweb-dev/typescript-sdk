@@ -2,7 +2,7 @@ import { ERC20__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
-import { BigNumberish, Signer } from "ethers";
+import { BigNumber, BigNumberish, Signer } from "ethers";
 import { ProviderOrSigner } from "../core/types";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chain";
 
@@ -201,6 +201,39 @@ export function isNativeToken(tokenAddress: string): boolean {
     tokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS ||
     tokenAddress.toLowerCase() === AddressZero
   );
+}
+
+/**
+ * @internal
+ */
+export async function getCurrencyBalance(
+  providerOrSigner: ProviderOrSigner,
+  tokenAddress: string,
+  walletAddress: string,
+): Promise<CurrencyValue> {
+  const provider = getProvider(providerOrSigner);
+  let balance = BigNumber.from(0);
+  if (isNativeToken(tokenAddress)) {
+    balance = await provider.getBalance(walletAddress);
+  } else {
+    try {
+      const erc20 = ERC20__factory.connect(tokenAddress, provider);
+      balance = await erc20.balanceOf(walletAddress);
+    } catch (e) {
+      console.error(e);
+      throw new Error("invalid ERC20 token address");
+    }
+  }
+
+  return getCurrencyValue(providerOrSigner, tokenAddress, balance);
+}
+
+function getProvider(providerOrSigner: ProviderOrSigner): Provider {
+  if (Signer.isSigner(providerOrSigner)) {
+    return (providerOrSigner as Signer).provider as Provider;
+  } else {
+    return providerOrSigner as Provider;
+  }
 }
 
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken {

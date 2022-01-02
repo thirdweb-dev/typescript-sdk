@@ -1,6 +1,7 @@
 export {
   PublicClaimCondition,
   PublicMintCondition,
+  ClaimCondition,
 } from "./claim-conditions/PublicMintCondition";
 export * from "./FileOrBuffer";
 export * from "./module-deployments";
