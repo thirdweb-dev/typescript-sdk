@@ -7,23 +7,27 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
+Claim a token and send it to someone else
+
 <b>Signature:</b>
 
 ```typescript
-claimTo(tokenId: BigNumberish, quantity: BigNumberish, to: string, proofs: BytesLike[], data?: BytesLike): Promise<void>;
+claimTo(tokenId: BigNumberish, quantity: BigNumberish, addressToClaim: string, proofs?: BytesLike[], data?: BytesLike): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  tokenId | BigNumberish |  |
-|  quantity | BigNumberish |  |
-|  to | string |  |
-|  proofs | BytesLike\[\] |  |
+|  tokenId | BigNumberish | Id of the token you want to claim |
+|  quantity | BigNumberish | Quantity of the tokens you want to claim |
+|  addressToClaim | string | Address you want to send the token to |
+|  proofs | BytesLike\[\] | Array of proofs |
 |  data | BytesLike |  |
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
+
+- Receipt for the transaction
 

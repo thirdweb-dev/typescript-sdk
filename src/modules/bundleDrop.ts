@@ -469,10 +469,9 @@ export class BundleDropModule
     };
   }
 
-
   /**
    * Claim a token to yourself
-   * 
+   *
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
    * @param proofs - Array of proofs
@@ -494,15 +493,14 @@ export class BundleDropModule
     );
   }
 
-
   /**
    * Claim a token and send it to someone else
-   * 
+   *
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
    * @param addressToClaim - Address you want to send the token to
    * @param proofs - Array of proofs
-   * @param data - 
+   * @param data -
    *
    * @returns - Receipt for the transaction
    */
@@ -512,7 +510,7 @@ export class BundleDropModule
     addressToClaim: string,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
     data: BytesLike = [0],
-  ) : Promise<TransactionReceipt> {
+  ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
     const encoded = [];
     encoded.push(
@@ -531,7 +529,11 @@ export class BundleDropModule
         data,
       ]),
     );
-    return await this.sendTransaction("multicall", [encoded], claimData.overrides);
+    return await this.sendTransaction(
+      "multicall",
+      [encoded],
+      claimData.overrides,
+    );
   }
 
   public async burn(

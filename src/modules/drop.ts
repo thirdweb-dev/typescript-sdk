@@ -723,7 +723,7 @@ export class DropModule
 
   /**
    * Claim a token and send it to someone else
-   * 
+   *
    * @param quantity - Quantity of the tokens you want to claim
    * @param addressToClaim - Address you want to send the token to
    * @param proofs - Array of proofs
@@ -738,7 +738,10 @@ export class DropModule
     const claimData = await this.prepareClaim(quantity, proofs);
     const encoded = [];
     encoded.push(
-      this.contract.interface.encodeFunctionData("claim", [quantity, claimData.proofs]),
+      this.contract.interface.encodeFunctionData("claim", [
+        quantity,
+        claimData.proofs,
+      ]),
     );
     encoded.push(
       this.contract.interface.encodeFunctionData("safeTransferFrom", [
@@ -747,12 +750,16 @@ export class DropModule
         (await this.readOnlyContract.nextTokenIdToClaim()).sub(1),
       ]),
     );
-    return await this.sendTransaction("multicall", [encoded], claimData.overrides);
+    return await this.sendTransaction(
+      "multicall",
+      [encoded],
+      claimData.overrides,
+    );
   }
 
   /**
    * Claim a token for yourself
-   * 
+   *
    * @param quantity - Quantity of the tokens you want to claim
    * @param proofs - Array of proofs
    *

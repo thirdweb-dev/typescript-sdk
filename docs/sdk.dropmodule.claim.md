@@ -7,6 +7,8 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
+Claim a token for yourself
+
 <b>Signature:</b>
 
 ```typescript
@@ -17,10 +19,12 @@ claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  quantity | BigNumberish |  |
-|  proofs | BytesLike\[\] |  |
+|  quantity | BigNumberish | Quantity of the tokens you want to claim |
+|  proofs | BytesLike\[\] | Array of proofs |
 
 <b>Returns:</b>
 
 Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt;
+
+- Receipt for the transaction
 
