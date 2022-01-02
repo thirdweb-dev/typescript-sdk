@@ -15,6 +15,8 @@ import { BigNumber, BigNumberish } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import {
   getCurrencyValue,
+  getTokenMetadata,
+  getTokenMetadataUsingStorage,
   InterfaceId_IERC721,
   ModuleType,
   Role,
@@ -322,7 +324,12 @@ export class MarketplaceModule
       quantity: listing.quantity,
       startTimeInSeconds: listing.startTime,
       // TODO: fetch the asset
-      asset: undefined,
+      asset: await getTokenMetadataUsingStorage(
+        listing.assetContract,
+        this.providerOrSigner,
+        listing.tokenId.toString(),
+        this.sdk.getStorage(),
+      ),
       secondsUntilEnd: listing.endTime,
       sellerAddress: listing.tokenOwner,
       type: ListingType.Direct,
@@ -352,8 +359,12 @@ export class MarketplaceModule
       tokenId: listing.tokenId,
       quantity: listing.quantity,
       startTimeInEpochSeconds: listing.startTime,
-      // TODO: fetch the asset
-      asset: undefined,
+      asset: await getTokenMetadataUsingStorage(
+        listing.assetContract,
+        this.providerOrSigner,
+        listing.tokenId.toString(),
+        this.sdk.getStorage(),
+      ),
       reservePriceCurrencyValuePerToken: await getCurrencyValue(
         this.providerOrSigner,
         listing.currency,

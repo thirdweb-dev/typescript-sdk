@@ -188,6 +188,9 @@ describe("Marketplace Module", async () => {
       )) as AuctionListing;
       assert.equal(listing.type.toString(), ListingType.Auction.toString());
       assert.equal(listing.tokenId.toString(), "1");
+
+      assert.equal(listing.asset.id, "1");
+      assert.equal(listing.asset.name, "Test 2");
     });
 
     it("should return a direct listing", async () => {
@@ -196,6 +199,9 @@ describe("Marketplace Module", async () => {
       )) as DirectListing;
       assert.equal(listing.type.toString(), ListingType.Direct.toString());
       assert.equal(listing.tokenId.toString(), "0");
+
+      assert.equal(listing.asset.id, "0");
+      assert.equal(listing.asset.name, "Test 0");
     });
 
     it("should return a direct listing using getDirectListing", async () => {

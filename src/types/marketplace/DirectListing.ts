@@ -1,5 +1,6 @@
 import { BigNumberish } from "ethers";
 import { CurrencyValue } from "../../common/currency";
+import { NFTMetadata } from "../../common/nft";
 import { ListingType } from "../../enums/marketplace";
 
 /**
@@ -23,9 +24,8 @@ export interface DirectListing {
 
   /**
    * The asset being listed.
-   * // TODO: This should be a more strict type.
    */
-  asset: any;
+  asset: NFTMetadata;
 
   /**
    * The start time of the listing.
