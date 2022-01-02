@@ -317,15 +317,15 @@ export class BundleDropModule
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
     const { metadata } = await this.getMetadata(false);
-    const oldMetadata = metadata;
     invariant(metadata, "Metadata is not set, this should never happen");
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
     }
+
     const encoded = [];
-    if (!isMetadataEqual(oldMetadata, metadata)) {
+    if (!isMetadataEqual(merkleInfo, metadata["merkle"])) {
       const metadataUri = await this.sdk
         .getStorage()
         .upload(JSON.stringify(metadata));
@@ -365,7 +365,6 @@ export class BundleDropModule
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
     const { metadata } = await this.getMetadata(false);
-    const oldMetadata = metadata;
     invariant(metadata, "Metadata is not set, this should never happen");
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
@@ -373,7 +372,7 @@ export class BundleDropModule
       metadata["merkle"] = merkleInfo;
     }
     const encoded = [];
-    if (!isMetadataEqual(oldMetadata, metadata)) {
+    if (!isMetadataEqual(merkleInfo, metadata["merkle"])) {
       const metadataUri = await this.sdk
         .getStorage()
         .upload(JSON.stringify(metadata));

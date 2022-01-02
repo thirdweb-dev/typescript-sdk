@@ -450,7 +450,6 @@ export class DropModule
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
     const { metadata } = await this.getMetadata(false);
-    const oldMetadata = metadata;
     invariant(metadata, "Metadata is not set, this should never happen");
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
@@ -459,7 +458,7 @@ export class DropModule
     }
 
     const encoded = [];
-    if (!isMetadataEqual(oldMetadata, metadata)) {
+    if (!isMetadataEqual(merkleInfo, metadata["merkle"])) {
       const metadataUri = await this.sdk
         .getStorage()
         .upload(JSON.stringify(metadata));
@@ -498,16 +497,13 @@ export class DropModule
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
+    const encoded = [];
     const { metadata } = await this.getMetadata(false);
-    const oldMetadata = metadata;
     invariant(metadata, "Metadata is not set, this should never happen");
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
-    } else {
+    } else if (!isMetadataEqual(merkleInfo, metadata["merkle"])) {
       metadata["merkle"] = merkleInfo;
-    }
-    const encoded = [];
-    if (!isMetadataEqual(oldMetadata, metadata)) {
       const metadataUri = await this.sdk
         .getStorage()
         .upload(JSON.stringify(metadata));
@@ -517,6 +513,7 @@ export class DropModule
         ]),
       );
     }
+
     encoded.push(
       this.contract.interface.encodeFunctionData("updateClaimConditions", [
         conditions,
