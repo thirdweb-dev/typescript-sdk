@@ -469,6 +469,17 @@ export class BundleDropModule
     };
   }
 
+
+  /**
+   * Claim a token to yourself
+   * 
+   * @param tokenId - Id of the token you want to claim
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
+
   public async claim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
@@ -482,13 +493,26 @@ export class BundleDropModule
       claimData.overrides,
     );
   }
+
+
+  /**
+   * Claim a token and send it to someone else
+   * 
+   * @param tokenId - Id of the token you want to claim
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param addressToClaim - Address you want to send the token to
+   * @param proofs - Array of proofs
+   * @param data - 
+   *
+   * @returns - Receipt for the transaction
+   */
   public async claimTo(
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    to: string,
+    addressToClaim: string,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
     data: BytesLike = [0],
-  ) {
+  ) : Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
     const encoded = [];
     encoded.push(
@@ -501,13 +525,13 @@ export class BundleDropModule
     encoded.push(
       this.contract.interface.encodeFunctionData("safeTransferFrom", [
         await this.getSignerAddress(),
-        to,
+        addressToClaim,
         tokenId,
         quantity,
         data,
       ]),
     );
-    await this.sendTransaction("multicall", [encoded], claimData.overrides);
+    return await this.sendTransaction("multicall", [encoded], claimData.overrides);
   }
 
   public async burn(

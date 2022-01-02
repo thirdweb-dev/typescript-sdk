@@ -721,6 +721,15 @@ export class DropModule
     };
   }
 
+  /**
+   * Claim a token and send it to someone else
+   * 
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param addressToClaim - Address you want to send the token to
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
   public async claimTo(
     quantity: BigNumberish,
     addressToClaim: string,
@@ -740,6 +749,15 @@ export class DropModule
     );
     return await this.sendTransaction("multicall", [encoded], claimData.overrides);
   }
+
+  /**
+   * Claim a token for yourself
+   * 
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
   public async claim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
