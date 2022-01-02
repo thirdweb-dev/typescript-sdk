@@ -15,7 +15,14 @@ import {
   TokenModule,
 } from "../src/modules";
 import { AuctionListing, DirectListing } from "../src/types/marketplace";
-import { appModule, fastForwardTime, sdk, signers } from "./before.test";
+import {
+  appModule,
+  defaultProvider,
+  fastForwardTime,
+  jsonProvider,
+  sdk,
+  signers,
+} from "./before.test";
 
 global.fetch = require("node-fetch");
 
@@ -43,6 +50,7 @@ describe("Marketplace Module", async () => {
     w4: SignerWithAddress;
 
   beforeEach(async () => {
+    await jsonProvider.send("hardhat_reset", []);
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
 
     await sdk.setProviderOrSigner(adminWallet);
@@ -626,7 +634,7 @@ describe("Marketplace Module", async () => {
         buyoutPricePerToken: ethers.utils.parseUnits("10"),
         currencyContractAddress: tokenAddress,
         startTimeInSeconds: now,
-        listingDurationInSeconds: 60,
+        listingDurationInSeconds: 60 * 60,
         tokenId: "2",
         quantity: "1",
         reservePricePerToken: ethers.utils.parseUnits("1"),
@@ -640,7 +648,7 @@ describe("Marketplace Module", async () => {
         pricePerToken: ethers.utils.parseUnits("2"),
       });
 
-      await fastForwardTime(60 * 60);
+      await fastForwardTime(60 * 60 * 24);
 
       /**
        * Buyer
@@ -726,6 +734,8 @@ describe("Marketplace Module", async () => {
 
     it("should allow you to update an auction listing", async () => {
       const buyoutPrice = ethers.utils.parseUnits("10");
+
+      await fastForwardTime(60);
 
       const id = await marketplaceModule.createAuctionListing({
         assetContractAddress: dummyNftModule.address,

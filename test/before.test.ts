@@ -7,6 +7,7 @@ import { deployRegistry } from "./setup/deployRegistry";
 
 const RPC_URL = "http://localhost:8545";
 
+const jsonProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
 const defaultProvider = hardhatEthers.provider;
 
 let appModule: AppModule;
@@ -37,7 +38,7 @@ before(async () => {
   wrappedNativeTokenAddress = wTokenDeployer.address;
   console.log(wrappedNativeTokenAddress);
 
-  defaultProvider.send("hardhat_reset", []);
+  await jsonProvider.send("hardhat_reset", []);
   registryAddress = await deployRegistry(signer);
   console.log("Deployed registry at address: ", registryAddress);
 
@@ -63,6 +64,7 @@ export {
   sdk,
   signers,
   wrappedNativeTokenAddress,
-  defaultProvider as jsonProvider,
+  jsonProvider,
+  defaultProvider,
   fastForwardTime,
 };
