@@ -287,7 +287,9 @@ export class BundleModule
         (await asset.getApproved(tokenId)).toLowerCase() ===
         this.address.toLowerCase();
       if (!isTokenApproved) {
-        await asset.setApprovalForAll(this.address, true);
+        await this.sendContractTransaction(asset, "setApprovalForAll", [
+          this.address,
+        ]);
       }
     }
     const uri = await this.sdk.getStorage().uploadMetadata(metadata);
