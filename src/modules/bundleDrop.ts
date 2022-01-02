@@ -411,6 +411,12 @@ export class BundleDropModule
     await this.sendTransaction("setClaimConditions", [tokenId, _conditions]);
   }
 
+  /**
+   * Returns proofs and the overrides required for the transaction.
+   *
+   * @returns - `overrides` and `proofs` as an object.
+   */
+
   private async prepareClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
