@@ -1,5 +1,6 @@
-import { CurrencyValue } from "../../common/currency";
 import { BigNumberish } from "ethers";
+import { CurrencyValue } from "../../common/currency";
+import { ListingType } from "../../enums/marketplace";
 
 /**
  * Represents a new marketplace auction listing.
@@ -74,4 +75,6 @@ export interface AuctionListing {
    * The address of the seller.
    */
   sellerAddress: string;
+
+  type: ListingType.Auction;
 }

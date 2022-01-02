@@ -213,6 +213,13 @@ export interface IMarketplace {
   getAuctionListing(listingId: BigNumberish): Promise<AuctionListing>;
 
   /**
+   * Helper method to fetch a listing without knowing the type.
+   *
+   * @param listingId - The ID of the listing to fetch.
+   */
+  getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
+
+  /**
    * Fetch the current bid buffer on the marketplace contract.
    * The bid buffer is represented in basis points.
    *

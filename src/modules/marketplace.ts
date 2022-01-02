@@ -1,3 +1,4 @@
+import { ListingType } from "./../enums/marketplace/ListingType";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -6,7 +7,10 @@ import {
   Marketplace,
   Marketplace__factory,
 } from "@3rdweb/contracts";
-import { ListingParametersStruct } from "@3rdweb/contracts/dist/IMarketplace";
+import {
+  ListingParametersStruct,
+  ListingStruct,
+} from "@3rdweb/contracts/dist/IMarketplace";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish } from "ethers";
 import { isAddress } from "ethers/lib/utils";
@@ -272,24 +276,7 @@ export class MarketplaceModule
       );
     }
 
-    return {
-      assetContractAddress: listing.assetContract,
-      buyoutPrice: listing.buyoutPricePerToken,
-      currencyContractAddress: listing.currency,
-      buyoutCurrencyValuePerToken: await getCurrencyValue(
-        this.providerOrSigner,
-        listing.currency,
-        listing.buyoutPricePerToken,
-      ),
-      id: listingId.toString(),
-      tokenId: listing.tokenId,
-      quantity: listing.quantity,
-      startTimeInSeconds: listing.startTime,
-      // TODO: fetch the asset
-      asset: undefined,
-      secondsUntilEnd: listing.endTime,
-      sellerAddress: listing.tokenOwner,
-    };
+    return await this.mapDirectListing(listing);
   }
 
   public async getAuctionListing(
@@ -309,7 +296,19 @@ export class MarketplaceModule
         "Auction",
       );
     }
+    return await this.mapAuctionListing(listing);
+  }
 
+  /**
+   * Helper method maps the auction listing to the direct listing interface.
+   *
+   * @internal
+   * @param listing - The listing to map, as returned from the contract.
+   * @returns - The mapped interface.
+   */
+  private async mapDirectListing(
+    listing: ListingStruct,
+  ): Promise<DirectListing> {
     return {
       assetContractAddress: listing.assetContract,
       buyoutPrice: listing.buyoutPricePerToken,
@@ -319,7 +318,38 @@ export class MarketplaceModule
         listing.currency,
         listing.buyoutPricePerToken,
       ),
-      id: listingId.toString(),
+      id: listing.listingId.toString(),
+      tokenId: listing.tokenId,
+      quantity: listing.quantity,
+      startTimeInSeconds: listing.startTime,
+      // TODO: fetch the asset
+      asset: undefined,
+      secondsUntilEnd: listing.endTime,
+      sellerAddress: listing.tokenOwner,
+      type: ListingType.Direct,
+    };
+  }
+
+  /**
+   * Helper method maps the auction listing to the auction listing interface.
+   *
+   * @internal
+   * @param listing - The listing to map, as returned from the contract.
+   * @returns - The mapped interface.
+   */
+  private async mapAuctionListing(
+    listing: ListingStruct,
+  ): Promise<AuctionListing> {
+    return {
+      assetContractAddress: listing.assetContract,
+      buyoutPrice: listing.buyoutPricePerToken,
+      currencyContractAddress: listing.currency,
+      buyoutCurrencyValuePerToken: await getCurrencyValue(
+        this.providerOrSigner,
+        listing.currency,
+        listing.buyoutPricePerToken,
+      ),
+      id: listing.listingId.toString(),
       tokenId: listing.tokenId,
       quantity: listing.quantity,
       startTimeInEpochSeconds: listing.startTime,
@@ -333,6 +363,7 @@ export class MarketplaceModule
       reservePrice: listing.reservePricePerToken,
       endTimeInEpochSeconds: listing.endTime,
       sellerAddress: listing.tokenOwner,
+      type: ListingType.Auction,
     };
   }
 
@@ -704,6 +735,27 @@ export class MarketplaceModule
       }
       case ListingType.Auction: {
         return await this.buyoutAuctionListing(listingId);
+      }
+    }
+  }
+
+  public async getListing(
+    listingId: BigNumberish,
+  ): Promise<AuctionListing | DirectListing> {
+    const listing = await this.readOnlyContract.listings(listingId);
+    if (listing.listingId.toString() !== listingId.toString()) {
+      throw new ListingNotFoundError(this.address, listingId.toString());
+    }
+
+    switch (listing.listingType) {
+      case ListingType.Auction: {
+        return await this.mapAuctionListing(listing);
+      }
+      case ListingType.Direct: {
+        return await this.mapDirectListing(listing);
+      }
+      default: {
+        throw new Error(`Unknown listing type: ${listing.listingType}`);
       }
     }
   }

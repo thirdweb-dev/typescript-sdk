@@ -1,5 +1,6 @@
-import { CurrencyValue } from "../../common/currency";
 import { BigNumberish } from "ethers";
+import { CurrencyValue } from "../../common/currency";
+import { ListingType } from "../../enums/marketplace";
 
 /**
  * Represents a marketplace direct listing.
@@ -62,4 +63,6 @@ export interface DirectListing {
    * The address of the seller.
    */
   sellerAddress: string;
+
+  type: ListingType.Direct;
 }
