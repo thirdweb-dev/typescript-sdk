@@ -135,6 +135,22 @@ export interface IMarketplace {
     quantityDesired: BigNumberish;
   }): Promise<void>;
 
+  /**
+   * Generic buyout method that will dynamically determine
+   * the listing type.
+   *
+   * Only direct listings support buying out a specific quantity,
+   * therefore the `quantityDesired` parameter is ignored
+   * if the listing ID passed in is an auction listing.
+   *
+   * @param listingId - Id of the listing to buyout.
+   * @param quantityDesired - The quantity of tokens to buyout. Required if listing is a direct listing.
+   */
+  buyoutListing(
+    listingId: BigNumberish,
+    quantityDesired?: BigNumberish,
+  ): Promise<void>;
+
   // TODO: Implement these with subgraph
   // /**
   //  * Return all active bids for an auction.

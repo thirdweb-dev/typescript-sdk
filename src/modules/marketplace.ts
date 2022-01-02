@@ -1,4 +1,3 @@
-import { AuctionHasNotEndedError } from "./../common/error";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -21,6 +20,7 @@ import {
 import { NATIVE_TOKEN_ADDRESS } from "../common/currency";
 import {
   AuctionAlreadyStartedError,
+  AuctionHasNotEndedError,
   ListingNotFoundError,
   WrongListingTypeError,
 } from "../common/error";
@@ -683,5 +683,28 @@ export class MarketplaceModule
       BigNumber.from(buffer),
       bidBuffer,
     ]);
+  }
+
+  public async buyoutListing(
+    listingId: BigNumberish,
+    quantityDesired?: BigNumberish,
+  ): Promise<void> {
+    const listing = await this.readOnlyContract.listings(listingId);
+    if (listing.listingId.toString() !== listingId.toString()) {
+      throw new ListingNotFoundError(this.address, listingId.toString());
+    }
+
+    switch (listing.listingType) {
+      case ListingType.Direct: {
+        invariant(
+          quantityDesired !== undefined,
+          "quantityDesired is required when buying out a direct listing",
+        );
+        return await this.buyoutDirectListing({ listingId, quantityDesired });
+      }
+      case ListingType.Auction: {
+        return await this.buyoutAuctionListing(listingId);
+      }
+    }
   }
 }
