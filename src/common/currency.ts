@@ -2,7 +2,7 @@ import { ERC20__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
-import { BigNumber, BigNumberish, Signer } from "ethers";
+import { BigNumberish, Signer } from "ethers";
 import { ProviderOrSigner } from "../core/types";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chain";
 
@@ -212,7 +212,7 @@ export async function getCurrencyBalance(
   walletAddress: string,
 ): Promise<CurrencyValue> {
   const provider = getProvider(providerOrSigner);
-  let balance = BigNumber.from(0);
+  let balance;
   if (isNativeToken(tokenAddress)) {
     balance = await provider.getBalance(walletAddress);
   } else {

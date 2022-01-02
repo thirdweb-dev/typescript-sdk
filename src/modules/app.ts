@@ -989,6 +989,7 @@ export class AppModule
   }
 
   public async upgradeModule(moduleAddresses: string[]): Promise<void> {
+    console.log(moduleAddresses)
     // no upgrade needed
     if (!(await this.isV1())) {
       return;
@@ -998,7 +999,6 @@ export class AppModule
     if ((await this.getRoyaltyTreasury()) === this.address) {
       return;
     }
-
     // TODO:
     // module.getMetadata
     // // replace fee_recipient to getRoyaltyTreasury() if fee_recipient === this.address

@@ -111,7 +111,11 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     // (undocumented)
     setRoyaltyTreasury(treasury: string): Promise<TransactionReceipt>;
     // (undocumented)
+    shouldUpgradeModuleList(): Promise<ModuleMetadata[]>;
+    // (undocumented)
     shouldUpgradeToV2(): Promise<boolean>;
+    // (undocumented)
+    upgradeModule(moduleAddresses: string[]): Promise<void>;
     upgradeToV2(upgradeOptions: {
         splitsModuleAddress?: string;
         splitsRecipients?: NewSplitRecipient[];
