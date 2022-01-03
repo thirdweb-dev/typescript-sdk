@@ -9,7 +9,7 @@ Upgrades the protocol control to v2. In v2, the royalty treasury needs to be set
 <b>Signature:</b>
 
 ```typescript
-upgradeToV2(upgradeOptions: {
+upgradeToV2(upgradeOptions?: {
         splitsModuleAddress?: string;
         splitsRecipients?: NewSplitRecipient[];
     }): Promise<void>;

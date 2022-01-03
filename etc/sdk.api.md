@@ -116,7 +116,7 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     shouldUpgradeToV2(): Promise<boolean>;
     // (undocumented)
     upgradeModuleList(moduleAddresses: string[]): Promise<void>;
-    upgradeToV2(upgradeOptions: {
+    upgradeToV2(upgradeOptions?: {
         splitsModuleAddress?: string;
         splitsRecipients?: NewSplitRecipient[];
     }): Promise<void>;
