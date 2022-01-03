@@ -23,6 +23,7 @@ import { LazyMintERC721 } from '@3rdweb/contracts';
 import { LazyNFT } from '@3rdweb/contracts';
 import { Log } from '@ethersproject/providers';
 import { Market } from '@3rdweb/contracts';
+import { Marketplace } from '@3rdweb/contracts';
 import type { Network } from '@ethersproject/providers';
 import { NFT } from '@3rdweb/contracts';
 import { NFTCollection } from '@3rdweb/contracts';
@@ -47,7 +48,7 @@ export type AllModuleMetadata = CollectionModuleMetadata | CommonModuleMetadata;
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule | typeof BundleDropModule | typeof VoteModule;
+export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule | typeof BundleDropModule | typeof MarketplaceModule | typeof VoteModule;
 
 // Warning: (ae-forgotten-export) The symbol "IAppModule" needs to be exported by the entry point index.d.ts
 //
@@ -66,6 +67,10 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     // Warning: (ae-incompatible-release-tags) The symbol "deployDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
     deployDropModule(metadata: DropModuleMetadata): Promise<DropModule>;
     deployMarketModule(metadata: MarketModuleMetadata): Promise<MarketModule>;
+    // Warning: (ae-forgotten-export) The symbol "MarketplaceModuleMetadata" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    deployMarketplaceModule(metadata: MarketplaceModuleMetadata): Promise<MarketplaceModule>;
     deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
     // Warning: (ae-incompatible-release-tags) The symbol "deployPackModule" is marked as @public, but its signature references "PackModule" which is marked as @beta
     deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
@@ -98,6 +103,10 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     getPackModules(): Promise<ModuleMetadata[]>;
     // (undocumented)
     getRoyaltyTreasury(address?: string): Promise<string>;
+    // @internal
+    isV1(): Promise<boolean>;
+    // @internal (undocumented)
+    isV1UpgradedOrV2(): Promise<boolean>;
     // (undocumented)
     static roles: readonly ["admin"];
     // @deprecated (undocumented)
@@ -107,6 +116,16 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     // (undocumented)
     setRoyaltyTreasury(treasury: string): Promise<TransactionReceipt>;
     // (undocumented)
+    shouldUpgradeModuleList(): Promise<ModuleMetadata[]>;
+    // (undocumented)
+    shouldUpgradeToV2(): Promise<boolean>;
+    // (undocumented)
+    upgradeModuleList(moduleAddresses: string[]): Promise<void>;
+    upgradeToV2(upgradeOptions?: {
+        splitsModuleAddress?: string;
+        splitsRecipients?: NewSplitRecipient[];
+    }): Promise<void>;
+    // (undocumented)
     withdrawFunds(to: string, currency: string): Promise<TransactionReceipt>;
 }
 
@@ -114,6 +133,27 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
 export class AssetNotFoundError extends Error {
     // @internal
     constructor(message?: string);
+}
+
+// @public
+export class AuctionAlreadyStartedError extends Error {
+    constructor(id?: string);
+}
+
+// @public
+export interface AuctionListing {
+    asset: any;
+    assetContractAddress: string;
+    buyoutCurrencyValuePerToken: CurrencyValue;
+    buyoutPrice: BigNumberish_2;
+    currencyContractAddress: string;
+    id: string;
+    quantity: BigNumberish_2;
+    reservePrice: BigNumberish_2;
+    reservePriceCurrencyValuePerToken: CurrencyValue;
+    secondsUntilEnd: BigNumberish_2;
+    startTimeInSeconds: BigNumberish_2;
+    tokenId: BigNumberish_2;
 }
 
 // @beta (undocumented)
@@ -160,8 +200,6 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
     // (undocumented)
     get(tokenId: string): Promise<BundleDropMetadata>;
-    // Warning: (ae-forgotten-export) The symbol "ClaimCondition" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     getActiveClaimCondition(tokenId: BigNumberish_2): Promise<ClaimCondition>;
     // (undocumented)
@@ -173,6 +211,8 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     // (undocumented)
     getClaimConditionsFactory(): ClaimConditionFactory;
     getClaimIneligibilityReasons(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    // (undocumented)
+    getDefaultSaleRecipient(): Promise<string>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
@@ -335,6 +375,34 @@ export type ChainlinkInfo = {
 //
 // @internal (undocumented)
 export const ChainlinkVrf: Record<number, ChainlinkInfo>;
+
+// @beta (undocumented)
+export interface ClaimCondition {
+    // (undocumented)
+    availableSupply: string;
+    // (undocumented)
+    currency: string;
+    // (undocumented)
+    currencyContract: string;
+    // (undocumented)
+    currencyMetadata: CurrencyValue | null;
+    // (undocumented)
+    currentMintSupply: string;
+    // (undocumented)
+    maxMintSupply: string;
+    // (undocumented)
+    merkleRoot: BytesLike;
+    // (undocumented)
+    price: BigNumber_2;
+    // (undocumented)
+    pricePerToken: BigNumber_2;
+    // (undocumented)
+    quantityLimitPerTransaction: string;
+    // (undocumented)
+    startTimestamp: Date;
+    // (undocumented)
+    waitTimeSecondsLimitPerTransaction: string;
+}
 
 // @public (undocumented)
 export class ClaimConditionFactory {
@@ -521,6 +589,20 @@ export const DEFAULT_BLOCK_TIMES_FALLBACK: Record<SUPPORTED_CHAIN_ID | ChainId.H
     synced: boolean;
 }>;
 
+// @public
+export interface DirectListing {
+    asset: any;
+    assetContractAddress: string;
+    buyoutCurrencyValuePerToken: CurrencyValue;
+    buyoutPrice: BigNumberish_2;
+    currencyContractAddress: string;
+    id: string;
+    quantity: BigNumberish_2;
+    secondsUntilEnd: BigNumberish_2;
+    startTimeInSeconds: BigNumberish_2;
+    tokenId: BigNumberish_2;
+}
+
 // @beta
 export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITransferable {
     // @internal
@@ -559,6 +641,8 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getClaimConditionsFactory(): ClaimConditionFactory;
     getClaimIneligibilityReasons(quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    // (undocumented)
+    getDefaultSaleRecipient(): Promise<string>;
     // @deprecated (undocumented)
     getMintConditionsFactory(): ClaimConditionFactory;
     // @internal @override (undocumented)
@@ -664,6 +748,11 @@ export function generateRoot(items: string[]): string;
 // @internal (undocumented)
 export function getContractMetadata(provider: ProviderOrSigner, address: string, ipfsGatewayUrl: string, resolveGateway?: boolean): Promise<ContractMetadata>;
 
+// Warning: (ae-internal-missing-underscore) The name "getCurrencyBalance" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getCurrencyBalance(providerOrSigner: ProviderOrSigner, tokenAddress: string, walletAddress: string): Promise<CurrencyValue>;
+
 // Warning: (ae-internal-missing-underscore) The name "getCurrencyMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -715,6 +804,47 @@ export interface IAppModule {
 // @public (undocumented)
 export interface IDropModule {
     mintBatch(tokenMetadata: MetadataURIOrObject[]): Promise<void>;
+}
+
+// @public (undocumented)
+export interface IMarketplace {
+    acceptDirectListingOffer(listingId: BigNumberish_2, addressOfOfferor: string): Promise<void>;
+    acceptWinningBid(listingId: BigNumberish_2): Promise<void>;
+    buyoutAuction(buyout: {
+        listingId: BigNumberish_2;
+        quantityDesired: BigNumberish_2;
+    }): Promise<void>;
+    buyoutDirectListing(buyout: {
+        listingId: BigNumberish_2;
+        quantityDesired: BigNumberish_2;
+    }): Promise<void>;
+    cancelAuctionListing(listingId: BigNumberish_2): Promise<void>;
+    cancelDirectListing(listingId: BigNumberish_2): Promise<void>;
+    closeAuctionListing(listingId: BigNumberish_2): Promise<void>;
+    createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
+    createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
+    getActiveBids(listingId: BigNumberish_2): Promise<Offer[]>;
+    getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
+    getActiveOffers(listingId: BigNumberish_2): Promise<Offer[]>;
+    getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
+    getBidBufferBps(): Promise<BigNumber_2>;
+    getDirectListing(listingId: BigNumberish_2): Promise<DirectListing>;
+    getTimeBufferInSeconds(): Promise<BigNumber_2>;
+    getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
+    makeBid(bid: {
+        listingId: BigNumberish_2;
+        quantityDesired: BigNumberish_2;
+        currencyContractAddress: string;
+        pricePerToken: BigNumberish_2;
+    }): Promise<void>;
+    makeOffer(offer: {
+        listingId: BigNumberish_2;
+        quantityDesired: BigNumberish_2;
+        currencyContractAddress: string;
+        pricePerToken: BigNumberish_2;
+    }): Promise<void>;
+    updateAuctionListing(listing: AuctionListing): Promise<void>;
+    updateDirectListing(listing: DirectListing): Promise<void>;
 }
 
 // @public (undocumented)
@@ -952,6 +1082,19 @@ export interface ListingMetadata {
 }
 
 // @public
+export class ListingNotFoundError extends Error {
+    constructor(marketplaceContractAddress: string, listingId?: string);
+}
+
+// @public (undocumented)
+export enum ListingType {
+    // (undocumented)
+    Auction = 1,
+    // (undocumented)
+    Direct = 0
+}
+
+// @public @deprecated
 export class MarketModule extends ModuleWithRoles<Market> {
     // (undocumented)
     buy(listingId: string, quantity: BigNumberish_2): Promise<ListingMetadata>;
@@ -992,6 +1135,80 @@ export class MarketModule extends ModuleWithRoles<Market> {
 // @public (undocumented)
 export class MarketModuleMetadata extends CommonModuleMetadata {
     marketFeeBasisPoints: number;
+}
+
+// @public
+export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements IMarketplace {
+    // (undocumented)
+    acceptDirectListingOffer(listingId: BigNumberish_2, addressOfOfferor: string): Promise<void>;
+    // (undocumented)
+    acceptWinningBid(listingId: BigNumberish_2): Promise<void>;
+    // @beta
+    buyoutAuction(_buyout: {
+        listingId: BigNumberish_2;
+        quantityDesired: BigNumberish_2;
+    }): Promise<void>;
+    // (undocumented)
+    buyoutDirectListing(_buyout: {
+        listingId: BigNumberish_2;
+        quantityDesired: BigNumberish_2;
+    }): Promise<void>;
+    // (undocumented)
+    cancelAuctionListing(listingId: BigNumberish_2): Promise<void>;
+    // (undocumented)
+    cancelDirectListing(listingId: BigNumberish_2): Promise<void>;
+    // (undocumented)
+    closeAuctionListing(_listingId: BigNumberish_2): Promise<void>;
+    // @internal (undocumented)
+    protected connectContract(): Marketplace;
+    // (undocumented)
+    createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
+    // (undocumented)
+    createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
+    // @beta
+    getActiveBids(_listingId: BigNumberish_2): Promise<Offer[]>;
+    // (undocumented)
+    getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
+    // @beta
+    getActiveOffers(listingId: BigNumberish_2): Promise<Offer[]>;
+    // (undocumented)
+    getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
+    // (undocumented)
+    getBidBufferBps(): Promise<BigNumber_2>;
+    // (undocumented)
+    getDirectListing(listingId: BigNumberish_2): Promise<DirectListing>;
+    // @internal @override (undocumented)
+    protected getModuleRoles(): readonly Role[];
+    // @internal (undocumented)
+    protected getModuleType(): ModuleType;
+    // (undocumented)
+    getTimeBufferInSeconds(): Promise<BigNumber_2>;
+    // (undocumented)
+    getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
+    // (undocumented)
+    isWinningBid(winningPrice: BigNumberish_2, newBidPrice: BigNumberish_2, bidBuffer: BigNumberish_2): Promise<boolean>;
+    // (undocumented)
+    makeBid(bid: {
+        listingId: BigNumberish_2;
+        quantityDesired: BigNumberish_2;
+        currencyContractAddress: string;
+        pricePerToken: BigNumberish_2;
+    }): Promise<void>;
+    // (undocumented)
+    makeOffer(offer: {
+        listingId: BigNumberish_2;
+        quantityDesired: BigNumberish_2;
+        currencyContractAddress: string;
+        pricePerToken: BigNumberish_2;
+    }): Promise<void>;
+    // (undocumented)
+    static moduleType: ModuleType;
+    // (undocumented)
+    static roles: readonly ["admin", "lister", "pauser"];
+    // (undocumented)
+    updateAuctionListing(listing: AuctionListing): Promise<void>;
+    // (undocumented)
+    updateDirectListing(listing: DirectListing): Promise<void>;
 }
 
 // @public
@@ -1112,6 +1329,8 @@ export enum ModuleType {
     // (undocumented)
     MARKET = 6,
     // (undocumented)
+    MARKETPLACE = 12,
+    // (undocumented)
     NFT = 2,
     // (undocumented)
     PACK = 5,
@@ -1153,6 +1372,33 @@ export interface NativeToken extends Currency {
         name: string;
         symbol: string;
     };
+}
+
+// @public
+export interface NewAuctionListing {
+    assetContractAddress: string;
+    buyoutPricePerToken: BigNumberish_2;
+    currencyContractAddress: string;
+    listingDurationInSeconds: BigNumberish_2;
+    quantity: BigNumberish_2;
+    reservePricePerToken: BigNumberish_2;
+    startTimeInSeconds: BigNumberish_2;
+    tokenId: BigNumberish_2;
+    // (undocumented)
+    type?: "NewAuctionListing";
+}
+
+// @public
+export interface NewDirectListing {
+    assetContractAddress: string;
+    buyoutPricePerToken: BigNumberish_2;
+    currencyContractAddress: string;
+    listingDurationInSeconds: BigNumberish_2;
+    quantity: BigNumberish_2;
+    startTimeInSeconds: BigNumberish_2;
+    tokenId: BigNumberish_2;
+    // (undocumented)
+    type?: "NewDirectListing";
 }
 
 // @public
@@ -1272,6 +1518,16 @@ export class NotEnoughTokensError extends Error {
 export class NotFoundError extends Error {
     // @internal
     constructor();
+}
+
+// @public (undocumented)
+export interface Offer {
+    buyerAddress: string;
+    currencyContractAddress: string;
+    currencyValue: CurrencyValue;
+    listingId: BigNumberish_2;
+    pricePerToken: BigNumber_2;
+    quantityDesired: BigNumberish_2;
 }
 
 // @beta (undocumented)
@@ -1572,6 +1828,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
     getGasPrice(speed?: string, maxGasGwei?: number): Promise<number | null>;
     // (undocumented)
     getMarketModule(address: string): MarketModule;
+    // @beta (undocumented)
+    getMarketplaceModule(address: string): MarketplaceModule;
     // (undocumented)
     getNFTModule(address: string): NFTModule;
     // Warning: (ae-incompatible-release-tags) The symbol "getPackModule" is marked as @public, but its signature references "PackModule" which is marked as @beta
@@ -1750,6 +2008,11 @@ export enum VoteType {
     Against = 0,
     // (undocumented)
     For = 1
+}
+
+// @public
+export class WrongListingTypeError extends Error {
+    constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
 
 ```
