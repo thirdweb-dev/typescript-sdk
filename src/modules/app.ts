@@ -1044,10 +1044,12 @@ export class AppModule
    * @param splitsModuleAddress - Optional. By default, it automatically creates a Splits for the project.
    * @param splitsRecipients - Optiional. By default, it is the signer who upgrades.
    */
-  public async upgradeToV2(upgradeOptions: {
-    splitsModuleAddress?: string;
-    splitsRecipients?: NewSplitRecipient[];
-  }): Promise<void> {
+  public async upgradeToV2(
+    upgradeOptions: {
+      splitsModuleAddress?: string;
+      splitsRecipients?: NewSplitRecipient[];
+    } = {},
+  ): Promise<void> {
     if (await this.isV1UpgradedOrV2()) {
       return;
     }
