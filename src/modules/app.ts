@@ -975,6 +975,13 @@ export class AppModule
     if (!(await this.isV1())) {
       return [];
     }
+
+    // not ready for upgrade yet. need to upgrade app first.
+    // otherwise royalty of sub-modules may point to wrong royalty treasury
+    if ((await this.getRoyaltyTreasury()) === this.address) {
+      return [];
+    }
+
     const modules = await this.getAllModuleMetadata([
       ModuleType.NFT,
       ModuleType.BUNDLE,
@@ -989,21 +996,46 @@ export class AppModule
   }
 
   public async upgradeModuleList(moduleAddresses: string[]): Promise<void> {
-    console.log(moduleAddresses);
-    // no upgrade needed
-    if (!(await this.isV1())) {
-      return;
-    }
+    const signer = this.getSigner();
+    invariant(signer, "needs a signer");
 
-    // not ready for upgrade yet. need to upgrade app first.
-    if ((await this.getRoyaltyTreasury()) === this.address) {
-      return;
-    }
-    // TODO:
-    // module.getMetadata
-    // // replace fee_recipient to getRoyaltyTreasury() if fee_recipient === this.address
-    // uploadMetadata
-    // module.setContractURI();
+    const allUpgradableModules = await this.shouldUpgradeModuleList();
+    const upgradableModules = allUpgradableModules.filter((m) =>
+      moduleAddresses.includes(m.address),
+    );
+
+    // since all the modules consistent / similar for contractURI (get and set),
+    // we just pretend everything is NFT module :)
+    const moduleMetadatas = await Promise.all(
+      upgradableModules.map((m) =>
+        this.sdk.getNFTModule(m.address).getMetadata(false),
+      ),
+    );
+
+    const royaltyTreasury = await this.getRoyaltyTreasury();
+
+    // map to address, new updated metadata
+    const metadataUris = await Promise.all(
+      moduleMetadatas.map((m) => {
+        return this.sdk.getStorage().uploadMetadata({
+          ...m.metadata,
+          fee_recipient: royaltyTreasury,
+        });
+      }),
+    );
+
+    const nonce = await signer.getTransactionCount("pending");
+    const txData = metadataUris.map((uri) =>
+      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
+    );
+    const txs = txData.map((data, i) => ({
+      to: moduleMetadatas[i].address,
+      nonce: nonce + i,
+      data,
+    }));
+
+    // batch send :)
+    await Promise.all(txs.map((tx) => signer.sendTransaction(tx)));
   }
 
   /**
