@@ -71,6 +71,7 @@ Output
 |  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
+|  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
 |  [BundleDropModule](./sdk.bundledropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleDropModule()](./sdk.thirdwebsdk.getbundledropmodule.md) |
 |  [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md) |  |
 |  [BundleModule](./sdk.bundlemodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md) |
@@ -135,6 +136,7 @@ Output
 |  [estimateBlockAtTime(timeInEpochSeconds, provider)](./sdk.estimateblockattime.md) | Given a time in second, return the block number that the time is in. |
 |  [generateRoot(items)](./sdk.generateroot.md) | Convenience function to generate a merkle root from a list of strings. |
 |  [getNativeTokenByChainId(chainId)](./sdk.getnativetokenbychainid.md) |  |
+|  [getTokenMetadataUsingStorage(contractAddress, provider, tokenId, storage)](./sdk.gettokenmetadatausingstorage.md) |  |
 |  [recursiveResolveGatewayUrl(json, ipfsGatewayUrl)](./sdk.recursiveresolvegatewayurl.md) |  |
 |  [uploadToIPFS(data, contractAddress, signerAddress)](./sdk.uploadtoipfs.md) | A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri. |
 

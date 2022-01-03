@@ -4,12 +4,18 @@
 
 ## IMarketplace.closeAuctionListing() method
 
-Closes an auction listing and distributes the payment/assets. You can only cancel the listing after it has already ended.
+Closes an auction listing and distributes the payment/assets. You can only close the listing after it has already ended.
+
+This method must be called by both the buyer and the seller.
+
+When the buyer calls this method, the tokens they purchased will be distributed to the buyers wallet.
+
+When the seller calls this method, the winning bid will be distributed to the sellers wallet.
 
 <b>Signature:</b>
 
 ```typescript
-closeAuctionListing(listingId: BigNumberish): Promise<void>;
+closeAuctionListing(listingId: BigNumberish, closeFor?: string): Promise<void>;
 ```
 
 ## Parameters
@@ -17,6 +23,7 @@ closeAuctionListing(listingId: BigNumberish): Promise<void>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  listingId | BigNumberish | Id of the listing to remove. |
+|  closeFor | string | The address of the wallet to close the sale for (buyer or seller). |
 
 <b>Returns:</b>
 

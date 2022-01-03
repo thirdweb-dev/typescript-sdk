@@ -4,7 +4,7 @@
 
 ## IMarketplace.makeBid() method
 
-Make an offer on an auction. The offer must be at least `current bid * (1 + bid buffer)` in order to be accepted.
+Make an offer on an auction. The offer must be at least `current bid * bid buffer %)` in order to be accepted.
 
 Bid buffer is configured on the Marketplace contract.
 
@@ -15,7 +15,6 @@ Note: If you make a bid above the buyout price, you will automatically be awarde
 ```typescript
 makeBid(bid: {
         listingId: BigNumberish;
-        quantityDesired: BigNumberish;
         currencyContractAddress: string;
         pricePerToken: BigNumberish;
     }): Promise<void>;
@@ -25,7 +24,7 @@ makeBid(bid: {
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  bid | { listingId: BigNumberish; quantityDesired: BigNumberish; currencyContractAddress: string; pricePerToken: BigNumberish; } |  |
+|  bid | { listingId: BigNumberish; currencyContractAddress: string; pricePerToken: BigNumberish; } |  |
 
 <b>Returns:</b>
 

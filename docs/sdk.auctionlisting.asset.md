@@ -4,10 +4,10 @@
 
 ## AuctionListing.asset property
 
-The asset being listed. // TODO: This should be a more strict type.
+The asset being listed.
 
 <b>Signature:</b>
 
 ```typescript
-asset: any;
+asset: NFTMetadata;
 ```
