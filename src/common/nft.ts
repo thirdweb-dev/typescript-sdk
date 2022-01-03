@@ -1,4 +1,3 @@
-import { IStorage } from "./../interfaces/IStorage";
 import {
   LazyMintERC1155,
   LazyMintERC721,
@@ -8,6 +7,7 @@ import {
 } from "@3rdweb/contracts";
 import { Contract } from "@ethersproject/contracts";
 import { JSONValue, ProviderOrSigner } from "../core/types";
+import { IStorage } from "../interfaces/IStorage";
 import { NotFoundError } from "./error";
 import { recursiveResolveGatewayUrl, replaceIpfsWithGateway } from "./ipfs";
 
