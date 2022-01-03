@@ -70,6 +70,7 @@ Output
 |  [AdminRoleMissingError](./sdk.adminrolemissingerror.md) | Thrown when attempting to execute an admin-role function. |
 |  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
+|  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
 |  [BundleDropModule](./sdk.bundledropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleDropModule()](./sdk.thirdwebsdk.getbundledropmodule.md) |
 |  [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md) |  |
 |  [BundleModule](./sdk.bundlemodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md) |
@@ -88,8 +89,10 @@ Output
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [IpfsStorage](./sdk.ipfsstorage.md) |  |
+|  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
 |  [MarketModuleMetadata](./sdk.marketmodulemetadata.md) |  |
+|  [MarketplaceModule](./sdk.marketplacemodule.md) | Access this module by calling [ThirdwebSDK.getMarketplaceModule()](./sdk.thirdwebsdk.getmarketplacemodule.md) |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
@@ -110,12 +113,14 @@ Output
 |  [UploadError](./sdk.uploaderror.md) |  |
 |  [VoteModule](./sdk.votemodule.md) | Access this module by calling  |
 |  [VoteModuleMetadata](./sdk.votemodulemetadata.md) |  |
+|  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 
 ## Enumerations
 
 |  Enumeration | Description |
 |  --- | --- |
 |  [ClaimEligibility](./sdk.claimeligibility.md) |  |
+|  [ListingType](./sdk.listingtype.md) |  |
 |  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
 |  [ProposalState](./sdk.proposalstate.md) |  |
 |  [UnderlyingType](./sdk.underlyingtype.md) |  |
@@ -137,6 +142,7 @@ Output
 
 |  Interface | Description |
 |  --- | --- |
+|  [AuctionListing](./sdk.auctionlisting.md) | Represents a new marketplace auction listing. |
 |  [BundleDropCreateClaimCondition](./sdk.bundledropcreateclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [BundleDropMetadata](./sdk.bundledropmetadata.md) | <b><i>(BETA)</i></b> |
 |  [BundleMetadata](./sdk.bundlemetadata.md) | <b><i>(BETA)</i></b> |
@@ -146,8 +152,10 @@ Output
 |  [CreatePublicMintCondition](./sdk.createpublicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [Currency](./sdk.currency.md) | Currency metadata. |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
+|  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
 |  [IAppModule](./sdk.iappmodule.md) |  |
 |  [IDropModule](./sdk.idropmodule.md) |  |
+|  [IMarketplace](./sdk.imarketplace.md) |  |
 |  [INFTBundleBatchArgs](./sdk.inftbundlebatchargs.md) |  |
 |  [INFTBundleCreateArgs](./sdk.inftbundlecreateargs.md) | <b><i>(BETA)</i></b> |
 |  [INFTCollectionBatchArgs](./sdk.inftcollectionbatchargs.md) | <b><i>(BETA)</i></b> |
@@ -167,9 +175,12 @@ Output
 |  [ModuleMetadata](./sdk.modulemetadata.md) | The module metadata, includes the <code>address</code> and the [ModuleType](./sdk.moduletype.md)<!-- -->. |
 |  [ModuleMetadataNoType](./sdk.modulemetadatanotype.md) | The module metadata, but missing the ModuleType. |
 |  [NativeToken](./sdk.nativetoken.md) |  |
+|  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
+|  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
 |  [NewSplitRecipient](./sdk.newsplitrecipient.md) | The NewSplitRecipient interface describes the structure of a new split recipient. The <code>shares</code> property is important for the calculation of the the total split.<!-- -->If there are two recipients each with 10 shares, they each will receive 50% of the total royalties.<!-- -->If there are two recipients each with 1 share, they each will receive 50% of the total royalties.<!-- -->I.e. the total number of shares is used to calculate the percentage of the total royalties that is allocated to each recipient. |
 |  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
+|  [Offer](./sdk.offer.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [Proposal](./sdk.proposal.md) |  |

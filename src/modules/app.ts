@@ -11,6 +11,7 @@ import {
   ProtocolControl,
   ProtocolControl__factory,
   Royalty__factory,
+  Marketplace__factory,
   VotingGovernor__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
@@ -63,6 +64,8 @@ import { MarketModule } from "./market";
 import { NFTModule } from "./nft";
 import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
+import { MarketplaceModule } from "./marketplace";
+import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceModuleMetadata";
 import { CurrencyModule, TokenModule } from "./token";
 import { VoteModule } from "./vote";
 
@@ -1159,5 +1162,40 @@ export class AppModule
    */
   async isV1UpgradedOrV2(): Promise<boolean> {
     return !(await this.isV1()) || !(await this.shouldUpgradeToV2());
+  }
+
+  public async deployMarketplaceModule(
+    metadata: MarketplaceModuleMetadata,
+  ): Promise<MarketplaceModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      MarketplaceModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
+
+    const address = await this._deployModule(
+      ModuleType.MARKETPLACE,
+      [
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        nativeTokenWrapperAddress,
+        metadataUri,
+        metadata.marketFeeBasisPoints,
+      ],
+      Marketplace__factory,
+    );
+
+    return this.sdk.getMarketplaceModule(address);
   }
 }

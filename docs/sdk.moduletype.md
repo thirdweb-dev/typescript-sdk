@@ -25,6 +25,7 @@ export declare enum ModuleType
 |  DROP | <code>7</code> |  |
 |  DYNAMIC\_NFT | <code>3</code> |  |
 |  MARKET | <code>6</code> |  |
+|  MARKETPLACE | <code>12</code> |  |
 |  NFT | <code>2</code> |  |
 |  PACK | <code>5</code> |  |
 |  SPLITS | <code>9</code> |  |

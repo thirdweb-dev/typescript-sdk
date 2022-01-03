@@ -5,6 +5,7 @@ export * from "./collection";
 export * from "./datastore";
 export * from "./drop";
 export * from "./market";
+export * from "./marketplace";
 export * from "./nft";
 export * from "./pack";
 export * from "./royalty";
