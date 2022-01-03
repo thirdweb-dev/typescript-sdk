@@ -9,3 +9,4 @@ export * from "./ModuleMetadata";
 export * from "./snapshots";
 export * from "./SplitRecipient";
 export * from "./vote";
+export * from "./voucher";
