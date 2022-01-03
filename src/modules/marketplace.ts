@@ -45,6 +45,7 @@ const MAX_BPS = 10000;
 /**
  * Access this module by calling {@link ThirdwebSDK.getMarketplaceModule}
  * @public
+ * @beta
  */
 export class MarketplaceModule
   extends ModuleWithRoles<Marketplace>
