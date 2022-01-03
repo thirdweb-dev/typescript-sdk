@@ -71,7 +71,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
   private defaultOptions: ISDKOptions = {
     ipfsGatewayUrl: "https://cloudflare-ipfs.com/ipfs/",
     registryContractAddress: "",
-    maxGasPriceInGwei: 100,
+    maxGasPriceInGwei: 300,
     gasSpeed: "fastest",
     transactionRelayerUrl: "",
     transactionRelayerSendFunction: this.defaultRelayerSendFunction.bind(this),
@@ -224,7 +224,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
   /**
    *
    * @param speed - what speed to prefer, default: "fastest"
-   * @param maxGas - how much gas to use at most, default: 100
+   * @param maxGas - how much gas to use at most, default: 300
    * @returns the optiomal gas price
    */
   public async getGasPrice(
