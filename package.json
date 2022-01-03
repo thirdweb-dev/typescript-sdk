@@ -30,7 +30,7 @@
     "generate-docs": "yarn full-build && yarn generate-md-docs",
     "build": "yarn generate-docs",
     "test": "echo \"\nUse 'yarn run test:all' to run all tests\nPass a test file pattern from ./test to run\n\n\t$ yarn run test test/pack.test.ts\" && ts-mocha -t 120000 -r esm -p tsconfig.testing.json",
-    "test:all": "ts-mocha -t 120000 -r esm -p tsconfig.testing.json test/**/*.test.ts"
+    "test:all": "ts-mocha -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.1",

@@ -1,19 +1,22 @@
+import { BundleDropModule } from "../modules/bundleDrop";
 import { CollectionModule } from "../modules/collection";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
-import { BundleDropModule } from "../modules/bundleDrop";
 import { MarketModule } from "../modules/market";
+import { MarketplaceModule } from "../modules/marketplace";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
+import { CurrencyModule } from "../modules/token";
+import BundleDropModuleMetadata from "../types/module-deployments/BundleDropModuleMetadata";
 import { CurrencyModule, TokenModule } from "../modules/token";
 import { VoteModule } from "../modules/vote";
 import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
 import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
 import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
-import BundleDropModuleMetadata from "../types/module-deployments/BundleDropModuleMetadata";
 import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetadata";
+import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceModuleMetadata";
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
@@ -47,6 +50,10 @@ export default interface IAppModule {
   deployDatastoreModule(
     metadata: DatastoreModuleMetadata,
   ): Promise<DatastoreModule>;
+
+  deployMarketplaceModule(
+    metadata: MarketplaceModuleMetadata,
+  ): Promise<MarketplaceModule>;
 
   deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
 }

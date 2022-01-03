@@ -4,6 +4,10 @@
 
 ## MarketModule class
 
+> Warning: This API is now obsolete.
+> 
+> 
+
 Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md)
 
 <b>Signature:</b>

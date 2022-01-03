@@ -35,6 +35,7 @@ export declare class ThirdwebSDK implements IThirdwebSdk
 |  [getDropModule(address)](./sdk.thirdwebsdk.getdropmodule.md) |  |  |
 |  [getGasPrice(speed, maxGasGwei)](./sdk.thirdwebsdk.getgasprice.md) |  |  |
 |  [getMarketModule(address)](./sdk.thirdwebsdk.getmarketmodule.md) |  |  |
+|  [getMarketplaceModule(address)](./sdk.thirdwebsdk.getmarketplacemodule.md) |  | <b><i>(BETA)</i></b> |
 |  [getNFTModule(address)](./sdk.thirdwebsdk.getnftmodule.md) |  |  |
 |  [getPackModule(address)](./sdk.thirdwebsdk.getpackmodule.md) |  |  |
 |  [getStorage()](./sdk.thirdwebsdk.getstorage.md) |  | Accessor for the storage instance used by the SDK |
