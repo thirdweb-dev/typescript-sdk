@@ -103,7 +103,7 @@ export class IpfsStorage implements IStorage {
       if (!withFileNames) {
         fileWithName = {
           file: file as any,
-          name: `files/${fileStartNumber + i}`,
+          name: `${fileStartNumber + i}`,
         } as FileOrBufferWithNames;
       } else {
         fileWithName = file as FileOrBufferWithNames;
