@@ -60,12 +60,10 @@ export interface IMarketplace {
    * // TODO:  come back to `currencyContractAddress`
    *
    * @param listingId - The listing id.
-   * @param currencyContractAddress - The address of the currency contract.
    * @param tokenAmount - The amount of tokens to be offered.
    */
   makeAuctionListingBid(bid: {
     listingId: BigNumberish;
-    currencyContractAddress: string;
     pricePerToken: BigNumberish;
   }): Promise<void>;
 
