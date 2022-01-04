@@ -7,6 +7,7 @@ import {
 } from "@3rdweb/contracts";
 import { Contract } from "@ethersproject/contracts";
 import { JSONValue, ProviderOrSigner } from "../core/types";
+import { IStorage } from "../interfaces/IStorage";
 import { NotFoundError } from "./error";
 import { recursiveResolveGatewayUrl, replaceIpfsWithGateway } from "./ipfs";
 
@@ -120,6 +121,34 @@ export async function getTokenMetadata(
       ...json,
       id: tokenId,
       uri,
+    };
+    return entity;
+  } catch (e) {
+    console.error("failed to fetch nft", e);
+    return {
+      id: tokenId,
+      uri,
+    };
+  }
+}
+
+export async function getTokenMetadataUsingStorage(
+  contractAddress: string,
+  provider: ProviderOrSigner,
+  tokenId: string,
+  storage: IStorage,
+): Promise<NFTMetadata> {
+  const contract = new Contract(contractAddress, tokenUriABI, provider) as NFT;
+
+  const uri = await getTokenUri(contract, tokenId);
+  if (!uri) {
+    throw new NotFoundError();
+  }
+  try {
+    const json = JSON.parse(await storage.get(uri));
+    const entity: NFTMetadata = {
+      ...json,
+      id: tokenId,
     };
     return entity;
   } catch (e) {

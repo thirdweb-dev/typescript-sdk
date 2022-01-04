@@ -10,7 +10,7 @@ import {
   PackOpenRequestEvent,
 } from "@3rdweb/contracts/dist/Pack";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, Contract, ethers } from "ethers";
 import {
   CurrencyValue,
   getCurrencyValue,
@@ -43,7 +43,11 @@ export interface PackNFTMetadata {
   supply: BigNumber;
   metadata: NFTMetadata;
 }
-
+export enum UnderlyingType {
+  None = 0,
+  ERC20 = 1,
+  ERC721 = 2,
+}
 /**
  * @beta
  */
@@ -336,7 +340,46 @@ export class PackModule
   }
 
   public async withdrawLink(to: string, amount: BigNumberish) {
-    await this.sendTransaction("transferLink", [to, amount]);
+    try {
+      // old version of the contract
+      const _contract = new Contract(
+        this.address,
+        [
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "_to",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "_amount",
+                type: "uint256",
+              },
+            ],
+            name: "transferLink",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+        ],
+        this.providerOrSigner,
+      );
+      await this.sendContractTransaction(_contract, "transferLink", [
+        to,
+        amount,
+      ]);
+    } catch (e) {
+      // new version of the contract
+      const chainId = await this.getChainID();
+      const chainlink = ChainlinkVrf[chainId];
+      await this.sendTransaction("transferERC20", [
+        chainlink.linkTokenAddress,
+        to,
+        amount,
+      ]);
+    }
   }
 
   public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {

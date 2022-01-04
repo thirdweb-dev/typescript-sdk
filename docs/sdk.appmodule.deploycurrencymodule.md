@@ -16,7 +16,7 @@ deployCurrencyModule(metadata: CurrencyModuleMetadata): Promise<CurrencyModule>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | CurrencyModuleMetadata | The module metadata |
+|  metadata | [CurrencyModuleMetadata](./sdk.currencymodulemetadata.md) | The module metadata |
 
 <b>Returns:</b>
 

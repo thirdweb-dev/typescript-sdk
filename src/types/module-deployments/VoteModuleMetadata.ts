@@ -2,7 +2,7 @@ import { JsonObject, JsonProperty } from "json2typescript";
 import CommonModuleMetadata from "./CommonModuleMetadata";
 
 @JsonObject("VoteModuleMetadata")
-export default class VoteModuleMetadata extends CommonModuleMetadata {
+export class VoteModuleMetadata extends CommonModuleMetadata {
   /**
    * The wait time before a proposal can begin being voted on (seconds).
    */
@@ -52,3 +52,5 @@ export default class VoteModuleMetadata extends CommonModuleMetadata {
   @JsonProperty("proposal_token_threshold", String)
   minimumNumberOfTokensNeededToPropose = "0";
 }
+
+export default VoteModuleMetadata;

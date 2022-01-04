@@ -3,6 +3,8 @@ import CommonModuleMetadata from "./CommonModuleMetadata";
 import { NewSplitRecipient } from "./NewSplitRecipient";
 
 @JsonObject("SplitsModuleMetadata")
-export default class SplitsModuleMetadata extends CommonModuleMetadata {
+export class SplitsModuleMetadata extends CommonModuleMetadata {
   recipientSplits: NewSplitRecipient[] = [];
 }
+
+export default SplitsModuleMetadata;

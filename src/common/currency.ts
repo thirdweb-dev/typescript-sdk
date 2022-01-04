@@ -203,6 +203,39 @@ export function isNativeToken(tokenAddress: string): boolean {
   );
 }
 
+/**
+ * @internal
+ */
+export async function getCurrencyBalance(
+  providerOrSigner: ProviderOrSigner,
+  tokenAddress: string,
+  walletAddress: string,
+): Promise<CurrencyValue> {
+  const provider = getProvider(providerOrSigner);
+  let balance;
+  if (isNativeToken(tokenAddress)) {
+    balance = await provider.getBalance(walletAddress);
+  } else {
+    try {
+      const erc20 = ERC20__factory.connect(tokenAddress, provider);
+      balance = await erc20.balanceOf(walletAddress);
+    } catch (e) {
+      console.error(e);
+      throw new Error("invalid ERC20 token address");
+    }
+  }
+
+  return getCurrencyValue(providerOrSigner, tokenAddress, balance);
+}
+
+function getProvider(providerOrSigner: ProviderOrSigner): Provider {
+  if (Signer.isSigner(providerOrSigner)) {
+    return (providerOrSigner as Signer).provider as Provider;
+  } else {
+    return providerOrSigner as Provider;
+  }
+}
+
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
   return NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID];
 }

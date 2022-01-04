@@ -49,6 +49,7 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [getAllUnclaimed(queryParams)](./sdk.dropmodule.getallunclaimed.md) |  | <b><i>(BETA)</i></b> |
 |  [getClaimConditionsFactory()](./sdk.dropmodule.getclaimconditionsfactory.md) |  | <b><i>(BETA)</i></b> Creates a claim condition factory |
 |  [getClaimIneligibilityReasons(quantity, addressToCheck)](./sdk.dropmodule.getclaimineligibilityreasons.md) |  | <b><i>(BETA)</i></b> For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user. |
+|  [getDefaultSaleRecipient()](./sdk.dropmodule.getdefaultsalerecipient.md) |  | <b><i>(BETA)</i></b> |
 |  [getMintConditionsFactory()](./sdk.dropmodule.getmintconditionsfactory.md) |  | <b><i>(BETA)</i></b> |
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | <b><i>(BETA)</i></b> |
 |  [getRoyaltyBps()](./sdk.dropmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
@@ -61,6 +62,7 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
 |  [setClaimConditions(factory)](./sdk.dropmodule.setclaimconditions.md) |  | <b><i>(BETA)</i></b> Sets public mint conditions for the next minting using the claim condition factory. |
+|  [setDefaultSaleRecipient(recipient)](./sdk.dropmodule.setdefaultsalerecipient.md) |  | <b><i>(BETA)</i></b> |
 |  [setMintConditions(factory)](./sdk.dropmodule.setmintconditions.md) |  | <b><i>(BETA)</i></b> |
 |  [setModuleMetadata(metadata)](./sdk.dropmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
 |  [setPublicMintConditions(conditions)](./sdk.dropmodule.setpublicmintconditions.md) |  | <b><i>(BETA)</i></b> |
@@ -71,4 +73,5 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [totalUnclaimedSupply()](./sdk.dropmodule.totalunclaimedsupply.md) |  | <b><i>(BETA)</i></b> |
 |  [transfer(to, tokenId)](./sdk.dropmodule.transfer.md) |  | <b><i>(BETA)</i></b> |
 |  [transferFrom(from, to, tokenId)](./sdk.dropmodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
+|  [updateClaimConditions(factory)](./sdk.dropmodule.updateclaimconditions.md) |  | <b><i>(BETA)</i></b> |
 

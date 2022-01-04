@@ -1,7 +1,7 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import {
   ClaimEligibility,
@@ -448,5 +448,22 @@ describe("Drop Module", async () => {
       const canClaim = await dropModule.canClaim("1", w1.address);
       assert.isTrue(canClaim);
     });
+  });
+  it("should allow you to update claim conditions", async () => {
+    let factory = dropModule.getClaimConditionsFactory();
+
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+
+    await dropModule.setClaimConditions(factory);
+
+    const conditions = await dropModule.getAllClaimConditions();
+    factory = dropModule.getClaimConditionsFactory();
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await dropModule.updateClaimConditions(factory);
+    assert.lengthOf(conditions, 1);
   });
 });

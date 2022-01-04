@@ -61,4 +61,6 @@ export declare class BundleModule extends ModuleWithRoles<NFTBundleContract> imp
 |  [transfer(to, tokenId, amount)](./sdk.bundlemodule.transfer.md) |  | <b><i>(BETA)</i></b> |
 |  [transferBatchFrom(from, to, args, data)](./sdk.bundlemodule.transferbatchfrom.md) |  | <b><i>(BETA)</i></b> |
 |  [transferFrom(from, to, args, data)](./sdk.bundlemodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
+|  [unwrapNFT(tokenId)](./sdk.bundlemodule.unwrapnft.md) |  | <b><i>(BETA)</i></b> |
+|  [unwrapToken(tokenId, amount)](./sdk.bundlemodule.unwraptoken.md) |  | <b><i>(BETA)</i></b> |
 

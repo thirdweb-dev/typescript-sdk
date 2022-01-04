@@ -32,6 +32,7 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [deployCurrencyModule(metadata)](./sdk.appmodule.deploycurrencymodule.md) |  | Deploys a currency module. |
 |  [deployDropModule(metadata)](./sdk.appmodule.deploydropmodule.md) |  | Deploys a Drop module |
 |  [deployMarketModule(metadata)](./sdk.appmodule.deploymarketmodule.md) |  | Deploys a Marketplace module |
+|  [deployMarketplaceModule(metadata)](./sdk.appmodule.deploymarketplacemodule.md) |  |  |
 |  [deployNftModule(metadata)](./sdk.appmodule.deploynftmodule.md) |  | Deploys a NFT module. |
 |  [deployPackModule(metadata)](./sdk.appmodule.deploypackmodule.md) |  | Deploys a Pack module |
 |  [deploySplitsModule(metadata)](./sdk.appmodule.deploysplitsmodule.md) |  | Deploys a Splits module |
@@ -49,5 +50,9 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [setModuleMetadata(metadata)](./sdk.appmodule.setmodulemetadata.md) |  |  |
 |  [setModuleRoyaltyTreasury(moduleAddress, treasury)](./sdk.appmodule.setmoduleroyaltytreasury.md) |  |  |
 |  [setRoyaltyTreasury(treasury)](./sdk.appmodule.setroyaltytreasury.md) |  |  |
+|  [shouldUpgradeModuleList()](./sdk.appmodule.shouldupgrademodulelist.md) |  |  |
+|  [shouldUpgradeToV2()](./sdk.appmodule.shouldupgradetov2.md) |  |  |
+|  [upgradeModuleList(moduleAddresses)](./sdk.appmodule.upgrademodulelist.md) |  |  |
+|  [upgradeToV2(upgradeOptions)](./sdk.appmodule.upgradetov2.md) |  | Upgrades the protocol control to v2. In v2, the royalty treasury needs to be set to be set to a splits contract. |
 |  [withdrawFunds(to, currency)](./sdk.appmodule.withdrawfunds.md) |  |  |
 

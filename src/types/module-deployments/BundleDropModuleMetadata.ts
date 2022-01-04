@@ -6,7 +6,7 @@ import {
 import CommonModuleMetadata from "./CommonModuleMetadata";
 
 @JsonObject("BundleDropModuleMetadata")
-export default class BundleDropModuleMetadata extends CommonModuleMetadata {
+export class BundleDropModuleMetadata extends CommonModuleMetadata {
   /**
    * The amount of royalty collected on all royalties represented as basis points.
    * The default is 0 (no royalties).
@@ -67,3 +67,6 @@ export default class BundleDropModuleMetadata extends CommonModuleMetadata {
   @JsonProperty("primary_sale_recipient_address", String)
   primarySaleRecipientAddress = "";
 }
+
+// For backwards compatibility
+export default BundleDropModuleMetadata;
