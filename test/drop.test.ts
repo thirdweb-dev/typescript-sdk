@@ -467,7 +467,7 @@ describe("Drop Module", async () => {
     assert.lengthOf(conditions, 1);
   });
   it("should be able to use claim as function expected", async () => {
-    await dropModule.lazyMintBatch([
+    await dropModule.createBatch([
       {
         name: "test",
       }
@@ -477,13 +477,13 @@ describe("Drop Module", async () => {
       startTime: new Date(),
     });
     await dropModule.setClaimConditions(factory);
-    await dropModule.claim("0");
+    await dropModule.claim(1);
     assert((await dropModule.getOwned()).length === 1)
 
   });
 
   it("should be able to use claimTo function as expected", async () => {
-    await dropModule.lazyMintBatch([
+    await dropModule.createBatch([
       {
         name: "test",
       }
