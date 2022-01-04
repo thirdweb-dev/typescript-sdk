@@ -148,8 +148,8 @@ describe("IPFS Uploads", async () => {
   it("should upload files according to start file number as 0", async () => {
     const storage = sdk.getStorage();
     const sampleObjects: FileOrBuffer[] = [
-      readFileSync("test/test.mp4"),
       readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+      readFileSync("test/test.mp4"),
     ];
     const cid = await storage.uploadBatch(sampleObjects, "");
     assert(

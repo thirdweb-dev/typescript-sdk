@@ -121,7 +121,7 @@ export class IpfsStorage implements IStorage {
         }
       }
 
-      const filepath = fileWithName.name;
+      const filepath = `files/${fileWithName.name}`;
       if (typeof window === "undefined") {
         data.append("file", fileWithName.file as any, { filepath } as any);
       } else {
