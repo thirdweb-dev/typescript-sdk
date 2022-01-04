@@ -58,18 +58,18 @@ export class IpfsStorage implements IStorage {
     const cid = await this.uploadBatchWithCid(
       files,
       contractAddress,
-      fileStartNumber
+      fileStartNumber,
     );
 
     return `ipfs://${cid}/`;
   }
 
   /**
-   * 
+   *
    * @param files - Array of file along with their filenames (required in case they are not `File` objects)
    * @param contractAddress - - Optional. The contract address the data belongs to.
    * @returns The IPFS URI of the folder
-   * 
+   *
    */
 
   public async uploadBatchWithFileNames(
@@ -105,17 +105,21 @@ export class IpfsStorage implements IStorage {
           file: file as any,
           name: `files/${fileStartNumber + i}`,
         } as FileOrBufferWithNames;
-
       } else {
-        fileWithName = file as FileOrBufferWithNames
-        if(file instanceof File && (fileWithName.name === undefined)){
-          fileWithName.name = file.name
+        fileWithName = file as FileOrBufferWithNames;
+        if (
+          fileWithName.file instanceof File &&
+          fileWithName.name === undefined
+        ) {
+          fileWithName.name = fileWithName.file.name;
         }
-        if(!(file instanceof File) && (fileWithName.name === undefined)){
-          throw new FileNameMissingError()
+        if (
+          !(fileWithName.file instanceof File) &&
+          fileWithName.name === undefined
+        ) {
+          throw new FileNameMissingError();
         }
       }
-
 
       const filepath = fileWithName.name;
       if (typeof window === "undefined") {
