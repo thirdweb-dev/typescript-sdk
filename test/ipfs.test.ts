@@ -133,7 +133,12 @@ describe("IPFS Uploads", async () => {
     const cid = await storage.uploadBatch(sampleObjects, "", 1)
     assert((await getFile(`${cid}${"2"}`)).headers.get("content-type").toString() === "image/jpeg")
   });
-
+  it("should upload files according to passed start file number", async () => {
+    const storage = sdk.getStorage()
+    const sampleObjects: FileOrBuffer[] = [readFileSync("test/test.mp4"), readFileSync("test/3510820011_4f558b6dea_b.jpg"),];
+    const cid = await storage.uploadBatch(sampleObjects, "", 0)
+    assert((await getFile(`${cid}${"0"}`)).headers.get("content-type").toString() === "image/jpeg")
+  });
   it("should upload properties recursively in batch", async () => {
     const sampleObjects: any[] = [
       {
