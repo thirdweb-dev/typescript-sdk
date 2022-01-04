@@ -261,7 +261,7 @@ describe("Marketplace Module", async () => {
         "The buyer should start with no tokens",
       );
 
-      await marketplaceModule.makeOffer({
+      await marketplaceModule.makeDirectListingOffer({
         currencyContractAddress: tokenAddress,
         listingId: directListingId,
         quantityDesired: 1,
@@ -305,7 +305,7 @@ describe("Marketplace Module", async () => {
 
     it("should allow offers to be made on direct listings", async () => {
       await sdk.setProviderOrSigner(bobWallet);
-      await marketplaceModule.makeOffer({
+      await marketplaceModule.makeDirectListingOffer({
         currencyContractAddress: tokenAddress,
         listingId: directListingId,
         quantityDesired: 1,
@@ -325,7 +325,7 @@ describe("Marketplace Module", async () => {
       assert.equal(offer.listingId.toString(), directListingId.toString());
 
       await sdk.setProviderOrSigner(samWallet);
-      await marketplaceModule.makeOffer({
+      await marketplaceModule.makeDirectListingOffer({
         currencyContractAddress: tokenAddress,
         listingId: directListingId,
         quantityDesired: 1,
@@ -355,7 +355,7 @@ describe("Marketplace Module", async () => {
 
     it("should allow bids to be made on auction listings", async () => {
       await sdk.setProviderOrSigner(bobWallet);
-      await marketplaceModule.makeBid({
+      await marketplaceModule.makeAuctionListingBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
         pricePerToken: ethers.utils.parseUnits("1"),
@@ -375,7 +375,7 @@ describe("Marketplace Module", async () => {
 
       // Make a higher winning bid
       await sdk.setProviderOrSigner(samWallet);
-      await marketplaceModule.makeBid({
+      await marketplaceModule.makeAuctionListingBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
         pricePerToken: ethers.utils.parseUnits("2"),
@@ -443,7 +443,7 @@ describe("Marketplace Module", async () => {
         "0",
         "The buyer should start with no tokens",
       );
-      await marketplaceModule.makeBid({
+      await marketplaceModule.makeAuctionListingBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
         pricePerToken: ethers.utils.parseUnits("20"),
@@ -468,7 +468,7 @@ describe("Marketplace Module", async () => {
         "0",
         "The buyer should start with no tokens",
       );
-      await marketplaceModule.makeBid({
+      await marketplaceModule.makeAuctionListingBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
         pricePerToken: ethers.utils.parseUnits("2"),
@@ -504,13 +504,13 @@ describe("Marketplace Module", async () => {
         "0",
         "The buyer should start with no tokens",
       );
-      await marketplaceModule.makeBid({
+      await marketplaceModule.makeAuctionListingBid({
         currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
         pricePerToken: ethers.utils.parseUnits("2"),
       });
       try {
-        await marketplaceModule.makeBid({
+        await marketplaceModule.makeAuctionListingBid({
           currencyContractAddress: tokenAddress,
           listingId: auctionListingId,
           pricePerToken: ethers.utils.parseUnits("2.01"),
@@ -642,7 +642,7 @@ describe("Marketplace Module", async () => {
 
       await sdk.setProviderOrSigner(bobWallet);
 
-      await marketplaceModule.makeBid({
+      await marketplaceModule.makeAuctionListingBid({
         currencyContractAddress: tokenAddress,
         listingId,
         pricePerToken: ethers.utils.parseUnits("2"),
