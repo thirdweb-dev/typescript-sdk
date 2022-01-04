@@ -83,6 +83,36 @@ describe("Voucher Module", async () => {
         "This voucher should be invalid because the price was changed",
       );
     });
+
+    it("should generate a valid batch of signatures", async () => {
+      const input = [
+        {
+          ...meta,
+          metadata: {
+            name: "OUCH VOUCH 0",
+          },
+        },
+        {
+          ...meta,
+          metadata: {
+            name: "OUCH VOUCH 1",
+          },
+        },
+        {
+          ...meta,
+          metadata: {
+            name: "OUCH VOUCH 2",
+          },
+        },
+      ];
+      const batch = await voucherModule.generateSignatureBatch(input);
+
+      for (const [i, v] of batch.entries()) {
+        const mintedId = await voucherModule.mint(v.voucher, v.signature);
+        const nft = await voucherModule.get(mintedId);
+        assert.equal(input[i].metadata.name, nft.name);
+      }
+    });
   });
 
   describe("Claiming", async () => {
