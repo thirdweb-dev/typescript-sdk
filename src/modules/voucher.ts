@@ -1,16 +1,15 @@
-import { Voucher } from "./../types/voucher/Voucher";
 import { SignatureMint721, SignatureMint721__factory } from "@3rdweb/contracts";
 import { MintRequestStructOutput } from "@3rdweb/contracts/dist/SignatureMint721";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { sign } from "crypto";
-import { Signer } from "ethers";
-import { formatBytes32String, hexlify, toUtf8Bytes } from "ethers/lib/utils";
+import { BigNumber, Signer } from "ethers";
+import { hexlify, toUtf8Bytes } from "ethers/lib/utils";
 import { v4 as uuidv4 } from "uuid";
 import { ModuleType } from "../common";
 import { Module } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { IVoucher } from "../interfaces/modules";
-import { NewMintRequest, Voucher } from "../types";
+import { NewMintRequest } from "./../types/voucher/NewMintRequest";
+import { Voucher } from "./../types/voucher/Voucher";
 
 const EIP712Domain = [
   { name: "name", type: "string" },
@@ -65,9 +64,14 @@ export class VoucherModule
     return await this.sendTransaction("setContractURI", [uri]);
   }
 
-  mint(req: NewMintRequest): Promise<string> {
-    throw new Error("Method not implemented.");
+  public async mint(req: Voucher, signature: string): Promise<BigNumber> {
+    const message = this.mapVoucher(req);
+
+    const reciept = await this.sendTransaction("mint", [message, signature]);
+
+    return BigNumber.from(0);
   }
+
   mintBatch(tokenMetadata: NewMintRequest[]): Promise<string[]> {
     throw new Error("Method not implemented.");
   }
@@ -76,17 +80,11 @@ export class VoucherModule
     mintRequest: Voucher,
     signature: string,
   ): Promise<boolean> {
-    const message = {
-      to: mintRequest.to,
-      uri: mintRequest.uri,
-      price: mintRequest.price,
-      currency: mintRequest.currencyAddress,
-      validityEndTimestamp: mintRequest.voucherEndTimeEpochSeconds,
-      validityStartTimestamp: mintRequest.voucherStartTimeEpochSeconds,
-      uid: mintRequest.id,
-    } as MintRequestStructOutput;
-
-    return await this.readOnlyContract.verify(message, signature);
+    const message = this.mapVoucher(mintRequest);
+    return await this.readOnlyContract.verify(
+      { ...message, uri: mintRequest.uri },
+      signature,
+    );
   }
 
   claim(mintRequest: Voucher, signature: string): Promise<void> {
@@ -114,12 +112,8 @@ export class VoucherModule
     const signer = (await this.getSigner()) as Signer;
 
     const message = {
-      to: mintRequest.to,
       uri: metadataUri,
-      price: mintRequest.price,
-      currency: mintRequest.currencyAddress,
-      validityEndTimestamp: mintRequest.voucherEndTimeEpochSeconds,
-      validityStartTimestamp: mintRequest.voucherStartTimeEpochSeconds,
+      ...(this.mapVoucher(mintRequest) as any),
       uid: id,
     } as MintRequestStructOutput;
     const chainId = await this.getChainID();
@@ -144,5 +138,18 @@ export class VoucherModule
       },
       signature: signature.toString(),
     };
+  }
+
+  private mapVoucher(
+    mintRequest: Voucher | NewMintRequest,
+  ): MintRequestStructOutput {
+    return {
+      to: mintRequest.to,
+      price: mintRequest.price,
+      currency: mintRequest.currencyAddress,
+      validityEndTimestamp: mintRequest.voucherEndTimeEpochSeconds,
+      validityStartTimestamp: mintRequest.voucherStartTimeEpochSeconds,
+      uid: mintRequest.id,
+    } as MintRequestStructOutput;
   }
 }

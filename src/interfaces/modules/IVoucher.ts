@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import { NewMintRequest, Voucher } from "../../types/voucher";
 
 export interface IVoucher {
@@ -5,9 +6,9 @@ export interface IVoucher {
    * Creates a new voucher based on the metadata provided.
    *
    * @param tokenMetadata - The metadata of the token to generate a signature for.
-   * @returns - The signature of the voucher.
+   * @returns - The ID of the minted token.
    */
-  mint(req: NewMintRequest): Promise<string>;
+  mint(req: Voucher, signature: string): Promise<BigNumber>;
 
   /**
    * Creates many vouchers at once based on the metadata provided.
