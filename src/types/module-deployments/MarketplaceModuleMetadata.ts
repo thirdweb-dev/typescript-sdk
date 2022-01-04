@@ -52,7 +52,7 @@ export class MarketplaceModuleMetadata extends CommonModuleMetadata {
     Number,
     PropertyConvertingMode.IGNORE_NULLABLE,
   )
-  bigBufferInBasisPoints? = 0;
+  bidBufferInBasisPoints? = 0;
 }
 
 export default MarketplaceModuleMetadata;
