@@ -15,7 +15,5 @@ export declare class MarketplaceModuleMetadata extends CommonModuleMetadata
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [bidBufferInBasisPoints?](./sdk.marketplacemodulemetadata.bidbufferinbasispoints.md) |  | number \| undefined | <i>(Optional)</i> This is a percentage (e.g. 5%). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.<!-- -->This value is formatter as basis points (e.g. 5% = 500). |
 |  [marketFeeBasisPoints](./sdk.marketplacemodulemetadata.marketfeebasispoints.md) |  | number | The fee collected on all sales out of this marketplace. This fee only applies to items sold from the marketplace and does not include any resale royalties that occur outside of this marketplace. The default is 0 (no fees).<!-- -->1 basis point = 0.01%<!-- -->For example: if this value is 100, then the royalty is 1% of the total sales. |
-|  [timeBufferInSeconds?](./sdk.marketplacemodulemetadata.timebufferinseconds.md) |  | number \| undefined | <i>(Optional)</i> This is measured in seconds (e.g. 15 minutes or 900 seconds). If a winning bid is made within the buffer of the auction closing (e.g. 15 minutes within the auction closing), the auction's closing time is increased by the buffer toprevent buyers from making last minute winning bids, and to give time to other buyers to make a higher bid if they wish to. |
 

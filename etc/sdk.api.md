@@ -1220,9 +1220,7 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
 
 // @public (undocumented)
 export class MarketplaceModuleMetadata extends CommonModuleMetadata {
-    bidBufferInBasisPoints?: number | undefined;
     marketFeeBasisPoints: number;
-    timeBufferInSeconds?: number | undefined;
 }
 
 // @public
