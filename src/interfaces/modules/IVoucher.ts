@@ -1,4 +1,5 @@
-import { BigNumber } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
+import { NFTMetadata } from "../../common/nft";
 import { NewMintRequest, Voucher } from "../../types/voucher";
 
 export interface IVoucher {
@@ -45,4 +46,11 @@ export interface IVoucher {
   generateSignature(
     mintRequest: NewMintRequest,
   ): Promise<{ voucher: Voucher; signature: string }>;
+
+  /**
+   * Get the nft with the given id.
+   *
+   * @param tokenId - The id to fetch.
+   */
+  get(tokenId: BigNumberish): Promise<NFTMetadata>;
 }

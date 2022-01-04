@@ -1,10 +1,18 @@
-import { SignatureMint721, SignatureMint721__factory } from "@3rdweb/contracts";
-import { MintRequestStructOutput } from "@3rdweb/contracts/dist/SignatureMint721";
+import {
+  ERC20__factory,
+  SignatureMint721,
+  SignatureMint721__factory,
+} from "@3rdweb/contracts";
+import {
+  MintRequestStructOutput,
+  TokensMintedEvent,
+} from "@3rdweb/contracts/dist/SignatureMint721";
+import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, Signer } from "ethers";
+import { BigNumber, BigNumberish, Signer } from "ethers";
 import { hexlify, toUtf8Bytes } from "ethers/lib/utils";
 import { v4 as uuidv4 } from "uuid";
-import { ModuleType } from "../common";
+import { ModuleType, NATIVE_TOKEN_ADDRESS, NFTMetadata } from "../common";
 import { Module } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { IVoucher } from "../interfaces/modules";
@@ -65,11 +73,30 @@ export class VoucherModule
   }
 
   public async mint(req: Voucher, signature: string): Promise<BigNumber> {
-    const message = this.mapVoucher(req);
+    const message = { ...this.mapVoucher(req), uri: req.uri };
 
-    const reciept = await this.sendTransaction("mint", [message, signature]);
+    const overrides = await this.getCallOverrides();
+    await this.setAllowance(
+      BigNumber.from(message.price),
+      req.currencyAddress,
+      overrides,
+    );
 
-    return BigNumber.from(0);
+    const reciept = await this.sendTransaction(
+      "mint",
+      [message, signature],
+      overrides,
+    );
+
+    const t = await this.parseLogs<TokensMintedEvent>(
+      "TokensMinted",
+      reciept.logs,
+    );
+    if (t.length === 0) {
+      throw new Error("No TokensMinted event found");
+    }
+
+    return t[0].args.tokenIdMinted;
   }
 
   mintBatch(tokenMetadata: NewMintRequest[]): Promise<string[]> {
@@ -151,5 +178,53 @@ export class VoucherModule
       validityStartTimestamp: mintRequest.voucherStartTimeEpochSeconds,
       uid: mintRequest.id,
     } as MintRequestStructOutput;
+  }
+
+  // TODO: write in common place and stop duping
+  private async setAllowance(
+    value: BigNumber,
+    currencyAddress: string,
+    overrides: any,
+  ): Promise<any> {
+    if (
+      currencyAddress === NATIVE_TOKEN_ADDRESS ||
+      currencyAddress === AddressZero
+    ) {
+      overrides["value"] = value;
+    } else {
+      const erc20 = ERC20__factory.connect(
+        currencyAddress,
+        this.providerOrSigner,
+      );
+      const owner = await this.getSignerAddress();
+      const spender = this.address;
+      const allowance = await erc20.allowance(owner, spender);
+
+      if (allowance.lt(value)) {
+        await this.sendContractTransaction(erc20, "increaseAllowance", [
+          spender,
+          value.sub(allowance),
+        ]);
+      }
+      return overrides;
+    }
+  }
+
+  /**
+   * Fetches an NFT from storage with the resolved metadata.
+   *
+   * @param tokenId - The id of the token to fetch.
+   * @returns - The NFT metadata.
+   */
+  public async get(tokenId: BigNumberish): Promise<NFTMetadata> {
+    const storage = this.sdk.getStorage();
+    const uri = await this.readOnlyContract.tokenURI(tokenId);
+    const metadata = JSON.parse(await storage.get(uri));
+    return {
+      ...metadata,
+      id: tokenId,
+      uri,
+      image: storage.resolveFullUrl(metadata.image),
+    };
   }
 }

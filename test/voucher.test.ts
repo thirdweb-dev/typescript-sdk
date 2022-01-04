@@ -2,7 +2,7 @@ import { NewMintRequest } from "./../src/types/voucher/NewMintRequest";
 import { Voucher } from "./../src/types/voucher/Voucher";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { ethers } from "ethers";
 import { NATIVE_TOKEN_ADDRESS, VoucherModule } from "../src";
 import { appModule, sdk, signers } from "./before.test";
@@ -86,17 +86,27 @@ describe("Voucher Module", async () => {
   });
 
   describe("Claiming", async () => {
-    let voucher: Voucher, signature: string;
+    let v1, v2: { voucher: Voucher; signature: string };
 
     beforeEach(async () => {
-      const v = await voucherModule.generateSignature(meta);
-      voucher = v.voucher;
-      signature = v.signature;
+      v1 = await voucherModule.generateSignature(meta);
+      v2 = await voucherModule.generateSignature(meta);
     });
 
     it("should allow a valid voucher to mint", async () => {
       await sdk.setProviderOrSigner(samWallet);
-      await voucherModule.mint(voucher, signature);
+      const newId = await voucherModule.mint(v1.voucher, v1.signature);
+      assert.equal(newId.toString(), "0");
+
+      await sdk.setProviderOrSigner(samWallet);
+      const newId2 = await voucherModule.mint(v2.voucher, v2.signature);
+      assert.equal(newId2.toString(), "1");
+    });
+
+    it("should mint the right metadata", async () => {
+      const id = await voucherModule.mint(v1.voucher, v1.signature);
+      const nft = await voucherModule.get(id.toString());
+      expect(nft).to.haveOwnProperty("name", (meta.metadata as any).name);
     });
   });
 });
