@@ -7,14 +7,15 @@
 <b>Signature:</b>
 
 ```typescript
-closeAuctionListing(_listingId: BigNumberish): Promise<void>;
+closeAuctionListing(listingId: BigNumberish, closeFor?: string): Promise<void>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_listingId | BigNumberish |  |
+|  listingId | BigNumberish |  |
+|  closeFor | string |  |
 
 <b>Returns:</b>
 

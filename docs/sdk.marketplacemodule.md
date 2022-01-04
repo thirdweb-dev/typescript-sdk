@@ -27,25 +27,26 @@ export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> impl
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [acceptDirectListingOffer(listingId, addressOfOfferor)](./sdk.marketplacemodule.acceptdirectlistingoffer.md) |  |  |
-|  [acceptWinningBid(listingId)](./sdk.marketplacemodule.acceptwinningbid.md) |  |  |
-|  [buyoutAuction(\_buyout)](./sdk.marketplacemodule.buyoutauction.md) |  | <b><i>(BETA)</i></b> - This method is not yet ready for production use |
+|  [buyoutAuctionListing(listingId)](./sdk.marketplacemodule.buyoutauctionlisting.md) |  |  |
 |  [buyoutDirectListing(\_buyout)](./sdk.marketplacemodule.buyoutdirectlisting.md) |  |  |
+|  [buyoutListing(listingId, quantityDesired)](./sdk.marketplacemodule.buyoutlisting.md) |  |  |
 |  [cancelAuctionListing(listingId)](./sdk.marketplacemodule.cancelauctionlisting.md) |  |  |
 |  [cancelDirectListing(listingId)](./sdk.marketplacemodule.canceldirectlisting.md) |  |  |
-|  [closeAuctionListing(\_listingId)](./sdk.marketplacemodule.closeauctionlisting.md) |  |  |
+|  [closeAuctionListing(listingId, closeFor)](./sdk.marketplacemodule.closeauctionlisting.md) |  |  |
 |  [createAuctionListing(listing)](./sdk.marketplacemodule.createauctionlisting.md) |  |  |
 |  [createDirectListing(listing)](./sdk.marketplacemodule.createdirectlisting.md) |  |  |
-|  [getActiveBids(\_listingId)](./sdk.marketplacemodule.getactivebids.md) |  | <b><i>(BETA)</i></b> - This method is not yet ready for production use |
 |  [getActiveOffer(listingId, address)](./sdk.marketplacemodule.getactiveoffer.md) |  |  |
-|  [getActiveOffers(listingId)](./sdk.marketplacemodule.getactiveoffers.md) |  | <b><i>(BETA)</i></b> - This method is not yet complete. |
 |  [getAuctionListing(listingId)](./sdk.marketplacemodule.getauctionlisting.md) |  |  |
 |  [getBidBufferBps()](./sdk.marketplacemodule.getbidbufferbps.md) |  |  |
 |  [getDirectListing(listingId)](./sdk.marketplacemodule.getdirectlisting.md) |  |  |
+|  [getListing(listingId)](./sdk.marketplacemodule.getlisting.md) |  |  |
 |  [getTimeBufferInSeconds()](./sdk.marketplacemodule.gettimebufferinseconds.md) |  |  |
 |  [getWinningBid(listingId)](./sdk.marketplacemodule.getwinningbid.md) |  |  |
 |  [isWinningBid(winningPrice, newBidPrice, bidBuffer)](./sdk.marketplacemodule.iswinningbid.md) |  |  |
-|  [makeBid(bid)](./sdk.marketplacemodule.makebid.md) |  |  |
-|  [makeOffer(offer)](./sdk.marketplacemodule.makeoffer.md) |  |  |
+|  [makeAuctionListingBid(bid)](./sdk.marketplacemodule.makeauctionlistingbid.md) |  |  |
+|  [makeDirectListingOffer(offer)](./sdk.marketplacemodule.makedirectlistingoffer.md) |  |  |
+|  [setBidBufferBps(buffer)](./sdk.marketplacemodule.setbidbufferbps.md) |  |  |
+|  [setTimeBufferInSeconds(buffer)](./sdk.marketplacemodule.settimebufferinseconds.md) |  |  |
 |  [updateAuctionListing(listing)](./sdk.marketplacemodule.updateauctionlisting.md) |  |  |
 |  [updateDirectListing(listing)](./sdk.marketplacemodule.updatedirectlisting.md) |  |  |
 

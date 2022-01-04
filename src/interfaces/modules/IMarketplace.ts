@@ -42,7 +42,7 @@ export interface IMarketplace {
    * @param currencyContractAddress - The address of the currency contract.
    * @param tokenAmount - The amount of tokens to be offered.
    */
-  makeOffer(offer: {
+  makeDirectListingOffer(offer: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
@@ -57,11 +57,13 @@ export interface IMarketplace {
    * Note: If you make a bid above the buyout price, you will automatically be awarded the
    * the listing and the sale will be executed.
    *
+   * // TODO:  come back to `currencyContractAddress`
+   *
    * @param listingId - The listing id.
    * @param currencyContractAddress - The address of the currency contract.
    * @param tokenAmount - The amount of tokens to be offered.
    */
-  makeBid(bid: {
+  makeAuctionListingBid(bid: {
     listingId: BigNumberish;
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
@@ -81,6 +83,9 @@ export interface IMarketplace {
    * @param listingId - Id of the listing to remove.
    */
   cancelAuctionListing(listingId: BigNumberish): Promise<void>;
+
+  // TODO: finish
+  // cancelListing();
 
   /**
    * Closes an auction listing and distributes the payment/assets.
@@ -191,7 +196,7 @@ export interface IMarketplace {
    * Accepts the offer of the specified wallet in `addressofOfferor`.
    *
    * @param listingId - The listing Id to accept the offer for.
-   * @param addressofOfferor - The address of the offeror.
+   * @param addressOfOfferor - The address of the offeror.
    */
   acceptDirectListingOffer(
     listingId: BigNumberish,
@@ -223,12 +228,26 @@ export interface IMarketplace {
    * Fetch the current bid buffer on the marketplace contract.
    * The bid buffer is represented in basis points.
    *
+   * This is a percentage (e.g. 5%). A new bid is considered to be a winning
+   * bid only if its bid amount is at least the bid buffer (e.g. 5%) greater
+   * than the previous winning bid. This prevents buyers from making very
+   * slightly higher bids to win the auctioned items.
+   *
    * @returns - The bid buffer in basis points.
    */
   getBidBufferBps(): Promise<BigNumber>;
 
   /**
    * Fetch the current time buffer on the marketplace contract.
+   *
+   * This is measured in seconds (e.g. 15 minutes or 900 seconds).
+   * If a winning bid is made within the buffer of the auction closing
+   * (e.g. 15 minutes within the auction closing), the auction's closing
+   * time is increased by the buffer toprevent buyers from making last
+   * minute winning bids, and to give time to other buyers to make a
+   * higher bid if they wish to.
+   *
+   * This value is formatter as basis points (e.g. 5% = 500).
    *
    * @returns - The time buffer in seconds.
    */

@@ -6,6 +6,8 @@
 
 Fetch the current bid buffer on the marketplace contract. The bid buffer is represented in basis points.
 
+This is a percentage (e.g. 5%). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.
+
 <b>Signature:</b>
 
 ```typescript

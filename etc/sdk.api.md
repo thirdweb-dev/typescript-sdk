@@ -67,8 +67,6 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     // Warning: (ae-incompatible-release-tags) The symbol "deployDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
     deployDropModule(metadata: DropModuleMetadata): Promise<DropModule>;
     deployMarketModule(metadata: MarketModuleMetadata): Promise<MarketModule>;
-    // Warning: (ae-forgotten-export) The symbol "MarketplaceModuleMetadata" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     deployMarketplaceModule(metadata: MarketplaceModuleMetadata): Promise<MarketplaceModule>;
     deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
@@ -141,19 +139,27 @@ export class AuctionAlreadyStartedError extends Error {
 }
 
 // @public
+export class AuctionHasNotEndedError extends Error {
+    constructor(id?: string, endTime?: BigNumberish_2);
+}
+
+// @public
 export interface AuctionListing {
-    asset: any;
+    asset: NFTMetadata;
     assetContractAddress: string;
     buyoutCurrencyValuePerToken: CurrencyValue;
     buyoutPrice: BigNumberish_2;
     currencyContractAddress: string;
+    endTimeInEpochSeconds: BigNumberish_2;
     id: string;
     quantity: BigNumberish_2;
     reservePrice: BigNumberish_2;
     reservePriceCurrencyValuePerToken: CurrencyValue;
-    secondsUntilEnd: BigNumberish_2;
-    startTimeInSeconds: BigNumberish_2;
+    sellerAddress: string;
+    startTimeInEpochSeconds: BigNumberish_2;
     tokenId: BigNumberish_2;
+    // (undocumented)
+    type: ListingType.Auction;
 }
 
 // @beta (undocumented)
@@ -591,7 +597,7 @@ export const DEFAULT_BLOCK_TIMES_FALLBACK: Record<SUPPORTED_CHAIN_ID | ChainId.H
 
 // @public
 export interface DirectListing {
-    asset: any;
+    asset: NFTMetadata;
     assetContractAddress: string;
     buyoutCurrencyValuePerToken: CurrencyValue;
     buyoutPrice: BigNumberish_2;
@@ -599,8 +605,11 @@ export interface DirectListing {
     id: string;
     quantity: BigNumberish_2;
     secondsUntilEnd: BigNumberish_2;
+    sellerAddress: string;
     startTimeInSeconds: BigNumberish_2;
     tokenId: BigNumberish_2;
+    // (undocumented)
+    type: ListingType.Direct;
 }
 
 // @beta
@@ -786,6 +795,9 @@ export function getRoleHash(role: Role): BytesLike;
 // @internal
 export function getTokenMetadata(contract: NFTContractTypes, tokenId: string, ipfsGatewayUrl: string): Promise<NFTMetadata>;
 
+// @public (undocumented)
+export function getTokenMetadataUsingStorage(contractAddress: string, provider: ProviderOrSigner, tokenId: string, storage: IStorage): Promise<NFTMetadata>;
+
 // Warning: (ae-internal-missing-underscore) The name "getTokenUri" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -809,40 +821,37 @@ export interface IDropModule {
 // @public (undocumented)
 export interface IMarketplace {
     acceptDirectListingOffer(listingId: BigNumberish_2, addressOfOfferor: string): Promise<void>;
-    acceptWinningBid(listingId: BigNumberish_2): Promise<void>;
-    buyoutAuction(buyout: {
-        listingId: BigNumberish_2;
-        quantityDesired: BigNumberish_2;
-    }): Promise<void>;
+    buyoutAuctionListing(listingId: BigNumberish_2): Promise<void>;
     buyoutDirectListing(buyout: {
         listingId: BigNumberish_2;
         quantityDesired: BigNumberish_2;
     }): Promise<void>;
+    buyoutListing(listingId: BigNumberish_2, quantityDesired?: BigNumberish_2): Promise<void>;
     cancelAuctionListing(listingId: BigNumberish_2): Promise<void>;
     cancelDirectListing(listingId: BigNumberish_2): Promise<void>;
-    closeAuctionListing(listingId: BigNumberish_2): Promise<void>;
+    closeAuctionListing(listingId: BigNumberish_2, closeFor?: string): Promise<void>;
     createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
     createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
-    getActiveBids(listingId: BigNumberish_2): Promise<Offer[]>;
     getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
-    getActiveOffers(listingId: BigNumberish_2): Promise<Offer[]>;
     getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
     getBidBufferBps(): Promise<BigNumber_2>;
     getDirectListing(listingId: BigNumberish_2): Promise<DirectListing>;
+    getListing(listingId: BigNumberish_2): Promise<AuctionListing | DirectListing>;
     getTimeBufferInSeconds(): Promise<BigNumber_2>;
     getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
-    makeBid(bid: {
+    makeAuctionListingBid(bid: {
+        listingId: BigNumberish_2;
+        currencyContractAddress: string;
+        pricePerToken: BigNumberish_2;
+    }): Promise<void>;
+    makeDirectListingOffer(offer: {
         listingId: BigNumberish_2;
         quantityDesired: BigNumberish_2;
         currencyContractAddress: string;
         pricePerToken: BigNumberish_2;
     }): Promise<void>;
-    makeOffer(offer: {
-        listingId: BigNumberish_2;
-        quantityDesired: BigNumberish_2;
-        currencyContractAddress: string;
-        pricePerToken: BigNumberish_2;
-    }): Promise<void>;
+    setBidBufferBps(buffer: BigNumberish_2): Promise<void>;
+    setTimeBufferInSeconds(buffer: BigNumberish_2): Promise<void>;
     updateAuctionListing(listing: AuctionListing): Promise<void>;
     updateDirectListing(listing: DirectListing): Promise<void>;
 }
@@ -1142,41 +1151,36 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     // (undocumented)
     acceptDirectListingOffer(listingId: BigNumberish_2, addressOfOfferor: string): Promise<void>;
     // (undocumented)
-    acceptWinningBid(listingId: BigNumberish_2): Promise<void>;
-    // @beta
-    buyoutAuction(_buyout: {
-        listingId: BigNumberish_2;
-        quantityDesired: BigNumberish_2;
-    }): Promise<void>;
+    buyoutAuctionListing(listingId: BigNumberish_2): Promise<void>;
     // (undocumented)
     buyoutDirectListing(_buyout: {
         listingId: BigNumberish_2;
         quantityDesired: BigNumberish_2;
     }): Promise<void>;
     // (undocumented)
+    buyoutListing(listingId: BigNumberish_2, quantityDesired?: BigNumberish_2): Promise<void>;
+    // (undocumented)
     cancelAuctionListing(listingId: BigNumberish_2): Promise<void>;
     // (undocumented)
     cancelDirectListing(listingId: BigNumberish_2): Promise<void>;
     // (undocumented)
-    closeAuctionListing(_listingId: BigNumberish_2): Promise<void>;
+    closeAuctionListing(listingId: BigNumberish_2, closeFor?: string): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): Marketplace;
     // (undocumented)
     createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
     // (undocumented)
     createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
-    // @beta
-    getActiveBids(_listingId: BigNumberish_2): Promise<Offer[]>;
     // (undocumented)
     getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
-    // @beta
-    getActiveOffers(listingId: BigNumberish_2): Promise<Offer[]>;
     // (undocumented)
     getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
     // (undocumented)
     getBidBufferBps(): Promise<BigNumber_2>;
     // (undocumented)
     getDirectListing(listingId: BigNumberish_2): Promise<DirectListing>;
+    // (undocumented)
+    getListing(listingId: BigNumberish_2): Promise<AuctionListing | DirectListing>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
@@ -1188,14 +1192,13 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     // (undocumented)
     isWinningBid(winningPrice: BigNumberish_2, newBidPrice: BigNumberish_2, bidBuffer: BigNumberish_2): Promise<boolean>;
     // (undocumented)
-    makeBid(bid: {
+    makeAuctionListingBid(bid: {
         listingId: BigNumberish_2;
-        quantityDesired: BigNumberish_2;
         currencyContractAddress: string;
         pricePerToken: BigNumberish_2;
     }): Promise<void>;
     // (undocumented)
-    makeOffer(offer: {
+    makeDirectListingOffer(offer: {
         listingId: BigNumberish_2;
         quantityDesired: BigNumberish_2;
         currencyContractAddress: string;
@@ -1206,9 +1209,18 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     // (undocumented)
     static roles: readonly ["admin", "lister", "pauser"];
     // (undocumented)
+    setBidBufferBps(buffer: BigNumberish_2): Promise<void>;
+    // (undocumented)
+    setTimeBufferInSeconds(buffer: BigNumberish_2): Promise<void>;
+    // (undocumented)
     updateAuctionListing(listing: AuctionListing): Promise<void>;
     // (undocumented)
     updateDirectListing(listing: DirectListing): Promise<void>;
+}
+
+// @public (undocumented)
+export class MarketplaceModuleMetadata extends CommonModuleMetadata {
+    marketFeeBasisPoints: number;
 }
 
 // @public
