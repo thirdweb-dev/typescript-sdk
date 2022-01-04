@@ -5,6 +5,7 @@ import { sdk, signers } from "./before.test";
 import { expect, assert } from "chai";
 import { IpfsStorage } from "../src/storage/IpfsStorage";
 import { FileOrBufferWithNames } from "../src/types/FireOrBufferWithNames";
+import FileOrBuffer from "../src/types/FileOrBuffer";
 
 global.fetch = require("node-fetch");
 
@@ -110,6 +111,7 @@ describe("IPFS Uploads", async () => {
   });
 
   it("should upload files with filenames correctly", async () => {
+    const storage = sdk.getStorage()
     const sampleObjects: FileOrBufferWithNames[] = [
       {
         file: readFileSync("test/test.mp4"),
@@ -117,12 +119,19 @@ describe("IPFS Uploads", async () => {
       },
       { file: readFileSync("test/test.mp4"), name: "test3.mp4" },
       {
-        file: readFileSync("test/test.mp4"),
-        name: "test1.mp4",
+        file: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+        name: "test.jpeg",
       },
     ];
-    const cid = await sdk.getStorage().uploadBatchWithFileNames(sampleObjects);
-    console.log(cid);
+    const cid = await storage.uploadBatchWithFileNames(sampleObjects);
+    assert((await getFile(`${cid}${"test.jpeg"}`)).headers.get("content-type").toString() === "image/jpeg")
+  });
+
+  it("should upload files according to passed start file number", async () => {
+    const storage = sdk.getStorage()
+    const sampleObjects: FileOrBuffer[] = [readFileSync("test/test.mp4"), readFileSync("test/3510820011_4f558b6dea_b.jpg"),];
+    const cid = await storage.uploadBatch(sampleObjects, "", 1)
+    assert((await getFile(`${cid}${"2"}`)).headers.get("content-type").toString() === "image/jpeg")
   });
 
   it("should upload properties recursively in batch", async () => {
