@@ -755,7 +755,7 @@ export class DropModule
       ]),
     );
     encoded.push(
-      this.contract.interface.encodeFunctionData("safeTransferFrom", [
+      this.contract.interface.encodeFunctionData("transferFrom", [
         await this.getSignerAddress(),
         addressToClaim,
         (await this.readOnlyContract.nextTokenIdToClaim()).sub(1),
