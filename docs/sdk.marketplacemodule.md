@@ -43,8 +43,8 @@ export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> impl
 |  [getTimeBufferInSeconds()](./sdk.marketplacemodule.gettimebufferinseconds.md) |  |  |
 |  [getWinningBid(listingId)](./sdk.marketplacemodule.getwinningbid.md) |  |  |
 |  [isWinningBid(winningPrice, newBidPrice, bidBuffer)](./sdk.marketplacemodule.iswinningbid.md) |  |  |
-|  [makeBid(bid)](./sdk.marketplacemodule.makebid.md) |  |  |
-|  [makeOffer(offer)](./sdk.marketplacemodule.makeoffer.md) |  |  |
+|  [makeAuctionListingBid(bid)](./sdk.marketplacemodule.makeauctionlistingbid.md) |  |  |
+|  [makeDirectListingOffer(offer)](./sdk.marketplacemodule.makedirectlistingoffer.md) |  |  |
 |  [setBidBufferBps(buffer)](./sdk.marketplacemodule.setbidbufferbps.md) |  |  |
 |  [setTimeBufferInSeconds(buffer)](./sdk.marketplacemodule.settimebufferinseconds.md) |  |  |
 |  [updateAuctionListing(listing)](./sdk.marketplacemodule.updateauctionlisting.md) |  |  |

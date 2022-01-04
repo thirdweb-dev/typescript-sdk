@@ -17,7 +17,7 @@ acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): Pro
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  listingId | BigNumberish | The listing Id to accept the offer for. |
-|  addressOfOfferor | string |  |
+|  addressOfOfferor | string | The address of the offeror. |
 
 <b>Returns:</b>
 

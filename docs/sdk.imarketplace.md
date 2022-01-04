@@ -30,8 +30,8 @@ export interface IMarketplace
 |  [getListing(listingId)](./sdk.imarketplace.getlisting.md) | Helper method to fetch a listing without knowing the type. |
 |  [getTimeBufferInSeconds()](./sdk.imarketplace.gettimebufferinseconds.md) | Fetch the current time buffer on the marketplace contract. |
 |  [getWinningBid(listingId)](./sdk.imarketplace.getwinningbid.md) | If there's a winning big on the listing, this method will return it. |
-|  [makeBid(bid)](./sdk.imarketplace.makebid.md) | Make an offer on an auction. The offer must be at least <code>current bid * bid buffer %)</code> in order to be accepted.<!-- -->Bid buffer is configured on the Marketplace contract.<!-- -->Note: If you make a bid above the buyout price, you will automatically be awarded the the listing and the sale will be executed. |
-|  [makeOffer(offer)](./sdk.imarketplace.makeoffer.md) | Make an offer on a direct listing. |
+|  [makeAuctionListingBid(bid)](./sdk.imarketplace.makeauctionlistingbid.md) | Make an offer on an auction. The offer must be at least <code>current bid * bid buffer %)</code> in order to be accepted.<!-- -->Bid buffer is configured on the Marketplace contract.<!-- -->Note: If you make a bid above the buyout price, you will automatically be awarded the the listing and the sale will be executed.<!-- -->// TODO: come back to <code>currencyContractAddress</code> |
+|  [makeDirectListingOffer(offer)](./sdk.imarketplace.makedirectlistingoffer.md) | Make an offer on a direct listing. |
 |  [setBidBufferBps(buffer)](./sdk.imarketplace.setbidbufferbps.md) | Sets the bid buffer on the marketplace contract. The bid buffer is represented in basis points. |
 |  [setTimeBufferInSeconds(buffer)](./sdk.imarketplace.settimebufferinseconds.md) | Sets the current time buffer on the marketplace contract. |
 |  [updateAuctionListing(listing)](./sdk.imarketplace.updateauctionlisting.md) | Creates a new auction listing on a marketplace. |

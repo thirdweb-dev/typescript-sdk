@@ -841,12 +841,12 @@ export interface IMarketplace {
     getListing(listingId: BigNumberish_2): Promise<AuctionListing | DirectListing>;
     getTimeBufferInSeconds(): Promise<BigNumber_2>;
     getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
-    makeBid(bid: {
+    makeAuctionListingBid(bid: {
         listingId: BigNumberish_2;
         currencyContractAddress: string;
         pricePerToken: BigNumberish_2;
     }): Promise<void>;
-    makeOffer(offer: {
+    makeDirectListingOffer(offer: {
         listingId: BigNumberish_2;
         quantityDesired: BigNumberish_2;
         currencyContractAddress: string;
@@ -1194,13 +1194,13 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     // (undocumented)
     isWinningBid(winningPrice: BigNumberish_2, newBidPrice: BigNumberish_2, bidBuffer: BigNumberish_2): Promise<boolean>;
     // (undocumented)
-    makeBid(bid: {
+    makeAuctionListingBid(bid: {
         listingId: BigNumberish_2;
         currencyContractAddress: string;
         pricePerToken: BigNumberish_2;
     }): Promise<void>;
     // (undocumented)
-    makeOffer(offer: {
+    makeDirectListingOffer(offer: {
         listingId: BigNumberish_2;
         quantityDesired: BigNumberish_2;
         currencyContractAddress: string;
