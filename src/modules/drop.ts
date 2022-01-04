@@ -200,11 +200,16 @@ export class DropModule
     return await this.readOnlyContract.ownerOf(tokenId);
   }
 
+  public async getDefaultSaleRecipient(): Promise<string> {
+    return await this.readOnlyContract.defaultSaleRecipient();
+  }
+
   public async setDefaultSaleRecipient(
     recipient: string,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setDefaultSaleRecipient", [recipient]);
   }
+
   public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
     const address = _address ? _address : await this.getSignerAddress();
     const balance = await this.readOnlyContract.balanceOf(address);

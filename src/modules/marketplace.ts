@@ -139,7 +139,7 @@ export class MarketplaceModule
     return event.listingId;
   }
 
-  public async makeOffer(offer: {
+  public async makeDirectListingOffer(offer: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
@@ -198,7 +198,7 @@ export class MarketplaceModule
     }
   }
 
-  public async makeBid(bid: {
+  public async makeAuctionListingBid(bid: {
     listingId: BigNumberish;
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
@@ -595,7 +595,7 @@ export class MarketplaceModule
       BigNumber.from(listingId),
     );
 
-    await this.makeBid({
+    await this.makeAuctionListingBid({
       listingId,
       currencyContractAddress: listing.currencyContractAddress,
       pricePerToken: listing.buyoutPrice,

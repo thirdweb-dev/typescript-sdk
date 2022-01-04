@@ -43,6 +43,7 @@ export declare class BundleDropModule extends ModuleWithRoles<BundleDrop> implem
 |  [getClaimConditionFactory()](./sdk.bundledropmodule.getclaimconditionfactory.md) |  | <b><i>(BETA)</i></b> Creates a claim condition factory |
 |  [getClaimConditionsFactory()](./sdk.bundledropmodule.getclaimconditionsfactory.md) |  | <b><i>(BETA)</i></b> |
 |  [getClaimIneligibilityReasons(tokenId, quantity, addressToCheck)](./sdk.bundledropmodule.getclaimineligibilityreasons.md) |  | <b><i>(BETA)</i></b> For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user. |
+|  [getDefaultSaleRecipient()](./sdk.bundledropmodule.getdefaultsalerecipient.md) |  | <b><i>(BETA)</i></b> |
 |  [getOwned(\_address)](./sdk.bundledropmodule.getowned.md) |  | <b><i>(BETA)</i></b> <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
 |  [getRoyaltyBps()](./sdk.bundledropmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.bundledropmodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |

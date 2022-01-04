@@ -15,24 +15,25 @@ export interface IMarketplace
 |  Method | Description |
 |  --- | --- |
 |  [acceptDirectListingOffer(listingId, addressOfOfferor)](./sdk.imarketplace.acceptdirectlistingoffer.md) | Accepts the offer of the specified wallet in <code>addressofOfferor</code>. |
-|  [acceptWinningBid(listingId)](./sdk.imarketplace.acceptwinningbid.md) | Accepts the winning bid for an auction and closes the listing, resulting in the sale of the tokens to the buyer. |
-|  [buyoutAuction(buyout)](./sdk.imarketplace.buyoutauction.md) | Buyout the listing based on the buyout price.<!-- -->The offer must be higher as high as the buyout price in order for this buyout to succeed. If the buyout is too low, the method will throw an error. |
+|  [buyoutAuctionListing(listingId)](./sdk.imarketplace.buyoutauctionlisting.md) | Buyout the listing based on the buyout price.<!-- -->The offer must be higher as high as the buyout price in order for this buyout to succeed. If the buyout is too low, the method will throw an error.<!-- -->Buying out an auction listing will purchase all tokens regardless of the quantity. There is no way to buy a partial amount of the tokens.<!-- -->Assuming this transaction is successful, the buyer will instantly have access to the tokens and does not need to call <code>closeAuctionListing</code>. |
 |  [buyoutDirectListing(buyout)](./sdk.imarketplace.buyoutdirectlisting.md) | Buyout the listing based on the buyout price.<!-- -->The offer must be higher as high as the buyout price in order for this buyout to succeed. If the buyout is too low, the method will throw an error. |
+|  [buyoutListing(listingId, quantityDesired)](./sdk.imarketplace.buyoutlisting.md) | Generic buyout method that will dynamically determine the listing type.<!-- -->Only direct listings support buying out a specific quantity, therefore the <code>quantityDesired</code> parameter is ignored if the listing ID passed in is an auction listing. |
 |  [cancelAuctionListing(listingId)](./sdk.imarketplace.cancelauctionlisting.md) | Cancels an auction listing. You can only cancel the listing if it has not started yet. |
 |  [cancelDirectListing(listingId)](./sdk.imarketplace.canceldirectlisting.md) | Cancels a direct listing by updating the quantity to be sold to 0. |
-|  [closeAuctionListing(listingId)](./sdk.imarketplace.closeauctionlisting.md) | Closes an auction listing and distributes the payment/assets. You can only cancel the listing after it has already ended. |
+|  [closeAuctionListing(listingId, closeFor)](./sdk.imarketplace.closeauctionlisting.md) | Closes an auction listing and distributes the payment/assets. You can only close the listing after it has already ended.<!-- -->This method must be called by both the buyer and the seller.<!-- -->When the buyer calls this method, the tokens they purchased will be distributed to the buyers wallet.<!-- -->When the seller calls this method, the winning bid will be distributed to the sellers wallet. |
 |  [createAuctionListing(listing)](./sdk.imarketplace.createauctionlisting.md) | Creates a new auction listing on a marketplace. |
 |  [createDirectListing(listing)](./sdk.imarketplace.createdirectlisting.md) | Creates a new direct listing on a marketplace. |
-|  [getActiveBids(listingId)](./sdk.imarketplace.getactivebids.md) | Return all active bids for an auction. |
 |  [getActiveOffer(listingId, address)](./sdk.imarketplace.getactiveoffer.md) | If the <code>address</code> has made an offer to the specified listing, this method will fetch the offer and return it. If no offer has been made, this method will return <code>undefined</code>. |
-|  [getActiveOffers(listingId)](./sdk.imarketplace.getactiveoffers.md) | Return all active offers for a direct listing. |
 |  [getAuctionListing(listingId)](./sdk.imarketplace.getauctionlisting.md) | Fetch an auction listing by Id. |
 |  [getBidBufferBps()](./sdk.imarketplace.getbidbufferbps.md) | Fetch the current bid buffer on the marketplace contract. The bid buffer is represented in basis points. |
 |  [getDirectListing(listingId)](./sdk.imarketplace.getdirectlisting.md) | Fetch a direct listing by Id. |
+|  [getListing(listingId)](./sdk.imarketplace.getlisting.md) | Helper method to fetch a listing without knowing the type. |
 |  [getTimeBufferInSeconds()](./sdk.imarketplace.gettimebufferinseconds.md) | Fetch the current time buffer on the marketplace contract. |
 |  [getWinningBid(listingId)](./sdk.imarketplace.getwinningbid.md) | If there's a winning big on the listing, this method will return it. |
-|  [makeBid(bid)](./sdk.imarketplace.makebid.md) | Make an offer on an auction. The offer must be at least <code>current bid * (1 + bid buffer)</code> in order to be accepted.<!-- -->Bid buffer is configured on the Marketplace contract.<!-- -->Note: If you make a bid above the buyout price, you will automatically be awarded the the listing and the sale will be executed. |
-|  [makeOffer(offer)](./sdk.imarketplace.makeoffer.md) | Make an offer on a direct listing. |
+|  [makeAuctionListingBid(bid)](./sdk.imarketplace.makeauctionlistingbid.md) | Make an offer on an auction. The offer must be at least <code>current bid * bid buffer %)</code> in order to be accepted.<!-- -->Bid buffer is configured on the Marketplace contract.<!-- -->Note: If you make a bid above the buyout price, you will automatically be awarded the the listing and the sale will be executed.<!-- -->// TODO: come back to <code>currencyContractAddress</code> |
+|  [makeDirectListingOffer(offer)](./sdk.imarketplace.makedirectlistingoffer.md) | Make an offer on a direct listing. |
+|  [setBidBufferBps(buffer)](./sdk.imarketplace.setbidbufferbps.md) | Sets the bid buffer on the marketplace contract. The bid buffer is represented in basis points. |
+|  [setTimeBufferInSeconds(buffer)](./sdk.imarketplace.settimebufferinseconds.md) | Sets the current time buffer on the marketplace contract. |
 |  [updateAuctionListing(listing)](./sdk.imarketplace.updateauctionlisting.md) | Creates a new auction listing on a marketplace. |
 |  [updateDirectListing(listing)](./sdk.imarketplace.updatedirectlisting.md) | Creates a new direct listing on a marketplace. |
 
