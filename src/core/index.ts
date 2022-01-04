@@ -31,6 +31,7 @@ import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule, TokenModule } from "../modules/token";
 import { VoteModule } from "../modules/vote";
+import { VoucherModule } from "../modules/voucher";
 import { IpfsStorage } from "../storage/IpfsStorage";
 import { ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { ClaimProof, Snapshot, SnapshotInfo } from "../types/snapshots";
@@ -59,7 +60,8 @@ export type AnyContract =
   | typeof SplitsModule
   | typeof BundleDropModule
   | typeof MarketplaceModule
-  | typeof VoteModule;
+  | typeof VoteModule
+  | typeof VoucherModule;
 
 /**
  * The entrypoint to the SDK.
@@ -423,6 +425,16 @@ export class ThirdwebSDK implements IThirdwebSdk {
    */
   public getVoteModule(address: string): VoteModule {
     return this.getOrCreateModule(address, VoteModule);
+  }
+
+  /**
+   * @beta
+   *
+   * @param address - The contract address of the given Voucher module.
+   * @returns The Voucher Module.
+   */
+  public getVoucherModule(address: string): VoucherModule {
+    return this.getOrCreateModule(address, VoucherModule);
   }
 
   /**

@@ -3,9 +3,9 @@
 
 
 "@3rdweb/contracts@^1.19.0":
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.19.0.tgz#e52ba5512b15e29df2b52ee8594a255bd4877c47"
-  integrity sha512-bVrqiwncCRqyhpbbb7plLDbflmr3dKtxEPgVAVQnyu+E1zZsrhll+TquSFX2AhtV3p6Jx8a/pusTt0woJYb00g==
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.20.0.tgz#e9752ed15ec5dda938cf99d7f88a1eb5e86d9551"
+  integrity sha512-xxxRVVIK3Y4qXpJWsINjIOiA7gW/+Zo9QL8filHcfXr4R3ZCcYxqSyA9YBx3wBnHwmh69KBHPaDh5MfBopF4Qg==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
@@ -2122,6 +2122,11 @@
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
+
+"@types/uuid@^8.3.3":
+  version "8.3.3"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.3.tgz#c6a60686d953dbd1b1d45e66f4ecdbd5d471b4d0"
+  integrity sha512-0LbEEx1zxrYB3pgpd1M5lEhLcXjKJnYghvhTRgaBeUivLHMDM1TzF3IJ6hXU2+8uA4Xz+5BA63mtZo5DjVT8iA==
 
 "@types/yargs-parser@*":
   version "20.2.1"

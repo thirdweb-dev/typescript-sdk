@@ -39,7 +39,9 @@ export interface IVoucher {
    * their signature won't be valid.
    *
    * @param mintRequest - The voucher to generate a signature for.
-   * @returns - The signature of the voucher.
+   * @returns - The voucher (with the uri pre-populated) and signature of the voucher.
    */
-  generateSignature(mintRequest: NewMintRequest): Promise<string>;
+  generateSignature(
+    mintRequest: NewMintRequest,
+  ): Promise<{ voucher: Voucher; signature: string }>;
 }

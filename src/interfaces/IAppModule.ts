@@ -7,10 +7,10 @@ import { MarketplaceModule } from "../modules/marketplace";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
-import { CurrencyModule } from "../modules/token";
-import BundleDropModuleMetadata from "../types/module-deployments/BundleDropModuleMetadata";
 import { CurrencyModule, TokenModule } from "../modules/token";
 import { VoteModule } from "../modules/vote";
+import { VoucherModule } from "../modules/voucher";
+import BundleDropModuleMetadata from "../types/module-deployments/BundleDropModuleMetadata";
 import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
 import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
@@ -20,8 +20,9 @@ import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceMo
 import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
 import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
-import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
 import TokenModuleMetadata from "../types/module-deployments/TokenModuleMetadata";
+import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
+import { VoucherModuleMetadata } from "../types/module-deployments/VoucherModuleMetadata";
 
 /* eslint-disable semi */
 export default interface IAppModule {
@@ -56,4 +57,6 @@ export default interface IAppModule {
   ): Promise<MarketplaceModule>;
 
   deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
+
+  deployVoucherModule(metadata: VoucherModuleMetadata): Promise<VoucherModule>;
 }

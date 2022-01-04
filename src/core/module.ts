@@ -1,3 +1,4 @@
+import { $enum } from "ts-enum-util";
 import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
 import {
   ExternalProvider,
@@ -417,29 +418,13 @@ export class Module<TContract extends BaseContract = BaseContract> {
       signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
     } else {
       // wallet connect special 🦋
-      if (
-        (
-          (signer?.provider as Web3Provider)?.provider as ExternalProvider & {
-            isWalletConnect?: boolean;
-          }
-        )?.isWalletConnect
-      ) {
-        const payload = ethers.utils._TypedDataEncoder.getPayload(
-          domain,
-          types,
-          message,
-        );
-        signature = await (signer?.provider as JsonRpcProvider).send(
-          "eth_signTypedData",
-          [from.toLowerCase(), JSON.stringify(payload)],
-        );
-      } else {
-        signature = await (signer as JsonRpcSigner)._signTypedData(
-          domain,
-          types,
-          message,
-        );
-      }
+      signature = await this.signTypedData(
+        signer,
+        from,
+        domain,
+        types,
+        message,
+      );
     }
 
     // await forwarder.verify(message, signature);
@@ -449,6 +434,43 @@ export class Module<TContract extends BaseContract = BaseContract> {
     );
 
     return await provider.waitForTransaction(txHash);
+  }
+
+  protected async signTypedData(
+    signer: ethers.Signer,
+    from: string,
+    domain: {
+      name: string;
+      version: string;
+      chainId: number;
+      verifyingContract: string;
+    },
+    types: any,
+    message: any,
+  ): Promise<BytesLike> {
+    if (
+      (
+        (signer?.provider as Web3Provider)?.provider as ExternalProvider & {
+          isWalletConnect?: boolean;
+        }
+      )?.isWalletConnect
+    ) {
+      const payload = ethers.utils._TypedDataEncoder.getPayload(
+        domain,
+        types,
+        message,
+      );
+      return await (signer?.provider as JsonRpcProvider).send(
+        "eth_signTypedData",
+        [from.toLowerCase(), JSON.stringify(payload)],
+      );
+    } else {
+      return await (signer as JsonRpcSigner)._signTypedData(
+        domain,
+        types,
+        message,
+      );
+    }
   }
 
   protected parseEventLogs(eventName: string, logs?: Log[]): any {
