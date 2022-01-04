@@ -17,7 +17,6 @@ import {
 import { AuctionListing, DirectListing } from "../src/types/marketplace";
 import {
   appModule,
-  defaultProvider,
   fastForwardTime,
   jsonProvider,
   sdk,
@@ -27,6 +26,7 @@ import {
 global.fetch = require("node-fetch");
 
 let tokenAddress = NATIVE_TOKEN_ADDRESS;
+let startingBalance = BigNumber.from("10000");
 
 /**
  * Throughout these tests, the admin wallet will be the deployer
@@ -114,6 +114,7 @@ describe("Marketplace Module", async () => {
       },
     ]);
     tokenAddress = customTokenModule.address;
+    startingBalance = BigNumber.from("100000000000000000000");
   });
 
   const createDirectListing = async (
@@ -148,6 +149,16 @@ describe("Marketplace Module", async () => {
       quantity,
       reservePricePerToken: ethers.utils.parseUnits("1"),
     });
+  };
+
+  const provider = ethers.getDefaultProvider();
+  const checkTokenBalance = async (address: string): Promise<BigNumber> => {
+    if (tokenAddress === NATIVE_TOKEN_ADDRESS) {
+      return provider.getBalance(address);
+    } else {
+      const balance = await customTokenModule.balanceOf(address);
+      return BigNumber.from(balance.value);
+    }
   };
 
   describe("Listing", () => {
@@ -265,8 +276,10 @@ describe("Marketplace Module", async () => {
         currencyContractAddress: tokenAddress,
         listingId: directListingId,
         quantityDesired: 1,
-        pricePerToken: ethers.utils.parseUnits("10"),
+        pricePerToken: ethers.utils.parseUnits("8"),
       });
+
+      console.log("Offer made");
 
       await sdk.setProviderOrSigner(adminWallet);
       await marketplaceModule.acceptDirectListingOffer(
@@ -356,7 +369,6 @@ describe("Marketplace Module", async () => {
     it("should allow bids to be made on auction listings", async () => {
       await sdk.setProviderOrSigner(bobWallet);
       await marketplaceModule.makeAuctionListingBid({
-        currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
         pricePerToken: ethers.utils.parseUnits("1"),
       });
@@ -376,7 +388,6 @@ describe("Marketplace Module", async () => {
       // Make a higher winning bid
       await sdk.setProviderOrSigner(samWallet);
       await marketplaceModule.makeAuctionListingBid({
-        currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
         pricePerToken: ethers.utils.parseUnits("2"),
       });
@@ -444,7 +455,6 @@ describe("Marketplace Module", async () => {
         "The buyer should start with no tokens",
       );
       await marketplaceModule.makeAuctionListingBid({
-        currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
         pricePerToken: ethers.utils.parseUnits("20"),
       });
@@ -469,7 +479,6 @@ describe("Marketplace Module", async () => {
         "The buyer should start with no tokens",
       );
       await marketplaceModule.makeAuctionListingBid({
-        currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
         pricePerToken: ethers.utils.parseUnits("2"),
       });
@@ -505,13 +514,11 @@ describe("Marketplace Module", async () => {
         "The buyer should start with no tokens",
       );
       await marketplaceModule.makeAuctionListingBid({
-        currencyContractAddress: tokenAddress,
         listingId: auctionListingId,
         pricePerToken: ethers.utils.parseUnits("2"),
       });
       try {
         await marketplaceModule.makeAuctionListingBid({
-          currencyContractAddress: tokenAddress,
           listingId: auctionListingId,
           pricePerToken: ethers.utils.parseUnits("2.01"),
         });
@@ -643,7 +650,6 @@ describe("Marketplace Module", async () => {
       await sdk.setProviderOrSigner(bobWallet);
 
       await marketplaceModule.makeAuctionListingBid({
-        currencyContractAddress: tokenAddress,
         listingId,
         pricePerToken: ethers.utils.parseUnits("2"),
       });
@@ -700,12 +706,10 @@ describe("Marketplace Module", async () => {
 
   describe("Updating listings", () => {
     let directListingId: BigNumber;
-    let auctionListingId: BigNumber;
 
     beforeEach(async () => {
       await sdk.setProviderOrSigner(adminWallet);
       directListingId = await createDirectListing(dummyNftModule.address, 0);
-      auctionListingId = await createAuctionListing(dummyNftModule.address, 1);
     });
 
     it("should allow you to update a direct listing", async () => {
