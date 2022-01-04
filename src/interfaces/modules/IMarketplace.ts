@@ -228,12 +228,26 @@ export interface IMarketplace {
    * Fetch the current bid buffer on the marketplace contract.
    * The bid buffer is represented in basis points.
    *
+   * This is a percentage (e.g. 5%). A new bid is considered to be a winning
+   * bid only if its bid amount is at least the bid buffer (e.g. 5%) greater
+   * than the previous winning bid. This prevents buyers from making very
+   * slightly higher bids to win the auctioned items.
+   *
    * @returns - The bid buffer in basis points.
    */
   getBidBufferBps(): Promise<BigNumber>;
 
   /**
    * Fetch the current time buffer on the marketplace contract.
+   *
+   * This is measured in seconds (e.g. 15 minutes or 900 seconds).
+   * If a winning bid is made within the buffer of the auction closing
+   * (e.g. 15 minutes within the auction closing), the auction's closing
+   * time is increased by the buffer toprevent buyers from making last
+   * minute winning bids, and to give time to other buyers to make a
+   * higher bid if they wish to.
+   *
+   * This value is formatter as basis points (e.g. 5% = 500).
    *
    * @returns - The time buffer in seconds.
    */
