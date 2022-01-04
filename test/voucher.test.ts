@@ -109,4 +109,6 @@ describe("Voucher Module", async () => {
       expect(nft).to.haveOwnProperty("name", (meta.metadata as any).name);
     });
   });
+
+  describe("Balances", () => {});
 });

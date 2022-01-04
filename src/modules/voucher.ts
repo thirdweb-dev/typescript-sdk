@@ -12,12 +12,20 @@ import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, Signer } from "ethers";
 import { hexlify, toUtf8Bytes } from "ethers/lib/utils";
 import { v4 as uuidv4 } from "uuid";
-import { ModuleType, NATIVE_TOKEN_ADDRESS, NFTMetadata } from "../common";
-import { Module } from "../core/module";
+import {
+  ModuleType,
+  NATIVE_TOKEN_ADDRESS,
+  NFTMetadata,
+  NFTMetadataOwner,
+  Role,
+  RolesMap,
+} from "../common";
 import { MetadataURIOrObject } from "../core/types";
 import { IVoucher } from "../interfaces/modules";
-import { NewMintRequest } from "./../types/voucher/NewMintRequest";
-import { Voucher } from "./../types/voucher/Voucher";
+import { NewMintRequest } from "../types/voucher/NewMintRequest";
+import { Voucher } from "../types/voucher/Voucher";
+import { ModuleWithRoles } from "./../core/module";
+import { NFTModule } from "./nft";
 
 const EIP712Domain = [
   { name: "name", type: "string" },
@@ -43,10 +51,28 @@ const MintRequest = [
  * @public
  */
 export class VoucherModule
-  extends Module<SignatureMint721>
+  extends ModuleWithRoles<SignatureMint721>
   implements IVoucher
 {
   public static moduleType: ModuleType = ModuleType.VOUCHER as const;
+
+  public static roles = [
+    RolesMap.admin,
+    RolesMap.minter,
+    RolesMap.pauser,
+    RolesMap.transfer,
+  ] as const;
+
+  private nftModule = new NFTModule(
+    this.providerOrSigner,
+    this.address,
+    this.options,
+    this.sdk,
+  );
+
+  protected getModuleRoles(): readonly Role[] {
+    return VoucherModule.roles;
+  }
 
   /**
    * @internal
@@ -82,7 +108,7 @@ export class VoucherModule
       overrides,
     );
 
-    const reciept = await this.sendTransaction(
+    const receipt = await this.sendTransaction(
       "mint",
       [message, signature],
       overrides,
@@ -90,7 +116,7 @@ export class VoucherModule
 
     const t = await this.parseLogs<TokensMintedEvent>(
       "TokensMinted",
-      reciept.logs,
+      receipt.logs,
     );
     if (t.length === 0) {
       throw new Error("No TokensMinted event found");
@@ -99,9 +125,11 @@ export class VoucherModule
     return t[0].args.tokenIdMinted;
   }
 
-  mintBatch(tokenMetadata: NewMintRequest[]): Promise<string[]> {
-    throw new Error("Method not implemented.");
-  }
+  // public async mintBatch(
+  //   tokenMetadata: { req: Voucher; signature: string }[],
+  // ): Promise<string[]> {
+  //   return Promise.all();
+  // }
 
   public async verify(
     mintRequest: Voucher,
@@ -114,57 +142,67 @@ export class VoucherModule
     );
   }
 
-  claim(mintRequest: Voucher, signature: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  public async generateSignatureBatch(
+    mintRequests: NewMintRequest[],
+  ): Promise<{ voucher: Voucher; signature: string }[]> {
+    const resolveId = (mintRequest: NewMintRequest): string => {
+      if (mintRequest.id === undefined) {
+        console.warn("mintRequest.id is an empty string, generating uuid-v4");
+        const buffer = Buffer.alloc(16);
+        uuidv4({}, buffer);
+        return hexlify(toUtf8Bytes(buffer.toString("hex")));
+      } else {
+        return hexlify(mintRequest.id as string);
+      }
+    };
+
+    await this.onlyRoles(["minter"], await this.getSignerAddress());
+
+    const cid = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(mintRequests.map((r) => r.metadata));
+
+    const chainId = await this.getChainID();
+    const from = await this.getSignerAddress();
+    const signer = (await this.getSigner()) as Signer;
+
+    return await Promise.all(
+      mintRequests.map(async (m, i) => {
+        const id = resolveId(m);
+        const uri = `${cid}${i}`;
+        return {
+          voucher: {
+            ...m,
+            id,
+            uri,
+          },
+          signature: (
+            await this.signTypedData(
+              signer,
+              from,
+              {
+                name: "SignatureMint721",
+                version: "1",
+                chainId,
+                verifyingContract: this.address,
+              },
+              { MintRequest },
+              {
+                uri,
+                ...(this.mapVoucher(m) as any),
+                uid: id,
+              },
+            )
+          ).toString(),
+        };
+      }),
+    );
   }
 
   public async generateSignature(
     mintRequest: NewMintRequest,
   ): Promise<{ voucher: Voucher; signature: string }> {
-    let id = mintRequest.id;
-    if (mintRequest.id === undefined) {
-      console.warn("mintRequest.id is an empty string, generating uuid-v4");
-      const buffer = Buffer.alloc(16);
-      uuidv4({}, buffer);
-      id = hexlify(toUtf8Bytes(buffer.toString("hex")));
-    } else {
-      id = hexlify(id as string);
-    }
-
-    const metadataUri = await this.sdk
-      .getStorage()
-      .uploadMetadata(mintRequest.metadata);
-
-    const from = await this.getSignerAddress();
-    const signer = (await this.getSigner()) as Signer;
-
-    const message = {
-      uri: metadataUri,
-      ...(this.mapVoucher(mintRequest) as any),
-      uid: id,
-    } as MintRequestStructOutput;
-    const chainId = await this.getChainID();
-    const signature = await this.signTypedData(
-      signer,
-      from,
-      {
-        name: "SignatureMint721",
-        version: "1",
-        chainId,
-        verifyingContract: this.address,
-      },
-      { MintRequest },
-      message,
-    );
-
-    return {
-      voucher: {
-        ...mintRequest,
-        id,
-        uri: metadataUri,
-      },
-      signature: signature.toString(),
-    };
+    return (await this.generateSignatureBatch([mintRequest]))[0];
   }
 
   private mapVoucher(
@@ -217,14 +255,37 @@ export class VoucherModule
    * @returns - The NFT metadata.
    */
   public async get(tokenId: BigNumberish): Promise<NFTMetadata> {
-    const storage = this.sdk.getStorage();
-    const uri = await this.readOnlyContract.tokenURI(tokenId);
-    const metadata = JSON.parse(await storage.get(uri));
-    return {
-      ...metadata,
-      id: tokenId,
-      uri,
-      image: storage.resolveFullUrl(metadata.image),
-    };
+    return await this.nftModule.get(tokenId.toString());
+  }
+
+  public async getOwned(_address?: string): Promise<NFTMetadata[]> {
+    return await this.nftModule.getOwned(_address);
+  }
+
+  public async totalSupply(): Promise<BigNumber> {
+    return await this.nftModule.totalSupply();
+  }
+
+  public async balanceOf(address: string): Promise<BigNumber> {
+    return await this.nftModule.balanceOf(address);
+  }
+
+  public async balance(): Promise<BigNumber> {
+    return await this.balanceOf(await this.getSignerAddress());
+  }
+
+  public async getAllWithOwner(): Promise<NFTMetadataOwner[]> {
+    return await this.nftModule.getAllWithOwner();
+  }
+
+  public async ownerOf(tokenId: string): Promise<string> {
+    return await this.nftModule.ownerOf(tokenId);
+  }
+
+  public async transfer(
+    to: string,
+    tokenId: string,
+  ): Promise<TransactionReceipt> {
+    return await this.nftModule.transfer(to, tokenId);
   }
 }
