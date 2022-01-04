@@ -841,7 +841,6 @@ export interface IMarketplace {
     getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
     makeAuctionListingBid(bid: {
         listingId: BigNumberish_2;
-        currencyContractAddress: string;
         pricePerToken: BigNumberish_2;
     }): Promise<void>;
     makeDirectListingOffer(offer: {
@@ -1194,7 +1193,6 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     // (undocumented)
     makeAuctionListingBid(bid: {
         listingId: BigNumberish_2;
-        currencyContractAddress: string;
         pricePerToken: BigNumberish_2;
     }): Promise<void>;
     // (undocumented)
@@ -1374,7 +1372,7 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
 // Warning: (ae-internal-missing-underscore) The name "NATIVE_TOKEN_ADDRESS" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+export const NATIVE_TOKEN_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
 // @public (undocumented)
 export interface NativeToken extends Currency {
