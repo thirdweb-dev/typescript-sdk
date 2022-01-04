@@ -36,22 +36,28 @@ describe("Vote Module", async () => {
       },
       price: ethers.utils.parseUnits("1", 18),
       to: samWallet.address,
+
+      // Claimable for "24 hours"
       voucherEndTimeEpochSeconds: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
       voucherStartTimeEpochSeconds: Math.floor(Date.now() / 1000),
     };
 
     const { voucher, signature } = await voucherModule.generateSignature(meta);
+    const { signature: badSignature } = await voucherModule.generateSignature({
+      ...meta,
+      price: 0,
+    });
 
     const valid = await voucherModule.verify(voucher, signature);
     assert.isTrue(valid, "This voucher should be valid");
 
-    try {
-      const invalid = await voucherModule.verify(
-        voucher,
-        "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      );
-      assert.isFalse(invalid, "This voucher should be invalid");
-    } catch (err) {}
+    console.log(signature);
+
+    const invalid = await voucherModule.verify(voucher, badSignature);
+    assert.isFalse(
+      invalid,
+      "This voucher should be invalid because the signature is invalid",
+    );
 
     voucher.price = 0;
     const invalidModified = await voucherModule.verify(voucher, signature);
