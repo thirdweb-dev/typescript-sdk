@@ -1,3 +1,4 @@
+import { WETH9__factory } from "@3rdweb/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
@@ -7,6 +8,7 @@ import { deployRegistry } from "./setup/deployRegistry";
 const RPC_URL = "http://localhost:8545";
 
 const jsonProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
+const defaultProvider = hardhatEthers.provider;
 
 let appModule: AppModule;
 let registryAddress: string;
@@ -14,11 +16,29 @@ let sdk: ThirdwebSDK;
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 
+let wrappedNativeTokenAddress: string;
+
+const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
+  const now = Math.floor(Date.now() / 1000);
+  await defaultProvider.send("evm_mine", [now + timeInSeconds]);
+};
+
 before(async () => {
   signers = await hardhatEthers.getSigners();
   [signer] = signers;
 
-  jsonProvider.send("hardhat_reset", []);
+  const wTokenDeployer = await new ethers.ContractFactory(
+    WETH9__factory.abi,
+    WETH9__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy();
+
+  await wTokenDeployer.deployed();
+  wrappedNativeTokenAddress = wTokenDeployer.address;
+  console.log(wrappedNativeTokenAddress);
+
+  await jsonProvider.send("hardhat_reset", []);
   registryAddress = await deployRegistry(signer);
   console.log("Deployed registry at address: ", registryAddress);
 
@@ -39,4 +59,12 @@ before(async () => {
   appModule = await sdk.getAppModule(address);
 });
 
-export { appModule, sdk, signers };
+export {
+  appModule,
+  sdk,
+  signers,
+  wrappedNativeTokenAddress,
+  jsonProvider,
+  defaultProvider,
+  fastForwardTime,
+};

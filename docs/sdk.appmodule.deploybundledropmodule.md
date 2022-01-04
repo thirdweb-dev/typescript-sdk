@@ -16,7 +16,7 @@ deployBundleDropModule(metadata: BundleDropModuleMetadata): Promise<BundleDropMo
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | BundleDropModuleMetadata | The module metadata |
+|  metadata | [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md) | The module metadata |
 
 <b>Returns:</b>
 

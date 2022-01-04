@@ -16,7 +16,7 @@ deployTokenModule(metadata: TokenModuleMetadata): Promise<TokenModule>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | TokenModuleMetadata | The module metadata |
+|  metadata | [TokenModuleMetadata](./sdk.tokenmodulemetadata.md) | The module metadata |
 
 <b>Returns:</b>
 

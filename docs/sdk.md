@@ -70,43 +70,63 @@ Output
 |  [AdminRoleMissingError](./sdk.adminrolemissingerror.md) | Thrown when attempting to execute an admin-role function. |
 |  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
+|  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
+|  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
 |  [BundleDropModule](./sdk.bundledropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleDropModule()](./sdk.thirdwebsdk.getbundledropmodule.md) |
+|  [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md) |  |
 |  [BundleModule](./sdk.bundlemodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md) |
+|  [BundleModuleMetadata](./sdk.bundlemodulemetadata.md) |  |
 |  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
 |  [ClaimConditionPhase](./sdk.claimconditionphase.md) |  |
 |  [ClaimProof](./sdk.claimproof.md) | The model for a claim proof. Currently we support only an address in the leaf of the merkle tree. |
+|  [CommonModuleMetadata](./sdk.commonmodulemetadata.md) | CommonModuleMetadata defines the common properties of a module deployment. |
 |  [CurrencyModule](./sdk.currencymodule.md) |  |
+|  [CurrencyModuleMetadata](./sdk.currencymodulemetadata.md) |  |
+|  [DatastoreModuleMetadata](./sdk.datastoremodulemetadata.md) |  |
 |  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md) |
+|  [DropModuleMetadata](./sdk.dropmodulemetadata.md) |  |
 |  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
 |  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
 |  [FileNameMissingError](./sdk.filenamemissingerror.md) |  |
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [IpfsStorage](./sdk.ipfsstorage.md) |  |
+|  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
+|  [MarketModuleMetadata](./sdk.marketmodulemetadata.md) |  |
+|  [MarketplaceModule](./sdk.marketplacemodule.md) | Access this module by calling [ThirdwebSDK.getMarketplaceModule()](./sdk.thirdwebsdk.getmarketplacemodule.md) |
+|  [MarketplaceModuleMetadata](./sdk.marketplacemodulemetadata.md) |  |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
 |  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality. |
 |  [NFTModule](./sdk.nftmodule.md) | Access this module by calling [ThirdwebSDK.getNFTModule()](./sdk.thirdwebsdk.getnftmodule.md) |
+|  [NftModuleMetadata](./sdk.nftmodulemetadata.md) |  |
 |  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.getpackmodule.md) |
+|  [PackModuleMetadata](./sdk.packmodulemetadata.md) |  |
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
 |  [Snapshot](./sdk.snapshot.md) |  |
+|  [SplitsModuleMetadata](./sdk.splitsmodulemetadata.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
 |  [TokenModule](./sdk.tokenmodule.md) | Access this module by calling [ThirdwebSDK.getTokenModule()](./sdk.thirdwebsdk.gettokenmodule.md) |
+|  [TokenModuleMetadata](./sdk.tokenmodulemetadata.md) |  |
 |  [UploadError](./sdk.uploaderror.md) |  |
 |  [VoteModule](./sdk.votemodule.md) | Access this module by calling  |
+|  [VoteModuleMetadata](./sdk.votemodulemetadata.md) |  |
+|  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 
 ## Enumerations
 
 |  Enumeration | Description |
 |  --- | --- |
 |  [ClaimEligibility](./sdk.claimeligibility.md) |  |
+|  [ListingType](./sdk.listingtype.md) |  |
 |  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
 |  [ProposalState](./sdk.proposalstate.md) |  |
+|  [UnderlyingType](./sdk.underlyingtype.md) |  |
 |  [VoteType](./sdk.votetype.md) |  |
 
 ## Functions
@@ -118,6 +138,7 @@ Output
 |  [estimateBlockAtTime(timeInEpochSeconds, provider)](./sdk.estimateblockattime.md) | Given a time in second, return the block number that the time is in. |
 |  [generateRoot(items)](./sdk.generateroot.md) | Convenience function to generate a merkle root from a list of strings. |
 |  [getNativeTokenByChainId(chainId)](./sdk.getnativetokenbychainid.md) |  |
+|  [getTokenMetadataUsingStorage(contractAddress, provider, tokenId, storage)](./sdk.gettokenmetadatausingstorage.md) |  |
 |  [recursiveResolveGatewayUrl(json, ipfsGatewayUrl)](./sdk.recursiveresolvegatewayurl.md) |  |
 |  [uploadToIPFS(data, contractAddress, signerAddress)](./sdk.uploadtoipfs.md) | A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri. |
 
@@ -125,16 +146,20 @@ Output
 
 |  Interface | Description |
 |  --- | --- |
+|  [AuctionListing](./sdk.auctionlisting.md) | Represents a new marketplace auction listing. |
 |  [BundleDropCreateClaimCondition](./sdk.bundledropcreateclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [BundleDropMetadata](./sdk.bundledropmetadata.md) | <b><i>(BETA)</i></b> |
 |  [BundleMetadata](./sdk.bundlemetadata.md) | <b><i>(BETA)</i></b> |
+|  [ClaimCondition](./sdk.claimcondition.md) | <b><i>(BETA)</i></b> |
 |  [CollectionMetadata](./sdk.collectionmetadata.md) |  |
 |  [ContractMetadata](./sdk.contractmetadata.md) | The typical contract metadata found on the modules. |
 |  [CreatePublicMintCondition](./sdk.createpublicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [Currency](./sdk.currency.md) | Currency metadata. |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
+|  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
 |  [IAppModule](./sdk.iappmodule.md) |  |
 |  [IDropModule](./sdk.idropmodule.md) |  |
+|  [IMarketplace](./sdk.imarketplace.md) |  |
 |  [INFTBundleBatchArgs](./sdk.inftbundlebatchargs.md) |  |
 |  [INFTBundleCreateArgs](./sdk.inftbundlecreateargs.md) | <b><i>(BETA)</i></b> |
 |  [INFTCollectionBatchArgs](./sdk.inftcollectionbatchargs.md) | <b><i>(BETA)</i></b> |
@@ -143,6 +168,7 @@ Output
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) | <b><i>(BETA)</i></b> |
 |  [IRoles](./sdk.iroles.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
+|  [ISplitsModule](./sdk.isplitsmodule.md) |  |
 |  [IStorage](./sdk.istorage.md) |  |
 |  [IThirdwebSdk](./sdk.ithirdwebsdk.md) |  |
 |  [ITokenMintArgs](./sdk.itokenmintargs.md) |  |
@@ -153,8 +179,12 @@ Output
 |  [ModuleMetadata](./sdk.modulemetadata.md) | The module metadata, includes the <code>address</code> and the [ModuleType](./sdk.moduletype.md)<!-- -->. |
 |  [ModuleMetadataNoType](./sdk.modulemetadatanotype.md) | The module metadata, but missing the ModuleType. |
 |  [NativeToken](./sdk.nativetoken.md) |  |
+|  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
+|  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
+|  [NewSplitRecipient](./sdk.newsplitrecipient.md) | The NewSplitRecipient interface describes the structure of a new split recipient. The <code>shares</code> property is important for the calculation of the the total split.<!-- -->If there are two recipients each with 10 shares, they each will receive 50% of the total royalties.<!-- -->If there are two recipients each with 1 share, they each will receive 50% of the total royalties.<!-- -->I.e. the total number of shares is used to calculate the percentage of the total royalties that is allocated to each recipient. |
 |  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
+|  [Offer](./sdk.offer.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [Proposal](./sdk.proposal.md) |  |
@@ -177,10 +207,13 @@ Output
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [AllModuleMetadata](./sdk.allmodulemetadata.md) |  |
 |  [CollectionModule](./sdk.collectionmodule.md) |  |
+|  [CollectionModuleMetadata](./sdk.collectionmodulemetadata.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |
 |  [MetadataURIOrObject](./sdk.metadatauriorobject.md) | A valid URI string or metadata object |
+|  [ModuleMetadataMap](./sdk.modulemetadatamap.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [ProviderOrSigner](./sdk.providerorsigner.md) | A valid "ethers" Provider or Signer. |
 |  [Role](./sdk.role.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |

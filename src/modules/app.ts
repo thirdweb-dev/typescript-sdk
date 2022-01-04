@@ -11,6 +11,7 @@ import {
   ProtocolControl,
   ProtocolControl__factory,
   Royalty__factory,
+  Marketplace__factory,
   VotingGovernor__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
@@ -28,25 +29,31 @@ import {
 } from "../common";
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { getContractMetadata } from "../common/contract";
-import { getNativeTokenByChainId } from "../common/currency";
+import {
+  getCurrencyBalance,
+  getNativeTokenByChainId,
+} from "../common/currency";
 import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import IAppModule from "../interfaces/IAppModule";
 import FileOrBuffer from "../types/FileOrBuffer";
-import BundleDropModuleMetadata from "../types/module-deployments/BundleDropModuleMetadata";
-import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
-import CommonModuleMetadata from "../types/module-deployments/CommonModuleMetadata";
-import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
-import DatastoreModuleMetadata from "../types/module-deployments/DatastoreModuleMetadata";
-import DropModuleMetadata from "../types/module-deployments/DropModuleMetadata";
-import MarketModuleMetadata from "../types/module-deployments/MarketModuleMetadata";
-import NftModuleMetadata from "../types/module-deployments/NftModuleMetadata";
-import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
-import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
-import TokenModuleMetadata from "../types/module-deployments/TokenModuleMetadata";
-import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
+import {
+  BundleDropModuleMetadata,
+  BundleModuleMetadata,
+  CommonModuleMetadata,
+  CurrencyModuleMetadata,
+  DatastoreModuleMetadata,
+  DropModuleMetadata,
+  MarketModuleMetadata,
+  NewSplitRecipient,
+  NftModuleMetadata,
+  PackModuleMetadata,
+  SplitsModuleMetadata,
+  TokenModuleMetadata,
+  VoteModuleMetadata,
+} from "../types/module-deployments";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";
 import { BundleDropModule } from "./bundleDrop";
@@ -57,6 +64,8 @@ import { MarketModule } from "./market";
 import { NFTModule } from "./nft";
 import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
+import { MarketplaceModule } from "./marketplace";
+import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceModuleMetadata";
 import { CurrencyModule, TokenModule } from "./token";
 import { VoteModule } from "./vote";
 
@@ -68,6 +77,8 @@ export class AppModule
   extends ModuleWithRoles<ProtocolControl>
   implements IAppModule
 {
+  private _shouldCheckVersion = true;
+  private _isV1 = false;
   private jsonConvert = new JsonConvert();
 
   public static roles = [RolesMap.admin] as const;
@@ -343,10 +354,63 @@ export class AppModule
     to: string,
     currency: string,
   ): Promise<TransactionReceipt> {
-    if (isNativeToken(currency)) {
+    const provider = this.readOnlyContract.provider;
+    let lastTransaction: TransactionReceipt | null = null;
+    const isNative = isNativeToken(currency);
+    if (isNative) {
       currency = ethers.constants.AddressZero;
     }
-    return await this.sendTransaction("withdrawFunds", [to, currency]);
+
+    // should fetch for contract only, not treasury
+    const balance = await getCurrencyBalance(provider, currency, this.address);
+    const bn = BigNumber.from(balance.value);
+
+    // tries to withdraw from the project
+    if (bn.gt(0)) {
+      // v1 erc20 doesn't work, so check for v2 or native
+      const isV2 = !(await this.isV1());
+      if (isV2 || isNative) {
+        lastTransaction = await this.sendTransaction("withdrawFunds", [
+          to,
+          currency,
+        ]);
+      }
+    }
+
+    // tries to withdraw from the splits
+    const treasury = await this.getRoyaltyTreasury();
+    if (treasury !== this.address) {
+      const treasuryBalance = await getCurrencyBalance(
+        provider,
+        currency,
+        treasury,
+      );
+      if (BigNumber.from(treasuryBalance.value).gt(0)) {
+        const royalty = Royalty__factory.connect(
+          treasury,
+          this.readOnlyContract.provider,
+        );
+        if (isNative) {
+          lastTransaction = await this.sendContractTransaction(
+            royalty,
+            "distribute()",
+            [],
+          );
+        } else {
+          lastTransaction = await this.sendContractTransaction(
+            royalty,
+            "distribute(address)",
+            [currency],
+          );
+        }
+      }
+    }
+
+    if (!lastTransaction) {
+      throw new Error("no funds to withdraw");
+    }
+
+    return lastTransaction;
   }
 
   /**
@@ -899,16 +963,144 @@ export class AppModule
     return this.sdk.getVoteModule(address);
   }
 
+  public async shouldUpgradeToV2(): Promise<boolean> {
+    if (await this.isV1()) {
+      if ((await this.getRoyaltyTreasury()) === this.address) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public async shouldUpgradeModuleList(): Promise<ModuleMetadata[]> {
+    // if it's v1, we don't want module's fee_recipient to be set to protocol control
+    // it should be set to protocol control's `this.getRoyaltyTreasury()`
+    if (!(await this.isV1())) {
+      return [];
+    }
+
+    // not ready for upgrade yet. need to upgrade app first.
+    // otherwise royalty of sub-modules may point to wrong royalty treasury
+    if ((await this.getRoyaltyTreasury()) === this.address) {
+      return [];
+    }
+
+    const modules = await this.getAllModuleMetadata([
+      ModuleType.NFT,
+      ModuleType.BUNDLE,
+      ModuleType.PACK,
+      ModuleType.DROP,
+      ModuleType.BUNDLE_DROP,
+    ]);
+    return modules.filter(
+      (m) =>
+        m.metadata?.fee_recipient?.toLowerCase() === this.address.toLowerCase(),
+    );
+  }
+
+  public async upgradeModuleList(moduleAddresses: string[]): Promise<void> {
+    const signer = this.getSigner();
+    invariant(signer, "needs a signer");
+
+    const allUpgradableModules = await this.shouldUpgradeModuleList();
+    const upgradableModules = allUpgradableModules.filter((m) =>
+      moduleAddresses.includes(m.address),
+    );
+
+    // since all the modules consistent / similar for contractURI (get and set),
+    // we just pretend everything is NFT module :)
+    const moduleMetadatas = await Promise.all(
+      upgradableModules.map((m) =>
+        this.sdk.getNFTModule(m.address).getMetadata(false),
+      ),
+    );
+
+    const royaltyTreasury = await this.getRoyaltyTreasury();
+
+    // map to address, new updated metadata
+    const metadataUris = await Promise.all(
+      moduleMetadatas.map((m) => {
+        return this.sdk.getStorage().uploadMetadata({
+          ...m.metadata,
+          fee_recipient: royaltyTreasury,
+        });
+      }),
+    );
+
+    const nonce = await signer.getTransactionCount("pending");
+    const txData = metadataUris.map((uri) =>
+      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
+    );
+    const txs = txData.map((data, i) => ({
+      to: moduleMetadatas[i].address,
+      nonce: nonce + i,
+      data,
+    }));
+
+    // batch send :)
+    await Promise.all(txs.map((tx) => signer.sendTransaction(tx)));
+  }
+
+  /**
+   * Upgrades the protocol control to v2. In v2, the royalty treasury needs to be set to be set to a splits contract.
+   *
+   * @param splitsModuleAddress - Optional. By default, it automatically creates a Splits for the project.
+   * @param splitsRecipients - Optiional. By default, it is the signer who upgrades.
+   */
+  public async upgradeToV2(
+    upgradeOptions: {
+      splitsModuleAddress?: string;
+      splitsRecipients?: NewSplitRecipient[];
+    } = {},
+  ): Promise<void> {
+    if (await this.isV1UpgradedOrV2()) {
+      return;
+    }
+
+    let splitsAddress = "";
+    if (upgradeOptions.splitsModuleAddress) {
+      splitsAddress = upgradeOptions.splitsModuleAddress;
+    } else {
+      if (!upgradeOptions.splitsRecipients) {
+        upgradeOptions.splitsRecipients = [
+          {
+            address: await this.getSignerAddress(),
+            shares: 100,
+          },
+        ];
+      }
+
+      const metadata = (await this.getMetadata()).metadata;
+      splitsAddress = (
+        await this.deploySplitsModule({
+          name: `${metadata?.name} Treasury`,
+          recipientSplits: upgradeOptions.splitsRecipients,
+        })
+      ).address;
+    }
+
+    await this.setRoyaltyTreasury(splitsAddress);
+  }
+
   /**
    * Check the balance of the project wallet in the native token of the chain
    *
    * @returns - The balance of the project in the native token of the chain
    */
   public async balance(): Promise<BigNumber> {
-    const walletBalance = await this.readOnlyContract.provider.getBalance(
+    const projectBalance = await this.readOnlyContract.provider.getBalance(
       this.address,
     );
-    return walletBalance;
+
+    let treasuryBalance = BigNumber.from(0);
+    const treasury = await this.getRoyaltyTreasury();
+    if (treasury !== this.address) {
+      treasuryBalance = await this.readOnlyContract.provider.getBalance(
+        treasury,
+      );
+    }
+
+    return projectBalance.add(treasuryBalance);
   }
 
   /**
@@ -918,7 +1110,7 @@ export class AppModule
    * @returns - The balance of the project in the native token of the chain
    */
   public async balanceOfToken(tokenAddress: string): Promise<CurrencyValue> {
-    let balance: BigNumber;
+    let balance = BigNumber.from(0);
     if (isNativeToken(tokenAddress)) {
       balance = await this.balance();
     } else {
@@ -926,14 +1118,84 @@ export class AppModule
         tokenAddress,
         this.readOnlyContract.provider,
       );
-      try {
-        balance = await erc20.balanceOf(this.address);
-      } catch (e) {
-        console.error(tokenAddress, e);
-        balance = BigNumber.from(0);
+
+      // TODO: multicall :)
+      if (await this.isV1UpgradedOrV2()) {
+        try {
+          balance = await erc20.balanceOf(this.address);
+        } catch (e) {
+          // invalid token address
+          console.error(e);
+          throw new Error("invalid token address");
+        }
+      }
+
+      // if it's not upgraded or v2, erc20 balance wont show up
+      const treasury = await this.getRoyaltyTreasury();
+      if (treasury !== this.address) {
+        balance.add(await erc20.balanceOf(treasury));
       }
     }
 
     return await getCurrencyValue(this.providerOrSigner, tokenAddress, balance);
+  }
+
+  /**
+   * @internal
+   * Check if contract is v1 or v2. If the contract doesn't have version = v1 contract.
+   */
+  async isV1(): Promise<boolean> {
+    if (this._shouldCheckVersion) {
+      try {
+        await this.readOnlyContract.callStatic.version();
+        this._isV1 = false;
+      } catch (e) {
+        this._isV1 = true;
+      }
+      this._shouldCheckVersion = false;
+    }
+    return this._isV1;
+  }
+
+  /**
+   * @internal
+   */
+  async isV1UpgradedOrV2(): Promise<boolean> {
+    return !(await this.isV1()) || !(await this.shouldUpgradeToV2());
+  }
+
+  public async deployMarketplaceModule(
+    metadata: MarketplaceModuleMetadata,
+  ): Promise<MarketplaceModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      MarketplaceModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
+
+    const address = await this._deployModule(
+      ModuleType.MARKETPLACE,
+      [
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        nativeTokenWrapperAddress,
+        metadataUri,
+        metadata.marketFeeBasisPoints,
+      ],
+      Marketplace__factory,
+    );
+
+    return this.sdk.getMarketplaceModule(address);
   }
 }

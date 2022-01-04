@@ -1,3 +1,4 @@
+import { BigNumberish } from "ethers";
 /**
  * Error that may get thrown if IPFS returns nothing for a given uri.
  * @public
@@ -98,6 +99,54 @@ export class DuplicateLeafsError extends Error {
 }
 
 /**
+ * Thrown when attempting to update/cancel an auction that already started
+ */
+export class AuctionAlreadyStartedError extends Error {
+  constructor(id?: string) {
+    super(
+      `Auction already started with existing bid${id ? `, id: ${id}` : ""}`,
+    );
+  }
+}
+
+/**
+ * Thrown when trying to retrieve a listing from a marketplace that doesn't exist
+ */
+export class ListingNotFoundError extends Error {
+  constructor(marketplaceContractAddress: string, listingId?: string) {
+    super(
+      `Could not find listing.${
+        marketplaceContractAddress
+          ? ` marketplace address: ${marketplaceContractAddress}`
+          : ""
+      }${listingId ? ` listing id: ${listingId}` : ""}`,
+    );
+  }
+}
+
+/**
+ * Thrown when trying to retrieve a listing of the wrong type
+ */
+export class WrongListingTypeError extends Error {
+  constructor(
+    marketplaceContractAddress: string,
+    listingId?: string,
+    actualType?: string,
+    expectedType?: string,
+  ) {
+    super(
+      `Incorrect listing type. Are you sure you're using the right method?.${
+        marketplaceContractAddress
+          ? ` marketplace address: ${marketplaceContractAddress}`
+          : ""
+      }${listingId ? ` listing id: ${listingId}` : ""}${
+        expectedType ? ` expected type: ${expectedType}` : ""
+      }${actualType ? ` actual type: ${actualType}` : ""}`,
+    );
+  }
+}
+
+/**
  * Thrown when attempting to transfer an asset that has restricted transferability
  */
 export class RestrictedTransferError extends Error {
@@ -123,6 +172,19 @@ export class AdminRoleMissingError extends Error {
       `${message}, admin role is missing${
         address ? ` on address: ${address}` : ""
       }${contractAddress ? ` on contract: ${contractAddress}` : ""}`,
+    );
+  }
+}
+
+/**
+ * Thrown when attempting to close an auction that has not ended
+ */
+export class AuctionHasNotEndedError extends Error {
+  constructor(id?: string, endTime?: BigNumberish) {
+    super(
+      `Auction has not ended yet${id ? `, id: ${id}` : ""}${
+        endTime ? `, end time: ${endTime.toString()}` : ""
+      }`,
     );
   }
 }
