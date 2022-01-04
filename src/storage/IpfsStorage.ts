@@ -2,7 +2,7 @@ import { FetchError, UploadError } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
 import { IStorage } from "../interfaces/IStorage";
 import FileOrBuffer from "../types/FileOrBuffer";
-import FileOrBufferWithNames from "../types/FireOrBufferWithNames";
+import { FileOrBufferWithNames } from "../types/FireOrBufferWithNames";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -56,10 +56,9 @@ export class IpfsStorage implements IStorage {
     fileStartNumber = 0,
   ): Promise<string> {
     const cid = await this.uploadBatchWithCid(
-      false,
       files,
       contractAddress,
-      fileStartNumber,
+      fileStartNumber
     );
 
     return `ipfs://${cid}/`;
@@ -69,13 +68,12 @@ export class IpfsStorage implements IStorage {
     files: FileOrBufferWithNames[],
     contractAddress?: string,
   ): Promise<string> {
-    const cid = await this.uploadBatchWithCid(true, files, contractAddress);
+    const cid = await this.uploadBatchWithCid(files, contractAddress, 0, true);
 
     return `ipfs://${cid}/`;
   }
 
   private async uploadBatchWithCid(
-    withFileNames = false,
     files:
       | Buffer[]
       | string[]
@@ -84,6 +82,7 @@ export class IpfsStorage implements IStorage {
       | FileOrBufferWithNames[],
     contractAddress?: string,
     fileStartNumber = 0,
+    withFileNames = false,
   ): Promise<string> {
     const token = await this.getUploadToken(contractAddress || "");
     const metadata = {
@@ -225,7 +224,7 @@ export class IpfsStorage implements IStorage {
     if (filesToUpload.length === 0) {
       return metadata;
     }
-    const cid = await this.uploadBatchWithCid(false, filesToUpload, "");
+    const cid = await this.uploadBatchWithCid(filesToUpload, "", 0, false);
     const cids = [];
 
     // recurse ordered array
