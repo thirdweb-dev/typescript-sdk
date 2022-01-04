@@ -769,13 +769,11 @@ export class MarketplaceModule
       }
     }
   }
-  public async getAll(): Promise<(AuctionListing | DirectListing)[]> {
-    const result = [];
-    let i = 0;
-    while (i < (await this.readOnlyContract.totalListings()).toNumber()) {
-      result.push(await this.getListing(i));
-      i++;
-    }
-    return result;
+  public async getAllListings(): Promise<(AuctionListing | DirectListing)[]> {
+    return Promise.all(
+      Array.from(
+        Array((await this.readOnlyContract.totalListings()).toNumber()).keys(),
+      ).map((i) => this.getListing(i)),
+    );
   }
 }
