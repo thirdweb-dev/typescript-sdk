@@ -67,8 +67,6 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     // Warning: (ae-incompatible-release-tags) The symbol "deployDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
     deployDropModule(metadata: DropModuleMetadata): Promise<DropModule>;
     deployMarketModule(metadata: MarketModuleMetadata): Promise<MarketModule>;
-    // Warning: (ae-forgotten-export) The symbol "MarketplaceModuleMetadata" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     deployMarketplaceModule(metadata: MarketplaceModuleMetadata): Promise<MarketplaceModule>;
     deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
@@ -1218,6 +1216,13 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     updateAuctionListing(listing: AuctionListing): Promise<void>;
     // (undocumented)
     updateDirectListing(listing: DirectListing): Promise<void>;
+}
+
+// @public (undocumented)
+export class MarketplaceModuleMetadata extends CommonModuleMetadata {
+    bigBufferInBasisPoints?: number | undefined;
+    marketFeeBasisPoints: number;
+    timeBufferInSeconds?: number | undefined;
 }
 
 // @public
