@@ -228,7 +228,7 @@ export interface IMarketplace {
    * Fetch all the active listings on the marketplace contract regardless of the type.
    *
    */
-   getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
+  getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
 
   /**
    * Fetch the current bid buffer on the marketplace contract.
