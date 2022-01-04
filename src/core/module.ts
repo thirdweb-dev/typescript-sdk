@@ -538,7 +538,9 @@ export class ModuleWithRoles<
     const roleHash = getRoleHash(role);
     const count = (await contract.getRoleMemberCount(roleHash)).toNumber();
     return await Promise.all(
-      Array.from(Array(count).keys()).map((i) => contract.getRoleMember(roleHash, i), ),
+      Array.from(Array(count).keys()).map((i) =>
+        contract.getRoleMember(roleHash, i),
+      ),
     );
   }
 
