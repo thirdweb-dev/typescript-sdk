@@ -24,7 +24,7 @@ import { MetadataURIOrObject } from "../core/types";
 import { IVoucher } from "../interfaces/modules";
 import { NewMintRequest } from "../types/voucher/NewMintRequest";
 import { Voucher } from "../types/voucher/Voucher";
-import { ModuleWithRoles } from "./../core/module";
+import { ModuleWithRoles } from "../core/module";
 import { NFTModule } from "./nft";
 
 const EIP712Domain = [
