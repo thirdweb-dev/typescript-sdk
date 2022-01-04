@@ -45,6 +45,13 @@ export class UploadError extends Error {
   }
 }
 
+export class FileNameMissingError extends Error {
+  /** @internal */
+  constructor() {
+    super("File name is required when object is not a `File` type object.");
+  }
+}
+
 export class NotEnoughTokensError extends Error {
   /** @internal */
   constructor(contractAddress: string, quantity: number, available: number) {

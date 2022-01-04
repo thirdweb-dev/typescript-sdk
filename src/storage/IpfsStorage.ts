@@ -1,4 +1,4 @@
-import { FetchError, UploadError } from "../common/error";
+import { FetchError, FileNameMissingError, UploadError } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
 import { IStorage } from "../interfaces/IStorage";
 import FileOrBuffer from "../types/FileOrBuffer";
@@ -64,6 +64,14 @@ export class IpfsStorage implements IStorage {
     return `ipfs://${cid}/`;
   }
 
+  /**
+   * 
+   * @param files - Array of file along with their filenames (required in case they are not `File` objects)
+   * @param contractAddress - - Optional. The contract address the data belongs to.
+   * @returns The IPFS URI of the folder
+   * 
+   */
+
   public async uploadBatchWithFileNames(
     files: FileOrBufferWithNames[],
     contractAddress?: string,
@@ -91,19 +99,23 @@ export class IpfsStorage implements IStorage {
     const data = new FormData();
 
     files.forEach((file, i) => {
+      let fileWithName;
       if (!withFileNames) {
-        file = {
+        fileWithName = {
           file: file as any,
           name: `files/${fileStartNumber + i}`,
         } as FileOrBufferWithNames;
+
       } else {
-        file = {
-          file: file as any,
-          name: `files/${(file as FileOrBufferWithNames).name}`,
-        };
+        fileWithName = file as FileOrBufferWithNames
+        if(file instanceof File && (fileWithName.name === undefined)){
+          fileWithName.name = file.name
+        }
+        if(!(file instanceof File) && (fileWithName.name === undefined)){
+          throw new FileNameMissingError()
+        }
       }
 
-      const fileWithName = file as FileOrBufferWithNames;
 
       const filepath = fileWithName.name;
       if (typeof window === "undefined") {
