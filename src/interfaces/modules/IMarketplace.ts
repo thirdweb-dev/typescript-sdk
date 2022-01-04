@@ -42,7 +42,7 @@ export interface IMarketplace {
    * @param currencyContractAddress - The address of the currency contract.
    * @param tokenAmount - The amount of tokens to be offered.
    */
-  makeOffer(offer: {
+  makeDirectListingOffer(offer: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
@@ -57,11 +57,13 @@ export interface IMarketplace {
    * Note: If you make a bid above the buyout price, you will automatically be awarded the
    * the listing and the sale will be executed.
    *
+   * // TODO:  come back to `currencyContractAddress`
+   *
    * @param listingId - The listing id.
    * @param currencyContractAddress - The address of the currency contract.
    * @param tokenAmount - The amount of tokens to be offered.
    */
-  makeBid(bid: {
+  makeAuctionListingBid(bid: {
     listingId: BigNumberish;
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
@@ -81,6 +83,9 @@ export interface IMarketplace {
    * @param listingId - Id of the listing to remove.
    */
   cancelAuctionListing(listingId: BigNumberish): Promise<void>;
+
+  // TODO: finish
+  // cancelListing();
 
   /**
    * Closes an auction listing and distributes the payment/assets.
@@ -191,7 +196,7 @@ export interface IMarketplace {
    * Accepts the offer of the specified wallet in `addressofOfferor`.
    *
    * @param listingId - The listing Id to accept the offer for.
-   * @param addressofOfferor - The address of the offeror.
+   * @param addressOfOfferor - The address of the offeror.
    */
   acceptDirectListingOffer(
     listingId: BigNumberish,
