@@ -595,6 +595,12 @@ export class FetchError extends Error {
     innerError?: Error;
 }
 
+// @public (undocumented)
+export class FileNameMissingError extends Error {
+    // @internal
+    constructor();
+}
+
 // @public
 export type ForwardRequestMessage = {
     from: string;
@@ -767,6 +773,10 @@ export class IpfsStorage implements IStorage {
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
     // (undocumented)
     uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "FileOrBufferWithNames" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    uploadBatchWithFileNames(files: FileOrBufferWithNames[], contractAddress?: string): Promise<string>;
     // (undocumented)
     uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
     // @internal (undocumented)
@@ -813,6 +823,8 @@ export interface IStorage {
     resolveFullUrl(hash: string): string;
     upload(data: string | File | FileOrBuffer | Buffer, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
+    // (undocumented)
+    uploadBatchWithFileNames(files: FileOrBufferWithNames[], contractAddress?: string): Promise<string>;
     uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
 }
