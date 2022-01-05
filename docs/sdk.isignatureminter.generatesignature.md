@@ -25,5 +25,5 @@ generateSignature(mintRequest: NewSignaturePayload): Promise<{
 
 Promise&lt;{ payload: [SignaturePayload](./sdk.signaturepayload.md)<!-- -->; signature: string; }&gt;
 
-- The voucher (with the uri pre-populated) and signature.
+- The payload (with the uri pre-populated) and signature.
 

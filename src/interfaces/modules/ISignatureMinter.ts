@@ -30,7 +30,7 @@ export interface ISignatureMinter {
    * their signature won't be valid.
    *
    * @param mintRequest - The request to generate a signature for.
-   * @returns - The voucher (with the uri pre-populated) and signature.
+   * @returns - The payload (with the uri pre-populated) and signature.
    */
   generateSignature(
     mintRequest: NewSignaturePayload,
@@ -39,10 +39,10 @@ export interface ISignatureMinter {
   /**
    * Batch generation of signatures.
    *
-   * @param mintRequest - The voucher to generate a signature for.
-   * @returns - The batch of voucher signatures.
+   * @param paylaods - The payloads to generate a signatures for.
+   * @returns - The batch of payloads + signatures.
    */
   generateSignatureBatch(
-    mintRequests: NewSignaturePayload[],
+    payloads: NewSignaturePayload[],
   ): Promise<{ payload: SignaturePayload; signature: string }[]>;
 }

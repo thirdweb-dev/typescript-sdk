@@ -30,7 +30,7 @@ export declare class NFTModule extends ModuleWithRoles<SignatureMint721> impleme
 |  [balanceOf(address)](./sdk.nftmodule.balanceof.md) |  |  |
 |  [burn(tokenId)](./sdk.nftmodule.burn.md) |  |  |
 |  [generateSignature(mintRequest)](./sdk.nftmodule.generatesignature.md) |  |  |
-|  [generateSignatureBatch(mintRequests)](./sdk.nftmodule.generatesignaturebatch.md) |  |  |
+|  [generateSignatureBatch(payloads)](./sdk.nftmodule.generatesignaturebatch.md) |  |  |
 |  [get(tokenId)](./sdk.nftmodule.get.md) |  | Fetches an NFT from storage with the resolved metadata. |
 |  [getAll()](./sdk.nftmodule.getall.md) |  |  |
 |  [getAllWithOwner()](./sdk.nftmodule.getallwithowner.md) |  |  |

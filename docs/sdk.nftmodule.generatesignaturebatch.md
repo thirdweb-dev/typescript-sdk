@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
+generateSignatureBatch(payloads: NewSignaturePayload[]): Promise<{
         payload: SignaturePayload;
         signature: string;
     }[]>;
@@ -17,7 +17,7 @@ generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequests | [NewSignaturePayload](./sdk.newsignaturepayload.md)<!-- -->\[\] |  |
+|  payloads | [NewSignaturePayload](./sdk.newsignaturepayload.md)<!-- -->\[\] |  |
 
 <b>Returns:</b>
 

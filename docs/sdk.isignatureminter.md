@@ -15,7 +15,7 @@ export interface ISignatureMinter
 |  Method | Description |
 |  --- | --- |
 |  [generateSignature(mintRequest)](./sdk.isignatureminter.generatesignature.md) | Generates a signature. This should only be called by wallets that have the <code>MINTER</code> role on the contract. Otherwise their signature won't be valid. |
-|  [generateSignatureBatch(mintRequests)](./sdk.isignatureminter.generatesignaturebatch.md) | Batch generation of signatures. |
+|  [generateSignatureBatch(payloads)](./sdk.isignatureminter.generatesignaturebatch.md) | Batch generation of signatures. |
 |  [mintWithSignature(req, signature)](./sdk.isignatureminter.mintwithsignature.md) | Mints an NFT given a payload and signature. |
 |  [verify(mintRequest, signature)](./sdk.isignatureminter.verify.md) | Verifies the signature. |
 

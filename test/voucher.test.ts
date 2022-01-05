@@ -109,7 +109,7 @@ describe("Voucher Module", async () => {
 
       for (const [i, v] of batch.entries()) {
         const mintedId = await nftModule.mintWithSignature(
-          v.voucher,
+          v.payload,
           v.signature,
         );
         const nft = await nftModule.get(mintedId.toString());

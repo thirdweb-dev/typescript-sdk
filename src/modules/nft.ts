@@ -465,7 +465,7 @@ export class NFTModule
   }
 
   public async generateSignatureBatch(
-    mintRequests: NewSignaturePayload[],
+    payloads: NewSignaturePayload[],
   ): Promise<{ payload: SignaturePayload; signature: string }[]> {
     const resolveId = (mintRequest: NewSignaturePayload): string => {
       if (mintRequest.id === undefined) {
@@ -482,14 +482,14 @@ export class NFTModule
 
     const cid = await this.sdk
       .getStorage()
-      .uploadMetadataBatch(mintRequests.map((r) => r.metadata));
+      .uploadMetadataBatch(payloads.map((r) => r.metadata));
 
     const chainId = await this.getChainID();
     const from = await this.getSignerAddress();
     const signer = (await this.getSigner()) as Signer;
 
     return await Promise.all(
-      mintRequests.map(async (m, i) => {
+      payloads.map(async (m, i) => {
         const id = resolveId(m);
         const uri = `${cid}${i}`;
         return {

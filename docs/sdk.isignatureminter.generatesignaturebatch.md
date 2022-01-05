@@ -9,7 +9,7 @@ Batch generation of signatures.
 <b>Signature:</b>
 
 ```typescript
-generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
+generateSignatureBatch(payloads: NewSignaturePayload[]): Promise<{
         payload: SignaturePayload;
         signature: string;
     }[]>;
@@ -19,11 +19,11 @@ generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequests | [NewSignaturePayload](./sdk.newsignaturepayload.md)<!-- -->\[\] |  |
+|  payloads | [NewSignaturePayload](./sdk.newsignaturepayload.md)<!-- -->\[\] |  |
 
 <b>Returns:</b>
 
 Promise&lt;{ payload: [SignaturePayload](./sdk.signaturepayload.md)<!-- -->; signature: string; }\[\]&gt;
 
-- The batch of voucher signatures.
+- The batch of payloads + signatures.
 

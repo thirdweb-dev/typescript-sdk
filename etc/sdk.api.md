@@ -998,7 +998,7 @@ export interface ISignatureMinter {
         payload: SignaturePayload;
         signature: string;
     }>;
-    generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
+    generateSignatureBatch(payloads: NewSignaturePayload[]): Promise<{
         payload: SignaturePayload;
         signature: string;
     }[]>;
@@ -1501,7 +1501,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
         signature: string;
     }>;
     // (undocumented)
-    generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
+    generateSignatureBatch(payloads: NewSignaturePayload[]): Promise<{
         payload: SignaturePayload;
         signature: string;
     }[]>;
