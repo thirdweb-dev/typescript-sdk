@@ -1,5 +1,4 @@
-import { BigNumber, BigNumberish } from "ethers";
-import { NFTMetadata } from "../../common/nft";
+import { BigNumber } from "ethers";
 import { NewSignatureMint, SignatureMint } from "../../types/signature-minting";
 
 export interface ISignatureMinter {
