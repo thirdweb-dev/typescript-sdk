@@ -398,8 +398,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
   /**
    * @beta
    *
-   * @param address - The contract address of the given BundleDrop module.
-   * @returns The Drop Module.
+   * @param address - The contract address of the given Marketplace module.
+   * @returns The Marketplace Module.
    */
   public getMarketplaceModule(address: string): MarketplaceModule {
     return this.getOrCreateModule(address, MarketplaceModule);
