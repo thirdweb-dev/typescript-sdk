@@ -21,7 +21,7 @@ import {
   Role,
   RolesMap,
 } from "../common";
-import { NATIVE_TOKEN_ADDRESS } from "../common/currency";
+import { isNativeToken } from "../common/currency";
 import {
   AuctionAlreadyStartedError,
   AuctionHasNotEndedError,
@@ -145,7 +145,7 @@ export class MarketplaceModule
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
   }): Promise<void> {
-    if (offer.currencyContractAddress === NATIVE_TOKEN_ADDRESS) {
+    if (isNativeToken(offer.currencyContractAddress)) {
       throw new Error(
         "You must use the wrapped native token address when making an offer with a native token",
       );
@@ -180,10 +180,7 @@ export class MarketplaceModule
     currencyAddress: string,
     overrides: any,
   ): Promise<any> {
-    if (
-      currencyAddress === NATIVE_TOKEN_ADDRESS ||
-      currencyAddress === AddressZero
-    ) {
+    if (isNativeToken(currencyAddress)) {
       overrides["value"] = value;
     } else {
       const erc20 = ERC20__factory.connect(
