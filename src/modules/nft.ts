@@ -426,7 +426,7 @@ export class NFTModule
     req: SignaturePayload,
     signature: string,
   ): Promise<BigNumber> {
-    const message = { ...this.mapVoucher(req), uri: req.uri };
+    const message = { ...this.mapPayload(req), uri: req.uri };
 
     const overrides = await this.getCallOverrides();
     await this.setAllowance(
@@ -456,7 +456,7 @@ export class NFTModule
     mintRequest: SignaturePayload,
     signature: string,
   ): Promise<boolean> {
-    const message = this.mapVoucher(mintRequest);
+    const message = this.mapPayload(mintRequest);
     const v = await this.readOnlyContract.verify(
       { ...message, uri: mintRequest.uri },
       signature,
@@ -511,7 +511,7 @@ export class NFTModule
               { MintRequest },
               {
                 uri,
-                ...(this.mapVoucher(m) as any),
+                ...(this.mapPayload(m) as any),
                 uid: id,
               },
             )
@@ -527,7 +527,15 @@ export class NFTModule
     return (await this.generateSignatureBatch([mintRequest]))[0];
   }
 
-  private mapVoucher(
+  /**
+   * Maps a payload to the format expected by the contract
+   *
+   * @internal
+   *
+   * @param mintRequest - The payload to map.
+   * @returns - The mapped payload.
+   */
+  private mapPayload(
     mintRequest: SignaturePayload | NewSignaturePayload,
   ): MintRequestStructOutput {
     return {
