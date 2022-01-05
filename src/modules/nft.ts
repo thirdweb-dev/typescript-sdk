@@ -6,7 +6,7 @@ import {
   SignatureMint721__factory,
 } from "@3rdweb/contracts";
 
-import { MintedEvent } from "@3rdweb/contracts/dist/NFT";
+import { MintedBatchEvent, MintedEvent } from "@3rdweb/contracts/dist/NFT";
 import {
   MintRequestStructOutput,
   TokenMintedEvent,
@@ -278,10 +278,44 @@ export class NFTModule
     return await this.mintBatchTo(await this.getSignerAddress(), metadatas);
   }
 
+  private async _v1MintBatchTo(
+    to: string,
+    metadatas: MetadataURIOrObject[],
+  ): Promise<NFTMetadata[]> {
+    invariant(this.v1Contract !== undefined, "v1 contract is undefined");
+
+    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
+    const uris = Array.from(Array(metadatas.length).keys()).map(
+      (i) => `${baseUri}${i}/`,
+    );
+    const receipt = await this.sendContractTransaction(
+      this.v1Contract,
+      "mintNFTBatch",
+      [to, uris],
+    );
+    const events = this.parseLogs<MintedBatchEvent>(
+      "MintedBatch",
+      receipt?.logs,
+      this.v1Contract,
+    );
+    if (events.length === 0) {
+      throw new Error("No MintedBatch event found, failed to mint");
+    }
+
+    const tokenIds = events[0].args.tokenIds;
+    return await Promise.all(
+      tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),
+    );
+  }
+
   public async mintBatchTo(
     to: string,
     metadatas: MetadataURIOrObject[],
   ): Promise<NFTMetadata[]> {
+    if (await this.isV1()) {
+      return await this._v1MintBatchTo(to, metadatas);
+    }
+
     const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
     const uris = Array.from(Array(metadatas.length).keys()).map(
       (i) => `${baseUri}${i}/`,
