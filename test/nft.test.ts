@@ -56,19 +56,22 @@ describe("NFT Module", async () => {
     const nft = await nftModule.getWithOwner("0");
     assert.equal(nft.owner, AddressZero);
   });
+
   it("should correctly mint nfts in batch", async () => {
-    console.log(await nftModule.getAllWithOwner());
-    await nftModule.mintBatch([
+    const metas = [
       {
         name: "Test1",
       },
       {
         name: "Test2",
       },
-    ]);
-    const one = await nftModule.get("0");
-    const two = await nftModule.get("1");
-    expect(one.name).to.equal("Test1");
-    expect(two.name).to.equal("Test2");
+    ];
+    const batch = await nftModule.mintBatch(metas);
+    assert.lengthOf(batch, 2);
+
+    for (const meta of metas) {
+      const nft = batch.find((n) => n.name === meta.name);
+      assert.isDefined(nft);
+    }
   });
 });

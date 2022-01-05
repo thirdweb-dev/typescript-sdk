@@ -95,7 +95,7 @@ export class NFTModule
   }
 
   public async getAll(): Promise<NFTMetadata[]> {
-    const maxId = (await this.readOnlyContract.totalSupply()).toNumber();
+    const maxId = (await this.readOnlyContract.nextTokenIdToMint()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
@@ -111,7 +111,7 @@ export class NFTModule
   }
 
   public async getAllWithOwner(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.readOnlyContract.totalSupply()).toNumber();
+    const maxId = (await this.readOnlyContract.nextTokenIdToMint()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) =>
         this.getWithOwner(i.toString()),
@@ -197,9 +197,16 @@ export class NFTModule
     metadata: MetadataURIOrObject,
   ): Promise<NFTMetadata> {
     const uri = await this.sdk.getStorage().uploadMetadata(metadata);
-    const receipt = await this.sendTransaction("mintNFT", [to, uri]);
-    const event = this.parseEventLogs("Minted", receipt?.logs);
-    const tokenId = event?.tokenId;
+    const receipt = await this.sendTransaction("mintTo", [to, uri]);
+    const event = this.parseLogs<TokenMintedEvent>(
+      "TokenMinted",
+      receipt?.logs,
+    );
+    if (event.length === 0) {
+      throw new Error("TokenMinted event not found");
+    }
+
+    const tokenId = event[0].args.tokenIdMinted;
     return await this.get(tokenId.toString());
   }
 
@@ -217,9 +224,21 @@ export class NFTModule
     const uris = Array.from(Array(metadatas.length).keys()).map(
       (i) => `${baseUri}${i}/`,
     );
-    const receipt = await this.sendTransaction("mintNFTBatch", [to, uris]);
-    const event = this.parseEventLogs("MintedBatch", receipt?.logs);
-    const tokenIds = event.tokenIds;
+
+    const multicall = uris.map((uri) =>
+      this.contract.interface.encodeFunctionData("mintTo", [to, uri]),
+    );
+
+    const receipt = await this.sendTransaction("multicall", [multicall]);
+    const events = await this.parseLogs<TokenMintedEvent>(
+      "TokenMinted",
+      receipt.logs,
+    );
+    if (events.length === 0 || events.length < metadatas.length) {
+      throw new Error("TokenMinted event not found, minting failed");
+    }
+
+    const tokenIds = events.map((e) => e.args.tokenIdMinted);
     return await Promise.all(
       tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),
     );
