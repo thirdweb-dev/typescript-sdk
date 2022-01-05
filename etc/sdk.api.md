@@ -833,6 +833,7 @@ export interface IMarketplace {
     createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
     createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
     getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
+    getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
     getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
     getBidBufferBps(): Promise<BigNumber_2>;
     getDirectListing(listingId: BigNumberish_2): Promise<DirectListing>;
@@ -1172,6 +1173,8 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
     // (undocumented)
     getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
+    // (undocumented)
+    getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
     // (undocumented)
     getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
     // (undocumented)
