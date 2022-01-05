@@ -211,6 +211,11 @@ describe("Marketplace Module", async () => {
       assert.equal(listing.asset.id, "1");
       assert.equal(listing.asset.name, "Test 2");
     });
+    it("should return an auction listing", async () => {
+      const listings = await marketplaceModule.getAllListings();
+      console.log(listings);
+      assert(listings.length > 0);
+    });
 
     it("should return a direct listing", async () => {
       const listing = (await marketplaceModule.getListing(

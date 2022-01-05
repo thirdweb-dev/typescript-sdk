@@ -227,6 +227,13 @@ export interface IMarketplace {
   getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
 
   /**
+   * Fetch all the listings in the marketplace.
+   *
+   * @returns - An array of listings.
+   */
+  getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
+
+  /**
    * Fetch the current bid buffer on the marketplace contract.
    * The bid buffer is represented in basis points.
    *

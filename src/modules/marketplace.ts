@@ -773,4 +773,12 @@ export class MarketplaceModule
       }
     }
   }
+
+  public async getAllListings(): Promise<(AuctionListing | DirectListing)[]> {
+    return await Promise.all(
+      Array.from(
+        Array((await this.readOnlyContract.totalListings()).toNumber()).keys(),
+      ).map((i) => this.getListing(i)),
+    );
+  }
 }
