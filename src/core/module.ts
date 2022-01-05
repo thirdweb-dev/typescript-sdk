@@ -1,4 +1,3 @@
-import { $enum } from "ts-enum-util";
 import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
 import {
   ExternalProvider,
