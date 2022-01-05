@@ -225,8 +225,9 @@ export interface IMarketplace {
   getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
 
   /**
-   * Fetch all the active listings on the marketplace contract regardless of the type.
+   * Fetch all the listings in the marketplace.
    *
+   * @returns - An array of listings.
    */
   getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
 
