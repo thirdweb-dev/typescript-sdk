@@ -36,7 +36,6 @@ export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> impl
 |  [createAuctionListing(listing)](./sdk.marketplacemodule.createauctionlisting.md) |  |  |
 |  [createDirectListing(listing)](./sdk.marketplacemodule.createdirectlisting.md) |  |  |
 |  [getActiveOffer(listingId, address)](./sdk.marketplacemodule.getactiveoffer.md) |  |  |
-|  [getAllListings()](./sdk.marketplacemodule.getalllistings.md) |  |  |
 |  [getAuctionListing(listingId)](./sdk.marketplacemodule.getauctionlisting.md) |  |  |
 |  [getBidBufferBps()](./sdk.marketplacemodule.getbidbufferbps.md) |  |  |
 |  [getDirectListing(listingId)](./sdk.marketplacemodule.getdirectlisting.md) |  |  |
