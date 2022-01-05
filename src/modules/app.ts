@@ -4,16 +4,15 @@ import {
   ERC20__factory,
   LazyMintERC1155__factory,
   LazyMintERC721__factory,
+  Marketplace__factory,
   Market__factory,
   NFTCollection__factory,
-  NFT__factory,
   Pack__factory,
   ProtocolControl,
   ProtocolControl__factory,
   Royalty__factory,
-  Marketplace__factory,
-  VotingGovernor__factory,
   SignatureMint721__factory,
+  VotingGovernor__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -56,6 +55,7 @@ import {
   VoteModuleMetadata,
   VoucherModuleMetadata,
 } from "../types/module-deployments";
+import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";
 import { BundleDropModule } from "./bundleDrop";
@@ -63,11 +63,10 @@ import { CollectionModule } from "./collection";
 import { DatastoreModule } from "./datastore";
 import { DropModule } from "./drop";
 import { MarketModule } from "./market";
+import { MarketplaceModule } from "./marketplace";
 import { NFTModule } from "./nft";
 import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
-import { MarketplaceModule } from "./marketplace";
-import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceModuleMetadata";
 import { CurrencyModule, TokenModule } from "./token";
 import { VoteModule } from "./vote";
 import { VoucherModule } from "./voucher";
