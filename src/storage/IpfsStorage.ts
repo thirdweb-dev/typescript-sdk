@@ -109,13 +109,13 @@ export class IpfsStorage implements IStorage {
         fileWithName = file as FileOrBufferWithNames;
         if (
           fileWithName.file instanceof File &&
-          fileWithName.name === undefined
+          !fileWithName.name
         ) {
           fileWithName.name = fileWithName.file.name;
         }
         if (
           !(fileWithName.file instanceof File) &&
-          fileWithName.name === undefined
+          !fileWithName.name
         ) {
           throw new FileNameMissingError();
         }
