@@ -56,7 +56,6 @@ export class NFTModule
   public static roles = [
     RolesMap.admin,
     RolesMap.minter,
-    RolesMap.pauser,
     RolesMap.transfer,
   ] as const;
 
