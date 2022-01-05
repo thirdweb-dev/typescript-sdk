@@ -126,9 +126,7 @@ export class NFTModule
   public async getAll(): Promise<NFTMetadata[]> {
     let maxId: number;
     if (await this.isV1()) {
-      maxId = (
-        await (this.readOnlyContract as any as NFT).nextTokenId()
-      ).toNumber();
+      maxId = (await this.v1Contract?.nextTokenId())?.toNumber() as number;
     } else {
       maxId = (await this.readOnlyContract.nextTokenIdToMint()).toNumber();
     }
@@ -147,7 +145,12 @@ export class NFTModule
   }
 
   public async getAllWithOwner(): Promise<NFTMetadataOwner[]> {
-    const maxId = (await this.readOnlyContract.nextTokenIdToMint()).toNumber();
+    let maxId: number;
+    if (await this.isV1()) {
+      maxId = (await this.v1Contract?.nextTokenId())?.toNumber() as number;
+    } else {
+      maxId = (await this.readOnlyContract.nextTokenIdToMint()).toNumber();
+    }
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) =>
         this.getWithOwner(i.toString()),

@@ -92,7 +92,6 @@ describe("NFT Module", async () => {
       const nft = await oldNftModule.mint({
         name: "test",
       });
-      console.log(nft);
     });
 
     it("should correctly mint nfts in batch", async () => {
@@ -111,6 +110,19 @@ describe("NFT Module", async () => {
         const nft = batch.find((n) => n.name === meta.name);
         assert.isDefined(nft);
       }
+    });
+
+    it("should return nfts even if some are burned", async () => {
+      await oldNftModule.mint({
+        name: "Test1",
+      });
+      const token = await oldNftModule.mint({
+        name: "Test2",
+      });
+      await oldNftModule.burn(token.id);
+
+      const nfts = await oldNftModule.getAllWithOwner();
+      expect(nfts).to.be.an("array").length(2);
     });
   });
 });
