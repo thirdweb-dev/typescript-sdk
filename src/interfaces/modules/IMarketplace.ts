@@ -25,12 +25,16 @@ export interface IMarketplace {
   createAuctionListing(listing: NewAuctionListing): Promise<BigNumber>;
 
   /**
-   * Creates a new direct listing on a marketplace.
+   * Updates a direct listing.
+   *
+   * @param listing - The listing to update.
    */
   updateDirectListing(listing: DirectListing): Promise<void>;
 
   /**
-   * Creates a new auction listing on a marketplace.
+   * Updates an auction listing.
+   *
+   * @param listing - The listing to update.
    */
   updateAuctionListing(listing: AuctionListing): Promise<void>;
 
