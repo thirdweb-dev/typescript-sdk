@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { NFTModule, RolesMap } from "../src/index";
+import { BundleModule, RolesMap } from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
 
 import { expect, assert } from "chai";
@@ -7,7 +7,7 @@ import { expect, assert } from "chai";
 global.fetch = require("node-fetch");
 
 describe("Roles Module", async () => {
-  let nftModule: NFTModule;
+  let nftModule: BundleModule;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -20,9 +20,9 @@ describe("Roles Module", async () => {
   beforeEach(async () => {
     sdk.setProviderOrSigner(adminWallet);
 
-    nftModule = sdk.getNFTModule(
+    nftModule = sdk.getBundleModule(
       await appModule
-        .deployNftModule({
+        .deployBundleModule({
           name: "NFT Module",
           sellerFeeBasisPoints: 1000,
         })
