@@ -41,7 +41,8 @@ describe("Voucher Module", async () => {
 
       // Claimable for "24 hours"
       mintEndTimeEpochSeconds: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
-      mintStartTimeEpochSeconds: Math.floor(Date.now() / 1000),
+      // Math.floor(Date.now() / 1000),
+      mintStartTimeEpochSeconds: 0,
     };
   });
 
