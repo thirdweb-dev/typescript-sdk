@@ -1,14 +1,16 @@
+import { NFT, NFT__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { NFTModule, ThirdwebSDK } from "../src/index";
+import { assert, expect } from "chai";
+import { ethers } from "ethers";
+import { NFTModule } from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
-
-import { expect, assert } from "chai";
 
 global.fetch = require("node-fetch");
 
 describe("NFT Module", async () => {
   let nftModule: NFTModule;
+  let oldNftModule: NFTModule;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -25,6 +27,16 @@ describe("NFT Module", async () => {
       name: "NFT Module",
       sellerFeeBasisPoints: 1000,
     });
+
+    const tx = await new ethers.ContractFactory(
+      NFT__factory.abi,
+      NFT__factory.bytecode,
+    )
+      .connect(adminWallet)
+      .deploy(...[appModule.address, "NFT", "NFT", AddressZero, "", 0]);
+    await tx.deployed();
+
+    oldNftModule = sdk.getNFTModule(tx.address);
   });
 
   it("should return nfts even if some are burned", async () => {
@@ -73,5 +85,32 @@ describe("NFT Module", async () => {
       const nft = batch.find((n) => n.name === meta.name);
       assert.isDefined(nft);
     }
+  });
+
+  describe("Old Module Backwards Compatibility", () => {
+    it("should perform a mint successfully", async () => {
+      const nft = await oldNftModule.mint({
+        name: "test",
+      });
+      console.log(nft);
+    });
+
+    it("should correctly mint nfts in batch", async () => {
+      const metas = [
+        {
+          name: "Test1",
+        },
+        {
+          name: "Test2",
+        },
+      ];
+      const batch = await oldNftModule.mintBatch(metas);
+      assert.lengthOf(batch, 2);
+
+      for (const meta of metas) {
+        const nft = batch.find((n) => n.name === meta.name);
+        assert.isDefined(nft);
+      }
+    });
   });
 });

@@ -492,14 +492,18 @@ export class Module<TContract extends BaseContract = BaseContract> {
     return null;
   }
 
-  protected parseLogs<T = any>(eventName: string, logs?: Log[]): T[] {
+  protected parseLogs<T = any>(
+    eventName: string,
+    logs?: Log[],
+    contract: BaseContract = this.contract,
+  ): T[] {
     if (!logs || logs.length === 0) {
       return [];
     }
-    const topic = this.contract.interface.getEventTopic(eventName);
+    const topic = contract.interface.getEventTopic(eventName);
     const parsedLogs = logs.filter((x) => x.topics.indexOf(topic) >= 0);
     return parsedLogs.map(
-      (l) => this.contract.interface.parseLog(l) as unknown as T,
+      (l) => contract.interface.parseLog(l) as unknown as T,
     );
   }
 }

@@ -1,8 +1,12 @@
 import {
   ERC20__factory,
+  NFT,
+  NFT__factory,
   SignatureMint721,
   SignatureMint721__factory,
 } from "@3rdweb/contracts";
+
+import { MintedEvent } from "@3rdweb/contracts/dist/NFT";
 import {
   MintRequestStructOutput,
   TokenMintedEvent,
@@ -20,6 +24,7 @@ import {
   Role,
   RolesMap,
 } from "../common";
+import { invariant } from "../common/invariant";
 import { NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -76,6 +81,30 @@ export class NFTModule
     return NFTModule.moduleType;
   }
 
+  private _shouldCheckVersion = true;
+  private _isV1 = false;
+  private v1Contract?: NFT;
+
+  /**
+   * Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract.
+   */
+  async isV1(): Promise<boolean> {
+    if (this._shouldCheckVersion) {
+      try {
+        await this.readOnlyContract.nextTokenIdToMint();
+        this._isV1 = false;
+      } catch (e) {
+        this._isV1 = true;
+        this.v1Contract = NFT__factory.connect(
+          this.address,
+          this.providerOrSigner,
+        );
+      }
+      this._shouldCheckVersion = false;
+    }
+    return this._isV1;
+  }
+
   /**
    * Fetches an NFT from storage with the resolved metadata.
    *
@@ -95,7 +124,14 @@ export class NFTModule
   }
 
   public async getAll(): Promise<NFTMetadata[]> {
-    const maxId = (await this.readOnlyContract.nextTokenIdToMint()).toNumber();
+    let maxId: number;
+    if (await this.isV1()) {
+      maxId = (
+        await (this.readOnlyContract as any as NFT).nextTokenId()
+      ).toNumber();
+    } else {
+      maxId = (await this.readOnlyContract.nextTokenIdToMint()).toNumber();
+    }
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
@@ -192,10 +228,36 @@ export class NFTModule
     return await this.mintTo(await this.getSignerAddress(), metadata);
   }
 
+  private async _v1MintTo(
+    to: string,
+    metadata: MetadataURIOrObject,
+  ): Promise<NFTMetadata> {
+    invariant(this.v1Contract !== undefined, "v1 contract is undefined");
+    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
+    const receipt = await this.sendContractTransaction(
+      this.v1Contract,
+      "mintNFT",
+      [to, uri],
+    );
+    const events = this.parseLogs<MintedEvent>(
+      "Minted",
+      receipt?.logs,
+      this.v1Contract,
+    );
+    if (events.length === 0) {
+      throw new Error("No Minted event found, failed to mint");
+    }
+    return await this.get(events[0].args.tokenId.toString());
+  }
+
   public async mintTo(
     to: string,
     metadata: MetadataURIOrObject,
   ): Promise<NFTMetadata> {
+    if (await this.isV1()) {
+      return await this._v1MintTo(to, metadata);
+    }
+
     const uri = await this.sdk.getStorage().uploadMetadata(metadata);
     const receipt = await this.sendTransaction("mintTo", [to, uri]);
     const event = this.parseLogs<TokenMintedEvent>(
