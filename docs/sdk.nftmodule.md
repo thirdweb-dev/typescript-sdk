@@ -20,7 +20,7 @@ export declare class NFTModule extends ModuleWithRoles<SignatureMint721> impleme
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.nftmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.nftmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
+|  [roles](./sdk.nftmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 
 ## Methods
 

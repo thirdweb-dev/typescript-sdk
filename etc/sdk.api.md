@@ -1543,7 +1543,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     static moduleType: ModuleType;
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
-    static roles: readonly ["admin", "minter", "pauser", "transfer"];
+    static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
