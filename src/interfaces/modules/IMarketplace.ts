@@ -25,12 +25,16 @@ export interface IMarketplace {
   createAuctionListing(listing: NewAuctionListing): Promise<BigNumber>;
 
   /**
-   * Creates a new direct listing on a marketplace.
+   * Updates a direct listing.
+   *
+   * @param listing - The listing to update.
    */
   updateDirectListing(listing: DirectListing): Promise<void>;
 
   /**
-   * Creates a new auction listing on a marketplace.
+   * Updates an auction listing.
+   *
+   * @param listing - The listing to update.
    */
   updateAuctionListing(listing: AuctionListing): Promise<void>;
 
@@ -60,12 +64,10 @@ export interface IMarketplace {
    * // TODO:  come back to `currencyContractAddress`
    *
    * @param listingId - The listing id.
-   * @param currencyContractAddress - The address of the currency contract.
    * @param tokenAmount - The amount of tokens to be offered.
    */
   makeAuctionListingBid(bid: {
     listingId: BigNumberish;
-    currencyContractAddress: string;
     pricePerToken: BigNumberish;
   }): Promise<void>;
 
@@ -225,8 +227,20 @@ export interface IMarketplace {
   getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
 
   /**
+   * Fetch all the listings in the marketplace.
+   *
+   * @returns - An array of listings.
+   */
+  getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
+
+  /**
    * Fetch the current bid buffer on the marketplace contract.
    * The bid buffer is represented in basis points.
+   *
+   * This is a percentage (e.g. 5%). A new bid is considered to be a winning
+   * bid only if its bid amount is at least the bid buffer (e.g. 5%) greater
+   * than the previous winning bid. This prevents buyers from making very
+   * slightly higher bids to win the auctioned items.
    *
    * @returns - The bid buffer in basis points.
    */
@@ -234,6 +248,15 @@ export interface IMarketplace {
 
   /**
    * Fetch the current time buffer on the marketplace contract.
+   *
+   * This is measured in seconds (e.g. 15 minutes or 900 seconds).
+   * If a winning bid is made within the buffer of the auction closing
+   * (e.g. 15 minutes within the auction closing), the auction's closing
+   * time is increased by the buffer toprevent buyers from making last
+   * minute winning bids, and to give time to other buyers to make a
+   * higher bid if they wish to.
+   *
+   * This value is formatter as basis points (e.g. 5% = 500).
    *
    * @returns - The time buffer in seconds.
    */

@@ -94,6 +94,7 @@ Output
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
 |  [MarketModuleMetadata](./sdk.marketmodulemetadata.md) |  |
 |  [MarketplaceModule](./sdk.marketplacemodule.md) | Access this module by calling [ThirdwebSDK.getMarketplaceModule()](./sdk.thirdwebsdk.getmarketplacemodule.md) |
+|  [MarketplaceModuleMetadata](./sdk.marketplacemodulemetadata.md) |  |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |

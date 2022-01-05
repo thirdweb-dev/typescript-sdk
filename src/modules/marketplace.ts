@@ -145,6 +145,12 @@ export class MarketplaceModule
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
   }): Promise<void> {
+    if (offer.currencyContractAddress === NATIVE_TOKEN_ADDRESS) {
+      throw new Error(
+        "You must use the wrapped native token address when making an offer with a native token",
+      );
+    }
+
     try {
       await this.getDirectListing(offer.listingId);
     } catch (err) {
@@ -194,13 +200,12 @@ export class MarketplaceModule
           value.sub(allowance),
         ]);
       }
-      return overrides;
     }
+    return overrides;
   }
 
   public async makeAuctionListingBid(bid: {
     listingId: BigNumberish;
-    currencyContractAddress: string;
     pricePerToken: BigNumberish;
   }): Promise<void> {
     const listing = await this.validateAuctionListing(
@@ -233,14 +238,14 @@ export class MarketplaceModule
     const value = BigNumber.from(bid.pricePerToken).mul(quantity);
 
     const overrides = (await this.getCallOverrides()) || {};
-    await this.setAllowance(value, bid.currencyContractAddress, overrides);
+    await this.setAllowance(value, listing.currencyContractAddress, overrides);
 
     await this.sendTransaction(
       "offer",
       [
         bid.listingId,
         listing.quantity,
-        bid.currencyContractAddress,
+        listing.currencyContractAddress,
         bid.pricePerToken,
       ],
       overrides,
@@ -597,7 +602,6 @@ export class MarketplaceModule
 
     await this.makeAuctionListingBid({
       listingId,
-      currencyContractAddress: listing.currencyContractAddress,
       pricePerToken: listing.buyoutPrice,
     });
   }
@@ -768,5 +772,13 @@ export class MarketplaceModule
         throw new Error(`Unknown listing type: ${listing.listingType}`);
       }
     }
+  }
+
+  public async getAllListings(): Promise<(AuctionListing | DirectListing)[]> {
+    return await Promise.all(
+      Array.from(
+        Array((await this.readOnlyContract.totalListings()).toNumber()).keys(),
+      ).map((i) => this.getListing(i)),
+    );
   }
 }

@@ -17,11 +17,11 @@ getMarketplaceModule(address: string): MarketplaceModule;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  address | string | The contract address of the given BundleDrop module. |
+|  address | string | The contract address of the given Marketplace module. |
 
 <b>Returns:</b>
 
 [MarketplaceModule](./sdk.marketplacemodule.md)
 
-The Drop Module.
+The Marketplace Module.
 

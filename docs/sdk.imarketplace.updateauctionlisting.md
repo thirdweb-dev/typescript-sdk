@@ -4,7 +4,7 @@
 
 ## IMarketplace.updateAuctionListing() method
 
-Creates a new auction listing on a marketplace.
+Updates an auction listing.
 
 <b>Signature:</b>
 
@@ -16,7 +16,7 @@ updateAuctionListing(listing: AuctionListing): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listing | [AuctionListing](./sdk.auctionlisting.md) |  |
+|  listing | [AuctionListing](./sdk.auctionlisting.md) | The listing to update. |
 
 <b>Returns:</b>
 

@@ -4,7 +4,7 @@
 
 ## IMarketplace.updateDirectListing() method
 
-Creates a new direct listing on a marketplace.
+Updates a direct listing.
 
 <b>Signature:</b>
 
@@ -16,7 +16,7 @@ updateDirectListing(listing: DirectListing): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listing | [DirectListing](./sdk.directlisting.md) |  |
+|  listing | [DirectListing](./sdk.directlisting.md) | The listing to update. |
 
 <b>Returns:</b>
 

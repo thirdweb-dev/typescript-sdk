@@ -68,8 +68,6 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     // Warning: (ae-incompatible-release-tags) The symbol "deployDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
     deployDropModule(metadata: DropModuleMetadata): Promise<DropModule>;
     deployMarketModule(metadata: MarketModuleMetadata): Promise<MarketModule>;
-    // Warning: (ae-forgotten-export) The symbol "MarketplaceModuleMetadata" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     deployMarketplaceModule(metadata: MarketplaceModuleMetadata): Promise<MarketplaceModule>;
     deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
@@ -836,6 +834,7 @@ export interface IMarketplace {
     createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
     createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
     getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
+    getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
     getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
     getBidBufferBps(): Promise<BigNumber_2>;
     getDirectListing(listingId: BigNumberish_2): Promise<DirectListing>;
@@ -844,7 +843,6 @@ export interface IMarketplace {
     getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
     makeAuctionListingBid(bid: {
         listingId: BigNumberish_2;
-        currencyContractAddress: string;
         pricePerToken: BigNumberish_2;
     }): Promise<void>;
     makeDirectListingOffer(offer: {
@@ -1191,6 +1189,8 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     // (undocumented)
     getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
     // (undocumented)
+    getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
+    // (undocumented)
     getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
     // (undocumented)
     getBidBufferBps(): Promise<BigNumber_2>;
@@ -1211,7 +1211,6 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     // (undocumented)
     makeAuctionListingBid(bid: {
         listingId: BigNumberish_2;
-        currencyContractAddress: string;
         pricePerToken: BigNumberish_2;
     }): Promise<void>;
     // (undocumented)
@@ -1233,6 +1232,11 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     updateAuctionListing(listing: AuctionListing): Promise<void>;
     // (undocumented)
     updateDirectListing(listing: DirectListing): Promise<void>;
+}
+
+// @public (undocumented)
+export class MarketplaceModuleMetadata extends CommonModuleMetadata {
+    marketFeeBasisPoints: number;
 }
 
 // @public
@@ -1393,7 +1397,7 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
 // Warning: (ae-internal-missing-underscore) The name "NATIVE_TOKEN_ADDRESS" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+export const NATIVE_TOKEN_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
 // @public (undocumented)
 export interface NativeToken extends Currency {

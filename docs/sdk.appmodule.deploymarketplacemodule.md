@@ -14,7 +14,7 @@ deployMarketplaceModule(metadata: MarketplaceModuleMetadata): Promise<Marketplac
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | MarketplaceModuleMetadata |  |
+|  metadata | [MarketplaceModuleMetadata](./sdk.marketplacemodulemetadata.md) |  |
 
 <b>Returns:</b>
 

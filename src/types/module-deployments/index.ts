@@ -5,6 +5,7 @@ export * from "./CurrencyModuleMetadata";
 export * from "./DatastoreModuleMetadata";
 export * from "./DropModuleMetadata";
 export * from "./MarketModuleMetadata";
+export * from "./MarketplaceModuleMetadata";
 export * from "./MetadataMap";
 export * from "./NewSplitRecipient";
 export * from "./NftModuleMetadata";
