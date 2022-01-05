@@ -994,16 +994,16 @@ export interface ISDKOptions {
 
 // @public (undocumented)
 export interface ISignatureMinter {
-    generateSignature(mintRequest: NewSignatureMint): Promise<{
-        voucher: SignatureMint;
+    generateSignature(mintRequest: NewSignaturePayload): Promise<{
+        payload: SignaturePayload;
         signature: string;
     }>;
-    generateSignatureBatch(mintRequests: NewSignatureMint[]): Promise<{
-        voucher: SignatureMint;
+    generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
+        payload: SignaturePayload;
         signature: string;
     }[]>;
-    mintWithSignature(req: SignatureMint, signature: string): Promise<BigNumber_2>;
-    verify(mintRequest: SignatureMint, signature: string): Promise<boolean>;
+    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber_2>;
+    verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "isNativeToken" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1433,14 +1433,14 @@ export interface NewDirectListing {
 }
 
 // @public
-export interface NewSignatureMint {
+export interface NewSignaturePayload {
     currencyAddress: string;
     id?: string;
     metadata: MetadataURIOrObject;
+    mintEndTimeEpochSeconds: BigNumberish_2;
+    mintStartTimeEpochSeconds: BigNumberish_2;
     price: BigNumberish_2;
     to: string;
-    voucherEndTimeEpochSeconds: BigNumberish_2;
-    voucherStartTimeEpochSeconds: BigNumberish_2;
 }
 
 // @public
@@ -1496,13 +1496,13 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     // @internal (undocumented)
     protected connectContract(): SignatureMint721;
     // (undocumented)
-    generateSignature(mintRequest: NewSignatureMint): Promise<{
-        voucher: SignatureMint;
+    generateSignature(mintRequest: NewSignaturePayload): Promise<{
+        payload: SignaturePayload;
         signature: string;
     }>;
     // (undocumented)
-    generateSignatureBatch(mintRequests: NewSignatureMint[]): Promise<{
-        voucher: SignatureMint;
+    generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
+        payload: SignaturePayload;
         signature: string;
     }[]>;
     get(tokenId: string): Promise<NFTMetadata>;
@@ -1534,7 +1534,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     // (undocumented)
     mintTo(to: string, metadata: MetadataURIOrObject): Promise<NFTMetadata>;
     // (undocumented)
-    mintWithSignature(req: SignatureMint, signature: string): Promise<BigNumber_2>;
+    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber_2>;
     // (undocumented)
     static moduleType: ModuleType;
     ownerOf(tokenId: string): Promise<string>;
@@ -1555,7 +1555,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
-    verify(mintRequest: SignatureMint, signature: string): Promise<boolean>;
+    verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
 }
 
 // @public (undocumented)
@@ -1791,7 +1791,7 @@ export type SetAllRoles = {
 };
 
 // @public
-export interface SignatureMint extends NewSignatureMint {
+export interface SignaturePayload extends NewSignaturePayload {
     uri: string;
 }
 

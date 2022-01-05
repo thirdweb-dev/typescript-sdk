@@ -4,13 +4,13 @@
 
 ## ISignatureMinter.generateSignature() method
 
-Generates a signature for a given voucher. This should only be called by wallets that have the `MINTER` role on the contract. Otherwise their signature won't be valid.
+Generates a signature. This should only be called by wallets that have the `MINTER` role on the contract. Otherwise their signature won't be valid.
 
 <b>Signature:</b>
 
 ```typescript
-generateSignature(mintRequest: NewSignatureMint): Promise<{
-        voucher: SignatureMint;
+generateSignature(mintRequest: NewSignaturePayload): Promise<{
+        payload: SignaturePayload;
         signature: string;
     }>;
 ```
@@ -19,11 +19,11 @@ generateSignature(mintRequest: NewSignatureMint): Promise<{
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequest | [NewSignatureMint](./sdk.newsignaturemint.md) | The voucher to generate a signature for. |
+|  mintRequest | [NewSignaturePayload](./sdk.newsignaturepayload.md) | The request to generate a signature for. |
 
 <b>Returns:</b>
 
-Promise&lt;{ voucher: [SignatureMint](./sdk.signaturemint.md)<!-- -->; signature: string; }&gt;
+Promise&lt;{ payload: [SignaturePayload](./sdk.signaturepayload.md)<!-- -->; signature: string; }&gt;
 
-- The voucher (with the uri pre-populated) and signature of the voucher.
+- The voucher (with the uri pre-populated) and signature.
 

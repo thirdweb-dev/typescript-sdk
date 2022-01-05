@@ -30,8 +30,8 @@ import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
 import { ISignatureMinter } from "../interfaces/modules/ISignatureMinter";
-import { NewSignatureMint } from "../types/signature-minting/NewMintRequest";
-import { SignatureMint } from "../types/signature-minting/SignatureMint";
+import { NewSignaturePayload } from "../types/signature-minting/NewSignaturePayload";
+import { SignaturePayload } from "../types/signature-minting/SignaturePayload";
 
 const MintRequest = [
   { name: "to", type: "address" },
@@ -423,7 +423,7 @@ export class NFTModule
   }
 
   public async mintWithSignature(
-    req: SignatureMint,
+    req: SignaturePayload,
     signature: string,
   ): Promise<BigNumber> {
     const message = { ...this.mapVoucher(req), uri: req.uri };
@@ -453,7 +453,7 @@ export class NFTModule
   }
 
   public async verify(
-    mintRequest: SignatureMint,
+    mintRequest: SignaturePayload,
     signature: string,
   ): Promise<boolean> {
     const message = this.mapVoucher(mintRequest);
@@ -465,9 +465,9 @@ export class NFTModule
   }
 
   public async generateSignatureBatch(
-    mintRequests: NewSignatureMint[],
-  ): Promise<{ voucher: SignatureMint; signature: string }[]> {
-    const resolveId = (mintRequest: NewSignatureMint): string => {
+    mintRequests: NewSignaturePayload[],
+  ): Promise<{ payload: SignaturePayload; signature: string }[]> {
+    const resolveId = (mintRequest: NewSignaturePayload): string => {
       if (mintRequest.id === undefined) {
         console.warn("mintRequest.id is an empty string, generating uuid-v4");
         const buffer = Buffer.alloc(16);
@@ -493,7 +493,7 @@ export class NFTModule
         const id = resolveId(m);
         const uri = `${cid}${i}`;
         return {
-          voucher: {
+          payload: {
             ...m,
             id,
             uri,
@@ -522,20 +522,20 @@ export class NFTModule
   }
 
   public async generateSignature(
-    mintRequest: NewSignatureMint,
-  ): Promise<{ voucher: SignatureMint; signature: string }> {
+    mintRequest: NewSignaturePayload,
+  ): Promise<{ payload: SignaturePayload; signature: string }> {
     return (await this.generateSignatureBatch([mintRequest]))[0];
   }
 
   private mapVoucher(
-    mintRequest: SignatureMint | NewSignatureMint,
+    mintRequest: SignaturePayload | NewSignaturePayload,
   ): MintRequestStructOutput {
     return {
       to: mintRequest.to,
       price: mintRequest.price,
       currency: mintRequest.currencyAddress,
-      validityEndTimestamp: mintRequest.voucherEndTimeEpochSeconds,
-      validityStartTimestamp: mintRequest.voucherStartTimeEpochSeconds,
+      validityEndTimestamp: mintRequest.mintEndTimeEpochSeconds,
+      validityStartTimestamp: mintRequest.mintStartTimeEpochSeconds,
       uid: mintRequest.id,
     } as MintRequestStructOutput;
   }

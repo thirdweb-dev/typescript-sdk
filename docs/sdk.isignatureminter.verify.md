@@ -4,19 +4,19 @@
 
 ## ISignatureMinter.verify() method
 
-Verifies the signature of a voucher.
+Verifies the signature.
 
 <b>Signature:</b>
 
 ```typescript
-verify(mintRequest: SignatureMint, signature: string): Promise<boolean>;
+verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequest | [SignatureMint](./sdk.signaturemint.md) | The signature of the voucher to verify. |
+|  mintRequest | [SignaturePayload](./sdk.signaturepayload.md) | The signature of the pyaload to verify. |
 |  signature | string |  |
 
 <b>Returns:</b>

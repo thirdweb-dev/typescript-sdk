@@ -4,19 +4,19 @@ import { MetadataURIOrObject } from "../../core/types";
 /**
  * Represents a new `SignatureMint` request.
  */
-export interface NewSignatureMint {
+export interface NewSignaturePayload {
   /**
    * The metadata of the token to generate a signature for.
    */
   metadata: MetadataURIOrObject;
 
   /**
-   * The receiver of the NFTs being minted when the voucher is claimed.
+   * The receiver of the NFTs being minted when the signature is claimed.
    */
   to: string;
 
   /**
-   * The price per the NFT being minted for this particular voucher.
+   * The price per the NFT being minted for this particular signature.
    */
   price: BigNumberish;
 
@@ -27,18 +27,18 @@ export interface NewSignatureMint {
   currencyAddress: string;
 
   /**
-   * The epoch start time (in seconds) when the voucher can be claimed.
+   * The epoch start time (in seconds) when the signature can be claimed.
    */
-  voucherStartTimeEpochSeconds: BigNumberish;
+  mintStartTimeEpochSeconds: BigNumberish;
 
   /**
-   * The epoch end time (in seconds) that essentially invalidates the voucher
+   * The epoch end time (in seconds) that essentially invalidates the signature
    * such that it can no longer be claimed.
    */
-  voucherEndTimeEpochSeconds: BigNumberish;
+  mintEndTimeEpochSeconds: BigNumberish;
 
   /**
-   * A unique identifier for the voucher.
+   * A unique identifier for the signature.
    *
    * If this value is an empty string, then a uuid-v4 will be generated.
    */

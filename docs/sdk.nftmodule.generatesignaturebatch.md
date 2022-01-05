@@ -7,8 +7,8 @@
 <b>Signature:</b>
 
 ```typescript
-generateSignatureBatch(mintRequests: NewSignatureMint[]): Promise<{
-        voucher: SignatureMint;
+generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
+        payload: SignaturePayload;
         signature: string;
     }[]>;
 ```
@@ -17,9 +17,9 @@ generateSignatureBatch(mintRequests: NewSignatureMint[]): Promise<{
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequests | [NewSignatureMint](./sdk.newsignaturemint.md)<!-- -->\[\] |  |
+|  mintRequests | [NewSignaturePayload](./sdk.newsignaturepayload.md)<!-- -->\[\] |  |
 
 <b>Returns:</b>
 
-Promise&lt;{ voucher: [SignatureMint](./sdk.signaturemint.md)<!-- -->; signature: string; }\[\]&gt;
+Promise&lt;{ payload: [SignaturePayload](./sdk.signaturepayload.md)<!-- -->; signature: string; }\[\]&gt;
 

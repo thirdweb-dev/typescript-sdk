@@ -1,2 +1,2 @@
-export * from "./SignatureMint";
-export * from "./NewMintRequest";
+export * from "./SignaturePayload";
+export * from "./NewSignaturePayload";

@@ -180,7 +180,7 @@ Output
 |  [NativeToken](./sdk.nativetoken.md) |  |
 |  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
 |  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
-|  [NewSignatureMint](./sdk.newsignaturemint.md) | Represents a new <code>SignatureMint</code> request. |
+|  [NewSignaturePayload](./sdk.newsignaturepayload.md) | Represents a new <code>SignatureMint</code> request. |
 |  [NewSplitRecipient](./sdk.newsplitrecipient.md) | The NewSplitRecipient interface describes the structure of a new split recipient. The <code>shares</code> property is important for the calculation of the the total split.<!-- -->If there are two recipients each with 10 shares, they each will receive 50% of the total royalties.<!-- -->If there are two recipients each with 1 share, they each will receive 50% of the total royalties.<!-- -->I.e. the total number of shares is used to calculate the percentage of the total royalties that is allocated to each recipient. |
 |  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
@@ -192,7 +192,7 @@ Output
 |  [ProposalVote](./sdk.proposalvote.md) |  |
 |  [PublicClaimCondition](./sdk.publicclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
-|  [SignatureMint](./sdk.signaturemint.md) | Represents a prepared <code>SignatureMint</code> object. |
+|  [SignaturePayload](./sdk.signaturepayload.md) | Represents a prepared <code>SignaturePayload</code> object, which will be signed by a wallet. |
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
 |  [VoteSettings](./sdk.votesettings.md) |  |

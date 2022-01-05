@@ -3,8 +3,8 @@ import { assert, expect } from "chai";
 import { ethers } from "ethers";
 import { NATIVE_TOKEN_ADDRESS } from "../src";
 import { NFTModule } from "../src/modules/nft";
-import { NewSignatureMint } from "../src/types/signature-minting/NewMintRequest";
-import { SignatureMint } from "../src/types/signature-minting/SignatureMint";
+import { NewSignaturePayload } from "../src/types/signature-minting/NewSignaturePayload";
+import { SignaturePayload } from "../src/types/signature-minting/SignaturePayload";
 import { appModule, sdk, signers } from "./before.test";
 
 global.fetch = require("node-fetch");
@@ -16,7 +16,7 @@ describe("Voucher Module", async () => {
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
 
-  let meta: NewSignatureMint;
+  let meta: NewSignaturePayload;
 
   before(() => {
     [adminWallet, samWallet, bobWallet] = signers;
@@ -40,13 +40,13 @@ describe("Voucher Module", async () => {
       to: samWallet.address,
 
       // Claimable for "24 hours"
-      voucherEndTimeEpochSeconds: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
-      voucherStartTimeEpochSeconds: Math.floor(Date.now() / 1000),
+      mintEndTimeEpochSeconds: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+      mintStartTimeEpochSeconds: Math.floor(Date.now() / 1000),
     };
   });
 
   describe("Generating Signatures", () => {
-    let voucher: SignatureMint;
+    let voucher: SignaturePayload;
     let signature, badSignature: string;
 
     beforeEach(async () => {
@@ -119,7 +119,7 @@ describe("Voucher Module", async () => {
   });
 
   describe("Claiming", async () => {
-    let v1, v2: { voucher: SignatureMint; signature: string };
+    let v1, v2: { voucher: SignaturePayload; signature: string };
 
     beforeEach(async () => {
       v1 = await nftModule.generateSignature(meta);

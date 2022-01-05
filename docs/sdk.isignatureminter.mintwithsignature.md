@@ -4,19 +4,19 @@
 
 ## ISignatureMinter.mintWithSignature() method
 
-Mints an NFT given a voucher and signature.
+Mints an NFT given a payload and signature.
 
 <b>Signature:</b>
 
 ```typescript
-mintWithSignature(req: SignatureMint, signature: string): Promise<BigNumber>;
+mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  req | [SignatureMint](./sdk.signaturemint.md) |  |
+|  req | [SignaturePayload](./sdk.signaturepayload.md) |  |
 |  signature | string |  |
 
 <b>Returns:</b>
