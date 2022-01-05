@@ -1,2 +1,2 @@
 export * from "./IMarketplace";
-export * from "./IVoucher";
+export * from "./ISignatureMinter";

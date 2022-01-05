@@ -2,9 +2,9 @@ import { BigNumberish } from "ethers";
 import { MetadataURIOrObject } from "../../core/types";
 
 /**
- * Represents the common fields of a voucher.
+ * Represents a new `SignatureMint` request.
  */
-export interface NewMintRequest {
+export interface NewSignatureMint {
   /**
    * The metadata of the token to generate a signature for.
    */

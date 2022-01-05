@@ -577,17 +577,28 @@ export class AppModule
         await this.getSignerAddress(),
       );
 
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
+
     const address = await this._deployModule(
       ModuleType.NFT,
       [
-        this.address,
         metadata.name,
         metadata.symbol ? metadata.symbol : "",
-        await this.sdk.getForwarderAddress(),
         metadataUri,
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        nativeTokenWrapperAddress,
+        metadata.defaultSaleRecipientAddress
+          ? metadata.defaultSaleRecipientAddress
+          : await this.getSignerAddress(),
         metadata.sellerFeeBasisPoints,
+        metadata.primarySaleFeeBasisPoints
+          ? metadata.primarySaleFeeBasisPoints
+          : 0,
       ],
-      NFT__factory,
+      SignatureMint721__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
       this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);

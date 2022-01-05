@@ -1,2 +1,2 @@
-export * from "./Voucher";
+export * from "./SignatureMint";
 export * from "./NewMintRequest";

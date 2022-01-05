@@ -20,11 +20,11 @@ import {
   Role,
   RolesMap,
 } from "../common";
-import { MetadataURIOrObject } from "../core/types";
-import { IVoucher } from "../interfaces/modules";
-import { NewMintRequest } from "../types/voucher/NewMintRequest";
-import { Voucher } from "../types/voucher/Voucher";
 import { ModuleWithRoles } from "../core/module";
+import { MetadataURIOrObject } from "../core/types";
+import { ISignatureMinter } from "../interfaces/modules";
+import { NewSignatureMint } from "../types/signature-minting/NewMintRequest";
+import { SignatureMint } from "../types/signature-minting/SignatureMint";
 import { NFTModule } from "./nft";
 
 const EIP712Domain = [
@@ -52,7 +52,7 @@ const MintRequest = [
  */
 export class VoucherModule
   extends ModuleWithRoles<SignatureMint721>
-  implements IVoucher
+  implements ISignatureMinter
 {
   public static moduleType: ModuleType = ModuleType.VOUCHER as const;
 
@@ -98,7 +98,10 @@ export class VoucherModule
     return await this.sendTransaction("setContractURI", [uri]);
   }
 
-  public async mint(req: Voucher, signature: string): Promise<BigNumber> {
+  public async mintWithSignature(
+    req: SignatureMint,
+    signature: string,
+  ): Promise<BigNumber> {
     const message = { ...this.mapVoucher(req), uri: req.uri };
 
     const overrides = await this.getCallOverrides();
@@ -132,7 +135,7 @@ export class VoucherModule
   // }
 
   public async verify(
-    mintRequest: Voucher,
+    mintRequest: SignatureMint,
     signature: string,
   ): Promise<boolean> {
     const message = this.mapVoucher(mintRequest);
@@ -143,9 +146,9 @@ export class VoucherModule
   }
 
   public async generateSignatureBatch(
-    mintRequests: NewMintRequest[],
-  ): Promise<{ voucher: Voucher; signature: string }[]> {
-    const resolveId = (mintRequest: NewMintRequest): string => {
+    mintRequests: NewSignatureMint[],
+  ): Promise<{ voucher: SignatureMint; signature: string }[]> {
+    const resolveId = (mintRequest: NewSignatureMint): string => {
       if (mintRequest.id === undefined) {
         console.warn("mintRequest.id is an empty string, generating uuid-v4");
         const buffer = Buffer.alloc(16);
@@ -200,13 +203,13 @@ export class VoucherModule
   }
 
   public async generateSignature(
-    mintRequest: NewMintRequest,
-  ): Promise<{ voucher: Voucher; signature: string }> {
+    mintRequest: NewSignatureMint,
+  ): Promise<{ voucher: SignatureMint; signature: string }> {
     return (await this.generateSignatureBatch([mintRequest]))[0];
   }
 
   private mapVoucher(
-    mintRequest: Voucher | NewMintRequest,
+    mintRequest: SignatureMint | NewSignatureMint,
   ): MintRequestStructOutput {
     return {
       to: mintRequest.to,
