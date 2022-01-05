@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-protected parseLogs<T = any>(eventName: string, logs?: Log[]): T[];
+protected parseLogs<T = any>(eventName: string, logs?: Log[], contract?: BaseContract): T[];
 ```
 
 ## Parameters
@@ -16,6 +16,7 @@ protected parseLogs<T = any>(eventName: string, logs?: Log[]): T[];
 |  --- | --- | --- |
 |  eventName | string |  |
 |  logs | Log\[\] |  |
+|  contract | BaseContract |  |
 
 <b>Returns:</b>
 

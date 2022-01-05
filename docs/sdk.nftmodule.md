@@ -9,11 +9,11 @@ Access this module by calling [ThirdwebSDK.getNFTModule()](./sdk.thirdwebsdk.get
 <b>Signature:</b>
 
 ```typescript
-export declare class NFTModule extends ModuleWithRoles<NFT> implements ITransferable 
+export declare class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITransferable, ISignatureMinter 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;NFT&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;SignatureMint721&gt;
 
-<b>Implements:</b> [ITransferable](./sdk.itransferable.md)
+<b>Implements:</b> [ITransferable](./sdk.itransferable.md)<!-- -->, [ISignatureMinter](./sdk.isignatureminter.md)
 
 ## Properties
 
@@ -29,6 +29,8 @@ export declare class NFTModule extends ModuleWithRoles<NFT> implements ITransfer
 |  [balance()](./sdk.nftmodule.balance.md) |  |  |
 |  [balanceOf(address)](./sdk.nftmodule.balanceof.md) |  |  |
 |  [burn(tokenId)](./sdk.nftmodule.burn.md) |  |  |
+|  [generateSignature(mintRequest)](./sdk.nftmodule.generatesignature.md) |  |  |
+|  [generateSignatureBatch(mintRequests)](./sdk.nftmodule.generatesignaturebatch.md) |  |  |
 |  [get(tokenId)](./sdk.nftmodule.get.md) |  | Fetches an NFT from storage with the resolved metadata. |
 |  [getAll()](./sdk.nftmodule.getall.md) |  |  |
 |  [getAllWithOwner()](./sdk.nftmodule.getallwithowner.md) |  |  |
@@ -39,10 +41,12 @@ export declare class NFTModule extends ModuleWithRoles<NFT> implements ITransfer
 |  [getWithOwner(tokenId)](./sdk.nftmodule.getwithowner.md) |  |  |
 |  [isApproved(address, operator)](./sdk.nftmodule.isapproved.md) |  |  |
 |  [isTransferRestricted()](./sdk.nftmodule.istransferrestricted.md) |  |  |
+|  [isV1()](./sdk.nftmodule.isv1.md) |  | Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract. |
 |  [mint(metadata)](./sdk.nftmodule.mint.md) |  |  |
 |  [mintBatch(metadatas)](./sdk.nftmodule.mintbatch.md) |  |  |
 |  [mintBatchTo(to, metadatas)](./sdk.nftmodule.mintbatchto.md) |  |  |
 |  [mintTo(to, metadata)](./sdk.nftmodule.mintto.md) |  |  |
+|  [mintWithSignature(req, signature)](./sdk.nftmodule.mintwithsignature.md) |  |  |
 |  [ownerOf(tokenId)](./sdk.nftmodule.ownerof.md) |  | Checks the owner of a particular NFT |
 |  [setApproval(operator, approved)](./sdk.nftmodule.setapproval.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.nftmodule.setmodulemetadata.md) |  |  |
@@ -51,4 +55,5 @@ export declare class NFTModule extends ModuleWithRoles<NFT> implements ITransfer
 |  [totalSupply()](./sdk.nftmodule.totalsupply.md) |  |  |
 |  [transfer(to, tokenId)](./sdk.nftmodule.transfer.md) |  |  |
 |  [transferFrom(from, to, tokenId)](./sdk.nftmodule.transferfrom.md) |  |  |
+|  [verify(mintRequest, signature)](./sdk.nftmodule.verify.md) |  |  |
 
