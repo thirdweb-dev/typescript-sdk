@@ -21,7 +21,7 @@ import {
   Role,
   RolesMap,
 } from "../common";
-import { isNativeToken, NATIVE_TOKEN_ADDRESS } from "../common/currency";
+import { isNativeToken } from "../common/currency";
 import {
   AuctionAlreadyStartedError,
   AuctionHasNotEndedError,
