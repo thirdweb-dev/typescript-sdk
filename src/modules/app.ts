@@ -53,7 +53,6 @@ import {
   SplitsModuleMetadata,
   TokenModuleMetadata,
   VoteModuleMetadata,
-  VoucherModuleMetadata,
 } from "../types/module-deployments";
 import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
@@ -69,7 +68,6 @@ import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
 import { CurrencyModule, TokenModule } from "./token";
 import { VoteModule } from "./vote";
-import { VoucherModule } from "./voucher";
 
 /**
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
@@ -1210,46 +1208,5 @@ export class AppModule
     );
 
     return this.sdk.getMarketplaceModule(address);
-  }
-
-  public async deployVoucherModule(
-    metadata: VoucherModuleMetadata,
-  ): Promise<VoucherModule> {
-    const serializedMetadata = this.jsonConvert.serializeObject(
-      await this._prepareMetadata(metadata),
-      VoucherModuleMetadata,
-    );
-
-    const metadataUri = await this.sdk
-      .getStorage()
-      .uploadMetadata(
-        serializedMetadata,
-        this.address,
-        await this.getSignerAddress(),
-      );
-
-    const nativeTokenWrapperAddress = getNativeTokenByChainId(
-      await this.getChainID(),
-    ).wrapped.address;
-
-    const address = await this._deployModule(
-      ModuleType.VOUCHER,
-      [
-        metadata.name,
-        metadata.symbol,
-        metadataUri,
-        this.address,
-        await this.sdk.getForwarderAddress(),
-        nativeTokenWrapperAddress,
-        metadata.defaultSaleRecipientAddress,
-        metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
-        metadata.primarySaleFeeBasisPoints
-          ? metadata.primarySaleFeeBasisPoints
-          : 0,
-      ],
-      SignatureMint721__factory,
-    );
-
-    return this.sdk.getVoucherModule(address);
   }
 }

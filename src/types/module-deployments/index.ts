@@ -12,4 +12,3 @@ export * from "./PackModuleMetadata";
 export * from "./SplitsModuleMetadata";
 export * from "./TokenModuleMetadata";
 export * from "./VoteModuleMetadata";
-export * from "./VoucherModuleMetadata";

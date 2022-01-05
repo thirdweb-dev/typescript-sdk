@@ -11,4 +11,3 @@ export * from "./pack";
 export * from "./royalty";
 export * from "./token";
 export * from "./vote";
-export * from "./voucher";

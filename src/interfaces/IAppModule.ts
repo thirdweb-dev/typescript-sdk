@@ -9,7 +9,6 @@ import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
 import { CurrencyModule, TokenModule } from "../modules/token";
 import { VoteModule } from "../modules/vote";
-import { VoucherModule } from "../modules/voucher";
 import BundleDropModuleMetadata from "../types/module-deployments/BundleDropModuleMetadata";
 import BundleModuleMetadata from "../types/module-deployments/BundleModuleMetadata";
 import CurrencyModuleMetadata from "../types/module-deployments/CurrencyModuleMetadata";
@@ -22,7 +21,6 @@ import PackModuleMetadata from "../types/module-deployments/PackModuleMetadata";
 import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetadata";
 import TokenModuleMetadata from "../types/module-deployments/TokenModuleMetadata";
 import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
-import { VoucherModuleMetadata } from "../types/module-deployments/VoucherModuleMetadata";
 
 /* eslint-disable semi */
 export default interface IAppModule {
@@ -57,6 +55,4 @@ export default interface IAppModule {
   ): Promise<MarketplaceModule>;
 
   deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
-
-  deployVoucherModule(metadata: VoucherModuleMetadata): Promise<VoucherModule>;
 }
