@@ -1397,7 +1397,7 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
 // Warning: (ae-internal-missing-underscore) The name "NATIVE_TOKEN_ADDRESS" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const NATIVE_TOKEN_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
+export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 // @public (undocumented)
 export interface NativeToken extends Currency {
