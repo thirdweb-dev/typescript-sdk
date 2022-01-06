@@ -1,3 +1,7 @@
+/**
+ * @internal
+ */
+
 export function isMetadataEqual(old: any, changed: any): boolean {
   if (typeof old === "object" && typeof changed === "object") {
     const oldKeys = Object.keys(old).sort();
