@@ -790,7 +790,8 @@ export class MarketplaceModule
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
     const startTime = BigNumber.from(listing.startTimeInEpochSeconds);
 
-    if (now.gt(startTime)) {
+    const offers = await this.readOnlyContract.winningBid(listingId);
+    if (now.gt(startTime) && offers.offeror !== AddressZero) {
       throw new AuctionAlreadyStartedError(listingId.toString());
     }
 

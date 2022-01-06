@@ -588,7 +588,15 @@ describe("Marketplace Module", async () => {
       }
     });
 
-    it("should throw an error when trying to close an auction that already started", async () => {
+    it("should not throw an error when trying to close an auction that already started (no bids)", async () => {
+      await marketplaceModule.cancelAuctionListing(auctionListingId);
+    });
+
+    it("should throw an error when trying to close an auction that already started (with bids)", async () => {
+      await marketplaceModule.makeAuctionListingBid({
+        listingId: auctionListingId,
+        pricePerToken: ethers.utils.parseUnits("2"),
+      });
       try {
         await marketplaceModule.cancelAuctionListing(auctionListingId);
         assert.fail("should have thrown an error");
