@@ -20,7 +20,7 @@ export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> impl
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.marketplacemodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.marketplacemodule.roles.md) | <code>static</code> | readonly \["admin", "lister", "pauser"\] |  |
+|  [roles](./sdk.marketplacemodule.roles.md) | <code>static</code> | readonly \["admin", "lister"\] |  |
 
 ## Methods
 
