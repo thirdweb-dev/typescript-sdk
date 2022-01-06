@@ -97,6 +97,43 @@ describe("Bundle Drop Module", async () => {
     }
   });
 
+  it("allow all addresses in the merkle tree to claim using useSnapshot", async () => {
+    console.log("Claim condition set");
+    console.log("Minting 100");
+    await bdModule.lazyMintBatch([
+      {
+        name: "test",
+        description: "test",
+      },
+    ]);
+
+    const factory = bdModule.getClaimConditionFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+      maxQuantity: 1000,
+    });
+    const testWallets: SignerWithAddress[] = [
+      bobWallet,
+      samWallet,
+      abbyWallet,
+      w1,
+      w2,
+      w3,
+      w4,
+    ];
+    const members = testWallets.map((w) => w.address);
+    phase.useSnapshot(members);
+
+    console.log("Setting claim condition");
+    await bdModule.setClaimCondition("0", factory);
+
+    for (const member of testWallets) {
+      await sdk.setProviderOrSigner(member);
+      await bdModule.claim("0", 1);
+      console.log(`Address ${member.address} claimed successfully!`);
+    }
+  });
+
   it("should return the newly minted tokens", async () => {
     const tokens = [
       {
