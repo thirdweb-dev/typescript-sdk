@@ -758,7 +758,7 @@ export class DropModule
       this.contract.interface.encodeFunctionData("transferFrom", [
         await this.getSignerAddress(),
         addressToClaim,
-        (await this.readOnlyContract.nextTokenIdToClaim()).sub(1),
+        (await this.readOnlyContract.nextTokenIdToMint()).sub(1),
       ]),
     );
     return await this.sendTransaction(
