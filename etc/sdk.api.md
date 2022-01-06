@@ -32,6 +32,7 @@ import { ProtocolControl } from '@3rdweb/contracts';
 import { Provider } from '@ethersproject/providers';
 import { Registry } from '@3rdweb/contracts';
 import { Royalty } from '@3rdweb/contracts';
+import { SignatureMint721 } from '@3rdweb/contracts';
 import { Signer } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/providers';
 import { VotingGovernor } from '@3rdweb/contracts';
@@ -989,6 +990,20 @@ export interface ISDKOptions {
     transactionRelayerUrl: string;
 }
 
+// @public (undocumented)
+export interface ISignatureMinter {
+    generateSignature(mintRequest: NewSignaturePayload): Promise<{
+        payload: SignaturePayload;
+        signature: string;
+    }>;
+    generateSignatureBatch(payloads: NewSignaturePayload[]): Promise<{
+        payload: SignaturePayload;
+        signature: string;
+    }[]>;
+    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber_2>;
+    verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
+}
+
 // Warning: (ae-internal-missing-underscore) The name "isNativeToken" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1275,7 +1290,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     // (undocumented)
     protected parseEventLogs(eventName: string, logs?: Log[]): any;
     // (undocumented)
-    protected parseLogs<T = any>(eventName: string, logs?: Log[]): T[];
+    protected parseLogs<T = any>(eventName: string, logs?: Log[], contract?: BaseContract): T[];
     // @internal (undocumented)
     protected get providerOrSigner(): ProviderOrSigner;
     // @internal
@@ -1291,6 +1306,13 @@ export class Module<TContract extends BaseContract = BaseContract> {
     setProviderOrSigner(providerOrSigner: ProviderOrSigner): void;
     // @internal (undocumented)
     protected get signer(): Signer | null;
+    // (undocumented)
+    protected signTypedData(signer: ethers.Signer, from: string, domain: {
+        name: string;
+        version: string;
+        chainId: number;
+        verifyingContract: string;
+    }, types: any, message: any): Promise<BytesLike>;
 }
 
 // @public
@@ -1375,7 +1397,7 @@ export class ModuleWithRoles<TContract extends AccessControlEnumerable = AccessC
 // Warning: (ae-internal-missing-underscore) The name "NATIVE_TOKEN_ADDRESS" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const NATIVE_TOKEN_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
+export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 // @public (undocumented)
 export interface NativeToken extends Currency {
@@ -1412,6 +1434,17 @@ export interface NewDirectListing {
     tokenId: BigNumberish_2;
     // (undocumented)
     type?: "NewDirectListing";
+}
+
+// @public
+export interface NewSignaturePayload {
+    currencyAddress: string;
+    id?: string;
+    metadata: MetadataURIOrObject;
+    mintEndTimeEpochSeconds: BigNumberish_2;
+    mintStartTimeEpochSeconds: BigNumberish_2;
+    price: BigNumberish_2;
+    to: string;
 }
 
 // @public
@@ -1457,7 +1490,7 @@ export interface NFTMetadataOwner {
 }
 
 // @public
-export class NFTModule extends ModuleWithRoles<NFT> implements ITransferable {
+export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITransferable, ISignatureMinter {
     // (undocumented)
     balance(): Promise<BigNumber_2>;
     // (undocumented)
@@ -1465,7 +1498,17 @@ export class NFTModule extends ModuleWithRoles<NFT> implements ITransferable {
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // @internal (undocumented)
-    protected connectContract(): NFT;
+    protected connectContract(): SignatureMint721;
+    // (undocumented)
+    generateSignature(mintRequest: NewSignaturePayload): Promise<{
+        payload: SignaturePayload;
+        signature: string;
+    }>;
+    // (undocumented)
+    generateSignatureBatch(payloads: NewSignaturePayload[]): Promise<{
+        payload: SignaturePayload;
+        signature: string;
+    }[]>;
     get(tokenId: string): Promise<NFTMetadata>;
     // (undocumented)
     getAll(): Promise<NFTMetadata[]>;
@@ -1485,6 +1528,7 @@ export class NFTModule extends ModuleWithRoles<NFT> implements ITransferable {
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
     isTransferRestricted(): Promise<boolean>;
+    isV1(): Promise<boolean>;
     // (undocumented)
     mint(metadata: MetadataURIOrObject): Promise<NFTMetadata>;
     // (undocumented)
@@ -1494,10 +1538,12 @@ export class NFTModule extends ModuleWithRoles<NFT> implements ITransferable {
     // (undocumented)
     mintTo(to: string, metadata: MetadataURIOrObject): Promise<NFTMetadata>;
     // (undocumented)
+    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber_2>;
+    // (undocumented)
     static moduleType: ModuleType;
     ownerOf(tokenId: string): Promise<string>;
     // (undocumented)
-    static roles: readonly ["admin", "minter", "pauser", "transfer"];
+    static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
@@ -1512,11 +1558,15 @@ export class NFTModule extends ModuleWithRoles<NFT> implements ITransferable {
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
+    // (undocumented)
+    verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
 }
 
 // @public (undocumented)
 export class NftModuleMetadata extends CommonModuleMetadata {
+    defaultSaleRecipientAddress?: string | undefined;
     feeRecipient?: string;
+    primarySaleFeeBasisPoints?: number | undefined;
     sellerFeeBasisPoints: number;
     symbol?: string;
 }
@@ -1743,6 +1793,11 @@ export const RolesMap: IRoles;
 export type SetAllRoles = {
     [key in keyof IRoles]?: string[];
 };
+
+// @public
+export interface SignaturePayload extends NewSignaturePayload {
+    uri: string;
+}
 
 // @public (undocumented)
 export class Snapshot {
