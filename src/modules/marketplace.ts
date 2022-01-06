@@ -461,19 +461,14 @@ export class MarketplaceModule
         );
 
         const approved = await asset.isApprovedForAll(from, this.address);
-        if (!approved) {
-          // TODO: No clue which approval to return
-          const isTokenApproved =
-            (await asset.getApproved(tokenId)).toLowerCase() ===
-            this.address.toLowerCase();
-
-          if (!isTokenApproved) {
-            await this.sendContractTransaction(asset, "setApprovalForAll", [
-              this.address,
-              true,
-            ]);
-          }
+        if (approved) {
+          return true;
         }
+
+        return (
+          (await asset.getApproved(tokenId)).toLowerCase() ===
+          this.address.toLowerCase()
+        );
       } else {
         const asset = ERC1155__factory.connect(
           assetContract,
@@ -502,12 +497,45 @@ export class MarketplaceModule
    */
   private async isStillValidDirectListing(
     listing: DirectListing,
+    quantity?: BigNumberish,
   ): Promise<boolean> {
-    return await this.isTokenApprovedForMarketplace(
+    const approved = await this.isTokenApprovedForMarketplace(
       listing.assetContractAddress,
       listing.tokenId,
-      this.address,
+      listing.sellerAddress,
     );
+
+    if (!approved) {
+      return false;
+    }
+
+    const erc165 = ERC165__factory.connect(
+      listing.assetContractAddress,
+      this.providerOrSigner,
+    );
+
+    // check for token approval
+    const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
+    if (isERC721) {
+      const asset = ERC721__factory.connect(
+        listing.assetContractAddress,
+        this.providerOrSigner,
+      );
+      return (
+        (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
+        listing.sellerAddress.toLowerCase()
+      );
+    } else {
+      const asset = ERC1155__factory.connect(
+        listing.assetContractAddress,
+        this.providerOrSigner,
+      );
+      const balance = await asset.balanceOf(
+        listing.sellerAddress,
+        listing.tokenId,
+      );
+      return balance.gte(quantity || listing.quantity);
+    }
   }
 
   // TODO: Complete method implementation with subgraph
@@ -695,10 +723,9 @@ export class MarketplaceModule
       BigNumber.from(_buyout.listingId),
     );
 
-    const valid = await this.isTokenApprovedForMarketplace(
-      listing.assetContractAddress,
-      listing.tokenId,
-      this.address,
+    const valid = await this.isStillValidDirectListing(
+      listing,
+      _buyout.quantityDesired,
     );
     if (!valid) {
       throw new Error(
