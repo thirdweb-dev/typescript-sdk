@@ -6,6 +6,7 @@ import { expect, assert } from "chai";
 import { IpfsStorage } from "../src/storage/IpfsStorage";
 import { FileOrBufferWithNames } from "../src/types/FireOrBufferWithNames";
 import FileOrBuffer from "../src/types/FileOrBuffer";
+import { DuplicateFileNameError } from "../src";
 
 global.fetch = require("node-fetch");
 
@@ -182,5 +183,50 @@ describe("IPFS Uploads", async () => {
     ];
     const storage = (await sdk.getStorage()) as IpfsStorage;
     console.log(await storage.uploadMetadataBatch(sampleObjects));
+  });
+
+  it("should upload properly with same file names but one with capitalized letters", async () => {
+    const storage = sdk.getStorage();
+    const sampleObjects: FileOrBufferWithNames[] = [
+      {
+        file: readFileSync("test/test.mp4"),
+        name: "test",
+      },
+      {
+        file: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+        name: "TEST",
+      },
+    ];
+    const cid = await storage.uploadBatchWithFileNames(sampleObjects);
+    assert(
+      (await getFile(`${cid}${"TEST"}`)).headers
+        .get("content-type")
+        .toString() === "image/jpeg",
+      `${cid}`,
+    );
+    console.log(
+      (await getFile(`${cid}${"TEST"}`)).headers.get("content-type").toString(),
+    );
+  });
+
+  it("should throw an error when trying to upload two files with the same name", async () => {
+    const storage = sdk.getStorage();
+    const sampleObjects: FileOrBufferWithNames[] = [
+      {
+        file: readFileSync("test/test.mp4"),
+        name: "test",
+      },
+      {
+        file: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+        name: "test",
+      },
+    ];
+    try {
+      const cid = await storage.uploadBatchWithFileNames(sampleObjects);
+    } catch (e) {
+      if (!(e instanceof DuplicateFileNameError)) {
+        throw e;
+      }
+    }
   });
 });
