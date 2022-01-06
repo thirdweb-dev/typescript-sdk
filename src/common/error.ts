@@ -53,6 +53,15 @@ export class FileNameMissingError extends Error {
   }
 }
 
+export class DuplicateFileNameError extends Error {
+  /** @internal */
+  constructor(fileName: string) {
+    super(
+      `DUPLICATE_FILE_NAME_ERROR: File name ${fileName} was passed for more than one file.`,
+    );
+  }
+}
+
 export class NotEnoughTokensError extends Error {
   /** @internal */
   constructor(contractAddress: string, quantity: number, available: number) {

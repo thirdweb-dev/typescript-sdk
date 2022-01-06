@@ -97,7 +97,7 @@ export class IpfsStorage implements IStorage {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
     };
     const data = new FormData();
-
+    const uniqueNames: string[] = [];
     files.forEach((file, i) => {
       let fileWithName;
       if (!withFileNames) {
@@ -107,21 +107,18 @@ export class IpfsStorage implements IStorage {
         } as FileOrBufferWithNames;
       } else {
         fileWithName = file as FileOrBufferWithNames;
-        if (
-          fileWithName.file instanceof File &&
-          !fileWithName.name
-        ) {
+        if (fileWithName.file instanceof File && !fileWithName.name) {
           fileWithName.name = fileWithName.file.name;
         }
-        if (
-          !(fileWithName.file instanceof File) &&
-          !fileWithName.name
-        ) {
+        if (!(fileWithName.file instanceof File) && !fileWithName.name) {
           throw new FileNameMissingError();
         }
       }
-
       const filepath = `files/${fileWithName.name}`;
+      if (filepath in uniqueNames) {
+        throw new Error(`File name ${filepath} already exists`);
+      }
+      uniqueNames.push(filepath);
       if (typeof window === "undefined") {
         data.append("file", fileWithName.file as any, { filepath } as any);
       } else {
