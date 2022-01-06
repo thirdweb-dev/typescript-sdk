@@ -511,7 +511,6 @@ export class BundleDropModule
    * @param quantity - Quantity of the tokens you want to claim
    * @param addressToClaim - Address you want to send the token to
    * @param proofs - Array of proofs
-   * @param data -
    *
    * @returns - Receipt for the transaction
    */

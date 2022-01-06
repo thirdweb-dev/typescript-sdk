@@ -12,7 +12,7 @@ Claim a token and send it to someone else
 <b>Signature:</b>
 
 ```typescript
-claimTo(tokenId: BigNumberish, quantity: BigNumberish, addressToClaim: string, proofs?: BytesLike[], data?: BytesLike): Promise<TransactionReceipt>;
+claimTo(tokenId: BigNumberish, quantity: BigNumberish, addressToClaim: string, proofs?: BytesLike[]): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -23,7 +23,6 @@ claimTo(tokenId: BigNumberish, quantity: BigNumberish, addressToClaim: string, p
 |  quantity | BigNumberish | Quantity of the tokens you want to claim |
 |  addressToClaim | string | Address you want to send the token to |
 |  proofs | BytesLike\[\] | Array of proofs |
-|  data | BytesLike |  |
 
 <b>Returns:</b>
 
