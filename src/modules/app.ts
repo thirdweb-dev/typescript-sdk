@@ -4,14 +4,14 @@ import {
   ERC20__factory,
   LazyMintERC1155__factory,
   LazyMintERC721__factory,
+  Marketplace__factory,
   Market__factory,
   NFTCollection__factory,
-  NFT__factory,
   Pack__factory,
   ProtocolControl,
   ProtocolControl__factory,
   Royalty__factory,
-  Marketplace__factory,
+  SignatureMint721__factory,
   VotingGovernor__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
@@ -54,6 +54,7 @@ import {
   TokenModuleMetadata,
   VoteModuleMetadata,
 } from "../types/module-deployments";
+import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceModuleMetadata";
 import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";
 import { BundleDropModule } from "./bundleDrop";
@@ -61,11 +62,10 @@ import { CollectionModule } from "./collection";
 import { DatastoreModule } from "./datastore";
 import { DropModule } from "./drop";
 import { MarketModule } from "./market";
+import { MarketplaceModule } from "./marketplace";
 import { NFTModule } from "./nft";
 import { PackModule } from "./pack";
 import { SplitsModule } from "./royalty";
-import { MarketplaceModule } from "./marketplace";
-import MarketplaceModuleMetadata from "../types/module-deployments/MarketplaceModuleMetadata";
 import { CurrencyModule, TokenModule } from "./token";
 import { VoteModule } from "./vote";
 
@@ -574,17 +574,28 @@ export class AppModule
         await this.getSignerAddress(),
       );
 
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
+
     const address = await this._deployModule(
       ModuleType.NFT,
       [
-        this.address,
         metadata.name,
         metadata.symbol ? metadata.symbol : "",
-        await this.sdk.getForwarderAddress(),
         metadataUri,
+        this.address,
+        await this.sdk.getForwarderAddress(),
+        nativeTokenWrapperAddress,
+        metadata.defaultSaleRecipientAddress
+          ? metadata.defaultSaleRecipientAddress
+          : await this.getSignerAddress(),
         metadata.sellerFeeBasisPoints,
+        metadata.primarySaleFeeBasisPoints
+          ? metadata.primarySaleFeeBasisPoints
+          : 0,
       ],
-      NFT__factory,
+      SignatureMint721__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
       this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);

@@ -24,6 +24,7 @@ export interface IMarketplace
 |  [createAuctionListing(listing)](./sdk.imarketplace.createauctionlisting.md) | Creates a new auction listing on a marketplace. |
 |  [createDirectListing(listing)](./sdk.imarketplace.createdirectlisting.md) | Creates a new direct listing on a marketplace. |
 |  [getActiveOffer(listingId, address)](./sdk.imarketplace.getactiveoffer.md) | If the <code>address</code> has made an offer to the specified listing, this method will fetch the offer and return it. If no offer has been made, this method will return <code>undefined</code>. |
+|  [getAllListings()](./sdk.imarketplace.getalllistings.md) | Fetch all the listings in the marketplace. |
 |  [getAuctionListing(listingId)](./sdk.imarketplace.getauctionlisting.md) | Fetch an auction listing by Id. |
 |  [getBidBufferBps()](./sdk.imarketplace.getbidbufferbps.md) | Fetch the current bid buffer on the marketplace contract. The bid buffer is represented in basis points.<!-- -->This is a percentage (e.g. 5%). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items. |
 |  [getDirectListing(listingId)](./sdk.imarketplace.getdirectlisting.md) | Fetch a direct listing by Id. |
@@ -34,6 +35,6 @@ export interface IMarketplace
 |  [makeDirectListingOffer(offer)](./sdk.imarketplace.makedirectlistingoffer.md) | Make an offer on a direct listing. |
 |  [setBidBufferBps(buffer)](./sdk.imarketplace.setbidbufferbps.md) | Sets the bid buffer on the marketplace contract. The bid buffer is represented in basis points. |
 |  [setTimeBufferInSeconds(buffer)](./sdk.imarketplace.settimebufferinseconds.md) | Sets the current time buffer on the marketplace contract. |
-|  [updateAuctionListing(listing)](./sdk.imarketplace.updateauctionlisting.md) | Creates a new auction listing on a marketplace. |
-|  [updateDirectListing(listing)](./sdk.imarketplace.updatedirectlisting.md) | Creates a new direct listing on a marketplace. |
+|  [updateAuctionListing(listing)](./sdk.imarketplace.updateauctionlisting.md) | Updates an auction listing. |
+|  [updateDirectListing(listing)](./sdk.imarketplace.updatedirectlisting.md) | Updates a direct listing. |
 
