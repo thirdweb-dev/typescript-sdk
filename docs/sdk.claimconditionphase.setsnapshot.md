@@ -4,7 +4,10 @@
 
 ## ClaimConditionPhase.setSnapshot() method
 
-Sets a snapshot for the claim condition. You can use a snapshot to verify a merkle tree condition.
+> Warning: This API is now obsolete.
+> 
+> - use 
+> 
 
 <b>Signature:</b>
 

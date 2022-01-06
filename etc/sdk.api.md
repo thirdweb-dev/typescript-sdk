@@ -416,9 +416,9 @@ export class ClaimConditionFactory {
     constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>);
     allSnapshots(): SnapshotInfo[];
     // @internal
-    buildConditions(): PublicClaimCondition[];
+    buildConditions(): Promise<PublicClaimCondition[]>;
     // @internal
-    buildConditionsForDropV1(): PublicClaimCondition[];
+    buildConditionsForDropV1(): Promise<PublicClaimCondition[]>;
     // Warning: (ae-incompatible-release-tags) The symbol "fromPublicClaimConditions" is marked as @public, but its signature references "PublicClaimCondition" which is marked as @beta
     fromPublicClaimConditions(conditions: PublicClaimCondition[]): this;
     newClaimPhase({ startTime, maxQuantity, maxQuantityPerTransaction, }: {
@@ -426,14 +426,14 @@ export class ClaimConditionFactory {
         maxQuantity?: BigNumberish_2;
         maxQuantityPerTransaction?: BigNumberish_2;
     }): ClaimConditionPhase;
-    removeClaimPhase(index: number): void;
+    removeClaimPhase(index: number): Promise<void>;
 }
 
 // @public (undocumented)
 export class ClaimConditionPhase {
     constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>);
     // @internal
-    buildPublicClaimCondition(): PublicMintCondition;
+    buildPublicClaimCondition(): Promise<PublicMintCondition>;
     // @internal (undocumented)
     getSnapshot(): SnapshotInfo | undefined;
     setConditionStartTime(when: Date | number): ClaimConditionPhase;
@@ -441,8 +441,10 @@ export class ClaimConditionPhase {
     setMaxQuantityPerTransaction(max: BigNumberish_2): ClaimConditionPhase;
     setMerkleRoot(root: string): ClaimConditionPhase;
     setPrice(price: BigNumberish_2, tokenAddress?: string): ClaimConditionPhase;
+    // @deprecated (undocumented)
     setSnapshot(addresses: string[]): Promise<ClaimConditionPhase>;
     setWaitTimeBetweenClaims(waitInSeconds: BigNumberish_2): ClaimConditionPhase;
+    useSnapshot(addresses: string[]): ClaimConditionPhase;
 }
 
 // @public (undocumented)

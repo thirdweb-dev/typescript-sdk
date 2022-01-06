@@ -9,7 +9,7 @@ Removes a claim condition phase from the factory.
 <b>Signature:</b>
 
 ```typescript
-removeClaimPhase(index: number): void;
+removeClaimPhase(index: number): Promise<void>;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ removeClaimPhase(index: number): void;
 
 <b>Returns:</b>
 
-void
+Promise&lt;void&gt;
 
