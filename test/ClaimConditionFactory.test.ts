@@ -112,7 +112,7 @@ describe("ClaimConditionFactory", async () => {
   });
 
   it("should delete phases correctly", async () => {
-    factory.removeClaimPhase(0);
+    await factory.deleteClaimPhase(0);
 
     const newConditions = await factory.buildConditions();
 

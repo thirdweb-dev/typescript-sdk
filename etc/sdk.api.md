@@ -419,6 +419,7 @@ export class ClaimConditionFactory {
     buildConditions(): Promise<PublicClaimCondition[]>;
     // @internal
     buildConditionsForDropV1(): Promise<PublicClaimCondition[]>;
+    deleteClaimPhase(index: number): Promise<void>;
     // Warning: (ae-incompatible-release-tags) The symbol "fromPublicClaimConditions" is marked as @public, but its signature references "PublicClaimCondition" which is marked as @beta
     fromPublicClaimConditions(conditions: PublicClaimCondition[]): this;
     newClaimPhase({ startTime, maxQuantity, maxQuantityPerTransaction, }: {
@@ -426,7 +427,8 @@ export class ClaimConditionFactory {
         maxQuantity?: BigNumberish_2;
         maxQuantityPerTransaction?: BigNumberish_2;
     }): ClaimConditionPhase;
-    removeClaimPhase(index: number): Promise<void>;
+    // @deprecated (undocumented)
+    removeClaimPhase(index: number): void;
 }
 
 // @public (undocumented)
@@ -751,6 +753,12 @@ export type ForwardRequestMessage = {
     nonce: string;
     data: BytesLike;
 };
+
+// @public (undocumented)
+export class FunctionDeprecatedError extends Error {
+    // @internal
+    constructor(message: string);
+}
 
 // @public
 export function generateRoot(items: string[]): string;

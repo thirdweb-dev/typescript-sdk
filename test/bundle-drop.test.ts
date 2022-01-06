@@ -119,18 +119,23 @@ describe("Bundle Drop Module", async () => {
       w1,
       w2,
       w3,
-      w4,
     ];
     const members = testWallets.map((w) => w.address);
     phase.useSnapshot(members);
-
     console.log("Setting claim condition");
     await bdModule.setClaimCondition("0", factory);
-
+    testWallets.push(w4)
     for (const member of testWallets) {
-      await sdk.setProviderOrSigner(member);
-      await bdModule.claim("0", 1);
-      console.log(`Address ${member.address} claimed successfully!`);
+      try {
+        sdk.setProviderOrSigner(member);
+        await bdModule.claim("0", 1);
+        console.log(`Address ${member.address} claimed successfully!`);
+      } catch (e) {
+        if (member != w4) {
+          throw e;
+        }
+        console.log(`Address ${member.address} failed to claim, as expected!`);
+      }
     }
   });
 

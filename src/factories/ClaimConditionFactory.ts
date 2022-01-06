@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
+import { FunctionDeprecatedError } from "..";
 import { PublicClaimCondition } from "../types/claim-conditions/PublicMintCondition";
 import { SnapshotInfo } from "../types/snapshots/SnapshotInfo";
 import ClaimConditionPhase from "./ClaimConditionPhase";
@@ -147,7 +148,7 @@ class ClaimConditionFactory {
    *
    * @param phase - The phase to remove
    */
-  public async removeClaimPhase(index: number): Promise<void> {
+  public async deleteClaimPhase(index: number): Promise<void> {
     if (index < 0 || index >= this.phases.length) {
       return;
     }
@@ -155,6 +156,14 @@ class ClaimConditionFactory {
     const sorted = await this.buildConditions();
     const cleared = sorted.splice(index - 1, 1);
     this.fromPublicClaimConditions(cleared);
+  }
+
+  /**
+   * @deprecated - Use {@link deleteClaimPhase} instead.
+   */
+  public removeClaimPhase(index: number): void {
+    index;
+    throw new FunctionDeprecatedError("deleteClaimPhase");
   }
 
   /**
