@@ -862,4 +862,46 @@ describe("Marketplace Module", async () => {
       assert.equal(buffer.toNumber(), 1000);
     });
   });
+
+  describe("Invalid Listings", () => {
+    let directListingId: BigNumber;
+    let auctionListingId: BigNumber;
+
+    beforeEach(async () => {
+      await sdk.setProviderOrSigner(adminWallet);
+      directListingId = await createDirectListing(dummyNftModule.address, 0);
+      auctionListingId = await createAuctionListing(dummyNftModule.address, 1);
+    });
+
+    it("should throw an error when trying to buyout an invalid direct listing", async () => {
+      await sdk.setProviderOrSigner(adminWallet);
+      await dummyNftModule.transfer(samWallet.address, "0");
+
+      await sdk.setProviderOrSigner(bobWallet);
+
+      try {
+        await marketplaceModule.buyoutDirectListing({
+          listingId: directListingId,
+          quantityDesired: 1,
+        });
+        assert.fail("should have thrown");
+      } catch (err: any) {
+        console.error(err);
+      }
+    });
+
+    it("should not return invalid direct listings", async () => {
+      await sdk.setProviderOrSigner(adminWallet);
+      await dummyNftModule.transfer(samWallet.address, "0");
+
+      const allListings = await marketplaceModule.getAllListings();
+      const found = allListings.find(
+        (l) => l.id.toString() === directListingId.toString(),
+      );
+      assert.isUndefined(
+        found,
+        "should not have found the listing becuase it is invalid",
+      );
+    });
+  });
 });
