@@ -25,6 +25,7 @@ import { CollectionModule } from "../modules/collection";
 import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
 import { MarketModule } from "../modules/market";
+import { MarketplaceModule } from "../modules/marketplace";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
@@ -57,6 +58,7 @@ export type AnyContract =
   | typeof DatastoreModule
   | typeof SplitsModule
   | typeof BundleDropModule
+  | typeof MarketplaceModule
   | typeof VoteModule;
 
 /**
@@ -69,7 +71,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
   private defaultOptions: ISDKOptions = {
     ipfsGatewayUrl: "https://cloudflare-ipfs.com/ipfs/",
     registryContractAddress: "",
-    maxGasPriceInGwei: 100,
+    maxGasPriceInGwei: 300,
     gasSpeed: "fastest",
     transactionRelayerUrl: "",
     transactionRelayerSendFunction: this.defaultRelayerSendFunction.bind(this),
@@ -222,7 +224,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
   /**
    *
    * @param speed - what speed to prefer, default: "fastest"
-   * @param maxGas - how much gas to use at most, default: 100
+   * @param maxGas - how much gas to use at most, default: 300
    * @returns the optiomal gas price
    */
   public async getGasPrice(
@@ -391,6 +393,16 @@ export class ThirdwebSDK implements IThirdwebSdk {
    */
   public getBundleDropModule(address: string): BundleDropModule {
     return this.getOrCreateModule(address, BundleDropModule);
+  }
+
+  /**
+   * @beta
+   *
+   * @param address - The contract address of the given Marketplace module.
+   * @returns The Marketplace Module.
+   */
+  public getMarketplaceModule(address: string): MarketplaceModule {
+    return this.getOrCreateModule(address, MarketplaceModule);
   }
 
   /**

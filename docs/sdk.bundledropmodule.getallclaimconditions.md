@@ -21,5 +21,5 @@ getAllClaimConditions(tokenId: BigNumberish): Promise<ClaimCondition[]>;
 
 <b>Returns:</b>
 
-Promise&lt;ClaimCondition\[\]&gt;
+Promise&lt;[ClaimCondition](./sdk.claimcondition.md)<!-- -->\[\]&gt;
 

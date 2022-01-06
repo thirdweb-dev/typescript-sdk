@@ -70,6 +70,8 @@ Output
 |  [AdminRoleMissingError](./sdk.adminrolemissingerror.md) | Thrown when attempting to execute an admin-role function. |
 |  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
+|  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
+|  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
 |  [BundleDropModule](./sdk.bundledropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleDropModule()](./sdk.thirdwebsdk.getbundledropmodule.md) |
 |  [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md) |  |
 |  [BundleModule](./sdk.bundlemodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md) |
@@ -88,8 +90,11 @@ Output
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [IpfsStorage](./sdk.ipfsstorage.md) |  |
+|  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
 |  [MarketModuleMetadata](./sdk.marketmodulemetadata.md) |  |
+|  [MarketplaceModule](./sdk.marketplacemodule.md) | Access this module by calling [ThirdwebSDK.getMarketplaceModule()](./sdk.thirdwebsdk.getmarketplacemodule.md) |
+|  [MarketplaceModuleMetadata](./sdk.marketplacemodulemetadata.md) |  |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
@@ -110,12 +115,14 @@ Output
 |  [UploadError](./sdk.uploaderror.md) |  |
 |  [VoteModule](./sdk.votemodule.md) | Access this module by calling  |
 |  [VoteModuleMetadata](./sdk.votemodulemetadata.md) |  |
+|  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 
 ## Enumerations
 
 |  Enumeration | Description |
 |  --- | --- |
 |  [ClaimEligibility](./sdk.claimeligibility.md) |  |
+|  [ListingType](./sdk.listingtype.md) |  |
 |  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
 |  [ProposalState](./sdk.proposalstate.md) |  |
 |  [UnderlyingType](./sdk.underlyingtype.md) |  |
@@ -130,6 +137,7 @@ Output
 |  [estimateBlockAtTime(timeInEpochSeconds, provider)](./sdk.estimateblockattime.md) | Given a time in second, return the block number that the time is in. |
 |  [generateRoot(items)](./sdk.generateroot.md) | Convenience function to generate a merkle root from a list of strings. |
 |  [getNativeTokenByChainId(chainId)](./sdk.getnativetokenbychainid.md) |  |
+|  [getTokenMetadataUsingStorage(contractAddress, provider, tokenId, storage)](./sdk.gettokenmetadatausingstorage.md) |  |
 |  [recursiveResolveGatewayUrl(json, ipfsGatewayUrl)](./sdk.recursiveresolvegatewayurl.md) |  |
 |  [uploadToIPFS(data, contractAddress, signerAddress)](./sdk.uploadtoipfs.md) | A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri. |
 
@@ -137,16 +145,20 @@ Output
 
 |  Interface | Description |
 |  --- | --- |
+|  [AuctionListing](./sdk.auctionlisting.md) | Represents a new marketplace auction listing. |
 |  [BundleDropCreateClaimCondition](./sdk.bundledropcreateclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [BundleDropMetadata](./sdk.bundledropmetadata.md) | <b><i>(BETA)</i></b> |
 |  [BundleMetadata](./sdk.bundlemetadata.md) | <b><i>(BETA)</i></b> |
+|  [ClaimCondition](./sdk.claimcondition.md) | <b><i>(BETA)</i></b> |
 |  [CollectionMetadata](./sdk.collectionmetadata.md) |  |
 |  [ContractMetadata](./sdk.contractmetadata.md) | The typical contract metadata found on the modules. |
 |  [CreatePublicMintCondition](./sdk.createpublicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [Currency](./sdk.currency.md) | Currency metadata. |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
+|  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
 |  [IAppModule](./sdk.iappmodule.md) |  |
 |  [IDropModule](./sdk.idropmodule.md) |  |
+|  [IMarketplace](./sdk.imarketplace.md) |  |
 |  [INFTBundleBatchArgs](./sdk.inftbundlebatchargs.md) |  |
 |  [INFTBundleCreateArgs](./sdk.inftbundlecreateargs.md) | <b><i>(BETA)</i></b> |
 |  [INFTCollectionBatchArgs](./sdk.inftcollectionbatchargs.md) | <b><i>(BETA)</i></b> |
@@ -155,6 +167,7 @@ Output
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) | <b><i>(BETA)</i></b> |
 |  [IRoles](./sdk.iroles.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
+|  [ISignatureMinter](./sdk.isignatureminter.md) |  |
 |  [ISplitsModule](./sdk.isplitsmodule.md) |  |
 |  [IStorage](./sdk.istorage.md) |  |
 |  [IThirdwebSdk](./sdk.ithirdwebsdk.md) |  |
@@ -166,9 +179,13 @@ Output
 |  [ModuleMetadata](./sdk.modulemetadata.md) | The module metadata, includes the <code>address</code> and the [ModuleType](./sdk.moduletype.md)<!-- -->. |
 |  [ModuleMetadataNoType](./sdk.modulemetadatanotype.md) | The module metadata, but missing the ModuleType. |
 |  [NativeToken](./sdk.nativetoken.md) |  |
+|  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
+|  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
+|  [NewSignaturePayload](./sdk.newsignaturepayload.md) | Represents a new <code>SignatureMint</code> request. |
 |  [NewSplitRecipient](./sdk.newsplitrecipient.md) | The NewSplitRecipient interface describes the structure of a new split recipient. The <code>shares</code> property is important for the calculation of the the total split.<!-- -->If there are two recipients each with 10 shares, they each will receive 50% of the total royalties.<!-- -->If there are two recipients each with 1 share, they each will receive 50% of the total royalties.<!-- -->I.e. the total number of shares is used to calculate the percentage of the total royalties that is allocated to each recipient. |
 |  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
+|  [Offer](./sdk.offer.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [Proposal](./sdk.proposal.md) |  |
@@ -176,6 +193,7 @@ Output
 |  [ProposalVote](./sdk.proposalvote.md) |  |
 |  [PublicClaimCondition](./sdk.publicclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
+|  [SignaturePayload](./sdk.signaturepayload.md) | Represents a prepared <code>SignaturePayload</code> object, which will be signed by a wallet. |
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
 |  [VoteSettings](./sdk.votesettings.md) |  |

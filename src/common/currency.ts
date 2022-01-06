@@ -126,7 +126,7 @@ const NATIVE_TOKENS: Record<SUPPORTED_CHAIN_ID | ChainId.Hardhat, NativeToken> =
       symbol: "ETH",
       decimals: 18,
       wrapped: {
-        address: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+        address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
         name: "Wrapped Ether",
         symbol: "WETH",
       },
@@ -201,6 +201,39 @@ export function isNativeToken(tokenAddress: string): boolean {
     tokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS ||
     tokenAddress.toLowerCase() === AddressZero
   );
+}
+
+/**
+ * @internal
+ */
+export async function getCurrencyBalance(
+  providerOrSigner: ProviderOrSigner,
+  tokenAddress: string,
+  walletAddress: string,
+): Promise<CurrencyValue> {
+  const provider = getProvider(providerOrSigner);
+  let balance;
+  if (isNativeToken(tokenAddress)) {
+    balance = await provider.getBalance(walletAddress);
+  } else {
+    try {
+      const erc20 = ERC20__factory.connect(tokenAddress, provider);
+      balance = await erc20.balanceOf(walletAddress);
+    } catch (e) {
+      console.error(e);
+      throw new Error("invalid ERC20 token address");
+    }
+  }
+
+  return getCurrencyValue(providerOrSigner, tokenAddress, balance);
+}
+
+function getProvider(providerOrSigner: ProviderOrSigner): Provider {
+  if (Signer.isSigner(providerOrSigner)) {
+    return (providerOrSigner as Signer).provider as Provider;
+  } else {
+    return providerOrSigner as Provider;
+  }
 }
 
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken {

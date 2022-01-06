@@ -201,11 +201,16 @@ export class DropModule
     return await this.readOnlyContract.ownerOf(tokenId);
   }
 
+  public async getDefaultSaleRecipient(): Promise<string> {
+    return await this.readOnlyContract.defaultSaleRecipient();
+  }
+
   public async setDefaultSaleRecipient(
     recipient: string,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setDefaultSaleRecipient", [recipient]);
   }
+
   public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
     const address = _address ? _address : await this.getSignerAddress();
     const balance = await this.readOnlyContract.balanceOf(address);
@@ -674,13 +679,19 @@ export class DropModule
     );
   }
 
-  public async claim(
+  /**
+   * Returns proofs and the overrides required for the transaction.
+   *
+   * @returns - `overrides` and `proofs` as an object.
+   */
+
+  private async prepareClaim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ): Promise<NFTMetadataOwner[]> {
-    if (await this.isV1()) {
-      return this.v1Module.claim(quantity, proofs);
-    }
+  ): Promise<{
+    overrides: ethers.CallOverrides;
+    proofs: BytesLike[];
+  }> {
     const mintCondition = await this.getActiveClaimCondition();
     const { metadata } = await this.getMetadata();
 
@@ -730,11 +741,68 @@ export class DropModule
         }
       }
     }
+    return {
+      overrides,
+      proofs,
+    };
+  }
 
+  /**
+   * Claim a token and send it to someone else
+   *
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param addressToClaim - Address you want to send the token to
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
+  public async claimTo(
+    quantity: BigNumberish,
+    addressToClaim: string,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<TransactionReceipt> {
+    const claimData = await this.prepareClaim(quantity, proofs);
+    const encoded = [];
+    encoded.push(
+      this.contract.interface.encodeFunctionData("claim", [
+        quantity,
+        claimData.proofs,
+      ]),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("transferFrom", [
+        await this.getSignerAddress(),
+        addressToClaim,
+        (await this.readOnlyContract.nextTokenIdToMint()).sub(1),
+      ]),
+    );
+    return await this.sendTransaction(
+      "multicall",
+      [encoded],
+      claimData.overrides,
+    );
+  }
+
+  /**
+   * Claim a token for yourself
+   *
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
+  public async claim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<NFTMetadataOwner[]> {
+    if (await this.isV1()) {
+      return this.v1Module.claim(quantity, proofs);
+    }
+    const claimData = await this.prepareClaim(quantity, proofs);
     const receipt = await this.sendTransaction(
       "claim",
-      [quantity, proofs],
-      overrides,
+      [quantity, claimData.proofs],
+      claimData.overrides,
     );
     const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
     const startingIndex: BigNumber = event.startTokenId;
@@ -747,7 +815,6 @@ export class DropModule
       tokenIds.map(async (t) => await this.get(t.toString())),
     );
   }
-
   public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [tokenId]);
   }

@@ -37,7 +37,8 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [balanceOf(address)](./sdk.dropmodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
 |  [burn(tokenId)](./sdk.dropmodule.burn.md) |  | <b><i>(BETA)</i></b> |
 |  [canClaim(quantity, addressToCheck)](./sdk.dropmodule.canclaim.md) |  | <b><i>(BETA)</i></b> - Parameters interface may change, proofs parameter is ignored. |
-|  [claim(quantity, proofs)](./sdk.dropmodule.claim.md) |  | <b><i>(BETA)</i></b> |
+|  [claim(quantity, proofs)](./sdk.dropmodule.claim.md) |  | <b><i>(BETA)</i></b> Claim a token for yourself |
+|  [claimTo(quantity, addressToClaim, proofs)](./sdk.dropmodule.claimto.md) |  | <b><i>(BETA)</i></b> Claim a token and send it to someone else |
 |  [createBatch(metadatas)](./sdk.dropmodule.createbatch.md) |  | <b><i>(BETA)</i></b> Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per module at the moment. |
 |  [get(tokenId)](./sdk.dropmodule.get.md) |  | <b><i>(BETA)</i></b> |
 |  [getActiveClaimCondition()](./sdk.dropmodule.getactiveclaimcondition.md) |  | <b><i>(BETA)</i></b> |
@@ -49,6 +50,7 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [getAllUnclaimed(queryParams)](./sdk.dropmodule.getallunclaimed.md) |  | <b><i>(BETA)</i></b> |
 |  [getClaimConditionsFactory()](./sdk.dropmodule.getclaimconditionsfactory.md) |  | <b><i>(BETA)</i></b> Creates a claim condition factory |
 |  [getClaimIneligibilityReasons(quantity, addressToCheck)](./sdk.dropmodule.getclaimineligibilityreasons.md) |  | <b><i>(BETA)</i></b> For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user. |
+|  [getDefaultSaleRecipient()](./sdk.dropmodule.getdefaultsalerecipient.md) |  | <b><i>(BETA)</i></b> |
 |  [getMintConditionsFactory()](./sdk.dropmodule.getmintconditionsfactory.md) |  | <b><i>(BETA)</i></b> |
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | <b><i>(BETA)</i></b> |
 |  [getRoyaltyBps()](./sdk.dropmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |

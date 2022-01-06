@@ -198,6 +198,10 @@ export class BundleDropModule
     );
   }
 
+  public async getDefaultSaleRecipient(): Promise<string> {
+    return await this.readOnlyContract.defaultSaleRecipient();
+  }
+
   public async getSaleRecipient(tokenId: BigNumberish): Promise<string> {
     const saleRecipient = await this.readOnlyContract.saleRecipient(tokenId);
     if (saleRecipient === AddressZero) {
@@ -265,6 +269,7 @@ export class BundleDropModule
   ): Promise<TransactionReceipt> {
     return this.sendTransaction("setDefaultSaleRecipient", [recipient]);
   }
+
   public async setApproval(
     operator: string,
     approved = true,
@@ -426,7 +431,13 @@ export class BundleDropModule
     await this.sendTransaction("setClaimConditions", [tokenId, _conditions]);
   }
 
-  public async claim(
+  /**
+   * Returns proofs and the overrides required for the transaction.
+   *
+   * @returns - `overrides` and `proofs` as an object.
+   */
+
+  private async prepareClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
@@ -478,7 +489,75 @@ export class BundleDropModule
         }
       }
     }
-    await this.sendTransaction("claim", [tokenId, quantity, proofs], overrides);
+    return {
+      overrides,
+      proofs,
+    };
+  }
+
+  /**
+   * Claim a token to yourself
+   *
+   * @param tokenId - Id of the token you want to claim
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
+
+  public async claim(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ) {
+    const claimData = await this.prepareClaim(tokenId, quantity, proofs);
+
+    await this.sendTransaction(
+      "claim",
+      [tokenId, quantity, claimData.proofs],
+      claimData.overrides,
+    );
+  }
+
+  /**
+   * Claim a token and send it to someone else
+   *
+   * @param tokenId - Id of the token you want to claim
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param addressToClaim - Address you want to send the token to
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
+  public async claimTo(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    addressToClaim: string,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<TransactionReceipt> {
+    const claimData = await this.prepareClaim(tokenId, quantity, proofs);
+    const encoded = [];
+    encoded.push(
+      this.contract.interface.encodeFunctionData("claim", [
+        tokenId,
+        quantity,
+        proofs,
+      ]),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("safeTransferFrom", [
+        await this.getSignerAddress(),
+        addressToClaim,
+        tokenId,
+        quantity,
+        [0],
+      ]),
+    );
+    return await this.sendTransaction(
+      "multicall",
+      [encoded],
+      claimData.overrides,
+    );
   }
 
   public async burn(
