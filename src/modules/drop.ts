@@ -451,6 +451,7 @@ export class DropModule
     });
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
+    const oldMerkle = metadata["merkle"];
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
@@ -458,7 +459,7 @@ export class DropModule
     }
 
     const encoded = [];
-    if (!isMetadataEqual(merkleInfo, metadata["merkle"])) {
+    if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
       const metadataUri = await this.sdk
         .getStorage()
         .upload(JSON.stringify(metadata));
@@ -500,7 +501,7 @@ export class DropModule
     const encoded = [];
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
-    const oldMerkle = JSON.parse(JSON.stringify(metadata["merkle"]));
+    const oldMerkle = metadata["merkle"];
 
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
