@@ -21,19 +21,20 @@ class ClaimConditionFactory {
    * @returns - The claim conditions that will be used when validating a users claim transaction.
    */
   public buildConditions(): PublicClaimCondition[] {
-    const publicClaimConditions = this.phases.map((c) =>
-      c.buildPublicClaimCondition(),
-    );
-
-    // TODO: write test to ensure they're sorted by start time, earliest first
-    const sorted = publicClaimConditions.sort((a, b) => {
-      if (a.startTimestamp.eq(b.startTimestamp)) {
-        return 0;
-      } else if (a.startTimestamp.gt(b.startTimestamp)) {
-        return 1;
-      } else {
-        return -1;
-      }
+    let sorted: PublicClaimCondition[] = [];
+    Promise.all(
+      this.phases.map(async (c) => await c.buildPublicClaimCondition()),
+    ).then((publicClaimConditions) => {
+      // TODO: write test to ensure they're sorted by start time, earliest first
+      sorted = publicClaimConditions.sort((a, b) => {
+        if (a.startTimestamp.eq(b.startTimestamp)) {
+          return 0;
+        } else if (a.startTimestamp.gt(b.startTimestamp)) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
     });
 
     return sorted;
