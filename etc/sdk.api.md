@@ -1223,7 +1223,7 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
-    static roles: readonly ["admin", "lister", "pauser"];
+    static roles: readonly ["admin", "lister"];
     // (undocumented)
     setBidBufferBps(buffer: BigNumberish_2): Promise<void>;
     // (undocumented)

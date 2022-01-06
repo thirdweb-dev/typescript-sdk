@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-static roles: readonly ["admin", "lister", "pauser"];
+static roles: readonly ["admin", "lister"];
 ```
