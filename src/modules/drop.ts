@@ -500,10 +500,15 @@ export class DropModule
     const encoded = [];
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
+    const oldMerkle = JSON.parse(JSON.stringify(metadata["merkle"]));
+
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
-    } else if (!isMetadataEqual(merkleInfo, metadata["merkle"])) {
+    } else {
       metadata["merkle"] = merkleInfo;
+    }
+
+    if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
       const metadataUri = await this.sdk
         .getStorage()
         .upload(JSON.stringify(metadata));
