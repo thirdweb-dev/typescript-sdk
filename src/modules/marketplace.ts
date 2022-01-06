@@ -426,6 +426,118 @@ export class MarketplaceModule
     }
   }
 
+  /**
+   * This method checks if the given token is approved for the marketplace module.
+   * This is particularly useful for direct listings where the token
+   * being listed may be moved before the listing is actually closed.
+   *
+   * TODO: Ask Jake/Krishang: do we need to also check the owners balance of the token,
+   * based on the listing quantity? I.e. query the balance of the tokenId, and check if
+   * the seller holds enough of the token
+   *
+   * @internal
+   * @param assetContract - The address of the asset contract.
+   * @param tokenId - The token id of the token.
+   * @param from - The address of the account that owns the token.
+   * @returns - True if the marketplace is approved on the token, false otherwise.
+   */
+  private async isTokenApprovedForMarketplace(
+    assetContract: string,
+    tokenId: BigNumberish,
+    from: string,
+  ): Promise<boolean> {
+    try {
+      const erc165 = ERC165__factory.connect(
+        assetContract,
+        this.providerOrSigner,
+      );
+
+      // check for token approval
+      const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
+      if (isERC721) {
+        const asset = ERC721__factory.connect(
+          assetContract,
+          this.providerOrSigner,
+        );
+
+        const approved = await asset.isApprovedForAll(from, this.address);
+        if (approved) {
+          return true;
+        }
+
+        return (
+          (await asset.getApproved(tokenId)).toLowerCase() ===
+          this.address.toLowerCase()
+        );
+      } else {
+        const asset = ERC1155__factory.connect(
+          assetContract,
+          this.providerOrSigner,
+        );
+
+        return await asset.isApprovedForAll(from, this.address);
+      }
+    } catch (err: any) {
+      console.error("Failed to check if token is approved", err);
+      return false;
+    }
+  }
+
+  /**
+   * Use this method to check if a direct listing is still valid.
+   *
+   * Ways a direct listing can become invalid:
+   * 1. The asset holder transferred the asset to another wallet
+   * 2. The asset holder burned the asset
+   * 3. The asset holder removed the approval on the marketplace
+   *
+   * @internal
+   * @param listing - The listing to check.
+   * @returns - True if the listing is valid, false otherwise.
+   */
+  private async isStillValidDirectListing(
+    listing: DirectListing,
+    quantity?: BigNumberish,
+  ): Promise<boolean> {
+    const approved = await this.isTokenApprovedForMarketplace(
+      listing.assetContractAddress,
+      listing.tokenId,
+      listing.sellerAddress,
+    );
+
+    if (!approved) {
+      return false;
+    }
+
+    const erc165 = ERC165__factory.connect(
+      listing.assetContractAddress,
+      this.providerOrSigner,
+    );
+
+    // check for token approval
+    const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
+    if (isERC721) {
+      const asset = ERC721__factory.connect(
+        listing.assetContractAddress,
+        this.providerOrSigner,
+      );
+      return (
+        (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
+        listing.sellerAddress.toLowerCase()
+      );
+    } else {
+      const asset = ERC1155__factory.connect(
+        listing.assetContractAddress,
+        this.providerOrSigner,
+      );
+      const balance = await asset.balanceOf(
+        listing.sellerAddress,
+        listing.tokenId,
+      );
+      return balance.gte(quantity || listing.quantity);
+    }
+  }
+
   // TODO: Complete method implementation with subgraph
   // /**
   //  * @beta - This method is not yet complete.
@@ -611,6 +723,16 @@ export class MarketplaceModule
       BigNumber.from(_buyout.listingId),
     );
 
+    const valid = await this.isStillValidDirectListing(
+      listing,
+      _buyout.quantityDesired,
+    );
+    if (!valid) {
+      throw new Error(
+        "The asset on this listing has been moved from the listers wallet, this listing is now invalid",
+      );
+    }
+
     const quantity = BigNumber.from(_buyout.quantityDesired);
     const value = BigNumber.from(listing.buyoutPrice).mul(quantity);
     const overrides = (await this.getCallOverrides()) || {};
@@ -668,7 +790,8 @@ export class MarketplaceModule
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
     const startTime = BigNumber.from(listing.startTimeInEpochSeconds);
 
-    if (now.gt(startTime)) {
+    const offers = await this.readOnlyContract.winningBid(listingId);
+    if (now.gt(startTime) && offers.offeror !== AddressZero) {
       throw new AuctionAlreadyStartedError(listingId.toString());
     }
 
@@ -772,10 +895,27 @@ export class MarketplaceModule
   }
 
   public async getAllListings(): Promise<(AuctionListing | DirectListing)[]> {
-    return await Promise.all(
+    const listings = await Promise.all(
       Array.from(
         Array((await this.readOnlyContract.totalListings()).toNumber()).keys(),
-      ).map((i) => this.getListing(i)),
+      ).map(async (i) => {
+        const listing = await this.getListing(i);
+
+        if (listing.type === ListingType.Auction) {
+          return listing;
+        }
+
+        const valid = await this.isStillValidDirectListing(listing);
+        if (!valid) {
+          return undefined;
+        }
+
+        return listing;
+      }),
     );
+    return listings.filter((l) => l !== undefined) as (
+      | AuctionListing
+      | DirectListing
+    )[];
   }
 }
