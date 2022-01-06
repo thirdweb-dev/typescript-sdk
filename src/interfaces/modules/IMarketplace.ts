@@ -25,12 +25,16 @@ export interface IMarketplace {
   createAuctionListing(listing: NewAuctionListing): Promise<BigNumber>;
 
   /**
-   * Creates a new direct listing on a marketplace.
+   * Updates a direct listing.
+   *
+   * @param listing - The listing to update.
    */
   updateDirectListing(listing: DirectListing): Promise<void>;
 
   /**
-   * Creates a new auction listing on a marketplace.
+   * Updates an auction listing.
+   *
+   * @param listing - The listing to update.
    */
   updateAuctionListing(listing: AuctionListing): Promise<void>;
 
@@ -60,12 +64,10 @@ export interface IMarketplace {
    * // TODO:  come back to `currencyContractAddress`
    *
    * @param listingId - The listing id.
-   * @param currencyContractAddress - The address of the currency contract.
    * @param tokenAmount - The amount of tokens to be offered.
    */
   makeAuctionListingBid(bid: {
     listingId: BigNumberish;
-    currencyContractAddress: string;
     pricePerToken: BigNumberish;
   }): Promise<void>;
 
@@ -223,6 +225,13 @@ export interface IMarketplace {
    * @param listingId - The ID of the listing to fetch.
    */
   getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
+
+  /**
+   * Fetch all the listings in the marketplace.
+   *
+   * @returns - An array of listings.
+   */
+  getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
 
   /**
    * Fetch the current bid buffer on the marketplace contract.

@@ -32,6 +32,7 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [exists()](./sdk.module.exists.md) |  |  |
 |  [getMetadata(resolveUrls)](./sdk.module.getmetadata.md) |  | Get the metadata of the contract. |
 |  [parseEventLogs(eventName, logs)](./sdk.module.parseeventlogs.md) |  |  |
-|  [parseLogs(eventName, logs)](./sdk.module.parselogs.md) |  |  |
+|  [parseLogs(eventName, logs, contract)](./sdk.module.parselogs.md) |  |  |
 |  [setMetadata(metadata)](./sdk.module.setmetadata.md) |  | Set new metadata on the contract and return it if successful. |
+|  [signTypedData(signer, from, domain, types, message)](./sdk.module.signtypeddata.md) |  |  |
 

@@ -9,7 +9,6 @@
 ```typescript
 makeAuctionListingBid(bid: {
         listingId: BigNumberish;
-        currencyContractAddress: string;
         pricePerToken: BigNumberish;
     }): Promise<void>;
 ```
@@ -18,7 +17,7 @@ makeAuctionListingBid(bid: {
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  bid | { listingId: BigNumberish; currencyContractAddress: string; pricePerToken: BigNumberish; } |  |
+|  bid | { listingId: BigNumberish; pricePerToken: BigNumberish; } |  |
 
 <b>Returns:</b>
 
