@@ -7,6 +7,8 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
+Claim a token to yourself
+
 <b>Signature:</b>
 
 ```typescript
@@ -17,11 +19,13 @@ claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Prom
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  tokenId | BigNumberish |  |
-|  quantity | BigNumberish |  |
-|  proofs | BytesLike\[\] |  |
+|  tokenId | BigNumberish | Id of the token you want to claim |
+|  quantity | BigNumberish | Quantity of the tokens you want to claim |
+|  proofs | BytesLike\[\] | Array of proofs |
 
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+- Receipt for the transaction
 
