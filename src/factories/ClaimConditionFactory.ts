@@ -161,8 +161,7 @@ class ClaimConditionFactory {
   /**
    * @deprecated - Use {@link deleteClaimPhase} instead.
    */
-  public removeClaimPhase(index: number): void {
-    index;
+  public removeClaimPhase(_index: number): void {
     throw new FunctionDeprecatedError("deleteClaimPhase");
   }
 
