@@ -520,7 +520,6 @@ export class BundleDropModule
     quantity: BigNumberish,
     addressToClaim: string,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-    data: BytesLike = [0],
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
     const encoded = [];
@@ -537,7 +536,7 @@ export class BundleDropModule
         addressToClaim,
         tokenId,
         quantity,
-        data,
+        [0],
       ]),
     );
     return await this.sendTransaction(

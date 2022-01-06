@@ -673,10 +673,10 @@ export class DropModule
   private async prepareClaim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ): Promise<any> {
-    if (await this.isV1()) {
-      return this.v1Module.claim(quantity, proofs);
-    }
+  ): Promise<{
+    overrides: ethers.CallOverrides;
+    proofs: BytesLike[];
+  }> {
     const mintCondition = await this.getActiveClaimCondition();
     const { metadata } = await this.getMetadata();
 
@@ -780,6 +780,9 @@ export class DropModule
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<NFTMetadataOwner[]> {
+    if (await this.isV1()) {
+      return this.v1Module.claim(quantity, proofs);
+    }
     const claimData = await this.prepareClaim(quantity, proofs);
     const receipt = await this.sendTransaction(
       "claim",
