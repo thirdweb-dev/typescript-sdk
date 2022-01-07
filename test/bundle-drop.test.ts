@@ -121,10 +121,10 @@ describe("Bundle Drop Module", async () => {
       w3,
     ];
     const members = testWallets.map((w) => w.address);
-    phase.useSnapshot(members);
+    phase.setSnapshot(members);
     console.log("Setting claim condition");
     await bdModule.setClaimCondition("0", factory);
-    testWallets.push(w4)
+    testWallets.push(w4);
     for (const member of testWallets) {
       try {
         sdk.setProviderOrSigner(member);
