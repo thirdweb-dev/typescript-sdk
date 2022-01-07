@@ -18,6 +18,7 @@ import {
   RolesMap,
 } from "../common";
 import { invariant } from "../common/invariant";
+import { isMetadataEqual } from "../common/isMetadataEqual";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -322,24 +323,32 @@ export class BundleDropModule
     });
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
+    const oldMerkle = metadata["merkle"];
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
     }
 
-    const metadataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metadataUri,
-      ]),
+    const encoded = [];
+    if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
+      const metadataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metadataUri,
+        ]),
+      );
+    }
+
+    encoded.push(
       this.contract.interface.encodeFunctionData("setClaimConditions", [
         tokenId,
         conditions,
       ]),
-    ];
+    );
+
     return await this.sendTransaction("multicall", [encoded]);
   }
   public async updateClaimConditions(
@@ -363,24 +372,30 @@ export class BundleDropModule
     });
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
+    const oldMerkle = metadata["merkle"];
+
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
     }
-
-    const metadataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metadataUri,
-      ]),
+    const encoded = [];
+    if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
+      const metadataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metadataUri,
+        ]),
+      );
+    }
+    encoded.push(
       this.contract.interface.encodeFunctionData("updateClaimConditions", [
         tokenId,
         conditions,
       ]),
-    ];
+    );
     return await this.sendTransaction("multicall", [encoded]);
   }
 
