@@ -12,14 +12,14 @@
 <b>Signature:</b>
 
 ```typescript
-removeClaimPhase(index: number): void;
+removeClaimPhase(_index: number): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  index | number |  |
+|  \_index | number |  |
 
 <b>Returns:</b>
 

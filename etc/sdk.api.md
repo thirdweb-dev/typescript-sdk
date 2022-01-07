@@ -428,7 +428,7 @@ export class ClaimConditionFactory {
         maxQuantityPerTransaction?: BigNumberish_2;
     }): ClaimConditionPhase;
     // @deprecated (undocumented)
-    removeClaimPhase(index: number): void;
+    removeClaimPhase(_index: number): void;
 }
 
 // @public (undocumented)
@@ -443,10 +443,8 @@ export class ClaimConditionPhase {
     setMaxQuantityPerTransaction(max: BigNumberish_2): ClaimConditionPhase;
     setMerkleRoot(root: string): ClaimConditionPhase;
     setPrice(price: BigNumberish_2, tokenAddress?: string): ClaimConditionPhase;
-    // @deprecated (undocumented)
-    setSnapshot(addresses: string[]): Promise<ClaimConditionPhase>;
+    setSnapshot(addresses: string[]): ClaimConditionPhase;
     setWaitTimeBetweenClaims(waitInSeconds: BigNumberish_2): ClaimConditionPhase;
-    useSnapshot(addresses: string[]): ClaimConditionPhase;
 }
 
 // @public (undocumented)

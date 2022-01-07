@@ -102,15 +102,6 @@ export default class ClaimConditionPhase {
     return this;
   }
 
-  /**
-   *
-   * @deprecated - use {@link useSnapshot}
-   *
-   */
-  public async setSnapshot(addresses: string[]): Promise<ClaimConditionPhase> {
-    this._merkleCondition = await this.createSnapshot(addresses);
-    return this;
-  }
 
   /**
    * Sets a snapshot for the claim condition. You can use a snapshot
@@ -118,7 +109,7 @@ export default class ClaimConditionPhase {
    *
    * @param root - The merkle root hash
    */
-  public useSnapshot(addresses: string[]): ClaimConditionPhase {
+  public setSnapshot(addresses: string[]): ClaimConditionPhase {
     this._snapshot = addresses;
     return this;
   }
