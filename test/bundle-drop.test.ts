@@ -456,4 +456,35 @@ describe("Bundle Drop Module", async () => {
     await bdModule.updateClaimConditions(BigNumber.from("0"), factory);
     assert.lengthOf(conditions, 1);
   });
+
+  it("should be able to use claim as function expected", async () => {
+    await bdModule.lazyMintBatch([
+      {
+        name: "test",
+      }
+    ]);
+    const factory = bdModule.getClaimConditionFactory();
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await bdModule.setClaimCondition("0", factory);
+    await bdModule.claim("0", 1);
+    assert((await bdModule.getOwned()).length > 0)
+
+  });
+
+  it("should be able to use claimTo function as expected", async () => {
+    await bdModule.lazyMintBatch([
+      {
+        name: "test",
+      }
+    ]);
+    const factory = bdModule.getClaimConditionFactory();
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await bdModule.setClaimCondition("0", factory);
+    await bdModule.claimTo("0", 1, samWallet.address);
+    assert((await bdModule.getOwned(samWallet.address)).length > 0)
+  }); 
 });

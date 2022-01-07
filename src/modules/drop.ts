@@ -21,6 +21,7 @@ import {
   RolesMap,
 } from "../common";
 import { invariant } from "../common/invariant";
+import { isMetadataEqual } from "../common/isMetadataEqual";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ThirdwebSDK } from "../core";
 import { ModuleWithRoles } from "../core/module";
@@ -455,24 +456,30 @@ export class DropModule
     });
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
+    const oldMerkle = metadata["merkle"];
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
     }
 
-    const metatdataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
-
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metatdataUri,
-      ]),
+    const encoded = [];
+    if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
+      const metadataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metadataUri,
+        ]),
+      );
+    }
+    encoded.push(
       this.contract.interface.encodeFunctionData("setClaimConditions", [
         conditions,
       ]),
-    ];
+    );
+
     return await this.sendTransaction("multicall", [encoded]);
   }
 
@@ -481,6 +488,7 @@ export class DropModule
       return this.v1Module.setClaimConditions(factory);
     }
     const conditions = (await factory.buildConditions()).map((c) => ({
+
       startTimestamp: c.startTimestamp,
       maxClaimableSupply: c.maxMintSupply,
       supplyClaimed: 0,
@@ -495,26 +503,33 @@ export class DropModule
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
+    const encoded = [];
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
+    const oldMerkle = metadata["merkle"];
+
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
     }
 
-    const metatdataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
+    if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
+      const metadataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metadataUri,
+        ]),
+      );
+    }
 
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metatdataUri,
-      ]),
+    encoded.push(
       this.contract.interface.encodeFunctionData("updateClaimConditions", [
         conditions,
       ]),
-    ];
+    );
     return await this.sendTransaction("multicall", [encoded]);
   }
   /**
@@ -664,13 +679,19 @@ export class DropModule
     );
   }
 
-  public async claim(
+  /**
+   * Returns proofs and the overrides required for the transaction.
+   *
+   * @returns - `overrides` and `proofs` as an object.
+   */
+
+  private async prepareClaim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ): Promise<NFTMetadataOwner[]> {
-    if (await this.isV1()) {
-      return this.v1Module.claim(quantity, proofs);
-    }
+  ): Promise<{
+    overrides: ethers.CallOverrides;
+    proofs: BytesLike[];
+  }> {
     const mintCondition = await this.getActiveClaimCondition();
     const { metadata } = await this.getMetadata();
 
@@ -720,11 +741,68 @@ export class DropModule
         }
       }
     }
+    return {
+      overrides,
+      proofs,
+    };
+  }
 
+  /**
+   * Claim a token and send it to someone else
+   *
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param addressToClaim - Address you want to send the token to
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
+  public async claimTo(
+    quantity: BigNumberish,
+    addressToClaim: string,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<TransactionReceipt> {
+    const claimData = await this.prepareClaim(quantity, proofs);
+    const encoded = [];
+    encoded.push(
+      this.contract.interface.encodeFunctionData("claim", [
+        quantity,
+        claimData.proofs,
+      ]),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("transferFrom", [
+        await this.getSignerAddress(),
+        addressToClaim,
+        (await this.readOnlyContract.nextTokenIdToMint()).sub(1),
+      ]),
+    );
+    return await this.sendTransaction(
+      "multicall",
+      [encoded],
+      claimData.overrides,
+    );
+  }
+
+  /**
+   * Claim a token for yourself
+   *
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
+  public async claim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<NFTMetadataOwner[]> {
+    if (await this.isV1()) {
+      return this.v1Module.claim(quantity, proofs);
+    }
+    const claimData = await this.prepareClaim(quantity, proofs);
     const receipt = await this.sendTransaction(
       "claim",
-      [quantity, proofs],
-      overrides,
+      [quantity, claimData.proofs],
+      claimData.overrides,
     );
     const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
     const startingIndex: BigNumber = event.startTokenId;
@@ -737,7 +815,6 @@ export class DropModule
       tokenIds.map(async (t) => await this.get(t.toString())),
     );
   }
-
   public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [tokenId]);
   }

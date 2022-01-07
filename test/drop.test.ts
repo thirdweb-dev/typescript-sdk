@@ -466,4 +466,33 @@ describe("Drop Module", async () => {
     await dropModule.updateClaimConditions(factory);
     assert.lengthOf(conditions, 1);
   });
+  it("should be able to use claim as function expected", async () => {
+    await dropModule.createBatch([
+      {
+        name: "test",
+      },
+    ]);
+    const factory = dropModule.getClaimConditionsFactory();
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await dropModule.setClaimConditions(factory);
+    await dropModule.claim(1);
+    assert((await dropModule.getOwned()).length === 1);
+  });
+
+  it("should be able to use claimTo function as expected", async () => {
+    const factory = dropModule.getClaimConditionsFactory();
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await dropModule.setClaimConditions(factory);
+    await dropModule.createBatch([
+      {
+        name: "test",
+      },
+    ]);
+    await dropModule.claimTo(1, samWallet.address);
+    assert((await dropModule.getOwned(samWallet.address)).length === 1);
+  });
 });

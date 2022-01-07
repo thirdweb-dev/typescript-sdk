@@ -18,6 +18,7 @@ import {
   RolesMap,
 } from "../common";
 import { invariant } from "../common/invariant";
+import { isMetadataEqual } from "../common/isMetadataEqual";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
@@ -322,24 +323,32 @@ export class BundleDropModule
     });
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
+    const oldMerkle = metadata["merkle"];
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
     }
 
-    const metadataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metadataUri,
-      ]),
+    const encoded = [];
+    if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
+      const metadataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metadataUri,
+        ]),
+      );
+    }
+
+    encoded.push(
       this.contract.interface.encodeFunctionData("setClaimConditions", [
         tokenId,
         conditions,
       ]),
-    ];
+    );
+
     return await this.sendTransaction("multicall", [encoded]);
   }
   public async updateClaimConditions(
@@ -363,24 +372,30 @@ export class BundleDropModule
     });
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
+    const oldMerkle = metadata["merkle"];
+
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
       metadata["merkle"] = {};
     } else {
       metadata["merkle"] = merkleInfo;
     }
-
-    const metadataUri = await this.sdk
-      .getStorage()
-      .upload(JSON.stringify(metadata));
-    const encoded = [
-      this.contract.interface.encodeFunctionData("setContractURI", [
-        metadataUri,
-      ]),
+    const encoded = [];
+    if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
+      const metadataUri = await this.sdk
+        .getStorage()
+        .upload(JSON.stringify(metadata));
+      encoded.push(
+        this.contract.interface.encodeFunctionData("setContractURI", [
+          metadataUri,
+        ]),
+      );
+    }
+    encoded.push(
       this.contract.interface.encodeFunctionData("updateClaimConditions", [
         tokenId,
         conditions,
       ]),
-    ];
+    );
     return await this.sendTransaction("multicall", [encoded]);
   }
 
@@ -416,7 +431,13 @@ export class BundleDropModule
     await this.sendTransaction("setClaimConditions", [tokenId, _conditions]);
   }
 
-  public async claim(
+  /**
+   * Returns proofs and the overrides required for the transaction.
+   *
+   * @returns - `overrides` and `proofs` as an object.
+   */
+
+  private async prepareClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
@@ -468,7 +489,75 @@ export class BundleDropModule
         }
       }
     }
-    await this.sendTransaction("claim", [tokenId, quantity, proofs], overrides);
+    return {
+      overrides,
+      proofs,
+    };
+  }
+
+  /**
+   * Claim a token to yourself
+   *
+   * @param tokenId - Id of the token you want to claim
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
+
+  public async claim(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ) {
+    const claimData = await this.prepareClaim(tokenId, quantity, proofs);
+
+    await this.sendTransaction(
+      "claim",
+      [tokenId, quantity, claimData.proofs],
+      claimData.overrides,
+    );
+  }
+
+  /**
+   * Claim a token and send it to someone else
+   *
+   * @param tokenId - Id of the token you want to claim
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param addressToClaim - Address you want to send the token to
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
+  public async claimTo(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    addressToClaim: string,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<TransactionReceipt> {
+    const claimData = await this.prepareClaim(tokenId, quantity, proofs);
+    const encoded = [];
+    encoded.push(
+      this.contract.interface.encodeFunctionData("claim", [
+        tokenId,
+        quantity,
+        proofs,
+      ]),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("safeTransferFrom", [
+        await this.getSignerAddress(),
+        addressToClaim,
+        tokenId,
+        quantity,
+        [0],
+      ]),
+    );
+    return await this.sendTransaction(
+      "multicall",
+      [encoded],
+      claimData.overrides,
+    );
   }
 
   public async burn(
