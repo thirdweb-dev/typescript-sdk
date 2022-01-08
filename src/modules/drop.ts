@@ -625,10 +625,13 @@ export class DropModule
       // TODO: compute proofs to root, need browser compatibility
     }
 
+    const timestampIndex = (await this.readOnlyContract.claimConditions())
+      .timstampLimitIndex;
+
     // check for claim timestamp between claims
     const timestampForNextClaim =
       await this.readOnlyContract.getTimestampForNextValidClaim(
-        activeConditionIndex,
+        activeConditionIndex.add(timestampIndex),
         addressToCheck,
       );
     const now = BigNumber.from(Date.now()).div(1000);
