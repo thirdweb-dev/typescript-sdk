@@ -636,23 +636,33 @@ export class BundleDropModule
       // TODO: compute proofs to root, need browser compatibility
     }
 
-    const timestampIndex = (
-      await this.readOnlyContract.claimConditions(tokenId)
-    ).timstampLimitIndex;
-
     // check for claim timestamp between claims
     const timestampForNextClaim =
       await this.readOnlyContract.getTimestampForNextValidClaim(
         tokenId,
-        activeConditionIndex.add(timestampIndex),
+        activeConditionIndex,
         addressToCheck,
       );
+
     const now = BigNumber.from(Date.now()).div(1000);
-    if (
-      now.lt(timestampForNextClaim) &&
-      timestampForNextClaim.toString() !== "0"
-    ) {
-      reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+    if (now.lt(timestampForNextClaim)) {
+      // if waitTimeSecondsLimitPerTransaction equals to timestampForNextClaim, that means that this is the first time this address claims this token
+      if (
+        BigNumber.from(claimCondition.waitTimeSecondsLimitPerTransaction).eq(
+          timestampForNextClaim,
+        )
+      ) {
+        const balance = await this.readOnlyContract.balanceOf(
+          addressToCheck,
+          tokenId,
+        );
+
+        if (balance.gte(1)) {
+          reasons.push(ClaimEligibility.AlreadyClaimed);
+        }
+      } else {
+        reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+      }
     }
 
     // check for wallet balance
