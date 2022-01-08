@@ -595,11 +595,15 @@ export class BundleDropModule
       // TODO: compute proofs to root, need browser compatibility
     }
 
+    const timestampIndex = (
+      await this.readOnlyContract.claimConditions(tokenId)
+    ).timstampLimitIndex;
+
     // check for claim timestamp between claims
     const timestampForNextClaim =
       await this.readOnlyContract.getTimestampForNextValidClaim(
         tokenId,
-        activeConditionIndex,
+        activeConditionIndex.add(timestampIndex),
         addressToCheck,
       );
     const now = BigNumber.from(Date.now()).div(1000);
