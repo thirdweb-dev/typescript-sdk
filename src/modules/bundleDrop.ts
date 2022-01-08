@@ -743,8 +743,8 @@ export class BundleDropModule
       );
     const now = BigNumber.from(Date.now()).div(1000);
     if (
-      now.lt(timestampForNextClaim) ||
-      timestampForNextClaim.toString() === "0"
+      now.lt(timestampForNextClaim) &&
+      timestampForNextClaim.toString() !== "0"
     ) {
       reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
     }
