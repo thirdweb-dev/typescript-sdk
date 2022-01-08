@@ -61,6 +61,7 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  | <b><i>(BETA)</i></b> |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
 |  [setClaimConditions(factory)](./sdk.dropmodule.setclaimconditions.md) |  | <b><i>(BETA)</i></b> Sets public mint conditions for the next minting using the claim condition factory. |
+|  [setDefaultSaleRecipient(recipient)](./sdk.dropmodule.setdefaultsalerecipient.md) |  | <b><i>(BETA)</i></b> |
 |  [setMintConditions(factory)](./sdk.dropmodule.setmintconditions.md) |  | <b><i>(BETA)</i></b> |
 |  [setModuleMetadata(metadata)](./sdk.dropmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
 |  [setPublicMintConditions(conditions)](./sdk.dropmodule.setpublicmintconditions.md) |  | <b><i>(BETA)</i></b> |
@@ -71,4 +72,5 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [totalUnclaimedSupply()](./sdk.dropmodule.totalunclaimedsupply.md) |  | <b><i>(BETA)</i></b> |
 |  [transfer(to, tokenId)](./sdk.dropmodule.transfer.md) |  | <b><i>(BETA)</i></b> |
 |  [transferFrom(from, to, tokenId)](./sdk.dropmodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
+|  [updateClaimConditions(factory)](./sdk.dropmodule.updateclaimconditions.md) |  | <b><i>(BETA)</i></b> |
 

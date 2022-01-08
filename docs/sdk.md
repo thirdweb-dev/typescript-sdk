@@ -118,6 +118,7 @@ Output
 |  [ClaimEligibility](./sdk.claimeligibility.md) |  |
 |  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
 |  [ProposalState](./sdk.proposalstate.md) |  |
+|  [UnderlyingType](./sdk.underlyingtype.md) |  |
 |  [VoteType](./sdk.votetype.md) |  |
 
 ## Functions
@@ -154,6 +155,7 @@ Output
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) | <b><i>(BETA)</i></b> |
 |  [IRoles](./sdk.iroles.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |
 |  [ISDKOptions](./sdk.isdkoptions.md) | The optional options that can be passed to the SDK. |
+|  [ISplitsModule](./sdk.isplitsmodule.md) |  |
 |  [IStorage](./sdk.istorage.md) |  |
 |  [IThirdwebSdk](./sdk.ithirdwebsdk.md) |  |
 |  [ITokenMintArgs](./sdk.itokenmintargs.md) |  |

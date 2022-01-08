@@ -1,4 +1,4 @@
-import { DropModule, ThirdwebSDK } from "../src/index";
+import { DropModule } from "../src/index";
 import * as chai from "chai";
 import { createReadStream, readdirSync } from "fs";
 import { appModule, sdk, signers } from "./before.test";

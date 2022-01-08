@@ -200,6 +200,11 @@ export class DropModule
     return await this.readOnlyContract.ownerOf(tokenId);
   }
 
+  public async setDefaultSaleRecipient(
+    recipient: string,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setDefaultSaleRecipient", [recipient]);
+  }
   public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
     const address = _address ? _address : await this.getSignerAddress();
     const balance = await this.readOnlyContract.balanceOf(address);
@@ -466,6 +471,47 @@ export class DropModule
     return await this.sendTransaction("multicall", [encoded]);
   }
 
+  public async updateClaimConditions(factory: ClaimConditionFactory) {
+    if (await this.isV1()) {
+      return this.v1Module.setClaimConditions(factory);
+    }
+    const conditions = factory.buildConditions().map((c) => ({
+      startTimestamp: c.startTimestamp,
+      maxClaimableSupply: c.maxMintSupply,
+      supplyClaimed: 0,
+      quantityLimitPerTransaction: c.quantityLimitPerTransaction,
+      waitTimeInSecondsBetweenClaims: c.waitTimeSecondsLimitPerTransaction,
+      pricePerToken: c.pricePerToken,
+      currency: c.currency === AddressZero ? NATIVE_TOKEN_ADDRESS : c.currency,
+      merkleRoot: c.merkleRoot,
+    }));
+
+    const merkleInfo: { [key: string]: string } = {};
+    factory.allSnapshots().forEach((s) => {
+      merkleInfo[s.merkleRoot] = s.snapshotUri;
+    });
+    const { metadata } = await this.getMetadata(false);
+    invariant(metadata, "Metadata is not set, this should never happen");
+    if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
+      metadata["merkle"] = {};
+    } else {
+      metadata["merkle"] = merkleInfo;
+    }
+
+    const metatdataUri = await this.sdk
+      .getStorage()
+      .upload(JSON.stringify(metadata));
+
+    const encoded = [
+      this.contract.interface.encodeFunctionData("setContractURI", [
+        metatdataUri,
+      ]),
+      this.contract.interface.encodeFunctionData("updateClaimConditions", [
+        conditions,
+      ]),
+    ];
+    return await this.sendTransaction("multicall", [encoded]);
+  }
   /**
    * Creates a claim condition factory
    *
