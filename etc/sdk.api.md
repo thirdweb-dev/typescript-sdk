@@ -375,6 +375,8 @@ export enum ClaimEligibility {
     // (undocumented)
     AddressNotAllowed = "This address is not on the allowlist.",
     // (undocumented)
+    AlreadyClaimed = "You have already claimed the token.",
+    // (undocumented)
     NoActiveClaimPhase = "There is no active claim phase at the moment. Please check back in later.",
     // (undocumented)
     NotEnoughSupply = "There is not enough supply to claim.",
