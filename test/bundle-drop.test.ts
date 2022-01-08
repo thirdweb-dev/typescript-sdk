@@ -414,4 +414,36 @@ describe("Bundle Drop Module", async () => {
     await bdModule.updateClaimConditions(BigNumber.from("0"), factory);
     assert.lengthOf(conditions, 1);
   });
+
+  describe("setting merkle claim conditions", () => {
+    it("should not overwrite existing merkle keys in the metadata", async () => {
+      await bdModule.lazyMintBatch([
+        { name: "test", description: "test" },
+        { name: "test", description: "test" },
+      ]);
+
+      const factory = bdModule.getClaimConditionFactory();
+      const phase = factory.newClaimPhase({
+        startTime: new Date(),
+      });
+      await phase.setSnapshot([w1.address, w2.address, bobWallet.address]);
+      await bdModule.setClaimCondition("1", factory);
+
+      const factory2 = bdModule.getClaimConditionFactory();
+      const phase2 = factory2.newClaimPhase({
+        startTime: new Date(),
+      });
+      await phase2.setSnapshot([
+        w3.address,
+        w1.address,
+        w2.address,
+        adminWallet.address,
+      ]);
+      await bdModule.setClaimCondition("2", factory2);
+
+      const { metadata } = await bdModule.getMetadata(false);
+      const merkle: { [key: string]: string } = metadata["merkle"];
+      assert.lengthOf(Object.keys(merkle), 2);
+    });
+  });
 });
