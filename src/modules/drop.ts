@@ -720,7 +720,7 @@ export class DropModule
         Snapshot,
       );
       const item = snapshotData.claims.find(
-        (c) => c.address === addressToClaim,
+        (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
       );
       if (item === undefined) {
         throw new Error("No claim found for this address");
@@ -979,7 +979,10 @@ export class DropModule
       JSON.parse(snapshot),
       Snapshot,
     );
-    const item = snapshotData.claims.find((c) => c.address === addressToClaim);
+    const item = snapshotData.claims.find(
+      (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
+    );
+
     if (item === undefined) {
       return [];
     }
@@ -1421,7 +1424,9 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
       JSON.parse(snapshot),
       Snapshot,
     );
-    const item = snapshotData.claims.find((c) => c.address === addressToClaim);
+    const item = snapshotData.claims.find(
+      (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
+    );
     if (item === undefined) {
       return [];
     }
@@ -1447,7 +1452,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
         Snapshot,
       );
       const item = snapshotData.claims.find(
-        (c) => c.address === addressToClaim,
+        (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
       );
       if (item === undefined) {
         throw new Error("No claim found for this address");
