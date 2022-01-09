@@ -19,20 +19,19 @@ To get you started here's how you would instantiate the SDK and fetch some NFTs
 1. Install the sdk and other dependencies
 
 ```shell
-npm install @3rdweb/sdk ethers dotenv
+npm install @3rdweb/sdk ethers
 ```
-2. Create a .env file to save your PRIVATE_KEY , you can check how to get your wallet's private key, on [this guide](https://thirdweb.com/portal/guides/create-a-metamask-wallet#export-your-private-key). Also add this .env file to .gitignore.
+2. Create your wallet PRIVATE_KEY , you can check how to get your wallet's private key, on [this guide](https://thirdweb.com/portal/guides/create-a-metamask-wallet#export-your-private-key). Keep it safe and make sure you don't commit it onto github.
 
 3. Get your NFT contract address from the [Admin Dashboard](https://thirdweb.com/dashboard)<!-- -->.
 
-3. Write the tiniest amount of code! 
+4. Write the tiniest amount of code! 
    
 ##### NFT.ts
 
 ```typescript
 import { NFTMetadataOwner, NFTModule, ThirdwebSDK } from "@3rdweb/sdk";
 import { ethers } from "ethers";
-require("dotenv").config();
 
 const NFTContractAddress = "0x..."; // your NFT contract address from step 3
 
@@ -42,7 +41,7 @@ const NFTContractAddress = "0x..."; // your NFT contract address from step 3
     const sdk = new ThirdwebSDK(
       new ethers.Wallet(
         // Your wallet private key
-        process.env.PRIVATE_KEY as string,
+        <YOUR_PRIVATE_KEY_KEEP_IT_SAFE_AND_DONT_REVEAL_IT>,
         // RPC URL, we'll use Polygon Mumbai
         ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com")
       )
@@ -55,13 +54,13 @@ const NFTContractAddress = "0x..."; // your NFT contract address from step 3
   }
 })();
 ```
-4. Run the above code. This command creates a .js file and runs the code.
+5. Run the above code. This command creates a .js file and runs the code.
    
 ```shell
 tsc NFT.ts && node NFT.js
 ```
 
-5. nftListWithOwnerAddress (output) :
+6. nftListWithOwnerAddress (output) :
    
 ```
 [
