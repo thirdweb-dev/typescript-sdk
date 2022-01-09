@@ -457,7 +457,7 @@ export class BundleDropModule
         Snapshot,
       );
       const item = snapshotData.claims.find(
-        (c) => c.address === addressToClaim,
+        (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
       );
       if (item === undefined) {
         throw new Error("No claim found for this address");
@@ -832,7 +832,9 @@ export class BundleDropModule
       JSON.parse(snapshot),
       Snapshot,
     );
-    const item = snapshotData.claims.find((c) => c.address === addressToClaim);
+    const item = snapshotData.claims.find(
+      (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
+    );
     if (item === undefined) {
       return [];
     }
