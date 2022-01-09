@@ -16,8 +16,8 @@ mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  req | [SignaturePayload](./sdk.signaturepayload.md) |  |
-|  signature | string |  |
+|  req | [SignaturePayload](./sdk.signaturepayload.md) | The payload of the signature that will be minted. |
+|  signature | string | The signature of the payload. |
 
 <b>Returns:</b>
 

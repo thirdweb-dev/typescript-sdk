@@ -33,7 +33,8 @@ export declare class BundleDropModule extends ModuleWithRoles<BundleDrop> implem
 |  [balanceOf(address, tokenId)](./sdk.bundledropmodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
 |  [burn(tokenId, amount)](./sdk.bundledropmodule.burn.md) |  | <b><i>(BETA)</i></b> |
 |  [canClaim(tokenId, quantity, addressToCheck)](./sdk.bundledropmodule.canclaim.md) |  | <b><i>(BETA)</i></b> |
-|  [claim(tokenId, quantity, proofs)](./sdk.bundledropmodule.claim.md) |  | <b><i>(BETA)</i></b> |
+|  [claim(tokenId, quantity, proofs)](./sdk.bundledropmodule.claim.md) |  | <b><i>(BETA)</i></b> Claim a token to yourself |
+|  [claimTo(tokenId, quantity, addressToClaim, proofs)](./sdk.bundledropmodule.claimto.md) |  | <b><i>(BETA)</i></b> Claim a token and send it to someone else |
 |  [createBatch(metadatas)](./sdk.bundledropmodule.createbatch.md) |  | <b><i>(BETA)</i></b> |
 |  [get(tokenId)](./sdk.bundledropmodule.get.md) |  | <b><i>(BETA)</i></b> |
 |  [getActiveClaimCondition(tokenId)](./sdk.bundledropmodule.getactiveclaimcondition.md) |  | <b><i>(BETA)</i></b> |

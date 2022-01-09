@@ -426,7 +426,6 @@ export class NFTModule
     signature: string,
   ): Promise<BigNumber> {
     const message = { ...this.mapPayload(req), uri: req.uri };
-
     const overrides = await this.getCallOverrides();
     await this.setAllowance(
       BigNumber.from(message.price),

@@ -414,4 +414,66 @@ describe("Bundle Drop Module", async () => {
     await bdModule.updateClaimConditions(BigNumber.from("0"), factory);
     assert.lengthOf(conditions, 1);
   });
+
+  it("should be able to use claim as function expected", async () => {
+    await bdModule.lazyMintBatch([
+      {
+        name: "test",
+      },
+    ]);
+    const factory = bdModule.getClaimConditionFactory();
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await bdModule.setClaimCondition("0", factory);
+    await bdModule.claim("0", 1);
+    assert((await bdModule.getOwned()).length > 0);
+  });
+
+  it("should be able to use claimTo function as expected", async () => {
+    await bdModule.lazyMintBatch([
+      {
+        name: "test",
+      },
+    ]);
+    const factory = bdModule.getClaimConditionFactory();
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await bdModule.setClaimCondition("0", factory);
+    await bdModule.claimTo("0", 1, samWallet.address);
+    assert((await bdModule.getOwned(samWallet.address)).length > 0);
+  });
+
+  describe("setting merkle claim conditions", () => {
+    it("should not overwrite existing merkle keys in the metadata", async () => {
+      await bdModule.lazyMintBatch([
+        { name: "test", description: "test" },
+        { name: "test", description: "test" },
+      ]);
+
+      const factory = bdModule.getClaimConditionFactory();
+      const phase = factory.newClaimPhase({
+        startTime: new Date(),
+      });
+      await phase.setSnapshot([w1.address, w2.address, bobWallet.address]);
+      await bdModule.setClaimCondition("1", factory);
+
+      const factory2 = bdModule.getClaimConditionFactory();
+      const phase2 = factory2.newClaimPhase({
+        startTime: new Date(),
+      });
+      await phase2.setSnapshot([
+        w3.address,
+        w1.address,
+        w2.address,
+        adminWallet.address,
+      ]);
+      await bdModule.setClaimCondition("2", factory2);
+
+      const { metadata } = await bdModule.getMetadata(false);
+      const merkle: { [key: string]: string } = metadata["merkle"];
+      assert.lengthOf(Object.keys(merkle), 2);
+    });
+  });
 });

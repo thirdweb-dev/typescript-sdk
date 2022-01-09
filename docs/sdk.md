@@ -16,33 +16,54 @@ Should you find bugs or in the case you need help please reach out to us in [Dis
 
 To get you started here's how you would instantiate the SDK and fetch some NFTs
 
-1. Install the sdk
+1. Install the sdk and other dependencies
 
 ```shell
-npm install @3rdweb/sdk
+npm install @3rdweb/sdk ethers
 ```
-2. Get your NFT contract address from the [Admin Dashboard](https://thirdweb.com/dashboard)<!-- -->.
+2. Create your wallet PRIVATE_KEY , you can check how to get your wallet's private key, on [this guide](https://thirdweb.com/portal/guides/create-a-metamask-wallet#export-your-private-key). Keep it safe and make sure you don't commit it onto github.
 
-3. Write the tiniest amount of code!
+3. Get your NFT contract address from the [Admin Dashboard](https://thirdweb.com/dashboard)<!-- -->.
+
+4. Write the tiniest amount of code! 
+   
+##### NFT.ts
 
 ```typescript
- 1 | import { ThirdwebSDK } from "@3rdweb/sdk";
- 2 | import type { NFTModule, NFTMetadataOwner } from "@3rdweb/sdk";
- 3 |
- 5 | const contractAddress = "0x..."; // your contract address from step 2
- 6 |
- 7 | const sdk = new ThirdwebSDK();
- 8 |
- 9 | const nftModule: NFTModule = sdk.getNFTModule(contractAddress);
-10 |
-11 | const nftListWithOwnerAddress: NFTMetadataOwner[] = await nftModule.getAllWithOwner();
-12 |
-13 | console.log(nftListWithOwnerAddress);
+import { NFTMetadataOwner, NFTModule, ThirdwebSDK } from "@3rdweb/sdk";
+import { ethers } from "ethers";
+
+const NFTContractAddress = "0x..."; // your NFT contract address from step 3
+
+(async () => {
+  try {
+    //Instantiate 3rdweb SDK
+    const sdk = new ThirdwebSDK(
+      new ethers.Wallet(
+        // Your wallet private key
+        <YOUR_PRIVATE_KEY_KEEP_IT_SAFE_AND_DONT_REVEAL_IT>,
+        // RPC URL, we'll use Polygon Mumbai
+        ethers.getDefaultProvider("https://rpc-mumbai.maticvigil.com")
+      )
+    );
+    console.log("SDK initialized");
+    const nftModule: NFTModule = sdk.getNFTModule(NFTContractAddress);
+    const nftListWithOwnerAddress: NFTMetadataOwner[] = await nftModule.getAllWithOwner();
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+5. Run the above code. This command creates a .js file and runs the code.
+   
+```shell
+tsc NFT.ts && node NFT.js
 ```
 
+6. nftListWithOwnerAddress (output) :
+   
 ```
-Output
-=> [
+[
       {
          owner: "0x...",
          metadata: {
@@ -60,7 +81,7 @@ Output
          },
       },
       ...
-   ]
+]
 ```
 
 ## Classes
