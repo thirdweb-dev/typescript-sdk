@@ -324,6 +324,7 @@ export class BundleDropModule
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
     const oldMerkle = metadata["merkle"];
+
     const existingMerkle = "merkle" in metadata ? metadata.merkle : {};
     for (const key of Object.keys(existingMerkle)) {
       merkleInfo[key] = existingMerkle[key];
@@ -374,11 +375,11 @@ export class BundleDropModule
     invariant(metadata, "Metadata is not set, this should never happen");
     const oldMerkle = metadata["merkle"];
 
-    if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
-      metadata["merkle"] = {};
-    } else {
-      metadata["merkle"] = merkleInfo;
+    const existingMerkle = "merkle" in metadata ? metadata.merkle : {};
+    for (const key of Object.keys(existingMerkle)) {
+      merkleInfo[key] = existingMerkle[key];
     }
+
     const encoded = [];
     if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
       const metadataUri = await this.sdk
