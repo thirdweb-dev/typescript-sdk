@@ -895,7 +895,13 @@ export class MarketplaceModule
       Array.from(
         Array((await this.readOnlyContract.totalListings()).toNumber()).keys(),
       ).map(async (i) => {
-        const listing = await this.getListing(i);
+        let listing;
+
+        try {
+          listing = await this.getListing(i);
+        } catch (err) {
+          return undefined;
+        }
 
         if (listing.type === ListingType.Auction) {
           return listing;
