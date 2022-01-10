@@ -24,7 +24,7 @@ class ClaimConditionFactory {
   public async buildConditions(): Promise<PublicClaimCondition[]> {
     let sorted: PublicClaimCondition[] = [];
     await Promise.all(
-      this.phases.map(async (c) => await c.buildPublicClaimCondition()),
+      this.phases.map((c) => c.buildPublicClaimCondition()),
     ).then((publicClaimConditions) => {
       // TODO: write test to ensure they're sorted by start time, earliest first
       sorted = publicClaimConditions.sort((a, b) => {
@@ -54,7 +54,7 @@ class ClaimConditionFactory {
     // v2 takes unix timestamp in seconds.
     let sorted: PublicClaimCondition[] = [];
     await Promise.all(
-      this.phases.map(async (c) => await c.buildPublicClaimCondition()),
+      this.phases.map((c) => c.buildPublicClaimCondition()),
     )
       .then((c) => {
         return c.map((c) => {
