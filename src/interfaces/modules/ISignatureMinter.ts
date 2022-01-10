@@ -8,7 +8,8 @@ export interface ISignatureMinter {
   /**
    * Mints an NFT given a payload and signature.
    *
-   * @param tokenMetadata - The metadata of the token to generate a signature for.
+   * @param req - The payload of the signature that will be minted.
+   * @param signature - The signature of the payload.
    * @returns - The ID of the minted token.
    */
   mintWithSignature(

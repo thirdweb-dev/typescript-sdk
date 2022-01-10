@@ -631,9 +631,22 @@ export class DropModule
         activeConditionIndex,
         addressToCheck,
       );
+
     const now = BigNumber.from(Date.now()).div(1000);
     if (now.lt(timestampForNextClaim)) {
-      reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+      // if waitTimeSecondsLimitPerTransaction equals to timestampForNextClaim, that means that this is the first time this address claims this token
+      if (
+        BigNumber.from(claimCondition.waitTimeSecondsLimitPerTransaction).eq(
+          timestampForNextClaim,
+        )
+      ) {
+        const balance = await this.readOnlyContract.balanceOf(addressToCheck);
+        if (balance.gte(1)) {
+          reasons.push(ClaimEligibility.AlreadyClaimed);
+        }
+      } else {
+        reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+      }
     }
 
     // check for wallet balance
@@ -707,7 +720,7 @@ export class DropModule
         Snapshot,
       );
       const item = snapshotData.claims.find(
-        (c) => c.address === addressToClaim,
+        (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
       );
       if (item === undefined) {
         throw new Error("No claim found for this address");
@@ -966,7 +979,10 @@ export class DropModule
       JSON.parse(snapshot),
       Snapshot,
     );
-    const item = snapshotData.claims.find((c) => c.address === addressToClaim);
+    const item = snapshotData.claims.find(
+      (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
+    );
+
     if (item === undefined) {
       return [];
     }
@@ -1408,7 +1424,9 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
       JSON.parse(snapshot),
       Snapshot,
     );
-    const item = snapshotData.claims.find((c) => c.address === addressToClaim);
+    const item = snapshotData.claims.find(
+      (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
+    );
     if (item === undefined) {
       return [];
     }
@@ -1434,7 +1452,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
         Snapshot,
       );
       const item = snapshotData.claims.find(
-        (c) => c.address === addressToClaim,
+        (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
       );
       if (item === undefined) {
         throw new Error("No claim found for this address");

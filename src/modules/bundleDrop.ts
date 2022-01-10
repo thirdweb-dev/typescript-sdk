@@ -324,11 +324,12 @@ export class BundleDropModule
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
     const oldMerkle = metadata["merkle"];
-    if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
-      metadata["merkle"] = {};
-    } else {
-      metadata["merkle"] = merkleInfo;
+
+    const existingMerkle = "merkle" in metadata ? metadata.merkle : {};
+    for (const key of Object.keys(existingMerkle)) {
+      merkleInfo[key] = existingMerkle[key];
     }
+    metadata["merkle"] = merkleInfo;
 
     const encoded = [];
     if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
@@ -374,11 +375,11 @@ export class BundleDropModule
     invariant(metadata, "Metadata is not set, this should never happen");
     const oldMerkle = metadata["merkle"];
 
-    if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
-      metadata["merkle"] = {};
-    } else {
-      metadata["merkle"] = merkleInfo;
+    const existingMerkle = "merkle" in metadata ? metadata.merkle : {};
+    for (const key of Object.keys(existingMerkle)) {
+      merkleInfo[key] = existingMerkle[key];
     }
+
     const encoded = [];
     if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
       const metadataUri = await this.sdk
@@ -457,7 +458,7 @@ export class BundleDropModule
         Snapshot,
       );
       const item = snapshotData.claims.find(
-        (c) => c.address === addressToClaim,
+        (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
       );
       if (item === undefined) {
         throw new Error("No claim found for this address");
@@ -737,9 +738,26 @@ export class BundleDropModule
         activeConditionIndex,
         addressToCheck,
       );
+
     const now = BigNumber.from(Date.now()).div(1000);
     if (now.lt(timestampForNextClaim)) {
-      reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+      // if waitTimeSecondsLimitPerTransaction equals to timestampForNextClaim, that means that this is the first time this address claims this token
+      if (
+        BigNumber.from(claimCondition.waitTimeSecondsLimitPerTransaction).eq(
+          timestampForNextClaim,
+        )
+      ) {
+        const balance = await this.readOnlyContract.balanceOf(
+          addressToCheck,
+          tokenId,
+        );
+
+        if (balance.gte(1)) {
+          reasons.push(ClaimEligibility.AlreadyClaimed);
+        }
+      } else {
+        reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+      }
     }
 
     // check for wallet balance
@@ -815,7 +833,9 @@ export class BundleDropModule
       JSON.parse(snapshot),
       Snapshot,
     );
-    const item = snapshotData.claims.find((c) => c.address === addressToClaim);
+    const item = snapshotData.claims.find(
+      (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
+    );
     if (item === undefined) {
       return [];
     }

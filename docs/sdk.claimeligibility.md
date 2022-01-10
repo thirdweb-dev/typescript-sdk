@@ -15,6 +15,7 @@ export declare enum ClaimEligibility
 |  Member | Value | Description |
 |  --- | --- | --- |
 |  AddressNotAllowed | <code>&quot;This address is not on the allowlist.&quot;</code> |  |
+|  AlreadyClaimed | <code>&quot;You have already claimed the token.&quot;</code> |  |
 |  NoActiveClaimPhase | <code>&quot;There is no active claim phase at the moment. Please check back in later.&quot;</code> |  |
 |  NotEnoughSupply | <code>&quot;There is not enough supply to claim.&quot;</code> |  |
 |  NotEnoughTokens | <code>&quot;There are not enough tokens in the wallet to pay for the claim.&quot;</code> |  |
