@@ -439,7 +439,7 @@ export class DropModule
     if (await this.isV1()) {
       return this.v1Module.setClaimConditions(factory);
     }
-    const conditions = factory.buildConditions().map((c) => ({
+    const conditions = (await factory.buildConditions()).map((c) => ({
       startTimestamp: c.startTimestamp,
       maxClaimableSupply: c.maxMintSupply,
       supplyClaimed: 0,
@@ -487,8 +487,8 @@ export class DropModule
     if (await this.isV1()) {
       return this.v1Module.setClaimConditions(factory);
     }
+    const conditions = (await factory.buildConditions()).map((c) => ({
 
-    const conditions = factory.buildConditions().map((c) => ({
       startTimestamp: c.startTimestamp,
       maxClaimableSupply: c.maxMintSupply,
       supplyClaimed: 0,
@@ -1294,7 +1294,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
    * @param factory - The claim condition factory.
    */
   public async setClaimConditions(factory: ClaimConditionFactory) {
-    const conditions = factory.buildConditionsForDropV1();
+    const conditions = await factory.buildConditionsForDropV1();
 
     const merkleInfo: { [key: string]: string } = {};
     factory.allSnapshots().forEach((s) => {

@@ -416,9 +416,10 @@ export class ClaimConditionFactory {
     constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>);
     allSnapshots(): SnapshotInfo[];
     // @internal
-    buildConditions(): PublicClaimCondition[];
+    buildConditions(): Promise<PublicClaimCondition[]>;
     // @internal
-    buildConditionsForDropV1(): PublicClaimCondition[];
+    buildConditionsForDropV1(): Promise<PublicClaimCondition[]>;
+    deleteClaimPhase(index: number): Promise<void>;
     // Warning: (ae-incompatible-release-tags) The symbol "fromPublicClaimConditions" is marked as @public, but its signature references "PublicClaimCondition" which is marked as @beta
     fromPublicClaimConditions(conditions: PublicClaimCondition[]): this;
     newClaimPhase({ startTime, maxQuantity, maxQuantityPerTransaction, }: {
@@ -426,14 +427,15 @@ export class ClaimConditionFactory {
         maxQuantity?: BigNumberish_2;
         maxQuantityPerTransaction?: BigNumberish_2;
     }): ClaimConditionPhase;
-    removeClaimPhase(index: number): void;
+    // @deprecated (undocumented)
+    removeClaimPhase(_index: number): void;
 }
 
 // @public (undocumented)
 export class ClaimConditionPhase {
     constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>);
     // @internal
-    buildPublicClaimCondition(): PublicMintCondition;
+    buildPublicClaimCondition(): Promise<PublicMintCondition>;
     // @internal (undocumented)
     getSnapshot(): SnapshotInfo | undefined;
     setConditionStartTime(when: Date | number): ClaimConditionPhase;
@@ -441,7 +443,7 @@ export class ClaimConditionPhase {
     setMaxQuantityPerTransaction(max: BigNumberish_2): ClaimConditionPhase;
     setMerkleRoot(root: string): ClaimConditionPhase;
     setPrice(price: BigNumberish_2, tokenAddress?: string): ClaimConditionPhase;
-    setSnapshot(addresses: string[]): Promise<ClaimConditionPhase>;
+    setSnapshot(addresses: string[]): ClaimConditionPhase;
     setWaitTimeBetweenClaims(waitInSeconds: BigNumberish_2): ClaimConditionPhase;
 }
 
@@ -751,6 +753,12 @@ export type ForwardRequestMessage = {
     nonce: string;
     data: BytesLike;
 };
+
+// @public (undocumented)
+export class FunctionDeprecatedError extends Error {
+    // @internal
+    constructor(message: string);
+}
 
 // @public
 export function generateRoot(items: string[]): string;

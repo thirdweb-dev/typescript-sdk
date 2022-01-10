@@ -63,7 +63,7 @@ describe("ClaimConditionFactory", async () => {
       .setPrice(phaseOnePrice)
       .setMerkleRoot(phaseOneMerkleRoot);
 
-    conditions = factory.buildConditions();
+    conditions = await factory.buildConditions();
   });
 
   it("should contain all claim conditions", async () => {
@@ -112,9 +112,9 @@ describe("ClaimConditionFactory", async () => {
   });
 
   it("should delete phases correctly", async () => {
-    factory.removeClaimPhase(0);
+    await factory.deleteClaimPhase(0);
 
-    const newConditions = factory.buildConditions();
+    const newConditions = await factory.buildConditions();
 
     chai.assert.lengthOf(
       newConditions,

@@ -9,7 +9,7 @@ Sets a snapshot for the claim condition. You can use a snapshot to verify a merk
 <b>Signature:</b>
 
 ```typescript
-setSnapshot(addresses: string[]): Promise<ClaimConditionPhase>;
+setSnapshot(addresses: string[]): ClaimConditionPhase;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ setSnapshot(addresses: string[]): Promise<ClaimConditionPhase>;
 
 <b>Returns:</b>
 
-Promise&lt;ClaimConditionPhase&gt;
+ClaimConditionPhase
 
