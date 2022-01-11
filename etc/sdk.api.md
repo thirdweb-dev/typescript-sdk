@@ -1520,7 +1520,6 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
         signature: string;
     }[]>;
     get(tokenId: string): Promise<NFTMetadata>;
-    // (undocumented)
     getAll(): Promise<NFTMetadata[]>;
     // (undocumented)
     getAllWithOwner(): Promise<NFTMetadataOwner[]>;

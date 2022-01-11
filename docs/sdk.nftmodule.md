@@ -4,7 +4,7 @@
 
 ## NFTModule class
 
-Access this module by calling [ThirdwebSDK.getNFTModule()](./sdk.thirdwebsdk.getnftmodule.md)
+The NFT Collection Module.
 
 <b>Signature:</b>
 
@@ -14,6 +14,40 @@ export declare class NFTModule extends ModuleWithRoles<SignatureMint721> impleme
 <b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;SignatureMint721&gt;
 
 <b>Implements:</b> [ITransferable](./sdk.itransferable.md)<!-- -->, [ISignatureMinter](./sdk.isignatureminter.md)
+
+## Remarks
+
+This module provides ERC721 functionality. It is used to mint 1 of 1 NFTs.
+
+## Example
+
+Usage example in react:
+
+```jsx
+import { useWeb3 } from "@3rdweb/hooks";
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+const Component = () => {
+  const { provider } = useWeb3();
+  const signer = provider ? provider.getSigner() : undefined;
+  const module = useMemo(() => {
+    const sdk = new ThirdwebSDK(signer);
+    return sdk.getNFTModule("{{module_address}}");
+  }, [signer]);
+
+  return (
+    <>Your component code goes here</>
+  );
+}
+```
+Usage example in node.js:
+
+```javascript
+const { ThirdwebSDK } = require("@3rdweb/sdk");
+
+const sdk = new ThirdwebSDK({{wallet_provider}});
+const module = sdk.getNFTModule("{{module_address}}");
+```
 
 ## Properties
 
@@ -32,7 +66,7 @@ export declare class NFTModule extends ModuleWithRoles<SignatureMint721> impleme
 |  [generateSignature(mintRequest)](./sdk.nftmodule.generatesignature.md) |  |  |
 |  [generateSignatureBatch(payloads)](./sdk.nftmodule.generatesignaturebatch.md) |  |  |
 |  [get(tokenId)](./sdk.nftmodule.get.md) |  | Fetches an NFT from storage with the resolved metadata. |
-|  [getAll()](./sdk.nftmodule.getall.md) |  |  |
+|  [getAll()](./sdk.nftmodule.getall.md) |  | Fetches all NFTs that are contained by the module. |
 |  [getAllWithOwner()](./sdk.nftmodule.getallwithowner.md) |  |  |
 |  [getModuleRoles()](./sdk.nftmodule.getmoduleroles.md) |  |  |
 |  [getOwned(\_address)](./sdk.nftmodule.getowned.md) |  |  |

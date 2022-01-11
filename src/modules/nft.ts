@@ -44,7 +44,37 @@ const MintRequest = [
 ];
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getNFTModule}
+ * The NFT Collection Module.
+ *
+ * @remarks This module provides ERC721 functionality. It is used to mint 1 of 1 NFTs.
+ *
+ * @example
+ * Usage example in react:
+ * ```jsx
+ * import { useWeb3 } from "@3rdweb/hooks";
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * const Component = () => {
+ *   const { provider } = useWeb3();
+ *   const signer = provider ? provider.getSigner() : undefined;
+ *   const module = useMemo(() => {
+ *     const sdk = new ThirdwebSDK(signer);
+ *     return sdk.getNFTModule("{{module_address}}");
+ *   }, [signer]);
+ *
+ *   return (
+ *     <>Your component code goes here</>
+ *   );
+ * }
+ * ```
+ * Usage example in node.js:
+ * ```javascript
+ * const { ThirdwebSDK } = require("@3rdweb/sdk");
+ *
+ * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * const module = sdk.getNFTModule("{{module_address}}");
+ * ```
+ *
  * @public
  */
 export class NFTModule
@@ -122,6 +152,17 @@ export class NFTModule
     };
   }
 
+  /**
+   * Fetches all NFTs that are contained by the module.
+   *
+   * @example
+   * ```javascript
+   * const module = sdk.getNFTModule("{{module_address}}");
+   * const nfts = await module.getAll();
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
+   */
   public async getAll(): Promise<NFTMetadata[]> {
     let maxId: number;
     if (await this.isV1()) {
