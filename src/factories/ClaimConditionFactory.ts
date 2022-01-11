@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
+import { FunctionDeprecatedError } from "..";
 import { PublicClaimCondition } from "../types/claim-conditions/PublicMintCondition";
 import { SnapshotInfo } from "../types/snapshots/SnapshotInfo";
 import ClaimConditionPhase from "./ClaimConditionPhase";
@@ -20,20 +21,21 @@ class ClaimConditionFactory {
    *
    * @returns - The claim conditions that will be used when validating a users claim transaction.
    */
-  public buildConditions(): PublicClaimCondition[] {
-    const publicClaimConditions = this.phases.map((c) =>
-      c.buildPublicClaimCondition(),
-    );
-
-    // TODO: write test to ensure they're sorted by start time, earliest first
-    const sorted = publicClaimConditions.sort((a, b) => {
-      if (a.startTimestamp.eq(b.startTimestamp)) {
-        return 0;
-      } else if (a.startTimestamp.gt(b.startTimestamp)) {
-        return 1;
-      } else {
-        return -1;
-      }
+  public async buildConditions(): Promise<PublicClaimCondition[]> {
+    let sorted: PublicClaimCondition[] = [];
+    await Promise.all(
+      this.phases.map((c) => c.buildPublicClaimCondition()),
+    ).then((publicClaimConditions) => {
+      // TODO: write test to ensure they're sorted by start time, earliest first
+      sorted = publicClaimConditions.sort((a, b) => {
+        if (a.startTimestamp.eq(b.startTimestamp)) {
+          return 0;
+        } else if (a.startTimestamp.gt(b.startTimestamp)) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
     });
 
     return sorted;
@@ -47,31 +49,36 @@ class ClaimConditionFactory {
    *
    * @returns - The claim conditions that will be used when validating a users claim transaction.
    */
-  public buildConditionsForDropV1(): PublicClaimCondition[] {
+  public async buildConditionsForDropV1(): Promise<PublicClaimCondition[]> {
     // v1 startTimestamp takes seconds from now.
     // v2 takes unix timestamp in seconds.
-    const publicClaimConditions = this.phases
-      .map((c) => c.buildPublicClaimCondition())
-      .map((c) => {
-        const now = Math.floor(Date.now() / 1000);
-        return {
-          ...c,
-          startTimestamp: c.startTimestamp.lt(now)
-            ? BigNumber.from(0)
-            : c.startTimestamp.sub(now),
-        };
+    let sorted: PublicClaimCondition[] = [];
+    await Promise.all(
+      this.phases.map((c) => c.buildPublicClaimCondition()),
+    )
+      .then((c) => {
+        return c.map((c) => {
+          const now = Math.floor(Date.now() / 1000);
+          return {
+            ...c,
+            startTimestamp: c.startTimestamp.lt(now)
+              ? BigNumber.from(0)
+              : c.startTimestamp.sub(now),
+          };
+        });
+      })
+      .then((publicClaimConditions) => {
+        // TODO: write test to ensure they're sorted by start time, earliest first
+        sorted = publicClaimConditions.sort((a, b) => {
+          if (a.startTimestamp.eq(b.startTimestamp)) {
+            return 0;
+          } else if (a.startTimestamp.gt(b.startTimestamp)) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
       });
-
-    // TODO: write test to ensure they're sorted by start time, earliest first
-    const sorted = publicClaimConditions.sort((a, b) => {
-      if (a.startTimestamp.eq(b.startTimestamp)) {
-        return 0;
-      } else if (a.startTimestamp.gt(b.startTimestamp)) {
-        return 1;
-      } else {
-        return -1;
-      }
-    });
 
     return sorted;
   }
@@ -141,14 +148,21 @@ class ClaimConditionFactory {
    *
    * @param phase - The phase to remove
    */
-  public removeClaimPhase(index: number): void {
+  public async deleteClaimPhase(index: number): Promise<void> {
     if (index < 0 || index >= this.phases.length) {
       return;
     }
 
-    const sorted = this.buildConditions();
+    const sorted = await this.buildConditions();
     const cleared = sorted.splice(index - 1, 1);
     this.fromPublicClaimConditions(cleared);
+  }
+
+  /**
+   * @deprecated - Use {@link deleteClaimPhase} instead.
+   */
+  public removeClaimPhase(_index: number): void {
+    throw new FunctionDeprecatedError("deleteClaimPhase");
   }
 
   /**

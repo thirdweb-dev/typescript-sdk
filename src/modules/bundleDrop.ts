@@ -306,7 +306,7 @@ export class BundleDropModule
     tokenId: BigNumberish,
     factory: ClaimConditionFactory,
   ) {
-    const conditions = factory.buildConditions().map((c) => ({
+    const conditions = (await factory.buildConditions()).map((c) => ({
       startTimestamp: c.startTimestamp,
       maxClaimableSupply: c.maxMintSupply,
       supplyClaimed: 0,
@@ -356,7 +356,7 @@ export class BundleDropModule
     tokenId: BigNumberish,
     factory: ClaimConditionFactory,
   ) {
-    const conditions = factory.buildConditions().map((c) => ({
+    const conditions = (await factory.buildConditions()).map((c) => ({
       startTimestamp: c.startTimestamp,
       maxClaimableSupply: c.maxMintSupply,
       supplyClaimed: 0,

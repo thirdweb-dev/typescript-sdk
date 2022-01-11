@@ -88,6 +88,7 @@ Output
 |  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
 |  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
 |  [FileNameMissingError](./sdk.filenamemissingerror.md) |  |
+|  [FunctionDeprecatedError](./sdk.functiondeprecatederror.md) |  |
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [IpfsStorage](./sdk.ipfsstorage.md) |  |

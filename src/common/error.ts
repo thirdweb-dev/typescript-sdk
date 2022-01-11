@@ -118,6 +118,12 @@ export class AuctionAlreadyStartedError extends Error {
   }
 }
 
+export class FunctionDeprecatedError extends Error {
+  /** @internal */
+  constructor(message: string) {
+    super(`FUNCTION DEPRECATED. ${message ? `Use ${message} instead` : ""}`);
+  }
+}
 /**
  * Thrown when trying to retrieve a listing from a marketplace that doesn't exist
  */

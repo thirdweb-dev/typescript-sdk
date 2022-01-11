@@ -4,19 +4,22 @@
 
 ## ClaimConditionFactory.removeClaimPhase() method
 
-Removes a claim condition phase from the factory.
+> Warning: This API is now obsolete.
+> 
+> - Use  instead.
+> 
 
 <b>Signature:</b>
 
 ```typescript
-removeClaimPhase(index: number): void;
+removeClaimPhase(_index: number): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  index | number |  |
+|  \_index | number |  |
 
 <b>Returns:</b>
 

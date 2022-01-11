@@ -24,6 +24,8 @@ export default class ClaimConditionPhase {
 
   private _merkleCondition?: SnapshotInfo = undefined;
 
+  private _snapshot?: string[] = undefined;
+
   private createSnapshot: (leafs: string[]) => Promise<SnapshotInfo>;
 
   private _waitInSeconds: BigNumberish = 0;
@@ -100,14 +102,15 @@ export default class ClaimConditionPhase {
     return this;
   }
 
+
   /**
    * Sets a snapshot for the claim condition. You can use a snapshot
    * to verify a merkle tree condition.
    *
    * @param root - The merkle root hash
    */
-  public async setSnapshot(addresses: string[]): Promise<ClaimConditionPhase> {
-    this._merkleCondition = await this.createSnapshot(addresses);
+  public setSnapshot(addresses: string[]): ClaimConditionPhase {
+    this._snapshot = addresses;
     return this;
   }
 
@@ -122,7 +125,11 @@ export default class ClaimConditionPhase {
    * Helper method that provides defaults for each claim condition.
    * @internal
    */
-  public buildPublicClaimCondition(): PublicMintCondition {
+  public async buildPublicClaimCondition(): Promise<PublicMintCondition> {
+    if (this._snapshot) {
+      this._merkleCondition = await this.createSnapshot(this._snapshot);
+    }
+
     return {
       startTimestamp: BigNumber.from(this._conditionStartTime.toString()),
       pricePerToken: this._price,
