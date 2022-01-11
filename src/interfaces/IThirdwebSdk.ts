@@ -1,6 +1,6 @@
 import { Snapshot } from "../types/snapshots";
 
-export default interface IThirdwebSdk {
+export interface IThirdwebSdk {
   /**
    * Creates a snapshot from a list of leafs. The leafs could be addresses,
    * hashes, etc.

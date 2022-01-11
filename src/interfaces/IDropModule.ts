@@ -1,6 +1,6 @@
 import { MetadataURIOrObject } from "../core/types";
 
-export default interface IDropModule {
+export interface IDropModule {
   /**
    * Allows you to mint a batch of tokens by passing in a list of metadata objects.
    * The metadata objects will all be uploaded to a distributed file system in a folder format

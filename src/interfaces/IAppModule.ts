@@ -22,8 +22,7 @@ import SplitsModuleMetadata from "../types/module-deployments/SplitsModuleMetada
 import TokenModuleMetadata from "../types/module-deployments/TokenModuleMetadata";
 import VoteModuleMetadata from "../types/module-deployments/VoteModuleMetadata";
 
-/* eslint-disable semi */
-export default interface IAppModule {
+export interface IAppModule {
   deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
 
   deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;

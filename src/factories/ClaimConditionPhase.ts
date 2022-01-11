@@ -102,7 +102,6 @@ export default class ClaimConditionPhase {
     return this;
   }
 
-
   /**
    * Sets a snapshot for the claim condition. You can use a snapshot
    * to verify a merkle tree condition.

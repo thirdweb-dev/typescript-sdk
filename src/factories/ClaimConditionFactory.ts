@@ -53,17 +53,15 @@ class ClaimConditionFactory {
     // v1 startTimestamp takes seconds from now.
     // v2 takes unix timestamp in seconds.
     let sorted: PublicClaimCondition[] = [];
-    await Promise.all(
-      this.phases.map((c) => c.buildPublicClaimCondition()),
-    )
-      .then((c) => {
-        return c.map((c) => {
+    await Promise.all(this.phases.map((c) => c.buildPublicClaimCondition()))
+      .then((c1) => {
+        return c1.map((c2) => {
           const now = Math.floor(Date.now() / 1000);
           return {
-            ...c,
-            startTimestamp: c.startTimestamp.lt(now)
+            ...c2,
+            startTimestamp: c2.startTimestamp.lt(now)
               ? BigNumber.from(0)
-              : c.startTimestamp.sub(now),
+              : c2.startTimestamp.sub(now),
           };
         });
       })
