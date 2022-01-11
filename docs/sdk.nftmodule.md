@@ -4,7 +4,7 @@
 
 ## NFTModule class
 
-The NFT Collection Module.
+The NFT Collection Module
 
 <b>Signature:</b>
 
@@ -21,32 +21,12 @@ This module provides ERC721 functionality. It is used to mint 1 of 1 NFTs.
 
 ## Example
 
-Usage example in react:
-
-```jsx
-import { useWeb3 } from "@3rdweb/hooks";
-import { ThirdwebSDK } from "@3rdweb/sdk";
-
-const Component = () => {
-  const { provider } = useWeb3();
-  const signer = provider ? provider.getSigner() : undefined;
-  const module = useMemo(() => {
-    const sdk = new ThirdwebSDK(signer);
-    return sdk.getNFTModule("{{module_address}}");
-  }, [signer]);
-
-  return (
-    <>Your component code goes here</>
-  );
-}
-```
-Usage example in node.js:
 
 ```javascript
-const { ThirdwebSDK } = require("@3rdweb/sdk");
+import ThirdwebSDK from "@3rdweb/sdk";
 
-const sdk = new ThirdwebSDK({{wallet_provider}});
-const module = sdk.getNFTModule("{{module_address}}");
+const sdk: ThirdwebSDK = new ThirdwebSDK({{wallet_provider}});
+const module: NFTModule = sdk.getNFTModule("{{module_address}}");
 ```
 
 ## Properties
@@ -66,7 +46,7 @@ const module = sdk.getNFTModule("{{module_address}}");
 |  [generateSignature(mintRequest)](./sdk.nftmodule.generatesignature.md) |  |  |
 |  [generateSignatureBatch(payloads)](./sdk.nftmodule.generatesignaturebatch.md) |  |  |
 |  [get(tokenId)](./sdk.nftmodule.get.md) |  | Fetches an NFT from storage with the resolved metadata. |
-|  [getAll()](./sdk.nftmodule.getall.md) |  | Fetches all NFTs that are contained by the module. |
+|  [getAll()](./sdk.nftmodule.getall.md) |  | Fetch all NFTs that are contained by the module |
 |  [getAllWithOwner()](./sdk.nftmodule.getallwithowner.md) |  |  |
 |  [getModuleRoles()](./sdk.nftmodule.getmoduleroles.md) |  |  |
 |  [getOwned(\_address)](./sdk.nftmodule.getowned.md) |  |  |

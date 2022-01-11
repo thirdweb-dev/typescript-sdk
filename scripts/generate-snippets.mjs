@@ -35,10 +35,12 @@ const json = JSON.parse(
 
 function languageNameToKey(languageName) {
   switch (languageName) {
+    case "js":
     case "jsx":
-      return "react";
-    case "javascript":
-      return "node";
+      return "javascript";
+    case "ts":
+    case "tsx":
+      return "tyepscript";
     default:
       return languageName;
   }
@@ -71,6 +73,12 @@ function parseExampleTag(docComment) {
   return examples;
 }
 
+const parseSignature = (m) => {
+  return m.excerptTokens
+    ? m.excerptTokens.map((t) => t.text).join("")
+    : undefined;
+};
+
 const parseMembers = (members = [], kind = "Method") => {
   const validMembers = members.filter((m) => m.kind === kind);
   return validMembers
@@ -86,6 +94,7 @@ const parseMembers = (members = [], kind = "Method") => {
             ? Formatter.renderDocNode(docComment.remarksBlock.content)
             : null,
           examples,
+          signature: parseSignature(m),
         };
       }
       return null;
@@ -107,6 +116,7 @@ const moduleMap = modules.reduce((acc, m) => {
         : null,
       examples,
       methods: parseMembers(m.members),
+      signature: parseSignature(m),
     };
   }
 

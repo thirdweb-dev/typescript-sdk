@@ -100,7 +100,7 @@ Output
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
 |  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality. |
-|  [NFTModule](./sdk.nftmodule.md) | The NFT Collection Module. |
+|  [NFTModule](./sdk.nftmodule.md) | The NFT Collection Module |
 |  [NftModuleMetadata](./sdk.nftmodulemetadata.md) |  |
 |  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |

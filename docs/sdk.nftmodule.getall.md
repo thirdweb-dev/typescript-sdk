@@ -4,7 +4,7 @@
 
 ## NFTModule.getAll() method
 
-Fetches all NFTs that are contained by the module.
+Fetch all NFTs that are contained by the module
 
 <b>Signature:</b>
 
