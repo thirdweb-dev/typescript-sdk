@@ -1,10 +1,10 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { readFileSync } from "fs";
-import { sdk, signers } from "./before.test";
+import { ipfsGatewayUrl, sdk, signers } from "./before.test";
 
 import { expect, assert } from "chai";
 import { IpfsStorage } from "../src/storage/IpfsStorage";
-import { FileOrBufferWithNames } from "../src/types/FireOrBufferWithNames";
+import { BufferOrStringWithName } from "../src/types/BufferOrStringWithName";
 import FileOrBuffer from "../src/types/FileOrBuffer";
 import { DuplicateFileNameError } from "../src";
 
@@ -25,7 +25,7 @@ describe("IPFS Uploads", async () => {
 
   async function getFile(upload: string): Promise<Response> {
     const response = await fetch(
-      `https://nftlabs.mypinata.cloud/ipfs/${upload.replace("ipfs://", "")}`,
+      `${ipfsGatewayUrl}${upload.replace("ipfs://", "")}`,
     )
       .then(async (res) => {
         return res;
@@ -48,7 +48,7 @@ describe("IPFS Uploads", async () => {
         },
       });
       const data = await (await getFile(upload)).json();
-      const uploadTest = await (await getFile(data.test.test.image)).headers
+      const uploadTest = (await getFile(data.test.test.image)).headers
         .get("content-type")
         .toString();
 
@@ -84,12 +84,12 @@ describe("IPFS Uploads", async () => {
       {
         id: 0,
         description: "test 0",
-        prop: Math.random().toString(),
+        prop: "123",
       },
       {
         id: 1,
         description: "test 1",
-        prop: Math.random().toString(),
+        prop: "321",
       },
     ];
     const serialized = sampleObjects.map((o) => Buffer.from(JSON.stringify(o)));
@@ -106,25 +106,26 @@ describe("IPFS Uploads", async () => {
     const sampleObjects: Buffer[] = [
       readFileSync("test/test.mp4"),
       readFileSync("test/test.mp4"),
-      readFileSync("test/test.mp4"),
     ];
     const cid = await sdk.getStorage().uploadBatch(sampleObjects);
+    console.log(cid);
   });
 
   it("should upload files with filenames correctly", async () => {
     const storage = sdk.getStorage();
-    const sampleObjects: FileOrBufferWithNames[] = [
+    const sampleObjects: BufferOrStringWithName[] = [
       {
-        file: readFileSync("test/test.mp4"),
+        data: readFileSync("test/test.mp4"),
         name: "test2.mp4",
       },
-      { file: readFileSync("test/test.mp4"), name: "test3.mp4" },
+      { data: readFileSync("test/test.mp4"), name: "test3.mp4" },
       {
-        file: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+        data: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
         name: "test.jpeg",
       },
     ];
-    const cid = await storage.uploadBatchWithFileNames(sampleObjects);
+    const cid = await storage.uploadBatch(sampleObjects);
+    console.log("filenames", cid);
     assert(
       (await getFile(`${cid}${"test.jpeg"}`)).headers
         .get("content-type")
@@ -148,7 +149,7 @@ describe("IPFS Uploads", async () => {
   });
   it("should upload files according to start file number as 0", async () => {
     const storage = sdk.getStorage();
-    const sampleObjects: FileOrBuffer[] = [
+    const sampleObjects = [
       readFileSync("test/3510820011_4f558b6dea_b.jpg"),
       readFileSync("test/test.mp4"),
     ];
@@ -181,48 +182,47 @@ describe("IPFS Uploads", async () => {
         },
       },
     ];
-    const storage = (await sdk.getStorage()) as IpfsStorage;
-    console.log(await storage.uploadMetadataBatch(sampleObjects));
+    const storage = sdk.getStorage() as IpfsStorage;
+    const cid = await storage.uploadMetadataBatch(sampleObjects);
+    assert(cid.length > 0);
   });
 
   it("should upload properly with same file names but one with capitalized letters", async () => {
     const storage = sdk.getStorage();
-    const sampleObjects: FileOrBufferWithNames[] = [
+    const sampleObjects: BufferOrStringWithName[] = [
       {
-        file: readFileSync("test/test.mp4"),
+        data: readFileSync("test/test.mp4"),
         name: "test",
       },
       {
-        file: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+        data: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
         name: "TEST",
       },
     ];
-    const cid = await storage.uploadBatchWithFileNames(sampleObjects);
+    const cid = await storage.uploadBatch(sampleObjects);
     assert(
       (await getFile(`${cid}${"TEST"}`)).headers
         .get("content-type")
         .toString() === "image/jpeg",
       `${cid}`,
     );
-    console.log(
-      (await getFile(`${cid}${"TEST"}`)).headers.get("content-type").toString(),
-    );
   });
 
   it("should throw an error when trying to upload two files with the same name", async () => {
     const storage = sdk.getStorage();
-    const sampleObjects: FileOrBufferWithNames[] = [
+    const sampleObjects: BufferOrStringWithName[] = [
       {
-        file: readFileSync("test/test.mp4"),
+        data: readFileSync("test/test.mp4"),
         name: "test",
       },
       {
-        file: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+        data: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
         name: "test",
       },
     ];
     try {
-      const cid = await storage.uploadBatchWithFileNames(sampleObjects);
+      await storage.uploadBatch(sampleObjects);
+      assert.fail("should throw an error");
     } catch (e) {
       if (!(e instanceof DuplicateFileNameError)) {
         throw e;
