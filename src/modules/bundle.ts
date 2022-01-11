@@ -22,7 +22,7 @@ export interface BundleMetadata {
   creator: string;
   supply: BigNumber;
   metadata: NFTMetadata;
-  ownedByAddress: number;
+  ownedByAddress: BigNumber;
   underlyingType: UnderlyingType;
 }
 
@@ -118,7 +118,7 @@ export class BundleModule
       creator: state.creator,
       supply,
       metadata,
-      ownedByAddress,
+      ownedByAddress: BigNumber.from(ownedByAddress),
       underlyingType: state.underlyingType,
     };
   }
@@ -459,7 +459,10 @@ export class BundleModule
       })
       .filter((b) => b.balance.gt(0));
     return await Promise.all(
-      ownedBalances.map(async (b) => await this.get(b.tokenId.toString())),
+      ownedBalances.map(async ({ tokenId, balance }) => {
+        const token = await this.get(tokenId.toString());
+        return { ...token, ownedByAddress: balance };
+      }),
     );
   }
 
