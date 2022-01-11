@@ -25,8 +25,8 @@ This module provides ERC721 functionality. It is used to mint 1 of 1 NFTs.
 ```javascript
 import ThirdwebSDK from "@3rdweb/sdk";
 
-const sdk: ThirdwebSDK = new ThirdwebSDK({{wallet_provider}});
-const module: NFTModule = sdk.getNFTModule("{{module_address}}");
+const sdk = new ThirdwebSDK({{wallet_provider}});
+const module = sdk.getNFTModule("{{module_address}}");
 ```
 
 ## Properties

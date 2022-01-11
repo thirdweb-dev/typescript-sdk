@@ -5,7 +5,6 @@ import {
   SignatureMint721,
   SignatureMint721__factory,
 } from "@3rdweb/contracts";
-
 import { MintedBatchEvent, MintedEvent } from "@3rdweb/contracts/dist/NFT";
 import {
   MintRequestStructOutput,
@@ -53,8 +52,8 @@ const MintRequest = [
  * ```javascript
  * import ThirdwebSDK from "@3rdweb/sdk";
  *
- * const sdk: ThirdwebSDK = new ThirdwebSDK({{wallet_provider}});
- * const module: NFTModule = sdk.getNFTModule("{{module_address}}");
+ * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * const module = sdk.getNFTModule("{{module_address}}");
  * ```
  *
  * @public
@@ -140,6 +139,11 @@ export class NFTModule
    * @example
    * ```javascript
    * const module = sdk.getNFTModule("{{module_address}}");
+   * const nfts = await module.getAll();
+   * ```
+   *
+   * ```typescript
+   * const module: NFTModule = sdk.getNFTModule("{{module_address}}");
    * const nfts = await module.getAll();
    * ```
    *

@@ -25,3 +25,8 @@ const module = sdk.getNFTModule("{{module_address}}");
 const nfts = await module.getAll();
 ```
 
+```typescript
+const module: NFTModule = sdk.getNFTModule("{{module_address}}");
+const nfts = await module.getAll();
+```
+

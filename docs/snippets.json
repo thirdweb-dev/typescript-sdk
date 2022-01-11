@@ -4,7 +4,7 @@
     "summary": "The NFT Collection Module\n\n",
     "remarks": "\n\nThis module provides ERC721 functionality. It is used to mint 1 of 1 NFTs.\n\n",
     "examples": {
-      "javascript": "import ThirdwebSDK from \"@3rdweb/sdk\";\n\nconst sdk: ThirdwebSDK = new ThirdwebSDK({{wallet_provider}});\nconst module: NFTModule = sdk.getNFTModule(\"{{module_address}}\");"
+      "javascript": "import ThirdwebSDK from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getNFTModule(\"{{module_address}}\");"
     },
     "methods": [
       {
@@ -12,7 +12,8 @@
         "summary": "Fetch all NFTs that are contained by the module\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const module = sdk.getNFTModule(\"{{module_address}}\");\nconst nfts = await module.getAll();"
+          "javascript": "const module = sdk.getNFTModule(\"{{module_address}}\");\nconst nfts = await module.getAll();",
+          "typescript": "const module: NFTModule = sdk.getNFTModule(\"{{module_address}}\");\nconst nfts = await module.getAll();"
         },
         "signature": "getAll(): Promise<NFTMetadata[]>;"
       }
