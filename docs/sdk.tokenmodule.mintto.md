@@ -4,6 +4,8 @@
 
 ## TokenModule.mintTo() method
 
+Mint Tokens
+
 <b>Signature:</b>
 
 ```typescript
@@ -20,4 +22,21 @@ mintTo(to: string, amount: BigNumberish): Promise<void>;
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Mint tokens to a specified address
+
+## Example
+
+
+```javascript
+// Address of the wallet you want to mint the tokens to
+const toAddress = "{{wallet_address}}";
+
+// The amount of this token you want to mint
+const amount = 100;
+
+await module.transfer(toAddress, amount);
+```
 

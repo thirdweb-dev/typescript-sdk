@@ -61,8 +61,18 @@ export interface INFTBundleBatchArgs {
 }
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getBundleModule}
- * @beta
+ * Create a collection of NFTs that lets you optionally mint multiple copies of each NFT.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * const module = sdk.getBundleModule("{{module_address}}");
+ * ```
+ *
+ * @public
  */
 export class BundleModule
   extends ModuleWithRoles<NFTBundleContract>
@@ -124,8 +134,23 @@ export class BundleModule
   }
 
   /**
-   * Return all items in the bundle.
-   * @returns An array of `INFTBundle`.
+   * Get NFT Data
+   *
+   * @remarks Get data associated with NFTs in this module.
+   *
+   * @example
+   * ```javascript
+   * // You can get every NFT in the module
+   * const nfts = await module.getAll();
+   * console.log(nfts);
+   *
+   * // Or you can get optionally get the NFTs owned by a specific wallet
+   * const address = "{{wallet_address}}"; // The address you want to get the NFTs for;
+   * const ownedNfts = await module.getAll(address);
+   * console.log(ownedNfts);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
    */
   public async getAll(address?: string): Promise<BundleMetadata[]> {
     const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
@@ -136,6 +161,22 @@ export class BundleModule
     );
   }
 
+  /**
+   * Get NFT Balance
+   *
+   * @remarks Get a wallets NFT balance (number of a specific NFT in this module owned by the wallet).
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to check NFT balance
+   * const address = "{{wallet_address}}"";
+   * // The token ID of the NFT you want to check the wallets balance of
+   * const tokenId = "0"
+   *
+   * const balance = await module.balanceOf(address, tokenId);
+   * console.log(balance);
+   * ```
+   */
   public async balanceOf(address: string, tokenId: string): Promise<BigNumber> {
     return await this.readOnlyContract.balanceOf(address, tokenId);
   }
@@ -184,6 +225,25 @@ export class BundleModule
     ]);
   }
 
+  /**
+   * Transfer NFT
+   *
+   * @remarks Transfer an NFT from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "0x...";
+   *
+   * // The token ID of the NFT you want to send
+   * const tokenId = "0";
+   *
+   * // The number of NFTs you want to send
+   * const amount = 1;
+   *
+   * await module.transfer(toAddress, tokenId, amount);
+   * ```
+   */
   public async transfer(
     to: string,
     tokenId: string,
@@ -212,12 +272,61 @@ export class BundleModule
     return this.createAndMintBatch(metadataWithSupply);
   }
 
+  /**
+   * Create & Mint NFT
+   *
+   * @remarks Create and mint NFTs.
+   *
+   * @example
+   * ```javascript
+   * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
+   * const metadata = {
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }
+   *
+   * const metadataWithSupply = {
+   *   metadata,
+   *   supply: 1, // The number of this NFT you want to mint
+   * }
+   *
+   * await module.createAndMint(metadataWithSupply);
+   * ```
+   */
   public async createAndMint(
     metadataWithSupply: INFTBundleCreateArgs,
   ): Promise<BundleMetadata> {
     return (await this.createAndMintBatch([metadataWithSupply]))[0];
   }
 
+  /**
+   * Create & Mint Many NFTs
+   *
+   * @remarks Create and mint many different NFTs.
+   *
+   * @example
+   * ```javascript
+   * // Custom metadata and supplies of your NFTs
+   * const metadataWithSupply = [{
+   *   supply: 1, // The number of this NFT you want to mint
+   *   metadata: {
+   *     name: "Cool NFT #1",
+   *     description: "This is a cool NFT",
+   *     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   *   },
+   * }, {
+   *   supply: 1,
+   *   metadata: {
+   *     name: "Cool NFT #2",
+   *     description: "This is a cool NFT",
+   *     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   *   },
+   * }];
+   *
+   * await module.createAndMintBatch(metadataWithSupply);
+   * ```
+   */
   public async createAndMintBatch(
     metadataWithSupply: INFTBundleCreateArgs[],
   ): Promise<BundleMetadata[]> {
@@ -383,6 +492,32 @@ export class BundleModule
       data,
     ]);
   }
+
+  /**
+   * Transfer Many NFTs
+   *
+   * @remarks Transfer NFTs from the one wallet to another.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to send the NFT from
+   * const fromAddress = "{{wallet_address}}";
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "0x...";
+   *
+   * // The data of the NFTs you want to send
+   * const data = [{
+   *   tokenId: 1, // The token ID of the NFT you want to send
+   *   amount: 1, // The number of this NFT you want to send
+   * }, {
+   *   tokenId: 2,
+   *   amount: 1,
+   * }]
+   *
+   * // Note that the connected wallet must have approval to transfer the tokens of the fromAddress
+   * await module.transferBatchFrom(fromAddress, toAddress, data);
+   * ```
+   */
 
   public async transferBatchFrom(
     from: string,

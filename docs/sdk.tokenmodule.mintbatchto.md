@@ -4,6 +4,8 @@
 
 ## TokenModule.mintBatchTo() method
 
+Mint Tokens To Many Wallets
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,27 @@ mintBatchTo(args: ITokenMintArgs[]): Promise<void>;
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Mint tokens to many different wallets
+
+## Example
+
+
+```javascript
+// Data of the tokens you want to mint
+const data = [
+  {
+    address: "{{wallet_address}}", // Address to mint tokens to
+    amount: 100, // How many tokens to mint to specified address
+  },
+ {
+   address: "0x...",
+   amount: 100,
+ }
+]
+
+await module.transfer(toAddress, amount);
+```
 

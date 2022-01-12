@@ -1,5 +1,6 @@
 import { MetadataURIOrObject } from "../core/types";
 
+/* eslint-disable semi */
 export default interface IDropModule {
   /**
    * Allows you to mint a batch of tokens by passing in a list of metadata objects.

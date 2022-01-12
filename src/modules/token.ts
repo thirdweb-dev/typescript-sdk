@@ -24,8 +24,17 @@ export interface ITokenMintFromArgs extends ITokenMintArgs {
 }
 
 /**
+ * Create a standard crypto token or crypto currency.
  *
- * Access this module by calling {@link ThirdwebSDK.getTokenModule}
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * const module = sdk.getTokenModule("{{module_address}}");
+ * ```
+ *
  * @public
  */
 export class TokenModule
@@ -83,6 +92,22 @@ export class TokenModule
     return await this.balanceOf(await this.getSignerAddress());
   }
 
+  /**
+   * Get Token Balance
+   *
+   * @remarks Get a wallets token balance.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to check token balance
+   * const address = "{{wallet_address}}";
+   *
+   * const balance = await module.balanceOf(address);
+   * console.log(balance);
+   * ```
+   *
+   * @returns The balance of a specific wallet.
+   */
   public async balanceOf(address: string): Promise<CurrencyValue> {
     return await this.getValue(await this.readOnlyContract.balanceOf(address));
   }
@@ -91,6 +116,25 @@ export class TokenModule
     return await this.allowanceOf(await this.getSignerAddress(), spender);
   }
 
+  /**
+   * Get Token Allowance
+   *
+   * @remarks Get the allowance of one wallet over another's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the connected wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet who owns the funds
+   * const address = "{{wallet_address}}"";
+   *
+   * // Address of the wallet to check token allowance
+   * const otherAddress = "{{wallet_address}}"";
+   *
+   * const allowance = await module.allowanceOf(otherAddress);
+   * console.log(allowance);
+   * ```
+   *
+   * @returns The allowance of one wallet over anothers funds.
+   */
   public async allowanceOf(owner: string, spender: string): Promise<BigNumber> {
     return await this.readOnlyContract.allowance(owner, spender);
   }
@@ -133,7 +177,22 @@ export class TokenModule
     return await this.sendTransaction("delegate", [delegateeAddress]);
   }
 
-  // write functions
+  /**
+   * Transfer Tokens
+   *
+   * @remarks Transfer tokens from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the tokens to
+   * const toAddress = "0x...";
+   *
+   * // The amount of tokens you want to send
+   * const amount = 0;
+   *
+   * await module.transfer(toAddress, amount);
+   * ```
+   */
   public async transfer(
     to: string,
     amount: BigNumberish,
@@ -157,10 +216,48 @@ export class TokenModule
     await this.mintTo(await this.getSignerAddress(), amount);
   }
 
+  /**
+   * Mint Tokens
+   *
+   * @remarks Mint tokens to a specified address
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to mint the tokens to
+   * const toAddress = "{{wallet_address}}";
+   *
+   * // The amount of this token you want to mint
+   * const amount = 100;
+   *
+   * await module.transfer(toAddress, amount);
+   * ```
+   */
   public async mintTo(to: string, amount: BigNumberish) {
     await this.sendTransaction("mint", [to, amount]);
   }
 
+  /**
+   * Mint Tokens To Many Wallets
+   *
+   * @remarks Mint tokens to many different wallets
+   *
+   * @example
+   * ```javascript
+   * // Data of the tokens you want to mint
+   * const data = [
+   *   {
+   *     address: "{{wallet_address}}", // Address to mint tokens to
+   *     amount: 100, // How many tokens to mint to specified address
+   *   },
+   *  {
+   *    address: "0x...",
+   *    amount: 100,
+   *  }
+   * ]
+   *
+   * await module.transfer(toAddress, amount);
+   * ```
+   */
   public async mintBatchTo(args: ITokenMintArgs[]) {
     const encoded = [];
     for (const arg of args) {
@@ -207,6 +304,19 @@ export class TokenModule
     return balances;
   }
 
+  /**
+   * Burn Tokens
+   *
+   * @remarks Burn tokens held by the connected wallet
+   *
+   * @example
+   * ```javascript
+   * // The amount of this token you want to burn
+   * const amount = 100;
+   *
+   * await module.burn(amount);
+   * ```
+   */
   public async burn(amount: BigNumberish): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [amount]);
   }
@@ -218,6 +328,24 @@ export class TokenModule
     return await this.sendTransaction("burnFrom", [from, amount]);
   }
 
+  /**
+   * Transfer Tokens From Address
+   *
+   * @remarks Transfer tokens from one wallet to another
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet sending the tokens
+   * const fromAddress = "{{wallet_address}}";
+   * // Address of the wallet you want to send the tokens to
+   * const toAddress = "0x...";
+   * // The number of tokens you want to send
+   * const amount = 100
+   *
+   * // Note that the connected wallet must have approval to transfer the tokens of the fromAddress
+   * await module.transferFrom(fromAddress, toAddress, amount);
+   * ```
+   */
   public async transferFrom(
     from: string,
     to: string,

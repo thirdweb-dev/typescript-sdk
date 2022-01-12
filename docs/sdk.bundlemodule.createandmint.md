@@ -4,8 +4,7 @@
 
 ## BundleModule.createAndMint() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Create &amp; Mint NFT
 
 <b>Signature:</b>
 
@@ -22,4 +21,27 @@ createAndMint(metadataWithSupply: INFTBundleCreateArgs): Promise<BundleMetadata>
 <b>Returns:</b>
 
 Promise&lt;[BundleMetadata](./sdk.bundlemetadata.md)<!-- -->&gt;
+
+## Remarks
+
+Create and mint NFTs.
+
+## Example
+
+
+```javascript
+// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
+const metadata = {
+  name: "Cool NFT",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+}
+
+const metadataWithSupply = {
+  metadata,
+  supply: 1, // The number of this NFT you want to mint
+}
+
+await module.createAndMint(metadataWithSupply);
+```
 

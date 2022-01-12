@@ -4,7 +4,7 @@
 
 ## NFTModule class
 
-Access this module by calling [ThirdwebSDK.getNFTModule()](./sdk.thirdwebsdk.getnftmodule.md)
+Create a collection of one-of-one NFTs.
 
 <b>Signature:</b>
 
@@ -14,6 +14,16 @@ export declare class NFTModule extends ModuleWithRoles<SignatureMint721> impleme
 <b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;SignatureMint721&gt;
 
 <b>Implements:</b> [ITransferable](./sdk.itransferable.md)<!-- -->, [ISignatureMinter](./sdk.isignatureminter.md)
+
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+const sdk = new ThirdwebSDK({{wallet_provider}});
+const module = sdk.getNFTModule("{{module_address}}");
+```
 
 ## Properties
 
@@ -27,15 +37,15 @@ export declare class NFTModule extends ModuleWithRoles<SignatureMint721> impleme
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [balance()](./sdk.nftmodule.balance.md) |  |  |
-|  [balanceOf(address)](./sdk.nftmodule.balanceof.md) |  |  |
+|  [balanceOf(address)](./sdk.nftmodule.balanceof.md) |  | Get NFT Balance |
 |  [burn(tokenId)](./sdk.nftmodule.burn.md) |  |  |
 |  [generateSignature(mintRequest)](./sdk.nftmodule.generatesignature.md) |  |  |
 |  [generateSignatureBatch(payloads)](./sdk.nftmodule.generatesignaturebatch.md) |  |  |
 |  [get(tokenId)](./sdk.nftmodule.get.md) |  | Fetches an NFT from storage with the resolved metadata. |
-|  [getAll()](./sdk.nftmodule.getall.md) |  |  |
+|  [getAll()](./sdk.nftmodule.getall.md) |  | Get All NFTs |
 |  [getAllWithOwner()](./sdk.nftmodule.getallwithowner.md) |  |  |
 |  [getModuleRoles()](./sdk.nftmodule.getmoduleroles.md) |  |  |
-|  [getOwned(\_address)](./sdk.nftmodule.getowned.md) |  |  |
+|  [getOwned(\_address)](./sdk.nftmodule.getowned.md) |  | Get Owned NFTs |
 |  [getRoyaltyBps()](./sdk.nftmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.nftmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
 |  [getWithOwner(tokenId)](./sdk.nftmodule.getwithowner.md) |  |  |
@@ -44,8 +54,8 @@ export declare class NFTModule extends ModuleWithRoles<SignatureMint721> impleme
 |  [isV1()](./sdk.nftmodule.isv1.md) |  | Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract. |
 |  [mint(metadata)](./sdk.nftmodule.mint.md) |  |  |
 |  [mintBatch(metadatas)](./sdk.nftmodule.mintbatch.md) |  |  |
-|  [mintBatchTo(to, metadatas)](./sdk.nftmodule.mintbatchto.md) |  |  |
-|  [mintTo(to, metadata)](./sdk.nftmodule.mintto.md) |  |  |
+|  [mintBatchTo(to, metadatas)](./sdk.nftmodule.mintbatchto.md) |  | Mint Many NFTs |
+|  [mintTo(to, metadata)](./sdk.nftmodule.mintto.md) |  | Mint NFT |
 |  [mintWithSignature(req, signature)](./sdk.nftmodule.mintwithsignature.md) |  |  |
 |  [ownerOf(tokenId)](./sdk.nftmodule.ownerof.md) |  | Checks the owner of a particular NFT |
 |  [setApproval(operator, approved)](./sdk.nftmodule.setapproval.md) |  |  |
@@ -53,7 +63,7 @@ export declare class NFTModule extends ModuleWithRoles<SignatureMint721> impleme
 |  [setRestrictedTransfer(restricted)](./sdk.nftmodule.setrestrictedtransfer.md) |  |  |
 |  [setRoyaltyBps(amount)](./sdk.nftmodule.setroyaltybps.md) |  |  |
 |  [totalSupply()](./sdk.nftmodule.totalsupply.md) |  |  |
-|  [transfer(to, tokenId)](./sdk.nftmodule.transfer.md) |  |  |
+|  [transfer(to, tokenId)](./sdk.nftmodule.transfer.md) |  | Transfer NFT |
 |  [transferFrom(from, to, tokenId)](./sdk.nftmodule.transferfrom.md) |  |  |
 |  [verify(mintRequest, signature)](./sdk.nftmodule.verify.md) |  |  |
 

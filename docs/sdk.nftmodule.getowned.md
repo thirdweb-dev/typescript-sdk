@@ -4,6 +4,8 @@
 
 ## NFTModule.getOwned() method
 
+Get Owned NFTs
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,18 @@ getOwned(_address?: string): Promise<NFTMetadata[]>;
 <b>Returns:</b>
 
 Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->\[\]&gt;
+
+## Remarks
+
+Get all the data associated with the NFTs owned by a specific wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet to get the NFTs of
+const address = "{{wallet_address}}";
+const nfts = await module.getOwned(address);
+console.log(nfts);
+```
 

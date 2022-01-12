@@ -4,6 +4,8 @@
 
 ## MarketplaceModule.createDirectListing() method
 
+Create Direct Listing
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,33 @@ createDirectListing(listing: NewDirectListing): Promise<BigNumber>;
 <b>Returns:</b>
 
 Promise&lt;BigNumber&gt;
+
+## Remarks
+
+Create a new listing on the marketplace where people can buy an asset directly.
+
+## Example
+
+
+```javascript
+// Data of the listing you want to create
+const listing = {
+  // address of the contract the asset you want to list is on
+  assetContractAddress: "0x...",
+  // token ID of the asset you want to list
+  tokenId: "0",
+  // in how many seconds with the listing open up
+  startTimeInSeconds: 0,
+  // how long the listing will be open for
+  listingDurationInSeconds: 86400,
+  // how many of the asset you want to list
+  quantity: 1,
+  // address of the currency contract that will be used to pay for the listing
+  currencyContractAddress: "0x0000000000000000000000000000000000000000",
+  // how much the asset will be sold for
+  buyoutPricePerToken: "1",
+}
+
+await module.createDirectListing(listing);
+```
 
