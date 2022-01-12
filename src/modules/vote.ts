@@ -27,17 +27,9 @@ export interface VoteSettings {
 }
 
 /**
- * Create a decentralized organization for token holders to vote on proposals.
+ * Access this module by calling {@link ThirdwebSDK.getVoteModule}
  *
- * @example
- *
- * ```javascript
- * import { ThirdwebSDK } from "@3rdweb/sdk";
- *
- * const sdk = new ThirdwebSDK({{wallet_provider}});
- * const module = sdk.getVoteModule("{{module_address}}");
- * ```
- *
+ * @alpha
  * @public
  */
 export class VoteModule extends Module<VotingGovernor> {
@@ -105,7 +97,15 @@ export class VoteModule extends Module<VotingGovernor> {
   }
 
   /**
-   * Returns all the proposals in the contract.
+   * Get All Proposals
+   *
+   * @remarks Get all the proposals in this module.
+   *
+   * @example
+   * ```javascript
+   * const proposals = await module.getAll();
+   * console.log(proposals);
+   * ```
    *
    * @returns - All the proposals in the contract.
    */
@@ -172,7 +172,16 @@ export class VoteModule extends Module<VotingGovernor> {
   }
 
   /**
-   * Create a new proposal.
+   * Create Proposal
+   *
+   * @remarks Create a new proposal for token holders to vote on.
+   *
+   * @example
+   * ```javascript
+   * // The description of the proposal you want to pass
+   * const description = "This is a great proposal - vote for it!"
+   * const proposal = await module.propose(description);
+   * ```
    *
    * @param description - The description of the proposal.
    * @param executions - A set of executable transactions that will be run if the proposal is passed and executed.
