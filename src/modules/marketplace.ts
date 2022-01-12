@@ -989,6 +989,7 @@ export class MarketplaceModule
    * @remarks Get all listings in the marketplace.
    *
    * @example
+   * ```javascript
    * // Get all listings
    * const listings = await module.getAllListings();
    * console.log(listings);
