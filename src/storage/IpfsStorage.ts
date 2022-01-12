@@ -131,7 +131,8 @@ export class IpfsStorage implements IStorage {
         fileData = file?.data;
         fileName = `${file.name}`;
       } else {
-        throw new FileNameMissingError();
+        // default behavior
+        fileName = `${i + fileStartNumber}`;
       }
 
       const filepath = `files/${fileName}`;
