@@ -13,6 +13,7 @@ const defaultProvider = hardhatEthers.provider;
 let appModule: AppModule;
 let registryAddress: string;
 let sdk: ThirdwebSDK;
+const ipfsGatewayUrl = "https://ipfs.thirdweb.com/ipfs/";
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 
@@ -43,7 +44,7 @@ before(async () => {
   console.log("Deployed registry at address: ", registryAddress);
 
   sdk = new ThirdwebSDK(signer, {
-    ipfsGatewayUrl: "https://ipfs.thirdweb.com/ipfs/",
+    ipfsGatewayUrl,
     registryContractAddress: registryAddress,
     maxGasPriceInGwei: 10000,
   });
@@ -60,6 +61,7 @@ before(async () => {
 });
 
 export {
+  ipfsGatewayUrl,
   appModule,
   sdk,
   signers,

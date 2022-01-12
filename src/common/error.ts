@@ -46,6 +46,22 @@ export class UploadError extends Error {
   }
 }
 
+export class FileNameMissingError extends Error {
+  /** @internal */
+  constructor() {
+    super("File name is required when object is not a `File` type object.");
+  }
+}
+
+export class DuplicateFileNameError extends Error {
+  /** @internal */
+  constructor(fileName: string) {
+    super(
+      `DUPLICATE_FILE_NAME_ERROR: File name ${fileName} was passed for more than one file.`,
+    );
+  }
+}
+
 export class NotEnoughTokensError extends Error {
   /** @internal */
   constructor(contractAddress: string, quantity: number, available: number) {
