@@ -16,6 +16,6 @@ export interface CollectionMetadata
 |  --- | --- | --- |
 |  [creator](./sdk.collectionmetadata.creator.md) | string |  |
 |  [metadata](./sdk.collectionmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) |  |
-|  [ownedByAddress](./sdk.collectionmetadata.ownedbyaddress.md) | number |  |
+|  [ownedByAddress](./sdk.collectionmetadata.ownedbyaddress.md) | BigNumber |  |
 |  [supply](./sdk.collectionmetadata.supply.md) | BigNumber |  |
 
