@@ -192,8 +192,6 @@ export class TokenModule
    *
    * await module.transfer(toAddress, amount);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
   public async transfer(
     to: string,
@@ -233,8 +231,6 @@ export class TokenModule
    *
    * await module.transfer(toAddress, amount);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
   public async mintTo(to: string, amount: BigNumberish) {
     await this.sendTransaction("mint", [to, amount]);
@@ -261,8 +257,6 @@ export class TokenModule
    *
    * await module.transfer(toAddress, amount);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
   public async mintBatchTo(args: ITokenMintArgs[]) {
     const encoded = [];
@@ -310,6 +304,19 @@ export class TokenModule
     return balances;
   }
 
+  /**
+   * Burn Tokens
+   *
+   * @remarks Burn tokens held by the connected wallet
+   *
+   * @example
+   * ```javascript
+   * // The amount of this token you want to burn
+   * const amount = 100;
+   *
+   * await module.burn(amount);
+   * ```
+   */
   public async burn(amount: BigNumberish): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [amount]);
   }
@@ -321,6 +328,24 @@ export class TokenModule
     return await this.sendTransaction("burnFrom", [from, amount]);
   }
 
+  /**
+   * Transfer Tokens From Address
+   *
+   * @remarks Transfer tokens from one wallet to another
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet sending the tokens
+   * const fromAddress = "{{wallet_address}}";
+   * // Address of the wallet you want to send the tokens to
+   * const toAddress = "0x...";
+   * // The number of tokens you want to send
+   * const amount = 100
+   *
+   * // Note that the connected wallet must have approval to transfer the tokens of the fromAddress
+   * await module.transferFrom(fromAddress, toAddress, amount);
+   * ```
+   */
   public async transferFrom(
     from: string,
     to: string,

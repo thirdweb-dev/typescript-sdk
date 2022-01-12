@@ -146,6 +146,20 @@ export class BundleDropModule
     };
   }
 
+  /**
+   * Get NFT Data
+   *
+   * @remarks Get data associated with NFTs in this module.
+   *
+   * @example
+   * ```javascript
+   * // Get data associated with every NFT in the module
+   * const nfts = await module.getAll();
+   * console.log(nfts);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
+   */
   public async getAll(): Promise<BundleDropMetadata[]> {
     const maxId = (await this.readOnlyContract.nextTokenIdToMint()).toNumber();
     return await Promise.all(
@@ -220,6 +234,22 @@ export class BundleDropModule
     return saleRecipient;
   }
 
+  /**
+   * Get NFT Balance
+   *
+   * @remarks Get a wallets NFT balance (number of a specific NFT in this module owned by the wallet).
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to check NFT balance
+   * const address = "{{wallet_address}}"";
+   * // The token ID of the NFT you want to check the wallets balance of
+   * const tokenId = "0"
+   *
+   * const balance = await module.balanceOf(address, tokenId);
+   * console.log(balance);
+   * ```
+   */
   public async balanceOf(
     address: string,
     tokenId: BigNumberish,
@@ -247,6 +277,27 @@ export class BundleDropModule
     return await Promise.all(tokenIds.map((t) => this.get(t.toString())));
   }
 
+  /**
+   * Create Many NFTs
+   *
+   * @remarks Create and mint NFTs.
+   *
+   * @example
+   * ```javascript
+   * // Custom metadata of the NFTs to create
+   * const metadatas = [{
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }, {
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }];
+   *
+   * await module.createBatch(metadatas);
+   * ```
+   */
   public async createBatch(
     metadatas: MetadataURIOrObject[],
   ): Promise<string[]> {
@@ -290,6 +341,25 @@ export class BundleDropModule
     ]);
   }
 
+  /**
+   * Transfer NFT
+   *
+   * @remarks Transfer an NFT from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "0x...";
+   *
+   * // The token ID of the NFT you want to send
+   * const tokenId = "0";
+   *
+   * // The number of NFTs you want to send
+   * const amount = 1;
+   *
+   * await module.transfer(toAddress, tokenId, amount);
+   * ```
+   */
   public async transfer(
     to: string,
     tokenId: BigNumberish,
@@ -531,7 +601,23 @@ export class BundleDropModule
   }
 
   /**
-   * Claim a token and send it to someone else
+   * Claim NFTs to Wallet
+   *
+   * @remarks Let the a specified wallet claim NFTs.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to claim the NFTs
+   * const address = "{{wallet_address}}";
+   *
+   * // The number of NFTs to claim
+   * const quantity = 1;
+   *
+   * // The token ID of the NFT you want to claim
+   * const tokenId = "0"
+   *
+   * await module.claimTo(tokenId, quantity, address);
+   * ```
    *
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim

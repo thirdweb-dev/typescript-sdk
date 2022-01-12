@@ -203,11 +203,9 @@ export class NFTModule
    * ```javascript
    * // Address of the wallet to get the NFTs of
    * const address = "{{wallet_address}}";
-   * const nfts = await module.getWallet(address);
+   * const nfts = await module.getOwned(address);
    * console.log(nfts);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
   public async getOwned(_address?: string): Promise<NFTMetadata[]> {
     const address = _address ? _address : await this.getSignerAddress();
@@ -239,7 +237,7 @@ export class NFTModule
    * console.log(balance);
    * ```
    *
-   * @returns The NFT metadata for all NFTs in the module.
+   * @returns The balance of the NFTs in the wallet
    */
   public async balanceOf(address: string): Promise<BigNumber> {
     return await this.readOnlyContract.balanceOf(address);
@@ -278,8 +276,6 @@ export class NFTModule
    *
    * await module.transfer(toAddress, tokenId);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
   public async transfer(
     to: string,
@@ -342,8 +338,6 @@ export class NFTModule
    *
    * await module.mintTo(toAddress, metadata);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
   public async mintTo(
     to: string,
@@ -426,8 +420,6 @@ export class NFTModule
    *
    * await module.mintBatchTo(toAddress, metadatas);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
   public async mintBatchTo(
     to: string,

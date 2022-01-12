@@ -176,8 +176,6 @@ export class BundleModule
    * const balance = await module.balanceOf(address, tokenId);
    * console.log(balance);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
   public async balanceOf(address: string, tokenId: string): Promise<BigNumber> {
     return await this.readOnlyContract.balanceOf(address, tokenId);
@@ -245,8 +243,6 @@ export class BundleModule
    *
    * await module.transfer(toAddress, tokenId, amount);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
   public async transfer(
     to: string,
@@ -297,8 +293,6 @@ export class BundleModule
    *
    * await module.createAndMint(metadataWithSupply);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
   public async createAndMint(
     metadataWithSupply: INFTBundleCreateArgs,
@@ -332,8 +326,6 @@ export class BundleModule
    *
    * await module.createAndMintBatch(metadataWithSupply);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
   public async createAndMintBatch(
     metadataWithSupply: INFTBundleCreateArgs[],
@@ -525,8 +517,6 @@ export class BundleModule
    * // Note that the connected wallet must have approval to transfer the tokens of the fromAddress
    * await module.transferBatchFrom(fromAddress, toAddress, data);
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
    */
 
   public async transferBatchFrom(

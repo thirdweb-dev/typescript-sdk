@@ -140,6 +140,19 @@ export class DropModule
     return { owner, metadata };
   }
 
+  /**
+   * Get All NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this module.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await module.getAll();
+   * console.log(nfts);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
+   */
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
@@ -221,6 +234,21 @@ export class DropModule
     return await this.sendTransaction("setDefaultSaleRecipient", [recipient]);
   }
 
+  /**
+   * Get Owned NFTs
+   *
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await module.getOwned(address);
+   * console.log(nfts);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
+   */
   public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
     const address = _address ? _address : await this.getSignerAddress();
     const balance = await this.readOnlyContract.balanceOf(address);
@@ -373,6 +401,20 @@ export class DropModule
     return await this.readOnlyContract.nextTokenIdToClaim();
   }
 
+  /**
+   * Get NFT Balance
+   *
+   * @remarks Get a wallets NFT balance (number of NFTs in this module owned by the wallet).
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to check NFT balance
+   * const address = "{{wallet_address}}"";
+   *
+   * const balance = await module.balanceOf(address);
+   * console.log(balance);
+   * ```
+   */
   public async balanceOf(address: string): Promise<BigNumber> {
     return await this.readOnlyContract.balanceOf(address);
   }
@@ -396,6 +438,22 @@ export class DropModule
     ]);
   }
 
+  /**
+   * Transfer NFT
+   *
+   * @remarks Transfer an NFT from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "{{wallet_address}}";
+   *
+   * // The token ID of the NFT you want to send
+   * const tokenId = "0";
+   *
+   * await module.transfer(toAddress, tokenId);
+   * ```
+   */
   public async transfer(
     to: string,
     tokenId: string,
@@ -683,7 +741,17 @@ export class DropModule
   }
 
   /**
-   * @beta - Parameters interface may change, proofs parameter is ignored.
+   * Can Claim
+   *
+   * @remarks Check if the drop can currently be claimed.
+   *
+   * @example
+   * ```javascript
+   * // Quantity of tokens to check if they are claimable
+   * const quantity = 1;
+   *
+   * await module.canClaim(quantity);
+   * ```
    */
   public async canClaim(
     quantity: BigNumberish,
@@ -770,7 +838,20 @@ export class DropModule
   }
 
   /**
-   * Claim a token and send it to someone else
+   * Claim NFTs to Wallet
+   *
+   * @remarks Let the a specified wallet claim NFTs.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to claim the NFTs
+   * const address = "{{wallet_address}}";
+   *
+   * // The number of NFTs to claim
+   * const quantity = 1;
+   *
+   * await module.claimTo(quantity, address);
+   * ```
    *
    * @param quantity - Quantity of the tokens you want to claim
    * @param addressToClaim - Address you want to send the token to
@@ -805,8 +886,7 @@ export class DropModule
     );
   }
 
-  /**
-   * Claim a token for yourself
+  /** Claim NFTs
    *
    * @param quantity - Quantity of the tokens you want to claim
    * @param proofs - Array of proofs
