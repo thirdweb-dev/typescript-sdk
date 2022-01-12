@@ -576,7 +576,7 @@ export class BundleDropModule
     amount: BigNumberish,
     data: BytesLike = [0],
   ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("transferFrom", [
+    return await this.sendTransaction("safeTransferFrom", [
       from,
       to,
       tokenId,
