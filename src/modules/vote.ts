@@ -180,7 +180,25 @@ export class VoteModule extends Module<VotingGovernor> {
    * ```javascript
    * // The description of the proposal you want to pass
    * const description = "This is a great proposal - vote for it!"
-   * const proposal = await module.propose(description);
+   * // You can (optionally) pass in contract calls that will executed when the proposal is executed.
+   * const executions = [
+   *   {
+   *     // The contract you want to make a call to
+   *     toAddress: "0x...",
+   *     // The amount of the native currency to send in this transaction
+   *     nativeTokenValue: 0,
+   *     // Transaction data that will be executed when the proposal is executed
+   *     // This is an example transfer transaction with a token module (which you would need to setup in code)
+   *     transactionData: tokenModule.contract.interface.encodeFunctionData(
+   *       "transfer", [
+   *         fromAddress,
+   *         amount,
+   *       ]
+   *     ),
+   *   }
+   * ]
+   *
+   * const proposal = await module.propose(description, executions);
    * ```
    *
    * @param description - The description of the proposal.
@@ -211,8 +229,21 @@ export class VoteModule extends Module<VotingGovernor> {
   }
 
   /**
-   * Vote on a proposal.
+   * Vote
    *
+   * @remarks Vote on an active proposal
+   *
+   * @example
+   * ```javascript
+   * // The proposal ID of the proposal you want to vote on
+   * const proposalId = "0";
+   * // The vote type you want to cast, can be VoteType.Against, VoteType.For, or VoteType.Abstain
+   * const voteType = VoteType.For;
+   * // The (optional) reason for the vote
+   * const reason = "I like this proposal!";
+   *
+   * await module.vote(proposalId, voteType, reason);
+   * ```
    * @param proposalId - The proposal to cast a vote on.
    * @param voteType - The position the voter is taking on their vote.
    * @param reason - (optional) The reason for the vote.
@@ -228,7 +259,19 @@ export class VoteModule extends Module<VotingGovernor> {
   }
 
   /**
-   * Checks if an account has voted on a proposal
+   * Check If Wallet Voted
+   *
+   * @remarks Check if a specified wallet has voted a specific proposal
+   *
+   * @example
+   * ```javascript
+   * // The proposal ID of the proposal you want to check
+   * const proposalId = "0";
+   * // The address of the wallet you want to check to see if they voted
+   * const address = "{{wallet_address}}";
+   *
+   * await module.hasVoted(proposalId, address);
+   * ```
    *
    * @param proposalId - The unique identifier of a proposal .
    * @param account - (optional) wallet account address. Defaults to connected signer.
@@ -245,7 +288,16 @@ export class VoteModule extends Module<VotingGovernor> {
   }
 
   /**
-   * Once the voting period has ended, call this method to execute the executables in the proposal.
+   * Execute Proposal
+   *
+   * @remarks Execute the related transactions for a proposal if the proposal succeeded.
+   *
+   * @example
+   * ```javascript
+   * // The proposal ID ofthe proposal you want to execute
+   * const proposalId = "0"
+   * await module.execute(proposalId);
+   * ```
    *
    * @param proposalId - The proposal id to execute.
    */
@@ -266,7 +318,17 @@ export class VoteModule extends Module<VotingGovernor> {
   }
 
   /**
-   * Check to see if a proposal can be executed.
+   * Can Execute
+   *
+   * @remarks Check if a proposal can be executed (if the proposal has succeeded).
+   *
+   * @example
+   * ```javascript
+   * // The proposal ID of the proposal you want to check
+   * const proposalId = "0";
+   * const canExecute = await module.canExecute(proposalId);
+   * console.log(canExecute);
+   * ```
    *
    * @param proposalId - The proposal ID to check.
    * @returns - True if the proposal can be executed, false otherwise.
