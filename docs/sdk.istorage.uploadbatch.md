@@ -9,14 +9,14 @@ Uploads a folder to storage.
 <b>Signature:</b>
 
 ```typescript
-uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
+uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStringWithName[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  files | Buffer\[\] \| string\[\] \| FileOrBuffer\[\] \| File\[\] |  |
+|  files | Buffer\[\] \| string\[\] \| FileOrBuffer\[\] \| File\[\] \| BufferOrStringWithName\[\] |  |
 |  contractAddress | string | Optional. The contract address the data belongs to. |
 |  uploadFileStartNumber | number | Optional. The first file file name begins with. |
 

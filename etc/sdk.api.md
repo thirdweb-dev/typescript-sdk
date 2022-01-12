@@ -278,7 +278,7 @@ export interface BundleMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    ownedByAddress: number;
+    ownedByAddress: BigNumber;
     // (undocumented)
     supply: BigNumber;
     // (undocumented)
@@ -728,6 +728,12 @@ export class DropModuleMetadata extends CommonModuleMetadata {
     symbol?: string;
 }
 
+// @public (undocumented)
+export class DuplicateFileNameError extends Error {
+    // @internal
+    constructor(fileName: string);
+}
+
 // @public
 export class DuplicateLeafsError extends Error {
     constructor(message?: string);
@@ -970,14 +976,12 @@ export class IpfsStorage implements IStorage {
     resolveFullUrl(ipfsHash: string): string;
     // (undocumented)
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    // (undocumented)
-    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
-    // Warning: (ae-forgotten-export) The symbol "FileOrBufferWithNames" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "BufferOrStringWithName" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    uploadBatchWithFileNames(files: FileOrBufferWithNames[], contractAddress?: string): Promise<string>;
+    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStringWithName[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
     // (undocumented)
-    uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
+    uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, _signerAddress?: string): Promise<string>;
     // @internal (undocumented)
     uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, startFileNumber?: number): Promise<string>;
 }
@@ -1047,9 +1051,7 @@ export interface IStorage {
     getUploadToken(contractAddress: string): Promise<string>;
     resolveFullUrl(hash: string): string;
     upload(data: string | File | FileOrBuffer | Buffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
-    // (undocumented)
-    uploadBatchWithFileNames(files: FileOrBufferWithNames[], contractAddress?: string): Promise<string>;
+    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStringWithName[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
     uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
 }
