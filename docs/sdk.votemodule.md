@@ -4,7 +4,7 @@
 
 ## VoteModule class
 
-Access this module by calling 
+Create a decentralized organization for token holders to vote on proposals.
 
 <b>Signature:</b>
 
@@ -12,6 +12,16 @@ Access this module by calling
 export declare class VoteModule extends Module<VotingGovernor> 
 ```
 <b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;VotingGovernor&gt;
+
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+const sdk = new ThirdwebSDK({{wallet_provider}});
+const module = sdk.getVoteModule("{{module_address}}");
+```
 
 ## Properties
 

@@ -4,6 +4,8 @@
 
 ## TokenModule.allowanceOf() method
 
+Get Token Allowance
+
 <b>Signature:</b>
 
 ```typescript
@@ -20,4 +22,24 @@ allowanceOf(owner: string, spender: string): Promise<BigNumber>;
 <b>Returns:</b>
 
 Promise&lt;BigNumber&gt;
+
+The allowance of one wallet over anothers funds.
+
+## Remarks
+
+Get the allowance of one wallet over another's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the connected wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet who owns the funds
+const address = "{{wallet_address}}"";
+
+// Address of the wallet to check token allowance
+const otherAddress = "{{wallet_address}}"";
+
+const allowance = await module.allowanceOf(otherAddress);
+console.log(allowance);
+```
 

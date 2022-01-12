@@ -4,6 +4,8 @@
 
 ## NFTModule.transfer() method
 
+Transfer NFT
+
 <b>Signature:</b>
 
 ```typescript
@@ -20,4 +22,21 @@ transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
 <b>Returns:</b>
 
 Promise&lt;TransactionReceipt&gt;
+
+## Remarks
+
+Transfer an NFT from the connected wallet to another wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet you want to send the NFT to
+const toAddress = "{{wallet_address}}";
+
+// The token ID of the NFT you want to send
+const tokenId = "0";
+
+await module.transfer(toAddress, tokenId);
+```
 

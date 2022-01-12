@@ -4,9 +4,6 @@
 
 ## DropModule.lazyMintBatch() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
-
 > Warning: This API is now obsolete.
 > 
 > - The function has been deprecated. Use `mintBatch` instead.

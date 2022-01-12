@@ -4,8 +4,7 @@
 
 ## DropModule.transfer() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Transfer NFT
 
 <b>Signature:</b>
 
@@ -23,4 +22,21 @@ transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
 <b>Returns:</b>
 
 Promise&lt;TransactionReceipt&gt;
+
+## Remarks
+
+Transfer an NFT from the connected wallet to another wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet you want to send the NFT to
+const toAddress = "{{wallet_address}}";
+
+// The token ID of the NFT you want to send
+const tokenId = "0";
+
+await module.transfer(toAddress, tokenId);
+```
 

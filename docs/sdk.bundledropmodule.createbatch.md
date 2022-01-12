@@ -4,8 +4,7 @@
 
 ## BundleDropModule.createBatch() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Create Many NFTs
 
 <b>Signature:</b>
 
@@ -22,4 +21,26 @@ createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
 <b>Returns:</b>
 
 Promise&lt;string\[\]&gt;
+
+## Remarks
+
+Create and mint NFTs.
+
+## Example
+
+
+```javascript
+// Custom metadata of the NFTs to create
+const metadatas = [{
+  name: "Cool NFT",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+}, {
+  name: "Cool NFT",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+}];
+
+await module.createBatch(metadatas);
+```
 

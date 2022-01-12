@@ -4,7 +4,7 @@
 
 ## MarketplaceModule class
 
-Access this module by calling [ThirdwebSDK.getMarketplaceModule()](./sdk.thirdwebsdk.getmarketplacemodule.md)
+Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
 
 <b>Signature:</b>
 
@@ -14,6 +14,16 @@ export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> impl
 <b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Marketplace&gt;
 
 <b>Implements:</b> [IMarketplace](./sdk.imarketplace.md)
+
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+const sdk = new ThirdwebSDK({{wallet_provider}});
+const module = sdk.getMarketplaceModule("{{module_address}}");
+```
 
 ## Properties
 
@@ -30,13 +40,13 @@ export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> impl
 |  [buyoutAuctionListing(listingId)](./sdk.marketplacemodule.buyoutauctionlisting.md) |  |  |
 |  [buyoutDirectListing(\_buyout)](./sdk.marketplacemodule.buyoutdirectlisting.md) |  |  |
 |  [buyoutListing(listingId, quantityDesired)](./sdk.marketplacemodule.buyoutlisting.md) |  |  |
-|  [cancelAuctionListing(listingId)](./sdk.marketplacemodule.cancelauctionlisting.md) |  |  |
-|  [cancelDirectListing(listingId)](./sdk.marketplacemodule.canceldirectlisting.md) |  |  |
+|  [cancelAuctionListing(listingId)](./sdk.marketplacemodule.cancelauctionlisting.md) |  | Cancel Auction Listing |
+|  [cancelDirectListing(listingId)](./sdk.marketplacemodule.canceldirectlisting.md) |  | Cancel Direct Listing |
 |  [closeAuctionListing(listingId, closeFor)](./sdk.marketplacemodule.closeauctionlisting.md) |  |  |
-|  [createAuctionListing(listing)](./sdk.marketplacemodule.createauctionlisting.md) |  |  |
-|  [createDirectListing(listing)](./sdk.marketplacemodule.createdirectlisting.md) |  |  |
+|  [createAuctionListing(listing)](./sdk.marketplacemodule.createauctionlisting.md) |  | Create Auction |
+|  [createDirectListing(listing)](./sdk.marketplacemodule.createdirectlisting.md) |  | Create Direct Listing |
 |  [getActiveOffer(listingId, address)](./sdk.marketplacemodule.getactiveoffer.md) |  |  |
-|  [getAllListings()](./sdk.marketplacemodule.getalllistings.md) |  |  |
+|  [getAllListings()](./sdk.marketplacemodule.getalllistings.md) |  | Get Listings |
 |  [getAuctionListing(listingId)](./sdk.marketplacemodule.getauctionlisting.md) |  |  |
 |  [getBidBufferBps()](./sdk.marketplacemodule.getbidbufferbps.md) |  |  |
 |  [getDirectListing(listingId)](./sdk.marketplacemodule.getdirectlisting.md) |  |  |

@@ -4,6 +4,8 @@
 
 ## MarketplaceModule.cancelDirectListing() method
 
+Cancel Direct Listing
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,18 @@ cancelDirectListing(listingId: BigNumberish): Promise<void>;
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Cancel a direct listing on the marketplace
+
+## Example
+
+
+```javascript
+// The listing ID of the direct listing you want to cancel
+const listingId = "0"
+
+await module.cancelDirectListing(listingId);
+```
 

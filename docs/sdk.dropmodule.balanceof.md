@@ -4,8 +4,7 @@
 
 ## DropModule.balanceOf() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Get NFT Balance
 
 <b>Signature:</b>
 
@@ -22,4 +21,19 @@ balanceOf(address: string): Promise<BigNumber>;
 <b>Returns:</b>
 
 Promise&lt;BigNumber&gt;
+
+## Remarks
+
+Get a wallets NFT balance (number of NFTs in this module owned by the wallet).
+
+## Example
+
+
+```javascript
+// Address of the wallet to check NFT balance
+const address = "{{wallet_address}}"";
+
+const balance = await module.balanceOf(address);
+console.log(balance);
+```
 

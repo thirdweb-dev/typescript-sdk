@@ -4,6 +4,8 @@
 
 ## MarketplaceModule.getAllListings() method
 
+Get Listings
+
 <b>Signature:</b>
 
 ```typescript
@@ -12,4 +14,20 @@ getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
 <b>Returns:</b>
 
 Promise&lt;([AuctionListing](./sdk.auctionlisting.md) \| [DirectListing](./sdk.directlisting.md)<!-- -->)\[\]&gt;
+
+## Remarks
+
+Get all listings in the marketplace.
+
+## Example
+
+
+```javascript
+// Get all listings
+const listings = await module.getAllListings();
+console.log(listings);
+
+// Get only the active listings
+const activeListings = listings.filter((listing) => listing.quantity > 0);
+```
 

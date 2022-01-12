@@ -4,6 +4,8 @@
 
 ## NFTModule.mintTo() method
 
+Mint NFT
+
 <b>Signature:</b>
 
 ```typescript
@@ -20,4 +22,25 @@ mintTo(to: string, metadata: MetadataURIOrObject): Promise<NFTMetadata>;
 <b>Returns:</b>
 
 Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->&gt;
+
+## Remarks
+
+Mint an NFT to a specified wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet you want to mint the NFT to
+const toAddress = "{{wallet_address}}"
+
+// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
+const metadata = {
+  name: "Cool NFT",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+}
+
+await module.mintTo(toAddress, metadata);
+```
 

@@ -4,8 +4,7 @@
 
 ## BundleModule.createAndMintBatch() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Create &amp; Mint Many NFTs
 
 <b>Signature:</b>
 
@@ -22,4 +21,32 @@ createAndMintBatch(metadataWithSupply: INFTBundleCreateArgs[]): Promise<BundleMe
 <b>Returns:</b>
 
 Promise&lt;[BundleMetadata](./sdk.bundlemetadata.md)<!-- -->\[\]&gt;
+
+## Remarks
+
+Create and mint many different NFTs.
+
+## Example
+
+
+```javascript
+// Custom metadata and supplies of your NFTs
+const metadataWithSupply = [{
+  supply: 1, // The number of this NFT you want to mint
+  metadata: {
+    name: "Cool NFT #1",
+    description: "This is a cool NFT",
+    image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+  },
+}, {
+  supply: 1,
+  metadata: {
+    name: "Cool NFT #2",
+    description: "This is a cool NFT",
+    image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+  },
+}];
+
+await module.createAndMintBatch(metadataWithSupply);
+```
 
