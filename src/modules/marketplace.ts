@@ -264,6 +264,21 @@ export class MarketplaceModule
     return overrides;
   }
 
+  /**
+   * Bid On Auction
+   *
+   * @remarks Make a bid on an auction listings
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the asset you want to bid on
+   * const listingId = 0;
+   * // The price you are willing to bid for a single token of the listing
+   * const bidPricePerToken = 1;
+   *
+   * await module.buyoutDirectListing(listingId, bidPricePerToken);
+   * ```
+   */
   public async makeAuctionListingBid(bid: {
     listingId: BigNumberish;
     pricePerToken: BigNumberish;
@@ -767,6 +782,20 @@ export class MarketplaceModule
     await this.sendTransaction("acceptOffer", [listingId, addressOfOfferor]);
   }
 
+  /**
+   * Buyout Auction
+   *
+   * @remarks Buy a specific direct listing from the marketplace.
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the asset you want to buy
+   * const listingId = 0;
+   *
+   * const balance = await module.balanceOf(listingId, quantity);
+   * console.log(balance);
+   * ```
+   */
   public async buyoutAuctionListing(listingId: BigNumberish): Promise<void> {
     const listing = await this.validateAuctionListing(
       BigNumber.from(listingId),
@@ -778,6 +807,21 @@ export class MarketplaceModule
     });
   }
 
+  /**
+   * Buy Listing
+   *
+   * @remarks Buy a specific direct listing from the marketplace.
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the asset you want to buy
+   * const listingId = 0;
+   * // Quantity of the asset you want to buy
+   * const quantity = 1;
+   *
+   * await module.buyoutDirectListing(listingId, quantity);
+   * ```
+   */
   public async buyoutDirectListing(_buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;

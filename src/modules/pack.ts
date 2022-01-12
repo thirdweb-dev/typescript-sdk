@@ -119,6 +119,19 @@ export class PackModule
     return PackModule.moduleType;
   }
 
+  /**
+   * Open Pack
+   *
+   * @remarks Open a pack to burn it and obtain the reward asset inside.
+   *
+   * @example
+   * ```javascript
+   * // The pack ID of the asset you want to buy
+   * const packId = "0";
+   * const rewards = await module.open(packId);
+   * console.log(rewards);
+   * ```
+   */
   public async open(packId: string): Promise<NFTMetadata[]> {
     const receipt = await this.sendTransaction("openPack", [packId]);
     const logs = this.parseLogs<PackOpenRequestEvent>(
@@ -189,6 +202,19 @@ export class PackModule
     return entity;
   }
 
+  /**
+   * Get Pack Data
+   *
+   * @remarks Get data associated with every pack in this module.
+   *
+   * @example
+   * ```javascript
+   * const packs = await module.getAll();
+   * console.log(packs);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
+   */
   public async getAll(): Promise<PackMetadata[]> {
     const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
     return await Promise.all(
@@ -217,7 +243,22 @@ export class PackModule
     }));
   }
 
-  // passthrough to the contract
+  /**
+   * Get Pack Balance
+   *
+   * @remarks Get a wallets pack balance (number of a specific packs in this module owned by the wallet).
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to check pack balance
+   * const address = "{{wallet_address}}"";
+   * // The token ID of the pack you want to check the wallets balance of
+   * const tokenId = "0"
+   *
+   * const balance = await module.balanceOf(address, tokenId);
+   * console.log(balance);
+   * ```
+   */
   public async balanceOf(address: string, tokenId: string): Promise<BigNumber> {
     return await this.readOnlyContract.balanceOf(address, tokenId);
   }
@@ -234,6 +275,25 @@ export class PackModule
     await this.sendTransaction("setApprovalForAll", [operator, approved]);
   }
 
+  /**
+   * Transfer NFT
+   *
+   * @remarks Transfer an NFT from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "0x...";
+   *
+   * // The token ID of the NFT you want to send
+   * const tokenId = "0";
+   *
+   * // The number of NFTs you want to send
+   * const amount = 1;
+   *
+   * await module.transfer(toAddress, tokenId, amount);
+   * ```
+   */
   public async transfer(to: string, tokenId: string, amount: BigNumber) {
     await this.sendTransaction("safeTransferFrom", [
       await this.getSignerAddress(),
@@ -246,7 +306,37 @@ export class PackModule
 
   // owner functions
   /**
-   * Create a pack from a set of assets.
+   * Create Pack
+   *
+   * @remarks Create a new pack with its own rewards.
+   *
+   * @example
+   * ```javascript
+   * // Data to create the pack
+   * const pack = {
+   *   // The address of the contract that holds the rewards you want to include
+   *   assetContract: "0x...",
+   *   // The metadata of the pack
+   *   metadata: {
+   *     name: "Cool Pack",
+   *     description: "This is a cool pack",
+   *     // This can be an image url or image file
+   *     image: readFileSync("path/to/image.png"),
+   *   },
+   *   // The NFTs you want to include in the pack
+   *   assets: [
+   *     {
+   *       tokenId: 0, // The token ID of the asset you want to add
+   *       amount: 1, // The amount of the asset you want to add
+   *     }, {
+   *       tokenId: 1,
+   *       amount: 1,
+   *     }
+   *   ],
+   * };
+   *
+   * await module.create(pack);
+   * ```
    *
    * @param args - Args for the pack creation
    * @returns - The newly created pack metadata
@@ -318,7 +408,6 @@ export class PackModule
     ]);
   }
 
-  // owner functions
   public async getLinkBalance(): Promise<CurrencyValue> {
     const chainId = await this.getChainID();
     const chainlink = ChainlinkVrf[chainId];
