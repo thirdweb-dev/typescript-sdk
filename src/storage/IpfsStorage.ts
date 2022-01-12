@@ -1,7 +1,6 @@
 import {
   DuplicateFileNameError,
   FetchError,
-  FileNameMissingError,
   UploadError,
 } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
