@@ -58,6 +58,13 @@ export async function getContractMetadata(
   const uri = await contract.contractURI();
   const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
   const meta = await fetch(gatewayUrl);
+
+  if (!meta.ok) {
+    throw new Error(
+      `Gateway did not return metadata, instead returned:\n ${meta.status} - ${meta.statusText}`,
+    );
+  }
+
   try {
     let json = await meta.json();
     if (resolveGateway) {
@@ -69,7 +76,7 @@ export async function getContractMetadata(
     return entity;
   } catch (e) {
     throw new Error(
-      `Gateway did not return metadata, instead returned:\n ${await meta.text()}`,
+      `Gateway did not return metadata, instead returned:\n ${meta.status} - ${meta.statusText}`,
     );
   }
 }
