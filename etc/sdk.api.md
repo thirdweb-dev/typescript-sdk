@@ -728,6 +728,12 @@ export class DropModuleMetadata extends CommonModuleMetadata {
     symbol?: string;
 }
 
+// @public (undocumented)
+export class DuplicateFileNameError extends Error {
+    // @internal
+    constructor(fileName: string);
+}
+
 // @public
 export class DuplicateLeafsError extends Error {
     constructor(message?: string);
@@ -742,6 +748,12 @@ export class FetchError extends Error {
     constructor(message: string, innerError?: Error);
     // (undocumented)
     innerError?: Error;
+}
+
+// @public (undocumented)
+export class FileNameMissingError extends Error {
+    // @internal
+    constructor();
 }
 
 // @public
@@ -964,10 +976,12 @@ export class IpfsStorage implements IStorage {
     resolveFullUrl(ipfsHash: string): string;
     // (undocumented)
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "BufferOrStringWithName" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
+    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStringWithName[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
     // (undocumented)
-    uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
+    uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, _signerAddress?: string): Promise<string>;
     // @internal (undocumented)
     uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, startFileNumber?: number): Promise<string>;
 }
@@ -1037,7 +1051,7 @@ export interface IStorage {
     getUploadToken(contractAddress: string): Promise<string>;
     resolveFullUrl(hash: string): string;
     upload(data: string | File | FileOrBuffer | Buffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
+    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStringWithName[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
     uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
 }

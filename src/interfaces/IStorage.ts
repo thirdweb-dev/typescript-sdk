@@ -1,5 +1,6 @@
 import { MetadataURIOrObject } from "../core/types";
 import FileOrBuffer from "../types/FileOrBuffer";
+import { BufferOrStringWithName } from "../types/BufferOrStringWithName";
 
 /* eslint-disable semi */
 export interface IStorage {
@@ -29,7 +30,12 @@ export interface IStorage {
    * @returns - The CID of the uploaded folder.
    */
   uploadBatch(
-    files: Buffer[] | string[] | FileOrBuffer[] | File[],
+    files:
+      | Buffer[]
+      | string[]
+      | FileOrBuffer[]
+      | File[]
+      | BufferOrStringWithName[],
     contractAddress?: string,
     uploadFileStartNumber?: number,
   ): Promise<string>;

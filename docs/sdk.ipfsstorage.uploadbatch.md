@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
+uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStringWithName[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  files | Buffer\[\] \| string\[\] \| FileOrBuffer\[\] \| File\[\] |  |
+|  files | Buffer\[\] \| string\[\] \| FileOrBuffer\[\] \| File\[\] \| BufferOrStringWithName\[\] |  |
 |  contractAddress | string |  |
 |  fileStartNumber | number |  |
 

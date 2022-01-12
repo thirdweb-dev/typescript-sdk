@@ -52,33 +52,30 @@ class ClaimConditionFactory {
   public async buildConditionsForDropV1(): Promise<PublicClaimCondition[]> {
     // v1 startTimestamp takes seconds from now.
     // v2 takes unix timestamp in seconds.
-    let sorted: PublicClaimCondition[] = [];
-    await Promise.all(
+    let conditions = await Promise.all(
       this.phases.map((c) => c.buildPublicClaimCondition()),
-    )
-      .then((c) => {
-        return c.map((c) => {
-          const now = Math.floor(Date.now() / 1000);
-          return {
-            ...c,
-            startTimestamp: c.startTimestamp.lt(now)
-              ? BigNumber.from(0)
-              : c.startTimestamp.sub(now),
-          };
-        });
-      })
-      .then((publicClaimConditions) => {
-        // TODO: write test to ensure they're sorted by start time, earliest first
-        sorted = publicClaimConditions.sort((a, b) => {
-          if (a.startTimestamp.eq(b.startTimestamp)) {
-            return 0;
-          } else if (a.startTimestamp.gt(b.startTimestamp)) {
-            return 1;
-          } else {
-            return -1;
-          }
-        });
-      });
+    );
+
+    conditions = conditions.map((c) => {
+      const now = Math.floor(Date.now() / 1000);
+      return {
+        ...c,
+        startTimestamp: c.startTimestamp.lt(now)
+          ? BigNumber.from(0)
+          : c.startTimestamp.sub(now),
+      };
+    });
+
+    // TODO: write test to ensure they're sorted by start time, earliest first
+    const sorted = conditions.sort((a, b) => {
+      if (a.startTimestamp.eq(b.startTimestamp)) {
+        return 0;
+      } else if (a.startTimestamp.gt(b.startTimestamp)) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
 
     return sorted;
   }

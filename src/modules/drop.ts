@@ -488,7 +488,6 @@ export class DropModule
       return this.v1Module.setClaimConditions(factory);
     }
     const conditions = (await factory.buildConditions()).map((c) => ({
-
       startTimestamp: c.startTimestamp,
       maxClaimableSupply: c.maxMintSupply,
       supplyClaimed: 0,
