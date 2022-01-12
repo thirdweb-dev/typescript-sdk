@@ -30,7 +30,7 @@ export interface CollectionMetadata {
   creator: string;
   supply: BigNumber;
   metadata: NFTMetadata;
-  ownedByAddress: number;
+  ownedByAddress: BigNumber;
 }
 
 /**

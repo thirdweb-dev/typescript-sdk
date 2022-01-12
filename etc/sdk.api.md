@@ -476,7 +476,7 @@ export interface CollectionMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    ownedByAddress: number;
+    ownedByAddress: BigNumber;
     // (undocumented)
     supply: BigNumber;
 }
