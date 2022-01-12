@@ -51,8 +51,18 @@ export interface CreatePublicMintCondition {
 }
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getDropModule}
- * @beta
+ * Setup a collection of one-of-one NFTs that are minted as users claim them.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * const module = sdk.getDropModule("{{module_address}}");
+ * ```
+ *
+ * @public
  */
 export class DropModule
   extends ModuleWithRoles<DropV2>

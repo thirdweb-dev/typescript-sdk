@@ -71,8 +71,18 @@ export interface IPackBatchArgs {
 }
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getPackModule}
- * @beta
+ * Create lootboxes of NFTs with rarity based open mechanics.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * const module = sdk.getPackModule("{{module_address}}");
+ * ```
+ *
+ * @public
  */
 export class PackModule
   extends ModuleWithRoles<PackContract>

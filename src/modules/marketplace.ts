@@ -43,9 +43,18 @@ import { DirectListing } from "../types/marketplace/DirectListing";
 const MAX_BPS = 10000;
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getMarketplaceModule}
+ * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * const module = sdk.getMarketplaceModule("{{module_address}}");
+ * ```
+ *
  * @public
- * @beta
  */
 export class MarketplaceModule
   extends ModuleWithRoles<Marketplace>

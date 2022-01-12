@@ -50,8 +50,18 @@ export interface BundleDropMetadata {
 }
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getBundleDropModule}
- * @beta
+ * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * const module = sdk.getBundleDropModule("{{module_address}}");
+ * ```
+ *
+ * @public
  */
 export class BundleDropModule
   extends ModuleWithRoles<BundleDrop>

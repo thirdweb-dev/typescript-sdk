@@ -27,9 +27,17 @@ export interface VoteSettings {
 }
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getVoteModule}
+ * Create a decentralized organization for token holders to vote on proposals.
  *
- * @alpha
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * const module = sdk.getVoteModule("{{module_address}}");
+ * ```
+ *
  * @public
  */
 export class VoteModule extends Module<VotingGovernor> {

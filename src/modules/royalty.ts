@@ -80,9 +80,18 @@ export interface ISplitsModule {
 }
 
 /**
+ * Create custom royalty splits to distribute funds.
  *
- * Access this module by calling {@link ThirdwebSDK.getSplitsModule}
- * @alpha
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * const module = sdk.getSplitsModule("{{module_address}}");
+ * ```
+ *
+ * @public
  */
 export class SplitsModule extends Module<Royalty> implements ISplitsModule {
   public static moduleType: ModuleType = ModuleType.SPLITS as const;
