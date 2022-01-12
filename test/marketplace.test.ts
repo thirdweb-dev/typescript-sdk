@@ -216,6 +216,37 @@ describe("Marketplace Module", async () => {
       console.log(listings);
       assert(listings.length > 0);
     });
+    it("should paginate properly", async () => {
+      const listings = await marketplaceModule.getAllListings({
+        start: 0,
+        count: 1,
+      });
+      console.log(listings);
+      assert.equal(listings.length, 1, "pagination doesn't work");
+    });
+
+    it("should filter sellers properly", async () => {
+      const listings = await marketplaceModule.getAllListings({
+        seller: "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+      });
+      console.log(listings);
+      assert.equal(listings.length, 2, "seller filter doesn't work");
+    });
+    it("should filter asset contract properly", async () => {
+      const listings = await marketplaceModule.getAllListings({
+        tokenContract: "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6",
+      });
+      console.log(listings);
+      assert.equal(listings.length, 2, "seller filter doesn't work");
+    });
+    it("should filter asset contract with token id properly", async () => {
+      const listings = await marketplaceModule.getAllListings({
+        tokenContract: "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6",
+        tokenId: 1,
+      });
+      console.log(listings);
+      assert.equal(listings.length, 1, "seller filter doesn't work");
+    });
 
     it("should return a direct listing", async () => {
       const listing = (await marketplaceModule.getListing(

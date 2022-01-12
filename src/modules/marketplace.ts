@@ -39,6 +39,13 @@ import {
   Offer,
 } from "../types";
 import { DirectListing } from "../types/marketplace/DirectListing";
+export interface MarketplaceFilter {
+  seller?: string;
+  tokenContract?: string;
+  tokenId?: number;
+  start?: number;
+  count?: number;
+}
 
 const MAX_BPS = 10000;
 
@@ -890,11 +897,47 @@ export class MarketplaceModule
     }
   }
 
-  public async getAllListings(): Promise<(AuctionListing | DirectListing)[]> {
+  public async getAllListings(
+    filter?: MarketplaceFilter,
+  ): Promise<(AuctionListing | DirectListing)[]> {
+    let rawListings = Array.from(
+      Array((await this.readOnlyContract.totalListings()).toNumber()).keys(),
+    );
+    if (filter) {
+      if (filter.seller) {
+        rawListings = rawListings.filter(
+          (seller) =>
+            seller.toString().toLowerCase() ===
+            filter?.seller?.toString().toLowerCase(),
+        );
+      }
+      if (filter.tokenContract) {
+        if (!filter.tokenId) {
+          rawListings = rawListings.filter(
+            (tokenContract) =>
+              tokenContract.toString().toLowerCase() ===
+              filter?.tokenContract?.toString().toLowerCase(),
+          );
+        } else {
+          rawListings = rawListings.filter(
+            (tokenContract, tokenId) =>
+              tokenContract.toString().toLowerCase() ===
+                filter?.tokenContract?.toString().toLowerCase() &&
+              (tokenId as unknown as BigNumber).toNumber() === filter?.tokenId,
+          );
+        }
+      }
+      if (filter.start !== undefined) {
+        const start = filter.start;
+        rawListings = rawListings.filter((id) => parseInt(id as any) >= start);
+        if (filter.count !== undefined && rawListings.length > filter.count) {
+          rawListings = rawListings.slice(0, filter.count);
+        }
+      }
+    }
+
     const listings = await Promise.all(
-      Array.from(
-        Array((await this.readOnlyContract.totalListings()).toNumber()).keys(),
-      ).map(async (i) => {
+      rawListings.map(async (i) => {
         let listing;
 
         try {
