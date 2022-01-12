@@ -65,7 +65,7 @@ describe("IPFS Uploads", async () => {
     });
     assert.equal(
       upload,
-      "ipfs://bafkreifivlt2emsugvh7pbeluwneqtkxebn73qytd7ulsipsgzrkk2liiy",
+      "ipfs://QmYKJLPfwKduSfWgdLLt49SE6LvzkGzxeYMCkhXWbpJam7/0",
     );
   });
 
@@ -75,7 +75,7 @@ describe("IPFS Uploads", async () => {
     });
     assert.equal(
       upload,
-      "ipfs://bafkreih6i5vu3ods5zz3c7j3f6ad5nt7fkoamsmbxpypl54zwdm4vsu4ju",
+      "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
     );
   });
 
