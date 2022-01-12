@@ -4,8 +4,7 @@
 
 ## DropModule.getAll() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Get All NFTs
 
 <b>Signature:</b>
 
@@ -22,4 +21,18 @@ getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
 <b>Returns:</b>
 
 Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt;
+
+The NFT metadata for all NFTs in the module.
+
+## Remarks
+
+Get all the data associated with every NFT in this module.
+
+## Example
+
+
+```javascript
+const nfts = await module.getAll();
+console.log(nfts);
+```
 

@@ -4,10 +4,7 @@
 
 ## BundleDropModule class
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
-
-Access this module by calling [ThirdwebSDK.getBundleDropModule()](./sdk.thirdwebsdk.getbundledropmodule.md)
+Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
 
 <b>Signature:</b>
 
@@ -18,50 +15,60 @@ export declare class BundleDropModule extends ModuleWithRoles<BundleDrop> implem
 
 <b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+const sdk = new ThirdwebSDK({{wallet_provider}});
+const module = sdk.getBundleDropModule("{{module_address}}");
+```
+
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [moduleType](./sdk.bundledropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
-|  [roles](./sdk.bundledropmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] | <b><i>(BETA)</i></b> |
+|  [moduleType](./sdk.bundledropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [roles](./sdk.bundledropmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [balance(tokenId)](./sdk.bundledropmodule.balance.md) |  | <b><i>(BETA)</i></b> |
-|  [balanceOf(address, tokenId)](./sdk.bundledropmodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
-|  [burn(tokenId, amount)](./sdk.bundledropmodule.burn.md) |  | <b><i>(BETA)</i></b> |
-|  [canClaim(tokenId, quantity, addressToCheck)](./sdk.bundledropmodule.canclaim.md) |  | <b><i>(BETA)</i></b> |
-|  [claim(tokenId, quantity, proofs)](./sdk.bundledropmodule.claim.md) |  | <b><i>(BETA)</i></b> Claim a token to yourself |
-|  [claimTo(tokenId, quantity, addressToClaim, proofs)](./sdk.bundledropmodule.claimto.md) |  | <b><i>(BETA)</i></b> Claim a token and send it to someone else |
-|  [createBatch(metadatas)](./sdk.bundledropmodule.createbatch.md) |  | <b><i>(BETA)</i></b> |
-|  [get(tokenId)](./sdk.bundledropmodule.get.md) |  | <b><i>(BETA)</i></b> |
-|  [getActiveClaimCondition(tokenId)](./sdk.bundledropmodule.getactiveclaimcondition.md) |  | <b><i>(BETA)</i></b> |
-|  [getAll()](./sdk.bundledropmodule.getall.md) |  | <b><i>(BETA)</i></b> |
-|  [getAllClaimConditions(tokenId)](./sdk.bundledropmodule.getallclaimconditions.md) |  | <b><i>(BETA)</i></b> |
+|  [balance(tokenId)](./sdk.bundledropmodule.balance.md) |  |  |
+|  [balanceOf(address, tokenId)](./sdk.bundledropmodule.balanceof.md) |  | Get NFT Balance |
+|  [burn(tokenId, amount)](./sdk.bundledropmodule.burn.md) |  |  |
+|  [canClaim(tokenId, quantity, addressToCheck)](./sdk.bundledropmodule.canclaim.md) |  |  |
+|  [claim(tokenId, quantity, proofs)](./sdk.bundledropmodule.claim.md) |  | Claim a token to yourself |
+|  [claimTo(tokenId, quantity, addressToClaim, proofs)](./sdk.bundledropmodule.claimto.md) |  | Claim NFTs to Wallet |
+|  [createBatch(metadatas)](./sdk.bundledropmodule.createbatch.md) |  | Create Many NFTs |
+|  [get(tokenId)](./sdk.bundledropmodule.get.md) |  |  |
+|  [getActiveClaimCondition(tokenId)](./sdk.bundledropmodule.getactiveclaimcondition.md) |  |  |
+|  [getAll()](./sdk.bundledropmodule.getall.md) |  | Get NFT Data |
+|  [getAllClaimConditions(tokenId)](./sdk.bundledropmodule.getallclaimconditions.md) |  |  |
 |  [getAllClaimerAddresses(tokenId)](./sdk.bundledropmodule.getallclaimeraddresses.md) |  | <b><i>(BETA)</i></b> Pulls the list of all addresses that have claimed a particular token<!-- -->- This can be very slow for large numbers of token holders |
-|  [getClaimConditionFactory()](./sdk.bundledropmodule.getclaimconditionfactory.md) |  | <b><i>(BETA)</i></b> Creates a claim condition factory |
-|  [getClaimConditionsFactory()](./sdk.bundledropmodule.getclaimconditionsfactory.md) |  | <b><i>(BETA)</i></b> |
-|  [getClaimIneligibilityReasons(tokenId, quantity, addressToCheck)](./sdk.bundledropmodule.getclaimineligibilityreasons.md) |  | <b><i>(BETA)</i></b> For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user. |
-|  [getDefaultSaleRecipient()](./sdk.bundledropmodule.getdefaultsalerecipient.md) |  | <b><i>(BETA)</i></b> |
-|  [getOwned(\_address)](./sdk.bundledropmodule.getowned.md) |  | <b><i>(BETA)</i></b> <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
-|  [getRoyaltyBps()](./sdk.bundledropmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
-|  [getRoyaltyRecipientAddress()](./sdk.bundledropmodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |
-|  [getSaleRecipient(tokenId)](./sdk.bundledropmodule.getsalerecipient.md) |  | <b><i>(BETA)</i></b> |
-|  [isApproved(address, operator)](./sdk.bundledropmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
-|  [isTransferRestricted()](./sdk.bundledropmodule.istransferrestricted.md) |  | <b><i>(BETA)</i></b> |
-|  [lazyMintBatch(metadatas)](./sdk.bundledropmodule.lazymintbatch.md) |  | <b><i>(BETA)</i></b> |
-|  [setApproval(operator, approved)](./sdk.bundledropmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
-|  [setClaimCondition(tokenId, factory)](./sdk.bundledropmodule.setclaimcondition.md) |  | <b><i>(BETA)</i></b> Sets public claim conditions for the next minting using the claim condition factory. |
-|  [setDefaultSaleRecipient(recipient)](./sdk.bundledropmodule.setdefaultsalerecipient.md) |  | <b><i>(BETA)</i></b> |
-|  [setModuleMetadata(metadata)](./sdk.bundledropmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
-|  [setPublicClaimConditions(tokenId, conditions)](./sdk.bundledropmodule.setpublicclaimconditions.md) |  | <b><i>(BETA)</i></b> |
-|  [setRestrictedTransfer(restricted)](./sdk.bundledropmodule.setrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |
-|  [setRoyaltyBps(amount)](./sdk.bundledropmodule.setroyaltybps.md) |  | <b><i>(BETA)</i></b> |
-|  [setSaleRecipient(tokenId, recipient)](./sdk.bundledropmodule.setsalerecipient.md) |  | <b><i>(BETA)</i></b> |
-|  [totalSupply(tokenId)](./sdk.bundledropmodule.totalsupply.md) |  | <b><i>(BETA)</i></b> Returns the total supply of a specific token |
-|  [transfer(to, tokenId, amount, data)](./sdk.bundledropmodule.transfer.md) |  | <b><i>(BETA)</i></b> |
-|  [transferFrom(from, to, tokenId, amount, data)](./sdk.bundledropmodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
-|  [updateClaimConditions(tokenId, factory)](./sdk.bundledropmodule.updateclaimconditions.md) |  | <b><i>(BETA)</i></b> |
+|  [getClaimConditionFactory()](./sdk.bundledropmodule.getclaimconditionfactory.md) |  | Creates a claim condition factory |
+|  [getClaimConditionsFactory()](./sdk.bundledropmodule.getclaimconditionsfactory.md) |  |  |
+|  [getClaimIneligibilityReasons(tokenId, quantity, addressToCheck)](./sdk.bundledropmodule.getclaimineligibilityreasons.md) |  | For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user. |
+|  [getDefaultSaleRecipient()](./sdk.bundledropmodule.getdefaultsalerecipient.md) |  |  |
+|  [getOwned(\_address)](./sdk.bundledropmodule.getowned.md) |  | <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
+|  [getRoyaltyBps()](./sdk.bundledropmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
+|  [getRoyaltyRecipientAddress()](./sdk.bundledropmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
+|  [getSaleRecipient(tokenId)](./sdk.bundledropmodule.getsalerecipient.md) |  |  |
+|  [isApproved(address, operator)](./sdk.bundledropmodule.isapproved.md) |  |  |
+|  [isTransferRestricted()](./sdk.bundledropmodule.istransferrestricted.md) |  |  |
+|  [lazyMintBatch(metadatas)](./sdk.bundledropmodule.lazymintbatch.md) |  |  |
+|  [setApproval(operator, approved)](./sdk.bundledropmodule.setapproval.md) |  |  |
+|  [setClaimCondition(tokenId, factory)](./sdk.bundledropmodule.setclaimcondition.md) |  | Sets public claim conditions for the next minting using the claim condition factory. |
+|  [setDefaultSaleRecipient(recipient)](./sdk.bundledropmodule.setdefaultsalerecipient.md) |  |  |
+|  [setModuleMetadata(metadata)](./sdk.bundledropmodule.setmodulemetadata.md) |  |  |
+|  [setPublicClaimConditions(tokenId, conditions)](./sdk.bundledropmodule.setpublicclaimconditions.md) |  |  |
+|  [setRestrictedTransfer(restricted)](./sdk.bundledropmodule.setrestrictedtransfer.md) |  |  |
+|  [setRoyaltyBps(amount)](./sdk.bundledropmodule.setroyaltybps.md) |  |  |
+|  [setSaleRecipient(tokenId, recipient)](./sdk.bundledropmodule.setsalerecipient.md) |  |  |
+|  [totalSupply(tokenId)](./sdk.bundledropmodule.totalsupply.md) |  | Returns the total supply of a specific token |
+|  [transfer(to, tokenId, amount, data)](./sdk.bundledropmodule.transfer.md) |  | Transfer NFT |
+|  [transferFrom(from, to, tokenId, amount, data)](./sdk.bundledropmodule.transferfrom.md) |  |  |
+|  [updateClaimConditions(tokenId, factory)](./sdk.bundledropmodule.updateclaimconditions.md) |  |  |
 

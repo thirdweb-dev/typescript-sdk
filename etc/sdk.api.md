@@ -59,21 +59,17 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     // @internal (undocumented)
     protected connectContract(): ProtocolControl;
-    // Warning: (ae-incompatible-release-tags) The symbol "deployBundleDropModule" is marked as @public, but its signature references "BundleDropModule" which is marked as @beta
     deployBundleDropModule(metadata: BundleDropModuleMetadata): Promise<BundleDropModule>;
     deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
     deployCurrencyModule(metadata: CurrencyModuleMetadata): Promise<CurrencyModule>;
     // @alpha
     deployDatastoreModule(metadata: DatastoreModuleMetadata): Promise<DatastoreModule>;
-    // Warning: (ae-incompatible-release-tags) The symbol "deployDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
     deployDropModule(metadata: DropModuleMetadata): Promise<DropModule>;
     deployMarketModule(metadata: MarketModuleMetadata): Promise<MarketModule>;
     // (undocumented)
     deployMarketplaceModule(metadata: MarketplaceModuleMetadata): Promise<MarketplaceModule>;
     deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
-    // Warning: (ae-incompatible-release-tags) The symbol "deployPackModule" is marked as @public, but its signature references "PackModule" which is marked as @beta
     deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
-    // Warning: (ae-incompatible-release-tags) The symbol "deploySplitsModule" is marked as @public, but its signature references "SplitsModule" which is marked as @alpha
     deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
     deployTokenModule(metadata: TokenModuleMetadata): Promise<TokenModule>;
     deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
@@ -189,11 +185,10 @@ export interface BundleDropMetadata {
     supply: BigNumber_2;
 }
 
-// @beta
+// @public
 export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implements ITransferable {
     // (undocumented)
     balance(tokenId: BigNumberish_2): Promise<BigNumber_2>;
-    // (undocumented)
     balanceOf(address: string, tokenId: BigNumberish_2): Promise<BigNumber_2>;
     // (undocumented)
     burn(tokenId: BigNumberish_2, amount: BigNumberish_2): Promise<TransactionReceipt>;
@@ -203,16 +198,22 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     claimTo(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToClaim: string, proofs?: BytesLike[]): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): LazyMintERC1155;
-    // (undocumented)
     createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "get" is marked as @public, but its signature references "BundleDropMetadata" which is marked as @beta
+    //
     // (undocumented)
     get(tokenId: string): Promise<BundleDropMetadata>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getActiveClaimCondition" is marked as @public, but its signature references "ClaimCondition" which is marked as @beta
+    //
     // (undocumented)
     getActiveClaimCondition(tokenId: BigNumberish_2): Promise<ClaimCondition>;
-    // (undocumented)
+    // Warning: (ae-incompatible-release-tags) The symbol "getAll" is marked as @public, but its signature references "BundleDropMetadata" which is marked as @beta
     getAll(): Promise<BundleDropMetadata[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getAllClaimConditions" is marked as @public, but its signature references "ClaimCondition" which is marked as @beta
+    //
     // (undocumented)
     getAllClaimConditions(tokenId: BigNumberish_2): Promise<ClaimCondition[]>;
+    // @beta
     getAllClaimerAddresses(tokenId: BigNumberish_2): Promise<string[]>;
     getClaimConditionFactory(): ClaimConditionFactory;
     // (undocumented)
@@ -224,6 +225,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
+    // Warning: (ae-incompatible-release-tags) The symbol "getOwned" is marked as @public, but its signature references "BundleDropMetadata" which is marked as @beta
     getOwned(_address?: string): Promise<BundleDropMetadata[]>;
     getRoyaltyBps(): Promise<BigNumberish_2>;
     getRoyaltyRecipientAddress(): Promise<string>;
@@ -233,6 +235,8 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
     isTransferRestricted(): Promise<boolean>;
+    // Warning: (ae-incompatible-release-tags) The symbol "lazyMintBatch" is marked as @public, but its signature references "BundleDropMetadata" which is marked as @beta
+    //
     // (undocumented)
     lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<BundleDropMetadata[]>;
     // (undocumented)
@@ -246,6 +250,8 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     setDefaultSaleRecipient(recipient: string): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    // Warning: (ae-incompatible-release-tags) The symbol "setPublicClaimConditions" is marked as @public, but its signature references "BundleDropCreateClaimCondition" which is marked as @beta
+    //
     // @deprecated (undocumented)
     setPublicClaimConditions(tokenId: BigNumberish_2, conditions: BundleDropCreateClaimCondition[]): Promise<void>;
     // (undocumented)
@@ -255,7 +261,6 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     // (undocumented)
     setSaleRecipient(tokenId: BigNumberish_2, recipient: string): Promise<TransactionReceipt>;
     totalSupply(tokenId: BigNumberish_2): Promise<BigNumber_2>;
-    // (undocumented)
     transfer(to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
@@ -278,18 +283,17 @@ export interface BundleMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    ownedByAddress: number;
+    ownedByAddress: BigNumber;
     // (undocumented)
     supply: BigNumber;
     // (undocumented)
     underlyingType: UnderlyingType;
 }
 
-// @beta
+// @public
 export class BundleModule extends ModuleWithRoles<NFTCollection> implements ITransferable {
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber>;
-    // (undocumented)
     balanceOf(address: string, tokenId: string): Promise<BigNumber>;
     // (undocumented)
     burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt>;
@@ -301,28 +305,41 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> implements ITra
     burnFrom(account: string, args: INFTBundleBatchArgs): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): NFTCollection;
+    // Warning: (ae-incompatible-release-tags) The symbol "create" is marked as @public, but its signature references "BundleMetadata" which is marked as @beta
+    //
     // (undocumented)
     create(metadata: MetadataURIOrObject): Promise<BundleMetadata>;
-    // (undocumented)
+    // Warning: (ae-incompatible-release-tags) The symbol "createAndMint" is marked as @public, but its signature references "INFTBundleCreateArgs" which is marked as @beta
+    // Warning: (ae-incompatible-release-tags) The symbol "createAndMint" is marked as @public, but its signature references "BundleMetadata" which is marked as @beta
     createAndMint(metadataWithSupply: INFTBundleCreateArgs): Promise<BundleMetadata>;
-    // (undocumented)
+    // Warning: (ae-incompatible-release-tags) The symbol "createAndMintBatch" is marked as @public, but its signature references "INFTBundleCreateArgs" which is marked as @beta
+    // Warning: (ae-incompatible-release-tags) The symbol "createAndMintBatch" is marked as @public, but its signature references "BundleMetadata" which is marked as @beta
     createAndMintBatch(metadataWithSupply: INFTBundleCreateArgs[]): Promise<BundleMetadata[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "createBatch" is marked as @public, but its signature references "BundleMetadata" which is marked as @beta
+    //
     // (undocumented)
     createBatch(metadatas: MetadataURIOrObject[]): Promise<BundleMetadata[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "createWithErc20" is marked as @public, but its signature references "INFTBundleCreateArgs" which is marked as @beta
+    //
     // (undocumented)
     createWithErc20(tokenContract: string, tokenAmount: BigNumberish, args: INFTBundleCreateArgs): Promise<void>;
     // (undocumented)
     createWithERC721(tokenContract: string, tokenId: BigNumberish, metadata: MetadataURIOrObject): Promise<void>;
     // (undocumented)
     createWithNFT(tokenContract: string, tokenId: BigNumberish, metadata: MetadataURIOrObject): Promise<void>;
+    // Warning: (ae-incompatible-release-tags) The symbol "createWithToken" is marked as @public, but its signature references "INFTBundleCreateArgs" which is marked as @beta
+    //
     // (undocumented)
     createWithToken(tokenContract: string, tokenAmount: BigNumberish, args: INFTBundleCreateArgs): Promise<void>;
+    // Warning: (ae-incompatible-release-tags) The symbol "get" is marked as @public, but its signature references "BundleMetadata" which is marked as @beta
     get(tokenId: string, address?: string): Promise<BundleMetadata>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getAll" is marked as @public, but its signature references "BundleMetadata" which is marked as @beta
     getAll(address?: string): Promise<BundleMetadata[]>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
+    // Warning: (ae-incompatible-release-tags) The symbol "getOwned" is marked as @public, but its signature references "BundleMetadata" which is marked as @beta
     getOwned(_address?: string): Promise<BundleMetadata[]>;
     getRoyaltyBps(): Promise<BigNumberish>;
     getRoyaltyRecipientAddress(): Promise<string>;
@@ -350,9 +367,7 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> implements ITra
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
-    // (undocumented)
     transfer(to: string, tokenId: string, amount: BigNumberish): Promise<TransactionReceipt>;
-    // (undocumented)
     transferBatchFrom(from: string, to: string, args: INFTBundleBatchArgs[], data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, args: INFTBundleBatchArgs, data?: BytesLike): Promise<TransactionReceipt>;
@@ -476,13 +491,11 @@ export interface CollectionMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    ownedByAddress: number;
+    ownedByAddress: BigNumber;
     // (undocumented)
     supply: BigNumber;
 }
 
-// Warning: (ae-incompatible-release-tags) The symbol "CollectionModule" is marked as @public, but its signature references "BundleModule" which is marked as @beta
-//
 // @public (undocumented)
 export type CollectionModule = BundleModule;
 
@@ -617,13 +630,12 @@ export interface DirectListing {
     type: ListingType.Direct;
 }
 
-// @beta
+// @public
 export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITransferable {
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     // (undocumented)
     balance(): Promise<BigNumber_2>;
-    // (undocumented)
     balanceOf(address: string): Promise<BigNumber_2>;
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
@@ -634,21 +646,28 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     claimTo(quantity: BigNumberish_2, addressToClaim: string, proofs?: BytesLike[]): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): LazyMintERC721;
+    // @beta
     createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getActiveClaimCondition" is marked as @public, but its signature references "ClaimCondition" which is marked as @beta
+    //
     // (undocumented)
     getActiveClaimCondition(): Promise<ClaimCondition>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getActiveMintCondition" is marked as @public, but its signature references "PublicMintCondition" which is marked as @beta
+    //
     // @deprecated (undocumented)
     getActiveMintCondition(): Promise<PublicMintCondition>;
     // Warning: (ae-forgotten-export) The symbol "QueryAllParams" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getAllClaimConditions" is marked as @public, but its signature references "ClaimCondition" which is marked as @beta
+    //
     // (undocumented)
     getAllClaimConditions(): Promise<ClaimCondition[]>;
     // (undocumented)
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getAllMintConditions" is marked as @public, but its signature references "PublicMintCondition" which is marked as @beta
+    //
     // @deprecated (undocumented)
     getAllMintConditions(): Promise<PublicMintCondition[]>;
     // (undocumented)
@@ -663,7 +682,6 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
-    // (undocumented)
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
     getRoyaltyBps(): Promise<BigNumberish_2>;
     getRoyaltyRecipientAddress(): Promise<string>;
@@ -695,6 +713,8 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // @internal (undocumented)
     setProviderOrSigner(providerOrSigner: ProviderOrSigner): void;
+    // Warning: (ae-incompatible-release-tags) The symbol "setPublicMintConditions" is marked as @public, but its signature references "CreatePublicMintCondition" which is marked as @beta
+    //
     // @deprecated (undocumented)
     setPublicMintConditions(conditions: CreatePublicMintCondition[]): Promise<void>;
     // (undocumented)
@@ -707,7 +727,6 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     totalSupply(): Promise<BigNumber_2>;
     // (undocumented)
     totalUnclaimedSupply(): Promise<BigNumber_2>;
-    // (undocumented)
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
@@ -728,6 +747,12 @@ export class DropModuleMetadata extends CommonModuleMetadata {
     symbol?: string;
 }
 
+// @public (undocumented)
+export class DuplicateFileNameError extends Error {
+    // @internal
+    constructor(fileName: string);
+}
+
 // @public
 export class DuplicateLeafsError extends Error {
     constructor(message?: string);
@@ -742,6 +767,12 @@ export class FetchError extends Error {
     constructor(message: string, innerError?: Error);
     // (undocumented)
     innerError?: Error;
+}
+
+// @public (undocumented)
+export class FileNameMissingError extends Error {
+    // @internal
+    constructor();
 }
 
 // @public
@@ -964,10 +995,12 @@ export class IpfsStorage implements IStorage {
     resolveFullUrl(ipfsHash: string): string;
     // (undocumented)
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "BufferOrStringWithName" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
+    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStringWithName[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
     // (undocumented)
-    uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
+    uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, _signerAddress?: string): Promise<string>;
     // @internal (undocumented)
     uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, startFileNumber?: number): Promise<string>;
 }
@@ -1037,7 +1070,7 @@ export interface IStorage {
     getUploadToken(contractAddress: string): Promise<string>;
     resolveFullUrl(hash: string): string;
     upload(data: string | File | FileOrBuffer | Buffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
+    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStringWithName[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
     uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
 }
@@ -1184,21 +1217,16 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     }): Promise<void>;
     // (undocumented)
     buyoutListing(listingId: BigNumberish_2, quantityDesired?: BigNumberish_2): Promise<void>;
-    // (undocumented)
     cancelAuctionListing(listingId: BigNumberish_2): Promise<void>;
-    // (undocumented)
     cancelDirectListing(listingId: BigNumberish_2): Promise<void>;
     // (undocumented)
     closeAuctionListing(listingId: BigNumberish_2, closeFor?: string): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): Marketplace;
-    // (undocumented)
     createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
-    // (undocumented)
     createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
     // (undocumented)
     getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
-    // (undocumented)
     getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
     // (undocumented)
     getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
@@ -1503,7 +1531,6 @@ export interface NFTMetadataOwner {
 export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITransferable, ISignatureMinter {
     // (undocumented)
     balance(): Promise<BigNumber_2>;
-    // (undocumented)
     balanceOf(address: string): Promise<BigNumber_2>;
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
@@ -1527,7 +1554,6 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
-    // (undocumented)
     getOwned(_address?: string): Promise<NFTMetadata[]>;
     getRoyaltyBps(): Promise<BigNumberish_2>;
     getRoyaltyRecipientAddress(): Promise<string>;
@@ -1542,9 +1568,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     mint(metadata: MetadataURIOrObject): Promise<NFTMetadata>;
     // (undocumented)
     mintBatch(metadatas: MetadataURIOrObject[]): Promise<NFTMetadata[]>;
-    // (undocumented)
     mintBatchTo(to: string, metadatas: MetadataURIOrObject[]): Promise<NFTMetadata[]>;
-    // (undocumented)
     mintTo(to: string, metadata: MetadataURIOrObject): Promise<NFTMetadata>;
     // (undocumented)
     mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber_2>;
@@ -1563,7 +1587,6 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
     totalSupply(): Promise<BigNumber_2>;
-    // (undocumented)
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
@@ -1616,7 +1639,7 @@ export interface PackMetadata {
     openStart: Date | null;
 }
 
-// @beta
+// @public
 export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber_2>;
@@ -1624,11 +1647,17 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     balanceOf(address: string, tokenId: string): Promise<BigNumber_2>;
     // @internal (undocumented)
     protected connectContract(): Pack;
+    // Warning: (ae-incompatible-release-tags) The symbol "create" is marked as @public, but its signature references "IPackCreateArgs" which is marked as @beta
+    // Warning: (ae-incompatible-release-tags) The symbol "create" is marked as @public, but its signature references "PackMetadata" which is marked as @beta
     create(args: IPackCreateArgs): Promise<PackMetadata>;
     // (undocumented)
     depositLink(amount: BigNumberish_2): Promise<void>;
+    // Warning: (ae-incompatible-release-tags) The symbol "get" is marked as @public, but its signature references "PackMetadata" which is marked as @beta
+    //
     // (undocumented)
     get(packId: string): Promise<PackMetadata>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getAll" is marked as @public, but its signature references "PackMetadata" which is marked as @beta
+    //
     // (undocumented)
     getAll(): Promise<PackMetadata[]>;
     // (undocumented)
@@ -1661,8 +1690,12 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
     transfer(to: string, tokenId: string, amount: BigNumber_2): Promise<void>;
+    // Warning: (ae-incompatible-release-tags) The symbol "transferBatchFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
+    //
     // (undocumented)
     transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: BytesLike): Promise<void>;
+    // Warning: (ae-incompatible-release-tags) The symbol "transferFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
+    //
     // (undocumented)
     transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): Promise<void>;
     // (undocumented)
@@ -1832,7 +1865,7 @@ export interface SplitRecipient {
     splitPercentage: number;
 }
 
-// @alpha
+// @public
 export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     // (undocumented)
     balanceOf(address: string): Promise<BigNumber_2>;
@@ -1883,8 +1916,6 @@ export class ThirdwebSDK implements IThirdwebSdk {
     getApps(address?: string): Promise<IAppModule[]>;
     // @beta (undocumented)
     getBundleDropModule(address: string): BundleDropModule;
-    // Warning: (ae-incompatible-release-tags) The symbol "getBundleModule" is marked as @public, but its signature references "BundleModule" which is marked as @beta
-    //
     // (undocumented)
     getBundleModule(address: string): BundleModule;
     // @deprecated (undocumented)
@@ -1895,8 +1926,6 @@ export class ThirdwebSDK implements IThirdwebSdk {
     getCurrencyModule(address: string): CurrencyModule;
     // @alpha (undocumented)
     getDatastoreModule(address: string): DatastoreModule;
-    // Warning: (ae-incompatible-release-tags) The symbol "getDropModule" is marked as @public, but its signature references "DropModule" which is marked as @beta
-    //
     // (undocumented)
     getDropModule(address: string): DropModule;
     // @internal
@@ -1909,8 +1938,6 @@ export class ThirdwebSDK implements IThirdwebSdk {
     getMarketplaceModule(address: string): MarketplaceModule;
     // (undocumented)
     getNFTModule(address: string): NFTModule;
-    // Warning: (ae-incompatible-release-tags) The symbol "getPackModule" is marked as @public, but its signature references "PackModule" which is marked as @beta
-    //
     // (undocumented)
     getPackModule(address: string): PackModule;
     // @alpha (undocumented)
@@ -1935,13 +1962,10 @@ export class ThirdwebSDK implements IThirdwebSdk {
 export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable {
     // (undocumented)
     allowance(spender: string): Promise<BigNumber_2>;
-    // (undocumented)
     allowanceOf(owner: string, spender: string): Promise<BigNumber_2>;
     // (undocumented)
     balance(): Promise<CurrencyValue>;
-    // (undocumented)
     balanceOf(address: string): Promise<CurrencyValue>;
-    // (undocumented)
     burn(amount: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
     burnFrom(from: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
@@ -1969,9 +1993,7 @@ export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     mint(amount: BigNumberish_2): Promise<void>;
-    // (undocumented)
     mintBatchTo(args: ITokenMintArgs[]): Promise<void>;
-    // (undocumented)
     mintTo(to: string, amount: BigNumberish_2): Promise<void>;
     // (undocumented)
     static moduleType: ModuleType;
@@ -1985,11 +2007,9 @@ export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     totalSupply(): Promise<BigNumber_2>;
-    // (undocumented)
     transfer(to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
     transferBatch(args: ITokenMintArgs[]): Promise<void>;
-    // (undocumented)
     transferFrom(from: string, to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
     transferFromBatch(args: ITokenMintFromArgs[]): Promise<void>;

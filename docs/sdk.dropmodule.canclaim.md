@@ -4,10 +4,7 @@
 
 ## DropModule.canClaim() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
-
-- Parameters interface may change, proofs parameter is ignored.
+Can Claim
 
 <b>Signature:</b>
 
@@ -25,4 +22,18 @@ canClaim(quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
 <b>Returns:</b>
 
 Promise&lt;boolean&gt;
+
+## Remarks
+
+Check if the drop can currently be claimed.
+
+## Example
+
+
+```javascript
+// Quantity of tokens to check if they are claimable
+const quantity = 1;
+
+await module.canClaim(quantity);
+```
 

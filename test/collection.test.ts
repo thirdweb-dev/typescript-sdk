@@ -59,6 +59,24 @@ describe("Bundle Module (aka Collection Module)", async () => {
       .length(0, "Bob should not have any nfts");
   });
 
+  it("should return non-zero balance of owned collection tokens", async () => {
+    const token = await nftModule.mint({
+      name: "test",
+    });
+
+    try {
+      await collectionModule.createWithERC721(nftModule.address, token.id, {
+        name: "TEST NFT",
+      });
+    } catch (err) {
+      assert.fail(err);
+    }
+
+    const nfts = await bundleModule.getOwned(adminWallet.address);
+    expect(nfts).to.be.an("array").length(1);
+    assert.isTrue(nfts[0].ownedByAddress.eq(1));
+  });
+
   it("should create a new collection using token", async () => {
     await currencyModule.mint(100);
 

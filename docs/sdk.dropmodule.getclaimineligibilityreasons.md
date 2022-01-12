@@ -4,9 +4,6 @@
 
 ## DropModule.getClaimIneligibilityReasons() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
-
 For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user.
 
 <b>Signature:</b>

@@ -4,6 +4,8 @@
 
 ## NFTModule.mintBatchTo() method
 
+Mint Many NFTs
+
 <b>Signature:</b>
 
 ```typescript
@@ -20,4 +22,29 @@ mintBatchTo(to: string, metadatas: MetadataURIOrObject[]): Promise<NFTMetadata[]
 <b>Returns:</b>
 
 Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->\[\]&gt;
+
+## Remarks
+
+Mint many NFTs at once to a specified wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet you want to mint the NFT to
+const toAddress = "{{wallet_address}}"
+
+// Custom metadata of the NFTs you want to mint.
+const metadatas = [{
+  name: "Cool NFT #1",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+}, {
+  name: "Cool NFT #2",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/other/image.png"),
+}];
+
+await module.mintBatchTo(toAddress, metadatas);
+```
 

@@ -72,9 +72,9 @@ Output
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
 |  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
-|  [BundleDropModule](./sdk.bundledropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleDropModule()](./sdk.thirdwebsdk.getbundledropmodule.md) |
+|  [BundleDropModule](./sdk.bundledropmodule.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md) |  |
-|  [BundleModule](./sdk.bundlemodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md) |
+|  [BundleModule](./sdk.bundlemodule.md) | Create a collection of NFTs that lets you optionally mint multiple copies of each NFT. |
 |  [BundleModuleMetadata](./sdk.bundlemodulemetadata.md) |  |
 |  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
 |  [ClaimConditionPhase](./sdk.claimconditionphase.md) |  |
@@ -83,10 +83,12 @@ Output
 |  [CurrencyModule](./sdk.currencymodule.md) |  |
 |  [CurrencyModuleMetadata](./sdk.currencymodulemetadata.md) |  |
 |  [DatastoreModuleMetadata](./sdk.datastoremodulemetadata.md) |  |
-|  [DropModule](./sdk.dropmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getDropModule()](./sdk.thirdwebsdk.getdropmodule.md) |
+|  [DropModule](./sdk.dropmodule.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [DropModuleMetadata](./sdk.dropmodulemetadata.md) |  |
+|  [DuplicateFileNameError](./sdk.duplicatefilenameerror.md) |  |
 |  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
 |  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
+|  [FileNameMissingError](./sdk.filenamemissingerror.md) |  |
 |  [FunctionDeprecatedError](./sdk.functiondeprecatederror.md) |  |
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
@@ -94,27 +96,28 @@ Output
 |  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
 |  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
 |  [MarketModuleMetadata](./sdk.marketmodulemetadata.md) |  |
-|  [MarketplaceModule](./sdk.marketplacemodule.md) | Access this module by calling [ThirdwebSDK.getMarketplaceModule()](./sdk.thirdwebsdk.getmarketplacemodule.md) |
+|  [MarketplaceModule](./sdk.marketplacemodule.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MarketplaceModuleMetadata](./sdk.marketplacemodulemetadata.md) |  |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
 |  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality. |
-|  [NFTModule](./sdk.nftmodule.md) | The NFT Collection Module |
+|  [NFTModule](./sdk.nftmodule.md) | Create a collection of one-of-one NFTs. |
 |  [NftModuleMetadata](./sdk.nftmodulemetadata.md) |  |
 |  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
-|  [PackModule](./sdk.packmodule.md) | <b><i>(BETA)</i></b> Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.getpackmodule.md) |
+|  [PackModule](./sdk.packmodule.md) | Create lootboxes of NFTs with rarity based open mechanics. |
 |  [PackModuleMetadata](./sdk.packmodulemetadata.md) |  |
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
 |  [Snapshot](./sdk.snapshot.md) |  |
+|  [SplitsModule](./sdk.splitsmodule.md) | Create custom royalty splits to distribute funds. |
 |  [SplitsModuleMetadata](./sdk.splitsmodulemetadata.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
-|  [TokenModule](./sdk.tokenmodule.md) | Access this module by calling [ThirdwebSDK.getTokenModule()](./sdk.thirdwebsdk.gettokenmodule.md) |
+|  [TokenModule](./sdk.tokenmodule.md) | Create a standard crypto token or crypto currency. |
 |  [TokenModuleMetadata](./sdk.tokenmodulemetadata.md) |  |
 |  [UploadError](./sdk.uploaderror.md) |  |
-|  [VoteModule](./sdk.votemodule.md) | Access this module by calling  |
+|  [VoteModule](./sdk.votemodule.md) | Create a decentralized organization for token holders to vote on proposals. |
 |  [VoteModuleMetadata](./sdk.votemodulemetadata.md) |  |
 |  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 

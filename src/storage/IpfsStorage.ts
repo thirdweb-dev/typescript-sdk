@@ -1,7 +1,12 @@
-import { FetchError, UploadError } from "../common/error";
+import {
+  DuplicateFileNameError,
+  FetchError,
+  UploadError,
+} from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
 import { IStorage } from "../interfaces/IStorage";
 import FileOrBuffer from "../types/FileOrBuffer";
+import { BufferOrStringWithName } from "../types/BufferOrStringWithName";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -11,6 +16,14 @@ if (!globalThis.FormData) {
 const thirdwebIpfsServerUrl = "https://upload.nftlabs.co";
 const pinataIpfsUrl = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 // const thirdwebIpfsServerUrl = "http://localhost:3002";
+
+/**
+ * @internal
+ */
+interface CidWithFiles {
+  cid: string;
+  fileNames: string[];
+}
 
 export class IpfsStorage implements IStorage {
   private gatewayUrl: string;
@@ -24,6 +37,18 @@ export class IpfsStorage implements IStorage {
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<string> {
+    if (typeof data === "string") {
+      // always 0 indexed because there's only 1 file
+      const cid = await this.uploadBatch([data], contractAddress, 0);
+      return `${cid}0`;
+    } else if (data instanceof Buffer) {
+      // always 0 indexed because there's only 1 file
+      const cid = await this.uploadBatch([data], contractAddress, 0);
+      return `${cid}0`;
+    }
+
+    // if it's file type, we're doing legacy upload
+
     const headers = {
       "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
       "X-Public-Address": signerAddress || "",
@@ -50,11 +75,16 @@ export class IpfsStorage implements IStorage {
   }
 
   public async uploadBatch(
-    files: Buffer[] | string[] | FileOrBuffer[] | File[],
+    files:
+      | Buffer[]
+      | string[]
+      | FileOrBuffer[]
+      | File[]
+      | BufferOrStringWithName[],
     contractAddress?: string,
     fileStartNumber = 0,
   ): Promise<string> {
-    const cid = await this.uploadBatchWithCid(
+    const { cid } = await this.uploadBatchWithCid(
       files,
       contractAddress,
       fileStartNumber,
@@ -64,24 +94,58 @@ export class IpfsStorage implements IStorage {
   }
 
   private async uploadBatchWithCid(
-    files: Buffer[] | string[] | FileOrBuffer[] | File[],
+    files:
+      | Buffer[]
+      | string[]
+      | FileOrBuffer[]
+      | File[]
+      | BufferOrStringWithName[],
     contractAddress?: string,
     fileStartNumber = 0,
-  ): Promise<string> {
+  ): Promise<CidWithFiles> {
     const token = await this.getUploadToken(contractAddress || "");
     const metadata = {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
     };
     const data = new FormData();
-
+    const fileNames: string[] = [];
     files.forEach((file, i) => {
-      const filepath = `files/${fileStartNumber + i}`;
+      let fileName = "";
+      let fileData = file;
+      // if it is a file, we passthrough the file extensions,
+      // if it is a buffer or string, the filename would be fileStartNumber + index
+      // if it is a buffer or string with names, the filename would be the name
+      if (file instanceof File) {
+        let extensions = "";
+        if (file.name) {
+          const extensionStartIndex = file.name.lastIndexOf(".");
+          if (extensionStartIndex > -1) {
+            extensions = file.name.substring(extensionStartIndex);
+          }
+        }
+        fileName = `${i + fileStartNumber}${extensions}`;
+      } else if (file instanceof Buffer || typeof file === "string") {
+        fileName = `${i + fileStartNumber}`;
+      } else if (file && file.name && file?.data) {
+        fileData = file?.data;
+        fileName = `${file.name}`;
+      } else {
+        // default behavior
+        fileName = `${i + fileStartNumber}`;
+      }
+
+      const filepath = `files/${fileName}`;
+      if (fileNames.indexOf(fileName) > -1) {
+        throw new DuplicateFileNameError(fileName);
+      }
+      fileNames.push(fileName);
+
       if (typeof window === "undefined") {
-        data.append("file", file as any, { filepath } as any);
+        data.append("file", fileData as any, { filepath } as any);
       } else {
         // browser does blob things, filepath is parsed differently on browser vs node.
         // pls pinata?
-        data.append("file", new Blob([file]), filepath);
+        data.append("file", new Blob([fileData as any]), filepath);
       }
     });
 
@@ -95,9 +159,13 @@ export class IpfsStorage implements IStorage {
     });
     const body = await res.json();
     if (!res.ok) {
+      console.log(body);
       throw new UploadError("Failed to upload files to IPFS");
     }
-    return body.IpfsHash;
+    return {
+      cid: body.IpfsHash,
+      fileNames,
+    };
   }
 
   public async getUploadToken(contractAddress: string): Promise<string> {
@@ -129,25 +197,6 @@ export class IpfsStorage implements IStorage {
     } catch (err: any) {
       throw new FetchError(`Failed to fetch IPFS file: ${uri}`, err);
     }
-  }
-
-  private async uploadFileHandler(object: any) {
-    const keys = Object.keys(object);
-    for (const key in keys) {
-      const val = object[keys[key]];
-      const shouldUpload = val instanceof File || val instanceof Buffer;
-
-      if (shouldUpload) {
-        object[keys[key]] = await this.upload(object[keys[key]]);
-      }
-      if (shouldUpload && typeof object[keys[key]] !== "string") {
-        throw new Error("Upload to IPFS failed");
-      }
-      if (typeof val === "object") {
-        object[keys[key]] = await this.uploadFileHandler(object[keys[key]]);
-      }
-    }
-    return object;
   }
 
   /**
@@ -193,12 +242,16 @@ export class IpfsStorage implements IStorage {
     if (filesToUpload.length === 0) {
       return metadata;
     }
-    const cid = await this.uploadBatchWithCid(filesToUpload, "");
-    const cids = [];
+    const { cid, fileNames } = await this.uploadBatchWithCid(
+      filesToUpload,
+      "",
+      0,
+    );
 
+    const cids = [];
     // recurse ordered array
-    for (const index in filesToUpload) {
-      cids.push(`${cid}/${index}`);
+    for (const filename of fileNames) {
+      cids.push(`${cid}/${filename}`);
     }
 
     const finalMetadata = await this.replaceFilePropertiesWithHashes(
@@ -242,19 +295,15 @@ export class IpfsStorage implements IStorage {
   public async uploadMetadata(
     metadata: MetadataURIOrObject,
     contractAddress?: string,
-    signerAddress?: string,
+    _signerAddress?: string,
   ): Promise<string> {
     if (typeof metadata === "string") {
       return metadata;
     }
 
-    metadata = await this.uploadFileHandler(metadata);
-
-    return await this.upload(
-      JSON.stringify(metadata),
-      contractAddress,
-      signerAddress,
-    );
+    // since there's only single object, always use the first index
+    const cid = await this.uploadMetadataBatch([metadata], contractAddress, 0);
+    return `${cid}0`;
   }
 
   /**

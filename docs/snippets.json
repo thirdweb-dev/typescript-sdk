@@ -1,23 +1,413 @@
 {
-  "NFTModule": {
-    "name": "NFTModule",
-    "summary": "The NFT Collection Module\n\n",
-    "remarks": "\n\nThis module provides ERC721 functionality. It is used to mint 1 of 1 NFTs.\n\n",
+  "BundleDropModule": {
+    "name": "BundleDropModule",
+    "summary": "Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.\n\n",
+    "remarks": null,
     "examples": {
-      "javascript": "import ThirdwebSDK from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getNFTModule(\"{{module_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getBundleDropModule(\"{{module_address}}\");"
     },
     "methods": [
       {
-        "name": "getAll",
-        "summary": "Fetch all NFTs that are contained by the module\n\n",
-        "remarks": null,
+        "name": "balanceOf",
+        "summary": "Get NFT Balance\n\n",
+        "remarks": "\n\nGet a wallets NFT balance (number of a specific NFT in this module owned by the wallet).\n\n",
         "examples": {
-          "javascript": "const module = sdk.getNFTModule(\"{{module_address}}\");\nconst nfts = await module.getAll();",
-          "typescript": "const module: NFTModule = sdk.getNFTModule(\"{{module_address}}\");\nconst nfts = await module.getAll();"
+          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\"\";\n// The token ID of the NFT you want to check the wallets balance of\nconst tokenId = \"0\"\n\nconst balance = await module.balanceOf(address, tokenId);\nconsole.log(balance);"
+        },
+        "signature": "balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;"
+      },
+      {
+        "name": "claimTo",
+        "summary": "Claim NFTs to Wallet\n\n",
+        "remarks": "\n\nLet the a specified wallet claim NFTs.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to claim the NFTs\nconst address = \"{{wallet_address}}\";\n\n// The number of NFTs to claim\nconst quantity = 1;\n\n// The token ID of the NFT you want to claim\nconst tokenId = \"0\"\n\nawait module.claimTo(tokenId, quantity, address);"
+        },
+        "signature": "claimTo(tokenId: BigNumberish, quantity: BigNumberish, addressToClaim: string, proofs?: BytesLike[]): Promise<TransactionReceipt>;"
+      },
+      {
+        "name": "createBatch",
+        "summary": "Create Many NFTs\n\n",
+        "remarks": "\n\nCreate and mint NFTs.\n\n",
+        "examples": {
+          "javascript": "// Custom metadata of the NFTs to create\nconst metadatas = [{\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}];\n\nawait module.createBatch(metadatas);"
+        },
+        "signature": "createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;"
+      },
+      {
+        "name": "getAll",
+        "summary": "Get NFT Data\n\n",
+        "remarks": "\n\nGet data associated with NFTs in this module.\n\n",
+        "examples": {
+          "javascript": "// Get data associated with every NFT in the module\nconst nfts = await module.getAll();\nconsole.log(nfts);"
+        },
+        "signature": "getAll(): Promise<BundleDropMetadata[]>;"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer NFT\n\n",
+        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"0x...\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\n// The number of NFTs you want to send\nconst amount = 1;\n\nawait module.transfer(toAddress, tokenId, amount);"
+        },
+        "signature": "transfer(to: string, tokenId: BigNumberish, amount: BigNumberish, data?: BytesLike): Promise<TransactionReceipt>;"
+      }
+    ],
+    "signature": "export declare class BundleDropModule extends ModuleWithRoles<BundleDrop> implements ITransferable "
+  },
+  "BundleModule": {
+    "name": "BundleModule",
+    "summary": "Create a collection of NFTs that lets you optionally mint multiple copies of each NFT.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getBundleModule(\"{{module_address}}\");"
+    },
+    "methods": [
+      {
+        "name": "balanceOf",
+        "summary": "Get NFT Balance\n\n",
+        "remarks": "\n\nGet a wallets NFT balance (number of a specific NFT in this module owned by the wallet).\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\"\";\n// The token ID of the NFT you want to check the wallets balance of\nconst tokenId = \"0\"\n\nconst balance = await module.balanceOf(address, tokenId);\nconsole.log(balance);"
+        },
+        "signature": "balanceOf(address: string, tokenId: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "createAndMint",
+        "summary": "Create & Mint NFT\n\n",
+        "remarks": "\n\nCreate and mint NFTs.\n\n",
+        "examples": {
+          "javascript": "// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}\n\nconst metadataWithSupply = {\n  metadata,\n  supply: 1, // The number of this NFT you want to mint\n}\n\nawait module.createAndMint(metadataWithSupply);"
+        },
+        "signature": "createAndMint(metadataWithSupply: INFTBundleCreateArgs): Promise<BundleMetadata>;"
+      },
+      {
+        "name": "createAndMintBatch",
+        "summary": "Create & Mint Many NFTs\n\n",
+        "remarks": "\n\nCreate and mint many different NFTs.\n\n",
+        "examples": {
+          "javascript": "// Custom metadata and supplies of your NFTs\nconst metadataWithSupply = [{\n  supply: 1, // The number of this NFT you want to mint\n  metadata: {\n    name: \"Cool NFT #1\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}, {\n  supply: 1,\n  metadata: {\n    name: \"Cool NFT #2\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}];\n\nawait module.createAndMintBatch(metadataWithSupply);"
+        },
+        "signature": "createAndMintBatch(metadataWithSupply: INFTBundleCreateArgs[]): Promise<BundleMetadata[]>;"
+      },
+      {
+        "name": "getAll",
+        "summary": "Get NFT Data\n\n",
+        "remarks": "\n\nGet data associated with NFTs in this module.\n\n",
+        "examples": {
+          "javascript": "// You can get every NFT in the module\nconst nfts = await module.getAll();\nconsole.log(nfts);\n\n// Or you can get optionally get the NFTs owned by a specific wallet\nconst address = \"{{wallet_address}}\"; // The address you want to get the NFTs for;\nconst ownedNfts = await module.getAll(address);\nconsole.log(ownedNfts);"
+        },
+        "signature": "getAll(address?: string): Promise<BundleMetadata[]>;"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer NFT\n\n",
+        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"0x...\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\n// The number of NFTs you want to send\nconst amount = 1;\n\nawait module.transfer(toAddress, tokenId, amount);"
+        },
+        "signature": "transfer(to: string, tokenId: string, amount: BigNumberish): Promise<TransactionReceipt>;"
+      },
+      {
+        "name": "transferBatchFrom",
+        "summary": "Transfer Many NFTs\n\n",
+        "remarks": "\n\nTransfer NFTs from the one wallet to another.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to send the NFT from\nconst fromAddress = \"{{wallet_address}}\";\n// Address of the wallet you want to send the NFT to\nconst toAddress = \"0x...\";\n\n// The data of the NFTs you want to send\nconst data = [{\n  tokenId: 1, // The token ID of the NFT you want to send\n  amount: 1, // The number of this NFT you want to send\n}, {\n  tokenId: 2,\n  amount: 1,\n}]\n\n// Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nawait module.transferBatchFrom(fromAddress, toAddress, data);"
+        },
+        "signature": "transferBatchFrom(from: string, to: string, args: INFTBundleBatchArgs[], data?: BytesLike): Promise<TransactionReceipt>;"
+      }
+    ],
+    "signature": "export declare class BundleModule extends ModuleWithRoles<NFTBundleContract> implements ITransferable "
+  },
+  "DropModule": {
+    "name": "DropModule",
+    "summary": "Setup a collection of one-of-one NFTs that are minted as users claim them.\n\n",
+    "remarks": "\n\nThe constructor for this class is marked as internal. Third-party code should not call the constructor directly or create subclasses that extend the `DropModule` class.\n\n",
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getDropModule(\"{{module_address}}\");"
+    },
+    "methods": [
+      {
+        "name": "balanceOf",
+        "summary": "Get NFT Balance\n\n",
+        "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this module owned by the wallet).\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\"\";\n\nconst balance = await module.balanceOf(address);\nconsole.log(balance);"
+        },
+        "signature": "balanceOf(address: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "canClaim",
+        "summary": "Can Claim\n\n",
+        "remarks": "\n\nCheck if the drop can currently be claimed.\n\n",
+        "examples": {
+          "javascript": "// Quantity of tokens to check if they are claimable\nconst quantity = 1;\n\nawait module.canClaim(quantity);"
+        },
+        "signature": "canClaim(quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;"
+      },
+      {
+        "name": "claimTo",
+        "summary": "Claim NFTs to Wallet\n\n",
+        "remarks": "\n\nLet the a specified wallet claim NFTs.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to claim the NFTs\nconst address = \"{{wallet_address}}\";\n\n// The number of NFTs to claim\nconst quantity = 1;\n\nawait module.claimTo(quantity, address);"
+        },
+        "signature": "claimTo(quantity: BigNumberish, addressToClaim: string, proofs?: BytesLike[]): Promise<TransactionReceipt>;"
+      },
+      {
+        "name": "getAll",
+        "summary": "Get All NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with every NFT in this module.\n\n",
+        "examples": {
+          "javascript": "const nfts = await module.getAll();\nconsole.log(nfts);"
+        },
+        "signature": "getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;"
+      },
+      {
+        "name": "getOwned",
+        "summary": "Get Owned NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await module.getOwned(address);\nconsole.log(nfts);"
+        },
+        "signature": "getOwned(_address?: string): Promise<NFTMetadataOwner[]>;"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer NFT\n\n",
+        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\nawait module.transfer(toAddress, tokenId);"
+        },
+        "signature": "transfer(to: string, tokenId: string): Promise<TransactionReceipt>;"
+      }
+    ],
+    "signature": "export declare class DropModule extends ModuleWithRoles<DropV2> implements ITransferable "
+  },
+  "MarketplaceModule": {
+    "name": "MarketplaceModule",
+    "summary": "Create your own whitelabel marketplace that enables users to buy and sell any digital assets.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getMarketplaceModule(\"{{module_address}}\");"
+    },
+    "methods": [
+      {
+        "name": "cancelAuctionListing",
+        "summary": "Cancel Auction Listing\n\n",
+        "remarks": "\n\nCancel an auction listing on the marketplace\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the auction listing you want to cancel\nconst listingId = \"0\"\n\nawait module.cancelAuctionListing(listingId);"
+        },
+        "signature": "cancelAuctionListing(listingId: BigNumberish): Promise<void>;"
+      },
+      {
+        "name": "cancelDirectListing",
+        "summary": "Cancel Direct Listing\n\n",
+        "remarks": "\n\nCancel a direct listing on the marketplace\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the direct listing you want to cancel\nconst listingId = \"0\"\n\nawait module.cancelDirectListing(listingId);"
+        },
+        "signature": "cancelDirectListing(listingId: BigNumberish): Promise<void>;"
+      },
+      {
+        "name": "createAuctionListing",
+        "summary": "Create Auction\n\n",
+        "remarks": "\n\nCreate a new auction where people can bid on an asset.\n\n",
+        "examples": {
+          "javascript": "// Data of the auction you want to create\nconst auction = {\n  // address of the contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // in how many seconds with the listing open up\n  startTimeInSeconds: 0,\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: \"0x0000000000000000000000000000000000000000\",\n  // how much people would have to bid to instantly buy the asset\n  buyoutPricePerToken: \"10\",\n  // the minimum bid that will be accepted for the token\n  reservePricePerToken: \"1\",\n}\n\nawait module.createAuctionListing(auction);"
+        },
+        "signature": "createAuctionListing(listing: NewAuctionListing): Promise<BigNumber>;"
+      },
+      {
+        "name": "createDirectListing",
+        "summary": "Create Direct Listing\n\n",
+        "remarks": "\n\nCreate a new listing on the marketplace where people can buy an asset directly.\n\n",
+        "examples": {
+          "javascript": "// Data of the listing you want to create\nconst listing = {\n  // address of the contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // in how many seconds with the listing open up\n  startTimeInSeconds: 0,\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: \"0x0000000000000000000000000000000000000000\",\n  // how much the asset will be sold for\n  buyoutPricePerToken: \"1\",\n}\n\nawait module.createDirectListing(listing);"
+        },
+        "signature": "createDirectListing(listing: NewDirectListing): Promise<BigNumber>;"
+      },
+      {
+        "name": "getAllListings",
+        "summary": "Get Listings\n\n",
+        "remarks": "\n\nGet all listings in the marketplace.\n\n",
+        "examples": {
+          "javascript": "// Get all listings\nconst listings = await module.getAllListings();\nconsole.log(listings);\n\n// Get only the active listings\nconst activeListings = listings.filter((listing) => listing.quantity > 0);"
+        },
+        "signature": "getAllListings(): Promise<(AuctionListing | DirectListing)[]>;"
+      }
+    ],
+    "signature": "export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> implements IMarketplace "
+  },
+  "NFTModule": {
+    "name": "NFTModule",
+    "summary": "Create a collection of one-of-one NFTs.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getNFTModule(\"{{module_address}}\");"
+    },
+    "methods": [
+      {
+        "name": "balanceOf",
+        "summary": "Get NFT Balance\n\n",
+        "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this module owned by the wallet).\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\"\";\n\nconst balance = await module.balanceOf(address);\nconsole.log(balance);"
+        },
+        "signature": "balanceOf(address: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "getAll",
+        "summary": "Get All NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with every NFT in this module.\n\n",
+        "examples": {
+          "javascript": "const nfts = await module.getAll();\nconsole.log(nfts);"
         },
         "signature": "getAll(): Promise<NFTMetadata[]>;"
+      },
+      {
+        "name": "getOwned",
+        "summary": "Get Owned NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await module.getOwned(address);\nconsole.log(nfts);"
+        },
+        "signature": "getOwned(_address?: string): Promise<NFTMetadata[]>;"
+      },
+      {
+        "name": "mintBatchTo",
+        "summary": "Mint Many NFTs\n\n",
+        "remarks": "\n\nMint many NFTs at once to a specified wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\"\n\n// Custom metadata of the NFTs you want to mint.\nconst metadatas = [{\n  name: \"Cool NFT #1\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT #2\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/other/image.png\"),\n}];\n\nawait module.mintBatchTo(toAddress, metadatas);"
+        },
+        "signature": "mintBatchTo(to: string, metadatas: MetadataURIOrObject[]): Promise<NFTMetadata[]>;"
+      },
+      {
+        "name": "mintTo",
+        "summary": "Mint NFT\n\n",
+        "remarks": "\n\nMint an NFT to a specified wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\"\n\n// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}\n\nawait module.mintTo(toAddress, metadata);"
+        },
+        "signature": "mintTo(to: string, metadata: MetadataURIOrObject): Promise<NFTMetadata>;"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer NFT\n\n",
+        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\nawait module.transfer(toAddress, tokenId);"
+        },
+        "signature": "transfer(to: string, tokenId: string): Promise<TransactionReceipt>;"
       }
     ],
     "signature": "export declare class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITransferable, ISignatureMinter "
+  },
+  "PackModule": {
+    "name": "PackModule",
+    "summary": "Create lootboxes of NFTs with rarity based open mechanics.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getPackModule(\"{{module_address}}\");"
+    },
+    "methods": [],
+    "signature": "export declare class PackModule extends ModuleWithRoles<PackContract> implements ITransferable "
+  },
+  "SplitsModule": {
+    "name": "SplitsModule",
+    "summary": "Create custom royalty splits to distribute funds.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getSplitsModule(\"{{module_address}}\");"
+    },
+    "methods": [],
+    "signature": "export declare class SplitsModule extends Module<Royalty> implements ISplitsModule "
+  },
+  "TokenModule": {
+    "name": "TokenModule",
+    "summary": "Create a standard crypto token or crypto currency.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getTokenModule(\"{{module_address}}\");"
+    },
+    "methods": [
+      {
+        "name": "allowanceOf",
+        "summary": "Get Token Allowance\n\n",
+        "remarks": "\n\nGet the allowance of one wallet over another's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the connected wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet who owns the funds\nconst address = \"{{wallet_address}}\"\";\n\n// Address of the wallet to check token allowance\nconst otherAddress = \"{{wallet_address}}\"\";\n\nconst allowance = await module.allowanceOf(otherAddress);\nconsole.log(allowance);"
+        },
+        "signature": "allowanceOf(owner: string, spender: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "balanceOf",
+        "summary": "Get Token Balance\n\n",
+        "remarks": "\n\nGet a wallets token balance.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to check token balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await module.balanceOf(address);\nconsole.log(balance);"
+        },
+        "signature": "balanceOf(address: string): Promise<CurrencyValue>;"
+      },
+      {
+        "name": "burn",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
+        "examples": {
+          "javascript": "// The amount of this token you want to burn\nconst amount = 100;\n\nawait module.burn(amount);"
+        },
+        "signature": "burn(amount: BigNumberish): Promise<TransactionReceipt>;"
+      },
+      {
+        "name": "mintBatchTo",
+        "summary": "Mint Tokens To Many Wallets\n\n",
+        "remarks": "\n\nMint tokens to many different wallets\n\n",
+        "examples": {
+          "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    address: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 100, // How many tokens to mint to specified address\n  },\n {\n   address: \"0x...\",\n   amount: 100,\n }\n]\n\nawait module.transfer(toAddress, amount);"
+        },
+        "signature": "mintBatchTo(args: ITokenMintArgs[]): Promise<void>;"
+      },
+      {
+        "name": "mintTo",
+        "summary": "Mint Tokens\n\n",
+        "remarks": "\n\nMint tokens to a specified address\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to mint the tokens to\nconst toAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to mint\nconst amount = 100;\n\nawait module.transfer(toAddress, amount);"
+        },
+        "signature": "mintTo(to: string, amount: BigNumberish): Promise<void>;"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer Tokens\n\n",
+        "remarks": "\n\nTransfer tokens from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n\n// The amount of tokens you want to send\nconst amount = 0;\n\nawait module.transfer(toAddress, amount);"
+        },
+        "signature": "transfer(to: string, amount: BigNumberish): Promise<TransactionReceipt>;"
+      },
+      {
+        "name": "transferFrom",
+        "summary": "Transfer Tokens From Address\n\n",
+        "remarks": "\n\nTransfer tokens from one wallet to another\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet sending the tokens\nconst fromAddress = \"{{wallet_address}}\";\n// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n// The number of tokens you want to send\nconst amount = 100\n\n// Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nawait module.transferFrom(fromAddress, toAddress, amount);"
+        },
+        "signature": "transferFrom(from: string, to: string, amount: BigNumberish): Promise<TransactionReceipt>;"
+      }
+    ],
+    "signature": "export declare class TokenModule extends ModuleWithRoles<Coin> implements ITransferable "
+  },
+  "VoteModule": {
+    "name": "VoteModule",
+    "summary": "Create a decentralized organization for token holders to vote on proposals.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getVoteModule(\"{{module_address}}\");"
+    },
+    "methods": [],
+    "signature": "export declare class VoteModule extends Module<VotingGovernor> "
   }
 }

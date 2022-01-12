@@ -4,10 +4,7 @@
 
 ## BundleModule class
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
-
-Access this module by calling [ThirdwebSDK.getBundleModule()](./sdk.thirdwebsdk.getbundlemodule.md)
+Create a collection of NFTs that lets you optionally mint multiple copies of each NFT.
 
 <b>Signature:</b>
 
@@ -18,49 +15,59 @@ export declare class BundleModule extends ModuleWithRoles<NFTBundleContract> imp
 
 <b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+const sdk = new ThirdwebSDK({{wallet_provider}});
+const module = sdk.getBundleModule("{{module_address}}");
+```
+
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [moduleType](./sdk.bundlemodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
-|  [roles](./sdk.bundlemodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] | <b><i>(BETA)</i></b> |
+|  [moduleType](./sdk.bundlemodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [roles](./sdk.bundlemodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [balance(tokenId)](./sdk.bundlemodule.balance.md) |  | <b><i>(BETA)</i></b> |
-|  [balanceOf(address, tokenId)](./sdk.bundlemodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
-|  [burn(args)](./sdk.bundlemodule.burn.md) |  | <b><i>(BETA)</i></b> |
-|  [burnBatch(args)](./sdk.bundlemodule.burnbatch.md) |  | <b><i>(BETA)</i></b> |
-|  [burnBatchFrom(account, args)](./sdk.bundlemodule.burnbatchfrom.md) |  | <b><i>(BETA)</i></b> |
-|  [burnFrom(account, args)](./sdk.bundlemodule.burnfrom.md) |  | <b><i>(BETA)</i></b> |
-|  [create(metadata)](./sdk.bundlemodule.create.md) |  | <b><i>(BETA)</i></b> |
-|  [createAndMint(metadataWithSupply)](./sdk.bundlemodule.createandmint.md) |  | <b><i>(BETA)</i></b> |
-|  [createAndMintBatch(metadataWithSupply)](./sdk.bundlemodule.createandmintbatch.md) |  | <b><i>(BETA)</i></b> |
-|  [createBatch(metadatas)](./sdk.bundlemodule.createbatch.md) |  | <b><i>(BETA)</i></b> |
-|  [createWithErc20(tokenContract, tokenAmount, args)](./sdk.bundlemodule.createwitherc20.md) |  | <b><i>(BETA)</i></b> |
-|  [createWithERC721(tokenContract, tokenId, metadata)](./sdk.bundlemodule.createwitherc721.md) |  | <b><i>(BETA)</i></b> |
-|  [createWithNFT(tokenContract, tokenId, metadata)](./sdk.bundlemodule.createwithnft.md) |  | <b><i>(BETA)</i></b> |
-|  [createWithToken(tokenContract, tokenAmount, args)](./sdk.bundlemodule.createwithtoken.md) |  | <b><i>(BETA)</i></b> |
-|  [get(tokenId, address)](./sdk.bundlemodule.get.md) |  | <b><i>(BETA)</i></b> Get a single bundle item by tokenId. |
-|  [getAll(address)](./sdk.bundlemodule.getall.md) |  | <b><i>(BETA)</i></b> Return all items in the bundle. |
-|  [getOwned(\_address)](./sdk.bundlemodule.getowned.md) |  | <b><i>(BETA)</i></b> <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
-|  [getRoyaltyBps()](./sdk.bundlemodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
-|  [getRoyaltyRecipientAddress()](./sdk.bundlemodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |
-|  [isApproved(address, operator, assetContract, assetId)](./sdk.bundlemodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
-|  [isTransferRestricted()](./sdk.bundlemodule.istransferrestricted.md) |  | <b><i>(BETA)</i></b> |
-|  [mint(args)](./sdk.bundlemodule.mint.md) |  | <b><i>(BETA)</i></b> |
-|  [mintBatch(args)](./sdk.bundlemodule.mintbatch.md) |  | <b><i>(BETA)</i></b> |
-|  [mintBatchTo(to, args, data)](./sdk.bundlemodule.mintbatchto.md) |  | <b><i>(BETA)</i></b> |
-|  [mintTo(to, args, data)](./sdk.bundlemodule.mintto.md) |  | <b><i>(BETA)</i></b> |
-|  [setApproval(operator, approved)](./sdk.bundlemodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
-|  [setModuleMetadata(metadata)](./sdk.bundlemodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
-|  [setRestrictedTransfer(restricted)](./sdk.bundlemodule.setrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |
-|  [setRoyaltyBps(amount)](./sdk.bundlemodule.setroyaltybps.md) |  | <b><i>(BETA)</i></b> |
-|  [transfer(to, tokenId, amount)](./sdk.bundlemodule.transfer.md) |  | <b><i>(BETA)</i></b> |
-|  [transferBatchFrom(from, to, args, data)](./sdk.bundlemodule.transferbatchfrom.md) |  | <b><i>(BETA)</i></b> |
-|  [transferFrom(from, to, args, data)](./sdk.bundlemodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
-|  [unwrapNFT(tokenId)](./sdk.bundlemodule.unwrapnft.md) |  | <b><i>(BETA)</i></b> |
-|  [unwrapToken(tokenId, amount)](./sdk.bundlemodule.unwraptoken.md) |  | <b><i>(BETA)</i></b> |
+|  [balance(tokenId)](./sdk.bundlemodule.balance.md) |  |  |
+|  [balanceOf(address, tokenId)](./sdk.bundlemodule.balanceof.md) |  | Get NFT Balance |
+|  [burn(args)](./sdk.bundlemodule.burn.md) |  |  |
+|  [burnBatch(args)](./sdk.bundlemodule.burnbatch.md) |  |  |
+|  [burnBatchFrom(account, args)](./sdk.bundlemodule.burnbatchfrom.md) |  |  |
+|  [burnFrom(account, args)](./sdk.bundlemodule.burnfrom.md) |  |  |
+|  [create(metadata)](./sdk.bundlemodule.create.md) |  |  |
+|  [createAndMint(metadataWithSupply)](./sdk.bundlemodule.createandmint.md) |  | Create &amp; Mint NFT |
+|  [createAndMintBatch(metadataWithSupply)](./sdk.bundlemodule.createandmintbatch.md) |  | Create &amp; Mint Many NFTs |
+|  [createBatch(metadatas)](./sdk.bundlemodule.createbatch.md) |  |  |
+|  [createWithErc20(tokenContract, tokenAmount, args)](./sdk.bundlemodule.createwitherc20.md) |  |  |
+|  [createWithERC721(tokenContract, tokenId, metadata)](./sdk.bundlemodule.createwitherc721.md) |  |  |
+|  [createWithNFT(tokenContract, tokenId, metadata)](./sdk.bundlemodule.createwithnft.md) |  |  |
+|  [createWithToken(tokenContract, tokenAmount, args)](./sdk.bundlemodule.createwithtoken.md) |  |  |
+|  [get(tokenId, address)](./sdk.bundlemodule.get.md) |  | Get a single bundle item by tokenId. |
+|  [getAll(address)](./sdk.bundlemodule.getall.md) |  | Get NFT Data |
+|  [getOwned(\_address)](./sdk.bundlemodule.getowned.md) |  | <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
+|  [getRoyaltyBps()](./sdk.bundlemodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
+|  [getRoyaltyRecipientAddress()](./sdk.bundlemodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
+|  [isApproved(address, operator, assetContract, assetId)](./sdk.bundlemodule.isapproved.md) |  |  |
+|  [isTransferRestricted()](./sdk.bundlemodule.istransferrestricted.md) |  |  |
+|  [mint(args)](./sdk.bundlemodule.mint.md) |  |  |
+|  [mintBatch(args)](./sdk.bundlemodule.mintbatch.md) |  |  |
+|  [mintBatchTo(to, args, data)](./sdk.bundlemodule.mintbatchto.md) |  |  |
+|  [mintTo(to, args, data)](./sdk.bundlemodule.mintto.md) |  |  |
+|  [setApproval(operator, approved)](./sdk.bundlemodule.setapproval.md) |  |  |
+|  [setModuleMetadata(metadata)](./sdk.bundlemodule.setmodulemetadata.md) |  |  |
+|  [setRestrictedTransfer(restricted)](./sdk.bundlemodule.setrestrictedtransfer.md) |  |  |
+|  [setRoyaltyBps(amount)](./sdk.bundlemodule.setroyaltybps.md) |  |  |
+|  [transfer(to, tokenId, amount)](./sdk.bundlemodule.transfer.md) |  | Transfer NFT |
+|  [transferBatchFrom(from, to, args, data)](./sdk.bundlemodule.transferbatchfrom.md) |  | Transfer Many NFTs |
+|  [transferFrom(from, to, args, data)](./sdk.bundlemodule.transferfrom.md) |  |  |
+|  [unwrapNFT(tokenId)](./sdk.bundlemodule.unwrapnft.md) |  |  |
+|  [unwrapToken(tokenId, amount)](./sdk.bundlemodule.unwraptoken.md) |  |  |
 

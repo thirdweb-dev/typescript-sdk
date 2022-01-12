@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-ownedByAddress: number;
+ownedByAddress: BigNumber;
 ```

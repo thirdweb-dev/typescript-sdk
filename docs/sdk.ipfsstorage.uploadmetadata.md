@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
+uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, _signerAddress?: string): Promise<string>;
 ```
 
 ## Parameters
@@ -16,7 +16,7 @@ uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAd
 |  --- | --- | --- |
 |  metadata | [MetadataURIOrObject](./sdk.metadatauriorobject.md) |  |
 |  contractAddress | string |  |
-|  signerAddress | string |  |
+|  \_signerAddress | string |  |
 
 <b>Returns:</b>
 
