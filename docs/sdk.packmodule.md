@@ -37,23 +37,23 @@ const module = sdk.getPackModule("{{module_address}}");
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [balance(tokenId)](./sdk.packmodule.balance.md) |  |  |
-|  [balanceOf(address, tokenId)](./sdk.packmodule.balanceof.md) |  |  |
-|  [create(args)](./sdk.packmodule.create.md) |  | Create a pack from a set of assets. |
+|  [balanceOf(address, tokenId)](./sdk.packmodule.balanceof.md) |  | Get Pack Balance |
+|  [create(args)](./sdk.packmodule.create.md) |  | Create Pack |
 |  [depositLink(amount)](./sdk.packmodule.depositlink.md) |  |  |
 |  [get(packId)](./sdk.packmodule.get.md) |  |  |
-|  [getAll()](./sdk.packmodule.getall.md) |  |  |
+|  [getAll()](./sdk.packmodule.getall.md) |  | Get Pack Data |
 |  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  |  |
 |  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  |  |
 |  [getRoyaltyBps()](./sdk.packmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.packmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
 |  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  |  |
 |  [isTransferRestricted()](./sdk.packmodule.istransferrestricted.md) |  |  |
-|  [open(packId)](./sdk.packmodule.open.md) |  |  |
+|  [open(packId)](./sdk.packmodule.open.md) |  | Open Pack |
 |  [setApproval(operator, approved)](./sdk.packmodule.setapproval.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.packmodule.setmodulemetadata.md) |  |  |
 |  [setRestrictedTransfer(restricted)](./sdk.packmodule.setrestrictedtransfer.md) |  |  |
 |  [setRoyaltyBps(amount)](./sdk.packmodule.setroyaltybps.md) |  |  |
-|  [transfer(to, tokenId, amount)](./sdk.packmodule.transfer.md) |  |  |
+|  [transfer(to, tokenId, amount)](./sdk.packmodule.transfer.md) |  | Transfer NFT |
 |  [transferBatchFrom(from, to, args, data)](./sdk.packmodule.transferbatchfrom.md) |  |  |
 |  [transferFrom(from, to, args, data)](./sdk.packmodule.transferfrom.md) |  |  |
 |  [withdrawLink(to, amount)](./sdk.packmodule.withdrawlink.md) |  |  |

@@ -4,6 +4,8 @@
 
 ## MarketplaceModule.makeAuctionListingBid() method
 
+Bid On Auction
+
 <b>Signature:</b>
 
 ```typescript
@@ -22,4 +24,20 @@ makeAuctionListingBid(bid: {
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Make a bid on an auction listings
+
+## Example
+
+
+```javascript
+// The listing ID of the asset you want to bid on
+const listingId = 0;
+// The price you are willing to bid for a single token of the listing
+const bidPricePerToken = 1;
+
+await module.buyoutDirectListing(listingId, bidPricePerToken);
+```
 

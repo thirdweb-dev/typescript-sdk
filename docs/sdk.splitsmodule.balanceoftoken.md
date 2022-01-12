@@ -4,6 +4,8 @@
 
 ## SplitsModule.balanceOfToken() method
 
+Get Token Funds
+
 <b>Signature:</b>
 
 ```typescript
@@ -20,4 +22,20 @@ balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyVal
 <b>Returns:</b>
 
 Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)<!-- -->&gt;
+
+## Remarks
+
+Get the amount of funds in the non-native tokens held by the module thats owed to a specific recipient.
+
+## Example
+
+
+```javascript
+// The address to check the funds of
+const address = "{{wallet_address}}";
+// The address of the currency to check the contracts funds of
+const tokenAddress = "0x..."
+const funds = await module.balanceOfToken(address, tokenAddress);
+console.log(funds);
+```
 

@@ -4,6 +4,8 @@
 
 ## MarketplaceModule.buyoutDirectListing() method
 
+Buy Listing
+
 <b>Signature:</b>
 
 ```typescript
@@ -22,4 +24,20 @@ buyoutDirectListing(_buyout: {
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Buy a specific direct listing from the marketplace.
+
+## Example
+
+
+```javascript
+// The listing ID of the asset you want to buy
+const listingId = 0;
+// Quantity of the asset you want to buy
+const quantity = 1;
+
+await module.buyoutDirectListing(listingId, quantity);
+```
 

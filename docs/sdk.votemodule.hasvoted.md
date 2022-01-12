@@ -4,7 +4,7 @@
 
 ## VoteModule.hasVoted() method
 
-Checks if an account has voted on a proposal
+Check If Wallet Voted
 
 <b>Signature:</b>
 
@@ -24,4 +24,20 @@ hasVoted(proposalId: string, account?: string): Promise<boolean>;
 Promise&lt;boolean&gt;
 
 - True if the account has already voted on the proposal.
+
+## Remarks
+
+Check if a specified wallet has voted a specific proposal
+
+## Example
+
+
+```javascript
+// The proposal ID of the proposal you want to check
+const proposalId = "0";
+// The address of the wallet you want to check to see if they voted
+const address = "{{wallet_address}}";
+
+await module.hasVoted(proposalId, address);
+```
 

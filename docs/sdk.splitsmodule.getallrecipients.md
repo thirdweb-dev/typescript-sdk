@@ -4,6 +4,8 @@
 
 ## SplitsModule.getAllRecipients() method
 
+Get Recients
+
 <b>Signature:</b>
 
 ```typescript
@@ -12,4 +14,16 @@ getAllRecipients(): Promise<SplitRecipient[]>;
 <b>Returns:</b>
 
 Promise&lt;[SplitRecipient](./sdk.splitrecipient.md)<!-- -->\[\]&gt;
+
+## Remarks
+
+Get the data about the shares of every split recipient on the module
+
+## Example
+
+
+```javascript
+const recipients = await module.getAllRecepients();
+console.log(recipients);
+```
 

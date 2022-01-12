@@ -4,6 +4,8 @@
 
 ## SplitsModule.distributeToken() method
 
+Distribute Funds
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,17 @@ distributeToken(tokenAddress: string): Promise<void>;
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Distribute funds held by the contract in the native currency to all recipients.
+
+## Example
+
+
+```javascript
+// The address of the currency to distribute funds
+const tokenAddress = "0x..."
+await module.distributeToken(tokenAddress);
+```
 

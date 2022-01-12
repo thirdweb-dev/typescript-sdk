@@ -4,6 +4,8 @@
 
 ## SplitsModule.withdrawToken() method
 
+Withdraw Token Funds
+
 <b>Signature:</b>
 
 ```typescript
@@ -20,4 +22,19 @@ withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Withdraw due funds held by the contract in non-native tokens to a specific recipient.
+
+## Example
+
+
+```javascript
+// The address to check the funds of
+const address = "{{wallet_address}}";
+// The address of the currency to withdraw funds in
+const tokenAddress = "0x..."
+await module.withdrawToken(address, tokenAddress);
+```
 

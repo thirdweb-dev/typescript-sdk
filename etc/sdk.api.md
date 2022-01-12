@@ -1208,9 +1208,7 @@ export class MarketModuleMetadata extends CommonModuleMetadata {
 export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements IMarketplace {
     // (undocumented)
     acceptDirectListingOffer(listingId: BigNumberish_2, addressOfOfferor: string): Promise<void>;
-    // (undocumented)
     buyoutAuctionListing(listingId: BigNumberish_2): Promise<void>;
-    // (undocumented)
     buyoutDirectListing(_buyout: {
         listingId: BigNumberish_2;
         quantityDesired: BigNumberish_2;
@@ -1246,7 +1244,6 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
     // (undocumented)
     isWinningBid(winningPrice: BigNumberish_2, newBidPrice: BigNumberish_2, bidBuffer: BigNumberish_2): Promise<boolean>;
-    // (undocumented)
     makeAuctionListingBid(bid: {
         listingId: BigNumberish_2;
         pricePerToken: BigNumberish_2;
@@ -1643,7 +1640,6 @@ export interface PackMetadata {
 export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber_2>;
-    // (undocumented)
     balanceOf(address: string, tokenId: string): Promise<BigNumber_2>;
     // @internal (undocumented)
     protected connectContract(): Pack;
@@ -1657,8 +1653,6 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // (undocumented)
     get(packId: string): Promise<PackMetadata>;
     // Warning: (ae-incompatible-release-tags) The symbol "getAll" is marked as @public, but its signature references "PackMetadata" which is marked as @beta
-    //
-    // (undocumented)
     getAll(): Promise<PackMetadata[]>;
     // (undocumented)
     getLinkBalance(): Promise<CurrencyValue>;
@@ -1676,7 +1670,6 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     static moduleType: ModuleType;
-    // (undocumented)
     open(packId: string): Promise<NFTMetadata[]>;
     // (undocumented)
     static roles: readonly ["admin", "minter", "pauser", "transfer"];
@@ -1688,7 +1681,6 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
-    // (undocumented)
     transfer(to: string, tokenId: string, amount: BigNumber_2): Promise<void>;
     // Warning: (ae-incompatible-release-tags) The symbol "transferBatchFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
     //
@@ -1867,25 +1859,20 @@ export interface SplitRecipient {
 
 // @public
 export class SplitsModule extends Module<Royalty> implements ISplitsModule {
-    // (undocumented)
     balanceOf(address: string): Promise<BigNumber_2>;
     balanceOfAllRecipients(): Promise<{
         [key: string]: BigNumber_2;
     }>;
-    // (undocumented)
     balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyValue>;
     balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
         [key: string]: CurrencyValue;
     }>;
     // @internal (undocumented)
     protected connectContract(): Royalty;
-    // (undocumented)
     distribute(): Promise<void>;
-    // (undocumented)
     distributeToken(tokenAddress: string): Promise<void>;
     // (undocumented)
     get(): Promise<Currency>;
-    // (undocumented)
     getAllRecipients(): Promise<SplitRecipient[]>;
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
@@ -1893,9 +1880,7 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
     // (undocumented)
     static moduleType: ModuleType;
-    // (undocumented)
     withdraw(address: string): Promise<void>;
-    // (undocumented)
     withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;
 }
 

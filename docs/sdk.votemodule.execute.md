@@ -4,7 +4,7 @@
 
 ## VoteModule.execute() method
 
-Once the voting period has ended, call this method to execute the executables in the proposal.
+Execute Proposal
 
 <b>Signature:</b>
 
@@ -21,4 +21,17 @@ execute(proposalId: string): Promise<void>;
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Execute the related transactions for a proposal if the proposal succeeded.
+
+## Example
+
+
+```javascript
+// The proposal ID ofthe proposal you want to execute
+const proposalId = "0"
+await module.execute(proposalId);
+```
 

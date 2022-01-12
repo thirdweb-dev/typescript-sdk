@@ -4,6 +4,8 @@
 
 ## SplitsModule.distribute() method
 
+Distribute Funds
+
 <b>Signature:</b>
 
 ```typescript
@@ -12,4 +14,15 @@ distribute(): Promise<void>;
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Distribute funds held by the contract in the native currency to all recipients.
+
+## Example
+
+
+```javascript
+await module.distribute();
+```
 

@@ -35,15 +35,15 @@ const module = sdk.getSplitsModule("{{module_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [balanceOf(address)](./sdk.splitsmodule.balanceof.md) |  |  |
+|  [balanceOf(address)](./sdk.splitsmodule.balanceof.md) |  | Get Funds |
 |  [balanceOfAllRecipients()](./sdk.splitsmodule.balanceofallrecipients.md) |  | Returns all the recipients and their balances in the native currency. |
-|  [balanceOfToken(walletAddress, tokenAddress)](./sdk.splitsmodule.balanceoftoken.md) |  |  |
+|  [balanceOfToken(walletAddress, tokenAddress)](./sdk.splitsmodule.balanceoftoken.md) |  | Get Token Funds |
 |  [balanceOfTokenAllRecipients(tokenAddress)](./sdk.splitsmodule.balanceoftokenallrecipients.md) |  | Returns all the recipients and their balances in a non-native currency. |
-|  [distribute()](./sdk.splitsmodule.distribute.md) |  |  |
-|  [distributeToken(tokenAddress)](./sdk.splitsmodule.distributetoken.md) |  |  |
+|  [distribute()](./sdk.splitsmodule.distribute.md) |  | Distribute Funds |
+|  [distributeToken(tokenAddress)](./sdk.splitsmodule.distributetoken.md) |  | Distribute Funds |
 |  [get()](./sdk.splitsmodule.get.md) |  |  |
-|  [getAllRecipients()](./sdk.splitsmodule.getallrecipients.md) |  |  |
+|  [getAllRecipients()](./sdk.splitsmodule.getallrecipients.md) |  | Get Recients |
 |  [getRecipientSplitPercentage(address)](./sdk.splitsmodule.getrecipientsplitpercentage.md) |  |  |
-|  [withdraw(address)](./sdk.splitsmodule.withdraw.md) |  |  |
-|  [withdrawToken(walletAddress, tokenAddress)](./sdk.splitsmodule.withdrawtoken.md) |  |  |
+|  [withdraw(address)](./sdk.splitsmodule.withdraw.md) |  | Withdraw Funds |
+|  [withdrawToken(walletAddress, tokenAddress)](./sdk.splitsmodule.withdrawtoken.md) |  | Withdraw Token Funds |
 
