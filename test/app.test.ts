@@ -150,7 +150,7 @@ describe("App Module", async () => {
 
   it("should deploy a marketplace module successfully", async () => {
     const result = await appModule.deployMarketModule({
-      name: `Testing market from SDK - ${new Date().toLocaleString()}`,
+      name: `Testing market from SDK`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       marketFeeBasisPoints: 100,
@@ -160,7 +160,7 @@ describe("App Module", async () => {
 
   it("should deploy a pack module successfully", async () => {
     const result = await appModule.deployPackModule({
-      name: `Testing pack from SDK - ${new Date().toLocaleString()}`,
+      name: `Testing pack from SDK`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       sellerFeeBasisPoints: 100,
@@ -176,7 +176,7 @@ describe("App Module", async () => {
 
   it("should deploy a drop module successfully", async () => {
     const result = await appModule.deployDropModule({
-      name: `Testing drop from SDK - ${new Date().toLocaleString()}`,
+      name: `Testing drop from SDK`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       sellerFeeBasisPoints: 100,
@@ -197,7 +197,7 @@ describe("App Module", async () => {
 
   it("should deploy a datastore module successfully", async () => {
     const result = await appModule.deployDatastoreModule({
-      name: `Testing drop from SDK - ${new Date().toLocaleString()}`,
+      name: `Testing drop from SDK`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
     });
@@ -230,7 +230,7 @@ describe("App Module", async () => {
   });
   it("should deploy a bundle drop module correctly", async () => {
     const contract = await appModule.deployBundleDropModule({
-      name: `Testing bundle drop from SDK - ${new Date().toLocaleString()}`,
+      name: `Testing bundle drop from SDK`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       sellerFeeBasisPoints: 100,

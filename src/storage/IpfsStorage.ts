@@ -188,15 +188,12 @@ export class IpfsStorage implements IStorage {
     if (hash) {
       uri = this.resolveFullUrl(hash);
     }
-    try {
-      const result = await fetch(uri);
-      if (result.status !== 200) {
-        throw new Error(`Status code (!= 200) =${result.status}`);
-      }
-      return await result.text();
-    } catch (err: any) {
-      throw new FetchError(`Failed to fetch IPFS file: ${uri}`, err);
+    const result = await fetch(uri);
+    if (!result.ok) {
+      throw new Error(`Status code (!= 200) =${result.status}`);
     }
+
+    return await result.text();
   }
 
   /**
