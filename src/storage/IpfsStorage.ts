@@ -80,8 +80,7 @@ export class IpfsStorage implements IStorage {
       | string[]
       | FileOrBuffer[]
       | File[]
-      | BufferOrStringWithName[]
-      | string[],
+      | BufferOrStringWithName[],
     contractAddress?: string,
     fileStartNumber = 0,
   ): Promise<string> {
