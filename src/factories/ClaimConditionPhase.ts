@@ -131,14 +131,15 @@ export default class ClaimConditionPhase {
           if (address.includes(".eth")) {
             const resolved = await ethers
               .getDefaultProvider()
-              .resolveName(address);
+              .resolveName(address)
+              .then((address) => address?.toLocaleLowerCase());
             if (!resolved) {
               throw new Error(`Could not resolve address ${address}`);
             }
             return resolved as string;
           }
           invariant(isAddress(address), "Invalid address");
-          return address;
+          return address.toLowerCase();
         }),
       ).then(async (addresses) => {
         console.log(addresses);
