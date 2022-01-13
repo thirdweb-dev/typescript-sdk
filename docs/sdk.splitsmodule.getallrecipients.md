@@ -4,7 +4,7 @@
 
 ## SplitsModule.getAllRecipients() method
 
-Get Recients
+&lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt; HEAD Get Recients ======= Get Recipients &gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt; jd/generate-json-snippets
 
 <b>Signature:</b>
 

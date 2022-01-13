@@ -409,7 +409,7 @@ export class DropModule
    * @example
    * ```javascript
    * // Address of the wallet to check NFT balance
-   * const address = "{{wallet_address}}"";
+   * const address = "{{wallet_address}}";
    *
    * const balance = await module.balanceOf(address);
    * console.log(balance);

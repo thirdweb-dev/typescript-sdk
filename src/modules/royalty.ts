@@ -115,7 +115,11 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
   }
 
   /**
+<<<<<<< HEAD
    * Get Recients
+=======
+   * Get Recipients
+>>>>>>> jd/generate-json-snippets
    *
    * @remarks Get the data about the shares of every split recipient on the module
    *

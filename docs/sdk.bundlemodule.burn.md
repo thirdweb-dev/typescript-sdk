@@ -4,6 +4,8 @@
 
 ## BundleModule.burn() method
 
+Burn NFT
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,20 @@ burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt>;
 <b>Returns:</b>
 
 Promise&lt;TransactionReceipt&gt;
+
+## Remarks
+
+Burn an NFT, permanently taking it out of circulation and reducing the supply.
+
+## Example
+
+
+```javascript
+// The token ID of the NFT you want to burn
+const tokenId = 0;
+// The number of specified NFTs you want to burn
+const amount = 1
+
+await module.burn({ tokenId, amount });
+```
 

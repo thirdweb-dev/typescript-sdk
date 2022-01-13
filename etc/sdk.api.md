@@ -295,7 +295,6 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> implements ITra
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber>;
     balanceOf(address: string, tokenId: string): Promise<BigNumber>;
-    // (undocumented)
     burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt>;
     // (undocumented)
     burnBatch(args: INFTBundleBatchArgs[]): Promise<TransactionReceipt>;
@@ -1529,7 +1528,6 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     // (undocumented)
     balance(): Promise<BigNumber_2>;
     balanceOf(address: string): Promise<BigNumber_2>;
-    // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): SignatureMint721;
@@ -1660,7 +1658,6 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
-    // (undocumented)
     getNFTs(packId: string): Promise<PackNFTMetadata[]>;
     getRoyaltyBps(): Promise<BigNumberish_2>;
     getRoyaltyRecipientAddress(): Promise<string>;

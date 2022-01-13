@@ -169,7 +169,7 @@ export class BundleModule
    * @example
    * ```javascript
    * // Address of the wallet to check NFT balance
-   * const address = "{{wallet_address}}"";
+   * const address = "{{wallet_address}}";
    * // The token ID of the NFT you want to check the wallets balance of
    * const tokenId = "0"
    *
@@ -273,9 +273,9 @@ export class BundleModule
   }
 
   /**
-   * Create & Mint NFT
+   * Mint NFT
    *
-   * @remarks Create and mint NFTs.
+   * @remarks Mint an NFT with a specified supply.
    *
    * @example
    * ```javascript
@@ -301,9 +301,9 @@ export class BundleModule
   }
 
   /**
-   * Create & Mint Many NFTs
+   * Mint Many NFTs
    *
-   * @remarks Create and mint many different NFTs.
+   * @remarks Mint many different NFTs with specified supplies.
    *
    * @example
    * ```javascript
@@ -448,6 +448,21 @@ export class BundleModule
     await this.sendTransaction("mintBatch", [to, ids, amounts, data]);
   }
 
+  /**
+   * Burn NFT
+   *
+   * @remarks Burn an NFT, permanently taking it out of circulation and reducing the supply.
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the NFT you want to burn
+   * const tokenId = 0;
+   * // The number of specified NFTs you want to burn
+   * const amount = 1
+   *
+   * await module.burn({ tokenId, amount });
+   * ```
+   */
   public async burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt> {
     return await this.burnFrom(await this.getSignerAddress(), args);
   }

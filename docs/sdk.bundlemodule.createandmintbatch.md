@@ -4,7 +4,7 @@
 
 ## BundleModule.createAndMintBatch() method
 
-Create &amp; Mint Many NFTs
+Mint Many NFTs
 
 <b>Signature:</b>
 
@@ -24,7 +24,7 @@ Promise&lt;[BundleMetadata](./sdk.bundlemetadata.md)<!-- -->\[\]&gt;
 
 ## Remarks
 
-Create and mint many different NFTs.
+Mint many different NFTs with specified supplies.
 
 ## Example
 

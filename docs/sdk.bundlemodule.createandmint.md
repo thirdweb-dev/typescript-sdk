@@ -4,7 +4,7 @@
 
 ## BundleModule.createAndMint() method
 
-Create &amp; Mint NFT
+Mint NFT
 
 <b>Signature:</b>
 
@@ -24,7 +24,7 @@ Promise&lt;[BundleMetadata](./sdk.bundlemetadata.md)<!-- -->&gt;
 
 ## Remarks
 
-Create and mint NFTs.
+Mint an NFT with a specified supply.
 
 ## Example
 
