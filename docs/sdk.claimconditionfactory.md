@@ -24,5 +24,4 @@ declare class ClaimConditionFactory
 |  [deleteClaimPhase(index)](./sdk.claimconditionfactory.deleteclaimphase.md) |  | Removes a claim condition phase from the factory. |
 |  [fromPublicClaimConditions(conditions)](./sdk.claimconditionfactory.frompublicclaimconditions.md) |  | Converts a set of generic <code>PublicClaimCondition</code>s into a <code>ClaimConditionFactory</code> |
 |  [newClaimPhase({ startTime, maxQuantity, maxQuantityPerTransaction, })](./sdk.claimconditionfactory.newclaimphase.md) |  | Creates a new claim 'phase' with its own set of claim conditions |
-|  [removeClaimPhase(\_index)](./sdk.claimconditionfactory.removeclaimphase.md) |  |  |
 

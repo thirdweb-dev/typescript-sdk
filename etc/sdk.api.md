@@ -8,32 +8,26 @@
 
 import { AccessControlEnumerable } from '@3rdweb/contracts';
 import { BaseContract } from 'ethers';
-import { BigNumber } from '@ethersproject/bignumber';
-import { BigNumber as BigNumber_2 } from 'ethers';
-import { BigNumberish } from '@ethersproject/bignumber';
-import { BigNumberish as BigNumberish_2 } from 'ethers';
+import { BigNumber } from 'ethers';
+import { BigNumber as BigNumber_2 } from '@ethersproject/bignumber';
+import { BigNumberish } from 'ethers';
+import { BigNumberish as BigNumberish_2 } from '@ethersproject/bignumber';
 import { BytesLike } from 'ethers';
 import { CallOverrides } from 'ethers';
 import { Coin } from '@3rdweb/contracts';
-import { ContractReceipt } from 'ethers';
-import { DataStore } from '@3rdweb/contracts';
 import { ethers } from 'ethers';
 import { LazyMintERC1155 } from '@3rdweb/contracts';
 import { LazyMintERC721 } from '@3rdweb/contracts';
-import { LazyNFT } from '@3rdweb/contracts';
 import { Log } from '@ethersproject/providers';
-import { Market } from '@3rdweb/contracts';
 import { Marketplace } from '@3rdweb/contracts';
 import type { Network } from '@ethersproject/providers';
-import { NFT } from '@3rdweb/contracts';
 import { NFTCollection } from '@3rdweb/contracts';
 import { Pack } from '@3rdweb/contracts';
-import { ProtocolControl } from '@3rdweb/contracts';
 import { Provider } from '@ethersproject/providers';
-import { Registry } from '@3rdweb/contracts';
-import { Royalty } from '@3rdweb/contracts';
 import { SignatureMint721 } from '@3rdweb/contracts';
 import { Signer } from 'ethers';
+import { Splits } from '@3rdweb/contracts';
+import { ThirdwebRegistry } from '@3rdweb/contracts';
 import { TransactionReceipt } from '@ethersproject/providers';
 import { VotingGovernor } from '@3rdweb/contracts';
 
@@ -49,80 +43,7 @@ export type AllModuleMetadata = CollectionModuleMetadata | CommonModuleMetadata;
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule | typeof BundleDropModule | typeof MarketplaceModule | typeof VoteModule;
-
-// Warning: (ae-forgotten-export) The symbol "IAppModule" needs to be exported by the entry point index.d.ts
-//
-// @public
-export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppModule_2 {
-    balance(): Promise<BigNumber_2>;
-    balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
-    // @internal (undocumented)
-    protected connectContract(): ProtocolControl;
-    deployBundleDropModule(metadata: BundleDropModuleMetadata): Promise<BundleDropModule>;
-    deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
-    deployCurrencyModule(metadata: CurrencyModuleMetadata): Promise<CurrencyModule>;
-    // @alpha
-    deployDatastoreModule(metadata: DatastoreModuleMetadata): Promise<DatastoreModule>;
-    deployDropModule(metadata: DropModuleMetadata): Promise<DropModule>;
-    deployMarketModule(metadata: MarketModuleMetadata): Promise<MarketModule>;
-    // (undocumented)
-    deployMarketplaceModule(metadata: MarketplaceModuleMetadata): Promise<MarketplaceModule>;
-    deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
-    deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
-    deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
-    deployTokenModule(metadata: TokenModuleMetadata): Promise<TokenModule>;
-    deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
-    // @internal (undocumented)
-    getAllContractMetadata(addresses: string[]): Promise<ModuleMetadataNoType[]>;
-    getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
-    // (undocumented)
-    getBundleModules(): Promise<ModuleMetadata[]>;
-    // @deprecated
-    getCollectionModules(): Promise<ModuleMetadata[]>;
-    // @deprecated
-    getCurrencyModules(): Promise<ModuleMetadata[]>;
-    // @alpha @deprecated
-    getDatastoreModules(): Promise<ModuleMetadata[]>;
-    // @deprecated
-    getDropModules(): Promise<ModuleMetadata[]>;
-    // @deprecated
-    getMarketModules(): Promise<ModuleMetadata[]>;
-    // @internal @override (undocumented)
-    protected getModuleRoles(): readonly Role[];
-    // @internal (undocumented)
-    protected getModuleType(): ModuleType;
-    // @deprecated
-    getNFTModules(): Promise<ModuleMetadata[]>;
-    // @deprecated
-    getPackModules(): Promise<ModuleMetadata[]>;
-    // (undocumented)
-    getRoyaltyTreasury(address?: string): Promise<string>;
-    // @internal
-    isV1(): Promise<boolean>;
-    // @internal (undocumented)
-    isV1UpgradedOrV2(): Promise<boolean>;
-    // (undocumented)
-    static roles: readonly ["admin"];
-    // @deprecated (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // (undocumented)
-    setModuleRoyaltyTreasury(moduleAddress: string, treasury: string): Promise<TransactionReceipt>;
-    // (undocumented)
-    setRoyaltyTreasury(treasury: string): Promise<TransactionReceipt>;
-    // (undocumented)
-    shouldUpgradeModuleList(): Promise<ModuleMetadata[]>;
-    // (undocumented)
-    shouldUpgradeToV2(): Promise<boolean>;
-    // (undocumented)
-    upgradeModuleList(moduleAddresses: string[]): Promise<void>;
-    upgradeToV2(upgradeOptions?: {
-        splitsModuleAddress?: string;
-        splitsRecipients?: NewSplitRecipient[];
-    }): Promise<void>;
-    // (undocumented)
-    withdrawFunds(to: string, currency: string): Promise<TransactionReceipt>;
-}
+export type AnyContract = typeof BundleModule | typeof NFTModule | typeof PackModule | typeof DropModule | typeof SplitsModule | typeof BundleDropModule | typeof MarketplaceModule | typeof TokenModule | typeof RegistryModule | typeof VoteModule;
 
 // @public (undocumented)
 export class AssetNotFoundError extends Error {
@@ -137,7 +58,7 @@ export class AuctionAlreadyStartedError extends Error {
 
 // @public
 export class AuctionHasNotEndedError extends Error {
-    constructor(id?: string, endTime?: BigNumberish_2);
+    constructor(id?: string, endTime?: BigNumberish);
 }
 
 // @public
@@ -145,16 +66,16 @@ export interface AuctionListing {
     asset: NFTMetadata;
     assetContractAddress: string;
     buyoutCurrencyValuePerToken: CurrencyValue;
-    buyoutPrice: BigNumberish_2;
+    buyoutPrice: BigNumberish;
     currencyContractAddress: string;
-    endTimeInEpochSeconds: BigNumberish_2;
+    endTimeInEpochSeconds: BigNumberish;
     id: string;
-    quantity: BigNumberish_2;
-    reservePrice: BigNumberish_2;
+    quantity: BigNumberish;
+    reservePrice: BigNumberish;
     reservePriceCurrencyValuePerToken: CurrencyValue;
     sellerAddress: string;
-    startTimeInEpochSeconds: BigNumberish_2;
-    tokenId: BigNumberish_2;
+    startTimeInEpochSeconds: BigNumberish;
+    tokenId: BigNumberish;
     // (undocumented)
     type: ListingType.Auction;
 }
@@ -164,17 +85,17 @@ export interface BundleDropCreateClaimCondition {
     // (undocumented)
     currency?: string;
     // (undocumented)
-    maxClaimableSupply: BigNumberish_2;
+    maxClaimableSupply: BigNumberish;
     // (undocumented)
     merkleRoot?: BytesLike;
     // (undocumented)
-    pricePerToken?: BigNumberish_2;
+    pricePerToken?: BigNumberish;
     // (undocumented)
-    quantityLimitPerTransaction?: BigNumberish_2;
+    quantityLimitPerTransaction?: BigNumberish;
     // (undocumented)
-    startTimestamp?: BigNumberish_2;
+    startTimestamp?: BigNumberish;
     // (undocumented)
-    waitTimeInSecondsBetweenClaims?: BigNumberish_2;
+    waitTimeInSecondsBetweenClaims?: BigNumberish;
 }
 
 // @beta (undocumented)
@@ -182,20 +103,20 @@ export interface BundleDropMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    supply: BigNumber_2;
+    supply: BigNumber;
 }
 
 // @public
 export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implements ITransferable {
     // (undocumented)
-    balance(tokenId: BigNumberish_2): Promise<BigNumber_2>;
-    balanceOf(address: string, tokenId: BigNumberish_2): Promise<BigNumber_2>;
+    balance(tokenId: BigNumberish): Promise<BigNumber>;
+    balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
     // (undocumented)
-    burn(tokenId: BigNumberish_2, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
-    canClaim(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToCheck?: string): Promise<boolean>;
-    claim(tokenId: BigNumberish_2, quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
-    claimTo(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToClaim: string, proofs?: BytesLike[]): Promise<TransactionReceipt>;
+    canClaim(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
+    claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<void>;
+    claimTo(tokenId: BigNumberish, quantity: BigNumberish, addressToClaim: string, proofs?: BytesLike[]): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): LazyMintERC1155;
     createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
@@ -206,19 +127,19 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     // Warning: (ae-incompatible-release-tags) The symbol "getActiveClaimCondition" is marked as @public, but its signature references "ClaimCondition" which is marked as @beta
     //
     // (undocumented)
-    getActiveClaimCondition(tokenId: BigNumberish_2): Promise<ClaimCondition>;
+    getActiveClaimCondition(tokenId: BigNumberish): Promise<ClaimCondition>;
     // Warning: (ae-incompatible-release-tags) The symbol "getAll" is marked as @public, but its signature references "BundleDropMetadata" which is marked as @beta
     getAll(): Promise<BundleDropMetadata[]>;
     // Warning: (ae-incompatible-release-tags) The symbol "getAllClaimConditions" is marked as @public, but its signature references "ClaimCondition" which is marked as @beta
     //
     // (undocumented)
-    getAllClaimConditions(tokenId: BigNumberish_2): Promise<ClaimCondition[]>;
+    getAllClaimConditions(tokenId: BigNumberish): Promise<ClaimCondition[]>;
     // @beta
-    getAllClaimerAddresses(tokenId: BigNumberish_2): Promise<string[]>;
+    getAllClaimerAddresses(tokenId: BigNumberish): Promise<string[]>;
     getClaimConditionFactory(): ClaimConditionFactory;
     // (undocumented)
     getClaimConditionsFactory(): ClaimConditionFactory;
-    getClaimIneligibilityReasons(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    getClaimIneligibilityReasons(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // (undocumented)
     getDefaultSaleRecipient(): Promise<string>;
     // @internal @override (undocumented)
@@ -227,45 +148,37 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     protected getModuleType(): ModuleType;
     // Warning: (ae-incompatible-release-tags) The symbol "getOwned" is marked as @public, but its signature references "BundleDropMetadata" which is marked as @beta
     getOwned(_address?: string): Promise<BundleDropMetadata[]>;
-    getRoyaltyBps(): Promise<BigNumberish_2>;
+    getRoyaltyBps(): Promise<BigNumberish>;
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
-    getSaleRecipient(tokenId: BigNumberish_2): Promise<string>;
+    getSaleRecipient(tokenId: BigNumberish): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
     isTransferRestricted(): Promise<boolean>;
-    // Warning: (ae-incompatible-release-tags) The symbol "lazyMintBatch" is marked as @public, but its signature references "BundleDropMetadata" which is marked as @beta
-    //
-    // (undocumented)
-    lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<BundleDropMetadata[]>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
-    setClaimCondition(tokenId: BigNumberish_2, factory: ClaimConditionFactory): Promise<TransactionReceipt>;
+    setClaimCondition(tokenId: BigNumberish, factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
     setDefaultSaleRecipient(recipient: string): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // Warning: (ae-incompatible-release-tags) The symbol "setPublicClaimConditions" is marked as @public, but its signature references "BundleDropCreateClaimCondition" which is marked as @beta
-    //
-    // @deprecated (undocumented)
-    setPublicClaimConditions(tokenId: BigNumberish_2, conditions: BundleDropCreateClaimCondition[]): Promise<void>;
     // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
-    setSaleRecipient(tokenId: BigNumberish_2, recipient: string): Promise<TransactionReceipt>;
-    totalSupply(tokenId: BigNumberish_2): Promise<BigNumber_2>;
-    transfer(to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
+    setSaleRecipient(tokenId: BigNumberish, recipient: string): Promise<TransactionReceipt>;
+    totalSupply(tokenId: BigNumberish): Promise<BigNumber>;
+    transfer(to: string, tokenId: BigNumberish, amount: BigNumberish, data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
-    transferFrom(from: string, to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
+    transferFrom(from: string, to: string, tokenId: BigNumberish, amount: BigNumberish, data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
-    updateClaimConditions(tokenId: BigNumberish_2, factory: ClaimConditionFactory): Promise<TransactionReceipt>;
+    updateClaimConditions(tokenId: BigNumberish, factory: ClaimConditionFactory): Promise<TransactionReceipt>;
 }
 
 // @public (undocumented)
@@ -283,9 +196,9 @@ export interface BundleMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    ownedByAddress: BigNumber;
+    ownedByAddress: BigNumber_2;
     // (undocumented)
-    supply: BigNumber;
+    supply: BigNumber_2;
     // (undocumented)
     underlyingType: UnderlyingType;
 }
@@ -293,8 +206,8 @@ export interface BundleMetadata {
 // @public
 export class BundleModule extends ModuleWithRoles<NFTCollection> implements ITransferable {
     // (undocumented)
-    balance(tokenId: string): Promise<BigNumber>;
-    balanceOf(address: string, tokenId: string): Promise<BigNumber>;
+    balance(tokenId: string): Promise<BigNumber_2>;
+    balanceOf(address: string, tokenId: string): Promise<BigNumber_2>;
     burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt>;
     // (undocumented)
     burnBatch(args: INFTBundleBatchArgs[]): Promise<TransactionReceipt>;
@@ -321,15 +234,15 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> implements ITra
     // Warning: (ae-incompatible-release-tags) The symbol "createWithErc20" is marked as @public, but its signature references "INFTBundleCreateArgs" which is marked as @beta
     //
     // (undocumented)
-    createWithErc20(tokenContract: string, tokenAmount: BigNumberish, args: INFTBundleCreateArgs): Promise<void>;
+    createWithErc20(tokenContract: string, tokenAmount: BigNumberish_2, args: INFTBundleCreateArgs): Promise<void>;
     // (undocumented)
-    createWithERC721(tokenContract: string, tokenId: BigNumberish, metadata: MetadataURIOrObject): Promise<void>;
+    createWithERC721(tokenContract: string, tokenId: BigNumberish_2, metadata: MetadataURIOrObject): Promise<void>;
     // (undocumented)
-    createWithNFT(tokenContract: string, tokenId: BigNumberish, metadata: MetadataURIOrObject): Promise<void>;
+    createWithNFT(tokenContract: string, tokenId: BigNumberish_2, metadata: MetadataURIOrObject): Promise<void>;
     // Warning: (ae-incompatible-release-tags) The symbol "createWithToken" is marked as @public, but its signature references "INFTBundleCreateArgs" which is marked as @beta
     //
     // (undocumented)
-    createWithToken(tokenContract: string, tokenAmount: BigNumberish, args: INFTBundleCreateArgs): Promise<void>;
+    createWithToken(tokenContract: string, tokenAmount: BigNumberish_2, args: INFTBundleCreateArgs): Promise<void>;
     // Warning: (ae-incompatible-release-tags) The symbol "get" is marked as @public, but its signature references "BundleMetadata" which is marked as @beta
     get(tokenId: string, address?: string): Promise<BundleMetadata>;
     // Warning: (ae-incompatible-release-tags) The symbol "getAll" is marked as @public, but its signature references "BundleMetadata" which is marked as @beta
@@ -340,10 +253,10 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> implements ITra
     protected getModuleType(): ModuleType;
     // Warning: (ae-incompatible-release-tags) The symbol "getOwned" is marked as @public, but its signature references "BundleMetadata" which is marked as @beta
     getOwned(_address?: string): Promise<BundleMetadata[]>;
-    getRoyaltyBps(): Promise<BigNumberish>;
+    getRoyaltyBps(): Promise<BigNumberish_2>;
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
-    isApproved(address: string, operator: string, assetContract?: string, assetId?: BigNumberish): Promise<boolean>;
+    isApproved(address: string, operator: string, assetContract?: string, assetId?: BigNumberish_2): Promise<boolean>;
     // (undocumented)
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
@@ -366,14 +279,14 @@ export class BundleModule extends ModuleWithRoles<NFTCollection> implements ITra
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
-    transfer(to: string, tokenId: string, amount: BigNumberish): Promise<TransactionReceipt>;
+    transfer(to: string, tokenId: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
     transferBatchFrom(from: string, to: string, args: INFTBundleBatchArgs[], data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, args: INFTBundleBatchArgs, data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
-    unwrapNFT(tokenId: BigNumberish): Promise<TransactionReceipt>;
+    unwrapNFT(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
-    unwrapToken(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionReceipt>;
+    unwrapToken(tokenId: BigNumberish_2, amount: BigNumberish_2): Promise<TransactionReceipt>;
 }
 
 // @public (undocumented)
@@ -389,7 +302,7 @@ export type ChainlinkInfo = {
     vrfCoordinator: string;
     linkTokenAddress: string;
     keyHash: string;
-    fees: BigNumber_2;
+    fees: BigNumber;
 };
 
 // Warning: (ae-internal-missing-underscore) The name "ChainlinkVrf" should be prefixed with an underscore because the declaration is marked as @internal
@@ -414,9 +327,9 @@ export interface ClaimCondition {
     // (undocumented)
     merkleRoot: BytesLike;
     // (undocumented)
-    price: BigNumber_2;
+    price: BigNumber;
     // (undocumented)
-    pricePerToken: BigNumber_2;
+    pricePerToken: BigNumber;
     // (undocumented)
     quantityLimitPerTransaction: string;
     // (undocumented)
@@ -434,31 +347,28 @@ export class ClaimConditionFactory {
     // @internal
     buildConditionsForDropV1(): Promise<PublicClaimCondition[]>;
     deleteClaimPhase(index: number): Promise<void>;
-    // Warning: (ae-incompatible-release-tags) The symbol "fromPublicClaimConditions" is marked as @public, but its signature references "PublicClaimCondition" which is marked as @beta
     fromPublicClaimConditions(conditions: PublicClaimCondition[]): this;
     newClaimPhase({ startTime, maxQuantity, maxQuantityPerTransaction, }: {
         startTime: Date | number;
-        maxQuantity?: BigNumberish_2;
-        maxQuantityPerTransaction?: BigNumberish_2;
+        maxQuantity?: BigNumberish;
+        maxQuantityPerTransaction?: BigNumberish;
     }): ClaimConditionPhase;
-    // @deprecated (undocumented)
-    removeClaimPhase(_index: number): void;
 }
 
 // @public (undocumented)
 export class ClaimConditionPhase {
     constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>);
     // @internal
-    buildPublicClaimCondition(): Promise<PublicMintCondition>;
+    buildPublicClaimCondition(): Promise<PublicClaimCondition>;
     // @internal (undocumented)
     getSnapshot(): SnapshotInfo | undefined;
     setConditionStartTime(when: Date | number): ClaimConditionPhase;
-    setMaxQuantity(maxQuantity: BigNumberish_2): ClaimConditionPhase;
-    setMaxQuantityPerTransaction(max: BigNumberish_2): ClaimConditionPhase;
+    setMaxQuantity(maxQuantity: BigNumberish): ClaimConditionPhase;
+    setMaxQuantityPerTransaction(max: BigNumberish): ClaimConditionPhase;
     setMerkleRoot(root: string): ClaimConditionPhase;
-    setPrice(price: BigNumberish_2, tokenAddress?: string): ClaimConditionPhase;
+    setPrice(price: BigNumberish, tokenAddress?: string): ClaimConditionPhase;
     setSnapshot(addresses: string[]): ClaimConditionPhase;
-    setWaitTimeBetweenClaims(waitInSeconds: BigNumberish_2): ClaimConditionPhase;
+    setWaitTimeBetweenClaims(waitInSeconds: BigNumberish): ClaimConditionPhase;
 }
 
 // @public (undocumented)
@@ -490,13 +400,10 @@ export interface CollectionMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    ownedByAddress: BigNumber;
+    ownedByAddress: BigNumber_2;
     // (undocumented)
-    supply: BigNumber;
+    supply: BigNumber_2;
 }
-
-// @public (undocumented)
-export type CollectionModule = BundleModule;
 
 // @public (undocumented)
 export type CollectionModuleMetadata = BundleModuleMetadata;
@@ -536,24 +443,6 @@ export function convertModuleTypeToName(moduleType: ModuleType): keyof typeof Mo
 // @public (undocumented)
 export function convertNameToModuleType(moduleName?: string): ModuleType | undefined;
 
-// @beta (undocumented)
-export interface CreatePublicMintCondition {
-    // (undocumented)
-    currency?: string;
-    // (undocumented)
-    maxMintSupply: BigNumberish_2;
-    // (undocumented)
-    merkleRoot?: BytesLike;
-    // (undocumented)
-    pricePerToken?: BigNumberish_2;
-    // (undocumented)
-    quantityLimitPerTransaction?: BigNumberish_2;
-    // (undocumented)
-    startTimestampInSeconds?: BigNumberish_2;
-    // (undocumented)
-    waitTimeSecondsLimitPerTransaction?: BigNumberish_2;
-}
-
 // @public
 export interface Currency {
     // (undocumented)
@@ -562,10 +451,6 @@ export interface Currency {
     name: string;
     // (undocumented)
     symbol: string;
-}
-
-// @public @deprecated (undocumented)
-export class CurrencyModule extends TokenModule {
 }
 
 // @public (undocumented)
@@ -579,24 +464,6 @@ export interface CurrencyValue extends Currency {
     displayValue: string;
     // (undocumented)
     value: string;
-}
-
-// @alpha
-export class DatastoreModule extends ModuleWithRoles<DataStore> {
-    // @internal (undocumented)
-    protected connectContract(): DataStore;
-    // @internal @override (undocumented)
-    protected getModuleRoles(): readonly Role[];
-    // @internal (undocumented)
-    protected getModuleType(): ModuleType;
-    // (undocumented)
-    getUint(key: string): Promise<BigNumberish_2 | undefined>;
-    // (undocumented)
-    static moduleType: ModuleType;
-    // (undocumented)
-    static roles: readonly ["admin", "editor"];
-    // (undocumented)
-    setUint(key: string, value: BigNumberish_2): Promise<TransactionReceipt>;
 }
 
 // @public (undocumented)
@@ -617,14 +484,14 @@ export interface DirectListing {
     asset: NFTMetadata;
     assetContractAddress: string;
     buyoutCurrencyValuePerToken: CurrencyValue;
-    buyoutPrice: BigNumberish_2;
+    buyoutPrice: BigNumberish;
     currencyContractAddress: string;
     id: string;
-    quantity: BigNumberish_2;
-    secondsUntilEnd: BigNumberish_2;
+    quantity: BigNumberish;
+    secondsUntilEnd: BigNumberish;
     sellerAddress: string;
-    startTimeInSeconds: BigNumberish_2;
-    tokenId: BigNumberish_2;
+    startTimeInSeconds: BigNumberish;
+    tokenId: BigNumberish;
     // (undocumented)
     type: ListingType.Direct;
 }
@@ -634,15 +501,15 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     // (undocumented)
-    balance(): Promise<BigNumber_2>;
-    balanceOf(address: string): Promise<BigNumber_2>;
+    balance(): Promise<BigNumber>;
+    balanceOf(address: string): Promise<BigNumber>;
     // (undocumented)
-    burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
-    canClaim(quantity: BigNumberish_2, addressToCheck?: string): Promise<boolean>;
+    burn(tokenId: BigNumberish): Promise<TransactionReceipt>;
+    canClaim(quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
     // @internal (undocumented)
     canCreateBatch(): Promise<boolean>;
-    claim(quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>;
-    claimTo(quantity: BigNumberish_2, addressToClaim: string, proofs?: BytesLike[]): Promise<TransactionReceipt>;
+    claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<NFTMetadataOwner[]>;
+    claimTo(quantity: BigNumberish, addressToClaim: string, proofs?: BytesLike[]): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): LazyMintERC721;
     // @beta
@@ -653,10 +520,6 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     //
     // (undocumented)
     getActiveClaimCondition(): Promise<ClaimCondition>;
-    // Warning: (ae-incompatible-release-tags) The symbol "getActiveMintCondition" is marked as @public, but its signature references "PublicMintCondition" which is marked as @beta
-    //
-    // @deprecated (undocumented)
-    getActiveMintCondition(): Promise<PublicMintCondition>;
     // Warning: (ae-forgotten-export) The symbol "QueryAllParams" needs to be exported by the entry point index.d.ts
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     // Warning: (ae-incompatible-release-tags) The symbol "getAllClaimConditions" is marked as @public, but its signature references "ClaimCondition" which is marked as @beta
@@ -665,36 +528,25 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     getAllClaimConditions(): Promise<ClaimCondition[]>;
     // (undocumented)
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
-    // Warning: (ae-incompatible-release-tags) The symbol "getAllMintConditions" is marked as @public, but its signature references "PublicMintCondition" which is marked as @beta
-    //
-    // @deprecated (undocumented)
-    getAllMintConditions(): Promise<PublicMintCondition[]>;
     // (undocumented)
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getClaimConditionsFactory(): ClaimConditionFactory;
-    getClaimIneligibilityReasons(quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    getClaimIneligibilityReasons(quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // (undocumented)
     getDefaultSaleRecipient(): Promise<string>;
-    // @deprecated (undocumented)
-    getMintConditionsFactory(): ClaimConditionFactory;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
-    getRoyaltyBps(): Promise<BigNumberish_2>;
+    getRoyaltyBps(): Promise<BigNumberish>;
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
     isTransferRestricted(): Promise<boolean>;
-    isV1(): Promise<boolean>;
-    // @deprecated (undocumented)
-    lazyMint(metadata: MetadataURIOrObject): Promise<void>;
-    // @deprecated (undocumented)
-    lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
     // @internal (undocumented)
-    maxTotalSupply(): Promise<BigNumber_2>;
+    maxTotalSupply(): Promise<BigNumber>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
@@ -706,40 +558,30 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     setClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
     setDefaultSaleRecipient(recipient: string): Promise<TransactionReceipt>;
-    // @deprecated (undocumented)
-    setMintConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // @internal (undocumented)
     setProviderOrSigner(providerOrSigner: ProviderOrSigner): void;
-    // Warning: (ae-incompatible-release-tags) The symbol "setPublicMintConditions" is marked as @public, but its signature references "CreatePublicMintCondition" which is marked as @beta
-    //
-    // @deprecated (undocumented)
-    setPublicMintConditions(conditions: CreatePublicMintCondition[]): Promise<void>;
     // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
-    totalClaimedSupply(): Promise<BigNumber_2>;
+    totalClaimedSupply(): Promise<BigNumber>;
     // (undocumented)
-    totalSupply(): Promise<BigNumber_2>;
+    totalSupply(): Promise<BigNumber>;
     // (undocumented)
-    totalUnclaimedSupply(): Promise<BigNumber_2>;
+    totalUnclaimedSupply(): Promise<BigNumber>;
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
-    transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
+    transferFrom(from: string, to: string, tokenId: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
     updateClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
 }
 
 // @public (undocumented)
 export class DropModuleMetadata extends CommonModuleMetadata {
-    // @deprecated
-    baseTokenUri?: string | undefined;
     feeRecipient?: string;
-    // @deprecated
-    maxSupply: number;
     primarySaleFeeBasisPoints?: number | undefined;
     primarySaleRecipientAddress: string;
     sellerFeeBasisPoints?: number | undefined;
@@ -811,7 +653,7 @@ export function getCurrencyMetadata(providerOrSigner: ProviderOrSigner, asset: s
 // Warning: (ae-internal-missing-underscore) The name "getCurrencyValue" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getCurrencyValue(providerOrSigner: ProviderOrSigner, asset: string, price: BigNumberish_2): Promise<CurrencyValue>;
+export function getCurrencyValue(providerOrSigner: ProviderOrSigner, asset: string, price: BigNumberish): Promise<CurrencyValue>;
 
 // Warning: (ae-internal-missing-underscore) The name "getGasPriceForChain" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -861,38 +703,38 @@ export interface IDropModule {
 
 // @public (undocumented)
 export interface IMarketplace {
-    acceptDirectListingOffer(listingId: BigNumberish_2, addressOfOfferor: string): Promise<void>;
-    buyoutAuctionListing(listingId: BigNumberish_2): Promise<void>;
+    acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<void>;
+    buyoutAuctionListing(listingId: BigNumberish): Promise<void>;
     buyoutDirectListing(buyout: {
-        listingId: BigNumberish_2;
-        quantityDesired: BigNumberish_2;
+        listingId: BigNumberish;
+        quantityDesired: BigNumberish;
     }): Promise<void>;
-    buyoutListing(listingId: BigNumberish_2, quantityDesired?: BigNumberish_2): Promise<void>;
-    cancelAuctionListing(listingId: BigNumberish_2): Promise<void>;
-    cancelDirectListing(listingId: BigNumberish_2): Promise<void>;
-    closeAuctionListing(listingId: BigNumberish_2, closeFor?: string): Promise<void>;
-    createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
-    createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
-    getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
+    buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<void>;
+    cancelAuctionListing(listingId: BigNumberish): Promise<void>;
+    cancelDirectListing(listingId: BigNumberish): Promise<void>;
+    closeAuctionListing(listingId: BigNumberish, closeFor?: string): Promise<void>;
+    createAuctionListing(listing: NewAuctionListing): Promise<BigNumber>;
+    createDirectListing(listing: NewDirectListing): Promise<BigNumber>;
+    getActiveOffer(listingId: BigNumberish, address: string): Promise<Offer | undefined>;
     getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
-    getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
-    getBidBufferBps(): Promise<BigNumber_2>;
-    getDirectListing(listingId: BigNumberish_2): Promise<DirectListing>;
-    getListing(listingId: BigNumberish_2): Promise<AuctionListing | DirectListing>;
-    getTimeBufferInSeconds(): Promise<BigNumber_2>;
-    getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
+    getAuctionListing(listingId: BigNumberish): Promise<AuctionListing>;
+    getBidBufferBps(): Promise<BigNumber>;
+    getDirectListing(listingId: BigNumberish): Promise<DirectListing>;
+    getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
+    getTimeBufferInSeconds(): Promise<BigNumber>;
+    getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
     makeAuctionListingBid(bid: {
-        listingId: BigNumberish_2;
-        pricePerToken: BigNumberish_2;
+        listingId: BigNumberish;
+        pricePerToken: BigNumberish;
     }): Promise<void>;
     makeDirectListingOffer(offer: {
-        listingId: BigNumberish_2;
-        quantityDesired: BigNumberish_2;
+        listingId: BigNumberish;
+        quantityDesired: BigNumberish;
         currencyContractAddress: string;
-        pricePerToken: BigNumberish_2;
+        pricePerToken: BigNumberish;
     }): Promise<void>;
-    setBidBufferBps(buffer: BigNumberish_2): Promise<void>;
-    setTimeBufferInSeconds(buffer: BigNumberish_2): Promise<void>;
+    setBidBufferBps(buffer: BigNumberish): Promise<void>;
+    setTimeBufferInSeconds(buffer: BigNumberish): Promise<void>;
     updateAuctionListing(listing: AuctionListing): Promise<void>;
     updateDirectListing(listing: DirectListing): Promise<void>;
 }
@@ -900,9 +742,9 @@ export interface IMarketplace {
 // @public (undocumented)
 export interface INFTBundleBatchArgs {
     // (undocumented)
-    amount: BigNumberish;
+    amount: BigNumberish_2;
     // (undocumented)
-    tokenId: BigNumberish;
+    tokenId: BigNumberish_2;
 }
 
 // @beta (undocumented)
@@ -910,15 +752,15 @@ export interface INFTBundleCreateArgs {
     // (undocumented)
     metadata: MetadataURIOrObject;
     // (undocumented)
-    supply: BigNumberish;
+    supply: BigNumberish_2;
 }
 
 // @beta (undocumented)
 export interface INFTCollectionBatchArgs {
     // (undocumented)
-    amount: BigNumberish;
+    amount: BigNumberish_2;
     // (undocumented)
-    tokenId: BigNumberish;
+    tokenId: BigNumberish_2;
 }
 
 // @public (undocumented)
@@ -926,7 +768,7 @@ export interface INFTCollectionCreateArgs {
     // (undocumented)
     metadata: MetadataURIOrObject;
     // (undocumented)
-    supply: BigNumberish;
+    supply: BigNumberish_2;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "InterfaceId_IERC1155" should be prefixed with an underscore because the declaration is marked as @internal
@@ -958,9 +800,9 @@ export class InvariantError extends Error {
 // @beta (undocumented)
 export interface IPackBatchArgs {
     // (undocumented)
-    amount: BigNumberish_2;
+    amount: BigNumberish;
     // (undocumented)
-    tokenId: BigNumberish_2;
+    tokenId: BigNumberish;
 }
 
 // @beta (undocumented)
@@ -969,15 +811,15 @@ export interface IPackCreateArgs {
     assetContract: string;
     // (undocumented)
     assets: {
-        tokenId: BigNumberish_2;
-        amount: BigNumberish_2;
+        tokenId: BigNumberish;
+        amount: BigNumberish;
     }[];
     // (undocumented)
     metadata: MetadataURIOrObject;
     // (undocumented)
-    rewardsPerOpen?: BigNumberish_2;
+    rewardsPerOpen?: BigNumberish;
     // (undocumented)
-    secondsUntilOpenStart?: BigNumberish_2;
+    secondsUntilOpenStart?: BigNumberish;
 }
 
 // @public (undocumented)
@@ -1042,7 +884,7 @@ export interface ISignatureMinter {
         payload: SignaturePayload;
         signature: string;
     }[]>;
-    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber_2>;
+    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber>;
     verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
 }
 
@@ -1053,7 +895,7 @@ export function isNativeToken(tokenAddress: string): boolean;
 
 // @public (undocumented)
 export interface ISplitsModule {
-    balanceOf(address: string): Promise<BigNumber_2>;
+    balanceOf(address: string): Promise<BigNumber>;
     balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyValue>;
     distribute(): Promise<void>;
     distributeToken(tokenAddress: string): Promise<void>;
@@ -1089,7 +931,7 @@ export interface ITokenMintArgs {
     // (undocumented)
     address: string;
     // (undocumented)
-    amount: BigNumberish_2;
+    amount: BigNumberish;
 }
 
 // @public (undocumented)
@@ -1110,44 +952,6 @@ export type JSONValue = string | number | null | boolean | JSONValue[] | {
 };
 
 // @public
-export interface ListingFilter {
-    // (undocumented)
-    seller?: string;
-    // (undocumented)
-    tokenContract?: string;
-    // (undocumented)
-    tokenId?: string;
-}
-
-// @public
-export interface ListingMetadata {
-    // (undocumented)
-    currencyContract: string;
-    // (undocumented)
-    currencyMetadata: CurrencyValue | null;
-    // (undocumented)
-    id: string;
-    // (undocumented)
-    price: BigNumber_2;
-    // (undocumented)
-    quantity: BigNumber_2;
-    // (undocumented)
-    saleEnd: Date | null;
-    // (undocumented)
-    saleStart: Date | null;
-    // (undocumented)
-    seller: string;
-    // (undocumented)
-    tokenContract: string;
-    // (undocumented)
-    tokenId: string;
-    // (undocumented)
-    tokenMetadata?: NFTMetadata;
-    // (undocumented)
-    tokensPerBuyer: BigNumber_2;
-}
-
-// @public
 export class ListingNotFoundError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string);
 }
@@ -1160,44 +964,6 @@ export enum ListingType {
     Direct = 0
 }
 
-// @public @deprecated
-export class MarketModule extends ModuleWithRoles<Market> {
-    // (undocumented)
-    buy(listingId: string, quantity: BigNumberish_2): Promise<ListingMetadata>;
-    // @internal (undocumented)
-    protected connectContract(): Market;
-    // (undocumented)
-    get(listingId: string): Promise<ListingMetadata>;
-    // (undocumented)
-    getAll(filter?: ListingFilter): Promise<ListingMetadata[]>;
-    // @deprecated (undocumented)
-    getAllListings(filter?: ListingFilter): Promise<ListingMetadata[]>;
-    // @deprecated (undocumented)
-    getListing(listingId: string): Promise<ListingMetadata>;
-    // (undocumented)
-    getMarketFeeBps(): Promise<BigNumber_2>;
-    // @internal @override (undocumented)
-    protected getModuleRoles(): readonly Role[];
-    // @internal (undocumented)
-    protected getModuleType(): ModuleType;
-    // (undocumented)
-    list(assetContract: string, tokenId: string, currencyContract: string, price: BigNumberish_2, quantity: BigNumberish_2, tokensPerBuyer?: BigNumberish_2, secondsUntilStart?: BigNumberish_2, secondsUntilEnd?: BigNumberish_2): Promise<ListingMetadata>;
-    // (undocumented)
-    static moduleType: ModuleType;
-    // (undocumented)
-    static roles: readonly ["admin", "lister", "pauser"];
-    // (undocumented)
-    setMarketFeeBps(fee: number): Promise<TransactionReceipt>;
-    // (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // (undocumented)
-    setRestrictedListerRoleOnly(restricted: boolean): Promise<void>;
-    // (undocumented)
-    unlist(listingId: string, quantity: BigNumberish_2): Promise<void>;
-    // (undocumented)
-    unlistAll(listingId: string): Promise<void>;
-}
-
 // @public (undocumented)
 export class MarketModuleMetadata extends CommonModuleMetadata {
     marketFeeBasisPoints: number;
@@ -1206,62 +972,62 @@ export class MarketModuleMetadata extends CommonModuleMetadata {
 // @public
 export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements IMarketplace {
     // (undocumented)
-    acceptDirectListingOffer(listingId: BigNumberish_2, addressOfOfferor: string): Promise<void>;
-    buyoutAuctionListing(listingId: BigNumberish_2): Promise<void>;
+    acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<void>;
+    buyoutAuctionListing(listingId: BigNumberish): Promise<void>;
     buyoutDirectListing(_buyout: {
-        listingId: BigNumberish_2;
-        quantityDesired: BigNumberish_2;
+        listingId: BigNumberish;
+        quantityDesired: BigNumberish;
     }): Promise<void>;
     // (undocumented)
-    buyoutListing(listingId: BigNumberish_2, quantityDesired?: BigNumberish_2): Promise<void>;
-    cancelAuctionListing(listingId: BigNumberish_2): Promise<void>;
-    cancelDirectListing(listingId: BigNumberish_2): Promise<void>;
+    buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<void>;
+    cancelAuctionListing(listingId: BigNumberish): Promise<void>;
+    cancelDirectListing(listingId: BigNumberish): Promise<void>;
     // (undocumented)
-    closeAuctionListing(listingId: BigNumberish_2, closeFor?: string): Promise<void>;
+    closeAuctionListing(listingId: BigNumberish, closeFor?: string): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): Marketplace;
-    createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
-    createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
+    createAuctionListing(listing: NewAuctionListing): Promise<BigNumber>;
+    createDirectListing(listing: NewDirectListing): Promise<BigNumber>;
     // (undocumented)
-    getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
+    getActiveOffer(listingId: BigNumberish, address: string): Promise<Offer | undefined>;
     getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
     // (undocumented)
-    getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
+    getAuctionListing(listingId: BigNumberish): Promise<AuctionListing>;
     // (undocumented)
-    getBidBufferBps(): Promise<BigNumber_2>;
+    getBidBufferBps(): Promise<BigNumber>;
     // (undocumented)
-    getDirectListing(listingId: BigNumberish_2): Promise<DirectListing>;
+    getDirectListing(listingId: BigNumberish): Promise<DirectListing>;
     // (undocumented)
-    getListing(listingId: BigNumberish_2): Promise<AuctionListing | DirectListing>;
+    getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
-    getTimeBufferInSeconds(): Promise<BigNumber_2>;
+    getTimeBufferInSeconds(): Promise<BigNumber>;
     // (undocumented)
-    getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
+    getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
     // (undocumented)
-    isWinningBid(winningPrice: BigNumberish_2, newBidPrice: BigNumberish_2, bidBuffer: BigNumberish_2): Promise<boolean>;
+    isWinningBid(winningPrice: BigNumberish, newBidPrice: BigNumberish, bidBuffer: BigNumberish): Promise<boolean>;
     makeAuctionListingBid(bid: {
-        listingId: BigNumberish_2;
-        pricePerToken: BigNumberish_2;
+        listingId: BigNumberish;
+        pricePerToken: BigNumberish;
     }): Promise<void>;
     // (undocumented)
     makeDirectListingOffer(offer: {
-        listingId: BigNumberish_2;
-        quantityDesired: BigNumberish_2;
+        listingId: BigNumberish;
+        quantityDesired: BigNumberish;
         currencyContractAddress: string;
-        pricePerToken: BigNumberish_2;
+        pricePerToken: BigNumberish;
     }): Promise<void>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
     static roles: readonly ["admin", "lister"];
     // (undocumented)
-    setBidBufferBps(buffer: BigNumberish_2): Promise<void>;
+    setBidBufferBps(buffer: BigNumberish): Promise<void>;
     // (undocumented)
-    setTimeBufferInSeconds(buffer: BigNumberish_2): Promise<void>;
+    setTimeBufferInSeconds(buffer: BigNumberish): Promise<void>;
     // (undocumented)
     updateAuctionListing(listing: AuctionListing): Promise<void>;
     // (undocumented)
@@ -1350,65 +1116,35 @@ export class Module<TContract extends BaseContract = BaseContract> {
 }
 
 // @public
-export interface ModuleMetadata extends ModuleMetadataNoType {
-    // (undocumented)
-    type: ModuleType;
-}
-
-// @public (undocumented)
-export type ModuleMetadataMap = {
-    [ModuleType.COLLECTION]: CollectionModuleMetadata;
-    [ModuleType.ACCESS_NFT]: CommonModuleMetadata;
-    [ModuleType.CURRENCY]: CommonModuleMetadata;
-    [ModuleType.DATASTORE]: CommonModuleMetadata;
-    [ModuleType.DROP]: CommonModuleMetadata;
-    [ModuleType.DYNAMIC_NFT]: CommonModuleMetadata;
-    [ModuleType.MARKET]: CommonModuleMetadata;
-    [ModuleType.NFT]: CommonModuleMetadata;
-    [ModuleType.PACK]: CommonModuleMetadata;
-    [ModuleType.SPLITS]: CommonModuleMetadata;
-};
-
-// @public @deprecated
-export interface ModuleMetadataNoType {
+export interface ModuleMetadata {
     // (undocumented)
     address: string;
     // (undocumented)
     metadata?: ContractMetadata;
+    // (undocumented)
+    type: ModuleType;
 }
 
 // @public
 export enum ModuleType {
     // (undocumented)
-    ACCESS_NFT = 4,
+    BUNDLE = "BUNDLE",
     // (undocumented)
-    BUNDLE = 1,
+    BUNDLE_DROP = "BUNDLE_DROP",
     // (undocumented)
-    BUNDLE_DROP = 11,
+    DROP = "DROP",
     // (undocumented)
-    COLLECTION = 1,
+    MARKETPLACE = "MARKETPLACE",
     // (undocumented)
-    CURRENCY = 0,
+    NFT = "NFT",
     // (undocumented)
-    DATASTORE = 8,
+    PACK = "PACK",
     // (undocumented)
-    DROP = 7,
+    SPLITS = "SPLITS",
     // (undocumented)
-    DYNAMIC_NFT = 3,
+    TOKEN = "TOKEN",
     // (undocumented)
-    MARKET = 6,
-    // (undocumented)
-    MARKETPLACE = 12,
-    // (undocumented)
-    NFT = 2,
-    // (undocumented)
-    PACK = 5,
-    // (undocumented)
-    SPLITS = 9,
-    // (undocumented)
-    TOKEN = 0,
-    // (undocumented)
-    VOTE = 10
+    VOTE = "VOTE"
 }
 
 // @public
@@ -1446,13 +1182,13 @@ export interface NativeToken extends Currency {
 // @public
 export interface NewAuctionListing {
     assetContractAddress: string;
-    buyoutPricePerToken: BigNumberish_2;
+    buyoutPricePerToken: BigNumberish;
     currencyContractAddress: string;
-    listingDurationInSeconds: BigNumberish_2;
-    quantity: BigNumberish_2;
-    reservePricePerToken: BigNumberish_2;
-    startTimeInSeconds: BigNumberish_2;
-    tokenId: BigNumberish_2;
+    listingDurationInSeconds: BigNumberish;
+    quantity: BigNumberish;
+    reservePricePerToken: BigNumberish;
+    startTimeInSeconds: BigNumberish;
+    tokenId: BigNumberish;
     // (undocumented)
     type?: "NewAuctionListing";
 }
@@ -1460,12 +1196,12 @@ export interface NewAuctionListing {
 // @public
 export interface NewDirectListing {
     assetContractAddress: string;
-    buyoutPricePerToken: BigNumberish_2;
+    buyoutPricePerToken: BigNumberish;
     currencyContractAddress: string;
-    listingDurationInSeconds: BigNumberish_2;
-    quantity: BigNumberish_2;
-    startTimeInSeconds: BigNumberish_2;
-    tokenId: BigNumberish_2;
+    listingDurationInSeconds: BigNumberish;
+    quantity: BigNumberish;
+    startTimeInSeconds: BigNumberish;
+    tokenId: BigNumberish;
     // (undocumented)
     type?: "NewDirectListing";
 }
@@ -1475,25 +1211,22 @@ export interface NewSignaturePayload {
     currencyAddress: string;
     id?: string;
     metadata: MetadataURIOrObject;
-    mintEndTimeEpochSeconds: BigNumberish_2;
-    mintStartTimeEpochSeconds: BigNumberish_2;
-    price: BigNumberish_2;
+    mintEndTimeEpochSeconds: BigNumberish;
+    mintStartTimeEpochSeconds: BigNumberish;
+    price: BigNumberish;
     to: string;
 }
 
 // @public
 export interface NewSplitRecipient {
     address: string;
-    shares: BigNumberish_2;
+    shares: BigNumberish;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type NFTContractTypes = NFT | NFTCollection | LazyNFT | LazyMintERC721 | LazyMintERC1155;
-
-// @public @deprecated
-export const NFTLabsSDK: typeof ThirdwebSDK;
+export type NFTContractTypes = SignatureMint721 | NFTCollection | LazyMintERC721 | LazyMintERC1155;
 
 // @public
 export interface NFTMetadata {
@@ -1526,9 +1259,9 @@ export interface NFTMetadataOwner {
 // @public
 export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITransferable, ISignatureMinter {
     // (undocumented)
-    balance(): Promise<BigNumber_2>;
-    balanceOf(address: string): Promise<BigNumber_2>;
-    burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
+    balance(): Promise<BigNumber>;
+    balanceOf(address: string): Promise<BigNumber>;
+    burn(tokenId: BigNumberish): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): SignatureMint721;
     // (undocumented)
@@ -1550,7 +1283,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     getOwned(_address?: string): Promise<NFTMetadata[]>;
-    getRoyaltyBps(): Promise<BigNumberish_2>;
+    getRoyaltyBps(): Promise<BigNumberish>;
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     getWithOwner(tokenId: string): Promise<NFTMetadataOwner>;
@@ -1558,7 +1291,6 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
     isTransferRestricted(): Promise<boolean>;
-    isV1(): Promise<boolean>;
     // (undocumented)
     mint(metadata: MetadataURIOrObject): Promise<NFTMetadata>;
     // (undocumented)
@@ -1566,7 +1298,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     mintBatchTo(to: string, metadatas: MetadataURIOrObject[]): Promise<NFTMetadata[]>;
     mintTo(to: string, metadata: MetadataURIOrObject): Promise<NFTMetadata>;
     // (undocumented)
-    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber_2>;
+    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber>;
     // (undocumented)
     static moduleType: ModuleType;
     ownerOf(tokenId: string): Promise<string>;
@@ -1581,10 +1313,10 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
-    totalSupply(): Promise<BigNumber_2>;
+    totalSupply(): Promise<BigNumber>;
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
-    transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
+    transferFrom(from: string, to: string, tokenId: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
     verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
 }
@@ -1615,9 +1347,9 @@ export interface Offer {
     buyerAddress: string;
     currencyContractAddress: string;
     currencyValue: CurrencyValue;
-    listingId: BigNumberish_2;
-    pricePerToken: BigNumber_2;
-    quantityDesired: BigNumberish_2;
+    listingId: BigNumberish;
+    pricePerToken: BigNumber;
+    quantityDesired: BigNumberish;
 }
 
 // @beta (undocumented)
@@ -1625,7 +1357,7 @@ export interface PackMetadata {
     // (undocumented)
     creator: string;
     // (undocumented)
-    currentSupply: BigNumber_2;
+    currentSupply: BigNumber;
     // (undocumented)
     id: string;
     // (undocumented)
@@ -1637,15 +1369,15 @@ export interface PackMetadata {
 // @public
 export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // (undocumented)
-    balance(tokenId: string): Promise<BigNumber_2>;
-    balanceOf(address: string, tokenId: string): Promise<BigNumber_2>;
+    balance(tokenId: string): Promise<BigNumber>;
+    balanceOf(address: string, tokenId: string): Promise<BigNumber>;
     // @internal (undocumented)
     protected connectContract(): Pack;
     // Warning: (ae-incompatible-release-tags) The symbol "create" is marked as @public, but its signature references "IPackCreateArgs" which is marked as @beta
     // Warning: (ae-incompatible-release-tags) The symbol "create" is marked as @public, but its signature references "PackMetadata" which is marked as @beta
     create(args: IPackCreateArgs): Promise<PackMetadata>;
     // (undocumented)
-    depositLink(amount: BigNumberish_2): Promise<void>;
+    depositLink(amount: BigNumberish): Promise<void>;
     // Warning: (ae-incompatible-release-tags) The symbol "get" is marked as @public, but its signature references "PackMetadata" which is marked as @beta
     //
     // (undocumented)
@@ -1659,7 +1391,7 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     getNFTs(packId: string): Promise<PackNFTMetadata[]>;
-    getRoyaltyBps(): Promise<BigNumberish_2>;
+    getRoyaltyBps(): Promise<BigNumberish>;
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
@@ -1678,7 +1410,7 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
-    transfer(to: string, tokenId: string, amount: BigNumber_2): Promise<void>;
+    transfer(to: string, tokenId: string, amount: BigNumber): Promise<void>;
     // Warning: (ae-incompatible-release-tags) The symbol "transferBatchFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
     //
     // (undocumented)
@@ -1688,7 +1420,7 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // (undocumented)
     transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): Promise<void>;
     // (undocumented)
-    withdrawLink(to: string, amount: BigNumberish_2): Promise<void>;
+    withdrawLink(to: string, amount: BigNumberish): Promise<void>;
 }
 
 // @public (undocumented)
@@ -1702,7 +1434,7 @@ export interface PackNFTMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    supply: BigNumber_2;
+    supply: BigNumber;
 }
 
 // @public
@@ -1719,19 +1451,19 @@ export type PermitRequestMessage = {
 export interface Proposal {
     description: string;
     // (undocumented)
-    endBlock: BigNumber_2;
+    endBlock: BigNumber;
     executions: ProposalExecutable[];
     proposalId: string;
     proposer: string;
     // (undocumented)
-    startBlock: BigNumber_2;
+    startBlock: BigNumber;
     state: ProposalState;
     votes: ProposalVote[];
 }
 
 // @public (undocumented)
 export interface ProposalExecutable {
-    nativeTokenValue: BigNumberish_2;
+    nativeTokenValue: BigNumberish;
     toAddress: string;
     transactionData: BytesLike;
 }
@@ -1759,7 +1491,7 @@ export enum ProposalState {
 // @public (undocumented)
 export interface ProposalVote {
     // (undocumented)
-    count: BigNumber_2;
+    count: BigNumber;
     // (undocumented)
     label: string;
     // (undocumented)
@@ -1769,28 +1501,24 @@ export interface ProposalVote {
 // @public
 export type ProviderOrSigner = Provider | Signer;
 
-// @beta (undocumented)
+// @public (undocumented)
 export interface PublicClaimCondition {
     // (undocumented)
     currency: string;
     // (undocumented)
-    currentMintSupply: BigNumberish_2;
+    currentMintSupply: BigNumberish;
     // (undocumented)
-    maxMintSupply: BigNumberish_2;
+    maxMintSupply: BigNumberish;
     // (undocumented)
     merkleRoot: BytesLike;
     // (undocumented)
-    pricePerToken: BigNumberish_2;
+    pricePerToken: BigNumberish;
     // (undocumented)
-    quantityLimitPerTransaction: BigNumberish_2;
+    quantityLimitPerTransaction: BigNumberish;
     // (undocumented)
-    startTimestamp: BigNumber_2;
+    startTimestamp: BigNumber;
     // (undocumented)
-    waitTimeSecondsLimitPerTransaction: BigNumberish_2;
-}
-
-// @beta @deprecated (undocumented)
-export interface PublicMintCondition extends PublicClaimCondition {
+    waitTimeSecondsLimitPerTransaction: BigNumberish;
 }
 
 // @public (undocumented)
@@ -1855,17 +1583,17 @@ export interface SplitRecipient {
 }
 
 // @public
-export class SplitsModule extends Module<Royalty> implements ISplitsModule {
-    balanceOf(address: string): Promise<BigNumber_2>;
+export class SplitsModule extends Module<Splits> implements ISplitsModule {
+    balanceOf(address: string): Promise<BigNumber>;
     balanceOfAllRecipients(): Promise<{
-        [key: string]: BigNumber_2;
+        [key: string]: BigNumber;
     }>;
     balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyValue>;
     balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
         [key: string]: CurrencyValue;
     }>;
     // @internal (undocumented)
-    protected connectContract(): Royalty;
+    protected connectContract(): Splits;
     distribute(): Promise<void>;
     distributeToken(tokenAddress: string): Promise<void>;
     // (undocumented)
@@ -1890,34 +1618,19 @@ export class SplitsModuleMetadata extends CommonModuleMetadata {
 // @public
 export class ThirdwebSDK implements IThirdwebSdk {
     constructor(providerOrNetwork: ValidProviderInput, opts?: Partial<ISDKOptions>);
-    createApp(metadata: MetadataURIOrObject): Promise<ContractReceipt>;
     // (undocumented)
     createSnapshot(leafs: string[]): Promise<SnapshotInfo>;
-    // (undocumented)
-    getAppModule(address: string): AppModule;
-    getApps(address?: string): Promise<IAppModule[]>;
     // @beta (undocumented)
     getBundleDropModule(address: string): BundleDropModule;
     // (undocumented)
     getBundleModule(address: string): BundleModule;
-    // @deprecated (undocumented)
-    getCollectionModule(address: string): CollectionModule;
-    // (undocumented)
-    getContractMetadata(address: string): Promise<ModuleMetadataNoType>;
-    // @deprecated (undocumented)
-    getCurrencyModule(address: string): CurrencyModule;
-    // @alpha (undocumented)
-    getDatastoreModule(address: string): DatastoreModule;
     // (undocumented)
     getDropModule(address: string): DropModule;
-    // @internal
-    getForwarderAddress(): Promise<string>;
     // (undocumented)
     getGasPrice(speed?: string, maxGasGwei?: number): Promise<number | null>;
-    // (undocumented)
-    getMarketModule(address: string): MarketModule;
     // @beta (undocumented)
     getMarketplaceModule(address: string): MarketplaceModule;
+    getModules(address: string, filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
     // (undocumented)
     getNFTModule(address: string): NFTModule;
     // (undocumented)
@@ -1943,14 +1656,14 @@ export class ThirdwebSDK implements IThirdwebSdk {
 // @public
 export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable {
     // (undocumented)
-    allowance(spender: string): Promise<BigNumber_2>;
-    allowanceOf(owner: string, spender: string): Promise<BigNumber_2>;
+    allowance(spender: string): Promise<BigNumber>;
+    allowanceOf(owner: string, spender: string): Promise<BigNumber>;
     // (undocumented)
     balance(): Promise<CurrencyValue>;
     balanceOf(address: string): Promise<CurrencyValue>;
-    burn(amount: BigNumberish_2): Promise<TransactionReceipt>;
+    burn(amount: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
-    burnFrom(from: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    burnFrom(from: string, amount: BigNumberish): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): Coin;
     // @alpha
@@ -1958,7 +1671,7 @@ export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
     // (undocumented)
     get(): Promise<Currency>;
     // @beta
-    getAllHolderBalances(): Promise<Record<string, BigNumber_2>>;
+    getAllHolderBalances(): Promise<Record<string, BigNumber>>;
     getDelegation(): Promise<string>;
     // (undocumented)
     getDelegationOf(account: string): Promise<string>;
@@ -1967,32 +1680,32 @@ export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
-    getValue(value: BigNumberish_2): Promise<CurrencyValue>;
-    getVoteBalance(): Promise<BigNumber_2>;
+    getValue(value: BigNumberish): Promise<CurrencyValue>;
+    getVoteBalance(): Promise<BigNumber>;
     // (undocumented)
-    getVoteBalanceOf(account: string): Promise<BigNumber_2>;
+    getVoteBalanceOf(account: string): Promise<BigNumber>;
     // (undocumented)
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
-    mint(amount: BigNumberish_2): Promise<void>;
+    mint(amount: BigNumberish): Promise<void>;
     mintBatchTo(args: ITokenMintArgs[]): Promise<void>;
-    mintTo(to: string, amount: BigNumberish_2): Promise<void>;
+    mintTo(to: string, amount: BigNumberish): Promise<void>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
     static roles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
-    setAllowance(spender: string, amount: BigNumber_2): Promise<TransactionReceipt>;
+    setAllowance(spender: string, amount: BigNumber): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
-    totalSupply(): Promise<BigNumber_2>;
-    transfer(to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    totalSupply(): Promise<BigNumber>;
+    transfer(to: string, amount: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
     transferBatch(args: ITokenMintArgs[]): Promise<void>;
-    transferFrom(from: string, to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
+    transferFrom(from: string, to: string, amount: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
     transferFromBatch(args: ITokenMintFromArgs[]): Promise<void>;
 }
@@ -2044,7 +1757,7 @@ export class VoteModule extends Module<VotingGovernor> {
     hasVoted(proposalId: string, account?: string): Promise<boolean>;
     // (undocumented)
     static moduleType: ModuleType;
-    propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber_2>;
+    propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)

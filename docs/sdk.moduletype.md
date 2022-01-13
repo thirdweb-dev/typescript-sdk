@@ -16,19 +16,13 @@ export declare enum ModuleType
 
 |  Member | Value | Description |
 |  --- | --- | --- |
-|  ACCESS\_NFT | <code>4</code> |  |
-|  BUNDLE | <code>1</code> |  |
-|  BUNDLE\_DROP | <code>11</code> |  |
-|  COLLECTION | <code>1</code> |  |
-|  CURRENCY | <code>0</code> |  |
-|  DATASTORE | <code>8</code> |  |
-|  DROP | <code>7</code> |  |
-|  DYNAMIC\_NFT | <code>3</code> |  |
-|  MARKET | <code>6</code> |  |
-|  MARKETPLACE | <code>12</code> |  |
-|  NFT | <code>2</code> |  |
-|  PACK | <code>5</code> |  |
-|  SPLITS | <code>9</code> |  |
-|  TOKEN | <code>0</code> |  |
-|  VOTE | <code>10</code> |  |
+|  BUNDLE | <code>&quot;BUNDLE&quot;</code> |  |
+|  BUNDLE\_DROP | <code>&quot;BUNDLE_DROP&quot;</code> |  |
+|  DROP | <code>&quot;DROP&quot;</code> |  |
+|  MARKETPLACE | <code>&quot;MARKETPLACE&quot;</code> |  |
+|  NFT | <code>&quot;NFT&quot;</code> |  |
+|  PACK | <code>&quot;PACK&quot;</code> |  |
+|  SPLITS | <code>&quot;SPLITS&quot;</code> |  |
+|  TOKEN | <code>&quot;TOKEN&quot;</code> |  |
+|  VOTE | <code>&quot;VOTE&quot;</code> |  |
 

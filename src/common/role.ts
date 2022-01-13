@@ -33,7 +33,7 @@ export interface IRoles {
    */
   editor: "editor";
   /**
-   * The lister role allows the wallet to list assets on the {@link MarketModule}.
+   * The lister role allows the wallet to list assets on the {@link MarketplaceModule}.
    * @public
    */
   lister: "lister";

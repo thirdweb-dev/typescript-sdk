@@ -23,19 +23,13 @@ export declare class ThirdwebSDK implements IThirdwebSdk
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [createApp(metadata)](./sdk.thirdwebsdk.createapp.md) |  | Call this to create a new app |
 |  [createSnapshot(leafs)](./sdk.thirdwebsdk.createsnapshot.md) |  |  |
-|  [getAppModule(address)](./sdk.thirdwebsdk.getappmodule.md) |  |  |
-|  [getApps(address)](./sdk.thirdwebsdk.getapps.md) |  | Call this to get the current apps. |
 |  [getBundleDropModule(address)](./sdk.thirdwebsdk.getbundledropmodule.md) |  | <b><i>(BETA)</i></b> |
 |  [getBundleModule(address)](./sdk.thirdwebsdk.getbundlemodule.md) |  |  |
-|  [getCollectionModule(address)](./sdk.thirdwebsdk.getcollectionmodule.md) |  |  |
-|  [getContractMetadata(address)](./sdk.thirdwebsdk.getcontractmetadata.md) |  |  |
-|  [getCurrencyModule(address)](./sdk.thirdwebsdk.getcurrencymodule.md) |  |  |
 |  [getDropModule(address)](./sdk.thirdwebsdk.getdropmodule.md) |  |  |
 |  [getGasPrice(speed, maxGasGwei)](./sdk.thirdwebsdk.getgasprice.md) |  |  |
-|  [getMarketModule(address)](./sdk.thirdwebsdk.getmarketmodule.md) |  |  |
 |  [getMarketplaceModule(address)](./sdk.thirdwebsdk.getmarketplacemodule.md) |  | <b><i>(BETA)</i></b> |
+|  [getModules(address, filterByModuleType)](./sdk.thirdwebsdk.getmodules.md) |  | Call this to get the current apps. |
 |  [getNFTModule(address)](./sdk.thirdwebsdk.getnftmodule.md) |  |  |
 |  [getPackModule(address)](./sdk.thirdwebsdk.getpackmodule.md) |  |  |
 |  [getStorage()](./sdk.thirdwebsdk.getstorage.md) |  | Accessor for the storage instance used by the SDK |

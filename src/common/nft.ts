@@ -1,8 +1,7 @@
 import {
   LazyMintERC1155,
   LazyMintERC721,
-  LazyNFT,
-  NFT,
+  SignatureMint721 as NFT,
   NFTCollection,
 } from "@3rdweb/contracts";
 import { Contract } from "@ethersproject/contracts";
@@ -83,7 +82,6 @@ export interface NFTMetadataOwner {
 export type NFTContractTypes =
   | NFT
   | NFTCollection
-  | LazyNFT
   | LazyMintERC721
   | LazyMintERC1155;
 

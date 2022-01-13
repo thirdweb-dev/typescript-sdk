@@ -51,7 +51,6 @@ const module = sdk.getNFTModule("{{module_address}}");
 |  [getWithOwner(tokenId)](./sdk.nftmodule.getwithowner.md) |  |  |
 |  [isApproved(address, operator)](./sdk.nftmodule.isapproved.md) |  |  |
 |  [isTransferRestricted()](./sdk.nftmodule.istransferrestricted.md) |  |  |
-|  [isV1()](./sdk.nftmodule.isv1.md) |  | Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract. |
 |  [mint(metadata)](./sdk.nftmodule.mint.md) |  |  |
 |  [mintBatch(metadatas)](./sdk.nftmodule.mintbatch.md) |  |  |
 |  [mintBatchTo(to, metadatas)](./sdk.nftmodule.mintbatchto.md) |  | Mint Many NFTs |

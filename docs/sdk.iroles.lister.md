@@ -4,7 +4,7 @@
 
 ## IRoles.lister property
 
-The lister role allows the wallet to list assets on the [MarketModule](./sdk.marketmodule.md)<!-- -->.
+The lister role allows the wallet to list assets on the [MarketplaceModule](./sdk.marketplacemodule.md)<!-- -->.
 
 <b>Signature:</b>
 

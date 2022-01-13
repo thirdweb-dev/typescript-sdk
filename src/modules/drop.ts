@@ -598,6 +598,7 @@ export class DropModule
   private async prepareClaim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    _addressToClaim?: string,
   ): Promise<{
     overrides: ethers.CallOverrides;
     proofs: BytesLike[];
@@ -605,7 +606,7 @@ export class DropModule
     const mintCondition = await this.getActiveClaimCondition();
     const { metadata } = await this.getMetadata();
 
-    const addressToClaim = await this.getSignerAddress();
+    const addressToClaim = _addressToClaim || (await this.getSignerAddress());
 
     if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
       const snapshot = await this.sdk
@@ -684,7 +685,7 @@ export class DropModule
     addressToClaim: string,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionReceipt> {
-    const claimData = await this.prepareClaim(quantity, proofs);
+    const claimData = await this.prepareClaim(quantity, proofs, addressToClaim);
 
     return await this.sendTransaction(
       "claim",
@@ -707,7 +708,7 @@ export class DropModule
     const claimData = await this.prepareClaim(quantity, proofs);
     const receipt = await this.sendTransaction(
       "claim",
-      [quantity, claimData.proofs],
+      [await this.getSignerAddress(), quantity, claimData.proofs],
       claimData.overrides,
     );
     const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
@@ -721,6 +722,7 @@ export class DropModule
       tokenIds.map(async (t) => await this.get(t.toString())),
     );
   }
+
   public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [tokenId]);
   }

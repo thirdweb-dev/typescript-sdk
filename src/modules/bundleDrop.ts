@@ -490,11 +490,12 @@ export class BundleDropModule
     tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    _addressToClaim?: string,
   ) {
     const mintCondition = await this.getActiveClaimCondition(tokenId);
     const overrides = (await this.getCallOverrides()) || {};
 
-    const addressToClaim = await this.getSignerAddress();
+    const addressToClaim = _addressToClaim || (await this.getSignerAddress());
     const { metadata } = await this.getMetadata();
     if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
       const snapshot = await this.sdk
@@ -563,7 +564,7 @@ export class BundleDropModule
 
     await this.sendTransaction(
       "claim",
-      [tokenId, quantity, claimData.proofs],
+      [await this.getSignerAddress(), tokenId, quantity, claimData.proofs],
       claimData.overrides,
     );
   }
@@ -600,27 +601,16 @@ export class BundleDropModule
     addressToClaim: string,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionReceipt> {
-    const claimData = await this.prepareClaim(tokenId, quantity, proofs);
-    const encoded = [];
-    encoded.push(
-      this.contract.interface.encodeFunctionData("claim", [
-        tokenId,
-        quantity,
-        proofs,
-      ]),
+    const claimData = await this.prepareClaim(
+      tokenId,
+      quantity,
+      proofs,
+      addressToClaim,
     );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("safeTransferFrom", [
-        await this.getSignerAddress(),
-        addressToClaim,
-        tokenId,
-        quantity,
-        [0],
-      ]),
-    );
+
     return await this.sendTransaction(
-      "multicall",
-      [encoded],
+      "claim",
+      [addressToClaim, tokenId, quantity, proofs],
       claimData.overrides,
     );
   }

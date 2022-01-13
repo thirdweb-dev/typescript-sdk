@@ -58,12 +58,10 @@ const module = sdk.getBundleDropModule("{{module_address}}");
 |  [getSaleRecipient(tokenId)](./sdk.bundledropmodule.getsalerecipient.md) |  |  |
 |  [isApproved(address, operator)](./sdk.bundledropmodule.isapproved.md) |  |  |
 |  [isTransferRestricted()](./sdk.bundledropmodule.istransferrestricted.md) |  |  |
-|  [lazyMintBatch(metadatas)](./sdk.bundledropmodule.lazymintbatch.md) |  |  |
 |  [setApproval(operator, approved)](./sdk.bundledropmodule.setapproval.md) |  |  |
 |  [setClaimCondition(tokenId, factory)](./sdk.bundledropmodule.setclaimcondition.md) |  | Sets public claim conditions for the next minting using the claim condition factory. |
 |  [setDefaultSaleRecipient(recipient)](./sdk.bundledropmodule.setdefaultsalerecipient.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.bundledropmodule.setmodulemetadata.md) |  |  |
-|  [setPublicClaimConditions(tokenId, conditions)](./sdk.bundledropmodule.setpublicclaimconditions.md) |  |  |
 |  [setRestrictedTransfer(restricted)](./sdk.bundledropmodule.setrestrictedtransfer.md) |  |  |
 |  [setRoyaltyBps(amount)](./sdk.bundledropmodule.setroyaltybps.md) |  |  |
 |  [setSaleRecipient(tokenId, recipient)](./sdk.bundledropmodule.setsalerecipient.md) |  |  |

@@ -9,13 +9,14 @@ The module metadata, includes the `address` and the [ModuleType](./sdk.moduletyp
 <b>Signature:</b>
 
 ```typescript
-export interface ModuleMetadata extends ModuleMetadataNoType 
+export interface ModuleMetadata 
 ```
-<b>Extends:</b> [ModuleMetadataNoType](./sdk.modulemetadatanotype.md)
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
+|  [address](./sdk.modulemetadata.address.md) | string |  |
+|  [metadata?](./sdk.modulemetadata.metadata.md) | [ContractMetadata](./sdk.contractmetadata.md) | <i>(Optional)</i> |
 |  [type](./sdk.modulemetadata.type.md) | [ModuleType](./sdk.moduletype.md) |  |
 

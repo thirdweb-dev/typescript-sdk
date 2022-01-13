@@ -68,7 +68,6 @@ Output
 |  Class | Description |
 |  --- | --- |
 |  [AdminRoleMissingError](./sdk.adminrolemissingerror.md) | Thrown when attempting to execute an admin-role function. |
-|  [AppModule](./sdk.appmodule.md) | Access this module by calling [ThirdwebSDK.getAppModule()](./sdk.thirdwebsdk.getappmodule.md) |
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
 |  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
@@ -80,7 +79,6 @@ Output
 |  [ClaimConditionPhase](./sdk.claimconditionphase.md) |  |
 |  [ClaimProof](./sdk.claimproof.md) | The model for a claim proof. Currently we support only an address in the leaf of the merkle tree. |
 |  [CommonModuleMetadata](./sdk.commonmodulemetadata.md) | CommonModuleMetadata defines the common properties of a module deployment. |
-|  [CurrencyModule](./sdk.currencymodule.md) |  |
 |  [CurrencyModuleMetadata](./sdk.currencymodulemetadata.md) |  |
 |  [DatastoreModuleMetadata](./sdk.datastoremodulemetadata.md) |  |
 |  [DropModule](./sdk.dropmodule.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
@@ -94,7 +92,6 @@ Output
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [IpfsStorage](./sdk.ipfsstorage.md) |  |
 |  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
-|  [MarketModule](./sdk.marketmodule.md) | Access this module by calling [ThirdwebSDK.getMarketModule()](./sdk.thirdwebsdk.getmarketmodule.md) |
 |  [MarketModuleMetadata](./sdk.marketmodulemetadata.md) |  |
 |  [MarketplaceModule](./sdk.marketplacemodule.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MarketplaceModuleMetadata](./sdk.marketplacemodulemetadata.md) |  |
@@ -156,7 +153,6 @@ Output
 |  [ClaimCondition](./sdk.claimcondition.md) | <b><i>(BETA)</i></b> |
 |  [CollectionMetadata](./sdk.collectionmetadata.md) |  |
 |  [ContractMetadata](./sdk.contractmetadata.md) | The typical contract metadata found on the modules. |
-|  [CreatePublicMintCondition](./sdk.createpublicmintcondition.md) | <b><i>(BETA)</i></b> |
 |  [Currency](./sdk.currency.md) | Currency metadata. |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
@@ -178,10 +174,7 @@ Output
 |  [ITokenMintArgs](./sdk.itokenmintargs.md) |  |
 |  [ITokenMintFromArgs](./sdk.itokenmintfromargs.md) |  |
 |  [ITransferable](./sdk.itransferable.md) |  |
-|  [ListingFilter](./sdk.listingfilter.md) | Filter options for the Market module. |
-|  [ListingMetadata](./sdk.listingmetadata.md) | Metadata for items listed on a Market module. |
 |  [ModuleMetadata](./sdk.modulemetadata.md) | The module metadata, includes the <code>address</code> and the [ModuleType](./sdk.moduletype.md)<!-- -->. |
-|  [ModuleMetadataNoType](./sdk.modulemetadatanotype.md) | The module metadata, but missing the ModuleType. |
 |  [NativeToken](./sdk.nativetoken.md) |  |
 |  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
 |  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
@@ -195,8 +188,7 @@ Output
 |  [Proposal](./sdk.proposal.md) |  |
 |  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
 |  [ProposalVote](./sdk.proposalvote.md) |  |
-|  [PublicClaimCondition](./sdk.publicclaimcondition.md) | <b><i>(BETA)</i></b> |
-|  [PublicMintCondition](./sdk.publicmintcondition.md) | <b><i>(BETA)</i></b> |
+|  [PublicClaimCondition](./sdk.publicclaimcondition.md) |  |
 |  [SignaturePayload](./sdk.signaturepayload.md) | Represents a prepared <code>SignaturePayload</code> object, which will be signed by a wallet. |
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
@@ -207,19 +199,16 @@ Output
 |  Variable | Description |
 |  --- | --- |
 |  [DEFAULT\_BLOCK\_TIMES\_FALLBACK](./sdk.default_block_times_fallback.md) | Fallback map of default block mining times in seconds. |
-|  [NFTLabsSDK](./sdk.nftlabssdk.md) | Deprecated, please use ThirdwebSDK instead. |
 
 ## Type Aliases
 
 |  Type Alias | Description |
 |  --- | --- |
 |  [AllModuleMetadata](./sdk.allmodulemetadata.md) |  |
-|  [CollectionModule](./sdk.collectionmodule.md) |  |
 |  [CollectionModuleMetadata](./sdk.collectionmodulemetadata.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |
 |  [MetadataURIOrObject](./sdk.metadatauriorobject.md) | A valid URI string or metadata object |
-|  [ModuleMetadataMap](./sdk.modulemetadatamap.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [ProviderOrSigner](./sdk.providerorsigner.md) | A valid "ethers" Provider or Signer. |
 |  [Role](./sdk.role.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |

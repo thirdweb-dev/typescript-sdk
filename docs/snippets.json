@@ -462,7 +462,7 @@
       },
       {
         "name": "getAllRecipients",
-        "summary": "<<<<<<< HEAD Get Recients ======= Get Recipients >>>>>>> jd/generate-json-snippets\n\n",
+        "summary": "Get Recipients\n\n",
         "remarks": "\n\nGet the data about the shares of every split recipient on the module\n\n",
         "examples": {
           "javascript": "const recipients = await module.getAllRecepients();\nconsole.log(recipients);"
@@ -488,7 +488,7 @@
         "signature": "withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;"
       }
     ],
-    "signature": "export declare class SplitsModule extends Module<Royalty> implements ISplitsModule "
+    "signature": "export declare class SplitsModule extends Module<Splits> implements ISplitsModule "
   },
   "TokenModule": {
     "name": "TokenModule",

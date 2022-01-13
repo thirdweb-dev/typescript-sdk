@@ -9,9 +9,9 @@ Create custom royalty splits to distribute funds.
 <b>Signature:</b>
 
 ```typescript
-export declare class SplitsModule extends Module<Royalty> implements ISplitsModule 
+export declare class SplitsModule extends Module<Splits> implements ISplitsModule 
 ```
-<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;Royalty&gt;
+<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;Splits&gt;
 
 <b>Implements:</b> [ISplitsModule](./sdk.isplitsmodule.md)
 
@@ -42,7 +42,7 @@ const module = sdk.getSplitsModule("{{module_address}}");
 |  [distribute()](./sdk.splitsmodule.distribute.md) |  | Distribute Funds |
 |  [distributeToken(tokenAddress)](./sdk.splitsmodule.distributetoken.md) |  | Distribute Funds |
 |  [get()](./sdk.splitsmodule.get.md) |  |  |
-|  [getAllRecipients()](./sdk.splitsmodule.getallrecipients.md) |  | &lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt; HEAD Get Recients ======= Get Recipients &gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt; jd/generate-json-snippets |
+|  [getAllRecipients()](./sdk.splitsmodule.getallrecipients.md) |  | Get Recipients |
 |  [getRecipientSplitPercentage(address)](./sdk.splitsmodule.getrecipientsplitpercentage.md) |  |  |
 |  [withdraw(address)](./sdk.splitsmodule.withdraw.md) |  | Withdraw Funds |
 |  [withdrawToken(walletAddress, tokenAddress)](./sdk.splitsmodule.withdrawtoken.md) |  | Withdraw Token Funds |

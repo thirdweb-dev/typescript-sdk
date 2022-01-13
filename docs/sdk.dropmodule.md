@@ -49,31 +49,23 @@ const module = sdk.getDropModule("{{module_address}}");
 |  [createBatch(metadatas)](./sdk.dropmodule.createbatch.md) |  | <b><i>(BETA)</i></b> Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per module at the moment. |
 |  [get(tokenId)](./sdk.dropmodule.get.md) |  |  |
 |  [getActiveClaimCondition()](./sdk.dropmodule.getactiveclaimcondition.md) |  |  |
-|  [getActiveMintCondition()](./sdk.dropmodule.getactivemintcondition.md) |  |  |
 |  [getAll(queryParams)](./sdk.dropmodule.getall.md) |  | Get All NFTs |
 |  [getAllClaimConditions()](./sdk.dropmodule.getallclaimconditions.md) |  |  |
 |  [getAllClaimed(queryParams)](./sdk.dropmodule.getallclaimed.md) |  |  |
-|  [getAllMintConditions()](./sdk.dropmodule.getallmintconditions.md) |  |  |
 |  [getAllUnclaimed(queryParams)](./sdk.dropmodule.getallunclaimed.md) |  |  |
 |  [getClaimConditionsFactory()](./sdk.dropmodule.getclaimconditionsfactory.md) |  | Creates a claim condition factory |
 |  [getClaimIneligibilityReasons(quantity, addressToCheck)](./sdk.dropmodule.getclaimineligibilityreasons.md) |  | For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user. |
 |  [getDefaultSaleRecipient()](./sdk.dropmodule.getdefaultsalerecipient.md) |  |  |
-|  [getMintConditionsFactory()](./sdk.dropmodule.getmintconditionsfactory.md) |  |  |
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | Get Owned NFTs |
 |  [getRoyaltyBps()](./sdk.dropmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.dropmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
 |  [isApproved(address, operator)](./sdk.dropmodule.isapproved.md) |  |  |
 |  [isTransferRestricted()](./sdk.dropmodule.istransferrestricted.md) |  |  |
-|  [isV1()](./sdk.dropmodule.isv1.md) |  | Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract. |
-|  [lazyMint(metadata)](./sdk.dropmodule.lazymint.md) |  |  |
-|  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  |  |
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  |  |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  |  |
 |  [setClaimConditions(factory)](./sdk.dropmodule.setclaimconditions.md) |  | Sets public mint conditions for the next minting using the claim condition factory. |
 |  [setDefaultSaleRecipient(recipient)](./sdk.dropmodule.setdefaultsalerecipient.md) |  |  |
-|  [setMintConditions(factory)](./sdk.dropmodule.setmintconditions.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.dropmodule.setmodulemetadata.md) |  |  |
-|  [setPublicMintConditions(conditions)](./sdk.dropmodule.setpublicmintconditions.md) |  |  |
 |  [setRestrictedTransfer(restricted)](./sdk.dropmodule.setrestrictedtransfer.md) |  |  |
 |  [setRoyaltyBps(amount)](./sdk.dropmodule.setroyaltybps.md) |  |  |
 |  [totalClaimedSupply()](./sdk.dropmodule.totalclaimedsupply.md) |  |  |
