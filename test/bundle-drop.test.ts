@@ -85,7 +85,7 @@ describe("Bundle Drop Module", async () => {
       w4,
     ];
     const members = testWallets.map((w) => w.address);
-    await phase.setSnapshot(members);
+    phase.setSnapshot(members);
 
     console.log("Setting claim condition");
     await bdModule.setClaimCondition("0", factory);
@@ -95,6 +95,17 @@ describe("Bundle Drop Module", async () => {
       await bdModule.claim("0", 1);
       console.log(`Address ${member.address} claimed successfully!`);
     }
+  });
+
+  it("should resolve ens domains", async () => {
+    const factory = bdModule.getClaimConditionFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+      maxQuantity: 1000,
+    });
+    phase.setSnapshot(["ayushp.eth"]);
+    const conditions = await phase.buildPublicClaimCondition();
+    console.log(conditions);
   });
 
   it("allow all addresses in the merkle tree to claim using useSnapshot", async () => {

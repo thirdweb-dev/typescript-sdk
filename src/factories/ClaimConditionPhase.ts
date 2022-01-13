@@ -126,7 +126,24 @@ export default class ClaimConditionPhase {
    */
   public async buildPublicClaimCondition(): Promise<PublicMintCondition> {
     if (this._snapshot) {
-      this._merkleCondition = await this.createSnapshot(this._snapshot);
+      const snapshot = await Promise.all(
+        this._snapshot.map(async (address) => {
+          if (address.includes(".eth")) {
+            const resolved = await ethers
+              .getDefaultProvider()
+              .resolveName(address);
+            if (!resolved) {
+              throw new Error(`Could not resolve address ${address}`);
+            }
+            return resolved as string;
+          }
+          invariant(isAddress(address), "Invalid address");
+          return address;
+        }),
+      ).then(async (addresses) => {
+        console.log(addresses);
+        this._merkleCondition = await this.createSnapshot(addresses);
+      });
     }
 
     return {
