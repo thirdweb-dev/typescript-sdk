@@ -72,7 +72,7 @@
     "events": "^3.3.0"
   },
   "dependencies": {
-    "@3rdweb/contracts": "^1.21.1",
+    "@3rdweb/contracts": "^2.0.0-0",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/constants": "^5.5.0",

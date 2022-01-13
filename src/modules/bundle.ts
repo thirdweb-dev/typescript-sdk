@@ -1,6 +1,6 @@
 import {
   ERC20__factory,
-  ERC721__factory,
+  ERC721Upgradeable__factory,
   NFTCollection as NFTBundleContract,
   NFTCollection__factory,
 } from "@3rdweb/contracts";
@@ -200,7 +200,7 @@ export class BundleModule
     if (!assetId) {
       throw new Error("tokenId is required");
     }
-    const contract = ERC721__factory.connect(
+    const contract = ERC721Upgradeable__factory.connect(
       assetContract,
       this.providerOrSigner,
     );
@@ -384,7 +384,10 @@ export class BundleModule
     tokenId: BigNumberish,
     metadata: MetadataURIOrObject,
   ) {
-    const asset = ERC721__factory.connect(tokenContract, this.providerOrSigner);
+    const asset = ERC721Upgradeable__factory.connect(
+      tokenContract,
+      this.providerOrSigner,
+    );
 
     if (
       !(await asset.isApprovedForAll(

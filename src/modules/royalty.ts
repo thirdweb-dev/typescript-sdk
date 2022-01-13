@@ -1,4 +1,4 @@
-import { ERC20__factory, Royalty, Royalty__factory } from "@3rdweb/contracts";
+import { ERC20__factory, Splits, Splits__factory } from "@3rdweb/contracts";
 import { BigNumber } from "ethers";
 import { ModuleType } from "../common";
 import {
@@ -93,14 +93,14 @@ export interface ISplitsModule {
  *
  * @public
  */
-export class SplitsModule extends Module<Royalty> implements ISplitsModule {
+export class SplitsModule extends Module<Splits> implements ISplitsModule {
   public static moduleType: ModuleType = ModuleType.SPLITS as const;
 
   /**
    * @internal
    */
-  protected connectContract(): Royalty {
-    return Royalty__factory.connect(this.address, this.providerOrSigner);
+  protected connectContract(): Splits {
+    return Splits__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**

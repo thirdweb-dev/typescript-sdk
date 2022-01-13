@@ -5,21 +5,15 @@ import { $enum } from "ts-enum-util";
  * @public
  */
 export enum ModuleType {
-  CURRENCY = 0,
-  TOKEN = 0,
-  COLLECTION = 1,
-  BUNDLE = 1,
-  NFT = 2,
-  DYNAMIC_NFT = 3,
-  ACCESS_NFT = 4,
-  PACK = 5,
-  MARKET = 6,
-  DROP = 7,
-  DATASTORE = 8,
-  SPLITS = 9,
-  VOTE = 10,
-  BUNDLE_DROP = 11,
-  MARKETPLACE = 12,
+  TOKEN = "TOKEN",
+  BUNDLE = "BUNDLE",
+  NFT = "NFT",
+  PACK = "PACK",
+  DROP = "DROP",
+  SPLITS = "SPLITS",
+  VOTE = "VOTE",
+  BUNDLE_DROP = "BUNDLE_DROP",
+  MARKETPLACE = "MARKETPLACE",
 }
 /**
  *

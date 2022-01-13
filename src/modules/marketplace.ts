@@ -2,7 +2,7 @@ import {
   ERC1155__factory,
   ERC165__factory,
   ERC20__factory,
-  ERC721__factory,
+  ERC721Upgradeable__factory as ERC721__factory,
   Marketplace,
   Marketplace__factory,
 } from "@3rdweb/contracts";

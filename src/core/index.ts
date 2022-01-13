@@ -1,14 +1,9 @@
 import { Provider } from "@ethersproject/providers";
-import { parseUnits } from "@ethersproject/units";
-import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
+import { BytesLike, ethers, Signer } from "ethers";
 import { JsonConvert } from "json2typescript";
 import MerkleTree from "merkletreejs";
 import type { C } from "ts-toolbelt";
-import {
-  DuplicateLeafsError,
-  getContractMetadata,
-  uploadMetadata,
-} from "../common";
+import { DuplicateLeafsError, ModuleType } from "../common";
 import {
   FORWARDER_ADDRESS,
   getContractAddressByChainId,
@@ -18,26 +13,21 @@ import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { ISDKOptions, IThirdwebSdk } from "../interfaces";
 import { IStorage } from "../interfaces/IStorage";
-import { AppModule } from "../modules/app";
 import { BundleModule } from "../modules/bundle";
 import { BundleDropModule } from "../modules/bundleDrop";
-import { CollectionModule } from "../modules/collection";
-import { DatastoreModule } from "../modules/datastore";
 import { DropModule } from "../modules/drop";
-import { MarketModule } from "../modules/market";
 import { MarketplaceModule } from "../modules/marketplace";
 import { NFTModule } from "../modules/nft";
 import { PackModule } from "../modules/pack";
 import { SplitsModule } from "../modules/royalty";
-import { CurrencyModule, TokenModule } from "../modules/token";
+import { TokenModule } from "../modules/token";
 import { VoteModule } from "../modules/vote";
 import { IpfsStorage } from "../storage/IpfsStorage";
-import { ModuleMetadataNoType } from "../types/ModuleMetadata";
+import { ModuleMetadata } from "../types/ModuleMetadata";
 import { ClaimProof, Snapshot, SnapshotInfo } from "../types/snapshots";
-import { IAppModule, RegistryModule } from "./registry";
+import { RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,
-  MetadataURIOrObject,
   PermitRequestMessage,
   ProviderOrSigner,
   ValidProviderInput,
@@ -47,18 +37,15 @@ import {
  * @internal
  */
 export type AnyContract =
-  | typeof AppModule
   | typeof BundleModule
   | typeof NFTModule
-  | typeof CurrencyModule
-  | typeof MarketModule
   | typeof PackModule
-  | typeof RegistryModule
   | typeof DropModule
-  | typeof DatastoreModule
   | typeof SplitsModule
   | typeof BundleDropModule
   | typeof MarketplaceModule
+  | typeof TokenModule
+  | typeof RegistryModule
   | typeof VoteModule;
 
 /**
@@ -172,53 +159,18 @@ export class ThirdwebSDK implements IThirdwebSdk {
     this.modules.set(address, _newModule);
     return _newModule as C.Instance<T>;
   }
-
-  /**
-   * you should not need this unless you are creating new modules
-   * @returns the active registry module forwarder address
-   * @internal
-   */
-  public async getForwarderAddress(): Promise<string> {
-    return await (
-      this.registry || (await this.getRegistryModule())
-    ).readOnlyContract.forwarder();
-  }
-
   /**
    * Call this to get the current apps.
    * @returns All currently registered apps for the connected wallet
    */
-  public async getApps(address?: string): Promise<IAppModule[]> {
-    return (
-      this.registry || (await this.getRegistryModule())
-    ).getProtocolContracts(address);
-  }
-
-  /**
-   * Call this to create a new app
-   * @param metadata - metadata URI or a JSON object
-   * @returns The transaction receipt
-   */
-  public async createApp(
-    metadata: MetadataURIOrObject,
-  ): Promise<ContractReceipt> {
-    const registryContract = (this.registry || (await this.getRegistryModule()))
-      .contract;
-    const gasPrice = await this.getGasPrice();
-    const txOpts: Record<string, any> = {};
-    // could technically be `0` so simple falsy check does not suffice
-    if (typeof gasPrice === "number") {
-      txOpts.gasPrice = parseUnits(gasPrice.toString(), "gwei");
-    }
-
-    const uri = await uploadMetadata(
-      metadata,
-      registryContract.address,
-      (await this.signer?.getAddress()) || undefined,
+  public async getModules(
+    address: string,
+    filterByModuleType?: ModuleType[],
+  ): Promise<ModuleMetadata[]> {
+    return (this.registry || (await this.getRegistryModule())).getModules(
+      address,
+      filterByModuleType,
     );
-
-    const txn = await registryContract.deployProtocol(uri, txOpts);
-    return await txn.wait();
   }
 
   /**
@@ -274,33 +226,6 @@ export class ThirdwebSDK implements IThirdwebSdk {
   }
 
   /**
-   * @public
-   * @returns The contract metadata for the given contract address.
-   */
-  public async getContractMetadata(
-    address: string,
-  ): Promise<ModuleMetadataNoType> {
-    return {
-      ...(await getContractMetadata(
-        this.providerOrSigner,
-        address,
-        this.options.ipfsGatewayUrl,
-        true,
-      )),
-      address,
-    };
-  }
-
-  /**
-   *
-   * @param address - The contract address of the given App module.
-   * @returns The App Module.
-   */
-  public getAppModule(address: string): AppModule {
-    return this.getOrCreateModule(address, AppModule);
-  }
-
-  /**
    *
    * @param address - The contract address of the given NFT module.
    * @returns The NFT Module.
@@ -308,17 +233,6 @@ export class ThirdwebSDK implements IThirdwebSdk {
   public getNFTModule(address: string): NFTModule {
     return this.getOrCreateModule(address, NFTModule);
   }
-
-  /**
-   *
-   * @param address - The contract address of the given Collection module.
-   * @returns The Bundle Module.
-   * @deprecated Use the new {@link ThirdwebSDK.getBundleModule} function instead.
-   */
-  public getCollectionModule(address: string): CollectionModule {
-    return this.getBundleModule(address);
-  }
-
   /**
    *
    * @param address - The contract address of the given Bundle module.
@@ -336,18 +250,6 @@ export class ThirdwebSDK implements IThirdwebSdk {
   public getPackModule(address: string): PackModule {
     return this.getOrCreateModule(address, PackModule);
   }
-
-  /**
-   *
-   * @param address - The contract address of the given Currency module.
-   * @returns The Currency Module.
-   *
-   * @deprecated - see {@link TokenModule}
-   */
-  public getCurrencyModule(address: string): CurrencyModule {
-    return this.getOrCreateModule(address, CurrencyModule);
-  }
-
   /**
    *
    * @param address - The contract address of the given Token module.
@@ -355,25 +257,6 @@ export class ThirdwebSDK implements IThirdwebSdk {
    */
   public getTokenModule(address: string): TokenModule {
     return this.getOrCreateModule(address, TokenModule);
-  }
-
-  /**
-   * @alpha
-   *
-   * @param address - The contract address of the given Datastore module.
-   * @returns The Datastore Module.
-   */
-  public getDatastoreModule(address: string): DatastoreModule {
-    return this.getOrCreateModule(address, DatastoreModule);
-  }
-
-  /**
-   *
-   * @param address - The contract address of the given Market module.
-   * @returns The Market Module.
-   */
-  public getMarketModule(address: string): MarketModule {
-    return this.getOrCreateModule(address, MarketModule);
   }
 
   /**
@@ -461,24 +344,20 @@ export class ThirdwebSDK implements IThirdwebSdk {
 
   // used for invoke route for unity sdk.
   private getModuleByName(name: string, address: string) {
-    if (name === "currency") {
-      return this.getCurrencyModule(address);
+    if (name === "token") {
+      return this.getTokenModule(address);
     } else if (name === "nft") {
       return this.getNFTModule(address);
-    } else if (name === "market") {
-      return this.getMarketModule(address);
-    } else if (name === "bundle" || name === "collection") {
-      return this.getCollectionModule(address);
+    } else if (name === "marketplace") {
+      return this.getMarketplaceModule(address);
+    } else if (name === "bundle") {
+      return this.getBundleModule(address);
     } else if (name === "drop") {
       return this.getDropModule(address);
     } else if (name === "splits") {
       return this.getSplitsModule(address);
     } else if (name === "pack") {
       return this.getPackModule(address);
-    } else if (name === "datastore") {
-      return this.getDatastoreModule(address);
-    } else if (name === "app" || name === "project") {
-      return this.getAppModule(address);
     }
     throw new Error("unsupported module");
   }
@@ -567,10 +446,3 @@ export class ThirdwebSDK implements IThirdwebSdk {
     this.storage = storage;
   }
 }
-
-/**
- * Deprecated, please use ThirdwebSDK instead.
- * @public
- * @deprecated use ThirdwebSDK instead
- */
-export const NFTLabsSDK = ThirdwebSDK;
