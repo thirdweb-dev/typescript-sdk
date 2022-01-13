@@ -716,7 +716,7 @@ export class MarketplaceModule
    * Maps a contract offer to the strict interface
    *
    * @internal
-   * @param offer
+   * @param offer - the offer input
    * @returns - An `Offer` object
    */
   private async mapOffer(listingId: BigNumber, offer: any): Promise<Offer> {

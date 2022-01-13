@@ -226,7 +226,7 @@ export class IpfsStorage implements IStorage {
   /**
    * Pre-processes metadata and uploads all file properties
    * to storage in *bulk*, then performs a string replacement of
-   * all file properties -> the resulting ipfs uri. This is
+   * all file properties -\> the resulting ipfs uri. This is
    * called internally by `uploadMetadataBatch`.
    *
    * @internal

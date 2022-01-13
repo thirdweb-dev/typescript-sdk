@@ -1,7 +1,7 @@
 import { ThirdwebRegistry, ThirdwebRegistry__factory } from "@3rdweb/contracts";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { ModuleType } from "../common/module-type";
-import { ModuleMetadata, ModuleMetadataNoType } from "../types/ModuleMetadata";
+import { ModuleMetadata } from "../types/ModuleMetadata";
 import { Module } from "./module";
 
 /**
@@ -38,7 +38,7 @@ export class RegistryModule extends Module<ThirdwebRegistry> {
    */
   public async getAllContractMetadata(
     addresses: string[],
-  ): Promise<ModuleMetadataNoType[]> {
+  ): Promise<Omit<ModuleMetadata, "type">[]> {
     const metadatas = await Promise.all(
       addresses.map((address) =>
         getContractMetadata(

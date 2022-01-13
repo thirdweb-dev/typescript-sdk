@@ -20,32 +20,16 @@ import {
 import { invariant } from "../common/invariant";
 import { isMetadataEqual } from "../common/isMetadataEqual";
 import { getTokenMetadata, NFTMetadata, NFTMetadataOwner } from "../common/nft";
-import { ThirdwebSDK } from "../core";
+import type { ThirdwebSDK } from "../core";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject, ProviderOrSigner } from "../core/types";
 import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
-import {
-  ClaimCondition,
-  PublicMintCondition,
-} from "../types/claim-conditions/PublicMintCondition";
+import { ClaimCondition } from "../types/claim-conditions/PublicClaimCondition";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 import { Snapshot } from "../types/snapshots/Snapshot";
-
-/**
- * @beta
- */
-export interface CreatePublicMintCondition {
-  startTimestampInSeconds?: BigNumberish;
-  maxMintSupply: BigNumberish;
-  quantityLimitPerTransaction?: BigNumberish;
-  waitTimeSecondsLimitPerTransaction?: BigNumberish;
-  pricePerToken?: BigNumberish;
-  currency?: string;
-  merkleRoot?: BytesLike;
-}
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -241,25 +225,6 @@ export class DropModule
       tokenIds.map((tokenId) => this.get(tokenId.toString())),
     );
   }
-
-  /**
-   * @deprecated - For backward compatibility reason
-   */
-  private transformResultToMintCondition(
-    pm: ClaimConditionStructOutput,
-  ): PublicMintCondition {
-    return {
-      startTimestamp: pm.startTimestamp,
-      maxMintSupply: pm.maxClaimableSupply,
-      currentMintSupply: pm.supplyClaimed,
-      quantityLimitPerTransaction: pm.quantityLimitPerTransaction,
-      waitTimeSecondsLimitPerTransaction: pm.waitTimeInSecondsBetweenClaims,
-      pricePerToken: pm.pricePerToken,
-      currency: pm.currency,
-      merkleRoot: pm.merkleRoot,
-    };
-  }
-
   private async transformResultToClaimCondition(
     pm: ClaimConditionStructOutput,
   ): Promise<ClaimCondition> {
@@ -287,16 +252,6 @@ export class DropModule
       currencyMetadata: cv,
       merkleRoot: pm.merkleRoot,
     };
-  }
-
-  /**
-   * @deprecated - Use {@link DropModule.getActiveClaimCondition} instead
-   */
-  public async getActiveMintCondition(): Promise<PublicMintCondition> {
-    const index = await this.readOnlyContract.getIndexOfActiveCondition();
-    return this.transformResultToMintCondition(
-      await this.readOnlyContract.getClaimConditionAtIndex(index),
-    );
   }
 
   public async getActiveClaimCondition(): Promise<ClaimCondition> {
@@ -399,27 +354,6 @@ export class DropModule
       "safeTransferFrom(address,address,uint256)",
       [from, to, tokenId],
     );
-  }
-
-  /**
-   * @deprecated - The function has been deprecated. Use `createBatch` instead.
-   */
-  public async lazyMint(metadata: MetadataURIOrObject) {
-    await this.lazyMintBatch([metadata]);
-  }
-
-  /**
-   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
-   */
-  public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
-    await this.createBatch(metadatas);
-  }
-
-  /**
-   * @deprecated - Use {@link DropModule.setClaimConditions} instead
-   */
-  public async setMintConditions(factory: ClaimConditionFactory) {
-    return this.setClaimConditions(factory);
   }
 
   /**
@@ -527,34 +461,6 @@ export class DropModule
     const createSnapshotFunc = this.sdk.createSnapshot.bind(this.sdk);
     const factory = new ClaimConditionFactory(createSnapshotFunc);
     return factory;
-  }
-
-  /**
-   * @deprecated - Use the {@link DropModule.getClaimConditionsFactory} instead.
-   */
-  public getMintConditionsFactory(): ClaimConditionFactory {
-    return this.getClaimConditionsFactory();
-  }
-
-  /**
-   * @deprecated - Use the {@link DropModule.setClaimConditions} instead.
-   */
-  public async setPublicMintConditions(
-    conditions: CreatePublicMintCondition[],
-  ) {
-    const now = BigNumber.from(Date.now()).div(1000);
-    const _conditions = conditions.map((c) => ({
-      startTimestamp: now.add(c.startTimestampInSeconds || 0),
-      maxClaimableSupply: c.maxMintSupply,
-      supplyClaimed: 0,
-      quantityLimitPerTransaction:
-        c.quantityLimitPerTransaction || c.maxMintSupply,
-      waitTimeInSecondsBetweenClaims: c.waitTimeSecondsLimitPerTransaction || 0,
-      pricePerToken: c.pricePerToken || 0,
-      currency: c.currency || AddressZero,
-      merkleRoot: c.merkleRoot || hexZeroPad([0], 32),
-    }));
-    await this.sendTransaction("setClaimConditions", [_conditions]);
   }
 
   /**

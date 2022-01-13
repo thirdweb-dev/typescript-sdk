@@ -56,14 +56,6 @@ export class DropModuleMetadata extends CommonModuleMetadata {
   symbol?: string;
 
   /**
-   * The max supply
-   *
-   * @deprecated - No longer applicable. This value is ignored.
-   */
-  @JsonProperty("max_supply", Number, PropertyConvertingMode.IGNORE_NULLABLE)
-  maxSupply = 1;
-
-  /**
    * The address of the receiver of the initial sale.You can use this field to
    * distribute the initial sale proceeds. All drop contracts are required to set this field,
    * even if the tokens are planned to be free. If you plan to do a free drop, you can set this
@@ -81,22 +73,6 @@ export class DropModuleMetadata extends CommonModuleMetadata {
    */
   @JsonProperty("primary_sale_recipient_address", String)
   primarySaleRecipientAddress = "";
-
-  /**
-   * The IPFS base URI thats prepended to all token URIs. This allows
-   * you to batch upload all the metadata for the tokens ahead of time
-   * so they can be lazy minted later
-   *
-   * e.g. if a Drop Collection has a token URI of /ipfs/BOREDAPES/TOKEN1, then the IPFS base URI is /BOREDAPES/
-   *
-   * @deprecated - No longer applicable. This value is ignored.
-   */
-  @JsonProperty(
-    "base_token_uri",
-    String,
-    PropertyConvertingMode.IGNORE_NULLABLE,
-  )
-  baseTokenUri? = "";
 }
 
 export default DropModuleMetadata;

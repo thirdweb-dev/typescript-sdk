@@ -26,7 +26,7 @@ import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role, SetAllRoles } from "../common/role";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
 import { ModuleMetadata } from "../types/ModuleMetadata";
-import { ThirdwebSDK } from "./index";
+import type { ThirdwebSDK } from "./index";
 import type {
   ForwardRequestMessage,
   MetadataURIOrObject,

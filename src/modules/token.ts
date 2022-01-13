@@ -393,8 +393,3 @@ export class TokenModule
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 }
-
-/**
- * @deprecated - see {@link TokenModule}
- */
-export class CurrencyModule extends TokenModule {}

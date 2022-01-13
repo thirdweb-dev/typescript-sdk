@@ -4,7 +4,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { InvalidAddressError } from "../common/error";
 import { invariant } from "../common/invariant";
-import { PublicMintCondition } from "../types/claim-conditions/PublicMintCondition";
+import { PublicClaimCondition } from "../types/claim-conditions/PublicClaimCondition";
 import { SnapshotInfo } from "../types/snapshots/SnapshotInfo";
 
 export default class ClaimConditionPhase {
@@ -38,7 +38,7 @@ export default class ClaimConditionPhase {
   /**
    * Set the price claim condition for the drop.
    *
-   * @param price - The price of the currency in wei. Must be >= 0.
+   * @param price - The price of the currency in wei. Must be \>= 0.
    * @param tokenAddress - The address of an ERC20 contract to use as the currency for the claim. By default this is the native currency address which is 0x0000000000000000000000000000000000000000 address.
    */
   public setPrice(
@@ -124,7 +124,7 @@ export default class ClaimConditionPhase {
    * Helper method that provides defaults for each claim condition.
    * @internal
    */
-  public async buildPublicClaimCondition(): Promise<PublicMintCondition> {
+  public async buildPublicClaimCondition(): Promise<PublicClaimCondition> {
     if (this._snapshot) {
       this._merkleCondition = await this.createSnapshot(this._snapshot);
     }

@@ -25,7 +25,7 @@ import { MetadataURIOrObject } from "../core/types";
 import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
-import { ClaimCondition } from "../types/claim-conditions/PublicMintCondition";
+import { ClaimCondition } from "../types/claim-conditions/PublicClaimCondition";
 import { Snapshot } from "../types/snapshots";
 
 /**
@@ -266,17 +266,6 @@ export class BundleDropModule
 
   // write functions
 
-  /*
-   *
-   * @deprecated - {@link BundleDropModule.mintBatch}
-   */
-  public async lazyMintBatch(
-    metadatas: MetadataURIOrObject[],
-  ): Promise<BundleDropMetadata[]> {
-    const tokenIds = await this.createBatch(metadatas);
-    return await Promise.all(tokenIds.map((t) => this.get(t.toString())));
-  }
-
   /**
    * Create Many NFTs
    *
@@ -489,27 +478,6 @@ export class BundleDropModule
     const createSnapshotFunc = this.sdk.createSnapshot.bind(this.sdk);
     const factory = new ClaimConditionFactory(createSnapshotFunc);
     return factory;
-  }
-
-  /**
-   * @deprecated - Use the ClaimConditionFactory instead.
-   */
-  public async setPublicClaimConditions(
-    tokenId: BigNumberish,
-    conditions: BundleDropCreateClaimCondition[],
-  ) {
-    const _conditions = conditions.map((c) => ({
-      startTimestamp: c.startTimestamp || 0,
-      maxClaimableSupply: c.maxClaimableSupply,
-      supplyClaimed: 0,
-      quantityLimitPerTransaction:
-        c.quantityLimitPerTransaction || c.maxClaimableSupply,
-      waitTimeInSecondsBetweenClaims: c.waitTimeInSecondsBetweenClaims || 0,
-      pricePerToken: c.pricePerToken || 0,
-      currency: c.currency || AddressZero,
-      merkleRoot: c.merkleRoot || hexZeroPad([0], 32),
-    }));
-    await this.sendTransaction("setClaimConditions", [tokenId, _conditions]);
   }
 
   /**

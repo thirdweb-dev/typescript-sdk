@@ -1,6 +1,5 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { FunctionDeprecatedError } from "..";
-import { PublicClaimCondition } from "../types/claim-conditions/PublicMintCondition";
+import { PublicClaimCondition } from "../types/claim-conditions/PublicClaimCondition";
 import { SnapshotInfo } from "../types/snapshots/SnapshotInfo";
 import ClaimConditionPhase from "./ClaimConditionPhase";
 
@@ -154,14 +153,6 @@ class ClaimConditionFactory {
     const cleared = sorted.splice(index - 1, 1);
     this.fromPublicClaimConditions(cleared);
   }
-
-  /**
-   * @deprecated - Use {@link deleteClaimPhase} instead.
-   */
-  public removeClaimPhase(_index: number): void {
-    throw new FunctionDeprecatedError("deleteClaimPhase");
-  }
-
   /**
    * Helper method fetches all snapshots from a factory.
    *

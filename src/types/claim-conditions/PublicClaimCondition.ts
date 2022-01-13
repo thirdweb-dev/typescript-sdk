@@ -2,7 +2,7 @@ import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { CurrencyValue } from "../../common/currency";
 
 /**
- * @beta
+ * @public
  */
 export interface PublicClaimCondition {
   startTimestamp: BigNumber;
@@ -32,9 +32,3 @@ export interface ClaimCondition {
   currencyMetadata: CurrencyValue | null;
   merkleRoot: BytesLike;
 }
-
-/**
- * @beta
- * @deprecated - use {@link PublicClaimCondition}
- */
-export interface PublicMintCondition extends PublicClaimCondition {}
