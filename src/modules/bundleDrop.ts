@@ -57,7 +57,9 @@ export interface BundleDropMetadata {
  * ```javascript
  * import { ThirdwebSDK } from "@3rdweb/sdk";
  *
- * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
  * const module = sdk.getBundleDropModule("{{module_address}}");
  * ```
  *

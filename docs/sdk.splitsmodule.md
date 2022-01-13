@@ -21,7 +21,9 @@ export declare class SplitsModule extends Module<Royalty> implements ISplitsModu
 ```javascript
 import { ThirdwebSDK } from "@3rdweb/sdk";
 
-const sdk = new ThirdwebSDK({{wallet_provider}});
+// You can switch out this provider with any wallet or provider setup you like.
+const provider = ethers.Wallet.createRandom();
+const sdk = new ThirdwebSDK(provider);
 const module = sdk.getSplitsModule("{{module_address}}");
 ```
 
@@ -42,7 +44,7 @@ const module = sdk.getSplitsModule("{{module_address}}");
 |  [distribute()](./sdk.splitsmodule.distribute.md) |  | Distribute Funds |
 |  [distributeToken(tokenAddress)](./sdk.splitsmodule.distributetoken.md) |  | Distribute Funds |
 |  [get()](./sdk.splitsmodule.get.md) |  |  |
-|  [getAllRecipients()](./sdk.splitsmodule.getallrecipients.md) |  | &lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt;<!-- -->&lt; HEAD Get Recients ======= Get Recipients &gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt;<!-- -->&gt; jd/generate-json-snippets |
+|  [getAllRecipients()](./sdk.splitsmodule.getallrecipients.md) |  | Get Recipients |
 |  [getRecipientSplitPercentage(address)](./sdk.splitsmodule.getrecipientsplitpercentage.md) |  |  |
 |  [withdraw(address)](./sdk.splitsmodule.withdraw.md) |  | Withdraw Funds |
 |  [withdrawToken(walletAddress, tokenAddress)](./sdk.splitsmodule.withdrawtoken.md) |  | Withdraw Token Funds |
