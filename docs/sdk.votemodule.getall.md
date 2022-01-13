@@ -4,7 +4,7 @@
 
 ## VoteModule.getAll() method
 
-Returns all the proposals in the contract.
+Get All Proposals
 
 <b>Signature:</b>
 
@@ -16,4 +16,16 @@ getAll(): Promise<Proposal[]>;
 Promise&lt;[Proposal](./sdk.proposal.md)<!-- -->\[\]&gt;
 
 - All the proposals in the contract.
+
+## Remarks
+
+Get all the proposals in this module.
+
+## Example
+
+
+```javascript
+const proposals = await module.getAll();
+console.log(proposals);
+```
 

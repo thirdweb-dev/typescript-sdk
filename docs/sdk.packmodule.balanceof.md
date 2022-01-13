@@ -4,8 +4,7 @@
 
 ## PackModule.balanceOf() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Get Pack Balance
 
 <b>Signature:</b>
 
@@ -23,4 +22,21 @@ balanceOf(address: string, tokenId: string): Promise<BigNumber>;
 <b>Returns:</b>
 
 Promise&lt;BigNumber&gt;
+
+## Remarks
+
+Get a wallets pack balance (number of a specific packs in this module owned by the wallet).
+
+## Example
+
+
+```javascript
+// Address of the wallet to check pack balance
+const address = "{{wallet_address}}"";
+// The token ID of the pack you want to check the wallets balance of
+const tokenId = "0"
+
+const balance = await module.balanceOf(address, tokenId);
+console.log(balance);
+```
 

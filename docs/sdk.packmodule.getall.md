@@ -4,8 +4,7 @@
 
 ## PackModule.getAll() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Get Pack Data
 
 <b>Signature:</b>
 
@@ -15,4 +14,18 @@ getAll(): Promise<PackMetadata[]>;
 <b>Returns:</b>
 
 Promise&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->\[\]&gt;
+
+The NFT metadata for all NFTs in the module.
+
+## Remarks
+
+Get data associated with every pack in this module.
+
+## Example
+
+
+```javascript
+const packs = await module.getAll();
+console.log(packs);
+```
 

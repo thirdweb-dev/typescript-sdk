@@ -4,10 +4,7 @@
 
 ## BundleModule.getAll() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
-
-Return all items in the bundle.
+Get NFT Data
 
 <b>Signature:</b>
 
@@ -25,5 +22,23 @@ getAll(address?: string): Promise<BundleMetadata[]>;
 
 Promise&lt;[BundleMetadata](./sdk.bundlemetadata.md)<!-- -->\[\]&gt;
 
-An array of `INFTBundle`<!-- -->.
+The NFT metadata for all NFTs in the module.
+
+## Remarks
+
+Get data associated with NFTs in this module.
+
+## Example
+
+
+```javascript
+// You can get every NFT in the module
+const nfts = await module.getAll();
+console.log(nfts);
+
+// Or you can get optionally get the NFTs owned by a specific wallet
+const address = "{{wallet_address}}"; // The address you want to get the NFTs for;
+const ownedNfts = await module.getAll(address);
+console.log(ownedNfts);
+```
 

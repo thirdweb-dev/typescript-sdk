@@ -4,9 +4,6 @@
 
 ## DropModule.isV1() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
-
 Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract.
 
 <b>Signature:</b>

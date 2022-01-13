@@ -4,6 +4,8 @@
 
 ## TokenModule.transfer() method
 
+Transfer Tokens
+
 <b>Signature:</b>
 
 ```typescript
@@ -20,4 +22,21 @@ transfer(to: string, amount: BigNumberish): Promise<TransactionReceipt>;
 <b>Returns:</b>
 
 Promise&lt;TransactionReceipt&gt;
+
+## Remarks
+
+Transfer tokens from the connected wallet to another wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet you want to send the tokens to
+const toAddress = "0x...";
+
+// The amount of tokens you want to send
+const amount = 0;
+
+await module.transfer(toAddress, amount);
+```
 

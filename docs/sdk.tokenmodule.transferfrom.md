@@ -4,6 +4,8 @@
 
 ## TokenModule.transferFrom() method
 
+Transfer Tokens From Address
+
 <b>Signature:</b>
 
 ```typescript
@@ -21,4 +23,23 @@ transferFrom(from: string, to: string, amount: BigNumberish): Promise<Transactio
 <b>Returns:</b>
 
 Promise&lt;TransactionReceipt&gt;
+
+## Remarks
+
+Transfer tokens from one wallet to another
+
+## Example
+
+
+```javascript
+// Address of the wallet sending the tokens
+const fromAddress = "{{wallet_address}}";
+// Address of the wallet you want to send the tokens to
+const toAddress = "0x...";
+// The number of tokens you want to send
+const amount = 100
+
+// Note that the connected wallet must have approval to transfer the tokens of the fromAddress
+await module.transferFrom(fromAddress, toAddress, amount);
+```
 

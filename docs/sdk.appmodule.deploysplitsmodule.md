@@ -20,7 +20,7 @@ deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
 
 <b>Returns:</b>
 
-Promise&lt;SplitsModule&gt;
+Promise&lt;[SplitsModule](./sdk.splitsmodule.md)<!-- -->&gt;
 
 - The deployed splits module
 

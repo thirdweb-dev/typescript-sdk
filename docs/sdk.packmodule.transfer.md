@@ -4,8 +4,7 @@
 
 ## PackModule.transfer() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Transfer Pack
 
 <b>Signature:</b>
 
@@ -24,4 +23,24 @@ transfer(to: string, tokenId: string, amount: BigNumber): Promise<void>;
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Transfer a pack from the connected wallet to another wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet you want to send the pack to
+const toAddress = "0x...";
+
+// The token ID of the pack you want to send
+const tokenId = "0";
+
+// The number of packs you want to send
+const amount = 1;
+
+await module.transfer(toAddress, tokenId, amount);
+```
 

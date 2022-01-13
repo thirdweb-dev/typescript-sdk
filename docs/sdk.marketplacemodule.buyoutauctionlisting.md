@@ -4,6 +4,8 @@
 
 ## MarketplaceModule.buyoutAuctionListing() method
 
+Buyout Auction
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,19 @@ buyoutAuctionListing(listingId: BigNumberish): Promise<void>;
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Buy a specific direct listing from the marketplace.
+
+## Example
+
+
+```javascript
+// The listing ID of the asset you want to buy
+const listingId = 0;
+
+const balance = await module.balanceOf(listingId, quantity);
+console.log(balance);
+```
 

@@ -43,9 +43,20 @@ import { DirectListing } from "../types/marketplace/DirectListing";
 const MAX_BPS = 10000;
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getMarketplaceModule}
+ * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
+ * const module = sdk.getMarketplaceModule("{{module_address}}");
+ * ```
+ *
  * @public
- * @beta
  */
 export class MarketplaceModule
   extends ModuleWithRoles<Marketplace>
@@ -77,6 +88,34 @@ export class MarketplaceModule
     return MarketplaceModule.moduleType;
   }
 
+  /**
+   * Create Direct Listing
+   *
+   * @remarks Create a new listing on the marketplace where people can buy an asset directly.
+   *
+   * @example
+   * ```javascript
+   * // Data of the listing you want to create
+   * const listing = {
+   *   // address of the contract the asset you want to list is on
+   *   assetContractAddress: "0x...",
+   *   // token ID of the asset you want to list
+   *   tokenId: "0",
+   *   // in how many seconds with the listing open up
+   *   startTimeInSeconds: 0,
+   *   // how long the listing will be open for
+   *   listingDurationInSeconds: 86400,
+   *   // how many of the asset you want to list
+   *   quantity: 1,
+   *   // address of the currency contract that will be used to pay for the listing
+   *   currencyContractAddress: "0x0000000000000000000000000000000000000000",
+   *   // how much the asset will be sold for
+   *   buyoutPricePerToken: "1",
+   * }
+   *
+   * await module.createDirectListing(listing);
+   * ```
+   */
   public async createDirectListing(
     listing: NewDirectListing,
   ): Promise<BigNumber> {
@@ -106,6 +145,36 @@ export class MarketplaceModule
     return event.listingId;
   }
 
+  /**
+   * Create Auction
+   *
+   * @remarks Create a new auction where people can bid on an asset.
+   *
+   * @example
+   * ```javascript
+   * // Data of the auction you want to create
+   * const auction = {
+   *   // address of the contract the asset you want to list is on
+   *   assetContractAddress: "0x...",
+   *   // token ID of the asset you want to list
+   *   tokenId: "0",
+   *   // in how many seconds with the listing open up
+   *   startTimeInSeconds: 0,
+   *   // how long the listing will be open for
+   *   listingDurationInSeconds: 86400,
+   *   // how many of the asset you want to list
+   *   quantity: 1,
+   *   // address of the currency contract that will be used to pay for the listing
+   *   currencyContractAddress: "0x0000000000000000000000000000000000000000",
+   *   // how much people would have to bid to instantly buy the asset
+   *   buyoutPricePerToken: "10",
+   *   // the minimum bid that will be accepted for the token
+   *   reservePricePerToken: "1",
+   * }
+   *
+   * await module.createAuctionListing(auction);
+   * ```
+   */
   public async createAuctionListing(
     listing: NewAuctionListing,
   ): Promise<BigNumber> {
@@ -197,6 +266,21 @@ export class MarketplaceModule
     return overrides;
   }
 
+  /**
+   * Bid On Auction
+   *
+   * @remarks Make a bid on an auction listings
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the asset you want to bid on
+   * const listingId = 0;
+   * // The price you are willing to bid for a single token of the listing
+   * const bidPricePerToken = 1;
+   *
+   * await module.buyoutDirectListing(listingId, bidPricePerToken);
+   * ```
+   */
   public async makeAuctionListingBid(bid: {
     listingId: BigNumberish;
     pricePerToken: BigNumberish;
@@ -700,6 +784,20 @@ export class MarketplaceModule
     await this.sendTransaction("acceptOffer", [listingId, addressOfOfferor]);
   }
 
+  /**
+   * Buyout Auction
+   *
+   * @remarks Buy a specific direct listing from the marketplace.
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the asset you want to buy
+   * const listingId = 0;
+   *
+   * const balance = await module.balanceOf(listingId, quantity);
+   * console.log(balance);
+   * ```
+   */
   public async buyoutAuctionListing(listingId: BigNumberish): Promise<void> {
     const listing = await this.validateAuctionListing(
       BigNumber.from(listingId),
@@ -711,6 +809,21 @@ export class MarketplaceModule
     });
   }
 
+  /**
+   * Buy Listing
+   *
+   * @remarks Buy a specific direct listing from the marketplace.
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the asset you want to buy
+   * const listingId = 0;
+   * // Quantity of the asset you want to buy
+   * const quantityDesired = 1;
+   *
+   * await module.buyoutDirectListing({ listingId, quantityDesired });
+   * ```
+   */
   public async buyoutDirectListing(_buyout: {
     listingId: BigNumberish;
     quantityDesired: BigNumberish;
@@ -772,12 +885,38 @@ export class MarketplaceModule
     ]);
   }
 
+  /**
+   * Cancel Direct Listing
+   *
+   * @remarks Cancel a direct listing on the marketplace
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the direct listing you want to cancel
+   * const listingId = "0"
+   *
+   * await module.cancelDirectListing(listingId);
+   * ```
+   */
   public async cancelDirectListing(listingId: BigNumberish): Promise<void> {
     const listing = await this.validateDirectListing(BigNumber.from(listingId));
     listing.quantity = 0;
     await this.updateDirectListing(listing);
   }
 
+  /**
+   * Cancel Auction Listing
+   *
+   * @remarks Cancel an auction listing on the marketplace
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the auction listing you want to cancel
+   * const listingId = "0"
+   *
+   * await module.cancelAuctionListing(listingId);
+   * ```
+   */
   public async cancelAuctionListing(listingId: BigNumberish): Promise<void> {
     const listing = await this.validateAuctionListing(
       BigNumber.from(listingId),
@@ -890,6 +1029,21 @@ export class MarketplaceModule
     }
   }
 
+  /**
+   * Get Listings
+   *
+   * @remarks Get all listings in the marketplace.
+   *
+   * @example
+   * ```javascript
+   * // Get all listings
+   * const listings = await module.getAllListings();
+   * console.log(listings);
+   *
+   * // Get only the active listings
+   * const activeListings = listings.filter((listing) => listing.quantity > 0);
+   * ```
+   */
   public async getAllListings(): Promise<(AuctionListing | DirectListing)[]> {
     const listings = await Promise.all(
       Array.from(

@@ -4,7 +4,7 @@
 
 ## MarketplaceModule class
 
-Access this module by calling [ThirdwebSDK.getMarketplaceModule()](./sdk.thirdwebsdk.getmarketplacemodule.md)
+Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
 
 <b>Signature:</b>
 
@@ -14,6 +14,18 @@ export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> impl
 <b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Marketplace&gt;
 
 <b>Implements:</b> [IMarketplace](./sdk.imarketplace.md)
+
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+// You can switch out this provider with any wallet or provider setup you like.
+const provider = ethers.Wallet.createRandom();
+const sdk = new ThirdwebSDK(provider);
+const module = sdk.getMarketplaceModule("{{module_address}}");
+```
 
 ## Properties
 
@@ -27,16 +39,16 @@ export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> impl
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [acceptDirectListingOffer(listingId, addressOfOfferor)](./sdk.marketplacemodule.acceptdirectlistingoffer.md) |  |  |
-|  [buyoutAuctionListing(listingId)](./sdk.marketplacemodule.buyoutauctionlisting.md) |  |  |
-|  [buyoutDirectListing(\_buyout)](./sdk.marketplacemodule.buyoutdirectlisting.md) |  |  |
+|  [buyoutAuctionListing(listingId)](./sdk.marketplacemodule.buyoutauctionlisting.md) |  | Buyout Auction |
+|  [buyoutDirectListing(\_buyout)](./sdk.marketplacemodule.buyoutdirectlisting.md) |  | Buy Listing |
 |  [buyoutListing(listingId, quantityDesired)](./sdk.marketplacemodule.buyoutlisting.md) |  |  |
-|  [cancelAuctionListing(listingId)](./sdk.marketplacemodule.cancelauctionlisting.md) |  |  |
-|  [cancelDirectListing(listingId)](./sdk.marketplacemodule.canceldirectlisting.md) |  |  |
+|  [cancelAuctionListing(listingId)](./sdk.marketplacemodule.cancelauctionlisting.md) |  | Cancel Auction Listing |
+|  [cancelDirectListing(listingId)](./sdk.marketplacemodule.canceldirectlisting.md) |  | Cancel Direct Listing |
 |  [closeAuctionListing(listingId, closeFor)](./sdk.marketplacemodule.closeauctionlisting.md) |  |  |
-|  [createAuctionListing(listing)](./sdk.marketplacemodule.createauctionlisting.md) |  |  |
-|  [createDirectListing(listing)](./sdk.marketplacemodule.createdirectlisting.md) |  |  |
+|  [createAuctionListing(listing)](./sdk.marketplacemodule.createauctionlisting.md) |  | Create Auction |
+|  [createDirectListing(listing)](./sdk.marketplacemodule.createdirectlisting.md) |  | Create Direct Listing |
 |  [getActiveOffer(listingId, address)](./sdk.marketplacemodule.getactiveoffer.md) |  |  |
-|  [getAllListings()](./sdk.marketplacemodule.getalllistings.md) |  |  |
+|  [getAllListings()](./sdk.marketplacemodule.getalllistings.md) |  | Get Listings |
 |  [getAuctionListing(listingId)](./sdk.marketplacemodule.getauctionlisting.md) |  |  |
 |  [getBidBufferBps()](./sdk.marketplacemodule.getbidbufferbps.md) |  |  |
 |  [getDirectListing(listingId)](./sdk.marketplacemodule.getdirectlisting.md) |  |  |
@@ -44,7 +56,7 @@ export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> impl
 |  [getTimeBufferInSeconds()](./sdk.marketplacemodule.gettimebufferinseconds.md) |  |  |
 |  [getWinningBid(listingId)](./sdk.marketplacemodule.getwinningbid.md) |  |  |
 |  [isWinningBid(winningPrice, newBidPrice, bidBuffer)](./sdk.marketplacemodule.iswinningbid.md) |  |  |
-|  [makeAuctionListingBid(bid)](./sdk.marketplacemodule.makeauctionlistingbid.md) |  |  |
+|  [makeAuctionListingBid(bid)](./sdk.marketplacemodule.makeauctionlistingbid.md) |  | Bid On Auction |
 |  [makeDirectListingOffer(offer)](./sdk.marketplacemodule.makedirectlistingoffer.md) |  |  |
 |  [setBidBufferBps(buffer)](./sdk.marketplacemodule.setbidbufferbps.md) |  |  |
 |  [setTimeBufferInSeconds(buffer)](./sdk.marketplacemodule.settimebufferinseconds.md) |  |  |

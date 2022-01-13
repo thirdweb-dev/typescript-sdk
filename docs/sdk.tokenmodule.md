@@ -4,7 +4,7 @@
 
 ## TokenModule class
 
-Access this module by calling [ThirdwebSDK.getTokenModule()](./sdk.thirdwebsdk.gettokenmodule.md)
+Create a standard crypto token or crypto currency.
 
 <b>Signature:</b>
 
@@ -14,6 +14,18 @@ export declare class TokenModule extends ModuleWithRoles<Coin> implements ITrans
 <b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Coin&gt;
 
 <b>Implements:</b> [ITransferable](./sdk.itransferable.md)
+
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+// You can switch out this provider with any wallet or provider setup you like.
+const provider = ethers.Wallet.createRandom();
+const sdk = new ThirdwebSDK(provider);
+const module = sdk.getTokenModule("{{module_address}}");
+```
 
 ## Properties
 
@@ -27,10 +39,10 @@ export declare class TokenModule extends ModuleWithRoles<Coin> implements ITrans
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [allowance(spender)](./sdk.tokenmodule.allowance.md) |  |  |
-|  [allowanceOf(owner, spender)](./sdk.tokenmodule.allowanceof.md) |  |  |
+|  [allowanceOf(owner, spender)](./sdk.tokenmodule.allowanceof.md) |  | Get Token Allowance |
 |  [balance()](./sdk.tokenmodule.balance.md) |  |  |
-|  [balanceOf(address)](./sdk.tokenmodule.balanceof.md) |  |  |
-|  [burn(amount)](./sdk.tokenmodule.burn.md) |  |  |
+|  [balanceOf(address)](./sdk.tokenmodule.balanceof.md) |  | Get Token Balance |
+|  [burn(amount)](./sdk.tokenmodule.burn.md) |  | Burn Tokens |
 |  [burnFrom(from, amount)](./sdk.tokenmodule.burnfrom.md) |  |  |
 |  [get()](./sdk.tokenmodule.get.md) |  |  |
 |  [getAllHolderBalances()](./sdk.tokenmodule.getallholderbalances.md) |  | <b><i>(BETA)</i></b> Lets you get a all token holders and their corresponding balances - This can be very slow for large numbers of token holders |
@@ -41,14 +53,14 @@ export declare class TokenModule extends ModuleWithRoles<Coin> implements ITrans
 |  [getVoteBalanceOf(account)](./sdk.tokenmodule.getvotebalanceof.md) |  |  |
 |  [isTransferRestricted()](./sdk.tokenmodule.istransferrestricted.md) |  |  |
 |  [mint(amount)](./sdk.tokenmodule.mint.md) |  |  |
-|  [mintBatchTo(args)](./sdk.tokenmodule.mintbatchto.md) |  |  |
-|  [mintTo(to, amount)](./sdk.tokenmodule.mintto.md) |  |  |
+|  [mintBatchTo(args)](./sdk.tokenmodule.mintbatchto.md) |  | Mint Tokens To Many Wallets |
+|  [mintTo(to, amount)](./sdk.tokenmodule.mintto.md) |  | Mint Tokens |
 |  [setAllowance(spender, amount)](./sdk.tokenmodule.setallowance.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.tokenmodule.setmodulemetadata.md) |  |  |
 |  [setRestrictedTransfer(restricted)](./sdk.tokenmodule.setrestrictedtransfer.md) |  |  |
 |  [totalSupply()](./sdk.tokenmodule.totalsupply.md) |  |  |
-|  [transfer(to, amount)](./sdk.tokenmodule.transfer.md) |  |  |
+|  [transfer(to, amount)](./sdk.tokenmodule.transfer.md) |  | Transfer Tokens |
 |  [transferBatch(args)](./sdk.tokenmodule.transferbatch.md) |  |  |
-|  [transferFrom(from, to, amount)](./sdk.tokenmodule.transferfrom.md) |  |  |
+|  [transferFrom(from, to, amount)](./sdk.tokenmodule.transferfrom.md) |  | Transfer Tokens From Address |
 |  [transferFromBatch(args)](./sdk.tokenmodule.transferfrombatch.md) |  |  |
 

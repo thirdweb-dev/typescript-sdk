@@ -4,7 +4,7 @@
 
 ## VoteModule.canExecute() method
 
-Check to see if a proposal can be executed.
+Can Execute
 
 <b>Signature:</b>
 
@@ -23,4 +23,18 @@ canExecute(proposalId: string): Promise<boolean>;
 Promise&lt;boolean&gt;
 
 - True if the proposal can be executed, false otherwise.
+
+## Remarks
+
+Check if a proposal can be executed (if the proposal has succeeded).
+
+## Example
+
+
+```javascript
+// The proposal ID of the proposal you want to check
+const proposalId = "0";
+const canExecute = await module.canExecute(proposalId);
+console.log(canExecute);
+```
 

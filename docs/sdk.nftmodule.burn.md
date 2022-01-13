@@ -4,6 +4,8 @@
 
 ## NFTModule.burn() method
 
+Burn NFT
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,18 @@ burn(tokenId: BigNumberish): Promise<TransactionReceipt>;
 <b>Returns:</b>
 
 Promise&lt;TransactionReceipt&gt;
+
+## Remarks
+
+Burn an NFT, permanently taking it out of circulation and reducing the supply.
+
+## Example
+
+
+```javascript
+// The token ID of the NFT you want to burn
+const tokenId = 0;
+
+await module.burn(tokenId);
+```
 

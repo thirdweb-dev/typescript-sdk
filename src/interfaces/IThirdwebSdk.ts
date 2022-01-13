@@ -1,5 +1,6 @@
 import { Snapshot } from "../types/snapshots";
 
+/* eslint-disable semi */
 export default interface IThirdwebSdk {
   /**
    * Creates a snapshot from a list of leafs. The leafs could be addresses,
