@@ -209,10 +209,6 @@ export class IpfsStorage implements IStorage {
     object: any,
     files: (File | Buffer)[],
   ): Promise<(File | Buffer)[]> {
-    if (typeof object === "string") {
-      files.push(Buffer.from(await this.get(object)));
-      return files;
-    }
     const keys = Object.keys(object).sort();
     for (const key in keys) {
       const val = object[keys[key]];
@@ -325,7 +321,7 @@ export class IpfsStorage implements IStorage {
       await this.batchUploadProperties(metadatas);
     const filesToUpload = await Promise.all(
       finalMetadata.map(async (m) => {
-        if (typeof m === "string") {
+        if (typeof m === "string" && m.startsWith("ipfs://")) {
           return await this.get(m);
         } else {
           return JSON.stringify(m);

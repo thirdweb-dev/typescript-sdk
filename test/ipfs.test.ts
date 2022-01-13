@@ -196,7 +196,7 @@ describe("IPFS Uploads", async () => {
     const cid = await storage.uploadMetadataBatch(sampleObjects);
     console.log(cid);
     assert((await (await getFile(`${cid}0`)).text()).includes("passed"));
-    assert((await (await getFile(`${cid}0`)).text()).includes("should pass"));
+    assert((await (await getFile(`${cid}1`)).text()).includes("should pass"));
   });
 
   it("should upload properly with same file names but one with capitalized letters", async () => {
