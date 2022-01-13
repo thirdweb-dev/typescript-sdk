@@ -3,6 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
+import { invariant } from "../src/common/invariant";
 import {
   ClaimEligibility,
   DropModule,
@@ -253,6 +254,55 @@ describe("Drop Module", async () => {
         tree.getHexRoot(),
       );
       console.log("Leaf verified =", leaf, verified);
+    }
+  });
+
+  it("should properly validate snapshot addresses", async () => {
+    const members = [
+      bobWallet.address,
+      samWallet.address,
+      abbyWallet.address,
+      w1.address,
+      w2.address,
+      w3.address,
+      w4.address,
+      w4.address,
+    ];
+
+    const hashedLeafs = members.map((l) => keccak256(l));
+    const tree = new MerkleTree(hashedLeafs, keccak256, {
+      sort: true,
+      sortLeaves: true,
+      sortPairs: true,
+    });
+    try {
+      const snapshot = await sdk.createSnapshot(members);
+    } catch (err) {
+      invariant(
+        err.message.includes(`repeated addresses`),
+        "expected a different error",
+      );
+    }
+  });
+
+  it("should properly validate snapshot addresses", async () => {
+    const members = [
+      "shouldthrow",
+    ];
+
+    const hashedLeafs = members.map((l) => keccak256(l));
+    const tree = new MerkleTree(hashedLeafs, keccak256, {
+      sort: true,
+      sortLeaves: true,
+      sortPairs: true,
+    });
+    try {
+      const snapshot = await sdk.createSnapshot(members);
+    } catch (err) {
+      invariant(
+        err.message.includes(`Invalid address`),
+        "expected a different error",
+      );
     }
   });
 

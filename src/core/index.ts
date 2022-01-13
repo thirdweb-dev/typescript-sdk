@@ -1,6 +1,7 @@
 import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
 import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
+import { isAddress } from "ethers/lib/utils";
 import { JsonConvert } from "json2typescript";
 import MerkleTree from "merkletreejs";
 import type { C } from "ts-toolbelt";
@@ -514,6 +515,22 @@ export class ThirdwebSDK implements IThirdwebSdk {
   }
 
   public async createSnapshot(leafs: string[]): Promise<SnapshotInfo> {
+    const counts: { [key: string]: any } = {};
+    const repeated: string[] = [];
+    leafs.forEach((leaf) => {
+      leaf = leaf.toLowerCase();
+      invariant(isAddress(leaf), "Invalid address : " + leaf);
+      if (counts[leaf] && repeated.indexOf(leaf) === -1) {
+        repeated.push(leaf);
+      } else {
+        counts[leaf] = 1;
+      }
+    });
+    invariant(
+      repeated.length === 0,
+      "repeated addresses: " + repeated.join(","),
+    );
+
     const hasDuplicates = new Set(leafs).size < leafs.length;
     if (hasDuplicates) {
       throw new DuplicateLeafsError();
