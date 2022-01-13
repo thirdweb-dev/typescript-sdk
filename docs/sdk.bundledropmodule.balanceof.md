@@ -32,7 +32,7 @@ Get a wallets NFT balance (number of a specific NFT in this module owned by the 
 
 ```javascript
 // Address of the wallet to check NFT balance
-const address = "{{wallet_address}}"";
+const address = "{{wallet_address}}";
 // The token ID of the NFT you want to check the wallets balance of
 const tokenId = "0"
 

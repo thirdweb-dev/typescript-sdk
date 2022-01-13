@@ -817,9 +817,9 @@ export class MarketplaceModule
    * // The listing ID of the asset you want to buy
    * const listingId = 0;
    * // Quantity of the asset you want to buy
-   * const quantity = 1;
+   * const quantityDesired = 1;
    *
-   * await module.buyoutDirectListing(listingId, quantity);
+   * await module.buyoutDirectListing({ listingId, quantityDesired });
    * ```
    */
   public async buyoutDirectListing(_buyout: {

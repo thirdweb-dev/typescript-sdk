@@ -33,7 +33,7 @@ Get a wallets NFT balance (number of NFTs in this module owned by the wallet).
 
 ```javascript
 // Address of the wallet to check NFT balance
-const address = "{{wallet_address}}"";
+const address = "{{wallet_address}}";
 
 const balance = await module.balanceOf(address);
 console.log(balance);

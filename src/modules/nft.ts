@@ -231,7 +231,7 @@ export class NFTModule
    * @example
    * ```javascript
    * // Address of the wallet to check NFT balance
-   * const address = "{{wallet_address}}"";
+   * const address = "{{wallet_address}}";
    *
    * const balance = await module.balanceOf(address);
    * console.log(balance);
@@ -453,6 +453,19 @@ export class NFTModule
     );
   }
 
+  /**
+   * Burn NFT
+   *
+   * @remarks Burn an NFT, permanently taking it out of circulation and reducing the supply.
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the NFT you want to burn
+   * const tokenId = 0;
+   *
+   * await module.burn(tokenId);
+   * ```
+   */
   public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [tokenId]);
   }
