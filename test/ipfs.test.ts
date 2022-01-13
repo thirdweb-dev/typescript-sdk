@@ -183,20 +183,40 @@ describe("IPFS Uploads", async () => {
       },
     ];
     const storage = sdk.getStorage() as IpfsStorage;
-    const cid = await storage.uploadMetadataBatch(sampleObjects);
-    assert(cid.length > 0);
+    const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
+      sampleObjects,
+    );
+    assert(baseUri.length > 0);
+    assert(metadataUris.length > 0);
   });
 
   it("should properly parse ipfs urls in uploadMetadataBatch", async () => {
     const sampleObjects: any[] = [
       "ipfs://QmTaWb3L89Deg8fxW8snWPULX6iNh5t7vfXa68sVeAfrHJ",
       { test: "should pass" },
+      "https://ipfs.io",
+      { test: "maybe pass" },
     ];
     const storage = sdk.getStorage() as IpfsStorage;
-    const cid = await storage.uploadMetadataBatch(sampleObjects);
-    console.log(cid);
-    assert((await (await getFile(`${cid}0`)).text()).includes("passed"));
-    assert((await (await getFile(`${cid}1`)).text()).includes("should pass"));
+    const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
+      sampleObjects,
+    );
+    console.log(baseUri, metadataUris);
+    assert(metadataUris.length === sampleObjects.length);
+    assert(metadataUris[0] === sampleObjects[0]);
+    assert(
+      metadataUris[1].startsWith(baseUri) && metadataUris[1].endsWith("/0"),
+    );
+    assert(metadataUris[2] === sampleObjects[2]);
+    assert(
+      metadataUris[3].startsWith(baseUri) && metadataUris[3].endsWith("/1"),
+    );
+    assert(
+      (await (await getFile(`${baseUri}0`)).text()).includes("should pass"),
+    );
+    assert(
+      (await (await getFile(`${baseUri}1`)).text()).includes("maybe pass"),
+    );
   });
 
   it("should upload properly with same file names but one with capitalized letters", async () => {
@@ -234,6 +254,7 @@ describe("IPFS Uploads", async () => {
     ];
     try {
       await storage.uploadBatch(sampleObjects);
+      assert.fail("should throw an error");
     } catch (e) {
       if (!(e instanceof DuplicateFileNameError)) {
         throw e;

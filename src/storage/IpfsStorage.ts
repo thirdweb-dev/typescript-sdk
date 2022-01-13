@@ -4,7 +4,7 @@ import {
   UploadError,
 } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage, UploadMetadataBatchResult } from "../interfaces/IStorage";
 import FileOrBuffer from "../types/FileOrBuffer";
 import { BufferOrStringWithName } from "../types/BufferOrStringWithName";
 
@@ -20,8 +20,11 @@ const pinataIpfsUrl = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 /**
  * @internal
  */
-interface CidWithFiles {
+interface CidWithFileName {
+  // base cid of the directory
   cid: string;
+
+  // file name of the file without cid
   fileNames: string[];
 }
 
@@ -99,18 +102,17 @@ export class IpfsStorage implements IStorage {
       | string[]
       | FileOrBuffer[]
       | File[]
-      | BufferOrStringWithName[]
-      | string[],
+      | BufferOrStringWithName[],
     contractAddress?: string,
     fileStartNumber = 0,
-  ): Promise<CidWithFiles> {
+  ): Promise<CidWithFileName> {
     const token = await this.getUploadToken(contractAddress || "");
     const metadata = {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
     };
     const data = new FormData();
     const fileNames: string[] = [];
-    files.forEach(async (file, i) => {
+    files.forEach((file, i) => {
       let fileName = "";
       let fileData = file;
       // if it is a file, we passthrough the file extensions,
@@ -206,10 +208,10 @@ export class IpfsStorage implements IStorage {
    * @param files - The running array of files or buffer to upload
    * @returns - The final map of all hashes to files
    */
-  public async buildFilePropertiesMap(
-    object: any,
+  public buildFilePropertiesMap(
+    object: Record<string, any>,
     files: (File | Buffer)[],
-  ): Promise<(File | Buffer)[]> {
+  ): (File | Buffer)[] {
     const keys = Object.keys(object).sort();
     for (const key in keys) {
       const val = object[keys[key]];
@@ -219,7 +221,7 @@ export class IpfsStorage implements IStorage {
       }
 
       if (typeof val === "object") {
-        await this.buildFilePropertiesMap(val, files);
+        this.buildFilePropertiesMap(val, files);
       }
     }
     return files;
@@ -239,10 +241,10 @@ export class IpfsStorage implements IStorage {
   public async batchUploadProperties(
     metadata: MetadataURIOrObject,
   ): Promise<any> {
-    if (typeof metadata === "string" && metadata.startsWith("ipfs://")) {
+    if (typeof metadata === "string") {
       return metadata;
     }
-    const filesToUpload = await this.buildFilePropertiesMap(metadata, []);
+    const filesToUpload = this.buildFilePropertiesMap(metadata, []);
     if (filesToUpload.length === 0) {
       return metadata;
     }
@@ -277,7 +279,10 @@ export class IpfsStorage implements IStorage {
    * @param cids - The array of file hashes to ipfs uris in the recurse order
    * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
    */
-  private async replaceFilePropertiesWithHashes(object: any, cids: string[]) {
+  private async replaceFilePropertiesWithHashes(
+    object: Record<string, any>,
+    cids: string[],
+  ) {
     const keys = Object.keys(object).sort();
     for (const key in keys) {
       const val = object[keys[key]];
@@ -306,8 +311,12 @@ export class IpfsStorage implements IStorage {
     }
 
     // since there's only single object, always use the first index
-    const cid = await this.uploadMetadataBatch([metadata], contractAddress, 0);
-    return `${cid}0`;
+    const { metadataUris } = await this.uploadMetadataBatch(
+      [metadata],
+      contractAddress,
+      0,
+    );
+    return metadataUris[0];
   }
 
   /**
@@ -317,24 +326,44 @@ export class IpfsStorage implements IStorage {
     metadatas: MetadataURIOrObject[],
     contractAddress?: string,
     startFileNumber?: number,
-  ) {
-    const finalMetadata: MetadataURIOrObject[] =
-      await this.batchUploadProperties(metadatas);
-    const filesToUpload = await Promise.all(
-      finalMetadata.map(async (m) => {
-        if (typeof m === "string" && m.startsWith("ipfs://")) {
-          return await this.get(m);
-        } else {
-          return JSON.stringify(m);
-        }
-      }),
-    );
+  ): Promise<UploadMetadataBatchResult> {
+    // we only want to upload if the metadata object is not a string
+    const metadataToUpload: string[] = (
+      await Promise.all(metadatas.map((m) => this.batchUploadProperties(m)))
+    )
+      .filter((m) => typeof m !== "string")
+      .map((m) => JSON.stringify(m));
 
-    return await this.uploadBatch(
-      filesToUpload,
+    // batch upload non-string metadata object
+    if (metadataToUpload.length === 0) {
+      return {
+        baseUri: "",
+        metadataUris: metadatas.filter(
+          (m) => typeof m === "string",
+        ) as string[],
+      };
+    }
+
+    const { cid, fileNames } = await this.uploadBatchWithCid(
+      metadataToUpload,
       contractAddress,
       startFileNumber,
     );
+
+    const baseUri = `ipfs://${cid}/`;
+    const uris = [];
+    for (const metadata of metadatas) {
+      if (typeof metadata === "string") {
+        uris.push(metadata);
+      } else {
+        uris.push(`${baseUri}${fileNames.splice(0, 1)[0]}`);
+      }
+    }
+
+    return {
+      baseUri,
+      metadataUris: uris,
+    };
   }
 
   /**

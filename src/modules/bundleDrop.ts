@@ -304,7 +304,7 @@ export class BundleDropModule
     metadatas: MetadataURIOrObject[],
   ): Promise<string[]> {
     const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
-    const baseUri = await this.sdk
+    const { baseUri } = await this.sdk
       .getStorage()
       .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
     const receipt = await this.sendTransaction("lazyMint", [
