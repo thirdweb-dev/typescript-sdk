@@ -126,7 +126,7 @@ export default class ClaimConditionPhase {
    */
   public async buildPublicClaimCondition(): Promise<PublicMintCondition> {
     if (this._snapshot) {
-      const snapshot = await Promise.all(
+      await Promise.all(
         this._snapshot.map(async (address) => {
           if (address.includes(".eth")) {
             const resolved = await ethers
