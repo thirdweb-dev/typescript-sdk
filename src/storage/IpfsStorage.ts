@@ -237,14 +237,14 @@ export class IpfsStorage implements IStorage {
    * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
    */
   public async batchUploadProperties(
-    metadata: MetadataURIOrObject,
+    metadatas: MetadataURIOrObject[],
   ): Promise<any> {
-    if (typeof metadata === "string") {
-      return metadata;
+    if (typeof metadatas === "string") {
+      return metadatas;
     }
-    const filesToUpload = this.buildFilePropertiesMap(metadata, []);
+    const filesToUpload = this.buildFilePropertiesMap(metadatas, []);
     if (filesToUpload.length === 0) {
-      return metadata;
+      return metadatas;
     }
     const { cid, fileNames } = await this.uploadBatchWithCid(
       filesToUpload,
@@ -259,7 +259,7 @@ export class IpfsStorage implements IStorage {
     }
 
     const finalMetadata = await this.replaceFilePropertiesWithHashes(
-      metadata,
+      metadatas,
       cids,
     );
     return finalMetadata;
@@ -326,11 +326,10 @@ export class IpfsStorage implements IStorage {
     startFileNumber?: number,
   ): Promise<UploadMetadataBatchResult> {
     // we only want to upload if the metadata object is not a string
+    const metadataObjects = metadatas.filter((m) => typeof m !== "string");
     const metadataToUpload: string[] = (
-      await Promise.all(metadatas.map((m) => this.batchUploadProperties(m)))
-    )
-      .filter((m) => typeof m !== "string")
-      .map((m) => JSON.stringify(m));
+      await this.batchUploadProperties(metadataObjects)
+    ).map((m: any) => JSON.stringify(m));
 
     // batch upload non-string metadata object
     if (metadataToUpload.length === 0) {
