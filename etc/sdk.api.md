@@ -984,7 +984,7 @@ export interface IPackCreateArgs {
 export class IpfsStorage implements IStorage {
     constructor(gatewayUrl: string);
     // @internal
-    batchUploadProperties(metadata: MetadataURIOrObject): Promise<any>;
+    batchUploadProperties(metadatas: MetadataURIOrObject[]): Promise<any>;
     buildFilePropertiesMap(object: Record<string, any>, files: (File | Buffer)[]): (File | Buffer)[];
     // (undocumented)
     get(hash: string): Promise<string>;
