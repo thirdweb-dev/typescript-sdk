@@ -4,7 +4,7 @@
 
 ## PackModule.transfer() method
 
-Transfer NFT
+Transfer Pack
 
 <b>Signature:</b>
 
@@ -26,19 +26,19 @@ Promise&lt;void&gt;
 
 ## Remarks
 
-Transfer an NFT from the connected wallet to another wallet.
+Transfer a pack from the connected wallet to another wallet.
 
 ## Example
 
 
 ```javascript
-// Address of the wallet you want to send the NFT to
+// Address of the wallet you want to send the pack to
 const toAddress = "0x...";
 
-// The token ID of the NFT you want to send
+// The token ID of the pack you want to send
 const tokenId = "0";
 
-// The number of NFTs you want to send
+// The number of packs you want to send
 const amount = 1;
 
 await module.transfer(toAddress, tokenId, amount);
