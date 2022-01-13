@@ -170,12 +170,14 @@ describe("Bundle Module (aka Collection Module)", async () => {
       {
         metadata: {
           name: "Test1",
+          image: "ipfs://myownipfs1",
         },
         supply: 5,
       },
       {
         metadata: {
           name: "Test2",
+          image: "ipfs://myownipfs2",
         },
         supply: 5,
       },
@@ -185,6 +187,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
     let i = 0;
     nfts.forEach(async (nft) => {
       expect(nft.metadata.name).to.be.equal(`Test${i}`);
+      expect(nft.metadata.image).to.be.equal(`ipfs://myownipfs${i}`);
       i++;
     });
   });
