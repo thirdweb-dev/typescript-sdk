@@ -237,7 +237,7 @@ export class IpfsStorage implements IStorage {
   public async batchUploadProperties(
     metadata: MetadataURIOrObject,
   ): Promise<any> {
-    if (typeof metadata === "string") {
+    if (typeof metadata === "string" && metadata.startsWith("ipfs://")) {
       return metadata;
     }
     const filesToUpload = await this.buildFilePropertiesMap(metadata, []);
