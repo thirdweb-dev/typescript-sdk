@@ -46,12 +46,14 @@ describe("Bundle Module (aka Collection Module)", async () => {
     await bundleModule.createAndMint({
       metadata: {
         name: "Bundle 1",
-        descrition: "Bundle 1",
+        description: "Bundle 1",
+        image: "fake://myownfakeipfs",
       },
       supply: 100,
     });
     const nfts = await bundleModule.getOwned(adminWallet.address);
     expect(nfts).to.be.an("array").length(1);
+    expect(nfts[0].metadata.image).to.be.equal("fake://myownfakeipfs");
 
     const bobsNfts = await bundleModule.getOwned(bobWallet.address);
     expect(bobsNfts)
