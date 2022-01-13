@@ -468,24 +468,6 @@
           "javascript": "const recipients = await module.getAllRecepients();\nconsole.log(recipients);"
         },
         "signature": "getAllRecipients(): Promise<SplitRecipient[]>;"
-      },
-      {
-        "name": "withdraw",
-        "summary": "Withdraw Funds\n\n",
-        "remarks": "\n\nWithdraw due funds held by the contract in the native currency to a specific recipient.\n\n",
-        "examples": {
-          "javascript": "// The address to check the funds of\nconst address = \"{{wallet_address}}\";\nawait module.withdraw(address);"
-        },
-        "signature": "withdraw(address: string): Promise<void>;"
-      },
-      {
-        "name": "withdrawToken",
-        "summary": "Withdraw Token Funds\n\n",
-        "remarks": "\n\nWithdraw due funds held by the contract in non-native tokens to a specific recipient.\n\n",
-        "examples": {
-          "javascript": "// The address to check the funds of\nconst address = \"{{wallet_address}}\";\n// The address of the currency to withdraw funds in\nconst tokenAddress = \"0x...\"\nawait module.withdrawToken(address, tokenAddress);"
-        },
-        "signature": "withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;"
       }
     ],
     "signature": "export declare class SplitsModule extends Module<Royalty> implements ISplitsModule "

@@ -46,6 +46,6 @@ const module = sdk.getSplitsModule("{{module_address}}");
 |  [get()](./sdk.splitsmodule.get.md) |  |  |
 |  [getAllRecipients()](./sdk.splitsmodule.getallrecipients.md) |  | Get Recipients |
 |  [getRecipientSplitPercentage(address)](./sdk.splitsmodule.getrecipientsplitpercentage.md) |  |  |
-|  [withdraw(address)](./sdk.splitsmodule.withdraw.md) |  | Withdraw Funds |
-|  [withdrawToken(walletAddress, tokenAddress)](./sdk.splitsmodule.withdrawtoken.md) |  | Withdraw Token Funds |
+|  [withdraw(address)](./sdk.splitsmodule.withdraw.md) |  |  |
+|  [withdrawToken(walletAddress, tokenAddress)](./sdk.splitsmodule.withdrawtoken.md) |  |  |
 
