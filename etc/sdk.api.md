@@ -984,8 +984,8 @@ export interface IPackCreateArgs {
 export class IpfsStorage implements IStorage {
     constructor(gatewayUrl: string);
     // @internal
-    batchUploadProperties(metadata: object): Promise<any>;
-    buildFilePropertiesMap(object: any, files: (File | Buffer)[]): Promise<(File | Buffer)[]>;
+    batchUploadProperties(metadata: MetadataURIOrObject): Promise<any>;
+    buildFilePropertiesMap(object: Record<string, any>, files: (File | Buffer)[]): (File | Buffer)[];
     // (undocumented)
     get(hash: string): Promise<string>;
     // (undocumented)
@@ -1001,7 +1001,7 @@ export class IpfsStorage implements IStorage {
     // (undocumented)
     uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, _signerAddress?: string): Promise<string>;
     // @internal (undocumented)
-    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, startFileNumber?: number): Promise<string>;
+    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, startFileNumber?: number): Promise<UploadMetadataBatchResult>;
 }
 
 // @public
@@ -1071,7 +1071,8 @@ export interface IStorage {
     upload(data: string | File | FileOrBuffer | Buffer, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStringWithName[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
     uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "uploadMetadataBatch" is marked as @public, but its signature references "UploadMetadataBatchResult" which is marked as @internal
+    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<UploadMetadataBatchResult>;
 }
 
 // @public (undocumented)
@@ -2024,6 +2025,16 @@ export class UploadError extends Error {
 //
 // @internal (undocumented)
 export function uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
+
+// Warning: (ae-internal-missing-underscore) The name "UploadMetadataBatchResult" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export interface UploadMetadataBatchResult {
+    // (undocumented)
+    baseUri: string;
+    // (undocumented)
+    metadataUris: string[];
+}
 
 // @public
 export function uploadToIPFS(data: string | File | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
