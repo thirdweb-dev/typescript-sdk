@@ -136,9 +136,10 @@ export class IpfsStorage implements IStorage {
       }
 
       const filepath = `files/${fileName}`;
-
-      if (fileName in fileNames) {
-        throw new DuplicateFileNameError(fileName);
+      console.log(fileNames.indexOf(fileName));
+      if (fileNames.indexOf(fileName) > -1) {
+        console.log(fileNames);
+        throw new Error(`DUPLICATE_FILE_NAME_ERROR: File name ${fileName} was passed for more than one file.`)
       }
       fileNames.push(fileName);
       if (typeof window === "undefined") {

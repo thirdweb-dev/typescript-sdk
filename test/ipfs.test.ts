@@ -234,7 +234,6 @@ describe("IPFS Uploads", async () => {
     ];
     try {
       await storage.uploadBatch(sampleObjects);
-      assert.fail("should throw an error");
     } catch (e) {
       if (!(e instanceof DuplicateFileNameError)) {
         throw e;
