@@ -80,7 +80,8 @@ export class IpfsStorage implements IStorage {
       | string[]
       | FileOrBuffer[]
       | File[]
-      | BufferOrStringWithName[],
+      | BufferOrStringWithName[]
+      | string[],
     contractAddress?: string,
     fileStartNumber = 0,
   ): Promise<string> {
@@ -99,7 +100,8 @@ export class IpfsStorage implements IStorage {
       | string[]
       | FileOrBuffer[]
       | File[]
-      | BufferOrStringWithName[],
+      | BufferOrStringWithName[]
+      | string[],
     contractAddress?: string,
     fileStartNumber = 0,
   ): Promise<CidWithFiles> {
@@ -109,7 +111,7 @@ export class IpfsStorage implements IStorage {
     };
     const data = new FormData();
     const fileNames: string[] = [];
-    files.forEach((file, i) => {
+    files.forEach(async (file, i) => {
       let fileName = "";
       let fileData = file;
       // if it is a file, we passthrough the file extensions,
@@ -139,7 +141,6 @@ export class IpfsStorage implements IStorage {
         throw new DuplicateFileNameError(fileName);
       }
       fileNames.push(fileName);
-
       if (typeof window === "undefined") {
         data.append("file", fileData as any, { filepath } as any);
       } else {
@@ -208,6 +209,10 @@ export class IpfsStorage implements IStorage {
     object: any,
     files: (File | Buffer)[],
   ): Promise<(File | Buffer)[]> {
+    if (typeof object === "string") {
+      files.push(Buffer.from(await this.get(object)));
+      return files;
+    }
     const keys = Object.keys(object).sort();
     for (const key in keys) {
       const val = object[keys[key]];
@@ -234,7 +239,12 @@ export class IpfsStorage implements IStorage {
    * @param metadata - The metadata to recursively process
    * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
    */
-  public async batchUploadProperties(metadata: object): Promise<any> {
+  public async batchUploadProperties(
+    metadata: MetadataURIOrObject,
+  ): Promise<any> {
+    if (typeof metadata === "string") {
+      return metadata;
+    }
     const filesToUpload = await this.buildFilePropertiesMap(metadata, []);
     if (filesToUpload.length === 0) {
       return metadata;
@@ -313,8 +323,18 @@ export class IpfsStorage implements IStorage {
   ) {
     const finalMetadata: MetadataURIOrObject[] =
       await this.batchUploadProperties(metadatas);
+    const filesToUpload = await Promise.all(
+      finalMetadata.map(async (m) => {
+        if (typeof m === "string") {
+          return await this.get(m);
+        } else {
+          return JSON.stringify(m);
+        }
+      }),
+    );
+
     return await this.uploadBatch(
-      finalMetadata.map((m) => JSON.stringify(m)),
+      filesToUpload,
       contractAddress,
       startFileNumber,
     );

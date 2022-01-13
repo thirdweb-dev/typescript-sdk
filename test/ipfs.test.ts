@@ -187,6 +187,18 @@ describe("IPFS Uploads", async () => {
     assert(cid.length > 0);
   });
 
+  it("should properly parse ipfs urls in uploadMetadataBatch", async () => {
+    const sampleObjects: any[] = [
+      "ipfs://QmTaWb3L89Deg8fxW8snWPULX6iNh5t7vfXa68sVeAfrHJ",
+      { test: "should pass" },
+    ];
+    const storage = sdk.getStorage() as IpfsStorage;
+    const cid = await storage.uploadMetadataBatch(sampleObjects);
+    console.log(cid);
+    assert((await (await getFile(`${cid}0`)).text()).includes("passed"));
+    assert((await (await getFile(`${cid}0`)).text()).includes("should pass"));
+  });
+
   it("should upload properly with same file names but one with capitalized letters", async () => {
     const storage = sdk.getStorage();
     const sampleObjects: BufferOrStringWithName[] = [
