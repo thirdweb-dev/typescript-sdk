@@ -87,7 +87,9 @@ export interface ISplitsModule {
  * ```javascript
  * import { ThirdwebSDK } from "@3rdweb/sdk";
  *
- * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
  * const module = sdk.getSplitsModule("{{module_address}}");
  * ```
  *
@@ -115,11 +117,7 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
   }
 
   /**
-<<<<<<< HEAD
-   * Get Recients
-=======
    * Get Recipients
->>>>>>> jd/generate-json-snippets
    *
    * @remarks Get the data about the shares of every split recipient on the module
    *

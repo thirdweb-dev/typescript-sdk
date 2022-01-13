@@ -4,7 +4,7 @@
     "summary": "Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getBundleDropModule(\"{{module_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst module = sdk.getBundleDropModule(\"{{module_address}}\");"
     },
     "methods": [
       {
@@ -60,7 +60,7 @@
     "summary": "Create a collection of NFTs that lets you optionally mint multiple copies of each NFT.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getBundleModule(\"{{module_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst module = sdk.getBundleModule(\"{{module_address}}\");"
     },
     "methods": [
       {
@@ -134,7 +134,7 @@
     "summary": "Setup a collection of one-of-one NFTs that are minted as users claim them.\n\n",
     "remarks": "\n\nThe constructor for this class is marked as internal. Third-party code should not call the constructor directly or create subclasses that extend the `DropModule` class.\n\n",
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getDropModule(\"{{module_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst module = sdk.getDropModule(\"{{module_address}}\");"
     },
     "methods": [
       {
@@ -199,7 +199,7 @@
     "summary": "Create your own whitelabel marketplace that enables users to buy and sell any digital assets.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getMarketplaceModule(\"{{module_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst module = sdk.getMarketplaceModule(\"{{module_address}}\");"
     },
     "methods": [
       {
@@ -282,7 +282,7 @@
     "summary": "Create a collection of one-of-one NFTs.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getNFTModule(\"{{module_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst module = sdk.getNFTModule(\"{{module_address}}\");"
     },
     "methods": [
       {
@@ -356,7 +356,7 @@
     "summary": "Create lootboxes of NFTs with rarity based open mechanics.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getPackModule(\"{{module_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst module = sdk.getPackModule(\"{{module_address}}\");"
     },
     "methods": [
       {
@@ -421,7 +421,7 @@
     "summary": "Create custom royalty splits to distribute funds.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getSplitsModule(\"{{module_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst module = sdk.getSplitsModule(\"{{module_address}}\");"
     },
     "methods": [
       {
@@ -462,7 +462,7 @@
       },
       {
         "name": "getAllRecipients",
-        "summary": "<<<<<<< HEAD Get Recients ======= Get Recipients >>>>>>> jd/generate-json-snippets\n\n",
+        "summary": "Get Recipients\n\n",
         "remarks": "\n\nGet the data about the shares of every split recipient on the module\n\n",
         "examples": {
           "javascript": "const recipients = await module.getAllRecepients();\nconsole.log(recipients);"
@@ -495,7 +495,7 @@
     "summary": "Create a standard crypto token or crypto currency.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getTokenModule(\"{{module_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst module = sdk.getTokenModule(\"{{module_address}}\");"
     },
     "methods": [
       {
