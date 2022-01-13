@@ -1877,7 +1877,9 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
     // (undocumented)
     static moduleType: ModuleType;
+    // (undocumented)
     withdraw(address: string): Promise<void>;
+    // (undocumented)
     withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;
 }
 
