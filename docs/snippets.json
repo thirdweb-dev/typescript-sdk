@@ -12,7 +12,7 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of a specific NFT in this module owned by the wallet).\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\"\";\n// The token ID of the NFT you want to check the wallets balance of\nconst tokenId = \"0\"\n\nconst balance = await module.balanceOf(address, tokenId);\nconsole.log(balance);"
+          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n// The token ID of the NFT you want to check the wallets balance of\nconst tokenId = \"0\"\n\nconst balance = await module.balanceOf(address, tokenId);\nconsole.log(balance);"
         },
         "signature": "balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;"
       },
@@ -68,14 +68,23 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of a specific NFT in this module owned by the wallet).\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\"\";\n// The token ID of the NFT you want to check the wallets balance of\nconst tokenId = \"0\"\n\nconst balance = await module.balanceOf(address, tokenId);\nconsole.log(balance);"
+          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n// The token ID of the NFT you want to check the wallets balance of\nconst tokenId = \"0\"\n\nconst balance = await module.balanceOf(address, tokenId);\nconsole.log(balance);"
         },
         "signature": "balanceOf(address: string, tokenId: string): Promise<BigNumber>;"
       },
       {
+        "name": "burn",
+        "summary": "Burn NFT\n\n",
+        "remarks": "\n\nBurn an NFT, permanently taking it out of circulation and reducing the supply.\n\n",
+        "examples": {
+          "javascript": "// The token ID of the NFT you want to burn\nconst tokenId = 0;\n// The number of specified NFTs you want to burn\nconst amount = 1\n\nawait module.burn({ tokenId, amount });"
+        },
+        "signature": "burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt>;"
+      },
+      {
         "name": "createAndMint",
-        "summary": "Create & Mint NFT\n\n",
-        "remarks": "\n\nCreate and mint NFTs.\n\n",
+        "summary": "Mint NFT\n\n",
+        "remarks": "\n\nMint an NFT with a specified supply.\n\n",
         "examples": {
           "javascript": "// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}\n\nconst metadataWithSupply = {\n  metadata,\n  supply: 1, // The number of this NFT you want to mint\n}\n\nawait module.createAndMint(metadataWithSupply);"
         },
@@ -83,8 +92,8 @@
       },
       {
         "name": "createAndMintBatch",
-        "summary": "Create & Mint Many NFTs\n\n",
-        "remarks": "\n\nCreate and mint many different NFTs.\n\n",
+        "summary": "Mint Many NFTs\n\n",
+        "remarks": "\n\nMint many different NFTs with specified supplies.\n\n",
         "examples": {
           "javascript": "// Custom metadata and supplies of your NFTs\nconst metadataWithSupply = [{\n  supply: 1, // The number of this NFT you want to mint\n  metadata: {\n    name: \"Cool NFT #1\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}, {\n  supply: 1,\n  metadata: {\n    name: \"Cool NFT #2\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}];\n\nawait module.createAndMintBatch(metadataWithSupply);"
         },
@@ -133,7 +142,7 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this module owned by the wallet).\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\"\";\n\nconst balance = await module.balanceOf(address);\nconsole.log(balance);"
+          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await module.balanceOf(address);\nconsole.log(balance);"
         },
         "signature": "balanceOf(address: string): Promise<BigNumber>;"
       },
@@ -194,6 +203,24 @@
     },
     "methods": [
       {
+        "name": "buyoutAuctionListing",
+        "summary": "Buyout Auction\n\n",
+        "remarks": "\n\nBuy a specific direct listing from the marketplace.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n\nconst balance = await module.balanceOf(listingId, quantity);\nconsole.log(balance);"
+        },
+        "signature": "buyoutAuctionListing(listingId: BigNumberish): Promise<void>;"
+      },
+      {
+        "name": "buyoutDirectListing",
+        "summary": "Buy Listing\n\n",
+        "remarks": "\n\nBuy a specific direct listing from the marketplace.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n// Quantity of the asset you want to buy\nconst quantityDesired = 1;\n\nawait module.buyoutDirectListing({ listingId, quantityDesired });"
+        },
+        "signature": "buyoutDirectListing(_buyout: {\n        listingId: BigNumberish;\n        quantityDesired: BigNumberish;\n    }): Promise<void>;"
+      },
+      {
         "name": "cancelAuctionListing",
         "summary": "Cancel Auction Listing\n\n",
         "remarks": "\n\nCancel an auction listing on the marketplace\n\n",
@@ -237,6 +264,15 @@
           "javascript": "// Get all listings\nconst listings = await module.getAllListings();\nconsole.log(listings);\n\n// Get only the active listings\nconst activeListings = listings.filter((listing) => listing.quantity > 0);"
         },
         "signature": "getAllListings(): Promise<(AuctionListing | DirectListing)[]>;"
+      },
+      {
+        "name": "makeAuctionListingBid",
+        "summary": "Bid On Auction\n\n",
+        "remarks": "\n\nMake a bid on an auction listings\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the asset you want to bid on\nconst listingId = 0;\n// The price you are willing to bid for a single token of the listing\nconst bidPricePerToken = 1;\n\nawait module.buyoutDirectListing(listingId, bidPricePerToken);"
+        },
+        "signature": "makeAuctionListingBid(bid: {\n        listingId: BigNumberish;\n        pricePerToken: BigNumberish;\n    }): Promise<void>;"
       }
     ],
     "signature": "export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> implements IMarketplace "
@@ -246,7 +282,7 @@
     "summary": "Create a collection of one-of-one NFTs.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getNFTModule(\"{{module_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getNFTModule(\"{{module_address}}\");"
     },
     "methods": [
       {
@@ -254,9 +290,18 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this module owned by the wallet).\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\"\";\n\nconst balance = await module.balanceOf(address);\nconsole.log(balance);"
+          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await module.balanceOf(address);\nconsole.log(balance);"
         },
         "signature": "balanceOf(address: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "burn",
+        "summary": "Burn NFT\n\n",
+        "remarks": "\n\nBurn an NFT, permanently taking it out of circulation and reducing the supply.\n\n",
+        "examples": {
+          "javascript": "// The token ID of the NFT you want to burn\nconst tokenId = 0;\n\nawait module.burn(tokenId);"
+        },
+        "signature": "burn(tokenId: BigNumberish): Promise<TransactionReceipt>;"
       },
       {
         "name": "getAll",
@@ -313,7 +358,62 @@
     "examples": {
       "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getPackModule(\"{{module_address}}\");"
     },
-    "methods": [],
+    "methods": [
+      {
+        "name": "balanceOf",
+        "summary": "Get Pack Balance\n\n",
+        "remarks": "\n\nGet a wallets pack balance (number of a specific packs in this module owned by the wallet).\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to check pack balance\nconst address = \"{{wallet_address}}\"\";\n// The token ID of the pack you want to check the wallets balance of\nconst tokenId = \"0\"\n\nconst balance = await module.balanceOf(address, tokenId);\nconsole.log(balance);"
+        },
+        "signature": "balanceOf(address: string, tokenId: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "create",
+        "summary": "Create Pack\n\n",
+        "remarks": "\n\nCreate a new pack with its own rewards.\n\n",
+        "examples": {
+          "javascript": "// Data to create the pack\nconst pack = {\n  // The address of the contract that holds the rewards you want to include\n  assetContract: \"0x...\",\n  // The metadata of the pack\n  metadata: {\n    name: \"Cool Pack\",\n    description: \"This is a cool pack\",\n    // This can be an image url or image file\n    image: readFileSync(\"path/to/image.png\"),\n  },\n  // The NFTs you want to include in the pack\n  assets: [\n    {\n      tokenId: 0, // The token ID of the asset you want to add\n      amount: 1, // The amount of the asset you want to add\n    }, {\n      tokenId: 1,\n      amount: 1,\n    }\n  ],\n};\n\nawait module.create(pack);"
+        },
+        "signature": "create(args: IPackCreateArgs): Promise<PackMetadata>;"
+      },
+      {
+        "name": "getAll",
+        "summary": "Get Pack Data\n\n",
+        "remarks": "\n\nGet data associated with every pack in this module.\n\n",
+        "examples": {
+          "javascript": "const packs = await module.getAll();\nconsole.log(packs);"
+        },
+        "signature": "getAll(): Promise<PackMetadata[]>;"
+      },
+      {
+        "name": "getNFTs",
+        "summary": "Get Pack Reward Data\n\n",
+        "remarks": "\n\nGet data associated with the rewards inside a specified pack\n\n",
+        "examples": {
+          "javascript": "// The pack ID of the pack whos rewards you want to get\nconst packId = 0;\n\nconst nfts = await module.getNFTs(packId);\nconsole.log(nfts);"
+        },
+        "signature": "getNFTs(packId: string): Promise<PackNFTMetadata[]>;"
+      },
+      {
+        "name": "open",
+        "summary": "Open Pack\n\n",
+        "remarks": "\n\nOpen a pack to burn it and obtain the reward asset inside.\n\n",
+        "examples": {
+          "javascript": "// The pack ID of the asset you want to buy\nconst packId = \"0\";\nconst rewards = await module.open(packId);\nconsole.log(rewards);"
+        },
+        "signature": "open(packId: string): Promise<NFTMetadata[]>;"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer NFT\n\n",
+        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"0x...\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\n// The number of NFTs you want to send\nconst amount = 1;\n\nawait module.transfer(toAddress, tokenId, amount);"
+        },
+        "signature": "transfer(to: string, tokenId: string, amount: BigNumber): Promise<void>;"
+      }
+    ],
     "signature": "export declare class PackModule extends ModuleWithRoles<PackContract> implements ITransferable "
   },
   "SplitsModule": {
@@ -323,7 +423,53 @@
     "examples": {
       "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getSplitsModule(\"{{module_address}}\");"
     },
-    "methods": [],
+    "methods": [
+      {
+        "name": "balanceOf",
+        "summary": "Get Funds\n\n",
+        "remarks": "\n\nGet the amount of funds in the native currency held by the module thats owed to a specific recipient.\n\n",
+        "examples": {
+          "javascript": "// The address to check the funds of\nconst address = \"{{wallet_address}}\";\nconst funds = await module.balanceOf(address);\nconsole.log(funds);"
+        },
+        "signature": "balanceOf(address: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "balanceOfToken",
+        "summary": "Get Token Funds\n\n",
+        "remarks": "\n\nGet the amount of funds in the non-native tokens held by the module thats owed to a specific recipient.\n\n",
+        "examples": {
+          "javascript": "// The address to check the funds of\nconst address = \"{{wallet_address}}\";\n// The address of the currency to check the contracts funds of\nconst tokenAddress = \"0x...\"\nconst funds = await module.balanceOfToken(address, tokenAddress);\nconsole.log(funds);"
+        },
+        "signature": "balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyValue>;"
+      },
+      {
+        "name": "distribute",
+        "summary": "Distribute Funds\n\n",
+        "remarks": "\n\nDistribute funds held by the contract in the native currency to all recipients.\n\n",
+        "examples": {
+          "javascript": "await module.distribute();"
+        },
+        "signature": "distribute(): Promise<void>;"
+      },
+      {
+        "name": "distributeToken",
+        "summary": "Distribute Funds\n\n",
+        "remarks": "\n\nDistribute funds held by the contract in the native currency to all recipients.\n\n",
+        "examples": {
+          "javascript": "// The address of the currency to distribute funds\nconst tokenAddress = \"0x...\"\nawait module.distributeToken(tokenAddress);"
+        },
+        "signature": "distributeToken(tokenAddress: string): Promise<void>;"
+      },
+      {
+        "name": "getAllRecipients",
+        "summary": "Get Recipients\n\n",
+        "remarks": "\n\nGet the data about the shares of every split recipient on the module\n\n",
+        "examples": {
+          "javascript": "const recipients = await module.getAllRecepients();\nconsole.log(recipients);"
+        },
+        "signature": "getAllRecipients(): Promise<SplitRecipient[]>;"
+      }
+    ],
     "signature": "export declare class SplitsModule extends Module<Royalty> implements ISplitsModule "
   },
   "TokenModule": {
@@ -339,7 +485,7 @@
         "summary": "Get Token Allowance\n\n",
         "remarks": "\n\nGet the allowance of one wallet over another's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the connected wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet who owns the funds\nconst address = \"{{wallet_address}}\"\";\n\n// Address of the wallet to check token allowance\nconst otherAddress = \"{{wallet_address}}\"\";\n\nconst allowance = await module.allowanceOf(otherAddress);\nconsole.log(allowance);"
+          "javascript": "// Address of the wallet who owns the funds\nconst address = \"{{wallet_address}}\";\n\n// Address of the wallet to check token allowance\nconst otherAddress = \"0x...\";\n\nconst allowance = await module.allowanceOf(otherAddress);\nconsole.log(allowance);"
         },
         "signature": "allowanceOf(owner: string, spender: string): Promise<BigNumber>;"
       },
@@ -399,15 +545,5 @@
       }
     ],
     "signature": "export declare class TokenModule extends ModuleWithRoles<Coin> implements ITransferable "
-  },
-  "VoteModule": {
-    "name": "VoteModule",
-    "summary": "Create a decentralized organization for token holders to vote on proposals.\n\n",
-    "remarks": null,
-    "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\nconst sdk = new ThirdwebSDK({{wallet_provider}});\nconst module = sdk.getVoteModule(\"{{module_address}}\");"
-    },
-    "methods": [],
-    "signature": "export declare class VoteModule extends Module<VotingGovernor> "
   }
 }

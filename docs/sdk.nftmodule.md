@@ -21,6 +21,7 @@ export declare class NFTModule extends ModuleWithRoles<SignatureMint721> impleme
 ```javascript
 import { ThirdwebSDK } from "@3rdweb/sdk";
 
+const
 const sdk = new ThirdwebSDK({{wallet_provider}});
 const module = sdk.getNFTModule("{{module_address}}");
 ```
@@ -38,7 +39,7 @@ const module = sdk.getNFTModule("{{module_address}}");
 |  --- | --- | --- |
 |  [balance()](./sdk.nftmodule.balance.md) |  |  |
 |  [balanceOf(address)](./sdk.nftmodule.balanceof.md) |  | Get NFT Balance |
-|  [burn(tokenId)](./sdk.nftmodule.burn.md) |  |  |
+|  [burn(tokenId)](./sdk.nftmodule.burn.md) |  | Burn NFT |
 |  [generateSignature(mintRequest)](./sdk.nftmodule.generatesignature.md) |  |  |
 |  [generateSignatureBatch(payloads)](./sdk.nftmodule.generatesignaturebatch.md) |  |  |
 |  [get(tokenId)](./sdk.nftmodule.get.md) |  | Fetches an NFT from storage with the resolved metadata. |

@@ -37,8 +37,8 @@ const module = sdk.getMarketplaceModule("{{module_address}}");
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [acceptDirectListingOffer(listingId, addressOfOfferor)](./sdk.marketplacemodule.acceptdirectlistingoffer.md) |  |  |
-|  [buyoutAuctionListing(listingId)](./sdk.marketplacemodule.buyoutauctionlisting.md) |  |  |
-|  [buyoutDirectListing(\_buyout)](./sdk.marketplacemodule.buyoutdirectlisting.md) |  |  |
+|  [buyoutAuctionListing(listingId)](./sdk.marketplacemodule.buyoutauctionlisting.md) |  | Buyout Auction |
+|  [buyoutDirectListing(\_buyout)](./sdk.marketplacemodule.buyoutdirectlisting.md) |  | Buy Listing |
 |  [buyoutListing(listingId, quantityDesired)](./sdk.marketplacemodule.buyoutlisting.md) |  |  |
 |  [cancelAuctionListing(listingId)](./sdk.marketplacemodule.cancelauctionlisting.md) |  | Cancel Auction Listing |
 |  [cancelDirectListing(listingId)](./sdk.marketplacemodule.canceldirectlisting.md) |  | Cancel Direct Listing |
@@ -54,7 +54,7 @@ const module = sdk.getMarketplaceModule("{{module_address}}");
 |  [getTimeBufferInSeconds()](./sdk.marketplacemodule.gettimebufferinseconds.md) |  |  |
 |  [getWinningBid(listingId)](./sdk.marketplacemodule.getwinningbid.md) |  |  |
 |  [isWinningBid(winningPrice, newBidPrice, bidBuffer)](./sdk.marketplacemodule.iswinningbid.md) |  |  |
-|  [makeAuctionListingBid(bid)](./sdk.marketplacemodule.makeauctionlistingbid.md) |  |  |
+|  [makeAuctionListingBid(bid)](./sdk.marketplacemodule.makeauctionlistingbid.md) |  | Bid On Auction |
 |  [makeDirectListingOffer(offer)](./sdk.marketplacemodule.makedirectlistingoffer.md) |  |  |
 |  [setBidBufferBps(buffer)](./sdk.marketplacemodule.setbidbufferbps.md) |  |  |
 |  [setTimeBufferInSeconds(buffer)](./sdk.marketplacemodule.settimebufferinseconds.md) |  |  |

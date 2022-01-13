@@ -4,6 +4,8 @@
 
 ## SplitsModule.balanceOf() method
 
+Get Funds
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,18 @@ balanceOf(address: string): Promise<BigNumber>;
 <b>Returns:</b>
 
 Promise&lt;BigNumber&gt;
+
+## Remarks
+
+Get the amount of funds in the native currency held by the module thats owed to a specific recipient.
+
+## Example
+
+
+```javascript
+// The address to check the funds of
+const address = "{{wallet_address}}";
+const funds = await module.balanceOf(address);
+console.log(funds);
+```
 

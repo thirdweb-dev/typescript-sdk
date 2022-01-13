@@ -222,6 +222,22 @@ export class PackModule
     );
   }
 
+  /**
+   * Get Pack Reward Data
+   *
+   * @remarks Get data associated with the rewards inside a specified pack
+   *
+   * @example
+   * ```javascript
+   * // The pack ID of the pack whos rewards you want to get
+   * const packId = 0;
+   *
+   * const nfts = await module.getNFTs(packId);
+   * console.log(nfts);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
+   */
   public async getNFTs(packId: string): Promise<PackNFTMetadata[]> {
     const packReward = await this.readOnlyContract.getPackWithRewards(packId);
     if (!packReward.source) {

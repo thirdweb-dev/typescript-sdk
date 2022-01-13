@@ -124,10 +124,10 @@ export class TokenModule
    * @example
    * ```javascript
    * // Address of the wallet who owns the funds
-   * const address = "{{wallet_address}}"";
+   * const address = "{{wallet_address}}";
    *
    * // Address of the wallet to check token allowance
-   * const otherAddress = "{{wallet_address}}"";
+   * const otherAddress = "0x...";
    *
    * const allowance = await module.allowanceOf(otherAddress);
    * console.log(allowance);

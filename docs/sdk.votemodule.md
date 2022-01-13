@@ -4,7 +4,7 @@
 
 ## VoteModule class
 
-Create a decentralized organization for token holders to vote on proposals.
+Access this module by calling 
 
 <b>Signature:</b>
 
@@ -12,16 +12,6 @@ Create a decentralized organization for token holders to vote on proposals.
 export declare class VoteModule extends Module<VotingGovernor> 
 ```
 <b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;VotingGovernor&gt;
-
-## Example
-
-
-```javascript
-import { ThirdwebSDK } from "@3rdweb/sdk";
-
-const sdk = new ThirdwebSDK({{wallet_provider}});
-const module = sdk.getVoteModule("{{module_address}}");
-```
 
 ## Properties
 
@@ -35,13 +25,13 @@ const module = sdk.getVoteModule("{{module_address}}");
 |  --- | --- | --- |
 |  [balance()](./sdk.votemodule.balance.md) |  | Check the balance of the project wallet in the native token of the chain |
 |  [balanceOfToken(tokenAddress)](./sdk.votemodule.balanceoftoken.md) |  | Check the balance of the project wallet in a particular ERC20 token contract |
-|  [canExecute(proposalId)](./sdk.votemodule.canexecute.md) |  | Check to see if a proposal can be executed. |
-|  [execute(proposalId)](./sdk.votemodule.execute.md) |  | Once the voting period has ended, call this method to execute the executables in the proposal. |
+|  [canExecute(proposalId)](./sdk.votemodule.canexecute.md) |  | Can Execute |
+|  [execute(proposalId)](./sdk.votemodule.execute.md) |  | Execute Proposal |
 |  [get(proposalId)](./sdk.votemodule.get.md) |  | Get a proposal by id. |
-|  [getAll()](./sdk.votemodule.getall.md) |  | Returns all the proposals in the contract. |
-|  [hasVoted(proposalId, account)](./sdk.votemodule.hasvoted.md) |  | Checks if an account has voted on a proposal |
-|  [propose(description, executions)](./sdk.votemodule.propose.md) |  | Create a new proposal. |
+|  [getAll()](./sdk.votemodule.getall.md) |  | Get All Proposals |
+|  [hasVoted(proposalId, account)](./sdk.votemodule.hasvoted.md) |  | Check If Wallet Voted |
+|  [propose(description, executions)](./sdk.votemodule.propose.md) |  | Create Proposal |
 |  [setModuleMetadata(metadata)](./sdk.votemodule.setmodulemetadata.md) |  |  |
 |  [settings()](./sdk.votemodule.settings.md) |  |  |
-|  [vote(proposalId, voteType, reason)](./sdk.votemodule.vote.md) |  | Vote on a proposal. |
+|  [vote(proposalId, voteType, reason)](./sdk.votemodule.vote.md) |  | Vote |
 

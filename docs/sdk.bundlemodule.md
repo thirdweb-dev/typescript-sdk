@@ -38,13 +38,13 @@ const module = sdk.getBundleModule("{{module_address}}");
 |  --- | --- | --- |
 |  [balance(tokenId)](./sdk.bundlemodule.balance.md) |  |  |
 |  [balanceOf(address, tokenId)](./sdk.bundlemodule.balanceof.md) |  | Get NFT Balance |
-|  [burn(args)](./sdk.bundlemodule.burn.md) |  |  |
+|  [burn(args)](./sdk.bundlemodule.burn.md) |  | Burn NFT |
 |  [burnBatch(args)](./sdk.bundlemodule.burnbatch.md) |  |  |
 |  [burnBatchFrom(account, args)](./sdk.bundlemodule.burnbatchfrom.md) |  |  |
 |  [burnFrom(account, args)](./sdk.bundlemodule.burnfrom.md) |  |  |
 |  [create(metadata)](./sdk.bundlemodule.create.md) |  |  |
-|  [createAndMint(metadataWithSupply)](./sdk.bundlemodule.createandmint.md) |  | Create &amp; Mint NFT |
-|  [createAndMintBatch(metadataWithSupply)](./sdk.bundlemodule.createandmintbatch.md) |  | Create &amp; Mint Many NFTs |
+|  [createAndMint(metadataWithSupply)](./sdk.bundlemodule.createandmint.md) |  | Mint NFT |
+|  [createAndMintBatch(metadataWithSupply)](./sdk.bundlemodule.createandmintbatch.md) |  | Mint Many NFTs |
 |  [createBatch(metadatas)](./sdk.bundlemodule.createbatch.md) |  |  |
 |  [createWithErc20(tokenContract, tokenAmount, args)](./sdk.bundlemodule.createwitherc20.md) |  |  |
 |  [createWithERC721(tokenContract, tokenId, metadata)](./sdk.bundlemodule.createwitherc721.md) |  |  |

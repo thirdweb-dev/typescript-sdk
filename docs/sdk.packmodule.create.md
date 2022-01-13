@@ -4,7 +4,7 @@
 
 ## PackModule.create() method
 
-Create a pack from a set of assets.
+Create Pack
 
 <b>Signature:</b>
 
@@ -23,4 +23,38 @@ create(args: IPackCreateArgs): Promise<PackMetadata>;
 Promise&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->&gt;
 
 - The newly created pack metadata
+
+## Remarks
+
+Create a new pack with its own rewards.
+
+## Example
+
+
+```javascript
+// Data to create the pack
+const pack = {
+  // The address of the contract that holds the rewards you want to include
+  assetContract: "0x...",
+  // The metadata of the pack
+  metadata: {
+    name: "Cool Pack",
+    description: "This is a cool pack",
+    // This can be an image url or image file
+    image: readFileSync("path/to/image.png"),
+  },
+  // The NFTs you want to include in the pack
+  assets: [
+    {
+      tokenId: 0, // The token ID of the asset you want to add
+      amount: 1, // The amount of the asset you want to add
+    }, {
+      tokenId: 1,
+      amount: 1,
+    }
+  ],
+};
+
+await module.create(pack);
+```
 
