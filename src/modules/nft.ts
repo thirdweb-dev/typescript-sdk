@@ -46,7 +46,9 @@ const MintRequest = [
  * ```javascript
  * import { ThirdwebSDK } from "@3rdweb/sdk";
  *
- * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
  * const module = sdk.getNFTModule("{{module_address}}");
  * ```
  *
@@ -347,7 +349,7 @@ export class NFTModule
     );
 
     const receipt = await this.sendTransaction("multicall", [multicall]);
-    const events = await this.parseLogs<TokenMintedEvent>(
+    const events = this.parseLogs<TokenMintedEvent>(
       "TokenMinted",
       receipt.logs,
     );
@@ -510,18 +512,18 @@ export class NFTModule
 
     await this.onlyRoles(["minter"], await this.getSignerAddress());
 
-    const cid = await this.sdk
+    const { metadataUris: uris } = await this.sdk
       .getStorage()
       .uploadMetadataBatch(payloads.map((r) => r.metadata));
 
     const chainId = await this.getChainID();
     const from = await this.getSignerAddress();
-    const signer = (await this.getSigner()) as Signer;
+    const signer = this.getSigner() as Signer;
 
     return await Promise.all(
       payloads.map(async (m, i) => {
         const id = resolveId(m);
-        const uri = `${cid}${i}`;
+        const uri = uris[i];
         return {
           payload: {
             ...m,

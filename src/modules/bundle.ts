@@ -68,7 +68,9 @@ export interface INFTBundleBatchArgs {
  * ```javascript
  * import { ThirdwebSDK } from "@3rdweb/sdk";
  *
- * const sdk = new ThirdwebSDK({{wallet_provider}});
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
  * const module = sdk.getBundleModule("{{module_address}}");
  * ```
  *
@@ -331,10 +333,9 @@ export class BundleModule
     metadataWithSupply: INFTBundleCreateArgs[],
   ): Promise<BundleMetadata[]> {
     const metadatas = metadataWithSupply.map((a) => a.metadata);
-    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
-    const uris = Array.from(Array(metadatas.length).keys()).map(
-      (i) => `${baseUri}${i}/`,
-    );
+    const { metadataUris: uris } = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(metadatas);
     const supplies = metadataWithSupply.map((a) => a.supply);
     const to = await this.getSignerAddress();
     const receipt = await this.sendTransaction("createNativeTokens", [

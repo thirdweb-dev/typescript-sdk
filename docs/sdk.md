@@ -114,7 +114,7 @@ Output
 |  [TokenModule](./sdk.tokenmodule.md) | Create a standard crypto token or crypto currency. |
 |  [TokenModuleMetadata](./sdk.tokenmodulemetadata.md) |  |
 |  [UploadError](./sdk.uploaderror.md) |  |
-|  [VoteModule](./sdk.votemodule.md) | Access this module by calling  |
+|  [VoteModule](./sdk.votemodule.md) | Create a decentralized organization for token holders to vote on proposals. |
 |  [VoteModuleMetadata](./sdk.votemodulemetadata.md) |  |
 |  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 

@@ -9,7 +9,7 @@ Uploads metadata to IPFS
 <b>Signature:</b>
 
 ```typescript
-uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
+uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<UploadMetadataBatchResult>;
 ```
 
 ## Parameters
@@ -22,5 +22,5 @@ uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, 
 
 <b>Returns:</b>
 
-Promise&lt;string&gt;
+Promise&lt;UploadMetadataBatchResult&gt;
 

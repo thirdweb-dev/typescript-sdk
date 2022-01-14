@@ -21,7 +21,9 @@ export declare class SplitsModule extends Module<Splits> implements ISplitsModul
 ```javascript
 import { ThirdwebSDK } from "@3rdweb/sdk";
 
-const sdk = new ThirdwebSDK({{wallet_provider}});
+// You can switch out this provider with any wallet or provider setup you like.
+const provider = ethers.Wallet.createRandom();
+const sdk = new ThirdwebSDK(provider);
 const module = sdk.getSplitsModule("{{module_address}}");
 ```
 
@@ -44,6 +46,6 @@ const module = sdk.getSplitsModule("{{module_address}}");
 |  [get()](./sdk.splitsmodule.get.md) |  |  |
 |  [getAllRecipients()](./sdk.splitsmodule.getallrecipients.md) |  | Get Recipients |
 |  [getRecipientSplitPercentage(address)](./sdk.splitsmodule.getrecipientsplitpercentage.md) |  |  |
-|  [withdraw(address)](./sdk.splitsmodule.withdraw.md) |  | Withdraw Funds |
-|  [withdrawToken(walletAddress, tokenAddress)](./sdk.splitsmodule.withdrawtoken.md) |  | Withdraw Token Funds |
+|  [withdraw(address)](./sdk.splitsmodule.withdraw.md) |  |  |
+|  [withdrawToken(walletAddress, tokenAddress)](./sdk.splitsmodule.withdrawtoken.md) |  |  |
 
