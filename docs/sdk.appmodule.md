@@ -43,10 +43,12 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get a list of Bundle module metadata. |
 |  [getCurrencyModules()](./sdk.appmodule.getcurrencymodules.md) |  | Method to get a list of Currency module metadata. |
 |  [getDropModules()](./sdk.appmodule.getdropmodules.md) |  | Method to get a list of Drop module metadata. |
+|  [getForwarder()](./sdk.appmodule.getforwarder.md) |  | Trusted forwarder is used to forward gasless transactions. Trusted Forwarder of each module cannot be changed once it is deployed. |
 |  [getMarketModules()](./sdk.appmodule.getmarketmodules.md) |  | Method to get a list of Market module metadata. |
 |  [getNFTModules()](./sdk.appmodule.getnftmodules.md) |  | Method to get a list of NFT module metadata. |
 |  [getPackModules()](./sdk.appmodule.getpackmodules.md) |  | Method to get a list of pack module metadata. |
 |  [getRoyaltyTreasury(address)](./sdk.appmodule.getroyaltytreasury.md) |  |  |
+|  [setForwarder(address)](./sdk.appmodule.setforwarder.md) |  | Set trusted forwarder for the modules. Every module that is deployed after this call will use the new forwarder. Trusted forwarder is used to forward gasless transactions. Trusted Forwarder of each module cannot be changed once it is deployed. |
 |  [setModuleMetadata(metadata)](./sdk.appmodule.setmodulemetadata.md) |  |  |
 |  [setModuleRoyaltyTreasury(moduleAddress, treasury)](./sdk.appmodule.setmoduleroyaltytreasury.md) |  |  |
 |  [setRoyaltyTreasury(treasury)](./sdk.appmodule.setroyaltytreasury.md) |  |  |
