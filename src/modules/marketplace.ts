@@ -338,7 +338,7 @@ export class MarketplaceModule
     winningPrice = BigNumber.from(winningPrice);
     newBidPrice = BigNumber.from(newBidPrice);
     const buffer = newBidPrice.sub(winningPrice).mul(MAX_BPS).div(winningPrice);
-    return buffer.gt(bidBuffer);
+    return buffer.gte(bidBuffer);
   }
 
   public async getDirectListing(
