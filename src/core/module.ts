@@ -1,4 +1,9 @@
-import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
+import {
+  AccessControl,
+  AccessControlEnumerable,
+  AccessControlEnumerableUpgradeable,
+  Forwarder__factory,
+} from "@3rdweb/contracts";
 import {
   ExternalProvider,
   JsonRpcProvider,

@@ -49,7 +49,7 @@ export class DropModule
   extends ModuleWithRoles<DropV2>
   implements ITransferable
 {
-  public static moduleType: ModuleType = ModuleType.DROP;
+  public static moduleType: ModuleType = "DROP" as const;
 
   public static roles = [
     RolesMap.admin,

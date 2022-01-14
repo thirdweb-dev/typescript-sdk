@@ -14,13 +14,15 @@ export class BundleDropModuleMetadata extends CommonModuleMetadata {
    * 1 basis point = 0.01%
    *
    * For example: if this value is 100, then the royalty is 1% of the total sales.
+   *
+   *  @internalremarks used by OpenSea
    */
   @JsonProperty(
     "seller_fee_basis_points",
     Number,
     PropertyConvertingMode.IGNORE_NULLABLE,
   )
-  sellerFeeBasisPoints? = 0;
+  royaltyBPS? = 0;
 
   /**
    * The amount of fees collected on the primary sale, represented as basis points. The default is 0.
@@ -40,14 +42,15 @@ export class BundleDropModuleMetadata extends CommonModuleMetadata {
     Number,
     PropertyConvertingMode.IGNORE_NULLABLE,
   )
-  primarySaleFeeBasisPoints? = 0;
+  platformFeeBPS? = 0;
 
   /**
    * The address of the royalty recipient. All royalties will be sent
    * to this address.
+   * @internalremarks used by OpenSea
    */
   @JsonProperty("fee_recipient", String, PropertyConvertingMode.IGNORE_NULLABLE)
-  feeRecipient?: string = undefined;
+  royaltyReceipient?: string = undefined;
   /**
    * The address of the receiver of the initial sale.You can use this field to
    * distribute the initial sale proceeds. All drop contracts are required to set this field,
@@ -65,7 +68,10 @@ export class BundleDropModuleMetadata extends CommonModuleMetadata {
    * All secondary sales will use the `sellerFeeBasisPoints` and royalty recipient address.
    */
   @JsonProperty("primary_sale_recipient_address", String)
-  primarySaleRecipientAddress = "";
+  primarySaleRecipient = "";
+
+  @JsonProperty("platform_fee_recipient_address", String)
+  platformFeeRecipient = "";
 }
 
 // For backwards compatibility

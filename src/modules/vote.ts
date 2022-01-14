@@ -33,7 +33,7 @@ export interface VoteSettings {
  * @public
  */
 export class VoteModule extends Module<VotingGovernor> {
-  public static moduleType: ModuleType = ModuleType.VOTE as const;
+  public static moduleType: ModuleType = "VOTE" as const;
 
   /**
    * @internal

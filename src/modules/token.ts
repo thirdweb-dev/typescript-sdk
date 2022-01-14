@@ -41,7 +41,7 @@ export class TokenModule
   extends ModuleWithRoles<Coin>
   implements ITransferable
 {
-  public static moduleType: ModuleType = ModuleType.TOKEN as const;
+  public static moduleType: ModuleType = "TOKEN" as const;
 
   public static roles = [
     RolesMap.admin,

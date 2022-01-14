@@ -94,7 +94,7 @@ export interface ISplitsModule {
  * @public
  */
 export class SplitsModule extends Module<Splits> implements ISplitsModule {
-  public static moduleType: ModuleType = ModuleType.SPLITS as const;
+  public static moduleType: ModuleType = "SPLITS" as const;
 
   /**
    * @internal

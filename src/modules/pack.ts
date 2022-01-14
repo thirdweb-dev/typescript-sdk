@@ -88,7 +88,7 @@ export class PackModule
   extends ModuleWithRoles<PackContract>
   implements ITransferable
 {
-  public static moduleType: ModuleType = ModuleType.PACK;
+  public static moduleType: ModuleType = "PACK" as const;
 
   public static roles = [
     RolesMap.admin,

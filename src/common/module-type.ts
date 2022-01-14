@@ -4,17 +4,17 @@ import { $enum } from "ts-enum-util";
  * The type of Modules that are available.
  * @public
  */
-export enum ModuleType {
-  TOKEN = "TOKEN",
-  BUNDLE = "BUNDLE",
-  NFT = "NFT",
-  PACK = "PACK",
-  DROP = "DROP",
-  SPLITS = "SPLITS",
-  VOTE = "VOTE",
-  BUNDLE_DROP = "BUNDLE_DROP",
-  MARKETPLACE = "MARKETPLACE",
-}
+export type ModuleType =
+  | "TOKEN"
+  | "NFT"
+  | "BUNDLE"
+  | "PACK"
+  | "DROP"
+  | "BUNDLE_DROP"
+  | "VOTE"
+  | "SPLITS"
+  | "MARKETPLACE";
+
 /**
  *
  * @param moduleName - a supported module name

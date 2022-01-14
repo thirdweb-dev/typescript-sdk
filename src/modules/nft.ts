@@ -56,7 +56,7 @@ export class NFTModule
   extends ModuleWithRoles<SignatureMint721>
   implements ITransferable, ISignatureMinter
 {
-  public static moduleType: ModuleType = ModuleType.NFT;
+  public static moduleType: ModuleType = "NFT" as const;
 
   public static roles = [
     RolesMap.admin,

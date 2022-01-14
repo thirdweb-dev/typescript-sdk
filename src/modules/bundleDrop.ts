@@ -67,7 +67,7 @@ export class BundleDropModule
   extends ModuleWithRoles<BundleDrop>
   implements ITransferable
 {
-  public static moduleType: ModuleType = ModuleType.BUNDLE_DROP;
+  public static moduleType: ModuleType = "BUNDLE_DROP" as const;
 
   public static roles = [
     RolesMap.admin,

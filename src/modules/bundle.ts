@@ -78,7 +78,7 @@ export class BundleModule
   extends ModuleWithRoles<NFTBundleContract>
   implements ITransferable
 {
-  public static moduleType: ModuleType = ModuleType.BUNDLE;
+  public static moduleType: ModuleType = "BUNDLE" as const;
 
   public static roles = [
     RolesMap.admin,

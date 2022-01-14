@@ -60,7 +60,7 @@ export class MarketplaceModule
   extends ModuleWithRoles<Marketplace>
   implements IMarketplace
 {
-  public static moduleType: ModuleType = ModuleType.MARKETPLACE;
+  public static moduleType: ModuleType = "MARKETPLACE" as const;
 
   public static roles = [RolesMap.admin, RolesMap.lister] as const;
 
