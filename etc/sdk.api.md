@@ -86,6 +86,7 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     getDatastoreModules(): Promise<ModuleMetadata[]>;
     // @deprecated
     getDropModules(): Promise<ModuleMetadata[]>;
+    getForwarder(): Promise<string>;
     // @deprecated
     getMarketModules(): Promise<ModuleMetadata[]>;
     // @internal @override (undocumented)
@@ -104,6 +105,7 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     isV1UpgradedOrV2(): Promise<boolean>;
     // (undocumented)
     static roles: readonly ["admin"];
+    setForwarder(address: string): Promise<void>;
     // @deprecated (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)

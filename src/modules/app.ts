@@ -323,7 +323,26 @@ export class AppModule
     ).reduce((acc, curr) => acc.concat(curr), []);
   }
 
+  /**
+   * Trusted forwarder is used to forward gasless transactions. Trusted Forwarder of each module cannot be changed once it is deployed.
+   *
+   * @returns The address of the trusted forwarder contract
+   */
+  public async getForwarder(): Promise<string> {
+    return await this.readOnlyContract.getForwarder();
+  }
+
   // owner functions
+  /**
+   * Set trusted forwarder for the modules. Every module that is deployed after this call will use the new forwarder.
+   * Trusted forwarder is used to forward gasless transactions. Trusted Forwarder of each module cannot be changed once it is deployed.
+   *
+   * @param address - The address of the trusted forwarder contract
+   */
+  public async setForwarder(address: string): Promise<void> {
+    await this.contract.setForwarder(address);
+  }
+
   /**
    * @deprecated - Use setMetadata() instead
    */
@@ -500,7 +519,7 @@ export class AppModule
       ModuleType.COLLECTION,
       [
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
         BigNumber.from(
           metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
@@ -541,7 +560,7 @@ export class AppModule
       ModuleType.SPLITS,
       [
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
         metadata.recipientSplits.map((s) => s.address),
         metadata.recipientSplits.map((s) => s.shares),
@@ -585,7 +604,7 @@ export class AppModule
         metadata.symbol ? metadata.symbol : "",
         metadataUri,
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         nativeTokenWrapperAddress,
         metadata.defaultSaleRecipientAddress
           ? metadata.defaultSaleRecipientAddress
@@ -631,7 +650,7 @@ export class AppModule
         this.address,
         metadata.name,
         metadata.symbol ? metadata.symbol : "",
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
       ],
       Coin__factory,
@@ -668,7 +687,7 @@ export class AppModule
         this.address,
         metadata.name,
         metadata.symbol ? metadata.symbol : "",
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
       ],
       Coin__factory,
@@ -703,7 +722,7 @@ export class AppModule
       ModuleType.MARKET,
       [
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
         metadata.marketFeeBasisPoints ? metadata.marketFeeBasisPoints : 0,
       ],
@@ -748,7 +767,7 @@ export class AppModule
         linkTokenAddress,
         keyHash,
         fees,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
       ],
       Pack__factory,
@@ -798,7 +817,7 @@ export class AppModule
         metadata.symbol ? metadata.symbol : "",
         metadataUri,
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         nativeTokenWrapperAddress,
         metadata.primarySaleRecipientAddress,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
@@ -851,7 +870,7 @@ export class AppModule
       [
         metadataUri,
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         nativeTokenWrapperAddress,
         metadata.primarySaleRecipientAddress,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
@@ -892,7 +911,7 @@ export class AppModule
 
     const address = await this._deployModule(
       ModuleType.DATASTORE,
-      [this.address, await this.sdk.getForwarderAddress(), metadataUri],
+      [this.address, await this.getForwarder(), metadataUri],
       DataStore__factory,
     );
 
@@ -965,7 +984,7 @@ export class AppModule
         metadata.votingPeriod,
         metadata.minimumNumberOfTokensNeededToPropose,
         metadata.votingQuorumFraction,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
       ],
       VotingGovernor__factory,
@@ -1203,7 +1222,7 @@ export class AppModule
       ModuleType.MARKETPLACE,
       [
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         nativeTokenWrapperAddress,
         metadataUri,
         metadata.marketFeeBasisPoints,
