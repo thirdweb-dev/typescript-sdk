@@ -64,7 +64,7 @@ import {
   ProviderOrSigner,
   ValidProviderInput,
 } from "./types";
-import { EVENT_NAMES } from '../utils';
+import { EVENT_NAMES } from "../utils";
 
 /**
  * @internal
@@ -89,7 +89,7 @@ export type AnyContract =
  * @public
  */
 export declare interface ThirdwebSDK {
-  on(event: string, listener: () => void): this;
+  on(event: keyof typeof EVENT_NAMES, listener: () => void): this;
 }
 export class ThirdwebSDK extends events.EventEmitter implements IThirdwebSdk {
   // default options
