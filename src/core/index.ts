@@ -1,3 +1,4 @@
+import events from "events";
 import { Forwarder__factory } from "@3rdweb/contracts";
 import {
   ExternalProvider,
@@ -86,7 +87,10 @@ export type AnyContract =
  * The entrypoint to the SDK.
  * @public
  */
-export class ThirdwebSDK implements IThirdwebSdk {
+export declare interface ThirdwebSDK {
+  on(event: string, listener: () => void): this;
+}
+export class ThirdwebSDK extends events.EventEmitter implements IThirdwebSdk {
   // default options
   private options: ISDKOptions;
   private defaultOptions: ISDKOptions = {
@@ -138,6 +142,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     providerOrNetwork: ValidProviderInput,
     opts?: Partial<ISDKOptions>,
   ) {
+    super();
     this.providerOrSigner = this.setProviderOrSigner(providerOrNetwork);
     this.options = {
       ...this.defaultOptions,
@@ -601,6 +606,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     );
 
     const signature = await signer.signMessage(hashToSign);
+    this.emit("sending-biconomy-request");
     const response = await fetch(
       "https://api.biconomy.io/api/v2/meta-tx/native",
       {
