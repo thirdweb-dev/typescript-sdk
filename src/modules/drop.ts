@@ -1004,7 +1004,7 @@ export class DropModule
       return this.v1Module.createBatch(metadatas);
     }
     const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
-    const baseUri = await this.sdk
+    const { baseUri } = await this.sdk
       .getStorage()
       .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
     const receipt = await this.sendTransaction("lazyMint", [
@@ -1357,7 +1357,9 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
    * @deprecated - The function has been deprecated. Use `mintBatch` instead.
    */
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
-    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
+    const { baseUri } = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(metadatas);
     const uris = Array.from(Array(metadatas.length).keys()).map(
       (i) => `${baseUri}${i}/`,
     );
@@ -1691,7 +1693,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
     }
 
     const startFileNumber = await this.readOnlyContract.nextMintTokenId();
-    const baseUri = await this.storage.uploadMetadataBatch(
+    const { baseUri } = await this.storage.uploadMetadataBatch(
       metadatas,
       this.address,
       startFileNumber.toNumber(),

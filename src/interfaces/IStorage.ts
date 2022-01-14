@@ -2,6 +2,17 @@ import { MetadataURIOrObject } from "../core/types";
 import FileOrBuffer from "../types/FileOrBuffer";
 import { BufferOrStringWithName } from "../types/BufferOrStringWithName";
 
+/**
+ * @internal
+ */
+export interface UploadMetadataBatchResult {
+  // base cid of the directory
+  baseUri: string;
+
+  // path to each of the file within the directory, included full cid path
+  metadataUris: string[];
+}
+
 /* eslint-disable semi */
 export interface IStorage {
   /**
@@ -91,10 +102,9 @@ export interface IStorage {
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
    */
-
   uploadMetadataBatch(
     metadatas: MetadataURIOrObject[],
     contractAddress?: string,
     fileStartNumber?: number,
-  ): Promise<string>;
+  ): Promise<UploadMetadataBatchResult>;
 }

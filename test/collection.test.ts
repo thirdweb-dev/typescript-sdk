@@ -46,12 +46,14 @@ describe("Bundle Module (aka Collection Module)", async () => {
     await bundleModule.createAndMint({
       metadata: {
         name: "Bundle 1",
-        descrition: "Bundle 1",
+        description: "Bundle 1",
+        image: "fake://myownfakeipfs",
       },
       supply: 100,
     });
     const nfts = await bundleModule.getOwned(adminWallet.address);
     expect(nfts).to.be.an("array").length(1);
+    expect(nfts[0].metadata.image).to.be.equal("fake://myownfakeipfs");
 
     const bobsNfts = await bundleModule.getOwned(bobWallet.address);
     expect(bobsNfts)
@@ -170,12 +172,14 @@ describe("Bundle Module (aka Collection Module)", async () => {
       {
         metadata: {
           name: "Test1",
+          image: "ipfs://myownipfs1",
         },
         supply: 5,
       },
       {
         metadata: {
           name: "Test2",
+          image: "ipfs://myownipfs2",
         },
         supply: 5,
       },
@@ -185,6 +189,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
     let i = 0;
     nfts.forEach(async (nft) => {
       expect(nft.metadata.name).to.be.equal(`Test${i}`);
+      expect(nft.metadata.image).to.be.equal(`ipfs://myownipfs${i}`);
       i++;
     });
   });
