@@ -1,4 +1,4 @@
-import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
+import { AccessControlEnumerable } from "@3rdweb/contracts";
 import {
   ExternalProvider,
   JsonRpcProvider,
@@ -7,7 +7,6 @@ import {
   TransactionReceipt,
   Web3Provider,
 } from "@ethersproject/providers";
-import { signERC2612Permit } from "eth-permit";
 import {
   BaseContract,
   BigNumber,
@@ -18,7 +17,6 @@ import {
 } from "ethers";
 import { getContractMetadata, isContract } from "../common/contract";
 import { MissingRoleError } from "../common/error";
-import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { uploadMetadata } from "../common/ipfs";
@@ -28,9 +26,8 @@ import { ISDKOptions } from "../interfaces/ISdkOptions";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import { ThirdwebSDK } from "./index";
 import type {
-  ForwardRequestMessage,
+  GaslessTransaction,
   MetadataURIOrObject,
-  PermitRequestMessage,
   ProviderOrSigner,
 } from "./types";
 
@@ -300,7 +297,10 @@ export class Module<TContract extends BaseContract = BaseContract> {
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
-    if (this.options.transactionRelayerUrl) {
+    if (
+      this.options.transactionRelayerUrl ||
+      this.options.gasless.biconomy.apiKey
+    ) {
       return await this.sendGaslessTransaction(
         contract,
         fn,
@@ -356,10 +356,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
     const chainId = await this.getChainID();
     const from = await this.getSignerAddress();
     const to = this.address;
-    const value = callOverrides?.value || 0;
+    // const value = callOverrides?.value || 0;
     const data = contract.interface.encodeFunctionData(fn, args);
-    const forwarderAddress = this.options.transactionRelayerForwarderAddress;
-    const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
 
     const gasEstimate = await contract.estimateGas[fn](...args);
     let gas = gasEstimate.mul(2);
@@ -371,66 +369,18 @@ export class Module<TContract extends BaseContract = BaseContract> {
       gas = BigNumber.from(500000);
     }
 
-    const nonce = await getAndIncrementNonce(forwarder, from);
-    const domain = {
-      name: "GSNv2 Forwarder",
-      version: "0.0.1",
-      chainId,
-      verifyingContract: forwarderAddress,
-    };
-
-    const types = {
-      ForwardRequest,
-    };
-
-    let message: ForwardRequestMessage | PermitRequestMessage = {
+    const tx: GaslessTransaction = {
       from,
       to,
-      value: BigNumber.from(value).toString(),
-      gas: BigNumber.from(gas).toString(),
-      nonce: BigNumber.from(nonce).toString(),
       data,
+      chainId,
+      gasLimit: gas,
+      functionName: fn,
+      functionArgs: args,
+      callOverrides,
     };
 
-    let signature: BytesLike;
-
-    // if the executing function is "approve" and matches with erc20 approve signature
-    // and if the token supports permit, then we use permit for gasless instead of approve.
-    if (
-      fn === "approve" &&
-      args.length === 2 &&
-      contract.interface.functions["approve(address,uint256)"] &&
-      contract.interface.functions[
-        "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"
-      ]
-    ) {
-      const spender = args[0];
-      const amount = args[1];
-      const permit = await signERC2612Permit(
-        signer,
-        contract.address,
-        from,
-        spender,
-        amount,
-      );
-      message = { to: contract.address, ...permit };
-      signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
-    } else {
-      // wallet connect special 🦋
-      signature = await this.signTypedData(
-        signer,
-        from,
-        domain,
-        types,
-        message,
-      );
-    }
-
-    // await forwarder.verify(message, signature);
-    const txHash = await this.options.transactionRelayerSendFunction(
-      message,
-      signature,
-    );
+    const txHash = await this.options.gaslessSendFunction(contract, tx);
 
     return await provider.waitForTransaction(txHash);
   }
