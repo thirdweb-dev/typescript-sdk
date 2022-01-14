@@ -64,6 +64,7 @@ import {
   ProviderOrSigner,
   ValidProviderInput,
 } from "./types";
+import { EVENT_NAMES } from '../utils';
 
 /**
  * @internal
@@ -606,7 +607,7 @@ export class ThirdwebSDK extends events.EventEmitter implements IThirdwebSdk {
     );
 
     const signature = await signer.signMessage(hashToSign);
-    this.emit("sending-biconomy-request");
+    this.emit(EVENT_NAMES.SENDING_BICONOMY_REQUEST);
     const response = await fetch(
       "https://api.biconomy.io/api/v2/meta-tx/native",
       {
