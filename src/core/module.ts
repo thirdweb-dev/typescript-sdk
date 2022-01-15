@@ -1,4 +1,7 @@
-import { AccessControlEnumerableUpgradeable } from "@3rdweb/contracts";
+import {
+  AccessControlEnumerableUpgradeable,
+  RoyaltyReceiverUpgradeable,
+} from "@3rdweb/contracts";
 import {
   ExternalProvider,
   JsonRpcProvider,
@@ -15,7 +18,12 @@ import {
   ethers,
   Signer,
 } from "ethers";
-import { getContractMetadata, isContract } from "../common/contract";
+import { JsonConvert } from "json2typescript";
+import {
+  ContractMetadata,
+  getContractMetadata,
+  isContract,
+} from "../common/contract";
 import { MissingRoleError } from "../common/error";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
@@ -23,6 +31,18 @@ import { uploadMetadata } from "../common/ipfs";
 import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role, SetAllRoles } from "../common/role";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
+import {
+  BundleCollectionMetadata,
+  BundleDropModuleMetadata,
+  MarketplaceModuleMetadata,
+  NFTCollectionModuleMetadata,
+  NFTDropModuleMetadata,
+  PackModuleMetadata,
+  SplitsModuleMetadata,
+  TokenModuleMetadata,
+  VoteModuleMetadata,
+} from "../schema";
+import { CommonRoyaltyMetadata } from "../schema/modules/common";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import type { ThirdwebSDK } from "./index";
 import type {
@@ -31,12 +51,26 @@ import type {
   ProviderOrSigner,
 } from "./types";
 
+export type ContractMetadataSchema =
+  | BundleCollectionMetadata
+  | BundleDropModuleMetadata
+  | MarketplaceModuleMetadata
+  | NFTCollectionModuleMetadata
+  | NFTDropModuleMetadata
+  | PackModuleMetadata
+  | SplitsModuleMetadata
+  | TokenModuleMetadata
+  | VoteModuleMetadata;
+
 /**
  * The root Module class. All other Modules extend this.
  * @remarks This should never be instantiated directly.
  * @public
  */
-export class Module<TContract extends BaseContract = BaseContract> {
+export class Module<
+  TContract extends BaseContract,
+  TContractMetadata extends ContractMetadataSchema,
+> {
   /**
    * @readonly
    */
@@ -67,6 +101,24 @@ export class Module<TContract extends BaseContract = BaseContract> {
 
   private set providerOrSigner(value: ProviderOrSigner) {
     this._providerOrSigner = value;
+  }
+
+  /**
+   * @internal
+   */
+  protected jsonConvert = new JsonConvert();
+  protected serializeModuleMetadata(metadata: TContractMetadata) {
+    return this.jsonConvert.serializeObject(
+      metadata,
+      // TODO fix this @jns
+      this.getModuleMetadataSchema() as any,
+    );
+  }
+  protected deserializeModuleMetadata(serializedMetadata: any) {
+    return this.jsonConvert.deserializeObject<TContractMetadata>(
+      serializedMetadata,
+      this.getModuleMetadataSchema(),
+    );
   }
 
   /**
@@ -133,17 +185,20 @@ export class Module<TContract extends BaseContract = BaseContract> {
    *
    * @param resolveUrls - Whether to resolve the urls in the metadata to a gateway.
    */
-  public async getMetadata(resolveUrls = true): Promise<ModuleMetadata> {
+  public async getModuleMetadata(
+    resolveUrls = true,
+  ): Promise<ModuleMetadata<TContractMetadata>> {
     invariant(await this.exists(), "contract does not exist");
     const contract = this.connectContract();
     const type = this.getModuleType();
-
     return {
-      metadata: await getContractMetadata(
-        await this.getProvider(),
-        contract.address,
-        this.options.ipfsGatewayUrl,
-        resolveUrls,
+      metadata: this.deserializeModuleMetadata(
+        await getContractMetadata(
+          await this.getProvider(),
+          contract.address,
+          this.options.ipfsGatewayUrl,
+          resolveUrls,
+        ),
       ),
       address: contract.address,
       type,
@@ -155,13 +210,31 @@ export class Module<TContract extends BaseContract = BaseContract> {
    * Set new metadata on the contract and return it if successful.
    * @param metadata - The metadata to set.
    */
-  public async setMetadata(
-    metadata: MetadataURIOrObject,
-  ): Promise<ModuleMetadata> {
+  public async setModuleMetadata(
+    metadata: TContractMetadata,
+  ): Promise<ModuleMetadata<TContractMetadata>> {
     invariant(await this.exists(), "contract does not exist");
-    const uri = await uploadMetadata(metadata);
+    const uri = await uploadMetadata(this.serializeModuleMetadata(metadata));
     await this.sendTransaction("setContractURI", [uri]);
-    return this.getMetadata();
+    return this.getModuleMetadata();
+  }
+
+  /**
+   * @public
+   * update the metadata on the contract and return it if successful.
+   * @param metadata - The partial metadata to update with.
+   */
+  public async updateModuleMetadata(
+    metadata: Partial<TContractMetadata>,
+  ): Promise<ModuleMetadata<TContractMetadata>> {
+    invariant(await this.exists(), "contract does not exist");
+    const existingMetadata = await this.getModuleMetadata();
+    invariant(existingMetadata.metadata, "No metadata found, cannot update");
+
+    return this.setModuleMetadata({
+      ...existingMetadata.metadata,
+      ...metadata,
+    });
   }
 
   /**
@@ -251,6 +324,14 @@ export class Module<TContract extends BaseContract = BaseContract> {
    */
   protected getModuleType(): ModuleType {
     throw new Error("getModuleType has to be implemented");
+  }
+
+  /**
+   * @virtual
+   * @internal
+   */
+  protected getModuleMetadataSchema<T extends ContractMetadataSchema>(): T {
+    throw new Error("getModuleMetadataSchema has to be implemented");
   }
 
   /**
@@ -463,6 +544,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     );
   }
 }
+
 /**
  * Extends the {@link Module} class to add {@link Role} functionality.
  *
@@ -470,7 +552,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
  */
 export class ModuleWithRoles<
   TContract extends BaseContract,
-> extends Module<TContract> {
+  TContractMetadata extends ContractMetadata = ContractMetadata,
+> extends Module<TContract, TContractMetadata> {
   /**
    * @virtual
    * @internal
@@ -785,5 +868,66 @@ export class ModuleWithRoles<
         }
       }),
     );
+  }
+}
+
+/**
+ * Extends the {@link Module} class to add royalty functionality.
+ *
+ * @public
+ */
+export class ModuleWithRoyalties<
+  TContract extends BaseContract,
+  TContractMetadata extends ContractMetadata = ContractMetadata,
+> extends Module<TContract, TContractMetadata> {
+  public async setRoyaltyData(
+    royaltyData: CommonRoyaltyMetadata,
+  ): Promise<TransactionReceipt> {
+    const { metadata } = await this.getModuleMetadata();
+    const encoded: string[] = [];
+    if (!metadata) {
+      throw new Error("No metadata found, this module might be invalid!");
+    }
+
+    const combinedMetadata = { ...metadata, ...royaltyData };
+    const uri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        this.serializeModuleMetadata(combinedMetadata),
+        this.address,
+        await this.getSignerAddress(),
+      );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("setRoyaltyInfo", [
+        combinedMetadata.royaltyReceipient,
+        combinedMetadata.royaltyBps,
+      ]),
+    );
+    encoded.push(
+      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
+    );
+    return await this.sendTransaction("multicall", [encoded]);
+  }
+
+  /**
+   * Gets the royalty BPS (basis points) of the contract
+   *
+   * @returns - The royalty BPS
+   */
+  public async getRoyaltyBps() {
+    return await (
+      this.readOnlyContract as unknown as RoyaltyReceiverUpgradeable
+    ).royaltyBps();
+  }
+
+  /**
+   * Gets the address of the royalty recipient
+   *
+   * @returns - The royalty recipient address
+   */
+  public async getRoyaltyRecipientAddress() {
+    return await (
+      this.readOnlyContract as unknown as RoyaltyReceiverUpgradeable
+    ).royaltyReceipient();
   }
 }

@@ -9,7 +9,7 @@ The module metadata, includes the `address` and the [ModuleType](./sdk.moduletyp
 <b>Signature:</b>
 
 ```typescript
-export interface ModuleMetadata 
+export interface ModuleMetadata<TContractMetadata extends ContractMetadata> 
 ```
 
 ## Properties
@@ -17,6 +17,6 @@ export interface ModuleMetadata
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [address](./sdk.modulemetadata.address.md) | string |  |
-|  [metadata?](./sdk.modulemetadata.metadata.md) | [ContractMetadata](./sdk.contractmetadata.md) | <i>(Optional)</i> |
+|  [metadata?](./sdk.modulemetadata.metadata.md) | TContractMetadata | <i>(Optional)</i> |
 |  [type](./sdk.modulemetadata.type.md) | [ModuleType](./sdk.moduletype.md) |  |
 

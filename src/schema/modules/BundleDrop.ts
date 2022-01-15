@@ -12,7 +12,9 @@ import {
 export class BundleDropModuleMetadata extends Mixin(
   CommonModuleMetadata,
   CommonRoyaltyMetadata,
-) {}
+) {
+  merkle?: { [key: string]: string };
+}
 
 @JsonObject("DeployBundleDropModuleMetadata")
 export class DeployBundleDropModuleMetadata extends Mixin(

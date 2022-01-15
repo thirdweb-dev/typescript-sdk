@@ -7,11 +7,13 @@ import {
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BytesLike } from "ethers";
+import { mix } from "ts-mixer";
 import { ModuleType, Role, RolesMap } from "../common";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
-import { ModuleWithRoles } from "../core/module";
+import { ModuleWithRoles, ModuleWithRoyalties } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
+import { BundleCollectionMetadata } from "../schema";
 import { UnderlyingType } from "./pack";
 
 /**
@@ -76,10 +78,11 @@ export interface INFTBundleBatchArgs {
  *
  * @public
  */
-export class BundleCollectionModule
-  extends ModuleWithRoles<NFTBundleContract>
-  implements ITransferable
-{
+export interface BundleCollectionModule
+  extends ModuleWithRoles<NFTBundleContract, BundleCollectionMetadata>,
+    ModuleWithRoyalties<NFTBundleContract, BundleCollectionMetadata> {}
+@mix(ModuleWithRoles, ModuleWithRoyalties)
+export class BundleCollectionModule implements ITransferable {
   public static moduleType: ModuleType = "BUNDLE_COLLECTION" as const;
 
   public static roles = [
@@ -555,40 +558,6 @@ export class BundleCollectionModule
     ]);
   }
 
-  public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
-    // TODO: reduce this duplication and provide common functions around
-    // royalties through an interface. Currently this function is
-    // duplicated across 4 modules
-    const { metadata } = await this.getMetadata();
-    const encoded: string[] = [];
-    if (!metadata) {
-      throw new Error("No metadata found, this module might be invalid!");
-    }
-
-    metadata.seller_fee_basis_points = amount;
-    const uri = await this.sdk.getStorage().uploadMetadata(
-      {
-        ...metadata,
-      },
-      this.address,
-      await this.getSignerAddress(),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
-    );
-    return await this.sendTransaction("multicall", [encoded]);
-  }
-
-  public async setModuleMetadata(
-    metadata: MetadataURIOrObject,
-  ): Promise<TransactionReceipt> {
-    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
-    return await this.sendTransaction("setContractURI", [uri]);
-  }
-
   /**
    * `getOwned` is a convenience method for getting all owned tokens
    * for a particular wallet.
@@ -618,28 +587,6 @@ export class BundleCollectionModule
         return { ...token, ownedByAddress: balance };
       }),
     );
-  }
-
-  /**
-   * Gets the royalty BPS (basis points) of the contract
-   *
-   * @returns - The royalty BPS
-   */
-  public async getRoyaltyBps(): Promise<BigNumberish> {
-    return await this.readOnlyContract.royaltyBps();
-  }
-
-  /**
-   * Gets the address of the royalty recipient
-   *
-   * @returns - The royalty BPS
-   */
-  public async getRoyaltyRecipientAddress(): Promise<string> {
-    const metadata = await this.getMetadata();
-    if (metadata.metadata?.fee_recipient !== undefined) {
-      return metadata.metadata.fee_recipient;
-    }
-    return "";
   }
 
   public async isTransferRestricted(): Promise<boolean> {

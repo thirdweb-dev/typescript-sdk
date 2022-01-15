@@ -12,7 +12,6 @@ import {
   VotingGovernor__factory,
 } from "@3rdweb/contracts";
 
-import { JsonConvert } from "json2typescript";
 import { ModuleType } from "../common/module-type";
 import FileOrBuffer from "../types/FileOrBuffer";
 
@@ -75,8 +74,6 @@ function getMetadataClassForModuleType<TModuleType extends ModuleType>(
  * @public
  */
 export class Deployer extends Module<ThirdwebFactory> {
-  private jsonConvert = new JsonConvert();
-
   protected connectContract(): ThirdwebFactory {
     return ThirdwebFactory__factory.connect(
       this.address,

@@ -2,7 +2,6 @@
   // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
   "include": ["src", "types"],
   "compilerOptions": {
-    "experimentalDecorators": true,
     "module": "esnext",
     "lib": ["dom", "esnext"],
     "importHelpers": true,
@@ -32,5 +31,8 @@
     "noEmit": true,
     "target": "ES6",
     "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictNullChecks": true
   }
 }

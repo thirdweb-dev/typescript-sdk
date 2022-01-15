@@ -9,9 +9,9 @@ Create a standard crypto token or crypto currency.
 <b>Signature:</b>
 
 ```typescript
-export declare class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
+export declare class TokenModule extends ModuleWithRoles<Coin, TokenModuleMetadata> implements ITransferable 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Coin&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Coin, TokenModuleMetadata&gt;
 
 <b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 
@@ -56,7 +56,6 @@ const module = sdk.getTokenModule("{{module_address}}");
 |  [mintBatchTo(args)](./sdk.tokenmodule.mintbatchto.md) |  | Mint Tokens To Many Wallets |
 |  [mintTo(to, amount)](./sdk.tokenmodule.mintto.md) |  | Mint Tokens |
 |  [setAllowance(spender, amount)](./sdk.tokenmodule.setallowance.md) |  |  |
-|  [setModuleMetadata(metadata)](./sdk.tokenmodule.setmodulemetadata.md) |  |  |
 |  [setRestrictedTransfer(restricted)](./sdk.tokenmodule.setrestrictedtransfer.md) |  |  |
 |  [totalSupply()](./sdk.tokenmodule.totalsupply.md) |  |  |
 |  [transfer(to, amount)](./sdk.tokenmodule.transfer.md) |  | Transfer Tokens |

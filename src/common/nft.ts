@@ -3,6 +3,7 @@ import {
   LazyMintERC721,
   SignatureMint721 as NFT,
   NFTCollection,
+  SignatureMint721,
 } from "@3rdweb/contracts";
 import { Contract } from "@ethersproject/contracts";
 import { JSONValue, ProviderOrSigner } from "../core/types";
@@ -80,7 +81,7 @@ export interface NFTMetadataOwner {
  * @internal
  */
 export type NFTContractTypes =
-  | NFT
+  | SignatureMint721
   | NFTCollection
   | LazyMintERC721
   | LazyMintERC1155;
@@ -166,10 +167,12 @@ export async function getTokenUri(
   tokenId: string,
 ): Promise<string> {
   let uri = "";
-  try {
-    uri = await contract.tokenURI(tokenId);
-    // eslint-disable-next-line no-empty
-  } catch (e) {}
+  if ("tokenURI" in contract) {
+    try {
+      uri = await contract.tokenURI(tokenId);
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
+  }
 
   if (!uri) {
     try {

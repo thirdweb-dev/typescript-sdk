@@ -5,8 +5,8 @@ import { ModuleType } from "../common/module-type";
  * The module metadata, includes the `address` and the {@link ModuleType}.
  * @public
  */
-export interface ModuleMetadata {
+export interface ModuleMetadata<TContractMetadata extends ContractMetadata> {
   address: string;
-  metadata?: ContractMetadata;
+  metadata?: TContractMetadata;
   type: ModuleType;
 }

@@ -9,9 +9,9 @@ Setup a collection of one-of-one NFTs that are minted as users claim them.
 <b>Signature:</b>
 
 ```typescript
-export declare class DropModule extends ModuleWithRoles<DropV2> implements ITransferable 
+export declare class DropModule extends ModuleWithRoles<LazyMintERC721, NFTDropModuleMetadata> implements ITransferable 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;DropV2&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;LazyMintERC721, NFTDropModuleMetadata&gt;
 
 <b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 
@@ -57,19 +57,15 @@ const module = sdk.getDropModule("{{module_address}}");
 |  [getAllUnclaimed(queryParams)](./sdk.dropmodule.getallunclaimed.md) |  |  |
 |  [getClaimConditionsFactory()](./sdk.dropmodule.getclaimconditionsfactory.md) |  | Creates a claim condition factory |
 |  [getClaimIneligibilityReasons(quantity, addressToCheck)](./sdk.dropmodule.getclaimineligibilityreasons.md) |  | For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user. |
-|  [getDefaultSaleRecipient()](./sdk.dropmodule.getdefaultsalerecipient.md) |  |  |
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | Get Owned NFTs |
-|  [getRoyaltyBps()](./sdk.dropmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
-|  [getRoyaltyRecipientAddress()](./sdk.dropmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
+|  [getPrimarySaleRecipient()](./sdk.dropmodule.getprimarysalerecipient.md) |  |  |
 |  [isApproved(address, operator)](./sdk.dropmodule.isapproved.md) |  |  |
 |  [isTransferRestricted()](./sdk.dropmodule.istransferrestricted.md) |  |  |
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  |  |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  |  |
 |  [setClaimConditions(factory)](./sdk.dropmodule.setclaimconditions.md) |  | Sets public mint conditions for the next minting using the claim condition factory. |
-|  [setDefaultSaleRecipient(recipient)](./sdk.dropmodule.setdefaultsalerecipient.md) |  |  |
-|  [setModuleMetadata(metadata)](./sdk.dropmodule.setmodulemetadata.md) |  |  |
+|  [setPrimarySaleRecipient(recipient)](./sdk.dropmodule.setprimarysalerecipient.md) |  |  |
 |  [setRestrictedTransfer(restricted)](./sdk.dropmodule.setrestrictedtransfer.md) |  |  |
-|  [setRoyaltyBps(amount)](./sdk.dropmodule.setroyaltybps.md) |  |  |
 |  [totalClaimedSupply()](./sdk.dropmodule.totalclaimedsupply.md) |  |  |
 |  [totalSupply()](./sdk.dropmodule.totalsupply.md) |  |  |
 |  [totalUnclaimedSupply()](./sdk.dropmodule.totalunclaimedsupply.md) |  |  |

@@ -1,14 +1,13 @@
 import {
   ERC20__factory,
   ILazyMintERC721,
-  LazyMintERC721 as DropV2,
-  LazyMintERC721__factory as DropV2__factory,
+  LazyMintERC721,
+  LazyMintERC721__factory,
 } from "@3rdweb/contracts";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
-import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
   isNativeToken,
@@ -27,6 +26,7 @@ import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
+import { NFTDropModuleMetadata } from "../schema";
 import { ClaimCondition } from "../types/claim-conditions/PublicClaimCondition";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 import { Snapshot } from "../types/snapshots/Snapshot";
@@ -48,7 +48,7 @@ import { Snapshot } from "../types/snapshots/Snapshot";
  * @public
  */
 export class DropModule
-  extends ModuleWithRoles<DropV2>
+  extends ModuleWithRoles<LazyMintERC721, NFTDropModuleMetadata>
   implements ITransferable
 {
   public static moduleType: ModuleType = "NFT_DROP" as const;
@@ -89,8 +89,8 @@ export class DropModule
   /**
    * @internal
    */
-  protected connectContract(): DropV2 {
-    return DropV2__factory.connect(this.address, this.providerOrSigner);
+  protected connectContract(): LazyMintERC721 {
+    return LazyMintERC721__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**
@@ -191,11 +191,11 @@ export class DropModule
     return await this.readOnlyContract.ownerOf(tokenId);
   }
 
-  public async getDefaultSaleRecipient(): Promise<string> {
-    return await this.readOnlyContract.defaultSaleRecipient();
+  public async getPrimarySaleRecipient(): Promise<string> {
+    return await this.readOnlyContract.primarySaleRecipient();
   }
 
-  public async setDefaultSaleRecipient(
+  public async setPrimarySaleRecipient(
     recipient: string,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("setDefaultSaleRecipient", [recipient]);
@@ -380,7 +380,7 @@ export class DropModule
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
-    const { metadata } = await this.getMetadata(false);
+    const { metadata } = await this.getModuleMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
     const oldMerkle = metadata["merkle"];
     if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
@@ -403,6 +403,7 @@ export class DropModule
     encoded.push(
       this.contract.interface.encodeFunctionData("setClaimConditions", [
         conditions,
+        true,
       ]),
     );
 
@@ -426,7 +427,7 @@ export class DropModule
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
     const encoded = [];
-    const { metadata } = await this.getMetadata(false);
+    const { metadata } = await this.getModuleMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
     const oldMerkle = metadata["merkle"];
 
@@ -448,8 +449,9 @@ export class DropModule
     }
 
     encoded.push(
-      this.contract.interface.encodeFunctionData("updateClaimConditions", [
+      this.contract.interface.encodeFunctionData("setClaimConditions", [
         conditions,
+        false,
       ]),
     );
     return await this.sendTransaction("multicall", [encoded]);
@@ -606,16 +608,19 @@ export class DropModule
     proofs: BytesLike[];
   }> {
     const mintCondition = await this.getActiveClaimCondition();
-    const { metadata } = await this.getMetadata();
+    const { metadata } = await this.getModuleMetadata();
 
     const addressToClaim = _addressToClaim || (await this.getSignerAddress());
 
-    if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
+    if (
+      !mintCondition.merkleRoot.toString().startsWith(AddressZero) &&
+      metadata?.merkle
+    ) {
       const snapshot = await this.sdk
         .getStorage()
-        .get(metadata?.merkle[mintCondition.merkleRoot.toString()]);
-      const jsonConvert = new JsonConvert();
-      const snapshotData = jsonConvert.deserializeObject(
+        .get(metadata.merkle[mintCondition.merkleRoot.toString()]);
+
+      const snapshotData = this.jsonConvert.deserializeObject(
         JSON.parse(snapshot),
         Snapshot,
       );
@@ -737,63 +742,6 @@ export class DropModule
     return await this.sendTransaction("transferFrom", [from, to, tokenId]);
   }
 
-  // owner functions
-  public async setModuleMetadata(
-    metadata: MetadataURIOrObject,
-  ): Promise<TransactionReceipt> {
-    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
-    return await this.sendTransaction("setContractURI", [uri]);
-  }
-
-  public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
-    // TODO: reduce this duplication and provide common functions around
-    // royalties through an interface. Currently this function is
-    // duplicated across 4 modules
-    const { metadata } = await this.getMetadata();
-    const encoded: string[] = [];
-    if (!metadata) {
-      throw new Error("No metadata found, this module might be invalid!");
-    }
-
-    metadata.seller_fee_basis_points = amount;
-    const uri = await this.sdk.getStorage().uploadMetadata(
-      {
-        ...metadata,
-      },
-      this.address,
-      await this.getSignerAddress(),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
-    );
-    return await this.sendTransaction("multicall", [encoded]);
-  }
-
-  /**
-   * Gets the royalty BPS (basis points) of the contract
-   *
-   * @returns - The royalty BPS
-   */
-  public async getRoyaltyBps(): Promise<BigNumberish> {
-    return await this.readOnlyContract.royaltyBps();
-  }
-
-  /**
-   * Gets the address of the royalty recipient
-   *
-   * @returns - The royalty BPS
-   */
-  public async getRoyaltyRecipientAddress(): Promise<string> {
-    const metadata = await this.getMetadata();
-    if (metadata.metadata?.fee_recipient !== undefined) {
-      return metadata.metadata.fee_recipient;
-    }
-    return "";
-  }
-
   /**
    * Create batch allows you to create a batch of tokens
    * in one transaction. This function can only be called
@@ -845,12 +793,15 @@ export class DropModule
     if (!addressToClaim) {
       addressToClaim = await this.getSignerAddress();
     }
-    const { metadata } = await this.getMetadata();
+    const { metadata } = await this.getModuleMetadata();
+    if (!metadata?.merkle) {
+      return [];
+    }
     const snapshot = await this.sdk
       .getStorage()
-      .get(metadata?.merkle[merkleRoot]);
-    const jsonConvert = new JsonConvert();
-    const snapshotData = jsonConvert.deserializeObject(
+      .get(metadata.merkle[merkleRoot]);
+
+    const snapshotData = this.jsonConvert.deserializeObject(
       JSON.parse(snapshot),
       Snapshot,
     );

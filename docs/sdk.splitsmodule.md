@@ -9,9 +9,9 @@ Create custom royalty splits to distribute funds.
 <b>Signature:</b>
 
 ```typescript
-export declare class SplitsModule extends Module<Splits> implements ISplitsModule 
+export declare class SplitsModule extends Module<Splits, SplitsModuleMetadata> implements ISplitsModule 
 ```
-<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;Splits&gt;
+<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;Splits, SplitsModuleMetadata&gt;
 
 <b>Implements:</b> [ISplitsModule](./sdk.isplitsmodule.md)
 

@@ -12,6 +12,7 @@ import {
 } from "@3rdweb/contracts/dist/Pack";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike, Contract, ethers } from "ethers";
+import { mix } from "ts-mixer";
 import {
   CurrencyValue,
   getCurrencyValue,
@@ -22,9 +23,10 @@ import {
 import { ChainlinkVrf } from "../common/chainlink";
 import { NotFoundError } from "../common/error";
 import { getMetadataWithoutContract, NFTMetadata } from "../common/nft";
-import { ModuleWithRoles } from "../core/module";
+import { ModuleWithRoles, ModuleWithRoyalties } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
+import { PackModuleMetadata } from "../schema";
 
 /**
  * @beta
@@ -87,7 +89,11 @@ export interface IPackBatchArgs {
  *
  * @public
  */
-export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
+export interface PackModule
+  extends ModuleWithRoles<Pack, PackModuleMetadata>,
+    ModuleWithRoyalties<Pack, PackModuleMetadata> {}
+@mix(ModuleWithRoles, ModuleWithRoyalties)
+export class PackModule implements ITransferable {
   public static moduleType: ModuleType = "PACK" as const;
 
   public static roles = [
@@ -178,14 +184,14 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
   }
 
   public async get(packId: string): Promise<PackMetadata> {
-    const [meta, state, supply] = await Promise.all([
+    const [meta, [state], supply] = await Promise.all([
       getMetadataWithoutContract(
         this.providerOrSigner,
         this.address,
         packId,
         this.ipfsGatewayUrl,
       ),
-      this.readOnlyContract.getPack(packId),
+      this.readOnlyContract.getPackWithRewards(packId),
       this.readOnlyContract
         .totalSupply(packId)
         .catch(() => BigNumber.from("0")),
@@ -496,61 +502,6 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
       ]);
     }
   }
-
-  public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
-    // TODO: reduce this duplication and provide common functions around
-    // royalties through an interface. Currently this function is
-    // duplicated across 4 modules
-    const { metadata } = await this.getMetadata();
-    const encoded: string[] = [];
-    if (!metadata) {
-      throw new Error("No metadata found, this module might be invalid!");
-    }
-
-    metadata.seller_fee_basis_points = amount;
-    const uri = await this.sdk.getStorage().uploadMetadata(
-      {
-        ...metadata,
-      },
-      this.address,
-      await this.getSignerAddress(),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
-    );
-    return await this.sendTransaction("multicall", [encoded]);
-  }
-
-  public async setModuleMetadata(metadata: MetadataURIOrObject) {
-    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
-    await this.sendTransaction("setContractURI", [uri]);
-  }
-
-  /**
-   * Gets the royalty BPS (basis points) of the contract
-   *
-   * @returns - The royalty BPS
-   */
-  public async getRoyaltyBps(): Promise<BigNumberish> {
-    return await this.readOnlyContract.royaltyBps();
-  }
-
-  /**
-   * Gets the address of the royalty recipient
-   *
-   * @returns - The royalty BPS
-   */
-  public async getRoyaltyRecipientAddress(): Promise<string> {
-    const metadata = await this.getMetadata();
-    if (metadata.metadata?.fee_recipient !== undefined) {
-      return metadata.metadata.fee_recipient;
-    }
-    return "";
-  }
-
   public async isTransferRestricted(): Promise<boolean> {
     return this.readOnlyContract.transfersRestricted();
   }

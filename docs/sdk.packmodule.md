@@ -2,18 +2,16 @@
 
 [Home](./index.md) &gt; [@3rdweb/sdk](./sdk.md) &gt; [PackModule](./sdk.packmodule.md)
 
-## PackModule class
+## PackModule interface
 
 Create lootboxes of NFTs with rarity based open mechanics.
 
 <b>Signature:</b>
 
 ```typescript
-export declare class PackModule extends ModuleWithRoles<Pack> implements ITransferable 
+export interface PackModule extends ModuleWithRoles<Pack, PackModuleMetadata>, ModuleWithRoyalties<Pack, PackModuleMetadata> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Pack&gt;
-
-<b>Implements:</b> [ITransferable](./sdk.itransferable.md)
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Pack, PackModuleMetadata&gt;, ModuleWithRoyalties&lt;Pack, PackModuleMetadata&gt;
 
 ## Example
 
@@ -26,37 +24,4 @@ const provider = ethers.Wallet.createRandom();
 const sdk = new ThirdwebSDK(provider);
 const module = sdk.getPackModule("{{module_address}}");
 ```
-
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [moduleType](./sdk.packmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.packmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
-
-## Methods
-
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [balance(tokenId)](./sdk.packmodule.balance.md) |  |  |
-|  [balanceOf(address, tokenId)](./sdk.packmodule.balanceof.md) |  | Get Pack Balance |
-|  [create(args)](./sdk.packmodule.create.md) |  | Create Pack |
-|  [depositLink(amount)](./sdk.packmodule.depositlink.md) |  |  |
-|  [get(packId)](./sdk.packmodule.get.md) |  |  |
-|  [getAll()](./sdk.packmodule.getall.md) |  | Get Pack Data |
-|  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  |  |
-|  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  | Get Pack Reward Data |
-|  [getRoyaltyBps()](./sdk.packmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
-|  [getRoyaltyRecipientAddress()](./sdk.packmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
-|  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  |  |
-|  [isTransferRestricted()](./sdk.packmodule.istransferrestricted.md) |  |  |
-|  [open(packId)](./sdk.packmodule.open.md) |  | Open Pack |
-|  [setApproval(operator, approved)](./sdk.packmodule.setapproval.md) |  |  |
-|  [setModuleMetadata(metadata)](./sdk.packmodule.setmodulemetadata.md) |  |  |
-|  [setRestrictedTransfer(restricted)](./sdk.packmodule.setrestrictedtransfer.md) |  |  |
-|  [setRoyaltyBps(amount)](./sdk.packmodule.setroyaltybps.md) |  |  |
-|  [transfer(to, tokenId, amount)](./sdk.packmodule.transfer.md) |  | Transfer Pack |
-|  [transferBatchFrom(from, to, args, data)](./sdk.packmodule.transferbatchfrom.md) |  |  |
-|  [transferFrom(from, to, args, data)](./sdk.packmodule.transferfrom.md) |  |  |
-|  [withdrawLink(to, amount)](./sdk.packmodule.withdrawlink.md) |  |  |
 

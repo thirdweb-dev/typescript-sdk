@@ -36,7 +36,6 @@ import { SplitsModule } from "../modules/royalty";
 import { TokenModule } from "../modules/token";
 import { VoteModule } from "../modules/vote";
 import { IpfsStorage } from "../storage/IpfsStorage";
-import { ModuleMetadata } from "../types/ModuleMetadata";
 import { ClaimProof, Snapshot, SnapshotInfo } from "../types/snapshots";
 import { RegistryModule } from "./registry";
 import {
@@ -196,10 +195,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
    * Call this to get the current apps.
    * @returns All currently registered apps for the connected wallet
    */
-  public async getModules(
-    address: string,
-    filterByModuleType?: ModuleType[],
-  ): Promise<ModuleMetadata[]> {
+  public async getModules(address: string, filterByModuleType?: ModuleType[]) {
     return (this.registry || (await this.getRegistryModule())).getModules(
       address,
       filterByModuleType,

@@ -8,6 +8,7 @@ import {
   getCurrencyValue,
 } from "../common/currency";
 import { Module } from "../core/module";
+import { SplitsModuleMetadata } from "../schema";
 import { SplitRecipient } from "../types/SplitRecipient";
 
 export interface ISplitsModule {
@@ -95,7 +96,10 @@ export interface ISplitsModule {
  *
  * @public
  */
-export class SplitsModule extends Module<Splits> implements ISplitsModule {
+export class SplitsModule
+  extends Module<Splits, SplitsModuleMetadata>
+  implements ISplitsModule
+{
   public static moduleType: ModuleType = "SPLITS" as const;
 
   /**

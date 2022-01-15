@@ -71,18 +71,12 @@ Output
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
 |  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
-|  [BundleCollectionModule](./sdk.bundlecollectionmodule.md) | Create a collection of NFTs that lets you optionally mint multiple copies of each NFT. |
-|  [BundleDropModule](./sdk.bundledropmodule.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
-|  [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md) |  |
-|  [BundleModuleMetadata](./sdk.bundlemodulemetadata.md) |  |
+|  [BundleCollectionModule](./sdk.bundlecollectionmodule.md) |  |
+|  [BundleDropModule](./sdk.bundledropmodule.md) |  |
 |  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
 |  [ClaimConditionPhase](./sdk.claimconditionphase.md) |  |
 |  [ClaimProof](./sdk.claimproof.md) | The model for a claim proof. Currently we support only an address in the leaf of the merkle tree. |
-|  [CommonModuleMetadata](./sdk.commonmodulemetadata.md) | CommonModuleMetadata defines the common properties of a module deployment. |
-|  [CurrencyModuleMetadata](./sdk.currencymodulemetadata.md) |  |
-|  [DatastoreModuleMetadata](./sdk.datastoremodulemetadata.md) |  |
 |  [DropModule](./sdk.dropmodule.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
-|  [DropModuleMetadata](./sdk.dropmodulemetadata.md) |  |
 |  [DuplicateFileNameError](./sdk.duplicatefilenameerror.md) |  |
 |  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
 |  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
@@ -92,30 +86,23 @@ Output
 |  [InvariantError](./sdk.invarianterror.md) | Error that may get thrown when an invariant assummption fails. |
 |  [IpfsStorage](./sdk.ipfsstorage.md) |  |
 |  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
-|  [MarketModuleMetadata](./sdk.marketmodulemetadata.md) |  |
 |  [MarketplaceModule](./sdk.marketplacemodule.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
-|  [MarketplaceModuleMetadata](./sdk.marketplacemodulemetadata.md) |  |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
 |  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality. |
-|  [NFTModule](./sdk.nftmodule.md) | Create a collection of one-of-one NFTs. |
-|  [NftModuleMetadata](./sdk.nftmodulemetadata.md) |  |
+|  [NFTModule](./sdk.nftmodule.md) |  |
 |  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
-|  [PackModule](./sdk.packmodule.md) | Create lootboxes of NFTs with rarity based open mechanics. |
-|  [PackModuleMetadata](./sdk.packmodulemetadata.md) |  |
+|  [PackModule](./sdk.packmodule.md) |  |
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [SplitsModule](./sdk.splitsmodule.md) | Create custom royalty splits to distribute funds. |
-|  [SplitsModuleMetadata](./sdk.splitsmodulemetadata.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
 |  [TokenModule](./sdk.tokenmodule.md) | Create a standard crypto token or crypto currency. |
-|  [TokenModuleMetadata](./sdk.tokenmodulemetadata.md) |  |
 |  [UploadError](./sdk.uploaderror.md) |  |
 |  [VoteModule](./sdk.votemodule.md) | Create a decentralized organization for token holders to vote on proposals. |
-|  [VoteModuleMetadata](./sdk.votemodulemetadata.md) |  |
 |  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 
 ## Enumerations
@@ -143,8 +130,10 @@ Output
 |  Interface | Description |
 |  --- | --- |
 |  [AuctionListing](./sdk.auctionlisting.md) | Represents a new marketplace auction listing. |
+|  [BundleCollectionModule](./sdk.bundlecollectionmodule.md) | Create a collection of NFTs that lets you optionally mint multiple copies of each NFT. |
 |  [BundleDropCreateClaimCondition](./sdk.bundledropcreateclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [BundleDropMetadata](./sdk.bundledropmetadata.md) | <b><i>(BETA)</i></b> |
+|  [BundleDropModule](./sdk.bundledropmodule.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [BundleMetadata](./sdk.bundlemetadata.md) | <b><i>(BETA)</i></b> |
 |  [ClaimCondition](./sdk.claimcondition.md) | <b><i>(BETA)</i></b> |
 |  [CollectionMetadata](./sdk.collectionmetadata.md) |  |
@@ -176,11 +165,12 @@ Output
 |  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
 |  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
 |  [NewSignaturePayload](./sdk.newsignaturepayload.md) | Represents a new <code>SignatureMint</code> request. |
-|  [NewSplitRecipient](./sdk.newsplitrecipient.md) | The NewSplitRecipient interface describes the structure of a new split recipient. The <code>shares</code> property is important for the calculation of the the total split.<!-- -->If there are two recipients each with 10 shares, they each will receive 50% of the total royalties.<!-- -->If there are two recipients each with 1 share, they each will receive 50% of the total royalties.<!-- -->I.e. the total number of shares is used to calculate the percentage of the total royalties that is allocated to each recipient. |
 |  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
+|  [NFTModule](./sdk.nftmodule.md) | Create a collection of one-of-one NFTs. |
 |  [Offer](./sdk.offer.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
+|  [PackModule](./sdk.packmodule.md) | Create lootboxes of NFTs with rarity based open mechanics. |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [Proposal](./sdk.proposal.md) |  |
 |  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
@@ -201,8 +191,6 @@ Output
 
 |  Type Alias | Description |
 |  --- | --- |
-|  [AllModuleMetadata](./sdk.allmodulemetadata.md) |  |
-|  [CollectionModuleMetadata](./sdk.collectionmodulemetadata.md) |  |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |

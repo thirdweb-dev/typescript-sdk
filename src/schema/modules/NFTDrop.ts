@@ -16,7 +16,9 @@ import {
 export class NFTDropModuleMetadata extends Mixin(
   CommonModuleMetadata,
   CommonRoyaltyMetadata,
-) {}
+) {
+  merkle?: { [key: string]: string };
+}
 
 @JsonObject("DeployNFTDropModuleMetadata")
 export class DeployNFTDropModuleMetadata extends Mixin(

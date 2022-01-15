@@ -2,20 +2,14 @@ import { arrayify } from "@ethersproject/bytes";
 import { Contract } from "@ethersproject/contracts";
 import { Provider } from "@ethersproject/providers";
 import { ProviderOrSigner } from "../core/types";
+import { CommonModuleMetadata } from "../schema/modules/common";
 import { replaceIpfsWithGateway, recursiveResolveGatewayUrl } from "./ipfs";
 
 /**
  * The typical contract metadata found on the modules.
  * @public
  */
-export interface ContractMetadata {
-  uri: string;
-  name?: string;
-  description?: string;
-  image?: string;
-  external_link?: string;
-  seller_fee_basis_points?: number;
-  fee_recipient?: string;
+export interface ContractMetadata extends CommonModuleMetadata {
   [key: string]: any;
 }
 
@@ -48,12 +42,14 @@ const contractUriABI = [
 /**
  * @internal
  */
-export async function getContractMetadata(
+export async function getContractMetadata<
+  TMetadataType extends ContractMetadata,
+>(
   provider: ProviderOrSigner,
   address: string,
   ipfsGatewayUrl: string,
   resolveGateway = false,
-): Promise<ContractMetadata> {
+) {
   const contract = new Contract(address, contractUriABI, provider);
   const uri = await contract.contractURI();
   const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
@@ -70,7 +66,7 @@ export async function getContractMetadata(
     if (resolveGateway) {
       json = recursiveResolveGatewayUrl(json, ipfsGatewayUrl);
     }
-    const entity: ContractMetadata = {
+    const entity: TMetadataType = {
       ...json,
     };
     return entity;

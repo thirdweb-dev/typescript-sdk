@@ -11,8 +11,8 @@ import {
 } from "../common/currency";
 import { RestrictedTransferError } from "../common/error";
 import { ModuleWithRoles } from "../core/module";
-import { MetadataURIOrObject } from "../core/types";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
+import { TokenModuleMetadata } from "../schema";
 
 export interface ITokenMintArgs {
   address: string;
@@ -40,7 +40,7 @@ export interface ITokenMintFromArgs extends ITokenMintArgs {
  * @public
  */
 export class TokenModule
-  extends ModuleWithRoles<Coin>
+  extends ModuleWithRoles<Coin, TokenModuleMetadata>
   implements ITransferable
 {
   public static moduleType: ModuleType = "TOKEN" as const;
@@ -354,13 +354,6 @@ export class TokenModule
     amount: BigNumberish,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("transferFrom", [from, to, amount]);
-  }
-
-  public async setModuleMetadata(
-    metadata: MetadataURIOrObject,
-  ): Promise<TransactionReceipt> {
-    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
-    return await this.sendTransaction("setContractURI", [uri]);
   }
 
   public async transferBatch(args: ITokenMintArgs[]) {

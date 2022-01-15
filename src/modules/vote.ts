@@ -3,7 +3,6 @@ import {
   VotingGovernor,
   VotingGovernor__factory,
 } from "@3rdweb/contracts";
-import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
 import {
   Currency,
@@ -13,8 +12,8 @@ import {
   ModuleType,
 } from "../common";
 import { Module } from "../core/module";
-import { MetadataURIOrObject } from "../core/types";
 import { VoteType } from "../enums";
+import { VoteModuleMetadata } from "../schema";
 import { Proposal, ProposalExecutable } from "../types/vote";
 
 export interface VoteSettings {
@@ -42,7 +41,7 @@ export interface VoteSettings {
  *
  * @public
  */
-export class VoteModule extends Module<VotingGovernor> {
+export class VoteModule extends Module<VotingGovernor, VoteModuleMetadata> {
   public static moduleType: ModuleType = "VOTE" as const;
 
   /**
@@ -399,14 +398,6 @@ export class VoteModule extends Module<VotingGovernor> {
       await erc20.balanceOf(this.address),
     );
   }
-
-  public async setModuleMetadata(
-    metadata: MetadataURIOrObject,
-  ): Promise<TransactionReceipt> {
-    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
-    return await this.sendTransaction("setContractURI", [uri]);
-  }
-
   /**
    * Find a proposal by its id.
    *

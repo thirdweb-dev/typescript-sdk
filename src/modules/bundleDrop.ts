@@ -8,7 +8,7 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
-import { JsonConvert } from "json2typescript";
+import { mix } from "ts-mixer";
 import {
   getCurrencyValue,
   isNativeToken,
@@ -20,12 +20,14 @@ import {
 import { invariant } from "../common/invariant";
 import { isMetadataEqual } from "../common/isMetadataEqual";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
-import { ModuleWithRoles } from "../core/module";
+import { Module, ModuleWithRoles, ModuleWithRoyalties } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
+import { BundleDropModuleMetadata } from "../schema";
 import { ClaimCondition } from "../types/claim-conditions/PublicClaimCondition";
+
 import { Snapshot } from "../types/snapshots";
 
 /**
@@ -65,10 +67,11 @@ export interface BundleDropMetadata {
  *
  * @public
  */
-export class BundleDropModule
-  extends ModuleWithRoles<BundleDrop>
-  implements ITransferable
-{
+export interface BundleDropModule
+  extends ModuleWithRoles<BundleDrop, BundleDropModuleMetadata>,
+    ModuleWithRoyalties<BundleDrop, BundleDropModuleMetadata> {}
+@mix(Module, ModuleWithRoles)
+export class BundleDropModule implements ITransferable {
   public static moduleType: ModuleType = "BUNDLE_DROP" as const;
 
   public static roles = [
@@ -392,11 +395,11 @@ export class BundleDropModule
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
-    const { metadata } = await this.getMetadata(false);
+    const { metadata } = await this.getModuleMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
     const oldMerkle = metadata["merkle"];
 
-    const existingMerkle = "merkle" in metadata ? metadata.merkle : {};
+    const existingMerkle = "merkle" in metadata ? metadata.merkle || {} : {};
     for (const key of Object.keys(existingMerkle)) {
       merkleInfo[key] = existingMerkle[key];
     }
@@ -418,6 +421,7 @@ export class BundleDropModule
       this.contract.interface.encodeFunctionData("setClaimConditions", [
         tokenId,
         conditions,
+        true,
       ]),
     );
 
@@ -442,11 +446,11 @@ export class BundleDropModule
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
-    const { metadata } = await this.getMetadata(false);
+    const { metadata } = await this.getModuleMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
     const oldMerkle = metadata["merkle"];
 
-    const existingMerkle = "merkle" in metadata ? metadata.merkle : {};
+    const existingMerkle = "merkle" in metadata ? metadata.merkle || {} : {};
     for (const key of Object.keys(existingMerkle)) {
       merkleInfo[key] = existingMerkle[key];
     }
@@ -463,9 +467,10 @@ export class BundleDropModule
       );
     }
     encoded.push(
-      this.contract.interface.encodeFunctionData("updateClaimConditions", [
+      this.contract.interface.encodeFunctionData("setClaimConditions", [
         tokenId,
         conditions,
+        false,
       ]),
     );
     return await this.sendTransaction("multicall", [encoded]);
@@ -498,13 +503,16 @@ export class BundleDropModule
     const overrides = (await this.getCallOverrides()) || {};
 
     const addressToClaim = _addressToClaim || (await this.getSignerAddress());
-    const { metadata } = await this.getMetadata();
-    if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
+    const { metadata } = await this.getModuleMetadata();
+    if (
+      !mintCondition.merkleRoot.toString().startsWith(AddressZero) &&
+      metadata?.merkle
+    ) {
       const snapshot = await this.sdk
         .getStorage()
-        .get(metadata?.merkle[mintCondition.merkleRoot.toString()]);
-      const jsonConvert = new JsonConvert();
-      const snapshotData = jsonConvert.deserializeObject(
+        .get(metadata.merkle[mintCondition.merkleRoot.toString()]);
+
+      const snapshotData = this.jsonConvert.deserializeObject(
         JSON.parse(snapshot),
         Snapshot,
       );
@@ -639,63 +647,6 @@ export class BundleDropModule
       amount,
       data,
     ]);
-  }
-
-  // owner functions
-  public async setModuleMetadata(
-    metadata: MetadataURIOrObject,
-  ): Promise<TransactionReceipt> {
-    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
-    return await this.sendTransaction("setContractURI", [uri]);
-  }
-
-  public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
-    // TODO: reduce this duplication and provide common functions around
-    // royalties through an interface. Currently this function is
-    // duplicated across 4 modules
-    const { metadata } = await this.getMetadata();
-    const encoded: string[] = [];
-    if (!metadata) {
-      throw new Error("No metadata found, this module might be invalid!");
-    }
-
-    metadata.seller_fee_basis_points = amount;
-    const uri = await this.sdk.getStorage().uploadMetadata(
-      {
-        ...metadata,
-      },
-      this.address,
-      await this.getSignerAddress(),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
-    );
-    return await this.sendTransaction("multicall", [encoded]);
-  }
-
-  /**
-   * Gets the royalty BPS (basis points) of the contract
-   *
-   * @returns - The royalty BPS
-   */
-  public async getRoyaltyBps(): Promise<BigNumberish> {
-    return await this.readOnlyContract.royaltyBps();
-  }
-
-  /**
-   * Gets the address of the royalty recipient
-   *
-   * @returns - The royalty BPS
-   */
-  public async getRoyaltyRecipientAddress(): Promise<string> {
-    const metadata = await this.getMetadata();
-    if (metadata.metadata?.fee_recipient !== undefined) {
-      return metadata.metadata.fee_recipient;
-    }
-    return "";
   }
 
   public getClaimConditionsFactory(): ClaimConditionFactory {
@@ -880,12 +831,15 @@ export class BundleDropModule
     if (!addressToClaim) {
       addressToClaim = await this.getSignerAddress();
     }
-    const { metadata } = await this.getMetadata();
+    const { metadata } = await this.getModuleMetadata();
+    if (!metadata?.merkle) {
+      return [];
+    }
     const snapshot = await this.sdk
       .getStorage()
-      .get(metadata?.merkle[merkleRoot]);
-    const jsonConvert = new JsonConvert();
-    const snapshotData = jsonConvert.deserializeObject(
+      .get(metadata.merkle[merkleRoot]);
+
+    const snapshotData = this.jsonConvert.deserializeObject(
       JSON.parse(snapshot),
       Snapshot,
     );

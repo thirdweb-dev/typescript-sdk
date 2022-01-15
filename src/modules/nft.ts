@@ -12,6 +12,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, Signer } from "ethers";
 import { hexlify, toUtf8Bytes } from "ethers/lib/utils";
+import { mix } from "ts-mixer";
 import { v4 as uuidv4 } from "uuid";
 import {
   ModuleType,
@@ -21,10 +22,11 @@ import {
   RolesMap,
 } from "../common";
 import { NFTMetadata, NFTMetadataOwner } from "../common/nft";
-import { ModuleWithRoles } from "../core/module";
+import { ModuleWithRoles, ModuleWithRoyalties } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
 import { ISignatureMinter } from "../interfaces/modules/ISignatureMinter";
+import { NFTCollectionModuleMetadata } from "../schema";
 import { NewSignaturePayload } from "../types/signature-minting/NewSignaturePayload";
 import { SignaturePayload } from "../types/signature-minting/SignaturePayload";
 
@@ -54,10 +56,11 @@ const MintRequest = [
  *
  * @public
  */
-export class NFTModule
-  extends ModuleWithRoles<SignatureMint721>
-  implements ITransferable, ISignatureMinter
-{
+export interface NFTModule
+  extends ModuleWithRoles<SignatureMint721, NFTCollectionModuleMetadata>,
+    ModuleWithRoyalties<SignatureMint721, NFTCollectionModuleMetadata> {}
+@mix(ModuleWithRoles, ModuleWithRoyalties)
+export class NFTModule implements ITransferable, ISignatureMinter {
   public static moduleType: ModuleType = "NFT_COLLECTION" as const;
 
   public static roles = [
@@ -387,63 +390,6 @@ export class NFTModule
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("transferFrom", [from, to, tokenId]);
   }
-
-  public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
-    // TODO: reduce this duplication and provide common functions around
-    // royalties through an interface. Currently this function is
-    // duplicated across 4 modules
-    const { metadata } = await this.getMetadata();
-    const encoded: string[] = [];
-    if (!metadata) {
-      throw new Error("No metadata found, this module might be invalid!");
-    }
-
-    metadata.seller_fee_basis_points = amount;
-    const uri = await this.sdk.getStorage().uploadMetadata(
-      {
-        ...metadata,
-      },
-      this.address,
-      await this.getSignerAddress(),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("setContractURI", [uri]),
-    );
-    return await this.sendTransaction("multicall", [encoded]);
-  }
-
-  public async setModuleMetadata(
-    metadata: MetadataURIOrObject,
-  ): Promise<TransactionReceipt> {
-    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
-    return await this.sendTransaction("setContractURI", [uri]);
-  }
-
-  /**
-   * Gets the royalty BPS (basis points) of the contract
-   *
-   * @returns - The royalty BPS
-   */
-  public async getRoyaltyBps(): Promise<BigNumberish> {
-    return await this.readOnlyContract.royaltyBps();
-  }
-
-  /**
-   * Gets the address of the royalty recipient
-   *
-   * @returns - The royalty BPS
-   */
-  public async getRoyaltyRecipientAddress(): Promise<string> {
-    const metadata = await this.getMetadata();
-    if (metadata.metadata?.fee_recipient !== undefined) {
-      return metadata.metadata.fee_recipient;
-    }
-    return "";
-  }
-
   public async isTransferRestricted(): Promise<boolean> {
     return this.readOnlyContract.transfersRestricted();
   }

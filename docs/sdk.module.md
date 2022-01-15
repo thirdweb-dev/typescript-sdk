@@ -9,7 +9,7 @@ The root Module class. All other Modules extend this.
 <b>Signature:</b>
 
 ```typescript
-export declare class Module<TContract extends BaseContract = BaseContract> 
+export declare class Module<TContract extends BaseContract, TContractMetadata extends ContractMetadataSchema> 
 ```
 
 ## Remarks
@@ -29,10 +29,13 @@ The constructor for this class is marked as internal. Third-party code should no
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [deserializeModuleMetadata(serializedMetadata)](./sdk.module.deserializemodulemetadata.md) |  |  |
 |  [exists()](./sdk.module.exists.md) |  |  |
-|  [getMetadata(resolveUrls)](./sdk.module.getmetadata.md) |  | Get the metadata of the contract. |
+|  [getModuleMetadata(resolveUrls)](./sdk.module.getmodulemetadata.md) |  | Get the metadata of the contract. |
 |  [parseEventLogs(eventName, logs)](./sdk.module.parseeventlogs.md) |  |  |
 |  [parseLogs(eventName, logs, contract)](./sdk.module.parselogs.md) |  |  |
-|  [setMetadata(metadata)](./sdk.module.setmetadata.md) |  | Set new metadata on the contract and return it if successful. |
+|  [serializeModuleMetadata(metadata)](./sdk.module.serializemodulemetadata.md) |  |  |
+|  [setModuleMetadata(metadata)](./sdk.module.setmodulemetadata.md) |  | Set new metadata on the contract and return it if successful. |
 |  [signTypedData(signer, from, domain, types, message)](./sdk.module.signtypeddata.md) |  |  |
+|  [updateModuleMetadata(metadata)](./sdk.module.updatemodulemetadata.md) |  | update the metadata on the contract and return it if successful. |
 

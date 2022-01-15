@@ -9,9 +9,9 @@ Create a decentralized organization for token holders to vote on proposals.
 <b>Signature:</b>
 
 ```typescript
-export declare class VoteModule extends Module<VotingGovernor> 
+export declare class VoteModule extends Module<VotingGovernor, VoteModuleMetadata> 
 ```
-<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;VotingGovernor&gt;
+<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;VotingGovernor, VoteModuleMetadata&gt;
 
 ## Example
 
@@ -43,7 +43,6 @@ const module = sdk.getVoteModule("{{module_address}}");
 |  [getAll()](./sdk.votemodule.getall.md) |  | Get All Proposals |
 |  [hasVoted(proposalId, account)](./sdk.votemodule.hasvoted.md) |  | Check If Wallet Voted |
 |  [propose(description, executions)](./sdk.votemodule.propose.md) |  | Create Proposal |
-|  [setModuleMetadata(metadata)](./sdk.votemodule.setmodulemetadata.md) |  |  |
 |  [settings()](./sdk.votemodule.settings.md) |  |  |
 |  [vote(proposalId, voteType, reason)](./sdk.votemodule.vote.md) |  | Vote |
 

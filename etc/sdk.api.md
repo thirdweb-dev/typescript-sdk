@@ -13,8 +13,10 @@ import { BigNumberish } from 'ethers';
 import { BigNumberish as BigNumberish_2 } from '@ethersproject/bignumber';
 import { BytesLike } from 'ethers';
 import { CallOverrides } from 'ethers';
+import { Class } from 'ts-mixer/dist/types/types';
 import { Coin } from '@3rdweb/contracts';
 import { ethers } from 'ethers';
+import { JsonConvert } from 'json2typescript';
 import { LazyMintERC1155 } from '@3rdweb/contracts';
 import { LazyMintERC721 } from '@3rdweb/contracts';
 import { Log } from '@ethersproject/providers';
@@ -35,9 +37,6 @@ import { VotingGovernor } from '@3rdweb/contracts';
 export class AdminRoleMissingError extends Error {
     constructor(address?: string, contractAddress?: string, message?: string);
 }
-
-// @public (undocumented)
-export type AllModuleMetadata = CollectionModuleMetadata | CommonModuleMetadata;
 
 // Warning: (ae-forgotten-export) The symbol "RegistryModule" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
@@ -80,8 +79,15 @@ export interface AuctionListing {
     type: ListingType.Auction;
 }
 
+// Warning: (ae-forgotten-export) The symbol "BundleCollectionMetadata" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ModuleWithRoyalties" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class BundleCollectionModule extends ModuleWithRoles<NFTCollection> implements ITransferable {
+export interface BundleCollectionModule extends ModuleWithRoles<NFTCollection, BundleCollectionMetadata>, ModuleWithRoyalties<NFTCollection, BundleCollectionMetadata> {
+}
+
+// @public (undocumented)
+export class BundleCollectionModule implements ITransferable {
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber_2>;
     balanceOf(address: string, tokenId: string): Promise<BigNumber_2>;
@@ -130,8 +136,6 @@ export class BundleCollectionModule extends ModuleWithRoles<NFTCollection> imple
     protected getModuleType(): ModuleType;
     // Warning: (ae-incompatible-release-tags) The symbol "getOwned" is marked as @public, but its signature references "BundleMetadata" which is marked as @beta
     getOwned(_address?: string): Promise<BundleMetadata[]>;
-    getRoyaltyBps(): Promise<BigNumberish_2>;
-    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string, assetContract?: string, assetId?: BigNumberish_2): Promise<boolean>;
     // (undocumented)
@@ -151,11 +155,7 @@ export class BundleCollectionModule extends ModuleWithRoles<NFTCollection> imple
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     transfer(to: string, tokenId: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
     transferBatchFrom(from: string, to: string, args: INFTBundleBatchArgs[], data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
@@ -192,8 +192,14 @@ export interface BundleDropMetadata {
     supply: BigNumber;
 }
 
+// Warning: (ae-forgotten-export) The symbol "BundleDropModuleMetadata" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implements ITransferable {
+export interface BundleDropModule extends ModuleWithRoles<LazyMintERC1155, BundleDropModuleMetadata>, ModuleWithRoyalties<LazyMintERC1155, BundleDropModuleMetadata> {
+}
+
+// @public (undocumented)
+export class BundleDropModule implements ITransferable {
     // (undocumented)
     balance(tokenId: BigNumberish): Promise<BigNumber>;
     balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
@@ -234,8 +240,6 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     protected getModuleType(): ModuleType;
     // Warning: (ae-incompatible-release-tags) The symbol "getOwned" is marked as @public, but its signature references "BundleDropMetadata" which is marked as @beta
     getOwned(_address?: string): Promise<BundleDropMetadata[]>;
-    getRoyaltyBps(): Promise<BigNumberish>;
-    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     getSaleRecipient(tokenId: BigNumberish): Promise<string>;
     // (undocumented)
@@ -252,11 +256,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     // (undocumented)
     setDefaultSaleRecipient(recipient: string): Promise<TransactionReceipt>;
     // (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
     setSaleRecipient(tokenId: BigNumberish, recipient: string): Promise<TransactionReceipt>;
     totalSupply(tokenId: BigNumberish): Promise<BigNumber>;
@@ -265,16 +265,6 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     transferFrom(from: string, to: string, tokenId: BigNumberish, amount: BigNumberish, data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
     updateClaimConditions(tokenId: BigNumberish, factory: ClaimConditionFactory): Promise<TransactionReceipt>;
-}
-
-// @public (undocumented)
-export class BundleDropModuleMetadata extends CommonModuleMetadata {
-    platformFeeBPS?: number | undefined;
-    // (undocumented)
-    platformFeeRecipient: string;
-    primarySaleRecipient: string;
-    royaltyBPS?: number | undefined;
-    royaltyReceipient?: string;
 }
 
 // @beta (undocumented)
@@ -289,12 +279,6 @@ export interface BundleMetadata {
     supply: BigNumber_2;
     // (undocumented)
     underlyingType: UnderlyingType;
-}
-
-// @public (undocumented)
-export class BundleModuleMetadata extends CommonModuleMetadata {
-    feeRecipient?: string;
-    sellerFeeBasisPoints: number;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "ChainlinkInfo" should be prefixed with an underscore because the declaration is marked as @internal
@@ -407,35 +391,12 @@ export interface CollectionMetadata {
     supply: BigNumber_2;
 }
 
-// @public (undocumented)
-export type CollectionModuleMetadata = BundleModuleMetadata;
-
+// Warning: (ae-forgotten-export) The symbol "CommonModuleMetadata" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class CommonModuleMetadata {
-    description?: string;
-    externalLink?: string;
-    image?: string | FileOrBuffer;
-    name: string;
-}
-
-// @public
-export interface ContractMetadata {
+export interface ContractMetadata extends CommonModuleMetadata {
     // (undocumented)
     [key: string]: any;
-    // (undocumented)
-    description?: string;
-    // (undocumented)
-    external_link?: string;
-    // (undocumented)
-    fee_recipient?: string;
-    // (undocumented)
-    image?: string;
-    // (undocumented)
-    name?: string;
-    // (undocumented)
-    seller_fee_basis_points?: number;
-    // (undocumented)
-    uri: string;
 }
 
 // @public
@@ -448,21 +409,12 @@ export interface Currency {
     symbol: string;
 }
 
-// @public (undocumented)
-export class CurrencyModuleMetadata extends CommonModuleMetadata {
-    symbol: string;
-}
-
 // @public
 export interface CurrencyValue extends Currency {
     // (undocumented)
     displayValue: string;
     // (undocumented)
     value: string;
-}
-
-// @public (undocumented)
-export class DatastoreModuleMetadata extends CommonModuleMetadata {
 }
 
 // Warning: (ae-forgotten-export) The symbol "SUPPORTED_CHAIN_ID" needs to be exported by the entry point index.d.ts
@@ -491,8 +443,10 @@ export interface DirectListing {
     type: ListingType.Direct;
 }
 
+// Warning: (ae-forgotten-export) The symbol "NFTDropModuleMetadata" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITransferable {
+export class DropModule extends ModuleWithRoles<LazyMintERC721, NFTDropModuleMetadata> implements ITransferable {
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     // (undocumented)
@@ -527,15 +481,13 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getClaimConditionsFactory(): ClaimConditionFactory;
     getClaimIneligibilityReasons(quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
-    // (undocumented)
-    getDefaultSaleRecipient(): Promise<string>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
-    getRoyaltyBps(): Promise<BigNumberish>;
-    getRoyaltyRecipientAddress(): Promise<string>;
+    // (undocumented)
+    getPrimarySaleRecipient(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
@@ -552,15 +504,11 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     setClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
-    setDefaultSaleRecipient(recipient: string): Promise<TransactionReceipt>;
-    // (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    setPrimarySaleRecipient(recipient: string): Promise<TransactionReceipt>;
     // @internal (undocumented)
     setProviderOrSigner(providerOrSigner: ProviderOrSigner): void;
     // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
     totalClaimedSupply(): Promise<BigNumber>;
     // (undocumented)
@@ -572,15 +520,6 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     transferFrom(from: string, to: string, tokenId: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
     updateClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
-}
-
-// @public (undocumented)
-export class DropModuleMetadata extends CommonModuleMetadata {
-    feeRecipient?: string;
-    primarySaleFeeBasisPoints?: number | undefined;
-    primarySaleRecipientAddress: string;
-    sellerFeeBasisPoints?: number | undefined;
-    symbol?: string;
 }
 
 // @public (undocumented)
@@ -653,7 +592,7 @@ export function generateRoot(items: string[]): string;
 // Warning: (ae-internal-missing-underscore) The name "getContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getContractMetadata(provider: ProviderOrSigner, address: string, ipfsGatewayUrl: string, resolveGateway?: boolean): Promise<ContractMetadata>;
+export function getContractMetadata<TMetadataType extends ContractMetadata>(provider: ProviderOrSigner, address: string, ipfsGatewayUrl: string, resolveGateway?: boolean): Promise<TMetadataType>;
 
 // Warning: (ae-internal-missing-underscore) The name "getCurrencyBalance" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -989,11 +928,6 @@ export enum ListingType {
     Direct = 0
 }
 
-// @public (undocumented)
-export class MarketModuleMetadata extends CommonModuleMetadata {
-    marketFeeBasisPoints: number;
-}
-
 // @public
 export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements IMarketplaceModule {
     // (undocumented)
@@ -1059,11 +993,6 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     updateDirectListing(listing: DirectListing): Promise<void>;
 }
 
-// @public (undocumented)
-export class MarketplaceModuleMetadata extends CommonModuleMetadata {
-    marketFeeBasisPoints: number;
-}
-
 // @public
 export type MetadataURIOrObject = string | Record<string, any>;
 
@@ -1079,8 +1008,10 @@ export class MissingRoleError extends Error {
     constructor(address: string, role: string);
 }
 
+// Warning: (ae-forgotten-export) The symbol "ContractMetadataSchema" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class Module<TContract extends BaseContract = BaseContract> {
+export class Module<TContract extends BaseContract, TContractMetadata extends ContractMetadataSchema> {
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     // (undocumented)
@@ -1092,12 +1023,16 @@ export class Module<TContract extends BaseContract = BaseContract> {
     // @internal
     contract: TContract;
     // (undocumented)
+    protected deserializeModuleMetadata(serializedMetadata: any): TContractMetadata;
+    // (undocumented)
     exists(): Promise<boolean>;
     // @internal (undocumented)
     protected getCallOverrides(): Promise<CallOverrides>;
     // @internal (undocumented)
     protected getChainID(): Promise<number>;
-    getMetadata(resolveUrls?: boolean): Promise<ModuleMetadata>;
+    getModuleMetadata(resolveUrls?: boolean): Promise<ModuleMetadata<TContractMetadata>>;
+    // @internal @virtual (undocumented)
+    protected getModuleMetadataSchema<T extends ContractMetadataSchema>(): T;
     // @internal @virtual (undocumented)
     protected getModuleType(): ModuleType;
     // @internal (undocumented)
@@ -1110,6 +1045,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
     protected hasValidSigner(): boolean;
     // @internal (undocumented)
     protected readonly ipfsGatewayUrl: string;
+    // @internal (undocumented)
+    protected jsonConvert: JsonConvert;
     // @internal (undocumented)
     protected readonly options: ISDKOptions;
     // (undocumented)
@@ -1126,7 +1063,9 @@ export class Module<TContract extends BaseContract = BaseContract> {
     protected sendContractTransaction(contract: BaseContract, fn: string, args: any[], callOverrides?: CallOverrides): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected sendTransaction(fn: string, args: any[], callOverrides?: CallOverrides): Promise<TransactionReceipt>;
-    setMetadata(metadata: MetadataURIOrObject): Promise<ModuleMetadata>;
+    // (undocumented)
+    protected serializeModuleMetadata(metadata: TContractMetadata): any;
+    setModuleMetadata(metadata: TContractMetadata): Promise<ModuleMetadata<TContractMetadata>>;
     // @internal (undocumented)
     setProviderOrSigner(providerOrSigner: ProviderOrSigner): void;
     // @internal (undocumented)
@@ -1138,14 +1077,15 @@ export class Module<TContract extends BaseContract = BaseContract> {
         chainId: number;
         verifyingContract: string;
     }, types: any, message: any): Promise<BytesLike>;
+    updateModuleMetadata(metadata: Partial<TContractMetadata>): Promise<ModuleMetadata<TContractMetadata>>;
 }
 
 // @public
-export interface ModuleMetadata {
+export interface ModuleMetadata<TContractMetadata extends ContractMetadata> {
     // (undocumented)
     address: string;
     // (undocumented)
-    metadata?: ContractMetadata;
+    metadata?: TContractMetadata;
     // (undocumented)
     type: ModuleType;
 }
@@ -1154,7 +1094,7 @@ export interface ModuleMetadata {
 export type ModuleType = "TOKEN" | "NFT_COLLECTION" | "BUNDLE_COLLECTION" | "PACK" | "NFT_DROP" | "BUNDLE_DROP" | "VOTE" | "SPLITS" | "MARKETPLACE";
 
 // @public
-export class ModuleWithRoles<TContract extends BaseContract> extends Module<TContract> {
+export class ModuleWithRoles<TContract extends BaseContract, TContractMetadata extends ContractMetadata = ContractMetadata> extends Module<TContract, TContractMetadata> {
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     getAllRoleMembers(): Promise<Partial<Record<Role, string[]>>>;
@@ -1223,12 +1163,6 @@ export interface NewSignaturePayload {
     to: string;
 }
 
-// @public
-export interface NewSplitRecipient {
-    address: string;
-    shares: BigNumberish;
-}
-
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1262,8 +1196,14 @@ export interface NFTMetadataOwner {
     owner: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "NFTCollectionModuleMetadata" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITransferable, ISignatureMinter {
+export interface NFTModule extends ModuleWithRoles<SignatureMint721, NFTCollectionModuleMetadata>, ModuleWithRoyalties<SignatureMint721, NFTCollectionModuleMetadata> {
+}
+
+// @public (undocumented)
+export class NFTModule implements ITransferable, ISignatureMinter {
     // (undocumented)
     balance(): Promise<BigNumber>;
     balanceOf(address: string): Promise<BigNumber>;
@@ -1289,8 +1229,6 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     getOwned(_address?: string): Promise<NFTMetadata[]>;
-    getRoyaltyBps(): Promise<BigNumberish>;
-    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     getWithOwner(tokenId: string): Promise<NFTMetadataOwner>;
     // (undocumented)
@@ -1313,11 +1251,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
     totalSupply(): Promise<BigNumber>;
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
@@ -1325,15 +1259,6 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     transferFrom(from: string, to: string, tokenId: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
     verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
-}
-
-// @public (undocumented)
-export class NftModuleMetadata extends CommonModuleMetadata {
-    defaultSaleRecipientAddress?: string | undefined;
-    feeRecipient?: string;
-    primarySaleFeeBasisPoints?: number | undefined;
-    sellerFeeBasisPoints: number;
-    symbol?: string;
 }
 
 // @public (undocumented)
@@ -1372,8 +1297,14 @@ export interface PackMetadata {
     openStart: Date | null;
 }
 
+// Warning: (ae-forgotten-export) The symbol "PackModuleMetadata" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
+export interface PackModule extends ModuleWithRoles<Pack, PackModuleMetadata>, ModuleWithRoyalties<Pack, PackModuleMetadata> {
+}
+
+// @public (undocumented)
+export class PackModule implements ITransferable {
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber>;
     balanceOf(address: string, tokenId: string): Promise<BigNumber>;
@@ -1397,8 +1328,6 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     getNFTs(packId: string): Promise<PackNFTMetadata[]>;
-    getRoyaltyBps(): Promise<BigNumberish>;
-    getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
@@ -1411,11 +1340,7 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<void>;
     // (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<void>;
-    // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
-    // (undocumented)
-    setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     transfer(to: string, tokenId: string, amount: BigNumber): Promise<void>;
     // Warning: (ae-incompatible-release-tags) The symbol "transferBatchFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
     //
@@ -1427,12 +1352,6 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): Promise<void>;
     // (undocumented)
     withdrawLink(to: string, amount: BigNumberish): Promise<void>;
-}
-
-// @public (undocumented)
-export class PackModuleMetadata extends CommonModuleMetadata {
-    feeRecipient?: string;
-    sellerFeeBasisPoints: number;
 }
 
 // @public (undocumented)
@@ -1588,8 +1507,10 @@ export interface SplitRecipient {
     splitPercentage: number;
 }
 
+// Warning: (ae-forgotten-export) The symbol "SplitsModuleMetadata" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class SplitsModule extends Module<Splits> implements ISplitsModule {
+export class SplitsModule extends Module<Splits, SplitsModuleMetadata> implements ISplitsModule {
     balanceOf(address: string): Promise<BigNumber>;
     balanceOfAllRecipients(): Promise<{
         [key: string]: BigNumber;
@@ -1617,12 +1538,6 @@ export class SplitsModule extends Module<Splits> implements ISplitsModule {
     withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;
 }
 
-// @public (undocumented)
-export class SplitsModuleMetadata extends CommonModuleMetadata {
-    // (undocumented)
-    recipientSplits: NewSplitRecipient[];
-}
-
 // @public
 export class ThirdwebSDK implements IThirdwebSdk {
     constructor(providerOrNetwork: ValidProviderInput, opts?: Partial<ISDKOptions>);
@@ -1638,7 +1553,11 @@ export class ThirdwebSDK implements IThirdwebSdk {
     getGasPrice(speed?: string, maxGasGwei?: number): Promise<number | null>;
     // @beta (undocumented)
     getMarketplaceModule(address: string): MarketplaceModule;
-    getModules(address: string, filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
+    getModules(address: string, filterByModuleType?: ModuleType[]): Promise<{
+        type: ModuleType;
+        address: string;
+        metadata: ContractMetadata;
+    }[]>;
     // (undocumented)
     getNFTModule(address: string): NFTModule;
     // (undocumented)
@@ -1661,8 +1580,10 @@ export class ThirdwebSDK implements IThirdwebSdk {
     get signer(): Signer | null;
 }
 
+// Warning: (ae-forgotten-export) The symbol "TokenModuleMetadata" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable {
+export class TokenModule extends ModuleWithRoles<Coin, TokenModuleMetadata> implements ITransferable {
     // (undocumented)
     allowance(spender: string): Promise<BigNumber>;
     allowanceOf(owner: string, spender: string): Promise<BigNumber>;
@@ -1705,8 +1626,6 @@ export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
     // (undocumented)
     setAllowance(spender: string, amount: BigNumber): Promise<TransactionReceipt>;
     // (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     totalSupply(): Promise<BigNumber>;
@@ -1716,11 +1635,6 @@ export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
     transferFrom(from: string, to: string, amount: BigNumberish): Promise<TransactionReceipt>;
     // (undocumented)
     transferFromBatch(args: ITokenMintFromArgs[]): Promise<void>;
-}
-
-// @public (undocumented)
-export class TokenModuleMetadata extends CommonModuleMetadata {
-    symbol: string;
 }
 
 // @public (undocumented)
@@ -1760,8 +1674,10 @@ export function uploadToIPFS(data: string | File | FileOrBuffer, contractAddress
 // @public
 export type ValidProviderInput = ProviderOrSigner | Network | string;
 
+// Warning: (ae-forgotten-export) The symbol "VoteModuleMetadata" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class VoteModule extends Module<VotingGovernor> {
+export class VoteModule extends Module<VotingGovernor, VoteModuleMetadata> {
     balance(): Promise<CurrencyValue>;
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     canExecute(proposalId: string): Promise<boolean>;
@@ -1777,21 +1693,8 @@ export class VoteModule extends Module<VotingGovernor> {
     static moduleType: ModuleType;
     propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber>;
     // (undocumented)
-    setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
-    // (undocumented)
     settings(): Promise<VoteSettings>;
     vote(proposalId: string, voteType: VoteType, reason?: string): Promise<void>;
-}
-
-// @public (undocumented)
-export class VoteModuleMetadata extends CommonModuleMetadata {
-    minimumNumberOfTokensNeededToPropose: string;
-    proposalStartWaitTimeInSeconds: number;
-    proposalVotingTimeInSeconds: number;
-    votingDelay?: number | undefined;
-    votingPeriod?: number | undefined;
-    votingQuorumFraction: number;
-    votingTokenAddress: string;
 }
 
 // @public (undocumented)

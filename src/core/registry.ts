@@ -1,7 +1,6 @@
 import { ThirdwebRegistry, ThirdwebRegistry__factory } from "@3rdweb/contracts";
 import { ContractMetadata, getContractMetadata } from "../common/contract";
 import { ModuleType } from "../common/module-type";
-import { ModuleMetadata } from "../types/ModuleMetadata";
 import { Module } from "./module";
 
 /**
@@ -17,7 +16,7 @@ export interface IAppModule {
  * The RegistryModule. This should always be created via `getRegistryModule()` on the main SDK.
  * @internal
  */
-export class RegistryModule extends Module<ThirdwebRegistry> {
+export class RegistryModule extends Module<ThirdwebRegistry, any> {
   /**
    * @internal
    */
@@ -36,9 +35,7 @@ export class RegistryModule extends Module<ThirdwebRegistry> {
    * @internal
    * @param addresses - The addresses of the modules to get metadata for.
    */
-  public async getAllContractMetadata(
-    addresses: string[],
-  ): Promise<Omit<ModuleMetadata, "type">[]> {
+  public async getAllContractMetadata(addresses: string[]) {
     const metadatas = await Promise.all(
       addresses.map((address) =>
         getContractMetadata(
@@ -65,10 +62,7 @@ export class RegistryModule extends Module<ThirdwebRegistry> {
    * @param filterByModuleType - Optional array of {@link ModuleType} to filter by.
    * @returns Array of module metadata
    */
-  public async getModules(
-    address: string,
-    filterByModuleType?: ModuleType[],
-  ): Promise<ModuleMetadata[]> {
+  public async getModules(address: string, filterByModuleType?: ModuleType[]) {
     const moduleTypesToGet = filterByModuleType || [
       "NFT_COLLECTION",
       "BUNDLE_COLLECTION",

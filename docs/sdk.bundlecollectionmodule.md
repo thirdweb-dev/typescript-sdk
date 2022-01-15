@@ -2,18 +2,16 @@
 
 [Home](./index.md) &gt; [@3rdweb/sdk](./sdk.md) &gt; [BundleCollectionModule](./sdk.bundlecollectionmodule.md)
 
-## BundleCollectionModule class
+## BundleCollectionModule interface
 
 Create a collection of NFTs that lets you optionally mint multiple copies of each NFT.
 
 <b>Signature:</b>
 
 ```typescript
-export declare class BundleCollectionModule extends ModuleWithRoles<NFTBundleContract> implements ITransferable 
+export interface BundleCollectionModule extends ModuleWithRoles<NFTBundleContract, BundleCollectionMetadata>, ModuleWithRoyalties<NFTBundleContract, BundleCollectionMetadata> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;NFTBundleContract&gt;
-
-<b>Implements:</b> [ITransferable](./sdk.itransferable.md)
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;NFTBundleContract, BundleCollectionMetadata&gt;, ModuleWithRoyalties&lt;NFTBundleContract, BundleCollectionMetadata&gt;
 
 ## Example
 
@@ -26,50 +24,4 @@ const provider = ethers.Wallet.createRandom();
 const sdk = new ThirdwebSDK(provider);
 const module = sdk.getBundleCollectionModule("{{module_address}}");
 ```
-
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [moduleType](./sdk.bundlecollectionmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.bundlecollectionmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
-
-## Methods
-
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [balance(tokenId)](./sdk.bundlecollectionmodule.balance.md) |  |  |
-|  [balanceOf(address, tokenId)](./sdk.bundlecollectionmodule.balanceof.md) |  | Get NFT Balance |
-|  [burn(args)](./sdk.bundlecollectionmodule.burn.md) |  | Burn NFT |
-|  [burnBatch(args)](./sdk.bundlecollectionmodule.burnbatch.md) |  |  |
-|  [burnBatchFrom(account, args)](./sdk.bundlecollectionmodule.burnbatchfrom.md) |  |  |
-|  [burnFrom(account, args)](./sdk.bundlecollectionmodule.burnfrom.md) |  |  |
-|  [create(metadata)](./sdk.bundlecollectionmodule.create.md) |  |  |
-|  [createAndMint(metadataWithSupply)](./sdk.bundlecollectionmodule.createandmint.md) |  | Mint NFT |
-|  [createAndMintBatch(metadataWithSupply)](./sdk.bundlecollectionmodule.createandmintbatch.md) |  | Mint Many NFTs |
-|  [createBatch(metadatas)](./sdk.bundlecollectionmodule.createbatch.md) |  |  |
-|  [createWithErc20(tokenContract, tokenAmount, args)](./sdk.bundlecollectionmodule.createwitherc20.md) |  |  |
-|  [createWithERC721(tokenContract, tokenId, metadata)](./sdk.bundlecollectionmodule.createwitherc721.md) |  |  |
-|  [createWithNFT(tokenContract, tokenId, metadata)](./sdk.bundlecollectionmodule.createwithnft.md) |  |  |
-|  [createWithToken(tokenContract, tokenAmount, args)](./sdk.bundlecollectionmodule.createwithtoken.md) |  |  |
-|  [get(tokenId, address)](./sdk.bundlecollectionmodule.get.md) |  | Get a single bundle item by tokenId. |
-|  [getAll(address)](./sdk.bundlecollectionmodule.getall.md) |  | Get NFT Data |
-|  [getOwned(\_address)](./sdk.bundlecollectionmodule.getowned.md) |  | <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
-|  [getRoyaltyBps()](./sdk.bundlecollectionmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
-|  [getRoyaltyRecipientAddress()](./sdk.bundlecollectionmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
-|  [isApproved(address, operator, assetContract, assetId)](./sdk.bundlecollectionmodule.isapproved.md) |  |  |
-|  [isTransferRestricted()](./sdk.bundlecollectionmodule.istransferrestricted.md) |  |  |
-|  [mint(args)](./sdk.bundlecollectionmodule.mint.md) |  |  |
-|  [mintBatch(args)](./sdk.bundlecollectionmodule.mintbatch.md) |  |  |
-|  [mintBatchTo(to, args, data)](./sdk.bundlecollectionmodule.mintbatchto.md) |  |  |
-|  [mintTo(to, args, data)](./sdk.bundlecollectionmodule.mintto.md) |  |  |
-|  [setApproval(operator, approved)](./sdk.bundlecollectionmodule.setapproval.md) |  |  |
-|  [setModuleMetadata(metadata)](./sdk.bundlecollectionmodule.setmodulemetadata.md) |  |  |
-|  [setRestrictedTransfer(restricted)](./sdk.bundlecollectionmodule.setrestrictedtransfer.md) |  |  |
-|  [setRoyaltyBps(amount)](./sdk.bundlecollectionmodule.setroyaltybps.md) |  |  |
-|  [transfer(to, tokenId, amount)](./sdk.bundlecollectionmodule.transfer.md) |  | Transfer NFT |
-|  [transferBatchFrom(from, to, args, data)](./sdk.bundlecollectionmodule.transferbatchfrom.md) |  | Transfer Many NFTs |
-|  [transferFrom(from, to, args, data)](./sdk.bundlecollectionmodule.transferfrom.md) |  |  |
-|  [unwrapNFT(tokenId)](./sdk.bundlecollectionmodule.unwrapnft.md) |  |  |
-|  [unwrapToken(tokenId, amount)](./sdk.bundlecollectionmodule.unwraptoken.md) |  |  |
 
