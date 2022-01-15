@@ -8,8 +8,8 @@
 
 import { AccessControlEnumerable } from '@3rdweb/contracts';
 import { BaseContract } from 'ethers';
-import { BigNumber } from '@ethersproject/bignumber';
-import { BigNumber as BigNumber_2 } from 'ethers';
+import { BigNumber } from 'ethers';
+import { BigNumber as BigNumber_2 } from '@ethersproject/bignumber';
 import { BigNumberish } from '@ethersproject/bignumber';
 import { BigNumberish as BigNumberish_2 } from 'ethers';
 import { BytesLike } from 'ethers';
@@ -55,7 +55,7 @@ export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTMod
 //
 // @public
 export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppModule_2 {
-    balance(): Promise<BigNumber_2>;
+    balance(): Promise<BigNumber>;
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     // @internal (undocumented)
     protected connectContract(): ProtocolControl;
@@ -86,6 +86,7 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     getDatastoreModules(): Promise<ModuleMetadata[]>;
     // @deprecated
     getDropModules(): Promise<ModuleMetadata[]>;
+    getForwarder(): Promise<string>;
     // @deprecated
     getMarketModules(): Promise<ModuleMetadata[]>;
     // @internal @override (undocumented)
@@ -104,6 +105,7 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     isV1UpgradedOrV2(): Promise<boolean>;
     // (undocumented)
     static roles: readonly ["admin"];
+    setForwarder(address: string): Promise<void>;
     // @deprecated (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
@@ -182,14 +184,14 @@ export interface BundleDropMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    supply: BigNumber_2;
+    supply: BigNumber;
 }
 
 // @public
 export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implements ITransferable {
     // (undocumented)
-    balance(tokenId: BigNumberish_2): Promise<BigNumber_2>;
-    balanceOf(address: string, tokenId: BigNumberish_2): Promise<BigNumber_2>;
+    balance(tokenId: BigNumberish_2): Promise<BigNumber>;
+    balanceOf(address: string, tokenId: BigNumberish_2): Promise<BigNumber>;
     // (undocumented)
     burn(tokenId: BigNumberish_2, amount: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
@@ -260,7 +262,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
     setSaleRecipient(tokenId: BigNumberish_2, recipient: string): Promise<TransactionReceipt>;
-    totalSupply(tokenId: BigNumberish_2): Promise<BigNumber_2>;
+    totalSupply(tokenId: BigNumberish_2): Promise<BigNumber>;
     transfer(to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2, amount: BigNumberish_2, data?: BytesLike): Promise<TransactionReceipt>;
@@ -283,9 +285,9 @@ export interface BundleMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    ownedByAddress: BigNumber;
+    ownedByAddress: BigNumber_2;
     // (undocumented)
-    supply: BigNumber;
+    supply: BigNumber_2;
     // (undocumented)
     underlyingType: UnderlyingType;
 }
@@ -293,8 +295,8 @@ export interface BundleMetadata {
 // @public
 export class BundleModule extends ModuleWithRoles<NFTCollection> implements ITransferable {
     // (undocumented)
-    balance(tokenId: string): Promise<BigNumber>;
-    balanceOf(address: string, tokenId: string): Promise<BigNumber>;
+    balance(tokenId: string): Promise<BigNumber_2>;
+    balanceOf(address: string, tokenId: string): Promise<BigNumber_2>;
     burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt>;
     // (undocumented)
     burnBatch(args: INFTBundleBatchArgs[]): Promise<TransactionReceipt>;
@@ -389,7 +391,7 @@ export type ChainlinkInfo = {
     vrfCoordinator: string;
     linkTokenAddress: string;
     keyHash: string;
-    fees: BigNumber_2;
+    fees: BigNumber;
 };
 
 // Warning: (ae-internal-missing-underscore) The name "ChainlinkVrf" should be prefixed with an underscore because the declaration is marked as @internal
@@ -414,9 +416,9 @@ export interface ClaimCondition {
     // (undocumented)
     merkleRoot: BytesLike;
     // (undocumented)
-    price: BigNumber_2;
+    price: BigNumber;
     // (undocumented)
-    pricePerToken: BigNumber_2;
+    pricePerToken: BigNumber;
     // (undocumented)
     quantityLimitPerTransaction: string;
     // (undocumented)
@@ -490,9 +492,9 @@ export interface CollectionMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    ownedByAddress: BigNumber;
+    ownedByAddress: BigNumber_2;
     // (undocumented)
-    supply: BigNumber;
+    supply: BigNumber_2;
 }
 
 // @public (undocumented)
@@ -634,8 +636,8 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     // (undocumented)
-    balance(): Promise<BigNumber_2>;
-    balanceOf(address: string): Promise<BigNumber_2>;
+    balance(): Promise<BigNumber>;
+    balanceOf(address: string): Promise<BigNumber>;
     // (undocumented)
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     canClaim(quantity: BigNumberish_2, addressToCheck?: string): Promise<boolean>;
@@ -694,7 +696,7 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     // @deprecated (undocumented)
     lazyMintBatch(metadatas: MetadataURIOrObject[]): Promise<void>;
     // @internal (undocumented)
-    maxTotalSupply(): Promise<BigNumber_2>;
+    maxTotalSupply(): Promise<BigNumber>;
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
@@ -721,11 +723,11 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
-    totalClaimedSupply(): Promise<BigNumber_2>;
+    totalClaimedSupply(): Promise<BigNumber>;
     // (undocumented)
-    totalSupply(): Promise<BigNumber_2>;
+    totalSupply(): Promise<BigNumber>;
     // (undocumented)
-    totalUnclaimedSupply(): Promise<BigNumber_2>;
+    totalUnclaimedSupply(): Promise<BigNumber>;
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
@@ -788,6 +790,26 @@ export type ForwardRequestMessage = {
 export class FunctionDeprecatedError extends Error {
     // @internal
     constructor(message: string);
+}
+
+// @public
+export interface GaslessTransaction {
+    // (undocumented)
+    callOverrides: CallOverrides;
+    // (undocumented)
+    chainId: number;
+    // (undocumented)
+    data: string;
+    // (undocumented)
+    from: string;
+    // (undocumented)
+    functionArgs: any[];
+    // (undocumented)
+    functionName: string;
+    // (undocumented)
+    gasLimit: BigNumber;
+    // (undocumented)
+    to: string;
 }
 
 // @public
@@ -871,15 +893,15 @@ export interface IMarketplace {
     cancelAuctionListing(listingId: BigNumberish_2): Promise<void>;
     cancelDirectListing(listingId: BigNumberish_2): Promise<void>;
     closeAuctionListing(listingId: BigNumberish_2, closeFor?: string): Promise<void>;
-    createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
-    createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
+    createAuctionListing(listing: NewAuctionListing): Promise<BigNumber>;
+    createDirectListing(listing: NewDirectListing): Promise<BigNumber>;
     getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
     getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
     getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
-    getBidBufferBps(): Promise<BigNumber_2>;
+    getBidBufferBps(): Promise<BigNumber>;
     getDirectListing(listingId: BigNumberish_2): Promise<DirectListing>;
     getListing(listingId: BigNumberish_2): Promise<AuctionListing | DirectListing>;
-    getTimeBufferInSeconds(): Promise<BigNumber_2>;
+    getTimeBufferInSeconds(): Promise<BigNumber>;
     getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
     makeAuctionListingBid(bid: {
         listingId: BigNumberish_2;
@@ -984,8 +1006,8 @@ export interface IPackCreateArgs {
 export class IpfsStorage implements IStorage {
     constructor(gatewayUrl: string);
     // @internal
-    batchUploadProperties(metadata: object): Promise<any>;
-    buildFilePropertiesMap(object: any, files: (File | Buffer)[]): Promise<(File | Buffer)[]>;
+    batchUploadProperties(metadatas: MetadataURIOrObject[]): Promise<any>;
+    buildFilePropertiesMap(object: Record<string, any>, files: (File | Buffer)[]): (File | Buffer)[];
     // (undocumented)
     get(hash: string): Promise<string>;
     // (undocumented)
@@ -1001,7 +1023,7 @@ export class IpfsStorage implements IStorage {
     // (undocumented)
     uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, _signerAddress?: string): Promise<string>;
     // @internal (undocumented)
-    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, startFileNumber?: number): Promise<string>;
+    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, startFileNumber?: number): Promise<UploadMetadataBatchResult>;
 }
 
 // @public
@@ -1022,12 +1044,21 @@ export function isContract(provider: Provider, address: string): Promise<boolean
 
 // @public
 export interface ISDKOptions {
+    gasless: {
+        biconomy: {
+            apiId: string;
+            apiKey: string;
+            deadlineSeconds?: number;
+        };
+    };
+    gaslessSendFunction: (contract: BaseContract, transaction: GaslessTransaction) => Promise<string>;
     gasSpeed: string;
     ipfsGatewayUrl: string;
     maxGasPriceInGwei: number;
     readOnlyRpcUrl: string;
     registryContractAddress: string;
     transactionRelayerForwarderAddress: string;
+    // @deprecated (undocumented)
     transactionRelayerSendFunction: (message: ForwardRequestMessage | PermitRequestMessage, signature: BytesLike) => Promise<string>;
     transactionRelayerUrl: string;
 }
@@ -1042,7 +1073,7 @@ export interface ISignatureMinter {
         payload: SignaturePayload;
         signature: string;
     }[]>;
-    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber_2>;
+    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber>;
     verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
 }
 
@@ -1053,7 +1084,7 @@ export function isNativeToken(tokenAddress: string): boolean;
 
 // @public (undocumented)
 export interface ISplitsModule {
-    balanceOf(address: string): Promise<BigNumber_2>;
+    balanceOf(address: string): Promise<BigNumber>;
     balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyValue>;
     distribute(): Promise<void>;
     distributeToken(tokenAddress: string): Promise<void>;
@@ -1071,7 +1102,8 @@ export interface IStorage {
     upload(data: string | File | FileOrBuffer | Buffer, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStringWithName[], contractAddress?: string, uploadFileStartNumber?: number): Promise<string>;
     uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "uploadMetadataBatch" is marked as @public, but its signature references "UploadMetadataBatchResult" which is marked as @internal
+    uploadMetadataBatch(metadatas: MetadataURIOrObject[], contractAddress?: string, fileStartNumber?: number): Promise<UploadMetadataBatchResult>;
 }
 
 // @public (undocumented)
@@ -1128,9 +1160,9 @@ export interface ListingMetadata {
     // (undocumented)
     id: string;
     // (undocumented)
-    price: BigNumber_2;
+    price: BigNumber;
     // (undocumented)
-    quantity: BigNumber_2;
+    quantity: BigNumber;
     // (undocumented)
     saleEnd: Date | null;
     // (undocumented)
@@ -1144,7 +1176,7 @@ export interface ListingMetadata {
     // (undocumented)
     tokenMetadata?: NFTMetadata;
     // (undocumented)
-    tokensPerBuyer: BigNumber_2;
+    tokensPerBuyer: BigNumber;
 }
 
 // @public
@@ -1175,7 +1207,7 @@ export class MarketModule extends ModuleWithRoles<Market> {
     // @deprecated (undocumented)
     getListing(listingId: string): Promise<ListingMetadata>;
     // (undocumented)
-    getMarketFeeBps(): Promise<BigNumber_2>;
+    getMarketFeeBps(): Promise<BigNumber>;
     // @internal @override (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
@@ -1220,15 +1252,15 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     closeAuctionListing(listingId: BigNumberish_2, closeFor?: string): Promise<void>;
     // @internal (undocumented)
     protected connectContract(): Marketplace;
-    createAuctionListing(listing: NewAuctionListing): Promise<BigNumber_2>;
-    createDirectListing(listing: NewDirectListing): Promise<BigNumber_2>;
+    createAuctionListing(listing: NewAuctionListing): Promise<BigNumber>;
+    createDirectListing(listing: NewDirectListing): Promise<BigNumber>;
     // (undocumented)
     getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
     getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
     // (undocumented)
     getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
     // (undocumented)
-    getBidBufferBps(): Promise<BigNumber_2>;
+    getBidBufferBps(): Promise<BigNumber>;
     // (undocumented)
     getDirectListing(listingId: BigNumberish_2): Promise<DirectListing>;
     // (undocumented)
@@ -1238,7 +1270,7 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     // (undocumented)
-    getTimeBufferInSeconds(): Promise<BigNumber_2>;
+    getTimeBufferInSeconds(): Promise<BigNumber>;
     // (undocumented)
     getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
     // (undocumented)
@@ -1526,8 +1558,8 @@ export interface NFTMetadataOwner {
 // @public
 export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITransferable, ISignatureMinter {
     // (undocumented)
-    balance(): Promise<BigNumber_2>;
-    balanceOf(address: string): Promise<BigNumber_2>;
+    balance(): Promise<BigNumber>;
+    balanceOf(address: string): Promise<BigNumber>;
     burn(tokenId: BigNumberish_2): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): SignatureMint721;
@@ -1566,7 +1598,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     mintBatchTo(to: string, metadatas: MetadataURIOrObject[]): Promise<NFTMetadata[]>;
     mintTo(to: string, metadata: MetadataURIOrObject): Promise<NFTMetadata>;
     // (undocumented)
-    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber_2>;
+    mintWithSignature(req: SignaturePayload, signature: string): Promise<BigNumber>;
     // (undocumented)
     static moduleType: ModuleType;
     ownerOf(tokenId: string): Promise<string>;
@@ -1581,7 +1613,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
     // (undocumented)
-    totalSupply(): Promise<BigNumber_2>;
+    totalSupply(): Promise<BigNumber>;
     transfer(to: string, tokenId: string): Promise<TransactionReceipt>;
     // (undocumented)
     transferFrom(from: string, to: string, tokenId: BigNumberish_2): Promise<TransactionReceipt>;
@@ -1616,7 +1648,7 @@ export interface Offer {
     currencyContractAddress: string;
     currencyValue: CurrencyValue;
     listingId: BigNumberish_2;
-    pricePerToken: BigNumber_2;
+    pricePerToken: BigNumber;
     quantityDesired: BigNumberish_2;
 }
 
@@ -1625,7 +1657,7 @@ export interface PackMetadata {
     // (undocumented)
     creator: string;
     // (undocumented)
-    currentSupply: BigNumber_2;
+    currentSupply: BigNumber;
     // (undocumented)
     id: string;
     // (undocumented)
@@ -1637,8 +1669,8 @@ export interface PackMetadata {
 // @public
 export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // (undocumented)
-    balance(tokenId: string): Promise<BigNumber_2>;
-    balanceOf(address: string, tokenId: string): Promise<BigNumber_2>;
+    balance(tokenId: string): Promise<BigNumber>;
+    balanceOf(address: string, tokenId: string): Promise<BigNumber>;
     // @internal (undocumented)
     protected connectContract(): Pack;
     // Warning: (ae-incompatible-release-tags) The symbol "create" is marked as @public, but its signature references "IPackCreateArgs" which is marked as @beta
@@ -1678,7 +1710,7 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setRoyaltyBps(amount: number): Promise<TransactionReceipt>;
-    transfer(to: string, tokenId: string, amount: BigNumber_2): Promise<void>;
+    transfer(to: string, tokenId: string, amount: BigNumber): Promise<void>;
     // Warning: (ae-incompatible-release-tags) The symbol "transferBatchFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
     //
     // (undocumented)
@@ -1702,7 +1734,7 @@ export interface PackNFTMetadata {
     // (undocumented)
     metadata: NFTMetadata;
     // (undocumented)
-    supply: BigNumber_2;
+    supply: BigNumber;
 }
 
 // @public
@@ -1719,12 +1751,12 @@ export type PermitRequestMessage = {
 export interface Proposal {
     description: string;
     // (undocumented)
-    endBlock: BigNumber_2;
+    endBlock: BigNumber;
     executions: ProposalExecutable[];
     proposalId: string;
     proposer: string;
     // (undocumented)
-    startBlock: BigNumber_2;
+    startBlock: BigNumber;
     state: ProposalState;
     votes: ProposalVote[];
 }
@@ -1759,7 +1791,7 @@ export enum ProposalState {
 // @public (undocumented)
 export interface ProposalVote {
     // (undocumented)
-    count: BigNumber_2;
+    count: BigNumber;
     // (undocumented)
     label: string;
     // (undocumented)
@@ -1784,7 +1816,7 @@ export interface PublicClaimCondition {
     // (undocumented)
     quantityLimitPerTransaction: BigNumberish_2;
     // (undocumented)
-    startTimestamp: BigNumber_2;
+    startTimestamp: BigNumber;
     // (undocumented)
     waitTimeSecondsLimitPerTransaction: BigNumberish_2;
 }
@@ -1856,9 +1888,9 @@ export interface SplitRecipient {
 
 // @public
 export class SplitsModule extends Module<Royalty> implements ISplitsModule {
-    balanceOf(address: string): Promise<BigNumber_2>;
+    balanceOf(address: string): Promise<BigNumber>;
     balanceOfAllRecipients(): Promise<{
-        [key: string]: BigNumber_2;
+        [key: string]: BigNumber;
     }>;
     balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyValue>;
     balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
@@ -1877,7 +1909,9 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
     // (undocumented)
     static moduleType: ModuleType;
+    // (undocumented)
     withdraw(address: string): Promise<void>;
+    // (undocumented)
     withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;
 }
 
@@ -1943,8 +1977,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
 // @public
 export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable {
     // (undocumented)
-    allowance(spender: string): Promise<BigNumber_2>;
-    allowanceOf(owner: string, spender: string): Promise<BigNumber_2>;
+    allowance(spender: string): Promise<BigNumber>;
+    allowanceOf(owner: string, spender: string): Promise<BigNumber>;
     // (undocumented)
     balance(): Promise<CurrencyValue>;
     balanceOf(address: string): Promise<CurrencyValue>;
@@ -1958,7 +1992,7 @@ export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
     // (undocumented)
     get(): Promise<Currency>;
     // @beta
-    getAllHolderBalances(): Promise<Record<string, BigNumber_2>>;
+    getAllHolderBalances(): Promise<Record<string, BigNumber>>;
     getDelegation(): Promise<string>;
     // (undocumented)
     getDelegationOf(account: string): Promise<string>;
@@ -1968,9 +2002,9 @@ export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
     protected getModuleType(): ModuleType;
     // (undocumented)
     getValue(value: BigNumberish_2): Promise<CurrencyValue>;
-    getVoteBalance(): Promise<BigNumber_2>;
+    getVoteBalance(): Promise<BigNumber>;
     // (undocumented)
-    getVoteBalanceOf(account: string): Promise<BigNumber_2>;
+    getVoteBalanceOf(account: string): Promise<BigNumber>;
     // (undocumented)
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
@@ -1982,13 +2016,13 @@ export class TokenModule extends ModuleWithRoles<Coin> implements ITransferable 
     // (undocumented)
     static roles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
-    setAllowance(spender: string, amount: BigNumber_2): Promise<TransactionReceipt>;
+    setAllowance(spender: string, amount: BigNumber): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
-    totalSupply(): Promise<BigNumber_2>;
+    totalSupply(): Promise<BigNumber>;
     transfer(to: string, amount: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
     transferBatch(args: ITokenMintArgs[]): Promise<void>;
@@ -2023,6 +2057,16 @@ export class UploadError extends Error {
 // @internal (undocumented)
 export function uploadMetadata(metadata: MetadataURIOrObject, contractAddress?: string, signerAddress?: string): Promise<string>;
 
+// Warning: (ae-internal-missing-underscore) The name "UploadMetadataBatchResult" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export interface UploadMetadataBatchResult {
+    // (undocumented)
+    baseUri: string;
+    // (undocumented)
+    metadataUris: string[];
+}
+
 // @public
 export function uploadToIPFS(data: string | File | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
 
@@ -2044,7 +2088,7 @@ export class VoteModule extends Module<VotingGovernor> {
     hasVoted(proposalId: string, account?: string): Promise<boolean>;
     // (undocumented)
     static moduleType: ModuleType;
-    propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber_2>;
+    propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     // (undocumented)

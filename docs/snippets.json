@@ -406,10 +406,10 @@
       },
       {
         "name": "transfer",
-        "summary": "Transfer NFT\n\n",
-        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "summary": "Transfer Pack\n\n",
+        "remarks": "\n\nTransfer a pack from the connected wallet to another wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"0x...\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\n// The number of NFTs you want to send\nconst amount = 1;\n\nawait module.transfer(toAddress, tokenId, amount);"
+          "javascript": "// Address of the wallet you want to send the pack to\nconst toAddress = \"0x...\";\n\n// The token ID of the pack you want to send\nconst tokenId = \"0\";\n\n// The number of packs you want to send\nconst amount = 1;\n\nawait module.transfer(toAddress, tokenId, amount);"
         },
         "signature": "transfer(to: string, tokenId: string, amount: BigNumber): Promise<void>;"
       }
@@ -468,24 +468,6 @@
           "javascript": "const recipients = await module.getAllRecepients();\nconsole.log(recipients);"
         },
         "signature": "getAllRecipients(): Promise<SplitRecipient[]>;"
-      },
-      {
-        "name": "withdraw",
-        "summary": "Withdraw Funds\n\n",
-        "remarks": "\n\nWithdraw due funds held by the contract in the native currency to a specific recipient.\n\n",
-        "examples": {
-          "javascript": "// The address to check the funds of\nconst address = \"{{wallet_address}}\";\nawait module.withdraw(address);"
-        },
-        "signature": "withdraw(address: string): Promise<void>;"
-      },
-      {
-        "name": "withdrawToken",
-        "summary": "Withdraw Token Funds\n\n",
-        "remarks": "\n\nWithdraw due funds held by the contract in non-native tokens to a specific recipient.\n\n",
-        "examples": {
-          "javascript": "// The address to check the funds of\nconst address = \"{{wallet_address}}\";\n// The address of the currency to withdraw funds in\nconst tokenAddress = \"0x...\"\nawait module.withdrawToken(address, tokenAddress);"
-        },
-        "signature": "withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;"
       }
     ],
     "signature": "export declare class SplitsModule extends Module<Royalty> implements ISplitsModule "
@@ -563,5 +545,70 @@
       }
     ],
     "signature": "export declare class TokenModule extends ModuleWithRoles<Coin> implements ITransferable "
+  },
+  "VoteModule": {
+    "name": "VoteModule",
+    "summary": "Create a decentralized organization for token holders to vote on proposals.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst module = sdk.getVoteModule(\"{{module_address}}\");"
+    },
+    "methods": [
+      {
+        "name": "canExecute",
+        "summary": "Can Execute\n\n",
+        "remarks": "\n\nCheck if a proposal can be executed (if the proposal has succeeded).\n\n",
+        "examples": {
+          "javascript": "// The proposal ID of the proposal you want to check\nconst proposalId = \"0\";\nconst canExecute = await module.canExecute(proposalId);\nconsole.log(canExecute);"
+        },
+        "signature": "canExecute(proposalId: string): Promise<boolean>;"
+      },
+      {
+        "name": "execute",
+        "summary": "Execute Proposal\n\n",
+        "remarks": "\n\nExecute the related transactions for a proposal if the proposal succeeded.\n\n",
+        "examples": {
+          "javascript": "// The proposal ID ofthe proposal you want to execute\nconst proposalId = \"0\"\nawait module.execute(proposalId);"
+        },
+        "signature": "execute(proposalId: string): Promise<void>;"
+      },
+      {
+        "name": "getAll",
+        "summary": "Get All Proposals\n\n",
+        "remarks": "\n\nGet all the proposals in this module.\n\n",
+        "examples": {
+          "javascript": "const proposals = await module.getAll();\nconsole.log(proposals);"
+        },
+        "signature": "getAll(): Promise<Proposal[]>;"
+      },
+      {
+        "name": "hasVoted",
+        "summary": "Check If Wallet Voted\n\n",
+        "remarks": "\n\nCheck if a specified wallet has voted a specific proposal\n\n",
+        "examples": {
+          "javascript": "// The proposal ID of the proposal you want to check\nconst proposalId = \"0\";\n// The address of the wallet you want to check to see if they voted\nconst address = \"{{wallet_address}}\";\n\nawait module.hasVoted(proposalId, address);"
+        },
+        "signature": "hasVoted(proposalId: string, account?: string): Promise<boolean>;"
+      },
+      {
+        "name": "propose",
+        "summary": "Create Proposal\n\n",
+        "remarks": "\n\nCreate a new proposal for token holders to vote on.\n\n",
+        "examples": {
+          "javascript": "// The description of the proposal you want to pass\nconst description = \"This is a great proposal - vote for it!\"\n// You can (optionally) pass in contract calls that will executed when the proposal is executed.\nconst executions = [\n  {\n    // The contract you want to make a call to\n    toAddress: \"0x...\",\n    // The amount of the native currency to send in this transaction\n    nativeTokenValue: 0,\n    // Transaction data that will be executed when the proposal is executed\n    // This is an example transfer transaction with a token module (which you would need to setup in code)\n    transactionData: tokenModule.contract.interface.encodeFunctionData(\n      \"transfer\", [\n        fromAddress,\n        amount,\n      ]\n    ),\n  }\n]\n\nconst proposal = await module.propose(description, executions);"
+        },
+        "signature": "propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber>;"
+      },
+      {
+        "name": "vote",
+        "summary": "Vote\n\n",
+        "remarks": "\n\nVote on an active proposal\n\n",
+        "examples": {
+          "javascript": "// The proposal ID of the proposal you want to vote on\nconst proposalId = \"0\";\n// The vote type you want to cast, can be VoteType.Against, VoteType.For, or VoteType.Abstain\nconst voteType = VoteType.For;\n// The (optional) reason for the vote\nconst reason = \"I like this proposal!\";\n\nawait module.vote(proposalId, voteType, reason);"
+        },
+        "signature": "vote(proposalId: string, voteType: VoteType, reason?: string): Promise<void>;"
+      }
+    ],
+    "signature": "export declare class VoteModule extends Module<VotingGovernor> "
   }
 }

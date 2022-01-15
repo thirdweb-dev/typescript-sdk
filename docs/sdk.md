@@ -117,7 +117,7 @@ Output
 |  [TokenModule](./sdk.tokenmodule.md) | Create a standard crypto token or crypto currency. |
 |  [TokenModuleMetadata](./sdk.tokenmodulemetadata.md) |  |
 |  [UploadError](./sdk.uploaderror.md) |  |
-|  [VoteModule](./sdk.votemodule.md) | Access this module by calling  |
+|  [VoteModule](./sdk.votemodule.md) | Create a decentralized organization for token holders to vote on proposals. |
 |  [VoteModuleMetadata](./sdk.votemodulemetadata.md) |  |
 |  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 
@@ -160,6 +160,7 @@ Output
 |  [Currency](./sdk.currency.md) | Currency metadata. |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
+|  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
 |  [IAppModule](./sdk.iappmodule.md) |  |
 |  [IDropModule](./sdk.idropmodule.md) |  |
 |  [IMarketplace](./sdk.imarketplace.md) |  |

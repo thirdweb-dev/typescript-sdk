@@ -55,7 +55,7 @@ const module = sdk.getPackModule("{{module_address}}");
 |  [setModuleMetadata(metadata)](./sdk.packmodule.setmodulemetadata.md) |  |  |
 |  [setRestrictedTransfer(restricted)](./sdk.packmodule.setrestrictedtransfer.md) |  |  |
 |  [setRoyaltyBps(amount)](./sdk.packmodule.setroyaltybps.md) |  |  |
-|  [transfer(to, tokenId, amount)](./sdk.packmodule.transfer.md) |  | Transfer NFT |
+|  [transfer(to, tokenId, amount)](./sdk.packmodule.transfer.md) |  | Transfer Pack |
 |  [transferBatchFrom(from, to, args, data)](./sdk.packmodule.transferbatchfrom.md) |  |  |
 |  [transferFrom(from, to, args, data)](./sdk.packmodule.transferfrom.md) |  |  |
 |  [withdrawLink(to, amount)](./sdk.packmodule.withdrawlink.md) |  |  |

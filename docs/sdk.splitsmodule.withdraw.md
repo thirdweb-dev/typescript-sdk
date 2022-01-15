@@ -4,8 +4,6 @@
 
 ## SplitsModule.withdraw() method
 
-Withdraw Funds
-
 <b>Signature:</b>
 
 ```typescript
@@ -21,17 +19,4 @@ withdraw(address: string): Promise<void>;
 <b>Returns:</b>
 
 Promise&lt;void&gt;
-
-## Remarks
-
-Withdraw due funds held by the contract in the native currency to a specific recipient.
-
-## Example
-
-
-```javascript
-// The address to check the funds of
-const address = "{{wallet_address}}";
-await module.withdraw(address);
-```
 
