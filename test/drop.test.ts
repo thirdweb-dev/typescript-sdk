@@ -576,7 +576,11 @@ describe("Drop Module", async () => {
     const phase = factory.newClaimPhase({
       startTime: new Date(),
     });
-    await phase.setSnapshot([w1.address, w2.address, w3.address]);
+    await phase.setSnapshot([
+      w1.address.toUpperCase().replace("0X", "0x"),
+      w2.address.toLowerCase(),
+      w3.address,
+    ]);
     await dropModule.setClaimConditions(factory);
 
     assert.isTrue(await dropModule.canClaim(1, w1.address), "can claim");
