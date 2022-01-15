@@ -1,6 +1,6 @@
 import {
   ERC20__factory,
-  ERC721Upgradeable__factory,
+  ERC721__factory,
   NFTCollection as NFTBundleContract,
   NFTCollection__factory,
 } from "@3rdweb/contracts";
@@ -71,16 +71,16 @@ export interface INFTBundleBatchArgs {
  * // You can switch out this provider with any wallet or provider setup you like.
  * const provider = ethers.Wallet.createRandom();
  * const sdk = new ThirdwebSDK(provider);
- * const module = sdk.getBundleModule("{{module_address}}");
+ * const module = sdk.getBundleCollectionModule("{{module_address}}");
  * ```
  *
  * @public
  */
-export class BundleModule
+export class BundleCollectionModule
   extends ModuleWithRoles<NFTBundleContract>
   implements ITransferable
 {
-  public static moduleType: ModuleType = "BUNDLE" as const;
+  public static moduleType: ModuleType = "BUNDLE_COLLECTION" as const;
 
   public static roles = [
     RolesMap.admin,
@@ -94,7 +94,7 @@ export class BundleModule
    * @internal
    */
   protected getModuleRoles(): readonly Role[] {
-    return BundleModule.roles;
+    return BundleCollectionModule.roles;
   }
 
   /**
@@ -108,7 +108,7 @@ export class BundleModule
    * @internal
    */
   protected getModuleType(): ModuleType {
-    return BundleModule.moduleType;
+    return BundleCollectionModule.moduleType;
   }
 
   /**
@@ -202,7 +202,7 @@ export class BundleModule
     if (!assetId) {
       throw new Error("tokenId is required");
     }
-    const contract = ERC721Upgradeable__factory.connect(
+    const contract = ERC721__factory.connect(
       assetContract,
       this.providerOrSigner,
     );
@@ -385,10 +385,7 @@ export class BundleModule
     tokenId: BigNumberish,
     metadata: MetadataURIOrObject,
   ) {
-    const asset = ERC721Upgradeable__factory.connect(
-      tokenContract,
-      this.providerOrSigner,
-    );
+    const asset = ERC721__factory.connect(tokenContract, this.providerOrSigner);
 
     if (
       !(await asset.isApprovedForAll(

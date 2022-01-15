@@ -13,7 +13,7 @@ import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { ISDKOptions, IThirdwebSdk } from "../interfaces";
 import { IStorage } from "../interfaces/IStorage";
-import { BundleModule } from "../modules/bundle";
+import { BundleCollectionModule } from "../modules/bundleCollection";
 import { BundleDropModule } from "../modules/bundleDrop";
 import { DropModule } from "../modules/drop";
 import { MarketplaceModule } from "../modules/marketplace";
@@ -37,7 +37,7 @@ import {
  * @internal
  */
 export type AnyContract =
-  | typeof BundleModule
+  | typeof BundleCollectionModule
   | typeof NFTModule
   | typeof PackModule
   | typeof DropModule
@@ -238,8 +238,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
    * @param address - The contract address of the given Bundle module.
    * @returns The Bundle Module.
    */
-  public getBundleModule(address: string): BundleModule {
-    return this.getOrCreateModule(address, BundleModule);
+  public getBundleCollectionModule(address: string): BundleCollectionModule {
+    return this.getOrCreateModule(address, BundleCollectionModule);
   }
 
   /**
@@ -351,7 +351,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     } else if (name === "marketplace") {
       return this.getMarketplaceModule(address);
     } else if (name === "bundle") {
-      return this.getBundleModule(address);
+      return this.getBundleCollectionModule(address);
     } else if (name === "drop") {
       return this.getDropModule(address);
     } else if (name === "splits") {

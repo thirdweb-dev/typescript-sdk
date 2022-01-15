@@ -1,4 +1,4 @@
-export * from "./bundle";
+export * from "./bundleCollection";
 export * from "./bundleDrop";
 export * from "./drop";
 export * from "./marketplace";

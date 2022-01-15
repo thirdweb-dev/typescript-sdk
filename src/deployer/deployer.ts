@@ -2,8 +2,8 @@ import {
   Coin__factory,
   LazyMintERC1155__factory,
   NFTCollection__factory,
-  ThirdwebFactory,
-  ThirdwebFactory__factory,
+  ThirdwebProxy,
+  ThirdwebProxy__factory,
 } from "@3rdweb/contracts";
 
 import { JsonConvert } from "json2typescript";
@@ -26,10 +26,10 @@ import { FORWARDER_ADDRESS } from "../common/address";
 
 type ModuleMetadaTypeMap = {
   TOKEN: TokenModuleMetadata;
-  BUNDLE: BundleModuleMetadata;
-  NFT: NftModuleMetadata;
+  BUNDLE_COLLECTION: BundleModuleMetadata;
+  NFT_COLLECTION: NftModuleMetadata;
   PACK: PackModuleMetadata;
-  DROP: DropModuleMetadata;
+  NFT_DROP: DropModuleMetadata;
   SPLITS: SplitsModuleMetadata;
   VOTE: VoteModuleMetadata;
   BUNDLE_DROP: BundleDropModuleMetadata;
@@ -43,13 +43,13 @@ function getMetadataClassForModuleType<TModuleType extends ModuleType>(
     return BundleDropModuleMetadata;
   } else if (moduleType === "TOKEN") {
     return TokenModuleMetadata;
-  } else if (moduleType === "BUNDLE") {
+  } else if (moduleType === "BUNDLE_COLLECTION") {
     return BundleModuleMetadata;
-  } else if (moduleType === "NFT") {
+  } else if (moduleType === "NFT_COLLECTION") {
     return NftModuleMetadata;
   } else if (moduleType === "PACK") {
     return PackModuleMetadata;
-  } else if (moduleType === "DROP") {
+  } else if (moduleType === "NFT_DROP") {
     return DropModuleMetadata;
   } else if (moduleType === "SPLITS") {
     return SplitsModuleMetadata;
@@ -177,14 +177,11 @@ function getMetadataClassForModuleType<TModuleType extends ModuleType>(
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
  * @public
  */
-export class Deployer extends Module<ThirdwebFactory> {
+export class Deployer extends Module<ThirdwebProxy> {
   private jsonConvert = new JsonConvert();
 
-  protected connectContract(): ThirdwebFactory {
-    return ThirdwebFactory__factory.connect(
-      this.address,
-      this.providerOrSigner,
-    );
+  protected connectContract(): ThirdwebProxy {
+    return ThirdwebProxy__factory.connect(this.address, this.providerOrSigner);
   }
 
   /**
@@ -256,7 +253,7 @@ export class Deployer extends Module<ThirdwebFactory> {
         );
         break;
       }
-      case "BUNDLE": {
+      case "BUNDLE_COLLECTION": {
         encodedParams =
           NFTCollection__factory.createInterface().encodeFunctionData(
             "initialize",
