@@ -133,7 +133,14 @@ describe("Drop Module", async () => {
       w3,
       w4,
     ];
-    const members = testWallets.map((w) => w.address);
+    const members = testWallets.map((w, i) =>
+      i % 3 === 0
+        ? w.address.toLowerCase()
+        : i % 3 === 1
+        ? w.address.toUpperCase().replace("0X", "0x")
+        : w.address,
+    );
+    console.log("members", members);
     await phase.setSnapshot(members);
 
     console.log("Setting claim condition");
@@ -159,9 +166,49 @@ describe("Drop Module", async () => {
      */
 
     for (const member of testWallets) {
+      console.log(member.address);
       await sdk.setProviderOrSigner(member);
       await dropModule.claim(1);
       console.log(`Address ${member.address} claimed successfully!`);
+    }
+  });
+
+  it("allow one address in the merkle tree to claim", async () => {
+    const factory = dropModule.getClaimConditionsFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    const testWallets: SignerWithAddress[] = [bobWallet];
+    const members = testWallets.map((w) => w.address);
+    await phase.setSnapshot(members);
+
+    await dropModule.setClaimConditions(factory);
+
+    const metadata = [];
+    for (let i = 0; i < 2; i++) {
+      metadata.push({
+        name: `test ${i}`,
+      });
+    }
+    console.log("calling lazy mint batch");
+    await dropModule.createBatch(metadata);
+
+    /**
+     * Claiming 1 tokens with proofs: 0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9,0xb1a5bda84b83f7f014abcf0cf69cab5a4de1c3ececa8123a5e4aaacb01f63f83
+     */
+
+    for (const member of testWallets) {
+      await sdk.setProviderOrSigner(member);
+      await dropModule.claim(1);
+      console.log(`Address ${member.address} claimed successfully!`);
+    }
+
+    try {
+      await sdk.setProviderOrSigner(samWallet);
+      await dropModule.claim(1);
+      assert.fail("should have thrown");
+    } catch (e) {
+      // expected
     }
   });
 
