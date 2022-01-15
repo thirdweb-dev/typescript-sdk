@@ -684,12 +684,15 @@ export class DropModule
     // check for merkle root inclusion
     const merkleRootArray = ethers.utils.stripZeros(claimCondition.merkleRoot);
     if (merkleRootArray.length > 0) {
-      const proofs = await this.getClaimerProofs(
-        claimCondition.merkleRoot.toString(),
-        addressToCheck,
-      );
+      const merkleLower = claimCondition.merkleRoot.toString();
+      const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
       if (proofs.length === 0) {
-        reasons.push(ClaimEligibility.AddressNotAllowed);
+        const hashedAddress = ethers.utils
+          .keccak256(addressToCheck)
+          .toLowerCase();
+        if (hashedAddress !== merkleLower) {
+          reasons.push(ClaimEligibility.AddressNotAllowed);
+        }
       }
       // TODO: compute proofs to root, need browser compatibility
     }

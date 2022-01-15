@@ -542,4 +542,49 @@ describe("Drop Module", async () => {
     await dropModule.claimTo(1, samWallet.address);
     assert((await dropModule.getOwned(samWallet.address)).length === 1);
   });
+
+  it("canClaim: 1 address", async () => {
+    const metadata = [];
+    for (let i = 0; i < 10; i++) {
+      metadata.push({
+        name: `test ${i}`,
+      });
+    }
+    await dropModule.createBatch(metadata);
+
+    const factory = dropModule.getClaimConditionsFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await phase.setSnapshot([w1.address]);
+    await dropModule.setClaimConditions(factory);
+
+    assert.isTrue(await dropModule.canClaim(1, w1.address), "can claim");
+    assert.isFalse(await dropModule.canClaim(1, w2.address), "!can claim");
+  });
+
+  it("canClaim: 3 address", async () => {
+    const metadata = [];
+    for (let i = 0; i < 10; i++) {
+      metadata.push({
+        name: `test ${i}`,
+      });
+    }
+    await dropModule.createBatch(metadata);
+
+    const factory = dropModule.getClaimConditionsFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await phase.setSnapshot([w1.address, w2.address, w3.address]);
+    await dropModule.setClaimConditions(factory);
+
+    assert.isTrue(await dropModule.canClaim(1, w1.address), "can claim");
+    assert.isTrue(await dropModule.canClaim(1, w2.address), "can claim");
+    assert.isTrue(await dropModule.canClaim(1, w3.address), "can claim");
+    assert.isFalse(
+      await dropModule.canClaim(1, bobWallet.address),
+      "!can claim",
+    );
+  });
 });
