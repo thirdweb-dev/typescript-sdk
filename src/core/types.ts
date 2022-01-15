@@ -1,5 +1,5 @@
 import type { Network, Provider } from "@ethersproject/providers";
-import type { BytesLike, Signer } from "ethers";
+import type { BigNumber, BytesLike, CallOverrides, Signer } from "ethers";
 
 /**
  * A valid "ethers" Provider or Signer.
@@ -55,3 +55,17 @@ export type PermitRequestMessage = {
   nonce: number | string;
   deadline: number | string;
 };
+
+/**
+ * transaction message contains information that's needed to execute a gasless transaction
+ */
+export interface GaslessTransaction {
+  from: string;
+  to: string;
+  data: string;
+  chainId: number;
+  gasLimit: BigNumber;
+  functionName: string;
+  functionArgs: any[];
+  callOverrides: CallOverrides;
+}
