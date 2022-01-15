@@ -356,7 +356,14 @@ export class Module<TContract extends BaseContract = BaseContract> {
     const chainId = await this.getChainID();
     const from = await this.getSignerAddress();
     const to = this.address;
-    // const value = callOverrides?.value || 0;
+    const value = callOverrides?.value || 0;
+
+    if (BigNumber.from(value).gt(0)) {
+      throw new Error(
+        "Cannot send native token value with gasless transaction",
+      );
+    }
+
     const data = contract.interface.encodeFunctionData(fn, args);
 
     const gasEstimate = await contract.estimateGas[fn](...args);

@@ -621,6 +621,9 @@ export class ThirdwebSDK implements IThirdwebSdk {
 
     if (response.ok) {
       const resp = await response.json();
+      if (!resp.txHash) {
+        throw new Error(`relay transaction failed: ${resp.log}`);
+      }
       return resp.txHash;
     }
     throw new Error("relay transaction failed");
