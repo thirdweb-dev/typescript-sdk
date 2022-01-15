@@ -156,6 +156,7 @@ Output
 |  [Currency](./sdk.currency.md) | Currency metadata. |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
+|  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
 |  [IAppModule](./sdk.iappmodule.md) |  |
 |  [IDropModule](./sdk.idropmodule.md) |  |
 |  [IMarketplace](./sdk.imarketplace.md) |  |
