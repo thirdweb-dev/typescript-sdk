@@ -70,11 +70,11 @@ export class RegistryModule extends Module<ThirdwebRegistry> {
     filterByModuleType?: ModuleType[],
   ): Promise<ModuleMetadata[]> {
     const moduleTypesToGet = filterByModuleType || [
-      "NFT",
-      "BUNDLE",
+      "NFT_COLLECTION",
+      "BUNDLE_COLLECTION",
       "PACK",
       "TOKEN",
-      "DROP",
+      "NFT_DROP",
       "BUNDLE_DROP",
       "VOTE",
       "SPLITS",

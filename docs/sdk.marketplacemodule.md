@@ -9,11 +9,11 @@ Create your own whitelabel marketplace that enables users to buy and sell any di
 <b>Signature:</b>
 
 ```typescript
-export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> implements IMarketplace 
+export declare class MarketplaceModule extends ModuleWithRoles<Marketplace> implements IMarketplaceModule 
 ```
 <b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Marketplace&gt;
 
-<b>Implements:</b> [IMarketplace](./sdk.imarketplace.md)
+<b>Implements:</b> [IMarketplaceModule](./sdk.imarketplacemodule.md)
 
 ## Example
 

@@ -1,9 +1,9 @@
 import {
   ERC20__factory,
+  ILazyMintERC721,
   LazyMintERC721 as DropV2,
   LazyMintERC721__factory as DropV2__factory,
 } from "@3rdweb/contracts";
-import { ClaimConditionStructOutput } from "@3rdweb/contracts/dist/LazyMintERC721";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -51,7 +51,7 @@ export class DropModule
   extends ModuleWithRoles<DropV2>
   implements ITransferable
 {
-  public static moduleType: ModuleType = "DROP" as const;
+  public static moduleType: ModuleType = "NFT_DROP" as const;
 
   public static roles = [
     RolesMap.admin,
@@ -228,7 +228,7 @@ export class DropModule
     );
   }
   private async transformResultToClaimCondition(
-    pm: ClaimConditionStructOutput,
+    pm: ILazyMintERC721.ClaimConditionStructOutput,
   ): Promise<ClaimCondition> {
     const cv = await getCurrencyValue(
       this.providerOrSigner,

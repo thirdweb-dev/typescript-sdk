@@ -18,6 +18,6 @@ export declare class CommonModuleMetadata
 |  --- | --- | --- | --- |
 |  [description?](./sdk.commonmodulemetadata.description.md) |  | string | <i>(Optional)</i> The description of the module. |
 |  [externalLink?](./sdk.commonmodulemetadata.externallink.md) |  | string | <i>(Optional)</i> An external link for the module. |
-|  [image?](./sdk.commonmodulemetadata.image.md) |  | string \| FileOrBuffer | <i>(Optional)</i> An image for the module.<!-- -->If the image is a File or Buffer, it will be uploaded to IPFS. If the image is a string, it will be used as-is (in case you already uploaded it to IPFS and the property is the IPFS hash uri). |
+|  [image?](./sdk.commonmodulemetadata.image.md) |  | string \| [FileOrBuffer](./sdk.fileorbuffer.md) | <i>(Optional)</i> An image for the module.<!-- -->If the image is a File or Buffer, it will be uploaded to IPFS. If the image is a string, it will be used as-is (in case you already uploaded it to IPFS and the property is the IPFS hash uri). |
 |  [name](./sdk.commonmodulemetadata.name.md) |  | string | The name of the module. |
 

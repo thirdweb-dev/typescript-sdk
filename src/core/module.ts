@@ -1,4 +1,4 @@
-import { AccessControlEnumerable } from "@3rdweb/contracts";
+import { AccessControlEnumerableUpgradeable } from "@3rdweb/contracts";
 import {
   ExternalProvider,
   JsonRpcProvider,
@@ -463,14 +463,13 @@ export class Module<TContract extends BaseContract = BaseContract> {
     );
   }
 }
-
 /**
  * Extends the {@link Module} class to add {@link Role} functionality.
  *
  * @public
  */
 export class ModuleWithRoles<
-  TContract extends AccessControlEnumerable = AccessControlEnumerable,
+  TContract extends BaseContract,
 > extends Module<TContract> {
   /**
    * @virtual
@@ -516,7 +515,10 @@ export class ModuleWithRoles<
       this.roles.includes(role),
       `this module does not support the "${role}" role`,
     );
-    const contract = this.contract;
+    // TODO this is a hack we should remove
+    // this whole module should be typed with `TContract extends AccessControlEnumerableUpgradeable`
+    const contract = this
+      .contract as unknown as AccessControlEnumerableUpgradeable;
     const roleHash = getRoleHash(role);
     const count = (await contract.getRoleMemberCount(roleHash)).toNumber();
     return await Promise.all(

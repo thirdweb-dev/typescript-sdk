@@ -2,27 +2,12 @@
 
 [Home](./index.md) &gt; [@3rdweb/sdk](./sdk.md) &gt; [ModuleType](./sdk.moduletype.md)
 
-## ModuleType enum
+## ModuleType type
 
 The type of Modules that are available.
 
 <b>Signature:</b>
 
 ```typescript
-export declare enum ModuleType 
+export declare type ModuleType = "TOKEN" | "NFT_COLLECTION" | "BUNDLE_COLLECTION" | "PACK" | "NFT_DROP" | "BUNDLE_DROP" | "VOTE" | "SPLITS" | "MARKETPLACE";
 ```
-
-## Enumeration Members
-
-|  Member | Value | Description |
-|  --- | --- | --- |
-|  BUNDLE | <code>&quot;BUNDLE&quot;</code> |  |
-|  BUNDLE\_DROP | <code>&quot;BUNDLE_DROP&quot;</code> |  |
-|  DROP | <code>&quot;DROP&quot;</code> |  |
-|  MARKETPLACE | <code>&quot;MARKETPLACE&quot;</code> |  |
-|  NFT | <code>&quot;NFT&quot;</code> |  |
-|  PACK | <code>&quot;PACK&quot;</code> |  |
-|  SPLITS | <code>&quot;SPLITS&quot;</code> |  |
-|  TOKEN | <code>&quot;TOKEN&quot;</code> |  |
-|  VOTE | <code>&quot;VOTE&quot;</code> |  |
-

@@ -9,9 +9,9 @@ Create lootboxes of NFTs with rarity based open mechanics.
 <b>Signature:</b>
 
 ```typescript
-export declare class PackModule extends ModuleWithRoles<PackContract> implements ITransferable 
+export declare class PackModule extends ModuleWithRoles<Pack> implements ITransferable 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;PackContract&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Pack&gt;
 
 <b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 

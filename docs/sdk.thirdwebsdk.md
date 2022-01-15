@@ -24,8 +24,8 @@ export declare class ThirdwebSDK implements IThirdwebSdk
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [createSnapshot(leafs)](./sdk.thirdwebsdk.createsnapshot.md) |  |  |
+|  [getBundleCollectionModule(address)](./sdk.thirdwebsdk.getbundlecollectionmodule.md) |  |  |
 |  [getBundleDropModule(address)](./sdk.thirdwebsdk.getbundledropmodule.md) |  | <b><i>(BETA)</i></b> |
-|  [getBundleModule(address)](./sdk.thirdwebsdk.getbundlemodule.md) |  |  |
 |  [getDropModule(address)](./sdk.thirdwebsdk.getdropmodule.md) |  |  |
 |  [getGasPrice(speed, maxGasGwei)](./sdk.thirdwebsdk.getgasprice.md) |  |  |
 |  [getMarketplaceModule(address)](./sdk.thirdwebsdk.getmarketplacemodule.md) |  | <b><i>(BETA)</i></b> |

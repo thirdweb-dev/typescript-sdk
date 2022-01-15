@@ -71,9 +71,9 @@ Output
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
 |  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
+|  [BundleCollectionModule](./sdk.bundlecollectionmodule.md) | Create a collection of NFTs that lets you optionally mint multiple copies of each NFT. |
 |  [BundleDropModule](./sdk.bundledropmodule.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md) |  |
-|  [BundleModule](./sdk.bundlemodule.md) | Create a collection of NFTs that lets you optionally mint multiple copies of each NFT. |
 |  [BundleModuleMetadata](./sdk.bundlemodulemetadata.md) |  |
 |  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
 |  [ClaimConditionPhase](./sdk.claimconditionphase.md) |  |
@@ -124,7 +124,6 @@ Output
 |  --- | --- |
 |  [ClaimEligibility](./sdk.claimeligibility.md) |  |
 |  [ListingType](./sdk.listingtype.md) |  |
-|  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
 |  [ProposalState](./sdk.proposalstate.md) |  |
 |  [UnderlyingType](./sdk.underlyingtype.md) |  |
 |  [VoteType](./sdk.votetype.md) |  |
@@ -133,9 +132,6 @@ Output
 
 |  Function | Description |
 |  --- | --- |
-|  [convertModuleTypeToName(moduleType)](./sdk.convertmoduletypetoname.md) |  |
-|  [convertNameToModuleType(moduleName)](./sdk.convertnametomoduletype.md) |  |
-|  [estimateBlockAtTime(timeInEpochSeconds, provider)](./sdk.estimateblockattime.md) | Given a time in second, return the block number that the time is in. |
 |  [generateRoot(items)](./sdk.generateroot.md) | Convenience function to generate a merkle root from a list of strings. |
 |  [getNativeTokenByChainId(chainId)](./sdk.getnativetokenbychainid.md) |  |
 |  [getTokenMetadataUsingStorage(contractAddress, provider, tokenId, storage)](./sdk.gettokenmetadatausingstorage.md) |  |
@@ -159,7 +155,7 @@ Output
 |  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
 |  [IAppModule](./sdk.iappmodule.md) |  |
 |  [IDropModule](./sdk.idropmodule.md) |  |
-|  [IMarketplace](./sdk.imarketplace.md) |  |
+|  [IMarketplaceModule](./sdk.imarketplacemodule.md) |  |
 |  [INFTBundleBatchArgs](./sdk.inftbundlebatchargs.md) |  |
 |  [INFTBundleCreateArgs](./sdk.inftbundlecreateargs.md) | <b><i>(BETA)</i></b> |
 |  [INFTCollectionBatchArgs](./sdk.inftcollectionbatchargs.md) | <b><i>(BETA)</i></b> |
@@ -207,9 +203,11 @@ Output
 |  --- | --- |
 |  [AllModuleMetadata](./sdk.allmodulemetadata.md) |  |
 |  [CollectionModuleMetadata](./sdk.collectionmodulemetadata.md) |  |
+|  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |
 |  [MetadataURIOrObject](./sdk.metadatauriorobject.md) | A valid URI string or metadata object |
+|  [ModuleType](./sdk.moduletype.md) | The type of Modules that are available. |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [ProviderOrSigner](./sdk.providerorsigner.md) | A valid "ethers" Provider or Signer. |
 |  [Role](./sdk.role.md) | Roles are used to handle permissions on modules that extend [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->. |

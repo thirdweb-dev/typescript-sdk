@@ -14,7 +14,7 @@ upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: st
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  data | string \| FileOrBuffer |  |
+|  data | string \| [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  contractAddress | string |  |
 |  signerAddress | string |  |
 

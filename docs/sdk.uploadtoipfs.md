@@ -16,7 +16,7 @@ export declare function uploadToIPFS(data: string | File | FileOrBuffer, contrac
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  data | string \| File \| FileOrBuffer | stringified JSON \|\| File |
+|  data | string \| File \| [FileOrBuffer](./sdk.fileorbuffer.md) | stringified JSON \|\| File |
 |  contractAddress | string | (Optional) the contract address to associate the data with |
 |  signerAddress | string | (Optional) the wallet address of the actor that is uploading the file |
 

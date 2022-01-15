@@ -16,7 +16,7 @@ uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStrin
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  files | Buffer\[\] \| string\[\] \| FileOrBuffer\[\] \| File\[\] \| BufferOrStringWithName\[\] |  |
+|  files | Buffer\[\] \| string\[\] \| [FileOrBuffer](./sdk.fileorbuffer.md)<!-- -->\[\] \| File\[\] \| BufferOrStringWithName\[\] |  |
 |  contractAddress | string | Optional. The contract address the data belongs to. |
 |  uploadFileStartNumber | number | Optional. The first file file name begins with. |
 

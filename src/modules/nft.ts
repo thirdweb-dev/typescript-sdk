@@ -1,13 +1,13 @@
 import {
   ERC20__factory,
+  ISignatureMint721,
   SignatureMint721,
   SignatureMint721__factory,
 } from "@3rdweb/contracts";
-import {
-  MintRequestStructOutput,
-  TokenMintedEvent,
+import type {
   MintWithSignatureEvent,
-} from "@3rdweb/contracts/dist/SignatureMint721";
+  TokenMintedEvent,
+} from "@3rdweb/contracts/dist/ISignatureMint721";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, Signer } from "ethers";
@@ -58,7 +58,7 @@ export class NFTModule
   extends ModuleWithRoles<SignatureMint721>
   implements ITransferable, ISignatureMinter
 {
-  public static moduleType: ModuleType = "NFT" as const;
+  public static moduleType: ModuleType = "NFT_COLLECTION" as const;
 
   public static roles = [
     RolesMap.admin,
@@ -569,7 +569,7 @@ export class NFTModule
    */
   private mapPayload(
     mintRequest: SignaturePayload | NewSignaturePayload,
-  ): MintRequestStructOutput {
+  ): ISignatureMint721.MintRequestStructOutput {
     return {
       to: mintRequest.to,
       price: mintRequest.price,
@@ -577,7 +577,7 @@ export class NFTModule
       validityEndTimestamp: mintRequest.mintEndTimeEpochSeconds,
       validityStartTimestamp: mintRequest.mintStartTimeEpochSeconds,
       uid: mintRequest.id,
-    } as MintRequestStructOutput;
+    } as ISignatureMint721.MintRequestStructOutput;
   }
 
   // TODO: write in common place and stop duping

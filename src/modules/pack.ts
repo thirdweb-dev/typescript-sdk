@@ -6,6 +6,7 @@ import {
 } from "@3rdweb/contracts";
 
 import {
+  Pack,
   PackCreatedEvent,
   PackOpenRequestEvent,
 } from "@3rdweb/contracts/dist/Pack";
@@ -86,10 +87,7 @@ export interface IPackBatchArgs {
  *
  * @public
  */
-export class PackModule
-  extends ModuleWithRoles<PackContract>
-  implements ITransferable
-{
+export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
   public static moduleType: ModuleType = "PACK" as const;
 
   public static roles = [

@@ -91,6 +91,7 @@
     "merkletreejs": "^0.2.24",
     "node-fetch": "^2.6.5",
     "ts-enum-util": "^4.0.2",
+    "ts-mixer": "^6.0.0",
     "tslib": "^2.3.1",
     "uuid": "^8.3.2"
   },

@@ -1,9 +1,9 @@
 import {
   ERC20__factory,
+  ILazyMintERC1155,
   LazyMintERC1155 as BundleDrop,
   LazyMintERC1155__factory as BundleDrop__factory,
 } from "@3rdweb/contracts";
-import { ClaimConditionStruct } from "@3rdweb/contracts/dist/LazyMintERC1155";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -100,7 +100,7 @@ export class BundleDropModule
   }
 
   private async transformResultToClaimCondition(
-    pm: ClaimConditionStruct,
+    pm: ILazyMintERC1155.ClaimConditionStruct,
   ): Promise<ClaimCondition> {
     const cv = await getCurrencyValue(
       this.providerOrSigner,

@@ -5,11 +5,8 @@ import {
   ERC721Upgradeable__factory as ERC721__factory,
   Marketplace,
   Marketplace__factory,
+  IMarketplace,
 } from "@3rdweb/contracts";
-import {
-  ListingParametersStruct,
-  ListingStruct,
-} from "@3rdweb/contracts/dist/IMarketplace";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish } from "ethers";
 import { isAddress } from "ethers/lib/utils";
@@ -31,7 +28,7 @@ import {
 import { invariant } from "../common/invariant";
 import { ModuleWithRoles } from "../core/module";
 import { ListingType } from "../enums/marketplace/ListingType";
-import { IMarketplace } from "../interfaces/modules";
+import { IMarketplaceModule } from "../interfaces/modules";
 import {
   AuctionListing,
   NewAuctionListing,
@@ -60,7 +57,7 @@ const MAX_BPS = 10000;
  */
 export class MarketplaceModule
   extends ModuleWithRoles<Marketplace>
-  implements IMarketplace
+  implements IMarketplaceModule
 {
   public static moduleType: ModuleType = "MARKETPLACE" as const;
 
@@ -138,7 +135,7 @@ export class MarketplaceModule
         reservePricePerToken: listing.buyoutPricePerToken,
         secondsUntilEndTime: listing.listingDurationInSeconds,
         startTime: listing.startTimeInSeconds,
-      } as ListingParametersStruct,
+      } as IMarketplace.ListingParametersStruct,
     ]);
 
     const event = this.parseEventLogs("NewListing", receipt?.logs);
@@ -197,7 +194,7 @@ export class MarketplaceModule
         reservePricePerToken: listing.reservePricePerToken,
         secondsUntilEndTime: listing.listingDurationInSeconds,
         startTime: listing.startTimeInSeconds,
-      } as ListingParametersStruct,
+      } as IMarketplace.ListingParametersStruct,
     ]);
 
     const event = this.parseEventLogs("NewListing", receipt?.logs);
@@ -390,7 +387,7 @@ export class MarketplaceModule
    * @returns - The mapped interface.
    */
   private async mapDirectListing(
-    listing: ListingStruct,
+    listing: IMarketplace.ListingStruct,
   ): Promise<DirectListing> {
     return {
       assetContractAddress: listing.assetContract,
@@ -426,7 +423,7 @@ export class MarketplaceModule
    * @returns - The mapped interface.
    */
   private async mapAuctionListing(
-    listing: ListingStruct,
+    listing: IMarketplace.ListingStruct,
   ): Promise<AuctionListing> {
     return {
       assetContractAddress: listing.assetContract,

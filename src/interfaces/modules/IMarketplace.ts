@@ -7,7 +7,7 @@ import {
   Offer,
 } from "../../types/marketplace";
 
-export interface IMarketplace {
+export interface IMarketplaceModule {
   /**
    * Creates a new direct listing on a marketplace.
    *
