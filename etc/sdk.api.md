@@ -1544,6 +1544,17 @@ export class ThirdwebSDK implements IThirdwebSdk {
     // (undocumented)
     createSnapshot(leafs: string[]): Promise<SnapshotInfo>;
     // (undocumented)
+    deployModule: {
+        bundleCollection: (metadata: DeployBundleCollectionMetadata) => Promise<ethers.ContractTransaction>;
+        bundleDrop: (metadata: DeployBundleDropModuleMetadata) => Promise<ethers.ContractTransaction>;
+        marketplace: (metadata: DeployMarketplaceModuleMetadata) => Promise<ethers.ContractTransaction>;
+        nftCollection: (metadata: DeployNFTCollectionModuleMetadata) => Promise<ethers.ContractTransaction>;
+        pack: (metadata: DeployPackModuleMetadata) => Promise<ethers.ContractTransaction>;
+        splits: (metadata: DeploySplitsModuleMetadata) => Promise<ethers.ContractTransaction>;
+        token: (metadata: DeployTokenModuleMetadata) => Promise<ethers.ContractTransaction>;
+        vote: (metadata: DeployVoteModuleMetadata) => Promise<ethers.ContractTransaction>;
+    };
+    // (undocumented)
     getBundleCollectionModule(address: string): BundleCollectionModule;
     // @beta (undocumented)
     getBundleDropModule(address: string): BundleDropModule;
@@ -1727,5 +1738,16 @@ export enum VoteType {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/core/index.d.ts:54:9 - (ae-forgotten-export) The symbol "DeployBundleCollectionMetadata" needs to be exported by the entry point index.d.ts
+// dist/core/index.d.ts:55:9 - (ae-forgotten-export) The symbol "DeployBundleDropModuleMetadata" needs to be exported by the entry point index.d.ts
+// dist/core/index.d.ts:56:9 - (ae-forgotten-export) The symbol "DeployMarketplaceModuleMetadata" needs to be exported by the entry point index.d.ts
+// dist/core/index.d.ts:57:9 - (ae-forgotten-export) The symbol "DeployNFTCollectionModuleMetadata" needs to be exported by the entry point index.d.ts
+// dist/core/index.d.ts:58:9 - (ae-forgotten-export) The symbol "DeployPackModuleMetadata" needs to be exported by the entry point index.d.ts
+// dist/core/index.d.ts:59:9 - (ae-forgotten-export) The symbol "DeploySplitsModuleMetadata" needs to be exported by the entry point index.d.ts
+// dist/core/index.d.ts:60:9 - (ae-forgotten-export) The symbol "DeployTokenModuleMetadata" needs to be exported by the entry point index.d.ts
+// dist/core/index.d.ts:61:9 - (ae-forgotten-export) The symbol "DeployVoteModuleMetadata" needs to be exported by the entry point index.d.ts
 
 ```

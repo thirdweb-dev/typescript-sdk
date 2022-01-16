@@ -19,6 +19,12 @@ export declare class ThirdwebSDK implements IThirdwebSdk
 |  --- | --- | --- |
 |  [(constructor)(providerOrNetwork, opts)](./sdk.thirdwebsdk._constructor_.md) |  | Constructs a new instance of the <code>ThirdwebSDK</code> class |
 
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [deployModule](./sdk.thirdwebsdk.deploymodule.md) |  | { bundleCollection: (metadata: DeployBundleCollectionMetadata) =&gt; Promise&lt;ethers.ContractTransaction&gt;; bundleDrop: (metadata: DeployBundleDropModuleMetadata) =&gt; Promise&lt;ethers.ContractTransaction&gt;; marketplace: (metadata: DeployMarketplaceModuleMetadata) =&gt; Promise&lt;ethers.ContractTransaction&gt;; nftCollection: (metadata: DeployNFTCollectionModuleMetadata) =&gt; Promise&lt;ethers.ContractTransaction&gt;; pack: (metadata: DeployPackModuleMetadata) =&gt; Promise&lt;ethers.ContractTransaction&gt;; splits: (metadata: DeploySplitsModuleMetadata) =&gt; Promise&lt;ethers.ContractTransaction&gt;; token: (metadata: DeployTokenModuleMetadata) =&gt; Promise&lt;ethers.ContractTransaction&gt;; vote: (metadata: DeployVoteModuleMetadata) =&gt; Promise&lt;ethers.ContractTransaction&gt;; } |  |
+
 ## Methods
 
 |  Method | Modifiers | Description |
