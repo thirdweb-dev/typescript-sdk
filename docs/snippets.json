@@ -136,6 +136,24 @@
         "signature": "getAllListings(): Promise<(AuctionListing | DirectListing)[]>;"
       },
       {
+        "name": "getAuctionWinner",
+        "summary": "Get Auction Winner\n\n",
+        "remarks": "\n\nGet the winner of the auction after an auction ends.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the auction that closed\nconst listingId = 0;\n\nmodule\n  .getAuctionWinner(listingId)\n  .then((auctionWinner) => console.log(auctionWinner))\n  .catch((err) => console.error(err));"
+        },
+        "signature": "getAuctionWinner(listingId: BigNumberish): Promise<string>;"
+      },
+      {
+        "name": "getWinningBid",
+        "summary": "Get Highest Bid\n\n",
+        "remarks": "\n\nGet the current highest bid of an active auction.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the auction that closed\nconst listingId = 0;\n\nmodule\n  .getWinningBid(listingId)\n  .then((offer) => console.log(offer))\n  .catch((err) => console.error(err));"
+        },
+        "signature": "getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;"
+      },
+      {
         "name": "makeAuctionListingBid",
         "summary": "Bid On Auction\n\n",
         "remarks": "\n\nMake a bid on an auction listings\n\n",

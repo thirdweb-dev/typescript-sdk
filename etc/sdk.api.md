@@ -952,6 +952,7 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
     // (undocumented)
     getAuctionListing(listingId: BigNumberish): Promise<AuctionListing>;
+    getAuctionWinner(listingId: BigNumberish): Promise<string>;
     // (undocumented)
     getBidBufferBps(): Promise<BigNumber>;
     // (undocumented)
@@ -964,7 +965,6 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     protected getModuleType(): ModuleType;
     // (undocumented)
     getTimeBufferInSeconds(): Promise<BigNumber>;
-    // (undocumented)
     getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
     // (undocumented)
     isWinningBid(winningPrice: BigNumberish, newBidPrice: BigNumberish, bidBuffer: BigNumberish): Promise<boolean>;

@@ -255,6 +255,39 @@ describe("Bundle Drop Module", async () => {
     assert.isFalse(canClaimW2, "w2 should not be able to claimcan claim");
   });
 
+  it("canClaim: 1 address", async () => {
+    const factory = bdModule.getClaimConditionsFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await phase.setSnapshot([w1.address]);
+    await bdModule.setClaimCondition("0", factory);
+
+    assert.isTrue(await bdModule.canClaim("0", 1, w1.address), "can claim");
+    assert.isFalse(await bdModule.canClaim("0", 1, w2.address), "!can claim");
+  });
+
+  it("canClaim: 3 address", async () => {
+    const factory = bdModule.getClaimConditionsFactory();
+    const phase = factory.newClaimPhase({
+      startTime: new Date(),
+    });
+    await phase.setSnapshot([
+      w1.address.toUpperCase().replace("0X", "0x"),
+      w2.address.toLowerCase(),
+      w3.address,
+    ]);
+    await bdModule.setClaimCondition("0", factory);
+
+    assert.isTrue(await bdModule.canClaim("0", 1, w1.address), "can claim");
+    assert.isTrue(await bdModule.canClaim("0", 1, w2.address), "can claim");
+    assert.isTrue(await bdModule.canClaim("0", 1, w3.address), "can claim");
+    assert.isFalse(
+      await bdModule.canClaim("0", 1, bobWallet.address),
+      "!can claim",
+    );
+  });
+
   it("should work when the token has a price", async () => {
     await bdModule.lazyMintBatch([
       {

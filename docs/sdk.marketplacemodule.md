@@ -50,11 +50,12 @@ const module = sdk.getMarketplaceModule("{{module_address}}");
 |  [getActiveOffer(listingId, address)](./sdk.marketplacemodule.getactiveoffer.md) |  |  |
 |  [getAllListings()](./sdk.marketplacemodule.getalllistings.md) |  | Get Listings |
 |  [getAuctionListing(listingId)](./sdk.marketplacemodule.getauctionlisting.md) |  |  |
+|  [getAuctionWinner(listingId)](./sdk.marketplacemodule.getauctionwinner.md) |  | Get Auction Winner |
 |  [getBidBufferBps()](./sdk.marketplacemodule.getbidbufferbps.md) |  |  |
 |  [getDirectListing(listingId)](./sdk.marketplacemodule.getdirectlisting.md) |  |  |
 |  [getListing(listingId)](./sdk.marketplacemodule.getlisting.md) |  |  |
 |  [getTimeBufferInSeconds()](./sdk.marketplacemodule.gettimebufferinseconds.md) |  |  |
-|  [getWinningBid(listingId)](./sdk.marketplacemodule.getwinningbid.md) |  |  |
+|  [getWinningBid(listingId)](./sdk.marketplacemodule.getwinningbid.md) |  | Get Highest Bid |
 |  [isWinningBid(winningPrice, newBidPrice, bidBuffer)](./sdk.marketplacemodule.iswinningbid.md) |  |  |
 |  [makeAuctionListingBid(bid)](./sdk.marketplacemodule.makeauctionlistingbid.md) |  | Bid On Auction |
 |  [makeDirectListingOffer(offer)](./sdk.marketplacemodule.makedirectlistingoffer.md) |  |  |
