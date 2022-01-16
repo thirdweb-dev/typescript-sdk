@@ -341,6 +341,40 @@ export class MarketplaceModule
     return buffer.gte(bidBuffer);
   }
 
+  /**
+   * Get Auction Winner
+   *
+   * @remarks Get the winner of the auction after an auction ends.
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the auction that closed
+   * const listingId = 0;
+   *
+   * module
+   *   .getAuctionWinner(listingId)
+   *   .then((auctionWinner) => console.log(auctionWinner))
+   *   .catch((err) => console.error(err));
+   * ```
+   */
+  public async getAuctionWinner(listingId: BigNumberish): Promise<string> {
+    const closedAuctions = await this.readOnlyContract.queryFilter(
+      this.contract.filters.AuctionClosed(),
+    );
+
+    const auction = closedAuctions.find((a) =>
+      a.args.listingId.eq(BigNumber.from(listingId)),
+    );
+
+    if (!auction) {
+      throw new Error(
+        `Could not find auction with listingId ${listingId} in closed auctions`,
+      );
+    }
+
+    return auction.args.winningBidder;
+  }
+
   public async getDirectListing(
     listingId: BigNumberish,
   ): Promise<DirectListing> {
@@ -752,6 +786,22 @@ export class MarketplaceModule
     return await this.mapOffer(BigNumber.from(listingId), offers);
   }
 
+  /**
+   * Get Highest Bid
+   *
+   * @remarks Get the current highest bid of an active auction.
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the auction that closed
+   * const listingId = 0;
+   *
+   * module
+   *   .getWinningBid(listingId)
+   *   .then((offer) => console.log(offer))
+   *   .catch((err) => console.error(err));
+   * ```
+   */
   public async getWinningBid(
     listingId: BigNumberish,
   ): Promise<Offer | undefined> {
