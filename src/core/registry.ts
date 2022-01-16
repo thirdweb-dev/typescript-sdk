@@ -1,16 +1,7 @@
 import { ThirdwebRegistry, ThirdwebRegistry__factory } from "@3rdweb/contracts";
-import { ContractMetadata, getContractMetadata } from "../common/contract";
+import { getContractMetadata } from "../common/contract";
 import { ModuleType } from "../common/module-type";
 import { Module } from "./module";
-
-/**
- * @public
- */
-export interface IAppModule {
-  address: string;
-  version: number;
-  metadata?: ContractMetadata;
-}
 
 /**
  * The RegistryModule. This should always be created via `getRegistryModule()` on the main SDK.

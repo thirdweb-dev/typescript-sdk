@@ -404,13 +404,8 @@ export interface CollectionMetadata {
     supply: BigNumber_2;
 }
 
-// Warning: (ae-forgotten-export) The symbol "CommonModuleMetadata" needs to be exported by the entry point index.d.ts
-//
-// @public
-export interface ContractMetadata extends CommonModuleMetadata {
-    // (undocumented)
-    [key: string]: any;
-}
+// @public (undocumented)
+export type ContractMetadataSchema = BundleCollectionMetadata | BundleDropModuleMetadata | MarketplaceModuleMetadata | NFTCollectionModuleMetadata | NFTDropModuleMetadata | PackModuleMetadata | SplitsModuleMetadata | TokenModuleMetadata | VoteModuleMetadata;
 
 // @public
 export interface Currency {
@@ -670,7 +665,7 @@ export function generateRoot(items: string[]): string;
 // Warning: (ae-internal-missing-underscore) The name "getContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getContractMetadata<TMetadataType extends ContractMetadata>(provider: ProviderOrSigner, address: string, ipfsGatewayUrl: string, resolveGateway?: boolean): Promise<TMetadataType>;
+export function getContractMetadata<TMetadataType extends ContractMetadataSchema>(provider: ProviderOrSigner, address: string, ipfsGatewayUrl: string, resolveGateway?: boolean): Promise<TMetadataType>;
 
 // Warning: (ae-internal-missing-underscore) The name "getCurrencyBalance" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -717,16 +712,6 @@ export function getTokenMetadataUsingStorage(contractAddress: string, provider: 
 //
 // @internal
 export function getTokenUri(contract: NFTContractTypes, tokenId: string): Promise<string>;
-
-// @public (undocumented)
-export interface IAppModule {
-    // (undocumented)
-    address: string;
-    // (undocumented)
-    metadata?: ContractMetadata;
-    // (undocumented)
-    version: number;
-}
 
 // @public (undocumented)
 export interface IDropModule {
@@ -1071,6 +1056,8 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     updateDirectListing(listing: DirectListing): Promise<void>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "CommonModuleMetadata" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export class MarketplaceModuleMetadata extends CommonModuleMetadata {
 }
@@ -1090,10 +1077,8 @@ export class MissingRoleError extends Error {
     constructor(address: string, role: string);
 }
 
-// Warning: (ae-forgotten-export) The symbol "ContractMetadataSchema" needs to be exported by the entry point index.d.ts
-//
 // @public
-export class Module<TContract extends BaseContract, TContractMetadata extends ContractMetadataSchema> {
+export class Module<TContract extends BaseContract = BaseContract, TContractMetadata extends ContractMetadataSchema = ContractMetadataSchema> {
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     // (undocumented)
@@ -1163,7 +1148,7 @@ export class Module<TContract extends BaseContract, TContractMetadata extends Co
 }
 
 // @public
-export interface ModuleMetadata<TContractMetadata extends ContractMetadata> {
+export interface ModuleMetadata<TContractMetadata extends ContractMetadataSchema> {
     // (undocumented)
     address: string;
     // (undocumented)
@@ -1176,7 +1161,7 @@ export interface ModuleMetadata<TContractMetadata extends ContractMetadata> {
 export type ModuleType = "TOKEN" | "NFT_COLLECTION" | "BUNDLE_COLLECTION" | "PACK" | "NFT_DROP" | "BUNDLE_DROP" | "VOTE" | "SPLITS" | "MARKETPLACE";
 
 // @public
-export class ModuleWithRoles<TContract extends BaseContract, TContractMetadata extends ContractMetadata = ContractMetadata> extends Module<TContract, TContractMetadata> {
+export class ModuleWithRoles<TContract extends BaseContract = BaseContract, TContractMetadata extends ContractMetadataSchema = ContractMetadataSchema> extends Module<TContract, TContractMetadata> {
     // @internal
     constructor(providerOrSigner: ProviderOrSigner, address: string, options: ISDKOptions, sdk: ThirdwebSDK);
     getAllRoleMembers(): Promise<Partial<Record<Role, string[]>>>;
@@ -1672,11 +1657,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     getGasPrice(speed?: string, maxGasGwei?: number): Promise<number | null>;
     // @beta (undocumented)
     getMarketplaceModule(address: string): MarketplaceModule;
-    getModules(address: string, filterByModuleType?: ModuleType[]): Promise<{
-        type: ModuleType;
-        address: string;
-        metadata: ContractMetadata;
-    }[]>;
+    getModules(address: string, filterByModuleType?: ModuleType[]): Promise<ModuleMetadata<ContractMetadataSchema>[]>;
     // (undocumented)
     getNFTModule(address: string): NFTModule;
     // (undocumented)

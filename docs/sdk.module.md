@@ -9,7 +9,7 @@ The root Module class. All other Modules extend this.
 <b>Signature:</b>
 
 ```typescript
-export declare class Module<TContract extends BaseContract, TContractMetadata extends ContractMetadataSchema> 
+export declare class Module<TContract extends BaseContract = BaseContract, TContractMetadata extends ContractMetadataSchema = ContractMetadataSchema> 
 ```
 
 ## Remarks

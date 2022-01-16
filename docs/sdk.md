@@ -155,12 +155,10 @@ Output
 |  [BundleMetadata](./sdk.bundlemetadata.md) | <b><i>(BETA)</i></b> |
 |  [ClaimCondition](./sdk.claimcondition.md) | <b><i>(BETA)</i></b> |
 |  [CollectionMetadata](./sdk.collectionmetadata.md) |  |
-|  [ContractMetadata](./sdk.contractmetadata.md) | The typical contract metadata found on the modules. |
 |  [Currency](./sdk.currency.md) | Currency metadata. |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
 |  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
-|  [IAppModule](./sdk.iappmodule.md) |  |
 |  [IDropModule](./sdk.idropmodule.md) |  |
 |  [IMarketplaceModule](./sdk.imarketplacemodule.md) |  |
 |  [INFTBundleBatchArgs](./sdk.inftbundlebatchargs.md) |  |
@@ -210,6 +208,7 @@ Output
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [ContractMetadataSchema](./sdk.contractmetadataschema.md) |  |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [JSONValue](./sdk.jsonvalue.md) | A JSON value |

@@ -64,7 +64,6 @@ export * from "./common";
 export type { InvariantError } from "./common/invariant";
 export * from "./core";
 export type { Module, ModuleWithRoles } from "./core/module";
-export type { IAppModule } from "./core/registry";
 export * from "./core/types";
 export * from "./enums";
 export * from "./factories";

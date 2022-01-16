@@ -9,11 +9,7 @@ Call this to get the current apps.
 <b>Signature:</b>
 
 ```typescript
-getModules(address: string, filterByModuleType?: ModuleType[]): Promise<{
-        type: ModuleType;
-        address: string;
-        metadata: import("../common").ContractMetadata;
-    }[]>;
+getModules(address: string, filterByModuleType?: ModuleType[]): Promise<ModuleMetadata<ContractMetadataSchema>[]>;
 ```
 
 ## Parameters
@@ -25,7 +21,7 @@ getModules(address: string, filterByModuleType?: ModuleType[]): Promise<{
 
 <b>Returns:</b>
 
-Promise&lt;{ type: [ModuleType](./sdk.moduletype.md)<!-- -->; address: string; metadata: import("../common").[ContractMetadata](./sdk.contractmetadata.md)<!-- -->; }\[\]&gt;
+Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->&lt;[ContractMetadataSchema](./sdk.contractmetadataschema.md)<!-- -->&gt;\[\]&gt;
 
 All currently registered apps for the connected wallet
 

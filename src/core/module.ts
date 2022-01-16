@@ -19,11 +19,7 @@ import {
   Signer,
 } from "ethers";
 import { JsonConvert } from "json2typescript";
-import {
-  ContractMetadata,
-  getContractMetadata,
-  isContract,
-} from "../common/contract";
+import { getContractMetadata, isContract } from "../common/contract";
 import { MissingRoleError } from "../common/error";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
@@ -31,45 +27,25 @@ import { uploadMetadata } from "../common/ipfs";
 import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role, SetAllRoles } from "../common/role";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
-import {
-  BundleCollectionMetadata,
-  BundleDropModuleMetadata,
-  MarketplaceModuleMetadata,
-  NFTCollectionModuleMetadata,
-  NFTDropModuleMetadata,
-  PackModuleMetadata,
-  SplitsModuleMetadata,
-  TokenModuleMetadata,
-  VoteModuleMetadata,
-} from "../schema";
 import { CommonRoyaltyMetadata } from "../schema/modules/common";
-import { ModuleMetadata } from "../types/ModuleMetadata";
+import {
+  ContractMetadataSchema,
+  ModuleMetadata,
+} from "../types/ModuleMetadata";
 import type { ThirdwebSDK } from "./index";
 import type {
   GaslessTransaction,
   MetadataURIOrObject,
   ProviderOrSigner,
 } from "./types";
-
-export type ContractMetadataSchema =
-  | BundleCollectionMetadata
-  | BundleDropModuleMetadata
-  | MarketplaceModuleMetadata
-  | NFTCollectionModuleMetadata
-  | NFTDropModuleMetadata
-  | PackModuleMetadata
-  | SplitsModuleMetadata
-  | TokenModuleMetadata
-  | VoteModuleMetadata;
-
 /**
  * The root Module class. All other Modules extend this.
  * @remarks This should never be instantiated directly.
  * @public
  */
 export class Module<
-  TContract extends BaseContract,
-  TContractMetadata extends ContractMetadataSchema,
+  TContract extends BaseContract = BaseContract,
+  TContractMetadata extends ContractMetadataSchema = ContractMetadataSchema,
 > {
   /**
    * @readonly
@@ -551,8 +527,8 @@ export class Module<
  * @public
  */
 export class ModuleWithRoles<
-  TContract extends BaseContract,
-  TContractMetadata extends ContractMetadata = ContractMetadata,
+  TContract extends BaseContract = BaseContract,
+  TContractMetadata extends ContractMetadataSchema = ContractMetadataSchema,
 > extends Module<TContract, TContractMetadata> {
   /**
    * @virtual
@@ -877,8 +853,8 @@ export class ModuleWithRoles<
  * @public
  */
 export class ModuleWithRoyalties<
-  TContract extends BaseContract,
-  TContractMetadata extends ContractMetadata = ContractMetadata,
+  TContract extends BaseContract = BaseContract,
+  TContractMetadata extends ContractMetadataSchema = ContractMetadataSchema,
 > extends Module<TContract, TContractMetadata> {
   public async setRoyaltyData(
     royaltyData: CommonRoyaltyMetadata,

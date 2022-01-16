@@ -2,17 +2,8 @@ import { arrayify } from "@ethersproject/bytes";
 import { Contract } from "@ethersproject/contracts";
 import { Provider } from "@ethersproject/providers";
 import { ProviderOrSigner } from "../core/types";
-import { CommonModuleMetadata } from "../schema/modules/common";
+import { ContractMetadataSchema } from "../types";
 import { replaceIpfsWithGateway, recursiveResolveGatewayUrl } from "./ipfs";
-
-/**
- * The typical contract metadata found on the modules.
- * @public
- */
-export interface ContractMetadata extends CommonModuleMetadata {
-  [key: string]: any;
-}
-
 /**
  * @internal
  */
@@ -43,7 +34,7 @@ const contractUriABI = [
  * @internal
  */
 export async function getContractMetadata<
-  TMetadataType extends ContractMetadata,
+  TMetadataType extends ContractMetadataSchema,
 >(
   provider: ProviderOrSigner,
   address: string,

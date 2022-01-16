@@ -56,6 +56,7 @@ import {
   DeployTokenModuleMetadata,
   DeployVoteModuleMetadata,
 } from "../schema";
+import { ContractMetadataSchema, ModuleMetadata } from "..";
 
 /**
  * @internal
@@ -243,7 +244,10 @@ export class ThirdwebSDK implements IThirdwebSdk {
    * Call this to get the current apps.
    * @returns All currently registered apps for the connected wallet
    */
-  public async getModules(address: string, filterByModuleType?: ModuleType[]) {
+  public async getModules(
+    address: string,
+    filterByModuleType?: ModuleType[],
+  ): Promise<ModuleMetadata<ContractMetadataSchema>[]> {
     return (this.registry || (await this.getRegistryModule())).getModules(
       address,
       filterByModuleType,
