@@ -73,6 +73,7 @@ export * from "./modules";
 export * from "./storage";
 export * from "./types";
 export * from "./utils";
+export * from "./schema";
 
 if (!globalThis.fetch) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

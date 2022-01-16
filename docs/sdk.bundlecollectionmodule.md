@@ -11,7 +11,7 @@ Create a collection of NFTs that lets you optionally mint multiple copies of eac
 ```typescript
 export interface BundleCollectionModule extends ModuleWithRoles<NFTBundleContract, BundleCollectionMetadata>, ModuleWithRoyalties<NFTBundleContract, BundleCollectionMetadata> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;NFTBundleContract, BundleCollectionMetadata&gt;, ModuleWithRoyalties&lt;NFTBundleContract, BundleCollectionMetadata&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;NFTBundleContract, [BundleCollectionMetadata](./sdk.bundlecollectionmetadata.md)<!-- -->&gt;, ModuleWithRoyalties&lt;NFTBundleContract, [BundleCollectionMetadata](./sdk.bundlecollectionmetadata.md)<!-- -->&gt;
 
 ## Example
 

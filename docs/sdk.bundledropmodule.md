@@ -11,7 +11,7 @@ Setup a collection of NFTs with a customizable number of each NFT that are minte
 ```typescript
 export interface BundleDropModule extends ModuleWithRoles<BundleDrop, BundleDropModuleMetadata>, ModuleWithRoyalties<BundleDrop, BundleDropModuleMetadata> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;BundleDrop, BundleDropModuleMetadata&gt;, ModuleWithRoyalties&lt;BundleDrop, BundleDropModuleMetadata&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;BundleDrop, [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md)<!-- -->&gt;, ModuleWithRoyalties&lt;BundleDrop, [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md)<!-- -->&gt;
 
 ## Example
 

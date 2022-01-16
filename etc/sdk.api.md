@@ -79,7 +79,12 @@ export interface AuctionListing {
     type: ListingType.Auction;
 }
 
-// Warning: (ae-forgotten-export) The symbol "BundleCollectionMetadata" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BundleCollectionMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class BundleCollectionMetadata extends BundleCollectionMetadata_base {
+}
+
 // Warning: (ae-forgotten-export) The symbol "ModuleWithRoyalties" needs to be exported by the entry point index.d.ts
 //
 // @public
@@ -192,8 +197,6 @@ export interface BundleDropMetadata {
     supply: BigNumber;
 }
 
-// Warning: (ae-forgotten-export) The symbol "BundleDropModuleMetadata" needs to be exported by the entry point index.d.ts
-//
 // @public
 export interface BundleDropModule extends ModuleWithRoles<LazyMintERC1155, BundleDropModuleMetadata>, ModuleWithRoyalties<LazyMintERC1155, BundleDropModuleMetadata> {
 }
@@ -265,6 +268,16 @@ export class BundleDropModule implements ITransferable {
     transferFrom(from: string, to: string, tokenId: BigNumberish, amount: BigNumberish, data?: BytesLike): Promise<TransactionReceipt>;
     // (undocumented)
     updateClaimConditions(tokenId: BigNumberish, factory: ClaimConditionFactory): Promise<TransactionReceipt>;
+}
+
+// Warning: (ae-forgotten-export) The symbol "BundleDropModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class BundleDropModuleMetadata extends BundleDropModuleMetadata_base {
+    // (undocumented)
+    merkle?: {
+        [key: string]: string;
+    };
 }
 
 // @beta (undocumented)
@@ -426,6 +439,73 @@ export const DEFAULT_BLOCK_TIMES_FALLBACK: Record<SUPPORTED_CHAIN_ID | ChainId.H
     synced: boolean;
 }>;
 
+// Warning: (ae-forgotten-export) The symbol "DeployBundleCollectionMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class DeployBundleCollectionMetadata extends DeployBundleCollectionMetadata_base {
+}
+
+// Warning: (ae-forgotten-export) The symbol "DeployBundleDropModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class DeployBundleDropModuleMetadata extends DeployBundleDropModuleMetadata_base {
+    primarySaleRecipient: string;
+}
+
+// Warning: (ae-forgotten-export) The symbol "DeployMarketplaceModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class DeployMarketplaceModuleMetadata extends DeployMarketplaceModuleMetadata_base {
+}
+
+// Warning: (ae-forgotten-export) The symbol "DeployNFTCollectionModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class DeployNFTCollectionModuleMetadata extends DeployNFTCollectionModuleMetadata_base {
+    primarySaleRecipient: string;
+    symbol: string;
+}
+
+// Warning: (ae-forgotten-export) The symbol "DeployNFTDropModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class DeployNFTDropModuleMetadata extends DeployNFTDropModuleMetadata_base {
+    primarySaleRecipient: string;
+    symbol: string;
+}
+
+// Warning: (ae-forgotten-export) The symbol "DeployPackModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class DeployPackModuleMetadata extends DeployPackModuleMetadata_base {
+}
+
+// Warning: (ae-forgotten-export) The symbol "DeploySplitsModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class DeploySplitsModuleMetadata extends DeploySplitsModuleMetadata_base {
+    // (undocumented)
+    recipientSplits: NewSplitRecipient[];
+}
+
+// Warning: (ae-forgotten-export) The symbol "DeployTokenModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class DeployTokenModuleMetadata extends DeployTokenModuleMetadata_base {
+    symbol: string;
+}
+
+// Warning: (ae-forgotten-export) The symbol "DeployVoteModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class DeployVoteModuleMetadata extends DeployVoteModuleMetadata_base {
+    minimumNumberOfTokensNeededToPropose: number;
+    proposalStartWaitTimeInSeconds: number;
+    proposalVotingTimeInSeconds: number;
+    votingQuorumFraction: number;
+    votingTokenAddress: string;
+}
+
 // @public
 export interface DirectListing {
     asset: NFTMetadata;
@@ -443,8 +523,6 @@ export interface DirectListing {
     type: ListingType.Direct;
 }
 
-// Warning: (ae-forgotten-export) The symbol "NFTDropModuleMetadata" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class DropModule extends ModuleWithRoles<LazyMintERC721, NFTDropModuleMetadata> implements ITransferable {
     // @internal
@@ -993,6 +1071,10 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     updateDirectListing(listing: DirectListing): Promise<void>;
 }
 
+// @public (undocumented)
+export class MarketplaceModuleMetadata extends CommonModuleMetadata {
+}
+
 // @public
 export type MetadataURIOrObject = string | Record<string, any>;
 
@@ -1163,10 +1245,32 @@ export interface NewSignaturePayload {
     to: string;
 }
 
+// @public
+export interface NewSplitRecipient {
+    address: string;
+    shares: BigNumberish;
+}
+
+// Warning: (ae-forgotten-export) The symbol "NFTCollectionModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class NFTCollectionModuleMetadata extends NFTCollectionModuleMetadata_base {
+}
+
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export type NFTContractTypes = SignatureMint721 | NFTCollection | LazyMintERC721 | LazyMintERC1155;
+
+// Warning: (ae-forgotten-export) The symbol "NFTDropModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class NFTDropModuleMetadata extends NFTDropModuleMetadata_base {
+    // (undocumented)
+    merkle?: {
+        [key: string]: string;
+    };
+}
 
 // @public
 export interface NFTMetadata {
@@ -1196,8 +1300,6 @@ export interface NFTMetadataOwner {
     owner: string;
 }
 
-// Warning: (ae-forgotten-export) The symbol "NFTCollectionModuleMetadata" needs to be exported by the entry point index.d.ts
-//
 // @public
 export interface NFTModule extends ModuleWithRoles<SignatureMint721, NFTCollectionModuleMetadata>, ModuleWithRoyalties<SignatureMint721, NFTCollectionModuleMetadata> {
 }
@@ -1297,8 +1399,6 @@ export interface PackMetadata {
     openStart: Date | null;
 }
 
-// Warning: (ae-forgotten-export) The symbol "PackModuleMetadata" needs to be exported by the entry point index.d.ts
-//
 // @public
 export interface PackModule extends ModuleWithRoles<Pack, PackModuleMetadata>, ModuleWithRoyalties<Pack, PackModuleMetadata> {
 }
@@ -1352,6 +1452,12 @@ export class PackModule implements ITransferable {
     transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): Promise<void>;
     // (undocumented)
     withdrawLink(to: string, amount: BigNumberish): Promise<void>;
+}
+
+// Warning: (ae-forgotten-export) The symbol "PackModuleMetadata_base" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class PackModuleMetadata extends PackModuleMetadata_base {
 }
 
 // @public (undocumented)
@@ -1507,8 +1613,6 @@ export interface SplitRecipient {
     splitPercentage: number;
 }
 
-// Warning: (ae-forgotten-export) The symbol "SplitsModuleMetadata" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class SplitsModule extends Module<Splits, SplitsModuleMetadata> implements ISplitsModule {
     balanceOf(address: string): Promise<BigNumber>;
@@ -1536,6 +1640,10 @@ export class SplitsModule extends Module<Splits, SplitsModuleMetadata> implement
     withdraw(address: string): Promise<void>;
     // (undocumented)
     withdrawToken(walletAddress: string, tokenAddress: string): Promise<void>;
+}
+
+// @public (undocumented)
+export class SplitsModuleMetadata extends CommonModuleMetadata {
 }
 
 // @public
@@ -1591,8 +1699,6 @@ export class ThirdwebSDK implements IThirdwebSdk {
     get signer(): Signer | null;
 }
 
-// Warning: (ae-forgotten-export) The symbol "TokenModuleMetadata" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class TokenModule extends ModuleWithRoles<Coin, TokenModuleMetadata> implements ITransferable {
     // (undocumented)
@@ -1649,6 +1755,10 @@ export class TokenModule extends ModuleWithRoles<Coin, TokenModuleMetadata> impl
 }
 
 // @public (undocumented)
+export class TokenModuleMetadata extends CommonModuleMetadata {
+}
+
+// @public (undocumented)
 export enum UnderlyingType {
     // (undocumented)
     ERC20 = 1,
@@ -1685,8 +1795,6 @@ export function uploadToIPFS(data: string | File | FileOrBuffer, contractAddress
 // @public
 export type ValidProviderInput = ProviderOrSigner | Network | string;
 
-// Warning: (ae-forgotten-export) The symbol "VoteModuleMetadata" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class VoteModule extends Module<VotingGovernor, VoteModuleMetadata> {
     balance(): Promise<CurrencyValue>;
@@ -1706,6 +1814,10 @@ export class VoteModule extends Module<VotingGovernor, VoteModuleMetadata> {
     // (undocumented)
     settings(): Promise<VoteSettings>;
     vote(proposalId: string, voteType: VoteType, reason?: string): Promise<void>;
+}
+
+// @public (undocumented)
+export class VoteModuleMetadata extends CommonModuleMetadata {
 }
 
 // @public (undocumented)
@@ -1738,16 +1850,5 @@ export enum VoteType {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
-
-// Warnings were encountered during analysis:
-//
-// dist/core/index.d.ts:54:9 - (ae-forgotten-export) The symbol "DeployBundleCollectionMetadata" needs to be exported by the entry point index.d.ts
-// dist/core/index.d.ts:55:9 - (ae-forgotten-export) The symbol "DeployBundleDropModuleMetadata" needs to be exported by the entry point index.d.ts
-// dist/core/index.d.ts:56:9 - (ae-forgotten-export) The symbol "DeployMarketplaceModuleMetadata" needs to be exported by the entry point index.d.ts
-// dist/core/index.d.ts:57:9 - (ae-forgotten-export) The symbol "DeployNFTCollectionModuleMetadata" needs to be exported by the entry point index.d.ts
-// dist/core/index.d.ts:58:9 - (ae-forgotten-export) The symbol "DeployPackModuleMetadata" needs to be exported by the entry point index.d.ts
-// dist/core/index.d.ts:59:9 - (ae-forgotten-export) The symbol "DeploySplitsModuleMetadata" needs to be exported by the entry point index.d.ts
-// dist/core/index.d.ts:60:9 - (ae-forgotten-export) The symbol "DeployTokenModuleMetadata" needs to be exported by the entry point index.d.ts
-// dist/core/index.d.ts:61:9 - (ae-forgotten-export) The symbol "DeployVoteModuleMetadata" needs to be exported by the entry point index.d.ts
 
 ```

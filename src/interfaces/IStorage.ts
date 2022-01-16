@@ -1,5 +1,5 @@
 import { MetadataURIOrObject } from "../core/types";
-import FileOrBuffer from "../types/FileOrBuffer";
+import { FileOrBuffer } from "../schema";
 import { BufferOrStringWithName } from "../types/BufferOrStringWithName";
 
 /**

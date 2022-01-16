@@ -1,5 +1,4 @@
 export * from "./claim-conditions/PublicClaimCondition";
-export * from "./FileOrBuffer";
 export * from "./marketplace";
 export * from "./ModuleMetadata";
 export * from "./signature-minting";

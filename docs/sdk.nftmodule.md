@@ -11,7 +11,7 @@ Create a collection of one-of-one NFTs.
 ```typescript
 export interface NFTModule extends ModuleWithRoles<SignatureMint721, NFTCollectionModuleMetadata>, ModuleWithRoyalties<SignatureMint721, NFTCollectionModuleMetadata> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;SignatureMint721, NFTCollectionModuleMetadata&gt;, ModuleWithRoyalties&lt;SignatureMint721, NFTCollectionModuleMetadata&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;SignatureMint721, [NFTCollectionModuleMetadata](./sdk.nftcollectionmodulemetadata.md)<!-- -->&gt;, ModuleWithRoyalties&lt;SignatureMint721, [NFTCollectionModuleMetadata](./sdk.nftcollectionmodulemetadata.md)<!-- -->&gt;
 
 ## Example
 

@@ -11,7 +11,7 @@ Setup a collection of one-of-one NFTs that are minted as users claim them.
 ```typescript
 export declare class DropModule extends ModuleWithRoles<LazyMintERC721, NFTDropModuleMetadata> implements ITransferable 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;LazyMintERC721, NFTDropModuleMetadata&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;LazyMintERC721, [NFTDropModuleMetadata](./sdk.nftdropmodulemetadata.md)<!-- -->&gt;
 
 <b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 

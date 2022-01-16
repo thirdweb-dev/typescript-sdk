@@ -11,7 +11,7 @@ Create a decentralized organization for token holders to vote on proposals.
 ```typescript
 export declare class VoteModule extends Module<VotingGovernor, VoteModuleMetadata> 
 ```
-<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;VotingGovernor, VoteModuleMetadata&gt;
+<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;VotingGovernor, [VoteModuleMetadata](./sdk.votemodulemetadata.md)<!-- -->&gt;
 
 ## Example
 

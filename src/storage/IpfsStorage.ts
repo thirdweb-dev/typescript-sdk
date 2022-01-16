@@ -5,7 +5,7 @@ import {
 } from "../common/error";
 import { MetadataURIOrObject } from "../core/types";
 import { IStorage, UploadMetadataBatchResult } from "../interfaces/IStorage";
-import FileOrBuffer from "../types/FileOrBuffer";
+import { FileOrBuffer } from "../schema";
 import { BufferOrStringWithName } from "../types/BufferOrStringWithName";
 
 if (!globalThis.FormData) {

@@ -11,7 +11,7 @@ Create custom royalty splits to distribute funds.
 ```typescript
 export declare class SplitsModule extends Module<Splits, SplitsModuleMetadata> implements ISplitsModule 
 ```
-<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;Splits, SplitsModuleMetadata&gt;
+<b>Extends:</b> [Module](./sdk.module.md)<!-- -->&lt;Splits, [SplitsModuleMetadata](./sdk.splitsmodulemetadata.md)<!-- -->&gt;
 
 <b>Implements:</b> [ISplitsModule](./sdk.isplitsmodule.md)
 

@@ -11,7 +11,7 @@ Create a standard crypto token or crypto currency.
 ```typescript
 export declare class TokenModule extends ModuleWithRoles<Coin, TokenModuleMetadata> implements ITransferable 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Coin, TokenModuleMetadata&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Coin, [TokenModuleMetadata](./sdk.tokenmodulemetadata.md)<!-- -->&gt;
 
 <b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 

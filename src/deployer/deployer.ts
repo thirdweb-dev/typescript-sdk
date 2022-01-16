@@ -13,7 +13,6 @@ import {
 } from "@3rdweb/contracts";
 
 import { ModuleType } from "../common/module-type";
-import FileOrBuffer from "../types/FileOrBuffer";
 
 import { Module } from "../core/module";
 
@@ -27,6 +26,7 @@ import {
   DeployVoteModuleMetadata,
   DeployMarketplaceModuleMetadata,
   DeployPackModuleMetadata,
+  FileOrBuffer,
 } from "../schema";
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
 import { DEFAULT_BLOCK_TIMES_FALLBACK } from "../utils/blockTimeEstimator";

@@ -71,11 +71,22 @@ Output
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
 |  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
+|  [BundleCollectionMetadata](./sdk.bundlecollectionmetadata.md) |  |
 |  [BundleCollectionModule](./sdk.bundlecollectionmodule.md) |  |
 |  [BundleDropModule](./sdk.bundledropmodule.md) |  |
+|  [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md) |  |
 |  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
 |  [ClaimConditionPhase](./sdk.claimconditionphase.md) |  |
 |  [ClaimProof](./sdk.claimproof.md) | The model for a claim proof. Currently we support only an address in the leaf of the merkle tree. |
+|  [DeployBundleCollectionMetadata](./sdk.deploybundlecollectionmetadata.md) |  |
+|  [DeployBundleDropModuleMetadata](./sdk.deploybundledropmodulemetadata.md) |  |
+|  [DeployMarketplaceModuleMetadata](./sdk.deploymarketplacemodulemetadata.md) |  |
+|  [DeployNFTCollectionModuleMetadata](./sdk.deploynftcollectionmodulemetadata.md) |  |
+|  [DeployNFTDropModuleMetadata](./sdk.deploynftdropmodulemetadata.md) |  |
+|  [DeployPackModuleMetadata](./sdk.deploypackmodulemetadata.md) |  |
+|  [DeploySplitsModuleMetadata](./sdk.deploysplitsmodulemetadata.md) |  |
+|  [DeployTokenModuleMetadata](./sdk.deploytokenmodulemetadata.md) |  |
+|  [DeployVoteModuleMetadata](./sdk.deployvotemodulemetadata.md) |  |
 |  [DropModule](./sdk.dropmodule.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [DuplicateFileNameError](./sdk.duplicatefilenameerror.md) |  |
 |  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
@@ -87,22 +98,29 @@ Output
 |  [IpfsStorage](./sdk.ipfsstorage.md) |  |
 |  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
 |  [MarketplaceModule](./sdk.marketplacemodule.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
+|  [MarketplaceModuleMetadata](./sdk.marketplacemodulemetadata.md) |  |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [Module](./sdk.module.md) | The root Module class. All other Modules extend this. |
 |  [ModuleWithRoles](./sdk.modulewithroles.md) | Extends the [Module](./sdk.module.md) class to add [Role](./sdk.role.md) functionality. |
+|  [NFTCollectionModuleMetadata](./sdk.nftcollectionmodulemetadata.md) |  |
+|  [NFTDropModuleMetadata](./sdk.nftdropmodulemetadata.md) |  |
 |  [NFTModule](./sdk.nftmodule.md) |  |
 |  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [PackModule](./sdk.packmodule.md) |  |
+|  [PackModuleMetadata](./sdk.packmodulemetadata.md) |  |
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [SplitsModule](./sdk.splitsmodule.md) | Create custom royalty splits to distribute funds. |
+|  [SplitsModuleMetadata](./sdk.splitsmodulemetadata.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The entrypoint to the SDK. |
 |  [TokenModule](./sdk.tokenmodule.md) | Create a standard crypto token or crypto currency. |
+|  [TokenModuleMetadata](./sdk.tokenmodulemetadata.md) |  |
 |  [UploadError](./sdk.uploaderror.md) |  |
 |  [VoteModule](./sdk.votemodule.md) | Create a decentralized organization for token holders to vote on proposals. |
+|  [VoteModuleMetadata](./sdk.votemodulemetadata.md) |  |
 |  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 
 ## Enumerations
@@ -165,6 +183,7 @@ Output
 |  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
 |  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
 |  [NewSignaturePayload](./sdk.newsignaturepayload.md) | Represents a new <code>SignatureMint</code> request. |
+|  [NewSplitRecipient](./sdk.newsplitrecipient.md) | The NewSplitRecipient interface describes the structure of a new split recipient. The <code>shares</code> property is important for the calculation of the the total split.<!-- -->If there are two recipients each with 10 shares, they each will receive 50% of the total royalties.<!-- -->If there are two recipients each with 1 share, they each will receive 50% of the total royalties.<!-- -->I.e. the total number of shares is used to calculate the percentage of the total royalties that is allocated to each recipient. |
 |  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
 |  [NFTModule](./sdk.nftmodule.md) | Create a collection of one-of-one NFTs. |

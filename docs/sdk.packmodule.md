@@ -11,7 +11,7 @@ Create lootboxes of NFTs with rarity based open mechanics.
 ```typescript
 export interface PackModule extends ModuleWithRoles<Pack, PackModuleMetadata>, ModuleWithRoyalties<Pack, PackModuleMetadata> 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Pack, PackModuleMetadata&gt;, ModuleWithRoyalties&lt;Pack, PackModuleMetadata&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;Pack, [PackModuleMetadata](./sdk.packmodulemetadata.md)<!-- -->&gt;, ModuleWithRoyalties&lt;Pack, [PackModuleMetadata](./sdk.packmodulemetadata.md)<!-- -->&gt;
 
 ## Example
 
