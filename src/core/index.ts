@@ -24,15 +24,16 @@ import {
 } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
+import { Deployer } from "../deployer/deployer";
 import { ISDKOptions, IThirdwebSdk } from "../interfaces";
 import { IStorage } from "../interfaces/IStorage";
 import { BundleCollectionModule } from "../modules/bundleCollection";
 import { BundleDropModule } from "../modules/bundleDrop";
-import { DropModule } from "../modules/drop";
+import { DropModule } from "../modules/nftDrop";
 import { MarketplaceModule } from "../modules/marketplace";
-import { NFTModule } from "../modules/nft";
+import { NFTModule } from "../modules/nftCollection";
 import { PackModule } from "../modules/pack";
-import { SplitsModule } from "../modules/royalty";
+import { SplitsModule } from "../modules/splits";
 import { TokenModule } from "../modules/token";
 import { VoteModule } from "../modules/vote";
 import { IpfsStorage } from "../storage/IpfsStorage";
@@ -45,6 +46,16 @@ import {
   ProviderOrSigner,
   ValidProviderInput,
 } from "./types";
+import {
+  DeployBundleCollectionMetadata,
+  DeployBundleDropModuleMetadata,
+  DeployMarketplaceModuleMetadata,
+  DeployNFTCollectionModuleMetadata,
+  DeployPackModuleMetadata,
+  DeploySplitsModuleMetadata,
+  DeployTokenModuleMetadata,
+  DeployVoteModuleMetadata,
+} from "../schema";
 
 /**
  * @internal
@@ -113,6 +124,14 @@ export class ThirdwebSDK implements IThirdwebSdk {
     this._registry = value;
   }
 
+  private _deployer: Deployer | null = null;
+  private get deployer(): Deployer | null {
+    return this._deployer;
+  }
+  private set deployer(value: Deployer | null) {
+    this._deployer = value;
+  }
+
   constructor(
     providerOrNetwork: ValidProviderInput,
     opts?: Partial<ISDKOptions>,
@@ -163,6 +182,35 @@ export class ThirdwebSDK implements IThirdwebSdk {
       (await this.getChainID()) as SUPPORTED_CHAIN_ID,
     );
   }
+
+  private async getDeployer(): Promise<Deployer> {
+    if (this.deployer) {
+      return this.deployer;
+    }
+    return new Deployer(this.providerOrSigner, "", this.options, this);
+  }
+
+  public deployModule = {
+    bundleCollection: async (metadata: DeployBundleCollectionMetadata) =>
+      await (
+        await this.getDeployer()
+      ).deployModule("BUNDLE_COLLECTION", metadata),
+    bundleDrop: async (metadata: DeployBundleDropModuleMetadata) =>
+      await (await this.getDeployer()).deployModule("BUNDLE_DROP", metadata),
+    marketplace: async (metadata: DeployMarketplaceModuleMetadata) =>
+      await (await this.getDeployer()).deployModule("MARKETPLACE", metadata),
+    nftCollection: async (metadata: DeployNFTCollectionModuleMetadata) =>
+      await (await this.getDeployer()).deployModule("NFT_COLLECTION", metadata),
+    pack: async (metadata: DeployPackModuleMetadata) =>
+      await (await this.getDeployer()).deployModule("PACK", metadata),
+    splits: async (metadata: DeploySplitsModuleMetadata) =>
+      await (await this.getDeployer()).deployModule("SPLITS", metadata),
+    token: async (metadata: DeployTokenModuleMetadata) =>
+      await (await this.getDeployer()).deployModule("TOKEN", metadata),
+    vote: async (metadata: DeployVoteModuleMetadata) =>
+      await (await this.getDeployer()).deployModule("VOTE", metadata),
+  };
+
   /**
    *
    * @param address - The contract address of the given Registry module.

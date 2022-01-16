@@ -73,7 +73,7 @@ function getMetadataClassForModuleType<TModuleType extends ModuleType>(
  * Access this module by calling {@link ThirdwebSDK.getAppModule}
  * @public
  */
-export class Deployer extends Module<ThirdwebFactory> {
+export class Deployer extends Module<ThirdwebFactory, any> {
   protected connectContract(): ThirdwebFactory {
     return ThirdwebFactory__factory.connect(
       this.address,
