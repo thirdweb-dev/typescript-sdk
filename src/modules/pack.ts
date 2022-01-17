@@ -43,6 +43,14 @@ export interface PackNFTMetadata {
   supply: BigNumber;
   metadata: NFTMetadata;
 }
+
+/**
+ * @public
+ */
+export interface PackMetadataWithBalance extends PackMetadata {
+  ownedByAddress: BigNumber;
+}
+
 export enum UnderlyingType {
   None = 0,
   ERC20 = 1,
@@ -88,8 +96,7 @@ export interface IPackBatchArgs {
  */
 export class PackModule
   extends ModuleWithRoles<PackContract>
-  implements ITransferable
-{
+  implements ITransferable {
   public static moduleType: ModuleType = ModuleType.PACK;
 
   public static roles = [
@@ -562,5 +569,36 @@ export class PackModule
   ): Promise<TransactionReceipt> {
     await this.onlyRoles(["admin"], await this.getSignerAddress());
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  /**
+   * `getOwned` is a convenience method for getting all owned tokens
+   * for a particular wallet.
+   *
+   * @param _address - The address to check for token ownership
+   * @returns An array of PackMetadataWithBalance objects that are owned by the address
+   */
+  public async getOwned(_address?: string): Promise<PackMetadataWithBalance[]> {
+    const address = _address ? _address : await this.getSignerAddress();
+    const maxId = await this.readOnlyContract.nextTokenId();
+    const balances = await this.readOnlyContract.balanceOfBatch(
+      Array(maxId.toNumber()).fill(address),
+      Array.from(Array(maxId.toNumber()).keys()),
+    );
+
+    const ownedBalances = balances
+      .map((b, i) => {
+        return {
+          tokenId: i,
+          balance: b,
+        };
+      })
+      .filter((b) => b.balance.gt(0));
+    return await Promise.all(
+      ownedBalances.map(async ({ tokenId, balance }) => {
+        const token = await this.get(tokenId.toString());
+        return { ...token, ownedByAddress: balance };
+      }),
+    );
   }
 }
