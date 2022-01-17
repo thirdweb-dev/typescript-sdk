@@ -38,6 +38,6 @@ const listingId = 0;
 // The price you are willing to bid for a single token of the listing
 const bidPricePerToken = 1;
 
-await module.buyoutDirectListing(listingId, bidPricePerToken);
+await module.makeAuctionListingBid(listingId, bidPricePerToken);
 ```
 
