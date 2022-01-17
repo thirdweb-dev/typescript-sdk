@@ -198,11 +198,7 @@ export interface BundleDropMetadata {
 }
 
 // @public
-export interface BundleDropModule extends ModuleWithRoles<LazyMintERC1155, BundleDropModuleMetadata>, ModuleWithRoyalties<LazyMintERC1155, BundleDropModuleMetadata> {
-}
-
-// @public (undocumented)
-export class BundleDropModule implements ITransferable {
+export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155, BundleDropModuleMetadata> implements ITransferable {
     // (undocumented)
     balance(tokenId: BigNumberish): Promise<BigNumber>;
     balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
@@ -1642,6 +1638,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
         bundleDrop: (metadata: DeployBundleDropModuleMetadata) => Promise<ethers.ContractTransaction>;
         marketplace: (metadata: DeployMarketplaceModuleMetadata) => Promise<ethers.ContractTransaction>;
         nftCollection: (metadata: DeployNFTCollectionModuleMetadata) => Promise<ethers.ContractTransaction>;
+        nftDrop: (metadata: DeployNFTDropModuleMetadata) => Promise<ethers.ContractTransaction>;
         pack: (metadata: DeployPackModuleMetadata) => Promise<ethers.ContractTransaction>;
         splits: (metadata: DeploySplitsModuleMetadata) => Promise<ethers.ContractTransaction>;
         token: (metadata: DeployTokenModuleMetadata) => Promise<ethers.ContractTransaction>;

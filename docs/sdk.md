@@ -73,7 +73,7 @@ Output
 |  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
 |  [BundleCollectionMetadata](./sdk.bundlecollectionmetadata.md) |  |
 |  [BundleCollectionModule](./sdk.bundlecollectionmodule.md) |  |
-|  [BundleDropModule](./sdk.bundledropmodule.md) |  |
+|  [BundleDropModule](./sdk.bundledropmodule.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md) |  |
 |  [ClaimConditionFactory](./sdk.claimconditionfactory.md) |  |
 |  [ClaimConditionPhase](./sdk.claimconditionphase.md) |  |
@@ -151,7 +151,6 @@ Output
 |  [BundleCollectionModule](./sdk.bundlecollectionmodule.md) | Create a collection of NFTs that lets you optionally mint multiple copies of each NFT. |
 |  [BundleDropCreateClaimCondition](./sdk.bundledropcreateclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [BundleDropMetadata](./sdk.bundledropmetadata.md) | <b><i>(BETA)</i></b> |
-|  [BundleDropModule](./sdk.bundledropmodule.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [BundleMetadata](./sdk.bundlemetadata.md) | <b><i>(BETA)</i></b> |
 |  [ClaimCondition](./sdk.claimcondition.md) | <b><i>(BETA)</i></b> |
 |  [CollectionMetadata](./sdk.collectionmetadata.md) |  |

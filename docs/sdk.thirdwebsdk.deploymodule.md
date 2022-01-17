@@ -12,6 +12,7 @@ deployModule: {
         bundleDrop: (metadata: DeployBundleDropModuleMetadata) => Promise<ethers.ContractTransaction>;
         marketplace: (metadata: DeployMarketplaceModuleMetadata) => Promise<ethers.ContractTransaction>;
         nftCollection: (metadata: DeployNFTCollectionModuleMetadata) => Promise<ethers.ContractTransaction>;
+        nftDrop: (metadata: DeployNFTDropModuleMetadata) => Promise<ethers.ContractTransaction>;
         pack: (metadata: DeployPackModuleMetadata) => Promise<ethers.ContractTransaction>;
         splits: (metadata: DeploySplitsModuleMetadata) => Promise<ethers.ContractTransaction>;
         token: (metadata: DeployTokenModuleMetadata) => Promise<ethers.ContractTransaction>;

@@ -5,7 +5,7 @@ import {
   PropertyConvertingMode,
 } from "json2typescript";
 import { FORWARDER_ADDRESS } from "../../common/address";
-import { FileOrBuffer } from "../FileOrBuffer";
+// import { FileOrBuffer } from "../FileOrBuffer";
 
 /**
  * CommonModuleMetadata defines the common properties of a module.
@@ -32,7 +32,7 @@ export class CommonModuleMetadata {
    * and the property is the IPFS hash uri).
    */
   @JsonProperty("image", String, PropertyConvertingMode.IGNORE_NULLABLE)
-  image?: string | FileOrBuffer = undefined;
+  image?: string = undefined;
 
   /**
    * An external link for the module.

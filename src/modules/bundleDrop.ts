@@ -8,7 +8,6 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
-import { mix } from "ts-mixer";
 import {
   getCurrencyValue,
   isNativeToken,
@@ -20,7 +19,7 @@ import {
 import { invariant } from "../common/invariant";
 import { isMetadataEqual } from "../common/isMetadataEqual";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
-import { Module, ModuleWithRoles, ModuleWithRoyalties } from "../core/module";
+import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/ClaimConditionFactory";
@@ -67,11 +66,14 @@ export interface BundleDropMetadata {
  *
  * @public
  */
-export interface BundleDropModule
-  extends ModuleWithRoles<BundleDrop, BundleDropModuleMetadata>,
-    ModuleWithRoyalties<BundleDrop, BundleDropModuleMetadata> {}
-@mix(Module, ModuleWithRoles)
-export class BundleDropModule implements ITransferable {
+// export interface BundleDropModule
+//   extends ModuleWithRoles<BundleDrop, BundleDropModuleMetadata>,
+//     ModuleWithRoyalties<BundleDrop, BundleDropModuleMetadata> {}
+// @mix(Module, ModuleWithRoles)
+export class BundleDropModule
+  extends ModuleWithRoles<BundleDrop, BundleDropModuleMetadata>
+  implements ITransferable
+{
   public static moduleType: ModuleType = "BUNDLE_DROP" as const;
 
   public static roles = [

@@ -2,16 +2,18 @@
 
 [Home](./index.md) &gt; [@3rdweb/sdk](./sdk.md) &gt; [BundleDropModule](./sdk.bundledropmodule.md)
 
-## BundleDropModule interface
+## BundleDropModule class
 
 Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
 
 <b>Signature:</b>
 
 ```typescript
-export interface BundleDropModule extends ModuleWithRoles<BundleDrop, BundleDropModuleMetadata>, ModuleWithRoyalties<BundleDrop, BundleDropModuleMetadata> 
+export declare class BundleDropModule extends ModuleWithRoles<BundleDrop, BundleDropModuleMetadata> implements ITransferable 
 ```
-<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;BundleDrop, [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md)<!-- -->&gt;, ModuleWithRoyalties&lt;BundleDrop, [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md)<!-- -->&gt;
+<b>Extends:</b> [ModuleWithRoles](./sdk.modulewithroles.md)<!-- -->&lt;BundleDrop, [BundleDropModuleMetadata](./sdk.bundledropmodulemetadata.md)<!-- -->&gt;
+
+<b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 
 ## Example
 
@@ -24,4 +26,45 @@ const provider = ethers.Wallet.createRandom();
 const sdk = new ThirdwebSDK(provider);
 const module = sdk.getBundleDropModule("{{module_address}}");
 ```
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [moduleType](./sdk.bundledropmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [roles](./sdk.bundledropmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
+
+## Methods
+
+|  Method | Modifiers | Description |
+|  --- | --- | --- |
+|  [balance(tokenId)](./sdk.bundledropmodule.balance.md) |  |  |
+|  [balanceOf(address, tokenId)](./sdk.bundledropmodule.balanceof.md) |  | Get NFT Balance |
+|  [burn(tokenId, amount)](./sdk.bundledropmodule.burn.md) |  |  |
+|  [canClaim(tokenId, quantity, addressToCheck)](./sdk.bundledropmodule.canclaim.md) |  |  |
+|  [claim(tokenId, quantity, proofs)](./sdk.bundledropmodule.claim.md) |  | Claim a token to yourself |
+|  [claimTo(tokenId, quantity, addressToClaim, proofs)](./sdk.bundledropmodule.claimto.md) |  | Claim NFTs to Wallet |
+|  [createBatch(metadatas)](./sdk.bundledropmodule.createbatch.md) |  | Create Many NFTs |
+|  [get(tokenId)](./sdk.bundledropmodule.get.md) |  |  |
+|  [getActiveClaimCondition(tokenId)](./sdk.bundledropmodule.getactiveclaimcondition.md) |  |  |
+|  [getAll()](./sdk.bundledropmodule.getall.md) |  | Get NFT Data |
+|  [getAllClaimConditions(tokenId)](./sdk.bundledropmodule.getallclaimconditions.md) |  |  |
+|  [getAllClaimerAddresses(tokenId)](./sdk.bundledropmodule.getallclaimeraddresses.md) |  | <b><i>(BETA)</i></b> Pulls the list of all addresses that have claimed a particular token<!-- -->- This can be very slow for large numbers of token holders |
+|  [getClaimConditionFactory()](./sdk.bundledropmodule.getclaimconditionfactory.md) |  | Creates a claim condition factory |
+|  [getClaimConditionsFactory()](./sdk.bundledropmodule.getclaimconditionsfactory.md) |  |  |
+|  [getClaimIneligibilityReasons(tokenId, quantity, addressToCheck)](./sdk.bundledropmodule.getclaimineligibilityreasons.md) |  | For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user. |
+|  [getDefaultSaleRecipient()](./sdk.bundledropmodule.getdefaultsalerecipient.md) |  |  |
+|  [getOwned(\_address)](./sdk.bundledropmodule.getowned.md) |  | <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
+|  [getSaleRecipient(tokenId)](./sdk.bundledropmodule.getsalerecipient.md) |  |  |
+|  [isApproved(address, operator)](./sdk.bundledropmodule.isapproved.md) |  |  |
+|  [isTransferRestricted()](./sdk.bundledropmodule.istransferrestricted.md) |  |  |
+|  [setApproval(operator, approved)](./sdk.bundledropmodule.setapproval.md) |  |  |
+|  [setClaimCondition(tokenId, factory)](./sdk.bundledropmodule.setclaimcondition.md) |  | Sets public claim conditions for the next minting using the claim condition factory. |
+|  [setDefaultSaleRecipient(recipient)](./sdk.bundledropmodule.setdefaultsalerecipient.md) |  |  |
+|  [setRestrictedTransfer(restricted)](./sdk.bundledropmodule.setrestrictedtransfer.md) |  |  |
+|  [setSaleRecipient(tokenId, recipient)](./sdk.bundledropmodule.setsalerecipient.md) |  |  |
+|  [totalSupply(tokenId)](./sdk.bundledropmodule.totalsupply.md) |  | Returns the total supply of a specific token |
+|  [transfer(to, tokenId, amount, data)](./sdk.bundledropmodule.transfer.md) |  | Transfer NFT |
+|  [transferFrom(from, to, tokenId, amount, data)](./sdk.bundledropmodule.transferfrom.md) |  |  |
+|  [updateClaimConditions(tokenId, factory)](./sdk.bundledropmodule.updateclaimconditions.md) |  |  |
 

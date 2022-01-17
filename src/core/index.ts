@@ -51,6 +51,7 @@ import {
   DeployBundleDropModuleMetadata,
   DeployMarketplaceModuleMetadata,
   DeployNFTCollectionModuleMetadata,
+  DeployNFTDropModuleMetadata,
   DeployPackModuleMetadata,
   DeploySplitsModuleMetadata,
   DeployTokenModuleMetadata,
@@ -202,6 +203,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
       await (await this.getDeployer()).deployModule("MARKETPLACE", metadata),
     nftCollection: async (metadata: DeployNFTCollectionModuleMetadata) =>
       await (await this.getDeployer()).deployModule("NFT_COLLECTION", metadata),
+    nftDrop: async (metadata: DeployNFTDropModuleMetadata) =>
+      await (await this.getDeployer()).deployModule("NFT_DROP", metadata),
     pack: async (metadata: DeployPackModuleMetadata) =>
       await (await this.getDeployer()).deployModule("PACK", metadata),
     splits: async (metadata: DeploySplitsModuleMetadata) =>
