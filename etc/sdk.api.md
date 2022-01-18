@@ -18,6 +18,7 @@ import { Coin } from '@3rdweb/contracts';
 import { ContractReceipt } from 'ethers';
 import { DataStore } from '@3rdweb/contracts';
 import { ethers } from 'ethers';
+import { EventEmitter2 } from 'eventemitter2';
 import { LazyMintERC1155 } from '@3rdweb/contracts';
 import { LazyMintERC721 } from '@3rdweb/contracts';
 import { LazyNFT } from '@3rdweb/contracts';
@@ -1927,6 +1928,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
     createApp(metadata: MetadataURIOrObject): Promise<ContractReceipt>;
     // (undocumented)
     createSnapshot(leafs: string[]): Promise<SnapshotInfo>;
+    // (undocumented)
+    event: EventEmitter2;
     // (undocumented)
     getAppModule(address: string): AppModule;
     getApps(address?: string): Promise<IAppModule[]>;
