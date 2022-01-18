@@ -19,6 +19,12 @@ export declare class ThirdwebSDK implements IThirdwebSdk
 |  --- | --- | --- |
 |  [(constructor)(providerOrNetwork, opts)](./sdk.thirdwebsdk._constructor_.md) |  | Constructs a new instance of the <code>ThirdwebSDK</code> class |
 
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [event](./sdk.thirdwebsdk.event.md) |  | EventEmitter2 |  |
+
 ## Methods
 
 |  Method | Modifiers | Description |
