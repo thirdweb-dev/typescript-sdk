@@ -591,4 +591,20 @@ describe("Drop Module", async () => {
       "!can claim",
     );
   });
+
+  it("set claim condition and reset claim condition", async () => {
+    const factory = dropModule.getMintConditionsFactory();
+    factory.newClaimPhase({
+      startTime: new Date().getTime() / 2000,
+    });
+    factory.newClaimPhase({
+      startTime: new Date().getTime(),
+    });
+
+    await dropModule.setClaimConditions(factory);
+    expect((await dropModule.getAllClaimConditions()).length).to.be.equal(2);
+
+    await dropModule.setClaimConditions(dropModule.getClaimConditionsFactory());
+    expect((await dropModule.getAllClaimConditions()).length).to.be.equal(0);
+  });
 });
