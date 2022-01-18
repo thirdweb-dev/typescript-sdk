@@ -1125,11 +1125,11 @@ export class MarketplaceModule
     )[];
   }
 
-  public async isOpen(): Promise<boolean> {
+  public async isRestrictedListerRoleOnly(): Promise<boolean> {
     return this.readOnlyContract.restrictedListerRoleOnly();
   }
 
-  public async setIsOpen(isOpen: boolean): Promise<void> {
+  public async setRestrictedListerRoleOnly(isOpen: boolean): Promise<void> {
     await this.sendTransaction("setRestrictedListerRoleOnly", [isOpen]);
   }
 }
