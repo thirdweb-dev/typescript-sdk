@@ -96,7 +96,8 @@ export interface IPackBatchArgs {
  */
 export class PackModule
   extends ModuleWithRoles<PackContract>
-  implements ITransferable {
+  implements ITransferable
+{
   public static moduleType: ModuleType = ModuleType.PACK;
 
   public static roles = [
