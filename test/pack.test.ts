@@ -160,4 +160,27 @@ describe("Pack Module", async () => {
       const pack = await createPacks();
     });
   });
+
+  describe("Get owned packs", async () => {
+    beforeEach(async () => {
+      await createBundles();
+    });
+
+    it("get owned returns pack metadata and balances", async () => {
+      const pack = await createPacks();
+
+      let adminOwned = await packModule.getOwned();
+      assert.equal(adminOwned.length, 2);
+      assert.equal(adminOwned[0].ownedByAddress.toString(), "150");
+      assert.equal(adminOwned[1].ownedByAddress.toString(), "75");
+
+      await packModule.transfer(samWallet.address, "0", BigNumber.from(50));
+      const samOwned = await packModule.getOwned(samWallet.address);
+      assert.equal(samOwned.length, 1);
+      assert.equal(samOwned[0].ownedByAddress.toString(), "50");
+
+      adminOwned = await packModule.getOwned();
+      assert.equal(adminOwned[0].ownedByAddress.toString(), "100");
+    });
+  });
 });
