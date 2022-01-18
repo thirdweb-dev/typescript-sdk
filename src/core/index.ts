@@ -58,6 +58,7 @@ import {
   DeployVoteModuleMetadata,
 } from "../schema";
 import { ContractMetadataSchema, ModuleMetadata } from "..";
+import { EventEmitter2 } from "eventemitter2";
 
 /**
  * @internal
@@ -99,6 +100,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     },
     gaslessSendFunction: this.defaultGaslessSendFunction.bind(this),
   };
+
   private modules = new Map<string, C.Instance<AnyContract>>();
   private providerOrSigner: ProviderOrSigner;
 
@@ -106,6 +108,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
 
   private _jsonConvert = new JsonConvert();
   private storage: IStorage;
+
+  public event = new EventEmitter2();
 
   /**
    * The active Signer, you should not need to access this unless you are deploying new modules.

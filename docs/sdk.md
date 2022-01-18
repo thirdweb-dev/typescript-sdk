@@ -186,6 +186,7 @@ Output
 |  [NFTModule](./sdk.nftmodule.md) | Create a collection of one-of-one NFTs. |
 |  [Offer](./sdk.offer.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
+|  [PackMetadataWithBalance](./sdk.packmetadatawithbalance.md) |  |
 |  [PackModule](./sdk.packmodule.md) | Create lootboxes of NFTs with rarity based open mechanics. |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [Proposal](./sdk.proposal.md) |  |

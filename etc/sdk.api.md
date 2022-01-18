@@ -16,6 +16,7 @@ import { CallOverrides } from 'ethers';
 import { Class } from 'ts-mixer/dist/types/types';
 import { Coin } from '@3rdweb/contracts';
 import { ethers } from 'ethers';
+import { EventEmitter2 } from 'eventemitter2';
 import { JsonConvert } from 'json2typescript';
 import { LazyMintERC1155 } from '@3rdweb/contracts';
 import { LazyMintERC721 } from '@3rdweb/contracts';
@@ -1026,6 +1027,8 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     getTimeBufferInSeconds(): Promise<BigNumber>;
     getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
     // (undocumented)
+    isRestrictedListerRoleOnly(): Promise<boolean>;
+    // (undocumented)
     isWinningBid(winningPrice: BigNumberish, newBidPrice: BigNumberish, bidBuffer: BigNumberish): Promise<boolean>;
     makeAuctionListingBid(bid: {
         listingId: BigNumberish;
@@ -1044,6 +1047,8 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     static roles: readonly ["admin", "lister"];
     // (undocumented)
     setBidBufferBps(buffer: BigNumberish): Promise<void>;
+    // (undocumented)
+    setRestrictedListerRoleOnly(isRestricted: boolean): Promise<void>;
     // (undocumented)
     setTimeBufferInSeconds(buffer: BigNumberish): Promise<void>;
     // (undocumented)
@@ -1380,6 +1385,14 @@ export interface PackMetadata {
     openStart: Date | null;
 }
 
+// Warning: (ae-incompatible-release-tags) The symbol "PackMetadataWithBalance" is marked as @public, but its signature references "PackMetadata" which is marked as @beta
+//
+// @public (undocumented)
+export interface PackMetadataWithBalance extends PackMetadata {
+    // (undocumented)
+    ownedByAddress: BigNumber;
+}
+
 // @public
 export interface PackModule extends ModuleWithRoles<Pack, PackModuleMetadata>, ModuleWithRoyalties<Pack, PackModuleMetadata> {
 }
@@ -1409,6 +1422,7 @@ export class PackModule implements ITransferable {
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     getNFTs(packId: string): Promise<PackNFTMetadata[]>;
+    getOwned(_address?: string): Promise<PackMetadataWithBalance[]>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
@@ -1644,6 +1658,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
         token: (metadata: DeployTokenModuleMetadata) => Promise<ethers.ContractTransaction>;
         vote: (metadata: DeployVoteModuleMetadata) => Promise<ethers.ContractTransaction>;
     };
+    // (undocumented)
+    event: EventEmitter2;
     // (undocumented)
     getBundleCollectionModule(address: string): BundleCollectionModule;
     // @beta (undocumented)

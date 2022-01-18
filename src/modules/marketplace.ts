@@ -1121,4 +1121,14 @@ export class MarketplaceModule
       | DirectListing
     )[];
   }
+
+  public async isRestrictedListerRoleOnly(): Promise<boolean> {
+    return this.readOnlyContract.restrictedListerRoleOnly();
+  }
+
+  public async setRestrictedListerRoleOnly(
+    isRestricted: boolean,
+  ): Promise<void> {
+    await this.sendTransaction("setRestrictedListerRoleOnly", [isRestricted]);
+  }
 }
