@@ -1275,6 +1275,8 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     getTimeBufferInSeconds(): Promise<BigNumber>;
     getWinningBid(listingId: BigNumberish_2): Promise<Offer | undefined>;
     // (undocumented)
+    isRestrictedListerRoleOnly(): Promise<boolean>;
+    // (undocumented)
     isWinningBid(winningPrice: BigNumberish_2, newBidPrice: BigNumberish_2, bidBuffer: BigNumberish_2): Promise<boolean>;
     makeAuctionListingBid(bid: {
         listingId: BigNumberish_2;
@@ -1293,6 +1295,8 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     static roles: readonly ["admin", "lister"];
     // (undocumented)
     setBidBufferBps(buffer: BigNumberish_2): Promise<void>;
+    // (undocumented)
+    setRestrictedListerRoleOnly(isRestricted: boolean): Promise<void>;
     // (undocumented)
     setTimeBufferInSeconds(buffer: BigNumberish_2): Promise<void>;
     // (undocumented)
@@ -1667,6 +1671,14 @@ export interface PackMetadata {
     openStart: Date | null;
 }
 
+// Warning: (ae-incompatible-release-tags) The symbol "PackMetadataWithBalance" is marked as @public, but its signature references "PackMetadata" which is marked as @beta
+//
+// @public (undocumented)
+export interface PackMetadataWithBalance extends PackMetadata {
+    // (undocumented)
+    ownedByAddress: BigNumber;
+}
+
 // @public
 export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // (undocumented)
@@ -1692,6 +1704,7 @@ export class PackModule extends ModuleWithRoles<Pack> implements ITransferable {
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     getNFTs(packId: string): Promise<PackNFTMetadata[]>;
+    getOwned(_address?: string): Promise<PackMetadataWithBalance[]>;
     getRoyaltyBps(): Promise<BigNumberish_2>;
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
