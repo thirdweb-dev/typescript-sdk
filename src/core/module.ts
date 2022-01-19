@@ -694,6 +694,20 @@ export class ModuleWithRoles<
     ]);
   }
 
+  /**
+   * Call this to grant a role to many addresses at once.
+   *
+   * @remarks
+   *
+   * Make sure you are sure you want to grant the role to the addresses.
+   *
+   * @param role - The {@link IRoles | role} to grant to the address
+   * @param addresses - The addresses to grant the role to
+   * @returns The transaction receipt
+   * @throws If you are trying to grant does not exist on the module this will throw an {@link InvariantError}.
+   *
+   * @public
+   */
   public async batchGrantRole(
     role: Role,
     addresses: string[],
