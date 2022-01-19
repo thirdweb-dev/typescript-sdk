@@ -35,6 +35,7 @@ export interface IMarketplace
 |  [makeDirectListingOffer(offer)](./sdk.imarketplace.makedirectlistingoffer.md) | Make an offer on a direct listing. |
 |  [setBidBufferBps(buffer)](./sdk.imarketplace.setbidbufferbps.md) | Sets the bid buffer on the marketplace contract. The bid buffer is represented in basis points. |
 |  [setTimeBufferInSeconds(buffer)](./sdk.imarketplace.settimebufferinseconds.md) | Sets the current time buffer on the marketplace contract. |
+|  [setTimeBufferInSeconds(buffer)](./sdk.imarketplace.settimebufferinseconds_1.md) | Sets the current time buffer on the marketplace contract. |
 |  [updateAuctionListing(listing)](./sdk.imarketplace.updateauctionlisting.md) | Updates an auction listing. |
 |  [updateDirectListing(listing)](./sdk.imarketplace.updatedirectlisting.md) | Updates a direct listing. |
 

@@ -893,6 +893,7 @@ export interface IMarketplace {
     }): Promise<void>;
     setBidBufferBps(buffer: BigNumberish_2): Promise<void>;
     setTimeBufferInSeconds(buffer: BigNumberish_2): Promise<void>;
+    setTimeBufferInSeconds(buffer: BigNumberish_2): Promise<void>;
     updateAuctionListing(listing: AuctionListing): Promise<void>;
     updateDirectListing(listing: DirectListing): Promise<void>;
 }
