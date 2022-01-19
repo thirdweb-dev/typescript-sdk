@@ -1236,6 +1236,20 @@ export class MarketModuleMetadata extends CommonModuleMetadata {
     marketFeeBasisPoints: number;
 }
 
+// @public (undocumented)
+export interface MarketplaceFilter {
+    // (undocumented)
+    count?: number;
+    // (undocumented)
+    seller?: string;
+    // (undocumented)
+    start?: number;
+    // (undocumented)
+    tokenContract?: string;
+    // (undocumented)
+    tokenId?: number;
+}
+
 // @public
 export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements IMarketplace {
     // (undocumented)
@@ -1257,7 +1271,8 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     createDirectListing(listing: NewDirectListing): Promise<BigNumber>;
     // (undocumented)
     getActiveOffer(listingId: BigNumberish_2, address: string): Promise<Offer | undefined>;
-    getAllListings(): Promise<(AuctionListing | DirectListing)[]>;
+    // (undocumented)
+    getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     // (undocumented)
     getAuctionListing(listingId: BigNumberish_2): Promise<AuctionListing>;
     getAuctionWinner(listingId: BigNumberish_2): Promise<string>;

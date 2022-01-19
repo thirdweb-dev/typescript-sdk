@@ -48,7 +48,7 @@ const module = sdk.getMarketplaceModule("{{module_address}}");
 |  [createAuctionListing(listing)](./sdk.marketplacemodule.createauctionlisting.md) |  | Create Auction |
 |  [createDirectListing(listing)](./sdk.marketplacemodule.createdirectlisting.md) |  | Create Direct Listing |
 |  [getActiveOffer(listingId, address)](./sdk.marketplacemodule.getactiveoffer.md) |  |  |
-|  [getAllListings()](./sdk.marketplacemodule.getalllistings.md) |  | Get Listings |
+|  [getAllListings(filter)](./sdk.marketplacemodule.getalllistings.md) |  |  |
 |  [getAuctionListing(listingId)](./sdk.marketplacemodule.getauctionlisting.md) |  |  |
 |  [getAuctionWinner(listingId)](./sdk.marketplacemodule.getauctionwinner.md) |  | Get Auction Winner |
 |  [getBidBufferBps()](./sdk.marketplacemodule.getbidbufferbps.md) |  |  |
