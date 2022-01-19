@@ -12,6 +12,7 @@ import {
   BigNumber,
   BytesLike,
   CallOverrides,
+  ContractTransaction,
   ethers,
   Signer,
 } from "ethers";
@@ -24,6 +25,7 @@ import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role, SetAllRoles } from "../common/role";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
 import { ModuleMetadata } from "../types/ModuleMetadata";
+import { EventType } from "./events";
 import { ThirdwebSDK } from "./index";
 import type {
   GaslessTransaction,
@@ -277,6 +279,19 @@ export class Module<TContract extends BaseContract = BaseContract> {
   /**
    * @internal
    */
+  private async emitTransactionEvent(
+    status: "submitted" | "completed",
+    transactionHash: string,
+  ) {
+    this.sdk.event.emit(EventType.Transaction, {
+      status,
+      transactionHash,
+    });
+  }
+
+  /**
+   * @internal
+   */
   protected async sendTransaction(
     fn: string,
     args: any[],
@@ -297,44 +312,50 @@ export class Module<TContract extends BaseContract = BaseContract> {
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
+
     if (
       this.options.transactionRelayerUrl ||
       this.options.gasless.biconomy.apiKey
     ) {
-      return await this.sendGaslessTransaction(
+      const provider = await this.getProvider();
+      const txHash = await this.sendGaslessTransaction(
         contract,
         fn,
         args,
         callOverrides,
       );
+      this.emitTransactionEvent("submitted", txHash);
+      const receipt = await provider.waitForTransaction(txHash);
+      this.emitTransactionEvent("completed", txHash);
+      return receipt;
     } else {
-      return await this.sendAndWaitForTransaction(
+      const tx = await this.sendTransactionByFunction(
         contract,
         fn,
         args,
         callOverrides,
       );
+      this.emitTransactionEvent("submitted", tx.hash);
+      const receipt = tx.wait();
+      this.emitTransactionEvent("completed", tx.hash);
+      return receipt;
     }
   }
 
   /**
    * @internal
    */
-  private async sendAndWaitForTransaction(
+  private async sendTransactionByFunction(
     contract: BaseContract,
     fn: string,
     args: any[],
     callOverrides: CallOverrides,
-  ): Promise<TransactionReceipt> {
+  ): Promise<ContractTransaction> {
     const func: ethers.ContractFunction = contract.functions[fn];
     if (!func) {
       throw new Error("invalid function");
     }
-    const tx = await func(...args, callOverrides);
-    if (tx.wait) {
-      return await tx.wait();
-    }
-    return tx;
+    return await func(...args, callOverrides);
   }
 
   /**
@@ -345,7 +366,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     fn: string,
     args: any[],
     callOverrides: CallOverrides,
-  ): Promise<TransactionReceipt> {
+  ): Promise<string> {
     const signer = this.getSigner();
     invariant(
       signer,
@@ -388,8 +409,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     };
 
     const txHash = await this.options.gaslessSendFunction(contract, tx);
-
-    return await provider.waitForTransaction(txHash);
+    return txHash;
   }
 
   protected async signTypedData(

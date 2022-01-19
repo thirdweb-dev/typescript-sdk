@@ -528,7 +528,7 @@ export class AppModule
       NFTCollection__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
-      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
 
     return this.sdk.getBundleModule(address);
@@ -617,7 +617,7 @@ export class AppModule
       SignatureMint721__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
-      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getNFTModule(address);
   }
@@ -773,7 +773,7 @@ export class AppModule
       Pack__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
-      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getPackModule(address);
   }
@@ -828,7 +828,7 @@ export class AppModule
       LazyMintERC721__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
-      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getDropModule(address);
   }
@@ -881,7 +881,7 @@ export class AppModule
       LazyMintERC1155__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
-      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getBundleDropModule(address);
   }

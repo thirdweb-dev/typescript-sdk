@@ -192,6 +192,7 @@ Output
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) | The shared NFT metadata, including the current owner address. |
 |  [Offer](./sdk.offer.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) | <b><i>(BETA)</i></b> |
+|  [PackMetadataWithBalance](./sdk.packmetadatawithbalance.md) |  |
 |  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [Proposal](./sdk.proposal.md) |  |
 |  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
