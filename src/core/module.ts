@@ -630,6 +630,7 @@ export class ModuleWithRoles<
       });
     return await this.sendTransaction("multicall", [encoded]);
   }
+
   /**
    *
    * Call this to revoke all roles given to a specific address.
@@ -691,6 +692,34 @@ export class ModuleWithRoles<
       getRoleHash(role),
       address,
     ]);
+  }
+
+  public async batchGrantRole(
+    role: Role,
+    addresses: string[],
+  ): Promise<TransactionReceipt> {
+    invariant(
+      this.roles.includes(role),
+      `this module does not support the "${role}" role`,
+    );
+    invariant(
+      addresses.length,
+      "must provide at least one address to grant the role to",
+    );
+
+    const encoded: string[] = [];
+    const roleHash = getRoleHash(role as Role);
+
+    addresses.forEach((address) => {
+      encoded.push(
+        this.contract.interface.encodeFunctionData("grantRole", [
+          roleHash,
+          address,
+        ]),
+      );
+    });
+
+    return await this.sendTransaction("multicall", [encoded]);
   }
 
   /**
