@@ -5,7 +5,6 @@ import {
   SignatureMint721,
   SignatureMint721__factory,
 } from "@3rdweb/contracts";
-
 import { MintedBatchEvent, MintedEvent } from "@3rdweb/contracts/dist/NFT";
 import {
   MintRequestStructOutput,
@@ -44,7 +43,19 @@ const MintRequest = [
 ];
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getNFTModule}
+ * Create a collection of one-of-one NFTs.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
+ * const module = sdk.getNFTModule("{{module_address}}");
+ * ```
+ *
  * @public
  */
 export class NFTModule
@@ -122,6 +133,19 @@ export class NFTModule
     };
   }
 
+  /**
+   * Get All NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this module.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await module.getAll();
+   * console.log(nfts);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
+   */
   public async getAll(): Promise<NFTMetadata[]> {
     let maxId: number;
     if (await this.isV1()) {
@@ -172,6 +196,19 @@ export class NFTModule
     }
   }
 
+  /**
+   * Get Owned NFTs
+   *
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await module.getOwned(address);
+   * console.log(nfts);
+   * ```
+   */
   public async getOwned(_address?: string): Promise<NFTMetadata[]> {
     const address = _address ? _address : await this.getSignerAddress();
     const balance = await this.readOnlyContract.balanceOf(address);
@@ -188,6 +225,22 @@ export class NFTModule
     return await this.readOnlyContract.totalSupply();
   }
 
+  /**
+   * Get NFT Balance
+   *
+   * @remarks Get a wallets NFT balance (number of NFTs in this module owned by the wallet).
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to check NFT balance
+   * const address = "{{wallet_address}}";
+   *
+   * const balance = await module.balanceOf(address);
+   * console.log(balance);
+   * ```
+   *
+   * @returns The balance of the NFTs in the wallet
+   */
   public async balanceOf(address: string): Promise<BigNumber> {
     return await this.readOnlyContract.balanceOf(address);
   }
@@ -210,6 +263,22 @@ export class NFTModule
     ]);
   }
 
+  /**
+   * Transfer NFT
+   *
+   * @remarks Transfer an NFT from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "{{wallet_address}}";
+   *
+   * // The token ID of the NFT you want to send
+   * const tokenId = "0";
+   *
+   * await module.transfer(toAddress, tokenId);
+   * ```
+   */
   public async transfer(
     to: string,
     tokenId: string,
@@ -252,6 +321,26 @@ export class NFTModule
     return await this.get(events[0].args.tokenId.toString());
   }
 
+  /**
+   * Mint NFT
+   *
+   * @remarks Mint an NFT to a specified wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to mint the NFT to
+   * const toAddress = "{{wallet_address}}"
+   *
+   * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
+   * const metadata = {
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }
+   *
+   * await module.mintTo(toAddress, metadata);
+   * ```
+   */
   public async mintTo(
     to: string,
     metadata: MetadataURIOrObject,
@@ -286,10 +375,9 @@ export class NFTModule
   ): Promise<NFTMetadata[]> {
     invariant(this.v1Contract !== undefined, "v1 contract is undefined");
 
-    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
-    const uris = Array.from(Array(metadatas.length).keys()).map(
-      (i) => `${baseUri}${i}/`,
-    );
+    const { metadataUris: uris } = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(metadatas);
     const receipt = await this.sendContractTransaction(
       this.v1Contract,
       "mintNFTBatch",
@@ -310,6 +398,30 @@ export class NFTModule
     );
   }
 
+  /**
+   * Mint Many NFTs
+   *
+   * @remarks Mint many NFTs at once to a specified wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to mint the NFT to
+   * const toAddress = "{{wallet_address}}"
+   *
+   * // Custom metadata of the NFTs you want to mint.
+   * const metadatas = [{
+   *   name: "Cool NFT #1",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }, {
+   *   name: "Cool NFT #2",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/other/image.png"),
+   * }];
+   *
+   * await module.mintBatchTo(toAddress, metadatas);
+   * ```
+   */
   public async mintBatchTo(
     to: string,
     metadatas: MetadataURIOrObject[],
@@ -318,17 +430,15 @@ export class NFTModule
       return await this._v1MintBatchTo(to, metadatas);
     }
 
-    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
-    const uris = Array.from(Array(metadatas.length).keys()).map(
-      (i) => `${baseUri}${i}/`,
-    );
-
+    const { metadataUris: uris } = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(metadatas);
     const multicall = uris.map((uri) =>
       this.contract.interface.encodeFunctionData("mintTo", [to, uri]),
     );
 
     const receipt = await this.sendTransaction("multicall", [multicall]);
-    const events = await this.parseLogs<TokenMintedEvent>(
+    const events = this.parseLogs<TokenMintedEvent>(
       "TokenMinted",
       receipt.logs,
     );
@@ -342,6 +452,19 @@ export class NFTModule
     );
   }
 
+  /**
+   * Burn NFT
+   *
+   * @remarks Burn an NFT, permanently taking it out of circulation and reducing the supply.
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the NFT you want to burn
+   * const tokenId = 0;
+   *
+   * await module.burn(tokenId);
+   * ```
+   */
   public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [tokenId]);
   }
@@ -478,18 +601,18 @@ export class NFTModule
 
     await this.onlyRoles(["minter"], await this.getSignerAddress());
 
-    const cid = await this.sdk
+    const { metadataUris: uris } = await this.sdk
       .getStorage()
       .uploadMetadataBatch(payloads.map((r) => r.metadata));
 
     const chainId = await this.getChainID();
     const from = await this.getSignerAddress();
-    const signer = (await this.getSigner()) as Signer;
+    const signer = this.getSigner() as Signer;
 
     return await Promise.all(
       payloads.map(async (m, i) => {
         const id = resolveId(m);
-        const uri = `${cid}${i}`;
+        const uri = uris[i];
         return {
           payload: {
             ...m,

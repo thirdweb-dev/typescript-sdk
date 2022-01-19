@@ -4,10 +4,7 @@
 
 ## BundleDropModule.claimTo() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
-
-Claim a token and send it to someone else
+Claim NFTs to Wallet
 
 <b>Signature:</b>
 
@@ -29,4 +26,24 @@ claimTo(tokenId: BigNumberish, quantity: BigNumberish, addressToClaim: string, p
 Promise&lt;TransactionReceipt&gt;
 
 - Receipt for the transaction
+
+## Remarks
+
+Let the a specified wallet claim NFTs.
+
+## Example
+
+
+```javascript
+// Address of the wallet you want to claim the NFTs
+const address = "{{wallet_address}}";
+
+// The number of NFTs to claim
+const quantity = 1;
+
+// The token ID of the NFT you want to claim
+const tokenId = "0"
+
+await module.claimTo(tokenId, quantity, address);
+```
 

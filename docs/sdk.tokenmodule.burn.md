@@ -4,6 +4,8 @@
 
 ## TokenModule.burn() method
 
+Burn Tokens
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,18 @@ burn(amount: BigNumberish): Promise<TransactionReceipt>;
 <b>Returns:</b>
 
 Promise&lt;TransactionReceipt&gt;
+
+## Remarks
+
+Burn tokens held by the connected wallet
+
+## Example
+
+
+```javascript
+// The amount of this token you want to burn
+const amount = 100;
+
+await module.burn(amount);
+```
 

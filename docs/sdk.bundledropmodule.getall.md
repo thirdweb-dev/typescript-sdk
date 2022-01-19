@@ -4,8 +4,7 @@
 
 ## BundleDropModule.getAll() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Get NFT Data
 
 <b>Signature:</b>
 
@@ -15,4 +14,19 @@ getAll(): Promise<BundleDropMetadata[]>;
 <b>Returns:</b>
 
 Promise&lt;[BundleDropMetadata](./sdk.bundledropmetadata.md)<!-- -->\[\]&gt;
+
+The NFT metadata for all NFTs in the module.
+
+## Remarks
+
+Get data associated with NFTs in this module.
+
+## Example
+
+
+```javascript
+// Get data associated with every NFT in the module
+const nfts = await module.getAll();
+console.log(nfts);
+```
 

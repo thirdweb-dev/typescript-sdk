@@ -4,7 +4,7 @@
 
 ## VoteModule.propose() method
 
-Create a new proposal.
+Create Proposal
 
 <b>Signature:</b>
 
@@ -24,4 +24,35 @@ propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumb
 Promise&lt;BigNumber&gt;
 
 - The id of the created proposal.
+
+## Remarks
+
+Create a new proposal for token holders to vote on.
+
+## Example
+
+
+```javascript
+// The description of the proposal you want to pass
+const description = "This is a great proposal - vote for it!"
+// You can (optionally) pass in contract calls that will executed when the proposal is executed.
+const executions = [
+  {
+    // The contract you want to make a call to
+    toAddress: "0x...",
+    // The amount of the native currency to send in this transaction
+    nativeTokenValue: 0,
+    // Transaction data that will be executed when the proposal is executed
+    // This is an example transfer transaction with a token module (which you would need to setup in code)
+    transactionData: tokenModule.contract.interface.encodeFunctionData(
+      "transfer", [
+        fromAddress,
+        amount,
+      ]
+    ),
+  }
+]
+
+const proposal = await module.propose(description, executions);
+```
 

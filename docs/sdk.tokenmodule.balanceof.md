@@ -4,6 +4,8 @@
 
 ## TokenModule.balanceOf() method
 
+Get Token Balance
+
 <b>Signature:</b>
 
 ```typescript
@@ -19,4 +21,21 @@ balanceOf(address: string): Promise<CurrencyValue>;
 <b>Returns:</b>
 
 Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)<!-- -->&gt;
+
+The balance of a specific wallet.
+
+## Remarks
+
+Get a wallets token balance.
+
+## Example
+
+
+```javascript
+// Address of the wallet to check token balance
+const address = "{{wallet_address}}";
+
+const balance = await module.balanceOf(address);
+console.log(balance);
+```
 

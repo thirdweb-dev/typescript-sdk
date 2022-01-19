@@ -4,10 +4,7 @@
 
 ## PackModule class
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
-
-Access this module by calling [ThirdwebSDK.getPackModule()](./sdk.thirdwebsdk.getpackmodule.md)
+Create lootboxes of NFTs with rarity based open mechanics.
 
 <b>Signature:</b>
 
@@ -18,36 +15,49 @@ export declare class PackModule extends ModuleWithRoles<PackContract> implements
 
 <b>Implements:</b> [ITransferable](./sdk.itransferable.md)
 
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+// You can switch out this provider with any wallet or provider setup you like.
+const provider = ethers.Wallet.createRandom();
+const sdk = new ThirdwebSDK(provider);
+const module = sdk.getPackModule("{{module_address}}");
+```
+
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [moduleType](./sdk.packmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) | <b><i>(BETA)</i></b> |
-|  [roles](./sdk.packmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] | <b><i>(BETA)</i></b> |
+|  [moduleType](./sdk.packmodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
+|  [roles](./sdk.packmodule.roles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [balance(tokenId)](./sdk.packmodule.balance.md) |  | <b><i>(BETA)</i></b> |
-|  [balanceOf(address, tokenId)](./sdk.packmodule.balanceof.md) |  | <b><i>(BETA)</i></b> |
-|  [create(args)](./sdk.packmodule.create.md) |  | <b><i>(BETA)</i></b> Create a pack from a set of assets. |
-|  [depositLink(amount)](./sdk.packmodule.depositlink.md) |  | <b><i>(BETA)</i></b> |
-|  [get(packId)](./sdk.packmodule.get.md) |  | <b><i>(BETA)</i></b> |
-|  [getAll()](./sdk.packmodule.getall.md) |  | <b><i>(BETA)</i></b> |
-|  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  | <b><i>(BETA)</i></b> |
-|  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  | <b><i>(BETA)</i></b> |
-|  [getRoyaltyBps()](./sdk.packmodule.getroyaltybps.md) |  | <b><i>(BETA)</i></b> Gets the royalty BPS (basis points) of the contract |
-|  [getRoyaltyRecipientAddress()](./sdk.packmodule.getroyaltyrecipientaddress.md) |  | <b><i>(BETA)</i></b> Gets the address of the royalty recipient |
-|  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  | <b><i>(BETA)</i></b> |
-|  [isTransferRestricted()](./sdk.packmodule.istransferrestricted.md) |  | <b><i>(BETA)</i></b> |
-|  [open(packId)](./sdk.packmodule.open.md) |  | <b><i>(BETA)</i></b> |
-|  [setApproval(operator, approved)](./sdk.packmodule.setapproval.md) |  | <b><i>(BETA)</i></b> |
-|  [setModuleMetadata(metadata)](./sdk.packmodule.setmodulemetadata.md) |  | <b><i>(BETA)</i></b> |
-|  [setRestrictedTransfer(restricted)](./sdk.packmodule.setrestrictedtransfer.md) |  | <b><i>(BETA)</i></b> |
-|  [setRoyaltyBps(amount)](./sdk.packmodule.setroyaltybps.md) |  | <b><i>(BETA)</i></b> |
-|  [transfer(to, tokenId, amount)](./sdk.packmodule.transfer.md) |  | <b><i>(BETA)</i></b> |
-|  [transferBatchFrom(from, to, args, data)](./sdk.packmodule.transferbatchfrom.md) |  | <b><i>(BETA)</i></b> |
-|  [transferFrom(from, to, args, data)](./sdk.packmodule.transferfrom.md) |  | <b><i>(BETA)</i></b> |
-|  [withdrawLink(to, amount)](./sdk.packmodule.withdrawlink.md) |  | <b><i>(BETA)</i></b> |
+|  [balance(tokenId)](./sdk.packmodule.balance.md) |  |  |
+|  [balanceOf(address, tokenId)](./sdk.packmodule.balanceof.md) |  | Get Pack Balance |
+|  [create(args)](./sdk.packmodule.create.md) |  | Create Pack |
+|  [depositLink(amount)](./sdk.packmodule.depositlink.md) |  |  |
+|  [get(packId)](./sdk.packmodule.get.md) |  |  |
+|  [getAll()](./sdk.packmodule.getall.md) |  | Get Pack Data |
+|  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  |  |
+|  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  | Get Pack Reward Data |
+|  [getOwned(\_address)](./sdk.packmodule.getowned.md) |  | <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
+|  [getRoyaltyBps()](./sdk.packmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
+|  [getRoyaltyRecipientAddress()](./sdk.packmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
+|  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  |  |
+|  [isTransferRestricted()](./sdk.packmodule.istransferrestricted.md) |  |  |
+|  [open(packId)](./sdk.packmodule.open.md) |  | Open Pack |
+|  [setApproval(operator, approved)](./sdk.packmodule.setapproval.md) |  |  |
+|  [setModuleMetadata(metadata)](./sdk.packmodule.setmodulemetadata.md) |  |  |
+|  [setRestrictedTransfer(restricted)](./sdk.packmodule.setrestrictedtransfer.md) |  |  |
+|  [setRoyaltyBps(amount)](./sdk.packmodule.setroyaltybps.md) |  |  |
+|  [transfer(to, tokenId, amount)](./sdk.packmodule.transfer.md) |  | Transfer Pack |
+|  [transferBatchFrom(from, to, args, data)](./sdk.packmodule.transferbatchfrom.md) |  |  |
+|  [transferFrom(from, to, args, data)](./sdk.packmodule.transferfrom.md) |  |  |
+|  [withdrawLink(to, amount)](./sdk.packmodule.withdrawlink.md) |  |  |
 

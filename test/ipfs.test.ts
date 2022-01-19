@@ -168,23 +168,74 @@ describe("IPFS Uploads", async () => {
       },
       {
         name: "test 1",
+        image: readFileSync("test/images/1.jpg"),
         properties: {
-          image: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+          image: readFileSync("test/images/2.jpg"),
         },
       },
       {
-        name: "test 1",
-        image: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+        name: "test 2",
+        image: readFileSync("test/images/3.jpg"),
         properties: {
+          image: readFileSync("test/images/4.jpg"),
           test: {
-            image: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+            image: readFileSync("test/images/5.jpg"),
           },
         },
       },
     ];
     const storage = sdk.getStorage() as IpfsStorage;
-    const cid = await storage.uploadMetadataBatch(sampleObjects);
-    assert(cid.length > 0);
+    const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
+      sampleObjects,
+    );
+    assert(baseUri.startsWith("ipfs://") && baseUri.endsWith("/"));
+    assert(metadataUris.length === sampleObjects.length);
+    const [metadata1, metadata2, metadata3] = await Promise.all(
+      (
+        await Promise.all(metadataUris.map((m) => getFile(m)))
+      ).map((m: any) => m.json()),
+    );
+    assert(
+      metadata1.image ===
+        "ipfs://QmTpv5cWy677mgABsgJgwZ6pe2bEpSWQTvcCb8Hmj3ac8E/0",
+    );
+    assert(
+      metadata2.image ===
+        "ipfs://QmTpv5cWy677mgABsgJgwZ6pe2bEpSWQTvcCb8Hmj3ac8E/1",
+    );
+    assert(
+      metadata3.image ===
+        "ipfs://QmTpv5cWy677mgABsgJgwZ6pe2bEpSWQTvcCb8Hmj3ac8E/3",
+    );
+  });
+
+  it("should properly parse ipfs urls in uploadMetadataBatch", async () => {
+    const sampleObjects: any[] = [
+      "ipfs://QmTaWb3L89Deg8fxW8snWPULX6iNh5t7vfXa68sVeAfrHJ",
+      { test: "should pass" },
+      "https://ipfs.io",
+      { test: "maybe pass" },
+    ];
+    const storage = sdk.getStorage() as IpfsStorage;
+    const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
+      sampleObjects,
+    );
+    console.log(baseUri, metadataUris);
+    assert(metadataUris.length === sampleObjects.length);
+    assert(metadataUris[0] === sampleObjects[0]);
+    assert(
+      metadataUris[1].startsWith(baseUri) && metadataUris[1].endsWith("/0"),
+    );
+    assert(metadataUris[2] === sampleObjects[2]);
+    assert(
+      metadataUris[3].startsWith(baseUri) && metadataUris[3].endsWith("/1"),
+    );
+    assert(
+      (await (await getFile(`${baseUri}0`)).text()).includes("should pass"),
+    );
+    assert(
+      (await (await getFile(`${baseUri}1`)).text()).includes("maybe pass"),
+    );
   });
 
   it("should upload properly with same file names but one with capitalized letters", async () => {
@@ -209,6 +260,28 @@ describe("IPFS Uploads", async () => {
   });
 
   it("should throw an error when trying to upload two files with the same name", async () => {
+    const storage = sdk.getStorage();
+    const sampleObjects: BufferOrStringWithName[] = [
+      {
+        data: readFileSync("test/test.mp4"),
+        name: "test",
+      },
+      {
+        data: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
+        name: "test",
+      },
+    ];
+    try {
+      await storage.uploadBatch(sampleObjects);
+      assert.fail("should throw an error");
+    } catch (e) {
+      if (!(e instanceof DuplicateFileNameError)) {
+        throw e;
+      }
+    }
+  });
+
+  it("bulk upload", async () => {
     const storage = sdk.getStorage();
     const sampleObjects: BufferOrStringWithName[] = [
       {

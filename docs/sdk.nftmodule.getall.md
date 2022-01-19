@@ -4,6 +4,8 @@
 
 ## NFTModule.getAll() method
 
+Get All NFTs
+
 <b>Signature:</b>
 
 ```typescript
@@ -12,4 +14,18 @@ getAll(): Promise<NFTMetadata[]>;
 <b>Returns:</b>
 
 Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->\[\]&gt;
+
+The NFT metadata for all NFTs in the module.
+
+## Remarks
+
+Get all the data associated with every NFT in this module.
+
+## Example
+
+
+```javascript
+const nfts = await module.getAll();
+console.log(nfts);
+```
 

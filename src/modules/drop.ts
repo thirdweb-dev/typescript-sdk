@@ -51,8 +51,20 @@ export interface CreatePublicMintCondition {
 }
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getDropModule}
- * @beta
+ * Setup a collection of one-of-one NFTs that are minted as users claim them.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
+ * const module = sdk.getDropModule("{{module_address}}");
+ * ```
+ *
+ * @public
  */
 export class DropModule
   extends ModuleWithRoles<DropV2>
@@ -130,6 +142,19 @@ export class DropModule
     return { owner, metadata };
   }
 
+  /**
+   * Get All NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this module.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await module.getAll();
+   * console.log(nfts);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
+   */
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
@@ -211,6 +236,21 @@ export class DropModule
     return await this.sendTransaction("setDefaultSaleRecipient", [recipient]);
   }
 
+  /**
+   * Get Owned NFTs
+   *
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await module.getOwned(address);
+   * console.log(nfts);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
+   */
   public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
     const address = _address ? _address : await this.getSignerAddress();
     const balance = await this.readOnlyContract.balanceOf(address);
@@ -363,6 +403,20 @@ export class DropModule
     return await this.readOnlyContract.nextTokenIdToClaim();
   }
 
+  /**
+   * Get NFT Balance
+   *
+   * @remarks Get a wallets NFT balance (number of NFTs in this module owned by the wallet).
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to check NFT balance
+   * const address = "{{wallet_address}}";
+   *
+   * const balance = await module.balanceOf(address);
+   * console.log(balance);
+   * ```
+   */
   public async balanceOf(address: string): Promise<BigNumber> {
     return await this.readOnlyContract.balanceOf(address);
   }
@@ -386,6 +440,22 @@ export class DropModule
     ]);
   }
 
+  /**
+   * Transfer NFT
+   *
+   * @remarks Transfer an NFT from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "{{wallet_address}}";
+   *
+   * // The token ID of the NFT you want to send
+   * const tokenId = "0";
+   *
+   * await module.transfer(toAddress, tokenId);
+   * ```
+   */
   public async transfer(
     to: string,
     tokenId: string,
@@ -614,12 +684,15 @@ export class DropModule
     // check for merkle root inclusion
     const merkleRootArray = ethers.utils.stripZeros(claimCondition.merkleRoot);
     if (merkleRootArray.length > 0) {
-      const proofs = await this.getClaimerProofs(
-        claimCondition.merkleRoot.toString(),
-        addressToCheck,
-      );
+      const merkleLower = claimCondition.merkleRoot.toString();
+      const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
       if (proofs.length === 0) {
-        reasons.push(ClaimEligibility.AddressNotAllowed);
+        const hashedAddress = ethers.utils
+          .keccak256(addressToCheck)
+          .toLowerCase();
+        if (hashedAddress !== merkleLower) {
+          reasons.push(ClaimEligibility.AddressNotAllowed);
+        }
       }
       // TODO: compute proofs to root, need browser compatibility
     }
@@ -673,7 +746,17 @@ export class DropModule
   }
 
   /**
-   * @beta - Parameters interface may change, proofs parameter is ignored.
+   * Can Claim
+   *
+   * @remarks Check if the drop can currently be claimed.
+   *
+   * @example
+   * ```javascript
+   * // Quantity of tokens to check if they are claimable
+   * const quantity = 1;
+   *
+   * await module.canClaim(quantity);
+   * ```
    */
   public async canClaim(
     quantity: BigNumberish,
@@ -760,7 +843,20 @@ export class DropModule
   }
 
   /**
-   * Claim a token and send it to someone else
+   * Claim NFTs to Wallet
+   *
+   * @remarks Let the a specified wallet claim NFTs.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to claim the NFTs
+   * const address = "{{wallet_address}}";
+   *
+   * // The number of NFTs to claim
+   * const quantity = 1;
+   *
+   * await module.claimTo(quantity, address);
+   * ```
    *
    * @param quantity - Quantity of the tokens you want to claim
    * @param addressToClaim - Address you want to send the token to
@@ -795,8 +891,7 @@ export class DropModule
     );
   }
 
-  /**
-   * Claim a token for yourself
+  /** Claim NFTs
    *
    * @param quantity - Quantity of the tokens you want to claim
    * @param proofs - Array of proofs
@@ -912,7 +1007,7 @@ export class DropModule
       return this.v1Module.createBatch(metadatas);
     }
     const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
-    const baseUri = await this.sdk
+    const { baseUri } = await this.sdk
       .getStorage()
       .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
     const receipt = await this.sendTransaction("lazyMint", [
@@ -1265,7 +1360,9 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
    * @deprecated - The function has been deprecated. Use `mintBatch` instead.
    */
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
-    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
+    const { baseUri } = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(metadatas);
     const uris = Array.from(Array(metadatas.length).keys()).map(
       (i) => `${baseUri}${i}/`,
     );
@@ -1599,7 +1696,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
     }
 
     const startFileNumber = await this.readOnlyContract.nextMintTokenId();
-    const baseUri = await this.storage.uploadMetadataBatch(
+    const { baseUri } = await this.storage.uploadMetadataBatch(
       metadatas,
       this.address,
       startFileNumber.toNumber(),

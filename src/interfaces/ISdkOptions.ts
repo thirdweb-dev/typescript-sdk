@@ -1,5 +1,9 @@
-import { BytesLike } from "ethers";
-import { ForwardRequestMessage, PermitRequestMessage } from "../core/types";
+import { BaseContract, BytesLike } from "ethers";
+import {
+  ForwardRequestMessage,
+  GaslessTransaction,
+  PermitRequestMessage,
+} from "../core/types";
 
 /**
  * The optional options that can be passed to the SDK.
@@ -32,6 +36,8 @@ export interface ISDKOptions {
   transactionRelayerUrl: string;
 
   /**
+   * @deprecated {@link ISDKOptions.gaslessSendFunction}
+   *
    * Optional function for sending transaction to relayer
    * @returns transaction hash of relayed transaction.
    */
@@ -44,6 +50,27 @@ export interface ISDKOptions {
    * Optional trusted forwarder address overwrite
    */
   transactionRelayerForwarderAddress: string;
+
+  /**
+   * Optional function for sending transaction to a relayer
+   * @returns transaction hash of relayed transaction.
+   */
+  gaslessSendFunction: (
+    contract: BaseContract,
+    transaction: GaslessTransaction,
+  ) => Promise<string>;
+
+  /**
+   * Optional gasless transaction configuration
+   * deadlineSeconds is the number of seconds before the transaction is considered expired.
+   */
+  gasless: {
+    biconomy: {
+      apiId: string;
+      apiKey: string;
+      deadlineSeconds?: number;
+    };
+  };
 
   /**
    * Optional read only RPC url

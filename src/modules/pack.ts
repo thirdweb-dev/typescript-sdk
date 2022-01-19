@@ -43,6 +43,14 @@ export interface PackNFTMetadata {
   supply: BigNumber;
   metadata: NFTMetadata;
 }
+
+/**
+ * @public
+ */
+export interface PackMetadataWithBalance extends PackMetadata {
+  ownedByAddress: BigNumber;
+}
+
 export enum UnderlyingType {
   None = 0,
   ERC20 = 1,
@@ -71,8 +79,20 @@ export interface IPackBatchArgs {
 }
 
 /**
- * Access this module by calling {@link ThirdwebSDK.getPackModule}
- * @beta
+ * Create lootboxes of NFTs with rarity based open mechanics.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
+ * const module = sdk.getPackModule("{{module_address}}");
+ * ```
+ *
+ * @public
  */
 export class PackModule
   extends ModuleWithRoles<PackContract>
@@ -109,6 +129,19 @@ export class PackModule
     return PackModule.moduleType;
   }
 
+  /**
+   * Open Pack
+   *
+   * @remarks Open a pack to burn it and obtain the reward asset inside.
+   *
+   * @example
+   * ```javascript
+   * // The pack ID of the asset you want to buy
+   * const packId = "0";
+   * const rewards = await module.open(packId);
+   * console.log(rewards);
+   * ```
+   */
   public async open(packId: string): Promise<NFTMetadata[]> {
     const receipt = await this.sendTransaction("openPack", [packId]);
     const logs = this.parseLogs<PackOpenRequestEvent>(
@@ -179,6 +212,19 @@ export class PackModule
     return entity;
   }
 
+  /**
+   * Get Pack Data
+   *
+   * @remarks Get data associated with every pack in this module.
+   *
+   * @example
+   * ```javascript
+   * const packs = await module.getAll();
+   * console.log(packs);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
+   */
   public async getAll(): Promise<PackMetadata[]> {
     const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
     return await Promise.all(
@@ -186,6 +232,22 @@ export class PackModule
     );
   }
 
+  /**
+   * Get Pack Reward Data
+   *
+   * @remarks Get data associated with the rewards inside a specified pack
+   *
+   * @example
+   * ```javascript
+   * // The pack ID of the pack whos rewards you want to get
+   * const packId = 0;
+   *
+   * const nfts = await module.getNFTs(packId);
+   * console.log(nfts);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the module.
+   */
   public async getNFTs(packId: string): Promise<PackNFTMetadata[]> {
     const packReward = await this.readOnlyContract.getPackWithRewards(packId);
     if (!packReward.source) {
@@ -207,7 +269,22 @@ export class PackModule
     }));
   }
 
-  // passthrough to the contract
+  /**
+   * Get Pack Balance
+   *
+   * @remarks Get a wallets pack balance (number of a specific packs in this module owned by the wallet).
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to check pack balance
+   * const address = "{{wallet_address}}"";
+   * // The token ID of the pack you want to check the wallets balance of
+   * const tokenId = "0"
+   *
+   * const balance = await module.balanceOf(address, tokenId);
+   * console.log(balance);
+   * ```
+   */
   public async balanceOf(address: string, tokenId: string): Promise<BigNumber> {
     return await this.readOnlyContract.balanceOf(address, tokenId);
   }
@@ -224,6 +301,25 @@ export class PackModule
     await this.sendTransaction("setApprovalForAll", [operator, approved]);
   }
 
+  /**
+   * Transfer Pack
+   *
+   * @remarks Transfer a pack from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the pack to
+   * const toAddress = "0x...";
+   *
+   * // The token ID of the pack you want to send
+   * const tokenId = "0";
+   *
+   * // The number of packs you want to send
+   * const amount = 1;
+   *
+   * await module.transfer(toAddress, tokenId, amount);
+   * ```
+   */
   public async transfer(to: string, tokenId: string, amount: BigNumber) {
     await this.sendTransaction("safeTransferFrom", [
       await this.getSignerAddress(),
@@ -236,7 +332,37 @@ export class PackModule
 
   // owner functions
   /**
-   * Create a pack from a set of assets.
+   * Create Pack
+   *
+   * @remarks Create a new pack with its own rewards.
+   *
+   * @example
+   * ```javascript
+   * // Data to create the pack
+   * const pack = {
+   *   // The address of the contract that holds the rewards you want to include
+   *   assetContract: "0x...",
+   *   // The metadata of the pack
+   *   metadata: {
+   *     name: "Cool Pack",
+   *     description: "This is a cool pack",
+   *     // This can be an image url or image file
+   *     image: readFileSync("path/to/image.png"),
+   *   },
+   *   // The NFTs you want to include in the pack
+   *   assets: [
+   *     {
+   *       tokenId: 0, // The token ID of the asset you want to add
+   *       amount: 1, // The amount of the asset you want to add
+   *     }, {
+   *       tokenId: 1,
+   *       amount: 1,
+   *     }
+   *   ],
+   * };
+   *
+   * await module.create(pack);
+   * ```
    *
    * @param args - Args for the pack creation
    * @returns - The newly created pack metadata
@@ -308,7 +434,6 @@ export class PackModule
     ]);
   }
 
-  // owner functions
   public async getLinkBalance(): Promise<CurrencyValue> {
     const chainId = await this.getChainID();
     const chainlink = ChainlinkVrf[chainId];
@@ -445,5 +570,36 @@ export class PackModule
   ): Promise<TransactionReceipt> {
     await this.onlyRoles(["admin"], await this.getSignerAddress());
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  /**
+   * `getOwned` is a convenience method for getting all owned tokens
+   * for a particular wallet.
+   *
+   * @param _address - The address to check for token ownership
+   * @returns An array of PackMetadataWithBalance objects that are owned by the address
+   */
+  public async getOwned(_address?: string): Promise<PackMetadataWithBalance[]> {
+    const address = _address ? _address : await this.getSignerAddress();
+    const maxId = await this.readOnlyContract.nextTokenId();
+    const balances = await this.readOnlyContract.balanceOfBatch(
+      Array(maxId.toNumber()).fill(address),
+      Array.from(Array(maxId.toNumber()).keys()),
+    );
+
+    const ownedBalances = balances
+      .map((b, i) => {
+        return {
+          tokenId: i,
+          balance: b,
+        };
+      })
+      .filter((b) => b.balance.gt(0));
+    return await Promise.all(
+      ownedBalances.map(async ({ tokenId, balance }) => {
+        const token = await this.get(tokenId.toString());
+        return { ...token, ownedByAddress: balance };
+      }),
+    );
   }
 }

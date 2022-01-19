@@ -4,8 +4,7 @@
 
 ## BundleModule.transferBatchFrom() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Transfer Many NFTs
 
 <b>Signature:</b>
 
@@ -25,4 +24,30 @@ transferBatchFrom(from: string, to: string, args: INFTBundleBatchArgs[], data?: 
 <b>Returns:</b>
 
 Promise&lt;TransactionReceipt&gt;
+
+## Remarks
+
+Transfer NFTs from the one wallet to another.
+
+## Example
+
+
+```javascript
+// Address of the wallet to send the NFT from
+const fromAddress = "{{wallet_address}}";
+// Address of the wallet you want to send the NFT to
+const toAddress = "0x...";
+
+// The data of the NFTs you want to send
+const data = [{
+  tokenId: 1, // The token ID of the NFT you want to send
+  amount: 1, // The number of this NFT you want to send
+}, {
+  tokenId: 2,
+  amount: 1,
+}]
+
+// Note that the connected wallet must have approval to transfer the tokens of the fromAddress
+await module.transferBatchFrom(fromAddress, toAddress, data);
+```
 

@@ -4,8 +4,7 @@
 
 ## PackModule.getNFTs() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Get Pack Reward Data
 
 <b>Signature:</b>
 
@@ -22,4 +21,21 @@ getNFTs(packId: string): Promise<PackNFTMetadata[]>;
 <b>Returns:</b>
 
 Promise&lt;[PackNFTMetadata](./sdk.packnftmetadata.md)<!-- -->\[\]&gt;
+
+The NFT metadata for all NFTs in the module.
+
+## Remarks
+
+Get data associated with the rewards inside a specified pack
+
+## Example
+
+
+```javascript
+// The pack ID of the pack whos rewards you want to get
+const packId = 0;
+
+const nfts = await module.getNFTs(packId);
+console.log(nfts);
+```
 

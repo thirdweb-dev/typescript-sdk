@@ -4,8 +4,7 @@
 
 ## PackModule.open() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
+Open Pack
 
 <b>Signature:</b>
 
@@ -22,4 +21,18 @@ open(packId: string): Promise<NFTMetadata[]>;
 <b>Returns:</b>
 
 Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->\[\]&gt;
+
+## Remarks
+
+Open a pack to burn it and obtain the reward asset inside.
+
+## Example
+
+
+```javascript
+// The pack ID of the asset you want to buy
+const packId = "0";
+const rewards = await module.open(packId);
+console.log(rewards);
+```
 

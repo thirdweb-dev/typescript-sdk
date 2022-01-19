@@ -80,9 +80,20 @@ export interface ISplitsModule {
 }
 
 /**
+ * Create custom royalty splits to distribute funds.
  *
- * Access this module by calling {@link ThirdwebSDK.getSplitsModule}
- * @alpha
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
+ * const module = sdk.getSplitsModule("{{module_address}}");
+ * ```
+ *
+ * @public
  */
 export class SplitsModule extends Module<Royalty> implements ISplitsModule {
   public static moduleType: ModuleType = ModuleType.SPLITS as const;
@@ -105,6 +116,17 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     return await getCurrencyMetadata(this.providerOrSigner, this.address);
   }
 
+  /**
+   * Get Recipients
+   *
+   * @remarks Get the data about the shares of every split recipient on the module
+   *
+   * @example
+   * ```javascript
+   * const recipients = await module.getAllRecepients();
+   * console.log(recipients);
+   * ```
+   */
   public async getAllRecipients(): Promise<SplitRecipient[]> {
     const recipients: SplitRecipient[] = [];
 
@@ -183,6 +205,19 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     };
   }
 
+  /**
+   * Get Funds
+   *
+   * @remarks Get the amount of funds in the native currency held by the module thats owed to a specific recipient.
+   *
+   * @example
+   * ```javascript
+   * // The address to check the funds of
+   * const address = "{{wallet_address}}";
+   * const funds = await module.balanceOf(address);
+   * console.log(funds);
+   * ```
+   */
   public async balanceOf(address: string): Promise<BigNumber> {
     const walletBalance = await this.readOnlyContract.provider.getBalance(
       this.address,
@@ -197,6 +232,21 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     );
   }
 
+  /**
+   * Get Token Funds
+   *
+   * @remarks Get the amount of funds in the non-native tokens held by the module thats owed to a specific recipient.
+   *
+   * @example
+   * ```javascript
+   * // The address to check the funds of
+   * const address = "{{wallet_address}}";
+   * // The address of the currency to check the contracts funds of
+   * const tokenAddress = "0x..."
+   * const funds = await module.balanceOfToken(address, tokenAddress);
+   * console.log(funds);
+   * ```
+   */
   public async balanceOfToken(
     walletAddress: string,
     tokenAddress: string,
@@ -246,10 +296,32 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
     ]);
   }
 
+  /**
+   * Distribute Funds
+   *
+   * @remarks Distribute funds held by the contract in the native currency to all recipients.
+   *
+   * @example
+   * ```javascript
+   * await module.distribute();
+   * ```
+   */
   public async distribute(): Promise<void> {
     await this.sendTransaction("distribute()", []);
   }
 
+  /**
+   * Distribute Funds
+   *
+   * @remarks Distribute funds held by the contract in the native currency to all recipients.
+   *
+   * @example
+   * ```javascript
+   * // The address of the currency to distribute funds
+   * const tokenAddress = "0x..."
+   * await module.distributeToken(tokenAddress);
+   * ```
+   */
   public async distributeToken(tokenAddress: string): Promise<void> {
     await this.sendTransaction("distribute(address)", [tokenAddress]);
   }

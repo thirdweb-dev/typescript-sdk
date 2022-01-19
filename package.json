@@ -1,6 +1,6 @@
 {
   "name": "@3rdweb/sdk",
-  "version": "1.33.1",
+  "version": "1.36.1",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -28,7 +28,8 @@
     "full-build": "yarn build:tsdx && yarn extract-api",
     "generate-md-docs": "yarn api-documenter markdown -i ./temp -o ./docs",
     "generate-docs": "yarn full-build && yarn generate-md-docs",
-    "build": "yarn generate-docs",
+    "generate-snippets": "node ./scripts/generate-snippets.mjs",
+    "build": "yarn generate-docs && yarn generate-snippets",
     "test": "echo \"\nUse 'yarn run test:all' to run all tests\nPass a test file pattern from ./test to run\n\n\t$ yarn run test test/pack.test.ts\" && ts-mocha -t 120000 -r esm -p tsconfig.testing.json",
     "test:all": "ts-mocha -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'"
   },
@@ -36,6 +37,7 @@
     "@ethersproject/abi": "^5.4.1",
     "@microsoft/api-documenter": "^7.13.53",
     "@microsoft/api-extractor": "^7.18.10",
+    "@microsoft/tsdoc": "^0.13.2",
     "@nomiclabs/hardhat-ethers": "^2.0.3",
     "@types/chai": "^4.2.22",
     "@types/crypto-js": "^4.0.2",
@@ -66,8 +68,7 @@
     "typescript": "^4.4.3"
   },
   "peerDependencies": {
-    "ethers": "^5.4.6",
-    "events": "^3.3.0"
+    "ethers": "^5.4.6"
   },
   "dependencies": {
     "@3rdweb/contracts": "^1.21.1",
@@ -82,6 +83,7 @@
     "crypto-js": "^4.1.1",
     "eth-permit": "^0.2.1",
     "ethers": "^5.5.2",
+    "eventemitter2": "^6.4.5",
     "events": "^3.3.0",
     "form-data": "^4.0.0",
     "json2typescript": "^1.5.0-rc.0",
