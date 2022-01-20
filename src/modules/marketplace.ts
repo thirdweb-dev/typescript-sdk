@@ -39,6 +39,7 @@ import {
   Offer,
 } from "../types";
 import { DirectListing } from "../types/marketplace/DirectListing";
+
 export interface MarketplaceFilter {
   seller?: string;
   tokenContract?: string;
