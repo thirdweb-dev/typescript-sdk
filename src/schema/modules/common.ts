@@ -1,22 +1,11 @@
 import { AddressZero } from "@ethersproject/constants";
 import { z } from "zod";
 import { FORWARDER_ADDRESS } from "../../constants/addresses";
-
-if (!global.File) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  global.File = require("@web-std/file").File;
-}
-
-export const FileBufferOrStringSchema = z.union([
-  z.instanceof(File),
-  z.instanceof(Buffer),
-  z.string(),
-]);
-
-export const BasisPointsSchema = z
-  .number()
-  .min(0, "basis points cannot be less than 0")
-  .max(10000, "basis points cannot be greater than 10000");
+import {
+  BasisPointsSchema,
+  FileBufferOrStringSchema,
+  JsonLiteral,
+} from "../shared";
 
 export const CommonModuleSchema = z.object({
   name: z.string(),
@@ -24,6 +13,10 @@ export const CommonModuleSchema = z.object({
   image: FileBufferOrStringSchema.optional(),
   external_link: z.string().url().optional(),
 });
+
+export const CommonModuleOutputSchema = CommonModuleSchema.extend({
+  image: z.string().optional(),
+}).catchall(JsonLiteral);
 
 export const CommonRoyaltySchema = z.object({
   /**

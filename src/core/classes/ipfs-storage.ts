@@ -300,7 +300,9 @@ export class IpfsStorage {
     return object;
   }
 
-  public async uploadMetadata<T extends string | { [key: string]: unknown }>(
+  public async uploadMetadata<
+    T extends string | { [key: string]: unknown } | unknown,
+  >(
     metadata: T,
     contractAddress?: string,
     _signerAddress?: string,
@@ -322,7 +324,7 @@ export class IpfsStorage {
    * @internal
    */
   public async uploadMetadataBatch<
-    T extends string | { [key: string]: unknown },
+    T extends string | { [key: string]: unknown } | unknown,
   >(metadatas: T[], contractAddress?: string, startFileNumber?: number) {
     // we only want to upload if the metadata object is not a string
     const metadataObjects = metadatas.filter((m) => typeof m !== "string");

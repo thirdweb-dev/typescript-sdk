@@ -8,10 +8,14 @@ import type {
   MODULE_TYPE_TO_CONTRACT_MAP,
 } from "../constants/mappings";
 import type { ContractWrapper } from "./classes/contract-wrapper";
-import { C, Object } from "ts-toolbelt";
+import { C } from "ts-toolbelt";
 import { IThirdwebModule } from "@3rdweb/contracts";
-import { z } from "zod";
 import { BigNumber, BytesLike } from "ethers";
+import { z } from "zod";
+import {
+  CommonModuleOutputSchema,
+  CommonModuleSchema,
+} from "../schema/modules/common";
 
 export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 
@@ -31,19 +35,23 @@ export type ContractForModuleType<TModuleType extends ModuleType> =
     ? MODULE_TYPE_TO_CONTRACT_MAP[TModuleType]
     : ThirdwebModuleOrBaseContract;
 
-export type ModuleMetadataForModuleType<TModuleType extends ModuleType> =
-  TModuleType extends keyof typeof MODULE_TYPE_TO_SCHEMA_MAP
-    ? typeof MODULE_TYPE_TO_SCHEMA_MAP[TModuleType]["regular"]
-    : z.AnyZodObject;
-export type DeployModuleMetadataForModuleType<TModuleType extends ModuleType> =
-  TModuleType extends keyof typeof MODULE_TYPE_TO_SCHEMA_MAP
-    ? typeof MODULE_TYPE_TO_SCHEMA_MAP[TModuleType]["deploy"]
-    : z.AnyZodObject;
+export type InputModuleMetadataForModuleType<
+  TModuleType extends ModuleType = ModuleType,
+> = TModuleType extends keyof typeof MODULE_TYPE_TO_SCHEMA_MAP
+  ? z.infer<typeof MODULE_TYPE_TO_SCHEMA_MAP[TModuleType]["input"]>
+  : z.infer<typeof CommonModuleSchema>;
 
-export type RemoveFileOrBuffer<T extends {}> = Object.Partial<
-  Object.Replace<T, keyof T extends FileOrBuffer ? keyof T : "", string>,
-  "deep"
->;
+export type OutputModuleMetadataForModuleType<
+  TModuleType extends ModuleType = ModuleType,
+> = TModuleType extends keyof typeof MODULE_TYPE_TO_SCHEMA_MAP
+  ? z.infer<typeof MODULE_TYPE_TO_SCHEMA_MAP[TModuleType]["output"]>
+  : z.infer<typeof CommonModuleOutputSchema>;
+
+export type DeployModuleMetadataForModuleType<
+  TModuleType extends ModuleType = ModuleType,
+> = TModuleType extends keyof typeof MODULE_TYPE_TO_SCHEMA_MAP
+  ? z.infer<typeof MODULE_TYPE_TO_SCHEMA_MAP[TModuleType]["deploy"]>
+  : z.infer<typeof CommonModuleSchema>;
 
 export type ValueOf<T> = T[keyof T];
 

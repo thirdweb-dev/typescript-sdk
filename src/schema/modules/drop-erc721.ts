@@ -1,13 +1,17 @@
 import {
+  CommonModuleOutputSchema,
   CommonModuleSchema,
   CommonPlatformFeeSchema,
   CommonRoyaltySchema,
   CommonTrustedForwarderSchema,
 } from "./common";
 
-export const DropErc20MetadataSchema =
+export const DropErc721ModuleInput =
   CommonModuleSchema.merge(CommonRoyaltySchema);
 
-export const DropErc20DeploySchema = DropErc20MetadataSchema.merge(
+export const DropErc721ModuleOutput =
+  CommonModuleOutputSchema.merge(CommonRoyaltySchema);
+
+export const DropErc721ModuleDeploy = DropErc721ModuleInput.merge(
   CommonPlatformFeeSchema,
 ).merge(CommonTrustedForwarderSchema);

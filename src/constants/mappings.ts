@@ -7,9 +7,10 @@ import {
 import { BaseClass } from "../core/classes/base";
 import { ModuleType } from "../core/types";
 import {
-  DropErc20DeploySchema,
-  DropErc20MetadataSchema,
-} from "../schema/modules/drop-erc20";
+  DropErc721ModuleDeploy,
+  DropErc721ModuleInput,
+  DropErc721ModuleOutput,
+} from "../schema/modules/drop-erc721";
 
 export class Module extends BaseClass {
   static moduleType: ModuleType = "base_module";
@@ -39,7 +40,8 @@ export type MODULE_TYPE_TO_CONTRACT_MAP = {
 
 export const MODULE_TYPE_TO_SCHEMA_MAP = {
   [DropERC721__factory.contractName]: {
-    deploy: DropErc20DeploySchema,
-    regular: DropErc20MetadataSchema,
+    deploy: DropErc721ModuleInput,
+    output: DropErc721ModuleOutput,
+    input: DropErc721ModuleDeploy,
   } as const,
 } as const;
