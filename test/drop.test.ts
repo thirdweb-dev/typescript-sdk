@@ -269,12 +269,6 @@ describe("Drop Module", async () => {
       w4.address,
     ];
 
-    const hashedLeafs = members.map((l) => keccak256(l));
-    const tree = new MerkleTree(hashedLeafs, keccak256, {
-      sort: true,
-      sortLeaves: true,
-      sortPairs: true,
-    });
     try {
       const snapshot = await sdk.createSnapshot(members);
     } catch (err) {
