@@ -6,9 +6,9 @@ import { JsonConvert } from "json2typescript";
 import MerkleTree from "merkletreejs";
 import type { C } from "ts-toolbelt";
 import {
-  DuplicateLeafsError,
   getContractMetadata,
   InvalidAddressError,
+  RepeatedAddressError,
   uploadMetadata,
 } from "../common";
 import {
@@ -533,10 +533,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
       throw new RepeatedAddressError(repeated[0]);
     }
 
-    const hasDuplicates = new Set(leafs).size < leafs.length;
-    if (hasDuplicates) {
-      throw new DuplicateLeafsError();
-    }
+
 
     const { default: keccak256 } = await import("keccak256");
 

@@ -55,7 +55,7 @@ describe("Snapshots", async () => {
     try {
       await sdk.createSnapshot(duplicateLeafs);
     } catch (error) {
-      expect(error).to.have.property("message", "DUPLICATE_LEAFS", "");
+      expect(error).to.have.property("message", "repeated addresses", "");
       return;
     }
 
