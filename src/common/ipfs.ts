@@ -1,15 +1,12 @@
-import { MetadataURIOrObject } from "../core/types";
-import { FileOrBuffer } from "../schema";
+import { DEFAULT_IPFS_GATEWAY, TW_IPFS_SERVER_URL } from "../constants/urls";
 import { UploadError } from "./error";
 
-if (!globalThis.FormData) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  globalThis.FormData = require("form-data");
+if (!global.FormData) {
+  global.FormData = require("form-data");
 }
-
-if (!globalThis.File) {
+if (!global.File) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  globalThis.File = require("@web-std/file").File;
+  global.File = require("@web-std/file").File;
 }
 
 /**
@@ -19,7 +16,10 @@ if (!globalThis.File) {
  * @returns the fully formed IPFS url
  * @internal
  */
-export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
+export function replaceIpfsWithGateway(
+  ipfsUrl: string,
+  gatewayUrl: string = DEFAULT_IPFS_GATEWAY,
+) {
   if (!ipfsUrl || typeof ipfsUrl !== "string") {
     return "";
   }
@@ -28,7 +28,10 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
   }
   return ipfsUrl.replace("ipfs://", gatewayUrl);
 }
-export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string) {
+export function recursiveResolveGatewayUrl(
+  json: any,
+  ipfsGatewayUrl: string = DEFAULT_IPFS_GATEWAY,
+) {
   if (typeof json === "object") {
     const keylist = Object.keys(json);
     keylist.forEach((key: string) => {
@@ -54,7 +57,7 @@ export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string) {
  * @public
  */
 export async function uploadToIPFS(
-  data: string | File | FileOrBuffer,
+  data: string | File | Buffer,
   contractAddress?: string,
   signerAddress?: string,
 ): Promise<string> {
@@ -64,7 +67,7 @@ export async function uploadToIPFS(
   };
   const formData = new FormData();
   formData.append("file", data as any);
-  const res = await fetch("https://upload.nftlabs.co/upload", {
+  const res = await fetch(TW_IPFS_SERVER_URL, {
     method: "POST",
     body: formData as any,
     headers,
@@ -80,8 +83,8 @@ export async function uploadToIPFS(
 /**
  * @internal
  */
-export async function uploadMetadata(
-  metadata: MetadataURIOrObject,
+export async function uploadMetadata<TMetadata>(
+  metadata: TMetadata,
   contractAddress?: string,
   signerAddress?: string,
 ): Promise<string> {

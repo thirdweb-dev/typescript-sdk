@@ -1,35 +1,66 @@
-import type { Network, Provider } from "@ethersproject/providers";
-import type { BigNumber, BytesLike, CallOverrides, Signer } from "ethers";
+import { Signer } from "@ethersproject/abstract-signer";
+import { BaseContract, CallOverrides } from "@ethersproject/contracts";
+import { Networkish, Provider } from "@ethersproject/providers";
+import type {
+  MODULES_MAP,
+  Module,
+  MODULE_TYPE_TO_SCHEMA_MAP,
+  MODULE_TYPE_TO_CONTRACT_MAP,
+} from "../constants/mappings";
+import type { ContractWrapper } from "./classes/contract-wrapper";
+import { C, Object } from "ts-toolbelt";
+import { IThirdwebModule } from "@3rdweb/contracts";
+import { z } from "zod";
+import { BigNumber, BytesLike } from "ethers";
 
-/**
- * A valid "ethers" Provider or Signer.
- * @public
- */
-export type ProviderOrSigner = Provider | Signer;
+export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 
-/**
- * A valid "ethers" Provider, Signer or a Network object or url address to create a Provider with.
- * @public
- */
-export type ValidProviderInput = ProviderOrSigner | Network | string;
+export type ModuleType = keyof typeof MODULES_MAP | string;
 
-/**
- * A JSON value
- * @public
- */
-export type JSONValue =
-  | string
-  | number
-  | null
-  | boolean
-  | JSONValue[]
-  | { [key: string]: JSONValue };
+export type ValidModuleClass = C.Instance<ValueOf<typeof MODULES_MAP>> | Module;
 
-/**
- * A valid URI string or metadata object
- * @public
- */
-export type MetadataURIOrObject = string | Record<string, any>;
+export type ThirdwebModuleOrBaseContract = IThirdwebModule | BaseContract;
+
+export type ModuleForModuleType<TModuleType extends ModuleType> =
+  TModuleType extends keyof typeof MODULES_MAP
+    ? C.Instance<typeof MODULES_MAP[TModuleType]>
+    : Module;
+
+export type ContractForModuleType<TModuleType extends ModuleType> =
+  TModuleType extends keyof MODULE_TYPE_TO_CONTRACT_MAP
+    ? MODULE_TYPE_TO_CONTRACT_MAP[TModuleType]
+    : ThirdwebModuleOrBaseContract;
+
+export type ModuleMetadataForModuleType<TModuleType extends ModuleType> =
+  TModuleType extends keyof typeof MODULE_TYPE_TO_SCHEMA_MAP
+    ? typeof MODULE_TYPE_TO_SCHEMA_MAP[TModuleType]["regular"]
+    : z.AnyZodObject;
+export type DeployModuleMetadataForModuleType<TModuleType extends ModuleType> =
+  TModuleType extends keyof typeof MODULE_TYPE_TO_SCHEMA_MAP
+    ? typeof MODULE_TYPE_TO_SCHEMA_MAP[TModuleType]["deploy"]
+    : z.AnyZodObject;
+
+export type RemoveFileOrBuffer<T extends {}> = Object.Partial<
+  Object.Replace<T, keyof T extends FileOrBuffer ? keyof T : "", string>,
+  "deep"
+>;
+
+export type ValueOf<T> = T[keyof T];
+
+export type SignerOrProvider = Signer | Provider;
+
+export type FileOrBuffer = File | Buffer;
+
+export type BufferOrStringWithName = {
+  data: Buffer | string;
+  name?: string;
+};
+
+export interface IModule<TContract extends ThirdwebModuleOrBaseContract> {
+  contract: ContractWrapper<TContract>;
+  updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
+}
+
 /**
  * Forward Request Message that's used for gasless transaction
  * @public

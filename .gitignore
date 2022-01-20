@@ -10,3 +10,7 @@ yarn-error.log
 .parcel-cache/
 tsconfig.tsbuildinfo
 test/test_dump/*
+.yalc/
+.swc/
+yalc.lock
+old_src/

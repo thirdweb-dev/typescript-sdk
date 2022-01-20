@@ -8,5 +8,5 @@
 
 |  Package | Description |
 |  --- | --- |
-|  [@3rdweb/sdk](./sdk.md) | The [thirdweb](https://thirdweb.com) typescript sdk. |
+|  [@3rdweb/sdk](./sdk.md) |  |
 

@@ -1,4 +1,0 @@
-import ClaimConditionFactory from "./ClaimConditionFactory";
-import ClaimConditionPhase from "./ClaimConditionPhase";
-
-export { ClaimConditionFactory, ClaimConditionPhase };

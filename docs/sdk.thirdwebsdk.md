@@ -4,44 +4,24 @@
 
 ## ThirdwebSDK class
 
-The entrypoint to the SDK.
-
 <b>Signature:</b>
 
 ```typescript
-export declare class ThirdwebSDK implements IThirdwebSdk 
+export declare class ThirdwebSDK extends BaseClass 
 ```
-<b>Implements:</b> IThirdwebSdk
+<b>Extends:</b> BaseClass
 
 ## Constructors
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(providerOrNetwork, opts)](./sdk.thirdwebsdk._constructor_.md) |  | Constructs a new instance of the <code>ThirdwebSDK</code> class |
-
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [deployModule](./sdk.thirdwebsdk.deploymodule.md) |  | { bundleCollection: (metadata: [DeployBundleCollectionMetadata](./sdk.deploybundlecollectionmetadata.md)<!-- -->) =&gt; Promise&lt;ethers.ContractTransaction&gt;; bundleDrop: (metadata: [DeployBundleDropModuleMetadata](./sdk.deploybundledropmodulemetadata.md)<!-- -->) =&gt; Promise&lt;ethers.ContractTransaction&gt;; marketplace: (metadata: [DeployMarketplaceModuleMetadata](./sdk.deploymarketplacemodulemetadata.md)<!-- -->) =&gt; Promise&lt;ethers.ContractTransaction&gt;; nftCollection: (metadata: [DeployNFTCollectionModuleMetadata](./sdk.deploynftcollectionmodulemetadata.md)<!-- -->) =&gt; Promise&lt;ethers.ContractTransaction&gt;; nftDrop: (metadata: [DeployNFTDropModuleMetadata](./sdk.deploynftdropmodulemetadata.md)<!-- -->) =&gt; Promise&lt;ethers.ContractTransaction&gt;; pack: (metadata: [DeployPackModuleMetadata](./sdk.deploypackmodulemetadata.md)<!-- -->) =&gt; Promise&lt;ethers.ContractTransaction&gt;; splits: (metadata: [DeploySplitsModuleMetadata](./sdk.deploysplitsmodulemetadata.md)<!-- -->) =&gt; Promise&lt;ethers.ContractTransaction&gt;; token: (metadata: [DeployTokenModuleMetadata](./sdk.deploytokenmodulemetadata.md)<!-- -->) =&gt; Promise&lt;ethers.ContractTransaction&gt;; vote: (metadata: [DeployVoteModuleMetadata](./sdk.deployvotemodulemetadata.md)<!-- -->) =&gt; Promise&lt;ethers.ContractTransaction&gt;; } |  |
-|  [event](./sdk.thirdwebsdk.event.md) |  | EventEmitter2 |  |
+|  [(constructor)(network, options)](./sdk.thirdwebsdk._constructor_.md) |  | Constructs a new instance of the <code>ThirdwebSDK</code> class |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [createSnapshot(leafs)](./sdk.thirdwebsdk.createsnapshot.md) |  |  |
-|  [getBundleCollectionModule(address)](./sdk.thirdwebsdk.getbundlecollectionmodule.md) |  |  |
-|  [getBundleDropModule(address)](./sdk.thirdwebsdk.getbundledropmodule.md) |  | <b><i>(BETA)</i></b> |
-|  [getDropModule(address)](./sdk.thirdwebsdk.getdropmodule.md) |  |  |
-|  [getGasPrice(speed, maxGasGwei)](./sdk.thirdwebsdk.getgasprice.md) |  |  |
-|  [getMarketplaceModule(address)](./sdk.thirdwebsdk.getmarketplacemodule.md) |  | <b><i>(BETA)</i></b> |
-|  [getModules(address, filterByModuleType)](./sdk.thirdwebsdk.getmodules.md) |  | Call this to get the current apps. |
-|  [getNFTModule(address)](./sdk.thirdwebsdk.getnftmodule.md) |  |  |
-|  [getPackModule(address)](./sdk.thirdwebsdk.getpackmodule.md) |  |  |
-|  [getStorage()](./sdk.thirdwebsdk.getstorage.md) |  | Accessor for the storage instance used by the SDK |
-|  [getTokenModule(address)](./sdk.thirdwebsdk.gettokenmodule.md) |  |  |
-|  [isReadOnly()](./sdk.thirdwebsdk.isreadonly.md) |  |  |
-|  [overrideStorage(storage)](./sdk.thirdwebsdk.overridestorage.md) |  | Allows you to override the storage used across the SDK. |
-|  [setProviderOrSigner(providerOrSignerOrNetwork)](./sdk.thirdwebsdk.setproviderorsigner.md) |  |  |
+|  [getModule(address, moduleType)](./sdk.thirdwebsdk.getmodule.md) |  |  |
+|  [getModules(walletAddress, moduleTypesFilter)](./sdk.thirdwebsdk.getmodules.md) |  |  |
+|  [updateSignerOrProvider(network)](./sdk.thirdwebsdk.updatesignerorprovider.md) |  |  |
 

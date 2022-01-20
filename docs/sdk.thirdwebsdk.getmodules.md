@@ -4,24 +4,20 @@
 
 ## ThirdwebSDK.getModules() method
 
-Call this to get the current apps.
-
 <b>Signature:</b>
 
 ```typescript
-getModules(address: string, filterByModuleType?: ModuleType[]): Promise<ModuleMetadata<ContractMetadataSchema>[]>;
+getModules<TModuleType extends ModuleType = ModuleType>(walletAddress: string, moduleTypesFilter?: TModuleType[]): Promise<ModuleForModuleType<TModuleType>[]>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  address | string |  |
-|  filterByModuleType | [ModuleType](./sdk.moduletype.md)<!-- -->\[\] |  |
+|  walletAddress | string |  |
+|  moduleTypesFilter | TModuleType\[\] |  |
 
 <b>Returns:</b>
 
-Promise&lt;[ModuleMetadata](./sdk.modulemetadata.md)<!-- -->&lt;[ContractMetadataSchema](./sdk.contractmetadataschema.md)<!-- -->&gt;\[\]&gt;
-
-All currently registered apps for the connected wallet
+Promise&lt;ModuleForModuleType&lt;TModuleType&gt;\[\]&gt;
 
