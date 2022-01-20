@@ -1089,14 +1089,13 @@ export class MarketplaceModule
   public async getAllListings(
     filter?: MarketplaceFilter,
   ): Promise<(AuctionListing | DirectListing)[]> {
-    let rawListings = Array.from(
-      Array((await this.readOnlyContract.totalListings()).toNumber()).keys(),
-    );
+    let rawListings = await this.getAllListingsNoFilter();
+
     if (filter) {
       if (filter.seller) {
         rawListings = rawListings.filter(
           (seller) =>
-            seller.toString().toLowerCase() ===
+            seller.sellerAddress.toString().toLowerCase() ===
             filter?.seller?.toString().toLowerCase(),
         );
       }
@@ -1104,28 +1103,39 @@ export class MarketplaceModule
         if (!filter.tokenId) {
           rawListings = rawListings.filter(
             (tokenContract) =>
-              tokenContract.toString().toLowerCase() ===
+              tokenContract.assetContractAddress.toString().toLowerCase() ===
               filter?.tokenContract?.toString().toLowerCase(),
           );
         } else {
           rawListings = rawListings.filter(
-            (tokenContract, tokenId) =>
-              tokenContract.toString().toLowerCase() ===
+            (tokenContract) =>
+              tokenContract.assetContractAddress.toString().toLowerCase() ===
                 filter?.tokenContract?.toString().toLowerCase() &&
-              (tokenId as unknown as BigNumber).toNumber() === filter?.tokenId,
+              tokenContract.tokenId.toString() === filter?.tokenId?.toString(),
           );
         }
       }
       if (filter.start !== undefined) {
         const start = filter.start;
-        rawListings = rawListings.filter((id) => parseInt(id as any) >= start);
+        rawListings = rawListings.filter((_, index) => index >= start);
         if (filter.count !== undefined && rawListings.length > filter.count) {
           rawListings = rawListings.slice(0, filter.count);
         }
       }
     }
+    return rawListings.filter((l) => l !== undefined) as (
+      | AuctionListing
+      | DirectListing
+    )[];
+  }
+
+  private async getAllListingsNoFilter(): Promise<
+    (AuctionListing | DirectListing)[]
+  > {
     const listings = await Promise.all(
-      rawListings.map(async (i) => {
+      Array.from(
+        Array((await this.readOnlyContract.totalListings()).toNumber()).keys(),
+      ).map(async (i) => {
         let listing;
 
         try {
