@@ -1154,7 +1154,7 @@ export class AppModule
       );
 
       // TODO: multicall :)
-      if (await this.isV1UpgradedOrV2()) {
+      if (!(await this.isV1())) {
         try {
           balance = await erc20.balanceOf(this.address);
         } catch (e) {
