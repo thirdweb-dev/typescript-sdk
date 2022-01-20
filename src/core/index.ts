@@ -8,6 +8,7 @@ import type { C } from "ts-toolbelt";
 import {
   DuplicateLeafsError,
   getContractMetadata,
+  InvalidAddressError,
   uploadMetadata,
 } from "../common";
 import {
@@ -519,17 +520,18 @@ export class ThirdwebSDK implements IThirdwebSdk {
     const repeated: string[] = [];
     leafs.forEach((leaf) => {
       leaf = leaf.toLowerCase();
-      invariant(isAddress(leaf), "Invalid address : " + leaf);
+      if(!isAddress(leaf)){
+        throw new InvalidAddressError(leaf);
+      }
       if (counts[leaf] && repeated.indexOf(leaf) === -1) {
         repeated.push(leaf);
       } else {
         counts[leaf] = 1;
       }
     });
-    invariant(
-      repeated.length === 0,
-      "repeated addresses: " + repeated.join(","),
-    );
+    if(repeated.length > 0){
+      throw new RepeatedAddressError(repeated[0]);
+    }
 
     const hasDuplicates = new Set(leafs).size < leafs.length;
     if (hasDuplicates) {

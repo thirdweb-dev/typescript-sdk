@@ -23,6 +23,15 @@ export class InvalidAddressError extends Error {
   }
 }
 
+export class RepeatedAddressError extends Error {
+  /** @internal */
+  constructor(address?: string) {
+    super(
+      address ? `'${address}' is was passed more than once` : "An address was passed more than once",
+    );
+  }
+}
+
 export class MissingRoleError extends Error {
   /** @internal */
   /** @internal */
