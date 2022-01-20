@@ -39,6 +39,13 @@ import {
   Offer,
 } from "../types";
 import { DirectListing } from "../types/marketplace/DirectListing";
+export interface MarketplaceFilter {
+  seller?: string;
+  tokenContract?: string;
+  tokenId?: number;
+  start?: number;
+  count?: number;
+}
 
 const MAX_BPS = 10000;
 
@@ -1079,22 +1086,52 @@ export class MarketplaceModule
     }
   }
 
-  /**
-   * Get Listings
-   *
-   * @remarks Get all listings in the marketplace.
-   *
-   * @example
-   * ```javascript
-   * // Get all listings
-   * const listings = await module.getAllListings();
-   * console.log(listings);
-   *
-   * // Get only the active listings
-   * const activeListings = listings.filter((listing) => listing.quantity > 0);
-   * ```
-   */
-  public async getAllListings(): Promise<(AuctionListing | DirectListing)[]> {
+  public async getAllListings(
+    filter?: MarketplaceFilter,
+  ): Promise<(AuctionListing | DirectListing)[]> {
+    let rawListings = await this.getAllListingsNoFilter();
+
+    if (filter) {
+      if (filter.seller) {
+        rawListings = rawListings.filter(
+          (seller) =>
+            seller.sellerAddress.toString().toLowerCase() ===
+            filter?.seller?.toString().toLowerCase(),
+        );
+      }
+      if (filter.tokenContract) {
+        if (!filter.tokenId) {
+          rawListings = rawListings.filter(
+            (tokenContract) =>
+              tokenContract.assetContractAddress.toString().toLowerCase() ===
+              filter?.tokenContract?.toString().toLowerCase(),
+          );
+        } else {
+          rawListings = rawListings.filter(
+            (tokenContract) =>
+              tokenContract.assetContractAddress.toString().toLowerCase() ===
+                filter?.tokenContract?.toString().toLowerCase() &&
+              tokenContract.tokenId.toString() === filter?.tokenId?.toString(),
+          );
+        }
+      }
+      if (filter.start !== undefined) {
+        const start = filter.start;
+        rawListings = rawListings.filter((_, index) => index >= start);
+        if (filter.count !== undefined && rawListings.length > filter.count) {
+          rawListings = rawListings.slice(0, filter.count);
+        }
+      }
+    }
+    return rawListings.filter((l) => l !== undefined) as (
+      | AuctionListing
+      | DirectListing
+    )[];
+  }
+
+  private async getAllListingsNoFilter(): Promise<
+    (AuctionListing | DirectListing)[]
+  > {
     const listings = await Promise.all(
       Array.from(
         Array((await this.readOnlyContract.totalListings()).toNumber()).keys(),

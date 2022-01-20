@@ -257,15 +257,6 @@
         "signature": "createDirectListing(listing: NewDirectListing): Promise<BigNumber>;"
       },
       {
-        "name": "getAllListings",
-        "summary": "Get Listings\n\n",
-        "remarks": "\n\nGet all listings in the marketplace.\n\n",
-        "examples": {
-          "javascript": "// Get all listings\nconst listings = await module.getAllListings();\nconsole.log(listings);\n\n// Get only the active listings\nconst activeListings = listings.filter((listing) => listing.quantity > 0);"
-        },
-        "signature": "getAllListings(): Promise<(AuctionListing | DirectListing)[]>;"
-      },
-      {
         "name": "getAuctionWinner",
         "summary": "Get Auction Winner\n\n",
         "remarks": "\n\nGet the winner of the auction after an auction ends.\n\n",

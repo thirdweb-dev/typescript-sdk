@@ -369,6 +369,28 @@ export class AppModule
     ]);
   }
 
+  /**
+   * Checks to see if an address is either the current protocol
+   * control address, or a splits module address.
+   *
+   * @internal
+   * @param address - The address to check.
+   * @returns - True if the address is of this protocol control or if its a split module.
+   */
+  private async isValidRoyaltyRecipient(address: string): Promise<boolean> {
+    if (address.toLowerCase() === this.address.toLowerCase()) {
+      return true;
+    }
+
+    const contract = this.sdk.getSplitsModule(address);
+    try {
+      await contract.balanceOf(this.address);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
   public async withdrawFunds(
     to: string,
     currency: string,
@@ -494,6 +516,27 @@ export class AppModule
   }
 
   /**
+   * Throws an error if metadata is invalid
+   *
+   * @param metadata - The metadata to validate
+   */
+  private async verifyMetadata(metadata: {
+    feeRecipient?: string;
+  }): Promise<void> {
+    const shouldUpdateRecipient =
+      metadata.feeRecipient && metadata.feeRecipient !== this.address;
+
+    const isValidFeeRecipient = await this.isValidRoyaltyRecipient(
+      metadata.feeRecipient ? metadata.feeRecipient : this.address,
+    );
+    if (shouldUpdateRecipient && !isValidFeeRecipient) {
+      throw new Error(
+        "Invalid fee recipient, can only be the Project address or a Splits module address",
+      );
+    }
+  }
+
+  /**
    * Deploys a collection module.
    *
    * @param metadata - Metadata about the module.
@@ -506,6 +549,8 @@ export class AppModule
       await this._prepareMetadata(metadata),
       BundleModuleMetadata,
     );
+
+    await this.verifyMetadata(metadata);
 
     const metadataUri = await this.sdk
       .getStorage()
@@ -584,6 +629,8 @@ export class AppModule
       await this._prepareMetadata(metadata),
       NftModuleMetadata,
     );
+
+    await this.verifyMetadata(metadata);
 
     const metadataUri = await this.sdk
       .getStorage()
@@ -746,6 +793,8 @@ export class AppModule
       PackModuleMetadata,
     );
 
+    await this.verifyMetadata(metadata);
+
     const metadataUri = await this.sdk
       .getStorage()
       .uploadMetadata(
@@ -798,6 +847,8 @@ export class AppModule
       DropModuleMetadata,
     );
 
+    await this.verifyMetadata(metadata);
+
     const metadataUri = await this.sdk
       .getStorage()
       .uploadMetadata(
@@ -847,6 +898,8 @@ export class AppModule
         isAddress(metadata.primarySaleRecipientAddress),
       "Primary sale recipient address must be specified and must be a valid address",
     );
+
+    await this.verifyMetadata(metadata);
 
     const serializedMetadata = this.jsonConvert.serializeObject(
       await this._prepareMetadata(metadata),

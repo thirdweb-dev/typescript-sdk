@@ -26,7 +26,6 @@ describe("Pack Module", async () => {
     packModule = await appModule.deployPackModule({
       name: "Pack Module",
       sellerFeeBasisPoints: 1000,
-      feeRecipient: samWallet.address,
     });
 
     bundleModule = await appModule.deployBundleModule({

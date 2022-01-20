@@ -1,6 +1,6 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { BigNumber } from "ethers";
 import { readFileSync } from "fs";
 import { JsonConvert } from "json2typescript";
@@ -15,6 +15,7 @@ describe("App Module", async () => {
 
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
+    await sdk.setProviderOrSigner(signers[0]);
   });
 
   it.skip("should serialize metadata correctly", async () => {
@@ -116,18 +117,12 @@ describe("App Module", async () => {
       name: "Testing module from SDK",
       sellerFeeBasisPoints: 0,
       image,
-      feeRecipient: samWallet.address,
     });
 
     const metadata = await module.getMetadata();
     assert.isTrue(
       metadata.metadata.image.includes("ipfs/"),
       `Image property = ${metadata.metadata.image}, should include ipfs/`,
-    );
-    assert.equal(
-      await module.getRoyaltyRecipientAddress(),
-      samWallet.address,
-      "Royalty recipient address was not updated",
     );
   });
 
@@ -159,17 +154,29 @@ describe("App Module", async () => {
   });
 
   it("should deploy a pack module successfully", async () => {
+    const splits = await appModule.deploySplitsModule({
+      name: `Testing pack from SDK`,
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      recipientSplits: [
+        {
+          address: samWallet.address,
+          shares: 1,
+        },
+      ],
+    });
+
     const result = await appModule.deployPackModule({
       name: `Testing pack from SDK`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       sellerFeeBasisPoints: 100,
-      feeRecipient: samWallet.address,
+      feeRecipient: splits.address,
     });
     const contract = await sdk.getPackModule(result.address);
     assert.equal(
       await contract.getRoyaltyRecipientAddress(),
-      samWallet.address,
+      splits.address,
       "Royalty recipient address was not updated",
     );
   });
@@ -183,16 +190,10 @@ describe("App Module", async () => {
       maxSupply: 10,
       baseTokenUri: "/test",
       primarySaleRecipientAddress: AddressZero,
-      feeRecipient: samWallet.address,
     });
 
     const module = sdk.getDropModule(result.address);
     assert.isNotEmpty(module.address, "The max supply should be 10");
-    assert.equal(
-      await module.getRoyaltyRecipientAddress(),
-      samWallet.address,
-      "Royalty recipient address was not updated",
-    );
   });
 
   it("should deploy a datastore module successfully", async () => {
@@ -205,6 +206,26 @@ describe("App Module", async () => {
     await sdk.getDatastoreModule(result.address);
   });
 
+  it("should throw an error if the fee recipient is not a protocl control or splits module", async () => {
+    try {
+      const result = await appModule.deployBundleDropModule({
+        name: `Testing drop from SDK`,
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primarySaleRecipientAddress: samWallet.address,
+        feeRecipient: samWallet.address,
+      });
+    } catch (err) {
+      if (
+        !(err.message as string).includes(
+          "can only be the Project address or a Splits module address",
+        )
+      ) {
+        throw err;
+      }
+    }
+  });
+
   it("should properly parse metadata when image is string", async () => {
     const metadata = {
       name: "safe",
@@ -212,7 +233,6 @@ describe("App Module", async () => {
       image:
         "ipfs://bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
       sellerFeeBasisPoints: 0,
-      feeRecipient: samWallet.address,
       symbol: "",
     };
     const contract = await appModule.deployBundleModule(metadata);
@@ -222,11 +242,6 @@ describe("App Module", async () => {
       result.metadata.image,
       "https://ipfs.thirdweb.com/ipfs/bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
     );
-    assert.equal(
-      await contract.getRoyaltyRecipientAddress(),
-      samWallet.address,
-      "Royalty recipient address was not updated",
-    );
   });
   it("should deploy a bundle drop module correctly", async () => {
     const contract = await appModule.deployBundleDropModule({
@@ -234,15 +249,9 @@ describe("App Module", async () => {
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       sellerFeeBasisPoints: 100,
-      feeRecipient: samWallet.address,
       primarySaleRecipientAddress: AddressZero,
     });
-    const module = sdk.getBundleDropModule(contract.address);
-    assert.equal(
-      await module.getRoyaltyRecipientAddress(),
-      samWallet.address,
-      "Royalty recipient address was not updated",
-    );
+    sdk.getBundleDropModule(contract.address);
   });
   it("should upload to ipfs image is file", async () => {
     const metadata = {
