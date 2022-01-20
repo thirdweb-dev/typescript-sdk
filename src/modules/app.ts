@@ -994,7 +994,7 @@ export class AppModule
   }
 
   public async shouldUpgradeToV2(): Promise<boolean> {
-    if (await this.isV1()) {
+    if (await this.isV1() && this.hasValidSigner()) {
       const isAdmin = await this.readOnlyContract.hasRole(
         ethers.utils.hexZeroPad([0], 32),
         await this.getSignerAddress(),
