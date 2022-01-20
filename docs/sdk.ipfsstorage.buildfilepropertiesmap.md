@@ -9,19 +9,19 @@ This function recurisely traverses an object and hashes any `Buffer` or `File` o
 <b>Signature:</b>
 
 ```typescript
-buildFilePropertiesMap(object: any, files: (File | Buffer)[]): Promise<(File | Buffer)[]>;
+buildFilePropertiesMap(object: Record<string, any>, files: (File | Buffer)[]): (File | Buffer)[];
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  object | any | The object to recurse over |
+|  object | Record&lt;string, any&gt; | The object to recurse over |
 |  files | (File \| Buffer)\[\] | The running array of files or buffer to upload |
 
 <b>Returns:</b>
 
-Promise&lt;(File \| Buffer)\[\]&gt;
+(File \| Buffer)\[\]
 
 - The final map of all hashes to files
 

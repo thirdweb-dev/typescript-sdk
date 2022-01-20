@@ -323,7 +323,26 @@ export class AppModule
     ).reduce((acc, curr) => acc.concat(curr), []);
   }
 
+  /**
+   * Trusted forwarder is used to forward gasless transactions. Trusted Forwarder of each module cannot be changed once it is deployed.
+   *
+   * @returns The address of the trusted forwarder contract
+   */
+  public async getForwarder(): Promise<string> {
+    return await this.readOnlyContract.getForwarder();
+  }
+
   // owner functions
+  /**
+   * Set trusted forwarder for the modules. Every module that is deployed after this call will use the new forwarder.
+   * Trusted forwarder is used to forward gasless transactions. Trusted Forwarder of each module cannot be changed once it is deployed.
+   *
+   * @param address - The address of the trusted forwarder contract
+   */
+  public async setForwarder(address: string): Promise<void> {
+    await this.contract.setForwarder(address);
+  }
+
   /**
    * @deprecated - Use setMetadata() instead
    */
@@ -348,6 +367,28 @@ export class AppModule
       moduleAddress,
       treasury,
     ]);
+  }
+
+  /**
+   * Checks to see if an address is either the current protocol
+   * control address, or a splits module address.
+   *
+   * @internal
+   * @param address - The address to check.
+   * @returns - True if the address is of this protocol control or if its a split module.
+   */
+  private async isValidRoyaltyRecipient(address: string): Promise<boolean> {
+    if (address.toLowerCase() === this.address.toLowerCase()) {
+      return true;
+    }
+
+    const contract = this.sdk.getSplitsModule(address);
+    try {
+      await contract.balanceOf(this.address);
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
   public async withdrawFunds(
@@ -475,6 +516,27 @@ export class AppModule
   }
 
   /**
+   * Throws an error if metadata is invalid
+   *
+   * @param metadata - The metadata to validate
+   */
+  private async verifyMetadata(metadata: {
+    feeRecipient?: string;
+  }): Promise<void> {
+    const shouldUpdateRecipient =
+      metadata.feeRecipient && metadata.feeRecipient !== this.address;
+
+    const isValidFeeRecipient = await this.isValidRoyaltyRecipient(
+      metadata.feeRecipient ? metadata.feeRecipient : this.address,
+    );
+    if (shouldUpdateRecipient && !isValidFeeRecipient) {
+      throw new Error(
+        "Invalid fee recipient, can only be the Project address or a Splits module address",
+      );
+    }
+  }
+
+  /**
    * Deploys a collection module.
    *
    * @param metadata - Metadata about the module.
@@ -488,6 +550,8 @@ export class AppModule
       BundleModuleMetadata,
     );
 
+    await this.verifyMetadata(metadata);
+
     const metadataUri = await this.sdk
       .getStorage()
       .uploadMetadata(
@@ -500,7 +564,7 @@ export class AppModule
       ModuleType.COLLECTION,
       [
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
         BigNumber.from(
           metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
@@ -509,7 +573,7 @@ export class AppModule
       NFTCollection__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
-      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
 
     return this.sdk.getBundleModule(address);
@@ -541,7 +605,7 @@ export class AppModule
       ModuleType.SPLITS,
       [
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
         metadata.recipientSplits.map((s) => s.address),
         metadata.recipientSplits.map((s) => s.shares),
@@ -566,6 +630,8 @@ export class AppModule
       NftModuleMetadata,
     );
 
+    await this.verifyMetadata(metadata);
+
     const metadataUri = await this.sdk
       .getStorage()
       .uploadMetadata(
@@ -585,7 +651,7 @@ export class AppModule
         metadata.symbol ? metadata.symbol : "",
         metadataUri,
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         nativeTokenWrapperAddress,
         metadata.defaultSaleRecipientAddress
           ? metadata.defaultSaleRecipientAddress
@@ -598,7 +664,7 @@ export class AppModule
       SignatureMint721__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
-      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getNFTModule(address);
   }
@@ -631,7 +697,7 @@ export class AppModule
         this.address,
         metadata.name,
         metadata.symbol ? metadata.symbol : "",
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
       ],
       Coin__factory,
@@ -668,7 +734,7 @@ export class AppModule
         this.address,
         metadata.name,
         metadata.symbol ? metadata.symbol : "",
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
       ],
       Coin__factory,
@@ -703,7 +769,7 @@ export class AppModule
       ModuleType.MARKET,
       [
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
         metadata.marketFeeBasisPoints ? metadata.marketFeeBasisPoints : 0,
       ],
@@ -727,6 +793,8 @@ export class AppModule
       PackModuleMetadata,
     );
 
+    await this.verifyMetadata(metadata);
+
     const metadataUri = await this.sdk
       .getStorage()
       .uploadMetadata(
@@ -748,13 +816,13 @@ export class AppModule
         linkTokenAddress,
         keyHash,
         fees,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
       ],
       Pack__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
-      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getPackModule(address);
   }
@@ -779,6 +847,8 @@ export class AppModule
       DropModuleMetadata,
     );
 
+    await this.verifyMetadata(metadata);
+
     const metadataUri = await this.sdk
       .getStorage()
       .uploadMetadata(
@@ -798,7 +868,7 @@ export class AppModule
         metadata.symbol ? metadata.symbol : "",
         metadataUri,
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         nativeTokenWrapperAddress,
         metadata.primarySaleRecipientAddress,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
@@ -809,7 +879,7 @@ export class AppModule
       LazyMintERC721__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
-      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getDropModule(address);
   }
@@ -828,6 +898,8 @@ export class AppModule
         isAddress(metadata.primarySaleRecipientAddress),
       "Primary sale recipient address must be specified and must be a valid address",
     );
+
+    await this.verifyMetadata(metadata);
 
     const serializedMetadata = this.jsonConvert.serializeObject(
       await this._prepareMetadata(metadata),
@@ -851,7 +923,7 @@ export class AppModule
       [
         metadataUri,
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         nativeTokenWrapperAddress,
         metadata.primarySaleRecipientAddress,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
@@ -862,7 +934,7 @@ export class AppModule
       LazyMintERC1155__factory,
     );
     if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
-      this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getBundleDropModule(address);
   }
@@ -892,7 +964,7 @@ export class AppModule
 
     const address = await this._deployModule(
       ModuleType.DATASTORE,
-      [this.address, await this.sdk.getForwarderAddress(), metadataUri],
+      [this.address, await this.getForwarder(), metadataUri],
       DataStore__factory,
     );
 
@@ -965,7 +1037,7 @@ export class AppModule
         metadata.votingPeriod,
         metadata.minimumNumberOfTokensNeededToPropose,
         metadata.votingQuorumFraction,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         metadataUri,
       ],
       VotingGovernor__factory,
@@ -1203,7 +1275,7 @@ export class AppModule
       ModuleType.MARKETPLACE,
       [
         this.address,
-        await this.sdk.getForwarderAddress(),
+        await this.getForwarder(),
         nativeTokenWrapperAddress,
         metadataUri,
         metadata.marketFeeBasisPoints,

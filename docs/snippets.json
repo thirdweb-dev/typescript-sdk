@@ -257,13 +257,22 @@
         "signature": "createDirectListing(listing: NewDirectListing): Promise<BigNumber>;"
       },
       {
-        "name": "getAllListings",
-        "summary": "Get Listings\n\n",
-        "remarks": "\n\nGet all listings in the marketplace.\n\n",
+        "name": "getAuctionWinner",
+        "summary": "Get Auction Winner\n\n",
+        "remarks": "\n\nGet the winner of the auction after an auction ends.\n\n",
         "examples": {
-          "javascript": "// Get all listings\nconst listings = await module.getAllListings();\nconsole.log(listings);\n\n// Get only the active listings\nconst activeListings = listings.filter((listing) => listing.quantity > 0);"
+          "javascript": "// The listing ID of the auction that closed\nconst listingId = 0;\n\nmodule\n  .getAuctionWinner(listingId)\n  .then((auctionWinner) => console.log(auctionWinner))\n  .catch((err) => console.error(err));"
         },
-        "signature": "getAllListings(): Promise<(AuctionListing | DirectListing)[]>;"
+        "signature": "getAuctionWinner(listingId: BigNumberish): Promise<string>;"
+      },
+      {
+        "name": "getWinningBid",
+        "summary": "Get Highest Bid\n\n",
+        "remarks": "\n\nGet the current highest bid of an active auction.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the auction that closed\nconst listingId = 0;\n\nmodule\n  .getWinningBid(listingId)\n  .then((offer) => console.log(offer))\n  .catch((err) => console.error(err));"
+        },
+        "signature": "getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;"
       },
       {
         "name": "makeAuctionListingBid",

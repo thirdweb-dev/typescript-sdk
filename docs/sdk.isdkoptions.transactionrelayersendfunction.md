@@ -4,7 +4,12 @@
 
 ## ISDKOptions.transactionRelayerSendFunction property
 
-Optional function for sending transaction to relayer
+> Warning: This API is now obsolete.
+> 
+> [ISDKOptions.gaslessSendFunction](./sdk.isdkoptions.gaslesssendfunction.md)
+> 
+> Optional function for sending transaction to relayer
+> 
 
 <b>Signature:</b>
 

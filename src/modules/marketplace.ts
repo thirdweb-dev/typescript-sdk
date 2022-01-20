@@ -40,6 +40,14 @@ import {
 } from "../types";
 import { DirectListing } from "../types/marketplace/DirectListing";
 
+export interface MarketplaceFilter {
+  seller?: string;
+  tokenContract?: string;
+  tokenId?: number;
+  start?: number;
+  count?: number;
+}
+
 const MAX_BPS = 10000;
 
 /**
@@ -338,7 +346,41 @@ export class MarketplaceModule
     winningPrice = BigNumber.from(winningPrice);
     newBidPrice = BigNumber.from(newBidPrice);
     const buffer = newBidPrice.sub(winningPrice).mul(MAX_BPS).div(winningPrice);
-    return buffer.gt(bidBuffer);
+    return buffer.gte(bidBuffer);
+  }
+
+  /**
+   * Get Auction Winner
+   *
+   * @remarks Get the winner of the auction after an auction ends.
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the auction that closed
+   * const listingId = 0;
+   *
+   * module
+   *   .getAuctionWinner(listingId)
+   *   .then((auctionWinner) => console.log(auctionWinner))
+   *   .catch((err) => console.error(err));
+   * ```
+   */
+  public async getAuctionWinner(listingId: BigNumberish): Promise<string> {
+    const closedAuctions = await this.readOnlyContract.queryFilter(
+      this.contract.filters.AuctionClosed(),
+    );
+
+    const auction = closedAuctions.find((a) =>
+      a.args.listingId.eq(BigNumber.from(listingId)),
+    );
+
+    if (!auction) {
+      throw new Error(
+        `Could not find auction with listingId ${listingId} in closed auctions`,
+      );
+    }
+
+    return auction.args.winningBidder;
   }
 
   public async getDirectListing(
@@ -752,6 +794,22 @@ export class MarketplaceModule
     return await this.mapOffer(BigNumber.from(listingId), offers);
   }
 
+  /**
+   * Get Highest Bid
+   *
+   * @remarks Get the current highest bid of an active auction.
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the auction that closed
+   * const listingId = 0;
+   *
+   * module
+   *   .getWinningBid(listingId)
+   *   .then((offer) => console.log(offer))
+   *   .catch((err) => console.error(err));
+   * ```
+   */
   public async getWinningBid(
     listingId: BigNumberish,
   ): Promise<Offer | undefined> {
@@ -1029,22 +1087,52 @@ export class MarketplaceModule
     }
   }
 
-  /**
-   * Get Listings
-   *
-   * @remarks Get all listings in the marketplace.
-   *
-   * @example
-   * ```javascript
-   * // Get all listings
-   * const listings = await module.getAllListings();
-   * console.log(listings);
-   *
-   * // Get only the active listings
-   * const activeListings = listings.filter((listing) => listing.quantity > 0);
-   * ```
-   */
-  public async getAllListings(): Promise<(AuctionListing | DirectListing)[]> {
+  public async getAllListings(
+    filter?: MarketplaceFilter,
+  ): Promise<(AuctionListing | DirectListing)[]> {
+    let rawListings = await this.getAllListingsNoFilter();
+
+    if (filter) {
+      if (filter.seller) {
+        rawListings = rawListings.filter(
+          (seller) =>
+            seller.sellerAddress.toString().toLowerCase() ===
+            filter?.seller?.toString().toLowerCase(),
+        );
+      }
+      if (filter.tokenContract) {
+        if (!filter.tokenId) {
+          rawListings = rawListings.filter(
+            (tokenContract) =>
+              tokenContract.assetContractAddress.toString().toLowerCase() ===
+              filter?.tokenContract?.toString().toLowerCase(),
+          );
+        } else {
+          rawListings = rawListings.filter(
+            (tokenContract) =>
+              tokenContract.assetContractAddress.toString().toLowerCase() ===
+                filter?.tokenContract?.toString().toLowerCase() &&
+              tokenContract.tokenId.toString() === filter?.tokenId?.toString(),
+          );
+        }
+      }
+      if (filter.start !== undefined) {
+        const start = filter.start;
+        rawListings = rawListings.filter((_, index) => index >= start);
+        if (filter.count !== undefined && rawListings.length > filter.count) {
+          rawListings = rawListings.slice(0, filter.count);
+        }
+      }
+    }
+    return rawListings.filter((l) => l !== undefined) as (
+      | AuctionListing
+      | DirectListing
+    )[];
+  }
+
+  private async getAllListingsNoFilter(): Promise<
+    (AuctionListing | DirectListing)[]
+  > {
     const listings = await Promise.all(
       Array.from(
         Array((await this.readOnlyContract.totalListings()).toNumber()).keys(),
@@ -1073,5 +1161,15 @@ export class MarketplaceModule
       | AuctionListing
       | DirectListing
     )[];
+  }
+
+  public async isRestrictedListerRoleOnly(): Promise<boolean> {
+    return this.readOnlyContract.restrictedListerRoleOnly();
+  }
+
+  public async setRestrictedListerRoleOnly(
+    isRestricted: boolean,
+  ): Promise<void> {
+    await this.sendTransaction("setRestrictedListerRoleOnly", [isRestricted]);
   }
 }

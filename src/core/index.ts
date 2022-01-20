@@ -1,7 +1,23 @@
-import { Provider } from "@ethersproject/providers";
+import { Forwarder__factory } from "@3rdweb/contracts";
+import {
+  ExternalProvider,
+  JsonRpcProvider,
+  JsonRpcSigner,
+  Provider,
+  Web3Provider,
+} from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
-import { BytesLike, ContractReceipt, ethers, Signer } from "ethers";
 import { isAddress } from "ethers/lib/utils";
+import { signERC2612Permit } from "eth-permit";
+import {
+  BaseContract,
+  BigNumber,
+  BytesLike,
+  ContractReceipt,
+  ethers,
+  Signer,
+} from "ethers";
+import { EventEmitter2 } from "eventemitter2";
 import { JsonConvert } from "json2typescript";
 import MerkleTree from "merkletreejs";
 import type { C } from "ts-toolbelt";
@@ -16,6 +32,11 @@ import {
   getContractAddressByChainId,
 } from "../common/address";
 import { SUPPORTED_CHAIN_ID } from "../common/chain";
+import {
+  BiconomyForwarderAbi,
+  ForwardRequest,
+  getAndIncrementNonce,
+} from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { ISDKOptions, IThirdwebSdk } from "../interfaces";
@@ -39,6 +60,7 @@ import { ClaimProof, Snapshot, SnapshotInfo } from "../types/snapshots";
 import { IAppModule, RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,
+  GaslessTransaction,
   MetadataURIOrObject,
   PermitRequestMessage,
   ProviderOrSigner,
@@ -79,7 +101,16 @@ export class ThirdwebSDK implements IThirdwebSdk {
     transactionRelayerSendFunction: this.defaultRelayerSendFunction.bind(this),
     transactionRelayerForwarderAddress: FORWARDER_ADDRESS,
     readOnlyRpcUrl: "",
+    gasless: {
+      biconomy: {
+        apiId: "",
+        apiKey: "",
+        deadlineSeconds: 3600,
+      },
+    },
+    gaslessSendFunction: this.defaultGaslessSendFunction.bind(this),
   };
+
   private modules = new Map<string, C.Instance<AnyContract>>();
   private providerOrSigner: ProviderOrSigner;
 
@@ -87,6 +118,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
 
   private _jsonConvert = new JsonConvert();
   private storage: IStorage;
+
+  public event = new EventEmitter2();
 
   /**
    * The active Signer, you should not need to access this unless you are deploying new modules.
@@ -128,12 +161,23 @@ export class ThirdwebSDK implements IThirdwebSdk {
     }
   }
 
-  private async getChainID(): Promise<number> {
+  private getProvider(): Provider | undefined {
     const provider = Provider.isProvider(this.providerOrSigner)
       ? this.providerOrSigner
       : this.providerOrSigner.provider;
-    invariant(provider, "getRegistryAddress() -- No Provider");
+    return provider;
+  }
 
+  private getSigner(): Signer | undefined {
+    if (Signer.isSigner(this.providerOrSigner)) {
+      return this.providerOrSigner;
+    }
+    return undefined;
+  }
+
+  private async getChainID(): Promise<number> {
+    const provider = this.getProvider();
+    invariant(provider, "getRegistryAddress() -- No Provider");
     const { chainId } = await provider.getNetwork();
     return chainId;
   }
@@ -483,6 +527,204 @@ export class ThirdwebSDK implements IThirdwebSdk {
       return this.getAppModule(address);
     }
     throw new Error("unsupported module");
+  }
+
+  private async defaultGaslessSendFunction(
+    contract: BaseContract,
+    transaction: GaslessTransaction,
+  ): Promise<string> {
+    if (
+      this.options.gasless.biconomy.apiId &&
+      this.options.gasless.biconomy.apiKey
+    ) {
+      return this.biconomySendFunction(contract, transaction);
+    }
+    return this.defenderSendFunction(contract, transaction);
+  }
+
+  private async biconomySendFunction(
+    _contract: BaseContract,
+    transaction: GaslessTransaction,
+  ): Promise<string> {
+    const signer = this.getSigner();
+    const provider = this.getProvider();
+    invariant(signer && provider, "signer and provider must be set");
+
+    const forwarder = new ethers.Contract(
+      getContractAddressByChainId(
+        transaction.chainId,
+        "biconomyForwarder",
+      ) as string,
+      BiconomyForwarderAbi,
+      provider,
+    );
+    const batchId = 0;
+    const batchNonce = await getAndIncrementNonce(forwarder, "getNonce", [
+      transaction.from,
+      batchId,
+    ]);
+
+    const request = {
+      from: transaction.from,
+      to: transaction.to,
+      token: ethers.constants.AddressZero,
+      txGas: transaction.gasLimit.toNumber(),
+      tokenGasPrice: "0",
+      batchId,
+      batchNonce: batchNonce.toNumber(),
+      deadline: Math.floor(
+        Date.now() / 1000 +
+          (this.options.gasless.biconomy.deadlineSeconds ?? 3600),
+      ),
+      data: transaction.data,
+    };
+
+    const hashToSign = ethers.utils.arrayify(
+      ethers.utils.solidityKeccak256(
+        [
+          "address",
+          "address",
+          "address",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256",
+          "bytes32",
+        ],
+        [
+          request.from,
+          request.to,
+          request.token,
+          request.txGas,
+          request.tokenGasPrice,
+          request.batchId,
+          request.batchNonce,
+          request.deadline,
+          ethers.utils.keccak256(request.data),
+        ],
+      ),
+    );
+
+    const signature = await signer.signMessage(hashToSign);
+    const response = await fetch(
+      "https://api.biconomy.io/api/v2/meta-tx/native",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          from: transaction.from,
+          apiId: this.options.gasless.biconomy.apiId,
+          params: [request, signature],
+          to: transaction.to,
+          gasLimit: transaction.gasLimit.toHexString(),
+        }),
+        headers: {
+          "x-api-key": this.options.gasless.biconomy.apiKey,
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      },
+    );
+
+    if (response.ok) {
+      const resp = await response.json();
+      if (!resp.txHash) {
+        throw new Error(`relay transaction failed: ${resp.log}`);
+      }
+      return resp.txHash;
+    }
+    throw new Error("relay transaction failed");
+  }
+
+  private async defenderSendFunction(
+    contract: BaseContract,
+    transaction: GaslessTransaction,
+  ): Promise<string> {
+    const signer = this.getSigner();
+    const provider = this.getProvider();
+    invariant(signer, "provider is not set");
+    invariant(provider, "provider is not set");
+    const forwarderAddress = this.options.transactionRelayerForwarderAddress;
+    const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
+    const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
+      transaction.from,
+    ]);
+    const domain = {
+      name: "GSNv2 Forwarder",
+      version: "0.0.1",
+      chainId: transaction.chainId,
+      verifyingContract: forwarderAddress,
+    };
+
+    const types = {
+      ForwardRequest,
+    };
+
+    let message: ForwardRequestMessage | PermitRequestMessage = {
+      from: transaction.from,
+      to: transaction.to,
+      value: BigNumber.from(0).toString(),
+      gas: BigNumber.from(transaction.gasLimit).toString(),
+      nonce: BigNumber.from(nonce).toString(),
+      data: transaction.data,
+    };
+
+    let signature: BytesLike;
+
+    // if the executing function is "approve" and matches with erc20 approve signature
+    // and if the token supports permit, then we use permit for gasless instead of approve.
+    if (
+      transaction.functionName === "approve" &&
+      transaction.functionArgs.length === 2 &&
+      contract.interface.functions["approve(address,uint256)"] &&
+      contract.interface.functions[
+        "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"
+      ]
+    ) {
+      const spender = transaction.functionArgs[0];
+      const amount = transaction.functionArgs[1];
+      const permit = await signERC2612Permit(
+        signer,
+        contract.address,
+        transaction.from,
+        spender,
+        amount,
+      );
+      message = { to: contract.address, ...permit };
+      signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
+    } else {
+      // wallet connect special 🦋
+      if (
+        (
+          (signer?.provider as Web3Provider)?.provider as ExternalProvider & {
+            isWalletConnect?: boolean;
+          }
+        )?.isWalletConnect
+      ) {
+        const payload = ethers.utils._TypedDataEncoder.getPayload(
+          domain,
+          types,
+          message,
+        );
+        signature = await (signer?.provider as JsonRpcProvider).send(
+          "eth_signTypedData",
+          [transaction.from.toLowerCase(), JSON.stringify(payload)],
+        );
+      } else {
+        signature = await (signer as JsonRpcSigner)._signTypedData(
+          domain,
+          types,
+          message,
+        );
+      }
+    }
+
+    // TODO: isolate http request logic in here. `transactionRelayerSendFunction` is deprecated using it for backward compatibility reasons.
+    const txHash = await this.options.transactionRelayerSendFunction(
+      message,
+      signature,
+    );
+
+    return txHash;
   }
 
   private async defaultRelayerSendFunction(
