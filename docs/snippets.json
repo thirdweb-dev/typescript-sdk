@@ -521,7 +521,7 @@
         "summary": "Mint Tokens To Many Wallets\n\n",
         "remarks": "\n\nMint tokens to many different wallets\n\n",
         "examples": {
-          "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    address: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 100, // How many tokens to mint to specified address\n  },\n {\n   address: \"0x...\",\n   amount: 100,\n }\n]\n\nawait module.transfer(toAddress, amount);"
+          "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    address: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 100, // How many tokens to mint to specified address\n  },\n {\n   address: \"0x...\",\n   amount: 100,\n }\n]\n\nawait module.mintBatchTo(data);"
         },
         "signature": "mintBatchTo(args: ITokenMintArgs[]): Promise<void>;"
       },
