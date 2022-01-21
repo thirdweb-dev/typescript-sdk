@@ -26,21 +26,20 @@ export interface NewSignaturePayload {
    */
   currencyAddress: string;
   /**
-   * The epoch start time (in seconds) when the signature can be claimed.
+   * The start time (in epoch seconds or date object) when the signature can be claimed.
    */
-   mintStartTime?: BigNumberish | Date;
+  mintStartTime?: BigNumberish | Date;
   /**
-   * The epoch start time (in seconds) when the signature can be claimed.
+   * @deprecated Use mintStartTime instead
    */
   mintStartTimeEpochSeconds?: BigNumberish;
   /**
-   * The epoch end time (in seconds) that essentially invalidates the signature
+   * The end time (epoch seconds or date object) that essentially invalidates the signature
    * such that it can no longer be claimed.
    */
-   mintEndTime?: BigNumberish | Date;
+  mintEndTime?: BigNumberish | Date;
   /**
-   * The epoch end time (in seconds) that essentially invalidates the signature
-   * such that it can no longer be claimed.
+   * @deprecated Use mintEndTime instead
    */
   mintEndTimeEpochSeconds?: BigNumberish;
 

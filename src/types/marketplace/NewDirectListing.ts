@@ -20,7 +20,7 @@ export interface NewDirectListing {
    */
   startTime?: BigNumberish | Date;
   /**
-   * The start time of the listing.
+   * @deprecated Use startTime instead
    */
   startTimeInSeconds?: BigNumberish;
 
