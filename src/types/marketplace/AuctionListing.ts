@@ -29,11 +29,7 @@ export interface AuctionListing {
   /**
    * The start time of the listing.
    */
-  startTime?: BigNumberish | Date;
-  /**
-   * The start time of the listing.
-   */
-  startTimeInEpochSeconds?: BigNumberish;
+  startTimeInEpochSeconds: BigNumberish;
   /**
    * Number of seconds until the auction expires.
    */

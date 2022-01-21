@@ -15,11 +15,14 @@ export interface NewAuctionListing {
    * The ID of the token to list.
    */
   tokenId: BigNumberish;
-
   /**
    * The start time of the listing.
    */
-  startTimeInSeconds: BigNumberish;
+   startTime?: BigNumberish | Date;
+  /**
+   * The start time of the listing.
+   */
+  startTimeInSeconds?: BigNumberish;
 
   /**
    * The duration of the listing in seconds.

@@ -103,7 +103,7 @@ export class MarketplaceModule
    *   // token ID of the asset you want to list
    *   tokenId: "0",
    *   // in how many seconds with the listing open up
-   *   startTimeInSeconds: 0,
+   *   startTime: 0,
    *   // how long the listing will be open for
    *   listingDurationInSeconds: 86400,
    *   // how many of the asset you want to list
@@ -186,6 +186,13 @@ export class MarketplaceModule
   public async createAuctionListing(
     listing: NewAuctionListing,
   ): Promise<BigNumber> {
+    if(listing.startTimeInSeconds != undefined && listing.startTime == undefined) {
+      listing.startTime = listing.startTimeInSeconds;
+    }
+    if(listing.startTimeInSeconds == undefined && listing.startTime == undefined) {
+      throw new Error("startTime must be defined");
+    }
+    
     this.validateNewListingParam(listing);
 
     await this.handleTokenApproval(
@@ -666,8 +673,10 @@ export class MarketplaceModule
       "Listing duration is required",
     );
     invariant(
-      param.startTimeInSeconds !== undefined &&
-        param.startTimeInSeconds !== null,
+      (param.startTimeInSeconds !== undefined &&
+        param.startTimeInSeconds !== null) && (
+          param.startTime !== undefined && param.startTime !== null
+        ),
       "Start time is required",
     );
     invariant(

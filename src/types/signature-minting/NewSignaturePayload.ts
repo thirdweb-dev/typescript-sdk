@@ -28,21 +28,21 @@ export interface NewSignaturePayload {
   /**
    * The epoch start time (in seconds) when the signature can be claimed.
    */
-   mintStartTime: BigNumberish | Date;
+   mintStartTime?: BigNumberish | Date;
   /**
    * The epoch start time (in seconds) when the signature can be claimed.
    */
-  mintStartTimeEpochSeconds: BigNumberish;
+  mintStartTimeEpochSeconds?: BigNumberish;
   /**
    * The epoch end time (in seconds) that essentially invalidates the signature
    * such that it can no longer be claimed.
    */
-   mintEndTime: BigNumberish | Date;
+   mintEndTime?: BigNumberish | Date;
   /**
    * The epoch end time (in seconds) that essentially invalidates the signature
    * such that it can no longer be claimed.
    */
-  mintEndTimeEpochSeconds: BigNumberish;
+  mintEndTimeEpochSeconds?: BigNumberish;
 
   /**
    * A unique identifier for the signature.
