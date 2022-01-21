@@ -276,10 +276,5 @@ export interface IMarketplace {
    * @param buffer - The time buffer in seconds.
    */
    setTimeBufferInSeconds(buffer: BigNumberish): Promise<void>;
-  /**
-   * Sets the current time buffer on the marketplace contract.
-   *
-   * @param buffer - The time buffer in seconds.
-   */
-  setTimeBufferInSeconds(buffer: BigNumberish): Promise<void>;
+
 }
