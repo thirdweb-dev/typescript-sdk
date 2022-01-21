@@ -72,6 +72,11 @@ export interface ISDKOptions {
     };
   };
 
+  storage: {
+    thirdwebIpfsServerUrl: string;
+    pinataApiUrl: string;
+  };
+
   /**
    * Optional read only RPC url
    */
