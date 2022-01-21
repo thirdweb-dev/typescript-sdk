@@ -73,7 +73,9 @@ export class ContractWrapper<
     // update the underlyiyng base class
     super.updateSignerOrProvider(network);
     // re-connect the contract with the new signer / provider
-    this.contract.connect(this.getSigner() || this.getProvider());
+    this.contract = this.contract.connect(
+      this.getSigner() || this.getProvider(),
+    ) as TContract;
     // setup the read only contract
     this.readOnlyContract = this.options.readOnlyRpcUrl
       ? (this.contract.connect(
@@ -161,7 +163,7 @@ export class ContractWrapper<
 
     if (
       this.options?.gasless &&
-      ("openZeppelin" in this.options.gasless ||
+      ("openzeppelin" in this.options.gasless ||
         "biconomy" in this.options.gasless)
     ) {
       const provider = this.getProvider();
@@ -444,7 +446,7 @@ export class ContractWrapper<
     transaction: GaslessTransaction,
   ): Promise<string> {
     invariant(
-      this.options.gasless && "openZeppelin" in this.options.gasless,
+      this.options.gasless && "openzeppelin" in this.options.gasless,
       "calling biconomySendFunction without biconomy",
     );
     const signer = this.getSigner();
@@ -452,7 +454,7 @@ export class ContractWrapper<
     invariant(signer, "provider is not set");
     invariant(provider, "provider is not set");
     const forwarderAddress =
-      this.options.gasless.openZeppelin.relayerForwarderAddress ||
+      this.options.gasless.openzeppelin.relayerForwarderAddress ||
       FORWARDER_ADDRESS;
     const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
@@ -542,7 +544,7 @@ export class ContractWrapper<
     });
 
     // console.log("POST", this.options.transactionRelayerUrl, body);
-    const response = await fetch(this.options.gasless.openZeppelin.relayerUrl, {
+    const response = await fetch(this.options.gasless.openzeppelin.relayerUrl, {
       method: "POST",
       body,
     });

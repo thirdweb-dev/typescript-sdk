@@ -51,7 +51,7 @@ export class BaseModule<
     this.verifyThirdwebContract(this.readOnlyContract);
     if (!this.moduleType) {
       this.moduleType =
-        this.readOnlyContract.contractURI() as Promise<TModuleType>;
+        this.readOnlyContract.moduleType() as Promise<TModuleType>;
     }
     return this.moduleType;
   }
@@ -83,9 +83,9 @@ export class BaseModule<
     const parsedMetadata = await this.parseMetadata(metadata, "input");
     const uri = this.storage.uploadMetadata(parsedMetadata);
 
-    const tx = await this.sendTransaction("setContractURI", [uri]);
+    const transaction = await this.sendTransaction("setContractURI", [uri]);
     return {
-      tx,
+      transaction,
       result: () => this.getMetadata(),
     };
   }

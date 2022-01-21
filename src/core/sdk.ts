@@ -128,16 +128,16 @@ export class ThirdwebSDK extends BaseClass {
 //   // we skip the runtime check and just intantiate it straight away
 //   const nftModule = await sdk.getModule(
 //     "0x1234567890123456789012345678901234567890",
-//     "TokenERC721",
+//     "DropERC721",
 //   );
 
-//   nftModule.getNFTs();
+//   // nftModule.();
 //   // => typeof nftModule = NFTModule (inferred)
 
 //   // but also works with the module type just as a type
 //   // (this means we tell TS that it is a NFTModule, meaning we get the types
 //   // but we will still check at runtime, so if it doesn't match then, we will throw)
-//   const alsoNFTModule = await sdk.getModule<"TokenERC721">(
+//   const alsoNFTModule = await sdk.getModule<"DropERC721">(
 //     "0x1234567890123456789012345678901234567890",
 //   );
 //   // => typeof alsoNFTModule = NFTModule (explicit)

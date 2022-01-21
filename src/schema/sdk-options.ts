@@ -22,7 +22,7 @@ export const SDKOptionsSchema = z.object({
   gasless: z
     .union([
       z.object({
-        openZeppelin: z.object({
+        openzeppelin: z.object({
           relayerUrl: z.string().url(),
           relayerForwarderAddress: z
             .string()
