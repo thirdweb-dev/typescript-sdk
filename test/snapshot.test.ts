@@ -5,6 +5,7 @@ import { ClaimProof, Snapshot, ThirdwebSDK } from "../src/index";
 import chai = require("chai");
 
 import { appModule, sdk, signers } from "./before.test";
+import { invariant } from "../src/common/invariant";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
@@ -55,7 +56,10 @@ describe("Snapshots", async () => {
     try {
       await sdk.createSnapshot(duplicateLeafs);
     } catch (error) {
-      expect(error).to.have.property("message", "repeated addresses", "");
+      invariant(
+        error.message.includes(`repeated addresses`),
+        "expected a different error",
+      );
       return;
     }
 
