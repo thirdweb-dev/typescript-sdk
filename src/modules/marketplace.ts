@@ -22,6 +22,7 @@ import {
   RolesMap,
 } from "../common";
 import { isNativeToken } from "../common/currency";
+import { resolveDate } from "../common/dateResolver";
 import {
   AuctionAlreadyStartedError,
   AuctionHasNotEndedError,
@@ -120,7 +121,10 @@ export class MarketplaceModule
     listing: NewDirectListing,
   ): Promise<BigNumber> {
     this.validateNewListingParam(listing);
-
+    if(listing.startTimeInSeconds != undefined && listing.startTime == undefined) {
+      listing.startTime = listing.startTimeInSeconds;
+    }
+    resolveDate(listing);
     await this.handleTokenApproval(
       listing.assetContractAddress,
       listing.tokenId,
@@ -137,7 +141,7 @@ export class MarketplaceModule
         quantityToList: listing.quantity,
         reservePricePerToken: listing.buyoutPricePerToken,
         secondsUntilEndTime: listing.listingDurationInSeconds,
-        startTime: listing.startTimeInSeconds,
+        startTime: listing.startTime,
       } as ListingParametersStruct,
     ]);
 
@@ -874,14 +878,21 @@ export class MarketplaceModule
   }
 
   public async updateAuctionListing(listing: AuctionListing): Promise<void> {
+    if(listing.startTimeInEpochSeconds != undefined && listing.startTime == undefined){
+      listing.startTime = listing.startTime
+    }
+    if(listing.endTimeInEpochSeconds != undefined && listing.endTime == undefined){
+      listing.endTime = listing.endTimeInEpochSeconds
+    }
+    listing = resolveDate(listing);
     await this.sendTransaction("updateListing", [
       listing.id,
       listing.quantity,
       listing.reservePrice,
       listing.buyoutPrice,
       listing.currencyContractAddress,
-      listing.startTimeInEpochSeconds,
-      listing.endTimeInEpochSeconds,
+      listing.startTime,
+      listing.endTime,
     ]);
   }
 
@@ -947,7 +958,10 @@ export class MarketplaceModule
     const listing = await this.validateAuctionListing(
       BigNumber.from(listingId),
     );
-
+    if(listing.endTimeInEpochSeconds != undefined && listing.endTime == undefined){
+      listing.endTime = listing.endTimeInEpochSeconds
+    }
+    resolveDate(listing);
     try {
       await this.sendTransaction("closeAuction", [
         BigNumber.from(listingId),
@@ -957,7 +971,7 @@ export class MarketplaceModule
       if (err.message.includes("cannot close auction before it has ended")) {
         throw new AuctionHasNotEndedError(
           listingId.toString(),
-          listing.endTimeInEpochSeconds.toString(),
+          listing.endTime?.toString(),
         );
       } else {
         throw err;

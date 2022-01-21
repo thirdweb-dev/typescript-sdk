@@ -33,6 +33,7 @@ import {
   getCurrencyBalance,
   getNativeTokenByChainId,
 } from "../common/currency";
+import { resolveDate } from "../common/dateResolver";
 import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
@@ -908,6 +909,10 @@ export class AppModule
   public async deployVoteModule(
     metadata: VoteModuleMetadata,
   ): Promise<VoteModule> {
+    if(metadata.proposalStartWaitTimeInSeconds != 0 && metadata.proposalStartWaitTime == 0){
+      metadata.proposalStartWaitTime = metadata.proposalStartWaitTimeInSeconds
+    }
+    metadata = resolveDate(metadata);
     invariant(
       metadata.votingTokenAddress !== "" &&
         isAddress(metadata.votingTokenAddress),
@@ -924,7 +929,7 @@ export class AppModule
       DEFAULT_BLOCK_TIMES_FALLBACK[chainId as SUPPORTED_CHAIN_ID];
 
     const waitTimeInBlocks =
-      metadata.proposalStartWaitTimeInSeconds /
+      metadata.proposalStartWaitTime /
       timeBetweenBlocks.secondsBetweenBlocks;
     const votingTimeInBlocks =
       metadata.proposalVotingTimeInSeconds /

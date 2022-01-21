@@ -26,16 +26,23 @@ export interface AuctionListing {
    * The asset being listed.
    */
   asset: NFTMetadata;
-
   /**
    * The start time of the listing.
    */
-  startTimeInEpochSeconds: BigNumberish;
+   startTime?: BigNumberish | Date;
+  /**
+   * The start time of the listing.
+   */
+  startTimeInEpochSeconds?: BigNumberish;
+  /**
+   * Number of seconds until the auction expires.
+   */
+   endTime?: BigNumberish | Date;
 
   /**
    * Number of seconds until the auction expires.
    */
-  endTimeInEpochSeconds: BigNumberish;
+  endTimeInEpochSeconds?: BigNumberish;
 
   /**
    * The quantity of tokens to include in the listing.

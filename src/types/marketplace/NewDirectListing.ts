@@ -15,7 +15,10 @@ export interface NewDirectListing {
    * The ID of the token to list.
    */
   tokenId: BigNumberish;
-
+  /**
+   * The start time of the listing.
+   */
+   startTime?: BigNumberish | Date;
   /**
    * The start time of the listing.
    */

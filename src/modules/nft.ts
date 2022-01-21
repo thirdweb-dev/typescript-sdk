@@ -23,6 +23,7 @@ import {
   Role,
   RolesMap,
 } from "../common";
+import { resolveDate } from "../common/dateResolver";
 import { invariant } from "../common/invariant";
 import { NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
@@ -662,12 +663,19 @@ export class NFTModule
   private mapPayload(
     mintRequest: SignaturePayload | NewSignaturePayload,
   ): MintRequestStructOutput {
+    if(mintRequest.mintEndTimeEpochSeconds != undefined && mintRequest.mintEndTime == undefined) {
+      mintRequest.mintEndTime = mintRequest.mintEndTimeEpochSeconds
+    }
+    if(mintRequest.mintStartTimeEpochSeconds != undefined && mintRequest.mintStartTime == undefined) {
+      mintRequest.mintStartTime = mintRequest.mintStartTimeEpochSeconds
+    }    
+    resolveDate(mintRequest);
     return {
       to: mintRequest.to,
       price: mintRequest.price,
       currency: mintRequest.currencyAddress,
-      validityEndTimestamp: mintRequest.mintEndTimeEpochSeconds,
-      validityStartTimestamp: mintRequest.mintStartTimeEpochSeconds,
+      validityEndTimestamp: mintRequest.mintEndTime,
+      validityStartTimestamp: mintRequest.mintStartTime,
       uid: mintRequest.id,
     } as MintRequestStructOutput;
   }

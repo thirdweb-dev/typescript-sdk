@@ -25,12 +25,19 @@ export interface NewSignaturePayload {
    * on the token. If this is set to the 0x0 address, then its free to mint.
    */
   currencyAddress: string;
-
+  /**
+   * The epoch start time (in seconds) when the signature can be claimed.
+   */
+   mintStartTime: BigNumberish | Date;
   /**
    * The epoch start time (in seconds) when the signature can be claimed.
    */
   mintStartTimeEpochSeconds: BigNumberish;
-
+  /**
+   * The epoch end time (in seconds) that essentially invalidates the signature
+   * such that it can no longer be claimed.
+   */
+   mintEndTime: BigNumberish | Date;
   /**
    * The epoch end time (in seconds) that essentially invalidates the signature
    * such that it can no longer be claimed.

@@ -1,4 +1,4 @@
-export function resolveDate(object: { [key: string]: any }) {
+export function resolveDate(object: any ) {
   const keys: string[] = Object.keys(object);
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];

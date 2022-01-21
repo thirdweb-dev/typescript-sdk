@@ -3,6 +3,14 @@ import CommonModuleMetadata from "./CommonModuleMetadata";
 
 @JsonObject("VoteModuleMetadata")
 export class VoteModuleMetadata extends CommonModuleMetadata {
+
+  /**
+   * The wait time before a proposal can begin being voted on (seconds).
+   */
+   @JsonProperty("proposal_start_time", Number || Date)
+   proposalStartWaitTime = 0;
+
+
   /**
    * The wait time before a proposal can begin being voted on (seconds).
    */
