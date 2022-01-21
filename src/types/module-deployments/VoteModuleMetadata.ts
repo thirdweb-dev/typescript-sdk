@@ -7,14 +7,14 @@ export class VoteModuleMetadata extends CommonModuleMetadata {
   /**
    * The wait time before a proposal can begin being voted on (seconds).
    */
-   @JsonProperty("proposal_start_time", Number || Date)
+   @JsonProperty("proposal_start_time", Number || Date || undefined)
    proposalStartWaitTime = 0;
 
 
   /**
    * The wait time before a proposal can begin being voted on (seconds).
    */
-  @JsonProperty("proposal_start_time_in_seconds", Number)
+  @JsonProperty("proposal_start_time_in_seconds", Number || undefined)
   proposalStartWaitTimeInSeconds = 0;
 
   /**
