@@ -23,6 +23,7 @@ export interface ISDKOptions
 |  [maxGasPriceInGwei](./sdk.isdkoptions.maxgaspriceingwei.md) | number | maxGasPrice for transactions |
 |  [readOnlyRpcUrl](./sdk.isdkoptions.readonlyrpcurl.md) | string | Optional read only RPC url |
 |  [registryContractAddress](./sdk.isdkoptions.registrycontractaddress.md) | string | Optional Registry Contract Address |
+|  [storage](./sdk.isdkoptions.storage.md) | { thirdwebIpfsServerUrl: string; pinataApiUrl: string; } |  |
 |  [transactionRelayerForwarderAddress](./sdk.isdkoptions.transactionrelayerforwarderaddress.md) | string | Optional trusted forwarder address overwrite |
 |  [transactionRelayerSendFunction](./sdk.isdkoptions.transactionrelayersendfunction.md) | (message: [ForwardRequestMessage](./sdk.forwardrequestmessage.md) \| [PermitRequestMessage](./sdk.permitrequestmessage.md)<!-- -->, signature: BytesLike) =&gt; Promise&lt;string&gt; |  |
 |  [transactionRelayerUrl](./sdk.isdkoptions.transactionrelayerurl.md) | string | Optional relayer url to be used for gasless transaction |

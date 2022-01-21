@@ -109,7 +109,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     storage : {
       pinataApiUrl: "https://api.pinata.cloud/pinning/pinFileToIPFS",
       thirdwebIpfsServerUrl: "https://upload.nftlabs.co",
-    }
+    },
     gaslessSendFunction: this.defaultGaslessSendFunction.bind(this),
   };
 

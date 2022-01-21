@@ -15,7 +15,7 @@ export declare class IpfsStorage implements IStorage
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(gatewayUrl)](./sdk.ipfsstorage._constructor_.md) |  | Constructs a new instance of the <code>IpfsStorage</code> class |
+|  [(constructor)(gatewayUrl, pinataApiUrl, thirdwebIpfsServerUrl)](./sdk.ipfsstorage._constructor_.md) |  | Constructs a new instance of the <code>IpfsStorage</code> class |
 
 ## Methods
 
