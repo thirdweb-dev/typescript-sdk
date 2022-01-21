@@ -131,7 +131,7 @@ export class TokenModule
    * // Address of the wallet to check token allowance
    * const otherAddress = "0x...";
    *
-   * const allowance = await module.allowanceOf(otherAddress);
+   * const allowance = await module.allowanceOf(address, otherAddress);
    * console.log(allowance);
    * ```
    *
