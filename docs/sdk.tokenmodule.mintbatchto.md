@@ -42,6 +42,6 @@ const data = [
  }
 ]
 
-await module.transfer(toAddress, amount);
+await module.mintBatchTo(data);
 ```
 
