@@ -18,11 +18,11 @@ export interface NewDirectListing {
   /**
    * The start time of the listing.
    */
-   startTime?: BigNumberish | Date;
+  startTime?: BigNumberish | Date;
   /**
    * The start time of the listing.
    */
-  startTimeInSeconds: BigNumberish;
+  startTimeInSeconds?: BigNumberish;
 
   /**
    * The duration of the listing in seconds.

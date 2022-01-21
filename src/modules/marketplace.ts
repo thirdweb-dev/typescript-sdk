@@ -124,6 +124,10 @@ export class MarketplaceModule
     if(listing.startTimeInSeconds != undefined && listing.startTime == undefined) {
       listing.startTime = listing.startTimeInSeconds;
     }
+    if(listing.startTimeInSeconds == undefined && listing.startTime == undefined) {
+      throw new Error("startTime must be defined");
+    }
+
     resolveDate(listing);
     await this.handleTokenApproval(
       listing.assetContractAddress,
@@ -884,6 +888,12 @@ export class MarketplaceModule
     if(listing.endTimeInEpochSeconds != undefined && listing.endTime == undefined){
       listing.endTime = listing.endTimeInEpochSeconds
     }
+    if( listing.startTime == undefined && listing.startTimeInEpochSeconds == undefined){
+      throw new Error("Auction listing must have startTime")
+    }
+    if(listing.endTime == undefined && listing.endTimeInEpochSeconds == undefined){
+      throw new Error("Auction listing must have endTime")
+    }
     listing = resolveDate(listing);
     await this.sendTransaction("updateListing", [
       listing.id,
@@ -960,6 +970,9 @@ export class MarketplaceModule
     );
     if(listing.endTimeInEpochSeconds != undefined && listing.endTime == undefined){
       listing.endTime = listing.endTimeInEpochSeconds
+    }
+    if(listing.endTime == undefined && listing.endTimeInEpochSeconds == undefined){
+      throw new Error("Auction listing must have endTime")
     }
     resolveDate(listing);
     try {

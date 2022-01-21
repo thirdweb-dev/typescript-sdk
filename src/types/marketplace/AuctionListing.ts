@@ -29,7 +29,7 @@ export interface AuctionListing {
   /**
    * The start time of the listing.
    */
-   startTime?: BigNumberish | Date;
+  startTime?: BigNumberish | Date;
   /**
    * The start time of the listing.
    */
