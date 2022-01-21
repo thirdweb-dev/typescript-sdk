@@ -4,10 +4,13 @@
 
 ## NewSignaturePayload.mintStartTimeEpochSeconds property
 
-The epoch start time (in seconds) when the signature can be claimed.
+> Warning: This API is now obsolete.
+> 
+> Use mintStartTime instead
+> 
 
 <b>Signature:</b>
 
 ```typescript
-mintStartTimeEpochSeconds: BigNumberish;
+mintStartTimeEpochSeconds?: BigNumberish;
 ```

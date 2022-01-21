@@ -4,7 +4,10 @@
 
 ## AuctionListing.endTimeInEpochSeconds property
 
-Number of seconds until the auction expires.
+> Warning: This API is now obsolete.
+> 
+> Use endTime instead
+> 
 
 <b>Signature:</b>
 

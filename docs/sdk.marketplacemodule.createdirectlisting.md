@@ -37,7 +37,7 @@ const listing = {
   // token ID of the asset you want to list
   tokenId: "0",
   // in how many seconds with the listing open up
-  startTimeInSeconds: 0,
+  startTime: 0,
   // how long the listing will be open for
   listingDurationInSeconds: 86400,
   // how many of the asset you want to list

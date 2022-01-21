@@ -16,6 +16,7 @@ export declare class VoteModuleMetadata extends CommonModuleMetadata
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [minimumNumberOfTokensNeededToPropose](./sdk.votemodulemetadata.minimumnumberoftokensneededtopropose.md) |  | string | The minimum number of tokens required to propose a proposal. |
+|  [proposalStartWaitTime](./sdk.votemodulemetadata.proposalstartwaittime.md) |  | number | The wait time before a proposal can begin being voted on (seconds). |
 |  [proposalStartWaitTimeInSeconds](./sdk.votemodulemetadata.proposalstartwaittimeinseconds.md) |  | number | The wait time before a proposal can begin being voted on (seconds). |
 |  [proposalVotingTimeInSeconds](./sdk.votemodulemetadata.proposalvotingtimeinseconds.md) |  | number | How long a proposal is open for voting (seconds). |
 |  [votingDelay?](./sdk.votemodulemetadata.votingdelay.md) |  | number \| undefined | <i>(Optional)</i> \*\*Do not set this property directly. It will be set by the SDK. Unless you know what you're doing.\*\*<!-- -->Every proposal will wait <code>votingDelay</code> number of blocks before it can be voted on. |

@@ -4,10 +4,13 @@
 
 ## NewSignaturePayload.mintEndTimeEpochSeconds property
 
-The epoch end time (in seconds) that essentially invalidates the signature such that it can no longer be claimed.
+> Warning: This API is now obsolete.
+> 
+> Use mintEndTime instead
+> 
 
 <b>Signature:</b>
 
 ```typescript
-mintEndTimeEpochSeconds: BigNumberish;
+mintEndTimeEpochSeconds?: BigNumberish;
 ```

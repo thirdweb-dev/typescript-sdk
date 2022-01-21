@@ -150,13 +150,17 @@ export interface AuctionListing {
     buyoutCurrencyValuePerToken: CurrencyValue;
     buyoutPrice: BigNumberish_2;
     currencyContractAddress: string;
+    endTime?: BigNumberish_2 | Date;
+    // @deprecated (undocumented)
     endTimeInEpochSeconds: BigNumberish_2;
     id: string;
     quantity: BigNumberish_2;
     reservePrice: BigNumberish_2;
     reservePriceCurrencyValuePerToken: CurrencyValue;
     sellerAddress: string;
-    startTimeInEpochSeconds: BigNumberish_2;
+    startTime?: BigNumberish_2 | Date;
+    // @deprecated (undocumented)
+    startTimeInEpochSeconds?: BigNumberish_2;
     tokenId: BigNumberish_2;
     // (undocumented)
     type: ListingType.Auction;
@@ -1504,7 +1508,9 @@ export interface NewAuctionListing {
     listingDurationInSeconds: BigNumberish_2;
     quantity: BigNumberish_2;
     reservePricePerToken: BigNumberish_2;
-    startTimeInSeconds: BigNumberish_2;
+    startTime?: BigNumberish_2 | Date;
+    // @deprecated (undocumented)
+    startTimeInSeconds?: BigNumberish_2;
     tokenId: BigNumberish_2;
     // (undocumented)
     type?: "NewAuctionListing";
@@ -1517,7 +1523,9 @@ export interface NewDirectListing {
     currencyContractAddress: string;
     listingDurationInSeconds: BigNumberish_2;
     quantity: BigNumberish_2;
-    startTimeInSeconds: BigNumberish_2;
+    startTime?: BigNumberish_2 | Date;
+    // @deprecated (undocumented)
+    startTimeInSeconds?: BigNumberish_2;
     tokenId: BigNumberish_2;
     // (undocumented)
     type?: "NewDirectListing";
@@ -1528,8 +1536,12 @@ export interface NewSignaturePayload {
     currencyAddress: string;
     id?: string;
     metadata: MetadataURIOrObject;
-    mintEndTimeEpochSeconds: BigNumberish_2;
-    mintStartTimeEpochSeconds: BigNumberish_2;
+    mintEndTime?: BigNumberish_2 | Date;
+    // @deprecated (undocumented)
+    mintEndTimeEpochSeconds?: BigNumberish_2;
+    mintStartTime?: BigNumberish_2 | Date;
+    // @deprecated (undocumented)
+    mintStartTimeEpochSeconds?: BigNumberish_2;
     price: BigNumberish_2;
     to: string;
 }
@@ -2131,6 +2143,7 @@ export class VoteModule extends Module<VotingGovernor> {
 // @public (undocumented)
 export class VoteModuleMetadata extends CommonModuleMetadata {
     minimumNumberOfTokensNeededToPropose: string;
+    proposalStartWaitTime: number;
     proposalStartWaitTimeInSeconds: number;
     proposalVotingTimeInSeconds: number;
     votingDelay?: number | undefined;

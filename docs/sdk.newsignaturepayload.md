@@ -19,8 +19,10 @@ export interface NewSignaturePayload
 |  [currencyAddress](./sdk.newsignaturepayload.currencyaddress.md) | string | The address of the currency used in the event that there is a price set on the token. If this is set to the 0x0 address, then its free to mint. |
 |  [id?](./sdk.newsignaturepayload.id.md) | string | <i>(Optional)</i> A unique identifier for the signature.<!-- -->If this value is an empty string, then a uuid-v4 will be generated. |
 |  [metadata](./sdk.newsignaturepayload.metadata.md) | [MetadataURIOrObject](./sdk.metadatauriorobject.md) | The metadata of the token to generate a signature for. |
-|  [mintEndTimeEpochSeconds](./sdk.newsignaturepayload.mintendtimeepochseconds.md) | BigNumberish | The epoch end time (in seconds) that essentially invalidates the signature such that it can no longer be claimed. |
-|  [mintStartTimeEpochSeconds](./sdk.newsignaturepayload.mintstarttimeepochseconds.md) | BigNumberish | The epoch start time (in seconds) when the signature can be claimed. |
+|  [mintEndTime?](./sdk.newsignaturepayload.mintendtime.md) | BigNumberish \| Date | <i>(Optional)</i> The end time (epoch seconds or date object) that essentially invalidates the signature such that it can no longer be claimed. |
+|  [mintEndTimeEpochSeconds?](./sdk.newsignaturepayload.mintendtimeepochseconds.md) | BigNumberish | <i>(Optional)</i> |
+|  [mintStartTime?](./sdk.newsignaturepayload.mintstarttime.md) | BigNumberish \| Date | <i>(Optional)</i> The start time (in epoch seconds or date object) when the signature can be claimed. |
+|  [mintStartTimeEpochSeconds?](./sdk.newsignaturepayload.mintstarttimeepochseconds.md) | BigNumberish | <i>(Optional)</i> |
 |  [price](./sdk.newsignaturepayload.price.md) | BigNumberish | The price per the NFT being minted for this particular signature. |
 |  [to](./sdk.newsignaturepayload.to.md) | string | The receiver of the NFTs being minted when the signature is claimed. |
 

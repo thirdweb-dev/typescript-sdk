@@ -4,10 +4,13 @@
 
 ## NewAuctionListing.startTimeInSeconds property
 
-The start time of the listing.
+> Warning: This API is now obsolete.
+> 
+> Use startTime instead
+> 
 
 <b>Signature:</b>
 
 ```typescript
-startTimeInSeconds: BigNumberish;
+startTimeInSeconds?: BigNumberish;
 ```
