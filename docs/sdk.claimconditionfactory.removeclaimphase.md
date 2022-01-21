@@ -6,7 +6,7 @@
 
 > Warning: This API is now obsolete.
 > 
-> - Use  instead.
+> - Use [ClaimConditionFactory.deleteClaimPhase()](./sdk.claimconditionfactory.deleteclaimphase.md) instead.
 > 
 
 <b>Signature:</b>

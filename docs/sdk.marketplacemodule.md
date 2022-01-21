@@ -48,17 +48,20 @@ const module = sdk.getMarketplaceModule("{{module_address}}");
 |  [createAuctionListing(listing)](./sdk.marketplacemodule.createauctionlisting.md) |  | Create Auction |
 |  [createDirectListing(listing)](./sdk.marketplacemodule.createdirectlisting.md) |  | Create Direct Listing |
 |  [getActiveOffer(listingId, address)](./sdk.marketplacemodule.getactiveoffer.md) |  |  |
-|  [getAllListings()](./sdk.marketplacemodule.getalllistings.md) |  | Get Listings |
+|  [getAllListings(filter)](./sdk.marketplacemodule.getalllistings.md) |  |  |
 |  [getAuctionListing(listingId)](./sdk.marketplacemodule.getauctionlisting.md) |  |  |
+|  [getAuctionWinner(listingId)](./sdk.marketplacemodule.getauctionwinner.md) |  | Get Auction Winner |
 |  [getBidBufferBps()](./sdk.marketplacemodule.getbidbufferbps.md) |  |  |
 |  [getDirectListing(listingId)](./sdk.marketplacemodule.getdirectlisting.md) |  |  |
 |  [getListing(listingId)](./sdk.marketplacemodule.getlisting.md) |  |  |
 |  [getTimeBufferInSeconds()](./sdk.marketplacemodule.gettimebufferinseconds.md) |  |  |
-|  [getWinningBid(listingId)](./sdk.marketplacemodule.getwinningbid.md) |  |  |
+|  [getWinningBid(listingId)](./sdk.marketplacemodule.getwinningbid.md) |  | Get Highest Bid |
+|  [isRestrictedListerRoleOnly()](./sdk.marketplacemodule.isrestrictedlisterroleonly.md) |  |  |
 |  [isWinningBid(winningPrice, newBidPrice, bidBuffer)](./sdk.marketplacemodule.iswinningbid.md) |  |  |
 |  [makeAuctionListingBid(bid)](./sdk.marketplacemodule.makeauctionlistingbid.md) |  | Bid On Auction |
 |  [makeDirectListingOffer(offer)](./sdk.marketplacemodule.makedirectlistingoffer.md) |  |  |
 |  [setBidBufferBps(buffer)](./sdk.marketplacemodule.setbidbufferbps.md) |  |  |
+|  [setRestrictedListerRoleOnly(isRestricted)](./sdk.marketplacemodule.setrestrictedlisterroleonly.md) |  |  |
 |  [setTimeBufferInSeconds(buffer)](./sdk.marketplacemodule.settimebufferinseconds.md) |  |  |
 |  [updateAuctionListing(listing)](./sdk.marketplacemodule.updateauctionlisting.md) |  |  |
 |  [updateDirectListing(listing)](./sdk.marketplacemodule.updatedirectlisting.md) |  |  |

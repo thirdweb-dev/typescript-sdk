@@ -46,6 +46,7 @@ const module = sdk.getPackModule("{{module_address}}");
 |  [getAll()](./sdk.packmodule.getall.md) |  | Get Pack Data |
 |  [getLinkBalance()](./sdk.packmodule.getlinkbalance.md) |  |  |
 |  [getNFTs(packId)](./sdk.packmodule.getnfts.md) |  | Get Pack Reward Data |
+|  [getOwned(\_address)](./sdk.packmodule.getowned.md) |  | <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
 |  [getRoyaltyBps()](./sdk.packmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.packmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
 |  [isApproved(address, operator)](./sdk.packmodule.isapproved.md) |  |  |
