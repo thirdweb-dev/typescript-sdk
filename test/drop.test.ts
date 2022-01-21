@@ -319,6 +319,7 @@ describe("Drop Module", async () => {
     try {
       const snapshot = await sdk.createSnapshot(members);
     } catch (err) {
+      console.log(err.message);
       invariant(
         err.message.includes(`repeated addresses`),
         "expected a different error",
@@ -340,6 +341,7 @@ describe("Drop Module", async () => {
     try {
       const snapshot = await sdk.createSnapshot(members);
     } catch (err) {
+      console.log(err.message);
       invariant(
         err.message.includes(`Invalid address`),
         "expected a different error",

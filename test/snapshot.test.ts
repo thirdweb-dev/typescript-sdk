@@ -56,6 +56,7 @@ describe("Snapshots", async () => {
     try {
       await sdk.createSnapshot(duplicateLeafs);
     } catch (error) {
+      console.log(error);
       invariant(
         error.message.includes(`repeated addresses`),
         "expected a different error",
