@@ -950,7 +950,7 @@ export class MarketplaceModule
 
   public async updateAuctionListing(listing: AuctionListing): Promise<void> {
     if(listing.startTimeInEpochSeconds != undefined && listing.startTime == undefined){
-      listing.startTime = listing.startTime
+      listing.startTime = listing.startTimeInEpochSeconds
     }
     if(listing.endTimeInEpochSeconds != undefined && listing.endTime == undefined){
       listing.endTime = listing.endTimeInEpochSeconds
