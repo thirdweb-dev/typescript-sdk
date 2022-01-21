@@ -1,4 +1,4 @@
-import { AccessControlEnumerable, Forwarder__factory } from "@3rdweb/contracts";
+import { AccessControlEnumerable } from "@3rdweb/contracts";
 import {
   ExternalProvider,
   JsonRpcProvider,
@@ -7,18 +7,17 @@ import {
   TransactionReceipt,
   Web3Provider,
 } from "@ethersproject/providers";
-import { signERC2612Permit } from "eth-permit";
 import {
   BaseContract,
   BigNumber,
   BytesLike,
   CallOverrides,
+  ContractTransaction,
   ethers,
   Signer,
 } from "ethers";
 import { getContractMetadata, isContract } from "../common/contract";
 import { MissingRoleError } from "../common/error";
-import { ForwardRequest, getAndIncrementNonce } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
 import { uploadMetadata } from "../common/ipfs";
@@ -26,11 +25,11 @@ import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role, SetAllRoles } from "../common/role";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
 import { ModuleMetadata } from "../types/ModuleMetadata";
+import { EventType } from "./events";
 import { ThirdwebSDK } from "./index";
 import type {
-  ForwardRequestMessage,
+  GaslessTransaction,
   MetadataURIOrObject,
-  PermitRequestMessage,
   ProviderOrSigner,
 } from "./types";
 
@@ -280,6 +279,19 @@ export class Module<TContract extends BaseContract = BaseContract> {
   /**
    * @internal
    */
+  private async emitTransactionEvent(
+    status: "submitted" | "completed",
+    transactionHash: string,
+  ) {
+    this.sdk.event.emit(EventType.Transaction, {
+      status,
+      transactionHash,
+    });
+  }
+
+  /**
+   * @internal
+   */
   protected async sendTransaction(
     fn: string,
     args: any[],
@@ -300,41 +312,50 @@ export class Module<TContract extends BaseContract = BaseContract> {
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
-    if (this.options.transactionRelayerUrl) {
-      return await this.sendGaslessTransaction(
+
+    if (
+      this.options.transactionRelayerUrl ||
+      this.options.gasless.biconomy.apiKey
+    ) {
+      const provider = await this.getProvider();
+      const txHash = await this.sendGaslessTransaction(
         contract,
         fn,
         args,
         callOverrides,
       );
+      this.emitTransactionEvent("submitted", txHash);
+      const receipt = await provider.waitForTransaction(txHash);
+      this.emitTransactionEvent("completed", txHash);
+      return receipt;
     } else {
-      return await this.sendAndWaitForTransaction(
+      const tx = await this.sendTransactionByFunction(
         contract,
         fn,
         args,
         callOverrides,
       );
+      this.emitTransactionEvent("submitted", tx.hash);
+      const receipt = tx.wait();
+      this.emitTransactionEvent("completed", tx.hash);
+      return receipt;
     }
   }
 
   /**
    * @internal
    */
-  private async sendAndWaitForTransaction(
+  private async sendTransactionByFunction(
     contract: BaseContract,
     fn: string,
     args: any[],
     callOverrides: CallOverrides,
-  ): Promise<TransactionReceipt> {
+  ): Promise<ContractTransaction> {
     const func: ethers.ContractFunction = contract.functions[fn];
     if (!func) {
       throw new Error("invalid function");
     }
-    const tx = await func(...args, callOverrides);
-    if (tx.wait) {
-      return await tx.wait();
-    }
-    return tx;
+    return await func(...args, callOverrides);
   }
 
   /**
@@ -345,7 +366,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
     fn: string,
     args: any[],
     callOverrides: CallOverrides,
-  ): Promise<TransactionReceipt> {
+  ): Promise<string> {
     const signer = this.getSigner();
     invariant(
       signer,
@@ -357,9 +378,14 @@ export class Module<TContract extends BaseContract = BaseContract> {
     const from = await this.getSignerAddress();
     const to = this.address;
     const value = callOverrides?.value || 0;
+
+    if (BigNumber.from(value).gt(0)) {
+      throw new Error(
+        "Cannot send native token value with gasless transaction",
+      );
+    }
+
     const data = contract.interface.encodeFunctionData(fn, args);
-    const forwarderAddress = this.options.transactionRelayerForwarderAddress;
-    const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
 
     const gasEstimate = await contract.estimateGas[fn](...args);
     let gas = gasEstimate.mul(2);
@@ -371,68 +397,19 @@ export class Module<TContract extends BaseContract = BaseContract> {
       gas = BigNumber.from(500000);
     }
 
-    const nonce = await getAndIncrementNonce(forwarder, from);
-    const domain = {
-      name: "GSNv2 Forwarder",
-      version: "0.0.1",
-      chainId,
-      verifyingContract: forwarderAddress,
-    };
-
-    const types = {
-      ForwardRequest,
-    };
-
-    let message: ForwardRequestMessage | PermitRequestMessage = {
+    const tx: GaslessTransaction = {
       from,
       to,
-      value: BigNumber.from(value).toString(),
-      gas: BigNumber.from(gas).toString(),
-      nonce: BigNumber.from(nonce).toString(),
       data,
+      chainId,
+      gasLimit: gas,
+      functionName: fn,
+      functionArgs: args,
+      callOverrides,
     };
 
-    let signature: BytesLike;
-
-    // if the executing function is "approve" and matches with erc20 approve signature
-    // and if the token supports permit, then we use permit for gasless instead of approve.
-    if (
-      fn === "approve" &&
-      args.length === 2 &&
-      contract.interface.functions["approve(address,uint256)"] &&
-      contract.interface.functions[
-        "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"
-      ]
-    ) {
-      const spender = args[0];
-      const amount = args[1];
-      const permit = await signERC2612Permit(
-        signer,
-        contract.address,
-        from,
-        spender,
-        amount,
-      );
-      message = { to: contract.address, ...permit };
-      signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
-    } else {
-      // wallet connect special 🦋
-      signature = await this.signTypedData(
-        signer,
-        from,
-        domain,
-        types,
-        message,
-      );
-    }
-
-    // await forwarder.verify(message, signature);
-    const txHash = await this.options.transactionRelayerSendFunction(
-      message,
-      signature,
-    );
-
-    return await provider.waitForTransaction(txHash);
+    const txHash = await this.options.gaslessSendFunction(contract, tx);
+    return txHash;
   }
 
   protected async signTypedData(

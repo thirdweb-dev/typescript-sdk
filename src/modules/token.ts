@@ -257,7 +257,7 @@ export class TokenModule
    *  }
    * ]
    *
-   * await module.transfer(toAddress, amount);
+   * await module.mintBatchTo(data);
    * ```
    */
   public async mintBatchTo(args: ITokenMintArgs[]) {

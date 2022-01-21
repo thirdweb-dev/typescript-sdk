@@ -376,10 +376,9 @@ export class NFTModule
   ): Promise<NFTMetadata[]> {
     invariant(this.v1Contract !== undefined, "v1 contract is undefined");
 
-    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
-    const uris = Array.from(Array(metadatas.length).keys()).map(
-      (i) => `${baseUri}${i}/`,
-    );
+    const { metadataUris: uris } = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(metadatas);
     const receipt = await this.sendContractTransaction(
       this.v1Contract,
       "mintNFTBatch",
@@ -432,17 +431,15 @@ export class NFTModule
       return await this._v1MintBatchTo(to, metadatas);
     }
 
-    const baseUri = await this.sdk.getStorage().uploadMetadataBatch(metadatas);
-    const uris = Array.from(Array(metadatas.length).keys()).map(
-      (i) => `${baseUri}${i}/`,
-    );
-
+    const { metadataUris: uris } = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(metadatas);
     const multicall = uris.map((uri) =>
       this.contract.interface.encodeFunctionData("mintTo", [to, uri]),
     );
 
     const receipt = await this.sendTransaction("multicall", [multicall]);
-    const events = await this.parseLogs<TokenMintedEvent>(
+    const events = this.parseLogs<TokenMintedEvent>(
       "TokenMinted",
       receipt.logs,
     );
@@ -605,18 +602,18 @@ export class NFTModule
 
     await this.onlyRoles(["minter"], await this.getSignerAddress());
 
-    const cid = await this.sdk
+    const { metadataUris: uris } = await this.sdk
       .getStorage()
       .uploadMetadataBatch(payloads.map((r) => r.metadata));
 
     const chainId = await this.getChainID();
     const from = await this.getSignerAddress();
-    const signer = (await this.getSigner()) as Signer;
+    const signer = this.getSigner() as Signer;
 
     return await Promise.all(
       payloads.map(async (m, i) => {
         const id = resolveId(m);
-        const uri = `${cid}${i}`;
+        const uri = uris[i];
         return {
           payload: {
             ...m,

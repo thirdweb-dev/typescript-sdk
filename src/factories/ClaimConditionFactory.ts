@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { FunctionDeprecatedError } from "..";
+import { FunctionDeprecatedError } from "../common/error";
 import { PublicClaimCondition } from "../types/claim-conditions/PublicMintCondition";
 import { SnapshotInfo } from "../types/snapshots/SnapshotInfo";
 import ClaimConditionPhase from "./ClaimConditionPhase";
@@ -156,7 +156,7 @@ class ClaimConditionFactory {
   }
 
   /**
-   * @deprecated - Use {@link deleteClaimPhase} instead.
+   * @deprecated - Use {@link ClaimConditionFactory.deleteClaimPhase} instead.
    */
   public removeClaimPhase(_index: number): void {
     throw new FunctionDeprecatedError("deleteClaimPhase");

@@ -191,6 +191,54 @@ describe("Marketplace Module", async () => {
     });
   });
 
+  describe("Listing Filters", () => {
+    beforeEach(async () => {
+      await sdk.setProviderOrSigner(adminWallet);
+      await createDirectListing(dummyNftModule.address, 0);
+      await createAuctionListing(dummyNftModule.address, 1);
+
+      await createDirectListing(dummyBundleModule.address, 0, 10);
+      await createAuctionListing(dummyBundleModule.address, 0, 10);
+
+      await dummyBundleModule.transfer(samWallet.address, "0", 10);
+      await dummyBundleModule.transfer(samWallet.address, "1", 10);
+
+      await sdk.setProviderOrSigner(samWallet);
+      await createDirectListing(dummyBundleModule.address, 0, 10);
+      await createAuctionListing(dummyBundleModule.address, 1, 10);
+    });
+
+    it("should paginate properly", async () => {
+      const listings = await marketplaceModule.getAllListings({
+        start: 0,
+        count: 1,
+      });
+      assert.equal(listings.length, 1, "pagination doesn't work");
+    });
+
+    it("should filter sellers properly", async () => {
+      const listings = await marketplaceModule.getAllListings({
+        seller: adminWallet.address,
+      });
+      assert.equal(listings.length, 4, "seller filter doesn't work");
+    });
+
+    it("should filter asset contract properly", async () => {
+      const listings = await marketplaceModule.getAllListings({
+        tokenContract: dummyBundleModule.address,
+      });
+      assert.equal(listings.length, 4, "seller filter doesn't work");
+    });
+
+    it("should filter asset contract with token id properly", async () => {
+      const listings = await marketplaceModule.getAllListings({
+        tokenContract: dummyNftModule.address,
+        tokenId: 0,
+      });
+      assert.equal(listings.length, 2, "seller filter doesn't work");
+    });
+  });
+
   describe("Get Listing", () => {
     let directListingId: BigNumber;
     let auctionListingId: BigNumber;
@@ -211,9 +259,9 @@ describe("Marketplace Module", async () => {
       assert.equal(listing.asset.id, "1");
       assert.equal(listing.asset.name, "Test 2");
     });
+
     it("should return an auction listing", async () => {
       const listings = await marketplaceModule.getAllListings();
-      console.log(listings);
       assert(listings.length > 0);
     });
 
