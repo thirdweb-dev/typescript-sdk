@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-upgradeModuleList(moduleAddresses: string[]): Promise<void>;
+upgradeModuleList(moduleAddresses: string[]): Promise<ethers.providers.TransactionResponse[]>;
 ```
 
 ## Parameters
@@ -18,5 +18,5 @@ upgradeModuleList(moduleAddresses: string[]): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;ethers.providers.TransactionResponse\[\]&gt;
 
