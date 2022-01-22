@@ -27,7 +27,9 @@ export class RepeatedAddressError extends Error {
   /** @internal */
   constructor(address?: string) {
     super(
-      address ? `'${address}' is was passed more than once` : "An address was passed more than once",
+      address
+        ? `'${address}' is passed more than once`
+        : "An address was passed more than once",
     );
   }
 }
@@ -106,7 +108,6 @@ export class FetchError extends Error {
     this.innerError = innerError;
   }
 }
-
 
 /**
  * Thrown when attempting to update/cancel an auction that already started
