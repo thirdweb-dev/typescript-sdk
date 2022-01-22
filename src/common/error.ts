@@ -23,6 +23,10 @@ export class InvalidAddressError extends Error {
   }
 }
 
+/**
+ * Thrown when attempting to create a snapshot with duplicate leafs
+ */
+
 export class RepeatedAddressError extends Error {
   /** @internal */
   constructor(address?: string) {
@@ -33,6 +37,8 @@ export class RepeatedAddressError extends Error {
     );
   }
 }
+
+export type DuplicateLeafsError = RepeatedAddressError;
 
 export class MissingRoleError extends Error {
   /** @internal */
