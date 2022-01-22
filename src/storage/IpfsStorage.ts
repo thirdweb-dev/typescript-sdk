@@ -182,7 +182,7 @@ export class IpfsStorage implements IStorage {
       headers,
     });
     if (!res.ok) {
-      throw new FetchError(`Failed to get upload token`);
+      throw new FetchError(`Failed to get upload token using ${this.thirdwebIpfsServerUrl}`);
     }
     const body = await res.text();
     return body;
