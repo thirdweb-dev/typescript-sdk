@@ -34,8 +34,8 @@ export class IpfsStorage implements IStorage {
     thirdwebIpfsServerUrl: string,
   ) {
     this.gatewayUrl = `${gatewayUrl.replace(/\/$/, "")}/`;
-    this.pinataApiUrl = `${pinataApiUrl.replace(/\/$/, "")}/`;
-    this.thirdwebIpfsServerUrl = `${thirdwebIpfsServerUrl.replace(/\/$/, "")}/`;
+    this.pinataApiUrl = `${pinataApiUrl.replace(/\/$/, "")}`;
+    this.thirdwebIpfsServerUrl = `${thirdwebIpfsServerUrl.replace(/\/$/, "")}`;
   }
 
   public async upload(
