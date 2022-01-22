@@ -4,6 +4,8 @@
 
 ## ISDKOptions.storage property
 
+Optional configuration to interact with IPFS
+
 <b>Signature:</b>
 
 ```typescript

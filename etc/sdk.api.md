@@ -1058,7 +1058,6 @@ export interface ISDKOptions {
     maxGasPriceInGwei: number;
     readOnlyRpcUrl: string;
     registryContractAddress: string;
-    // (undocumented)
     storage: {
         thirdwebIpfsServerUrl: string;
         pinataApiUrl: string;

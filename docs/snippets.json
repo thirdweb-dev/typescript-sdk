@@ -494,7 +494,7 @@
         "summary": "Get Token Allowance\n\n",
         "remarks": "\n\nGet the allowance of one wallet over another's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the connected wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet who owns the funds\nconst address = \"{{wallet_address}}\";\n\n// Address of the wallet to check token allowance\nconst otherAddress = \"0x...\";\n\nconst allowance = await module.allowanceOf(otherAddress);\nconsole.log(allowance);"
+          "javascript": "// Address of the wallet who owns the funds\nconst address = \"{{wallet_address}}\";\n\n// Address of the wallet to check token allowance\nconst otherAddress = \"0x...\";\n\nconst allowance = await module.allowanceOf(address, otherAddress);\nconsole.log(allowance);"
         },
         "signature": "allowanceOf(owner: string, spender: string): Promise<BigNumber>;"
       },

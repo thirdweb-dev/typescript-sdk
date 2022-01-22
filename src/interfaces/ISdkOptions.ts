@@ -71,7 +71,9 @@ export interface ISDKOptions {
       deadlineSeconds?: number;
     };
   };
-
+  /**
+   * Optional configuration to interact with IPFS
+   */
   storage: {
     thirdwebIpfsServerUrl: string;
     pinataApiUrl: string;
