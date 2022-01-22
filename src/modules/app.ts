@@ -164,6 +164,7 @@ export class AppModule
    */
   public async getAllContractMetadata(
     addresses: string[],
+    resolveGateway = true,
   ): Promise<ModuleMetadataNoType[]> {
     const metadatas = await Promise.all(
       addresses.map((address) =>
@@ -171,7 +172,7 @@ export class AppModule
           this.providerOrSigner,
           address,
           this.ipfsGatewayUrl,
-          true,
+          resolveGateway,
         ),
       ),
     );
@@ -296,6 +297,7 @@ export class AppModule
    */
   public async getAllModuleMetadata(
     filterByModuleType?: ModuleType[],
+    resolveGateway = true,
   ): Promise<ModuleMetadata[]> {
     const moduleTypesToGet = filterByModuleType || [
       ModuleType.NFT,
@@ -312,12 +314,12 @@ export class AppModule
       await Promise.all(
         moduleTypesToGet.map(async (moduleType) => {
           const moduleAddresses = await this.getModuleAddress(moduleType);
-          return (await this.getAllContractMetadata(moduleAddresses)).map(
-            (m) => ({
-              ...m,
-              type: moduleType,
-            }),
-          );
+          return (
+            await this.getAllContractMetadata(moduleAddresses, resolveGateway)
+          ).map((m) => ({
+            ...m,
+            type: moduleType,
+          }));
         }),
       )
     ).reduce((acc, curr) => acc.concat(curr), []);
@@ -1072,13 +1074,17 @@ export class AppModule
       return [];
     }
 
-    const modules = await this.getAllModuleMetadata([
-      ModuleType.NFT,
-      ModuleType.BUNDLE,
-      ModuleType.PACK,
-      ModuleType.DROP,
-      ModuleType.BUNDLE_DROP,
-    ]);
+    const modules = await this.getAllModuleMetadata(
+      [
+        ModuleType.NFT,
+        ModuleType.BUNDLE,
+        ModuleType.PACK,
+        ModuleType.DROP,
+        ModuleType.BUNDLE_DROP,
+      ],
+      false,
+    );
+
     return modules.filter(
       (m) =>
         m.metadata?.fee_recipient?.toLowerCase() === this.address.toLowerCase(),
@@ -1092,8 +1098,10 @@ export class AppModule
     const signer = this.getSigner();
     invariant(signer, "needs a signer");
 
+    // already filtered to make sure that the fee_recipient is set to the app
     const allUpgradableModules = await this.shouldUpgradeModuleList();
-    // this already returns the correct metadata array...
+
+    // this already returns the correct metadata array with non-resolved metadata...
     const moduleMetadatas = allUpgradableModules.filter((m) =>
       moduleAddresses.includes(m.address),
     );
@@ -1122,6 +1130,7 @@ export class AppModule
 
     // batch send :)
     const txns = await Promise.all(txs.map((tx) => signer.sendTransaction(tx)));
+
     // have to actually wait for each txn to be confirmed until we're finished
     return await Promise.all(txns.map((tx) => tx.wait()));
   }
