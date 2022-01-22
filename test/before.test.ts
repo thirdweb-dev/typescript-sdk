@@ -73,5 +73,6 @@ export {
   wrappedNativeTokenAddress,
   jsonProvider,
   defaultProvider,
+  registryAddress,
   fastForwardTime,
 };
