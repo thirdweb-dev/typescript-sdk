@@ -12,11 +12,6 @@ if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   globalThis.FormData = require("form-data");
 }
-
-const thirdwebIpfsServerUrl = "https://upload.nftlabs.co";
-const pinataIpfsUrl = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-// const thirdwebIpfsServerUrl = "http://localhost:3002";
-
 /**
  * @internal
  */
@@ -30,9 +25,17 @@ interface CidWithFileName {
 
 export class IpfsStorage implements IStorage {
   private gatewayUrl: string;
+  private pinataApiUrl: string;
+  private thirdwebIpfsServerUrl: string;
 
-  constructor(gatewayUrl: string) {
+  constructor(
+    gatewayUrl: string,
+    pinataApiUrl: string,
+    thirdwebIpfsServerUrl: string,
+  ) {
     this.gatewayUrl = `${gatewayUrl.replace(/\/$/, "")}/`;
+    this.pinataApiUrl = `${pinataApiUrl.replace(/\/$/, "")}`;
+    this.thirdwebIpfsServerUrl = `${thirdwebIpfsServerUrl.replace(/\/$/, "")}`;
   }
 
   public async upload(
@@ -59,7 +62,7 @@ export class IpfsStorage implements IStorage {
     const formData = new FormData();
     formData.append("file", data as any);
     try {
-      const res = await fetch(`${thirdwebIpfsServerUrl}/upload`, {
+      const res = await fetch(`${this.thirdwebIpfsServerUrl}/upload`, {
         method: "POST",
         body: formData as any,
         headers,
@@ -152,7 +155,7 @@ export class IpfsStorage implements IStorage {
     });
 
     data.append("pinataMetadata", JSON.stringify(metadata));
-    const res = await fetch(pinataIpfsUrl, {
+    const res = await fetch(this.pinataApiUrl, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -174,12 +177,12 @@ export class IpfsStorage implements IStorage {
     const headers = {
       "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
     };
-    const res = await fetch(`${thirdwebIpfsServerUrl}/grant`, {
+    const res = await fetch(`${this.thirdwebIpfsServerUrl}/grant`, {
       method: "GET",
       headers,
     });
     if (!res.ok) {
-      throw new FetchError(`Failed to get upload token`);
+      throw new FetchError(`Failed to get upload token using ${this.thirdwebIpfsServerUrl}`);
     }
     const body = await res.text();
     return body;

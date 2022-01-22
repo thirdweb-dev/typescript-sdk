@@ -47,6 +47,11 @@ before(async () => {
     ipfsGatewayUrl,
     registryContractAddress: registryAddress,
     maxGasPriceInGwei: 10000,
+    storage: {
+      thirdwebIpfsServerUrl:
+        "https://nftlabs-ipfs-server-internal.zeet-nftlabs.zeet.app",
+      pinataApiUrl: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+    },
   });
 
   const receipt = await sdk.createApp({
@@ -68,5 +73,6 @@ export {
   wrappedNativeTokenAddress,
   jsonProvider,
   defaultProvider,
+  registryAddress,
   fastForwardTime,
 };

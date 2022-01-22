@@ -430,7 +430,7 @@ export class AppModule
       if (BigNumber.from(treasuryBalance.value).gt(0)) {
         const royalty = Royalty__factory.connect(
           treasury,
-          this.readOnlyContract.provider,
+          this.getSigner() as Signer,
         );
         if (isNative) {
           lastTransaction = await this.sendContractTransaction(

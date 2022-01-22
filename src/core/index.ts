@@ -106,6 +106,10 @@ export class ThirdwebSDK implements IThirdwebSdk {
         deadlineSeconds: 3600,
       },
     },
+    storage : {
+      pinataApiUrl: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+      thirdwebIpfsServerUrl: "https://upload.nftlabs.co",
+    },
     gaslessSendFunction: this.defaultGaslessSendFunction.bind(this),
   };
 
@@ -147,7 +151,11 @@ export class ThirdwebSDK implements IThirdwebSdk {
       ...this.defaultOptions,
       ...opts,
     };
-    this.storage = new IpfsStorage(this.options.ipfsGatewayUrl);
+    this.storage = new IpfsStorage(
+      this.options.ipfsGatewayUrl,
+      this.options.storage.pinataApiUrl,
+      this.options.storage.thirdwebIpfsServerUrl,
+    );
   }
 
   private updateModuleSigners() {

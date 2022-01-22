@@ -1010,7 +1010,7 @@ export interface IPackCreateArgs {
 
 // @public (undocumented)
 export class IpfsStorage implements IStorage {
-    constructor(gatewayUrl: string);
+    constructor(gatewayUrl: string, pinataApiUrl: string, thirdwebIpfsServerUrl: string);
     // @internal
     batchUploadProperties(metadatas: MetadataURIOrObject[]): Promise<any>;
     buildFilePropertiesMap(object: Record<string, any>, files: (File | Buffer)[]): (File | Buffer)[];
@@ -1063,6 +1063,10 @@ export interface ISDKOptions {
     maxGasPriceInGwei: number;
     readOnlyRpcUrl: string;
     registryContractAddress: string;
+    storage: {
+        thirdwebIpfsServerUrl: string;
+        pinataApiUrl: string;
+    };
     transactionRelayerForwarderAddress: string;
     // @deprecated (undocumented)
     transactionRelayerSendFunction: (message: ForwardRequestMessage | PermitRequestMessage, signature: BytesLike) => Promise<string>;

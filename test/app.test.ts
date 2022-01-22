@@ -1,11 +1,13 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert, expect } from "chai";
-import { BigNumber } from "ethers";
+import { assert } from "chai";
+import { BigNumber, ethers } from "ethers";
 import { readFileSync } from "fs";
 import { JsonConvert } from "json2typescript";
-import { BundleModuleMetadata, DropModule } from "../src/index";
-import { appModule, sdk, signers } from "./before.test";
+import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
+import { AppModule, BundleModuleMetadata, DropModule } from "../src/index";
+import { appModule, registryAddress, sdk, signers } from "./before.test";
+import { ProtocolControlV1__factory } from "./oldFactories/ProtocolControlV1";
 
 describe("App Module", async () => {
   let dropModule: DropModule;
@@ -269,5 +271,62 @@ describe("App Module", async () => {
       /Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}/,
     );
     assert.match(result.metadata.image, regex);
+  });
+
+  it("should allow you to withdraw funds", async () => {
+    await adminWallet.sendTransaction({
+      value: ethers.utils.parseEther("0.1"),
+      to: appModule.address,
+    });
+
+    const dummyWallet = ethers.Wallet.createRandom().connect(
+      adminWallet.provider,
+    );
+
+    await appModule.withdrawFunds(dummyWallet.address, NATIVE_TOKEN_ADDRESS);
+  });
+
+  describe("V1 -> V2", () => {
+    let v1Module: AppModule;
+
+    beforeEach(async () => {
+      const meta = {
+        name: "Test Module",
+      };
+      const ipfsUri = await sdk.getStorage().upload(JSON.stringify(meta));
+
+      const moduleDeployer = await new ethers.ContractFactory(
+        ProtocolControlV1__factory.abi,
+        ProtocolControlV1__factory.bytecode,
+      )
+        .connect(adminWallet)
+        .deploy(registryAddress, samWallet.address, ipfsUri);
+      await moduleDeployer.deployed();
+      v1Module = sdk.getAppModule(moduleDeployer.address);
+      await v1Module.setProviderOrSigner(samWallet);
+    });
+
+    it("should allow you to upgrade your project", async () => {
+      await v1Module.upgradeToV2();
+    });
+
+    it("should allow withdrawls after upgrading", async () => {
+      await v1Module.upgradeToV2();
+
+      await adminWallet.sendTransaction({
+        value: ethers.utils.parseEther("0.1"),
+        to: v1Module.address,
+      });
+
+      await adminWallet.sendTransaction({
+        value: ethers.utils.parseEther("0.1"),
+        to: await v1Module.getRoyaltyTreasury(),
+      });
+
+      await v1Module.withdrawFunds(
+        samWallet.address,
+        "0x0000000000000000000000000000000000000000",
+      );
+    });
   });
 });
