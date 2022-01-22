@@ -89,7 +89,7 @@
     "json2typescript": "^1.5.0-rc.0",
     "keccak256": "^1.0.6",
     "merkletreejs": "^0.2.24",
-    "node-fetch": "^2.6.5",
+    "node-fetch": "^3.1.1",
     "ts-enum-util": "^4.0.2",
     "tslib": "^2.3.1",
     "uuid": "^8.3.2"
