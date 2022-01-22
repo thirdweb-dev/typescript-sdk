@@ -1085,21 +1085,17 @@ export class AppModule
     );
   }
 
+  /**
+   * @internal
+   */
   public async upgradeModuleList(moduleAddresses: string[]) {
     const signer = this.getSigner();
     invariant(signer, "needs a signer");
 
     const allUpgradableModules = await this.shouldUpgradeModuleList();
-    const upgradableModules = allUpgradableModules.filter((m) =>
+    // this already returns the correct metadata array...
+    const moduleMetadatas = allUpgradableModules.filter((m) =>
       moduleAddresses.includes(m.address),
-    );
-
-    // since all the modules consistent / similar for contractURI (get and set),
-    // we just pretend everything is NFT module :)
-    const moduleMetadatas = await Promise.all(
-      upgradableModules.map((m) =>
-        this.sdk.getNFTModule(m.address).getMetadata(false),
-      ),
     );
 
     const royaltyTreasury = await this.getRoyaltyTreasury();
@@ -1125,10 +1121,13 @@ export class AppModule
     }));
 
     // batch send :)
-    return await Promise.all(txs.map((tx) => signer.sendTransaction(tx)));
+    const txns = await Promise.all(txs.map((tx) => signer.sendTransaction(tx)));
+    // have to actually wait for each txn to be confirmed until we're finished
+    return await Promise.all(txns.map((tx) => tx.wait()));
   }
 
   /**
+   *  @internal
    * Upgrades the protocol control to v2. In v2, the royalty treasury needs to be set to be set to a splits contract.
    *
    * @param splitsModuleAddress - Optional. By default, it automatically creates a Splits for the project.
@@ -1139,7 +1138,7 @@ export class AppModule
       splitsModuleAddress?: string;
       splitsRecipients?: NewSplitRecipient[];
     } = {},
-  ): Promise<void> {
+  ) {
     if (await this.isV1UpgradedOrV2()) {
       return;
     }
@@ -1166,7 +1165,7 @@ export class AppModule
       ).address;
     }
 
-    await this.setRoyaltyTreasury(splitsAddress);
+    return await this.setRoyaltyTreasury(splitsAddress);
   }
 
   /**

@@ -117,12 +117,13 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     shouldUpgradeModuleList(): Promise<ModuleMetadata[]>;
     // (undocumented)
     shouldUpgradeToV2(): Promise<boolean>;
-    // (undocumented)
-    upgradeModuleList(moduleAddresses: string[]): Promise<ethers.providers.TransactionResponse[]>;
+    // @internal (undocumented)
+    upgradeModuleList(moduleAddresses: string[]): Promise<TransactionReceipt[]>;
+    // @internal
     upgradeToV2(upgradeOptions?: {
         splitsModuleAddress?: string;
         splitsRecipients?: NewSplitRecipient[];
-    }): Promise<void>;
+    }): Promise<TransactionReceipt | undefined>;
     // (undocumented)
     withdrawFunds(to: string, currency: string): Promise<TransactionReceipt>;
 }
