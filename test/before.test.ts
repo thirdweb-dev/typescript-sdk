@@ -50,7 +50,7 @@ before(async () => {
     storage: {
       thirdwebIpfsServerUrl:
         "https://nftlabs-ipfs-server-internal.zeet-nftlabs.zeet.app",
-      pinataApiUrl: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+      pinataApiUrl: "https://api.pinata.cloud",
     },
   });
 

@@ -155,7 +155,7 @@ export class IpfsStorage implements IStorage {
     });
 
     data.append("pinataMetadata", JSON.stringify(metadata));
-    const res = await fetch(this.pinataApiUrl, {
+    const res = await fetch(`${this.pinataApiUrl}/pinning/pinFileToIPFS`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -182,7 +182,9 @@ export class IpfsStorage implements IStorage {
       headers,
     });
     if (!res.ok) {
-      throw new FetchError(`Failed to get upload token using ${this.thirdwebIpfsServerUrl}`);
+      throw new FetchError(
+        `Failed to get upload token using ${this.thirdwebIpfsServerUrl}`,
+      );
     }
     const body = await res.text();
     return body;
