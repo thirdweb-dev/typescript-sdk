@@ -75,7 +75,14 @@ export interface ISDKOptions {
    * Optional configuration to interact with IPFS
    */
   storage: {
+    /**
+     * Thirdweb IPFS server url, used for uploading and pinning files.
+     */
     thirdwebIpfsServerUrl: string;
+
+    /**
+     * Pinata API url, used to enable batch uploads to IPFS.
+     */
     pinataApiUrl: string;
   };
 
