@@ -1085,7 +1085,7 @@ export class AppModule
     );
   }
 
-  public async upgradeModuleList(moduleAddresses: string[]): Promise<void> {
+  public async upgradeModuleList(moduleAddresses: string[]) {
     const signer = this.getSigner();
     invariant(signer, "needs a signer");
 
@@ -1125,7 +1125,7 @@ export class AppModule
     }));
 
     // batch send :)
-    await Promise.all(txs.map((tx) => signer.sendTransaction(tx)));
+    return await Promise.all(txs.map((tx) => signer.sendTransaction(tx)));
   }
 
   /**
