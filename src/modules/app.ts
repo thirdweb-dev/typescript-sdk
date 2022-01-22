@@ -1,7 +1,7 @@
 import {
   Coin__factory,
   DataStore__factory,
-  ERC20__factory,
+  IERC20__factory,
   LazyMintERC1155__factory,
   LazyMintERC721__factory,
   Marketplace__factory,
@@ -1180,7 +1180,7 @@ export class AppModule
 
     let treasuryBalance = BigNumber.from(0);
     const treasury = await this.getRoyaltyTreasury();
-    if (treasury !== this.address) {
+    if (treasury.toLowerCase() !== this.address.toLowerCase()) {
       treasuryBalance = await this.readOnlyContract.provider.getBalance(
         treasury,
       );
@@ -1200,15 +1200,16 @@ export class AppModule
     if (isNativeToken(tokenAddress)) {
       balance = await this.balance();
     } else {
-      const erc20 = ERC20__factory.connect(
+      const erc20 = IERC20__factory.connect(
         tokenAddress,
         this.readOnlyContract.provider,
       );
 
       // TODO: multicall :)
+      // only fetch project's erc20 balance if it's not v1
       if (!(await this.isV1())) {
         try {
-          balance = await erc20.balanceOf(this.address);
+          balance = balance.add(await erc20.balanceOf(this.address));
         } catch (e) {
           // invalid token address
           console.error(e);
@@ -1218,8 +1219,14 @@ export class AppModule
 
       // if it's not upgraded or v2, erc20 balance wont show up
       const treasury = await this.getRoyaltyTreasury();
-      if (treasury !== this.address) {
-        balance.add(await erc20.balanceOf(treasury));
+      if (treasury.toLowerCase() !== this.address.toLowerCase()) {
+        try {
+          balance = balance.add(await erc20.balanceOf(treasury));
+        } catch (e) {
+          // invalid token address
+          console.error(e);
+          throw new Error("invalid token address");
+        }
       }
     }
 
