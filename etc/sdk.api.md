@@ -75,8 +75,8 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     deployTokenModule(metadata: TokenModuleMetadata): Promise<TokenModule>;
     deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
     // @internal (undocumented)
-    getAllContractMetadata(addresses: string[]): Promise<ModuleMetadataNoType[]>;
-    getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
+    getAllContractMetadata(addresses: string[], resolveGateway?: boolean): Promise<ModuleMetadataNoType[]>;
+    getAllModuleMetadata(filterByModuleType?: ModuleType[], resolveGateway?: boolean): Promise<ModuleMetadata[]>;
     // (undocumented)
     getBundleModules(): Promise<ModuleMetadata[]>;
     // @deprecated

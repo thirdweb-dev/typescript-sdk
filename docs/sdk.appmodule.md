@@ -38,7 +38,7 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [deploySplitsModule(metadata)](./sdk.appmodule.deploysplitsmodule.md) |  | Deploys a Splits module |
 |  [deployTokenModule(metadata)](./sdk.appmodule.deploytokenmodule.md) |  | Deploys a token module. |
 |  [deployVoteModule(metadata)](./sdk.appmodule.deployvotemodule.md) |  | Deploys a Vote module |
-|  [getAllModuleMetadata(filterByModuleType)](./sdk.appmodule.getallmodulemetadata.md) |  | Method to get a list of all module metadata on a given app. |
+|  [getAllModuleMetadata(filterByModuleType, resolveGateway)](./sdk.appmodule.getallmodulemetadata.md) |  | Method to get a list of all module metadata on a given app. |
 |  [getBundleModules()](./sdk.appmodule.getbundlemodules.md) |  |  |
 |  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get a list of Bundle module metadata. |
 |  [getCurrencyModules()](./sdk.appmodule.getcurrencymodules.md) |  | Method to get a list of Currency module metadata. |
