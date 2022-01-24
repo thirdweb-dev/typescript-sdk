@@ -1,12 +1,18 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
+import { expect, assert } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { readFileSync } from "fs";
 import { JsonConvert } from "json2typescript";
 import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
 import { AppModule, BundleModuleMetadata, DropModule } from "../src/index";
-import { appModule, registryAddress, sdk, signers } from "./before.test";
+import {
+  appModule,
+  ipfsGatewayUrl,
+  registryAddress,
+  sdk,
+  signers,
+} from "./before.test";
 import { ProtocolControlV1__factory } from "./oldFactories/ProtocolControlV1";
 
 describe("App Module", async () => {
@@ -327,6 +333,33 @@ describe("App Module", async () => {
         samWallet.address,
         "0x0000000000000000000000000000000000000000",
       );
+    });
+
+    it("should upgrade module metadata", async () => {
+      await v1Module.deployNftModule({
+        name: "Test NFT",
+        symbol: "TST",
+        image: "ipfs://test_image",
+        feeRecipient: v1Module.address,
+        sellerFeeBasisPoints: 0,
+      });
+
+      expect((await v1Module.shouldUpgradeModuleList()).length).to.equal(0);
+      await v1Module.upgradeToV2();
+
+      const upgradeList = await v1Module.shouldUpgradeModuleList();
+      const nftAddress = upgradeList[0].address;
+      expect(upgradeList.length).to.equal(1);
+      await v1Module.upgradeModuleList([nftAddress]);
+      expect((await v1Module.shouldUpgradeModuleList()).length).to.equal(0);
+
+      expect(
+        (await sdk.getNFTModule(nftAddress).getMetadata(true)).metadata.image,
+      ).to.equal(`${ipfsGatewayUrl}test_image`);
+
+      expect(
+        (await sdk.getNFTModule(nftAddress).getMetadata(false)).metadata.image,
+      ).to.equal("ipfs://test_image");
     });
   });
 });

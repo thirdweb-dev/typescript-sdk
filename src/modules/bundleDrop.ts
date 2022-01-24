@@ -461,6 +461,7 @@ export class BundleDropModule
     for (const key of Object.keys(existingMerkle)) {
       merkleInfo[key] = existingMerkle[key];
     }
+    metadata["merkle"] = merkleInfo;
 
     const encoded = [];
     if (!isMetadataEqual(oldMerkle, metadata["merkle"])) {
