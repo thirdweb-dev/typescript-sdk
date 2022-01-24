@@ -5,6 +5,8 @@ import {
 } from "json2typescript";
 import CommonModuleMetadata from "./CommonModuleMetadata";
 
+declare var NumberOrDate: Number | Date;
+
 @JsonObject("VoteModuleMetadata")
 export class VoteModuleMetadata extends CommonModuleMetadata {
   /**
@@ -12,7 +14,7 @@ export class VoteModuleMetadata extends CommonModuleMetadata {
    */
   @JsonProperty(
     "proposal_start_time",
-    Number || Date,
+    NumberOrDate,
     PropertyConvertingMode.MAP_NULLABLE,
   )
   proposalStartWaitTime = 0;
