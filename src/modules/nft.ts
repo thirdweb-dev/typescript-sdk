@@ -660,12 +660,18 @@ export class NFTModule
   private mapPayload(
     mintRequest: SignaturePayload | NewSignaturePayload,
   ): MintRequestStructOutput {
-    if(mintRequest.mintEndTimeEpochSeconds != undefined && mintRequest.mintEndTime == undefined) {
-      mintRequest.mintEndTime = mintRequest.mintEndTimeEpochSeconds
+    if (
+      mintRequest.mintEndTimeEpochSeconds != undefined &&
+      mintRequest.mintEndTime == undefined
+    ) {
+      mintRequest.mintEndTime = mintRequest.mintEndTimeEpochSeconds;
     }
-    if(mintRequest.mintStartTimeEpochSeconds != undefined && mintRequest.mintStartTime == undefined) {
-      mintRequest.mintStartTime = mintRequest.mintStartTimeEpochSeconds
-    }    
+    if (
+      mintRequest.mintStartTimeEpochSeconds != undefined &&
+      mintRequest.mintStartTime == undefined
+    ) {
+      mintRequest.mintStartTime = mintRequest.mintStartTimeEpochSeconds;
+    }
     resolveDate(mintRequest);
     return {
       to: mintRequest.to,

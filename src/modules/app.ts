@@ -981,8 +981,11 @@ export class AppModule
   public async deployVoteModule(
     metadata: VoteModuleMetadata,
   ): Promise<VoteModule> {
-    if(metadata.proposalStartWaitTimeInSeconds != 0 && metadata.proposalStartWaitTime == 0){
-      metadata.proposalStartWaitTime = metadata.proposalStartWaitTimeInSeconds
+    if (
+      metadata.proposalStartWaitTimeInSeconds != 0 &&
+      metadata.proposalStartWaitTime == 0
+    ) {
+      metadata.proposalStartWaitTime = metadata.proposalStartWaitTimeInSeconds;
     }
     metadata = resolveDate(metadata);
     invariant(
@@ -1001,8 +1004,7 @@ export class AppModule
       DEFAULT_BLOCK_TIMES_FALLBACK[chainId as SUPPORTED_CHAIN_ID];
 
     const waitTimeInBlocks =
-      metadata.proposalStartWaitTime /
-      timeBetweenBlocks.secondsBetweenBlocks;
+      metadata.proposalStartWaitTime / timeBetweenBlocks.secondsBetweenBlocks;
     const votingTimeInBlocks =
       metadata.proposalVotingTimeInSeconds /
       timeBetweenBlocks.secondsBetweenBlocks;

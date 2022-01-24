@@ -1,20 +1,30 @@
-import { JsonObject, JsonProperty, PropertyConvertingMode } from "json2typescript";
+import {
+  JsonObject,
+  JsonProperty,
+  PropertyConvertingMode,
+} from "json2typescript";
 import CommonModuleMetadata from "./CommonModuleMetadata";
 
 @JsonObject("VoteModuleMetadata")
 export class VoteModuleMetadata extends CommonModuleMetadata {
-
   /**
    * The wait time before a proposal can begin being voted on.
    */
-   @JsonProperty("proposal_start_time", Number || Date, PropertyConvertingMode.MAP_NULLABLE)
-   proposalStartWaitTime = 0;
-
+  @JsonProperty(
+    "proposal_start_time",
+    Number || Date,
+    PropertyConvertingMode.MAP_NULLABLE,
+  )
+  proposalStartWaitTime = 0;
 
   /**
    * @deprecated - use `proposalStartWaitTime` instead.
    */
-  @JsonProperty("proposal_start_time_in_seconds", Number || undefined, PropertyConvertingMode.MAP_NULLABLE)
+  @JsonProperty(
+    "proposal_start_time_in_seconds",
+    Number || undefined,
+    PropertyConvertingMode.MAP_NULLABLE,
+  )
   proposalStartWaitTimeInSeconds = 0;
 
   /**
