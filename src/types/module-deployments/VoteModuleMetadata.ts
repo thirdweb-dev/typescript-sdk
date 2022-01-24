@@ -8,9 +8,12 @@ import CommonModuleMetadata from "./CommonModuleMetadata";
 
 export type NumberOrDate = Number | Date;
 class TimestampConverter implements JsonCustomConvert<NumberOrDate> {
-  deserialize(data: number | Date): number {
+  deserialize(data: number | Date | undefined): number {
     if (data instanceof Date) {
       data = Math.floor(data.getTime() / 1000);
+    }
+    if (data === undefined) {
+      data = 0;
     }
     return data;
   }
@@ -18,6 +21,7 @@ class TimestampConverter implements JsonCustomConvert<NumberOrDate> {
     return data;
   }
 }
+
 @JsonObject("VoteModuleMetadata")
 export class VoteModuleMetadata extends CommonModuleMetadata {
   /**
