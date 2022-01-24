@@ -1,7 +1,7 @@
 import {
   Coin__factory,
   DataStore__factory,
-  ERC20__factory,
+  IERC20__factory,
   LazyMintERC1155__factory,
   LazyMintERC721__factory,
   Marketplace__factory,
@@ -165,6 +165,7 @@ export class AppModule
    */
   public async getAllContractMetadata(
     addresses: string[],
+    resolveGateway = true,
   ): Promise<ModuleMetadataNoType[]> {
     const metadatas = await Promise.all(
       addresses.map((address) =>
@@ -172,7 +173,7 @@ export class AppModule
           this.providerOrSigner,
           address,
           this.ipfsGatewayUrl,
-          true,
+          resolveGateway,
         ),
       ),
     );
@@ -297,6 +298,7 @@ export class AppModule
    */
   public async getAllModuleMetadata(
     filterByModuleType?: ModuleType[],
+    resolveGateway = true,
   ): Promise<ModuleMetadata[]> {
     const moduleTypesToGet = filterByModuleType || [
       ModuleType.NFT,
@@ -313,12 +315,12 @@ export class AppModule
       await Promise.all(
         moduleTypesToGet.map(async (moduleType) => {
           const moduleAddresses = await this.getModuleAddress(moduleType);
-          return (await this.getAllContractMetadata(moduleAddresses)).map(
-            (m) => ({
-              ...m,
-              type: moduleType,
-            }),
-          );
+          return (
+            await this.getAllContractMetadata(moduleAddresses, resolveGateway)
+          ).map((m) => ({
+            ...m,
+            type: moduleType,
+          }));
         }),
       )
     ).reduce((acc, curr) => acc.concat(curr), []);
@@ -1079,34 +1081,36 @@ export class AppModule
       return [];
     }
 
-    const modules = await this.getAllModuleMetadata([
-      ModuleType.NFT,
-      ModuleType.BUNDLE,
-      ModuleType.PACK,
-      ModuleType.DROP,
-      ModuleType.BUNDLE_DROP,
-    ]);
+    const modules = await this.getAllModuleMetadata(
+      [
+        ModuleType.NFT,
+        ModuleType.BUNDLE,
+        ModuleType.PACK,
+        ModuleType.DROP,
+        ModuleType.BUNDLE_DROP,
+      ],
+      false,
+    );
+
     return modules.filter(
       (m) =>
         m.metadata?.fee_recipient?.toLowerCase() === this.address.toLowerCase(),
     );
   }
 
-  public async upgradeModuleList(moduleAddresses: string[]): Promise<void> {
+  /**
+   * @internal
+   */
+  public async upgradeModuleList(moduleAddresses: string[]) {
     const signer = this.getSigner();
     invariant(signer, "needs a signer");
 
+    // already filtered to make sure that the fee_recipient is set to the app
     const allUpgradableModules = await this.shouldUpgradeModuleList();
-    const upgradableModules = allUpgradableModules.filter((m) =>
-      moduleAddresses.includes(m.address),
-    );
 
-    // since all the modules consistent / similar for contractURI (get and set),
-    // we just pretend everything is NFT module :)
-    const moduleMetadatas = await Promise.all(
-      upgradableModules.map((m) =>
-        this.sdk.getNFTModule(m.address).getMetadata(false),
-      ),
+    // this already returns the correct metadata array with non-resolved metadata...
+    const moduleMetadatas = allUpgradableModules.filter((m) =>
+      moduleAddresses.includes(m.address),
     );
 
     const royaltyTreasury = await this.getRoyaltyTreasury();
@@ -1132,10 +1136,14 @@ export class AppModule
     }));
 
     // batch send :)
-    await Promise.all(txs.map((tx) => signer.sendTransaction(tx)));
+    const txns = await Promise.all(txs.map((tx) => signer.sendTransaction(tx)));
+
+    // have to actually wait for each txn to be confirmed until we're finished
+    return await Promise.all(txns.map((tx) => tx.wait()));
   }
 
   /**
+   *  @internal
    * Upgrades the protocol control to v2. In v2, the royalty treasury needs to be set to be set to a splits contract.
    *
    * @param splitsModuleAddress - Optional. By default, it automatically creates a Splits for the project.
@@ -1146,7 +1154,7 @@ export class AppModule
       splitsModuleAddress?: string;
       splitsRecipients?: NewSplitRecipient[];
     } = {},
-  ): Promise<void> {
+  ) {
     if (await this.isV1UpgradedOrV2()) {
       return;
     }
@@ -1173,7 +1181,7 @@ export class AppModule
       ).address;
     }
 
-    await this.setRoyaltyTreasury(splitsAddress);
+    return await this.setRoyaltyTreasury(splitsAddress);
   }
 
   /**
@@ -1188,7 +1196,7 @@ export class AppModule
 
     let treasuryBalance = BigNumber.from(0);
     const treasury = await this.getRoyaltyTreasury();
-    if (treasury !== this.address) {
+    if (treasury.toLowerCase() !== this.address.toLowerCase()) {
       treasuryBalance = await this.readOnlyContract.provider.getBalance(
         treasury,
       );
@@ -1208,15 +1216,16 @@ export class AppModule
     if (isNativeToken(tokenAddress)) {
       balance = await this.balance();
     } else {
-      const erc20 = ERC20__factory.connect(
+      const erc20 = IERC20__factory.connect(
         tokenAddress,
         this.readOnlyContract.provider,
       );
 
       // TODO: multicall :)
+      // only fetch project's erc20 balance if it's not v1
       if (!(await this.isV1())) {
         try {
-          balance = await erc20.balanceOf(this.address);
+          balance = balance.add(await erc20.balanceOf(this.address));
         } catch (e) {
           // invalid token address
           console.error(e);
@@ -1226,8 +1235,14 @@ export class AppModule
 
       // if it's not upgraded or v2, erc20 balance wont show up
       const treasury = await this.getRoyaltyTreasury();
-      if (treasury !== this.address) {
-        balance.add(await erc20.balanceOf(treasury));
+      if (treasury.toLowerCase() !== this.address.toLowerCase()) {
+        try {
+          balance = balance.add(await erc20.balanceOf(treasury));
+        } catch (e) {
+          // invalid token address
+          console.error(e);
+          throw new Error("invalid token address");
+        }
       }
     }
 

@@ -38,7 +38,7 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [deploySplitsModule(metadata)](./sdk.appmodule.deploysplitsmodule.md) |  | Deploys a Splits module |
 |  [deployTokenModule(metadata)](./sdk.appmodule.deploytokenmodule.md) |  | Deploys a token module. |
 |  [deployVoteModule(metadata)](./sdk.appmodule.deployvotemodule.md) |  | Deploys a Vote module |
-|  [getAllModuleMetadata(filterByModuleType)](./sdk.appmodule.getallmodulemetadata.md) |  | Method to get a list of all module metadata on a given app. |
+|  [getAllModuleMetadata(filterByModuleType, resolveGateway)](./sdk.appmodule.getallmodulemetadata.md) |  | Method to get a list of all module metadata on a given app. |
 |  [getBundleModules()](./sdk.appmodule.getbundlemodules.md) |  |  |
 |  [getCollectionModules()](./sdk.appmodule.getcollectionmodules.md) |  | Method to get a list of Bundle module metadata. |
 |  [getCurrencyModules()](./sdk.appmodule.getcurrencymodules.md) |  | Method to get a list of Currency module metadata. |
@@ -54,7 +54,5 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [setRoyaltyTreasury(treasury)](./sdk.appmodule.setroyaltytreasury.md) |  |  |
 |  [shouldUpgradeModuleList()](./sdk.appmodule.shouldupgrademodulelist.md) |  |  |
 |  [shouldUpgradeToV2()](./sdk.appmodule.shouldupgradetov2.md) |  |  |
-|  [upgradeModuleList(moduleAddresses)](./sdk.appmodule.upgrademodulelist.md) |  |  |
-|  [upgradeToV2(upgradeOptions)](./sdk.appmodule.upgradetov2.md) |  | Upgrades the protocol control to v2. In v2, the royalty treasury needs to be set to be set to a splits contract. |
 |  [withdrawFunds(to, currency)](./sdk.appmodule.withdrawfunds.md) |  |  |
 
