@@ -5,7 +5,7 @@ import {
 } from "json2typescript";
 import CommonModuleMetadata from "./CommonModuleMetadata";
 
-declare var NumberOrDate: Number | Date;
+export const NumberOrDate = Number || Date;
 
 @JsonObject("VoteModuleMetadata")
 export class VoteModuleMetadata extends CommonModuleMetadata {
