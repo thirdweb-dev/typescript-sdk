@@ -129,10 +129,16 @@ export class MarketplaceModule
     listing: NewDirectListing,
   ): Promise<BigNumber> {
     this.validateNewListingParam(listing);
-    if(listing.startTimeInSeconds != undefined && listing.startTime == undefined) {
+    if (
+      listing.startTimeInSeconds != undefined &&
+      listing.startTime == undefined
+    ) {
       listing.startTime = listing.startTimeInSeconds;
     }
-    if(listing.startTimeInSeconds == undefined && listing.startTime == undefined) {
+    if (
+      listing.startTimeInSeconds == undefined &&
+      listing.startTime == undefined
+    ) {
       throw new Error("startTime must be defined");
     }
 
@@ -194,13 +200,19 @@ export class MarketplaceModule
   public async createAuctionListing(
     listing: NewAuctionListing,
   ): Promise<BigNumber> {
-    if(listing.startTimeInSeconds != undefined && listing.startTime == undefined) {
+    if (
+      listing.startTimeInSeconds != undefined &&
+      listing.startTime == undefined
+    ) {
       listing.startTime = listing.startTimeInSeconds;
     }
-    if(listing.startTimeInSeconds == undefined && listing.startTime == undefined) {
+    if (
+      listing.startTimeInSeconds == undefined &&
+      listing.startTime == undefined
+    ) {
       throw new Error("startTime must be defined");
     }
-    
+
     this.validateNewListingParam(listing);
 
     await this.handleTokenApproval(
@@ -715,10 +727,8 @@ export class MarketplaceModule
       "Listing duration is required",
     );
     invariant(
-      (param.startTimeInSeconds !== undefined &&
-        param.startTimeInSeconds !== null) && (
-          param.startTime !== undefined && param.startTime !== null
-        ),
+      param.startTimeInSeconds !== undefined &&
+        param.startTimeInSeconds !== null,
       "Start time is required",
     );
     invariant(
@@ -949,17 +959,29 @@ export class MarketplaceModule
   }
 
   public async updateAuctionListing(listing: AuctionListing): Promise<void> {
-    if(listing.startTimeInEpochSeconds != undefined && listing.startTime == undefined){
-      listing.startTime = listing.startTimeInEpochSeconds
+    if (
+      listing.startTimeInEpochSeconds != undefined &&
+      listing.startTime == undefined
+    ) {
+      listing.startTime = listing.startTimeInEpochSeconds;
     }
-    if(listing.endTimeInEpochSeconds != undefined && listing.endTime == undefined){
-      listing.endTime = listing.endTimeInEpochSeconds
+    if (
+      listing.endTimeInEpochSeconds != undefined &&
+      listing.endTime == undefined
+    ) {
+      listing.endTime = listing.endTimeInEpochSeconds;
     }
-    if( listing.startTime == undefined && listing.startTimeInEpochSeconds == undefined){
-      throw new Error("Auction listing must have startTime")
+    if (
+      listing.startTime == undefined &&
+      listing.startTimeInEpochSeconds == undefined
+    ) {
+      throw new Error("Auction listing must have startTime");
     }
-    if(listing.endTime == undefined && listing.endTimeInEpochSeconds == undefined){
-      throw new Error("Auction listing must have endTime")
+    if (
+      listing.endTime == undefined &&
+      listing.endTimeInEpochSeconds == undefined
+    ) {
+      throw new Error("Auction listing must have endTime");
     }
     listing = resolveDate(listing);
     await this.sendTransaction("updateListing", [
@@ -1035,11 +1057,17 @@ export class MarketplaceModule
     const listing = await this.validateAuctionListing(
       BigNumber.from(listingId),
     );
-    if(listing.endTimeInEpochSeconds != undefined && listing.endTime == undefined){
-      listing.endTime = listing.endTimeInEpochSeconds
+    if (
+      listing.endTimeInEpochSeconds != undefined &&
+      listing.endTime == undefined
+    ) {
+      listing.endTime = listing.endTimeInEpochSeconds;
     }
-    if(listing.endTime == undefined && listing.endTimeInEpochSeconds == undefined){
-      throw new Error("Auction listing must have endTime")
+    if (
+      listing.endTime == undefined &&
+      listing.endTimeInEpochSeconds == undefined
+    ) {
+      throw new Error("Auction listing must have endTime");
     }
     resolveDate(listing);
     try {
