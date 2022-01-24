@@ -23,7 +23,7 @@ import {
   Role,
   RolesMap,
 } from "../common";
-import { resolveDate } from "../common/dateResolver";
+import { resolveDatesToEpochSeconds } from "../common/dateResolver";
 import { invariant } from "../common/invariant";
 import { NFTMetadata, NFTMetadataOwner } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
@@ -672,7 +672,7 @@ export class NFTModule
     ) {
       mintRequest.mintStartTime = mintRequest.mintStartTimeEpochSeconds;
     }
-    resolveDate(mintRequest);
+    resolveDatesToEpochSeconds(mintRequest);
     return {
       to: mintRequest.to,
       price: mintRequest.price,

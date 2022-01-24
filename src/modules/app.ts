@@ -33,7 +33,7 @@ import {
   getCurrencyBalance,
   getNativeTokenByChainId,
 } from "../common/currency";
-import { resolveDate } from "../common/dateResolver";
+import { resolveDatesToEpochSeconds } from "../common/dateResolver";
 import { invariant } from "../common/invariant";
 import { ModuleType } from "../common/module-type";
 import { ModuleWithRoles } from "../core/module";
@@ -987,7 +987,7 @@ export class AppModule
     ) {
       metadata.proposalStartWaitTime = metadata.proposalStartWaitTimeInSeconds;
     }
-    metadata = resolveDate(metadata);
+    metadata = resolveDatesToEpochSeconds(metadata);
     invariant(
       metadata.votingTokenAddress !== "" &&
         isAddress(metadata.votingTokenAddress),

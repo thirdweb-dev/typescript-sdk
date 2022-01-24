@@ -22,7 +22,7 @@ import {
   RolesMap,
 } from "../common";
 import { isNativeToken } from "../common/currency";
-import { resolveDate } from "../common/dateResolver";
+import { resolveDatesToEpochSeconds } from "../common/dateResolver";
 import {
   AuctionAlreadyStartedError,
   AuctionHasNotEndedError,
@@ -142,7 +142,7 @@ export class MarketplaceModule
       throw new Error("startTime must be defined");
     }
 
-    resolveDate(listing);
+    resolveDatesToEpochSeconds(listing);
     await this.handleTokenApproval(
       listing.assetContractAddress,
       listing.tokenId,
@@ -983,7 +983,7 @@ export class MarketplaceModule
     ) {
       throw new Error("Auction listing must have endTime");
     }
-    listing = resolveDate(listing);
+    listing = resolveDatesToEpochSeconds(listing);
     await this.sendTransaction("updateListing", [
       listing.id,
       listing.quantity,
@@ -1069,7 +1069,7 @@ export class MarketplaceModule
     ) {
       throw new Error("Auction listing must have endTime");
     }
-    resolveDate(listing);
+    resolveDatesToEpochSeconds(listing);
     try {
       await this.sendTransaction("closeAuction", [
         BigNumber.from(listingId),
