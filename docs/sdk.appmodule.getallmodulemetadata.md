@@ -9,7 +9,7 @@ Method to get a list of all module metadata on a given app.
 <b>Signature:</b>
 
 ```typescript
-getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
+getAllModuleMetadata(filterByModuleType?: ModuleType[], resolveGateway?: boolean): Promise<ModuleMetadata[]>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  filterByModuleType | [ModuleType](./sdk.moduletype.md)<!-- -->\[\] | Optional array of [ModuleType](./sdk.moduletype.md) to filter by. |
+|  resolveGateway | boolean |  |
 
 <b>Returns:</b>
 

@@ -75,8 +75,8 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     deployTokenModule(metadata: TokenModuleMetadata): Promise<TokenModule>;
     deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
     // @internal (undocumented)
-    getAllContractMetadata(addresses: string[]): Promise<ModuleMetadataNoType[]>;
-    getAllModuleMetadata(filterByModuleType?: ModuleType[]): Promise<ModuleMetadata[]>;
+    getAllContractMetadata(addresses: string[], resolveGateway?: boolean): Promise<ModuleMetadataNoType[]>;
+    getAllModuleMetadata(filterByModuleType?: ModuleType[], resolveGateway?: boolean): Promise<ModuleMetadata[]>;
     // (undocumented)
     getBundleModules(): Promise<ModuleMetadata[]>;
     // @deprecated
@@ -117,12 +117,13 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     shouldUpgradeModuleList(): Promise<ModuleMetadata[]>;
     // (undocumented)
     shouldUpgradeToV2(): Promise<boolean>;
-    // (undocumented)
-    upgradeModuleList(moduleAddresses: string[]): Promise<void>;
+    // @internal (undocumented)
+    upgradeModuleList(moduleAddresses: string[]): Promise<TransactionReceipt[]>;
+    // @internal
     upgradeToV2(upgradeOptions?: {
         splitsModuleAddress?: string;
         splitsRecipients?: NewSplitRecipient[];
-    }): Promise<void>;
+    }): Promise<TransactionReceipt | undefined>;
     // (undocumented)
     withdrawFunds(to: string, currency: string): Promise<TransactionReceipt>;
 }
