@@ -6,8 +6,7 @@ import {
 } from "json2typescript";
 import CommonModuleMetadata from "./CommonModuleMetadata";
 
-export type NumberOrDate = Number | Date;
-class TimestampConverter implements JsonCustomConvert<NumberOrDate> {
+class TimestampConverter implements JsonCustomConvert<number> {
   deserialize(data: number | Date | undefined): number {
     if (data instanceof Date) {
       data = Math.floor(data.getTime() / 1000);
@@ -30,19 +29,19 @@ export class VoteModuleMetadata extends CommonModuleMetadata {
   @JsonProperty(
     "proposal_start_time",
     TimestampConverter,
-    PropertyConvertingMode.MAP_NULLABLE,
+    PropertyConvertingMode.IGNORE_NULLABLE,
   )
-  proposalStartWaitTime = 0;
+  proposalStartWaitTime?: number;
 
   /**
    * @deprecated - use `proposalStartWaitTime` instead.
    */
   @JsonProperty(
     "proposal_start_time_in_seconds",
-    Number || undefined,
-    PropertyConvertingMode.MAP_NULLABLE,
+    Number,
+    PropertyConvertingMode.IGNORE_NULLABLE,
   )
-  proposalStartWaitTimeInSeconds = 0;
+  proposalStartWaitTimeInSeconds?: number = undefined;
 
   /**
    * How long a proposal is open for voting (seconds).

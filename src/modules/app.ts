@@ -984,11 +984,30 @@ export class AppModule
     metadata: VoteModuleMetadata,
   ): Promise<VoteModule> {
     if (
-      metadata.proposalStartWaitTimeInSeconds != 0 &&
-      metadata.proposalStartWaitTime == 0
+      metadata.proposalStartWaitTimeInSeconds !== undefined &&
+      metadata.proposalStartWaitTime === undefined
     ) {
       metadata.proposalStartWaitTime = metadata.proposalStartWaitTimeInSeconds;
+      metadata.proposalStartWaitTimeInSeconds = undefined;
     }
+
+    invariant(
+      !(
+        metadata.proposalStartWaitTime === undefined &&
+        metadata.proposalStartWaitTimeInSeconds === undefined
+      ),
+      "Proposal start time must be specified",
+    );
+
+    console.log("metadata", metadata);
+    invariant(
+      !(
+        metadata.proposalStartWaitTime !== undefined &&
+        metadata.proposalStartWaitTimeInSeconds !== undefined
+      ),
+      "proposalStartWaitTimeInSeconds is deprecated, please use **only** the proposalStartWaitTime field",
+    );
+
     metadata = resolveDatesToEpochSeconds(metadata);
     invariant(
       metadata.votingTokenAddress !== "" &&
@@ -1006,7 +1025,8 @@ export class AppModule
       DEFAULT_BLOCK_TIMES_FALLBACK[chainId as SUPPORTED_CHAIN_ID];
 
     const waitTimeInBlocks =
-      metadata.proposalStartWaitTime / timeBetweenBlocks.secondsBetweenBlocks;
+      (metadata.proposalStartWaitTime as number) /
+      timeBetweenBlocks.secondsBetweenBlocks;
     const votingTimeInBlocks =
       metadata.proposalVotingTimeInSeconds /
       timeBetweenBlocks.secondsBetweenBlocks;

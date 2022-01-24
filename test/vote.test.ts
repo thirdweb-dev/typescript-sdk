@@ -203,4 +203,27 @@ describe("Vote Module", async () => {
       ethers.utils.parseUnits("1", 18).toString(),
     );
   });
+
+  describe("Backwards Compatibility", () => {
+    describe("Date times", () => {
+      it("should accept the start time passed as a Date", async () => {
+        const newModule = await appModule.deployVoteModule({
+          name: "DAO #1",
+          votingTokenAddress: currencyModule.address,
+
+          proposalStartWaitTime: voteStartWaitTimeInSeconds,
+          proposalVotingTimeInSeconds: voteWaitTimeInSeconds,
+
+          votingQuorumFraction: 1,
+
+          minimumNumberOfTokensNeededToPropose: ethers.utils
+            .parseUnits("1", 18)
+            .toString(),
+        });
+
+        const { metadata } = await newModule.getMetadata();
+        console.log(metadata);
+      });
+    });
+  });
 });
