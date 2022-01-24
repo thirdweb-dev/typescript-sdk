@@ -870,20 +870,18 @@ export class DropModule
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(quantity, proofs);
-    const encoded = [];
-    encoded.push(
-      this.contract.interface.encodeFunctionData("claim", [
-        quantity,
-        claimData.proofs,
-      ]),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("transferFrom", [
-        await this.getSignerAddress(),
-        addressToClaim,
-        (await this.readOnlyContract.nextTokenIdToMint()).sub(1),
-      ]),
-    );
+    const result = await this.claim(quantity, claimData.proofs);
+    const encoded: any[] = [];
+
+    result.forEach(async (r) => {
+      encoded.push(
+        this.contract.interface.encodeFunctionData("transferFrom", [
+          await this.getSignerAddress(),
+          addressToClaim,
+          r.metadata.id,
+        ]),
+      );
+    });
     return await this.sendTransaction(
       "multicall",
       [encoded],
