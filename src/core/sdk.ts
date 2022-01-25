@@ -8,7 +8,7 @@ import type {
   ValidModuleClass,
 } from "./types";
 import { ModuleFactory } from "./classes/factory";
-import { MODULES_MAP, Module } from "../constants/mappings";
+import { MODULES_MAP } from "../constants/mappings";
 import { Registry } from "./classes/registry";
 import { getModuleTypeForAddress } from "./helpers/module-type";
 
@@ -45,11 +45,12 @@ export class ThirdwebSDK extends BaseClass {
 
   /**
    *
+   * @internal
    * @param address - the address of the module to instantiate
    * @param moduleType - optional, the type of module to instantiate
    * @returns a promise that resolves with the module instance
    */
-  public async getModule<TModuleType extends ModuleType = ModuleType>(
+  private async getModule<TModuleType extends ModuleType = ModuleType>(
     address: string,
     moduleType?: TModuleType,
   ): Promise<ModuleForModuleType<TModuleType>> {
@@ -82,13 +83,13 @@ export class ThirdwebSDK extends BaseClass {
         // we have to do this as here because typescript is not smart enough to figure out
         // that the type is a key of the map (checked by the if statement above)
         moduleType as keyof typeof MODULES_MAP
-      ](this.getNetwork(), this.options) as ModuleForModuleType<TModuleType>;
-    } else {
-      // if we cannot figure out the the module type, we return a barebones module
-      newModule = new Module(
+      ](
         this.getNetwork(),
         this.options,
+        address,
       ) as ModuleForModuleType<TModuleType>;
+    } else {
+      throw new Error("not a valid thirdweb module");
     }
     this.moduleCache.set(address, newModule);
     return newModule;
@@ -123,6 +124,11 @@ export class ThirdwebSDK extends BaseClass {
 //     "0x1234567890123456789012345678901234567890",
 //   );
 //   // => typeof module = Module
+
+//   if(module instanceof DropErc721Module){
+//     // => typeof module = DropErc721Module
+
+//   }
 
 //   // module type is known, and we're passing it as a parameter
 //   // we skip the runtime check and just intantiate it straight away

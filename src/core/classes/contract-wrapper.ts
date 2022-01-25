@@ -87,7 +87,7 @@ export class ContractWrapper<
   /**
    * @internal
    */
-  protected async getChainID(): Promise<number> {
+  public async getChainID(): Promise<number> {
     const provider = this.getProvider();
     const { chainId } = await provider.getNetwork();
     return chainId;
@@ -95,7 +95,7 @@ export class ContractWrapper<
   /**
    * @internal
    */
-  protected async getSignerAddress(): Promise<string> {
+  public async getSignerAddress(): Promise<string> {
     const signer = this.getSigner();
     if (!signer) {
       throw new Error("cannot get signer address without valid signer");
@@ -106,7 +106,7 @@ export class ContractWrapper<
   /**
    * @internal
    */
-  protected async getCallOverrides(): Promise<CallOverrides> {
+  public async getCallOverrides(): Promise<CallOverrides> {
     const chainId = await this.getChainID();
     const speed = this.options.gasSettings?.speed || "fastest";
     const maxGasPrice = this.options.gasSettings?.maxPriceInGwei || 300;
@@ -140,7 +140,7 @@ export class ContractWrapper<
   /**
    * @internal
    */
-  protected async sendTransaction(
+  public async sendTransaction(
     fn: string,
     args: any[],
     callOverrides?: CallOverrides,
@@ -151,7 +151,7 @@ export class ContractWrapper<
   /**
    * @internal
    */
-  protected async sendContractTransaction(
+  public async sendContractTransaction(
     contract: TContract,
     fn: string,
     args: any[],
@@ -260,7 +260,7 @@ export class ContractWrapper<
     return txHash;
   }
 
-  protected async signTypedData(
+  public async signTypedData(
     signer: ethers.Signer,
     from: string,
     domain: {
@@ -297,7 +297,7 @@ export class ContractWrapper<
     }
   }
 
-  protected parseEventLogs(eventName: string, logs?: Log[]): any {
+  public parseEventLogs(eventName: string, logs?: Log[]): any {
     if (!logs) {
       return null;
     }
@@ -316,7 +316,7 @@ export class ContractWrapper<
     return null;
   }
 
-  protected parseLogs<T = any>(
+  public parseLogs<T = any>(
     eventName: string,
     logs?: Log[],
     contract: TContract = this.contract,
