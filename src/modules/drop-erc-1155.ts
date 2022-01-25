@@ -1,4 +1,4 @@
-import { DropERC721, DropERC721__factory } from "@3rdweb/contracts";
+import { DropERC1155, DropERC1155__factory } from "@3rdweb/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { NetworkOrSignerOrProvider } from "../core/types";
@@ -9,19 +9,19 @@ import {
 } from "../schema/modules/drop-erc721";
 import { SDKOptions } from "../schema/sdk-options";
 
-export class DropErc721Module {
-  static moduleType = "NFTDrop" as const;
+export class DropErc1155Module {
+  static moduleType = "NFTBundleDrop" as const;
   static schema = {
     deploy: DropErc721ModuleInput,
     output: DropErc721ModuleOutput,
     input: DropErc721ModuleDeploy,
   } as const;
 
-  public contractWrapper: ContractWrapper<DropERC721>;
+  public contractWrapper: ContractWrapper<DropERC1155>;
 
   public metadata: ContractMetadata<
-    DropERC721,
-    typeof DropErc721Module["schema"]
+    DropERC1155,
+    typeof DropErc1155Module["schema"]
   >;
 
   constructor(
@@ -29,21 +29,19 @@ export class DropErc721Module {
     options: SDKOptions = {},
     address: string,
   ) {
-    this.contractWrapper = new ContractWrapper<DropERC721>(
+    this.contractWrapper = new ContractWrapper<DropERC1155>(
       network,
       options,
       address,
-      DropERC721__factory.abi,
+      DropERC1155__factory.abi,
     );
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      DropErc721Module.schema,
+      DropErc1155Module.schema,
     );
 
-    // this.roles = new Roles(this.contractWrapper, [""]);
-    // this.contractWrapper.contract.getRol
-
+    // this.roles = new Roles(this.contract);
     // this.royalties = new Royalties(this.contract);
   }
 

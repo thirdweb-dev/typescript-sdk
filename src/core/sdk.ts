@@ -1,5 +1,5 @@
 import { Networkish } from "@ethersproject/providers";
-import { BaseClass } from "./classes/base";
+import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import { SDKOptions } from "../schema/sdk-options";
 import type {
   ModuleForModuleType,
@@ -12,7 +12,7 @@ import { MODULES_MAP } from "../constants/mappings";
 import { Registry } from "./classes/registry";
 import { getModuleTypeForAddress } from "./helpers/module-type";
 
-export class ThirdwebSDK extends BaseClass {
+export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * @internal
    * the cache of modules that we have already seen
@@ -28,7 +28,9 @@ export class ThirdwebSDK extends BaseClass {
     );
     this.factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
     for (const [, module] of this.moduleCache) {
-      module.updateSignerOrProvider(this.getSigner() || this.getProvider());
+      module.contractWrapper.updateSignerOrProvider(
+        this.getSigner() || this.getProvider(),
+      );
     }
   }
 
@@ -50,7 +52,7 @@ export class ThirdwebSDK extends BaseClass {
    * @param moduleType - optional, the type of module to instantiate
    * @returns a promise that resolves with the module instance
    */
-  private async getModule<TModuleType extends ModuleType = ModuleType>(
+  public async getModule<TModuleType extends ModuleType = ModuleType>(
     address: string,
     moduleType?: TModuleType,
   ): Promise<ModuleForModuleType<TModuleType>> {
@@ -94,24 +96,9 @@ export class ThirdwebSDK extends BaseClass {
     this.moduleCache.set(address, newModule);
     return newModule;
   }
-
-  public async getModules<TModuleType extends ModuleType = ModuleType>(
-    walletAddress: string,
-    moduleTypesFilter?: TModuleType[],
-  ): Promise<ModuleForModuleType<TModuleType>[]> {
-    const addresses = await this.registry.getModuleAddresses(walletAddress);
-    const modules = await Promise.all(
-      addresses.map(
-        async (address) => await this.getModule<TModuleType>(address),
-      ),
-    );
-    return modules.filter((module) =>
-      moduleTypesFilter && moduleTypesFilter.length
-        ? moduleTypesFilter.includes(module.moduleType as TModuleType)
-        : true,
-    );
-  }
 }
+
+// sdk.updateSignerOrProvider(signer);
 
 // new ThirdwebSDK("0", { storage: new IpfsStorage() });
 

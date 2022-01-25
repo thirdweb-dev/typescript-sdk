@@ -8,7 +8,7 @@ import {
   ContractTransaction,
   ethers,
 } from "ethers";
-import { BaseClass } from "./base";
+import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
   ForwardRequestMessage,
@@ -42,7 +42,7 @@ import { signERC2612Permit } from "eth-permit";
 
 export class ContractWrapper<
   TContract extends ThirdwebModuleOrBaseContract,
-> extends BaseClass {
+> extends RPCConnectionHandler {
   public contract: TContract;
   public readOnlyContract: TContract;
 

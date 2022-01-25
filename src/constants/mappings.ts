@@ -1,5 +1,9 @@
-import { DropERC721, DropERC721__factory } from "@3rdweb/contracts";
-
+import {
+  DropERC1155__factory,
+  DropERC721,
+  DropERC721__factory,
+} from "@3rdweb/contracts";
+import { DropErc1155Module } from "../modules/drop-erc-1155";
 import { DropErc721Module } from "../modules/drop-erc-721";
 import {
   DropErc721ModuleDeploy,
@@ -9,6 +13,7 @@ import {
 
 export const MODULES_MAP = {
   [DropERC721__factory.contractName]: DropErc721Module,
+  [DropERC1155__factory.contractName]: DropErc1155Module,
 } as const;
 
 export type MODULE_TYPE_TO_CONTRACT_MAP = {
