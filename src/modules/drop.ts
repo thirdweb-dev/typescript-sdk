@@ -871,12 +871,13 @@ export class DropModule
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(quantity, proofs);
     const result = await this.claim(quantity, claimData.proofs);
-    const encoded: any[] = [];
-
-    result.forEach(async (r) => {
+    const encoded: string[] = [];
+    console.log(result);
+    const fromAddress = await this.getSignerAddress();
+    result.forEach((r) => {
       encoded.push(
         this.contract.interface.encodeFunctionData("transferFrom", [
-          await this.getSignerAddress(),
+          fromAddress,
           addressToClaim,
           r.metadata.id,
         ]),

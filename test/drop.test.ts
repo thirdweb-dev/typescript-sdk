@@ -540,7 +540,10 @@ describe("Drop Module", async () => {
       },
     ]);
     await dropModule.claimTo(1, samWallet.address);
-    assert((await dropModule.getOwned(samWallet.address)).length === 1);
+    assert(
+      (await dropModule.getOwned(samWallet.address)).length === 1,
+      "claimTo did not work",
+    );
   });
 
   it("canClaim: 1 address", async () => {
