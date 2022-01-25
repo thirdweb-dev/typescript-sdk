@@ -113,6 +113,8 @@ export class ThirdwebSDK extends BaseClass {
   }
 }
 
+// new ThirdwebSDK("0", { storage: new IpfsStorage() });
+
 // BELOW ARE TYPESCRIPT SANITY CHECKS
 
 // (async () => {

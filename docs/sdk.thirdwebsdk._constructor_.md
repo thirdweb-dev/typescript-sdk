@@ -9,13 +9,13 @@ Constructs a new instance of the `ThirdwebSDK` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions);
+constructor(providerOrNetwork: ValidProviderInput, opts?: Partial<ISDKOptions>);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | NetworkOrSignerOrProvider |  |
-|  options | SDKOptions |  |
+|  providerOrNetwork | [ValidProviderInput](./sdk.validproviderinput.md) |  |
+|  opts | Partial&lt;[ISDKOptions](./sdk.isdkoptions.md)<!-- -->&gt; |  |
 
