@@ -69,6 +69,8 @@ export class BundleDropModule
   extends ModuleWithRoles<BundleDrop>
   implements ITransferable
 {
+  private _shouldCheckVersion = true;
+  private _isNewClaim = false;
   public static moduleType: ModuleType = ModuleType.BUNDLE_DROP;
 
   public static roles = [
@@ -595,12 +597,11 @@ export class BundleDropModule
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ) {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
+    const claimParams = (await this.isNewClaim())
+      ? [await this.getSignerAddress(), tokenId, quantity, proofs]
+      : [tokenId, quantity, proofs];
 
-    await this.sendTransaction(
-      "claim",
-      [tokenId, quantity, claimData.proofs],
-      claimData.overrides,
-    );
+    await this.sendTransaction("claim", claimParams, claimData.overrides);
   }
 
   /**
@@ -637,12 +638,13 @@ export class BundleDropModule
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
     const encoded = [];
+    const claimParams = (await this.isNewClaim())
+      ? [await this.getSignerAddress(), tokenId, quantity, proofs]
+      : [tokenId, quantity, proofs];
+
+    // forcing it old version of claim params
     encoded.push(
-      this.contract.interface.encodeFunctionData("claim", [
-        tokenId,
-        quantity,
-        proofs,
-      ]),
+      this.contract.interface.encodeFunctionData("claim", claimParams as any),
     );
     encoded.push(
       this.contract.interface.encodeFunctionData("safeTransferFrom", [
@@ -950,5 +952,29 @@ export class BundleDropModule
   ): Promise<TransactionReceipt> {
     await this.onlyRoles(["admin"], await this.getSignerAddress());
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  /**
+   * @internal
+   */
+  private async isNewClaim(): Promise<boolean> {
+    await this.checkVersion();
+    return this._isNewClaim;
+  }
+
+  /**
+   * @internal
+   */
+  private async checkVersion() {
+    if (this._shouldCheckVersion) {
+      try {
+        await this.readOnlyContract.VERSION();
+        this._isNewClaim = true;
+      } catch (e) {
+        this._isNewClaim = false;
+      }
+
+      this._shouldCheckVersion = false;
+    }
   }
 }
