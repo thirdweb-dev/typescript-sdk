@@ -1035,9 +1035,9 @@ export class AppModule
       [
         metadata.name,
         metadata.votingTokenAddress,
-        metadata.votingDelay,
-        metadata.votingPeriod,
-        metadata.minimumNumberOfTokensNeededToPropose,
+        BigNumber.from(Math.ceil(metadata.votingDelay)),
+        BigNumber.from(Math.ceil(metadata.votingPeriod)),
+        BigNumber.from(metadata.minimumNumberOfTokensNeededToPropose),
         metadata.votingQuorumFraction,
         await this.getForwarder(),
         metadataUri,
