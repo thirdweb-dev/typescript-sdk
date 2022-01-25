@@ -72,6 +72,7 @@ export class DropModule
 {
   private _shouldCheckVersion = true;
   private _isV1 = false;
+  private _isNewClaim = false;
   private v1Module: DropV1Module;
 
   public static moduleType: ModuleType = ModuleType.DROP;
@@ -871,19 +872,26 @@ export class DropModule
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(quantity, proofs);
     const encoded = [];
-    encoded.push(
-      this.contract.interface.encodeFunctionData("claim", [
-        quantity,
-        claimData.proofs,
-      ]),
+
+    const receipt = await this.sendTransaction(
+      "claim",
+      [quantity, claimData.proofs],
+      claimData.overrides,
     );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("transferFrom", [
-        await this.getSignerAddress(),
-        addressToClaim,
-        (await this.readOnlyContract.nextTokenIdToMint()).sub(1),
-      ]),
-    );
+
+    const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
+    const startingIndex: BigNumber = event.startTokenId;
+    const endingIndex = startingIndex.add(quantity);
+    for (let i = startingIndex; i.lt(endingIndex); i = i.add(1)) {
+      encoded.push(
+        this.contract.interface.encodeFunctionData("transferFrom", [
+          await this.getSignerAddress(),
+          addressToClaim,
+          i,
+        ]),
+      );
+    }
+
     return await this.sendTransaction(
       "multicall",
       [encoded],
@@ -906,9 +914,12 @@ export class DropModule
       return this.v1Module.claim(quantity, proofs);
     }
     const claimData = await this.prepareClaim(quantity, proofs);
+    const claimParams = (await this.isNewClaim())
+      ? [await this.getSignerAddress(), quantity, proofs]
+      : [quantity, proofs];
     const receipt = await this.sendTransaction(
       "claim",
-      [quantity, claimData.proofs],
+      claimParams,
       claimData.overrides,
     );
     const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
@@ -922,6 +933,7 @@ export class DropModule
       tokenIds.map(async (t) => await this.get(t.toString())),
     );
   }
+
   public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [tokenId]);
   }
@@ -1039,6 +1051,22 @@ export class DropModule
    * Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract.
    */
   async isV1(): Promise<boolean> {
+    await this.checkVersion();
+    return this._isV1;
+  }
+
+  /**
+   * @internal
+   */
+  private async isNewClaim(): Promise<boolean> {
+    await this.checkVersion();
+    return this._isNewClaim;
+  }
+
+  /**
+   * @internal
+   */
+  private async checkVersion() {
     if (this._shouldCheckVersion) {
       try {
         await this.readOnlyContract.nextTokenIdToMint();
@@ -1046,9 +1074,16 @@ export class DropModule
       } catch (e) {
         this._isV1 = true;
       }
+
+      try {
+        await this.readOnlyContract.VERSION();
+        this._isNewClaim = true;
+      } catch (e) {
+        this._isNewClaim = false;
+      }
+
       this._shouldCheckVersion = false;
     }
-    return this._isV1;
   }
 
   /**

@@ -70,6 +70,8 @@ export class MarketplaceModule
   extends ModuleWithRoles<Marketplace>
   implements IMarketplace
 {
+  private _shouldCheckVersion = true;
+  private _isNewBuy = false;
   public static moduleType: ModuleType = ModuleType.MARKETPLACE;
 
   public static roles = [RolesMap.admin, RolesMap.lister] as const;
@@ -904,7 +906,16 @@ export class MarketplaceModule
     const value = BigNumber.from(listing.buyoutPrice).mul(quantity);
     const overrides = (await this.getCallOverrides()) || {};
     await this.setAllowance(value, listing.currencyContractAddress, overrides);
-    await this.sendTransaction("buy", [_buyout.listingId, quantity], overrides);
+
+    const buyParams = (await this.isNewBuy())
+      ? [
+          _buyout.listingId,
+          quantity,
+          listing.currencyContractAddress,
+          BigNumber.from(listing.buyoutPrice).mul(quantity),
+        ]
+      : [_buyout.listingId, quantity];
+    await this.sendTransaction("buy", buyParams, overrides);
   }
 
   // TODO: Complete method implementation with subgraph
@@ -1171,5 +1182,29 @@ export class MarketplaceModule
     isRestricted: boolean,
   ): Promise<void> {
     await this.sendTransaction("setRestrictedListerRoleOnly", [isRestricted]);
+  }
+
+  /**
+   * @internal
+   */
+  private async isNewBuy(): Promise<boolean> {
+    await this.checkVersion();
+    return this._isNewBuy;
+  }
+
+  /**
+   * @internal
+   */
+  private async checkVersion() {
+    if (this._shouldCheckVersion) {
+      try {
+        await this.readOnlyContract.VERSION();
+        this._isNewBuy = true;
+      } catch (e) {
+        this._isNewBuy = false;
+      }
+
+      this._shouldCheckVersion = false;
+    }
   }
 }
