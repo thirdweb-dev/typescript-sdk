@@ -610,9 +610,9 @@ export class BundleModule
       })
       .filter((b) => b.balance.gt(0));
     return await Promise.all(
-      ownedBalances.map(async ({ tokenId, balance }) => {
-        const token = await this.get(tokenId.toString());
-        return { ...token, ownedByAddress: balance };
+      ownedBalances.map(async (item) => {
+        const token = await this.get(item.tokenId.toString());
+        return { ...token, ownedByAddress: item.balance };
       }),
     );
   }
