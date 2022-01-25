@@ -203,4 +203,16 @@ describe("Bundle Module (aka Collection Module)", async () => {
     const nft = await bundleModule.get("0");
     expect(typeof nft.underlyingType).to.be.equal("number");
   });
+
+  it("ownedByAddress should work as expected", async () => {
+    await bundleModule.createAndMint({
+      metadata: {
+        name: "Test1",
+      },
+      supply: 5,
+    });
+    const nfts = await bundleModule.getOwned(adminWallet.address);
+    expect(nfts).to.be.an("array").length(1);
+    assert.isTrue(nfts[0].ownedByAddress.eq(5));
+  });
 });
