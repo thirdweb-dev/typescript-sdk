@@ -102,7 +102,28 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 //   const sdk = new ThirdwebSDK("1");
 
 //   const dropModule = sdk.getDropModule("0x0");
+//   // metadata
 //   const metadata = await dropModule.metadata.get();
+//   const updated = await dropModule.metadata.update({
+//     name: "foo",
+//     seller_fee_basis_points: 1,
+//   });
+//   const transaction = updated.transaction;
+//   const data = await updated.metadata();
+
+//   // roles
 //   const roles = await dropModule.roles.getAllMembers();
 //   const adminAddrs = await dropModule.roles.getRoleMembers("admin");
+
+//   // royalty
+//   const royalty = await dropModule.royalty.getRoyaltyInfo();
+
+//   const updatedRoyalty = await dropModule.royalty.setRoyaltyInfo({
+//     fee_recipient: "0x0",
+//     seller_fee_basis_points: 500,
+//   });
+
+//   const transaction2 = updatedRoyalty.transaction;
+//   // metadata key doesn't really make sense here? hm.
+//   const data2 = await updatedRoyalty.metadata();
 // })();

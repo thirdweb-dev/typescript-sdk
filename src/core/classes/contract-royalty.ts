@@ -3,6 +3,7 @@ import { CommonRoyaltySchema } from "../../schema/modules/common";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { z } from "zod";
+import { TransactionResultPromise } from "../types";
 
 export class ContractRoyalty<
   TContract extends IThirdwebRoyalty,
@@ -30,7 +31,7 @@ export class ContractRoyalty<
 
   public async setRoyaltyInfo(
     royaltyData: z.input<typeof CommonRoyaltySchema>,
-  ) {
+  ): TransactionResultPromise<z.output<typeof CommonRoyaltySchema>> {
     // read the metadata from the contract
     const oldMetadata = await this.metadata.get();
 
@@ -64,7 +65,7 @@ export class ContractRoyalty<
       transaction: await this.contractWrapper.sendTransaction("multicall", [
         encoded,
       ]),
-      royaltyInfo: () => this.getRoyaltyInfo(),
+      metadata: () => this.getRoyaltyInfo(),
     };
   }
 }

@@ -1,6 +1,6 @@
 import { IThirdwebModule } from "@3rdweb/contracts";
-import { BaseContract } from "@ethersproject/contracts";
 import { z } from "zod";
+import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { IpfsStorage } from "./ipfs-storage";
 
@@ -11,7 +11,7 @@ export interface IGenericSchemaType {
 }
 
 export class ContractMetadata<
-  TContract extends BaseContract,
+  TContract extends IThirdwebModule,
   TSchema extends IGenericSchemaType,
 > {
   private contractWrapper;
@@ -27,15 +27,6 @@ export class ContractMetadata<
     this.schema = schema;
     this.storage = storage;
   }
-
-  private verifyThirdwebContract(
-    contract: BaseContract,
-  ): asserts contract is IThirdwebModule {
-    if (!("contractURI" in contract)) {
-      throw new Error("Contract is not a valid ThirdwebModule");
-    }
-  }
-
   /**
    * @internal
    */
@@ -54,7 +45,6 @@ export class ContractMetadata<
    * @returns the metadata of the given module
    */
   public async get() {
-    this.verifyThirdwebContract(this.contractWrapper.readContract);
     const uri = await this.contractWrapper.readContract.contractURI();
     const data = await this.storage.get(uri);
 
@@ -65,18 +55,19 @@ export class ContractMetadata<
    * @param metadata - the metadata to set
    * @returns
    */
-  public async set(metadata: z.infer<TSchema["input"]>) {
+  public async set(metadata: z.input<TSchema["input"]>) {
     const uri = await this._parseAndUploadMetadata(metadata);
-    return {
-      transaction: await this.contractWrapper.sendTransaction(
-        "setContractUri",
-        [uri],
-      ),
-      metadata: () => this.get(),
-    };
+
+    const transaction = await this.contractWrapper.sendTransaction(
+      "setContractUri",
+      [uri],
+    );
+    return { transaction, metadata: this.get } as TransactionResult<
+      z.output<TSchema["output"]>
+    >;
   }
 
-  public async update(metadata: Partial<z.infer<TSchema["input"]>>) {
+  public async update(metadata: Partial<z.input<TSchema["input"]>>) {
     return await this.set({
       ...(await this.get()),
       ...metadata,
@@ -89,7 +80,7 @@ export class ContractMetadata<
    * @param metadata - the metadata to set
    * @returns
    */
-  public async _parseAndUploadMetadata(metadata: z.infer<TSchema["input"]>) {
+  public async _parseAndUploadMetadata(metadata: z.input<TSchema["input"]>) {
     const parsedMetadata = this.parseInputMetadata(metadata);
     return this.storage.uploadMetadata(parsedMetadata);
   }

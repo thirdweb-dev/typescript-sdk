@@ -1,8 +1,13 @@
 import { Signer } from "@ethersproject/abstract-signer";
 import { CallOverrides } from "@ethersproject/contracts";
-import { Networkish, Provider } from "@ethersproject/providers";
+import {
+  Networkish,
+  Provider,
+  TransactionReceipt,
+} from "@ethersproject/providers";
 import { BigNumber, BytesLike } from "ethers";
-import { C } from "ts-toolbelt";
+import { A, C } from "ts-toolbelt";
+import { If } from "ts-toolbelt/out/Any/If";
 import type { MODULES_MAP } from "../modules";
 
 export type ModuleType = keyof typeof MODULES_MAP;
@@ -26,6 +31,19 @@ export type BufferOrStringWithName = {
   data: Buffer | string;
   name?: string;
 };
+
+type TransactionResultWithMetadata<T = unknown> = {
+  transaction: TransactionReceipt;
+  metadata: () => Promise<T>;
+};
+
+export type TransactionResult<T = never> = If<
+  A.Is<T, never, "equals">,
+  Omit<TransactionResultWithMetadata, "metadata">,
+  TransactionResultWithMetadata<T>
+>;
+
+export type TransactionResultPromise<T = never> = Promise<TransactionResult<T>>;
 
 /**
  * Forward Request Message that's used for gasless transaction

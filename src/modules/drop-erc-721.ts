@@ -1,4 +1,3 @@
-import { Role } from "../common/role";
 import { DropERC721, DropERC721__factory } from "@3rdweb/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
@@ -15,16 +14,14 @@ import { ContractRoyalty } from "../core/classes/contract-royalty";
 export class DropErc721Module {
   static moduleType = "NFTDrop" as const;
   static schema = {
-    deploy: DropErc721ModuleInput,
+    deploy: DropErc721ModuleDeploy,
     output: DropErc721ModuleOutput,
-    input: DropErc721ModuleDeploy,
+    input: DropErc721ModuleInput,
   } as const;
 
-  public static moduleRoles = [
-    "admin",
-    "minter",
-    "transfer",
-  ] as readonly Role[];
+  // this is a type of readoyly Role[], technically, doing it this way makes it work nicely for types
+  // **but** we probably want to enforce in an interface somewhere that `static moduleRoles` is a type of Role[]
+  public static moduleRoles = ["admin", "minter", "transfer"] as const;
 
   private contractWrapper;
   public metadata;

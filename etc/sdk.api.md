@@ -4,9 +4,9 @@
 
 ```ts
 
+import { A } from 'ts-toolbelt';
 import { AccessControlEnumerable } from '@3rdweb/contracts';
-import { BaseContract } from '@ethersproject/contracts';
-import { BaseContract as BaseContract_2 } from 'ethers';
+import { BaseContract } from 'ethers';
 import { BytesLike } from 'ethers';
 import { CallOverrides } from 'ethers';
 import { ContractInterface } from 'ethers';
@@ -15,6 +15,8 @@ import * as ethers from 'ethers';
 import { ethers as ethers_2 } from 'ethers';
 import * as _ethersproject_abstract_provider from '@ethersproject/abstract-provider';
 import { EventEmitter2 } from 'eventemitter2';
+import { If } from 'ts-toolbelt/out/Any/If';
+import { IThirdwebModule } from '@3rdweb/contracts';
 import { IThirdwebRoyalty } from '@3rdweb/contracts';
 import { Log } from '@ethersproject/providers';
 import { Networkish } from '@ethersproject/providers';
@@ -22,6 +24,8 @@ import { Provider } from '@ethersproject/providers';
 import { Signer } from '@ethersproject/abstract-signer';
 import { Signer as Signer_2 } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/providers';
+import * as ts_toolbelt_out_Any_Equals from 'ts-toolbelt/out/Any/Equals';
+import * as ts_toolbelt_out_Any_If from 'ts-toolbelt/out/Any/If';
 import { z } from 'zod';
 import * as zod from 'zod';
 

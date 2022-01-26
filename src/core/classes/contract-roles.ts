@@ -8,7 +8,7 @@ export class ContractRoles<
   TRole extends Role,
 > {
   private contractWrapper;
-  private roles;
+  private readonly roles;
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,
