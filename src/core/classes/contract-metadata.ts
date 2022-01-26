@@ -5,7 +5,7 @@ import { ThirdwebModuleOrBaseContract } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { IpfsStorage } from "./ipfs-storage";
 
-interface IGenericSchemaType {
+export interface IGenericSchemaType {
   deploy: z.AnyZodObject;
   input: z.AnyZodObject;
   output: z.AnyZodObject;
@@ -37,11 +37,17 @@ export class ContractMetadata<
     }
   }
 
-  private parseOutputMetadata(metadata: any): z.infer<TSchema["output"]> {
-    return this.schema.output.passthrough().parse(metadata);
+  /**
+   * @internal
+   */
+  public parseOutputMetadata(metadata: any): z.output<TSchema["output"]> {
+    return this.schema.output.parse(metadata);
   }
 
-  private parseInputMetadata(metadata: any): z.infer<TSchema["input"]> {
+  /**
+   * @internal
+   */
+  public parseInputMetadata(metadata: any): z.input<TSchema["input"]> {
     return this.schema.input.parse(metadata);
   }
   /**
@@ -49,8 +55,8 @@ export class ContractMetadata<
    * @returns the metadata of the given module
    */
   public async get() {
-    this.verifyThirdwebContract(this.contractWrapper.readOnlyContract);
-    const uri = await this.contractWrapper.readOnlyContract.contractURI();
+    this.verifyThirdwebContract(this.contractWrapper.readContract);
+    const uri = await this.contractWrapper.readContract.contractURI();
     const data = await this.storage.get(uri);
 
     return this.parseOutputMetadata(JSON.parse(data));

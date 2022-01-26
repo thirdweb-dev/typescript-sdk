@@ -4,12 +4,14 @@ import { Networkish, Provider } from "@ethersproject/providers";
 import type { ContractWrapper } from "./classes/contract-wrapper";
 import { IThirdwebModule } from "@3rdweb/contracts";
 import { BigNumber, BytesLike } from "ethers";
-import type { MODULES_MAP } from "./sdk";
 import { C } from "ts-toolbelt";
+import type { MODULES_MAP } from "../modules";
 
 export type ModuleType = keyof typeof MODULES_MAP;
 
-export type ValidModuleClass = C.Instance<ValueOf<typeof MODULES_MAP>>;
+export type ValidModuleClass = ValueOf<typeof MODULES_MAP>;
+
+export type ValidModuleInstance = C.Instance<ValidModuleClass>;
 
 export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<
   typeof MODULES_MAP[TModuleType]

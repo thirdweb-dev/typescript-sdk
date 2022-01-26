@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import { z } from "zod";
 
 if (!global.File) {
@@ -11,10 +12,29 @@ export const FileBufferOrStringSchema = z.union([
   z.string(),
 ]);
 
-export const BasisPointsSchema = z
-  .number()
-  .min(0, "basis points cannot be less than 0")
-  .max(10000, "basis points cannot be greater than 10000");
+const BigNumberSchema = z.instanceof(BigNumber);
+
+const BigNumberishSchema = z
+  .union([z.string(), z.number(), z.bigint(), BigNumberSchema])
+  .transform((arg) => BigNumber.from(arg));
+
+export const BasisPointsSchema = BigNumberishSchema.superRefine((bn, ctx) => {
+  if (bn.gt(10000)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.too_big,
+      maximum: 10000,
+      inclusive: true,
+      type: "number",
+    });
+  } else if (bn.lt(0)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.too_small,
+      minimum: 0,
+      inclusive: true,
+      type: "number",
+    });
+  }
+});
 
 type Literal = boolean | null | number | string;
 type Json = Literal | { [key: string]: Json } | Json[];

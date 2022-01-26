@@ -5,26 +5,19 @@ import type {
   ModuleForModuleType,
   ModuleType,
   NetworkOrSignerOrProvider,
-  ValidModuleClass,
+  ValidModuleInstance,
 } from "./types";
 import { ModuleFactory } from "./classes/factory";
 import { Registry } from "./classes/registry";
 import { getModuleTypeForAddress } from "./helpers/module-type";
-import { DropErc721Module } from "../modules/drop-erc-721";
-
-/**
- * @internal
- */
-export const MODULES_MAP = {
-  [DropErc721Module.moduleType]: DropErc721Module,
-} as const;
+import { MODULES_MAP } from "../modules";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * @internal
    * the cache of modules that we have already seen
    */
-  private moduleCache = new Map<string, ValidModuleClass>();
+  private moduleCache = new Map<string, ValidModuleInstance>();
 
   private registry: Registry;
   private factory: ModuleFactory;

@@ -43,8 +43,8 @@ import { signERC2612Permit } from "eth-permit";
 export class ContractWrapper<
   TContract extends ThirdwebModuleOrBaseContract,
 > extends RPCConnectionHandler {
-  public contract: TContract;
-  public readOnlyContract: TContract;
+  private writeContract;
+  public readContract;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -54,17 +54,17 @@ export class ContractWrapper<
   ) {
     super(network, options);
     // set up the contract
-    this.contract = new Contract(
+    this.writeContract = new Contract(
       contractAddress,
       contractAbi,
       this.getSigner() || this.getProvider(),
     ) as TContract;
     // setup the read only contract
-    this.readOnlyContract = this.options.readOnlyRpcUrl
-      ? (this.contract.connect(
+    this.readContract = this.options.readOnlyRpcUrl
+      ? (this.writeContract.connect(
           ethers.getDefaultProvider(this.options.readOnlyRpcUrl),
         ) as TContract)
-      : this.contract;
+      : this.writeContract;
   }
 
   public override updateSignerOrProvider(
@@ -73,15 +73,15 @@ export class ContractWrapper<
     // update the underlyiyng base class
     super.updateSignerOrProvider(network);
     // re-connect the contract with the new signer / provider
-    this.contract = this.contract.connect(
+    this.writeContract = this.writeContract.connect(
       this.getSigner() || this.getProvider(),
     ) as TContract;
     // setup the read only contract
-    this.readOnlyContract = this.options.readOnlyRpcUrl
-      ? (this.contract.connect(
+    this.readContract = this.options.readOnlyRpcUrl
+      ? (this.writeContract.connect(
           ethers.getDefaultProvider(this.options.readOnlyRpcUrl),
         ) as TContract)
-      : this.contract;
+      : this.writeContract;
   }
 
   /**
@@ -145,7 +145,12 @@ export class ContractWrapper<
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<TransactionReceipt> {
-    return this.sendContractTransaction(this.contract, fn, args, callOverrides);
+    return this.sendContractTransaction(
+      this.writeContract,
+      fn,
+      args,
+      callOverrides,
+    );
   }
 
   /**
@@ -224,7 +229,7 @@ export class ContractWrapper<
 
     const chainId = await this.getChainID();
     const from = await this.getSignerAddress();
-    const to = this.contract.address;
+    const to = this.writeContract.address;
     const value = callOverrides?.value || 0;
 
     if (BigNumber.from(value).gt(0)) {
@@ -301,7 +306,7 @@ export class ContractWrapper<
     if (!logs) {
       return null;
     }
-    const contract = this.contract;
+    const contract = this.writeContract;
     for (const log of logs) {
       try {
         const event = contract.interface.decodeEventLog(
@@ -319,7 +324,7 @@ export class ContractWrapper<
   public parseLogs<T = any>(
     eventName: string,
     logs?: Log[],
-    contract: TContract = this.contract,
+    contract: TContract = this.writeContract,
   ): T[] {
     if (!logs || logs.length === 0) {
       return [];

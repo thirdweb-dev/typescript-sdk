@@ -5,8 +5,8 @@ import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 
 export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
-  private contractWrapper: ContractWrapper<TContract>;
-  private roles: readonly TRole[];
+  private contractWrapper;
+  private roles;
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,
@@ -48,12 +48,12 @@ export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
    *
    * @public
    */
-  public async getRoleMembers(role: TRole): Promise<string[]> {
+  public async getRoleMembers(role: TRole) {
     invariant(
       this.roles.includes(role),
       `this module does not support the "${role}" role`,
     );
-    const contract = this.readOnlyAccessControl();
+    const contract = this.readContract();
     const roleHash = getRoleHash(role);
     const count = (await contract.getRoleMemberCount(roleHash)).toNumber();
     return await Promise.all(
@@ -84,7 +84,7 @@ export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
      * */
   public async setAllRoleMembers(rolesWithAddresses: {
     [key in TRole]?: string[];
-  }): Promise<any> {
+  }) {
     const roles = Object.keys(rolesWithAddresses) as TRole[];
     invariant(roles.length, "you must provide at least one role to set");
     invariant(
@@ -108,10 +108,10 @@ export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
         if (toAdd.length) {
           toAdd.forEach((address) => {
             encoded.push(
-              this.writeAccessControl().interface.encodeFunctionData(
-                "grantRole",
-                [getRoleHash(role), address],
-              ),
+              this.readContract().interface.encodeFunctionData("grantRole", [
+                getRoleHash(role),
+                address,
+              ]),
             );
           });
         }
@@ -121,7 +121,7 @@ export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
               address,
             )) as any;
             encoded.push(
-              this.writeAccessControl().interface.encodeFunctionData(
+              this.readContract().interface.encodeFunctionData(
                 revokeFunctionName,
                 [getRoleHash(role), address],
               ),
@@ -129,10 +129,10 @@ export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
           });
         }
       });
-    return await this.contractWrapper.sendTransaction("multicall", [encoded]);
+    return this.contractWrapper.sendTransaction("multicall", [encoded]);
   }
 
-  private async getRevokeRoleFunctionName(address: string): Promise<string> {
+  private async getRevokeRoleFunctionName(address: string) {
     const signerAddress = await this.contractWrapper.getSignerAddress();
     if (signerAddress.toLowerCase() === address.toLowerCase()) {
       return "renounceRole";
@@ -142,12 +142,8 @@ export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
 
   // FIXME hacky type bypass bacause of conflicting `contractName` between actual module contract and AccessControlEnumerable contract
   // Should be able to turn off `contractName` generation from the ts contract wrapper generator
-  private readOnlyAccessControl(): AccessControlEnumerable {
+  private readContract() {
     return this.contractWrapper
-      .readOnlyContract as unknown as AccessControlEnumerable;
-  }
-
-  private writeAccessControl(): AccessControlEnumerable {
-    return this.contractWrapper.contract as unknown as AccessControlEnumerable;
+      .readContract as unknown as AccessControlEnumerable;
   }
 }

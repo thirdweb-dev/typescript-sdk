@@ -4,7 +4,7 @@ import { FORWARDER_ADDRESS } from "../../constants/addresses";
 import {
   BasisPointsSchema,
   FileBufferOrStringSchema,
-  JsonLiteral,
+  JsonSchema,
 } from "../shared";
 
 export const CommonModuleSchema = z.object({
@@ -16,7 +16,7 @@ export const CommonModuleSchema = z.object({
 
 export const CommonModuleOutputSchema = CommonModuleSchema.extend({
   image: z.string().optional(),
-}).catchall(JsonLiteral);
+}).catchall(JsonSchema);
 
 export const CommonRoyaltySchema = z.object({
   /**
@@ -29,27 +29,27 @@ export const CommonRoyaltySchema = z.object({
    *
    *  @internalremarks used by OpenSea "seller_fee_basis_points"
    */
-  seller_fee_basis_points: BasisPointsSchema.default(0).optional(),
+  seller_fee_basis_points: BasisPointsSchema.default(0),
 
   /**
    * The address of the royalty recipient. All royalties will be sent
    * to this address.
    * @internalremarks used by OpenSea "fee_recipient"
    */
-  fee_recipient: z.string().default(AddressZero).optional(),
+  fee_recipient: z.string().default(AddressZero),
 });
 
 export const CommonPlatformFeeSchema = z.object({
   /**
    * platform fee basis points
    */
-  platform_fee_basis_points: BasisPointsSchema.default(0).optional(),
+  platform_fee_basis_points: BasisPointsSchema.default(0),
   /**
    * platform fee recipient address
    */
-  platform_fee_recipient: z.string().default(AddressZero).optional(),
+  platform_fee_recipient: z.string().default(AddressZero),
 });
 
 export const CommonTrustedForwarderSchema = z.object({
-  trusted_forwarder: z.string().default(FORWARDER_ADDRESS).optional(),
+  trusted_forwarder: z.string().default(FORWARDER_ADDRESS),
 });
