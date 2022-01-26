@@ -4,7 +4,7 @@ import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { z } from "zod";
 
-export class ContractRoyalties<
+export class ContractRoyalty<
   TContract extends IThirdwebRoyalty,
   TSchema extends IGenericSchemaType,
 > {

@@ -10,7 +10,7 @@ import {
   DropErc721ModuleDeploy,
 } from "../schema/modules/drop-erc721";
 import { SDKOptionsOutput } from "../schema/sdk-options";
-import { ContractRoyalties } from "../core/classes/contract-royalties";
+import { ContractRoyalty } from "../core/classes/contract-royalty";
 
 export class DropErc721Module {
   static moduleType = "NFTDrop" as const;
@@ -29,7 +29,7 @@ export class DropErc721Module {
   private contractWrapper;
   public metadata;
   public roles;
-  public royalties;
+  public royalty;
 
   public updateSignerOrProvider;
 
@@ -56,7 +56,7 @@ export class DropErc721Module {
       this.contractWrapper,
       DropErc721Module.moduleRoles,
     );
-    this.royalties = new ContractRoyalties(this.contractWrapper, this.metadata);
+    this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
   }
 
   public async getDrop() {
