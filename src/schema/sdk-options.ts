@@ -1,33 +1,30 @@
 import { FORWARDER_ADDRESS } from "../constants/addresses";
 import { DEFAULT_IPFS_GATEWAY } from "../constants/urls";
 import { z } from "zod";
+import { IpfsStorage } from "../core/classes/ipfs-storage";
 
 export const SDKOptionsSchema = z.object({
-  ipfsGateway: z.string().url().default(DEFAULT_IPFS_GATEWAY).optional(),
+  storage: z
+    .instanceof(IpfsStorage)
+    .default(new IpfsStorage(DEFAULT_IPFS_GATEWAY)),
   readOnlyRpcUrl: z.string().url().optional(),
   gasSettings: z
     .object({
       maxPriceInGwei: z
         .number()
         .min(1, "gas price cannot be less than 1")
-        .default(300)
-        .optional(),
+        .default(300),
       speed: z
         .enum(["safeLow", "standard", "fast", "fastest"])
-        .default("fastest")
-        .optional(),
+        .default("fastest"),
     })
-    .default({ maxPriceInGwei: 300, speed: "fastest" })
-    .optional(),
+    .default({ maxPriceInGwei: 300, speed: "fastest" }),
   gasless: z
     .union([
       z.object({
         openzeppelin: z.object({
           relayerUrl: z.string().url(),
-          relayerForwarderAddress: z
-            .string()
-            .default(FORWARDER_ADDRESS)
-            .optional(),
+          relayerForwarderAddress: z.string().default(FORWARDER_ADDRESS),
         }),
       }),
       z.object({
@@ -37,12 +34,12 @@ export const SDKOptionsSchema = z.object({
           deadlineSeconds: z
             .number()
             .min(1, "deadlineSeconds cannot be les than 1")
-            .default(3600)
-            .optional(),
+            .default(3600),
         }),
       }),
     ])
     .optional(),
 });
 
-export type SDKOptions = z.infer<typeof SDKOptionsSchema>;
+export type SDKOptions = z.input<typeof SDKOptionsSchema>;
+export type SDKOptionsOutput = z.output<typeof SDKOptionsSchema>;

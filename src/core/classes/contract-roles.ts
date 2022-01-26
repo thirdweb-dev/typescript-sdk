@@ -1,13 +1,10 @@
-import { getRoleHash, RoleName, SetAllRoles } from "../../common/role";
+import { getRoleHash, Role } from "../../common/role";
 import { AccessControlEnumerable } from "@3rdweb/contracts";
 import { BaseContract } from "@ethersproject/contracts";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 
-export class ContractRoles<
-  TContract extends BaseContract,
-  TRole extends RoleName,
-> {
+export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
   private contractWrapper: ContractWrapper<TContract>;
   private roles: readonly TRole[];
 
@@ -85,9 +82,9 @@ export class ContractRoles<
      * @public
      *
      * */
-  public async setAllRoleMembers(
-    rolesWithAddresses: SetAllRoles<TRole>,
-  ): Promise<any> {
+  public async setAllRoleMembers(rolesWithAddresses: {
+    [key in TRole]?: string[];
+  }): Promise<any> {
     const roles = Object.keys(rolesWithAddresses) as TRole[];
     invariant(roles.length, "you must provide at least one role to set");
     invariant(

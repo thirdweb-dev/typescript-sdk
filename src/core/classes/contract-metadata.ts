@@ -3,6 +3,7 @@ import { BaseContract } from "@ethersproject/contracts";
 import { z } from "zod";
 import { ThirdwebModuleOrBaseContract } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { IpfsStorage } from "./ipfs-storage";
 
 interface IGenericSchemaType {
   deploy: z.AnyZodObject;
@@ -14,12 +15,18 @@ export class ContractMetadata<
   TContract extends BaseContract,
   TSchema extends IGenericSchemaType,
 > {
-  private contractWrapper: ContractWrapper<TContract>;
-  private schema: TSchema;
+  private contractWrapper;
+  private schema;
+  private storage;
 
-  constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema) {
+  constructor(
+    contractWrapper: ContractWrapper<TContract>,
+    schema: TSchema,
+    storage: IpfsStorage,
+  ) {
     this.contractWrapper = contractWrapper;
     this.schema = schema;
+    this.storage = storage;
   }
 
   private verifyThirdwebContract(
@@ -44,9 +51,9 @@ export class ContractMetadata<
   public async get() {
     this.verifyThirdwebContract(this.contractWrapper.readOnlyContract);
     const uri = await this.contractWrapper.readOnlyContract.contractURI();
-    const data = await this.contractWrapper.storage.get(uri);
+    const data = await this.storage.get(uri);
 
-    return await this.parseOutputMetadata(JSON.parse(data));
+    return this.parseOutputMetadata(JSON.parse(data));
   }
 
   /**
@@ -56,7 +63,7 @@ export class ContractMetadata<
    */
   public async set(metadata: z.infer<TSchema["input"]>) {
     const parsedMetadata = this.parseInputMetadata(metadata);
-    const uri = this.contractWrapper.storage.uploadMetadata(parsedMetadata);
+    const uri = this.storage.uploadMetadata(parsedMetadata);
 
     const transaction = await this.contractWrapper.sendTransaction(
       "setContractURI",

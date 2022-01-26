@@ -1,56 +1,23 @@
 import { Signer } from "@ethersproject/abstract-signer";
 import { BaseContract, CallOverrides } from "@ethersproject/contracts";
 import { Networkish, Provider } from "@ethersproject/providers";
-import type {
-  MODULES_MAP,
-  MODULE_TYPE_TO_SCHEMA_MAP,
-  MODULE_TYPE_TO_CONTRACT_MAP,
-} from "../constants/mappings";
 import type { ContractWrapper } from "./classes/contract-wrapper";
-import { C } from "ts-toolbelt";
 import { IThirdwebModule } from "@3rdweb/contracts";
 import { BigNumber, BytesLike } from "ethers";
-import { z } from "zod";
-import {
-  CommonModuleOutputSchema,
-  CommonModuleSchema,
-} from "../schema/modules/common";
+import type { MODULES_MAP } from "./sdk";
+import { C } from "ts-toolbelt";
 
-export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
-
-export type ModuleType = keyof typeof MODULES_MAP | string;
+export type ModuleType = keyof typeof MODULES_MAP;
 
 export type ValidModuleClass = C.Instance<ValueOf<typeof MODULES_MAP>>;
 
+export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<
+  typeof MODULES_MAP[TModuleType]
+>;
+
+export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
+
 export type ThirdwebModuleOrBaseContract = IThirdwebModule | BaseContract;
-
-export type ModuleForModuleType<TModuleType extends ModuleType> =
-  TModuleType extends keyof typeof MODULES_MAP
-    ? C.Instance<typeof MODULES_MAP[TModuleType]>
-    : never;
-
-export type ContractForModuleType<TModuleType extends ModuleType> =
-  TModuleType extends keyof MODULE_TYPE_TO_CONTRACT_MAP
-    ? MODULE_TYPE_TO_CONTRACT_MAP[TModuleType]
-    : ThirdwebModuleOrBaseContract;
-
-export type InputModuleMetadataForModuleType<
-  TModuleType extends ModuleType = ModuleType,
-> = TModuleType extends keyof typeof MODULE_TYPE_TO_SCHEMA_MAP
-  ? z.infer<typeof MODULE_TYPE_TO_SCHEMA_MAP[TModuleType]["input"]>
-  : z.infer<typeof CommonModuleSchema>;
-
-export type OutputModuleMetadataForModuleType<
-  TModuleType extends ModuleType = ModuleType,
-> = TModuleType extends keyof typeof MODULE_TYPE_TO_SCHEMA_MAP
-  ? z.infer<typeof MODULE_TYPE_TO_SCHEMA_MAP[TModuleType]["output"]>
-  : z.infer<typeof CommonModuleOutputSchema>;
-
-export type DeployModuleMetadataForModuleType<
-  TModuleType extends ModuleType = ModuleType,
-> = TModuleType extends keyof typeof MODULE_TYPE_TO_SCHEMA_MAP
-  ? z.infer<typeof MODULE_TYPE_TO_SCHEMA_MAP[TModuleType]["deploy"]>
-  : z.infer<typeof CommonModuleSchema>;
 
 export type ValueOf<T> = T[keyof T];
 

@@ -1,14 +1,18 @@
 import { Provider } from "@ethersproject/providers";
 import { ethers, Signer } from "ethers";
 import { EventEmitter2 } from "eventemitter2";
-import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
+import {
+  SDKOptions,
+  SDKOptionsOutput,
+  SDKOptionsSchema,
+} from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
 
 export class RPCConnectionHandler extends EventEmitter2 {
   private network: NetworkOrSignerOrProvider;
   private provider: Provider;
   private signer: Signer | undefined = undefined;
-  protected readonly options: SDKOptions;
+  protected readonly options: SDKOptionsOutput;
 
   constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions) {
     super();

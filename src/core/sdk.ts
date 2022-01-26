@@ -8,10 +8,13 @@ import type {
   ValidModuleClass,
 } from "./types";
 import { ModuleFactory } from "./classes/factory";
-import { MODULES_MAP } from "../constants/mappings";
 import { Registry } from "./classes/registry";
 import { getModuleTypeForAddress } from "./helpers/module-type";
 import { DropErc721Module } from "../modules/drop-erc-721";
+
+export const MODULES_MAP = {
+  [DropErc721Module.moduleType]: DropErc721Module,
+} as const;
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
@@ -29,9 +32,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     );
     this.factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
     for (const [, module] of this.moduleCache) {
-      module.contractWrapper.updateSignerOrProvider(
-        this.getSigner() || this.getProvider(),
-      );
+      module.updateSignerOrProvider(this.getSigner() || this.getProvider());
     }
   }
 

@@ -19,7 +19,7 @@
   "sideEffects": false,
   "scripts": {
     "dev": "tsdx watch",
-    "build:lib": "tsup --env.NODE_ENV production --minify --format esm,cjs,iife",
+    "build:lib": "tsup --env.NODE_ENV production --minify --dts --format esm,cjs,iife",
     "format": "prettier src/ --write",
     "prepublishOnly": "yarn lint",
     "lint": "eslint src/",
