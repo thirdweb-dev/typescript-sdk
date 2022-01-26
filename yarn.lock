@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@3rdweb/contracts@^2.0.1-5":
-  version "2.0.1-5"
-  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-2.0.1-5.tgz#1cffa20b22ed4f4436e7b5f14c390177874d13d6"
-  integrity sha512-tXXSABH5aPidYgdbCt8LZKWqy2f7tnVH5vEZAPq1eDFnM+QqgnhQp8gzkRd1XQf5qnRBMUHb1yLhkFmtRNLerA==
+"@3rdweb/contracts@^2.0.1-7":
+  version "2.0.1-7"
+  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-2.0.1-7.tgz#2061169574ae9d1074b53d7aa29b4dd4d451c2a9"
+  integrity sha512-Zbynm4D9yJZJf7sOxyzLCmMwJHZ7YvDVgfZROwlwbX4gYYjJhFD0omK9BGrHfBaLgyi0LrWqaCeWCbnIzPZ2yw==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
@@ -1394,9 +1394,9 @@ buffer@^6.0.3:
     ieee754 "^1.2.1"
 
 bundle-require@^2.1.8:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/bundle-require/-/bundle-require-2.2.0.tgz#19abbe83771db4ac0bd569d7e116b39c34522dea"
-  integrity sha512-JDVxYEAxEX1g8AWtadiIkCkFf42RulEl5AOIvUa4cpuEL/VKpK2lJwogyswHnp+qizNQxM0Ylamw7CjPRaJZuA==
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/bundle-require/-/bundle-require-2.3.0.tgz#2d4d4968dd29d2de4b9ac1db98be495c73f5b2b8"
+  integrity sha512-kH8vyERJv0Td4Odu2KQyooYyeXDx2FbhGwSfkEGdyHmkTCahvwVI8w/pE2stbsp6G/W5/3kIC7ErdBg/30OAkw==
 
 bytes@3.1.1:
   version "3.1.1"
@@ -3404,12 +3404,11 @@ log-symbols@4.1.0:
     is-unicode-supported "^0.1.0"
 
 loupe@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/loupe/-/loupe-2.3.0.tgz#cfae54d12853592e0ec455af490fd6867e26875e"
-  integrity sha512-b6TVXtF01VErh8IxN/MfdiWLQmttrenN98PPGS01kym8kGycJ9tqBXD6D+4sNEDhgE83+H0Mk1cVSl0mD1nNSg==
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/loupe/-/loupe-2.3.1.tgz#a2e1192c9f452e4e85089766da10ac8288383947"
+  integrity sha512-EN1D3jyVmaX4tnajVlfbREU4axL647hLec1h/PXAb8CPDMJiYitcWF2UeLVNttRqaIqQs4x+mRvXf+d+TlDrCA==
   dependencies:
     get-func-name "^2.0.0"
-    type-detect "^4.0.8"
 
 lru-cache@^5.1.1:
   version "5.1.1"
@@ -4683,7 +4682,7 @@ type-check@^0.4.0, type-check@~0.4.0:
   dependencies:
     prelude-ls "^1.2.1"
 
-type-detect@^4.0.0, type-detect@^4.0.5, type-detect@^4.0.8:
+type-detect@^4.0.0, type-detect@^4.0.5:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
   integrity sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==
