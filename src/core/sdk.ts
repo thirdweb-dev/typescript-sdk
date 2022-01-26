@@ -11,6 +11,7 @@ import { ModuleFactory } from "./classes/factory";
 import { MODULES_MAP } from "../constants/mappings";
 import { Registry } from "./classes/registry";
 import { getModuleTypeForAddress } from "./helpers/module-type";
+import { DropErc721Module } from "../modules/drop-erc-721";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
@@ -107,17 +108,17 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 // (async () => {
 //   const sdk = new ThirdwebSDK("1", { ipfsGateway: "" });
 
+//   const dropModule = await sdk.getDropModule("0x0");
+//   const metadata = await dropModule.metadata.get();
+//   const roles = await dropModule.roles.getAllMembers();
+//   const adminAddrs = await dropModule.roles.getRoleMembers("admin");
+
 //   // no module type whatsoever, aka we will not know what this is
 //   // at runtime we will try to get the moudle type & instantiate that module but we cannot get types
 //   const module = await sdk.getModule(
 //     "0x1234567890123456789012345678901234567890",
 //   );
 //   // => typeof module = Module
-
-//   if(module instanceof DropErc721Module){
-//     // => typeof module = DropErc721Module
-
-//   }
 
 //   // module type is known, and we're passing it as a parameter
 //   // we skip the runtime check and just intantiate it straight away

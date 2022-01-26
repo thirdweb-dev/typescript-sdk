@@ -1,5 +1,7 @@
+import { RoleName, RolesMap } from "../common/role";
 import { DropERC721, DropERC721__factory } from "@3rdweb/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { NetworkOrSignerOrProvider } from "../core/types";
 import {
@@ -17,12 +19,15 @@ export class DropErc721Module {
     input: DropErc721ModuleDeploy,
   } as const;
 
-  public contractWrapper: ContractWrapper<DropERC721>;
+  private static moduleRoles = [
+    RolesMap.admin,
+    RolesMap.minter,
+    RolesMap.transfer,
+  ] as RoleName[];
 
-  public metadata: ContractMetadata<
-    DropERC721,
-    typeof DropErc721Module["schema"]
-  >;
+  private contractWrapper;
+  public metadata;
+  public roles;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -35,15 +40,14 @@ export class DropErc721Module {
       address,
       DropERC721__factory.abi,
     );
-
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc721Module.schema,
     );
-
-    // this.roles = new Roles(this.contractWrapper, [""]);
-    // this.contractWrapper.contract.getRol
-
+    this.roles = new ContractRoles(
+      this.contractWrapper,
+      DropErc721Module.moduleRoles,
+    );
     // this.royalties = new Royalties(this.contract);
   }
 
