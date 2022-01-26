@@ -3,7 +3,6 @@ import { BaseContract, CallOverrides } from "@ethersproject/contracts";
 import { Networkish, Provider } from "@ethersproject/providers";
 import type {
   MODULES_MAP,
-  Module,
   MODULE_TYPE_TO_SCHEMA_MAP,
   MODULE_TYPE_TO_CONTRACT_MAP,
 } from "../constants/mappings";
@@ -21,14 +20,14 @@ export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 
 export type ModuleType = keyof typeof MODULES_MAP | string;
 
-export type ValidModuleClass = C.Instance<ValueOf<typeof MODULES_MAP>> | Module;
+export type ValidModuleClass = C.Instance<ValueOf<typeof MODULES_MAP>>;
 
 export type ThirdwebModuleOrBaseContract = IThirdwebModule | BaseContract;
 
 export type ModuleForModuleType<TModuleType extends ModuleType> =
   TModuleType extends keyof typeof MODULES_MAP
     ? C.Instance<typeof MODULES_MAP[TModuleType]>
-    : Module;
+    : never;
 
 export type ContractForModuleType<TModuleType extends ModuleType> =
   TModuleType extends keyof MODULE_TYPE_TO_CONTRACT_MAP

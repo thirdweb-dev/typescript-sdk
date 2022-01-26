@@ -3,14 +3,12 @@ import { ethers, Signer } from "ethers";
 import { EventEmitter2 } from "eventemitter2";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
-import { IpfsStorage } from "./ipfs-storage";
 
-export class BaseClass extends EventEmitter2 {
+export class RPCConnectionHandler extends EventEmitter2 {
   private network: NetworkOrSignerOrProvider;
   private provider: Provider;
   private signer: Signer | undefined = undefined;
   protected readonly options: SDKOptions;
-  public readonly storage: IpfsStorage;
 
   constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions) {
     super();
@@ -51,7 +49,6 @@ export class BaseClass extends EventEmitter2 {
       );
       this.options = SDKOptionsSchema.parse({});
     }
-    this.storage = new IpfsStorage(this.options.ipfsGateway);
   }
   /**
    * The function to call whenever the the network changes, such as when the users connects their wallet, disconnects their wallet, the connected chain changes, etc.

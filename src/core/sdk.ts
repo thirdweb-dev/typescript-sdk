@@ -1,5 +1,5 @@
 import { Networkish } from "@ethersproject/providers";
-import { BaseClass } from "./classes/base";
+import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import { SDKOptions } from "../schema/sdk-options";
 import type {
   ModuleForModuleType,
@@ -11,8 +11,9 @@ import { ModuleFactory } from "./classes/factory";
 import { MODULES_MAP } from "../constants/mappings";
 import { Registry } from "./classes/registry";
 import { getModuleTypeForAddress } from "./helpers/module-type";
+import { DropErc721Module } from "../modules/drop-erc-721";
 
-export class ThirdwebSDK extends BaseClass {
+export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * @internal
    * the cache of modules that we have already seen
@@ -28,7 +29,9 @@ export class ThirdwebSDK extends BaseClass {
     );
     this.factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
     for (const [, module] of this.moduleCache) {
-      module.updateSignerOrProvider(this.getSigner() || this.getProvider());
+      module.contractWrapper.updateSignerOrProvider(
+        this.getSigner() || this.getProvider(),
+      );
     }
   }
 
@@ -50,7 +53,7 @@ export class ThirdwebSDK extends BaseClass {
    * @param moduleType - optional, the type of module to instantiate
    * @returns a promise that resolves with the module instance
    */
-  private async getModule<TModuleType extends ModuleType = ModuleType>(
+  public async getModule<TModuleType extends ModuleType = ModuleType>(
     address: string,
     moduleType?: TModuleType,
   ): Promise<ModuleForModuleType<TModuleType>> {
@@ -94,24 +97,9 @@ export class ThirdwebSDK extends BaseClass {
     this.moduleCache.set(address, newModule);
     return newModule;
   }
-
-  public async getModules<TModuleType extends ModuleType = ModuleType>(
-    walletAddress: string,
-    moduleTypesFilter?: TModuleType[],
-  ): Promise<ModuleForModuleType<TModuleType>[]> {
-    const addresses = await this.registry.getModuleAddresses(walletAddress);
-    const modules = await Promise.all(
-      addresses.map(
-        async (address) => await this.getModule<TModuleType>(address),
-      ),
-    );
-    return modules.filter((module) =>
-      moduleTypesFilter && moduleTypesFilter.length
-        ? moduleTypesFilter.includes(module.moduleType as TModuleType)
-        : true,
-    );
-  }
 }
+
+// sdk.updateSignerOrProvider(signer);
 
 // new ThirdwebSDK("0", { storage: new IpfsStorage() });
 
@@ -120,17 +108,17 @@ export class ThirdwebSDK extends BaseClass {
 // (async () => {
 //   const sdk = new ThirdwebSDK("1", { ipfsGateway: "" });
 
+//   const dropModule = await sdk.getDropModule("0x0");
+//   const metadata = await dropModule.metadata.get();
+//   const roles = await dropModule.roles.getAllMembers();
+//   const adminAddrs = await dropModule.roles.getRoleMembers("admin");
+
 //   // no module type whatsoever, aka we will not know what this is
 //   // at runtime we will try to get the moudle type & instantiate that module but we cannot get types
 //   const module = await sdk.getModule(
 //     "0x1234567890123456789012345678901234567890",
 //   );
 //   // => typeof module = Module
-
-//   if(module instanceof DropErc721Module){
-//     // => typeof module = DropErc721Module
-
-//   }
 
 //   // module type is known, and we're passing it as a parameter
 //   // we skip the runtime check and just intantiate it straight away
