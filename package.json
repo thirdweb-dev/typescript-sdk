@@ -94,11 +94,7 @@
     "zod": "^3.11.6"
   },
   "resolutions": {
-    "typescript": "^4.4.3",
-    "ansi-regex": "^5.0.1",
-    "set-value": "^4.0.1",
-    "node-notifier": "^8.0.1",
-    "validator": "^13.7.0 "
+    "nanoid": "^3.1.31"
   },
   "bugs": {
     "url": "https://github.com/nftlabs/nftlabs-sdk-ts/issues"
