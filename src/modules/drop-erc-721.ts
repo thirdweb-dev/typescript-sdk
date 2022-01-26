@@ -56,11 +56,7 @@ export class DropErc721Module {
       this.contractWrapper,
       DropErc721Module.moduleRoles,
     );
-    this.royalties = new ContractRoyalties(
-      this.contractWrapper,
-      this.metadata,
-      options.storage,
-    );
+    this.royalties = new ContractRoyalties(this.contractWrapper, this.metadata);
   }
 
   public async getDrop() {

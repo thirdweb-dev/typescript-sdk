@@ -10,3 +10,10 @@
 |  --- | --- |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
 
+## Type Aliases
+
+|  Type Alias | Description |
+|  --- | --- |
+|  [ModuleType](./sdk.moduletype.md) |  |
+|  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+

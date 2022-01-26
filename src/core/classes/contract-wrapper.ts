@@ -15,7 +15,6 @@ import {
   GaslessTransaction,
   NetworkOrSignerOrProvider,
   PermitRequestMessage,
-  ThirdwebModuleOrBaseContract,
 } from "../types";
 import { getGasPriceForChain } from "../../common/gas-price";
 import { EventType } from "../../constants/events";
@@ -41,7 +40,7 @@ import {
 import { signERC2612Permit } from "eth-permit";
 
 export class ContractWrapper<
-  TContract extends ThirdwebModuleOrBaseContract,
+  TContract extends BaseContract,
 > extends RPCConnectionHandler {
   private writeContract;
   public readContract;
@@ -145,23 +144,6 @@ export class ContractWrapper<
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<TransactionReceipt> {
-    return this.sendContractTransaction(
-      this.writeContract,
-      fn,
-      args,
-      callOverrides,
-    );
-  }
-
-  /**
-   * @internal
-   */
-  public async sendContractTransaction(
-    contract: TContract,
-    fn: string,
-    args: any[],
-    callOverrides?: CallOverrides,
-  ): Promise<TransactionReceipt> {
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
@@ -172,19 +154,13 @@ export class ContractWrapper<
         "biconomy" in this.options.gasless)
     ) {
       const provider = this.getProvider();
-      const txHash = await this.sendGaslessTransaction(
-        contract,
-        fn,
-        args,
-        callOverrides,
-      );
+      const txHash = await this.sendGaslessTransaction(fn, args, callOverrides);
       this.emitTransactionEvent("submitted", txHash);
       const receipt = await provider.waitForTransaction(txHash);
       this.emitTransactionEvent("completed", txHash);
       return receipt;
     } else {
       const tx = await this.sendTransactionByFunction(
-        contract,
         fn as keyof TContract["functions"],
         args,
         callOverrides,
@@ -200,12 +176,13 @@ export class ContractWrapper<
    * @internal
    */
   private async sendTransactionByFunction(
-    contract: TContract,
     fn: keyof TContract["functions"],
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<ContractTransaction> {
-    const func: ethers.ContractFunction = (contract.functions as any)[fn];
+    const func: ethers.ContractFunction = (this.writeContract.functions as any)[
+      fn
+    ];
     if (!func) {
       throw new Error("invalid function");
     }
@@ -216,7 +193,6 @@ export class ContractWrapper<
    * @internal
    */
   private async sendGaslessTransaction(
-    contract: TContract,
     fn: string,
     args: any[] = [],
     callOverrides: CallOverrides,
@@ -238,9 +214,14 @@ export class ContractWrapper<
       );
     }
 
-    const data = contract.interface.encodeFunctionData(fn as any, args as any);
+    const data = this.writeContract.interface.encodeFunctionData(
+      fn as any,
+      args as any,
+    );
 
-    const gasEstimate = await (contract.estimateGas as any)[fn](...args);
+    const gasEstimate = await (this.writeContract.estimateGas as any)[fn](
+      ...args,
+    );
     let gas = gasEstimate.mul(2);
 
     // in some cases WalletConnect doesn't properly gives an estimate for how much gas it would actually use.
@@ -261,7 +242,7 @@ export class ContractWrapper<
       callOverrides,
     };
 
-    const txHash = await this.defaultGaslessSendFunction(contract, tx);
+    const txHash = await this.defaultGaslessSendFunction(tx);
     return txHash;
   }
 
@@ -306,10 +287,10 @@ export class ContractWrapper<
     if (!logs) {
       return null;
     }
-    const contract = this.writeContract;
+
     for (const log of logs) {
       try {
-        const event = contract.interface.decodeEventLog(
+        const event = this.writeContract.interface.decodeEventLog(
           eventName,
           log.data,
           log.topics,
@@ -321,33 +302,27 @@ export class ContractWrapper<
     return null;
   }
 
-  public parseLogs<T = any>(
-    eventName: string,
-    logs?: Log[],
-    contract: TContract = this.writeContract,
-  ): T[] {
+  public parseLogs<T = any>(eventName: string, logs?: Log[]): T[] {
     if (!logs || logs.length === 0) {
       return [];
     }
-    const topic = contract.interface.getEventTopic(eventName);
+    const topic = this.writeContract.interface.getEventTopic(eventName);
     const parsedLogs = logs.filter((x) => x.topics.indexOf(topic) >= 0);
     return parsedLogs.map(
-      (l) => contract.interface.parseLog(l) as unknown as T,
+      (l) => this.writeContract.interface.parseLog(l) as unknown as T,
     );
   }
 
   private async defaultGaslessSendFunction(
-    contract: BaseContract,
     transaction: GaslessTransaction,
   ): Promise<string> {
     if (this.options.gasless && "biconomy" in this.options.gasless) {
-      return this.biconomySendFunction(contract, transaction);
+      return this.biconomySendFunction(transaction);
     }
-    return this.defenderSendFunction(contract, transaction);
+    return this.defenderSendFunction(transaction);
   }
 
   private async biconomySendFunction(
-    _contract: BaseContract,
     transaction: GaslessTransaction,
   ): Promise<string> {
     invariant(
@@ -447,7 +422,6 @@ export class ContractWrapper<
   }
 
   private async defenderSendFunction(
-    contract: BaseContract,
     transaction: GaslessTransaction,
   ): Promise<string> {
     invariant(
@@ -492,8 +466,8 @@ export class ContractWrapper<
     if (
       transaction.functionName === "approve" &&
       transaction.functionArgs.length === 2 &&
-      contract.interface.functions["approve(address,uint256)"] &&
-      contract.interface.functions[
+      this.writeContract.interface.functions["approve(address,uint256)"] &&
+      this.writeContract.interface.functions[
         "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"
       ]
     ) {
@@ -501,12 +475,12 @@ export class ContractWrapper<
       const amount = transaction.functionArgs[1];
       const permit = await signERC2612Permit(
         signer,
-        contract.address,
+        this.writeContract.address,
         transaction.from,
         spender,
         amount,
       );
-      message = { to: contract.address, ...permit };
+      message = { to: this.writeContract.address, ...permit };
       signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
     } else {
       // wallet connect special 🦋

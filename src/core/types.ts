@@ -1,8 +1,6 @@
 import { Signer } from "@ethersproject/abstract-signer";
-import { BaseContract, CallOverrides } from "@ethersproject/contracts";
+import { CallOverrides } from "@ethersproject/contracts";
 import { Networkish, Provider } from "@ethersproject/providers";
-import type { ContractWrapper } from "./classes/contract-wrapper";
-import { IThirdwebModule } from "@3rdweb/contracts";
 import { BigNumber, BytesLike } from "ethers";
 import { C } from "ts-toolbelt";
 import type { MODULES_MAP } from "../modules";
@@ -18,9 +16,6 @@ export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<
 >;
 
 export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
-
-export type ThirdwebModuleOrBaseContract = IThirdwebModule | BaseContract;
-
 export type ValueOf<T> = T[keyof T];
 
 export type SignerOrProvider = Signer | Provider;
@@ -31,11 +26,6 @@ export type BufferOrStringWithName = {
   data: Buffer | string;
   name?: string;
 };
-
-export interface IModule<TContract extends ThirdwebModuleOrBaseContract> {
-  contract: ContractWrapper<TContract>;
-  updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
-}
 
 /**
  * Forward Request Message that's used for gasless transaction

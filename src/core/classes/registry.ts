@@ -10,6 +10,6 @@ export class Registry extends ContractWrapper<TWRegistry> {
   }
 
   public async getModuleAddresses(walletAddress: string) {
-    return this.readOnlyContract.getAllModules(walletAddress);
+    return this.readContract.getAllModules(walletAddress);
   }
 }

@@ -4,16 +4,18 @@
 
 ```ts
 
+import { AccessControlEnumerable } from '@3rdweb/contracts';
 import { BaseContract } from '@ethersproject/contracts';
+import { BaseContract as BaseContract_2 } from 'ethers';
 import { BytesLike } from 'ethers';
-import { C } from 'ts-toolbelt';
 import { CallOverrides } from 'ethers';
 import { ContractInterface } from 'ethers';
 import { DropERC721 } from '@3rdweb/contracts';
-import { ethers } from 'ethers';
+import * as ethers from 'ethers';
+import { ethers as ethers_2 } from 'ethers';
 import * as _ethersproject_abstract_provider from '@ethersproject/abstract-provider';
 import { EventEmitter2 } from 'eventemitter2';
-import { IThirdwebModule } from '@3rdweb/contracts';
+import { IThirdwebRoyalty } from '@3rdweb/contracts';
 import { Log } from '@ethersproject/providers';
 import { Networkish } from '@ethersproject/providers';
 import { Provider } from '@ethersproject/providers';
@@ -23,18 +25,28 @@ import { TransactionReceipt } from '@ethersproject/providers';
 import { z } from 'zod';
 import * as zod from 'zod';
 
+// Warning: (ae-forgotten-export) The symbol "MODULES_MAP" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type ModuleType = keyof typeof MODULES_MAP;
+
+// @public (undocumented)
+export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
+
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export class ThirdwebSDK extends RPCConnectionHandler {
-    // Warning: (ae-forgotten-export) The symbol "NetworkOrSignerOrProvider" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
     constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions);
-    // Warning: (ae-forgotten-export) The symbol "ModuleType" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "ModuleForModuleType" needs to be exported by the entry point index.d.ts
+    // (undocumented)
+    getDropModule(moduleAddress: string): DropErc721Module;
+    // Warning: (ae-forgotten-export) The symbol "DropErc721Module" needs to be exported by the entry point index.d.ts
     //
     // @internal (undocumented)
-    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType?: TModuleType): Promise<ModuleForModuleType<TModuleType>>;
+    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module;
+    // (undocumented)
+    resolveModuleType<TModuleType extends ModuleType>(moduleAddress: string): Promise<TModuleType>;
     // (undocumented)
     updateSignerOrProvider(network: Networkish): void;
 }

@@ -1,7 +1,6 @@
 import { IThirdwebModule } from "@3rdweb/contracts";
 import { BaseContract } from "@ethersproject/contracts";
 import { z } from "zod";
-import { ThirdwebModuleOrBaseContract } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { IpfsStorage } from "./ipfs-storage";
 
@@ -30,7 +29,7 @@ export class ContractMetadata<
   }
 
   private verifyThirdwebContract(
-    contract: ThirdwebModuleOrBaseContract,
+    contract: BaseContract,
   ): asserts contract is IThirdwebModule {
     if (!("contractURI" in contract)) {
       throw new Error("Contract is not a valid ThirdwebModule");
@@ -61,22 +60,18 @@ export class ContractMetadata<
 
     return this.parseOutputMetadata(JSON.parse(data));
   }
-
   /**
    *
    * @param metadata - the metadata to set
    * @returns
    */
   public async set(metadata: z.infer<TSchema["input"]>) {
-    const parsedMetadata = this.parseInputMetadata(metadata);
-    const uri = this.storage.uploadMetadata(parsedMetadata);
-
-    const transaction = await this.contractWrapper.sendTransaction(
-      "setContractURI",
-      [uri],
-    );
+    const uri = await this._parseAndUploadMetadata(metadata);
     return {
-      transaction,
+      transaction: await this.contractWrapper.sendTransaction(
+        "setContractUri",
+        [uri],
+      ),
       metadata: () => this.get(),
     };
   }
@@ -86,5 +81,16 @@ export class ContractMetadata<
       ...(await this.get()),
       ...metadata,
     });
+  }
+
+  /**
+   *
+   * @internal
+   * @param metadata - the metadata to set
+   * @returns
+   */
+  public async _parseAndUploadMetadata(metadata: z.infer<TSchema["input"]>) {
+    const parsedMetadata = this.parseInputMetadata(metadata);
+    return this.storage.uploadMetadata(parsedMetadata);
   }
 }

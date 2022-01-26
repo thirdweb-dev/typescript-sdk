@@ -21,5 +21,7 @@ declare class ThirdwebSDK extends RPCConnectionHandler
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [getDropModule(moduleAddress)](./sdk.thirdwebsdk.getdropmodule.md) |  |  |
+|  [resolveModuleType(moduleAddress)](./sdk.thirdwebsdk.resolvemoduletype.md) |  |  |
 |  [updateSignerOrProvider(network)](./sdk.thirdwebsdk.updatesignerorprovider.md) |  |  |
 

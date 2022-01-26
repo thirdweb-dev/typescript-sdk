@@ -1,10 +1,12 @@
 import { getRoleHash, Role } from "../../common/role";
 import { AccessControlEnumerable } from "@3rdweb/contracts";
-import { BaseContract } from "@ethersproject/contracts";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 
-export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
+export class ContractRoles<
+  TContract extends AccessControlEnumerable,
+  TRole extends Role,
+> {
   private contractWrapper;
   private roles;
 
@@ -53,12 +55,14 @@ export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
       this.roles.includes(role),
       `this module does not support the "${role}" role`,
     );
-    const contract = this.readContract();
+
     const roleHash = getRoleHash(role);
-    const count = (await contract.getRoleMemberCount(roleHash)).toNumber();
+    const count = (
+      await this.contractWrapper.readContract.getRoleMemberCount(roleHash)
+    ).toNumber();
     return await Promise.all(
       Array.from(Array(count).keys()).map((i) =>
-        contract.getRoleMember(roleHash, i),
+        this.contractWrapper.readContract.getRoleMember(roleHash, i),
       ),
     );
   }
@@ -108,10 +112,10 @@ export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
         if (toAdd.length) {
           toAdd.forEach((address) => {
             encoded.push(
-              this.readContract().interface.encodeFunctionData("grantRole", [
-                getRoleHash(role),
-                address,
-              ]),
+              this.contractWrapper.readContract.interface.encodeFunctionData(
+                "grantRole",
+                [getRoleHash(role), address],
+              ),
             );
           });
         }
@@ -121,7 +125,7 @@ export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
               address,
             )) as any;
             encoded.push(
-              this.readContract().interface.encodeFunctionData(
+              this.contractWrapper.readContract.interface.encodeFunctionData(
                 revokeFunctionName,
                 [getRoleHash(role), address],
               ),
@@ -138,12 +142,5 @@ export class ContractRoles<TContract extends BaseContract, TRole extends Role> {
       return "renounceRole";
     }
     return "revokeRole";
-  }
-
-  // FIXME hacky type bypass bacause of conflicting `contractName` between actual module contract and AccessControlEnumerable contract
-  // Should be able to turn off `contractName` generation from the ts contract wrapper generator
-  private readContract() {
-    return this.contractWrapper
-      .readContract as unknown as AccessControlEnumerable;
   }
 }

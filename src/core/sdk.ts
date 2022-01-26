@@ -9,8 +9,9 @@ import type {
 } from "./types";
 import { ModuleFactory } from "./classes/factory";
 import { Registry } from "./classes/registry";
-import { getModuleTypeForAddress } from "./helpers/module-type";
-import { MODULES_MAP } from "../modules";
+import { DropErc721Module, MODULES_MAP } from "../modules";
+import { IThirdwebModule__factory } from "@3rdweb/contracts";
+import { ethers } from "ethers";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
@@ -45,93 +46,63 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   /**
    *
+   * @param moduleAddress - the address of the module to attempt to resolve the module type for
+   * @returns the {@link ModuleType} for the given module address
+   * @throws if the module type cannot be determined (is not a valid thirdweb module)
+   */
+  public async resolveModuleType<TModuleType extends ModuleType>(
+    moduleAddress: string,
+  ) {
+    const contract = IThirdwebModule__factory.connect(
+      moduleAddress,
+      this.options.readOnlyRpcUrl
+        ? ethers.getDefaultProvider(this.options.readOnlyRpcUrl)
+        : this.getProvider(),
+    );
+    return (await contract.moduleType()) as TModuleType;
+  }
+
+  /**
+   *
    * @internal
    * @param address - the address of the module to instantiate
    * @param moduleType - optional, the type of module to instantiate
    * @returns a promise that resolves with the module instance
    */
-  public async getModule<TModuleType extends ModuleType = ModuleType>(
+  public getModule<TModuleType extends ModuleType = ModuleType>(
     address: string,
-    moduleType?: TModuleType,
-  ): Promise<ModuleForModuleType<TModuleType>> {
+    moduleType: TModuleType,
+  ) {
     // if we have a module in the cache we will return it
     // we will do this **without** checking any module type things for simplicity, this may have to change in the future?
     if (this.moduleCache.has(address)) {
       return this.moduleCache.get(address) as ModuleForModuleType<TModuleType>;
     }
-
-    // if we don't have the module type try to get it...
-    if (!moduleType) {
-      try {
-        moduleType = await getModuleTypeForAddress<TModuleType>(
-          address,
-          this.getSigner() || this.getProvider(),
-        );
-      } catch (err) {
-        // this can happen so we will only log a debug log for it
-        console.debug(
-          `Could not determine module type for address ${address}`,
-          err,
-        );
-      }
-    }
-
-    let newModule: ModuleForModuleType<TModuleType>;
+    const newModule = new MODULES_MAP[
+      // we have to do this as here because typescript is not smart enough to figure out
+      // that the type is a key of the map (checked by the if statement above)
+      moduleType as keyof typeof MODULES_MAP
+    ](this.getNetwork(), this.options, address);
     // if we have a module type && the module type is part of the map
-    if (moduleType && moduleType in MODULES_MAP) {
-      newModule = new MODULES_MAP[
-        // we have to do this as here because typescript is not smart enough to figure out
-        // that the type is a key of the map (checked by the if statement above)
-        moduleType as keyof typeof MODULES_MAP
-      ](
-        this.getNetwork(),
-        this.options,
-        address,
-      ) as ModuleForModuleType<TModuleType>;
-    } else {
-      throw new Error("not a valid thirdweb module");
-    }
+
     this.moduleCache.set(address, newModule);
+
+    // return the new module
     return newModule;
   }
+
+  public getDropModule(moduleAddress: string) {
+    return this.getModule(moduleAddress, DropErc721Module.moduleType);
+  }
 }
-
-// sdk.updateSignerOrProvider(signer);
-
-// new ThirdwebSDK("0", { storage: new IpfsStorage() });
 
 // BELOW ARE TYPESCRIPT SANITY CHECKS
 
 // (async () => {
-//   const sdk = new ThirdwebSDK("1", { ipfsGateway: "" });
+//   const sdk = new ThirdwebSDK("1");
 
-//   const dropModule = await sdk.getDropModule("0x0");
+//   const dropModule = sdk.getDropModule("0x0");
 //   const metadata = await dropModule.metadata.get();
 //   const roles = await dropModule.roles.getAllMembers();
 //   const adminAddrs = await dropModule.roles.getRoleMembers("admin");
-
-//   // no module type whatsoever, aka we will not know what this is
-//   // at runtime we will try to get the moudle type & instantiate that module but we cannot get types
-//   const module = await sdk.getModule(
-//     "0x1234567890123456789012345678901234567890",
-//   );
-//   // => typeof module = Module
-
-//   // module type is known, and we're passing it as a parameter
-//   // we skip the runtime check and just intantiate it straight away
-//   const nftModule = await sdk.getModule(
-//     "0x1234567890123456789012345678901234567890",
-//     "DropERC721",
-//   );
-
-//   // nftModule.();
-//   // => typeof nftModule = NFTModule (inferred)
-
-//   // but also works with the module type just as a type
-//   // (this means we tell TS that it is a NFTModule, meaning we get the types
-//   // but we will still check at runtime, so if it doesn't match then, we will throw)
-//   const alsoNFTModule = await sdk.getModule<"DropERC721">(
-//     "0x1234567890123456789012345678901234567890",
-//   );
-//   // => typeof alsoNFTModule = NFTModule (explicit)
 // })();
