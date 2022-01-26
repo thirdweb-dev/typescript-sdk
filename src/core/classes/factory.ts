@@ -13,7 +13,7 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
     moduleType: TModuleType,
     moduleMetadata: any,
   ) {
-    const contractURI = await this.storage.uploadMetadata(
+    const contractURI = await this.options.storage.uploadMetadata(
       moduleMetadata,
       this.contract.address,
       await this.getSigner()?.getAddress(),

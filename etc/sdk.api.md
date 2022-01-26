@@ -23,7 +23,9 @@ import { TransactionReceipt } from '@ethersproject/providers';
 import { z } from 'zod';
 import * as zod from 'zod';
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "MODULES_MAP" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const MODULES_MAP: {
     readonly NFTDrop: typeof DropErc721Module;
 };
@@ -46,7 +48,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:579:5 - (ae-forgotten-export) The symbol "DropErc721Module" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:582:5 - (ae-forgotten-export) The symbol "DropErc721Module" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -10,9 +10,3 @@
 |  --- | --- |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
 
-## Variables
-
-|  Variable | Description |
-|  --- | --- |
-|  [MODULES\_MAP](./sdk.modules_map.md) |  |
-
