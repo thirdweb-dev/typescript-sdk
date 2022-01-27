@@ -92,7 +92,6 @@ export class MockStorage implements IStorage {
 
   resolveFullUrl(hash: string): string {
     if (typeof hash !== "string") {
-      console.warn(`ipfsHash is not a string: ${hash}`);
       return hash;
     }
     return hash.replace("mock://", "fake://");
