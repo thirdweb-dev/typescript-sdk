@@ -9,7 +9,7 @@ Constructs a new instance of the `ThirdwebSDK` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions);
+constructor(network: NetworkOrSignerOrProvider, options: SDKOptions);
 ```
 
 ## Parameters

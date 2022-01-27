@@ -33,7 +33,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     }
   }
 
-  constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions) {
+  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
     super(network, options);
     this.registry = new Registry(network);
     this.factory = new ModuleFactory(network);
@@ -82,7 +82,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       // we have to do this as here because typescript is not smart enough to figure out
       // that the type is a key of the map (checked by the if statement above)
       moduleType as keyof typeof MODULES_MAP
-    ](this.getNetwork(), this.options, address);
+    ](this.getNetwork(), address, this.options);
     // if we have a module type && the module type is part of the map
 
     this.moduleCache.set(address, newModule);

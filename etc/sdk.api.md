@@ -42,7 +42,7 @@ export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 // @public (undocumented)
 export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
-    constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions);
+    constructor(network: NetworkOrSignerOrProvider, options: SDKOptions);
     // (undocumented)
     getDropModule(moduleAddress: string): DropErc721Module;
     // Warning: (ae-forgotten-export) The symbol "DropErc721Module" needs to be exported by the entry point index.d.ts

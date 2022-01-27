@@ -1,11 +1,11 @@
 import { AddressZero } from "@ethersproject/constants";
 import { z } from "zod";
-import { FORWARDER_ADDRESS } from "../../constants/addresses";
+import { FORWARDER_ADDRESS } from "../../../constants/addresses";
 import {
   BasisPointsSchema,
   FileBufferOrStringSchema,
   JsonSchema,
-} from "../shared";
+} from "../../shared";
 
 export const CommonModuleSchema = z.object({
   name: z.string(),
@@ -16,7 +16,7 @@ export const CommonModuleSchema = z.object({
 
 export const CommonModuleOutputSchema = CommonModuleSchema.extend({
   image: z.string().optional(),
-}).catchall(JsonSchema);
+}).catchall(z.lazy(() => JsonSchema));
 
 export const CommonRoyaltySchema = z.object({
   /**
