@@ -2,6 +2,8 @@ import {
   DropERC721,
   DropERC721__factory,
   IDropERC721,
+  IERC20,
+  IERC20__factory,
 } from "@3rdweb/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
@@ -22,10 +24,13 @@ import {
   DropErc721TokenInput,
   DropErc721TokenOutput,
 } from "../schema/tokens/drop-erc721";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
 import { AddressZero } from "@ethersproject/constants";
 import { ClaimCondition } from "../types";
 import { z } from "zod";
+import { hexZeroPad } from "@ethersproject/bytes";
+import { SnapshotSchema } from "../schema/modules/common";
+import { isNativeToken } from "../common/currency";
 
 type NFTMetadataInput = z.input<typeof DropErc721TokenInput>;
 type NFTMetadata = z.output<typeof DropErc721TokenOutput>;
@@ -427,6 +432,72 @@ export class DropErc721Module {
   }
 
   /**
+   * Claim NFTs to a specific Wallet
+   *
+   * @remarks Let the a specified wallet claim NFTs.
+   *
+   * @example
+   * ```javascript
+   * const address = "{{wallet_address}}"; // Address of the wallet you want to claim the NFTs
+   * const quantity = 1; // Quantity of the tokens you want to claim
+   *
+   * await module.claimTo(address, quantity);
+   * ```
+   *
+   * @param destinationAddress - Address you want to send the token to
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
+  public async claimTo(
+    destinationAddress: string,
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+    const claimData = await this.prepareClaim(quantity, proofs);
+    const receipt = await this.contractWrapper.sendTransaction(
+      "claim",
+      [destinationAddress, quantity, claimData.proofs],
+      claimData.overrides,
+    );
+    const event = this.contractWrapper.parseEventLogs(
+      "ClaimedTokens",
+      receipt?.logs,
+    );
+    const startingIndex: BigNumber = event.startTokenId;
+    const endingIndex = startingIndex.add(quantity);
+    const results = [];
+    for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
+      results.push({
+        id,
+        receipt,
+        data: () => this.get(id),
+      });
+    }
+    return results;
+  }
+
+  /**
+   * Claim NFTs to your connected wallet.
+   *
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param proofs - Array of proofs
+   *
+   * @returns - Receipt for the transaction
+   */
+  public async claim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+    return this.claimTo(
+      await this.contractWrapper.getSignerAddress(),
+      quantity,
+      proofs,
+    );
+  }
+
+  /**
    * Transfer NFT
    *
    * @remarks Transfer an NFT from the connected wallet to another wallet.
@@ -508,6 +579,71 @@ export class DropErc721Module {
       currencyContract: pm.currency,
       currencyMetadata: cv,
       merkleRoot: pm.merkleRoot,
+    };
+  }
+
+  /**
+   * Returns proofs and the overrides required for the transaction.
+   *
+   * @returns - `overrides` and `proofs` as an object.
+   */
+  private async prepareClaim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  ): Promise<{
+    overrides: CallOverrides;
+    proofs: BytesLike[];
+  }> {
+    const mintCondition = await this.getActiveClaimCondition();
+    const metadata = await this.metadata.get();
+    const addressToClaim = await this.contractWrapper.getSignerAddress();
+
+    if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
+      const snapshot = await this.options.storage.get(
+        metadata?.merkle[mintCondition.merkleRoot.toString()],
+      );
+      const snapshotData = SnapshotSchema.parse(snapshot);
+      const item = snapshotData.claims.find(
+        (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
+      );
+      if (item === undefined) {
+        throw new Error("No claim found for this address");
+      }
+      proofs = item.proof;
+    }
+
+    const overrides = (await this.contractWrapper.getCallOverrides()) || {};
+    if (mintCondition.pricePerToken.gt(0)) {
+      if (isNativeToken(mintCondition.currency)) {
+        overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
+          quantity,
+        );
+      } else {
+        const signer = this.contractWrapper.getSigner();
+        const provider = this.contractWrapper.getProvider();
+        const erc20 = new ContractWrapper<IERC20>(
+          signer || provider,
+          mintCondition.currency,
+          IERC20__factory.abi,
+          this.options,
+        );
+        const owner = await this.contractWrapper.getSignerAddress();
+        const spender = this.contractWrapper.readContract.address;
+        const allowance = await erc20.readContract.allowance(owner, spender);
+        const totalPrice = BigNumber.from(mintCondition.pricePerToken).mul(
+          BigNumber.from(quantity),
+        );
+        if (allowance.lt(totalPrice)) {
+          await erc20.sendTransaction("approve", [
+            spender,
+            allowance.add(totalPrice),
+          ]);
+        }
+      }
+    }
+    return {
+      overrides,
+      proofs,
     };
   }
 }

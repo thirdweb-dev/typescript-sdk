@@ -53,3 +53,22 @@ export const CommonPlatformFeeSchema = z.object({
 export const CommonTrustedForwarderSchema = z.object({
   trusted_forwarder: z.string().default(FORWARDER_ADDRESS),
 });
+
+export const SnapshotSchema = z.preprocess(
+  (arg) => {
+    if (typeof arg === "string") {
+      return JSON.parse(arg);
+    } else {
+      return {};
+    }
+  },
+  z.object({
+    merkleRoot: z.string(),
+    claims: z.array(
+      z.object({
+        address: z.string(),
+        proof: z.array(z.string()),
+      }),
+    ),
+  }),
+);
