@@ -279,7 +279,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
   /**
    * @internal
    */
-  private async emitTransactionEvent(
+  private emitTransactionEvent(
     status: "submitted" | "completed",
     transactionHash: string,
   ) {
