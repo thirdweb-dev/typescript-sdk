@@ -472,16 +472,11 @@ export class DropErc721Module {
    * PRIVATE FUNCTIONS
    *******************************/
 
-  private async getTokenMetadata(_tokenId: BigNumberish): Promise<NFTMetadata> {
-    // return await getTokenMetadata(
-    //   this.contractWrapper.readContract,
-    //   tokenId,
-    //   this.storage.ipfsGatewayUrl,
-    // );
-    // TODO common token metadata fetch
-    // const tokenUri = await this.contractWrapper.readContract.tokenURI(_tokenId);
-    const data = await Promise.resolve({});
-    return DropErc721TokenOutput.parse(data);
+  private async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
+    const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
+    return DropErc721TokenOutput.parse(
+      await this.options.storage.get(tokenUri),
+    );
   }
 
   private async transformResultToClaimCondition(
