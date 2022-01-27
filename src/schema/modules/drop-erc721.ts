@@ -1,3 +1,4 @@
+import { z } from "zod";
 import {
   CommonModuleOutputSchema,
   CommonModuleSchema,
@@ -9,8 +10,11 @@ import {
 export const DropErc721ModuleInput =
   CommonModuleSchema.merge(CommonRoyaltySchema);
 
-export const DropErc721ModuleOutput =
-  CommonModuleOutputSchema.merge(CommonRoyaltySchema);
+export const DropErc721ModuleOutput = CommonModuleOutputSchema.merge(
+  CommonRoyaltySchema,
+).extend({
+  merkle: z.record(z.string()).default({}),
+});
 
 export const DropErc721ModuleDeploy = DropErc721ModuleInput.merge(
   CommonPlatformFeeSchema,
