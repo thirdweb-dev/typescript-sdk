@@ -1,3 +1,4 @@
+import { z } from "zod";
 import {
   DuplicateFileNameError,
   FetchError,
@@ -8,10 +9,9 @@ import {
   PINATA_IPFS_URL,
   TW_IPFS_SERVER_URL,
 } from "../../constants/urls";
-import { BufferOrStringWithName, FileOrBuffer } from "../types";
-
-// TODO fix this!
-type MetadataURIOrObject = any;
+import { JsonObjectSchema } from "../../schema/shared";
+import { IStorage } from "../interfaces/IStorage";
+import { FileOrBuffer, Json, JsonObject } from "../types";
 
 if (!global.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -31,7 +31,7 @@ interface CidWithFileName {
   fileNames: string[];
 }
 
-export class IpfsStorage {
+export class IpfsStorage implements IStorage {
   private gatewayUrl: string;
 
   constructor(gatewayUrl: string = DEFAULT_IPFS_GATEWAY) {
@@ -43,75 +43,42 @@ export class IpfsStorage {
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<string> {
-    if (typeof data === "string") {
-      // always 0 indexed because there's only 1 file
-      const cid = await this.uploadBatch([data], contractAddress, 0);
-      return `${cid}0`;
-    } else if (data instanceof Buffer) {
-      // always 0 indexed because there's only 1 file
-      const cid = await this.uploadBatch([data], contractAddress, 0);
-      return `${cid}0`;
-    }
-
-    // if it's file type, we're doing legacy upload
-
-    const headers = {
-      "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
-      "X-Public-Address": signerAddress || "",
-    };
-    const formData = new FormData();
-    formData.append("file", data as any);
-    try {
-      const res = await fetch(`${TW_IPFS_SERVER_URL}/upload`, {
-        method: "POST",
-        body: formData as any,
-        headers,
-      });
-      if (res.status !== 200) {
-        throw new Error(
-          `Failed to upload to IPFS [status code = ${res.status}]`,
-        );
-      }
-
-      const body = await res.json();
-      return body.IpfsUri;
-    } catch (e) {
-      throw new UploadError(`Failed to upload to IPFS: ${e}`);
-    }
+    const cid = await this.uploadBatch(
+      [data],
+      0,
+      contractAddress,
+      signerAddress,
+    );
+    return `${cid}0`;
   }
 
   public async uploadBatch(
-    files:
-      | Buffer[]
-      | string[]
-      | FileOrBuffer[]
-      | File[]
-      | BufferOrStringWithName[],
-    contractAddress?: string,
+    files: (string | FileOrBuffer)[],
     fileStartNumber = 0,
+    contractAddress?: string,
+    signerAddress?: string,
   ): Promise<string> {
     const { cid } = await this.uploadBatchWithCid(
       files,
-      contractAddress,
       fileStartNumber,
+      contractAddress,
+      signerAddress,
     );
 
     return `ipfs://${cid}/`;
   }
 
   private async uploadBatchWithCid(
-    files:
-      | Buffer[]
-      | string[]
-      | FileOrBuffer[]
-      | File[]
-      | BufferOrStringWithName[],
-    contractAddress?: string,
+    files: (string | FileOrBuffer)[],
     fileStartNumber = 0,
+    contractAddress?: string,
+    signerAddress?: string,
   ): Promise<CidWithFileName> {
     const token = await this.getUploadToken(contractAddress || "");
     const metadata = {
-      name: `CONSOLE-TS-SDK-${contractAddress}`,
+      sdk: "typescript",
+      contractAddress,
+      signerAddress,
     };
     const data = new FormData();
     const fileNames: string[] = [];
@@ -188,7 +155,7 @@ export class IpfsStorage {
     return body;
   }
 
-  public async get(hash: string): Promise<string> {
+  private async _get(hash: string): Promise<Response> {
     let uri = hash;
     if (hash) {
       uri = this.resolveFullUrl(hash);
@@ -197,32 +164,59 @@ export class IpfsStorage {
     if (!result.ok) {
       throw new Error(`Status code (!= 200) =${result.status}`);
     }
+    return result;
+  }
 
-    return await result.text();
+  public async get(hash: string) {
+    const res = await this._get(hash);
+    return res.text();
+  }
+
+  public async getMetadata(
+    hash: string,
+  ): Promise<z.output<typeof JsonObjectSchema>> {
+    const res = await this._get(hash);
+    const json = JsonObjectSchema.parse(await res.json());
+
+    const allProps = Object.keys(json);
+    for (const key in allProps) {
+      if (typeof json[key] === "object") {
+        const props = JsonObjectSchema.parse(json[key]);
+        const keys = Object.keys(props);
+        for (const _key of keys) {
+          props[_key] = this.resolveFullUrl(props[_key]);
+        }
+      }
+      json[key] = this.resolveFullUrl(json[key]);
+    }
+
+    return JsonObjectSchema.parse(json);
   }
 
   /**
    * This function recurisely traverses an object and hashes any
    * `Buffer` or `File` objects into the returned map.
    *
-   * @param object - The object to recurse over
+   * @param object - the Json Object
    * @param files - The running array of files or buffer to upload
    * @returns - The final map of all hashes to files
    */
   public buildFilePropertiesMap(
-    object: Record<string, any>,
-    files: (File | Buffer)[],
+    object: Json,
+    files: (File | Buffer)[] = [],
   ): (File | Buffer)[] {
-    const keys = Object.keys(object).sort();
-    for (const key in keys) {
-      const val = object[keys[key]];
-      const shouldUpload = val instanceof File || val instanceof Buffer;
-      if (shouldUpload) {
-        files.push(val);
-      }
-
-      if (typeof val === "object") {
-        this.buildFilePropertiesMap(val, files);
+    if (Array.isArray(object)) {
+      object.forEach((element) => {
+        this.buildFilePropertiesMap(element, files);
+      });
+    } else if (object) {
+      const values = Object.values(object);
+      for (const val of values) {
+        if (val instanceof File || val instanceof Buffer) {
+          files.push(val);
+        } else if (typeof val === "object") {
+          this.buildFilePropertiesMap(val, files);
+        }
       }
     }
     return files;
@@ -239,7 +233,7 @@ export class IpfsStorage {
    * @param metadata - The metadata to recursively process
    * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
    */
-  public async batchUploadProperties(metadatas: MetadataURIOrObject[]) {
+  public async batchUploadProperties(metadatas: Json[]) {
     if (typeof metadatas === "string") {
       return metadatas;
     }
@@ -247,11 +241,7 @@ export class IpfsStorage {
     if (filesToUpload.length === 0) {
       return metadatas;
     }
-    const { cid, fileNames } = await this.uploadBatchWithCid(
-      filesToUpload,
-      "",
-      0,
-    );
+    const { cid, fileNames } = await this.uploadBatchWithCid(filesToUpload);
 
     const cids = [];
     // recurse ordered array
@@ -300,12 +290,10 @@ export class IpfsStorage {
     return object;
   }
 
-  public async uploadMetadata<
-    T extends string | { [key: string]: unknown } | unknown,
-  >(
+  public async uploadMetadata<T extends string | JsonObject>(
     metadata: T,
     contractAddress?: string,
-    _signerAddress?: string,
+    signerAddress?: string,
   ): Promise<string> {
     if (typeof metadata === "string") {
       return metadata;
@@ -314,8 +302,9 @@ export class IpfsStorage {
     // since there's only single object, always use the first index
     const { metadataUris } = await this.uploadMetadataBatch(
       [metadata],
-      contractAddress,
       0,
+      contractAddress,
+      signerAddress,
     );
     return metadataUris[0];
   }
@@ -323,12 +312,15 @@ export class IpfsStorage {
   /**
    * @internal
    */
-  public async uploadMetadataBatch<
-    T extends string | { [key: string]: unknown } | unknown,
-  >(metadatas: T[], contractAddress?: string, startFileNumber?: number) {
+  public async uploadMetadataBatch<T extends string | JsonObject>(
+    metadatas: T[],
+    fileStartNumber?: number,
+    contractAddress?: string,
+    signerAddress?: string,
+  ) {
     // we only want to upload if the metadata object is not a string
     const metadataObjects = metadatas.filter((m) => typeof m !== "string");
-    const metadataToUpload: string[] = (
+    const metadataToUpload = (
       await this.batchUploadProperties(metadataObjects)
     ).map((m: any) => JSON.stringify(m));
 
@@ -344,8 +336,9 @@ export class IpfsStorage {
 
     const { cid, fileNames } = await this.uploadBatchWithCid(
       metadataToUpload,
+      fileStartNumber,
       contractAddress,
-      startFileNumber,
+      signerAddress,
     );
 
     const baseUri = `ipfs://${cid}/`;
@@ -371,9 +364,12 @@ export class IpfsStorage {
    * @returns - The fully formed IPFS url with the gateway url
    * @internal
    */
-  resolveFullUrl(ipfsHash: string): string {
-    return ipfsHash && ipfsHash.toLowerCase().includes("ipfs://")
-      ? ipfsHash.replace("ipfs://", this.gatewayUrl)
-      : ipfsHash;
+  resolveFullUrl<T>(ipfsHash: T): T {
+    if (typeof ipfsHash === "string") {
+      return (ipfsHash.toLowerCase().includes("ipfs://")
+        ? ipfsHash.replace("ipfs://", this.gatewayUrl)
+        : ipfsHash) as unknown as T;
+    }
+    return ipfsHash;
   }
 }

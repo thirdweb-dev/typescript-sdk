@@ -17,6 +17,4 @@
 |  --- | --- |
 |  [ModuleType](./sdk.moduletype.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
-|  [SDKOptions](./sdk.sdkoptions.md) |  |
-|  [SDKOptionsOutput](./sdk.sdkoptionsoutput.md) |  |
 

@@ -17,6 +17,15 @@
         "signature": "balanceOf(address: string): Promise<BigNumber>;"
       },
       {
+        "name": "createBatch",
+        "summary": "Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per module at the moment.\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "// The array of NFT metadata you want to create\nconst nftMetadatasToCreate = [{ name: ..., description: ...}, { name: ... }, ...];\n\nconst results = await module.createBatch(nftMetadatasToCreate); // uploads and creates the NFTs on chain\nconst receipt = results[0].receipt; // same transaction receipt for all created NFTs\nconst tokenIds = results.map((result) => result.id); // all the token ids created\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
+        },
+        "signature": "createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;"
+      },
+      {
         "name": "get",
         "summary": "Get a single NFT Metadata\n\n",
         "remarks": null,
@@ -42,6 +51,15 @@
           "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await module.getOwned(address);\nconsole.log(nfts);"
         },
         "signature": "getOwned(_address?: string): Promise<NFTMetadataOwner[]>;"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer NFT\n\n",
+        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\nawait module.transfer(toAddress, tokenId);"
+        },
+        "signature": "transfer(to: string, tokenId: string): TransactionResultPromise;"
       }
     ],
     "signature": "declare class DropErc721Module "

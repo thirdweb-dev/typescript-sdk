@@ -401,8 +401,9 @@ export class DropErc721Module {
       await this.contractWrapper.readContract.nextTokenIdToMint();
     const { baseUri } = await this.options.storage.uploadMetadataBatch(
       metadatas,
-      this.contractWrapper.readContract.address,
       startFileNumber.toNumber(),
+      this.contractWrapper.readContract.address,
+      await this.contractWrapper.getSigner()?.getAddress(),
     );
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
       metadatas.length,
@@ -475,7 +476,7 @@ export class DropErc721Module {
   private async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
     return DropErc721TokenOutput.parse(
-      await this.options.storage.get(tokenUri),
+      await this.options.storage.getMetadata(tokenUri),
     );
   }
 

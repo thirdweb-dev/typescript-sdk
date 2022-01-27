@@ -25,13 +25,16 @@ export type ValueOf<T> = T[keyof T];
 
 export type SignerOrProvider = Signer | Provider;
 
-export type FileOrBuffer = File | Buffer;
-
 export type BufferOrStringWithName = {
   data: Buffer | string;
   name?: string;
 };
 
+export type JsonLiteral = boolean | null | number | string;
+export type Json = JsonLiteral | { [key: string]: Json } | Json[];
+export type JsonObject = { [key: string]: Json };
+
+export type FileOrBuffer = File | Buffer | BufferOrStringWithName;
 type TransactionResultWithMetadata<T = unknown> = {
   receipt: TransactionReceipt;
   data: () => Promise<T>;

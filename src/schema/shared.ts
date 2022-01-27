@@ -1,5 +1,6 @@
 import { BigNumber } from "ethers";
 import { z } from "zod";
+import { Json } from "../core/types";
 
 if (!global.File) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -36,8 +37,6 @@ export const BasisPointsSchema = BigNumberishSchema.superRefine((bn, ctx) => {
   }
 });
 
-type Literal = boolean | null | number | string;
-type Json = Literal | { [key: string]: Json } | Json[];
 export const JsonLiteral = z.union([
   z.string().min(1, "Cannot be empty"),
   z.number(),
@@ -48,7 +47,7 @@ export const JsonLiteral = z.union([
 export const JsonSchema: z.ZodSchema<Json> = z.lazy(() =>
   z.union([JsonLiteral, z.array(JsonSchema), z.record(JsonSchema)]),
 );
-export const JsonObject = z.record(JsonSchema);
+export const JsonObjectSchema = z.record(JsonSchema);
 export const HexColor = z
   .string()
   .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color")
