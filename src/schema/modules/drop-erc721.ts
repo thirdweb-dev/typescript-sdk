@@ -10,7 +10,7 @@ export const DropErc721ModuleInput =
   CommonModuleSchema.merge(CommonRoyaltySchema);
 
 export const DropErc721ModuleOutput =
-  CommonModuleOutputSchema.merge(CommonRoyaltySchema).passthrough();
+  CommonModuleOutputSchema.merge(CommonRoyaltySchema);
 
 export const DropErc721ModuleDeploy = DropErc721ModuleInput.merge(
   CommonPlatformFeeSchema,

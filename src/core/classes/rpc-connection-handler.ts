@@ -14,7 +14,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
   private signer: Signer | undefined = undefined;
   protected readonly options: SDKOptionsOutput;
 
-  constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions) {
+  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions = {}) {
     super();
     this.network = network;
     let provider: Provider | undefined;
@@ -45,7 +45,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
     this.provider = provider;
 
     try {
-      this.options = SDKOptionsSchema.parse(options || {});
+      this.options = SDKOptionsSchema.parse(options);
     } catch (optionParseError) {
       console.error(
         "invalid sdk options object passed, falling back to default options",

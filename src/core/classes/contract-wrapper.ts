@@ -47,9 +47,9 @@ export class ContractWrapper<
 
   constructor(
     network: NetworkOrSignerOrProvider,
-    options: SDKOptions = {},
     contractAddress: string,
     contractAbi: ContractInterface,
+    options: SDKOptions = {},
   ) {
     super(network, options);
     // set up the contract

@@ -49,3 +49,7 @@ export const JsonSchema: z.ZodSchema<Json> = z.lazy(() =>
   z.union([JsonLiteral, z.array(JsonSchema), z.record(JsonSchema)]),
 );
 export const JsonObject = z.record(JsonSchema);
+export const HexColor = z
+  .string()
+  .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color")
+  .transform((val) => val.replace("#", ""));
