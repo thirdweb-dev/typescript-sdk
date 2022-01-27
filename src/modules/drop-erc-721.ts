@@ -6,7 +6,11 @@ import {
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { NetworkOrSignerOrProvider } from "../core/types";
+import {
+  NetworkOrSignerOrProvider,
+  TransactionResultPromise,
+  TransactionResultWithId,
+} from "../core/types";
 import {
   DropErc721ModuleInput,
   DropErc721ModuleOutput,
@@ -23,6 +27,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { ClaimCondition } from "../types";
 import { z } from "zod";
 
+type NFTMetadataInput = z.input<typeof DropErc721TokenInput>;
 type NFTMetadata = z.output<typeof DropErc721TokenOutput>;
 type NFTMetadataOwner = { metadata: NFTMetadata; owner: string };
 
@@ -365,6 +370,105 @@ export class DropErc721Module {
   }
 
   /** ******************************
+   * WRITE FUNCTIONS
+   *******************************/
+
+  /**
+   * Create batch allows you to create a batch of tokens
+   * in one transaction. This function can only be called
+   * once per module at the moment.
+   *
+   * @beta
+   *
+   * @example
+   * ```javascript
+   * // The array of NFT metadata you want to create
+   * const nftMetadatasToCreate = [{ name: ..., description: ...}, { name: ... }, ...];
+   *
+   * const results = await module.createBatch(nftMetadatasToCreate); // uploads and creates the NFTs on chain
+   * const receipt = results[0].receipt; // same transaction receipt for all created NFTs
+   * const tokenIds = results.map((result) => result.id); // all the token ids created
+   * const firstTokenId = results[0].id; // token id of the first created NFT
+   * const firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT
+   * ```
+   *
+   * @param metadatas - The metadata to include in the batch.
+   */
+  public async createBatch(
+    metadatas: NFTMetadataInput[],
+  ): Promise<TransactionResultWithId<NFTMetadata>[]> {
+    const startFileNumber =
+      await this.contractWrapper.readContract.nextTokenIdToMint();
+    const { baseUri } = await this.options.storage.uploadMetadataBatch(
+      metadatas,
+      this.contractWrapper.readContract.address,
+      startFileNumber.toNumber(),
+    );
+    const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
+      metadatas.length,
+      baseUri,
+    ]);
+    // TODO figure out how to type the return types of parseEventLogs
+    const event = this.contractWrapper.parseEventLogs(
+      "LazyMintedTokens",
+      receipt?.logs,
+    );
+    const [startingIndex, endingIndex]: BigNumber[] = event;
+    const results = [];
+    for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
+      results.push({
+        id,
+        receipt,
+        data: () => this.getTokenMetadata(id),
+      });
+    }
+    return results;
+  }
+
+  /**
+   * Transfer NFT
+   *
+   * @remarks Transfer an NFT from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to send the NFT to
+   * const toAddress = "{{wallet_address}}";
+   *
+   * // The token ID of the NFT you want to send
+   * const tokenId = "0";
+   *
+   * await module.transfer(toAddress, tokenId);
+   * ```
+   */
+  public async transfer(to: string, tokenId: string): TransactionResultPromise {
+    const from = await this.contractWrapper.getSignerAddress();
+    return {
+      receipt: await this.contractWrapper.sendTransaction(
+        "safeTransferFrom(address,address,uint256)",
+        [from, to, tokenId],
+      ),
+    };
+  }
+
+  /**
+   * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
+   * @param operator - the operator's address
+   * @param approved - whether to approve or remove
+   */
+  public async setApproval(
+    operator: string,
+    approved = true,
+  ): TransactionResultPromise {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("setApprovalForAll", [
+        operator,
+        approved,
+      ]),
+    };
+  }
+
+  /** ******************************
    * PRIVATE FUNCTIONS
    *******************************/
 
@@ -375,7 +479,7 @@ export class DropErc721Module {
     //   this.storage.ipfsGatewayUrl,
     // );
     // TODO common token metadata fetch
-
+    // const tokenUri = await this.contractWrapper.readContract.tokenURI(_tokenId);
     const data = await Promise.resolve({});
     return DropErc721TokenOutput.parse(data);
   }
@@ -423,10 +527,13 @@ export class DropErc721Module {
 //   const metdata = await module.metadata.get();
 
 //   const txResult = await module.metadata.set({ name: "foo" });
-//   const metadata = await txResult.metadata();
+//   const metadata = await txResult.data();
 
 //   // TOKEN
 //   const data = await module.getAll();
 //   const owner = data[0].owner;
 //   const tokenMetadata = data[0].metadata;
+
+//   const d = await module.createBatch([]);
+//   const meta = await d[0].data();
 // })();

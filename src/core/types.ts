@@ -33,13 +33,17 @@ export type BufferOrStringWithName = {
 };
 
 type TransactionResultWithMetadata<T = unknown> = {
-  transaction: TransactionReceipt;
-  metadata: () => Promise<T>;
+  receipt: TransactionReceipt;
+  data: () => Promise<T>;
+};
+
+export type TransactionResultWithId<T = never> = TransactionResult<T> & {
+  id: BigNumber;
 };
 
 export type TransactionResult<T = never> = If<
   A.Is<T, never, "equals">,
-  Omit<TransactionResultWithMetadata, "metadata">,
+  Omit<TransactionResultWithMetadata, "data">,
   TransactionResultWithMetadata<T>
 >;
 

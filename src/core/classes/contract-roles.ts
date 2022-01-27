@@ -1,3 +1,4 @@
+import { TransactionResultPromise } from "../types";
 import { getRoleHash, Role } from "../../common/role";
 import { AccessControlEnumerable } from "@3rdweb/contracts";
 import invariant from "tiny-invariant";
@@ -27,7 +28,7 @@ export class ContractRoles<
    *
    * @public
    */
-  public async getAllMembers() {
+  public async getAllMembers(): Promise<Record<TRole, string[]>> {
     invariant(this.roles.length, "this module has no support for roles");
     const roles = {} as Record<TRole, string[]>;
     for (const role of this.roles) {
@@ -50,7 +51,7 @@ export class ContractRoles<
    *
    * @public
    */
-  public async getRoleMembers(role: TRole) {
+  public async getRoleMembers(role: TRole): Promise<string[]> {
     invariant(
       this.roles.includes(role),
       `this module does not support the "${role}" role`,
@@ -88,7 +89,7 @@ export class ContractRoles<
      * */
   public async setAllRoleMembers(rolesWithAddresses: {
     [key in TRole]?: string[];
-  }) {
+  }): TransactionResultPromise {
     const roles = Object.keys(rolesWithAddresses) as TRole[];
     invariant(roles.length, "you must provide at least one role to set");
     invariant(
@@ -133,7 +134,11 @@ export class ContractRoles<
           });
         }
       });
-    return this.contractWrapper.sendTransaction("multicall", [encoded]);
+    return {
+      receipt: await this.contractWrapper.sendTransaction("multicall", [
+        encoded,
+      ]),
+    };
   }
 
   private async getRevokeRoleFunctionName(address: string) {

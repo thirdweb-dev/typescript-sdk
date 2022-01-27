@@ -58,11 +58,11 @@ export class ContractMetadata<
   public async set(metadata: z.input<TSchema["input"]>) {
     const uri = await this._parseAndUploadMetadata(metadata);
 
-    const transaction = await this.contractWrapper.sendTransaction(
+    const receipt = await this.contractWrapper.sendTransaction(
       "setContractUri",
       [uri],
     );
-    return { transaction, metadata: this.get } as TransactionResult<
+    return { receipt, data: this.get } as TransactionResult<
       z.output<TSchema["output"]>
     >;
   }
