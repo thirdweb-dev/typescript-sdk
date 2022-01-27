@@ -18,13 +18,13 @@ import {
   DropErc721TokenInput,
   DropErc721TokenOutput,
 } from "../schema/tokens/drop-erc721";
-import { BigNumber } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { AddressZero } from "@ethersproject/constants";
 import { ClaimCondition } from "../types";
+import { z } from "zod";
 
-// TODO zod-ify
-type NFTMetadataOwner = {};
-type NFTMetadata = {};
+type NFTMetadata = z.output<typeof DropErc721TokenOutput>;
+type NFTMetadataOwner = { metadata: NFTMetadata; owner: string };
 
 // TODO extract
 const DEFAULT_QUERY_ALL_COUNT = 100;
@@ -33,6 +33,22 @@ type QueryAllParams = {
   count: number;
 };
 
+/**
+ * Setup a collection of one-of-one NFTs that are minted as users claim them.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
+ * const module = sdk.getDropModule("{{module_address}}");
+ * ```
+ *
+ * @public
+ */
 export class DropErc721Module {
   static moduleType = "NFTDrop" as const;
   static schema = {
@@ -91,7 +107,6 @@ export class DropErc721Module {
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
   }
 
-
   /** ******************************
    * READ FUNCTIONS
    *******************************/
@@ -107,7 +122,7 @@ export class DropErc721Module {
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
    */
-  public async get(tokenId: string): Promise<NFTMetadataOwner> {
+  public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
     const [owner, metadata] = await Promise.all([
       this.ownerOf(tokenId).catch(() => AddressZero),
       this.getTokenMetadata(tokenId),
@@ -235,7 +250,7 @@ export class DropErc721Module {
    * @param tokenId - the tokenId of the NFT
    * @returns the address of the owner
    */
-  public async ownerOf(tokenId: string): Promise<string> {
+  public async ownerOf(tokenId: BigNumberish): Promise<string> {
     return await this.contractWrapper.readContract.ownerOf(tokenId);
   }
 
@@ -353,14 +368,16 @@ export class DropErc721Module {
    * PRIVATE FUNCTIONS
    *******************************/
 
-  private async getTokenMetadata(tokenId: string): Promise<NFTMetadata> {
+  private async getTokenMetadata(_tokenId: BigNumberish): Promise<NFTMetadata> {
     // return await getTokenMetadata(
     //   this.contractWrapper.readContract,
     //   tokenId,
     //   this.storage.ipfsGatewayUrl,
     // );
     // TODO common token metadata fetch
-    return Promise.resolve({});
+
+    const data = await Promise.resolve({});
+    return DropErc721TokenOutput.parse(data);
   }
 
   private async transformResultToClaimCondition(
@@ -400,6 +417,7 @@ export class DropErc721Module {
  */
 
 // (async () => {
+//   // MODULE
 //   const module = new DropErc721Module("1", "0x0");
 
 //   const metdata = await module.metadata.get();
@@ -407,7 +425,8 @@ export class DropErc721Module {
 //   const txResult = await module.metadata.set({ name: "foo" });
 //   const metadata = await txResult.metadata();
 
-//   // const parsedInput = DropErc721Module.schema.tokenInput.parse({ test: "foo" });
-
-//   // const parsedOutput = module.parseTokenOutput(parsedInput);
+//   // TOKEN
+//   const data = await module.getAll();
+//   const owner = data[0].owner;
+//   const tokenMetadata = data[0].metadata;
 // })();

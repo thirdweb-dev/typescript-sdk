@@ -1,5 +1,8 @@
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
-import { CurrencyValue } from "../../common/currency";
+// import { CurrencyValue } from "../../common/currency";
+
+// @fixme
+type CurrencyValue = unknown;
 
 /**
  * @public

@@ -1,1 +1,49 @@
-{}
+{
+  "DropErc721Module": {
+    "name": "DropErc721Module",
+    "summary": "Setup a collection of one-of-one NFTs that are minted as users claim them.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst module = sdk.getDropModule(\"{{module_address}}\");"
+    },
+    "methods": [
+      {
+        "name": "balanceOf",
+        "summary": "Get NFT Balance\n\n",
+        "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this module owned by the wallet).\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await module.balanceOf(address);\nconsole.log(balance);"
+        },
+        "signature": "balanceOf(address: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "get",
+        "summary": "Get a single NFT Metadata\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const nft = await module.get(\"0\");\nconsole.log(nft);"
+        },
+        "signature": "get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;"
+      },
+      {
+        "name": "getAll",
+        "summary": "Get All NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with every NFT in this module.\n\n",
+        "examples": {
+          "javascript": "const nfts = await module.getAll();\nconsole.log(nfts);"
+        },
+        "signature": "getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;"
+      },
+      {
+        "name": "getOwned",
+        "summary": "Get Owned NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await module.getOwned(address);\nconsole.log(nfts);"
+        },
+        "signature": "getOwned(_address?: string): Promise<NFTMetadataOwner[]>;"
+      }
+    ],
+    "signature": "declare class DropErc721Module "
+  }
+}

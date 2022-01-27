@@ -7,12 +7,14 @@
 import { A } from 'ts-toolbelt';
 import { AccessControlEnumerable } from '@3rdweb/contracts';
 import { BaseContract } from 'ethers';
+import { BigNumber } from 'ethers';
+import { BigNumberish } from 'ethers';
 import { BytesLike } from 'ethers';
 import { CallOverrides } from 'ethers';
 import { ContractInterface } from 'ethers';
 import { DropERC721 } from '@3rdweb/contracts';
-import * as ethers from 'ethers';
-import { ethers as ethers_2 } from 'ethers';
+import { ethers } from 'ethers';
+import * as ethers_2 from 'ethers';
 import * as _ethersproject_abstract_provider from '@ethersproject/abstract-provider';
 import { EventEmitter2 } from 'eventemitter2';
 import { If } from 'ts-toolbelt/out/Any/If';
@@ -29,6 +31,626 @@ import * as ts_toolbelt_out_Any_If from 'ts-toolbelt/out/Any/If';
 import { z } from 'zod';
 import * as zod from 'zod';
 
+// @public
+export class DropErc721Module {
+    constructor(network: NetworkOrSignerOrProvider, address: string, options?: SDKOptions);
+    balance(): Promise<BigNumber>;
+    balanceOf(address: string): Promise<BigNumber>;
+    // Warning: (ae-forgotten-export) The symbol "NFTMetadataOwner" needs to be exported by the entry point index.d.ts
+    get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
+    // Warning: (ae-forgotten-export) The symbol "ClaimCondition" needs to be exported by the entry point index.d.ts
+    getActiveClaimCondition(): Promise<ClaimCondition>;
+    // Warning: (ae-forgotten-export) The symbol "QueryAllParams" needs to be exported by the entry point index.d.ts
+    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    getAllClaimConditions(): Promise<ClaimCondition[]>;
+    getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    // Warning: (ae-forgotten-export) The symbol "NFTMetadata" needs to be exported by the entry point index.d.ts
+    getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
+    getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
+    getPrimarySaleRecipient(): Promise<string>;
+    isApproved(address: string, operator: string): Promise<boolean>;
+    // Warning: (ae-forgotten-export) The symbol "ContractMetadata" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    metadata: ContractMetadata<DropERC721, {
+        readonly deploy: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_link: z.ZodOptional<z.ZodString>;
+        }, {
+            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, {
+            platform_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            platform_fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, {
+            trusted_forwarder: z.ZodDefault<z.ZodString>;
+        }>, "strip", z.ZodTypeAny, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: BigNumber;
+            fee_recipient: string;
+            platform_fee_basis_points: BigNumber;
+            platform_fee_recipient: string;
+            trusted_forwarder: string;
+        }, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            fee_recipient?: string | undefined;
+            platform_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            platform_fee_recipient?: string | undefined;
+            trusted_forwarder?: string | undefined;
+            name: string;
+        }>;
+        readonly output: z.ZodObject<z.extendShape<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_link: z.ZodOptional<z.ZodString>;
+        }, {
+            image: z.ZodOptional<z.ZodString>;
+        }>, {
+            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, "strip", z.ZodLazy<z.ZodType<(string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[], z.ZodTypeDef, (string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[]>>, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: BigNumber;
+            fee_recipient: string;
+        }, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+        readonly input: z.ZodObject<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_link: z.ZodOptional<z.ZodString>;
+        }, {
+            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, "strip", z.ZodTypeAny, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: BigNumber;
+            fee_recipient: string;
+        }, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+        readonly tokenInput: z.ZodObject<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        }, {
+            animation_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            background_color: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
+            properties: z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodArray<z.ZodObject<{
+                key: z.ZodString;
+                value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>]>;
+            }, "strip", z.ZodTypeAny, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }>, "many">>, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined>, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined>, Record<string, string | number | boolean | File | Buffer | null> | undefined, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined>;
+        }>, "strip", z.ZodLazy<z.ZodType<(string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[], z.ZodTypeDef, (string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[]>>, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_url?: string | File | Buffer | undefined;
+            animation_url?: string | File | Buffer | undefined;
+            background_color?: string | undefined;
+            properties?: Record<string, string | number | boolean | File | Buffer | null> | undefined;
+            name: string;
+        }, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_url?: string | File | Buffer | undefined;
+            animation_url?: string | File | Buffer | undefined;
+            background_color?: string | undefined;
+            properties?: {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined;
+            name: string;
+        }>;
+        readonly tokenOutput: z.ZodObject<z.extendShape<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        }, {
+            image: z.ZodOptional<z.ZodString>;
+            external_url: z.ZodOptional<z.ZodString>;
+        }>, {
+            animation_url: z.ZodOptional<z.ZodString>;
+            properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
+        }>, "strip", z.ZodLazy<z.ZodType<(string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[], z.ZodTypeDef, (string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[]>>, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_url?: string | undefined;
+            animation_url?: string | undefined;
+            properties?: Record<string, string | number | boolean | null> | undefined;
+            name: string;
+        }, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_url?: string | undefined;
+            animation_url?: string | undefined;
+            properties?: Record<string, string | number | boolean | null> | undefined;
+            name: string;
+        }>;
+    }>;
+    // (undocumented)
+    static moduleRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static moduleType: "NFTDrop";
+    ownerOf(tokenId: BigNumberish): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "ContractRoles" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    roles: ContractRoles<DropERC721, "admin" | "transfer" | "minter">;
+    // Warning: (ae-forgotten-export) The symbol "ContractRoyalty" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    royalty: ContractRoyalty<DropERC721, {
+        readonly deploy: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_link: z.ZodOptional<z.ZodString>;
+        }, {
+            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, {
+            platform_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            platform_fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, {
+            trusted_forwarder: z.ZodDefault<z.ZodString>;
+        }>, "strip", z.ZodTypeAny, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: BigNumber;
+            fee_recipient: string;
+            platform_fee_basis_points: BigNumber;
+            platform_fee_recipient: string;
+            trusted_forwarder: string;
+        }, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            fee_recipient?: string | undefined;
+            platform_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            platform_fee_recipient?: string | undefined;
+            trusted_forwarder?: string | undefined;
+            name: string;
+        }>;
+        readonly output: z.ZodObject<z.extendShape<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_link: z.ZodOptional<z.ZodString>;
+        }, {
+            image: z.ZodOptional<z.ZodString>;
+        }>, {
+            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, "strip", z.ZodLazy<z.ZodType<(string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[], z.ZodTypeDef, (string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[]>>, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: BigNumber;
+            fee_recipient: string;
+        }, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+        readonly input: z.ZodObject<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_link: z.ZodOptional<z.ZodString>;
+        }, {
+            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, "strip", z.ZodTypeAny, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: BigNumber;
+            fee_recipient: string;
+        }, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+        readonly tokenInput: z.ZodObject<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        }, {
+            animation_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            background_color: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
+            properties: z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodArray<z.ZodObject<{
+                key: z.ZodString;
+                value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>]>;
+            }, "strip", z.ZodTypeAny, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }>, "many">>, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined>, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined>, Record<string, string | number | boolean | File | Buffer | null> | undefined, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined>;
+        }>, "strip", z.ZodLazy<z.ZodType<(string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[], z.ZodTypeDef, (string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[]>>, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_url?: string | File | Buffer | undefined;
+            animation_url?: string | File | Buffer | undefined;
+            background_color?: string | undefined;
+            properties?: Record<string, string | number | boolean | File | Buffer | null> | undefined;
+            name: string;
+        }, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_url?: string | File | Buffer | undefined;
+            animation_url?: string | File | Buffer | undefined;
+            background_color?: string | undefined;
+            properties?: {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined;
+            name: string;
+        }>;
+        readonly tokenOutput: z.ZodObject<z.extendShape<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        }, {
+            image: z.ZodOptional<z.ZodString>;
+            external_url: z.ZodOptional<z.ZodString>;
+        }>, {
+            animation_url: z.ZodOptional<z.ZodString>;
+            properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
+        }>, "strip", z.ZodLazy<z.ZodType<(string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[], z.ZodTypeDef, (string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[]>>, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_url?: string | undefined;
+            animation_url?: string | undefined;
+            properties?: Record<string, string | number | boolean | null> | undefined;
+            name: string;
+        }, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_url?: string | undefined;
+            animation_url?: string | undefined;
+            properties?: Record<string, string | number | boolean | null> | undefined;
+            name: string;
+        }>;
+    }>;
+    // (undocumented)
+    static schema: {
+        readonly deploy: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_link: z.ZodOptional<z.ZodString>;
+        }, {
+            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, {
+            platform_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            platform_fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, {
+            trusted_forwarder: z.ZodDefault<z.ZodString>;
+        }>, "strip", z.ZodTypeAny, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: BigNumber;
+            fee_recipient: string;
+            platform_fee_basis_points: BigNumber;
+            platform_fee_recipient: string;
+            trusted_forwarder: string;
+        }, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            fee_recipient?: string | undefined;
+            platform_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            platform_fee_recipient?: string | undefined;
+            trusted_forwarder?: string | undefined;
+            name: string;
+        }>;
+        readonly output: z.ZodObject<z.extendShape<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_link: z.ZodOptional<z.ZodString>;
+        }, {
+            image: z.ZodOptional<z.ZodString>;
+        }>, {
+            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, "strip", z.ZodLazy<z.ZodType<(string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[], z.ZodTypeDef, (string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[]>>, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: BigNumber;
+            fee_recipient: string;
+        }, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+        readonly input: z.ZodObject<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_link: z.ZodOptional<z.ZodString>;
+        }, {
+            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: z.ZodDefault<z.ZodString>;
+        }>, "strip", z.ZodTypeAny, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: BigNumber;
+            fee_recipient: string;
+        }, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+        readonly tokenInput: z.ZodObject<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        }, {
+            animation_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            background_color: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
+            properties: z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodArray<z.ZodObject<{
+                key: z.ZodString;
+                value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>]>;
+            }, "strip", z.ZodTypeAny, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }>, "many">>, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined>, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined>, Record<string, string | number | boolean | File | Buffer | null> | undefined, {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined>;
+        }>, "strip", z.ZodLazy<z.ZodType<(string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[], z.ZodTypeDef, (string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[]>>, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_url?: string | File | Buffer | undefined;
+            animation_url?: string | File | Buffer | undefined;
+            background_color?: string | undefined;
+            properties?: Record<string, string | number | boolean | File | Buffer | null> | undefined;
+            name: string;
+        }, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_url?: string | File | Buffer | undefined;
+            animation_url?: string | File | Buffer | undefined;
+            background_color?: string | undefined;
+            properties?: {
+                value: string | number | boolean | File | Buffer | null;
+                key: string;
+            }[] | undefined;
+            name: string;
+        }>;
+        readonly tokenOutput: z.ZodObject<z.extendShape<z.extendShape<{
+            name: z.ZodString;
+            description: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        }, {
+            image: z.ZodOptional<z.ZodString>;
+            external_url: z.ZodOptional<z.ZodString>;
+        }>, {
+            animation_url: z.ZodOptional<z.ZodString>;
+            properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
+        }>, "strip", z.ZodLazy<z.ZodType<(string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[], z.ZodTypeDef, (string | number | boolean | null) | {
+            [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+        } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[]>>, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_url?: string | undefined;
+            animation_url?: string | undefined;
+            properties?: Record<string, string | number | boolean | null> | undefined;
+            name: string;
+        }, {
+            [x: string]: (string | number | boolean | null) | {
+                [key: string]: (string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            } | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | ((string | number | boolean | null) | any | any)[])[])[])[])[])[])[])[])[])[])[];
+            description?: string | undefined;
+            image?: string | undefined;
+            external_url?: string | undefined;
+            animation_url?: string | undefined;
+            properties?: Record<string, string | number | boolean | null> | undefined;
+            name: string;
+        }>;
+    };
+    totalClaimedSupply(): Promise<BigNumber>;
+    totalSupply(): Promise<BigNumber>;
+    totalUnclaimedSupply(): Promise<BigNumber>;
+    // (undocumented)
+    updateSignerOrProvider: (network: NetworkOrSignerOrProvider) => void;
+}
+
 // Warning: (ae-forgotten-export) The symbol "MODULES_MAP" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
@@ -37,16 +659,21 @@ export type ModuleType = keyof typeof MODULES_MAP;
 // @public (undocumented)
 export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 
+// Warning: (ae-forgotten-export) The symbol "SDKOptionsSchema" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type SDKOptions = z.input<typeof SDKOptionsSchema>;
+
+// @public (undocumented)
+export type SDKOptionsOutput = z.output<typeof SDKOptionsSchema>;
+
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export class ThirdwebSDK extends RPCConnectionHandler {
-    // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions);
     // (undocumented)
     getDropModule(moduleAddress: string): DropErc721Module;
-    // Warning: (ae-forgotten-export) The symbol "DropErc721Module" needs to be exported by the entry point index.d.ts
-    //
     // @internal (undocumented)
     getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module;
     // (undocumented)

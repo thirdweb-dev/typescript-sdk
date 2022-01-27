@@ -8,6 +8,7 @@
 
 |  Class | Description |
 |  --- | --- |
+|  [DropErc721Module](./sdk.droperc721module.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
 
 ## Type Aliases
@@ -16,4 +17,6 @@
 |  --- | --- |
 |  [ModuleType](./sdk.moduletype.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  [SDKOptions](./sdk.sdkoptions.md) |  |
+|  [SDKOptionsOutput](./sdk.sdkoptionsoutput.md) |  |
 
