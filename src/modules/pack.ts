@@ -181,7 +181,7 @@ export class PackModule
           this.providerOrSigner,
           rewardContract,
           rewardId.toString(),
-          this.ipfsGatewayUrl,
+          this.sdk.getStorage(),
         ),
       ),
     );
@@ -193,7 +193,7 @@ export class PackModule
         this.providerOrSigner,
         this.address,
         packId,
-        this.ipfsGatewayUrl,
+        this.sdk.getStorage(),
       ),
       this.readOnlyContract.getPack(packId),
       this.readOnlyContract
@@ -259,7 +259,7 @@ export class PackModule
           this.providerOrSigner,
           packReward.source,
           tokenId.toString(),
-          this.ipfsGatewayUrl,
+          this.sdk.getStorage(),
         ),
       ),
     );

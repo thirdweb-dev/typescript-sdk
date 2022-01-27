@@ -110,7 +110,7 @@ export class MarketModule extends ModuleWithRoles<Market> {
         this.providerOrSigner,
         listing.assetContract,
         listing.tokenId.toString(),
-        this.ipfsGatewayUrl,
+        this.sdk.getStorage(),
       );
       // eslint-disable-next-line no-empty
     } catch (e) {}
