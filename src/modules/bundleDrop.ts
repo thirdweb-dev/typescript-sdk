@@ -530,7 +530,7 @@ export class BundleDropModule
     const overrides = (await this.getCallOverrides()) || {};
 
     const addressToClaim = await this.getSignerAddress();
-    const { metadata } = await this.getMetadata();
+    const { metadata } = await this.getMetadata(false);
     if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
       const snapshot = await this.sdk
         .getStorage()
@@ -923,7 +923,7 @@ export class BundleDropModule
     if (!addressToClaim) {
       addressToClaim = await this.getSignerAddress();
     }
-    const { metadata } = await this.getMetadata();
+    const { metadata } = await this.getMetadata(false);
     const snapshot = await this.sdk
       .getStorage()
       .get(metadata?.merkle[merkleRoot]);
