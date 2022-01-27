@@ -3,6 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 import { AppModule, ThirdwebSDK } from "../src";
+import { MockStorage } from "./mock/MockStorage";
 import { deployRegistry } from "./setup/deployRegistry";
 
 const RPC_URL = "http://localhost:8545";
@@ -48,6 +49,8 @@ before(async () => {
     registryContractAddress: registryAddress,
     maxGasPriceInGwei: 10000,
   });
+  const storage = new MockStorage();
+  sdk.overrideStorage(storage);
 
   const receipt = await sdk.createApp({
     name: "test",

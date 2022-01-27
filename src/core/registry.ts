@@ -42,7 +42,7 @@ export class RegistryModule extends Module<Registry> {
         getContractMetadata(
           this.providerOrSigner,
           addr,
-          this.ipfsGatewayUrl,
+          this.sdk.getStorage(),
         ).catch(() => undefined),
       ),
     );

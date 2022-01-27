@@ -328,7 +328,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
       ...(await getContractMetadata(
         this.providerOrSigner,
         address,
-        this.options.ipfsGatewayUrl,
+        this.getStorage(),
         true,
       )),
       address,

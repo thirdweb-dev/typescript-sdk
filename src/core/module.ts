@@ -144,7 +144,7 @@ export class Module<TContract extends BaseContract = BaseContract> {
       metadata: await getContractMetadata(
         await this.getProvider(),
         contract.address,
-        this.options.ipfsGatewayUrl,
+        this.sdk.getStorage(),
         resolveUrls,
       ),
       address: contract.address,

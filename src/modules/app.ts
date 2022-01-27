@@ -171,7 +171,7 @@ export class AppModule
         getContractMetadata(
           this.providerOrSigner,
           address,
-          this.ipfsGatewayUrl,
+          this.sdk.getStorage(),
           resolveGateway,
         ),
       ),

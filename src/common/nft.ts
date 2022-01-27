@@ -1,3 +1,4 @@
+import { IStorage } from "./../interfaces/IStorage";
 import {
   LazyMintERC1155,
   LazyMintERC721,
@@ -94,10 +95,10 @@ export async function getMetadataWithoutContract(
   provider: ProviderOrSigner,
   contractAddress: string,
   tokenId: string,
-  ipfsGatewayUrl: string,
+  storage: IStorage,
 ): Promise<NFTMetadata> {
   const contract = new Contract(contractAddress, tokenUriABI, provider) as NFT;
-  return getTokenMetadata(contract, tokenId, ipfsGatewayUrl);
+  return getTokenMetadata(contract, tokenId, storage);
 }
 
 /**
@@ -106,17 +107,16 @@ export async function getMetadataWithoutContract(
 export async function getTokenMetadata(
   contract: NFTContractTypes,
   tokenId: string,
-  ipfsGatewayUrl: string,
+  storage: IStorage,
 ): Promise<NFTMetadata> {
   const uri = await getTokenUri(contract, tokenId);
   if (!uri) {
     throw new NotFoundError();
   }
-  const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
+
   try {
-    const meta = await fetch(gatewayUrl);
-    let json = await meta.json();
-    json = recursiveResolveGatewayUrl(json, ipfsGatewayUrl);
+    const meta = await storage.get(uri);
+    const json = recursiveResolveGatewayUrl(JSON.parse(meta), storage);
     const entity: NFTMetadata = {
       ...json,
       id: tokenId,

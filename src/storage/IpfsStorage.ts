@@ -379,4 +379,8 @@ export class IpfsStorage implements IStorage {
       ? ipfsHash.replace("ipfs://", this.gatewayUrl)
       : ipfsHash;
   }
+
+  public getIdentifyingPrefix(): string {
+    return "ipfs://";
+  }
 }

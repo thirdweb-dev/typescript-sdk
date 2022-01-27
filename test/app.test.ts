@@ -1,3 +1,4 @@
+import { MockStorage } from "./mock/MockStorage";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect, assert } from "chai";
@@ -127,10 +128,12 @@ describe("App Module", async () => {
       image,
     });
 
-    const metadata = await module.getMetadata();
+    const metadata = await module.getMetadata(false);
     assert.isTrue(
-      metadata.metadata.image.includes("ipfs/"),
-      `Image property = ${metadata.metadata.image}, should include ipfs/`,
+      metadata.metadata.image.startsWith(
+        sdk.getStorage().getIdentifyingPrefix(),
+      ),
+      `Image property = ${metadata.metadata.image}, should include fake://`,
     );
   });
 
@@ -234,22 +237,21 @@ describe("App Module", async () => {
     }
   });
 
-  it("should properly parse metadata when image is string", async () => {
+  it("should allow image fields to pass-through as a string", async () => {
     const metadata = {
       name: "safe",
       description: "",
-      image:
-        "ipfs://bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
+      image: "mock://image",
       sellerFeeBasisPoints: 0,
       symbol: "",
     };
     const contract = await appModule.deployBundleModule(metadata);
     const module = sdk.getBundleModule(contract.address);
-    const result = await module.getMetadata();
-    assert.equal(
-      result.metadata.image,
-      "https://ipfs.thirdweb.com/ipfs/bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
-    );
+    const result = await module.getMetadata(true);
+    assert.equal(result.metadata.image, "fake://image");
+
+    const unresolved = await module.getMetadata(false);
+    assert.equal(unresolved.metadata.image, "mock://image");
   });
   it("should deploy a bundle drop module correctly", async () => {
     const contract = await appModule.deployBundleDropModule({
@@ -261,7 +263,8 @@ describe("App Module", async () => {
     });
     sdk.getBundleDropModule(contract.address);
   });
-  it("should upload to ipfs image is file", async () => {
+
+  it("should upload image to storage if image is file", async () => {
     const metadata = {
       name: "safe",
       description: "",
@@ -272,11 +275,11 @@ describe("App Module", async () => {
     };
     const contract = await appModule.deployBundleModule(metadata);
     const module = sdk.getBundleModule(contract.address);
-    const result = await module.getMetadata();
-    const regex = new RegExp(
-      /Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}/,
+    const result = await module.getMetadata(false);
+    assert.isTrue(
+      result.metadata.image.startsWith(sdk.getStorage().getIdentifyingPrefix()),
+      "The image property should have been replaced with a storage hash",
     );
-    assert.match(result.metadata.image, regex);
   });
 
   it("should allow you to withdraw funds", async () => {
@@ -339,7 +342,7 @@ describe("App Module", async () => {
       await v1Module.deployNftModule({
         name: "Test NFT",
         symbol: "TST",
-        image: "ipfs://test_image",
+        image: "mock://test_image",
         feeRecipient: v1Module.address,
         sellerFeeBasisPoints: 0,
       });
@@ -352,14 +355,6 @@ describe("App Module", async () => {
       expect(upgradeList.length).to.equal(1);
       await v1Module.upgradeModuleList([nftAddress]);
       expect((await v1Module.shouldUpgradeModuleList()).length).to.equal(0);
-
-      expect(
-        (await sdk.getNFTModule(nftAddress).getMetadata(true)).metadata.image,
-      ).to.equal(`${ipfsGatewayUrl}test_image`);
-
-      expect(
-        (await sdk.getNFTModule(nftAddress).getMetadata(false)).metadata.image,
-      ).to.equal("ipfs://test_image");
     });
   });
 });

@@ -107,4 +107,9 @@ export interface IStorage {
     contractAddress?: string,
     fileStartNumber?: number,
   ): Promise<UploadMetadataBatchResult>;
+
+  /**
+   * Returns the prefix that identifies files from this storage provider.
+   */
+  getIdentifyingPrefix(): string;
 }

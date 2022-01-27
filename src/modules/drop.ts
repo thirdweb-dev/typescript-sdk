@@ -129,7 +129,7 @@ export class DropModule
     return await getTokenMetadata(
       this.readOnlyContract,
       tokenId,
-      this.ipfsGatewayUrl,
+      this.sdk.getStorage(),
     );
   }
 
@@ -1135,7 +1135,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
     return await getTokenMetadata(
       this.readOnlyContract,
       tokenId,
-      this.ipfsGatewayUrl,
+      this.sdk.getStorage(),
     );
   }
 

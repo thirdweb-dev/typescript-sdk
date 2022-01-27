@@ -20,6 +20,9 @@ describe("IPFS Uploads", async () => {
   });
 
   beforeEach(async () => {
+    const storage = new IpfsStorage(ipfsGatewayUrl);
+    sdk.overrideStorage(storage);
+
     sdk.setProviderOrSigner(adminWallet);
   });
 

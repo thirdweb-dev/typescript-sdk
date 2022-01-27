@@ -119,7 +119,7 @@ export class BundleModule
    */
   public async get(tokenId: string, address?: string): Promise<BundleMetadata> {
     const [metadata, supply, ownedByAddress, state] = await Promise.all([
-      getTokenMetadata(this.readOnlyContract, tokenId, this.ipfsGatewayUrl),
+      getTokenMetadata(this.readOnlyContract, tokenId, this.sdk.getStorage()),
       this.readOnlyContract
         .totalSupply(tokenId)
         .catch(() => BigNumber.from("0")),

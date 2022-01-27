@@ -1,4 +1,5 @@
 import { MetadataURIOrObject } from "../core/types";
+import { IStorage } from "../interfaces/IStorage";
 import FileOrBuffer from "../types/FileOrBuffer";
 import { UploadError } from "./error";
 
@@ -28,17 +29,14 @@ export function replaceIpfsWithGateway(ipfsUrl: string, gatewayUrl: string) {
   }
   return ipfsUrl.replace("ipfs://", gatewayUrl);
 }
-export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string) {
+export function recursiveResolveGatewayUrl(json: any, storage: IStorage) {
   if (typeof json === "object") {
     const keylist = Object.keys(json);
     keylist.forEach((key: string) => {
       if (typeof json[key] === "object") {
-        json[key] = recursiveResolveGatewayUrl(json[key], ipfsGatewayUrl);
-      } else if (
-        typeof json[key] === "string" &&
-        json[key].startsWith("ipfs://")
-      ) {
-        json[key] = replaceIpfsWithGateway(json[key], ipfsGatewayUrl);
+        json[key] = recursiveResolveGatewayUrl(json[key], storage);
+      } else if (typeof json[key] === "string") {
+        json[key] = storage.resolveFullUrl(json[key]);
       }
     });
   }
