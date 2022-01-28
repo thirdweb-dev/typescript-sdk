@@ -105,7 +105,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
         apiId: "",
         apiKey: "",
         deadlineSeconds: 3600,
-        gasTier: "NORMAL",
+        gasTier: "RAPID",
       },
     },
     gaslessSendFunction: this.defaultGaslessSendFunction.bind(this),
