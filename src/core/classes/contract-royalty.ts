@@ -21,11 +21,12 @@ export class ContractRoyalty<
   }
 
   public async getRoyaltyInfo() {
+    const [royaltyRecipient, royaltyBps] =
+      await this.contractWrapper.readContract.getRoyaltyInfo();
     // parse it on the way out to make sure we default things if they are not set
     return CommonRoyaltySchema.parse({
-      fee_recipient: await this.contractWrapper.readContract.royaltyRecipient(),
-      seller_fee_basis_points:
-        await this.contractWrapper.readContract.royaltyBps(),
+      fee_recipient: royaltyRecipient,
+      seller_fee_basis_points: royaltyBps,
     });
   }
 
