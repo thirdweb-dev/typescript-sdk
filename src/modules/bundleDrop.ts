@@ -597,8 +597,8 @@ export class BundleDropModule
   ) {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
     const claimParams = (await this.isNewClaim())
-      ? [await this.getSignerAddress(), tokenId, quantity, proofs]
-      : [tokenId, quantity, proofs];
+      ? [await this.getSignerAddress(), tokenId, quantity, claimData.proofs]
+      : [tokenId, quantity, claimData.proofs];
 
     await this.sendTransaction("claim", claimParams, claimData.overrides);
   }
@@ -637,8 +637,8 @@ export class BundleDropModule
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
     const claimParams = (await this.isNewClaim())
-      ? [await this.getSignerAddress(), quantity, claimData.proofs]
-      : [quantity, claimData.proofs];
+      ? [await this.getSignerAddress(), tokenId, quantity, claimData.proofs]
+      : [tokenId, quantity, claimData.proofs];
     const encoded = [];
 
     // forcing it old version of claim params
