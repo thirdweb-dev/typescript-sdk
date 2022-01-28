@@ -309,7 +309,7 @@ export class BundleDropModule
       .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
     const receipt = await this.sendTransaction("lazyMint", [
       metadatas.length,
-      `${baseUri}/`,
+      `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
     ]);
     const event = this.parseEventLogs("LazyMintedTokens", receipt?.logs);
     const [startingIndex, endingIndex]: BigNumber[] = event;
@@ -530,7 +530,7 @@ export class BundleDropModule
     const overrides = (await this.getCallOverrides()) || {};
 
     const addressToClaim = await this.getSignerAddress();
-    const { metadata } = await this.getMetadata(false);
+    const { metadata } = await this.getMetadata();
     if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
       const snapshot = await this.sdk
         .getStorage()
@@ -923,7 +923,7 @@ export class BundleDropModule
     if (!addressToClaim) {
       addressToClaim = await this.getSignerAddress();
     }
-    const { metadata } = await this.getMetadata(false);
+    const { metadata } = await this.getMetadata();
     const snapshot = await this.sdk
       .getStorage()
       .get(metadata?.merkle[merkleRoot]);
