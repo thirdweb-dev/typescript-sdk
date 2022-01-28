@@ -1,3 +1,4 @@
+import { CommonNFTOutput } from "../schema/tokens/common/index";
 import {
   DropERC721,
   DropERC721__factory,
@@ -7,7 +8,6 @@ import {
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
-import { z } from "zod";
 import { isNativeToken } from "../common/currency";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
@@ -23,21 +23,12 @@ import { SnapshotInputSchema } from "../schema/modules/common/snapshots";
 import { DropErc721ModuleSchema } from "../schema/modules/drop-erc721";
 import { SDKOptions, SDKOptionsSchema } from "../schema/sdk-options";
 import {
-  DropErc721TokenInput,
-  DropErc721TokenOutput,
-} from "../schema/tokens/drop-erc721";
+  NFTMetadata,
+  NFTMetadataInput,
+  NFTMetadataOwner,
+} from "../schema/tokens/common";
 import { DropERC721ClaimConditions } from "./drop-erc721-claim-conditions";
-
-type NFTMetadataInput = z.input<typeof DropErc721TokenInput>;
-type NFTMetadata = z.output<typeof DropErc721TokenOutput>;
-type NFTMetadataOwner = { metadata: NFTMetadata; owner: string };
-
-// TODO extract
-const DEFAULT_QUERY_ALL_COUNT = 100;
-type QueryAllParams = {
-  start: number;
-  count: number;
-};
+import { QueryAllParams, DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -55,7 +46,7 @@ type QueryAllParams = {
  *
  * @public
  */
-export class DropErc721Module {
+export class DropERC721Module {
   static moduleType = "NFTDrop" as const;
 
   // this is a type of readoyly Role[], technically, doing it this way makes it work nicely for types
@@ -107,7 +98,7 @@ export class DropErc721Module {
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      DropErc721Module.moduleRoles,
+      DropERC721Module.moduleRoles,
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.claimConditions = new DropERC721ClaimConditions(
@@ -569,7 +560,7 @@ export class DropErc721Module {
 
     // TODO: include recursive metadata IPFS resolving for all
     // properties with a hash
-    return DropErc721TokenOutput.parse(await this.storage.get(tokenUri));
+    return CommonNFTOutput.parse(await this.storage.get(tokenUri));
   }
 
   /**
@@ -644,7 +635,7 @@ export class DropErc721Module {
 
 // (async () => {
 //   // MODULE
-//   const module = new DropErc721Module("1", "0x0");
+//   const module = new DropErc721Module("1", "0x0", new IpfsStorage(""));
 
 //   const metdata = await module.metadata.get();
 

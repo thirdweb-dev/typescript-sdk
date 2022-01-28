@@ -32,7 +32,7 @@ import { z } from 'zod';
 import * as zod from 'zod';
 
 // @public
-export class DropErc721Module {
+export class DropERC721Module {
     // Warning: (ae-forgotten-export) The symbol "IStorage" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions);
@@ -66,22 +66,22 @@ export class DropErc721Module {
     //
     // (undocumented)
     metadata: ContractMetadata<DropERC721, {
-        deploy: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            merkle: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>;
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
-            platform_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            platform_fee_recipient: z.ZodDefault<z.ZodString>;
+            platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            trusted_forwarder: z.ZodDefault<z.ZodString>;
-        }>, "strip", z.ZodTypeAny, {
+            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
@@ -104,19 +104,19 @@ export class DropErc721Module {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        output: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            image: z.ZodOptional<z.ZodString>;
+            image: zod.ZodOptional<zod.ZodString>;
         }>, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            merkle: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
@@ -135,17 +135,17 @@ export class DropErc721Module {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        input: z.ZodObject<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        input: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            merkle: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>;
-        }>, "strip", z.ZodTypeAny, {
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
@@ -162,18 +162,18 @@ export class DropErc721Module {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        tokenInput: z.ZodObject<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        tokenInput: zod.ZodObject<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
         }, {
-            animation_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            background_color: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
-            properties: z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodArray<z.ZodObject<{
-                key: z.ZodString;
-                value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>]>;
-            }, "strip", z.ZodTypeAny, {
+            animation_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            background_color: zod.ZodOptional<zod.ZodEffects<zod.ZodString, string, string>>;
+            properties: zod.ZodEffects<zod.ZodEffects<zod.ZodEffects<zod.ZodOptional<zod.ZodArray<zod.ZodObject<{
+                key: zod.ZodString;
+                value: zod.ZodUnion<[zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>, zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>]>;
+            }, "strip", zod.ZodTypeAny, {
                 value: string | number | boolean | File | Buffer | null;
                 key: string;
             }, {
@@ -195,7 +195,7 @@ export class DropErc721Module {
                 value: string | number | boolean | File | Buffer | null;
                 key: string;
             }[] | undefined>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
@@ -217,18 +217,18 @@ export class DropErc721Module {
             }[] | undefined;
             name: string;
         }>;
-        tokenOutput: z.ZodObject<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        tokenOutput: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
         }, {
-            image: z.ZodOptional<z.ZodString>;
-            external_url: z.ZodOptional<z.ZodString>;
+            image: zod.ZodOptional<zod.ZodString>;
+            external_url: zod.ZodOptional<zod.ZodString>;
         }>, {
-            animation_url: z.ZodOptional<z.ZodString>;
-            properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+            animation_url: zod.ZodOptional<zod.ZodString>;
+            properties: zod.ZodOptional<zod.ZodRecord<zod.ZodString, zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>>>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
@@ -259,22 +259,22 @@ export class DropErc721Module {
     //
     // (undocumented)
     royalty: ContractRoyalty<DropERC721, {
-        deploy: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            merkle: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>;
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
-            platform_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            platform_fee_recipient: z.ZodDefault<z.ZodString>;
+            platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            trusted_forwarder: z.ZodDefault<z.ZodString>;
-        }>, "strip", z.ZodTypeAny, {
+            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
@@ -297,19 +297,19 @@ export class DropErc721Module {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        output: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            image: z.ZodOptional<z.ZodString>;
+            image: zod.ZodOptional<zod.ZodString>;
         }>, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            merkle: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
@@ -328,17 +328,17 @@ export class DropErc721Module {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        input: z.ZodObject<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        input: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            merkle: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>;
-        }>, "strip", z.ZodTypeAny, {
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
@@ -355,18 +355,18 @@ export class DropErc721Module {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        tokenInput: z.ZodObject<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        tokenInput: zod.ZodObject<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
         }, {
-            animation_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            background_color: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
-            properties: z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodArray<z.ZodObject<{
-                key: z.ZodString;
-                value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>]>;
-            }, "strip", z.ZodTypeAny, {
+            animation_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            background_color: zod.ZodOptional<zod.ZodEffects<zod.ZodString, string, string>>;
+            properties: zod.ZodEffects<zod.ZodEffects<zod.ZodEffects<zod.ZodOptional<zod.ZodArray<zod.ZodObject<{
+                key: zod.ZodString;
+                value: zod.ZodUnion<[zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>, zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>]>;
+            }, "strip", zod.ZodTypeAny, {
                 value: string | number | boolean | File | Buffer | null;
                 key: string;
             }, {
@@ -388,7 +388,7 @@ export class DropErc721Module {
                 value: string | number | boolean | File | Buffer | null;
                 key: string;
             }[] | undefined>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
@@ -410,18 +410,18 @@ export class DropErc721Module {
             }[] | undefined;
             name: string;
         }>;
-        tokenOutput: z.ZodObject<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        tokenOutput: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
         }, {
-            image: z.ZodOptional<z.ZodString>;
-            external_url: z.ZodOptional<z.ZodString>;
+            image: zod.ZodOptional<zod.ZodString>;
+            external_url: zod.ZodOptional<zod.ZodString>;
         }>, {
-            animation_url: z.ZodOptional<z.ZodString>;
-            properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+            animation_url: zod.ZodOptional<zod.ZodString>;
+            properties: zod.ZodOptional<zod.ZodRecord<zod.ZodString, zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>>>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
@@ -441,22 +441,22 @@ export class DropErc721Module {
     }>;
     // (undocumented)
     static schema: {
-        deploy: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            merkle: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>;
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
-            platform_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            platform_fee_recipient: z.ZodDefault<z.ZodString>;
+            platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            trusted_forwarder: z.ZodDefault<z.ZodString>;
-        }>, "strip", z.ZodTypeAny, {
+            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
@@ -479,19 +479,19 @@ export class DropErc721Module {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        output: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            image: z.ZodOptional<z.ZodString>;
+            image: zod.ZodOptional<zod.ZodString>;
         }>, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            merkle: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
@@ -510,17 +510,17 @@ export class DropErc721Module {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        input: z.ZodObject<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        input: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            merkle: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>;
-        }>, "strip", z.ZodTypeAny, {
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
@@ -537,18 +537,18 @@ export class DropErc721Module {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        tokenInput: z.ZodObject<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        tokenInput: zod.ZodObject<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
         }, {
-            animation_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            background_color: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
-            properties: z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodArray<z.ZodObject<{
-                key: z.ZodString;
-                value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>]>;
-            }, "strip", z.ZodTypeAny, {
+            animation_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            background_color: zod.ZodOptional<zod.ZodEffects<zod.ZodString, string, string>>;
+            properties: zod.ZodEffects<zod.ZodEffects<zod.ZodEffects<zod.ZodOptional<zod.ZodArray<zod.ZodObject<{
+                key: zod.ZodString;
+                value: zod.ZodUnion<[zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>, zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>]>;
+            }, "strip", zod.ZodTypeAny, {
                 value: string | number | boolean | File | Buffer | null;
                 key: string;
             }, {
@@ -570,7 +570,7 @@ export class DropErc721Module {
                 value: string | number | boolean | File | Buffer | null;
                 key: string;
             }[] | undefined>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
@@ -592,18 +592,18 @@ export class DropErc721Module {
             }[] | undefined;
             name: string;
         }>;
-        tokenOutput: z.ZodObject<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        tokenOutput: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
         }, {
-            image: z.ZodOptional<z.ZodString>;
-            external_url: z.ZodOptional<z.ZodString>;
+            image: zod.ZodOptional<zod.ZodString>;
+            external_url: zod.ZodOptional<zod.ZodString>;
         }>, {
-            animation_url: z.ZodOptional<z.ZodString>;
-            properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+            animation_url: zod.ZodOptional<zod.ZodString>;
+            properties: zod.ZodOptional<zod.ZodRecord<zod.ZodString, zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>>>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
@@ -648,9 +648,9 @@ export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 export class ThirdwebSDK extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage?: IStorage);
     // (undocumented)
-    getDropModule(moduleAddress: string): DropErc721Module;
+    getDropModule(moduleAddress: string): DropERC721Module;
     // @internal (undocumented)
-    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module;
+    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropERC721Module;
     // (undocumented)
     resolveModuleType<TModuleType extends ModuleType>(moduleAddress: string): Promise<TModuleType>;
     // (undocumented)
@@ -659,7 +659,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
 // Warnings were encountered during analysis:
 //
-// dist/IStorage-bf7138e9.d.ts:933:9 - (ae-forgotten-export) The symbol "Json" needs to be exported by the entry point index.d.ts
+// dist/IStorage-37646019.d.ts:934:9 - (ae-forgotten-export) The symbol "Json" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

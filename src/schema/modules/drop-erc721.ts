@@ -1,7 +1,4 @@
-import {
-  DropErc721TokenInput,
-  DropErc721TokenOutput,
-} from "../tokens/drop-erc721";
+import { CommonNFTInput, CommonNFTOutput } from "../tokens/common/index";
 import {
   CommonModuleOutputSchema,
   CommonModuleSchema,
@@ -25,6 +22,6 @@ export const DropErc721ModuleSchema = {
   deploy: DropErc721ModuleDeploy,
   output: DropErc721ModuleOutput,
   input: DropErc721ModuleInput,
-  tokenInput: DropErc721TokenInput,
-  tokenOutput: DropErc721TokenOutput,
+  tokenInput: CommonNFTInput,
+  tokenOutput: CommonNFTOutput,
 };

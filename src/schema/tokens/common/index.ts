@@ -29,3 +29,7 @@ export const CommonNFTOutput = CommonTokenOutput.extend({
   animation_url: z.string().optional(),
   properties: OptionalPropertiesOutput,
 });
+
+export type NFTMetadataInput = z.input<typeof CommonNFTInput>;
+export type NFTMetadata = z.output<typeof CommonNFTOutput>;
+export type NFTMetadataOwner = { metadata: NFTMetadata; owner: string };

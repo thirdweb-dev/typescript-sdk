@@ -2,8 +2,8 @@ import { IThirdwebModule__factory } from "@3rdweb/contracts";
 import { Networkish } from "@ethersproject/providers";
 import { ethers } from "ethers";
 import { DEFAULT_IPFS_GATEWAY } from "../constants/urls";
-import { IStorage } from "../core/interfaces/IStorage";
-import { DropErc721Module, MODULES_MAP } from "../modules";
+import { IStorage } from "./interfaces/IStorage";
+import { DropERC721Module, MODULES_MAP } from "../modules";
 import { SDKOptions } from "../schema/sdk-options";
 import { ModuleFactory } from "./classes/factory";
 import { IpfsStorage } from "./classes/ipfs-storage";
@@ -102,7 +102,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   public getDropModule(moduleAddress: string) {
-    return this.getModule(moduleAddress, DropErc721Module.moduleType);
+    return this.getModule(moduleAddress, DropERC721Module.moduleType);
   }
 }
 

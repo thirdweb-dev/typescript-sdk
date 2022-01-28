@@ -15,7 +15,7 @@ export const FileBufferOrStringSchema = z.union([
 
 const BigNumberSchema = z.instanceof(BigNumber);
 
-const BigNumberishSchema = z
+export const BigNumberishSchema = z
   .union([z.string(), z.number(), z.bigint(), BigNumberSchema])
   .transform((arg) => BigNumber.from(arg));
 
