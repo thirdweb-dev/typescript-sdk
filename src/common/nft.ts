@@ -1,4 +1,3 @@
-import { IStorage } from "./../interfaces/IStorage";
 import {
   LazyMintERC1155,
   LazyMintERC721,
