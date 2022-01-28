@@ -2180,6 +2180,11 @@ eslint@7.32.0:
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
 
+esm@^3.2.25:
+  version "3.2.25"
+  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.25.tgz#342c18c29d56157688ba5ce31f8431fbb795cc10"
+  integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
+
 espree@^7.3.0, espree@^7.3.1:
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/espree/-/espree-7.3.1.tgz#f2df330b752c6f55019f8bd89b7660039c1bbbb6"
@@ -3230,6 +3235,11 @@ json-stable-stringify-without-jsonify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
   integrity sha1-nbe1lJatPzz+8wp1FC0tkwrXJlE=
+
+json2typescript@^1.5.0-rc.0:
+  version "1.5.0-rc.0"
+  resolved "https://registry.yarnpkg.com/json2typescript/-/json2typescript-1.5.0-rc.0.tgz#73f2101b438a0ca3a393c54cbcb7c0508e73313a"
+  integrity sha512-9v0Q6P38nV9zznaZxHRA8THp5oEGzancSUGgm8NXZSVRU/X8h/RlpP5hutP15J5sMODdx2pz9Fs/SNEpCTFAfA==
 
 json5@^1.0.1:
   version "1.0.1"
