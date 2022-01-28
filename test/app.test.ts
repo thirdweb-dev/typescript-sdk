@@ -241,17 +241,18 @@ describe("App Module", async () => {
     const metadata = {
       name: "safe",
       description: "",
-      image: "mock://image",
+      image: `${sdk.getStorage().getIdentifyingPrefix()}/image`,
       sellerFeeBasisPoints: 0,
       symbol: "",
     };
     const contract = await appModule.deployBundleModule(metadata);
     const module = sdk.getBundleModule(contract.address);
-    const result = await module.getMetadata(true);
-    assert.equal(result.metadata.image, "fake://image");
 
     const unresolved = await module.getMetadata(false);
-    assert.equal(unresolved.metadata.image, "mock://image");
+    assert.equal(
+      unresolved.metadata.image,
+      `${sdk.getStorage().getIdentifyingPrefix()}/image`,
+    );
   });
   it("should deploy a bundle drop module correctly", async () => {
     const contract = await appModule.deployBundleDropModule({
