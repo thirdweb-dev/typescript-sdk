@@ -820,7 +820,7 @@ export function generateRoot(items: string[]): string;
 // Warning: (ae-internal-missing-underscore) The name "getContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getContractMetadata(provider: ProviderOrSigner, address: string, ipfsGatewayUrl: string, resolveGateway?: boolean): Promise<ContractMetadata>;
+export function getContractMetadata(provider: ProviderOrSigner, address: string, storage: IStorage, resolveGateway?: boolean): Promise<ContractMetadata>;
 
 // Warning: (ae-internal-missing-underscore) The name "getCurrencyBalance" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -845,7 +845,7 @@ export function getGasPriceForChain(chainId: number, speed: string, maxGasPrice:
 // Warning: (ae-internal-missing-underscore) The name "getMetadataWithoutContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
-export function getMetadataWithoutContract(provider: ProviderOrSigner, contractAddress: string, tokenId: string, ipfsGatewayUrl: string): Promise<NFTMetadata>;
+export function getMetadataWithoutContract(provider: ProviderOrSigner, contractAddress: string, tokenId: string, storage: IStorage): Promise<NFTMetadata>;
 
 // @public (undocumented)
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken;
@@ -858,7 +858,7 @@ export function getRoleHash(role: Role): BytesLike;
 // Warning: (ae-internal-missing-underscore) The name "getTokenMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
-export function getTokenMetadata(contract: NFTContractTypes, tokenId: string, ipfsGatewayUrl: string): Promise<NFTMetadata>;
+export function getTokenMetadata(contract: NFTContractTypes, tokenId: string, storage: IStorage): Promise<NFTMetadata>;
 
 // @public (undocumented)
 export function getTokenMetadataUsingStorage(contractAddress: string, provider: ProviderOrSigner, tokenId: string, storage: IStorage): Promise<NFTMetadata>;
@@ -1013,6 +1013,8 @@ export class IpfsStorage implements IStorage {
     // (undocumented)
     get(hash: string): Promise<string>;
     // (undocumented)
+    getIdentifyingPrefix(): string;
+    // (undocumented)
     getUploadToken(contractAddress: string): Promise<string>;
     // @internal
     resolveFullUrl(ipfsHash: string): string;
@@ -1099,6 +1101,7 @@ export interface ISplitsModule {
 // @public (undocumented)
 export interface IStorage {
     get(hash: string): Promise<string>;
+    getIdentifyingPrefix(): string;
     getUploadToken(contractAddress: string): Promise<string>;
     resolveFullUrl(hash: string): string;
     upload(data: string | File | FileOrBuffer | Buffer, contractAddress?: string, signerAddress?: string): Promise<string>;
@@ -1660,7 +1663,7 @@ export class NotEnoughTokensError extends Error {
 // @public
 export class NotFoundError extends Error {
     // @internal
-    constructor();
+    constructor(identifier?: string);
 }
 
 // @public (undocumented)
@@ -1862,7 +1865,7 @@ export class QuantityAboveLimitError extends Error {
 }
 
 // @public (undocumented)
-export function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string): any;
+export function recursiveResolveGatewayUrl(json: any, storage: IStorage): any;
 
 // Warning: (ae-internal-missing-underscore) The name "replaceIpfsWithGateway" should be prefixed with an underscore because the declaration is marked as @internal
 //

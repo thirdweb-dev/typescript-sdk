@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: string): any;
+export declare function recursiveResolveGatewayUrl(json: any, storage: IStorage): any;
 ```
 
 ## Parameters
@@ -15,7 +15,7 @@ export declare function recursiveResolveGatewayUrl(json: any, ipfsGatewayUrl: st
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  json | any |  |
-|  ipfsGatewayUrl | string |  |
+|  storage | [IStorage](./sdk.istorage.md) |  |
 
 <b>Returns:</b>
 
