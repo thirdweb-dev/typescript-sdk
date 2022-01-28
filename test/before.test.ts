@@ -44,13 +44,16 @@ before(async () => {
   registryAddress = await deployRegistry(signer);
   console.log("Deployed registry at address: ", registryAddress);
 
-  sdk = new ThirdwebSDK(signer, {
-    ipfsGatewayUrl,
-    registryContractAddress: registryAddress,
-    maxGasPriceInGwei: 10000,
-  });
   const storage = new MockStorage();
-  sdk.overrideStorage(storage);
+  sdk = new ThirdwebSDK(
+    signer,
+    {
+      ipfsGatewayUrl,
+      registryContractAddress: registryAddress,
+      maxGasPriceInGwei: 10000,
+    },
+    storage,
+  );
 
   const receipt = await sdk.createApp({
     name: "test",

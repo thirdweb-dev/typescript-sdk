@@ -5,32 +5,33 @@ import {
   IERC20,
   IERC20__factory,
 } from "@3rdweb/contracts";
+import { hexZeroPad } from "@ethersproject/bytes";
+import { AddressZero } from "@ethersproject/constants";
+import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
+import { z } from "zod";
+import { isNativeToken } from "../common/currency";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   NetworkOrSignerOrProvider,
   TransactionResultPromise,
   TransactionResultWithId,
 } from "../core/types";
+import { IStorage } from "../interfaces/IStorage";
+import { SnapshotSchema } from "../schema/modules/common";
 import {
+  DropErc721ModuleDeploy,
   DropErc721ModuleInput,
   DropErc721ModuleOutput,
-  DropErc721ModuleDeploy,
 } from "../schema/modules/drop-erc721";
 import { SDKOptions, SDKOptionsSchema } from "../schema/sdk-options";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
 import {
   DropErc721TokenInput,
   DropErc721TokenOutput,
 } from "../schema/tokens/drop-erc721";
-import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
-import { AddressZero } from "@ethersproject/constants";
 import { ClaimCondition } from "../types";
-import { z } from "zod";
-import { hexZeroPad } from "@ethersproject/bytes";
-import { SnapshotSchema } from "../schema/modules/common";
-import { isNativeToken } from "../common/currency";
 
 type NFTMetadataInput = z.input<typeof DropErc721TokenInput>;
 type NFTMetadata = z.output<typeof DropErc721TokenOutput>;
@@ -73,6 +74,8 @@ export class DropErc721Module {
   // **but** we probably want to enforce in an interface somewhere that `static moduleRoles` is a type of Role[]
   public static moduleRoles = ["admin", "minter", "transfer"] as const;
 
+  private storage: IStorage;
+
   private contractWrapper;
   private options;
   public metadata;
@@ -84,8 +87,10 @@ export class DropErc721Module {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
+    storage: IStorage,
     options: SDKOptions = {},
   ) {
+    this.storage = storage;
     try {
       this.options = SDKOptionsSchema.parse(options);
     } catch (optionParseError) {
@@ -108,7 +113,7 @@ export class DropErc721Module {
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc721Module.schema,
-      this.options.storage,
+      this.storage,
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
@@ -404,7 +409,7 @@ export class DropErc721Module {
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
-    const { baseUri } = await this.options.storage.uploadMetadataBatch(
+    const { baseUri } = await this.storage.uploadMetadataBatch(
       metadatas,
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
@@ -547,7 +552,7 @@ export class DropErc721Module {
   private async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
     return DropErc721TokenOutput.parse(
-      await this.options.storage.getMetadata(tokenUri),
+      await this.storage.getMetadata(tokenUri),
     );
   }
 
@@ -599,7 +604,7 @@ export class DropErc721Module {
     const addressToClaim = await this.contractWrapper.getSignerAddress();
 
     if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
-      const snapshot = await this.options.storage.get(
+      const snapshot = await this.storage.get(
         metadata?.merkle[mintCondition.merkleRoot.toString()],
       );
       const snapshotData = SnapshotSchema.parse(snapshot);

@@ -5,9 +5,6 @@ import { IpfsStorage } from "../core/classes/ipfs-storage";
 
 export const SDKOptionsSchema = z
   .object({
-    storage: z
-      .instanceof(IpfsStorage)
-      .default(new IpfsStorage(DEFAULT_IPFS_GATEWAY)),
     readOnlyRpcUrl: z.string().url().optional(),
     gasSettings: z
       .object({
@@ -42,7 +39,6 @@ export const SDKOptionsSchema = z
       .optional(),
   })
   .default({
-    storage: new IpfsStorage(DEFAULT_IPFS_GATEWAY),
     gasSettings: { maxPriceInGwei: 300, speed: "fastest" },
   });
 

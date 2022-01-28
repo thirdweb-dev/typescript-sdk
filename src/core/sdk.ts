@@ -1,4 +1,6 @@
+import { IStorage } from "../interfaces/IStorage";
 import { Networkish } from "@ethersproject/providers";
+import { DEFAULT_IPFS_GATEWAY } from "../constants/urls";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import { SDKOptions } from "../schema/sdk-options";
 import type {
@@ -12,6 +14,7 @@ import { Registry } from "./classes/registry";
 import { DropErc721Module, MODULES_MAP } from "../modules";
 import { IThirdwebModule__factory } from "@3rdweb/contracts";
 import { ethers } from "ethers";
+import { IpfsStorage } from "./classes/ipfs-storage";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
@@ -23,6 +26,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   private registry: Registry;
   private factory: ModuleFactory;
 
+  private storage: IStorage;
+
   private updateModuleSignerOrProvider() {
     this.registry.updateSignerOrProvider(
       this.getSigner() || this.getProvider(),
@@ -33,10 +38,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     }
   }
 
-  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
+  constructor(
+    network: NetworkOrSignerOrProvider,
+    options: SDKOptions,
+    storage: IStorage = new IpfsStorage(DEFAULT_IPFS_GATEWAY),
+  ) {
     super(network, options);
     this.registry = new Registry(network);
     this.factory = new ModuleFactory(network);
+    this.storage = storage;
   }
 
   public override updateSignerOrProvider(network: Networkish) {
@@ -82,7 +92,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       // we have to do this as here because typescript is not smart enough to figure out
       // that the type is a key of the map (checked by the if statement above)
       moduleType as keyof typeof MODULES_MAP
-    ](this.getNetwork(), address, this.options);
+    ](this.getNetwork(), address, this.options, this.storage);
     // if we have a module type && the module type is part of the map
 
     this.moduleCache.set(address, newModule);
