@@ -60,10 +60,10 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
 
     const encodedType = ethers.utils.formatBytes32String(moduleType);
     console.log("moduleType", moduleType, encodedType);
-    const deployedModule = await this.writeContract.deployProxy(
+    const deployedModule = await this.sendTransaction("deployProxy", [
       encodedType,
       encodedFunc,
-    );
+    ]);
     console.log("deployedModule", deployedModule);
   }
 }

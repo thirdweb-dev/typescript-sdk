@@ -42,7 +42,7 @@ import { signERC2612Permit } from "eth-permit";
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
-  public writeContract;
+  private writeContract;
   public readContract;
 
   constructor(
