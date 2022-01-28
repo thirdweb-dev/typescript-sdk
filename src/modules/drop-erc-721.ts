@@ -331,6 +331,13 @@ export class DropErc721Module {
     return await this.contractWrapper.readContract.primarySaleRecipient();
   }
 
+  /**
+   * Get whether users can transfer NFTs after claiming them
+   */
+  public async isTransferRestricted(): Promise<boolean> {
+    return this.contractWrapper.readContract.isTransferRestricted();
+  }
+
   /** ******************************
    * WRITE FUNCTIONS
    *******************************/
@@ -507,6 +514,31 @@ export class DropErc721Module {
         approved,
       ]),
     };
+  }
+
+  /**
+   * Set the primary sale recipient
+   * @param recipient - the wallet address
+   */
+  public async setPrimarySaleRecipient(
+    recipient: string,
+  ): TransactionResultPromise {
+    return {
+      receipt: await this.contractWrapper.sendTransaction(
+        "setPrimarySaleRecdsdipient",
+        [recipient],
+      ),
+    };
+  }
+
+  public async setRestrictedTransfer(
+    restricted = false,
+  ): TransactionResultPromise {
+    await this.onlyRoles(
+      ["admin"],
+      await this.contractWrapper.getSignerAddress(),
+    );
+    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 
   /** ******************************
