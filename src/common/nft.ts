@@ -9,7 +9,7 @@ import { Contract } from "@ethersproject/contracts";
 import { JSONValue, ProviderOrSigner } from "../core/types";
 import { IStorage } from "../interfaces/IStorage";
 import { NotFoundError } from "./error";
-import { recursiveResolveGatewayUrl, replaceIpfsWithGateway } from "./ipfs";
+import { recursiveResolveGatewayUrl } from "./ipfs";
 
 // support erc721 and erc1155
 const tokenUriABI = [
