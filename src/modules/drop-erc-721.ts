@@ -120,6 +120,10 @@ export class DropErc721Module {
    * READ FUNCTIONS
    *******************************/
 
+  public getAddress(): string {
+    return this.contractWrapper.readContract.address;
+  }
+
   /**
    * Get a single NFT Metadata
    *
