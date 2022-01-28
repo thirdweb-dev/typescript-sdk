@@ -36,8 +36,8 @@ Make a bid on an auction listings
 // The listing ID of the asset you want to bid on
 const listingId = 0;
 // The price you are willing to bid for a single token of the listing
-const bidPricePerToken = 1;
+const pricePerToken = 1;
 
-await module.buyoutDirectListing(listingId, bidPricePerToken);
+await module.makeAuctionListingBid({ listingId, pricePerToken });
 ```
 
