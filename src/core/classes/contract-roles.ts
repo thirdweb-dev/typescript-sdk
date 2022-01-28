@@ -3,6 +3,7 @@ import { getRoleHash, Role } from "../../common/role";
 import { AccessControlEnumerable } from "@3rdweb/contracts";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
+import { MissingRoleError } from "../../common/error";
 
 export class ContractRoles<
   TContract extends AccessControlEnumerable,
@@ -139,6 +140,27 @@ export class ContractRoles<
         encoded,
       ]),
     };
+  }
+
+  /**
+   * Throws an error if an address is missing the roles specified.
+   *
+   * @param roles - The roles to check
+   * @param address - The address to check\
+   *
+   * @internal
+   */
+  public async onlyRoles(roles: TRole[], address: string): Promise<void> {
+    await Promise.all(
+      roles.map(async (role) => {
+        const members = await this.getRoleMembers(role);
+        if (
+          !members.map((a) => a.toLowerCase()).includes(address.toLowerCase())
+        ) {
+          throw new MissingRoleError(address, role);
+        }
+      }),
+    );
   }
 
   private async getRevokeRoleFunctionName(address: string) {

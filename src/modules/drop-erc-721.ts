@@ -531,14 +531,23 @@ export class DropErc721Module {
     };
   }
 
+  /**
+   * Set whether NFTs in this Drop can be trasnfered or not.
+   * @param restricted whether to restrict or allow transfers
+   */
   public async setRestrictedTransfer(
     restricted = false,
   ): TransactionResultPromise {
-    await this.onlyRoles(
+    await this.roles.onlyRoles(
       ["admin"],
       await this.contractWrapper.getSignerAddress(),
     );
-    return await this.sendTransaction("setRestrictedTransfer", [restricted]);
+    return {
+      receipt: await this.contractWrapper.sendTransaction(
+        "setRestrictedTransfer",
+        [restricted],
+      ),
+    };
   }
 
   /** ******************************
