@@ -109,7 +109,11 @@ export interface IStorage {
   ): Promise<UploadMetadataBatchResult>;
 
   /**
-   * Returns the prefix that identifies files from this storage provider.
+   * Returns true if the URI is resolvable by the current storage interface.
+   *
+   * For example: If the storage is configured to point to IPFS,
+   * passing in ipfs://SOME_HASH will return true in this function
+   * because that is a valid IPFS URI.
    */
-  getIdentifyingPrefix(): string;
+  canResolve(uri: string): boolean;
 }

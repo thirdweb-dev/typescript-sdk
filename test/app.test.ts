@@ -6,7 +6,12 @@ import { BigNumber, ethers } from "ethers";
 import { readFileSync } from "fs";
 import { JsonConvert } from "json2typescript";
 import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
-import { AppModule, BundleModuleMetadata, DropModule } from "../src/index";
+import {
+  AppModule,
+  BundleModuleMetadata,
+  DropModule,
+  IpfsStorage,
+} from "../src/index";
 import {
   appModule,
   ipfsGatewayUrl,
@@ -22,9 +27,18 @@ describe("App Module", async () => {
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
 
+  let storageUriPrefix: string;
+
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
     await sdk.setProviderOrSigner(signers[0]);
+
+    const storage = sdk.getStorage();
+    if (storage instanceof IpfsStorage) {
+      storageUriPrefix = "ipfs://";
+    } else if (storage instanceof MockStorage) {
+      storageUriPrefix = "mock://";
+    }
   });
 
   it.skip("should serialize metadata correctly", async () => {
@@ -130,9 +144,7 @@ describe("App Module", async () => {
 
     const metadata = await module.getMetadata(false);
     assert.isTrue(
-      metadata.metadata.image.startsWith(
-        sdk.getStorage().getIdentifyingPrefix(),
-      ),
+      sdk.getStorage().canResolve(metadata.metadata.image),
       `Image property = ${metadata.metadata.image}, should include fake://`,
     );
   });
@@ -241,7 +253,7 @@ describe("App Module", async () => {
     const metadata = {
       name: "safe",
       description: "",
-      image: `${sdk.getStorage().getIdentifyingPrefix()}/image`,
+      image: `${storageUriPrefix}/image`,
       sellerFeeBasisPoints: 0,
       symbol: "",
     };
@@ -249,10 +261,7 @@ describe("App Module", async () => {
     const module = sdk.getBundleModule(contract.address);
 
     const unresolved = await module.getMetadata(false);
-    assert.equal(
-      unresolved.metadata.image,
-      `${sdk.getStorage().getIdentifyingPrefix()}/image`,
-    );
+    assert.equal(unresolved.metadata.image, `${storageUriPrefix}/image`);
   });
   it("should deploy a bundle drop module correctly", async () => {
     const contract = await appModule.deployBundleDropModule({
@@ -278,7 +287,7 @@ describe("App Module", async () => {
     const module = sdk.getBundleModule(contract.address);
     const result = await module.getMetadata(false);
     assert.isTrue(
-      result.metadata.image.startsWith(sdk.getStorage().getIdentifyingPrefix()),
+      result.metadata.image.startsWith(storageUriPrefix),
       "The image property should have been replaced with a storage hash",
     );
   });
@@ -343,7 +352,7 @@ describe("App Module", async () => {
       await v1Module.deployNftModule({
         name: "Test NFT",
         symbol: "TST",
-        image: "mock://test_image",
+        image: `${storageUriPrefix}test_image`,
         feeRecipient: v1Module.address,
         sellerFeeBasisPoints: 0,
       });

@@ -379,7 +379,8 @@ export class IpfsStorage implements IStorage {
       : ipfsHash;
   }
 
-  public getIdentifyingPrefix(): string {
-    return "ipfs://";
+  public canResolve(uri: string): boolean {
+    const resolved = this.resolveFullUrl(uri);
+    return resolved.toLowerCase() !== uri.toLowerCase();
   }
 }

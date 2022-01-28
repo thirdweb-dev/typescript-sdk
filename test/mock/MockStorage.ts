@@ -139,8 +139,9 @@ export class MockStorage implements IStorage {
     };
   }
 
-  public getIdentifyingPrefix(): string {
-    return "mock://";
+  public canResolve(uri: string): boolean {
+    const resolved = this.resolveFullUrl(uri);
+    return resolved.toLowerCase() !== uri.toLowerCase();
   }
 
   private async uploadProperties(object: Record<string, any>): Promise<void> {
