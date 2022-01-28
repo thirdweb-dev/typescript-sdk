@@ -207,7 +207,7 @@
         "summary": "Buyout Auction\n\n",
         "remarks": "\n\nBuy a specific direct listing from the marketplace.\n\n",
         "examples": {
-          "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n\nconst balance = await module.balanceOf(listingId, quantity);\nconsole.log(balance);"
+          "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n\nawait module.buyoutAuctionListing(listingId);"
         },
         "signature": "buyoutAuctionListing(listingId: BigNumberish): Promise<void>;"
       },
