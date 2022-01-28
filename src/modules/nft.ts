@@ -590,7 +590,6 @@ export class NFTModule
   ): Promise<{ payload: SignaturePayload; signature: string }[]> {
     const resolveId = (mintRequest: NewSignaturePayload): string => {
       if (mintRequest.id === undefined) {
-        console.warn("mintRequest.id is an empty string, generating uuid-v4");
         const buffer = Buffer.alloc(16);
         uuidv4({}, buffer);
         return hexlify(toUtf8Bytes(buffer.toString("hex")));
