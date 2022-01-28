@@ -1,11 +1,11 @@
-import { IStorage } from "./../../interfaces/IStorage";
 import { TWFactory, TWFactory__factory } from "@3rdweb/contracts";
-import { SDKOptions } from "../../schema/sdk-options";
+import { z } from "zod";
 import { TW_FACTORY_ADDRESS } from "../../constants/addresses";
+import { IStorage } from "../interfaces/IStorage";
+import { MODULES_MAP } from "../../modules";
+import { SDKOptions } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider, ValidModuleClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { z } from "zod";
-import { MODULES_MAP } from "../../modules";
 
 export class ModuleFactory extends ContractWrapper<TWFactory> {
   private storage: IStorage;
