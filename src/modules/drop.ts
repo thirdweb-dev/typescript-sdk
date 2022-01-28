@@ -1012,7 +1012,7 @@ export class DropModule
       .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
     const receipt = await this.sendTransaction("lazyMint", [
       metadatas.length,
-      baseUri,
+      baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
     ]);
     const event = this.parseEventLogs("LazyMintedTokens", receipt?.logs);
     const [startingIndex, endingIndex]: BigNumber[] = event;

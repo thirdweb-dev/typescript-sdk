@@ -71,7 +71,7 @@ export class MockStorage implements IStorage {
   }
 
   get(hash: string): Promise<string> {
-    hash = hash.replace("mock://", "");
+    hash = hash.replace("mock://", "").replace("fake://", "");
     const split = hash.split("/");
     if (split.length === 1) {
       if (hash in this.objects) {
