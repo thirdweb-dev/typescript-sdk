@@ -86,8 +86,8 @@ export interface IStorage {
    * @param signerAddress - Optional. The address of the signer.
    */
 
-  uploadMetadata<T extends string | JsonObject>(
-    metadata: T,
+  uploadMetadata(
+    metadata: string | JsonObject,
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<string>;

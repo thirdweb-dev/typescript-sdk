@@ -1,13 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import {
-  BufferOrStringWithName,
-  FileOrBuffer,
   IStorage,
+  MetadataURIOrObject,
   NotFoundError,
   UploadMetadataBatchResult,
 } from "../../src";
-
-type MetadataURIOrObject = string | Record<string, any>;
+import { BufferOrStringWithName } from "../../src/types/BufferOrStringWithName";
+import FileOrBuffer from "../../src/types/FileOrBuffer";
 
 export class MockStorage implements IStorage {
   private objects: { [key: string]: string } = {};
@@ -27,7 +26,7 @@ export class MockStorage implements IStorage {
     }
 
     const key = `mock://${uuid}`;
-    this.objects[uuid] = data as string;
+    this.objects[uuid] = data;
     return Promise.resolve(key);
   }
 
@@ -38,14 +37,13 @@ export class MockStorage implements IStorage {
       | FileOrBuffer[]
       | File[]
       | BufferOrStringWithName[],
-    fileStartNumber?: number,
     contractAddress?: string,
-    signerAddress?: string,
+    uploadFileStartNumber?: number,
   ): Promise<string> {
     const cid = uuidv4();
     this.folders[cid] = {};
 
-    let index = fileStartNumber ? fileStartNumber : 0;
+    let index = uploadFileStartNumber ? uploadFileStartNumber : 0;
     for (const file of files) {
       let contents: string;
       if (file instanceof File) {
@@ -111,8 +109,8 @@ export class MockStorage implements IStorage {
     // since there's only single object, always use the first index
     const { metadataUris } = await this.uploadMetadataBatch(
       [metadata],
-      0,
       contractAddress,
+      0,
     );
 
     return metadataUris[0];
@@ -120,9 +118,8 @@ export class MockStorage implements IStorage {
 
   public async uploadMetadataBatch(
     metadatas: MetadataURIOrObject[],
-    fileStartNumber?: number,
     contractAddress?: string,
-    signerAddress?: string,
+    fileStartNumber?: number,
   ): Promise<UploadMetadataBatchResult> {
     const metadataObjects = metadatas.filter((m) => typeof m !== "string");
     await this.batchUploadProperties(metadatas);
@@ -133,8 +130,8 @@ export class MockStorage implements IStorage {
 
     const cid = await this.uploadBatch(
       metadataToUpload,
-      fileStartNumber,
       contractAddress,
+      fileStartNumber,
     );
     return {
       metadataUris: metadataToUpload.map((m, i) => `${cid}/${i}`),
