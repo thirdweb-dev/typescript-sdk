@@ -1,8 +1,8 @@
 import { IThirdwebModule } from "@3rdweb/contracts";
 import { z } from "zod";
+import { IStorage } from "../../core/interfaces/IStorage";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { IpfsStorage } from "./ipfs-storage";
 
 export interface IGenericSchemaType {
   deploy: z.AnyZodObject;
@@ -21,7 +21,7 @@ export class ContractMetadata<
   constructor(
     contractWrapper: ContractWrapper<TContract>,
     schema: TSchema,
-    storage: IpfsStorage,
+    storage: IStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.schema = schema;

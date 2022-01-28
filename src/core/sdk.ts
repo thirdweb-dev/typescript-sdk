@@ -1,20 +1,20 @@
-import { IStorage } from "../interfaces/IStorage";
+import { IThirdwebModule__factory } from "@3rdweb/contracts";
 import { Networkish } from "@ethersproject/providers";
+import { ethers } from "ethers";
 import { DEFAULT_IPFS_GATEWAY } from "../constants/urls";
-import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
+import { IStorage } from "../core/interfaces/IStorage";
+import { DropErc721Module, MODULES_MAP } from "../modules";
 import { SDKOptions } from "../schema/sdk-options";
+import { ModuleFactory } from "./classes/factory";
+import { IpfsStorage } from "./classes/ipfs-storage";
+import { Registry } from "./classes/registry";
+import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
   ModuleForModuleType,
   ModuleType,
   NetworkOrSignerOrProvider,
   ValidModuleInstance,
 } from "./types";
-import { ModuleFactory } from "./classes/factory";
-import { Registry } from "./classes/registry";
-import { DropErc721Module, MODULES_MAP } from "../modules";
-import { IThirdwebModule__factory } from "@3rdweb/contracts";
-import { ethers } from "ethers";
-import { IpfsStorage } from "./classes/ipfs-storage";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
@@ -45,7 +45,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ) {
     super(network, options);
     this.registry = new Registry(network);
-    this.factory = new ModuleFactory(network);
+    this.factory = new ModuleFactory(network, storage);
     this.storage = storage;
   }
 
@@ -92,7 +92,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       // we have to do this as here because typescript is not smart enough to figure out
       // that the type is a key of the map (checked by the if statement above)
       moduleType as keyof typeof MODULES_MAP
-    ](this.getNetwork(), address, this.options, this.storage);
+    ](this.getNetwork(), address, this.storage, this.options);
     // if we have a module type && the module type is part of the map
 
     this.moduleCache.set(address, newModule);

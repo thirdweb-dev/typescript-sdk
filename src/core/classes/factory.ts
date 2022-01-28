@@ -1,3 +1,4 @@
+import { IStorage } from "./../../interfaces/IStorage";
 import { TWFactory, TWFactory__factory } from "@3rdweb/contracts";
 import { SDKOptions } from "../../schema/sdk-options";
 import { TW_FACTORY_ADDRESS } from "../../constants/addresses";
@@ -7,8 +8,15 @@ import { z } from "zod";
 import { MODULES_MAP } from "../../modules";
 
 export class ModuleFactory extends ContractWrapper<TWFactory> {
-  constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions) {
-    super(network, options, TW_FACTORY_ADDRESS, TWFactory__factory.abi);
+  private storage: IStorage;
+
+  constructor(
+    network: NetworkOrSignerOrProvider,
+    storage: IStorage,
+    options?: SDKOptions,
+  ) {
+    super(network, TW_FACTORY_ADDRESS, TWFactory__factory.abi, options);
+    this.storage = storage;
   }
 
   public async deploy<TModule extends ValidModuleClass>(
@@ -17,7 +25,7 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
   ) {
     const metadata =
       MODULES_MAP[moduleType].schema.deploy.parse(moduleMetadata);
-    const contractURI = await this.options.storage.uploadMetadata(
+    const contractURI = await this.storage.uploadMetadata(
       metadata,
       this.readContract.address,
       await this.getSigner()?.getAddress(),
