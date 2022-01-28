@@ -1,3 +1,4 @@
+import { MockStorage } from "./mock/MockStorage";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { readFileSync } from "fs";
 import { ipfsGatewayUrl, sdk, signers } from "./before.test";
@@ -20,7 +21,15 @@ describe("IPFS Uploads", async () => {
   });
 
   beforeEach(async () => {
+    const storage = new IpfsStorage(ipfsGatewayUrl);
+    sdk.overrideStorage(storage);
+
     sdk.setProviderOrSigner(adminWallet);
+  });
+
+  afterAll(async () => {
+    const storage = new MockStorage();
+    sdk.overrideStorage(storage);
   });
 
   async function getFile(upload: string): Promise<Response> {

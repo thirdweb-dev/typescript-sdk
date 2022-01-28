@@ -1,7 +1,9 @@
 import { recursiveResolveGatewayUrl } from "../src/common/ipfs";
 import { assert } from "chai";
+import { IpfsStorage } from "../src";
 
 const ipfsGatewayUrl = "https://ipfs.thirdweb.com/ipfs/";
+const storage = new IpfsStorage(ipfsGatewayUrl);
 
 describe("Recursive Testing", async () => {
   let json;
@@ -22,7 +24,7 @@ describe("Recursive Testing", async () => {
   it("should resolve all URLs when resolveGateway is set to true", async () => {
     const resolveGateway = true;
     if (resolveGateway) {
-      json = await recursiveResolveGatewayUrl(json, ipfsGatewayUrl);
+      json = await recursiveResolveGatewayUrl(json, storage);
     }
     assert.notStrictEqual(json, {
       test2:
@@ -42,7 +44,7 @@ describe("Recursive Testing", async () => {
   it("should resolve all URLs when resolveGateway is set to true", async () => {
     const resolveGateway = false;
     if (resolveGateway) {
-      json = await recursiveResolveGatewayUrl(json, ipfsGatewayUrl);
+      json = await recursiveResolveGatewayUrl(json, storage);
     }
     assert.notStrictEqual(json, {
       test: "test",

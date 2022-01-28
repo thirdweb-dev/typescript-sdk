@@ -107,4 +107,13 @@ export interface IStorage {
     contractAddress?: string,
     fileStartNumber?: number,
   ): Promise<UploadMetadataBatchResult>;
+
+  /**
+   * Returns true if the URI is resolvable by the current storage interface.
+   *
+   * For example: If the storage is configured to point to IPFS,
+   * passing in ipfs://SOME_HASH will return true in this function
+   * because that is a valid IPFS URI.
+   */
+  canResolve(uri: string): boolean;
 }

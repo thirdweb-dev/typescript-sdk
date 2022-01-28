@@ -131,7 +131,7 @@ describe("Bundle Drop Module", async () => {
         await bdModule.claim("0", 1);
         console.log(`Address ${member.address} claimed successfully!`);
       } catch (e) {
-        if (member != w4) {
+        if (member !== w4) {
           throw e;
         }
         console.log(`Address ${member.address} failed to claim, as expected!`);

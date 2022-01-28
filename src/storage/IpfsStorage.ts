@@ -372,11 +372,15 @@ export class IpfsStorage implements IStorage {
    */
   resolveFullUrl(ipfsHash: string): string {
     if (typeof ipfsHash !== "string") {
-      console.warn(`ipfsHash is not a string: ${ipfsHash}`);
       return "";
     }
     return ipfsHash && ipfsHash.toLowerCase().includes("ipfs://")
       ? ipfsHash.replace("ipfs://", this.gatewayUrl)
       : ipfsHash;
+  }
+
+  public canResolve(uri: string): boolean {
+    const resolved = this.resolveFullUrl(uri);
+    return resolved.toLowerCase() !== uri.toLowerCase();
   }
 }

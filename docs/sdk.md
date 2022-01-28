@@ -142,7 +142,7 @@ Output
 |  [generateRoot(items)](./sdk.generateroot.md) | Convenience function to generate a merkle root from a list of strings. |
 |  [getNativeTokenByChainId(chainId)](./sdk.getnativetokenbychainid.md) |  |
 |  [getTokenMetadataUsingStorage(contractAddress, provider, tokenId, storage)](./sdk.gettokenmetadatausingstorage.md) |  |
-|  [recursiveResolveGatewayUrl(json, ipfsGatewayUrl)](./sdk.recursiveresolvegatewayurl.md) |  |
+|  [recursiveResolveGatewayUrl(json, storage)](./sdk.recursiveresolvegatewayurl.md) |  |
 |  [uploadToIPFS(data, contractAddress, signerAddress)](./sdk.uploadtoipfs.md) | A helper function to upload arbitrary data to IPFS and return the resulting IPFS uri. |
 
 ## Interfaces

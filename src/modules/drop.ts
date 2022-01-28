@@ -129,7 +129,7 @@ export class DropModule
     return await getTokenMetadata(
       this.readOnlyContract,
       tokenId,
-      this.ipfsGatewayUrl,
+      this.sdk.getStorage(),
     );
   }
 
@@ -946,7 +946,7 @@ export class DropModule
     // TODO: reduce this duplication and provide common functions around
     // royalties through an interface. Currently this function is
     // duplicated across 4 modules
-    const { metadata } = await this.getMetadata();
+    const { metadata } = await this.getMetadata(false);
     const encoded: string[] = [];
     if (!metadata) {
       throw new Error("No metadata found, this module might be invalid!");
@@ -1012,7 +1012,7 @@ export class DropModule
       .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
     const receipt = await this.sendTransaction("lazyMint", [
       metadatas.length,
-      baseUri,
+      baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
     ]);
     const event = this.parseEventLogs("LazyMintedTokens", receipt?.logs);
     const [startingIndex, endingIndex]: BigNumber[] = event;
@@ -1135,7 +1135,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
     return await getTokenMetadata(
       this.readOnlyContract,
       tokenId,
-      this.ipfsGatewayUrl,
+      this.sdk.getStorage(),
     );
   }
 

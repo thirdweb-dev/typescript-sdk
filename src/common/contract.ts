@@ -2,7 +2,8 @@ import { arrayify } from "@ethersproject/bytes";
 import { Contract } from "@ethersproject/contracts";
 import { Provider } from "@ethersproject/providers";
 import { ProviderOrSigner } from "../core/types";
-import { replaceIpfsWithGateway, recursiveResolveGatewayUrl } from "./ipfs";
+import { IStorage } from "../interfaces/IStorage";
+import { recursiveResolveGatewayUrl } from "./ipfs";
 
 /**
  * The typical contract metadata found on the modules.
@@ -51,24 +52,17 @@ const contractUriABI = [
 export async function getContractMetadata(
   provider: ProviderOrSigner,
   address: string,
-  ipfsGatewayUrl: string,
+  storage: IStorage,
   resolveGateway = false,
 ): Promise<ContractMetadata> {
   const contract = new Contract(address, contractUriABI, provider);
   const uri = await contract.contractURI();
-  const gatewayUrl = replaceIpfsWithGateway(uri, ipfsGatewayUrl);
-  const meta = await fetch(gatewayUrl);
-
-  if (!meta.ok) {
-    throw new Error(
-      `Gateway did not return metadata, instead returned:\n ${meta.status} - ${meta.statusText}`,
-    );
-  }
+  const meta = await storage.get(uri);
 
   try {
-    let json = await meta.json();
+    let json = JSON.parse(meta);
     if (resolveGateway) {
-      json = recursiveResolveGatewayUrl(json, ipfsGatewayUrl);
+      json = recursiveResolveGatewayUrl(json, storage);
     }
     const entity: ContractMetadata = {
       ...json,
@@ -76,7 +70,7 @@ export async function getContractMetadata(
     return entity;
   } catch (e) {
     throw new Error(
-      `Gateway did not return metadata, instead returned:\n ${meta.status} - ${meta.statusText}`,
+      `Failed to parse metadata for contract ${address} with uri ${uri}`,
     );
   }
 }

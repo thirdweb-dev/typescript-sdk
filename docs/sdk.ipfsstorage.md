@@ -22,6 +22,7 @@ export declare class IpfsStorage implements IStorage
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [buildFilePropertiesMap(object, files)](./sdk.ipfsstorage.buildfilepropertiesmap.md) |  | This function recurisely traverses an object and hashes any <code>Buffer</code> or <code>File</code> objects into the returned map. |
+|  [canResolve(uri)](./sdk.ipfsstorage.canresolve.md) |  |  |
 |  [get(hash)](./sdk.ipfsstorage.get.md) |  |  |
 |  [getUploadToken(contractAddress)](./sdk.ipfsstorage.getuploadtoken.md) |  |  |
 |  [upload(data, contractAddress, signerAddress)](./sdk.ipfsstorage.upload.md) |  |  |

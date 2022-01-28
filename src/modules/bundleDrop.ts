@@ -132,7 +132,7 @@ export class BundleDropModule
     return await getTokenMetadata(
       this.readOnlyContract,
       tokenId,
-      this.ipfsGatewayUrl,
+      this.sdk.getStorage(),
     );
   }
 
@@ -309,7 +309,7 @@ export class BundleDropModule
       .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
     const receipt = await this.sendTransaction("lazyMint", [
       metadatas.length,
-      baseUri,
+      `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
     ]);
     const event = this.parseEventLogs("LazyMintedTokens", receipt?.logs);
     const [startingIndex, endingIndex]: BigNumber[] = event;
