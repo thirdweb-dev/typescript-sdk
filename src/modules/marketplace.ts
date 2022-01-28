@@ -907,12 +907,7 @@ export class MarketplaceModule
     await this.setAllowance(value, listing.currencyContractAddress, overrides);
 
     const buyParams = (await this.isNewBuy())
-      ? [
-          _buyout.listingId,
-          quantity,
-          listing.currencyContractAddress,
-          BigNumber.from(listing.buyoutPrice).mul(quantity),
-        ]
+      ? [_buyout.listingId, quantity, listing.currencyContractAddress, value]
       : [_buyout.listingId, quantity];
     await this.sendTransaction("buy", buyParams, overrides);
   }
