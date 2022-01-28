@@ -1,5 +1,5 @@
-import { ethers } from "ethers";
-import { DropModule } from "../src";
+import { ethers, Wallet } from "ethers";
+import { DropModule, ThirdwebSDK } from "../src";
 import { EventType } from "../src/core/events";
 import { appModule, sdk } from "./before.test";
 
@@ -29,5 +29,23 @@ describe("Events", async () => {
       txStatus = event.status;
     });
     await dropModule.setApproval(ethers.constants.AddressZero, true);
+  });
+
+  it.skip("should emit Signature events", async () => {
+    const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
+    const provider = ethers.getDefaultProvider(RPC_URL);
+    const wallet = Wallet.createRandom().connect(provider);
+    const esdk = new ThirdwebSDK(wallet, {
+      transactionRelayerUrl: "dummy_url",
+    });
+    sdk.event.on(EventType.Transaction, (event) => {
+      console.log(event);
+    });
+    sdk.event.on(EventType.Signature, (event) => {
+      console.log(event);
+    });
+    await esdk
+      .getDropModule(dropModule.address)
+      .setApproval(ethers.constants.AddressZero, true);
   });
 });

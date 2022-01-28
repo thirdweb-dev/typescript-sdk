@@ -55,6 +55,7 @@ import { VoteModule } from "../modules/vote";
 import { IpfsStorage } from "../storage/IpfsStorage";
 import { ModuleMetadataNoType } from "../types/ModuleMetadata";
 import { ClaimProof, Snapshot, SnapshotInfo } from "../types/snapshots";
+import { EventType } from "./events";
 import { IAppModule, RegistryModule } from "./registry";
 import {
   ForwardRequestMessage,
@@ -604,7 +605,17 @@ export class ThirdwebSDK implements IThirdwebSdk {
       ),
     );
 
+    this.event.emit(EventType.Signature, {
+      status: "submitted",
+      message: hashToSign,
+      signature: "",
+    });
     const signature = await signer.signMessage(hashToSign);
+    this.event.emit(EventType.Signature, {
+      status: "completed",
+      message: hashToSign,
+      signature,
+    });
     const response = await fetch(
       "https://api.biconomy.io/api/v2/meta-tx/native",
       {
@@ -668,6 +679,12 @@ export class ThirdwebSDK implements IThirdwebSdk {
 
     let signature: BytesLike;
 
+    this.event.emit(EventType.Signature, {
+      status: "submitted",
+      message,
+      signature: "",
+    });
+
     // if the executing function is "approve" and matches with erc20 approve signature
     // and if the token supports permit, then we use permit for gasless instead of approve.
     if (
@@ -680,6 +697,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
     ) {
       const spender = transaction.functionArgs[0];
       const amount = transaction.functionArgs[1];
+
       const permit = await signERC2612Permit(
         signer,
         contract.address,
@@ -691,6 +709,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
       signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
     } else {
       // wallet connect special 🦋
+      // signing the message through wallet provider
       if (
         (
           (signer?.provider as Web3Provider)?.provider as ExternalProvider & {
@@ -715,6 +734,12 @@ export class ThirdwebSDK implements IThirdwebSdk {
         );
       }
     }
+
+    this.event.emit(EventType.Signature, {
+      status: "completed",
+      message,
+      signature,
+    });
 
     // TODO: isolate http request logic in here. `transactionRelayerSendFunction` is deprecated using it for backward compatibility reasons.
     const txHash = await this.options.transactionRelayerSendFunction(
