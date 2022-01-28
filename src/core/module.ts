@@ -424,6 +424,14 @@ export class Module<TContract extends BaseContract = BaseContract> {
     types: any,
     message: any,
   ): Promise<BytesLike> {
+    let signature = "";
+
+    this.sdk.event.emit(EventType.Signature, {
+      status: "submitted",
+      message,
+      signature,
+    });
+
     if (
       (
         (signer?.provider as Web3Provider)?.provider as ExternalProvider & {
@@ -436,17 +444,24 @@ export class Module<TContract extends BaseContract = BaseContract> {
         types,
         message,
       );
-      return await (signer?.provider as JsonRpcProvider).send(
+      signature = await (signer?.provider as JsonRpcProvider).send(
         "eth_signTypedData",
         [from.toLowerCase(), JSON.stringify(payload)],
       );
     } else {
-      return await (signer as JsonRpcSigner)._signTypedData(
+      signature = await (signer as JsonRpcSigner)._signTypedData(
         domain,
         types,
         message,
       );
     }
+
+    this.sdk.event.emit(EventType.Signature, {
+      status: "completed",
+      message,
+      signature,
+    });
+    return signature;
   }
 
   protected parseEventLogs(eventName: string, logs?: Log[]): any {
