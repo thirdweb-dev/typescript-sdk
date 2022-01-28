@@ -209,13 +209,15 @@ describe("App Module", async () => {
       name: `Testing drop from SDK`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      seller_fee_basis_points: 100,
       platform_fee_recipient: AddressZero,
     });
 
     console.log("Address: ", address);
 
     const dropModule = sdk.getDropModule(address);
+
+    const metadata = await dropModule.metadata.get();
+    console.log("Metadata: ", metadata);
 
     const owner = await dropModule.ownerOf("0");
     console.log("Owner: ", owner);
