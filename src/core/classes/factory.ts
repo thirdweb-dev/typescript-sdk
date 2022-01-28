@@ -39,7 +39,7 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
 
     // TODO: is there any special pre-processing we need to do before uploading?
     const contractURI = await this.storage.uploadMetadata(
-      JSON.stringify(metadata),
+      metadata,
       this.readContract.address,
       await this.getSigner()?.getAddress(),
     );
