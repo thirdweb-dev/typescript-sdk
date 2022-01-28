@@ -2,12 +2,12 @@ import { IThirdwebModule__factory } from "@3rdweb/contracts";
 import { Networkish } from "@ethersproject/providers";
 import { ethers } from "ethers";
 import { DEFAULT_IPFS_GATEWAY } from "../constants/urls";
-import { IStorage } from "../core/interfaces/IStorage";
-import { DropErc721Module, MODULES_MAP } from "../modules";
+import { IStorage } from "./interfaces/IStorage";
+import { MODULES_MAP } from "../modules";
 import { SDKOptions } from "../schema/sdk-options";
 import { ModuleFactory } from "./classes/factory";
+// import { ModuleFactory } from "./classes/factory";
 import { IpfsStorage } from "./classes/ipfs-storage";
-import { Registry } from "./classes/registry";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
   ModuleForModuleType,
@@ -15,6 +15,7 @@ import type {
   NetworkOrSignerOrProvider,
   ValidModuleInstance,
 } from "./types";
+import { DropErc721Module } from "../modules/drop-erc-721";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
@@ -23,15 +24,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   private moduleCache = new Map<string, ValidModuleInstance>();
 
-  private registry: Registry;
-  private factory: ModuleFactory;
+  // private moduleFactory: TWFactory;
+  public factory: ModuleFactory;
 
   private storage: IStorage;
 
   private updateModuleSignerOrProvider() {
-    this.registry.updateSignerOrProvider(
-      this.getSigner() || this.getProvider(),
-    );
     this.factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
     for (const [, module] of this.moduleCache) {
       module.updateSignerOrProvider(this.getSigner() || this.getProvider());
@@ -44,12 +42,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage: IStorage = new IpfsStorage(DEFAULT_IPFS_GATEWAY),
   ) {
     super(network, options);
-    this.registry = new Registry(network);
-    this.factory = new ModuleFactory(network, storage);
+    this.factory = new ModuleFactory(network, storage, options);
     this.storage = storage;
   }
 
-  public override updateSignerOrProvider(network: Networkish) {
+  public override updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
     super.updateSignerOrProvider(network);
     this.updateModuleSignerOrProvider();
   }

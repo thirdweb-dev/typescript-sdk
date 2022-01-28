@@ -4,6 +4,7 @@ import {
   TWFactory__factory,
   TWFee__factory,
 } from "@3rdweb/contracts";
+import { DropERC721LibraryAddresses } from "@3rdweb/contracts/dist/factories/DropERC721__factory";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
@@ -81,13 +82,15 @@ before(async () => {
   const thirdwebFeeDeployer = await new ethers.ContractFactory(
     TWFee__factory.abi,
     TWFee__factory.bytecode,
-  ).deploy(
-    trustedForwarderAddress,
-    defaultRecipient,
-    defaultRecipient,
-    defaultRoyaltyFeeBps,
-    defaultTransactionFeeBps,
-  );
+  )
+    .connect(signer)
+    .deploy(
+      trustedForwarderAddress,
+      defaultRecipient,
+      defaultRecipient,
+      defaultRoyaltyFeeBps,
+      defaultTransactionFeeBps,
+    );
   console.log("Deploying the deployer");
   await thirdwebFactoryDeployer.deployed();
   // const deployTxFee = thirdwebFeeDeployer.deployTransaction;
@@ -98,15 +101,22 @@ before(async () => {
 
   const drop721Factory = await new ethers.ContractFactory(
     DropERC721__factory.abi,
-    DropERC721__factory.bytecode,
-  ).deploy(thirdwebFeeDeployer.address);
+    DropERC721__factory.linkBytecode({
+      "contracts/lib/CurrencyTransferLib.sol:CurrencyTransferLib":
+        currencyTransferAddress,
+    }),
+  )
+    .connect(signer)
+    .deploy(thirdwebFeeDeployer.address);
   console.log(
     "Deploying Drop721 at tx:",
     drop721Factory.deployTransaction.hash,
   );
-  await drop721Factory.deployTransaction.wait();
+  await drop721Factory.deployed();
+  // await drop721Factory.deployTransaction.wait();
 
   const drop721ModuleType = await drop721Factory.moduleType();
+  console.log("Drop721 module type: ", drop721ModuleType);
   const tx = await thirdwebFactoryDeployer.addModuleImplementation(
     drop721ModuleType,
     drop721Factory.address,
@@ -124,6 +134,7 @@ before(async () => {
       gasSettings: {
         maxPriceInGwei: 10000,
       },
+      thirdwebModuleFactory: thirdwebFactoryDeployer.address,
     },
     storage,
   );
