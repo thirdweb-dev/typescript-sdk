@@ -105,6 +105,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
         apiId: "",
         apiKey: "",
         deadlineSeconds: 3600,
+        gasTier: "NORMAL",
       },
     },
     gaslessSendFunction: this.defaultGaslessSendFunction.bind(this),
@@ -616,23 +617,25 @@ export class ThirdwebSDK implements IThirdwebSdk {
       message: hashToSign,
       signature,
     });
-    const response = await fetch(
-      "https://api.biconomy.io/api/v2/meta-tx/native",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          from: transaction.from,
-          apiId: this.options.gasless.biconomy.apiId,
-          params: [request, signature],
-          to: transaction.to,
-          gasLimit: transaction.gasLimit.toHexString(),
-        }),
-        headers: {
-          "x-api-key": this.options.gasless.biconomy.apiKey,
-          "Content-Type": "application/json;charset=utf-8",
-        },
+
+    const apiUrl = `${
+      this.options.transactionRelayerUrl || "https://api.biconomy.io"
+    }/api/v2/meta-tx/native`;
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        from: transaction.from,
+        apiId: this.options.gasless.biconomy.apiId,
+        params: [request, signature],
+        to: transaction.to,
+        gasLimit: transaction.gasLimit.toHexString(),
+        gasType: this.options.gasless.biconomy.gasTier,
+      }),
+      headers: {
+        "x-api-key": this.options.gasless.biconomy.apiKey,
+        "Content-Type": "application/json;charset=utf-8",
       },
-    );
+    });
 
     if (response.ok) {
       const resp = await response.json();
