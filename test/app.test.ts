@@ -99,7 +99,7 @@ describe("App Module", async () => {
     }
   });
 
-  it("should deploy a collection module successfully", async () => {
+  it.skip("should deploy a collection module successfully", async () => {
     const module = await appModule.deployBundleModule({
       name: "Testing module from SDK",
       sellerFeeBasisPoints: 1000,
@@ -108,7 +108,7 @@ describe("App Module", async () => {
     });
   });
 
-  it("should deploy a splits module successfully", async () => {
+  it.skip("should deploy a splits module successfully", async () => {
     const module = await appModule.deploySplitsModule({
       name: "Testing module from SDK",
       image:
@@ -127,13 +127,13 @@ describe("App Module", async () => {
     });
   });
 
-  it("Should return a valid splits module", async () => {
+  it.skip("Should return a valid splits module", async () => {
     const module = await sdk.getSplitsModule(
       "0x255d57Be74C055Bdd29Dfb7c714EEfFdd2492163",
     );
   });
 
-  it("should deploy an nft module with an image file successfully", async () => {
+  it.skip("should deploy an nft module with an image file successfully", async () => {
     const filePath = `${__dirname}/3510820011_4f558b6dea_b.jpg`;
     const image = readFileSync(filePath);
     const module = await appModule.deployNftModule({
@@ -149,7 +149,7 @@ describe("App Module", async () => {
     );
   });
 
-  it("should deploy a currency module successfully", async () => {
+  it.skip("should deploy a currency module successfully", async () => {
     const image =
       "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg";
     const module = await appModule.deployCurrencyModule({
@@ -166,7 +166,7 @@ describe("App Module", async () => {
     );
   });
 
-  it("should deploy a marketplace module successfully", async () => {
+  it.skip("should deploy a marketplace module successfully", async () => {
     const result = await appModule.deployMarketModule({
       name: `Testing market from SDK`,
       image:
@@ -176,7 +176,7 @@ describe("App Module", async () => {
     await sdk.getMarketModule(result.address);
   });
 
-  it("should deploy a pack module successfully", async () => {
+  it.skip("should deploy a pack module successfully", async () => {
     const splits = await appModule.deploySplitsModule({
       name: `Testing pack from SDK`,
       image:
@@ -204,7 +204,7 @@ describe("App Module", async () => {
     );
   });
 
-  it("should deploy a drop module successfully", async () => {
+  it.skip("should deploy a drop module successfully", async () => {
     const result = await appModule.deployDropModule({
       name: `Testing drop from SDK`,
       image:
@@ -219,7 +219,7 @@ describe("App Module", async () => {
     assert.isNotEmpty(module.address, "The max supply should be 10");
   });
 
-  it("should deploy a datastore module successfully", async () => {
+  it.skip("should deploy a datastore module successfully", async () => {
     const result = await appModule.deployDatastoreModule({
       name: `Testing drop from SDK`,
       image:
@@ -249,7 +249,7 @@ describe("App Module", async () => {
     }
   });
 
-  it("should allow image fields to pass-through as a string", async () => {
+  it.skip("should allow image fields to pass-through as a string", async () => {
     const metadata = {
       name: "safe",
       description: "",
@@ -263,7 +263,8 @@ describe("App Module", async () => {
     const unresolved = await module.getMetadata(false);
     assert.equal(unresolved.metadata.image, `${storageUriPrefix}/image`);
   });
-  it("should deploy a bundle drop module correctly", async () => {
+
+  it.skip("should deploy a bundle drop module correctly", async () => {
     const contract = await appModule.deployBundleDropModule({
       name: `Testing bundle drop from SDK`,
       image:
@@ -274,7 +275,7 @@ describe("App Module", async () => {
     sdk.getBundleDropModule(contract.address);
   });
 
-  it("should upload image to storage if image is file", async () => {
+  it.skip("should upload image to storage if image is file", async () => {
     const metadata = {
       name: "safe",
       description: "",
@@ -292,7 +293,7 @@ describe("App Module", async () => {
     );
   });
 
-  it("should allow you to withdraw funds", async () => {
+  it.skip("should allow you to withdraw funds", async () => {
     await adminWallet.sendTransaction({
       value: ethers.utils.parseEther("0.1"),
       to: appModule.address,
@@ -305,7 +306,7 @@ describe("App Module", async () => {
     await appModule.withdrawFunds(dummyWallet.address, NATIVE_TOKEN_ADDRESS);
   });
 
-  describe("V1 -> V2", () => {
+  describe.skip("V1 -> V2", () => {
     let v1Module: AppModule;
 
     beforeEach(async () => {
