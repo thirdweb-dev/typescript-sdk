@@ -1011,9 +1011,9 @@ export class IpfsStorage implements IStorage {
     batchUploadProperties(metadatas: MetadataURIOrObject[]): Promise<any>;
     buildFilePropertiesMap(object: Record<string, any>, files: (File | Buffer)[]): (File | Buffer)[];
     // (undocumented)
-    get(hash: string): Promise<string>;
+    canResolve(uri: string): boolean;
     // (undocumented)
-    getIdentifyingPrefix(): string;
+    get(hash: string): Promise<string>;
     // (undocumented)
     getUploadToken(contractAddress: string): Promise<string>;
     // @internal
@@ -1100,8 +1100,8 @@ export interface ISplitsModule {
 
 // @public (undocumented)
 export interface IStorage {
+    canResolve(uri: string): boolean;
     get(hash: string): Promise<string>;
-    getIdentifyingPrefix(): string;
     getUploadToken(contractAddress: string): Promise<string>;
     resolveFullUrl(hash: string): string;
     upload(data: string | File | FileOrBuffer | Buffer, contractAddress?: string, signerAddress?: string): Promise<string>;
