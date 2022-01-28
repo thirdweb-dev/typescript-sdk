@@ -35,6 +35,7 @@ export type Json = JsonLiteral | { [key: string]: Json } | Json[];
 export type JsonObject = { [key: string]: Json };
 
 export type FileOrBuffer = File | Buffer | BufferOrStringWithName;
+
 type TransactionResultWithMetadata<T = unknown> = {
   receipt: TransactionReceipt;
   data: () => Promise<T>;

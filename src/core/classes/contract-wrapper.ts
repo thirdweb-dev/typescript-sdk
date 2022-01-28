@@ -49,7 +49,7 @@ export class ContractWrapper<
     network: NetworkOrSignerOrProvider,
     contractAddress: string,
     contractAbi: ContractInterface,
-    options: SDKOptions = {},
+    options: SDKOptions,
   ) {
     super(network, options);
     // set up the contract

@@ -1,17 +1,22 @@
-import { WETH9__factory } from "@3rdweb/contracts";
+import {
+  CurrencyTransferLib__factory,
+  DropERC721__factory,
+  TWFactory__factory,
+  TWFee__factory,
+} from "@3rdweb/contracts";
+import { DropERC721LibraryAddresses } from "@3rdweb/contracts/dist/factories/DropERC721__factory";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
-import { AppModule, ThirdwebSDK } from "../src";
+import { ThirdwebSDK } from "../src";
 import { MockStorage } from "./mock/MockStorage";
-import { deployRegistry } from "./setup/deployRegistry";
 
 const RPC_URL = "http://localhost:8545";
 
 const jsonProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
 const defaultProvider = hardhatEthers.provider;
 
-let appModule: AppModule;
+let appModule: any;
 let registryAddress: string;
 let sdk: ThirdwebSDK;
 const ipfsGatewayUrl = "https://ipfs.thirdweb.com/ipfs/";
@@ -29,41 +34,110 @@ before(async () => {
   signers = await hardhatEthers.getSigners();
   [signer] = signers;
 
-  const wTokenDeployer = await new ethers.ContractFactory(
-    WETH9__factory.abi,
-    WETH9__factory.bytecode,
+  const trustedForwarderAddress = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
+  const defaultRoyaltyFeeBps = BigNumber.from(100);
+  const defaultTransactionFeeBps = BigNumber.from(50);
+  const defaultRecipient = signer.address;
+
+  // const wTokenDeployer = await new ethers.ContractFactory(
+  //   WETH9__factory.abi,
+  //   WETH9__factory.bytecode,
+  // )
+  //   .connect(signer)
+  //   .deploy();
+  // await wTokenDeployer.deployed();
+  // wrappedNativeTokenAddress = wTokenDeployer.address;
+  // console.log(wrappedNativeTokenAddress);
+
+  await jsonProvider.send("hardhat_reset", []);
+
+  const currencyTransferDeployer = await new ethers.ContractFactory(
+    CurrencyTransferLib__factory.abi,
+    CurrencyTransferLib__factory.bytecode,
   )
     .connect(signer)
     .deploy();
+  await currencyTransferDeployer.deployed();
+  const currencyTransferAddress = currencyTransferDeployer.address;
+  console.log("currencyTransferAddress", currencyTransferAddress);
 
-  await wTokenDeployer.deployed();
-  wrappedNativeTokenAddress = wTokenDeployer.address;
-  console.log(wrappedNativeTokenAddress);
+  const thirdwebFactoryDeployer = await new ethers.ContractFactory(
+    TWFactory__factory.abi,
+    TWFactory__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(trustedForwarderAddress);
+  const deployTxFactory = thirdwebFactoryDeployer.deployTransaction;
+  console.log(
+    "Deploying TWFactory and TWRegistry at tx: ",
+    deployTxFactory.hash,
+  );
+  await deployTxFactory.wait();
+  const thirdwebRegistryAddress = await thirdwebFactoryDeployer.registry();
 
-  await jsonProvider.send("hardhat_reset", []);
-  registryAddress = await deployRegistry(signer);
-  console.log("Deployed registry at address: ", registryAddress);
+  console.log("TWFactory address: ", thirdwebFactoryDeployer.address);
+  console.log("TWRegistry address: ", thirdwebRegistryAddress);
+
+  console.log("Creating the deployer deployment");
+  const thirdwebFeeDeployer = await new ethers.ContractFactory(
+    TWFee__factory.abi,
+    TWFee__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(
+      trustedForwarderAddress,
+      defaultRecipient,
+      defaultRecipient,
+      defaultRoyaltyFeeBps,
+      defaultTransactionFeeBps,
+    );
+  console.log("Deploying the deployer");
+  await thirdwebFactoryDeployer.deployed();
+  // const deployTxFee = thirdwebFeeDeployer.deployTransaction;
+  // console.log("Deploying TWFee at tx: ", deployTxFee.hash);
+  // await deployTxFee.wait();
+
+  console.log("TWFee address: ", thirdwebFeeDeployer.address);
+
+  const drop721Factory = await new ethers.ContractFactory(
+    DropERC721__factory.abi,
+    DropERC721__factory.linkBytecode({
+      "contracts/lib/CurrencyTransferLib.sol:CurrencyTransferLib":
+        currencyTransferAddress,
+    }),
+  )
+    .connect(signer)
+    .deploy(thirdwebFeeDeployer.address);
+  console.log(
+    "Deploying Drop721 at tx:",
+    drop721Factory.deployTransaction.hash,
+  );
+  await drop721Factory.deployed();
+  // await drop721Factory.deployTransaction.wait();
+
+  const drop721ModuleType = await drop721Factory.moduleType();
+  console.log("Drop721 module type: ", drop721ModuleType);
+  const tx = await thirdwebFactoryDeployer.addModuleImplementation(
+    drop721ModuleType,
+    drop721Factory.address,
+  );
+  console.log(
+    "Setting deployed Drop721 as an approved implementation at tx: ",
+    tx.hash,
+  );
+  await tx.wait();
 
   const storage = new MockStorage();
   sdk = new ThirdwebSDK(
     signer,
     {
-      ipfsGatewayUrl,
-      registryContractAddress: registryAddress,
-      maxGasPriceInGwei: 10000,
+      gasSettings: {
+        maxPriceInGwei: 10000,
+      },
+      thirdwebModuleFactory: thirdwebFactoryDeployer.address,
     },
     storage,
   );
-
-  const receipt = await sdk.createApp({
-    name: "test",
-  });
-  const event = receipt?.events?.find(
-    (e: any) => e.event === "NewProtocolControl",
-  );
-  const address = event?.args?.controlAddress as string;
-  console.log("Created app at address: ", address);
-  appModule = await sdk.getAppModule(address);
 });
 
 export {

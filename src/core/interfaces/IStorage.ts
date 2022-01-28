@@ -1,4 +1,4 @@
-import { FileOrBuffer, JsonObject } from "../types";
+import { BufferOrStringWithName, FileOrBuffer, JsonObject } from "../types";
 
 /**
  * @internal
@@ -38,7 +38,12 @@ export interface IStorage {
    * @returns - The CID of the uploaded folder.
    */
   uploadBatch(
-    files: (string | FileOrBuffer)[],
+    files:
+      | Buffer[]
+      | string[]
+      | FileOrBuffer[]
+      | File[]
+      | BufferOrStringWithName[],
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,

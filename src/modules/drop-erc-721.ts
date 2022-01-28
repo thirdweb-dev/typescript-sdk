@@ -47,7 +47,7 @@ import { QueryAllParams, DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
  * @public
  */
 export class DropERC721Module {
-  static moduleType = "NFTDrop" as const;
+  static moduleType = "DropERC721" as const;
 
   // this is a type of readoyly Role[], technically, doing it this way makes it work nicely for types
   // **but** we probably want to enforce in an interface somewhere that `static moduleRoles` is a type of Role[]

@@ -1,16 +1,12 @@
 import { AddressZero } from "@ethersproject/constants";
 import { z } from "zod";
 import { FORWARDER_ADDRESS } from "../../../constants/addresses";
-import {
-  BasisPointsSchema,
-  FileBufferOrStringSchema,
-  JsonSchema,
-} from "../../shared";
+import { BasisPointsSchema, JsonSchema } from "../../shared";
 
 export const CommonModuleSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
-  image: FileBufferOrStringSchema.optional(),
+  image: z.string().optional(),
   external_link: z.string().url().optional(),
 });
 

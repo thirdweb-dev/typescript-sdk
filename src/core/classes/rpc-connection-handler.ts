@@ -14,7 +14,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
   private signer: Signer | undefined = undefined;
   protected readonly options: SDKOptionsOutput;
 
-  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions = {}) {
+  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
     super();
     this.network = network;
     let provider: Provider | undefined;

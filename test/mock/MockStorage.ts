@@ -1,12 +1,7 @@
+import { FileOrBuffer, JsonObject } from "../../src/core/types";
 import { v4 as uuidv4 } from "uuid";
-import {
-  IStorage,
-  MetadataURIOrObject,
-  NotFoundError,
-  UploadMetadataBatchResult,
-} from "../../src";
+import { IStorage, NotFoundError, UploadMetadataBatchResult } from "../../src";
 import { BufferOrStringWithName } from "../../src/types/BufferOrStringWithName";
-import FileOrBuffer from "../../src/types/FileOrBuffer";
 
 export class MockStorage implements IStorage {
   private objects: { [key: string]: string } = {};
@@ -18,15 +13,18 @@ export class MockStorage implements IStorage {
     signerAddress?: string,
   ): Promise<string> {
     const uuid = uuidv4();
+    let serializedData = "";
 
     if (data instanceof File) {
-      data = await data.text();
+      serializedData = await data.text();
     } else if (data instanceof Buffer) {
-      data = data.toString();
+      serializedData = data.toString();
+    } else if (typeof data === "string") {
+      serializedData = data;
     }
 
     const key = `mock://${uuid}`;
-    this.objects[uuid] = data;
+    this.objects[uuid] = serializedData;
     return Promise.resolve(key);
   }
 
@@ -37,13 +35,14 @@ export class MockStorage implements IStorage {
       | FileOrBuffer[]
       | File[]
       | BufferOrStringWithName[],
+    fileStartNumber?: number,
     contractAddress?: string,
-    uploadFileStartNumber?: number,
+    signerAddress?: string,
   ): Promise<string> {
     const cid = uuidv4();
     this.folders[cid] = {};
 
-    let index = uploadFileStartNumber ? uploadFileStartNumber : 0;
+    let index = fileStartNumber ? fileStartNumber : 0;
     for (const file of files) {
       let contents: string;
       if (file instanceof File) {
@@ -97,8 +96,8 @@ export class MockStorage implements IStorage {
     return hash.replace("mock://", "fake://");
   }
 
-  public async uploadMetadata(
-    metadata: MetadataURIOrObject,
+  public async uploadMetadata<T extends string | JsonObject>(
+    metadata: T,
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<string> {
@@ -109,17 +108,18 @@ export class MockStorage implements IStorage {
     // since there's only single object, always use the first index
     const { metadataUris } = await this.uploadMetadataBatch(
       [metadata],
-      contractAddress,
       0,
+      contractAddress,
     );
 
     return metadataUris[0];
   }
 
-  public async uploadMetadataBatch(
-    metadatas: MetadataURIOrObject[],
-    contractAddress?: string,
+  public async uploadMetadataBatch<T extends string | JsonObject>(
+    metadatas: T[],
     fileStartNumber?: number,
+    contractAddress?: string,
+    signerAddress?: string,
   ): Promise<UploadMetadataBatchResult> {
     const metadataObjects = metadatas.filter((m) => typeof m !== "string");
     await this.batchUploadProperties(metadatas);
@@ -130,8 +130,9 @@ export class MockStorage implements IStorage {
 
     const cid = await this.uploadBatch(
       metadataToUpload,
-      contractAddress,
       fileStartNumber,
+      contractAddress,
+      signerAddress,
     );
     return {
       metadataUris: metadataToUpload.map((m, i) => `${cid}/${i}`),
@@ -159,8 +160,8 @@ export class MockStorage implements IStorage {
     }
   }
 
-  private async batchUploadProperties(
-    metadatas: MetadataURIOrObject[],
+  private async batchUploadProperties<T extends string | JsonObject>(
+    metadatas: T[],
   ): Promise<any> {
     if (typeof metadatas === "string") {
       return metadatas;

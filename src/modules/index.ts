@@ -7,4 +7,4 @@ export const MODULES_MAP = {
   [DropERC721Module.moduleType]: DropERC721Module,
 } as const;
 
-export * from "./drop-erc-721";
+export { DropERC721Module };

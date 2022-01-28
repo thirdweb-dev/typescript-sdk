@@ -31,14 +31,14 @@ describe("App Module", async () => {
 
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    await sdk.setProviderOrSigner(signers[0]);
+    await sdk.updateSignerOrProvider(signers[0]);
 
-    const storage = sdk.getStorage();
-    if (storage instanceof IpfsStorage) {
-      storageUriPrefix = "ipfs://";
-    } else if (storage instanceof MockStorage) {
-      storageUriPrefix = "mock://";
-    }
+    // const storage = sdk.getStorage();
+    // if (storage instanceof IpfsStorage) {
+    //   storageUriPrefix = "ipfs://";
+    // } else if (storage instanceof MockStorage) {
+    //   storageUriPrefix = "mock://";
+    // }
   });
 
   it.skip("should serialize metadata correctly", async () => {
@@ -204,19 +204,23 @@ describe("App Module", async () => {
     );
   });
 
-  it.skip("should deploy a drop module successfully", async () => {
-    const result = await appModule.deployDropModule({
+  it("should deploy a drop module successfully", async () => {
+    const address = await sdk.factory.deploy("DropERC721", {
       name: `Testing drop from SDK`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      sellerFeeBasisPoints: 100,
-      maxSupply: 10,
-      baseTokenUri: "/test",
-      primarySaleRecipientAddress: AddressZero,
+      platform_fee_recipient: AddressZero,
     });
 
-    const module = sdk.getDropModule(result.address);
-    assert.isNotEmpty(module.address, "The max supply should be 10");
+    console.log("Address: ", address);
+
+    dropModule = sdk.getDropModule(address);
+
+    const metadata = await dropModule.metadata.get();
+    console.log("Metadata: ", metadata);
+
+    const owner = await dropModule.getAddress();
+    console.log("Deployed module: ", owner);
   });
 
   it.skip("should deploy a datastore module successfully", async () => {
@@ -229,7 +233,7 @@ describe("App Module", async () => {
     await sdk.getDatastoreModule(result.address);
   });
 
-  it("should throw an error if the fee recipient is not a protocl control or splits module", async () => {
+  it.skip("should throw an error if the fee recipient is not a protocl control or splits module", async () => {
     try {
       const result = await appModule.deployBundleDropModule({
         name: `Testing drop from SDK`,

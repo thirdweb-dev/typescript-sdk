@@ -15,19 +15,20 @@ export const FileBufferOrStringSchema = z.union([
 
 const BigNumberSchema = z.instanceof(BigNumber);
 
+// TODO this does not serialize to JSON
 export const BigNumberishSchema = z
   .union([z.string(), z.number(), z.bigint(), BigNumberSchema])
   .transform((arg) => BigNumber.from(arg));
 
-export const BasisPointsSchema = BigNumberishSchema.superRefine((bn, ctx) => {
-  if (bn.gt(10000)) {
+export const BasisPointsSchema = z.number().superRefine((bn, ctx) => {
+  if (bn > 10000) {
     ctx.addIssue({
       code: z.ZodIssueCode.too_big,
       maximum: 10000,
       inclusive: true,
       type: "number",
     });
-  } else if (bn.lt(0)) {
+  } else if (bn < 0) {
     ctx.addIssue({
       code: z.ZodIssueCode.too_small,
       minimum: 0,
