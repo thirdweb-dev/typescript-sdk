@@ -5,8 +5,8 @@ import { BigNumberish } from "ethers";
  */
 export class NotFoundError extends Error {
   /** @internal */
-  constructor() {
-    super("NOT_FOUND");
+  constructor(identifier?: string) {
+    super(identifier ? `Object with id ${identifier} NOT FOUND` : "NOT_FOUND");
   }
 }
 

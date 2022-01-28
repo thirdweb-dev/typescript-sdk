@@ -1,11 +1,25 @@
+import { MockStorage } from "./mock/MockStorage";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
-import { BigNumber } from "ethers";
+import { expect, assert } from "chai";
+import { BigNumber, ethers } from "ethers";
 import { readFileSync } from "fs";
 import { JsonConvert } from "json2typescript";
-import { BundleModuleMetadata, DropModule } from "../src/index";
-import { appModule, sdk, signers } from "./before.test";
+import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
+import {
+  AppModule,
+  BundleModuleMetadata,
+  DropModule,
+  IpfsStorage,
+} from "../src/index";
+import {
+  appModule,
+  ipfsGatewayUrl,
+  registryAddress,
+  sdk,
+  signers,
+} from "./before.test";
+import { ProtocolControlV1__factory } from "./oldFactories/ProtocolControlV1";
 
 describe("App Module", async () => {
   let dropModule: DropModule;
@@ -13,8 +27,18 @@ describe("App Module", async () => {
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
 
+  let storageUriPrefix: string;
+
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
+    await sdk.setProviderOrSigner(signers[0]);
+
+    const storage = sdk.getStorage();
+    if (storage instanceof IpfsStorage) {
+      storageUriPrefix = "ipfs://";
+    } else if (storage instanceof MockStorage) {
+      storageUriPrefix = "mock://";
+    }
   });
 
   it.skip("should serialize metadata correctly", async () => {
@@ -116,18 +140,12 @@ describe("App Module", async () => {
       name: "Testing module from SDK",
       sellerFeeBasisPoints: 0,
       image,
-      feeRecipient: samWallet.address,
     });
 
-    const metadata = await module.getMetadata();
+    const metadata = await module.getMetadata(false);
     assert.isTrue(
-      metadata.metadata.image.includes("ipfs/"),
-      `Image property = ${metadata.metadata.image}, should include ipfs/`,
-    );
-    assert.equal(
-      await module.getRoyaltyRecipientAddress(),
-      samWallet.address,
-      "Royalty recipient address was not updated",
+      sdk.getStorage().canResolve(metadata.metadata.image),
+      `Image property = ${metadata.metadata.image}, should include fake://`,
     );
   });
 
@@ -159,17 +177,29 @@ describe("App Module", async () => {
   });
 
   it("should deploy a pack module successfully", async () => {
+    const splits = await appModule.deploySplitsModule({
+      name: `Testing pack from SDK`,
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      recipientSplits: [
+        {
+          address: samWallet.address,
+          shares: 1,
+        },
+      ],
+    });
+
     const result = await appModule.deployPackModule({
       name: `Testing pack from SDK`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       sellerFeeBasisPoints: 100,
-      feeRecipient: samWallet.address,
+      feeRecipient: splits.address,
     });
     const contract = await sdk.getPackModule(result.address);
     assert.equal(
       await contract.getRoyaltyRecipientAddress(),
-      samWallet.address,
+      splits.address,
       "Royalty recipient address was not updated",
     );
   });
@@ -183,16 +213,10 @@ describe("App Module", async () => {
       maxSupply: 10,
       baseTokenUri: "/test",
       primarySaleRecipientAddress: AddressZero,
-      feeRecipient: samWallet.address,
     });
 
     const module = sdk.getDropModule(result.address);
     assert.isNotEmpty(module.address, "The max supply should be 10");
-    assert.equal(
-      await module.getRoyaltyRecipientAddress(),
-      samWallet.address,
-      "Royalty recipient address was not updated",
-    );
   });
 
   it("should deploy a datastore module successfully", async () => {
@@ -205,28 +229,39 @@ describe("App Module", async () => {
     await sdk.getDatastoreModule(result.address);
   });
 
-  it("should properly parse metadata when image is string", async () => {
+  it("should throw an error if the fee recipient is not a protocl control or splits module", async () => {
+    try {
+      const result = await appModule.deployBundleDropModule({
+        name: `Testing drop from SDK`,
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primarySaleRecipientAddress: samWallet.address,
+        feeRecipient: samWallet.address,
+      });
+    } catch (err) {
+      if (
+        !(err.message as string).includes(
+          "can only be the Project address or a Splits module address",
+        )
+      ) {
+        throw err;
+      }
+    }
+  });
+
+  it("should allow image fields to pass-through as a string", async () => {
     const metadata = {
       name: "safe",
       description: "",
-      image:
-        "ipfs://bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
+      image: `${storageUriPrefix}/image`,
       sellerFeeBasisPoints: 0,
-      feeRecipient: samWallet.address,
       symbol: "",
     };
     const contract = await appModule.deployBundleModule(metadata);
     const module = sdk.getBundleModule(contract.address);
-    const result = await module.getMetadata();
-    assert.equal(
-      result.metadata.image,
-      "https://ipfs.thirdweb.com/ipfs/bafkreiax7og4coq7z4w4mfsos6mbbit3qpzg4pa4viqhmed5dkyfbnp6ku",
-    );
-    assert.equal(
-      await contract.getRoyaltyRecipientAddress(),
-      samWallet.address,
-      "Royalty recipient address was not updated",
-    );
+
+    const unresolved = await module.getMetadata(false);
+    assert.equal(unresolved.metadata.image, `${storageUriPrefix}/image`);
   });
   it("should deploy a bundle drop module correctly", async () => {
     const contract = await appModule.deployBundleDropModule({
@@ -234,17 +269,12 @@ describe("App Module", async () => {
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       sellerFeeBasisPoints: 100,
-      feeRecipient: samWallet.address,
       primarySaleRecipientAddress: AddressZero,
     });
-    const module = sdk.getBundleDropModule(contract.address);
-    assert.equal(
-      await module.getRoyaltyRecipientAddress(),
-      samWallet.address,
-      "Royalty recipient address was not updated",
-    );
+    sdk.getBundleDropModule(contract.address);
   });
-  it("should upload to ipfs image is file", async () => {
+
+  it("should upload image to storage if image is file", async () => {
     const metadata = {
       name: "safe",
       description: "",
@@ -255,10 +285,86 @@ describe("App Module", async () => {
     };
     const contract = await appModule.deployBundleModule(metadata);
     const module = sdk.getBundleModule(contract.address);
-    const result = await module.getMetadata();
-    const regex = new RegExp(
-      /Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}/,
+    const result = await module.getMetadata(false);
+    assert.isTrue(
+      result.metadata.image.startsWith(storageUriPrefix),
+      "The image property should have been replaced with a storage hash",
     );
-    assert.match(result.metadata.image, regex);
+  });
+
+  it("should allow you to withdraw funds", async () => {
+    await adminWallet.sendTransaction({
+      value: ethers.utils.parseEther("0.1"),
+      to: appModule.address,
+    });
+
+    const dummyWallet = ethers.Wallet.createRandom().connect(
+      adminWallet.provider,
+    );
+
+    await appModule.withdrawFunds(dummyWallet.address, NATIVE_TOKEN_ADDRESS);
+  });
+
+  describe("V1 -> V2", () => {
+    let v1Module: AppModule;
+
+    beforeEach(async () => {
+      const meta = {
+        name: "Test Module",
+      };
+      const ipfsUri = await sdk.getStorage().upload(JSON.stringify(meta));
+
+      const moduleDeployer = await new ethers.ContractFactory(
+        ProtocolControlV1__factory.abi,
+        ProtocolControlV1__factory.bytecode,
+      )
+        .connect(adminWallet)
+        .deploy(registryAddress, samWallet.address, ipfsUri);
+      await moduleDeployer.deployed();
+      v1Module = sdk.getAppModule(moduleDeployer.address);
+      await v1Module.setProviderOrSigner(samWallet);
+    });
+
+    it("should allow you to upgrade your project", async () => {
+      await v1Module.upgradeToV2();
+    });
+
+    it("should allow withdrawls after upgrading", async () => {
+      await v1Module.upgradeToV2();
+
+      await adminWallet.sendTransaction({
+        value: ethers.utils.parseEther("0.1"),
+        to: v1Module.address,
+      });
+
+      await adminWallet.sendTransaction({
+        value: ethers.utils.parseEther("0.1"),
+        to: await v1Module.getRoyaltyTreasury(),
+      });
+
+      await v1Module.withdrawFunds(
+        samWallet.address,
+        "0x0000000000000000000000000000000000000000",
+      );
+    });
+
+    it("should upgrade module metadata", async () => {
+      await v1Module.deployNftModule({
+        name: "Test NFT",
+        symbol: "TST",
+        image: `${storageUriPrefix}test_image`,
+        feeRecipient: v1Module.address,
+        sellerFeeBasisPoints: 0,
+      });
+
+      expect((await v1Module.shouldUpgradeModuleList()).length).to.equal(0);
+      await v1Module.upgradeToV2();
+
+      const upgradeList = await v1Module.shouldUpgradeModuleList();
+      const nftAddress = upgradeList[0].address;
+      expect(upgradeList.length).to.equal(1);
+      await v1Module.upgradeModuleList([nftAddress]);
+      expect((await v1Module.shouldUpgradeModuleList()).length).to.equal(0);
+    });
   });
 });

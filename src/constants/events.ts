@@ -8,4 +8,13 @@ export enum EventType {
    * transactionHash: string of the transaction hash
    */
   Transaction = "transaction",
+
+  /**
+   * The event is triggered when wallet sign message is requested and completed.
+   *
+   * status: "submitted" | "completed"
+   * message: message to sign
+   * signature: signature of the message (only available when status is "completed")
+   */
+  Signature = "signature",
 }

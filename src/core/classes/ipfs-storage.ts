@@ -364,12 +364,17 @@ export class IpfsStorage implements IStorage {
    * @returns - The fully formed IPFS url with the gateway url
    * @internal
    */
-  resolveFullUrl<T>(ipfsHash: T): T {
-    if (typeof ipfsHash === "string") {
-      return (ipfsHash.toLowerCase().includes("ipfs://")
-        ? ipfsHash.replace("ipfs://", this.gatewayUrl)
-        : ipfsHash) as unknown as T;
+  resolveFullUrl(ipfsHash: string): string {
+    if (typeof ipfsHash !== "string") {
+      return "";
     }
-    return ipfsHash;
+    return ipfsHash && ipfsHash.toLowerCase().includes("ipfs://")
+      ? ipfsHash.replace("ipfs://", this.gatewayUrl)
+      : ipfsHash;
+  }
+
+  public canResolve(uri: string): boolean {
+    const resolved = this.resolveFullUrl(uri);
+    return resolved.toLowerCase() !== uri.toLowerCase();
   }
 }
