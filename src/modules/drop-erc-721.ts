@@ -1,7 +1,7 @@
+import { DropERC721ClaimConditions } from "./drop-erc721-claim-conditions";
 import {
   DropERC721,
   DropERC721__factory,
-  IDropERC721,
   IERC20,
   IERC20__factory,
 } from "@3rdweb/contracts";
@@ -13,11 +13,7 @@ import {
   TransactionResultPromise,
   TransactionResultWithId,
 } from "../core/types";
-import {
-  DropErc721ModuleInput,
-  DropErc721ModuleOutput,
-  DropErc721ModuleDeploy,
-} from "../schema/modules/drop-erc721";
+import { DropErc721ModuleSchema } from "../schema/modules/drop-erc721";
 import { SDKOptions, SDKOptionsSchema } from "../schema/sdk-options";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import {
@@ -26,11 +22,10 @@ import {
 } from "../schema/tokens/drop-erc721";
 import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
 import { AddressZero } from "@ethersproject/constants";
-import { ClaimCondition } from "../types";
 import { z } from "zod";
 import { hexZeroPad } from "@ethersproject/bytes";
-import { SnapshotSchema } from "../schema/modules/common";
 import { isNativeToken } from "../common/currency";
+import { SnapshotInputSchema } from "../schema/modules/common/snapshots";
 
 type NFTMetadataInput = z.input<typeof DropErc721TokenInput>;
 type NFTMetadata = z.output<typeof DropErc721TokenOutput>;
@@ -61,13 +56,6 @@ type QueryAllParams = {
  */
 export class DropErc721Module {
   static moduleType = "NFTDrop" as const;
-  static schema = {
-    deploy: DropErc721ModuleDeploy,
-    output: DropErc721ModuleOutput,
-    input: DropErc721ModuleInput,
-    tokenInput: DropErc721TokenInput,
-    tokenOutput: DropErc721TokenOutput,
-  } as const;
 
   // this is a type of readoyly Role[], technically, doing it this way makes it work nicely for types
   // **but** we probably want to enforce in an interface somewhere that `static moduleRoles` is a type of Role[]
@@ -78,6 +66,7 @@ export class DropErc721Module {
   public metadata;
   public roles;
   public royalty;
+  public claimConditions;
 
   public updateSignerOrProvider;
 
@@ -107,7 +96,7 @@ export class DropErc721Module {
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      DropErc721Module.schema,
+      DropErc721ModuleSchema,
       this.options.storage,
     );
     this.roles = new ContractRoles(
@@ -115,6 +104,10 @@ export class DropErc721Module {
       DropErc721Module.moduleRoles,
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.claimConditions = new DropERC721ClaimConditions(
+      this.contractWrapper,
+      this.metadata,
+    );
   }
 
   /** ******************************
@@ -262,42 +255,6 @@ export class DropErc721Module {
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
     return await this.contractWrapper.readContract.ownerOf(tokenId);
-  }
-
-  // TODO extract all the claim condition logic to its own class
-
-  /**
-   * Get the currently active claim condition in this Drop
-   *
-   * @returns the claim condition metadata
-   */
-  public async getActiveClaimCondition(): Promise<ClaimCondition> {
-    const index =
-      await this.contractWrapper.readContract.getIndexOfActiveCondition();
-    const mc = await this.contractWrapper.readContract.getClaimConditionAtIndex(
-      index,
-    );
-    return await this.transformResultToClaimCondition(mc);
-  }
-
-  /**
-   * Get all the claim conditions associated with this Drop
-   *
-   * @returns the claim conditions metadata
-   */
-  public async getAllClaimConditions(): Promise<ClaimCondition[]> {
-    const claimCondition =
-      await this.contractWrapper.readContract.claimConditions();
-    const count = claimCondition.totalConditionCount.toNumber();
-    const conditions = [];
-    for (let i = 0; i < count; i++) {
-      conditions.push(
-        await this.contractWrapper.readContract.getClaimConditionAtIndex(i),
-      );
-    }
-    return Promise.all(
-      conditions.map((c) => this.transformResultToClaimCondition(c)),
-    );
   }
 
   /**
@@ -498,7 +455,7 @@ export class DropErc721Module {
   }
 
   /**
-   * Transfer NFT
+   * Transfer a single NFT
    *
    * @remarks Transfer an NFT from the connected wallet to another wallet.
    *
@@ -524,13 +481,25 @@ export class DropErc721Module {
   }
 
   /**
+   * Burn a single NFT
+   * @param tokenId - the token Id to burn
+   */
+  public async burn(tokenId: BigNumberish): TransactionResultPromise {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
+    };
+  }
+
+  /**
    * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
    * @param operator - the operator's address
    * @param approved - whether to approve or remove
+   *
+   * @internal
    */
-  public async setApproval(
+  public async setApprovalForAll(
     operator: string,
-    approved = true,
+    approved: boolean,
   ): TransactionResultPromise {
     return {
       receipt: await this.contractWrapper.sendTransaction("setApprovalForAll", [
@@ -551,37 +520,6 @@ export class DropErc721Module {
     );
   }
 
-  private async transformResultToClaimCondition(
-    pm: IDropERC721.ClaimConditionStructOutput,
-  ): Promise<ClaimCondition> {
-    // TODO have a dedicated class for currency manipulation that takes in a contractWrapper?
-    // const cv = await getCurrencyValue(
-    //   this.providerOrSigner,
-    //   pm.currency,
-    //   pm.pricePerToken,
-    // );
-    const cv = "";
-    return {
-      startTimestamp: new Date(
-        BigNumber.from(pm.startTimestamp).toNumber() * 1000,
-      ),
-      maxMintSupply: pm.maxClaimableSupply.toString(),
-      currentMintSupply: pm.supplyClaimed.toString(),
-      availableSupply: BigNumber.from(pm.maxClaimableSupply)
-        .sub(pm.supplyClaimed)
-        .toString(),
-      quantityLimitPerTransaction: pm.quantityLimitPerTransaction.toString(),
-      waitTimeSecondsLimitPerTransaction:
-        pm.waitTimeInSecondsBetweenClaims.toString(),
-      price: BigNumber.from(pm.pricePerToken),
-      pricePerToken: BigNumber.from(pm.pricePerToken),
-      currency: pm.currency,
-      currencyContract: pm.currency,
-      currencyMetadata: cv,
-      merkleRoot: pm.merkleRoot,
-    };
-  }
-
   /**
    * Returns proofs and the overrides required for the transaction.
    *
@@ -594,7 +532,7 @@ export class DropErc721Module {
     overrides: CallOverrides;
     proofs: BytesLike[];
   }> {
-    const mintCondition = await this.getActiveClaimCondition();
+    const mintCondition = await this.claimConditions.getActive();
     const metadata = await this.metadata.get();
     const addressToClaim = await this.contractWrapper.getSignerAddress();
 
@@ -602,7 +540,7 @@ export class DropErc721Module {
       const snapshot = await this.options.storage.get(
         metadata?.merkle[mintCondition.merkleRoot.toString()],
       );
-      const snapshotData = SnapshotSchema.parse(snapshot);
+      const snapshotData = SnapshotInputSchema.parse(snapshot);
       const item = snapshotData.claims.find(
         (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
       );

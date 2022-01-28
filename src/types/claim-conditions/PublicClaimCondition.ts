@@ -1,4 +1,6 @@
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { z } from "zod";
+import { SnapshotInfoSchema } from "../../schema/modules/common/snapshots";
 // import { CurrencyValue } from "../../common/currency";
 
 // @fixme
@@ -35,3 +37,5 @@ export interface ClaimCondition {
   currencyMetadata: CurrencyValue | null;
   merkleRoot: BytesLike;
 }
+
+export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
