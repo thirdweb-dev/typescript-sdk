@@ -1,7 +1,5 @@
 import { FORWARDER_ADDRESS } from "../constants/addresses";
-import { DEFAULT_IPFS_GATEWAY } from "../constants/urls";
 import { z } from "zod";
-import { IpfsStorage } from "../core/classes/ipfs-storage";
 
 export const SDKOptionsSchema = z
   .object({
