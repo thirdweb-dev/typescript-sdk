@@ -25,8 +25,10 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
   ) {
     const metadata =
       MODULES_MAP[moduleType].schema.deploy.parse(moduleMetadata);
+
+    // TODO: is there any special pre-processing we need to do before uploading?
     const contractURI = await this.storage.uploadMetadata(
-      metadata,
+      JSON.stringify(metadata),
       this.readContract.address,
       await this.getSigner()?.getAddress(),
     );

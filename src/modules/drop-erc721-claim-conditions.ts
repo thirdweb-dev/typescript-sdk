@@ -7,7 +7,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../common/currency";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { ClaimCondition } from "../types";
 import ClaimConditionFactory from "../factories/claim-condition-factory";
-import isEqual from "lodash.isequal";
+import deepEqual from "deep-equal";
 
 export class DropERC721ClaimConditions {
   private contractWrapper;
@@ -92,7 +92,7 @@ export class DropERC721ClaimConditions {
     const metadata = await this.metadata.get();
     const encoded = [];
 
-    if (!isEqual(metadata.merkle, merkleInfo)) {
+    if (!deepEqual(metadata.merkle, merkleInfo)) {
       const mergedMetadata = this.metadata.parseInputMetadata({
         ...metadata,
         merkle: merkleInfo,

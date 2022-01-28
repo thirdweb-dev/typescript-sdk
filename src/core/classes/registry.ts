@@ -6,7 +6,7 @@ import { ContractWrapper } from "./contract-wrapper";
 
 export class Registry extends ContractWrapper<TWRegistry> {
   constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions) {
-    super(network, options, TW_FACTORY_ADDRESS, TWRegistry__factory.abi);
+    super(network, TW_FACTORY_ADDRESS, TWRegistry__factory.abi, options);
   }
 
   public async getModuleAddresses(walletAddress: string) {

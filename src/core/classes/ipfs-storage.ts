@@ -1,4 +1,3 @@
-import { z } from "zod";
 import {
   DuplicateFileNameError,
   FetchError,
@@ -9,7 +8,6 @@ import {
   PINATA_IPFS_URL,
   TW_IPFS_SERVER_URL,
 } from "../../constants/urls";
-import { JsonObjectSchema } from "../../schema/shared";
 import { IStorage } from "../interfaces/IStorage";
 import { FileOrBuffer, Json, JsonObject } from "../types";
 
@@ -170,27 +168,6 @@ export class IpfsStorage implements IStorage {
   public async get(hash: string) {
     const res = await this._get(hash);
     return res.text();
-  }
-
-  public async getMetadata(
-    hash: string,
-  ): Promise<z.output<typeof JsonObjectSchema>> {
-    const res = await this._get(hash);
-    const json = JsonObjectSchema.parse(await res.json());
-
-    const allProps = Object.keys(json);
-    for (const key in allProps) {
-      if (typeof json[key] === "object") {
-        const props = JsonObjectSchema.parse(json[key]);
-        const keys = Object.keys(props);
-        for (const _key of keys) {
-          props[_key] = this.resolveFullUrl(props[_key]);
-        }
-      }
-      json[key] = this.resolveFullUrl(json[key]);
-    }
-
-    return JsonObjectSchema.parse(json);
   }
 
   /**

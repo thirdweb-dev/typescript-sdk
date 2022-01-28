@@ -41,6 +41,7 @@
     "@nomiclabs/hardhat-ethers": "^2.0.3",
     "@swc/core": "^1.2.133",
     "@types/chai": "^4.2.22",
+    "@types/deep-equal": "^1.0.1",
     "@types/deep-equal-in-any-order": "^1.0.1",
     "@types/expect": "^24.3.0",
     "@types/form-data": "^2.5.0",
@@ -74,7 +75,7 @@
     "ethers": "^5"
   },
   "dependencies": {
-    "@3rdweb/contracts": "2.0.1-8",
+    "@3rdweb/contracts": "2.0.1-7",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/constants": "^5.5.0",
@@ -82,6 +83,7 @@
     "@ethersproject/providers": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
     "@web-std/file": "^3.0.0",
+    "deep-equal": "^2.0.5",
     "eth-permit": "^0.2.1",
     "eventemitter2": "^6.4.5",
     "events": "^3.3.0",

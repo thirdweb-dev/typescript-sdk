@@ -1,5 +1,3 @@
-import { z } from "zod";
-import { JsonObjectSchema } from "../../schema/shared";
 import { FileOrBuffer, JsonObject } from "../types";
 
 /**
@@ -62,8 +60,6 @@ export interface IStorage {
    * @returns - The data, if found.
    */
   get(hash: string): Promise<string>;
-
-  getMetadata(hash: string): Promise<z.output<typeof JsonObjectSchema>>;
 
   /**
    * Resolves the full URL of a file for a given gateway.

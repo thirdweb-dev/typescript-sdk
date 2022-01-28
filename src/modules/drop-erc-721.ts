@@ -521,9 +521,10 @@ export class DropErc721Module {
 
   private async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
-    return DropErc721TokenOutput.parse(
-      await this.storage.getMetadata(tokenUri),
-    );
+
+    // TODO: include recursive metadata IPFS resolving for all
+    // properties with a hash
+    return DropErc721TokenOutput.parse(await this.storage.get(tokenUri));
   }
 
   /**
