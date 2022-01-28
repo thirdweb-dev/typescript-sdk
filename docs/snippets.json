@@ -279,7 +279,7 @@
         "summary": "Bid On Auction\n\n",
         "remarks": "\n\nMake a bid on an auction listings\n\n",
         "examples": {
-          "javascript": "// The listing ID of the asset you want to bid on\nconst listingId = 0;\n// The price you are willing to bid for a single token of the listing\nconst bidPricePerToken = 1;\n\nawait module.buyoutDirectListing(listingId, bidPricePerToken);"
+          "javascript": "// The listing ID of the asset you want to bid on\nconst listingId = 0;\n// The price you are willing to bid for a single token of the listing\nconst pricePerToken = 1;\n\nawait module.makeAuctionListingBid({ listingId, pricePerToken });"
         },
         "signature": "makeAuctionListingBid(bid: {\n        listingId: BigNumberish;\n        pricePerToken: BigNumberish;\n    }): Promise<void>;"
       }
