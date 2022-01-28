@@ -214,13 +214,13 @@ describe("App Module", async () => {
 
     console.log("Address: ", address);
 
-    const dropModule = sdk.getDropModule(address);
+    dropModule = sdk.getDropModule(address);
 
     const metadata = await dropModule.metadata.get();
     console.log("Metadata: ", metadata);
 
-    const owner = await dropModule.ownerOf("0");
-    console.log("Owner: ", owner);
+    const owner = await dropModule.getAddress();
+    console.log("Deployed module: ", owner);
   });
 
   it.skip("should deploy a datastore module successfully", async () => {
