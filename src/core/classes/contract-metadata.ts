@@ -1,6 +1,6 @@
 import { IThirdwebModule } from "@3rdweb/contracts";
 import { z } from "zod";
-import { IStorage } from "../../core/interfaces/IStorage";
+import { IStorage } from "../interfaces/IStorage";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 
