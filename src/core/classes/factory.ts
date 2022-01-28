@@ -11,6 +11,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
 import { NetworkOrSignerOrProvider, ValidModuleClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { ProxyDeployedEvent } from "@3rdweb/contracts/dist/TWFactory";
 
 export class ModuleFactory extends ContractWrapper<TWFactory> {
   private storage: IStorage;
@@ -60,10 +61,20 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
 
     const encodedType = ethers.utils.formatBytes32String(moduleType);
     console.log("moduleType", moduleType, encodedType);
-    const deployedModule = await this.sendTransaction("deployProxy", [
+    const receipt = await this.sendTransaction("deployProxy", [
       encodedType,
       encodedFunc,
     ]);
-    console.log("deployedModule", deployedModule);
+
+    const events = await this.parseLogs<ProxyDeployedEvent>(
+      "ProxyDeployed",
+      receipt.logs,
+    );
+    if (events.length < 1) {
+      throw new Error("No ProxyDeployed event found");
+    }
+
+    const proxyAddress = events[0].args.proxy;
+    return proxyAddress;
   }
 }

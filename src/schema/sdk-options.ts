@@ -35,7 +35,7 @@ export const SDKOptionsSchema = z
         }),
       ])
       .optional(),
-    thirdwebModuleFactory: z.string(),
+    thirdwebModuleFactory: z.string().optional(),
   })
   .default({
     gasSettings: { maxPriceInGwei: 300, speed: "fastest" },

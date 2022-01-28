@@ -205,7 +205,7 @@ describe("App Module", async () => {
   });
 
   it("should deploy a drop module successfully", async () => {
-    const result = await sdk.factory.deploy("DropERC721", {
+    const address = await sdk.factory.deploy("DropERC721", {
       name: `Testing drop from SDK`,
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
@@ -213,8 +213,12 @@ describe("App Module", async () => {
       platform_fee_recipient: AddressZero,
     });
 
-    // const module = sdk.getDropModule(result.address);
-    // assert.isNotEmpty(module.address, "The max supply should be 10");
+    console.log("Address: ", address);
+
+    const dropModule = sdk.getDropModule(address);
+
+    const owner = await dropModule.ownerOf("0");
+    console.log("Owner: ", owner);
   });
 
   it.skip("should deploy a datastore module successfully", async () => {
