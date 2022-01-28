@@ -179,8 +179,7 @@ describe("Drop Module", async () => {
       startTime: new Date(),
     });
     const testWallets: SignerWithAddress[] = [bobWallet];
-    const members = testWallets.map((w) => w.address);
-    await phase.setSnapshot(members);
+    await phase.setSnapshot(testWallets.map((w) => w.address));
 
     await dropModule.setClaimConditions(factory);
 

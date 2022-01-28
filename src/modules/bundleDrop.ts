@@ -522,7 +522,6 @@ export class BundleDropModule
    *
    * @returns - `overrides` and `proofs` as an object.
    */
-
   private async prepareClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
@@ -637,10 +636,10 @@ export class BundleDropModule
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
-    const encoded = [];
     const claimParams = (await this.isNewClaim())
-      ? [await this.getSignerAddress(), tokenId, quantity, proofs]
-      : [tokenId, quantity, proofs];
+      ? [await this.getSignerAddress(), quantity, claimData.proofs]
+      : [quantity, claimData.proofs];
+    const encoded = [];
 
     // forcing it old version of claim params
     encoded.push(

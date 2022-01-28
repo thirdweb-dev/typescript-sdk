@@ -854,8 +854,7 @@ export class MarketplaceModule
    * // The listing ID of the asset you want to buy
    * const listingId = 0;
    *
-   * const balance = await module.balanceOf(listingId, quantity);
-   * console.log(balance);
+   * await module.buyoutAuctionListing(listingId);
    * ```
    */
   public async buyoutAuctionListing(listingId: BigNumberish): Promise<void> {

@@ -871,11 +871,13 @@ export class DropModule
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(quantity, proofs);
+    const claimParams = (await this.isNewClaim())
+      ? [await this.getSignerAddress(), quantity, claimData.proofs]
+      : [quantity, claimData.proofs];
     const encoded = [];
-
     const receipt = await this.sendTransaction(
       "claim",
-      [quantity, claimData.proofs],
+      claimParams,
       claimData.overrides,
     );
 
@@ -915,8 +917,8 @@ export class DropModule
     }
     const claimData = await this.prepareClaim(quantity, proofs);
     const claimParams = (await this.isNewClaim())
-      ? [await this.getSignerAddress(), quantity, proofs]
-      : [quantity, proofs];
+      ? [await this.getSignerAddress(), quantity, claimData.proofs]
+      : [quantity, claimData.proofs];
     const receipt = await this.sendTransaction(
       "claim",
       claimParams,
