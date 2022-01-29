@@ -229,9 +229,9 @@ export class TokenModule
    * const toAddress = "{{wallet_address}}";
    *
    * // The amount of this token you want to mint
-   * const amount = 100;
+   * const amount = ethers.utils.parseEther("1.5");
    *
-   * await module.transfer(toAddress, amount);
+   * await module.mintTo(toAddress, amount);
    * ```
    */
   public async mintTo(to: string, amount: BigNumberish) {

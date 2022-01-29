@@ -530,7 +530,7 @@
         "summary": "Mint Tokens\n\n",
         "remarks": "\n\nMint tokens to a specified address\n\n",
         "examples": {
-          "javascript": "// Address of the wallet you want to mint the tokens to\nconst toAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to mint\nconst amount = 100;\n\nawait module.transfer(toAddress, amount);"
+          "javascript": "// Address of the wallet you want to mint the tokens to\nconst toAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to mint\nconst amount = ethers.utils.parseEther(\"1.5\");\n\nawait module.mintTo(toAddress, amount);"
         },
         "signature": "mintTo(to: string, amount: BigNumberish): Promise<void>;"
       },
