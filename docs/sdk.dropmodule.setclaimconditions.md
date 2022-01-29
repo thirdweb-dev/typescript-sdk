@@ -4,7 +4,10 @@
 
 ## DropModule.setClaimConditions() method
 
-Sets public mint conditions for the next minting using the claim condition factory.
+> Warning: This API is now obsolete.
+> 
+> - Use [DropModule.setClaimCondition()](./sdk.dropmodule.setclaimcondition.md) instead
+> 
 
 <b>Signature:</b>
 
@@ -16,7 +19,7 @@ setClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  factory | ClaimConditionFactory | The claim condition factory. |
+|  factory | ClaimConditionFactory |  |
 
 <b>Returns:</b>
 

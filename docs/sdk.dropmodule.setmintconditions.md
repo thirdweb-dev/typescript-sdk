@@ -6,7 +6,7 @@
 
 > Warning: This API is now obsolete.
 > 
-> - Use [DropModule.setClaimConditions()](./sdk.dropmodule.setclaimconditions.md) instead
+> - Use [DropModule.setClaimCondition()](./sdk.dropmodule.setclaimcondition.md) instead
 > 
 
 <b>Signature:</b>

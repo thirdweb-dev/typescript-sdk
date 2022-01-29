@@ -707,6 +707,8 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
+    setClaimCondition(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
+    // @deprecated (undocumented)
     setClaimConditions(factory: ClaimConditionFactory): Promise<TransactionReceipt>;
     // (undocumented)
     setDefaultSaleRecipient(recipient: string): Promise<TransactionReceipt>;

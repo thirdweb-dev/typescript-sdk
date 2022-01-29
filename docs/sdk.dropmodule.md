@@ -71,7 +71,8 @@ const module = sdk.getDropModule("{{module_address}}");
 |  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  |  |
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  |  |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  |  |
-|  [setClaimConditions(factory)](./sdk.dropmodule.setclaimconditions.md) |  | Sets public mint conditions for the next minting using the claim condition factory. |
+|  [setClaimCondition(factory)](./sdk.dropmodule.setclaimcondition.md) |  | Sets public mint conditions for the next minting using the claim condition factory. |
+|  [setClaimConditions(factory)](./sdk.dropmodule.setclaimconditions.md) |  |  |
 |  [setDefaultSaleRecipient(recipient)](./sdk.dropmodule.setdefaultsalerecipient.md) |  |  |
 |  [setMintConditions(factory)](./sdk.dropmodule.setmintconditions.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.dropmodule.setmodulemetadata.md) |  |  |
