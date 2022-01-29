@@ -1,5 +1,4 @@
 import { TransactionResultPromise } from "../types";
-import { TransactionResultPromise } from "../types";
 import { getRoleHash, Role } from "../../common/role";
 import { AccessControlEnumerable } from "@3rdweb/contracts";
 import invariant from "tiny-invariant";
