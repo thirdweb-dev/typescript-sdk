@@ -71,7 +71,7 @@
     "ethers": "^5.4.6"
   },
   "dependencies": {
-    "@3rdweb/contracts": "^1.24.0-2",
+    "@3rdweb/contracts": "1.24.0",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/constants": "^5.5.0",
@@ -105,5 +105,5 @@
     "url": "https://github.com/nftlabs/nftlabs-sdk-ts/issues"
   },
   "homepage": "https://github.com/nftlabs/nftlabs-sdk-ts#readme",
-  "author": "NFTLabs"
+  "author": "thirdweb"
 }

@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@3rdweb/contracts@^1.24.0-2":
-  version "1.24.0-2"
-  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.24.0-2.tgz#905a5f35f70fd3d4c3ed71450410bfda7bf87b19"
-  integrity sha512-jz8GNnlVqS6lKogcaxM3LR9/ojXKfza/X7uC6/Uk+ZO/4cL6BLZsdKi0rELVQIZOMn4JzcvlCpFLgwvFY1Dvug==
+"@3rdweb/contracts@1.24.0":
+  version "1.24.0"
+  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.24.0.tgz#0e1b911b92d1a8737ecff19803474e11426bdaad"
+  integrity sha512-969wvEIuwcpurtzYmGsSfMhe8xU3ae/p06Z4aG4RMQ1C52QVQerEf+nrHCw9sXvIxWcHKHwX17xj1y6SS8WiTA==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
