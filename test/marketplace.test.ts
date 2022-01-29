@@ -1,3 +1,4 @@
+import { Marketplace__factory } from "@3rdweb/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -21,6 +22,7 @@ import {
   jsonProvider,
   sdk,
   signers,
+  wrappedNativeTokenAddress,
 } from "./before.test";
 
 global.fetch = require("node-fetch");
@@ -957,6 +959,79 @@ describe("Marketplace Module", async () => {
       assert.isUndefined(
         found,
         "should not have found the listing becuase it is invalid",
+      );
+    });
+  });
+
+  describe("v1.22.0 compatibility", () => {
+    let oldModule: MarketplaceModule;
+    let directListingId, auctionListingId: BigNumberish;
+
+    beforeEach(async () => {
+      const contractUri = await sdk
+        .getStorage()
+        .uploadMetadata({ name: "module" });
+      const tx = await new ethers.ContractFactory(
+        Marketplace__factory.abi,
+        Marketplace__factory.bytecode,
+      )
+        .connect(adminWallet)
+        .deploy(
+          appModule.address,
+          ethers.constants.AddressZero,
+          wrappedNativeTokenAddress,
+          contractUri,
+          0,
+        );
+      await tx.deployed();
+      oldModule = sdk.getMarketplaceModule(tx.address);
+
+      sdk.setProviderOrSigner(adminWallet);
+      directListingId = await createDirectListing(dummyNftModule.address, 0);
+      auctionListingId = await createAuctionListing(dummyNftModule.address, 1);
+    });
+
+    it("should allow a buyer to buyout a direct listing", async () => {
+      sdk.setProviderOrSigner(bobWallet);
+
+      const currentBalance = await dummyNftModule.balanceOf(bobWallet.address);
+      assert.equal(
+        currentBalance.toString(),
+        "0",
+        "The buyer should start with no tokens",
+      );
+      await marketplaceModule.buyoutDirectListing({
+        listingId: directListingId,
+        quantityDesired: 1,
+      });
+      const balance = await dummyNftModule.balanceOf(bobWallet.address);
+      assert.equal(
+        balance.toString(),
+        "1",
+        "The buyer should have been awarded token",
+      );
+    });
+
+    it("should allow an auction buyout", async () => {
+      const id = await marketplaceModule.createAuctionListing({
+        assetContractAddress: dummyBundleModule.address,
+        buyoutPricePerToken: ethers.utils.parseUnits("10"),
+        currencyContractAddress: tokenAddress,
+        // to start tomorrow so we can update it
+        startTimeInSeconds: Math.floor(Date.now() / 1000),
+        listingDurationInSeconds: 60 * 60 * 24,
+        tokenId: "1",
+        quantity: 2,
+        reservePricePerToken: ethers.utils.parseUnits("1"),
+      });
+      sdk.setProviderOrSigner(bobWallet);
+      await marketplaceModule.buyoutAuctionListing(id);
+
+      const balance = await dummyBundleModule.balanceOf(bobWallet.address, "1");
+      assert.equal(
+        balance.toString(),
+        "2",
+        "The buyer should have no tokens to start",
       );
     });
   });

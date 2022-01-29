@@ -468,10 +468,9 @@ export class Module<TContract extends BaseContract = BaseContract> {
     if (!logs) {
       return null;
     }
-    const contract = this.contract;
     for (const log of logs) {
       try {
-        const event = contract.interface.decodeEventLog(
+        const event = this.contract.interface.decodeEventLog(
           eventName,
           log.data,
           log.topics,

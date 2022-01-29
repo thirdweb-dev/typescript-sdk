@@ -11,7 +11,7 @@ import {
   ListingStruct,
 } from "@3rdweb/contracts/dist/IMarketplace";
 import { AddressZero } from "@ethersproject/constants";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import {
   getCurrencyValue,
@@ -70,6 +70,8 @@ export class MarketplaceModule
   extends ModuleWithRoles<Marketplace>
   implements IMarketplace
 {
+  private _shouldCheckVersion = true;
+  private _isNewBuy = false;
   public static moduleType: ModuleType = ModuleType.MARKETPLACE;
 
   public static roles = [RolesMap.admin, RolesMap.lister] as const;
@@ -852,8 +854,7 @@ export class MarketplaceModule
    * // The listing ID of the asset you want to buy
    * const listingId = 0;
    *
-   * const balance = await module.balanceOf(listingId, quantity);
-   * console.log(balance);
+   * await module.buyoutAuctionListing(listingId);
    * ```
    */
   public async buyoutAuctionListing(listingId: BigNumberish): Promise<void> {
@@ -894,6 +895,7 @@ export class MarketplaceModule
       listing,
       _buyout.quantityDesired,
     );
+
     if (!valid) {
       throw new Error(
         "The asset on this listing has been moved from the listers wallet, this listing is now invalid",
@@ -904,7 +906,45 @@ export class MarketplaceModule
     const value = BigNumber.from(listing.buyoutPrice).mul(quantity);
     const overrides = (await this.getCallOverrides()) || {};
     await this.setAllowance(value, listing.currencyContractAddress, overrides);
-    await this.sendTransaction("buy", [_buyout.listingId, quantity], overrides);
+
+    if (await this.isNewBuy()) {
+      await this.sendTransaction(
+        "buy",
+        [_buyout.listingId, quantity, listing.currencyContractAddress, value],
+        overrides,
+      );
+    } else {
+      // backward compatibility with old abi ftw
+      await this.sendContractTransaction(
+        new ethers.Contract(
+          this.address,
+          [
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_listingId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_quantityToBuy",
+                  type: "uint256",
+                },
+              ],
+              name: "buy",
+              outputs: [],
+              stateMutability: "payable",
+              type: "function",
+            },
+          ],
+          this.providerOrSigner,
+        ),
+        "buy",
+        [_buyout.listingId, quantity],
+        overrides,
+      );
+    }
   }
 
   // TODO: Complete method implementation with subgraph
@@ -1171,5 +1211,29 @@ export class MarketplaceModule
     isRestricted: boolean,
   ): Promise<void> {
     await this.sendTransaction("setRestrictedListerRoleOnly", [isRestricted]);
+  }
+
+  /**
+   * @internal
+   */
+  private async isNewBuy(): Promise<boolean> {
+    await this.checkVersion();
+    return this._isNewBuy;
+  }
+
+  /**
+   * @internal
+   */
+  private async checkVersion() {
+    if (this._shouldCheckVersion) {
+      try {
+        await this.readOnlyContract.VERSION();
+        this._isNewBuy = true;
+      } catch (e) {
+        this._isNewBuy = false;
+      }
+
+      this._shouldCheckVersion = false;
+    }
   }
 }

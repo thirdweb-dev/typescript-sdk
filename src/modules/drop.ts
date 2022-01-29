@@ -10,7 +10,14 @@ import { PublicMintConditionStruct } from "@3rdweb/contracts/dist/LazyNFT";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import {
+  BaseContract,
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  Contract,
+  ethers,
+} from "ethers";
 import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
@@ -51,6 +58,61 @@ export interface CreatePublicMintCondition {
 }
 
 /**
+ * @internal
+ */
+const OLD_CLAIM_ABI_V1_22_0 = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "claimConditionIndex",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "claimer",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "startTokenId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "quantityClaimed",
+        type: "uint256",
+      },
+    ],
+    name: "ClaimedTokens",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_quantity",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32[]",
+        name: "_proofs",
+        type: "bytes32[]",
+      },
+    ],
+    name: "claim",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+];
+
+/**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
  *
  * @example
@@ -72,6 +134,7 @@ export class DropModule
 {
   private _shouldCheckVersion = true;
   private _isV1 = false;
+  private _isNewClaim = false;
   private v1Module: DropV1Module;
 
   public static moduleType: ModuleType = ModuleType.DROP;
@@ -490,13 +553,20 @@ export class DropModule
   }
 
   /**
-   * @deprecated - Use {@link DropModule.setClaimConditions} instead
+   * @deprecated - Use {@link DropModule.setClaimCondition} instead
    */
   public async setMintConditions(factory: ClaimConditionFactory) {
     if (await this.isV1()) {
       return this.v1Module.setMintConditions(factory);
     }
-    return this.setClaimConditions(factory);
+    return this.setClaimCondition(factory);
+  }
+
+  /**
+   * @deprecated - Use {@link DropModule.setClaimCondition} instead
+   */
+  public async setClaimConditions(factory: ClaimConditionFactory) {
+    return this.setClaimCondition(factory);
   }
 
   /**
@@ -505,9 +575,9 @@ export class DropModule
    *
    * @param factory - The claim condition factory.
    */
-  public async setClaimConditions(factory: ClaimConditionFactory) {
+  public async setClaimCondition(factory: ClaimConditionFactory) {
     if (await this.isV1()) {
-      return this.v1Module.setClaimConditions(factory);
+      return this.v1Module.setClaimCondition(factory);
     }
     const conditions = (await factory.buildConditions()).map((c) => ({
       startTimestamp: c.startTimestamp,
@@ -555,7 +625,7 @@ export class DropModule
 
   public async updateClaimConditions(factory: ClaimConditionFactory) {
     if (await this.isV1()) {
-      return this.v1Module.setClaimConditions(factory);
+      return this.v1Module.setClaimCondition(factory);
     }
     const conditions = (await factory.buildConditions()).map((c) => ({
       startTimestamp: c.startTimestamp,
@@ -599,6 +669,7 @@ export class DropModule
         conditions,
       ]),
     );
+
     return await this.sendTransaction("multicall", [encoded]);
   }
   /**
@@ -870,20 +941,42 @@ export class DropModule
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(quantity, proofs);
+
+    if (await this.isNewClaim()) {
+      return await this.sendTransaction(
+        "claim",
+        [addressToClaim, quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    }
+
+    // backward compatibility for < 1.22.0 claim
+    const contract = new Contract(
+      this.address,
+      OLD_CLAIM_ABI_V1_22_0,
+      this.providerOrSigner,
+    );
+    const receipt = await this.sendContractTransaction(
+      contract,
+      "claim",
+      [quantity, claimData.proofs],
+      claimData.overrides,
+    );
+
     const encoded = [];
-    encoded.push(
-      this.contract.interface.encodeFunctionData("claim", [
-        quantity,
-        claimData.proofs,
-      ]),
-    );
-    encoded.push(
-      this.contract.interface.encodeFunctionData("transferFrom", [
-        await this.getSignerAddress(),
-        addressToClaim,
-        (await this.readOnlyContract.nextTokenIdToMint()).sub(1),
-      ]),
-    );
+    const events = this.parseLogs("ClaimedTokens", receipt?.logs, contract);
+    const startingIndex: BigNumber = events[0].args.startTokenId;
+    const endingIndex = startingIndex.add(quantity);
+    for (let i = startingIndex; i.lt(endingIndex); i = i.add(1)) {
+      encoded.push(
+        this.contract.interface.encodeFunctionData("transferFrom", [
+          await this.getSignerAddress(),
+          addressToClaim,
+          i,
+        ]),
+      );
+    }
+
     return await this.sendTransaction(
       "multicall",
       [encoded],
@@ -906,13 +999,32 @@ export class DropModule
       return this.v1Module.claim(quantity, proofs);
     }
     const claimData = await this.prepareClaim(quantity, proofs);
-    const receipt = await this.sendTransaction(
-      "claim",
-      [quantity, claimData.proofs],
-      claimData.overrides,
-    );
-    const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
-    const startingIndex: BigNumber = event.startTokenId;
+
+    let receipt;
+    let contract: BaseContract = this.contract;
+    if (await this.isNewClaim()) {
+      receipt = await this.sendTransaction(
+        "claim",
+        [await this.getSignerAddress(), quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    } else {
+      // backward compatibility for < 1.22.0 claim
+      contract = new Contract(
+        this.address,
+        OLD_CLAIM_ABI_V1_22_0,
+        this.providerOrSigner,
+      );
+      receipt = await this.sendContractTransaction(
+        contract,
+        "claim",
+        [quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    }
+
+    const events = this.parseLogs("ClaimedTokens", receipt?.logs, contract);
+    const startingIndex: BigNumber = events[0].args.startTokenId;
     const endingIndex = startingIndex.add(quantity);
     const tokenIds = [];
     for (let i = startingIndex; i.lt(endingIndex); i = i.add(1)) {
@@ -922,6 +1034,7 @@ export class DropModule
       tokenIds.map(async (t) => await this.get(t.toString())),
     );
   }
+
   public async burn(tokenId: BigNumberish): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [tokenId]);
   }
@@ -1039,6 +1152,22 @@ export class DropModule
    * Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract.
    */
   async isV1(): Promise<boolean> {
+    await this.checkVersion();
+    return this._isV1;
+  }
+
+  /**
+   * @internal
+   */
+  private async isNewClaim(): Promise<boolean> {
+    await this.checkVersion();
+    return this._isNewClaim;
+  }
+
+  /**
+   * @internal
+   */
+  private async checkVersion() {
     if (this._shouldCheckVersion) {
       try {
         await this.readOnlyContract.nextTokenIdToMint();
@@ -1046,9 +1175,16 @@ export class DropModule
       } catch (e) {
         this._isV1 = true;
       }
+
+      try {
+        await this.readOnlyContract.VERSION();
+        this._isNewClaim = true;
+      } catch (e) {
+        this._isNewClaim = false;
+      }
+
       this._shouldCheckVersion = false;
     }
-    return this._isV1;
   }
 
   /**
@@ -1377,10 +1513,17 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
   }
 
   /**
-   * @deprecated - Use {@link DropModule.setClaimConditions} instead
+   * @deprecated - Use {@link DropModule.setClaimCondition} instead
    */
   public async setMintConditions(factory: ClaimConditionFactory) {
-    return this.setClaimConditions(factory);
+    return this.setClaimCondition(factory);
+  }
+
+  /**
+   * @deprecated - Use {@link DropModule.setClaimCondition} instead
+   */
+  public async setClaimConditions(factory: ClaimConditionFactory) {
+    return this.setClaimCondition(factory);
   }
 
   /**
@@ -1389,7 +1532,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
    *
    * @param factory - The claim condition factory.
    */
-  public async setClaimConditions(factory: ClaimConditionFactory) {
+  public async setClaimCondition(factory: ClaimConditionFactory) {
     const conditions = await factory.buildConditionsForDropV1();
 
     const merkleInfo: { [key: string]: string } = {};

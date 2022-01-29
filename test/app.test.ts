@@ -19,7 +19,7 @@ import {
   sdk,
   signers,
 } from "./before.test";
-import { ProtocolControlV1__factory } from "./oldFactories/ProtocolControlV1";
+import { ProtocolControlV1__factory } from "./old_factories/ProtocolControlV1";
 
 describe("App Module", async () => {
   let dropModule: DropModule;

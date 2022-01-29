@@ -7,7 +7,7 @@ import { ClaimConditionStruct } from "@3rdweb/contracts/dist/LazyMintERC1155";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, Contract, ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
@@ -50,6 +50,66 @@ export interface BundleDropMetadata {
 }
 
 /**
+ * @internal
+ */
+const OLD_CLAIM_ABI = [
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_quantity",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32[]",
+        name: "_proofs",
+        type: "bytes32[]",
+      },
+    ],
+    name: "claim",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "claimConditionIndex",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "claimer",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "quantityClaimed",
+        type: "uint256",
+      },
+    ],
+    name: "ClaimedTokens",
+    type: "event",
+  },
+];
+
+/**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
  *
  * @example
@@ -69,6 +129,8 @@ export class BundleDropModule
   extends ModuleWithRoles<BundleDrop>
   implements ITransferable
 {
+  private _shouldCheckVersion = true;
+  private _isNewClaim = false;
   public static moduleType: ModuleType = ModuleType.BUNDLE_DROP;
 
   public static roles = [
@@ -520,7 +582,6 @@ export class BundleDropModule
    *
    * @returns - `overrides` and `proofs` as an object.
    */
-
   private async prepareClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
@@ -596,11 +657,20 @@ export class BundleDropModule
   ) {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
 
-    await this.sendTransaction(
-      "claim",
-      [tokenId, quantity, claimData.proofs],
-      claimData.overrides,
-    );
+    if (await this.isNewClaim()) {
+      await this.sendTransaction(
+        "claim",
+        [await this.getSignerAddress(), tokenId, quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    } else {
+      await this.sendContractTransaction(
+        new Contract(this.address, OLD_CLAIM_ABI, this.providerOrSigner),
+        "claim",
+        [tokenId, quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    }
   }
 
   /**
@@ -636,12 +706,27 @@ export class BundleDropModule
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
+
+    if (await this.isNewClaim()) {
+      return await this.sendTransaction(
+        "claim",
+        [addressToClaim, tokenId, quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    }
+
     const encoded = [];
+
+    // forcing it old version of claim params
     encoded.push(
-      this.contract.interface.encodeFunctionData("claim", [
+      new Contract(
+        this.address,
+        OLD_CLAIM_ABI,
+        this.providerOrSigner,
+      ).interface.encodeFunctionData("claim", [
         tokenId,
         quantity,
-        proofs,
+        claimData.proofs,
       ]),
     );
     encoded.push(
@@ -653,6 +738,7 @@ export class BundleDropModule
         [0],
       ]),
     );
+
     return await this.sendTransaction(
       "multicall",
       [encoded],
@@ -950,5 +1036,29 @@ export class BundleDropModule
   ): Promise<TransactionReceipt> {
     await this.onlyRoles(["admin"], await this.getSignerAddress());
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  /**
+   * @internal
+   */
+  private async isNewClaim(): Promise<boolean> {
+    await this.checkVersion();
+    return this._isNewClaim;
+  }
+
+  /**
+   * @internal
+   */
+  private async checkVersion() {
+    if (this._shouldCheckVersion) {
+      try {
+        await this.readOnlyContract.VERSION();
+        this._isNewClaim = true;
+      } catch (e) {
+        this._isNewClaim = false;
+      }
+
+      this._shouldCheckVersion = false;
+    }
   }
 }
