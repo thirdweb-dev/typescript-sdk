@@ -553,13 +553,20 @@ export class DropModule
   }
 
   /**
-   * @deprecated - Use {@link DropModule.setClaimConditions} instead
+   * @deprecated - Use {@link DropModule.setClaimCondition} instead
    */
   public async setMintConditions(factory: ClaimConditionFactory) {
     if (await this.isV1()) {
       return this.v1Module.setMintConditions(factory);
     }
-    return this.setClaimConditions(factory);
+    return this.setClaimCondition(factory);
+  }
+
+  /**
+   * @deprecated - Use {@link DropModule.setClaimCondition} instead
+   */
+  public async setClaimConditions(factory: ClaimConditionFactory) {
+    return this.setClaimCondition(factory);
   }
 
   /**
@@ -568,9 +575,9 @@ export class DropModule
    *
    * @param factory - The claim condition factory.
    */
-  public async setClaimConditions(factory: ClaimConditionFactory) {
+  public async setClaimCondition(factory: ClaimConditionFactory) {
     if (await this.isV1()) {
-      return this.v1Module.setClaimConditions(factory);
+      return this.v1Module.setClaimCondition(factory);
     }
     const conditions = (await factory.buildConditions()).map((c) => ({
       startTimestamp: c.startTimestamp,
@@ -618,7 +625,7 @@ export class DropModule
 
   public async updateClaimConditions(factory: ClaimConditionFactory) {
     if (await this.isV1()) {
-      return this.v1Module.setClaimConditions(factory);
+      return this.v1Module.setClaimCondition(factory);
     }
     const conditions = (await factory.buildConditions()).map((c) => ({
       startTimestamp: c.startTimestamp,
@@ -662,6 +669,7 @@ export class DropModule
         conditions,
       ]),
     );
+
     return await this.sendTransaction("multicall", [encoded]);
   }
   /**
