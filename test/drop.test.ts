@@ -9,6 +9,7 @@ import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
 import hre, { ethers as hardhatEthers } from "hardhat";
+import { ThirdwebSDK } from "../src";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
@@ -51,22 +52,28 @@ describe("Drop Module", async () => {
     // TEMPROARY HACKS
     await hre.network.provider.request({
       method: "hardhat_impersonateAccount",
-      params: ["0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"],
+      params: ["0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"],
     });
+    await hre.network.provider.send("hardhat_setBalance", [
+      "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+      ethers.utils.parseEther("10000000000000").toHexString(),
+    ]);
     const fakeSigner = await hardhatEthers.getSigner(
-      "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
     );
-    console.log(fakeSigner);
-    sdk.updateSignerOrProvider(fakeSigner);
-    await dropModule.roles.grantRole("admin", adminWallet.address);
-    await dropModule.roles.grantRole("minter", adminWallet.address);
-    await dropModule.roles.grantRole("transfer", adminWallet.address);
+    const fakeDropModule = new ThirdwebSDK(fakeSigner, {
+      thirdwebModuleFactory: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+    }).getDropModule(address);
+    await fakeDropModule.roles.setAllRoleMembers({
+      admin: [adminWallet.address],
+      minter: [adminWallet.address],
+      transfer: [adminWallet.address],
+    });
     await hre.network.provider.request({
       method: "hardhat_stopImpersonatingAccount",
-      params: ["0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"],
+      params: ["0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"],
     });
 
-    sdk.updateSignerOrProvider(adminWallet);
     console.log(await dropModule.roles.getAllMembers());
   });
 
