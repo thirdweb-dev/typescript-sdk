@@ -4,7 +4,10 @@ export const MerkleSchema = z.object({
   merkle: z.record(z.string()).default({}),
 });
 
-const SnapshotSchema = z.object({
+export const SnapshotSchema = z.object({
+  /**
+   * The merkle root
+   */
   merkleRoot: z.string(),
   claims: z.array(
     z.object({

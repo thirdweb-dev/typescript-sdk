@@ -5,6 +5,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { z } from "zod";
 import { TransactionResultPromise } from "../types";
 
+// TODO: hide zod implementation from this class with nice types
 export class ContractRoyalty<
   TContract extends IThirdwebRoyalty,
   TSchema extends IGenericSchemaType,

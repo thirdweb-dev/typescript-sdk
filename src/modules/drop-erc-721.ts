@@ -1,3 +1,4 @@
+import { ContractRoles } from "../core/classes/contract-roles";
 import { CommonNFTOutput } from "../schema/tokens/common/index";
 import {
   DropERC721,
@@ -10,7 +11,6 @@ import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
 import { isNativeToken } from "../common/currency";
 import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core/interfaces/IStorage";
@@ -56,12 +56,13 @@ export class DropERC721Module {
 
   private storage: IStorage;
 
+  // TODO type all of these for proper type inference
   private contractWrapper;
   private options;
   public metadata;
   public roles;
-  public royalty;
-  public claimConditions;
+  public royalty: ContractRoyalty<DropERC721, typeof DropErc721ModuleSchema>;
+  public claimConditions: DropERC721ClaimConditions;
 
   public updateSignerOrProvider;
 
@@ -104,6 +105,7 @@ export class DropERC721Module {
     this.claimConditions = new DropERC721ClaimConditions(
       this.contractWrapper,
       this.metadata,
+      this.storage,
     );
   }
 

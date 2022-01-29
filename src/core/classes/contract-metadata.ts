@@ -10,6 +10,7 @@ export interface IGenericSchemaType {
   output: z.AnyZodObject;
 }
 
+// TODO: hide zod implementation from this class with nice types
 export class ContractMetadata<
   TContract extends IThirdwebModule,
   TSchema extends IGenericSchemaType,

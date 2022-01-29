@@ -25,14 +25,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   // private moduleFactory: TWFactory;
   public factory: ModuleFactory;
 
-  private storage: IStorage;
-
-  private updateModuleSignerOrProvider() {
-    this.factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
-    for (const [, module] of this.moduleCache) {
-      module.updateSignerOrProvider(this.getSigner() || this.getProvider());
-    }
-  }
+  public storage: IStorage;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -42,11 +35,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     super(network, options);
     this.factory = new ModuleFactory(network, storage, options);
     this.storage = storage;
-  }
-
-  public override updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
-    super.updateSignerOrProvider(network);
-    this.updateModuleSignerOrProvider();
   }
 
   /**
@@ -96,8 +84,29 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     return newModule;
   }
 
+  /**
+   * Get an instance of a Drop module
+   * @param moduleAddress - the address of the deployed module
+   * @returns the module
+   */
   public getDropModule(moduleAddress: string) {
     return this.getModule(moduleAddress, DropERC721Module.moduleType);
+  }
+
+  /**
+   * Update the active signer or provider for all modules
+   * @param network - the new signer or provider
+   */
+  public override updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
+    super.updateSignerOrProvider(network);
+    this.updateModuleSignerOrProvider();
+  }
+
+  private updateModuleSignerOrProvider() {
+    this.factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
+    for (const [, module] of this.moduleCache) {
+      module.updateSignerOrProvider(this.getSigner() || this.getProvider());
+    }
   }
 }
 

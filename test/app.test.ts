@@ -207,8 +207,12 @@ describe("App Module", async () => {
   it("should deploy a drop module successfully", async () => {
     const address = await sdk.factory.deploy("DropERC721", {
       name: `Testing drop from SDK`,
+      description: "Test module from tests",
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      seller_fee_basis_points: 500,
+      fee_recipient: AddressZero,
+      platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
 

@@ -1,22 +1,33 @@
+import { IStorage } from "../core/interfaces/IStorage";
+import { SnapshotSchema } from "../schema/modules/common/snapshots";
 import { DropErc721ModuleSchema } from "../schema/modules/drop-erc721";
 import { ContractMetadata } from "../core/classes/contract-metadata";
-import { DropERC721, IDropERC721 } from "@3rdweb/contracts";
+import {
+  DropERC721,
+  IDropERC721,
+  IERC20,
+  IERC20__factory,
+} from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
-import { BigNumber } from "ethers";
-import { NATIVE_TOKEN_ADDRESS } from "../common/currency";
+import { BigNumber, BigNumberish, ethers } from "ethers";
+import { isNativeToken, NATIVE_TOKEN_ADDRESS } from "../common/currency";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { ClaimCondition } from "../types";
 import ClaimConditionFactory from "../factories/claim-condition-factory";
 import deepEqual from "deep-equal";
+import { ClaimEligibility } from "../enums";
 
 export class DropERC721ClaimConditions {
   private contractWrapper;
   private metadata;
+  private storage: IStorage;
 
   constructor(
     contractWrapper: ContractWrapper<DropERC721>,
     metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>,
+    storage: IStorage,
   ) {
+    this.storage = storage;
     this.contractWrapper = contractWrapper;
     this.metadata = metadata;
   }
@@ -59,6 +70,148 @@ export class DropERC721ClaimConditions {
     );
   }
 
+  /**
+   * Can Claim
+   *
+   * @remarks Check if the drop can currently be claimed.
+   *
+   * @example
+   * ```javascript
+   * // Quantity of tokens to check if they are claimable
+   * const quantity = 1;
+   *
+   * await module.canClaim(quantity);
+   * ```
+   */
+  public async canClaim(
+    quantity: BigNumberish,
+    addressToCheck?: string,
+  ): Promise<boolean> {
+    if (addressToCheck === undefined) {
+      addressToCheck = await this.contractWrapper.getSignerAddress();
+    }
+    return (
+      (await this.getClaimIneligibilityReasons(quantity, addressToCheck))
+        .length === 0
+    );
+  }
+
+  /**
+   * For any claim conditions that a particular wallet is violating,
+   * this function returns human readable information about the
+   * breaks in the condition that can be used to inform the user.
+   *
+   * @param quantity - The desired quantity that would be claimed.
+   * @param addressToCheck - The wallet address, defaults to the connected wallet.
+   *
+   */
+  public async getClaimIneligibilityReasons(
+    quantity: BigNumberish,
+    addressToCheck?: string,
+  ): Promise<ClaimEligibility[]> {
+    const reasons: ClaimEligibility[] = [];
+    let activeConditionIndex: BigNumber;
+    let claimCondition: ClaimCondition;
+
+    if (addressToCheck === undefined) {
+      throw new Error("addressToCheck is required");
+    }
+
+    try {
+      [activeConditionIndex, claimCondition] = await Promise.all([
+        this.contractWrapper.readContract.getIndexOfActiveCondition(),
+        this.getActive(),
+      ]);
+    } catch (err: any) {
+      if ((err.message as string).includes("no public mint condition.")) {
+        reasons.push(ClaimEligibility.NoActiveClaimPhase);
+        return reasons;
+      }
+      console.error("Failed to get active claim condition", err);
+      throw new Error("Failed to get active claim condition");
+    }
+
+    if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
+      reasons.push(ClaimEligibility.NotEnoughSupply);
+    }
+
+    // check for merkle root inclusion
+    const merkleRootArray = ethers.utils.stripZeros(claimCondition.merkleRoot);
+    if (merkleRootArray.length > 0) {
+      const merkleLower = claimCondition.merkleRoot.toString();
+      const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
+      if (proofs.length === 0) {
+        const hashedAddress = ethers.utils
+          .keccak256(addressToCheck)
+          .toLowerCase();
+        if (hashedAddress !== merkleLower) {
+          reasons.push(ClaimEligibility.AddressNotAllowed);
+        }
+      }
+      // TODO: compute proofs to root, need browser compatibility
+    }
+
+    // check for claim timestamp between claims
+    const timestampForNextClaim =
+      await this.contractWrapper.readContract.getTimestampForNextValidClaim(
+        activeConditionIndex,
+        addressToCheck,
+      );
+
+    const now = BigNumber.from(Date.now()).div(1000);
+    if (now.lt(timestampForNextClaim)) {
+      // if waitTimeSecondsLimitPerTransaction equals to timestampForNextClaim, that means that this is the first time this address claims this token
+      if (
+        BigNumber.from(claimCondition.waitTimeSecondsLimitPerTransaction).eq(
+          timestampForNextClaim,
+        )
+      ) {
+        const balance = await this.contractWrapper.readContract.balanceOf(
+          addressToCheck,
+        );
+        if (balance.gte(1)) {
+          reasons.push(ClaimEligibility.AlreadyClaimed);
+        }
+      } else {
+        reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+      }
+    }
+
+    // check for wallet balance
+    if (claimCondition.pricePerToken.gt(0)) {
+      const totalPrice = claimCondition.pricePerToken.mul(quantity);
+      const provider = this.contractWrapper.getProvider();
+      if (isNativeToken(claimCondition.currency)) {
+        const balance = await provider.getBalance(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.NotEnoughTokens);
+        }
+      } else {
+        const erc20 = new ContractWrapper<IERC20>(
+          provider,
+          claimCondition.currency,
+          IERC20__factory.abi,
+          {},
+        );
+        const balance = await erc20.readContract.balanceOf(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.NotEnoughTokens);
+        }
+      }
+    }
+
+    return reasons;
+  }
+
+  /**
+   * Creates a claim condition factory
+   *
+   * @returns - A new claim condition factory
+   */
+  public builder(): ClaimConditionFactory {
+    return new ClaimConditionFactory(this.storage);
+  }
+
   /** ***************************************
    * WRITE FUNCTIONS
    *****************************************/
@@ -74,6 +227,10 @@ export class DropERC721ClaimConditions {
     factory: ClaimConditionFactory,
     resetClaimEligibilityForAll: boolean,
   ) {
+    console.log(
+      "Claim metadata owner",
+      await this.contractWrapper.getSignerAddress(),
+    );
     const conditions = (await factory.buildConditions()).map((c) => ({
       startTimestamp: c.startTimestamp,
       maxClaimableSupply: c.maxMintSupply,
@@ -152,5 +309,31 @@ export class DropERC721ClaimConditions {
       currencyMetadata: cv,
       merkleRoot: pm.merkleRoot,
     };
+  }
+
+  /**
+   * Fetches the proof for the current signer for a particular wallet.
+   *
+   * @param merkleRoot - The merkle root of the condition to check.
+   * @returns - The proof for the current signer for the specified condition.
+   */
+  private async getClaimerProofs(
+    merkleRoot: string,
+    addressToClaim?: string,
+  ): Promise<string[]> {
+    if (!addressToClaim) {
+      addressToClaim = await this.contractWrapper.getSignerAddress();
+    }
+    const metadata = await this.metadata.get();
+    const snapshot = metadata.merkle[merkleRoot];
+    const snapshotData = SnapshotSchema.parse(JSON.parse(snapshot));
+    const item = snapshotData.claims.find(
+      (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
+    );
+
+    if (item === undefined) {
+      return [];
+    }
+    return item.proof;
   }
 }

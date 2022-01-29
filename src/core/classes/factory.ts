@@ -43,7 +43,6 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
       this.readContract.address,
       await this.getSigner()?.getAddress(),
     );
-    console.debug("getModuleAddresses", moduleType, contractURI);
 
     const encodedFunc = DropERC721__factory.getInterface(
       DropERC721__factory.abi,
@@ -58,6 +57,8 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
       metadata.platform_fee_basis_points,
       metadata.platform_fee_recipient,
     ]);
+
+    console.log("Deploying from", await this.getSignerAddress());
 
     const encodedType = ethers.utils.formatBytes32String(moduleType);
     console.log("moduleType", moduleType, encodedType);

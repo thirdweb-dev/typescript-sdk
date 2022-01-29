@@ -1,3 +1,4 @@
+import { IStorage } from "../core/interfaces/IStorage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { FunctionDeprecatedError } from "../common/error";
 import {
@@ -8,11 +9,11 @@ import ClaimConditionPhase from "./claim-condition-phase";
 
 class ClaimConditionFactory {
   private phases: ClaimConditionPhase[] = [];
-  private createSnapshot: (leafs: string[]) => Promise<SnapshotInfo>;
+  private storage: IStorage;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>) {
-    this.createSnapshot = createSnapshotFunc;
+  constructor(storage: IStorage) {
+    this.storage = storage;
   }
 
   /**
@@ -52,7 +53,7 @@ class ClaimConditionFactory {
   public fromPublicClaimConditions(conditions: PublicClaimCondition[]) {
     const phases = [];
     for (const condition of conditions) {
-      const phase = new ClaimConditionPhase(this.createSnapshot);
+      const phase = new ClaimConditionPhase(this.storage);
 
       // If there's a price, there must also be an associated currency
       if (condition.currency) {
@@ -91,7 +92,7 @@ class ClaimConditionFactory {
     maxQuantity?: BigNumberish;
     maxQuantityPerTransaction?: BigNumberish;
   }): ClaimConditionPhase {
-    const condition = new ClaimConditionPhase(this.createSnapshot);
+    const condition = new ClaimConditionPhase(this.storage);
 
     condition.setConditionStartTime(startTime);
     condition.setMaxQuantity(BigNumber.from(maxQuantity));

@@ -1,3 +1,4 @@
+import { IStorage } from "../core/interfaces/IStorage";
 import {
   PublicClaimCondition,
   SnapshotInfo,
@@ -8,33 +9,25 @@ import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { InvalidAddressError } from "../common/error";
 import invariant from "tiny-invariant";
+import { createSnapshot } from "../common/snapshots";
 
 export default class ClaimConditionPhase {
   // In seconds
   private _conditionStartTime = Math.floor(Date.now() / 1000);
-
   private _currencyAddress = "";
-
   private _price: BigNumberish = 0;
-
   private _maxQuantity: BigNumberish = BigNumber.from(0);
-
   private _quantityLimitPerTransaction: BigNumberish =
     ethers.constants.MaxUint256;
-
   private _merkleRootHash: BytesLike = hexZeroPad([0], 32);
-
   private _merkleCondition?: SnapshotInfo = undefined;
-
   private _snapshot?: string[] = undefined;
-
-  private createSnapshot: (leafs: string[]) => Promise<SnapshotInfo>;
-
   private _waitInSeconds: BigNumberish = 0;
+  private _storage: IStorage;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor(createSnapshotFunc: (leafs: string[]) => Promise<SnapshotInfo>) {
-    this.createSnapshot = createSnapshotFunc;
+  constructor(storage: IStorage) {
+    this._storage = storage;
   }
 
   /**
@@ -128,7 +121,10 @@ export default class ClaimConditionPhase {
    */
   public async buildPublicClaimCondition(): Promise<PublicClaimCondition> {
     if (this._snapshot) {
-      this._merkleCondition = await this.createSnapshot(this._snapshot);
+      this._merkleCondition = await createSnapshot(
+        this._snapshot,
+        this._storage,
+      );
     }
 
     return {
