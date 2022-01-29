@@ -50,6 +50,72 @@ export interface BundleDropMetadata {
 }
 
 /**
+ * @internal
+ */
+const OLD_CLAIM_ABI = [
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_quantity",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32[]",
+        name: "_proofs",
+        type: "bytes32[]",
+      },
+    ],
+    name: "claim",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "claimConditionIndex",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "claimer",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "quantityClaimed",
+        type: "uint256",
+      },
+    ],
+    name: "ClaimedTokens",
+    type: "event",
+  },
+];
+
+/**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
  *
  * @example
@@ -605,35 +671,7 @@ export class BundleDropModule
       );
     } else {
       await this.sendContractTransaction(
-        new Contract(
-          this.address,
-          [
-            {
-              inputs: [
-                {
-                  internalType: "uint256",
-                  name: "_tokenId",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "_quantity",
-                  type: "uint256",
-                },
-                {
-                  internalType: "bytes32[]",
-                  name: "_proofs",
-                  type: "bytes32[]",
-                },
-              ],
-              name: "claim",
-              outputs: [],
-              stateMutability: "payable",
-              type: "function",
-            },
-          ],
-          this.providerOrSigner,
-        ),
+        new Contract(this.address, OLD_CLAIM_ABI, this.providerOrSigner),
         "claim",
         [tokenId, quantity, claimData.proofs],
         claimData.overrides,

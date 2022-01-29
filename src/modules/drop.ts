@@ -51,6 +51,67 @@ export interface CreatePublicMintCondition {
 }
 
 /**
+ * @internal
+ */
+const OLD_CLAIM_ABI = [
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_quantity",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32[]",
+        name: "_proofs",
+        type: "bytes32[]",
+      },
+    ],
+    name: "claim",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "claimConditionIndex",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "claimer",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "startTokenId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "quantityClaimed",
+        type: "uint256",
+      },
+    ],
+    name: "ClaimedTokens",
+    type: "event",
+  },
+];
+
+/**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
  *
  * @example
@@ -881,30 +942,7 @@ export class DropModule
       );
     } else {
       receipt = await this.sendContractTransaction(
-        new Contract(
-          this.address,
-          [
-            {
-              inputs: [
-                {
-                  internalType: "uint256",
-                  name: "_quantity",
-                  type: "uint256",
-                },
-                {
-                  internalType: "bytes32[]",
-                  name: "_proofs",
-                  type: "bytes32[]",
-                },
-              ],
-              name: "claim",
-              outputs: [],
-              stateMutability: "payable",
-              type: "function",
-            },
-          ],
-          this.providerOrSigner,
-        ),
+        new Contract(this.address, OLD_CLAIM_ABI, this.providerOrSigner),
         "claim",
         [quantity, claimData.proofs],
         claimData.overrides,
@@ -956,30 +994,7 @@ export class DropModule
       );
     } else {
       receipt = await this.sendContractTransaction(
-        new Contract(
-          this.address,
-          [
-            {
-              inputs: [
-                {
-                  internalType: "uint256",
-                  name: "_quantity",
-                  type: "uint256",
-                },
-                {
-                  internalType: "bytes32[]",
-                  name: "_proofs",
-                  type: "bytes32[]",
-                },
-              ],
-              name: "claim",
-              outputs: [],
-              stateMutability: "payable",
-              type: "function",
-            },
-          ],
-          this.providerOrSigner,
-        ),
+        new Contract(this.address, OLD_CLAIM_ABI, this.providerOrSigner),
         "claim",
         [quantity, claimData.proofs],
         claimData.overrides,
