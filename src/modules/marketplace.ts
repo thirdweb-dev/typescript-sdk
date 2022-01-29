@@ -11,7 +11,7 @@ import {
   ListingStruct,
 } from "@3rdweb/contracts/dist/IMarketplace";
 import { AddressZero } from "@ethersproject/constants";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import {
   getCurrencyValue,
@@ -895,6 +895,7 @@ export class MarketplaceModule
       listing,
       _buyout.quantityDesired,
     );
+
     if (!valid) {
       throw new Error(
         "The asset on this listing has been moved from the listers wallet, this listing is now invalid",
@@ -906,10 +907,44 @@ export class MarketplaceModule
     const overrides = (await this.getCallOverrides()) || {};
     await this.setAllowance(value, listing.currencyContractAddress, overrides);
 
-    const buyParams = (await this.isNewBuy())
-      ? [_buyout.listingId, quantity, listing.currencyContractAddress, value]
-      : [_buyout.listingId, quantity];
-    await this.sendTransaction("buy", buyParams, overrides);
+    if (await this.isNewBuy()) {
+      await this.sendTransaction(
+        "buy",
+        [_buyout.listingId, quantity, listing.currencyContractAddress, value],
+        overrides,
+      );
+    } else {
+      // backward compatibility with old abi ftw
+      await this.sendContractTransaction(
+        new ethers.Contract(
+          this.address,
+          [
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_listingId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_quantityToBuy",
+                  type: "uint256",
+                },
+              ],
+              name: "buy",
+              outputs: [],
+              stateMutability: "payable",
+              type: "function",
+            },
+          ],
+          this.providerOrSigner,
+        ),
+        "buy",
+        [_buyout.listingId, quantity],
+        overrides,
+      );
+    }
   }
 
   // TODO: Complete method implementation with subgraph

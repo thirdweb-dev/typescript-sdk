@@ -10,7 +10,7 @@ import { PublicMintConditionStruct } from "@3rdweb/contracts/dist/LazyNFT";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, Contract, ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
@@ -871,16 +871,47 @@ export class DropModule
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(quantity, proofs);
-    const claimParams = (await this.isNewClaim())
-      ? [await this.getSignerAddress(), quantity, claimData.proofs]
-      : [quantity, claimData.proofs];
-    const encoded = [];
-    const receipt = await this.sendTransaction(
-      "claim",
-      claimParams,
-      claimData.overrides,
-    );
 
+    let receipt;
+    if (await this.isNewClaim()) {
+      receipt = await this.sendTransaction(
+        "claim",
+        [await this.getSignerAddress(), quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    } else {
+      receipt = await this.sendContractTransaction(
+        new Contract(
+          this.address,
+          [
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_quantity",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bytes32[]",
+                  name: "_proofs",
+                  type: "bytes32[]",
+                },
+              ],
+              name: "claim",
+              outputs: [],
+              stateMutability: "payable",
+              type: "function",
+            },
+          ],
+          this.providerOrSigner,
+        ),
+        "claim",
+        [quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    }
+
+    const encoded = [];
     const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
     const startingIndex: BigNumber = event.startTokenId;
     const endingIndex = startingIndex.add(quantity);
@@ -916,14 +947,44 @@ export class DropModule
       return this.v1Module.claim(quantity, proofs);
     }
     const claimData = await this.prepareClaim(quantity, proofs);
-    const claimParams = (await this.isNewClaim())
-      ? [await this.getSignerAddress(), quantity, claimData.proofs]
-      : [quantity, claimData.proofs];
-    const receipt = await this.sendTransaction(
-      "claim",
-      claimParams,
-      claimData.overrides,
-    );
+    let receipt;
+    if (await this.isNewClaim()) {
+      receipt = await this.sendTransaction(
+        "claim",
+        [await this.getSignerAddress(), quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    } else {
+      receipt = await this.sendContractTransaction(
+        new Contract(
+          this.address,
+          [
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_quantity",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bytes32[]",
+                  name: "_proofs",
+                  type: "bytes32[]",
+                },
+              ],
+              name: "claim",
+              outputs: [],
+              stateMutability: "payable",
+              type: "function",
+            },
+          ],
+          this.providerOrSigner,
+        ),
+        "claim",
+        [quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    }
     const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
     const startingIndex: BigNumber = event.startTokenId;
     const endingIndex = startingIndex.add(quantity);

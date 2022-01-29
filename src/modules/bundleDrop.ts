@@ -7,7 +7,7 @@ import { ClaimConditionStruct } from "@3rdweb/contracts/dist/LazyMintERC1155";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, Contract, ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
@@ -596,11 +596,49 @@ export class BundleDropModule
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ) {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
-    const claimParams = (await this.isNewClaim())
-      ? [await this.getSignerAddress(), tokenId, quantity, claimData.proofs]
-      : [tokenId, quantity, claimData.proofs];
 
-    await this.sendTransaction("claim", claimParams, claimData.overrides);
+    if (await this.isNewClaim()) {
+      await this.sendTransaction(
+        "claim",
+        [await this.getSignerAddress(), tokenId, quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    } else {
+      await this.sendContractTransaction(
+        new Contract(
+          this.address,
+          [
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_tokenId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_quantity",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bytes32[]",
+                  name: "_proofs",
+                  type: "bytes32[]",
+                },
+              ],
+              name: "claim",
+              outputs: [],
+              stateMutability: "payable",
+              type: "function",
+            },
+          ],
+          this.providerOrSigner,
+        ),
+        "claim",
+        [tokenId, quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    }
   }
 
   /**
