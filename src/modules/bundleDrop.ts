@@ -723,11 +723,11 @@ export class BundleDropModule
         this.address,
         OLD_CLAIM_ABI,
         this.providerOrSigner,
-      ).interface.encodeFunctionData(
-        "claim",
-        [tokenId, quantity, claimData.proofs],
-        claimData.overrides,
-      ),
+      ).interface.encodeFunctionData("claim", [
+        tokenId,
+        quantity,
+        claimData.proofs,
+      ]),
     );
     encoded.push(
       this.contract.interface.encodeFunctionData("safeTransferFrom", [
