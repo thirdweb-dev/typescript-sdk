@@ -99,12 +99,6 @@ const OLD_CLAIM_ABI = [
       },
       {
         indexed: false,
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-      {
-        indexed: false,
         internalType: "uint256",
         name: "quantityClaimed",
         type: "uint256",
@@ -712,14 +706,28 @@ export class BundleDropModule
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
-    const claimParams = (await this.isNewClaim())
-      ? [await this.getSignerAddress(), tokenId, quantity, claimData.proofs]
-      : [tokenId, quantity, claimData.proofs];
+
+    if (await this.isNewClaim()) {
+      return await this.sendTransaction(
+        "claim",
+        [addressToClaim, tokenId, quantity, claimData.proofs],
+        claimData.overrides,
+      );
+    }
+
     const encoded = [];
 
     // forcing it old version of claim params
     encoded.push(
-      this.contract.interface.encodeFunctionData("claim", claimParams as any),
+      new Contract(
+        this.address,
+        OLD_CLAIM_ABI,
+        this.providerOrSigner,
+      ).interface.encodeFunctionData(
+        "claim",
+        [tokenId, quantity, claimData.proofs],
+        claimData.overrides,
+      ),
     );
     encoded.push(
       this.contract.interface.encodeFunctionData("safeTransferFrom", [
@@ -730,6 +738,7 @@ export class BundleDropModule
         [0],
       ]),
     );
+
     return await this.sendTransaction(
       "multicall",
       [encoded],

@@ -10,7 +10,14 @@ import { PublicMintConditionStruct } from "@3rdweb/contracts/dist/LazyNFT";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, BytesLike, Contract, ethers } from "ethers";
+import {
+  BaseContract,
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  Contract,
+  ethers,
+} from "ethers";
 import { JsonConvert } from "json2typescript";
 import {
   getCurrencyValue,
@@ -53,25 +60,7 @@ export interface CreatePublicMintCondition {
 /**
  * @internal
  */
-const OLD_CLAIM_ABI = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_quantity",
-        type: "uint256",
-      },
-      {
-        internalType: "bytes32[]",
-        name: "_proofs",
-        type: "bytes32[]",
-      },
-    ],
-    name: "claim",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
+const OLD_CLAIM_ABI_V1_22_0 = [
   {
     anonymous: false,
     inputs: [
@@ -85,12 +74,6 @@ const OLD_CLAIM_ABI = [
         indexed: true,
         internalType: "address",
         name: "claimer",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "receiver",
         type: "address",
       },
       {
@@ -108,6 +91,24 @@ const OLD_CLAIM_ABI = [
     ],
     name: "ClaimedTokens",
     type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_quantity",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32[]",
+        name: "_proofs",
+        type: "bytes32[]",
+      },
+    ],
+    name: "claim",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
   },
 ];
 
@@ -933,25 +934,30 @@ export class DropModule
   ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(quantity, proofs);
 
-    let receipt;
     if (await this.isNewClaim()) {
-      receipt = await this.sendTransaction(
+      return await this.sendTransaction(
         "claim",
-        [await this.getSignerAddress(), quantity, claimData.proofs],
-        claimData.overrides,
-      );
-    } else {
-      receipt = await this.sendContractTransaction(
-        new Contract(this.address, OLD_CLAIM_ABI, this.providerOrSigner),
-        "claim",
-        [quantity, claimData.proofs],
+        [addressToClaim, quantity, claimData.proofs],
         claimData.overrides,
       );
     }
 
+    // backward compatibility for < 1.22.0 claim
+    const contract = new Contract(
+      this.address,
+      OLD_CLAIM_ABI_V1_22_0,
+      this.providerOrSigner,
+    );
+    const receipt = await this.sendContractTransaction(
+      contract,
+      "claim",
+      [quantity, claimData.proofs],
+      claimData.overrides,
+    );
+
     const encoded = [];
-    const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
-    const startingIndex: BigNumber = event.startTokenId;
+    const events = this.parseLogs("ClaimedTokens", receipt?.logs, contract);
+    const startingIndex: BigNumber = events[0].args.startTokenId;
     const endingIndex = startingIndex.add(quantity);
     for (let i = startingIndex; i.lt(endingIndex); i = i.add(1)) {
       encoded.push(
@@ -985,7 +991,9 @@ export class DropModule
       return this.v1Module.claim(quantity, proofs);
     }
     const claimData = await this.prepareClaim(quantity, proofs);
+
     let receipt;
+    let contract: BaseContract = this.contract;
     if (await this.isNewClaim()) {
       receipt = await this.sendTransaction(
         "claim",
@@ -993,15 +1001,22 @@ export class DropModule
         claimData.overrides,
       );
     } else {
+      // backward compatibility for < 1.22.0 claim
+      contract = new Contract(
+        this.address,
+        OLD_CLAIM_ABI_V1_22_0,
+        this.providerOrSigner,
+      );
       receipt = await this.sendContractTransaction(
-        new Contract(this.address, OLD_CLAIM_ABI, this.providerOrSigner),
+        contract,
         "claim",
         [quantity, claimData.proofs],
         claimData.overrides,
       );
     }
-    const event = this.parseEventLogs("ClaimedTokens", receipt?.logs);
-    const startingIndex: BigNumber = event.startTokenId;
+
+    const events = this.parseLogs("ClaimedTokens", receipt?.logs, contract);
+    const startingIndex: BigNumber = events[0].args.startTokenId;
     const endingIndex = startingIndex.add(quantity);
     const tokenIds = [];
     for (let i = startingIndex; i.lt(endingIndex); i = i.add(1)) {
@@ -1490,10 +1505,17 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
   }
 
   /**
-   * @deprecated - Use {@link DropModule.setClaimConditions} instead
+   * @deprecated - Use {@link DropModule.setClaimCondition} instead
    */
   public async setMintConditions(factory: ClaimConditionFactory) {
-    return this.setClaimConditions(factory);
+    return this.setClaimCondition(factory);
+  }
+
+  /**
+   * @deprecated - Use {@link DropModule.setClaimCondition} instead
+   */
+  public async setClaimConditions(factory: ClaimConditionFactory) {
+    return this.setClaimCondition(factory);
   }
 
   /**
@@ -1502,7 +1524,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
    *
    * @param factory - The claim condition factory.
    */
-  public async setClaimConditions(factory: ClaimConditionFactory) {
+  public async setClaimCondition(factory: ClaimConditionFactory) {
     const conditions = await factory.buildConditionsForDropV1();
 
     const merkleInfo: { [key: string]: string } = {};

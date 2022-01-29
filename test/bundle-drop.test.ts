@@ -6,7 +6,13 @@ import {
   ClaimEligibility,
   NATIVE_TOKEN_ADDRESS,
 } from "../src/index";
-import { appModule, sdk, signers } from "./before.test";
+import {
+  appModule,
+  sdk,
+  signers,
+  wrappedNativeTokenAddress,
+} from "./before.test";
+import { LazyMintERC1155__factory } from "./old_factories/v1.22.0/LazyMintERC1155";
 
 global.fetch = require("node-fetch");
 
@@ -549,6 +555,67 @@ describe("Bundle Drop Module", async () => {
       const { metadata } = await bdModule.getMetadata(false);
       const merkle: { [key: string]: string } = metadata["merkle"];
       assert.lengthOf(Object.keys(merkle), 2);
+    });
+  });
+
+  describe("v1.22.0 compatibility", () => {
+    let oldBundleDropModule: BundleDropModule;
+
+    beforeEach(async () => {
+      const contractUri = await sdk
+        .getStorage()
+        .uploadMetadata({ name: "module" });
+      const tx = await new ethers.ContractFactory(
+        LazyMintERC1155__factory.abi,
+        LazyMintERC1155__factory.bytecode,
+      )
+        .connect(adminWallet)
+        .deploy(
+          contractUri,
+          appModule.address,
+          ethers.constants.AddressZero,
+          wrappedNativeTokenAddress,
+          adminWallet.address,
+          0,
+          0,
+        );
+      await tx.deployed();
+      oldBundleDropModule = sdk.getBundleDropModule(tx.address);
+    });
+
+    it("should be able to use claim function as expected", async () => {
+      const factory = oldBundleDropModule.getClaimConditionsFactory();
+      factory.newClaimPhase({
+        startTime: new Date(),
+      });
+      await oldBundleDropModule.setClaimCondition(0, factory);
+      await oldBundleDropModule.createBatch([
+        {
+          name: "test",
+        },
+      ]);
+      sdk.setProviderOrSigner(samWallet);
+      await oldBundleDropModule.claim(0, 1);
+      assert(
+        (await oldBundleDropModule.getOwned(samWallet.address)).length === 1,
+      );
+    });
+
+    it("should be able to use claimTo function as expected", async () => {
+      const factory = oldBundleDropModule.getClaimConditionsFactory();
+      factory.newClaimPhase({
+        startTime: new Date(),
+      });
+      await oldBundleDropModule.setClaimCondition(0, factory);
+      await oldBundleDropModule.createBatch([
+        {
+          name: "test",
+        },
+      ]);
+      await oldBundleDropModule.claimTo(0, 1, samWallet.address);
+      assert(
+        (await oldBundleDropModule.getOwned(samWallet.address)).length === 1,
+      );
     });
   });
 });

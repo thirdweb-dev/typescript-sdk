@@ -8,7 +8,13 @@ import {
   DropModule,
   NATIVE_TOKEN_ADDRESS,
 } from "../src/index";
-import { appModule, sdk, signers } from "./before.test";
+import {
+  appModule,
+  sdk,
+  signers,
+  wrappedNativeTokenAddress,
+} from "./before.test";
+import { LazyMintERC721__factory } from "./old_factories/v1.22.0/LazyMintERC721";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
@@ -605,5 +611,72 @@ describe("Drop Module", async () => {
 
     await dropModule.setClaimConditions(dropModule.getClaimConditionsFactory());
     expect((await dropModule.getAllClaimConditions()).length).to.be.equal(0);
+  });
+
+  describe("v1.22.0 compatibility", () => {
+    let oldDropModule: DropModule;
+
+    beforeEach(async () => {
+      const contractUri = await sdk
+        .getStorage()
+        .uploadMetadata({ name: "module" });
+      const tx = await new ethers.ContractFactory(
+        LazyMintERC721__factory.abi,
+        LazyMintERC721__factory.bytecode,
+      )
+        .connect(adminWallet)
+        .deploy(
+          "Name",
+          "Symbol",
+          contractUri,
+          appModule.address,
+          ethers.constants.AddressZero,
+          wrappedNativeTokenAddress,
+          adminWallet.address,
+          0,
+          0,
+        );
+      await tx.deployed();
+      oldDropModule = sdk.getDropModule(tx.address);
+
+      /*
+      await oldDropModule.createBatch([
+        { name: "test #1" },
+        { name: "test #2" },
+        { name: "test #3" },
+      ]);
+      */
+    });
+
+    it("should be able to use claim function as expected", async () => {
+      const factory = oldDropModule.getClaimConditionsFactory();
+      factory.newClaimPhase({
+        startTime: new Date(),
+      });
+      await oldDropModule.setClaimConditions(factory);
+      await oldDropModule.createBatch([
+        {
+          name: "test",
+        },
+      ]);
+      sdk.setProviderOrSigner(samWallet);
+      await oldDropModule.claim(1);
+      assert((await oldDropModule.getOwned(samWallet.address)).length === 1);
+    });
+
+    it("should be able to use claimTo function as expected", async () => {
+      const factory = oldDropModule.getClaimConditionsFactory();
+      factory.newClaimPhase({
+        startTime: new Date(),
+      });
+      await oldDropModule.setClaimConditions(factory);
+      await oldDropModule.createBatch([
+        {
+          name: "test",
+        },
+      ]);
+      await oldDropModule.claimTo(1, samWallet.address);
+      assert((await oldDropModule.getOwned(samWallet.address)).length === 1);
+    });
   });
 });

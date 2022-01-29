@@ -464,11 +464,14 @@ export class Module<TContract extends BaseContract = BaseContract> {
     return signature;
   }
 
-  protected parseEventLogs(eventName: string, logs?: Log[]): any {
+  protected parseEventLogs(
+    eventName: string,
+    logs?: Log[],
+    contract = this.contract,
+  ): any {
     if (!logs) {
       return null;
     }
-    const contract = this.contract;
     for (const log of logs) {
       try {
         const event = contract.interface.decodeEventLog(
