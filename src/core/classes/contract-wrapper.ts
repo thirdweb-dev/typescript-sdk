@@ -7,6 +7,7 @@ import {
   ContractInterface,
   ContractTransaction,
   ethers,
+  Signer,
 } from "ethers";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { SDKOptions } from "../../schema/sdk-options";

@@ -64,7 +64,10 @@ export class DropERC721Module {
   public royalty: ContractRoyalty<DropERC721, typeof DropErc721ModuleSchema>;
   public claimConditions: DropERC721ClaimConditions;
 
-  public updateSignerOrProvider;
+  // TODO in base class or interface
+  public updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -90,7 +93,6 @@ export class DropERC721Module {
       options,
     );
     // expose **only** the updateSignerOrProvider function from the private contractWrapper publicly
-    this.updateSignerOrProvider = this.contractWrapper.updateSignerOrProvider;
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,

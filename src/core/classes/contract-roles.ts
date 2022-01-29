@@ -1,4 +1,5 @@
 import { TransactionResultPromise } from "../types";
+import { TransactionResultPromise } from "../types";
 import { getRoleHash, Role } from "../../common/role";
 import { AccessControlEnumerable } from "@3rdweb/contracts";
 import invariant from "tiny-invariant";
@@ -19,6 +20,10 @@ export class ContractRoles<
     this.contractWrapper = contractWrapper;
     this.roles = roles;
   }
+
+  /** **************************
+   * READ FUNCTIONS
+   ****************************/
 
   /**
    * Call this to get get a list of addresses for all supported roles on the module.
@@ -162,6 +167,44 @@ export class ContractRoles<
       }),
     );
   }
+
+  /** **************************
+   * WRITE FUNCTIONS
+   ****************************/
+
+  /**
+   * Call this to grant a role to a specific address.
+   *
+   * @remarks
+   *
+   * Make sure you are sure you want to grant the role to the address.
+   *
+   * @param role - The {@link IRoles | role} to grant to the address
+   * @param address - The address to grant the role to
+   * @returns The transaction receipt
+   * @throws If you are trying to grant does not exist on the module this will throw an {@link InvariantError}.
+   *
+   * @public
+   */
+  public async grantRole(
+    role: TRole,
+    address: string,
+  ): TransactionResultPromise {
+    invariant(
+      this.roles.includes(role),
+      `this module does not support the "${role}" role`,
+    );
+    return {
+      receipt: await this.contractWrapper.sendTransaction("grantRole", [
+        getRoleHash(role),
+        address,
+      ]),
+    };
+  }
+
+  /** **************************
+   * PRIVATE FUNCTIONS
+   ****************************/
 
   private async getRevokeRoleFunctionName(address: string) {
     const signerAddress = await this.contractWrapper.getSignerAddress();

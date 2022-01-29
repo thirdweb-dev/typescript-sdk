@@ -29,14 +29,7 @@ describe("Drop Module", async () => {
 
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
-    console.log(signers.map((s) => s.address));
-    await sdk.updateSignerOrProvider(adminWallet);
-    // await sdk.setProviderOrSigner(adminWallet);
-    // dropModule = await appModule.deployDropModule({
-    //   name: "Test Drop",
-    //   maxSupply: 1000,
-    //   primarySaleRecipientAddress: AddressZero,
-    // });
+    sdk.updateSignerOrProvider(adminWallet);
     const address = await sdk.factory.deploy("DropERC721", {
       name: `Testing drop from SDK`,
       description: "Test module from tests",
@@ -61,18 +54,15 @@ describe("Drop Module", async () => {
     const fakeSigner = await hardhatEthers.getSigner(
       "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
     );
-    const fakeDropModule = new ThirdwebSDK(fakeSigner, {
-      thirdwebModuleFactory: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
-    }).getDropModule(address);
-    await fakeDropModule.roles.setAllRoleMembers({
-      admin: [adminWallet.address],
-      minter: [adminWallet.address],
-      transfer: [adminWallet.address],
-    });
+    sdk.updateSignerOrProvider(fakeSigner);
+    await dropModule.roles.grantRole("admin", adminWallet.address);
+    await dropModule.roles.grantRole("minter", adminWallet.address);
+    await dropModule.roles.grantRole("transfer", adminWallet.address);
     await hre.network.provider.request({
       method: "hardhat_stopImpersonatingAccount",
       params: ["0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"],
     });
+    // END TEMPORARY HACKS
 
     console.log(await dropModule.roles.getAllMembers());
   });
