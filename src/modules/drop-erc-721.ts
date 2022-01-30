@@ -1,5 +1,4 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoles } from "../core/classes/contract-roles";
 import { CommonNFTOutput } from "../schema/tokens/common/index";
 import {
   DropERC721,
@@ -28,9 +27,8 @@ import {
   NFTMetadataInput,
   NFTMetadataOwner,
 } from "../schema/tokens/common";
-import { DropERC721ClaimConditions } from "./drop-erc721-claim-conditions";
 import { QueryAllParams, DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
-import { Drop } from "ts-toolbelt/out/List/Drop";
+import { DropERC721ClaimConditions } from "./drop-erc721-claim-conditions";
 
 type DropRoles = "admin" | "minter" | "transfer";
 

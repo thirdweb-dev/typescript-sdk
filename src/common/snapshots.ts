@@ -1,8 +1,8 @@
 import { IStorage } from "../core/interfaces/IStorage";
 import MerkleTree from "merkletreejs";
-import { DuplicateLeafsError } from ".";
-import { SnapshotInfo } from "..";
 import { SnapshotSchema } from "../schema/modules/common/snapshots";
+import { SnapshotInfo } from "../types/claim-conditions/PublicClaimCondition";
+import { DuplicateLeafsError } from "./error";
 
 /**
  * Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS

@@ -13,9 +13,9 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 import { isNativeToken, NATIVE_TOKEN_ADDRESS } from "../common/currency";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { ClaimCondition } from "../types";
-import ClaimConditionFactory from "../factories/claim-condition-factory";
 import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../enums";
+import ClaimConditionFactory from "../factories/claim-condition-factory";
 
 export class DropERC721ClaimConditions {
   private contractWrapper;
