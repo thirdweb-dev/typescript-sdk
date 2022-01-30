@@ -62,9 +62,8 @@ describe("Drop Module", async () => {
       method: "hardhat_stopImpersonatingAccount",
       params: ["0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"],
     });
+    sdk.updateSignerOrProvider(adminWallet);
     // END TEMPORARY HACKS
-
-    console.log(await dropModule.roles.getAllMembers());
   });
 
   it("should allow a snapshot to be set", async () => {
@@ -91,8 +90,8 @@ describe("Drop Module", async () => {
     await dropModule.claimConditions.set(factory, false);
     console.log("Claim condition set");
 
-    const { metadata } = await dropModule.metadata.get();
-    const merkles: { [key: string]: string } = { ...metadata?.merkle };
+    const metadata = await dropModule.metadata.get();
+    const merkles = metadata.merkle;
 
     expect(merkles).have.property(
       "0x887a9d7f2b1fca2ff8c07e1e02d906bc2cda73495a8da7494165adcd81875164",
@@ -128,8 +127,8 @@ describe("Drop Module", async () => {
     await dropModule.claimConditions.set(factory, false);
     console.log("Claim condition set");
 
-    const { metadata } = await dropModule.metadata.get();
-    const merkles: { [key: string]: string } = metadata?.merkle;
+    const metadata = await dropModule.metadata.get();
+    const merkles = metadata.merkle;
 
     expect(merkles).have.property(
       "0x887a9d7f2b1fca2ff8c07e1e02d906bc2cda73495a8da7494165adcd81875164",
@@ -149,8 +148,8 @@ describe("Drop Module", async () => {
       startTime: new Date(),
     });
     await dropModule.claimConditions.set(newFactory, false);
-    const { metadata: newMetadata } = await dropModule.metadata.get();
-    const newMerkles: { [key: string]: string } = newMetadata?.merkle;
+    const newMetadata = await dropModule.metadata.get();
+    const newMerkles = newMetadata.merkle;
     expect(JSON.stringify(newMerkles)).to.eq("{}");
   });
 
@@ -179,11 +178,10 @@ describe("Drop Module", async () => {
     await phase.setSnapshot(members);
 
     console.log("Setting claim condition");
-    await dropModule.metadata.set(factory);
-
+    await dropModule.claimConditions.set(factory, false);
     console.log("Claim condition set");
-    console.log("Minting 100");
 
+    console.log("Minting 100");
     const metadata = [];
     for (let i = 0; i < 10; i++) {
       metadata.push({
@@ -607,7 +605,7 @@ describe("Drop Module", async () => {
     const phase = factory.newClaimPhase({
       startTime: new Date(),
     });
-    await phase.setSnapshot([w1.address]);
+    phase.setSnapshot([w1.address]);
     await dropModule.claimConditions.set(factory, false);
 
     assert.isTrue(

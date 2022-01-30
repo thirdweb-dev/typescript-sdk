@@ -1,4 +1,5 @@
 import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractRoles } from "../core/classes/contract-roles";
 import { CommonNFTOutput } from "../schema/tokens/common/index";
 import {
   DropERC721,
@@ -29,6 +30,9 @@ import {
 } from "../schema/tokens/common";
 import { DropERC721ClaimConditions } from "./drop-erc721-claim-conditions";
 import { QueryAllParams, DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
+import { Drop } from "ts-toolbelt/out/List/Drop";
+
+type DropRoles = "admin" | "minter" | "transfer";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -51,16 +55,17 @@ export class DropERC721Module {
 
   // this is a type of readoyly Role[], technically, doing it this way makes it work nicely for types
   // **but** we probably want to enforce in an interface somewhere that `static moduleRoles` is a type of Role[]
-  public static moduleRoles = ["admin", "minter", "transfer"] as const;
+
+  // TODO figure out a way to not repeat the roles here
+  public static moduleRoles: DropRoles[] = ["admin", "minter", "transfer"];
   public static schema = DropErc721ModuleSchema;
 
   private storage: IStorage;
+  private contractWrapper: ContractWrapper<DropERC721>;
+  private options: SDKOptions;
 
-  // TODO type all of these for proper type inference
-  private contractWrapper;
-  private options;
-  public metadata;
-  public roles;
+  public metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>;
+  public roles: ContractRoles<DropERC721, DropRoles>;
   public royalty: ContractRoyalty<DropERC721, typeof DropErc721ModuleSchema>;
   public claimConditions: DropERC721ClaimConditions;
 
@@ -373,15 +378,15 @@ export class DropERC721Module {
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
-    const { baseUri } = await this.storage.uploadMetadataBatch(
+    const batch = await this.storage.uploadMetadataBatch(
       metadatas,
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
     );
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      metadatas.length,
-      baseUri,
+      batch.metadataUris.length,
+      batch.baseUri,
     ]);
     // TODO figure out how to type the return types of parseEventLogs
     const event = this.contractWrapper.parseEventLogs(
@@ -561,10 +566,9 @@ export class DropERC721Module {
 
   private async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
-
     // TODO: include recursive metadata IPFS resolving for all
     // properties with a hash
-    return CommonNFTOutput.parse(await this.storage.get(tokenUri));
+    return CommonNFTOutput.parse(JSON.parse(await this.storage.get(tokenUri)));
   }
 
   /**

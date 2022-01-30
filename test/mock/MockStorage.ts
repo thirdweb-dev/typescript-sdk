@@ -134,9 +134,10 @@ export class MockStorage implements IStorage {
       contractAddress,
       signerAddress,
     );
+    const baseUri = `${cid}/`;
     return {
-      metadataUris: metadataToUpload.map((m, i) => `${cid}/${i}`),
-      baseUri: cid,
+      metadataUris: metadataToUpload.map((m, i) => `${baseUri}${i}`),
+      baseUri,
     };
   }
 
