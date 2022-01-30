@@ -1,5 +1,4 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import { CommonNFTOutput } from "../schema/tokens/common/index";
 import {
   DropERC721,
   DropERC721__factory,
@@ -26,6 +25,7 @@ import {
   NFTMetadata,
   NFTMetadataInput,
   NFTMetadataOwner,
+  CommonNFTOutput,
 } from "../schema/tokens/common";
 import { QueryAllParams, DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
 import { DropERC721ClaimConditions } from "./drop-erc721-claim-conditions";
@@ -95,7 +95,6 @@ export class DropERC721Module {
       DropERC721__factory.abi,
       options,
     );
-    // expose **only** the updateSignerOrProvider function from the private contractWrapper publicly
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,

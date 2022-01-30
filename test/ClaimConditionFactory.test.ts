@@ -2,15 +2,15 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import * as chai from "chai";
 import { BigNumber, ethers } from "ethers";
-import ClaimConditionFactory from "../src/factories/ClaimConditionFactory";
-import { PublicMintCondition } from "../src/index";
-import { sdk } from "./before.test";
+import ClaimConditionFactory from "../src/factories/claim-condition-factory";
+import { PublicClaimCondition } from "../src/types/claim-conditions/PublicClaimCondition";
+import { MockStorage } from "./mock/MockStorage";
 
 global.fetch = require("node-fetch");
 
 describe("ClaimConditionFactory", async () => {
   let factory: ClaimConditionFactory;
-  let conditions: PublicMintCondition[];
+  let conditions: PublicClaimCondition[];
 
   const phaseOneStartTimeInSeconds =
     Date.parse("01 Dec 2021 00:00:00 GMT") / 1000;
@@ -32,8 +32,7 @@ describe("ClaimConditionFactory", async () => {
   beforeEach(async () => {
     // This will get the factory of an existing drop
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const createSnapshotFunc = sdk.createSnapshot.bind(sdk);
-    factory = new ClaimConditionFactory(createSnapshotFunc);
+    factory = new ClaimConditionFactory(new MockStorage());
 
     // You can also instantiate the factory and import a modules existing
     // mint conditions like this:

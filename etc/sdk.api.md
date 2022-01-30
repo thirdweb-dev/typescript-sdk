@@ -139,196 +139,18 @@ export class DropERC721Module {
     isApproved(address: string, operator: string): Promise<boolean>;
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
-    metadata: ContractMetadata<DropERC721, {
-        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodString;
-            external_link: zod.ZodOptional<zod.ZodString>;
-        }, {
-            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
-        }>, {
-            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
-        }>, {
-            platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
-        }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
-        }>, "strip", zod.ZodTypeAny, {
-            description?: string | undefined;
-            external_link?: string | undefined;
-            merkle: Record<string, string>;
-            name: string;
-            image: string;
-            seller_fee_basis_points: number;
-            fee_recipient: string;
-            platform_fee_basis_points: number;
-            platform_fee_recipient: string;
-            trusted_forwarder: string;
-        }, {
-            merkle?: Record<string, string> | undefined;
-            description?: string | undefined;
-            external_link?: string | undefined;
-            seller_fee_basis_points?: number | undefined;
-            fee_recipient?: string | undefined;
-            platform_fee_basis_points?: number | undefined;
-            platform_fee_recipient?: string | undefined;
-            trusted_forwarder?: string | undefined;
-            name: string;
-            image: string;
-        }>;
-        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodString;
-            external_link: zod.ZodOptional<zod.ZodString>;
-        }, {
-            image: zod.ZodOptional<zod.ZodString>;
-        }>, {
-            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
-        }>, {
-            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
-        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_link?: string | undefined;
-            merkle: Record<string, string>;
-            name: string;
-            seller_fee_basis_points: number;
-            fee_recipient: string;
-        }, {
-            [x: string]: Json;
-            merkle?: Record<string, string> | undefined;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_link?: string | undefined;
-            seller_fee_basis_points?: number | undefined;
-            fee_recipient?: string | undefined;
-            name: string;
-        }>;
-        input: zod.ZodObject<zod.extendShape<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodString;
-            external_link: zod.ZodOptional<zod.ZodString>;
-        }, {
-            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
-        }>, {
-            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
-        }>, "strip", zod.ZodTypeAny, {
-            description?: string | undefined;
-            external_link?: string | undefined;
-            merkle: Record<string, string>;
-            name: string;
-            image: string;
-            seller_fee_basis_points: number;
-            fee_recipient: string;
-        }, {
-            merkle?: Record<string, string> | undefined;
-            description?: string | undefined;
-            external_link?: string | undefined;
-            seller_fee_basis_points?: number | undefined;
-            fee_recipient?: string | undefined;
-            name: string;
-            image: string;
-        }>;
-        tokenInput: zod.ZodObject<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
-            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
-        }, {
-            animation_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
-            background_color: zod.ZodOptional<zod.ZodEffects<zod.ZodString, string, string>>;
-            properties: zod.ZodEffects<zod.ZodEffects<zod.ZodEffects<zod.ZodOptional<zod.ZodArray<zod.ZodObject<{
-                key: zod.ZodString;
-                value: zod.ZodUnion<[zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>, zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>]>;
-            }, "strip", zod.ZodTypeAny, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }>, "many">>, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined>, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined>, Record<string, string | number | boolean | File | Buffer | null> | undefined, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined>;
-        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | File | Buffer | undefined;
-            external_url?: string | File | Buffer | undefined;
-            animation_url?: string | File | Buffer | undefined;
-            background_color?: string | undefined;
-            properties?: Record<string, string | number | boolean | File | Buffer | null> | undefined;
-            name: string;
-        }, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | File | Buffer | undefined;
-            external_url?: string | File | Buffer | undefined;
-            animation_url?: string | File | Buffer | undefined;
-            background_color?: string | undefined;
-            properties?: {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined;
-            name: string;
-        }>;
-        tokenOutput: zod.ZodObject<zod.extendShape<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
-            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
-        }, {
-            image: zod.ZodOptional<zod.ZodString>;
-            external_url: zod.ZodOptional<zod.ZodString>;
-        }>, {
-            animation_url: zod.ZodOptional<zod.ZodString>;
-            properties: zod.ZodOptional<zod.ZodRecord<zod.ZodString, zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>>>;
-        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_url?: string | undefined;
-            animation_url?: string | undefined;
-            properties?: Record<string, string | number | boolean | null> | undefined;
-            name: string;
-        }, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_url?: string | undefined;
-            animation_url?: string | undefined;
-            properties?: Record<string, string | number | boolean | null> | undefined;
-            name: string;
-        }>;
-    }>;
+    metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>;
+    // Warning: (ae-forgotten-export) The symbol "DropRoles" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    static moduleRoles: readonly ["admin", "minter", "transfer"];
+    static moduleRoles: DropRoles[];
     // (undocumented)
     static moduleType: "DropERC721";
     ownerOf(tokenId: BigNumberish): Promise<string>;
     // Warning: (ae-forgotten-export) The symbol "ContractRoles" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    roles: ContractRoles<DropERC721, "transfer" | "admin" | "minter">;
+    roles: ContractRoles<DropERC721, DropRoles>;
     // Warning: (ae-forgotten-export) The symbol "ContractRoyalty" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -353,20 +175,20 @@ export class DropERC721Module {
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             external_link?: string | undefined;
-            merkle: Record<string, string>;
             name: string;
             image: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
+            merkle: Record<string, string>;
             platform_fee_basis_points: number;
             platform_fee_recipient: string;
             trusted_forwarder: string;
         }, {
-            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
+            merkle?: Record<string, string> | undefined;
             platform_fee_basis_points?: number | undefined;
             platform_fee_recipient?: string | undefined;
             trusted_forwarder?: string | undefined;
@@ -390,18 +212,18 @@ export class DropERC721Module {
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
-            merkle: Record<string, string>;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
+            merkle: Record<string, string>;
         }, {
             [x: string]: Json;
-            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
+            merkle?: Record<string, string> | undefined;
             name: string;
         }>;
         input: zod.ZodObject<zod.extendShape<zod.extendShape<{
@@ -417,17 +239,17 @@ export class DropERC721Module {
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             external_link?: string | undefined;
-            merkle: Record<string, string>;
             name: string;
             image: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
+            merkle: Record<string, string>;
         }, {
-            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
+            merkle?: Record<string, string> | undefined;
             name: string;
             image: string;
         }>;

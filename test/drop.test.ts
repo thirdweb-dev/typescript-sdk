@@ -2,15 +2,13 @@ import { DropERC721Module } from "../src/modules/drop-erc-721";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import { appModule, sdk, signers } from "./before.test";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
 import hre, { ethers as hardhatEthers } from "hardhat";
-import { ThirdwebSDK } from "../src";
-import { networkInterfaces } from "os";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
@@ -19,13 +17,13 @@ global.fetch = require("node-fetch");
 
 describe("Drop Module", async () => {
   let dropModule: DropERC721Module;
-  let adminWallet,
-    samWallet,
-    abbyWallet,
-    bobWallet,
-    w1,
-    w2,
-    w3,
+  let adminWallet: SignerWithAddress,
+    samWallet: SignerWithAddress,
+    abbyWallet: SignerWithAddress,
+    bobWallet: SignerWithAddress,
+    w1: SignerWithAddress,
+    w2: SignerWithAddress,
+    w3: SignerWithAddress,
     w4: SignerWithAddress;
 
   beforeEach(async () => {
