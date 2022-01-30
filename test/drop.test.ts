@@ -10,6 +10,7 @@ import { ClaimEligibility } from "../src/enums";
 import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
 import hre, { ethers as hardhatEthers } from "hardhat";
 import { ThirdwebSDK } from "../src";
+import { networkInterfaces } from "os";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
@@ -301,7 +302,9 @@ describe("Drop Module", async () => {
       { name: "name", description: "description" },
     ]);
     const factory = dropModule.claimConditions.builder();
-    // TODO set this [{ maxMintSupply: 100 }]
+    factory.newClaimPhase({
+      startTime: new Date(),
+    });
     await dropModule.claimConditions.set(factory, false);
     await dropModule.claim(1);
   });
@@ -495,6 +498,7 @@ describe("Drop Module", async () => {
         name: "test",
         symbol: "test",
       });
+      sdk.factory.deploy();
 
       const factory = dropModule.claimConditions.builder();
       factory
