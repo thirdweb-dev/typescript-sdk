@@ -31,7 +31,6 @@ describe("Splits Module", async () => {
           shares: 1,
         },
       ],
-      isRoyalty: true,
     });
 
     packModule = await appModule.deployPackModule({

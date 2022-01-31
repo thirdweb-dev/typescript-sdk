@@ -1953,8 +1953,6 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
 // @public (undocumented)
 export class SplitsModuleMetadata extends CommonModuleMetadata {
     // (undocumented)
-    isRoyalty: boolean;
-    // (undocumented)
     recipientSplits: NewSplitRecipient[];
 }
 
