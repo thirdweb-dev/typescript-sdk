@@ -12,6 +12,7 @@ import {
   ProtocolControl__factory,
   Royalty__factory,
   SignatureMint721__factory,
+  Splits__factory,
   VotingGovernor__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
@@ -612,7 +613,7 @@ export class AppModule
         metadata.recipientSplits.map((s) => s.address),
         metadata.recipientSplits.map((s) => s.shares),
       ],
-      Royalty__factory,
+      metadata.isRoyalty ? Royalty__factory : Splits__factory,
     );
 
     return this.sdk.getSplitsModule(address);
@@ -1168,8 +1169,9 @@ export class AppModule
       const metadata = (await this.getMetadata()).metadata;
       splitsAddress = (
         await this.deploySplitsModule({
-          name: `${metadata?.name} Treasury`,
+          name: `${metadata?.name} Royalty Treasury`,
           recipientSplits: upgradeOptions.splitsRecipients,
+          isRoyalty: true,
         })
       ).address;
     }

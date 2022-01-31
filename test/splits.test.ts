@@ -11,7 +11,6 @@ const thirdwebRoyaltyAddress = "0xE00994EBDB59f70350E2cdeb897796F732331562";
 
 describe("Splits Module", async () => {
   let splitsModule: SplitsModule;
-  let packModule: PackModule;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -31,13 +30,6 @@ describe("Splits Module", async () => {
           shares: 1,
         },
       ],
-      isRoyalty: true,
-    });
-
-    packModule = await appModule.deployPackModule({
-      name: "Pack Module",
-      sellerFeeBasisPoints: 1000,
-      feeRecipient: splitsModule.address,
     });
   });
 
@@ -55,8 +47,8 @@ describe("Splits Module", async () => {
     assert.equal(
       (await splitsModule.getRecipientSplitPercentage(adminWallet.address))
         .splitPercentage,
-      5,
-      "The Thirdweb wallet should have 5% share of all royalties",
+      0.3,
+      "The Thirdweb wallet should have 0.3% share of all royalties",
     );
   });
 
@@ -81,34 +73,6 @@ describe("Splits Module", async () => {
       Object.keys(balances).length,
       2,
       "There should be 3 recipients",
-    );
-  });
-
-  /**
-   * TODO: Write the following tests
-   *
-   * 1. Withdrawing royalties and assuring fund delivery
-   * 2. Checking balances
-   * 3. Funds are received when a module uses a splits address as a royalty recipient
-   */
-
-  // TODO: Move to royalty test suite
-  it("should return the correct royalty recipient", async () => {
-    const recipient = await packModule.getRoyaltyRecipientAddress();
-    assert.equal(
-      recipient,
-      splitsModule.address,
-      "The default royalty recipient should be the project address",
-    );
-  });
-
-  // TODO: Move to royalty test suite
-  it("should return the correct royalty BPS", async () => {
-    const bps = await packModule.getRoyaltyBps();
-    assert.equal(
-      "1000",
-      bps.toString(),
-      "The royalty BPS should be 10000 (10%)",
     );
   });
 });
