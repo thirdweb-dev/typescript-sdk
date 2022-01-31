@@ -221,7 +221,7 @@ export class DropERC721ClaimConditions {
    * claim condition factory.
    *
    * @param factory - The claim condition factory.
-   * @param resetPreviousClaims - Whether to reset the state of who already claimed NFTs previously
+   * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
   public async set(
     factory: ClaimConditionFactory,

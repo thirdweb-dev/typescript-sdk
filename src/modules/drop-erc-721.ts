@@ -30,8 +30,6 @@ import {
 import { QueryAllParams, DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
 import { DropERC721ClaimConditions } from "./drop-erc721-claim-conditions";
 
-type DropRoles = "admin" | "minter" | "transfer";
-
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
  *
@@ -50,12 +48,7 @@ type DropRoles = "admin" | "minter" | "transfer";
  */
 export class DropERC721Module {
   static moduleType = "DropERC721" as const;
-
-  // this is a type of readoyly Role[], technically, doing it this way makes it work nicely for types
-  // **but** we probably want to enforce in an interface somewhere that `static moduleRoles` is a type of Role[]
-
-  // TODO figure out a way to not repeat the roles here
-  public static moduleRoles: DropRoles[] = ["admin", "minter", "transfer"];
+  static moduleRoles = ["admin", "minter", "transfer"] as const;
   public static schema = DropErc721ModuleSchema;
 
   private storage: IStorage;
@@ -63,7 +56,10 @@ export class DropERC721Module {
   private options: SDKOptions;
 
   public metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>;
-  public roles: ContractRoles<DropERC721, DropRoles>;
+  public roles: ContractRoles<
+    DropERC721,
+    typeof DropERC721Module.moduleRoles[number]
+  >;
   public royalty: ContractRoyalty<DropERC721, typeof DropErc721ModuleSchema>;
   public claimConditions: DropERC721ClaimConditions;
 
