@@ -6,6 +6,8 @@ import {
   SnapshotInfo,
 } from "../types/claim-conditions/PublicClaimCondition";
 import ClaimConditionPhase from "./claim-condition-phase";
+import { createSnapshot } from "../common";
+import { AddressZero } from "@ethersproject/constants";
 
 class ClaimConditionFactory {
   private phases: ClaimConditionPhase[] = [];
@@ -27,7 +29,7 @@ class ClaimConditionFactory {
   public async buildConditions(): Promise<PublicClaimCondition[]> {
     let sorted: PublicClaimCondition[] = [];
     await Promise.all(
-      this.phases.map((c) => c.buildPublicClaimCondition()),
+      this.phases.map((c) => this.buildPublicClaimCondition(c)),
     ).then((publicClaimConditions) => {
       // TODO: write test to ensure they're sorted by start time, earliest first
       sorted = publicClaimConditions.sort((a, b) => {
@@ -53,7 +55,7 @@ class ClaimConditionFactory {
   public fromPublicClaimConditions(conditions: PublicClaimCondition[]) {
     const phases = [];
     for (const condition of conditions) {
-      const phase = new ClaimConditionPhase(this.storage);
+      const phase = new ClaimConditionPhase();
 
       // If there's a price, there must also be an associated currency
       if (condition.currency) {
@@ -92,7 +94,7 @@ class ClaimConditionFactory {
     maxQuantity?: BigNumberish;
     maxQuantityPerTransaction?: BigNumberish;
   }): ClaimConditionPhase {
-    const condition = new ClaimConditionPhase(this.storage);
+    const condition = new ClaimConditionPhase();
 
     condition.setConditionStartTime(startTime);
     condition.setMaxQuantity(BigNumber.from(maxQuantity));
@@ -133,8 +135,35 @@ class ClaimConditionFactory {
    */
   public allSnapshots(): SnapshotInfo[] {
     return this.phases
-      .filter((p) => p.getSnapshot() !== undefined)
-      .map((p) => p.getSnapshot() as SnapshotInfo);
+      .filter((p) => p.snaphsotInfo !== undefined)
+      .map((p) => p.snaphsotInfo as SnapshotInfo);
+  }
+
+  /**
+   * Helper method that provides defaults for each claim condition.
+   * @internal
+   */
+  public async buildPublicClaimCondition(
+    claimPhase: ClaimConditionPhase,
+  ): Promise<PublicClaimCondition> {
+    if (claimPhase.snapshot) {
+      claimPhase.setSnaphsotInfo(
+        await createSnapshot(claimPhase.snapshot, this.storage),
+      );
+    }
+
+    return {
+      startTimestamp: BigNumber.from(claimPhase.conditionStartTime.toString()),
+      pricePerToken: claimPhase.price,
+      currency: claimPhase.currencyAddress || AddressZero,
+      maxMintSupply: claimPhase.maxQuantity,
+      waitTimeSecondsLimitPerTransaction: claimPhase.waitInSeconds,
+      quantityLimitPerTransaction: claimPhase.quantityLimitPerTransaction,
+      currentMintSupply: 0,
+      merkleRoot: claimPhase.snaphsotInfo?.merkleRoot
+        ? claimPhase.snaphsotInfo.merkleRoot
+        : claimPhase.merkleRootHash,
+    };
   }
 }
 

@@ -12,10 +12,11 @@ import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { isNativeToken, NATIVE_TOKEN_ADDRESS } from "../common/currency";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { ClaimCondition } from "../types";
+import { ClaimCondition, PublicClaimCondition } from "../types";
 import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../enums";
 import ClaimConditionFactory from "../factories/claim-condition-factory";
+import ClaimConditionPhase from "../factories/claim-condition-phase";
 
 export class DropERC721ClaimConditions {
   private contractWrapper;
@@ -224,13 +225,13 @@ export class DropERC721ClaimConditions {
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
   public async set(
-    factory: ClaimConditionFactory,
+    claimConditions: PublicClaimCondition[],
     resetClaimEligibilityForAll: boolean,
   ) {
-    console.log(
-      "Claim metadata owner",
-      await this.contractWrapper.getSignerAddress(),
+    const factory: ClaimConditionFactory = new ClaimConditionFactory(
+      this.storage,
     );
+    factory.fromPublicClaimConditions(claimConditions);
     const conditions = (await factory.buildConditions()).map((c) => ({
       startTimestamp: c.startTimestamp,
       maxClaimableSupply: c.maxMintSupply,

@@ -16,22 +16,16 @@ export default class ClaimConditionPhase {
   private _conditionStartTime = Math.floor(Date.now() / 1000);
   private _currencyAddress = "";
   private _price: BigNumberish = 0;
-  private _maxQuantity: BigNumberish = BigNumber.from(0);
+  private _maxQuantity: BigNumberish = ethers.constants.MaxUint256;
   private _quantityLimitPerTransaction: BigNumberish =
     ethers.constants.MaxUint256;
   private _merkleRootHash: BytesLike = hexZeroPad([0], 32);
-  private _merkleCondition?: SnapshotInfo = undefined;
+  private _snaphsotInfo?: SnapshotInfo = undefined;
   private _snapshot?: string[] = undefined;
   private _waitInSeconds: BigNumberish = 0;
-  private _storage: IStorage;
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor(storage: IStorage) {
-    this._storage = storage;
-  }
 
   /**
-   * Set the price claim condition for the drop.
+   * Set the price claim condition for the drosp.
    *
    * @param price - The price of the currency in wei. Must be >= 0.
    * @param tokenAddress - The address of an ERC20 contract to use as the currency for the claim. By default this is the native currency address which is 0x0000000000000000000000000000000000000000 address.
@@ -98,47 +92,13 @@ export default class ClaimConditionPhase {
   }
 
   /**
-   * Sets a snapshot for the claim condition. You can use a snapshot
-   * to verify a merkle tree condition.
+   * Sets a snapshot of user wallets to restrict minting to
    *
-   * @param root - The merkle root hash
+   * @param addresses - the wallet addresses
    */
   public setSnapshot(addresses: string[]): ClaimConditionPhase {
     this._snapshot = addresses;
     return this;
-  }
-
-  /**
-   * @internal
-   */
-  public getSnapshot(): SnapshotInfo | undefined {
-    return this._merkleCondition;
-  }
-
-  /**
-   * Helper method that provides defaults for each claim condition.
-   * @internal
-   */
-  public async buildPublicClaimCondition(): Promise<PublicClaimCondition> {
-    if (this._snapshot) {
-      this._merkleCondition = await createSnapshot(
-        this._snapshot,
-        this._storage,
-      );
-    }
-
-    return {
-      startTimestamp: BigNumber.from(this._conditionStartTime.toString()),
-      pricePerToken: this._price,
-      currency: this._currencyAddress || AddressZero,
-      maxMintSupply: this._maxQuantity,
-      waitTimeSecondsLimitPerTransaction: this._waitInSeconds,
-      quantityLimitPerTransaction: this._quantityLimitPerTransaction,
-      currentMintSupply: 0,
-      merkleRoot: this._merkleCondition?.merkleRoot
-        ? this._merkleCondition.merkleRoot
-        : this._merkleRootHash,
-    };
   }
 
   /**
@@ -151,5 +111,48 @@ export default class ClaimConditionPhase {
   ): ClaimConditionPhase {
     this._waitInSeconds = waitInSeconds;
     return this;
+  }
+
+  /**
+   * @internal
+   */
+  public setSnaphsotInfo(value: SnapshotInfo) {
+    this._snaphsotInfo = value;
+  }
+
+  get snaphsotInfo(): SnapshotInfo | undefined {
+    return this._snaphsotInfo;
+  }
+
+  get snapshot(): string[] | undefined {
+    return this._snapshot;
+  }
+
+  get conditionStartTime(): number {
+    return this._conditionStartTime;
+  }
+
+  get currencyAddress(): string {
+    return this._currencyAddress;
+  }
+
+  get price(): BigNumberish {
+    return this._price;
+  }
+
+  get maxQuantity(): BigNumberish {
+    return this._maxQuantity;
+  }
+
+  get quantityLimitPerTransaction(): BigNumberish {
+    return this._quantityLimitPerTransaction;
+  }
+
+  get merkleRootHash(): BytesLike {
+    return this._merkleRootHash;
+  }
+
+  get waitInSeconds(): BigNumberish {
+    return this._waitInSeconds;
   }
 }
