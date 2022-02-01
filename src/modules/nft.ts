@@ -605,7 +605,6 @@ export class NFTModule
       .uploadMetadataBatch(payloads.map((r) => r.metadata));
 
     const chainId = await this.getChainID();
-    const from = await this.getSignerAddress();
     const signer = this.getSigner() as Signer;
 
     return await Promise.all(
@@ -619,9 +618,8 @@ export class NFTModule
             uri,
           },
           signature: (
-            await this.signTypedData(
+            await this.signTypedDataEmitEvent(
               signer,
-              from,
               {
                 name: "SignatureMint721",
                 version: "1",
