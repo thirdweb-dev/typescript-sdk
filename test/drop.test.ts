@@ -97,8 +97,6 @@ describe("Drop Module", async () => {
   });
 
   it("should remove merkles from the metadata when claim conditions are removed", async () => {
-    console.log("Setting claim condition");
-    // await dropModule.claimConditions.set(factory, false);
     await dropModule.claimConditions.set([
       {
         startTime: new Date(),
@@ -110,7 +108,6 @@ describe("Drop Module", async () => {
         snapshot: [bobWallet.address],
       },
     ]);
-    console.log("Claim condition set");
 
     const metadata = await dropModule.metadata.get();
     const merkles = metadata.merkle;
