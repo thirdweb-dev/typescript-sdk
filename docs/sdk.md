@@ -8,13 +8,63 @@
 
 |  Class | Description |
 |  --- | --- |
+|  [AdminRoleMissingError](./sdk.adminrolemissingerror.md) | Thrown when attempting to execute an admin-role function. |
+|  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
+|  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
+|  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
+|  [DropErc721ClaimConditions](./sdk.droperc721claimconditions.md) |  |
 |  [DropErc721Module](./sdk.droperc721module.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
+|  [DuplicateFileNameError](./sdk.duplicatefilenameerror.md) |  |
+|  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
+|  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
+|  [FileNameMissingError](./sdk.filenamemissingerror.md) |  |
+|  [FunctionDeprecatedError](./sdk.functiondeprecatederror.md) |  |
+|  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
+|  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
+|  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
+|  [MissingRoleError](./sdk.missingroleerror.md) |  |
+|  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
+|  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
+|  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
+|  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
+|  [UploadError](./sdk.uploaderror.md) |  |
+|  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
+
+## Functions
+
+|  Function | Description |
+|  --- | --- |
+|  [createSnapshot(leafs, storage)](./sdk.createsnapshot.md) | Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS |
+
+## Interfaces
+
+|  Interface | Description |
+|  --- | --- |
+|  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
+|  [IStorage](./sdk.istorage.md) |  |
 
 ## Type Aliases
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [BufferOrStringWithName](./sdk.bufferorstringwithname.md) |  |
+|  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
+|  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
+|  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
+|  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
+|  [Json](./sdk.json.md) |  |
+|  [JsonLiteral](./sdk.jsonliteral.md) |  |
+|  [JsonObject](./sdk.jsonobject.md) |  |
+|  [ModuleForModuleType](./sdk.moduleformoduletype.md) |  |
 |  [ModuleType](./sdk.moduletype.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
+|  [SignerOrProvider](./sdk.signerorprovider.md) |  |
+|  [TransactionResult](./sdk.transactionresult.md) |  |
+|  [TransactionResultPromise](./sdk.transactionresultpromise.md) |  |
+|  [TransactionResultWithId](./sdk.transactionresultwithid.md) |  |
+|  [ValidModuleClass](./sdk.validmoduleclass.md) |  |
+|  [ValidModuleInstance](./sdk.validmoduleinstance.md) |  |
+|  [ValueOf](./sdk.valueof.md) |  |
 

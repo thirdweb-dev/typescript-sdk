@@ -8,13 +8,13 @@
     },
     "methods": [
       {
-        "name": "balanceOf",
-        "summary": "Get NFT Balance\n\n",
-        "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this module owned by the wallet).\n\n",
+        "name": "claimTo",
+        "summary": "Claim NFTs to a specific Wallet\n\n",
+        "remarks": "\n\nLet the a specified wallet claim NFTs.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await module.balanceOf(address);\nconsole.log(balance);"
+          "javascript": "const address = \"{{wallet_address}}\"; // Address of the wallet you want to claim the NFTs\nconst quantity = 1; // Quantity of the tokens you want to claim\n\nawait module.claimTo(address, quantity);"
         },
-        "signature": "balanceOf(address: string): Promise<BigNumber>;"
+        "signature": "claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;"
       },
       {
         "name": "createBatch",
@@ -24,44 +24,8 @@
           "javascript": "// The array of NFT metadata you want to create\nconst nftMetadatasToCreate = [{ name: ..., description: ...}, { name: ... }, ...];\n\nconst results = await module.createBatch(nftMetadatasToCreate); // uploads and creates the NFTs on chain\nconst receipt = results[0].receipt; // same transaction receipt for all created NFTs\nconst tokenIds = results.map((result) => result.id); // all the token ids created\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
         },
         "signature": "createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;"
-      },
-      {
-        "name": "get",
-        "summary": "Get a single NFT Metadata\n\n",
-        "remarks": null,
-        "examples": {
-          "javascript": "const nft = await module.get(\"0\");\nconsole.log(nft);"
-        },
-        "signature": "get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;"
-      },
-      {
-        "name": "getAll",
-        "summary": "Get All NFTs\n\n",
-        "remarks": "\n\nGet all the data associated with every NFT in this module.\n\n",
-        "examples": {
-          "javascript": "const nfts = await module.getAll();\nconsole.log(nfts);"
-        },
-        "signature": "getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;"
-      },
-      {
-        "name": "getOwned",
-        "summary": "Get Owned NFTs\n\n",
-        "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
-        "examples": {
-          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await module.getOwned(address);\nconsole.log(nfts);"
-        },
-        "signature": "getOwned(_address?: string): Promise<NFTMetadataOwner[]>;"
-      },
-      {
-        "name": "transfer",
-        "summary": "Transfer NFT\n\n",
-        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
-        "examples": {
-          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\nawait module.transfer(toAddress, tokenId);"
-        },
-        "signature": "transfer(to: string, tokenId: string): TransactionResultPromise;"
       }
     ],
-    "signature": "declare class DropErc721Module "
+    "signature": "declare class DropErc721Module extends Erc721<DropERC721> "
   }
 }

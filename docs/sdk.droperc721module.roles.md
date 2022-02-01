@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-roles: ContractRoles<DropERC721, "admin" | "transfer" | "minter">;
+roles: ContractRoles<DropERC721, typeof DropErc721Module.moduleRoles[number]>;
 ```

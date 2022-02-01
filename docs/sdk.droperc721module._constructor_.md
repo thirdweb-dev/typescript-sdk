@@ -9,7 +9,7 @@ Constructs a new instance of the `DropErc721Module` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, address: string, options?: SDKOptions);
+constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
 ```
 
 ## Parameters
@@ -18,5 +18,7 @@ constructor(network: NetworkOrSignerOrProvider, address: string, options?: SDKOp
 |  --- | --- | --- |
 |  network | NetworkOrSignerOrProvider |  |
 |  address | string |  |
+|  storage | IStorage |  |
 |  options | SDKOptions |  |
+|  contractWrapper | ContractWrapper&lt;DropERC721&gt; |  |
 

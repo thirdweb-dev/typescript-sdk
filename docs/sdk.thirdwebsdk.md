@@ -15,13 +15,21 @@ declare class ThirdwebSDK extends RPCConnectionHandler
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, options)](./sdk.thirdwebsdk._constructor_.md) |  | Constructs a new instance of the <code>ThirdwebSDK</code> class |
+|  [(constructor)(network, options, storage)](./sdk.thirdwebsdk._constructor_.md) |  | Constructs a new instance of the <code>ThirdwebSDK</code> class |
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [factory](./sdk.thirdwebsdk.factory.md) |  | ModuleFactory |  |
+|  [storage](./sdk.thirdwebsdk.storage.md) |  | IStorage |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [getDropModule(moduleAddress)](./sdk.thirdwebsdk.getdropmodule.md) |  |  |
+|  [getDropModule(moduleAddress)](./sdk.thirdwebsdk.getdropmodule.md) |  | Get an instance of a Drop module |
+|  [getNFTModule(address)](./sdk.thirdwebsdk.getnftmodule.md) |  | Get an instance of a NFT Collection module |
 |  [resolveModuleType(moduleAddress)](./sdk.thirdwebsdk.resolvemoduletype.md) |  |  |
-|  [updateSignerOrProvider(network)](./sdk.thirdwebsdk.updatesignerorprovider.md) |  |  |
+|  [updateSignerOrProvider(network)](./sdk.thirdwebsdk.updatesignerorprovider.md) |  | Update the active signer or provider for all modules |
 

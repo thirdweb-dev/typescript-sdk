@@ -4,17 +4,19 @@
 
 ## ThirdwebSDK.updateSignerOrProvider() method
 
+Update the active signer or provider for all modules
+
 <b>Signature:</b>
 
 ```typescript
-updateSignerOrProvider(network: Networkish): void;
+updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | Networkish |  |
+|  network | NetworkOrSignerOrProvider | the new signer or provider |
 
 <b>Returns:</b>
 

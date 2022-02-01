@@ -8,102 +8,114 @@
 
 ```typescript
 static schema: {
-        readonly deploy: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodString>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
-            platform_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            platform_fee_recipient: z.ZodDefault<z.ZodString>;
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
-            trusted_forwarder: z.ZodDefault<z.ZodString>;
-        }>, "strip", z.ZodTypeAny, {
+            platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, {
+            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
-            image?: string | File | Buffer | undefined;
+            image?: string | undefined;
             external_link?: string | undefined;
+            merkle: Record<string, string>;
             name: string;
-            seller_fee_basis_points: BigNumber;
+            seller_fee_basis_points: number;
             fee_recipient: string;
-            platform_fee_basis_points: BigNumber;
+            platform_fee_basis_points: number;
             platform_fee_recipient: string;
             trusted_forwarder: string;
         }, {
+            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
-            image?: string | File | Buffer | undefined;
+            image?: string | undefined;
             external_link?: string | undefined;
-            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
-            platform_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            platform_fee_basis_points?: number | undefined;
             platform_fee_recipient?: string | undefined;
             trusted_forwarder?: string | undefined;
             name: string;
         }>;
-        readonly output: z.ZodObject<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodString>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            image: z.ZodOptional<z.ZodString>;
+            image: zod.ZodOptional<zod.ZodString>;
         }>, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, {
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
+            merkle: Record<string, string>;
             name: string;
-            seller_fee_basis_points: BigNumber;
+            seller_fee_basis_points: number;
             fee_recipient: string;
         }, {
             [x: string]: Json;
+            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
-            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
             name: string;
         }>;
-        readonly input: z.ZodObject<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_link: z.ZodOptional<z.ZodString>;
+        input: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodString>;
+            external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            seller_fee_basis_points: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, BigNumber, string | number | bigint | BigNumber>>;
-            fee_recipient: z.ZodDefault<z.ZodString>;
-        }>, "strip", z.ZodTypeAny, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, {
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
-            image?: string | File | Buffer | undefined;
+            image?: string | undefined;
             external_link?: string | undefined;
+            merkle: Record<string, string>;
             name: string;
-            seller_fee_basis_points: BigNumber;
+            seller_fee_basis_points: number;
             fee_recipient: string;
         }, {
+            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
-            image?: string | File | Buffer | undefined;
+            image?: string | undefined;
             external_link?: string | undefined;
-            seller_fee_basis_points?: string | number | bigint | BigNumber | undefined;
+            seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
             name: string;
         }>;
-        readonly tokenInput: z.ZodObject<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        tokenInput: zod.ZodObject<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
         }, {
-            animation_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            background_color: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
-            properties: z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodArray<z.ZodObject<{
-                key: z.ZodString;
-                value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>]>;
-            }, "strip", z.ZodTypeAny, {
+            animation_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            background_color: zod.ZodOptional<zod.ZodEffects<zod.ZodString, string, string>>;
+            properties: zod.ZodEffects<zod.ZodEffects<zod.ZodEffects<zod.ZodOptional<zod.ZodArray<zod.ZodObject<{
+                key: zod.ZodString;
+                value: zod.ZodUnion<[zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>, zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>]>;
+            }, "strip", zod.ZodTypeAny, {
                 value: string | number | boolean | File | Buffer | null;
                 key: string;
             }, {
@@ -125,7 +137,7 @@ static schema: {
                 value: string | number | boolean | File | Buffer | null;
                 key: string;
             }[] | undefined>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
@@ -147,18 +159,20 @@ static schema: {
             }[] | undefined;
             name: string;
         }>;
-        readonly tokenOutput: z.ZodObject<z.extendShape<z.extendShape<{
-            name: z.ZodString;
-            description: z.ZodOptional<z.ZodString>;
-            image: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
-            external_url: z.ZodOptional<z.ZodUnion<[z.ZodType<File, z.ZodTypeDef, File>, z.ZodType<Buffer, z.ZodTypeDef, Buffer>, z.ZodString]>>;
+        tokenOutput: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
         }, {
-            image: z.ZodOptional<z.ZodString>;
-            external_url: z.ZodOptional<z.ZodString>;
+            id: zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>;
+            uri: zod.ZodString;
+            image: zod.ZodOptional<zod.ZodString>;
+            external_url: zod.ZodOptional<zod.ZodString>;
         }>, {
-            animation_url: z.ZodOptional<z.ZodString>;
-            properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
-        }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+            animation_url: zod.ZodOptional<zod.ZodString>;
+            properties: zod.ZodOptional<zod.ZodRecord<zod.ZodString, zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>>>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
@@ -166,6 +180,8 @@ static schema: {
             animation_url?: string | undefined;
             properties?: Record<string, string | number | boolean | null> | undefined;
             name: string;
+            id: BigNumber;
+            uri: string;
         }, {
             [x: string]: Json;
             description?: string | undefined;
@@ -174,6 +190,8 @@ static schema: {
             animation_url?: string | undefined;
             properties?: Record<string, string | number | boolean | null> | undefined;
             name: string;
+            id: BigNumber;
+            uri: string;
         }>;
     };
 ```

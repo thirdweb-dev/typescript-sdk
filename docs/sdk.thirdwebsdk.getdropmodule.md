@@ -4,6 +4,8 @@
 
 ## ThirdwebSDK.getDropModule() method
 
+Get an instance of a Drop module
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,11 @@ getDropModule(moduleAddress: string): DropErc721Module;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  moduleAddress | string |  |
+|  moduleAddress | string | the address of the deployed module |
 
 <b>Returns:</b>
 
 DropErc721Module
+
+the module
 

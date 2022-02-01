@@ -15,20 +15,26 @@ import { CallOverrides } from 'ethers';
 import { CallOverrides as CallOverrides_2 } from '@ethersproject/contracts';
 import { ContractInterface } from 'ethers';
 import { DropERC721 } from '@3rdweb/contracts';
+import { DropERC721__factory } from '@3rdweb/contracts';
 import { ethers } from 'ethers';
+import * as ethers_2 from 'ethers';
 import * as _ethersproject_abstract_provider from '@ethersproject/abstract-provider';
 import { EventEmitter2 } from 'eventemitter2';
 import { If } from 'ts-toolbelt/out/Any/If';
 import { IThirdwebModule } from '@3rdweb/contracts';
+import { IThirdwebPrimarySale } from '@3rdweb/contracts';
 import { IThirdwebRoyalty } from '@3rdweb/contracts';
 import { Log } from '@ethersproject/providers';
 import { Networkish } from '@ethersproject/providers';
 import { Provider } from '@ethersproject/providers';
 import { Signer } from '@ethersproject/abstract-signer';
 import { Signer as Signer_2 } from 'ethers';
+import { TokenERC721 } from '@3rdweb/contracts';
+import { TokenERC721__factory } from '@3rdweb/contracts';
 import { TransactionReceipt } from '@ethersproject/providers';
 import * as ts_toolbelt_out_Any_Equals from 'ts-toolbelt/out/Any/Equals';
 import * as ts_toolbelt_out_Any_If from 'ts-toolbelt/out/Any/If';
+import * as ts_toolbelt_out_Class_Instance from 'ts-toolbelt/out/Class/Instance';
 import { TWFactory } from '@3rdweb/contracts';
 import { z } from 'zod';
 import * as zod from 'zod';
@@ -76,7 +82,7 @@ export type ClaimConditionInput = z.input<typeof PartialClaimConditionInputSchem
 export function createSnapshot(leafs: string[], storage: IStorage): Promise<SnapshotInfo>;
 
 // @public (undocumented)
-export class DropERC721ClaimConditions {
+export class DropErc721ClaimConditions {
     // Warning: (ae-forgotten-export) The symbol "ContractWrapper" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "ContractMetadata" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "DropErc721ModuleSchema" needs to be exported by the entry point index.d.ts
@@ -90,56 +96,51 @@ export class DropERC721ClaimConditions {
     update(index: number, claimConditionInput: ClaimConditionInput): TransactionResultPromise;
 }
 
-// Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "Erc721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DropERC721Module implements UpdateableNetwork {
+export class DropErc721Module extends Erc721<DropERC721> {
     // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions);
-    balance(): Promise<BigNumber>;
-    balanceOf(address: string): Promise<BigNumber>;
-    burn(tokenId: BigNumberish): TransactionResultPromise;
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
     claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
-    claimConditions: DropERC721ClaimConditions;
+    claimConditions: DropErc721ClaimConditions;
     claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // (undocumented)
+    static contractFactory: typeof DropERC721__factory;
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataInput" needs to be exported by the entry point index.d.ts
     //
     // @beta
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
-    // Warning: (ae-forgotten-export) The symbol "NFTMetadataOwner" needs to be exported by the entry point index.d.ts
-    get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
-    getAddress(): string;
     // Warning: (ae-forgotten-export) The symbol "QueryAllParams" needs to be exported by the entry point index.d.ts
-    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    // Warning: (ae-forgotten-export) The symbol "NFTMetadataOwner" needs to be exported by the entry point index.d.ts
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     // Warning: (ae-forgotten-export) The symbol "NFTMetadata" needs to be exported by the entry point index.d.ts
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
-    getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
-    getPrimarySaleRecipient(): Promise<string>;
-    isApproved(address: string, operator: string): Promise<boolean>;
-    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
-    metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>;
+    metadata: ContractMetadata<DropERC721, typeof DropErc721Module.schema>;
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static moduleType: "DropERC721";
-    ownerOf(tokenId: BigNumberish): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "ContractPrimarySale" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    primarySales: ContractPrimarySale<DropERC721>;
     // Warning: (ae-forgotten-export) The symbol "ContractRoles" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    roles: ContractRoles<DropERC721, typeof DropERC721Module.moduleRoles[number]>;
+    roles: ContractRoles<DropERC721, typeof DropErc721Module.moduleRoles[number]>;
     // Warning: (ae-forgotten-export) The symbol "ContractRoyalty" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    royalty: ContractRoyalty<DropERC721, typeof DropErc721ModuleSchema>;
+    royalty: ContractRoyalty<DropERC721, typeof DropErc721Module.schema>;
     // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodString;
+            image: zod.ZodOptional<zod.ZodString>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
@@ -153,10 +154,10 @@ export class DropERC721Module implements UpdateableNetwork {
             trusted_forwarder: zod.ZodDefault<zod.ZodString>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
+            image?: string | undefined;
             external_link?: string | undefined;
             merkle: Record<string, string>;
             name: string;
-            image: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
             platform_fee_basis_points: number;
@@ -165,6 +166,7 @@ export class DropERC721Module implements UpdateableNetwork {
         }, {
             merkle?: Record<string, string> | undefined;
             description?: string | undefined;
+            image?: string | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
@@ -172,12 +174,11 @@ export class DropERC721Module implements UpdateableNetwork {
             platform_fee_recipient?: string | undefined;
             trusted_forwarder?: string | undefined;
             name: string;
-            image: string;
         }>;
         output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodString;
+            image: zod.ZodOptional<zod.ZodString>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             image: zod.ZodOptional<zod.ZodString>;
@@ -208,7 +209,7 @@ export class DropERC721Module implements UpdateableNetwork {
         input: zod.ZodObject<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodString;
+            image: zod.ZodOptional<zod.ZodString>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
@@ -217,20 +218,20 @@ export class DropERC721Module implements UpdateableNetwork {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
+            image?: string | undefined;
             external_link?: string | undefined;
             merkle: Record<string, string>;
             name: string;
-            image: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
         }, {
             merkle?: Record<string, string> | undefined;
             description?: string | undefined;
+            image?: string | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
             name: string;
-            image: string;
         }>;
         tokenInput: zod.ZodObject<zod.extendShape<{
             name: zod.ZodString;
@@ -293,6 +294,8 @@ export class DropERC721Module implements UpdateableNetwork {
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
             external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
         }, {
+            id: zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>;
+            uri: zod.ZodString;
             image: zod.ZodOptional<zod.ZodString>;
             external_url: zod.ZodOptional<zod.ZodString>;
         }>, {
@@ -306,6 +309,8 @@ export class DropERC721Module implements UpdateableNetwork {
             animation_url?: string | undefined;
             properties?: Record<string, string | number | boolean | null> | undefined;
             name: string;
+            id: BigNumber;
+            uri: string;
         }, {
             [x: string]: Json;
             description?: string | undefined;
@@ -314,18 +319,12 @@ export class DropERC721Module implements UpdateableNetwork {
             animation_url?: string | undefined;
             properties?: Record<string, string | number | boolean | null> | undefined;
             name: string;
+            id: BigNumber;
+            uri: string;
         }>;
     };
-    // @internal
-    setApprovalForAll(operator: string, approved: boolean): TransactionResultPromise;
-    setPrimarySaleRecipient(recipient: string): TransactionResultPromise;
-    setRestrictedTransfer(restricted?: boolean): TransactionResultPromise;
     totalClaimedSupply(): Promise<BigNumber>;
-    totalSupply(): Promise<BigNumber>;
     totalUnclaimedSupply(): Promise<BigNumber>;
-    transfer(to: string, tokenId: string): TransactionResultPromise;
-    // @internal (undocumented)
-    updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 
 // @public (undocumented)
@@ -456,7 +455,8 @@ export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<typ
 //
 // @internal (undocumented)
 export const MODULES_MAP: {
-    readonly DropERC721: typeof DropERC721Module;
+    readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module;
+    readonly DropERC721: typeof DropErc721Module;
 };
 
 // Warning: (ae-incompatible-release-tags) The symbol "ModuleType" is marked as @public, but its signature references "MODULES_MAP" which is marked as @internal
@@ -524,9 +524,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     //
     // (undocumented)
     factory: ModuleFactory;
-    getDropModule(moduleAddress: string): DropERC721Module;
+    getDropModule(moduleAddress: string): DropErc721Module;
     // @internal (undocumented)
-    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropERC721Module;
+    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | ts_toolbelt_out_Class_Instance.Instance<{
+        readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module;
+        readonly DropERC721: typeof DropErc721Module;
+    }[TModuleType]>;
+    getNFTModule(address: string): TokenErc721Module;
     // (undocumented)
     resolveModuleType<TModuleType extends ModuleType>(moduleAddress: string): Promise<TModuleType>;
     // (undocumented)
@@ -578,6 +582,10 @@ export type ValueOf<T> = T[keyof T];
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/IStorage-c0b9f7f2.d.ts:2045:5 - (ae-forgotten-export) The symbol "TokenErc721Module" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
