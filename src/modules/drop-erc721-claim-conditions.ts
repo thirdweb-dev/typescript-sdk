@@ -12,11 +12,16 @@ import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { isNativeToken, NATIVE_TOKEN_ADDRESS } from "../common/currency";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { ClaimCondition, PublicClaimCondition } from "../types";
+import {
+  ClaimCondition,
+  ClaimConditionInput,
+  FilledConditionInput,
+  SnapshotInfo,
+} from "../types";
 import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../enums";
-import ClaimConditionFactory from "../factories/claim-condition-factory";
-import ClaimConditionPhase from "../factories/claim-condition-phase";
+import { createSnapshot } from "../common";
+import { ClaimConditionInputSchema } from "../schema/modules/common/claim-conditions";
 
 export class DropERC721ClaimConditions {
   private contractWrapper;
@@ -204,15 +209,6 @@ export class DropERC721ClaimConditions {
     return reasons;
   }
 
-  /**
-   * Creates a claim condition factory
-   *
-   * @returns - A new claim condition factory
-   */
-  public builder(): ClaimConditionFactory {
-    return new ClaimConditionFactory(this.storage);
-  }
-
   /** ***************************************
    * WRITE FUNCTIONS
    *****************************************/
@@ -225,31 +221,49 @@ export class DropERC721ClaimConditions {
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
   public async set(
-    claimConditions: PublicClaimCondition[],
-    resetClaimEligibilityForAll: boolean,
+    claimConditionInputs: ClaimConditionInput[],
+    resetClaimEligibilityForAll = false,
   ) {
-    const factory: ClaimConditionFactory = new ClaimConditionFactory(
-      this.storage,
+    // process inputs
+    const snapshotInfos: SnapshotInfo[] = [];
+    const inputsWithSnapshots: FilledConditionInput[] = await Promise.all(
+      claimConditionInputs.map(async (conditionInput) => {
+        // check snapshots and upload if provided
+        if (conditionInput.snapshot) {
+          const snapshotInfo = await createSnapshot(
+            conditionInput.snapshot,
+            this.storage,
+          );
+          snapshotInfos.push(snapshotInfo);
+          conditionInput.merkleRootHash = snapshotInfo.merkleRoot;
+        }
+        // fill condition with defaults values if not provided
+        return ClaimConditionInputSchema.parse(conditionInput);
+      }),
     );
-    factory.fromPublicClaimConditions(claimConditions);
-    const conditions = (await factory.buildConditions()).map((c) => ({
-      startTimestamp: c.startTimestamp,
-      maxClaimableSupply: c.maxMintSupply,
-      supplyClaimed: 0,
-      quantityLimitPerTransaction: c.quantityLimitPerTransaction,
-      waitTimeInSecondsBetweenClaims: c.waitTimeSecondsLimitPerTransaction,
-      pricePerToken: c.pricePerToken,
-      currency: c.currency === AddressZero ? NATIVE_TOKEN_ADDRESS : c.currency,
-      merkleRoot: c.merkleRoot,
-    }));
+
+    // Convert processed inputs to the format the contract expects, and sort by timestamp
+    const sortedConditions: IDropERC721.ClaimConditionStruct[] =
+      inputsWithSnapshots
+        .map((c) => this.convertToContractModel(c))
+        .sort((a, b) => {
+          if (a.startTimestamp.eq(b.startTimestamp)) {
+            return 0;
+          } else if (a.startTimestamp.gt(b.startTimestamp)) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
 
     const merkleInfo: { [key: string]: string } = {};
-    factory.allSnapshots().forEach((s) => {
+    snapshotInfos.forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
     const metadata = await this.metadata.get();
     const encoded = [];
 
+    // upload new merkle roots to snapshot URIs if updated
     if (!deepEqual(metadata.merkle, merkleInfo)) {
       const mergedMetadata = this.metadata.parseInputMetadata({
         ...metadata,
@@ -270,7 +284,7 @@ export class DropERC721ClaimConditions {
     encoded.push(
       this.contractWrapper.readContract.interface.encodeFunctionData(
         "setClaimConditions",
-        [conditions, resetClaimEligibilityForAll],
+        [sortedConditions, resetClaimEligibilityForAll],
       ),
     );
 
@@ -309,6 +323,22 @@ export class DropERC721ClaimConditions {
       currencyContract: pm.currency,
       currencyMetadata: cv,
       merkleRoot: pm.merkleRoot,
+    };
+  }
+
+  private convertToContractModel(c: FilledConditionInput) {
+    return {
+      startTimestamp: BigNumber.from(c.startTime),
+      maxClaimableSupply: c.maxQuantity,
+      supplyClaimed: 0,
+      quantityLimitPerTransaction: c.quantityLimitPerTransaction,
+      waitTimeInSecondsBetweenClaims: c.waitInSeconds,
+      pricePerToken: c.price,
+      currency:
+        c.currencyAddress === AddressZero
+          ? NATIVE_TOKEN_ADDRESS
+          : c.currencyAddress,
+      merkleRoot: c.merkleRootHash,
     };
   }
 

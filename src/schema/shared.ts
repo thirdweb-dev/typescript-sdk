@@ -13,6 +13,8 @@ export const FileBufferOrStringSchema = z.union([
   z.string(),
 ]);
 
+export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
+
 const BigNumberSchema = z.instanceof(BigNumber);
 
 // TODO this does not serialize to JSON

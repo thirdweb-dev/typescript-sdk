@@ -66,27 +66,17 @@ describe("Drop Module", async () => {
   });
 
   it("should allow a snapshot to be set", async () => {
-    const factory = dropModule.claimConditions.builder();
-    const phase = factory.newClaimPhase({
-      startTime: new Date().getTime() / 2000,
-    });
-    await phase.setSnapshot([
-      bobWallet.address,
-      samWallet.address,
-      abbyWallet.address,
-    ]);
-
-    const secondPhase = factory.newClaimPhase({
-      startTime: new Date(),
-    });
-    await secondPhase.setSnapshot([bobWallet.address]);
-
-    console.log(
-      "Setting metadata for addres:",
-      await sdk.getSigner().getAddress(),
-    );
     console.log("Setting claim condition");
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([
+      {
+        startTime: new Date().getTime() / 2000,
+        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+      },
+      {
+        startTime: new Date(),
+        snapshot: [bobWallet.address],
+      },
+    ]);
     console.log("Claim condition set");
 
     const metadata = await dropModule.metadata.get();
@@ -107,23 +97,19 @@ describe("Drop Module", async () => {
   });
 
   it("should remove merkles from the metadata when claim conditions are removed", async () => {
-    const factory = dropModule.claimConditions.builder();
-    const phase = factory.newClaimPhase({
-      startTime: new Date(),
-    });
-    await phase.setSnapshot([
-      bobWallet.address,
-      samWallet.address,
-      abbyWallet.address,
-    ]);
-
-    const secondPhase = factory.newClaimPhase({
-      startTime: Math.floor(new Date().getTime() / 1000) + 1000,
-    });
-    await secondPhase.setSnapshot([bobWallet.address]);
-
     console.log("Setting claim condition");
-    await dropModule.claimConditions.set(factory, false);
+    // await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([
+      {
+        startTime: new Date(),
+        waitInSeconds: 10,
+        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+      },
+      {
+        startTime: new Date().getTime() / 1000 + 1000,
+        snapshot: [bobWallet.address],
+      },
+    ]);
     console.log("Claim condition set");
 
     const metadata = await dropModule.metadata.get();
@@ -142,21 +128,13 @@ describe("Drop Module", async () => {
     );
     expect(roots).length(2);
 
-    const newFactory = dropModule.claimConditions.builder();
-    newFactory.newClaimPhase({
-      startTime: new Date(),
-    });
-    await dropModule.claimConditions.set(newFactory, false);
+    await dropModule.claimConditions.set([{}]);
     const newMetadata = await dropModule.metadata.get();
     const newMerkles = newMetadata.merkle;
     expect(JSON.stringify(newMerkles)).to.eq("{}");
   });
 
   it("allow all addresses in the merkle tree to claim", async () => {
-    const factory = dropModule.claimConditions.builder();
-    const phase = factory.newClaimPhase({
-      startTime: new Date(),
-    });
     const testWallets: SignerWithAddress[] = [
       bobWallet,
       samWallet,
@@ -174,10 +152,9 @@ describe("Drop Module", async () => {
         : w.address,
     );
     console.log("members", members);
-    await phase.setSnapshot(members);
 
     console.log("Setting claim condition");
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([{ snapshot: members }]);
     console.log("Claim condition set");
 
     console.log("Minting 100");
@@ -206,15 +183,10 @@ describe("Drop Module", async () => {
   });
 
   it("allow one address in the merkle tree to claim", async () => {
-    const factory = dropModule.claimConditions.builder();
-    const phase = factory.newClaimPhase({
-      startTime: new Date(),
-    });
     const testWallets: SignerWithAddress[] = [bobWallet];
     const members = testWallets.map((w) => w.address);
-    await phase.setSnapshot(members);
 
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([{ snapshot: members }]);
 
     const metadata = [];
     for (let i = 0; i < 2; i++) {
@@ -262,17 +234,15 @@ describe("Drop Module", async () => {
   });
 
   it("should not allow claiming to someone not in the merkle tree", async () => {
-    const factory = dropModule.claimConditions.builder();
-    const phase = factory.newClaimPhase({
-      startTime: new Date(),
-    });
-    await phase.setSnapshot([
-      bobWallet.address,
-      samWallet.address,
-      abbyWallet.address,
-    ]);
     console.log("Setting claim condition");
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set(
+      [
+        {
+          snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+        },
+      ],
+      false,
+    );
     console.log("Claim condition set");
     console.log("Minting");
     await dropModule.createBatch([
@@ -299,11 +269,7 @@ describe("Drop Module", async () => {
     await dropModule.createBatch([
       { name: "name", description: "description" },
     ]);
-    const factory = dropModule.claimConditions.builder();
-    factory.newClaimPhase({
-      startTime: new Date(),
-    });
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([{}]);
     await dropModule.claim(1);
   });
 
@@ -344,11 +310,7 @@ describe("Drop Module", async () => {
   });
 
   it("should return the newly claimed token", async () => {
-    const factory = dropModule.claimConditions.builder();
-    const phase = factory.newClaimPhase({
-      startTime: new Date(),
-    });
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([{}]);
     await dropModule.createBatch([
       {
         name: "test 0",
@@ -405,12 +367,7 @@ describe("Drop Module", async () => {
     });
 
     it("should check for the total supply", async () => {
-      const factory = dropModule.claimConditions.builder();
-      factory.newClaimPhase({
-        startTime: new Date(),
-        maxQuantity: 1,
-      });
-      await dropModule.claimConditions.set(factory, true);
+      await dropModule.claimConditions.set([{ maxQuantity: 1 }]);
 
       const reasons =
         await dropModule.claimConditions.getClaimIneligibilityReasons(
@@ -423,13 +380,9 @@ describe("Drop Module", async () => {
     });
 
     it("should check if an address has valid merkle proofs", async () => {
-      const factory = dropModule.claimConditions.builder();
-      const phase = factory.newClaimPhase({
-        startTime: new Date(),
-        maxQuantity: 1,
-      });
-      await phase.setSnapshot([w2.address, adminWallet.address]);
-      await dropModule.claimConditions.set(factory, false);
+      await dropModule.claimConditions.set([
+        { maxQuantity: 1, snapshot: [w2.address, adminWallet.address] },
+      ]);
 
       const reasons =
         await dropModule.claimConditions.getClaimIneligibilityReasons(
@@ -442,14 +395,12 @@ describe("Drop Module", async () => {
     });
 
     it("should check if its been long enough since the last claim", async () => {
-      const factory = dropModule.claimConditions.builder();
-      factory
-        .newClaimPhase({
-          startTime: new Date(),
+      await dropModule.claimConditions.set([
+        {
           maxQuantity: 10,
-        })
-        .setWaitTimeBetweenClaims(24 * 60 * 60);
-      await dropModule.claimConditions.set(factory, false);
+          waitInSeconds: 24 * 60 * 60,
+        },
+      ]);
       await sdk.updateSignerOrProvider(bobWallet);
       await dropModule.claim(1);
 
@@ -467,17 +418,13 @@ describe("Drop Module", async () => {
     });
 
     it("should check if an address has enough native currency", async () => {
-      const factory = dropModule.claimConditions.builder();
-      factory
-        .newClaimPhase({
-          startTime: new Date(),
+      await dropModule.claimConditions.set([
+        {
           maxQuantity: 10,
-        })
-        .setPrice(
-          ethers.utils.parseUnits("1000000000000000"),
-          NATIVE_TOKEN_ADDRESS,
-        );
-      await dropModule.claimConditions.set(factory, false);
+          price: ethers.utils.parseUnits("1000000000000000"),
+          currencyAddress: NATIVE_TOKEN_ADDRESS,
+        },
+      ]);
       await sdk.updateSignerOrProvider(bobWallet);
 
       const reasons =
@@ -491,6 +438,7 @@ describe("Drop Module", async () => {
       assert.isFalse(canClaim);
     });
 
+    // TODO fix this test once the ERC20 module is done
     it("should check if an address has enough erc20 currency", async () => {
       const currency = await appModule.deployCurrencyModule({
         name: "test",
@@ -498,17 +446,13 @@ describe("Drop Module", async () => {
       });
       sdk.factory.deploy();
 
-      const factory = dropModule.claimConditions.builder();
-      factory
-        .newClaimPhase({
-          startTime: new Date(),
+      await dropModule.claimConditions.set([
+        {
           maxQuantity: 10,
-        })
-        .setPrice(
-          ethers.utils.parseUnits("1000000000000000"),
-          currency.address,
-        );
-      await dropModule.claimConditions.set(factory, false);
+          price: ethers.utils.parseUnits("1000000000000000"),
+          currencyAddress: currency.address,
+        },
+      ]);
       await sdk.updateSignerOrProvider(bobWallet);
 
       const reasons =
@@ -523,15 +467,14 @@ describe("Drop Module", async () => {
     });
 
     it("should return nothing if the claim is eligible", async () => {
-      const factory = dropModule.claimConditions.builder();
-      const phase = factory
-        .newClaimPhase({
-          startTime: new Date(),
+      await dropModule.claimConditions.set([
+        {
           maxQuantity: 10,
-        })
-        .setPrice(ethers.utils.parseUnits("100"), NATIVE_TOKEN_ADDRESS);
-      await phase.setSnapshot([w1.address, w2.address, w3.address]);
-      await dropModule.claimConditions.set(factory, false);
+          price: ethers.utils.parseUnits("100"),
+          currencyAddress: NATIVE_TOKEN_ADDRESS,
+          snapshot: [w1.address, w2.address, w3.address],
+        },
+      ]);
 
       const reasons =
         await dropModule.claimConditions.getClaimIneligibilityReasons(
@@ -548,20 +491,10 @@ describe("Drop Module", async () => {
     });
   });
   it("should allow you to update claim conditions", async () => {
-    let factory = dropModule.claimConditions.builder();
-
-    factory.newClaimPhase({
-      startTime: new Date(),
-    });
-
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([{}]);
 
     const conditions = await dropModule.claimConditions.getAll();
-    factory = dropModule.claimConditions.builder();
-    factory.newClaimPhase({
-      startTime: new Date(),
-    });
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([{}]);
     assert.lengthOf(conditions, 1);
   });
   it("should be able to use claim as function expected", async () => {
@@ -570,21 +503,13 @@ describe("Drop Module", async () => {
         name: "test",
       },
     ]);
-    const factory = dropModule.claimConditions.builder();
-    factory.newClaimPhase({
-      startTime: new Date(),
-    });
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([{}]);
     await dropModule.claim(1);
     assert((await dropModule.getOwned()).length === 1);
   });
 
   it("should be able to use claimTo function as expected", async () => {
-    const factory = dropModule.claimConditions.builder();
-    factory.newClaimPhase({
-      startTime: new Date(),
-    });
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([{}]);
     await dropModule.createBatch([
       {
         name: "test",
@@ -603,12 +528,7 @@ describe("Drop Module", async () => {
     }
     await dropModule.createBatch(metadata);
 
-    const factory = dropModule.claimConditions.builder();
-    const phase = factory.newClaimPhase({
-      startTime: new Date(),
-    });
-    phase.setSnapshot([w1.address]);
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([{ snapshot: [w1.address] }]);
 
     assert.isTrue(
       await dropModule.claimConditions.canClaim(1, w1.address),
@@ -629,16 +549,16 @@ describe("Drop Module", async () => {
     }
     await dropModule.createBatch(metadata);
 
-    const factory = dropModule.claimConditions.builder();
-    const phase = factory.newClaimPhase({
-      startTime: new Date(),
-    });
-    await phase.setSnapshot([
+    const members = [
       w1.address.toUpperCase().replace("0X", "0x"),
       w2.address.toLowerCase(),
       w3.address,
+    ];
+    await dropModule.claimConditions.set([
+      {
+        snapshot: members,
+      },
     ]);
-    await dropModule.claimConditions.set(factory, false);
 
     assert.isTrue(
       await dropModule.claimConditions.canClaim(1, w1.address),
@@ -659,21 +579,13 @@ describe("Drop Module", async () => {
   });
 
   it("set claim condition and reset claim condition", async () => {
-    const factory = dropModule.claimConditions.builder();
-    factory.newClaimPhase({
-      startTime: new Date().getTime() / 2000,
-    });
-    factory.newClaimPhase({
-      startTime: new Date().getTime(),
-    });
-
-    await dropModule.claimConditions.set(factory, false);
+    await dropModule.claimConditions.set([
+      { startTime: new Date().getTime() / 2000 },
+      { startTime: new Date().getTime() },
+    ]);
     expect((await dropModule.claimConditions.getAll()).length).to.be.equal(2);
 
-    await dropModule.claimConditions.set(
-      dropModule.claimConditions.builder(),
-      false,
-    );
+    await dropModule.claimConditions.set([]);
     expect((await dropModule.claimConditions.getAll()).length).to.be.equal(0);
   });
 });
