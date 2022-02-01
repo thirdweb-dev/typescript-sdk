@@ -29,6 +29,7 @@ import {
 } from "../schema/tokens/common";
 import { QueryAllParams, DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
 import { DropERC721ClaimConditions } from "./drop-erc721-claim-conditions";
+import { UpdateableNetwork } from "../core/interfaces/network";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -46,7 +47,7 @@ import { DropERC721ClaimConditions } from "./drop-erc721-claim-conditions";
  *
  * @public
  */
-export class DropERC721Module {
+export class DropERC721Module implements UpdateableNetwork {
   static moduleType = "DropERC721" as const;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
   public static schema = DropErc721ModuleSchema;
@@ -62,11 +63,6 @@ export class DropERC721Module {
   >;
   public royalty: ContractRoyalty<DropERC721, typeof DropErc721ModuleSchema>;
   public claimConditions: DropERC721ClaimConditions;
-
-  // TODO in base class or interface
-  public updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
-    this.contractWrapper.updateSignerOrProvider(network);
-  }
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -107,6 +103,13 @@ export class DropERC721Module {
       this.metadata,
       this.storage,
     );
+  }
+
+  /**
+   * @internal
+   */
+  public updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
+    this.contractWrapper.updateSignerOrProvider(network);
   }
 
   /** ******************************

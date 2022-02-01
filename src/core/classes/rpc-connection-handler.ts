@@ -7,8 +7,12 @@ import {
   SDKOptionsSchema,
 } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
+import { UpdateableNetwork } from "../interfaces/network";
 
-export class RPCConnectionHandler extends EventEmitter2 {
+export class RPCConnectionHandler
+  extends EventEmitter2
+  implements UpdateableNetwork
+{
   private network: NetworkOrSignerOrProvider;
   private provider: Provider;
   private signer: Signer | undefined = undefined;
@@ -55,7 +59,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
     }
   }
   /**
-   * The function to call whenever the the network changes, such as when the users connects their wallet, disconnects their wallet, the connected chain changes, etc.
+   * The function to call whenever the network changes, such as when the users connects their wallet, disconnects their wallet, the connected chain changes, etc.
    *
    * @param network - a network, signer or provider that ethers js can interpret
    */

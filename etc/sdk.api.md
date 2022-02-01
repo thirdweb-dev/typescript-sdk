@@ -60,35 +60,10 @@ export type BufferOrStringWithName = {
     name?: string;
 };
 
-// @beta (undocumented)
-export interface ClaimCondition {
-    // (undocumented)
-    availableSupply: string;
-    // (undocumented)
-    currency: string;
-    // (undocumented)
-    currencyContract: string;
-    // Warning: (ae-forgotten-export) The symbol "CurrencyValue" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    currencyMetadata: CurrencyValue | null;
-    // (undocumented)
-    currentMintSupply: string;
-    // (undocumented)
-    maxMintSupply: string;
-    // (undocumented)
-    merkleRoot: BytesLike;
-    // (undocumented)
-    price: BigNumber;
-    // (undocumented)
-    pricePerToken: BigNumber;
-    // (undocumented)
-    quantityLimitPerTransaction: string;
-    // (undocumented)
-    startTimestamp: Date;
-    // (undocumented)
-    waitTimeSecondsLimitPerTransaction: string;
-}
+// Warning: (ae-forgotten-export) The symbol "ClaimConditionOutputSchema" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type ClaimCondition = z.output<typeof ClaimConditionOutputSchema>;
 
 // Warning: (ae-forgotten-export) The symbol "PartialClaimConditionInputSchema" needs to be exported by the entry point index.d.ts
 //
@@ -107,17 +82,18 @@ export class DropERC721ClaimConditions {
     // Warning: (ae-forgotten-export) The symbol "DropErc721ModuleSchema" needs to be exported by the entry point index.d.ts
     constructor(contractWrapper: ContractWrapper<DropERC721>, metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>, storage: IStorage);
     canClaim(quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
-    // Warning: (ae-incompatible-release-tags) The symbol "getActive" is marked as @public, but its signature references "ClaimCondition" which is marked as @beta
     getActive(): Promise<ClaimCondition>;
-    // Warning: (ae-incompatible-release-tags) The symbol "getAll" is marked as @public, but its signature references "ClaimCondition" which is marked as @beta
     getAll(): Promise<ClaimCondition[]>;
     // Warning: (ae-forgotten-export) The symbol "ClaimEligibility" needs to be exported by the entry point index.d.ts
     getClaimIneligibilityReasons(quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
-    set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<ethers.providers.TransactionReceipt>;
+    set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): TransactionResultPromise;
+    update(index: number, claimConditionInput: ClaimConditionInput): TransactionResultPromise;
 }
 
+// Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class DropERC721Module {
+export class DropERC721Module implements UpdateableNetwork {
     // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
@@ -348,7 +324,7 @@ export class DropERC721Module {
     totalSupply(): Promise<BigNumber>;
     totalUnclaimedSupply(): Promise<BigNumber>;
     transfer(to: string, tokenId: string): TransactionResultPromise;
-    // (undocumented)
+    // @internal (undocumented)
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 
