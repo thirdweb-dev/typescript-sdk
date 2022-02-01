@@ -59,7 +59,7 @@ export class ContractMetadata<
     const uri = await this._parseAndUploadMetadata(metadata);
 
     const receipt = await this.contractWrapper.sendTransaction(
-      "setContractUri",
+      "setContractURI",
       [uri],
     );
     return { receipt, data: this.get } as TransactionResult<

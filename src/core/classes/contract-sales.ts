@@ -2,7 +2,7 @@ import { IThirdwebPrimarySale } from "@3rdweb/contracts";
 import { ContractWrapper } from "./contract-wrapper";
 import { TransactionResultPromise } from "../types";
 
-export class ContractPrimarySales<TContract extends IThirdwebPrimarySale> {
+export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
   private contractWrapper;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {

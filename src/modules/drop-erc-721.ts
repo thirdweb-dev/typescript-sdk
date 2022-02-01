@@ -4,7 +4,6 @@ import {
   DropERC721__factory,
   IERC20,
   IERC20__factory,
-  TokenERC721__factory,
 } from "@3rdweb/contracts";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
@@ -29,7 +28,7 @@ import {
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 import { DropErc721ClaimConditions } from "./drop-erc721-claim-conditions";
 import { Erc721 } from "../core/classes/erc-721";
-import { ContractPrimarySales } from "../core/classes/contract-sales";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -59,7 +58,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     typeof DropErc721Module.moduleRoles[number]
   >;
   public royalty: ContractRoyalty<DropERC721, typeof DropErc721Module.schema>;
-  public primarySales: ContractPrimarySales<DropERC721>;
+  public primarySales: ContractPrimarySale<DropERC721>;
   public claimConditions: DropErc721ClaimConditions;
 
   constructor(
@@ -85,7 +84,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
       DropErc721Module.moduleRoles,
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.primarySales = new ContractPrimarySales(this.contractWrapper);
+    this.primarySales = new ContractPrimarySale(this.contractWrapper);
     this.claimConditions = new DropErc721ClaimConditions(
       this.contractWrapper,
       this.metadata,

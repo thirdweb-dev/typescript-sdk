@@ -1,9 +1,5 @@
 /* eslint-disable line-comment-position */
-import {
-  DropERC721__factory,
-  TWFactory,
-  TWFactory__factory,
-} from "@3rdweb/contracts";
+import { TWFactory, TWFactory__factory } from "@3rdweb/contracts";
 import { ethers } from "ethers";
 import { z } from "zod";
 import { MODULES_MAP } from "../../modules";
@@ -47,11 +43,12 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
     const encodedFunc = contractFactory
       .getInterface(contractFactory.abi)
       .encodeFunctionData("initialize", [
+        await this.getSignerAddress(),
         metadata.name,
         "SYMBOL", // TODO: make this configurable in metadata,
         contractURI,
         "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81", // TODO: dont hardcode trusted forwarder
-        await this.getSignerAddress(), // TODO: Who should this be?
+        await this.getSignerAddress(), // sales recipient
         metadata.fee_recipient,
         metadata.seller_fee_basis_points,
         metadata.platform_fee_basis_points,
@@ -75,4 +72,16 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
     const proxyAddress = events[0].args.proxy;
     return proxyAddress;
   }
+
+  // TODO generic function to generate deploy initialize arguments
+  // private getDeployArguments<TModule extends ValidModuleClass>(
+  //   moduleType: TModule["moduleType"],
+  //   moduleMetadata: z.input<TModule["schema"]["deploy"]>,
+  // ): string[] {
+  //   switch (moduleType) {
+  //     case DropErc721Module.moduleType:
+  //     case TokenErc721Module.moduleType:
+  //       break;
+  //   }
+  // }
 }

@@ -25,7 +25,7 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { Erc721 } from "../core/classes/erc-721";
-import { ContractPrimarySales } from "../core/classes/contract-sales";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
 import {
   MintWithSignatureEvent,
   TokenMintedEvent,
@@ -67,7 +67,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     typeof TokenErc721Module.moduleRoles[number]
   >;
   public royalty: ContractRoyalty<TokenERC721, typeof TokenErc721ModuleSchema>;
-  public primarySales: ContractPrimarySales<TokenERC721>;
+  public primarySale: ContractPrimarySale<TokenERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -92,7 +92,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
       TokenErc721Module.moduleRoles,
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.primarySales = new ContractPrimarySales(this.contractWrapper);
+    this.primarySale = new ContractPrimarySale(this.contractWrapper);
   }
 
   /** ******************************

@@ -1,19 +1,13 @@
-import { NFT, NFT__factory } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { ethers } from "ethers";
-import { NFTModule } from "../src/index";
-import { appModule, sdk, signers } from "./before.test";
-import hre, { ethers as hardhatEthers } from "hardhat";
+import { sdk, signers } from "./before.test";
 import { TokenErc721Module } from "../src/modules/token-erc-721";
 
 global.fetch = require("node-fetch");
 
 describe("NFT Module", async () => {
   let nftModule: TokenErc721Module;
-  let oldNftModule: NFTModule;
-
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -23,24 +17,6 @@ describe("NFT Module", async () => {
   });
 
   beforeEach(async () => {
-    // sdk.setProviderOrSigner(adminWallet);
-    //
-    // nftModule = await appModule.deployNftModule({
-    //   name: "NFT Module",
-    //   sellerFeeBasisPoints: 1000,
-    // });
-    //
-    // const tx = await new ethers.ContractFactory(
-    //   NFT__factory.abi,
-    //   NFT__factory.bytecode,
-    // )
-    //   .connect(adminWallet)
-    //   .deploy(...[appModule.address, "NFT", "NFT", AddressZero, "", 0]);
-    // await tx.deployed();
-    //
-    // oldNftModule = sdk.getNFTModule(tx.address);
-
-    // NEW DEPLOY FLOW
     sdk.updateSignerOrProvider(adminWallet);
     const address = await sdk.factory.deploy(TokenErc721Module.moduleType, {
       name: "NFT Module",
@@ -53,29 +29,6 @@ describe("NFT Module", async () => {
       platform_fee_recipient: AddressZero,
     });
     nftModule = sdk.getNFTModule(address);
-
-    // TEMPROARY HACKS
-    await hre.network.provider.request({
-      method: "hardhat_impersonateAccount",
-      params: ["0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"],
-    });
-    await hre.network.provider.send("hardhat_setBalance", [
-      "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
-      ethers.utils.parseEther("10000000000000").toHexString(),
-    ]);
-    const fakeSigner = await hardhatEthers.getSigner(
-      "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
-    );
-    sdk.updateSignerOrProvider(fakeSigner);
-    await nftModule.roles.grantRole("admin", adminWallet.address);
-    await nftModule.roles.grantRole("minter", adminWallet.address);
-    await nftModule.roles.grantRole("transfer", adminWallet.address);
-    await hre.network.provider.request({
-      method: "hardhat_stopImpersonatingAccount",
-      params: ["0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"],
-    });
-    sdk.updateSignerOrProvider(adminWallet);
-    // END TEMPORARY HACKS
   });
 
   it("should return nfts even if some are burned", async () => {
@@ -121,7 +74,9 @@ describe("NFT Module", async () => {
     assert.lengthOf(batch, 2);
 
     for (const meta of metas) {
-      const nft = batch.find((n) => n.name === meta.name);
+      const nft = batch.find(
+        async (n) => (await n.data()).metadata.name === meta.name,
+      );
       assert.isDefined(nft);
     }
   });
