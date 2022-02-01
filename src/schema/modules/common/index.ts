@@ -4,10 +4,12 @@ import { AddressZero } from "@ethersproject/constants";
 import { z } from "zod";
 import { FORWARDER_ADDRESS } from "../../../constants/addresses";
 
+export interface ModuleSchema {}
+
 export const CommonModuleSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
-  image: z.string(), // TODO - FileBufferOrStringSchema, requires recursive upload in IStorage
+  image: z.string().optional(), // TODO - FileBufferOrStringSchema, requires recursive upload in IStorage
   external_link: z.string().url().optional(),
 });
 

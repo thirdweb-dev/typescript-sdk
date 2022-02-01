@@ -136,11 +136,15 @@ export class ContractWrapper<
     });
   }
 
+  public async multiCall(encoded: string[]): Promise<TransactionReceipt> {
+    return this.sendTransaction("multicall", [encoded]);
+  }
+
   /**
    * @internal
    */
   public async sendTransaction(
-    fn: string,
+    fn: keyof TContract["functions"],
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<TransactionReceipt> {
@@ -193,7 +197,7 @@ export class ContractWrapper<
    * @internal
    */
   private async sendGaslessTransaction(
-    fn: string,
+    fn: keyof TContract["functions"],
     args: any[] = [],
     callOverrides: CallOverrides,
   ): Promise<string> {
@@ -237,7 +241,7 @@ export class ContractWrapper<
       data,
       chainId,
       gasLimit: gas,
-      functionName: fn,
+      functionName: fn.toString(),
       functionArgs: args,
       callOverrides,
     };

@@ -64,9 +64,7 @@ export class ContractRoyalty<
 
     // actually send the transaction and return the receipt + a way to get the new royalty info
     return {
-      receipt: await this.contractWrapper.sendTransaction("multicall", [
-        encoded,
-      ]),
+      receipt: await this.contractWrapper.multiCall(encoded),
       data: () => this.getRoyaltyInfo(),
     };
   }

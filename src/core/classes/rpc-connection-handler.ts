@@ -7,12 +7,8 @@ import {
   SDKOptionsSchema,
 } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
-import { UpdateableNetwork } from "../interfaces/network";
 
-export class RPCConnectionHandler
-  extends EventEmitter2
-  implements UpdateableNetwork
-{
+export class RPCConnectionHandler extends EventEmitter2 {
   private network: NetworkOrSignerOrProvider;
   private provider: Provider;
   private signer: Signer | undefined = undefined;

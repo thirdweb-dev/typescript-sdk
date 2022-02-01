@@ -140,9 +140,7 @@ export class ContractRoles<
         }
       });
     return {
-      receipt: await this.contractWrapper.sendTransaction("multicall", [
-        encoded,
-      ]),
+      receipt: await this.contractWrapper.multiCall(encoded),
     };
   }
 

@@ -1,4 +1,4 @@
-import { DropERC721Module } from "../src/modules/drop-erc-721";
+import { DropErc721Module } from "../src/modules/drop-erc-721";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
@@ -16,7 +16,7 @@ const keccak256 = require("keccak256");
 global.fetch = require("node-fetch");
 
 describe("Drop Module", async () => {
-  let dropModule: DropERC721Module;
+  let dropModule: DropErc721Module;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,

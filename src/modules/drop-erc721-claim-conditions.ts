@@ -27,7 +27,7 @@ import {
 } from "../schema/modules/common/claim-conditions";
 import { TransactionResultPromise } from "../core";
 
-export class DropERC721ClaimConditions {
+export class DropErc721ClaimConditions {
   private contractWrapper;
   private metadata;
   private storage: IStorage;

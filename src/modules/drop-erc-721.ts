@@ -25,11 +25,10 @@ import {
   NFTMetadata,
   NFTMetadataInput,
   NFTMetadataOwner,
-  CommonNFTOutput,
 } from "../schema/tokens/common";
-import { QueryAllParams, DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
-import { DropERC721ClaimConditions } from "./drop-erc721-claim-conditions";
-import { UpdateableNetwork } from "../core/interfaces/network";
+import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
+import { DropErc721ClaimConditions } from "./drop-erc721-claim-conditions";
+import { Erc721 } from "../core/classes/erc-721";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -47,30 +46,34 @@ import { UpdateableNetwork } from "../core/interfaces/network";
  *
  * @public
  */
-export class DropERC721Module implements UpdateableNetwork {
+export class DropErc721Module extends Erc721<DropERC721> {
   static moduleType = "DropERC721" as const;
+  static schema = DropErc721ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
-  public static schema = DropErc721ModuleSchema;
 
-  private storage: IStorage;
-  private contractWrapper: ContractWrapper<DropERC721>;
   private options: SDKOptions;
 
   public metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>;
   public roles: ContractRoles<
     DropERC721,
-    typeof DropERC721Module.moduleRoles[number]
+    typeof DropErc721Module.moduleRoles[number]
   >;
   public royalty: ContractRoyalty<DropERC721, typeof DropErc721ModuleSchema>;
-  public claimConditions: DropERC721ClaimConditions;
+  public claimConditions: DropErc721ClaimConditions;
 
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    contractWrapper = new ContractWrapper<DropERC721>(
+      network,
+      address,
+      DropERC721__factory.abi,
+      options,
+    ),
   ) {
-    this.storage = storage;
+    super(contractWrapper, storage);
     try {
       this.options = SDKOptionsSchema.parse(options);
     } catch (optionParseError) {
@@ -80,14 +83,6 @@ export class DropERC721Module implements UpdateableNetwork {
       );
       this.options = SDKOptionsSchema.parse({});
     }
-
-    this.contractWrapper = new ContractWrapper<DropERC721>(
-      network,
-      address,
-      DropERC721__factory.abi,
-      options,
-    );
-
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc721ModuleSchema,
@@ -95,80 +90,19 @@ export class DropERC721Module implements UpdateableNetwork {
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      DropERC721Module.moduleRoles,
+      DropErc721Module.moduleRoles,
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.claimConditions = new DropERC721ClaimConditions(
+    this.claimConditions = new DropErc721ClaimConditions(
       this.contractWrapper,
       this.metadata,
       this.storage,
     );
   }
 
-  /**
-   * @internal
-   */
-  public updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
-    this.contractWrapper.updateSignerOrProvider(network);
-  }
-
   /** ******************************
    * READ FUNCTIONS
    *******************************/
-
-  public getAddress(): string {
-    return this.contractWrapper.readContract.address;
-  }
-
-  /**
-   * Get a single NFT Metadata
-   *
-   * @example
-   * ```javascript
-   * const nft = await module.get("0");
-   * console.log(nft);
-   * ```
-   * @param tokenId - the tokenId of the NFT to retrieve
-   * @returns The NFT metadata
-   */
-  public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
-    const [owner, metadata] = await Promise.all([
-      this.ownerOf(tokenId).catch(() => AddressZero),
-      this.getTokenMetadata(tokenId),
-    ]);
-    return { owner, metadata };
-  }
-
-  /**
-   * Get All NFTs
-   *
-   * @remarks Get all the data associated with every NFT in this module.
-   *
-   * @example
-   * ```javascript
-   * const nfts = await module.getAll();
-   * console.log(nfts);
-   * ```
-   * @param queryParams - optional filtering to only fetch a subset of results.
-   * @returns The NFT metadata for all NFTs queried.
-   */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<NFTMetadataOwner[]> {
-    const start = BigNumber.from(queryParams?.start || 0).toNumber();
-    const count = BigNumber.from(
-      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
-    ).toNumber();
-    const maxId = Math.min(
-      (await this.contractWrapper.readContract.nextTokenIdToMint()).toNumber(),
-      start + count,
-    );
-    return await Promise.all(
-      Array.from(Array(maxId - start).keys()).map((i) =>
-        this.get((start + i).toString()),
-      ),
-    );
-  }
 
   /**
    * Get All Claimed NFTs
@@ -223,56 +157,6 @@ export class DropERC721Module implements UpdateableNetwork {
   }
 
   /**
-   * Get Owned NFTs
-   *
-   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet to get the NFTs of
-   * const address = "{{wallet_address}}";
-   * const nfts = await module.getOwned(address);
-   * console.log(nfts);
-   * ```
-   *
-   * @returns The NFT metadata for all NFTs in the module.
-   */
-  public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
-    const address = _address
-      ? _address
-      : await this.contractWrapper.getSignerAddress();
-    const balance = await this.contractWrapper.readContract.balanceOf(address);
-    const indices = Array.from(Array(balance.toNumber()).keys());
-    const tokenIds = await Promise.all(
-      indices.map((i) =>
-        this.contractWrapper.readContract.tokenOfOwnerByIndex(address, i),
-      ),
-    );
-    return await Promise.all(
-      tokenIds.map((tokenId) => this.get(tokenId.toString())),
-    );
-  }
-
-  /**
-   * Get the current owner of a given NFT within this Drop
-   *
-   * @param tokenId - the tokenId of the NFT
-   * @returns the address of the owner
-   */
-  public async ownerOf(tokenId: BigNumberish): Promise<string> {
-    return await this.contractWrapper.readContract.ownerOf(tokenId);
-  }
-
-  /**
-   * Get the total supply for this Drop.
-   *
-   * @returns the total supply
-   */
-  public async totalSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToMint();
-  }
-
-  /**
    * Get the unclaimed supply for this Drop.
    *
    * @returns the unclaimed supply
@@ -293,55 +177,12 @@ export class DropERC721Module implements UpdateableNetwork {
   }
 
   /**
-   * Get NFT Balance
-   *
-   * @remarks Get a wallets NFT balance (number of NFTs in this module owned by the wallet).
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet to check NFT balance
-   * const address = "{{wallet_address}}";
-   *
-   * const balance = await module.balanceOf(address);
-   * console.log(balance);
-   * ```
-   */
-  public async balanceOf(address: string): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.balanceOf(address);
-  }
-
-  /**
-   * Get NFT Balance for the currently connected wallet
-   */
-  public async balance(): Promise<BigNumber> {
-    return await this.balanceOf(await this.contractWrapper.getSignerAddress());
-  }
-
-  /**
-   * Get whether this wallet has approved transfers from the given operator
-   * @param address - the wallet address
-   * @param operator - the operator address
-   */
-  public async isApproved(address: string, operator: string): Promise<boolean> {
-    return await this.contractWrapper.readContract.isApprovedForAll(
-      address,
-      operator,
-    );
-  }
-
-  /**
    * Get the primary sale recipient.
    * @returns the wallet address.
    */
+  // TODO in sales object
   public async getPrimarySaleRecipient(): Promise<string> {
     return await this.contractWrapper.readContract.primarySaleRecipient();
-  }
-
-  /**
-   * Get whether users can transfer NFTs after claiming them
-   */
-  public async isTransferRestricted(): Promise<boolean> {
-    return this.contractWrapper.readContract.isTransferRestricted();
   }
 
   /** ******************************
@@ -468,90 +309,17 @@ export class DropERC721Module implements UpdateableNetwork {
   }
 
   /**
-   * Transfer a single NFT
-   *
-   * @remarks Transfer an NFT from the connected wallet to another wallet.
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet you want to send the NFT to
-   * const toAddress = "{{wallet_address}}";
-   *
-   * // The token ID of the NFT you want to send
-   * const tokenId = "0";
-   *
-   * await module.transfer(toAddress, tokenId);
-   * ```
-   */
-  public async transfer(to: string, tokenId: string): TransactionResultPromise {
-    const from = await this.contractWrapper.getSignerAddress();
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "safeTransferFrom(address,address,uint256)",
-        [from, to, tokenId],
-      ),
-    };
-  }
-
-  /**
-   * Burn a single NFT
-   * @param tokenId - the token Id to burn
-   */
-  public async burn(tokenId: BigNumberish): TransactionResultPromise {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
-    };
-  }
-
-  /**
-   * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
-   * @param operator - the operator's address
-   * @param approved - whether to approve or remove
-   *
-   * @internal
-   */
-  public async setApprovalForAll(
-    operator: string,
-    approved: boolean,
-  ): TransactionResultPromise {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("setApprovalForAll", [
-        operator,
-        approved,
-      ]),
-    };
-  }
-
-  /**
    * Set the primary sale recipient
    * @param recipient - the wallet address
    */
+  // TODO create ContractSales object
   public async setPrimarySaleRecipient(
     recipient: string,
   ): TransactionResultPromise {
     return {
       receipt: await this.contractWrapper.sendTransaction(
-        "setPrimarySaleRecdsdipient",
+        "setPrimarySaleRecipient",
         [recipient],
-      ),
-    };
-  }
-
-  /**
-   * Set whether NFTs in this Drop can be trasnfered or not.
-   * @param restricted whether to restrict or allow transfers
-   */
-  public async setRestrictedTransfer(
-    restricted = false,
-  ): TransactionResultPromise {
-    await this.roles.onlyRoles(
-      ["admin"],
-      await this.contractWrapper.getSignerAddress(),
-    );
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "setRestrictedTransfer",
-        [restricted],
       ),
     };
   }
@@ -559,13 +327,6 @@ export class DropERC721Module implements UpdateableNetwork {
   /** ******************************
    * PRIVATE FUNCTIONS
    *******************************/
-
-  private async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
-    const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
-    // TODO: include recursive metadata IPFS resolving for all
-    // properties with a hash
-    return CommonNFTOutput.parse(JSON.parse(await this.storage.get(tokenUri)));
-  }
 
   /**
    * Returns proofs and the overrides required for the transaction.

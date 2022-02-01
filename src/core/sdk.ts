@@ -2,7 +2,7 @@ import { IThirdwebModule__factory } from "@3rdweb/contracts";
 import { ethers } from "ethers";
 import { DEFAULT_IPFS_GATEWAY } from "../constants/urls";
 import { IStorage } from "./interfaces/IStorage";
-import { DropERC721Module, MODULES_MAP } from "../modules";
+import { DropErc721Module, MODULES_MAP } from "../modules";
 import { SDKOptions } from "../schema/sdk-options";
 import { ModuleFactory } from "./classes/factory";
 // import { ModuleFactory } from "./classes/factory";
@@ -90,7 +90,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the module
    */
   public getDropModule(moduleAddress: string) {
-    return this.getModule(moduleAddress, DropERC721Module.moduleType);
+    return this.getModule(moduleAddress, DropErc721Module.moduleType);
   }
 
   /**
@@ -105,7 +105,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   private updateModuleSignerOrProvider() {
     this.factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
     for (const [, module] of this.moduleCache) {
-      module.updateSignerOrProvider(this.getSigner() || this.getProvider());
+      module.onNetworkUpdated(this.getSigner() || this.getProvider());
     }
   }
 }
