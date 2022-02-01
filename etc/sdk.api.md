@@ -1399,8 +1399,8 @@ export class Module<TContract extends BaseContract = BaseContract> {
     setProviderOrSigner(providerOrSigner: ProviderOrSigner): void;
     // @internal (undocumented)
     protected get signer(): Signer | null;
-    // (undocumented)
-    protected signTypedData(signer: ethers.Signer, from: string, domain: {
+    // @internal (undocumented)
+    protected signTypedDataEmitEvent(signer: ethers.Signer, domain: {
         name: string;
         version: string;
         chainId: number;
@@ -1781,6 +1781,9 @@ export type PermitRequestMessage = {
     value: number | string;
     nonce: number | string;
     deadline: number | string;
+    v: number;
+    r: string;
+    s: string;
 };
 
 // @public (undocumented)
