@@ -90,6 +90,13 @@ export interface ClaimCondition {
     waitTimeSecondsLimitPerTransaction: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "PartialClaimConditionInputSchema" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type ClaimConditionInput = z.input<typeof PartialClaimConditionInputSchema>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "createSnapshot" is marked as @public, but its signature references "SnapshotInfo" which is marked as @internal
+//
 // @public
 export function createSnapshot(leafs: string[], storage: IStorage): Promise<SnapshotInfo>;
 
@@ -99,8 +106,6 @@ export class DropERC721ClaimConditions {
     // Warning: (ae-forgotten-export) The symbol "ContractMetadata" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "DropErc721ModuleSchema" needs to be exported by the entry point index.d.ts
     constructor(contractWrapper: ContractWrapper<DropERC721>, metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>, storage: IStorage);
-    // Warning: (ae-forgotten-export) The symbol "ClaimConditionFactory" needs to be exported by the entry point index.d.ts
-    builder(): ClaimConditionFactory;
     canClaim(quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
     // Warning: (ae-incompatible-release-tags) The symbol "getActive" is marked as @public, but its signature references "ClaimCondition" which is marked as @beta
     getActive(): Promise<ClaimCondition>;
@@ -108,7 +113,7 @@ export class DropERC721ClaimConditions {
     getAll(): Promise<ClaimCondition[]>;
     // Warning: (ae-forgotten-export) The symbol "ClaimEligibility" needs to be exported by the entry point index.d.ts
     getClaimIneligibilityReasons(quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
-    set(factory: ClaimConditionFactory, resetClaimEligibilityForAll: boolean): Promise<ethers.providers.TransactionReceipt>;
+    set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<ethers.providers.TransactionReceipt>;
 }
 
 // @public
@@ -140,17 +145,15 @@ export class DropERC721Module {
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>;
-    // Warning: (ae-forgotten-export) The symbol "DropRoles" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static moduleRoles: DropRoles[];
+    static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static moduleType: "DropERC721";
     ownerOf(tokenId: BigNumberish): Promise<string>;
     // Warning: (ae-forgotten-export) The symbol "ContractRoles" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    roles: ContractRoles<DropERC721, DropRoles>;
+    roles: ContractRoles<DropERC721, typeof DropERC721Module.moduleRoles[number]>;
     // Warning: (ae-forgotten-export) The symbol "ContractRoyalty" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -175,20 +178,20 @@ export class DropERC721Module {
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             external_link?: string | undefined;
+            merkle: Record<string, string>;
             name: string;
             image: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
-            merkle: Record<string, string>;
             platform_fee_basis_points: number;
             platform_fee_recipient: string;
             trusted_forwarder: string;
         }, {
+            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
-            merkle?: Record<string, string> | undefined;
             platform_fee_basis_points?: number | undefined;
             platform_fee_recipient?: string | undefined;
             trusted_forwarder?: string | undefined;
@@ -212,18 +215,18 @@ export class DropERC721Module {
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
+            merkle: Record<string, string>;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
-            merkle: Record<string, string>;
         }, {
             [x: string]: Json;
+            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
-            merkle?: Record<string, string> | undefined;
             name: string;
         }>;
         input: zod.ZodObject<zod.extendShape<zod.extendShape<{
@@ -239,17 +242,17 @@ export class DropERC721Module {
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             external_link?: string | undefined;
+            merkle: Record<string, string>;
             name: string;
             image: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
-            merkle: Record<string, string>;
         }, {
+            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
-            merkle?: Record<string, string> | undefined;
             name: string;
             image: string;
         }>;
@@ -376,6 +379,12 @@ export class FileNameMissingError extends Error {
 
 // @public (undocumented)
 export type FileOrBuffer = File | Buffer | BufferOrStringWithName;
+
+// Warning: (ae-forgotten-export) The symbol "ClaimConditionInputSchema" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "FilledConditionInput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
 
 // @public
 export type ForwardRequestMessage = {
@@ -505,26 +514,6 @@ export type PermitRequestMessage = {
 };
 
 // @public (undocumented)
-export interface PublicClaimCondition {
-    // (undocumented)
-    currency: string;
-    // (undocumented)
-    currentMintSupply: BigNumberish;
-    // (undocumented)
-    maxMintSupply: BigNumberish;
-    // (undocumented)
-    merkleRoot: BytesLike;
-    // (undocumented)
-    pricePerToken: BigNumberish;
-    // (undocumented)
-    quantityLimitPerTransaction: BigNumberish;
-    // (undocumented)
-    startTimestamp: BigNumber;
-    // (undocumented)
-    waitTimeSecondsLimitPerTransaction: BigNumberish;
-}
-
-// @public (undocumented)
 export class QuantityAboveLimitError extends Error {
     // @internal
     constructor(quantity: string);
@@ -539,13 +528,15 @@ export class RestrictedTransferError extends Error {
 export type SignerOrProvider = Signer | Provider;
 
 // Warning: (ae-forgotten-export) The symbol "SnapshotSchema" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "Snapshot" should be prefixed with an underscore because the declaration is marked as @internal
 //
-// @public (undocumented)
+// @internal (undocumented)
 export type Snapshot = z.output<typeof SnapshotSchema>;
 
 // Warning: (ae-forgotten-export) The symbol "SnapshotInfoSchema" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "SnapshotInfo" should be prefixed with an underscore because the declaration is marked as @internal
 //
-// @public (undocumented)
+// @internal (undocumented)
 export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
 
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts

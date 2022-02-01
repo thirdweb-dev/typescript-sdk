@@ -58,16 +58,13 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
       metadata.platform_fee_recipient,
     ]);
 
-    console.log("Deploying from", await this.getSignerAddress());
-
     const encodedType = ethers.utils.formatBytes32String(moduleType);
-    console.log("moduleType", moduleType, encodedType);
     const receipt = await this.sendTransaction("deployProxy", [
       encodedType,
       encodedFunc,
     ]);
 
-    const events = await this.parseLogs<ProxyDeployedEvent>(
+    const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",
       receipt.logs,
     );
