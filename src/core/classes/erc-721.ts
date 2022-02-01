@@ -15,16 +15,31 @@ import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResultPromise } from "../types";
 import { RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/module";
+import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 
 export class Erc721<T extends DropERC721 | TokenERC721>
   implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
+  protected options: SDKOptions;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
+  constructor(
+    contractWrapper: ContractWrapper<T>,
+    storage: IStorage,
+    options: SDKOptions = {},
+  ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
+    try {
+      this.options = SDKOptionsSchema.parse(options);
+    } catch (optionParseError) {
+      console.error(
+        "invalid module options object passed, falling back to default options",
+        optionParseError,
+      );
+      this.options = SDKOptionsSchema.parse({});
+    }
   }
 
   /**

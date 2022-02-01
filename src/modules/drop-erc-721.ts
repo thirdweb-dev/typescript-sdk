@@ -19,7 +19,7 @@ import {
 } from "../core/types";
 import { SnapshotInputSchema } from "../schema/modules/common/snapshots";
 import { DropErc721ModuleSchema } from "../schema/modules/drop-erc721";
-import { SDKOptions, SDKOptionsSchema } from "../schema/sdk-options";
+import { SDKOptions } from "../schema/sdk-options";
 import {
   NFTMetadata,
   NFTMetadataInput,
@@ -51,8 +51,6 @@ export class DropErc721Module extends Erc721<DropERC721> {
   static schema = DropErc721ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
 
-  private options: SDKOptions;
-
   public metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>;
   public roles: ContractRoles<
     DropERC721,
@@ -74,16 +72,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
       options,
     ),
   ) {
-    super(contractWrapper, storage);
-    try {
-      this.options = SDKOptionsSchema.parse(options);
-    } catch (optionParseError) {
-      console.error(
-        "invalid module options object passed, falling back to default options",
-        optionParseError,
-      );
-      this.options = SDKOptionsSchema.parse({});
-    }
+    super(contractWrapper, storage, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc721ModuleSchema,
