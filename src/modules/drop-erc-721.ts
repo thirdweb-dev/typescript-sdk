@@ -4,6 +4,7 @@ import {
   DropERC721__factory,
   IERC20,
   IERC20__factory,
+  TokenERC721__factory,
 } from "@3rdweb/contracts";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
@@ -50,13 +51,14 @@ export class DropErc721Module extends Erc721<DropERC721> {
   static moduleType = "DropERC721" as const;
   static schema = DropErc721ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
+  static contractFactory = DropERC721__factory;
 
-  public metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>;
+  public metadata: ContractMetadata<DropERC721, typeof DropErc721Module.schema>;
   public roles: ContractRoles<
     DropERC721,
     typeof DropErc721Module.moduleRoles[number]
   >;
-  public royalty: ContractRoyalty<DropERC721, typeof DropErc721ModuleSchema>;
+  public royalty: ContractRoyalty<DropERC721, typeof DropErc721Module.schema>;
   public primarySales: ContractPrimarySales<DropERC721>;
   public claimConditions: DropErc721ClaimConditions;
 
@@ -68,7 +70,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     contractWrapper = new ContractWrapper<DropERC721>(
       network,
       address,
-      DropERC721__factory.abi,
+      DropErc721Module.contractFactory.abi,
       options,
     ),
   ) {

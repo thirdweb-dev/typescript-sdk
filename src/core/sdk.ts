@@ -14,6 +14,7 @@ import type {
   NetworkOrSignerOrProvider,
   ValidModuleInstance,
 } from "./types";
+import { TokenErc721Module } from "../modules/token-erc-721";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
@@ -89,8 +90,23 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param moduleAddress - the address of the deployed module
    * @returns the module
    */
-  public getDropModule(moduleAddress: string) {
-    return this.getModule(moduleAddress, DropErc721Module.moduleType);
+  public getDropModule(moduleAddress: string): DropErc721Module {
+    return this.getModule(
+      moduleAddress,
+      DropErc721Module.moduleType,
+    ) as DropErc721Module;
+  }
+
+  /**
+   * Get an instance of a NFT Collection module
+   * @param address - the address of the deployed module
+   * @returns the module
+   */
+  public getNFTModule(address: string): TokenErc721Module {
+    return this.getModule(
+      address,
+      TokenErc721Module.moduleType,
+    ) as TokenErc721Module;
   }
 
   /**

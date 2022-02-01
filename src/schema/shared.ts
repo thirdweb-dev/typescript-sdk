@@ -15,7 +15,7 @@ export const FileBufferOrStringSchema = z.union([
 
 export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
 
-const BigNumberSchema = z.instanceof(BigNumber);
+export const BigNumberSchema = z.instanceof(BigNumber);
 
 // TODO this does not serialize to JSON
 export const BigNumberishSchema = z

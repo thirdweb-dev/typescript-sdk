@@ -34,9 +34,9 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
     moduleType: TModule["moduleType"],
     moduleMetadata: z.input<TModule["schema"]["deploy"]>,
   ) {
-    const metadata =
-      MODULES_MAP[moduleType].schema.deploy.parse(moduleMetadata);
-
+    const module = MODULES_MAP[moduleType];
+    const metadata = module.schema.deploy.parse(moduleMetadata);
+    const contractFactory = module.contractFactory;
     // TODO: is there any special pre-processing we need to do before uploading?
     const contractURI = await this.storage.uploadMetadata(
       metadata,
@@ -44,19 +44,19 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
       await this.getSigner()?.getAddress(),
     );
 
-    const encodedFunc = DropERC721__factory.getInterface(
-      DropERC721__factory.abi,
-    ).encodeFunctionData("initialize", [
-      metadata.name,
-      "SYMBOL", // TODO: make this configurable in metadata,
-      contractURI,
-      "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81", // TODO: dont hardcode trusted forwarder
-      await this.getSignerAddress(), // TODO: Who should this be?
-      metadata.fee_recipient,
-      metadata.seller_fee_basis_points,
-      metadata.platform_fee_basis_points,
-      metadata.platform_fee_recipient,
-    ]);
+    const encodedFunc = contractFactory
+      .getInterface(contractFactory.abi)
+      .encodeFunctionData("initialize", [
+        metadata.name,
+        "SYMBOL", // TODO: make this configurable in metadata,
+        contractURI,
+        "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81", // TODO: dont hardcode trusted forwarder
+        await this.getSignerAddress(), // TODO: Who should this be?
+        metadata.fee_recipient,
+        metadata.seller_fee_basis_points,
+        metadata.platform_fee_basis_points,
+        metadata.platform_fee_recipient,
+      ]);
 
     const encodedType = ethers.utils.formatBytes32String(moduleType);
     const receipt = await this.sendTransaction("deployProxy", [

@@ -13,7 +13,7 @@ import {
 } from "../../types/QueryParams";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResultPromise } from "../types";
-import { RestrictedTransferError } from "../../common";
+import { NotFoundError, RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/module";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 
@@ -288,8 +288,16 @@ export class Erc721<T extends DropERC721 | TokenERC721>
     tokenId: BigNumberish,
   ): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
+    if (!tokenUri) {
+      throw new NotFoundError();
+    }
     // TODO: include recursive metadata IPFS resolving for all
     // properties with a hash
-    return CommonNFTOutput.parse(JSON.parse(await this.storage.get(tokenUri)));
+    const jsonMetadata = JSON.parse(await this.storage.get(tokenUri));
+    return CommonNFTOutput.parse({
+      id: BigNumber.from(tokenId),
+      uri: tokenUri,
+      ...jsonMetadata,
+    });
   }
 }

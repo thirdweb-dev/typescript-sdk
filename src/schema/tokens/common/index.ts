@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { FileBufferOrStringSchema, HexColor, JsonSchema } from "../../shared";
+import {
+  BigNumberSchema,
+  FileBufferOrStringSchema,
+  HexColor,
+  JsonSchema,
+} from "../../shared";
 import {
   OptionalPropertiesInput,
   OptionalPropertiesOutput,
@@ -15,6 +20,8 @@ export const CommonTokenInput = z
   .catchall(z.lazy(() => JsonSchema));
 
 export const CommonTokenOutput = CommonTokenInput.extend({
+  id: BigNumberSchema,
+  uri: z.string(),
   image: z.string().optional(),
   external_url: z.string().optional(),
 });

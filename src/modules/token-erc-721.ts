@@ -56,6 +56,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
   static moduleType = "TokenERC721";
   static schema = TokenErc721ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
+  static contractFactory = TokenERC721__factory;
 
   public metadata: ContractMetadata<
     TokenERC721,
@@ -76,7 +77,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     contractWrapper = new ContractWrapper<TokenERC721>(
       network,
       address,
-      TokenERC721__factory.abi,
+      TokenErc721Module.contractFactory.abi,
       options,
     ),
   ) {
@@ -117,7 +118,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
    */
   public async mint(
     metadata: NFTMetadataInput,
-  ): TransactionResultPromise<NFTMetadataOwner> {
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
     return this.mintTo(await this.contractWrapper.getSignerAddress(), metadata);
   }
 
@@ -144,7 +145,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
   public async mintTo(
     to: string,
     metadata: NFTMetadataInput,
-  ): TransactionResultPromise<NFTMetadataOwner> {
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
     const uri = await this.storage.uploadMetadata(metadata);
     const receipt = await this.contractWrapper.sendTransaction("mintTo", [
       to,
@@ -157,10 +158,11 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     if (event.length === 0) {
       throw new Error("TokenMinted event not found");
     }
-    const tokenId = event[0].args.tokenIdMinted;
+    const id = event[0].args.tokenIdMinted;
     return {
+      id,
       receipt,
-      data: () => this.get(tokenId.toString()),
+      data: () => this.get(id.toString()),
     };
   }
 
