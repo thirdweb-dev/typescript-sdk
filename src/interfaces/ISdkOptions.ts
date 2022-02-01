@@ -69,6 +69,7 @@ export interface ISDKOptions {
       apiId: string;
       apiKey: string;
       deadlineSeconds?: number;
+      gasTier: "NORMAL" | "FAST" | "RAPID";
     };
   };
 

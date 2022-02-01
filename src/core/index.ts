@@ -105,6 +105,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
         apiId: "",
         apiKey: "",
         deadlineSeconds: 3600,
+        gasTier: "RAPID",
       },
     },
     gaslessSendFunction: this.defaultGaslessSendFunction.bind(this),
@@ -617,7 +618,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
       signature,
     });
     const response = await fetch(
-      "https://api.biconomy.io/api/v2/meta-tx/native",
+      this.options.transactionRelayerUrl ||
+        "https://api.biconomy.io/api/v2/meta-tx/native",
       {
         method: "POST",
         body: JSON.stringify({
@@ -626,6 +628,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
           params: [request, signature],
           to: transaction.to,
           gasLimit: transaction.gasLimit.toHexString(),
+          gasType: this.options.gasless.biconomy.gasTier,
         }),
         headers: {
           "x-api-key": this.options.gasless.biconomy.apiKey,
