@@ -21,7 +21,11 @@ import {
 import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../enums";
 import { createSnapshot } from "../common";
-import { ClaimConditionInputSchema } from "../schema/modules/common/claim-conditions";
+import {
+  ClaimConditionInputSchema,
+  ClaimConditionOutputSchema,
+} from "../schema/modules/common/claim-conditions";
+import { TransactionResultPromise } from "../core";
 
 export class DropERC721ClaimConditions {
   private contractWrapper;
@@ -142,9 +146,11 @@ export class DropERC721ClaimConditions {
     }
 
     // check for merkle root inclusion
-    const merkleRootArray = ethers.utils.stripZeros(claimCondition.merkleRoot);
+    const merkleRootArray = ethers.utils.stripZeros(
+      claimCondition.merkleRootHash,
+    );
     if (merkleRootArray.length > 0) {
-      const merkleLower = claimCondition.merkleRoot.toString();
+      const merkleLower = claimCondition.merkleRootHash.toString();
       const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
       if (proofs.length === 0) {
         const hashedAddress = ethers.utils
@@ -168,9 +174,7 @@ export class DropERC721ClaimConditions {
     if (now.lt(timestampForNextClaim)) {
       // if waitTimeSecondsLimitPerTransaction equals to timestampForNextClaim, that means that this is the first time this address claims this token
       if (
-        BigNumber.from(claimCondition.waitTimeSecondsLimitPerTransaction).eq(
-          timestampForNextClaim,
-        )
+        BigNumber.from(claimCondition.waitInSeconds).eq(timestampForNextClaim)
       ) {
         const balance = await this.contractWrapper.readContract.balanceOf(
           addressToCheck,
@@ -184,10 +188,10 @@ export class DropERC721ClaimConditions {
     }
 
     // check for wallet balance
-    if (claimCondition.pricePerToken.gt(0)) {
-      const totalPrice = claimCondition.pricePerToken.mul(quantity);
+    if (claimCondition.price.gt(0)) {
+      const totalPrice = claimCondition.price.mul(quantity);
       const provider = this.contractWrapper.getProvider();
-      if (isNativeToken(claimCondition.currency)) {
+      if (isNativeToken(claimCondition.currencyAddress)) {
         const balance = await provider.getBalance(addressToCheck);
         if (balance.lt(totalPrice)) {
           reasons.push(ClaimEligibility.NotEnoughTokens);
@@ -195,7 +199,7 @@ export class DropERC721ClaimConditions {
       } else {
         const erc20 = new ContractWrapper<IERC20>(
           provider,
-          claimCondition.currency,
+          claimCondition.currencyAddress,
           IERC20__factory.abi,
           {},
         );
@@ -223,7 +227,7 @@ export class DropERC721ClaimConditions {
   public async set(
     claimConditionInputs: ClaimConditionInput[],
     resetClaimEligibilityForAll = false,
-  ) {
+  ): TransactionResultPromise {
     // process inputs
     const snapshotInfos: SnapshotInfo[] = [];
     const inputsWithSnapshots: FilledConditionInput[] = await Promise.all(
@@ -288,7 +292,34 @@ export class DropERC721ClaimConditions {
       ),
     );
 
-    return await this.contractWrapper.sendTransaction("multicall", [encoded]);
+    return {
+      receipt: await this.contractWrapper.sendTransaction("multicall", [
+        encoded,
+      ]),
+    };
+  }
+
+  /**
+   * Update a single claim condition with new data.
+   * @param index the index of the claim condition to update, as given by the index from the result of `getAll()`
+   * @param claimConditionInput the new data to update, previous data will be retained
+   */
+  public async update(
+    index: number,
+    claimConditionInput: ClaimConditionInput,
+  ): TransactionResultPromise {
+    const existingConditions = await this.getAll();
+    if (index >= existingConditions.length) {
+      throw Error(
+        `Index out of bounds - got index: ${index} with ${existingConditions.length} conditions`,
+      );
+    }
+    const updatedCondition = ClaimConditionOutputSchema.parse({
+      ...existingConditions[index],
+      ...claimConditionInput,
+    });
+    existingConditions[index] = updatedCondition;
+    return await this.set(existingConditions);
   }
 
   /** ***************************************
@@ -305,25 +336,21 @@ export class DropERC721ClaimConditions {
     //   pm.pricePerToken,
     // );
     const cv = "";
-    return {
-      startTimestamp: new Date(
-        BigNumber.from(pm.startTimestamp).toNumber() * 1000,
-      ),
-      maxMintSupply: pm.maxClaimableSupply.toString(),
+    return ClaimConditionOutputSchema.parse({
+      startTime: new Date(BigNumber.from(pm.startTimestamp).toNumber() * 1000),
+      maxQuantity: pm.maxClaimableSupply.toString(),
       currentMintSupply: pm.supplyClaimed.toString(),
       availableSupply: BigNumber.from(pm.maxClaimableSupply)
         .sub(pm.supplyClaimed)
         .toString(),
       quantityLimitPerTransaction: pm.quantityLimitPerTransaction.toString(),
-      waitTimeSecondsLimitPerTransaction:
-        pm.waitTimeInSecondsBetweenClaims.toString(),
+      waitInSeconds: pm.waitTimeInSecondsBetweenClaims.toString(),
       price: BigNumber.from(pm.pricePerToken),
-      pricePerToken: BigNumber.from(pm.pricePerToken),
       currency: pm.currency,
-      currencyContract: pm.currency,
+      currencyAddress: pm.currency,
       currencyMetadata: cv,
-      merkleRoot: pm.merkleRoot,
-    };
+      merkleRootHash: pm.merkleRoot,
+    });
   }
 
   private convertToContractModel(c: FilledConditionInput) {

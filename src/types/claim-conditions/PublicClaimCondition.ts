@@ -2,34 +2,18 @@ import {
   SnapshotInfoSchema,
   SnapshotSchema,
 } from "../../schema/modules/common/snapshots";
-import { BigNumber, BytesLike } from "ethers";
 import { z } from "zod";
 import {
   ClaimConditionInputSchema,
+  ClaimConditionOutputSchema,
   PartialClaimConditionInputSchema,
 } from "../../schema/modules/common/claim-conditions";
 // import { CurrencyValue } from "../../common/currency";
 
-// @fixme
-type CurrencyValue = unknown;
-
 /**
- * @beta
+ * Represents a claim condition fetched from the SDK
  */
-export interface ClaimCondition {
-  startTimestamp: Date;
-  maxMintSupply: string;
-  currentMintSupply: string;
-  availableSupply: string;
-  quantityLimitPerTransaction: string;
-  waitTimeSecondsLimitPerTransaction: string;
-  price: BigNumber;
-  pricePerToken: BigNumber;
-  currency: string;
-  currencyContract: string;
-  currencyMetadata: CurrencyValue | null;
-  merkleRoot: BytesLike;
-}
+export type ClaimCondition = z.output<typeof ClaimConditionOutputSchema>;
 
 /**
  * @internal

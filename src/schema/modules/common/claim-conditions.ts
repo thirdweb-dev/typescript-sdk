@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { unknown, z } from "zod";
 import { ethers } from "ethers";
 import { BigNumberishSchema, BytesLikeSchema } from "../../shared";
 import { hexZeroPad } from "ethers/lib/utils";
@@ -28,3 +28,16 @@ export const ClaimConditionInputSchema = z.object({
 
 export const PartialClaimConditionInputSchema =
   ClaimConditionInputSchema.partial();
+
+export const ClaimConditionOutputSchema = ClaimConditionInputSchema.omit({
+  snapshot: true,
+}).extend({
+  availableSupply: z.string().default(""),
+  // TODO: implement currency type
+  currencyMetadata: z.unknown().default(unknown()),
+});
+
+ClaimConditionOutputSchema.omit({
+  availableSupply: true,
+  currencyMetadata: true,
+});

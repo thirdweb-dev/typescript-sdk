@@ -2,7 +2,7 @@ import { DropERC721Module } from "../src/modules/drop-erc-721";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import { appModule, sdk, signers } from "./before.test";
 import { createSnapshot } from "../src/common";
@@ -91,7 +91,7 @@ describe("Drop Module", async () => {
     );
 
     const roots = (await dropModule.claimConditions.getAll()).map(
-      (c) => c.merkleRoot,
+      (c) => c.merkleRootHash,
     );
     expect(roots).length(2);
   });
@@ -124,7 +124,7 @@ describe("Drop Module", async () => {
     );
 
     const roots = (await dropModule.claimConditions.getAll()).map(
-      (c) => c.merkleRoot,
+      (c) => c.merkleRootHash,
     );
     expect(roots).length(2);
 
@@ -587,5 +587,60 @@ describe("Drop Module", async () => {
 
     await dropModule.claimConditions.set([]);
     expect((await dropModule.claimConditions.getAll()).length).to.be.equal(0);
+  });
+
+  it("set claim condition and update claim condition", async () => {
+    await dropModule.claimConditions.set([
+      { startTime: new Date().getTime() / 2000, maxQuantity: 1 },
+      { startTime: new Date().getTime(), waitInSeconds: 60 },
+    ]);
+    expect((await dropModule.claimConditions.getAll()).length).to.be.equal(2);
+
+    await dropModule.claimConditions.update(0, { waitInSeconds: 10 });
+    let updatedConditions = await dropModule.claimConditions.getAll();
+    expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
+      BigNumber.from(1),
+    );
+    expect(updatedConditions[0].waitInSeconds).to.be.deep.equal(
+      BigNumber.from(10),
+    );
+    expect(updatedConditions[1].waitInSeconds).to.be.deep.equal(
+      BigNumber.from(60),
+    );
+
+    await dropModule.claimConditions.update(1, {
+      maxQuantity: 10,
+      waitInSeconds: 10,
+    });
+    updatedConditions = await dropModule.claimConditions.getAll();
+    expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
+      BigNumber.from(1),
+    );
+    expect(updatedConditions[1].maxQuantity).to.be.deep.equal(
+      BigNumber.from(10),
+    );
+    expect(updatedConditions[1].waitInSeconds).to.be.deep.equal(
+      BigNumber.from(10),
+    );
+  });
+
+  it("set claim condition and update claim condition with diff timestamps should reorder", async () => {
+    await dropModule.claimConditions.set([
+      { startTime: new Date().getTime() / 2000, maxQuantity: 1 },
+      { startTime: new Date().getTime(), maxQuantity: 2 },
+    ]);
+    expect((await dropModule.claimConditions.getAll()).length).to.be.equal(2);
+
+    await dropModule.claimConditions.update(0, {
+      startTime: new Date().getTime() * 2,
+    });
+    // max quantities should be inverted now
+    const updatedConditions = await dropModule.claimConditions.getAll();
+    expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
+      BigNumber.from(2),
+    );
+    expect(updatedConditions[1].maxQuantity).to.be.deep.equal(
+      BigNumber.from(1),
+    );
   });
 });

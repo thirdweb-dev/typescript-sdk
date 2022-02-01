@@ -580,9 +580,9 @@ export class DropERC721Module {
     const metadata = await this.metadata.get();
     const addressToClaim = await this.contractWrapper.getSignerAddress();
 
-    if (!mintCondition.merkleRoot.toString().startsWith(AddressZero)) {
+    if (!mintCondition.merkleRootHash.toString().startsWith(AddressZero)) {
       const snapshot = await this.storage.get(
-        metadata?.merkle[mintCondition.merkleRoot.toString()],
+        metadata?.merkle[mintCondition.merkleRootHash.toString()],
       );
       const snapshotData = SnapshotInputSchema.parse(snapshot);
       const item = snapshotData.claims.find(
@@ -595,24 +595,22 @@ export class DropERC721Module {
     }
 
     const overrides = (await this.contractWrapper.getCallOverrides()) || {};
-    if (mintCondition.pricePerToken.gt(0)) {
-      if (isNativeToken(mintCondition.currency)) {
-        overrides["value"] = BigNumber.from(mintCondition.pricePerToken).mul(
-          quantity,
-        );
+    if (mintCondition.price.gt(0)) {
+      if (isNativeToken(mintCondition.currencyAddress)) {
+        overrides["value"] = BigNumber.from(mintCondition.price).mul(quantity);
       } else {
         const signer = this.contractWrapper.getSigner();
         const provider = this.contractWrapper.getProvider();
         const erc20 = new ContractWrapper<IERC20>(
           signer || provider,
-          mintCondition.currency,
+          mintCondition.currencyAddress,
           IERC20__factory.abi,
           this.options,
         );
         const owner = await this.contractWrapper.getSignerAddress();
         const spender = this.contractWrapper.readContract.address;
         const allowance = await erc20.readContract.allowance(owner, spender);
-        const totalPrice = BigNumber.from(mintCondition.pricePerToken).mul(
+        const totalPrice = BigNumber.from(mintCondition.price).mul(
           BigNumber.from(quantity),
         );
         if (allowance.lt(totalPrice)) {
