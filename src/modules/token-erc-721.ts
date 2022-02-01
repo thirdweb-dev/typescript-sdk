@@ -4,7 +4,6 @@ import {
   SignaturePayload,
 } from "../schema/modules/common/signature";
 import { NFTMetadata, NFTMetadataInput } from "../schema/tokens/common";
-import { UpdateableNetwork } from "../core/interfaces/module";
 import { IStorage, NetworkOrSignerOrProvider } from "../core";
 import { TokenErc721ModuleSchema } from "../schema/modules/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -14,6 +13,7 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { Erc721 } from "../core/classes/erc-721";
+import { ContractPrimarySales } from "../core/classes/contract-sales";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -45,6 +45,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     typeof TokenErc721Module.moduleRoles[number]
   >;
   public royalty: ContractRoyalty<TokenERC721, typeof TokenErc721ModuleSchema>;
+  public primarySales: ContractPrimarySales<TokenERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -69,10 +70,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
       TokenErc721Module.moduleRoles,
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-  }
-
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
-    this.contractWrapper.updateSignerOrProvider(network);
+    this.primarySales = new ContractPrimarySales(this.contractWrapper);
   }
 
   /** ******************************

@@ -15,7 +15,6 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core/interfaces/IStorage";
 import {
   NetworkOrSignerOrProvider,
-  TransactionResultPromise,
   TransactionResultWithId,
 } from "../core/types";
 import { SnapshotInputSchema } from "../schema/modules/common/snapshots";
@@ -29,6 +28,7 @@ import {
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 import { DropErc721ClaimConditions } from "./drop-erc721-claim-conditions";
 import { Erc721 } from "../core/classes/erc-721";
+import { ContractPrimarySales } from "../core/classes/contract-sales";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -59,6 +59,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     typeof DropErc721Module.moduleRoles[number]
   >;
   public royalty: ContractRoyalty<DropERC721, typeof DropErc721ModuleSchema>;
+  public primarySales: ContractPrimarySales<DropERC721>;
   public claimConditions: DropErc721ClaimConditions;
 
   constructor(
@@ -93,6 +94,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
       DropErc721Module.moduleRoles,
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.primarySales = new ContractPrimarySales(this.contractWrapper);
     this.claimConditions = new DropErc721ClaimConditions(
       this.contractWrapper,
       this.metadata,
@@ -174,15 +176,6 @@ export class DropErc721Module extends Erc721<DropERC721> {
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
     return await this.contractWrapper.readContract.nextTokenIdToClaim();
-  }
-
-  /**
-   * Get the primary sale recipient.
-   * @returns the wallet address.
-   */
-  // TODO in sales object
-  public async getPrimarySaleRecipient(): Promise<string> {
-    return await this.contractWrapper.readContract.primarySaleRecipient();
   }
 
   /** ******************************
@@ -306,22 +299,6 @@ export class DropErc721Module extends Erc721<DropERC721> {
       quantity,
       proofs,
     );
-  }
-
-  /**
-   * Set the primary sale recipient
-   * @param recipient - the wallet address
-   */
-  // TODO create ContractSales object
-  public async setPrimarySaleRecipient(
-    recipient: string,
-  ): TransactionResultPromise {
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "setPrimarySaleRecipient",
-        [recipient],
-      ),
-    };
   }
 
   /** ******************************
