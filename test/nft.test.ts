@@ -80,4 +80,15 @@ describe("NFT Module", async () => {
       assert.isDefined(nft);
     }
   });
+
+  it("should not be able to mint without permission", async () => {
+    sdk.updateSignerOrProvider(samWallet);
+    await expect(
+      nftModule.mint({
+        name: "Test2",
+      }),
+    ).to.throw;
+  });
+
+  // TODO signature based minting tests
 });
