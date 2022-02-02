@@ -37,7 +37,7 @@ export async function signTypedData(
   types: Record<string, Array<TypedDataField>>,
   message: Record<string, any>,
 ) {
-  const provider = signer?.provider;
+  const provider = signer?.provider as JsonRpcProvider;
   if (!provider) {
     throw new Error("missing provider");
   }
@@ -51,8 +51,8 @@ export async function signTypedData(
   let signature = "";
 
   // an indirect way for accessing walletconnect's underlying provider
-  if ((provider as any)?.provider.isWalletConnect) {
-    signature = await (provider as JsonRpcProvider).send("eth_signTypedData", [
+  if ((provider as any)?.provider?.isWalletConnect) {
+    signature = await provider.send("eth_signTypedData", [
       (await signer.getAddress()).toLowerCase(),
       JSON.stringify(payload),
     ]);
@@ -65,10 +65,10 @@ export async function signTypedData(
       );
     } catch (err: any) {
       if (err?.message?.includes("Method eth_signTypedData_v4 not supported")) {
-        signature = await (provider as JsonRpcProvider).send(
-          "eth_signTypedData",
-          [(await signer.getAddress()).toLowerCase(), JSON.stringify(payload)],
-        );
+        signature = await provider.send("eth_signTypedData", [
+          (await signer.getAddress()).toLowerCase(),
+          JSON.stringify(payload),
+        ]);
       } else {
         throw err;
       }
