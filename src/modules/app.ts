@@ -364,7 +364,7 @@ export class AppModule
     } catch (e: any) {
       if (e?.message?.includes("provider shares too low")) {
         throw new Error(
-          `Missing thirdweb fees. You can only set it to a Royalty Splits, which can deployed using "deployRoyaltySplitsModule({...})".`,
+          `Missing thirdweb fees. Please set it to a Royalty Splits address, which can deployed using "deployRoyaltySplitsModule({...})".`,
         );
       }
       throw e;
@@ -383,7 +383,7 @@ export class AppModule
     } catch (e: any) {
       if (e?.message?.includes("provider shares too low")) {
         throw new Error(
-          `Missing thirdweb fees. You can only set it to a Royalty Splits, which can deployed using "deployRoyaltySplitsModule({...})".`,
+          `Missing thirdweb fees. Please set it to a Royalty Splits address, which can deployed using "deployRoyaltySplitsModule({...})".`,
         );
       }
       throw e;
