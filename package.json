@@ -1,6 +1,6 @@
 {
   "name": "@3rdweb/sdk",
-  "version": "1.38.0",
+  "version": "1.38.1-2",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -81,7 +81,6 @@
     "@web-std/file": "^3.0.0",
     "browser-or-node": "^2.0.0",
     "crypto-js": "^4.1.1",
-    "eth-permit": "^0.2.1",
     "ethers": "^5.5.2",
     "eventemitter2": "^6.4.5",
     "events": "^3.3.0",

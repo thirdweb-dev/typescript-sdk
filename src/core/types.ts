@@ -54,6 +54,9 @@ export type PermitRequestMessage = {
   value: number | string;
   nonce: number | string;
   deadline: number | string;
+  v: number;
+  r: string;
+  s: string;
 };
 
 /**

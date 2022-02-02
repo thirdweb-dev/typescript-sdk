@@ -1,12 +1,5 @@
 import { AccessControlEnumerable } from "@3rdweb/contracts";
-import {
-  ExternalProvider,
-  JsonRpcProvider,
-  JsonRpcSigner,
-  Log,
-  TransactionReceipt,
-  Web3Provider,
-} from "@ethersproject/providers";
+import { Log, TransactionReceipt } from "@ethersproject/providers";
 import {
   BaseContract,
   BigNumber,
@@ -23,6 +16,7 @@ import { invariant } from "../common/invariant";
 import { uploadMetadata } from "../common/ipfs";
 import { ModuleType } from "../common/module-type";
 import { getRoleHash, Role, SetAllRoles } from "../common/role";
+import { signTypedData } from "../common/sign";
 import { ISDKOptions } from "../interfaces/ISdkOptions";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import { EventType } from "./events";
@@ -412,9 +406,11 @@ export class Module<TContract extends BaseContract = BaseContract> {
     return txHash;
   }
 
-  protected async signTypedData(
+  /**
+   * @internal
+   */
+  protected async signTypedDataEmitEvent(
     signer: ethers.Signer,
-    from: string,
     domain: {
       name: string;
       version: string;
@@ -432,29 +428,13 @@ export class Module<TContract extends BaseContract = BaseContract> {
       signature,
     });
 
-    if (
-      (
-        (signer?.provider as Web3Provider)?.provider as ExternalProvider & {
-          isWalletConnect?: boolean;
-        }
-      )?.isWalletConnect
-    ) {
-      const payload = ethers.utils._TypedDataEncoder.getPayload(
-        domain,
-        types,
-        message,
-      );
-      signature = await (signer?.provider as JsonRpcProvider).send(
-        "eth_signTypedData",
-        [from.toLowerCase(), JSON.stringify(payload)],
-      );
-    } else {
-      signature = await (signer as JsonRpcSigner)._signTypedData(
-        domain,
-        types,
-        message,
-      );
-    }
+    const { signature: sig } = await signTypedData(
+      signer,
+      domain,
+      types,
+      message,
+    );
+    signature = sig;
 
     this.sdk.event.emit(EventType.Signature, {
       status: "completed",
