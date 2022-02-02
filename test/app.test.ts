@@ -187,6 +187,7 @@ describe("App Module", async () => {
           shares: 1,
         },
       ],
+      isRoyalty: true,
     });
 
     const result = await appModule.deployPackModule({

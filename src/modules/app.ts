@@ -12,6 +12,7 @@ import {
   ProtocolControl__factory,
   Royalty__factory,
   SignatureMint721__factory,
+  Splits__factory,
   VotingGovernor__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
@@ -358,17 +359,35 @@ export class AppModule
   public async setRoyaltyTreasury(
     treasury: string,
   ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setRoyaltyTreasury", [treasury]);
+    try {
+      return await this.sendTransaction("setRoyaltyTreasury", [treasury]);
+    } catch (e: any) {
+      if (e?.message?.includes("provider shares too low")) {
+        throw new Error(
+          `Missing thirdweb fees. Please set it to a Royalty Splits address, which can deployed using "deployRoyaltySplitsModule({...})".`,
+        );
+      }
+      throw e;
+    }
   }
 
   public async setModuleRoyaltyTreasury(
     moduleAddress: string,
     treasury: string,
   ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("setModuleRoyaltyTreasury", [
-      moduleAddress,
-      treasury,
-    ]);
+    try {
+      return await this.sendTransaction("setModuleRoyaltyTreasury", [
+        moduleAddress,
+        treasury,
+      ]);
+    } catch (e: any) {
+      if (e?.message?.includes("provider shares too low")) {
+        throw new Error(
+          `Missing thirdweb fees. Please set it to a Royalty Splits address, which can deployed using "deployRoyaltySplitsModule({...})".`,
+        );
+      }
+      throw e;
+    }
   }
 
   /**
@@ -574,7 +593,10 @@ export class AppModule
       ],
       NFTCollection__factory,
     );
-    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+    if (
+      metadata.feeRecipient &&
+      metadata.feeRecipient !== (await this.getRoyaltyTreasury())
+    ) {
       await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
 
@@ -590,6 +612,44 @@ export class AppModule
   public async deploySplitsModule(
     metadata: SplitsModuleMetadata,
   ): Promise<SplitsModule> {
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      SplitsModuleMetadata,
+    );
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const address = await this._deployModule(
+      ModuleType.SPLITS,
+      [
+        this.address,
+        await this.getForwarder(),
+        metadataUri,
+        metadata.recipientSplits.map((s) => s.address),
+        metadata.recipientSplits.map((s) => s.shares),
+      ],
+      metadata.isRoyalty ? Royalty__factory : Splits__factory,
+    );
+
+    return this.sdk.getSplitsModule(address);
+  }
+
+  /**
+   * Deploys a Royalty Splits module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed splits module
+   */
+  public async deployRoyaltySplitsModule(
+    metadata: SplitsModuleMetadata,
+  ): Promise<SplitsModule> {
+    metadata.isRoyalty = true;
     const serializedMetadata = this.jsonConvert.serializeObject(
       await this._prepareMetadata(metadata),
       SplitsModuleMetadata,
@@ -665,7 +725,10 @@ export class AppModule
       ],
       SignatureMint721__factory,
     );
-    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+    if (
+      metadata.feeRecipient &&
+      metadata.feeRecipient !== (await this.getRoyaltyTreasury())
+    ) {
       await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getNFTModule(address);
@@ -823,7 +886,10 @@ export class AppModule
       ],
       Pack__factory,
     );
-    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+    if (
+      metadata.feeRecipient &&
+      metadata.feeRecipient !== (await this.getRoyaltyTreasury())
+    ) {
       await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getPackModule(address);
@@ -880,7 +946,10 @@ export class AppModule
       ],
       LazyMintERC721__factory,
     );
-    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+    if (
+      metadata.feeRecipient &&
+      metadata.feeRecipient !== (await this.getRoyaltyTreasury())
+    ) {
       await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getDropModule(address);
@@ -935,7 +1004,10 @@ export class AppModule
       ],
       LazyMintERC1155__factory,
     );
-    if (metadata.feeRecipient && metadata.feeRecipient !== this.address) {
+    if (
+      metadata.feeRecipient &&
+      metadata.feeRecipient !== (await this.getRoyaltyTreasury())
+    ) {
       await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getBundleDropModule(address);
@@ -1168,8 +1240,9 @@ export class AppModule
       const metadata = (await this.getMetadata()).metadata;
       splitsAddress = (
         await this.deploySplitsModule({
-          name: `${metadata?.name} Treasury`,
+          name: `${metadata?.name} Royalty Treasury`,
           recipientSplits: upgradeOptions.splitsRecipients,
+          isRoyalty: true,
         })
       ).address;
     }

@@ -35,6 +35,7 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [deployMarketplaceModule(metadata)](./sdk.appmodule.deploymarketplacemodule.md) |  |  |
 |  [deployNftModule(metadata)](./sdk.appmodule.deploynftmodule.md) |  | Deploys a NFT module. |
 |  [deployPackModule(metadata)](./sdk.appmodule.deploypackmodule.md) |  | Deploys a Pack module |
+|  [deployRoyaltySplitsModule(metadata)](./sdk.appmodule.deployroyaltysplitsmodule.md) |  | Deploys a Royalty Splits module |
 |  [deploySplitsModule(metadata)](./sdk.appmodule.deploysplitsmodule.md) |  | Deploys a Splits module |
 |  [deployTokenModule(metadata)](./sdk.appmodule.deploytokenmodule.md) |  | Deploys a token module. |
 |  [deployVoteModule(metadata)](./sdk.appmodule.deployvotemodule.md) |  | Deploys a Vote module |
