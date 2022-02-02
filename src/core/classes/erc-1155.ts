@@ -1,21 +1,7 @@
 import { ContractWrapper } from "./contract-wrapper";
-import {
-  DropERC1155,
-  DropERC721,
-  TokenERC1155,
-  TokenERC721,
-} from "@3rdweb/contracts";
+import { DropERC1155, TokenERC1155 } from "@3rdweb/contracts";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
-import {
-  CommonNFTOutput,
-  NFTMetadata,
-  NFTMetadataOwner,
-} from "../../schema/tokens/common";
-import { AddressZero } from "@ethersproject/constants";
-import {
-  DEFAULT_QUERY_ALL_COUNT,
-  QueryAllParams,
-} from "../../types/QueryParams";
+import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResultPromise } from "../types";
 import { NotFoundError, RestrictedTransferError } from "../../common";
@@ -151,22 +137,12 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
   }
 
   /**
-   * Get the current owner of a given NFT within this Module
-   *
-   * @param tokenId - the tokenId of the NFT
-   * @returns the address of the owner
-   */
-  public async ownerOf(tokenId: BigNumberish): Promise<string> {
-    return await this.contractWrapper.readContract.ownerOf(tokenId);
-  }
-
-  /**
-   * Get the total supply for this Module.
-   *
+   * Returns the total supply of a specific token
+   * @param tokenId - The token ID to get the total supply of
    * @returns the total supply
    */
-  public async totalSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToMint();
+  public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
+    return await this.contractWrapper.readContract.totalSupply(tokenId);
   }
 
   /**
@@ -266,9 +242,17 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    * Burn a single NFT
    * @param tokenId - the token Id to burn
    */
-  public async burn(tokenId: BigNumberish): TransactionResultPromise {
+  public async burn(
+    tokenId: BigNumberish,
+    amount: BigNumberish,
+  ): TransactionResultPromise {
+    const account = await this.contractWrapper.getSignerAddress();
     return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
+      receipt: await this.contractWrapper.sendTransaction("burn", [
+        account,
+        tokenId,
+        amount,
+      ]),
     };
   }
 
