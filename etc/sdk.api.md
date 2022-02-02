@@ -138,7 +138,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
@@ -152,22 +152,22 @@ export class DropErc721Module extends Erc721<DropERC721> {
             trusted_forwarder: zod.ZodDefault<zod.ZodString>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
-            image?: string | undefined;
+            image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
-            merkle: Record<string, string>;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
+            merkle: Record<string, string>;
             platform_fee_basis_points: number;
             platform_fee_recipient: string;
             trusted_forwarder: string;
         }, {
-            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
-            image?: string | undefined;
+            image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
+            merkle?: Record<string, string> | undefined;
             platform_fee_basis_points?: number | undefined;
             platform_fee_recipient?: string | undefined;
             trusted_forwarder?: string | undefined;
@@ -176,7 +176,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
         output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             image: zod.ZodOptional<zod.ZodString>;
@@ -190,24 +190,24 @@ export class DropErc721Module extends Erc721<DropERC721> {
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
-            merkle: Record<string, string>;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
+            merkle: Record<string, string>;
         }, {
             [x: string]: Json;
-            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
+            merkle?: Record<string, string> | undefined;
             name: string;
         }>;
         input: zod.ZodObject<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
@@ -216,19 +216,19 @@ export class DropErc721Module extends Erc721<DropERC721> {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
-            image?: string | undefined;
+            image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
-            merkle: Record<string, string>;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
+            merkle: Record<string, string>;
         }, {
-            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
-            image?: string | undefined;
+            image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
+            merkle?: Record<string, string> | undefined;
             name: string;
         }>;
         tokenInput: zod.ZodObject<zod.extendShape<{
@@ -404,9 +404,6 @@ export class InvalidAddressError extends Error {
 // @public (undocumented)
 export class IpfsStorage implements IStorage {
     constructor(gatewayUrl?: string);
-    // @internal
-    batchUploadProperties(metadatas: Json[]): Promise<Record<string, any>>;
-    buildFilePropertiesMap(object: Json, files?: (File | Buffer)[]): (File | Buffer)[];
     // (undocumented)
     canResolve(uri: string): boolean;
     // (undocumented)
@@ -420,9 +417,9 @@ export class IpfsStorage implements IStorage {
     // (undocumented)
     uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
     // (undocumented)
-    uploadMetadata<T extends string | JsonObject>(metadata: T, contractAddress?: string, signerAddress?: string): Promise<string>;
+    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
     // @internal (undocumented)
-    uploadMetadataBatch<T extends string | JsonObject>(metadatas: T[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<{
+    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<{
         baseUri: string;
         metadataUris: string[];
     }>;
@@ -435,19 +432,16 @@ export interface IStorage {
     getUploadToken(contractAddress: string): Promise<string>;
     resolveFullUrl(hash: string): string;
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadBatch(files: Buffer[] | string[] | FileOrBuffer[] | File[] | BufferOrStringWithName[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadata<T extends string | JsonObject>(metadata: T, contractAddress?: string, signerAddress?: string): Promise<string>;
+    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
+    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
     // Warning: (ae-incompatible-release-tags) The symbol "uploadMetadataBatch" is marked as @public, but its signature references "UploadMetadataBatchResult" which is marked as @internal
-    uploadMetadataBatch<T extends string | JsonObject>(metadatas: T[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<UploadMetadataBatchResult>;
+    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<UploadMetadataBatchResult>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "JsonLiteralOrFileOrBuffer" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export type Json = JsonLiteral | {
-    [key: string]: Json;
-} | Json[];
-
-// @public (undocumented)
-export type JsonLiteral = boolean | null | number | string;
+export type Json = JsonLiteralOrFileOrBuffer | JsonObject | Json[];
 
 // @public (undocumented)
 export type JsonObject = {
@@ -620,7 +614,7 @@ export class WrongListingTypeError extends Error {
 
 // Warnings were encountered during analysis:
 //
-// dist/IStorage-b03dc443.d.ts:2045:5 - (ae-forgotten-export) The symbol "TokenErc721Module" needs to be exported by the entry point index.d.ts
+// dist/IStorage-f85b6eaa.d.ts:2045:5 - (ae-forgotten-export) The symbol "TokenErc721Module" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

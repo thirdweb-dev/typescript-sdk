@@ -1,36 +1,33 @@
-import { MockStorage } from "./mock/MockStorage";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { readFileSync } from "fs";
-import { ipfsGatewayUrl, sdk, signers } from "./before.test";
+import { ipfsGatewayUrl } from "./before.test";
 
-import { expect, assert } from "chai";
-import { IpfsStorage } from "../src/storage/IpfsStorage";
+import { assert } from "chai";
 import { BufferOrStringWithName } from "../src/types/BufferOrStringWithName";
-import FileOrBuffer from "../src/types/FileOrBuffer";
-import { DuplicateFileNameError } from "../src";
+import { DuplicateFileNameError, FileOrBuffer, IpfsStorage } from "../src";
 
 global.fetch = require("node-fetch");
 
 describe("IPFS Uploads", async () => {
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+  const storage: IpfsStorage = new IpfsStorage(ipfsGatewayUrl);
+  // let adminWallet: SignerWithAddress,
+  //   samWallet: SignerWithAddress,
+  //   bobWallet: SignerWithAddress;
 
-  before(() => {
-    [adminWallet, samWallet, bobWallet] = signers;
-  });
+  // before(() => {
+  //   [adminWallet, samWallet, bobWallet] = signers;
+  // });
 
-  beforeEach(async () => {
-    const storage = new IpfsStorage(ipfsGatewayUrl);
-    sdk.overrideStorage(storage);
+  // beforeEach(async () => {
+  // const storage = new IpfsStorage(ipfsGatewayUrl);
+  // sdk.overrideStorage(storage);
+  //
+  // sdk.setProviderOrSigner(adminWallet);
+  // });
 
-    sdk.setProviderOrSigner(adminWallet);
-  });
-
-  afterAll(async () => {
-    const storage = new MockStorage();
-    sdk.overrideStorage(storage);
-  });
+  // afterAll(async () => {
+  //   const storage = new MockStorage();
+  //   sdk.overrideStorage(storage);
+  // });
 
   async function getFile(upload: string): Promise<Response> {
     const response = await fetch(
@@ -47,7 +44,7 @@ describe("IPFS Uploads", async () => {
 
   it("should upload a file through any property, even when it is in an object nested inside another object", async () => {
     try {
-      const upload = await sdk.getStorage().uploadMetadata({
+      const upload = await storage.uploadMetadata({
         name: "test",
         image: readFileSync("test/3510820011_4f558b6dea_b.jpg"),
         test: {
@@ -58,17 +55,17 @@ describe("IPFS Uploads", async () => {
       });
       const data = await (await getFile(upload)).json();
       const uploadTest = (await getFile(data.test.test.image)).headers
-        .get("content-type")
-        .toString();
+        ?.get("content-type")
+        ?.toString();
 
       assert.equal(uploadTest, "image/jpeg");
     } catch (err) {
-      assert.fail(err);
+      assert.fail(err as string);
     }
   });
 
   it("should not upload the string to IPFS", async () => {
-    const upload = await sdk.getStorage().uploadMetadata({
+    const upload = await storage.uploadMetadata({
       image:
         "ipfs://QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/face_parts/Asset%20331.svg",
     });
@@ -79,7 +76,7 @@ describe("IPFS Uploads", async () => {
   });
 
   it("should upload an MP4 file when passed in the animation_url property", async () => {
-    const upload = await sdk.getStorage().uploadMetadata({
+    const upload = await storage.uploadMetadata({
       animation_url: readFileSync("test/test.mp4"),
     });
     assert.equal(
@@ -102,9 +99,9 @@ describe("IPFS Uploads", async () => {
       },
     ];
     const serialized = sampleObjects.map((o) => Buffer.from(JSON.stringify(o)));
-    const cid = await sdk.getStorage().uploadBatch(serialized);
+    const cid = await storage.uploadBatch(serialized);
     for (const object of sampleObjects) {
-      const fetched = await sdk.getStorage().get(`${cid}${object.id}`);
+      const fetched = await storage.get(`${cid}${object.id}`);
       const parsed = JSON.parse(fetched);
       assert.equal(parsed.description, object.description);
       assert.equal(parsed.id, object.id);
@@ -116,12 +113,11 @@ describe("IPFS Uploads", async () => {
       readFileSync("test/test.mp4"),
       readFileSync("test/test.mp4"),
     ];
-    const cid = await sdk.getStorage().uploadBatch(sampleObjects);
+    const cid = await storage.uploadBatch(sampleObjects);
     console.log(cid);
   });
 
   it("should upload files with filenames correctly", async () => {
-    const storage = sdk.getStorage();
     const sampleObjects: BufferOrStringWithName[] = [
       {
         data: readFileSync("test/test.mp4"),
@@ -136,35 +132,33 @@ describe("IPFS Uploads", async () => {
     const cid = await storage.uploadBatch(sampleObjects);
     console.log("filenames", cid);
     assert(
-      (await getFile(`${cid}${"test.jpeg"}`)).headers
-        .get("content-type")
-        .toString() === "image/jpeg",
+      (await getFile(`${cid}test.jpeg`)).headers
+        ?.get("content-type")
+        ?.toString() === "image/jpeg",
       `${cid}`,
     );
   });
 
   it("should upload files according to passed start file number", async () => {
-    const storage = sdk.getStorage();
     const sampleObjects: FileOrBuffer[] = [
       readFileSync("test/test.mp4"),
       readFileSync("test/3510820011_4f558b6dea_b.jpg"),
     ];
-    const cid = await storage.uploadBatch(sampleObjects, "", 1);
+    const cid = await storage.uploadBatch(sampleObjects);
     assert(
-      (await getFile(`${cid}2`)).headers.get("content-type").toString() ===
+      (await getFile(`${cid}2`)).headers?.get("content-type")?.toString() ===
         "image/jpeg",
       `${cid}`,
     );
   });
   it("should upload files according to start file number as 0", async () => {
-    const storage = sdk.getStorage();
     const sampleObjects = [
       readFileSync("test/3510820011_4f558b6dea_b.jpg"),
       readFileSync("test/test.mp4"),
     ];
-    const cid = await storage.uploadBatch(sampleObjects, "");
+    const cid = await storage.uploadBatch(sampleObjects);
     assert(
-      (await getFile(`${cid}0`)).headers.get("content-type").toString() ===
+      (await getFile(`${cid}0`)).headers?.get("content-type")?.toString() ===
         "image/jpeg",
       `${cid}`,
     );
@@ -193,7 +187,6 @@ describe("IPFS Uploads", async () => {
         },
       },
     ];
-    const storage = sdk.getStorage() as IpfsStorage;
     const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
       sampleObjects,
     );
@@ -225,7 +218,6 @@ describe("IPFS Uploads", async () => {
       "https://ipfs.io",
       { test: "maybe pass" },
     ];
-    const storage = sdk.getStorage() as IpfsStorage;
     const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
       sampleObjects,
     );
@@ -248,7 +240,6 @@ describe("IPFS Uploads", async () => {
   });
 
   it("should upload properly with same file names but one with capitalized letters", async () => {
-    const storage = sdk.getStorage();
     const sampleObjects: BufferOrStringWithName[] = [
       {
         data: readFileSync("test/test.mp4"),
@@ -261,15 +252,13 @@ describe("IPFS Uploads", async () => {
     ];
     const cid = await storage.uploadBatch(sampleObjects);
     assert(
-      (await getFile(`${cid}${"TEST"}`)).headers
-        .get("content-type")
-        .toString() === "image/jpeg",
+      (await getFile(`${cid}TEST`)).headers?.get("content-type")?.toString() ===
+        "image/jpeg",
       `${cid}`,
     );
   });
 
   it("should throw an error when trying to upload two files with the same name", async () => {
-    const storage = sdk.getStorage();
     const sampleObjects: BufferOrStringWithName[] = [
       {
         data: readFileSync("test/test.mp4"),
@@ -291,7 +280,6 @@ describe("IPFS Uploads", async () => {
   });
 
   it("bulk upload", async () => {
-    const storage = sdk.getStorage();
     const sampleObjects: BufferOrStringWithName[] = [
       {
         data: readFileSync("test/test.mp4"),

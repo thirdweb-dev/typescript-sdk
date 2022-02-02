@@ -9,14 +9,14 @@ Uploads metadata to IPFS
 <b>Signature:</b>
 
 ```typescript
-uploadMetadata<T extends string | JsonObject>(metadata: T, contractAddress?: string, signerAddress?: string): Promise<string>;
+uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | T | The metadata to be uploaded. |
+|  metadata | JsonObject | The metadata to be uploaded. |
 |  contractAddress | string | Optional. The contract address the data belongs to. |
 |  signerAddress | string | Optional. The address of the signer. |
 

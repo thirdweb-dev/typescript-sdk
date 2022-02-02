@@ -1,4 +1,4 @@
-import { BufferOrStringWithName, FileOrBuffer, JsonObject } from "../types";
+import { FileOrBuffer, JsonObject } from "../types";
 
 /**
  * @internal
@@ -30,7 +30,7 @@ export interface IStorage {
   /**
    * Uploads a folder to storage.
    *
-   * @param path - An array of the data to be uploaded. Can be a files or buffers (which will be loaded), or strings. (can be mixed, too)
+   * @param files - An array of the data to be uploaded. Can be a files or buffers (which will be loaded), or strings. (can be mixed, too)
    * @param fileStartNumber - Optional. The first file file name begins with.
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
@@ -38,12 +38,7 @@ export interface IStorage {
    * @returns - The CID of the uploaded folder.
    */
   uploadBatch(
-    files:
-      | Buffer[]
-      | string[]
-      | FileOrBuffer[]
-      | File[]
-      | BufferOrStringWithName[],
+    files: (string | FileOrBuffer)[],
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
@@ -86,8 +81,8 @@ export interface IStorage {
    * @param signerAddress - Optional. The address of the signer.
    */
 
-  uploadMetadata<T extends string | JsonObject>(
-    metadata: T,
+  uploadMetadata(
+    metadata: JsonObject,
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<string>;
@@ -101,8 +96,8 @@ export interface IStorage {
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
    */
-  uploadMetadataBatch<T extends string | JsonObject>(
-    metadatas: T[],
+  uploadMetadataBatch(
+    metadatas: JsonObject[],
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,

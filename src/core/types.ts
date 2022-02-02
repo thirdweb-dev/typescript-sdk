@@ -30,8 +30,9 @@ export type BufferOrStringWithName = {
   name?: string;
 };
 
-export type JsonLiteral = boolean | null | number | string;
-export type Json = JsonLiteral | { [key: string]: Json } | Json[];
+type JsonLiteral = boolean | null | number | string;
+type JsonLiteralOrFileOrBuffer = JsonLiteral | FileOrBuffer;
+export type Json = JsonLiteralOrFileOrBuffer | JsonObject | Json[];
 export type JsonObject = { [key: string]: Json };
 
 export type FileOrBuffer = File | Buffer | BufferOrStringWithName;

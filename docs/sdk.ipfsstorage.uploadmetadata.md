@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-uploadMetadata<T extends string | JsonObject>(metadata: T, contractAddress?: string, signerAddress?: string): Promise<string>;
+uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | T |  |
+|  metadata | JsonObject |  |
 |  contractAddress | string |  |
 |  signerAddress | string |  |
 

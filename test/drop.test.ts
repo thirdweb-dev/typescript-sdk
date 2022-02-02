@@ -2,13 +2,12 @@ import { DropErc721Module } from "../src/modules/drop-erc-721";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { ethers, BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import { appModule, sdk, signers } from "./before.test";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
-import hre, { ethers as hardhatEthers } from "hardhat";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");

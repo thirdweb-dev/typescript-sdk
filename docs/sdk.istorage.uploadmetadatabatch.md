@@ -9,14 +9,14 @@ Uploads metadata to IPFS
 <b>Signature:</b>
 
 ```typescript
-uploadMetadataBatch<T extends string | JsonObject>(metadatas: T[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<UploadMetadataBatchResult>;
+uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<UploadMetadataBatchResult>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadatas | T\[\] |  |
+|  metadatas | JsonObject\[\] |  |
 |  fileStartNumber | number | Optional. The first file file name begins with. |
 |  contractAddress | string | Optional. The contract address the data belongs to. |
 |  signerAddress | string | Optional. The address of the signer. |

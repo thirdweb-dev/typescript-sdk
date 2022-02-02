@@ -1,7 +1,6 @@
 import { FileOrBuffer, JsonObject } from "../../src/core/types";
 import { v4 as uuidv4 } from "uuid";
 import { IStorage, NotFoundError, UploadMetadataBatchResult } from "../../src";
-import { BufferOrStringWithName } from "../../src/types/BufferOrStringWithName";
 
 export class MockStorage implements IStorage {
   private objects: { [key: string]: string } = {};
@@ -9,8 +8,8 @@ export class MockStorage implements IStorage {
 
   public async upload(
     data: string | FileOrBuffer,
-    contractAddress?: string,
-    signerAddress?: string,
+    _contractAddress?: string,
+    _signerAddress?: string,
   ): Promise<string> {
     const uuid = uuidv4();
     let serializedData = "";
@@ -29,15 +28,10 @@ export class MockStorage implements IStorage {
   }
 
   public async uploadBatch(
-    files:
-      | Buffer[]
-      | string[]
-      | FileOrBuffer[]
-      | File[]
-      | BufferOrStringWithName[],
+    files: (string | FileOrBuffer)[],
     fileStartNumber?: number,
-    contractAddress?: string,
-    signerAddress?: string,
+    _contractAddress?: string,
+    _signerAddress?: string,
   ): Promise<string> {
     const cid = uuidv4();
     this.folders[cid] = {};
@@ -54,7 +48,8 @@ export class MockStorage implements IStorage {
       } else {
         contents =
           file.data instanceof Buffer ? file.data.toString() : file.data;
-        this.folders.cid[file.name] = contents;
+        const name = file.name ? file.name : `file_${index}`;
+        this.folders.cid[name] = contents;
         continue;
       }
       this.folders[cid][index.toString()] = contents;
@@ -65,7 +60,7 @@ export class MockStorage implements IStorage {
     return Promise.resolve(`mock://${cid}`);
   }
 
-  public async getUploadToken(contractAddress: string): Promise<string> {
+  public async getUploadToken(_contractAddress: string): Promise<string> {
     return Promise.resolve("mock-token");
   }
 
@@ -96,10 +91,10 @@ export class MockStorage implements IStorage {
     return hash.replace("mock://", "fake://");
   }
 
-  public async uploadMetadata<T extends string | JsonObject>(
-    metadata: T,
+  public async uploadMetadata(
+    metadata: JsonObject,
     contractAddress?: string,
-    signerAddress?: string,
+    _signerAddress?: string,
   ): Promise<string> {
     if (typeof metadata === "string") {
       return metadata;
@@ -115,8 +110,8 @@ export class MockStorage implements IStorage {
     return metadataUris[0];
   }
 
-  public async uploadMetadataBatch<T extends string | JsonObject>(
-    metadatas: T[],
+  public async uploadMetadataBatch(
+    metadatas: JsonObject[],
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
@@ -136,7 +131,7 @@ export class MockStorage implements IStorage {
     );
     const baseUri = `${cid}/`;
     return {
-      metadataUris: metadataToUpload.map((m, i) => `${baseUri}${i}`),
+      metadataUris: metadataToUpload.map((_, i) => `${baseUri}${i}`),
       baseUri,
     };
   }
@@ -161,9 +156,7 @@ export class MockStorage implements IStorage {
     }
   }
 
-  private async batchUploadProperties<T extends string | JsonObject>(
-    metadatas: T[],
-  ): Promise<any> {
+  private async batchUploadProperties(metadatas: JsonObject[]): Promise<any> {
     if (typeof metadatas === "string") {
       return metadatas;
     }

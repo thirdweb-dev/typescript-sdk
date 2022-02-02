@@ -9,7 +9,7 @@ import {
   TW_IPFS_SERVER_URL,
 } from "../../constants/urls";
 import { IStorage } from "../interfaces/IStorage";
-import { FileOrBuffer, Json, JsonObject } from "../types";
+import { FileOrBuffer, JsonObject } from "../types";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -178,8 +178,8 @@ export class IpfsStorage implements IStorage {
    * @param files - The running array of files or buffer to upload
    * @returns - The final map of all hashes to files
    */
-  public buildFilePropertiesMap(
-    object: Json,
+  private buildFilePropertiesMap(
+    object: JsonObject,
     files: (File | Buffer)[] = [],
   ): (File | Buffer)[] {
     if (Array.isArray(object)) {
@@ -192,7 +192,7 @@ export class IpfsStorage implements IStorage {
         if (val instanceof File || val instanceof Buffer) {
           files.push(val);
         } else if (typeof val === "object") {
-          this.buildFilePropertiesMap(val, files);
+          this.buildFilePropertiesMap(val as JsonObject, files);
         }
       }
     }
@@ -210,11 +210,10 @@ export class IpfsStorage implements IStorage {
    * @param metadata - The metadata to recursively process
    * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
    */
-  public async batchUploadProperties(metadatas: Json[]) {
-    if (typeof metadatas === "string") {
-      return metadatas;
-    }
-    const filesToUpload = this.buildFilePropertiesMap(metadatas, []);
+  private async batchUploadProperties(metadatas: JsonObject[]) {
+    const filesToUpload = metadatas.flatMap((m) =>
+      this.buildFilePropertiesMap(m, []),
+    );
     if (filesToUpload.length === 0) {
       return metadatas;
     }
@@ -267,15 +266,11 @@ export class IpfsStorage implements IStorage {
     return object;
   }
 
-  public async uploadMetadata<T extends string | JsonObject>(
-    metadata: T,
+  public async uploadMetadata(
+    metadata: JsonObject,
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<string> {
-    if (typeof metadata === "string") {
-      return metadata;
-    }
-
     // since there's only single object, always use the first index
     const { metadataUris } = await this.uploadMetadataBatch(
       [metadata],
@@ -289,27 +284,15 @@ export class IpfsStorage implements IStorage {
   /**
    * @internal
    */
-  public async uploadMetadataBatch<T extends string | JsonObject>(
-    metadatas: T[],
+  public async uploadMetadataBatch(
+    metadatas: JsonObject[],
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
   ) {
-    // we only want to upload if the metadata object is not a string
-    const metadataObjects = metadatas.filter((m) => typeof m !== "string");
-    const metadataToUpload = (
-      await this.batchUploadProperties(metadataObjects)
-    ).map((m: any) => JSON.stringify(m));
-
-    // batch upload non-string metadata object
-    if (metadataToUpload.length === 0) {
-      return {
-        baseUri: "",
-        metadataUris: metadatas.filter(
-          (m) => typeof m === "string",
-        ) as string[],
-      };
-    }
+    const metadataToUpload = (await this.batchUploadProperties(metadatas)).map(
+      (m: any) => JSON.stringify(m),
+    );
 
     const { cid, fileNames } = await this.uploadBatchWithCid(
       metadataToUpload,
@@ -319,14 +302,7 @@ export class IpfsStorage implements IStorage {
     );
 
     const baseUri = `ipfs://${cid}/`;
-    const uris = [];
-    for (const metadata of metadatas) {
-      if (typeof metadata === "string") {
-        uris.push(metadata);
-      } else {
-        uris.push(`${baseUri}${fileNames.splice(0, 1)[0]}`);
-      }
-    }
+    const uris = fileNames.map((filename) => `${baseUri}${filename}`);
 
     return {
       baseUri,

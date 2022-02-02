@@ -11,7 +11,7 @@ static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
@@ -25,22 +25,22 @@ static schema: {
             trusted_forwarder: zod.ZodDefault<zod.ZodString>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
-            image?: string | undefined;
+            image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
-            merkle: Record<string, string>;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
+            merkle: Record<string, string>;
             platform_fee_basis_points: number;
             platform_fee_recipient: string;
             trusted_forwarder: string;
         }, {
-            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
-            image?: string | undefined;
+            image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
+            merkle?: Record<string, string> | undefined;
             platform_fee_basis_points?: number | undefined;
             platform_fee_recipient?: string | undefined;
             trusted_forwarder?: string | undefined;
@@ -49,7 +49,7 @@ static schema: {
         output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             image: zod.ZodOptional<zod.ZodString>;
@@ -63,24 +63,24 @@ static schema: {
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
-            merkle: Record<string, string>;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
+            merkle: Record<string, string>;
         }, {
             [x: string]: Json;
-            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
+            merkle?: Record<string, string> | undefined;
             name: string;
         }>;
         input: zod.ZodObject<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
@@ -89,19 +89,19 @@ static schema: {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
-            image?: string | undefined;
+            image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
-            merkle: Record<string, string>;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
+            merkle: Record<string, string>;
         }, {
-            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
-            image?: string | undefined;
+            image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
+            merkle?: Record<string, string> | undefined;
             name: string;
         }>;
         tokenInput: zod.ZodObject<zod.extendShape<{

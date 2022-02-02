@@ -7,7 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-declare type Json = JsonLiteral | {
-    [key: string]: Json;
-} | Json[];
+declare type Json = JsonLiteralOrFileOrBuffer | JsonObject | Json[];
 ```
