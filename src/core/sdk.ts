@@ -30,7 +30,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   constructor(
     network: NetworkOrSignerOrProvider,
     options: SDKOptions,
-    storage: IStorage = new IpfsStorage(DEFAULT_IPFS_GATEWAY),
+    storage: IStorage = new IpfsStorage(),
   ) {
     super(network, options);
     this.factory = new ModuleFactory(network, storage, options);

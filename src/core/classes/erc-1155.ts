@@ -1,6 +1,11 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721, TokenERC721 } from "@3rdweb/contracts";
-import { BigNumber, BigNumberish } from "ethers";
+import {
+  DropERC1155,
+  DropERC721,
+  TokenERC1155,
+  TokenERC721,
+} from "@3rdweb/contracts";
+import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import {
   CommonNFTOutput,
   NFTMetadata,
@@ -16,9 +21,13 @@ import { NetworkOrSignerOrProvider, TransactionResultPromise } from "../types";
 import { NotFoundError, RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/module";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
-import { fetchTokenMetadata, getTokenMetadata } from "../../common/nft";
+import {
+  BundleDropMetadata,
+  BundleMetadataOutputSchema,
+} from "../../schema/tokens/bundle";
+import { fetchTokenMetadata } from "../../common/nft";
 
-export class Erc721<T extends DropERC721 | TokenERC721>
+export class Erc1155<T extends DropERC1155 | TokenERC1155>
   implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
@@ -69,12 +78,17 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
    */
-  public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
-    const [owner, metadata] = await Promise.all([
-      this.ownerOf(tokenId).catch(() => AddressZero),
+  public async get(tokenId: string): Promise<BundleDropMetadata> {
+    const [supply, metadata] = await Promise.all([
+      this.contractWrapper.readContract
+        .totalSupply(tokenId)
+        .catch(() => BigNumber.from(0)),
       this.getTokenMetadata(tokenId),
     ]);
-    return { owner, metadata };
+    return BundleMetadataOutputSchema.parse({
+      supply,
+      metadata,
+    });
   }
 
   /**
@@ -87,24 +101,14 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    * const nfts = await module.getAll();
    * console.log(nfts);
    * ```
-   * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
    */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<NFTMetadataOwner[]> {
-    const start = BigNumber.from(queryParams?.start || 0).toNumber();
-    const count = BigNumber.from(
-      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
+  public async getAll(): Promise<BundleDropMetadata[]> {
+    const maxId = (
+      await this.contractWrapper.readContract.nextTokenIdToMint()
     ).toNumber();
-    const maxId = Math.min(
-      (await this.contractWrapper.readContract.nextTokenIdToMint()).toNumber(),
-      start + count,
-    );
     return await Promise.all(
-      Array.from(Array(maxId - start).keys()).map((i) =>
-        this.get((start + i).toString()),
-      ),
+      Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
     );
   }
 
@@ -123,19 +127,26 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    *
    * @returns The NFT metadata for all NFTs in the module.
    */
-  public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
+  public async getOwned(_address?: string): Promise<BundleDropMetadata[]> {
     const address = _address
       ? _address
       : await this.contractWrapper.getSignerAddress();
-    const balance = await this.contractWrapper.readContract.balanceOf(address);
-    const indices = Array.from(Array(balance.toNumber()).keys());
-    const tokenIds = await Promise.all(
-      indices.map((i) =>
-        this.contractWrapper.readContract.tokenOfOwnerByIndex(address, i),
-      ),
+    const maxId = await this.contractWrapper.readContract.nextTokenIdToMint();
+    const balances = await this.contractWrapper.readContract.balanceOfBatch(
+      Array(maxId.toNumber()).fill(address),
+      Array.from(Array(maxId.toNumber()).keys()),
     );
+
+    const ownedBalances = balances
+      .map((b, i) => {
+        return {
+          tokenId: i,
+          balance: b,
+        };
+      })
+      .filter((b) => b.balance.gt(0));
     return await Promise.all(
-      tokenIds.map((tokenId) => this.get(tokenId.toString())),
+      ownedBalances.map(async (b) => await this.get(b.tokenId.toString())),
     );
   }
 
@@ -172,15 +183,21 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    * console.log(balance);
    * ```
    */
-  public async balanceOf(address: string): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.balanceOf(address);
+  public async balanceOf(
+    address: string,
+    tokenId: BigNumberish,
+  ): Promise<BigNumber> {
+    return await this.contractWrapper.readContract.balanceOf(address, tokenId);
   }
 
   /**
    * Get NFT Balance for the currently connected wallet
    */
-  public async balance(): Promise<BigNumber> {
-    return await this.balanceOf(await this.contractWrapper.getSignerAddress());
+  public async balance(tokenId: BigNumberish): Promise<BigNumber> {
+    return await this.balanceOf(
+      await this.contractWrapper.getSignerAddress(),
+      tokenId,
+    );
   }
 
   /**
@@ -225,6 +242,8 @@ export class Erc721<T extends DropERC721 | TokenERC721>
   public async transfer(
     to: string,
     tokenId: BigNumberish,
+    amount: BigNumberish,
+    data: BytesLike = [0],
   ): TransactionResultPromise {
     if (await this.isTransferRestricted()) {
       throw new RestrictedTransferError(
@@ -233,10 +252,13 @@ export class Erc721<T extends DropERC721 | TokenERC721>
     }
     const from = await this.contractWrapper.getSignerAddress();
     return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "safeTransferFrom(address,address,uint256)",
-        [from, to, tokenId],
-      ),
+      receipt: await this.contractWrapper.sendTransaction("safeTransferFrom", [
+        from,
+        to,
+        tokenId,
+        amount,
+        data,
+      ]),
     };
   }
 
@@ -271,7 +293,7 @@ export class Erc721<T extends DropERC721 | TokenERC721>
 
   /**
    * Set whether NFTs in this Module can be transferred or not.
-   * @param restricted - restricted whether to restrict or allow transfers
+   * @param restricted whether to restrict or allow transfers
    */
   public async setRestrictedTransfer(
     restricted = false,
@@ -291,7 +313,7 @@ export class Erc721<T extends DropERC721 | TokenERC721>
   protected async getTokenMetadata(
     tokenId: BigNumberish,
   ): Promise<NFTMetadata> {
-    const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
+    const tokenUri = await this.contractWrapper.readContract.uri(tokenId);
     if (!tokenUri) {
       throw new NotFoundError();
     }
