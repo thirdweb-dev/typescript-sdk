@@ -71,6 +71,7 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     deployMarketplaceModule(metadata: MarketplaceModuleMetadata): Promise<MarketplaceModule>;
     deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
     deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
+    deployRoyaltySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
     deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
     deployTokenModule(metadata: TokenModuleMetadata): Promise<TokenModule>;
     deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
@@ -1953,7 +1954,7 @@ export class SplitsModule extends Module<Royalty> implements ISplitsModule {
 // @public (undocumented)
 export class SplitsModuleMetadata extends CommonModuleMetadata {
     // (undocumented)
-    isRoyalty: boolean;
+    isRoyalty?: boolean;
     // (undocumented)
     recipientSplits: NewSplitRecipient[];
 }

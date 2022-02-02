@@ -1,6 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
-import { PackModule } from "../src/modules/pack";
 import { SplitsModule } from "../src/modules/royalty";
 import { appModule, sdk, signers } from "./before.test";
 

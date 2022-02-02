@@ -15,6 +15,6 @@ export declare class SplitsModuleMetadata extends CommonModuleMetadata
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [isRoyalty](./sdk.splitsmodulemetadata.isroyalty.md) |  | boolean |  |
+|  [isRoyalty?](./sdk.splitsmodulemetadata.isroyalty.md) |  | boolean | <i>(Optional)</i> |
 |  [recipientSplits](./sdk.splitsmodulemetadata.recipientsplits.md) |  | [NewSplitRecipient](./sdk.newsplitrecipient.md)<!-- -->\[\] |  |
 

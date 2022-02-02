@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-isRoyalty: boolean;
+isRoyalty?: boolean;
 ```
