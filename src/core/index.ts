@@ -1,13 +1,6 @@
 import { Forwarder__factory } from "@3rdweb/contracts";
-import {
-  ExternalProvider,
-  JsonRpcProvider,
-  JsonRpcSigner,
-  Provider,
-  Web3Provider,
-} from "@ethersproject/providers";
+import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
-import { signERC2612Permit } from "eth-permit";
 import {
   BaseContract,
   BigNumber,
@@ -37,6 +30,8 @@ import {
 } from "../common/forwarder";
 import { getGasPriceForChain } from "../common/gas-price";
 import { invariant } from "../common/invariant";
+import { signEIP2612Permit } from "../common/permit";
+import { signTypedData } from "../common/sign";
 import { ISDKOptions, IThirdwebSdk } from "../interfaces";
 import { IStorage } from "../interfaces/IStorage";
 import { AppModule } from "../modules/app";
@@ -105,6 +100,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
         apiId: "",
         apiKey: "",
         deadlineSeconds: 3600,
+        gasTier: "RAPID",
       },
     },
     gaslessSendFunction: this.defaultGaslessSendFunction.bind(this),
@@ -617,7 +613,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
       signature,
     });
     const response = await fetch(
-      "https://api.biconomy.io/api/v2/meta-tx/native",
+      this.options.transactionRelayerUrl ||
+        "https://api.biconomy.io/api/v2/meta-tx/native",
       {
         method: "POST",
         body: JSON.stringify({
@@ -626,6 +623,7 @@ export class ThirdwebSDK implements IThirdwebSdk {
           params: [request, signature],
           to: transaction.to,
           gasLimit: transaction.gasLimit.toHexString(),
+          gasType: this.options.gasless.biconomy.gasTier,
         }),
         headers: {
           "x-api-key": this.options.gasless.biconomy.apiKey,
@@ -637,7 +635,9 @@ export class ThirdwebSDK implements IThirdwebSdk {
     if (response.ok) {
       const resp = await response.json();
       if (!resp.txHash) {
-        throw new Error(`relay transaction failed: ${resp.log}`);
+        throw new Error(
+          `relay transaction failed: ${resp.log || resp.message}`,
+        );
       }
       return resp.txHash;
     }
@@ -689,50 +689,42 @@ export class ThirdwebSDK implements IThirdwebSdk {
     // and if the token supports permit, then we use permit for gasless instead of approve.
     if (
       transaction.functionName === "approve" &&
-      transaction.functionArgs.length === 2 &&
-      contract.interface.functions["approve(address,uint256)"] &&
-      contract.interface.functions[
-        "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"
-      ]
+      transaction.functionArgs.length === 2
     ) {
       const spender = transaction.functionArgs[0];
       const amount = transaction.functionArgs[1];
 
-      const permit = await signERC2612Permit(
+      // TODO: support DAI permit by signDAIPermit
+      const { message: permit, signature: sig } = await signEIP2612Permit(
         signer,
         contract.address,
         transaction.from,
         spender,
         amount,
       );
-      message = { to: contract.address, ...permit };
-      signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
+
+      const { r, s, v } = ethers.utils.splitSignature(sig);
+      message = {
+        to: contract.address,
+        owner: permit.owner,
+        spender: permit.spender,
+        value: BigNumber.from(permit.value).toString(),
+        nonce: BigNumber.from(permit.nonce).toString(),
+        deadline: BigNumber.from(permit.deadline).toString(),
+        r,
+        s,
+        v,
+      };
+
+      signature = sig;
     } else {
-      // wallet connect special 🦋
-      // signing the message through wallet provider
-      if (
-        (
-          (signer?.provider as Web3Provider)?.provider as ExternalProvider & {
-            isWalletConnect?: boolean;
-          }
-        )?.isWalletConnect
-      ) {
-        const payload = ethers.utils._TypedDataEncoder.getPayload(
-          domain,
-          types,
-          message,
-        );
-        signature = await (signer?.provider as JsonRpcProvider).send(
-          "eth_signTypedData",
-          [transaction.from.toLowerCase(), JSON.stringify(payload)],
-        );
-      } else {
-        signature = await (signer as JsonRpcSigner)._signTypedData(
-          domain,
-          types,
-          message,
-        );
-      }
+      const { signature: sig } = await signTypedData(
+        signer,
+        domain,
+        types,
+        message,
+      );
+      signature = sig;
     }
 
     this.event.emit(EventType.Signature, {
@@ -767,7 +759,6 @@ export class ThirdwebSDK implements IThirdwebSdk {
       type: messageType,
     });
 
-    // console.log("POST", this.options.transactionRelayerUrl, body);
     const response = await fetch(this.options.transactionRelayerUrl, {
       method: "POST",
       body,

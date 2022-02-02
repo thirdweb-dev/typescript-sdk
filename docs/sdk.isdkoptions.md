@@ -16,7 +16,7 @@ export interface ISDKOptions
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [gasless](./sdk.isdkoptions.gasless.md) | { biconomy: { apiId: string; apiKey: string; deadlineSeconds?: number; }; } | Optional gasless transaction configuration deadlineSeconds is the number of seconds before the transaction is considered expired. |
+|  [gasless](./sdk.isdkoptions.gasless.md) | { biconomy: { apiId: string; apiKey: string; deadlineSeconds?: number; gasTier: "NORMAL" \| "FAST" \| "RAPID"; }; } | Optional gasless transaction configuration deadlineSeconds is the number of seconds before the transaction is considered expired. |
 |  [gaslessSendFunction](./sdk.isdkoptions.gaslesssendfunction.md) | (contract: BaseContract, transaction: [GaslessTransaction](./sdk.gaslesstransaction.md)<!-- -->) =&gt; Promise&lt;string&gt; | Optional function for sending transaction to a relayer |
 |  [gasSpeed](./sdk.isdkoptions.gasspeed.md) | string | Optional default speed setting for transactions |
 |  [ipfsGatewayUrl](./sdk.isdkoptions.ipfsgatewayurl.md) | string | An optional IPFS Gateway. (Default: <code>https://cloudflare-ipfs.com/ipfs/</code>). |
