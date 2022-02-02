@@ -13,3 +13,4 @@ test/test_dump/*
 .yalc/
 old_src/
 yalc.lock
+.env
