@@ -1056,7 +1056,7 @@ export interface ISDKOptions {
             apiId: string;
             apiKey: string;
             deadlineSeconds?: number;
-            gasTier: "NORMAL" | "FAST" | "RAPID";
+            gasTier?: "NORMAL" | "FAST" | "RAPID";
         };
     };
     gaslessSendFunction: (contract: BaseContract, transaction: GaslessTransaction) => Promise<string>;
