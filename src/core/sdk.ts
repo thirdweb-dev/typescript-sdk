@@ -5,7 +5,6 @@ import { IStorage } from "./interfaces/IStorage";
 import { DropErc721Module, MODULES_MAP } from "../modules";
 import { SDKOptions } from "../schema/sdk-options";
 import { ModuleFactory } from "./classes/factory";
-// import { ModuleFactory } from "./classes/factory";
 import { IpfsStorage } from "./classes/ipfs-storage";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {

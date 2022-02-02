@@ -267,7 +267,7 @@ export class Erc721<T extends DropERC721 | TokenERC721>
 
   /**
    * Set whether NFTs in this Module can be transferred or not.
-   * @param restricted whether to restrict or allow transfers
+   * @param restricted - restricted whether to restrict or allow transfers
    */
   public async setRestrictedTransfer(
     restricted = false,

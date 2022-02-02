@@ -2,9 +2,9 @@ import { BigNumber } from "ethers";
 import { z } from "zod";
 import { Json } from "../core/types";
 
-if (!global.File) {
+if (!globalThis.File) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  global.File = require("@web-std/file").File;
+  globalThis.File = require("@web-std/file").File;
 }
 
 export const FileBufferOrStringSchema = z.union([

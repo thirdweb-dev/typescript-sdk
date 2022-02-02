@@ -5,7 +5,7 @@ import {
   SignaturePayload,
 } from "../schema/modules/common/signature";
 import { NFTMetadataInput, NFTMetadataOwner } from "../schema/tokens/common";
-import {
+import type {
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResultPromise,
