@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { PackModule } from "../src/modules/pack";
 import { SplitsModule } from "../src/modules/royalty";
 import { appModule, sdk, signers } from "./before.test";
@@ -110,5 +110,34 @@ describe("Splits Module", async () => {
       bps.toString(),
       "The royalty BPS should be 10000 (10%)",
     );
+  });
+
+  describe("isRoyalty flag", () => {
+    const deploy = async (isRoyalty: boolean) => {
+      return await appModule.deploySplitsModule({
+        isRoyalty,
+        name: "test",
+        recipientSplits: [
+          {
+            address: bobWallet.address,
+            shares: 1,
+          },
+        ],
+      });
+    };
+
+    it("should return true if the module is a royalty split", async () => {
+      const module = await deploy(true);
+      const { metadata } = await module.getMetadata();
+      expect(metadata).to.have.property("is_royalty");
+      expect(metadata.is_royalty).to.equal(true);
+    });
+
+    it("should return true if the module is a royalty split", async () => {
+      const module = await deploy(false);
+      const { metadata } = await module.getMetadata();
+      expect(metadata).to.have.property("is_royalty");
+      expect(metadata.is_royalty).to.equal(false);
+    });
   });
 });
