@@ -74,9 +74,12 @@ export class IpfsStorage implements IStorage {
   ): Promise<CidWithFileName> {
     const token = await this.getUploadToken(contractAddress || "");
     const metadata = {
-      sdk: "typescript",
-      contractAddress,
-      signerAddress,
+      name: `CONSOLE-TS-SDK-${contractAddress}`,
+      keyvalues: {
+        sdk: "typescript",
+        contractAddress,
+        signerAddress,
+      },
     };
     const data = new FormData();
     const fileNames: string[] = [];
