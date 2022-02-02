@@ -148,7 +148,7 @@ export class ContractRoles<
    * Throws an error if an address is missing the roles specified.
    *
    * @param roles - The roles to check
-   * @param address - The address to check\
+   * @param address - The address to check
    *
    * @internal
    */

@@ -1,4 +1,3 @@
-/* eslint-disable line-comment-position */
 import { TWFactory, TWFactory__factory } from "@3rdweb/contracts";
 import { ethers } from "ethers";
 import { z } from "zod";

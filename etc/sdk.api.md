@@ -108,8 +108,6 @@ export class DropErc721Module extends Erc721<DropERC721> {
     claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     static contractFactory: typeof DropERC721__factory;
-    // Warning: (ae-forgotten-export) The symbol "NFTMetadataInput" needs to be exported by the entry point index.d.ts
-    //
     // @beta
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // Warning: (ae-forgotten-export) The symbol "QueryAllParams" needs to be exported by the entry point index.d.ts
@@ -404,6 +402,33 @@ export class InvalidAddressError extends Error {
 }
 
 // @public (undocumented)
+export class IpfsStorage implements IStorage {
+    constructor(gatewayUrl?: string);
+    // @internal
+    batchUploadProperties(metadatas: Json[]): Promise<Record<string, any>>;
+    buildFilePropertiesMap(object: Json, files?: (File | Buffer)[]): (File | Buffer)[];
+    // (undocumented)
+    canResolve(uri: string): boolean;
+    // (undocumented)
+    get(hash: string): Promise<string>;
+    // (undocumented)
+    getUploadToken(contractAddress: string): Promise<string>;
+    // @internal
+    resolveFullUrl(ipfsHash: string): string;
+    // (undocumented)
+    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
+    // (undocumented)
+    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
+    // (undocumented)
+    uploadMetadata<T extends string | JsonObject>(metadata: T, contractAddress?: string, signerAddress?: string): Promise<string>;
+    // @internal (undocumented)
+    uploadMetadataBatch<T extends string | JsonObject>(metadatas: T[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<{
+        baseUri: string;
+        metadataUris: string[];
+    }>;
+}
+
+// @public (undocumented)
 export interface IStorage {
     canResolve(uri: string): boolean;
     get(hash: string): Promise<string>;
@@ -467,6 +492,11 @@ export type ModuleType = keyof typeof MODULES_MAP;
 // @public (undocumented)
 export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 
+// Warning: (ae-forgotten-export) The symbol "CommonNFTInput" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type NFTMetadataInput = z.input<typeof CommonNFTInput>;
+
 // @public (undocumented)
 export class NotEnoughTokensError extends Error {
     // @internal
@@ -499,6 +529,11 @@ export class QuantityAboveLimitError extends Error {
 export class RestrictedTransferError extends Error {
     constructor(assetAddress?: string);
 }
+
+// Warning: (ae-forgotten-export) The symbol "roleMap" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type Role = keyof typeof roleMap;
 
 // @public (undocumented)
 export type SignerOrProvider = Signer | Provider;
@@ -585,7 +620,7 @@ export class WrongListingTypeError extends Error {
 
 // Warnings were encountered during analysis:
 //
-// dist/IStorage-c0b9f7f2.d.ts:2045:5 - (ae-forgotten-export) The symbol "TokenErc721Module" needs to be exported by the entry point index.d.ts
+// dist/IStorage-b03dc443.d.ts:2045:5 - (ae-forgotten-export) The symbol "TokenErc721Module" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

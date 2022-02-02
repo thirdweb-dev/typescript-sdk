@@ -1,7 +1,7 @@
 import { BigNumberishSchema } from "../../shared";
 import { z } from "zod";
 import { CommonNFTInput } from "../../tokens/common";
-import { randomUUID } from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
 export const SignaturePayloadInput = z.object({
   metadata: CommonNFTInput,
@@ -10,7 +10,7 @@ export const SignaturePayloadInput = z.object({
   currencyAddress: z.string(),
   mintStartTimeEpochSeconds: BigNumberishSchema,
   mintEndTimeEpochSeconds: BigNumberishSchema,
-  id: z.string().default(randomUUID()),
+  id: z.string().default(uuidv4()),
 });
 
 export const SignaturePayloadOutput = SignaturePayloadInput.extend({

@@ -20,6 +20,7 @@
 |  [FileNameMissingError](./sdk.filenamemissingerror.md) |  |
 |  [FunctionDeprecatedError](./sdk.functiondeprecatederror.md) |  |
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
+|  [IpfsStorage](./sdk.ipfsstorage.md) |  |
 |  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
@@ -59,7 +60,9 @@
 |  [ModuleForModuleType](./sdk.moduleformoduletype.md) |  |
 |  [ModuleType](./sdk.moduletype.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
+|  [Role](./sdk.role.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultPromise](./sdk.transactionresultpromise.md) |  |

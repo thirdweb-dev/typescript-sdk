@@ -11,9 +11,9 @@ import {
 import { IStorage } from "../interfaces/IStorage";
 import { FileOrBuffer, Json, JsonObject } from "../types";
 
-if (!global.FormData) {
+if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  global.FormData = require("form-data");
+  globalThis.FormData = require("form-data");
 }
 
 // const thirdwebIpfsServerUrl = "http://localhost:3002";

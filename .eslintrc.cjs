@@ -46,7 +46,7 @@ module.exports = {
       { beforeColon: false, afterColon: true, mode: "strict" },
     ],
     "keyword-spacing": ["error", { before: true, after: true }],
-    "line-comment-position": "error",
+    "line-comment-position": "off",
     "no-alert": "error",
     "no-case-declarations": "off",
 

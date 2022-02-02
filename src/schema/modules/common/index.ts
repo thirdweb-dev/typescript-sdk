@@ -1,4 +1,3 @@
-/* eslint-disable line-comment-position */
 import { BasisPointsSchema, JsonSchema } from "../../shared";
 import { AddressZero } from "@ethersproject/constants";
 import { z } from "zod";
