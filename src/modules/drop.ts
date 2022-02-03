@@ -605,9 +605,7 @@ export class DropModule
       metadata["merkle"] = merkleInfo;
     } else if (
       factory.allSnapshots().length === 0 &&
-      conditions
-        .filter((c) => c.merkleRoot !== defaultMerkleRoot)
-        .map((c) => c.merkleRoot).length === 0
+      conditions.filter((c) => c.merkleRoot !== defaultMerkleRoot).length === 0
     ) {
       metadata["merkle"] = {};
     }
