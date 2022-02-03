@@ -5,7 +5,6 @@ import { ContractMetadata } from "./contract-metadata";
 import {
   DropERC1155,
   IDropERC1155,
-  IDropERC721,
   IERC20,
   IERC20__factory,
 } from "@3rdweb/contracts";

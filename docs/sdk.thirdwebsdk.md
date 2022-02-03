@@ -28,6 +28,7 @@ declare class ThirdwebSDK extends RPCConnectionHandler
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [getBundleDropModule(address)](./sdk.thirdwebsdk.getbundledropmodule.md) |  | Get an instance of a Bundle Drop module |
 |  [getDropModule(moduleAddress)](./sdk.thirdwebsdk.getdropmodule.md) |  | Get an instance of a Drop module |
 |  [getNFTModule(address)](./sdk.thirdwebsdk.getnftmodule.md) |  | Get an instance of a NFT Collection module |
 |  [resolveModuleType(moduleAddress)](./sdk.thirdwebsdk.resolvemoduletype.md) |  |  |

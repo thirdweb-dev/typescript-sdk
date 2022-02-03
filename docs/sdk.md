@@ -12,7 +12,7 @@
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
 |  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
-|  [DropErc721ClaimConditions](./sdk.droperc721claimconditions.md) |  |
+|  [DropErc1155Module](./sdk.droperc1155module.md) |  |
 |  [DropErc721Module](./sdk.droperc721module.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [DuplicateFileNameError](./sdk.duplicatefilenameerror.md) |  |
 |  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
@@ -29,6 +29,7 @@
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
+|  [TokenErc721Module](./sdk.tokenerc721module.md) | Create a collection of one-of-one NFTs. |
 |  [UploadError](./sdk.uploaderror.md) |  |
 |  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 

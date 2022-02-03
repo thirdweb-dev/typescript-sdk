@@ -106,8 +106,7 @@
   "author": "NFTLabs",
   "tsup": {
     "entry": [
-      "src/index.ts",
-      "src/modules/*.ts"
+      "src/index.ts"
     ],
     "splitting": false,
     "sourcemap": true,
