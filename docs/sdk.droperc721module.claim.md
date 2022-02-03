@@ -23,5 +23,5 @@ claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWi
 
 Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
 
-- Receipt for the transaction
+- an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
 

@@ -154,20 +154,20 @@ export class DropErc721Module extends Erc721<DropERC721> {
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
+            merkle: Record<string, string>;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
-            merkle: Record<string, string>;
             platform_fee_basis_points: number;
             platform_fee_recipient: string;
             trusted_forwarder: string;
         }, {
+            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
-            merkle?: Record<string, string> | undefined;
             platform_fee_basis_points?: number | undefined;
             platform_fee_recipient?: string | undefined;
             trusted_forwarder?: string | undefined;
@@ -190,18 +190,18 @@ export class DropErc721Module extends Erc721<DropERC721> {
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
+            merkle: Record<string, string>;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
-            merkle: Record<string, string>;
         }, {
             [x: string]: Json;
+            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
-            merkle?: Record<string, string> | undefined;
             name: string;
         }>;
         input: zod.ZodObject<zod.extendShape<zod.extendShape<{
@@ -218,107 +218,18 @@ export class DropErc721Module extends Erc721<DropERC721> {
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
+            merkle: Record<string, string>;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
-            merkle: Record<string, string>;
         }, {
+            merkle?: Record<string, string> | undefined;
             description?: string | undefined;
             image?: string | File | Buffer | undefined;
             external_link?: string | undefined;
             seller_fee_basis_points?: number | undefined;
             fee_recipient?: string | undefined;
-            merkle?: Record<string, string> | undefined;
             name: string;
-        }>;
-        tokenInput: zod.ZodObject<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
-            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
-        }, {
-            animation_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
-            background_color: zod.ZodOptional<zod.ZodEffects<zod.ZodString, string, string>>;
-            properties: zod.ZodEffects<zod.ZodEffects<zod.ZodEffects<zod.ZodOptional<zod.ZodArray<zod.ZodObject<{
-                key: zod.ZodString;
-                value: zod.ZodUnion<[zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>, zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>]>;
-            }, "strip", zod.ZodTypeAny, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }>, "many">>, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined>, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined>, Record<string, string | number | boolean | File | Buffer | null> | undefined, {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined>;
-        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | File | Buffer | undefined;
-            external_url?: string | File | Buffer | undefined;
-            animation_url?: string | File | Buffer | undefined;
-            background_color?: string | undefined;
-            properties?: Record<string, string | number | boolean | File | Buffer | null> | undefined;
-            name: string;
-        }, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | File | Buffer | undefined;
-            external_url?: string | File | Buffer | undefined;
-            animation_url?: string | File | Buffer | undefined;
-            background_color?: string | undefined;
-            properties?: {
-                value: string | number | boolean | File | Buffer | null;
-                key: string;
-            }[] | undefined;
-            name: string;
-        }>;
-        tokenOutput: zod.ZodObject<zod.extendShape<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
-            external_url: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
-        }, {
-            id: zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>;
-            uri: zod.ZodString;
-            image: zod.ZodOptional<zod.ZodString>;
-            external_url: zod.ZodOptional<zod.ZodString>;
-        }>, {
-            animation_url: zod.ZodOptional<zod.ZodString>;
-            properties: zod.ZodOptional<zod.ZodRecord<zod.ZodString, zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBoolean, zod.ZodNull]>>>;
-        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_url?: string | undefined;
-            animation_url?: string | undefined;
-            properties?: Record<string, string | number | boolean | null> | undefined;
-            name: string;
-            id: BigNumber;
-            uri: string;
-        }, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_url?: string | undefined;
-            animation_url?: string | undefined;
-            properties?: Record<string, string | number | boolean | null> | undefined;
-            name: string;
-            id: BigNumber;
-            uri: string;
         }>;
     };
     totalClaimedSupply(): Promise<BigNumber>;
@@ -614,7 +525,7 @@ export class WrongListingTypeError extends Error {
 
 // Warnings were encountered during analysis:
 //
-// dist/IStorage-f85b6eaa.d.ts:2045:5 - (ae-forgotten-export) The symbol "TokenErc721Module" needs to be exported by the entry point index.d.ts
+// dist/IStorage-bace49a8.d.ts:1777:5 - (ae-forgotten-export) The symbol "TokenErc721Module" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
