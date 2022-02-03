@@ -1,4 +1,4 @@
-import { DropErc721ClaimConditions } from "./drop-erc721-claim-conditions";
+import { DropErc721ClaimConditions } from "../core/classes/drop-erc721-claim-conditions";
 import { DropErc721Module } from "./drop-erc-721";
 import { TokenErc721Module } from "./token-erc-721";
 

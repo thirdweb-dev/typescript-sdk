@@ -1,14 +1,7 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import {
-  DropERC721,
-  DropERC721__factory,
-  IERC20,
-  IERC20__factory,
-} from "@3rdweb/contracts";
+import { DropERC721, DropERC721__factory } from "@3rdweb/contracts";
 import { hexZeroPad } from "@ethersproject/bytes";
-import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
-import { isNativeToken } from "../common/currency";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -17,7 +10,6 @@ import {
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
 } from "../core/types";
-import { SnapshotInputSchema } from "../schema/modules/common/snapshots";
 import { DropErc721ModuleSchema } from "../schema/modules/drop-erc721";
 import { SDKOptions } from "../schema/sdk-options";
 import {
@@ -26,9 +18,10 @@ import {
   NFTMetadataOwner,
 } from "../schema/tokens/common";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
-import { DropErc721ClaimConditions } from "./drop-erc721-claim-conditions";
+import { DropErc721ClaimConditions } from "../core/classes/drop-erc721-claim-conditions";
 import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { prepareClaim } from "../common/claim-conditions";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -242,7 +235,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
    * @param quantity - Quantity of the tokens you want to claim
    * @param proofs - Array of proofs
    *
-   * @returns - Receipt for the transaction
+   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   public async claimTo(
     destinationAddress: string,
@@ -278,7 +271,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
    * @param quantity - Quantity of the tokens you want to claim
    * @param proofs - Array of proofs
    *
-   * @returns - Receipt for the transaction
+   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   public async claim(
     quantity: BigNumberish,
@@ -307,55 +300,14 @@ export class DropErc721Module extends Erc721<DropERC721> {
     overrides: CallOverrides;
     proofs: BytesLike[];
   }> {
-    const mintCondition = await this.claimConditions.getActive();
-    const metadata = await this.metadata.get();
-    const addressToClaim = await this.contractWrapper.getSignerAddress();
-
-    if (!mintCondition.merkleRootHash.toString().startsWith(AddressZero)) {
-      const snapshot = await this.storage.get(
-        metadata?.merkle[mintCondition.merkleRootHash.toString()],
-      );
-      const snapshotData = SnapshotInputSchema.parse(snapshot);
-      const item = snapshotData.claims.find(
-        (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
-      );
-      if (item === undefined) {
-        throw new Error("No claim found for this address");
-      }
-      proofs = item.proof;
-    }
-
-    const overrides = (await this.contractWrapper.getCallOverrides()) || {};
-    if (mintCondition.price.gt(0)) {
-      if (isNativeToken(mintCondition.currencyAddress)) {
-        overrides["value"] = BigNumber.from(mintCondition.price).mul(quantity);
-      } else {
-        const signer = this.contractWrapper.getSigner();
-        const provider = this.contractWrapper.getProvider();
-        const erc20 = new ContractWrapper<IERC20>(
-          signer || provider,
-          mintCondition.currencyAddress,
-          IERC20__factory.abi,
-          this.options,
-        );
-        const owner = await this.contractWrapper.getSignerAddress();
-        const spender = this.contractWrapper.readContract.address;
-        const allowance = await erc20.readContract.allowance(owner, spender);
-        const totalPrice = BigNumber.from(mintCondition.price).mul(
-          BigNumber.from(quantity),
-        );
-        if (allowance.lt(totalPrice)) {
-          await erc20.sendTransaction("approve", [
-            spender,
-            allowance.add(totalPrice),
-          ]);
-        }
-      }
-    }
-    return {
-      overrides,
+    return prepareClaim(
+      quantity,
+      await this.claimConditions.getActive(),
+      (await this.metadata.get()).merkle,
+      this.contractWrapper,
+      this.storage,
       proofs,
-    };
+    );
   }
 }
 

@@ -7,18 +7,18 @@ import {
 } from "./common";
 import { MerkleSchema } from "./common/snapshots";
 
-export const DropErc721ModuleInput =
+export const DropErc1155ModuleInput =
   CommonModuleSchema.merge(CommonRoyaltySchema).merge(MerkleSchema);
 
-export const DropErc721ModuleOutput =
+export const DropErc1155ModuleOutput =
   CommonModuleOutputSchema.merge(CommonRoyaltySchema).merge(MerkleSchema);
 
-export const DropErc721ModuleDeploy = DropErc721ModuleInput.merge(
+export const DropErc1155ModuleDeploy = DropErc1155ModuleInput.merge(
   CommonPlatformFeeSchema,
 ).merge(CommonTrustedForwarderSchema);
 
-export const DropErc721ModuleSchema = {
-  deploy: DropErc721ModuleDeploy,
-  output: DropErc721ModuleOutput,
-  input: DropErc721ModuleInput,
+export const DropErc1155ModuleSchema = {
+  deploy: DropErc1155ModuleDeploy,
+  output: DropErc1155ModuleOutput,
+  input: DropErc1155ModuleInput,
 };

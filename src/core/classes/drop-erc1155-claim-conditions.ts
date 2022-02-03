@@ -1,40 +1,41 @@
-import { IStorage } from "../core/interfaces/IStorage";
-import { SnapshotSchema } from "../schema/modules/common/snapshots";
-import { DropErc721ModuleSchema } from "../schema/modules/drop-erc721";
-import { ContractMetadata } from "../core/classes/contract-metadata";
+import { IStorage } from "../interfaces/IStorage";
+import { SnapshotSchema } from "../../schema/modules/common/snapshots";
+import { DropErc721ModuleSchema } from "../../schema/modules/drop-erc721";
+import { ContractMetadata } from "./contract-metadata";
 import {
-  DropERC721,
+  DropERC1155,
+  IDropERC1155,
   IDropERC721,
   IERC20,
   IERC20__factory,
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { isNativeToken, NATIVE_TOKEN_ADDRESS } from "../common/currency";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { isNativeToken, NATIVE_TOKEN_ADDRESS } from "../../common/currency";
+import { ContractWrapper } from "./contract-wrapper";
 import {
   ClaimCondition,
   ClaimConditionInput,
   FilledConditionInput,
   SnapshotInfo,
-} from "../types";
+} from "../../types";
 import deepEqual from "deep-equal";
-import { ClaimEligibility } from "../enums";
-import { createSnapshot } from "../common";
+import { ClaimEligibility } from "../../enums";
+import { createSnapshot } from "../../common";
 import {
   ClaimConditionInputSchema,
   ClaimConditionOutputSchema,
-} from "../schema/modules/common/claim-conditions";
-import { TransactionResultPromise } from "../core";
+} from "../../schema/modules/common/claim-conditions";
+import { TransactionResultPromise } from "../index";
 
-export class DropErc721ClaimConditions {
+export class DropErc1155ClaimConditions {
   private contractWrapper;
   private metadata;
   private storage: IStorage;
 
   constructor(
-    contractWrapper: ContractWrapper<DropERC721>,
-    metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>,
+    contractWrapper: ContractWrapper<DropERC1155>,
+    metadata: ContractMetadata<DropERC1155, typeof DropErc721ModuleSchema>,
     storage: IStorage,
   ) {
     this.storage = storage;
@@ -51,10 +52,13 @@ export class DropErc721ClaimConditions {
    *
    * @returns the claim condition metadata
    */
-  public async getActive(): Promise<ClaimCondition> {
+  public async getActive(tokenId: BigNumberish): Promise<ClaimCondition> {
     const index =
-      await this.contractWrapper.readContract.getIndexOfActiveCondition();
+      await this.contractWrapper.readContract.getIndexOfActiveCondition(
+        tokenId,
+      );
     const mc = await this.contractWrapper.readContract.getClaimConditionAtIndex(
+      tokenId,
       index,
     );
     return await this.transformResultToClaimCondition(mc);
@@ -65,14 +69,17 @@ export class DropErc721ClaimConditions {
    *
    * @returns the claim conditions metadata
    */
-  public async getAll(): Promise<ClaimCondition[]> {
+  public async getAll(tokenId: BigNumberish): Promise<ClaimCondition[]> {
     const claimCondition =
-      await this.contractWrapper.readContract.claimConditions();
+      await this.contractWrapper.readContract.claimConditions(tokenId);
     const count = claimCondition.totalConditionCount.toNumber();
     const conditions = [];
     for (let i = 0; i < count; i++) {
       conditions.push(
-        await this.contractWrapper.readContract.getClaimConditionAtIndex(i),
+        await this.contractWrapper.readContract.getClaimConditionAtIndex(
+          tokenId,
+          i,
+        ),
       );
     }
     return Promise.all(
@@ -94,6 +101,7 @@ export class DropErc721ClaimConditions {
    * ```
    */
   public async canClaim(
+    tokenId: BigNumberish,
     quantity: BigNumberish,
     addressToCheck?: string,
   ): Promise<boolean> {
@@ -101,8 +109,13 @@ export class DropErc721ClaimConditions {
       addressToCheck = await this.contractWrapper.getSignerAddress();
     }
     return (
-      (await this.getClaimIneligibilityReasons(quantity, addressToCheck))
-        .length === 0
+      (
+        await this.getClaimIneligibilityReasons(
+          tokenId,
+          quantity,
+          addressToCheck,
+        )
+      ).length === 0
     );
   }
 
@@ -116,6 +129,7 @@ export class DropErc721ClaimConditions {
    *
    */
   public async getClaimIneligibilityReasons(
+    tokenId: BigNumberish,
     quantity: BigNumberish,
     addressToCheck?: string,
   ): Promise<ClaimEligibility[]> {
@@ -129,8 +143,8 @@ export class DropErc721ClaimConditions {
 
     try {
       [activeConditionIndex, claimCondition] = await Promise.all([
-        this.contractWrapper.readContract.getIndexOfActiveCondition(),
-        this.getActive(),
+        this.contractWrapper.readContract.getIndexOfActiveCondition(tokenId),
+        this.getActive(tokenId),
       ]);
     } catch (err: any) {
       if ((err.message as string).includes("no public mint condition.")) {
@@ -166,6 +180,7 @@ export class DropErc721ClaimConditions {
     // check for claim timestamp between claims
     const timestampForNextClaim =
       await this.contractWrapper.readContract.getTimestampForNextValidClaim(
+        tokenId,
         activeConditionIndex,
         addressToCheck,
       );
@@ -178,6 +193,7 @@ export class DropErc721ClaimConditions {
       ) {
         const balance = await this.contractWrapper.readContract.balanceOf(
           addressToCheck,
+          tokenId,
         );
         if (balance.gte(1)) {
           reasons.push(ClaimEligibility.AlreadyClaimed);
@@ -225,6 +241,7 @@ export class DropErc721ClaimConditions {
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
   public async set(
+    tokenId: BigNumberish,
     claimConditionInputs: ClaimConditionInput[],
     resetClaimEligibilityForAll = false,
   ): TransactionResultPromise {
@@ -251,9 +268,11 @@ export class DropErc721ClaimConditions {
       inputsWithSnapshots
         .map((c) => this.convertToContractModel(c))
         .sort((a, b) => {
-          if (a.startTimestamp.eq(b.startTimestamp)) {
+          const left = BigNumber.from(a.startTimestamp);
+          const right = BigNumber.from(b.startTimestamp);
+          if (left.eq(right)) {
             return 0;
-          } else if (a.startTimestamp.gt(b.startTimestamp)) {
+          } else if (left.gt(right)) {
             return 1;
           } else {
             return -1;
@@ -288,7 +307,7 @@ export class DropErc721ClaimConditions {
     encoded.push(
       this.contractWrapper.readContract.interface.encodeFunctionData(
         "setClaimConditions",
-        [sortedConditions, resetClaimEligibilityForAll],
+        [tokenId, sortedConditions, resetClaimEligibilityForAll],
       ),
     );
 
@@ -305,10 +324,11 @@ export class DropErc721ClaimConditions {
    * @param claimConditionInput the new data to update, previous data will be retained
    */
   public async update(
+    tokenId: BigNumberish,
     index: number,
     claimConditionInput: ClaimConditionInput,
   ): TransactionResultPromise {
-    const existingConditions = await this.getAll();
+    const existingConditions = await this.getAll(tokenId);
     if (index >= existingConditions.length) {
       throw Error(
         `Index out of bounds - got index: ${index} with ${existingConditions.length} conditions`,
@@ -319,7 +339,7 @@ export class DropErc721ClaimConditions {
       ...claimConditionInput,
     });
     existingConditions[index] = updatedCondition;
-    return await this.set(existingConditions);
+    return await this.set(tokenId, existingConditions);
   }
 
   /** ***************************************
@@ -327,7 +347,7 @@ export class DropErc721ClaimConditions {
    *****************************************/
 
   private async transformResultToClaimCondition(
-    pm: IDropERC721.ClaimConditionStructOutput,
+    pm: IDropERC1155.ClaimConditionStructOutput,
   ): Promise<ClaimCondition> {
     // TODO have a dedicated class for currency manipulation that takes in a contractWrapper?
     // const cv = await getCurrencyValue(
@@ -353,7 +373,9 @@ export class DropErc721ClaimConditions {
     });
   }
 
-  private convertToContractModel(c: FilledConditionInput) {
+  private convertToContractModel(
+    c: FilledConditionInput,
+  ): IDropERC1155.ClaimConditionStruct {
     return {
       startTimestamp: BigNumber.from(c.startTime),
       maxClaimableSupply: c.maxQuantity,

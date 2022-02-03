@@ -1,11 +1,7 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { DropERC721, TokenERC721 } from "@3rdweb/contracts";
 import { BigNumber, BigNumberish } from "ethers";
-import {
-  CommonNFTOutput,
-  NFTMetadata,
-  NFTMetadataOwner,
-} from "../../schema/tokens/common";
+import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
 import { AddressZero } from "@ethersproject/constants";
 import {
   DEFAULT_QUERY_ALL_COUNT,
@@ -16,7 +12,7 @@ import { NetworkOrSignerOrProvider, TransactionResultPromise } from "../types";
 import { NotFoundError, RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/module";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
-import { fetchTokenMetadata, getTokenMetadata } from "../../common/nft";
+import { fetchTokenMetadata } from "../../common/nft";
 
 export class Erc721<T extends DropERC721 | TokenERC721>
   implements UpdateableNetwork

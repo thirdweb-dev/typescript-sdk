@@ -5,7 +5,6 @@ import {
   CommonRoyaltySchema,
   CommonTrustedForwarderSchema,
 } from "./common";
-import { CommonTokenInput, CommonTokenOutput } from "../tokens/common";
 
 export const TokenErc721ModuleInput =
   CommonModuleSchema.merge(CommonRoyaltySchema);
@@ -21,6 +20,4 @@ export const TokenErc721ModuleSchema = {
   deploy: TokenErc721ModuleDeploy,
   output: TokenErc721ModuleOutput,
   input: TokenErc721ModuleInput,
-  tokenInput: CommonTokenInput,
-  tokenOutput: CommonTokenOutput,
 };
