@@ -1,6 +1,5 @@
 import { IThirdwebModule__factory } from "@3rdweb/contracts";
 import { ethers } from "ethers";
-import { DEFAULT_IPFS_GATEWAY } from "../constants/urls";
 import { IStorage } from "./interfaces/IStorage";
 import { DropErc721Module, MODULES_MAP } from "../modules";
 import { SDKOptions } from "../schema/sdk-options";
