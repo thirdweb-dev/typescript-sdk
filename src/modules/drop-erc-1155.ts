@@ -9,28 +9,32 @@ import {
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResultPromise,
+  TransactionResultWithId,
 } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { NFTMetadataInput } from "../schema/tokens/common";
+import { NFTMetadata, NFTMetadataInput } from "../schema/tokens/common";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { hexZeroPad } from "ethers/lib/utils";
 import { prepareClaim } from "../common/claim-conditions";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155ModuleSchema } from "../schema/modules/drop-erc1155";
 
-export class DropErc1155 extends Erc1155<DropERC1155> {
+export class DropErc1155Module extends Erc1155<DropERC1155> {
   static moduleType = "DropERC1155" as const;
   static schema = DropErc1155ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = DropERC1155__factory;
 
-  public metadata: ContractMetadata<DropERC1155, typeof DropErc1155.schema>;
+  public metadata: ContractMetadata<
+    DropERC1155,
+    typeof DropErc1155Module.schema
+  >;
   public roles: ContractRoles<
     DropERC1155,
-    typeof DropErc1155.moduleRoles[number]
+    typeof DropErc1155Module.moduleRoles[number]
   >;
-  public royalty: ContractRoyalty<DropERC1155, typeof DropErc1155.schema>;
+  public royalty: ContractRoyalty<DropERC1155, typeof DropErc1155Module.schema>;
   public primarySales: ContractPrimarySale<DropERC1155>;
   public claimConditions: DropErc1155ClaimConditions;
 
@@ -42,7 +46,7 @@ export class DropErc1155 extends Erc1155<DropERC1155> {
     contractWrapper = new ContractWrapper<DropERC1155>(
       network,
       address,
-      DropErc1155.contractFactory.abi,
+      DropErc1155Module.contractFactory.abi,
       options,
     ),
   ) {
@@ -54,7 +58,7 @@ export class DropErc1155 extends Erc1155<DropERC1155> {
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      DropErc1155.moduleRoles,
+      DropErc1155Module.moduleRoles,
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.primarySales = new ContractPrimarySale(this.contractWrapper);
@@ -94,28 +98,36 @@ export class DropErc1155 extends Erc1155<DropERC1155> {
    * await module.createBatch(metadatas);
    * ```
    */
-  public async createBatch(metadatas: NFTMetadataInput[]): Promise<string[]> {
+  public async createBatch(
+    metadatas: NFTMetadataInput[],
+  ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
-    const { baseUri } = await this.storage.uploadMetadataBatch(
+    const batch = await this.storage.uploadMetadataBatch(
       metadatas,
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
+      await this.contractWrapper.getSigner()?.getAddress(),
     );
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      metadatas.length,
-      `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
+      batch.metadataUris.length,
+      `${batch.baseUri.endsWith("/") ? batch.baseUri : `${batch.baseUri}/`}`,
     ]);
+    // TODO figure out how to type the return types of parseEventLogs
     const event = this.contractWrapper.parseEventLogs(
       "LazyMintedTokens",
       receipt?.logs,
     );
     const [startingIndex, endingIndex]: BigNumber[] = event;
-    const tokenIds = [];
-    for (let i = startingIndex; i.lte(endingIndex); i = i.add(1)) {
-      tokenIds.push(i.toString());
+    const results = [];
+    for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
+      results.push({
+        id,
+        receipt,
+        data: () => this.getTokenMetadata(id),
+      });
     }
-    return tokenIds;
+    return results;
   }
 
   /**

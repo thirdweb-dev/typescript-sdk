@@ -1,12 +1,18 @@
 import { TWFactory, TWFactory__factory } from "@3rdweb/contracts";
 import { ethers } from "ethers";
 import { z } from "zod";
-import { MODULES_MAP } from "../../modules";
+import {
+  DropErc1155Module,
+  DropErc721Module,
+  MODULES_MAP,
+} from "../../modules";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
 import { NetworkOrSignerOrProvider, ValidModuleClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { ProxyDeployedEvent } from "@3rdweb/contracts/dist/TWFactory";
+import { TokenErc721Module } from "../../modules/token-erc-721";
+import { FORWARDER_ADDRESS } from "../../constants/addresses";
 
 export class ModuleFactory extends ContractWrapper<TWFactory> {
   private storage: IStorage;
@@ -41,18 +47,10 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
 
     const encodedFunc = contractFactory
       .getInterface(contractFactory.abi)
-      .encodeFunctionData("initialize", [
-        await this.getSignerAddress(),
-        metadata.name,
-        "SYMBOL", // TODO: make this configurable in metadata,
-        contractURI,
-        "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81", // TODO: dont hardcode trusted forwarder
-        await this.getSignerAddress(), // sales recipient
-        metadata.fee_recipient,
-        metadata.seller_fee_basis_points,
-        metadata.platform_fee_basis_points,
-        metadata.platform_fee_recipient,
-      ]);
+      .encodeFunctionData(
+        "initialize",
+        await this.getDeployArguments(moduleType, metadata, contractURI),
+      );
 
     const encodedType = ethers.utils.formatBytes32String(moduleType);
     const receipt = await this.sendTransaction("deployProxy", [
@@ -73,14 +71,39 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
   }
 
   // TODO generic function to generate deploy initialize arguments
-  // private getDeployArguments<TModule extends ValidModuleClass>(
-  //   moduleType: TModule["moduleType"],
-  //   moduleMetadata: z.input<TModule["schema"]["deploy"]>,
-  // ): string[] {
-  //   switch (moduleType) {
-  //     case DropErc721Module.moduleType:
-  //     case TokenErc721Module.moduleType:
-  //       break;
-  //   }
-  // }
+  private async getDeployArguments<TModule extends ValidModuleClass>(
+    moduleType: TModule["moduleType"],
+    metadata: z.input<TModule["schema"]["deploy"]>,
+    contractURI: string,
+  ): Promise<any[]> {
+    switch (moduleType) {
+      case DropErc721Module.moduleType:
+      case TokenErc721Module.moduleType:
+        return [
+          await this.getSignerAddress(),
+          metadata.name,
+          "SYMBOL", // TODO: make this configurable in metadata,
+          contractURI,
+          FORWARDER_ADDRESS, // TODO: dont hardcode trusted forwarder
+          await this.getSignerAddress(), // sales recipient
+          metadata.fee_recipient,
+          metadata.seller_fee_basis_points,
+          metadata.platform_fee_basis_points,
+          metadata.platform_fee_recipient,
+        ];
+      case DropErc1155Module.moduleType:
+        return [
+          await this.getSignerAddress(),
+          contractURI,
+          FORWARDER_ADDRESS,
+          await this.getSignerAddress(), // sales recipient
+          metadata.fee_recipient,
+          metadata.seller_fee_basis_points,
+          metadata.platform_fee_basis_points,
+          metadata.platform_fee_recipient,
+        ];
+      default:
+        return [];
+    }
+  }
 }

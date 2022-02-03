@@ -1,7 +1,7 @@
 import { IThirdwebModule__factory } from "@3rdweb/contracts";
 import { ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
-import { DropErc721Module, MODULES_MAP } from "../modules";
+import { DropErc1155Module, DropErc721Module, MODULES_MAP } from "../modules";
 import { SDKOptions } from "../schema/sdk-options";
 import { ModuleFactory } from "./classes/factory";
 import { IpfsStorage } from "./classes/ipfs-storage";
@@ -105,6 +105,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       address,
       TokenErc721Module.moduleType,
     ) as TokenErc721Module;
+  }
+
+  /**
+   * Get an instance of a Bundle Drop module
+   * @param address - the address of the deployed module
+   * @returns the module
+   */
+  public getBundleDropModule(address: string): DropErc1155Module {
+    return this.getModule(
+      address,
+      DropErc1155Module.moduleType,
+    ) as DropErc1155Module;
   }
 
   /**

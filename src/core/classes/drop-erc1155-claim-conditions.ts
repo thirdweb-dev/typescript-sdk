@@ -147,7 +147,7 @@ export class DropErc1155ClaimConditions {
         this.getActive(tokenId),
       ]);
     } catch (err: any) {
-      if ((err.message as string).includes("no public mint condition.")) {
+      if ((err.message as string).includes("no active mint condition.")) {
         reasons.push(ClaimEligibility.NoActiveClaimPhase);
         return reasons;
       }
@@ -264,7 +264,7 @@ export class DropErc1155ClaimConditions {
     );
 
     // Convert processed inputs to the format the contract expects, and sort by timestamp
-    const sortedConditions: IDropERC721.ClaimConditionStruct[] =
+    const sortedConditions: IDropERC1155.ClaimConditionStruct[] =
       inputsWithSnapshots
         .map((c) => this.convertToContractModel(c))
         .sort((a, b) => {
@@ -285,6 +285,11 @@ export class DropErc1155ClaimConditions {
     });
     const metadata = await this.metadata.get();
     const encoded = [];
+
+    // keep the old merkle roots from other tokenIds
+    for (const key of Object.keys(metadata.merkle)) {
+      merkleInfo[key] = metadata.merkle[key];
+    }
 
     // upload new merkle roots to snapshot URIs if updated
     if (!deepEqual(metadata.merkle, merkleInfo)) {
@@ -312,9 +317,7 @@ export class DropErc1155ClaimConditions {
     );
 
     return {
-      receipt: await this.contractWrapper.sendTransaction("multicall", [
-        encoded,
-      ]),
+      receipt: await this.contractWrapper.multiCall(encoded),
     };
   }
 
