@@ -13,6 +13,7 @@ import type {
   ValidModuleInstance,
 } from "./types";
 import { TokenErc721Module } from "../modules/token-erc-721";
+import { TokenErc1155Module } from "../modules/token-erc-1155";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
@@ -117,6 +118,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       address,
       DropErc1155Module.moduleType,
     ) as DropErc1155Module;
+  }
+
+  /**
+   * Get an instance of a Bundle module
+   * @param address - the address of the deployed module
+   * @returns the module
+   */
+  public getBundleModule(address: string): TokenErc1155Module {
+    return this.getModule(
+      address,
+      TokenErc1155Module.moduleType,
+    ) as TokenErc1155Module;
   }
 
   /**

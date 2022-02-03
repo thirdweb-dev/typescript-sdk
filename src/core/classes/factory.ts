@@ -5,6 +5,7 @@ import {
   DropErc1155Module,
   DropErc721Module,
   MODULES_MAP,
+  TokenErc1155Module,
 } from "../../modules";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
@@ -92,6 +93,7 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           metadata.platform_fee_recipient,
         ];
       case DropErc1155Module.moduleType:
+      case TokenErc1155Module.moduleType:
         return [
           await this.getSignerAddress(),
           contractURI,
