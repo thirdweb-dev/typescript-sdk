@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-royalty: ContractRoyalty<TokenERC721, typeof TokenErc721ModuleSchema>;
+royalty: ContractRoyalty<TokenERC721, typeof TokenErc721Module.schema>;
 ```

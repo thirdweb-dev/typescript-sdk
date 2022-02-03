@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-metadata: ContractMetadata<TokenERC721, typeof TokenErc721ModuleSchema>;
+metadata: ContractMetadata<TokenERC721, typeof TokenErc721Module.schema>;
 ```

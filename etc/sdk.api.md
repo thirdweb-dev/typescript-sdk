@@ -32,6 +32,7 @@ import { Provider } from '@ethersproject/providers';
 import { Signer } from '@ethersproject/abstract-signer';
 import { Signer as Signer_2 } from 'ethers';
 import { TokenERC1155 } from '@3rdweb/contracts';
+import { TokenERC1155__factory } from '@3rdweb/contracts';
 import { TokenERC721 } from '@3rdweb/contracts';
 import { TokenERC721__factory } from '@3rdweb/contracts';
 import { TransactionReceipt } from '@ethersproject/providers';
@@ -505,9 +506,10 @@ export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<typ
 //
 // @internal (undocumented)
 export const MODULES_MAP: {
-    readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module;
+    readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module;
     readonly DropERC721: typeof DropErc721Module;
     readonly DropERC1155: typeof DropErc1155Module;
+    readonly TokenERC1155: typeof TokenErc1155Module;
 };
 
 // Warning: (ae-incompatible-release-tags) The symbol "ModuleType" is marked as @public, but its signature references "MODULES_MAP" which is marked as @internal
@@ -586,12 +588,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // (undocumented)
     factory: ModuleFactory;
     getBundleDropModule(address: string): DropErc1155Module;
+    getBundleModule(address: string): TokenErc1155Module;
     getDropModule(moduleAddress: string): DropErc721Module;
     // @internal (undocumented)
-    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | ts_toolbelt_out_Class_Instance.Instance<{
-        readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module;
+    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | ts_toolbelt_out_Class_Instance.Instance<{
+        readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module;
         readonly DropERC721: typeof DropErc721Module;
         readonly DropERC1155: typeof DropErc1155Module;
+        readonly TokenERC1155: typeof TokenErc1155Module;
     }[TModuleType]>;
     getNFTModule(address: string): TokenErc721Module;
     // (undocumented)
@@ -599,6 +603,118 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // (undocumented)
     storage: IStorage;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
+}
+
+// @public (undocumented)
+export class TokenErc1155Module extends Erc1155<TokenERC1155> {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
+    // (undocumented)
+    static contractFactory: typeof TokenERC1155__factory;
+    // (undocumented)
+    metadata: ContractMetadata<TokenERC1155, typeof TokenErc1155Module.schema>;
+    // Warning: (ae-forgotten-export) The symbol "BundleMetadataInput" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "BundleMetadata" needs to be exported by the entry point index.d.ts
+    mint(metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<BundleMetadata>>;
+    mintBatch(metadatas: BundleMetadataInput[]): Promise<TransactionResultWithId<BundleMetadata>[]>;
+    mintBatchTo(to: string, metadataWithSupply: BundleMetadataInput[]): Promise<TransactionResultWithId<BundleMetadata>[]>;
+    mintTo(to: string, metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<BundleMetadata>>;
+    // (undocumented)
+    static moduleRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static moduleType: "TokenERC1155";
+    // (undocumented)
+    primarySales: ContractPrimarySale<TokenERC1155>;
+    // (undocumented)
+    roles: ContractRoles<TokenERC1155, typeof TokenErc1155Module.moduleRoles[number]>;
+    // (undocumented)
+    royalty: ContractRoyalty<TokenERC1155, typeof TokenErc1155Module.schema>;
+    // (undocumented)
+    static schema: {
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, {
+            platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, {
+            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+            platform_fee_basis_points: number;
+            platform_fee_recipient: string;
+            trusted_forwarder: string;
+        }, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            platform_fee_basis_points?: number | undefined;
+            platform_fee_recipient?: string | undefined;
+            trusted_forwarder?: string | undefined;
+            name: string;
+        }>;
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            image: zod.ZodOptional<zod.ZodString>;
+        }>, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+        }, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+        input: zod.ZodObject<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodType<File, zod.ZodTypeDef, File>, zod.ZodType<Buffer, zod.ZodTypeDef, Buffer>, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+        }, {
+            description?: string | undefined;
+            image?: string | File | Buffer | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+    };
 }
 
 // @public
@@ -618,10 +734,8 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
         payload: SignaturePayload;
         signature: string;
     }[]>;
-    // Warning: (ae-forgotten-export) The symbol "TokenErc721ModuleSchema" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    metadata: ContractMetadata<TokenERC721, typeof TokenErc721ModuleSchema>;
+    metadata: ContractMetadata<TokenERC721, typeof TokenErc721Module.schema>;
     mint(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintBatchTo(to: string, metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
@@ -637,7 +751,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     // (undocumented)
     roles: ContractRoles<TokenERC721, typeof TokenErc721Module.moduleRoles[number]>;
     // (undocumented)
-    royalty: ContractRoyalty<TokenERC721, typeof TokenErc721ModuleSchema>;
+    royalty: ContractRoyalty<TokenERC721, typeof TokenErc721Module.schema>;
     // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{

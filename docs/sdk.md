@@ -29,6 +29,7 @@
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
+|  [TokenErc1155Module](./sdk.tokenerc1155module.md) |  |
 |  [TokenErc721Module](./sdk.tokenerc721module.md) | Create a collection of one-of-one NFTs. |
 |  [UploadError](./sdk.uploaderror.md) |  |
 |  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
