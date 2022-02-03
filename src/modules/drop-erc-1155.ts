@@ -1,6 +1,5 @@
 import { Erc1155 } from "../core/classes/erc-1155";
 import { DropERC1155, DropERC1155__factory } from "@3rdweb/contracts";
-import { DropErc721ModuleSchema } from "../schema/modules/drop-erc721";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
@@ -53,7 +52,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
     super(contractWrapper, storage, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      DropErc721ModuleSchema,
+      DropErc1155Module.schema,
       this.storage,
     );
     this.roles = new ContractRoles(
@@ -72,6 +71,8 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
   /** ******************************
    * READ FUNCTIONS
    *******************************/
+
+  // TODO getAllClaimerAddresses() - should be done via an indexer
 
   /** ******************************
    * WRITE FUNCTIONS

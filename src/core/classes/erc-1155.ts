@@ -8,7 +8,7 @@ import { NotFoundError, RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/module";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import {
-  BundleDropMetadata,
+  BundleMetadata,
   BundleMetadataOutputSchema,
 } from "../../schema/tokens/bundle";
 import { fetchTokenMetadata } from "../../common/nft";
@@ -64,7 +64,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
    */
-  public async get(tokenId: string): Promise<BundleDropMetadata> {
+  public async get(tokenId: BigNumberish): Promise<BundleMetadata> {
     const [supply, metadata] = await Promise.all([
       this.contractWrapper.readContract
         .totalSupply(tokenId)
@@ -89,7 +89,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    * ```
    * @returns The NFT metadata for all NFTs queried.
    */
-  public async getAll(): Promise<BundleDropMetadata[]> {
+  public async getAll(): Promise<BundleMetadata[]> {
     const maxId = (
       await this.contractWrapper.readContract.nextTokenIdToMint()
     ).toNumber();
@@ -113,7 +113,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    *
    * @returns The NFT metadata for all NFTs in the module.
    */
-  public async getOwned(_address?: string): Promise<BundleDropMetadata[]> {
+  public async getOwned(_address?: string): Promise<BundleMetadata[]> {
     const address = _address
       ? _address
       : await this.contractWrapper.getSignerAddress();

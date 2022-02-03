@@ -69,7 +69,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     super(contractWrapper, storage, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      DropErc721ModuleSchema,
+      DropErc721Module.schema,
       this.storage,
     );
     this.roles = new ContractRoles(

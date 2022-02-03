@@ -60,13 +60,13 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
 
   public metadata: ContractMetadata<
     TokenERC721,
-    typeof TokenErc721ModuleSchema
+    typeof TokenErc721Module.schema
   >;
   public roles: ContractRoles<
     TokenERC721,
     typeof TokenErc721Module.moduleRoles[number]
   >;
-  public royalty: ContractRoyalty<TokenERC721, typeof TokenErc721ModuleSchema>;
+  public royalty: ContractRoyalty<TokenERC721, typeof TokenErc721Module.schema>;
   public primarySale: ContractPrimarySale<TokenERC721>;
 
   constructor(
@@ -84,7 +84,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     super(contractWrapper, storage, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      TokenErc721ModuleSchema,
+      TokenErc721Module.schema,
       this.storage,
     );
     this.roles = new ContractRoles(

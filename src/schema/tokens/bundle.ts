@@ -1,10 +1,16 @@
 import { z } from "zod";
-import { BigNumberSchema } from "../shared";
-import { CommonNFTOutput } from "./common";
+import { BigNumberishSchema, BigNumberSchema } from "../shared";
+import { CommonNFTInput, CommonNFTOutput } from "./common";
 
 export const BundleMetadataOutputSchema = z.object({
   supply: BigNumberSchema,
   metadata: CommonNFTOutput,
 });
 
-export type BundleDropMetadata = z.output<typeof BundleMetadataOutputSchema>;
+export const BundleMetadataInputSchema = z.object({
+  supply: BigNumberishSchema,
+  metadata: CommonNFTInput,
+});
+
+export type BundleMetadata = z.output<typeof BundleMetadataOutputSchema>;
+export type BundleMetadataInput = z.input<typeof BundleMetadataInputSchema>;
