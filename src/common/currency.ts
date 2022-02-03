@@ -11,6 +11,7 @@ import { NATIVE_TOKEN_ADDRESS, NATIVE_TOKENS } from "../constants/currency";
 import { Signer } from "@ethersproject/abstract-signer";
 import { Provider } from "@ethersproject/providers";
 import { Currency, CurrencyValue, NativeToken } from "../types/currency";
+import { formatUnits } from "ethers/lib/utils";
 
 export function isNativeToken(tokenAddress: string): boolean {
   return (
@@ -85,7 +86,7 @@ export async function fetchCurrencyValue(
   asset: string,
   price: BigNumberish,
 ): Promise<CurrencyValue> {
-  const metadata = await getCurrencyMetadata(providerOrSigner, asset);
+  const metadata = await fetchCurrencyMetadata(providerOrSigner, asset);
   return {
     ...metadata,
     value: price.toString(),
