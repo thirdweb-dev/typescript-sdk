@@ -49,6 +49,7 @@ const module = sdk.getDropModule("{{module_address}}");
 |  [claim(quantity, proofs)](./sdk.dropmodule.claim.md) |  | Claim NFTs |
 |  [claimTo(quantity, addressToClaim, proofs)](./sdk.dropmodule.claimto.md) |  | Claim NFTs to Wallet |
 |  [createBatch(metadatas)](./sdk.dropmodule.createbatch.md) |  | <b><i>(BETA)</i></b> Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per module at the moment. |
+|  [createDelayRevealBatch(placeholder, metadatas, password)](./sdk.dropmodule.createdelayrevealbatch.md) |  | Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per module at the moment. |
 |  [get(tokenId)](./sdk.dropmodule.get.md) |  |  |
 |  [getActiveClaimCondition()](./sdk.dropmodule.getactiveclaimcondition.md) |  |  |
 |  [getActiveMintCondition()](./sdk.dropmodule.getactivemintcondition.md) |  |  |
@@ -64,12 +65,13 @@ const module = sdk.getDropModule("{{module_address}}");
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | Get Owned NFTs |
 |  [getRoyaltyBps()](./sdk.dropmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.dropmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
+|  [getUnrevealList()](./sdk.dropmodule.getunreveallist.md) |  | Gets a list of token uris that needs to be revealed. |
 |  [isApproved(address, operator)](./sdk.dropmodule.isapproved.md) |  |  |
 |  [isTransferRestricted()](./sdk.dropmodule.istransferrestricted.md) |  |  |
-|  [isV1()](./sdk.dropmodule.isv1.md) |  | Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract. |
 |  [lazyMint(metadata)](./sdk.dropmodule.lazymint.md) |  |  |
 |  [lazyMintBatch(metadatas)](./sdk.dropmodule.lazymintbatch.md) |  |  |
 |  [ownerOf(tokenId)](./sdk.dropmodule.ownerof.md) |  |  |
+|  [reveal(batchId, password)](./sdk.dropmodule.reveal.md) |  |  |
 |  [setApproval(operator, approved)](./sdk.dropmodule.setapproval.md) |  |  |
 |  [setClaimCondition(factory)](./sdk.dropmodule.setclaimcondition.md) |  | Sets public mint conditions for the next minting using the claim condition factory. |
 |  [setClaimConditions(factory)](./sdk.dropmodule.setclaimconditions.md) |  |  |

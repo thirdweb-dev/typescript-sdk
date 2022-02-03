@@ -183,7 +183,6 @@ export class DropModule
 {
   private _shouldCheckVersion = true;
   private _isV0 = false;
-  private _isNewClaim = false;
   private _version = 0;
   private v1Module: DropV1Module;
 
