@@ -14,5 +14,5 @@ The max supply
 <b>Signature:</b>
 
 ```typescript
-maxSupply: number;
+maxSupply?: number | undefined;
 ```

@@ -19,7 +19,6 @@ import {
   ethers,
 } from "ethers";
 import { JsonConvert } from "json2typescript";
-import { C } from "ts-toolbelt";
 import {
   getCurrencyValue,
   isNativeToken,
