@@ -19,6 +19,7 @@ import {
   ethers,
 } from "ethers";
 import { JsonConvert } from "json2typescript";
+import { C } from "ts-toolbelt";
 import {
   getCurrencyValue,
   isNativeToken,
@@ -594,13 +595,22 @@ export class DropModule
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
+
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
     const oldMerkle = metadata["merkle"];
-    if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
-      metadata["merkle"] = {};
-    } else {
+
+    const defaultMerkleRoot = hexZeroPad([0], 32).toString();
+
+    if (factory.allSnapshots().length > 0) {
       metadata["merkle"] = merkleInfo;
+    } else if (
+      factory.allSnapshots().length === 0 &&
+      conditions
+        .filter((c) => c.merkleRoot !== defaultMerkleRoot)
+        .map((c) => c.merkleRoot).length === 0
+    ) {
+      metadata["merkle"] = {};
     }
 
     const encoded = [];
