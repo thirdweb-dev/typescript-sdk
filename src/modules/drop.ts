@@ -604,7 +604,6 @@ export class DropModule
     if (factory.allSnapshots().length > 0) {
       metadata["merkle"] = merkleInfo;
     } else if (
-      factory.allSnapshots().length === 0 &&
       conditions.filter((c) => c.merkleRoot !== defaultMerkleRoot).length === 0
     ) {
       metadata["merkle"] = {};
