@@ -32,7 +32,7 @@ import {
 } from "@3rdweb/contracts/dist/TokenERC721";
 import { hexlify, toUtf8Bytes } from "ethers/lib/utils";
 import { Signer } from "@ethersproject/abstract-signer";
-import { NATIVE_TOKEN_ADDRESS } from "../common/currency";
+import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import { AddressZero } from "@ethersproject/constants";
 import { v4 as uuidv4 } from "uuid";
 

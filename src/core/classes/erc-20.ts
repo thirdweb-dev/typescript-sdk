@@ -1,24 +1,17 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721, TokenERC20, TokenERC721 } from "@3rdweb/contracts";
+import { TokenERC20 } from "@3rdweb/contracts";
 import { BigNumber, BigNumberish } from "ethers";
-import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
-import { AddressZero } from "@ethersproject/constants";
-import {
-  DEFAULT_QUERY_ALL_COUNT,
-  QueryAllParams,
-} from "../../types/QueryParams";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResultPromise } from "../types";
-import { NotFoundError, RestrictedTransferError } from "../../common";
+import { RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/module";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
-import { fetchTokenMetadata } from "../../common/nft";
 import { Currency, CurrencyValue } from "../../types/currency";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
 } from "../../common/currency";
-import { TokenMintInput, TokenTransferInput } from "../../schema/tokens/token";
+import { TokenMintInput } from "../../schema/tokens/token";
 
 export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   protected contractWrapper: ContractWrapper<T>;
@@ -177,78 +170,6 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   /** ******************************
    * WRITE FUNCTIONS
    *******************************/
-
-  /**
-   * Mint Tokens
-   *
-   * @remarks Mint tokens to the connected wallet
-   *
-   * @example
-   * ```javascript
-   * // The amount of this token you want to mint
-   * const amount = ethers.utils.parseEther("1.5");
-   *
-   * await module.mintTo(toAddress, amount);
-   * ```
-   */
-  public async mint(amount: BigNumberish) {
-    await this.mintTo(await this.contractWrapper.getSignerAddress(), amount);
-  }
-
-  /**
-   * Mint Tokens
-   *
-   * @remarks Mint tokens to a specified address
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet you want to mint the tokens to
-   * const toAddress = "{{wallet_address}}";
-   *
-   * // The amount of this token you want to mint
-   * const amount = ethers.utils.parseEther("1.5");
-   *
-   * await module.mintTo(toAddress, amount);
-   * ```
-   */
-  public async mintTo(to: string, amount: BigNumberish) {
-    await this.contractWrapper.sendTransaction("mint", [to, amount]);
-  }
-
-  /**
-   * Mint Tokens To Many Wallets
-   *
-   * @remarks Mint tokens to many wallets
-   *
-   * @example
-   * ```javascript
-   * // Data of the tokens you want to mint
-   * const data = [
-   *   {
-   *     toAddress: "{{wallet_address}}", // Address to mint tokens to
-   *     amount: 100, // How many tokens to mint to specified address
-   *   },
-   *  {
-   *    toAddress: "0x...",
-   *    amount: 100,
-   *  }
-   * ]
-   *
-   * await module.mintBatchTo(data);
-   * ```
-   */
-  public async mintBatchTo(args: TokenMintInput[]) {
-    const encoded = [];
-    for (const arg of args) {
-      encoded.push(
-        this.contractWrapper.readContract.interface.encodeFunctionData("mint", [
-          arg.toAddress,
-          arg.amount,
-        ]),
-      );
-    }
-    await this.contractWrapper.multiCall(encoded);
-  }
 
   /**
    * Transfer Tokens

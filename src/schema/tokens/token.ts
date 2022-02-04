@@ -6,4 +6,4 @@ export const TokenMintInputSchema = z.object({
   amount: BigNumberishSchema,
 });
 
-export type TokenMintInput = z.output<typeof TokenMintInputSchema>;
+export type TokenMintInput = z.input<typeof TokenMintInputSchema>;

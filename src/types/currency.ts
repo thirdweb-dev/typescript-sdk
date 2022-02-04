@@ -2,6 +2,8 @@
  * Currency metadata.
  * @public
  */
+import { BigNumber } from "ethers";
+
 export interface Currency {
   name: string;
   symbol: string;
@@ -21,6 +23,6 @@ export interface NativeToken extends Currency {
  * @public
  */
 export interface CurrencyValue extends Currency {
-  value: string;
+  value: BigNumber;
   displayValue: string;
 }

@@ -8,7 +8,6 @@ import {
 } from "@3rdweb/contracts";
 import { ChainId, SUPPORTED_CHAIN_ID } from "../constants/chains";
 import { NATIVE_TOKEN_ADDRESS, NATIVE_TOKENS } from "../constants/currency";
-import { Signer } from "@ethersproject/abstract-signer";
 import { Provider } from "@ethersproject/providers";
 import { Currency, CurrencyValue, NativeToken } from "../types/currency";
 import { formatUnits } from "ethers/lib/utils";
@@ -89,7 +88,7 @@ export async function fetchCurrencyValue(
   const metadata = await fetchCurrencyMetadata(providerOrSigner, asset);
   return {
     ...metadata,
-    value: price.toString(),
+    value: BigNumber.from(price),
     displayValue: formatUnits(price, metadata.decimals),
   };
 }

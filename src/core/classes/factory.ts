@@ -6,6 +6,7 @@ import {
   DropErc721Module,
   MODULES_MAP,
   TokenErc1155Module,
+  TokenErc20Module,
 } from "../../modules";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
@@ -80,29 +81,40 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
     switch (moduleType) {
       case DropErc721Module.moduleType:
       case TokenErc721Module.moduleType:
+        const erc721metadata = DropErc721Module.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
-          metadata.name,
-          "SYMBOL", // TODO: make this configurable in metadata,
+          erc721metadata.name,
+          erc721metadata.symbol,
           contractURI,
           FORWARDER_ADDRESS, // TODO: dont hardcode trusted forwarder
           await this.getSignerAddress(), // sales recipient
-          metadata.fee_recipient,
-          metadata.seller_fee_basis_points,
-          metadata.platform_fee_basis_points,
-          metadata.platform_fee_recipient,
+          erc721metadata.fee_recipient,
+          erc721metadata.seller_fee_basis_points,
+          erc721metadata.platform_fee_basis_points,
+          erc721metadata.platform_fee_recipient,
         ];
       case DropErc1155Module.moduleType:
       case TokenErc1155Module.moduleType:
+        const erc1155metadata = DropErc1155Module.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           contractURI,
           FORWARDER_ADDRESS,
           await this.getSignerAddress(), // sales recipient
-          metadata.fee_recipient,
-          metadata.seller_fee_basis_points,
-          metadata.platform_fee_basis_points,
-          metadata.platform_fee_recipient,
+          erc1155metadata.fee_recipient,
+          erc1155metadata.seller_fee_basis_points,
+          erc1155metadata.platform_fee_basis_points,
+          erc1155metadata.platform_fee_recipient,
+        ];
+      case TokenErc20Module.moduleType:
+        const erc20metadata = TokenErc20Module.schema.deploy.parse(metadata);
+        return [
+          await this.getSignerAddress(),
+          erc20metadata.name,
+          erc20metadata.symbol,
+          contractURI,
+          erc20metadata.trusted_forwarder,
         ];
       default:
         return [];
