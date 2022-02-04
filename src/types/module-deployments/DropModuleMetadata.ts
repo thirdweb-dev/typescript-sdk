@@ -61,7 +61,7 @@ export class DropModuleMetadata extends CommonModuleMetadata {
    * @deprecated - No longer applicable. This value is ignored.
    */
   @JsonProperty("max_supply", Number, PropertyConvertingMode.IGNORE_NULLABLE)
-  maxSupply = 1;
+  maxSupply? = 1;
 
   /**
    * The address of the receiver of the initial sale.You can use this field to

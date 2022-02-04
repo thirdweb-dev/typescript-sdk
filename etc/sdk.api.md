@@ -746,7 +746,7 @@ export class DropModuleMetadata extends CommonModuleMetadata {
     baseTokenUri?: string | undefined;
     feeRecipient?: string;
     // @deprecated
-    maxSupply: number;
+    maxSupply?: number | undefined;
     primarySaleFeeBasisPoints?: number | undefined;
     primarySaleRecipientAddress: string;
     sellerFeeBasisPoints?: number | undefined;
