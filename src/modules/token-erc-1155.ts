@@ -16,7 +16,7 @@ import { BundleMetadata, BundleMetadataInput } from "../schema/tokens/bundle";
 import { TokenMintedEvent } from "@3rdweb/contracts/dist/TokenERC721";
 
 export class TokenErc1155Module extends Erc1155<TokenERC1155> {
-  static moduleType = "TokenERC1155" as const;
+  static moduleType: string = "TokenERC1155" as const;
   static schema = TokenErc1155ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = TokenERC1155__factory;

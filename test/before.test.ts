@@ -1,12 +1,10 @@
 import {
   CurrencyTransferLib__factory,
-  DropERC721__factory,
   TWFactory__factory,
   TWFee__factory,
 } from "@3rdweb/contracts";
-import { DropERC721LibraryAddresses } from "@3rdweb/contracts/dist/factories/DropERC721__factory";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BigNumber, ContractFactory, ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 import {
   DropErc1155Module,
@@ -14,9 +12,7 @@ import {
   MODULES_MAP,
   ThirdwebSDK,
   TokenErc1155Module,
-  TokenErc20Module,
   TokenErc721Module,
-  ValidModuleClass,
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
 
@@ -102,9 +98,6 @@ before(async () => {
     );
   console.log("Deploying the deployer");
   await thirdwebFactoryDeployer.deployed();
-  // const deployTxFee = thirdwebFeeDeployer.deployTransaction;
-  // console.log("Deploying TWFee at tx: ", deployTxFee.hash);
-  // await deployTxFee.wait();
 
   console.log("TWFee address: ", thirdwebFeeDeployer.address);
 
@@ -133,12 +126,7 @@ before(async () => {
       deployedModule = await moduleFactory.deploy();
     }
 
-    console.log(
-      `Deploying Module ${moduleType} at tx:`,
-      deployedModule.deployTransaction.hash,
-    );
     await deployedModule.deployed();
-    // await drop721Factory.deployTransaction.wait();
 
     const deployedModuleType = await deployedModule.moduleType();
     console.log(`Deployed module ${moduleType}: `, deployedModuleType);
@@ -147,8 +135,8 @@ before(async () => {
       deployedModule.address,
     );
     console.log(
-      `Setting deployed ${moduleType} as an approved implementation at tx: `,
-      tx.hash,
+      `Setting deployed ${moduleType} as an approved implementation at address: `,
+      deployedModule.address,
     );
     await tx.wait();
   }

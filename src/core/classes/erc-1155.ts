@@ -45,7 +45,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  public getAddress(): string {
+  getAddress(): string {
     return this.contractWrapper.readContract.address;
   }
 

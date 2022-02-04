@@ -7,6 +7,7 @@ import {
   MODULES_MAP,
   TokenErc1155Module,
   TokenErc20Module,
+  VoteModule,
 } from "../../modules";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
@@ -55,11 +56,15 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
       );
 
     const encodedType = ethers.utils.formatBytes32String(moduleType);
+    console.log(
+      `Deploying ${moduleType} proxy - encodedType: ${encodedType} | encodedFunc: ${encodedFunc}`,
+    );
     const receipt = await this.sendTransaction("deployProxy", [
       encodedType,
       encodedFunc,
     ]);
 
+    console.log(`${moduleType} proxy deployed successfully`);
     const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",
       receipt.logs,
@@ -68,8 +73,7 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
       throw new Error("No ProxyDeployed event found");
     }
 
-    const proxyAddress = events[0].args.proxy;
-    return proxyAddress;
+    return events[0].args.proxy;
   }
 
   // TODO generic function to generate deploy initialize arguments
@@ -115,6 +119,18 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           erc20metadata.symbol,
           contractURI,
           erc20metadata.trusted_forwarder,
+        ];
+      case VoteModule.moduleType:
+        const voteMetadata = VoteModule.schema.deploy.parse(metadata);
+        return [
+          voteMetadata.name,
+          contractURI,
+          voteMetadata.trusted_forwarder,
+          voteMetadata.voting_token_address,
+          voteMetadata.voting_delay,
+          voteMetadata.voting_period,
+          voteMetadata.proposal_token_threshold,
+          voteMetadata.voting_quorum_fraction,
         ];
       default:
         return [];

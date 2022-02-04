@@ -23,12 +23,14 @@ export const FileBufferOrStringSchema = z.union(fileOrBufferUnion);
 
 export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
 
-export const BigNumberSchema = z.instanceof(BigNumber);
-
-// TODO this does not serialize to JSON
-export const BigNumberishSchema = z
-  .union([z.string(), z.number(), z.bigint(), BigNumberSchema])
+export const BigNumberSchema = z
+  .union([z.string(), z.number(), z.bigint(), z.instanceof(BigNumber)])
   .transform((arg) => BigNumber.from(arg));
+
+
+export const BigNumberishSchema = BigNumberSchema.transform((arg) =>
+  arg.toString(),
+);
 
 export const BasisPointsSchema = z
   .number()

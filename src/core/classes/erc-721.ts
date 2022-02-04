@@ -46,7 +46,7 @@ export class Erc721<T extends DropERC721 | TokenERC721>
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  public getAddress(): string {
+  getAddress(): string {
     return this.contractWrapper.readContract.address;
   }
 
