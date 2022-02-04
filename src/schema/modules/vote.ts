@@ -40,7 +40,7 @@ export const VoteModuleSchema = {
 };
 
 export const ProposalOutputSchema = z.object({
-  proposalId: BigNumberishSchema,
+  proposalId: BigNumberSchema,
   proposer: z.string(),
   targets: z.array(z.string()),
   values: z.array(BigNumberSchema),
