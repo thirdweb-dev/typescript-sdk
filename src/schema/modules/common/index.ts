@@ -53,3 +53,7 @@ export const CommonPlatformFeeSchema = z.object({
 export const CommonTrustedForwarderSchema = z.object({
   trusted_forwarder: z.string().default(FORWARDER_ADDRESS),
 });
+
+export const CommonSymbolSchema = z.object({
+  symbol: z.string(),
+});

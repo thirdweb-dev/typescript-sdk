@@ -3,14 +3,15 @@ import {
   CommonModuleSchema,
   CommonPlatformFeeSchema,
   CommonRoyaltySchema,
+  CommonSymbolSchema,
   CommonTrustedForwarderSchema,
 } from "./common";
 
 export const TokenErc721ModuleInput =
-  CommonModuleSchema.merge(CommonRoyaltySchema);
+  CommonModuleSchema.merge(CommonRoyaltySchema).merge(CommonSymbolSchema);
 
 export const TokenErc721ModuleOutput =
-  CommonModuleOutputSchema.merge(CommonRoyaltySchema);
+  CommonModuleOutputSchema.merge(CommonRoyaltySchema).merge(CommonSymbolSchema);
 
 export const TokenErc721ModuleDeploy = TokenErc721ModuleInput.merge(
   CommonPlatformFeeSchema,

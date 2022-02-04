@@ -6,9 +6,18 @@ import {
 } from "@3rdweb/contracts";
 import { DropERC721LibraryAddresses } from "@3rdweb/contracts/dist/factories/DropERC721__factory";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, ContractFactory, ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
-import { MODULES_MAP, ThirdwebSDK } from "../src";
+import {
+  DropErc1155Module,
+  DropErc721Module,
+  MODULES_MAP,
+  ThirdwebSDK,
+  TokenErc1155Module,
+  TokenErc20Module,
+  TokenErc721Module,
+  ValidModuleClass,
+} from "../src";
 import { MockStorage } from "./mock/MockStorage";
 
 const RPC_URL = "http://localhost:8545";
@@ -99,31 +108,43 @@ before(async () => {
 
   console.log("TWFee address: ", thirdwebFeeDeployer.address);
 
+  function needsThirdWebFeeDeployer(moduleType: string) {
+    return (
+      moduleType === DropErc721Module.moduleType ||
+      moduleType === TokenErc721Module.moduleType ||
+      moduleType === DropErc1155Module.moduleType ||
+      moduleType === TokenErc1155Module.moduleType
+    );
+  }
+
   for (const moduleType in MODULES_MAP) {
     const module = MODULES_MAP[moduleType];
     const contractFactory = module.contractFactory;
+    let deployedModule: ethers.Contract;
 
-    const moduleFactory = await new ethers.ContractFactory(
+    const moduleFactory = new ethers.ContractFactory(
       contractFactory.abi,
-      contractFactory.linkBytecode({
-        "contracts/lib/CurrencyTransferLib.sol:CurrencyTransferLib":
-          currencyTransferAddress,
-      }),
-    )
-      .connect(signer)
-      .deploy(thirdwebFeeDeployer.address);
+      contractFactory.bytecode,
+    ).connect(signer);
+
+    if (needsThirdWebFeeDeployer(moduleType)) {
+      deployedModule = await moduleFactory.deploy(thirdwebFeeDeployer.address);
+    } else {
+      deployedModule = await moduleFactory.deploy();
+    }
+
     console.log(
       `Deploying Module ${moduleType} at tx:`,
-      moduleFactory.deployTransaction.hash,
+      deployedModule.deployTransaction.hash,
     );
-    await moduleFactory.deployed();
+    await deployedModule.deployed();
     // await drop721Factory.deployTransaction.wait();
 
-    const deployedModuleType = await moduleFactory.moduleType();
+    const deployedModuleType = await deployedModule.moduleType();
     console.log(`Deployed module ${moduleType}: `, deployedModuleType);
     const tx = await thirdwebFactoryDeployer.addModuleImplementation(
       deployedModuleType,
-      moduleFactory.address,
+      deployedModule.address,
     );
     console.log(
       `Setting deployed ${moduleType} as an approved implementation at tx: `,

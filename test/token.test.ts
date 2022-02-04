@@ -1,14 +1,14 @@
-import * as chai from "chai";
+import { assert } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { CurrencyModule } from "../src";
-import { appModule, sdk, signers } from "./before.test";
+import { TokenErc20Module } from "../src";
+import { sdk, signers } from "./before.test";
+import { BigNumber, ethers } from "ethers";
+import { TokenMintInput } from "../src/schema/tokens/token";
 
-import { expect, assert } from "chai";
-
-global.fetch = require("node-fetch");
+// global.fetch = require("node-fetch");
 
 describe("Token Module", async () => {
-  let currencyModule: CurrencyModule;
+  let currencyModule: TokenErc20Module;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -19,58 +19,98 @@ describe("Token Module", async () => {
   });
 
   beforeEach(async () => {
-    sdk.setProviderOrSigner(adminWallet);
-    currencyModule = await appModule.deployCurrencyModule({
-      name: "Currency Module",
-      symbol: "TEST",
+    sdk.updateSignerOrProvider(adminWallet);
+    const address = await sdk.factory.deploy(TokenErc20Module.moduleType, {
+      name: `Testing token from SDK`,
+      symbol: `TEST`,
+      description: "Test module from tests",
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
     });
+    currencyModule = sdk.getTokenModule(address);
   });
 
-  it.skip("should mint a batch of tokens to the correct wallets", async () => {
-    const batch = [
+  it("should mint tokens", async () => {
+    await currencyModule.mint(ethers.utils.parseEther("20"));
+    assert.deepEqual(
+      await currencyModule.totalSupply(),
+      ethers.utils.parseEther("20"),
+      `Wrong supply`,
+    );
+    assert.deepEqual(
+      (await currencyModule.balanceOf(adminWallet.address)).value,
+      ethers.utils.parseEther("20"),
+      `Wrong balance`,
+    );
+  });
+
+  it("should transfer tokens", async () => {
+    await currencyModule.mint(ethers.utils.parseEther("20"));
+    await currencyModule.transfer(
+      samWallet.address,
+      ethers.utils.parseEther("10"),
+    );
+    assert.deepEqual(
+      (await currencyModule.balanceOf(adminWallet.address)).value,
+      ethers.utils.parseEther("10"),
+      `Wrong balance`,
+    );
+    assert.deepEqual(
+      (await currencyModule.balanceOf(samWallet.address)).value,
+      ethers.utils.parseEther("10"),
+      `Wrong balance`,
+    );
+  });
+
+  it("should mint a batch of tokens to the correct wallets", async () => {
+    const batch: TokenMintInput[] = [
       {
-        address: bobWallet.address,
-        toMint: 10,
+        toAddress: bobWallet.address,
+        amount: 10,
       },
       {
-        address: samWallet.address,
-        toMint: 10,
+        toAddress: samWallet.address,
+        amount: 10,
       },
     ];
 
-    await currencyModule.mintBatchTo(
-      batch.map((x) => {
-        return {
-          address: x.address,
-          amount: x.toMint,
-        };
-      }),
-    );
+    await currencyModule.mintBatchTo(batch);
 
     for (const b of batch) {
-      const expectedBalance = 10;
-      const actualBalance = (await currencyModule.balanceOf(b.address)).value;
+      const expectedBalance = BigNumber.from(10);
+      const actualBalance = (await currencyModule.balanceOf(b.toAddress)).value;
 
-      assert.equal(
+      assert.deepEqual(
         actualBalance,
-        expectedBalance.toString(),
-        `Wallet balance should increase by ${b.toMint}`,
+        expectedBalance,
+        `Wallet balance should increase by ${b.amount}`,
       );
     }
   });
-  it("should return the correct list of holders and their balances", async () => {
-    const balance = parseInt((await currencyModule.balance()).value);
-    const addresses = [
-      bobWallet.address,
-      samWallet.address,
-      adminWallet.address,
-      "0xd8Ceb88D81a30e615024024E3fDeB711690EeD92",
-      "0x59AA5E78bbC415E2e00F78a5E713F0A99C7645af",
+
+  it("should transfer a batch of tokens to the correct wallets", async () => {
+    const batch: TokenMintInput[] = [
+      {
+        toAddress: bobWallet.address,
+        amount: 10,
+      },
+      {
+        toAddress: samWallet.address,
+        amount: 10,
+      },
     ];
-    addresses.forEach(async (address) => {
-      await currencyModule.mintTo(address, 10);
-      const totest = await currencyModule.balanceOf(address);
-      chai.assert.equal(totest.value, "10");
-    });
+    await currencyModule.mint(20);
+    await currencyModule.transferBatch(batch);
+
+    for (const b of batch) {
+      const expectedBalance = BigNumber.from(10);
+      const actualBalance = (await currencyModule.balanceOf(b.toAddress)).value;
+
+      assert.deepEqual(
+        actualBalance,
+        expectedBalance,
+        `Wallet balance should increase by ${b.amount}`,
+      );
+    }
   });
 });
