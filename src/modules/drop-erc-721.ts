@@ -13,6 +13,7 @@ import {
 import { DropErc721ModuleSchema } from "../schema/modules/drop-erc721";
 import { SDKOptions } from "../schema/sdk-options";
 import {
+  CommonNFTInput,
   NFTMetadata,
   NFTMetadataInput,
   NFTMetadataOwner,
@@ -192,7 +193,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
     const batch = await this.storage.uploadMetadataBatch(
-      metadatas,
+      metadatas.map((m) => CommonNFTInput.parse(m)),
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),

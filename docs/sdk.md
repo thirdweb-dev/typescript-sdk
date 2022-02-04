@@ -48,11 +48,24 @@
 |  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
 |  [IStorage](./sdk.istorage.md) |  |
 
+## Variables
+
+|  Variable | Description |
+|  --- | --- |
+|  [BundleMetadataInputSchema](./sdk.bundlemetadatainputschema.md) |  |
+|  [BundleMetadataOutputSchema](./sdk.bundlemetadataoutputschema.md) |  |
+|  [ClaimConditionInputSchema](./sdk.claimconditioninputschema.md) |  |
+|  [ClaimConditionOutputSchema](./sdk.claimconditionoutputschema.md) |  |
+|  [CommonModuleSchema](./sdk.commonmoduleschema.md) |  |
+|  [PartialClaimConditionInputSchema](./sdk.partialclaimconditioninputschema.md) |  |
+
 ## Type Aliases
 
 |  Type Alias | Description |
 |  --- | --- |
 |  [BufferOrStringWithName](./sdk.bufferorstringwithname.md) |  |
+|  [BundleMetadata](./sdk.bundlemetadata.md) |  |
+|  [BundleMetadataInput](./sdk.bundlemetadatainput.md) |  |
 |  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
@@ -62,7 +75,9 @@
 |  [ModuleForModuleType](./sdk.moduleformoduletype.md) |  |
 |  [ModuleType](./sdk.moduletype.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
+|  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [Role](./sdk.role.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |
