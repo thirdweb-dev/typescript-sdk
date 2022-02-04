@@ -1,6 +1,10 @@
 import { unknown, z } from "zod";
 import { ethers } from "ethers";
-import { BigNumberishSchema, BytesLikeSchema } from "../../shared";
+import {
+  BigNumberishSchema,
+  BigNumberSchema,
+  BytesLikeSchema,
+} from "../../shared";
 import { hexZeroPad } from "ethers/lib/utils";
 import { AddressZero } from "@ethersproject/constants";
 
@@ -35,4 +39,7 @@ export const ClaimConditionOutputSchema = ClaimConditionInputSchema.omit({
   availableSupply: z.string().default(""),
   // TODO: implement currency type
   currencyMetadata: z.unknown().default(unknown()),
+  price: BigNumberSchema,
+  maxQuantity: BigNumberSchema,
+  quantityLimitPerTransaction: BigNumberSchema,
 });

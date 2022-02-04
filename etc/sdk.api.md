@@ -42,6 +42,8 @@ import * as ts_toolbelt_out_Any_Equals from 'ts-toolbelt/out/Any/Equals';
 import * as ts_toolbelt_out_Any_If from 'ts-toolbelt/out/Any/If';
 import * as ts_toolbelt_out_Class_Instance from 'ts-toolbelt/out/Class/Instance';
 import { TWFactory } from '@3rdweb/contracts';
+import { VoteERC20 } from '@3rdweb/contracts';
+import { VoteERC20__factory } from '@3rdweb/contracts';
 import { z } from 'zod';
 import * as zod from 'zod';
 
@@ -111,7 +113,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: "DropERC1155";
+    static moduleType: string;
     // Warning: (ae-forgotten-export) The symbol "ContractPrimarySale" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -261,7 +263,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: "DropERC721";
+    static moduleType: string;
     // (undocumented)
     primarySales: ContractPrimarySale<DropERC721>;
     // (undocumented)
@@ -532,11 +534,7 @@ export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<typ
 //
 // @internal (undocumented)
 export const MODULES_MAP: {
-    readonly DropERC721: typeof DropErc721Module;
-    readonly TokenERC721: typeof TokenErc721Module;
-    readonly DropERC1155: typeof DropErc1155Module;
-    readonly TokenERC1155: typeof TokenErc1155Module;
-    readonly TokenERC20: typeof TokenErc20Module;
+    readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule;
 };
 
 // Warning: (ae-incompatible-release-tags) The symbol "ModuleType" is marked as @public, but its signature references "MODULES_MAP" which is marked as @internal
@@ -618,15 +616,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getBundleModule(address: string): TokenErc1155Module;
     getDropModule(moduleAddress: string): DropErc721Module;
     // @internal (undocumented)
-    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | TokenErc20Module | ts_toolbelt_out_Class_Instance.Instance<{
-        readonly DropERC721: typeof DropErc721Module;
-        readonly TokenERC721: typeof TokenErc721Module;
-        readonly DropERC1155: typeof DropErc1155Module;
-        readonly TokenERC1155: typeof TokenErc1155Module;
-        readonly TokenERC20: typeof TokenErc20Module;
+    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | TokenErc20Module | VoteModule | ts_toolbelt_out_Class_Instance.Instance<{
+        readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule;
     }[TModuleType]>;
     getNFTModule(address: string): TokenErc721Module;
     getTokenModule(address: string): TokenErc20Module;
+    getVoteModule(address: string): VoteModule;
     // (undocumented)
     resolveModuleType<TModuleType extends ModuleType>(moduleAddress: string): Promise<TModuleType>;
     // (undocumented)
@@ -650,7 +645,7 @@ export class TokenErc1155Module extends Erc1155<TokenERC1155> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: "TokenERC1155";
+    static moduleType: string;
     // (undocumented)
     primarySales: ContractPrimarySale<TokenERC1155>;
     // (undocumented)
@@ -769,7 +764,7 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: "TokenERC20";
+    static moduleType: string;
     // (undocumented)
     roles: ContractRoles<TokenERC20, typeof TokenErc20Module.moduleRoles[number]>;
     // (undocumented)
@@ -880,7 +875,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: "TokenERC721";
+    static moduleType: string;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
     // (undocumented)
@@ -1029,6 +1024,167 @@ export type ValidModuleInstance = C.Instance<ValidModuleClass>;
 
 // @public (undocumented)
 export type ValueOf<T> = T[keyof T];
+
+// Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
+//
+// @public
+export class VoteModule implements UpdateableNetwork {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<VoteERC20>);
+    // Warning: (ae-forgotten-export) The symbol "CurrencyValue" needs to be exported by the entry point index.d.ts
+    balance(): Promise<CurrencyValue>;
+    balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
+    canExecute(proposalId: string): Promise<boolean>;
+    // (undocumented)
+    static contractFactory: typeof VoteERC20__factory;
+    execute(proposalId: string): Promise<void>;
+    // Warning: (ae-forgotten-export) The symbol "Proposal" needs to be exported by the entry point index.d.ts
+    get(proposalId: BigNumberish): Promise<Proposal>;
+    // (undocumented)
+    getAddress(): string;
+    getAll(): Promise<Proposal[]>;
+    // Warning: (ae-forgotten-export) The symbol "ProposalVote" needs to be exported by the entry point index.d.ts
+    getProposalVotes(proposalId: BigNumber): Promise<ProposalVote[]>;
+    hasVoted(proposalId: string, account?: string): Promise<boolean>;
+    // (undocumented)
+    metadata: ContractMetadata<VoteERC20, typeof VoteModule.schema>;
+    // (undocumented)
+    static moduleType: string;
+    // (undocumented)
+    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    // Warning: (ae-forgotten-export) The symbol "ProposalExecutable" needs to be exported by the entry point index.d.ts
+    propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber>;
+    // (undocumented)
+    static schema: {
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            proposal_start_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
+            proposal_voting_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
+            voting_delay: zod.ZodDefault<zod.ZodNumber>;
+            voting_period: zod.ZodDefault<zod.ZodNumber>;
+            voting_token_address: zod.ZodDefault<zod.ZodString>;
+            voting_quorum_fraction: zod.ZodDefault<zod.ZodNumber>;
+            proposal_token_threshold: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+        }>, {
+            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            name: string;
+            trusted_forwarder: string;
+            proposal_start_time_in_seconds: number;
+            proposal_voting_time_in_seconds: number;
+            voting_delay: number;
+            voting_period: number;
+            voting_token_address: string;
+            voting_quorum_fraction: number;
+            proposal_token_threshold: string;
+        }, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            trusted_forwarder?: string | undefined;
+            proposal_start_time_in_seconds?: number | undefined;
+            proposal_voting_time_in_seconds?: number | undefined;
+            voting_delay?: number | undefined;
+            voting_period?: number | undefined;
+            voting_token_address?: string | undefined;
+            voting_quorum_fraction?: number | undefined;
+            name: string;
+            proposal_token_threshold: string | number | bigint | BigNumber;
+        }>;
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            image: zod.ZodOptional<zod.ZodString>;
+        }>, zod.extendShape<{
+            proposal_start_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
+            proposal_voting_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
+            voting_delay: zod.ZodDefault<zod.ZodNumber>;
+            voting_period: zod.ZodDefault<zod.ZodNumber>;
+            voting_token_address: zod.ZodDefault<zod.ZodString>;
+            voting_quorum_fraction: zod.ZodDefault<zod.ZodNumber>;
+            proposal_token_threshold: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+        }, {
+            proposal_token_threshold: zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+        }>>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            proposal_start_time_in_seconds: number;
+            proposal_voting_time_in_seconds: number;
+            voting_delay: number;
+            voting_period: number;
+            voting_token_address: string;
+            voting_quorum_fraction: number;
+            proposal_token_threshold: BigNumber;
+        }, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            proposal_start_time_in_seconds?: number | undefined;
+            proposal_voting_time_in_seconds?: number | undefined;
+            voting_delay?: number | undefined;
+            voting_period?: number | undefined;
+            voting_token_address?: string | undefined;
+            voting_quorum_fraction?: number | undefined;
+            name: string;
+            proposal_token_threshold: string | number | bigint | BigNumber;
+        }>;
+        input: zod.ZodObject<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            proposal_start_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
+            proposal_voting_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
+            voting_delay: zod.ZodDefault<zod.ZodNumber>;
+            voting_period: zod.ZodDefault<zod.ZodNumber>;
+            voting_token_address: zod.ZodDefault<zod.ZodString>;
+            voting_quorum_fraction: zod.ZodDefault<zod.ZodNumber>;
+            proposal_token_threshold: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            name: string;
+            proposal_start_time_in_seconds: number;
+            proposal_voting_time_in_seconds: number;
+            voting_delay: number;
+            voting_period: number;
+            voting_token_address: string;
+            voting_quorum_fraction: number;
+            proposal_token_threshold: string;
+        }, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            proposal_start_time_in_seconds?: number | undefined;
+            proposal_voting_time_in_seconds?: number | undefined;
+            voting_delay?: number | undefined;
+            voting_period?: number | undefined;
+            voting_token_address?: string | undefined;
+            voting_quorum_fraction?: number | undefined;
+            name: string;
+            proposal_token_threshold: string | number | bigint | BigNumber;
+        }>;
+    };
+    // Warning: (ae-forgotten-export) The symbol "VoteSettings" needs to be exported by the entry point index.d.ts
+    settings(): Promise<VoteSettings>;
+    // Warning: (ae-forgotten-export) The symbol "VoteType" needs to be exported by the entry point index.d.ts
+    vote(proposalId: string, voteType: VoteType, reason?: string): Promise<void>;
+}
 
 // @public
 export class WrongListingTypeError extends Error {
