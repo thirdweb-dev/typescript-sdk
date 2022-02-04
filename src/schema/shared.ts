@@ -27,30 +27,18 @@ export const BigNumberSchema = z
   .union([z.string(), z.number(), z.bigint(), z.instanceof(BigNumber)])
   .transform((arg) => BigNumber.from(arg));
 
+
 export const BigNumberishSchema = BigNumberSchema.transform((arg) =>
   arg.toString(),
 );
 
-export const BasisPointsSchema = z.number().superRefine((bn, ctx) => {
-  if (bn > 10000) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.too_big,
-      maximum: 10000,
-      inclusive: true,
-      type: "number",
-    });
-  } else if (bn < 0) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.too_small,
-      minimum: 0,
-      inclusive: true,
-      type: "number",
-    });
-  }
-});
+export const BasisPointsSchema = z
+  .number()
+  .max(10_000, "Cannot exeed 100%")
+  .min(0, "Cannot be below 0%");
 
 export const JsonLiteral = z.union([
-  z.string().min(1, "Cannot be empty"),
+  z.string(),
   z.number(),
   z.boolean(),
   z.null(),
@@ -60,7 +48,10 @@ export const JsonSchema: z.ZodSchema<Json> = z.lazy(() =>
   z.union([JsonLiteral, z.array(JsonSchema), z.record(JsonSchema)]),
 );
 export const JsonObjectSchema = z.record(JsonSchema);
-export const HexColor = z
-  .string()
-  .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color")
-  .transform((val) => val.replace("#", ""));
+export const HexColor = z.union([
+  z
+    .string()
+    .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color")
+    .transform((val) => val.replace("#", "")),
+  z.string().length(0),
+]);

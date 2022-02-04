@@ -16,7 +16,7 @@ static schema: {
         }, {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, {
-            platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
+            platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
             platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
             trusted_forwarder: zod.ZodDefault<zod.ZodString>;
