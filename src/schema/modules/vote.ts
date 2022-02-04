@@ -5,15 +5,20 @@ import {
 } from "./common";
 import { BigNumberishSchema, BigNumberSchema } from "../shared";
 import { z } from "zod";
+import { AddressZero } from "@ethersproject/constants";
 
 export const VoteSettingsInputSchema = z.object({
-  proposal_start_time_in_seconds: z.number(),
-  proposal_voting_time_in_seconds: z.number(),
-  voting_delay: z.number(),
-  voting_period: z.number(),
-  voting_token_address: z.string(),
-  voting_quorum_fraction: z.number(),
+  proposal_start_time_in_seconds: z.number().default(0),
+  proposal_voting_time_in_seconds: z.number().default(0),
+  voting_delay: z.number().default(0),
+  voting_period: z.number().default(0),
+  voting_token_address: z.string().default(AddressZero),
+  voting_quorum_fraction: z.number().default(0),
   proposal_token_threshold: BigNumberishSchema,
+});
+
+export const VoteSettingsOuputSchema = VoteSettingsInputSchema.extend({
+  proposal_token_threshold: BigNumberSchema,
 });
 
 export const VoteModuleInput = CommonModuleSchema.merge(
@@ -21,7 +26,7 @@ export const VoteModuleInput = CommonModuleSchema.merge(
 );
 
 export const VoteModuleOutput = CommonModuleOutputSchema.merge(
-  VoteSettingsInputSchema,
+  VoteSettingsOuputSchema,
 );
 
 export const VoteModuleDeploy = VoteModuleInput.merge(

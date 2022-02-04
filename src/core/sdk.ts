@@ -6,6 +6,7 @@ import {
   DropErc721Module,
   MODULES_MAP,
   TokenErc20Module,
+  VoteModule,
 } from "../modules";
 import { SDKOptions } from "../schema/sdk-options";
 import { ModuleFactory } from "./classes/factory";
@@ -147,6 +148,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       address,
       TokenErc20Module.moduleType,
     ) as TokenErc20Module;
+  }
+
+  /**
+   * Get an instance of a Vote module
+   * @param address - the address of the deployed module
+   * @returns the module
+   */
+  public getVoteModule(address: string): VoteModule {
+    return this.getModule(address, VoteModule.moduleType) as VoteModule;
   }
 
   /**

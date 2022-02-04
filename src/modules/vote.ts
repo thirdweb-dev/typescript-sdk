@@ -19,6 +19,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 import { VoteType } from "../enums";
 import deepEqual from "deep-equal";
 import { CurrencyValue } from "../types/currency";
+import { UpdateableNetwork } from "../core/interfaces/module";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -36,8 +37,8 @@ import { CurrencyValue } from "../types/currency";
  *
  * @public
  */
-export class VoteModule {
-  static moduleType = "VoteERC20" as const;
+export class VoteModule implements UpdateableNetwork {
+  static moduleType: string = "VoteERC20" as const;
   static schema = VoteModuleSchema;
   static contractFactory = VoteERC20__factory;
 
@@ -65,6 +66,14 @@ export class VoteModule {
       VoteModule.schema,
       this.storage,
     );
+  }
+
+  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
+
+  getAddress(): string {
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************

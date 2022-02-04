@@ -126,7 +126,7 @@ export class ContractWrapper<
   /**
    * @internal
    */
-  private async emitTransactionEvent(
+  private emitTransactionEvent(
     status: "submitted" | "completed",
     transactionHash: string,
   ) {

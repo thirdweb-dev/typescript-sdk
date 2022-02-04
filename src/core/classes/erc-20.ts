@@ -43,7 +43,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  public getAddress(): string {
+  getAddress(): string {
     return this.contractWrapper.readContract.address;
   }
 

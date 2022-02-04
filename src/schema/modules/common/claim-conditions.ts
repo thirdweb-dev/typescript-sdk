@@ -36,8 +36,3 @@ export const ClaimConditionOutputSchema = ClaimConditionInputSchema.omit({
   // TODO: implement currency type
   currencyMetadata: z.unknown().default(unknown()),
 });
-
-ClaimConditionOutputSchema.omit({
-  availableSupply: true,
-  currencyMetadata: true,
-});
