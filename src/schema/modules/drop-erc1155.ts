@@ -3,15 +3,22 @@ import {
   CommonModuleSchema,
   CommonPlatformFeeSchema,
   CommonRoyaltySchema,
+  CommonSymbolSchema,
   CommonTrustedForwarderSchema,
 } from "./common";
 import { MerkleSchema } from "./common/snapshots";
 
-export const DropErc1155ModuleInput =
-  CommonModuleSchema.merge(CommonRoyaltySchema).merge(MerkleSchema);
+export const DropErc1155ModuleInput = CommonModuleSchema.merge(
+  CommonRoyaltySchema,
+)
+  .merge(MerkleSchema)
+  .merge(CommonSymbolSchema);
 
-export const DropErc1155ModuleOutput =
-  CommonModuleOutputSchema.merge(CommonRoyaltySchema).merge(MerkleSchema);
+export const DropErc1155ModuleOutput = CommonModuleOutputSchema.merge(
+  CommonRoyaltySchema,
+)
+  .merge(MerkleSchema)
+  .merge(CommonSymbolSchema);
 
 export const DropErc1155ModuleDeploy = DropErc1155ModuleInput.merge(
   CommonPlatformFeeSchema,

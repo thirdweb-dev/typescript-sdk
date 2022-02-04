@@ -8,7 +8,7 @@
 
 ```typescript
 static schema: {
-        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -19,6 +19,8 @@ static schema: {
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
+        }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
             platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
@@ -27,6 +29,7 @@ static schema: {
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
@@ -35,6 +38,7 @@ static schema: {
             trusted_forwarder: string;
             merkle: Record<string, string>;
         }, {
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
@@ -46,7 +50,7 @@ static schema: {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -58,17 +62,21 @@ static schema: {
             fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
             merkle: Record<string, string>;
         }, {
             [x: string]: Json;
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
@@ -77,7 +85,7 @@ static schema: {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        input: zod.ZodObject<zod.extendShape<zod.extendShape<{
+        input: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -87,15 +95,19 @@ static schema: {
             fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
             merkle: Record<string, string>;
         }, {
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;

@@ -9,8 +9,8 @@ import {
 import { ChainId, SUPPORTED_CHAIN_ID } from "../constants/chains";
 import { NATIVE_TOKEN_ADDRESS, NATIVE_TOKENS } from "../constants/currency";
 import { Provider } from "@ethersproject/providers";
-import { Currency, CurrencyValue, NativeToken } from "../types/currency";
 import { formatUnits } from "ethers/lib/utils";
+import { Currency, CurrencyValue, NativeToken } from "../types/currency";
 
 export function isNativeToken(tokenAddress: string): boolean {
   return (

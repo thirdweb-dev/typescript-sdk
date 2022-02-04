@@ -10,7 +10,7 @@ import {
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { isNativeToken, NATIVE_TOKEN_ADDRESS } from "../../common/currency";
+import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   ClaimCondition,
@@ -26,6 +26,7 @@ import {
   ClaimConditionOutputSchema,
 } from "../../schema/modules/common/claim-conditions";
 import { TransactionResultPromise } from "../index";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 
 export class DropErc1155ClaimConditions {
   private contractWrapper;

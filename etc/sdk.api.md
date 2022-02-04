@@ -33,6 +33,8 @@ import { Signer } from '@ethersproject/abstract-signer';
 import { Signer as Signer_2 } from 'ethers';
 import { TokenERC1155 } from '@3rdweb/contracts';
 import { TokenERC1155__factory } from '@3rdweb/contracts';
+import { TokenERC20 } from '@3rdweb/contracts';
+import { TokenERC20__factory } from '@3rdweb/contracts';
 import { TokenERC721 } from '@3rdweb/contracts';
 import { TokenERC721__factory } from '@3rdweb/contracts';
 import { TransactionReceipt } from '@ethersproject/providers';
@@ -124,7 +126,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
     royalty: ContractRoyalty<DropERC1155, typeof DropErc1155Module.schema>;
     // (undocumented)
     static schema: {
-        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -135,6 +137,8 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
+        }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
             platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
@@ -143,6 +147,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
@@ -151,6 +156,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
             trusted_forwarder: string;
             merkle: Record<string, string>;
         }, {
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
@@ -162,7 +168,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -174,17 +180,21 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
             fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
             merkle: Record<string, string>;
         }, {
             [x: string]: Json;
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
@@ -193,7 +203,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        input: zod.ZodObject<zod.extendShape<zod.extendShape<{
+        input: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -203,15 +213,19 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
             fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
             merkle: Record<string, string>;
         }, {
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
@@ -256,7 +270,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     royalty: ContractRoyalty<DropERC721, typeof DropErc721Module.schema>;
     // (undocumented)
     static schema: {
-        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -267,6 +281,8 @@ export class DropErc721Module extends Erc721<DropERC721> {
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
+        }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
             platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
@@ -275,6 +291,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
@@ -283,6 +300,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
             trusted_forwarder: string;
             merkle: Record<string, string>;
         }, {
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
@@ -294,7 +312,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -306,17 +324,21 @@ export class DropErc721Module extends Erc721<DropERC721> {
             fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
             merkle: Record<string, string>;
         }, {
             [x: string]: Json;
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
@@ -325,7 +347,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
             merkle?: Record<string, string> | undefined;
             name: string;
         }>;
-        input: zod.ZodObject<zod.extendShape<zod.extendShape<{
+        input: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -335,15 +357,19 @@ export class DropErc721Module extends Erc721<DropERC721> {
             fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
             merkle: Record<string, string>;
         }, {
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
@@ -506,10 +532,11 @@ export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<typ
 //
 // @internal (undocumented)
 export const MODULES_MAP: {
-    readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module;
     readonly DropERC721: typeof DropErc721Module;
+    readonly TokenERC721: typeof TokenErc721Module;
     readonly DropERC1155: typeof DropErc1155Module;
     readonly TokenERC1155: typeof TokenErc1155Module;
+    readonly TokenERC20: typeof TokenErc20Module;
 };
 
 // Warning: (ae-incompatible-release-tags) The symbol "ModuleType" is marked as @public, but its signature references "MODULES_MAP" which is marked as @internal
@@ -591,13 +618,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getBundleModule(address: string): TokenErc1155Module;
     getDropModule(moduleAddress: string): DropErc721Module;
     // @internal (undocumented)
-    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | ts_toolbelt_out_Class_Instance.Instance<{
-        readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module;
+    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | TokenErc20Module | ts_toolbelt_out_Class_Instance.Instance<{
         readonly DropERC721: typeof DropErc721Module;
+        readonly TokenERC721: typeof TokenErc721Module;
         readonly DropERC1155: typeof DropErc1155Module;
         readonly TokenERC1155: typeof TokenErc1155Module;
+        readonly TokenERC20: typeof TokenErc20Module;
     }[TModuleType]>;
     getNFTModule(address: string): TokenErc721Module;
+    getTokenModule(address: string): TokenErc20Module;
     // (undocumented)
     resolveModuleType<TModuleType extends ModuleType>(moduleAddress: string): Promise<TModuleType>;
     // (undocumented)
@@ -717,6 +746,112 @@ export class TokenErc1155Module extends Erc1155<TokenERC1155> {
     };
 }
 
+// Warning: (ae-forgotten-export) The symbol "Erc20" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class TokenErc20Module extends Erc20<TokenERC20> {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
+    // (undocumented)
+    static contractFactory: typeof TokenERC20__factory;
+    // @alpha
+    delegateTo(delegateeAddress: string): TransactionResultPromise;
+    getDelegation(): Promise<string>;
+    getDelegationOf(account: string): Promise<string>;
+    getVoteBalance(): Promise<BigNumber>;
+    // (undocumented)
+    getVoteBalanceOf(account: string): Promise<BigNumber>;
+    // (undocumented)
+    metadata: ContractMetadata<TokenERC20, typeof TokenErc20Module.schema>;
+    mint(amount: BigNumberish): TransactionResultPromise;
+    // Warning: (ae-forgotten-export) The symbol "TokenMintInput" needs to be exported by the entry point index.d.ts
+    mintBatchTo(args: TokenMintInput[]): TransactionResultPromise;
+    mintTo(to: string, amount: BigNumberish): TransactionResultPromise;
+    // (undocumented)
+    static moduleRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static moduleType: "TokenERC20";
+    // (undocumented)
+    roles: ContractRoles<TokenERC20, typeof TokenErc20Module.moduleRoles[number]>;
+    // (undocumented)
+    static schema: {
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
+        }>, {
+            platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, {
+            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            symbol: string;
+            name: string;
+            platform_fee_basis_points: number;
+            platform_fee_recipient: string;
+            trusted_forwarder: string;
+        }, {
+            symbol?: string | undefined;
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            platform_fee_basis_points?: number | undefined;
+            platform_fee_recipient?: string | undefined;
+            trusted_forwarder?: string | undefined;
+            name: string;
+        }>;
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            image: zod.ZodOptional<zod.ZodString>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            symbol: string;
+            name: string;
+        }, {
+            [x: string]: Json;
+            symbol?: string | undefined;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+        }>;
+        input: zod.ZodObject<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            symbol: string;
+            name: string;
+        }, {
+            symbol?: string | undefined;
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            name: string;
+        }>;
+    };
+}
+
 // @public
 export class TokenErc721Module extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
@@ -745,7 +880,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "TokenERC721";
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
     // (undocumented)
@@ -754,7 +889,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     royalty: ContractRoyalty<TokenERC721, typeof TokenErc721Module.schema>;
     // (undocumented)
     static schema: {
-        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -762,6 +897,8 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
             fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
             platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
@@ -771,6 +908,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
@@ -778,6 +916,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
             platform_fee_recipient: string;
             trusted_forwarder: string;
         }, {
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
@@ -788,7 +927,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
             trusted_forwarder?: string | undefined;
             name: string;
         }>;
-        output: zod.ZodObject<zod.extendShape<zod.extendShape<{
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -798,16 +937,20 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
         }>, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
             fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
         }, {
             [x: string]: Json;
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
@@ -815,7 +958,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
             fee_recipient?: string | undefined;
             name: string;
         }>;
-        input: zod.ZodObject<zod.extendShape<{
+        input: zod.ZodObject<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -823,14 +966,18 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodEffects<zod.ZodNumber, number, number>>;
             fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
+            symbol: string;
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
         }, {
+            symbol?: string | undefined;
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;

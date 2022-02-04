@@ -32,6 +32,7 @@ declare class ThirdwebSDK extends RPCConnectionHandler
 |  [getBundleModule(address)](./sdk.thirdwebsdk.getbundlemodule.md) |  | Get an instance of a Bundle module |
 |  [getDropModule(moduleAddress)](./sdk.thirdwebsdk.getdropmodule.md) |  | Get an instance of a Drop module |
 |  [getNFTModule(address)](./sdk.thirdwebsdk.getnftmodule.md) |  | Get an instance of a NFT Collection module |
+|  [getTokenModule(address)](./sdk.thirdwebsdk.gettokenmodule.md) |  | Get an instance of a Token module |
 |  [resolveModuleType(moduleAddress)](./sdk.thirdwebsdk.resolvemoduletype.md) |  |  |
 |  [updateSignerOrProvider(network)](./sdk.thirdwebsdk.updatesignerorprovider.md) |  | Update the active signer or provider for all modules |
 
