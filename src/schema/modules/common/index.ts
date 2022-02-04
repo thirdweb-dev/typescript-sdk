@@ -55,5 +55,5 @@ export const CommonTrustedForwarderSchema = z.object({
 });
 
 export const CommonSymbolSchema = z.object({
-  symbol: z.string(),
+  symbol: z.string().optional().default(""),
 });
