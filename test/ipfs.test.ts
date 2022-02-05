@@ -9,25 +9,6 @@ global.fetch = require("node-fetch");
 
 describe("IPFS Uploads", async () => {
   const storage: IpfsStorage = new IpfsStorage(ipfsGatewayUrl);
-  // let adminWallet: SignerWithAddress,
-  //   samWallet: SignerWithAddress,
-  //   bobWallet: SignerWithAddress;
-
-  // before(() => {
-  //   [adminWallet, samWallet, bobWallet] = signers;
-  // });
-
-  // beforeEach(async () => {
-  // const storage = new IpfsStorage(ipfsGatewayUrl);
-  // sdk.overrideStorage(storage);
-  //
-  // sdk.setProviderOrSigner(adminWallet);
-  // });
-
-  // afterAll(async () => {
-  //   const storage = new MockStorage();
-  //   sdk.overrideStorage(storage);
-  // });
 
   async function getFile(upload: string): Promise<Response> {
     const response = await fetch(
@@ -85,6 +66,21 @@ describe("IPFS Uploads", async () => {
     );
   });
 
+  it("should upload an media file and resolve to gateway URL when fetching it", async () => {
+    const upload = await storage.uploadMetadata({
+      animation_url: readFileSync("test/test.mp4"),
+    });
+    assert.equal(
+      upload,
+      "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
+    );
+    const meta = await storage.get(upload);
+    assert.equal(
+      meta.animation_url,
+      `${ipfsGatewayUrl}/QmUphf8LnNGdFwBevnxNkq8dxcZ4qxzzPjoNMDkSQfECKM/0`,
+    );
+  });
+
   it("should upload many objects correctly", async () => {
     const sampleObjects: { id: number; description: string; prop: string }[] = [
       {
@@ -101,8 +97,7 @@ describe("IPFS Uploads", async () => {
     const serialized = sampleObjects.map((o) => Buffer.from(JSON.stringify(o)));
     const cid = await storage.uploadBatch(serialized);
     for (const object of sampleObjects) {
-      const fetched = await storage.get(`${cid}${object.id}`);
-      const parsed = JSON.parse(fetched);
+      const parsed = await storage.get(`${cid}${object.id}`);
       assert.equal(parsed.description, object.description);
       assert.equal(parsed.id, object.id);
     }

@@ -698,13 +698,9 @@ export class InvalidAddressError extends Error {
 export class IpfsStorage implements IStorage {
     constructor(gatewayUrl?: string);
     // (undocumented)
-    canResolve(uri: string): boolean;
-    // (undocumented)
-    get(hash: string): Promise<string>;
+    get(hash: string): Promise<Record<string, any>>;
     // (undocumented)
     getUploadToken(contractAddress: string): Promise<string>;
-    // @internal
-    resolveFullUrl(ipfsHash: string): string;
     // (undocumented)
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
     // (undocumented)
@@ -720,10 +716,8 @@ export class IpfsStorage implements IStorage {
 
 // @public (undocumented)
 export interface IStorage {
-    canResolve(uri: string): boolean;
-    get(hash: string): Promise<string>;
+    get(hash: string): Promise<Record<string, any>>;
     getUploadToken(contractAddress: string): Promise<string>;
-    resolveFullUrl(hash: string): string;
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;

@@ -10,6 +10,11 @@ import {
 } from "../../constants/urls";
 import { IStorage } from "../interfaces/IStorage";
 import { FileOrBuffer, JsonObject } from "../types";
+import {
+  replaceFilePropertiesWithHashes,
+  replaceHashWithGatewayUrl,
+  resolveGatewayUrl,
+} from "../helpers/storage";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -64,6 +69,149 @@ export class IpfsStorage implements IStorage {
     );
 
     return `ipfs://${cid}/`;
+  }
+
+  public async getUploadToken(contractAddress: string): Promise<string> {
+    const headers = {
+      "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
+    };
+    const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
+      method: "GET",
+      headers,
+    });
+    if (!res.ok) {
+      throw new FetchError(`Failed to get upload token`);
+    }
+    const body = await res.text();
+    return body;
+  }
+
+  public async get(hash: string): Promise<Record<string, any>> {
+    const res = await this._get(hash);
+    const json = await res.json();
+    return replaceHashWithGatewayUrl(json, "ipfs://", this.gatewayUrl);
+  }
+
+  public async uploadMetadata(
+    metadata: JsonObject,
+    contractAddress?: string,
+    signerAddress?: string,
+  ): Promise<string> {
+    // since there's only single object, always use the first index
+    const { metadataUris } = await this.uploadMetadataBatch(
+      [metadata],
+      0,
+      contractAddress,
+      signerAddress,
+    );
+    return metadataUris[0];
+  }
+
+  /**
+   * @internal
+   */
+  public async uploadMetadataBatch(
+    metadatas: JsonObject[],
+    fileStartNumber?: number,
+    contractAddress?: string,
+    signerAddress?: string,
+  ) {
+    const metadataToUpload = (await this.batchUploadProperties(metadatas)).map(
+      (m: any) => JSON.stringify(m),
+    );
+
+    const { cid, fileNames } = await this.uploadBatchWithCid(
+      metadataToUpload,
+      fileStartNumber,
+      contractAddress,
+      signerAddress,
+    );
+
+    const baseUri = `ipfs://${cid}/`;
+    const uris = fileNames.map((filename) => `${baseUri}${filename}`);
+
+    return {
+      baseUri,
+      metadataUris: uris,
+    };
+  }
+
+  /** *************************
+   * PRIVATE FUNCTIONS
+   *************************/
+
+  private async _get(hash: string): Promise<Response> {
+    let uri = hash;
+    if (hash) {
+      uri = resolveGatewayUrl(hash, "ipfs://", this.gatewayUrl);
+    }
+    const result = await fetch(uri);
+    if (!result.ok) {
+      throw new Error(`Status code (!= 200) =${result.status}`);
+    }
+    return result;
+  }
+
+  /**
+   * Pre-processes metadata and uploads all file properties
+   * to storage in *bulk*, then performs a string replacement of
+   * all file properties -\> the resulting ipfs uri. This is
+   * called internally by `uploadMetadataBatch`.
+   *
+   * @internal
+   *
+   * @param metadata - The metadata to recursively process
+   * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
+   */
+  private async batchUploadProperties(metadatas: JsonObject[]) {
+    const filesToUpload = metadatas.flatMap((m) =>
+      this.buildFilePropertiesMap(m, []),
+    );
+    if (filesToUpload.length === 0) {
+      return metadatas;
+    }
+    const { cid, fileNames } = await this.uploadBatchWithCid(filesToUpload);
+
+    const cids = [];
+    // recurse ordered array
+    for (const filename of fileNames) {
+      cids.push(`${cid}/${filename}`);
+    }
+
+    const finalMetadata = await replaceFilePropertiesWithHashes(
+      metadatas,
+      cids,
+    );
+    return finalMetadata;
+  }
+
+  /**
+   * This function recurisely traverses an object and hashes any
+   * `Buffer` or `File` objects into the returned map.
+   *
+   * @param object - the Json Object
+   * @param files - The running array of files or buffer to upload
+   * @returns - The final map of all hashes to files
+   */
+  private buildFilePropertiesMap(
+    object: JsonObject,
+    files: (File | Buffer)[] = [],
+  ): (File | Buffer)[] {
+    if (Array.isArray(object)) {
+      object.forEach((element) => {
+        this.buildFilePropertiesMap(element, files);
+      });
+    } else if (object) {
+      const values = Object.values(object);
+      for (const val of values) {
+        if (val instanceof File || val instanceof Buffer) {
+          files.push(val);
+        } else if (typeof val === "object") {
+          this.buildFilePropertiesMap(val as JsonObject, files);
+        }
+      }
+    }
+    return files;
   }
 
   private async uploadBatchWithCid(
@@ -139,198 +287,5 @@ export class IpfsStorage implements IStorage {
       cid: body.IpfsHash,
       fileNames,
     };
-  }
-
-  public async getUploadToken(contractAddress: string): Promise<string> {
-    const headers = {
-      "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
-    };
-    const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
-      method: "GET",
-      headers,
-    });
-    if (!res.ok) {
-      throw new FetchError(`Failed to get upload token`);
-    }
-    const body = await res.text();
-    return body;
-  }
-
-  private async _get(hash: string): Promise<Response> {
-    let uri = hash;
-    if (hash) {
-      uri = this.resolveFullUrl(hash);
-    }
-    const result = await fetch(uri);
-    if (!result.ok) {
-      throw new Error(`Status code (!= 200) =${result.status}`);
-    }
-    return result;
-  }
-
-  public async get(hash: string) {
-    const res = await this._get(hash);
-    return res.text();
-  }
-
-  /**
-   * This function recurisely traverses an object and hashes any
-   * `Buffer` or `File` objects into the returned map.
-   *
-   * @param object - the Json Object
-   * @param files - The running array of files or buffer to upload
-   * @returns - The final map of all hashes to files
-   */
-  private buildFilePropertiesMap(
-    object: JsonObject,
-    files: (File | Buffer)[] = [],
-  ): (File | Buffer)[] {
-    if (Array.isArray(object)) {
-      object.forEach((element) => {
-        this.buildFilePropertiesMap(element, files);
-      });
-    } else if (object) {
-      const values = Object.values(object);
-      for (const val of values) {
-        if (val instanceof File || val instanceof Buffer) {
-          files.push(val);
-        } else if (typeof val === "object") {
-          this.buildFilePropertiesMap(val as JsonObject, files);
-        }
-      }
-    }
-    return files;
-  }
-
-  /**
-   * Pre-processes metadata and uploads all file properties
-   * to storage in *bulk*, then performs a string replacement of
-   * all file properties -\> the resulting ipfs uri. This is
-   * called internally by `uploadMetadataBatch`.
-   *
-   * @internal
-   *
-   * @param metadata - The metadata to recursively process
-   * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
-   */
-  private async batchUploadProperties(metadatas: JsonObject[]) {
-    const filesToUpload = metadatas.flatMap((m) =>
-      this.buildFilePropertiesMap(m, []),
-    );
-    if (filesToUpload.length === 0) {
-      return metadatas;
-    }
-    const { cid, fileNames } = await this.uploadBatchWithCid(filesToUpload);
-
-    const cids = [];
-    // recurse ordered array
-    for (const filename of fileNames) {
-      cids.push(`${cid}/${filename}`);
-    }
-
-    const finalMetadata = await this.replaceFilePropertiesWithHashes(
-      metadatas,
-      cids,
-    );
-    return finalMetadata;
-  }
-
-  /**
-   * Given a map of file hashes to ipfs uris, this function will hash
-   * all properties recursively and replace them with the ipfs uris
-   * from the map passed in. If a hash is missing from the map, the function
-   * will throw an error.
-   *
-   * @internal
-   *
-   * @param object - The object to recursively process
-   * @param cids - The array of file hashes to ipfs uris in the recurse order
-   * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
-   */
-  private async replaceFilePropertiesWithHashes(
-    object: Record<string, any>,
-    cids: string[],
-  ) {
-    const keys = Object.keys(object).sort();
-    for (const key in keys) {
-      const val = object[keys[key]];
-      const isFile = val instanceof File || val instanceof Buffer;
-      if (typeof val === "object" && !isFile) {
-        await this.replaceFilePropertiesWithHashes(val, cids);
-        continue;
-      }
-
-      if (!isFile) {
-        continue;
-      }
-
-      object[keys[key]] = `ipfs://${cids.splice(0, 1)[0]}`;
-    }
-    return object;
-  }
-
-  public async uploadMetadata(
-    metadata: JsonObject,
-    contractAddress?: string,
-    signerAddress?: string,
-  ): Promise<string> {
-    // since there's only single object, always use the first index
-    const { metadataUris } = await this.uploadMetadataBatch(
-      [metadata],
-      0,
-      contractAddress,
-      signerAddress,
-    );
-    return metadataUris[0];
-  }
-
-  /**
-   * @internal
-   */
-  public async uploadMetadataBatch(
-    metadatas: JsonObject[],
-    fileStartNumber?: number,
-    contractAddress?: string,
-    signerAddress?: string,
-  ) {
-    const metadataToUpload = (await this.batchUploadProperties(metadatas)).map(
-      (m: any) => JSON.stringify(m),
-    );
-
-    const { cid, fileNames } = await this.uploadBatchWithCid(
-      metadataToUpload,
-      fileStartNumber,
-      contractAddress,
-      signerAddress,
-    );
-
-    const baseUri = `ipfs://${cid}/`;
-    const uris = fileNames.map((filename) => `${baseUri}${filename}`);
-
-    return {
-      baseUri,
-      metadataUris: uris,
-    };
-  }
-
-  /**
-   * Resolves the full url for a file using the configured gateway
-   *
-   * @param ipfsHash - the ipfs:// uri
-   * @returns - The fully formed IPFS url with the gateway url
-   * @internal
-   */
-  resolveFullUrl(ipfsHash: string): string {
-    if (typeof ipfsHash !== "string") {
-      return "";
-    }
-    return ipfsHash && ipfsHash.toLowerCase().includes("ipfs://")
-      ? ipfsHash.replace("ipfs://", this.gatewayUrl)
-      : ipfsHash;
-  }
-
-  public canResolve(uri: string): boolean {
-    const resolved = this.resolveFullUrl(uri);
-    return resolved.toLowerCase() !== uri.toLowerCase();
   }
 }

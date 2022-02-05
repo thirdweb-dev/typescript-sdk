@@ -35,7 +35,7 @@ export async function createSnapshot(
     }),
   });
 
-  const uri = await storage.upload(JSON.stringify(snapshot));
+  const uri = await storage.uploadMetadata(snapshot);
   return {
     merkleRoot: tree.getHexRoot(),
     snapshotUri: uri,

@@ -48,7 +48,7 @@ export class ContractMetadata<
   public async get() {
     const uri = await this.contractWrapper.readContract.contractURI();
     const data = await this.storage.get(uri);
-    return this.parseOutputMetadata(JSON.parse(data));
+    return this.parseOutputMetadata(data);
   }
   /**
    *

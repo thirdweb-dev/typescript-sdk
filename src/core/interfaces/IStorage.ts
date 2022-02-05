@@ -13,6 +13,22 @@ export interface UploadMetadataBatchResult {
 
 export interface IStorage {
   /**
+   * Fetches a one-time-use upload token that can used to upload
+   * a file to storage.
+   *
+   * @returns - The one time use token that can be passed to the Pinata API.
+   */
+  getUploadToken(contractAddress: string): Promise<string>;
+
+  /**
+   * Fetches data from storage. This method expects to fetch JSON formatted data
+   *
+   * @param hash - The Hash of the file to fetch
+   * @returns - The data, if found.
+   */
+  get(hash: string): Promise<Record<string, any>>;
+
+  /**
    * Uploads a file to the storage.
    *
    * @param data - The data to be uploaded. Can be a file/buffer (which will be loaded), or a string.
@@ -45,36 +61,8 @@ export interface IStorage {
   ): Promise<string>;
 
   /**
-   * Fetches a one-time-use upload token that can used to upload
-   * a file to storage.
    *
-   * @returns - The one time use token that can be passed to the Pinata API.
-   */
-  getUploadToken(contractAddress: string): Promise<string>;
-
-  /**
-   * Fetches data from storage. This method does not handle any deserialization.
-   * Its up to the caller to determine what the type of the data is.
-   *
-   * @param hash - The Hash of the file to fetch
-   * @returns - The data, if found.
-   */
-  get(hash: string): Promise<string>;
-
-  /**
-   * Resolves the full URL of a file for a given gateway.
-   *
-   * For example, if the hash of a file is `ipfs://bafkreib3u2u6ir2fsl5nkuwixfsb3l4xehri3psjv5yga4inuzsjunk2sy`, then the URL will be:
-   * "https://cloudflare-ipfs.com/ipfs/bafkreibnwjhx5s3r2rggdoy3hw7lr7wmgy4bas35oky3ed6eijklk2oyvq"
-   * if the gateway is `cloudflare-ipfs.com`.
-   *
-   * @param hash - The hash of a file.
-   */
-  resolveFullUrl(hash: string): string;
-
-  /**
-   *
-   * Uploads metadata to IPFS
+   * Uploads JSON metadata to IPFS
    *
    * @param metadata - The metadata to be uploaded.
    * @param contractAddress - Optional. The contract address the data belongs to.
@@ -89,7 +77,7 @@ export interface IStorage {
 
   /**
    *
-   * Uploads metadata to IPFS
+   * Uploads JSON metadata to IPFS
    *
    * @param metadata - The metadata to be uploaded.
    * @param fileStartNumber - Optional. The first file file name begins with.
@@ -102,13 +90,4 @@ export interface IStorage {
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<UploadMetadataBatchResult>;
-
-  /**
-   * Returns true if the URI is resolvable by the current storage interface.
-   *
-   * For example: If the storage is configured to point to IPFS,
-   * passing in ipfs://SOME_HASH will return true in this function
-   * because that is a valid IPFS URI.
-   */
-  canResolve(uri: string): boolean;
 }

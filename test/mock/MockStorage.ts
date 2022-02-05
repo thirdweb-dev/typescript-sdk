@@ -3,8 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import { IStorage, NotFoundError, UploadMetadataBatchResult } from "../../src";
 
 export class MockStorage implements IStorage {
-  private objects: { [key: string]: string } = {};
-  private folders: { [cid: string]: { [id: string]: string } } = {};
+  private objects: { [key: string]: any } = {};
+  private folders: { [cid: string]: { [id: string]: any } } = {};
 
   public async upload(
     data: string | FileOrBuffer,
@@ -64,7 +64,7 @@ export class MockStorage implements IStorage {
     return Promise.resolve("mock-token");
   }
 
-  get(hash: string): Promise<string> {
+  get(hash: string): Promise<Record<string, any>> {
     hash = hash.replace("mock://", "").replace("fake://", "");
     const split = hash.split("/");
     if (split.length === 1) {
@@ -82,13 +82,6 @@ export class MockStorage implements IStorage {
       throw new NotFoundError(`${cid}/${index}`);
     }
     return Promise.resolve(this.folders[cid][index.toString()]);
-  }
-
-  resolveFullUrl(hash: string): string {
-    if (typeof hash !== "string") {
-      return hash;
-    }
-    return hash.replace("mock://", "fake://");
   }
 
   public async uploadMetadata(
@@ -134,11 +127,6 @@ export class MockStorage implements IStorage {
       metadataUris: metadataToUpload.map((_, i) => `${baseUri}${i}`),
       baseUri,
     };
-  }
-
-  public canResolve(uri: string): boolean {
-    const resolved = this.resolveFullUrl(uri);
-    return resolved.toLowerCase() !== uri.toLowerCase();
   }
 
   private async uploadProperties(object: Record<string, any>): Promise<void> {

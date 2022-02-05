@@ -410,7 +410,7 @@ export class DropErc1155ClaimConditions {
     const metadata = await this.metadata.get();
     const snapshotUri = metadata.merkle[merkleRoot];
     const snapshot = await this.storage.get(snapshotUri);
-    const snapshotData = SnapshotSchema.parse(JSON.parse(snapshot));
+    const snapshotData = SnapshotSchema.parse(snapshot);
     const item = snapshotData.claims.find(
       (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
     );
