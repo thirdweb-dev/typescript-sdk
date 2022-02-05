@@ -20,6 +20,7 @@ import type {
 } from "./types";
 import { TokenErc721Module } from "../modules/token-erc-721";
 import { TokenErc1155Module } from "../modules/token-erc-1155";
+import { ModuleRegistry } from "./classes/registry";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
@@ -28,8 +29,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   private moduleCache = new Map<string, ValidModuleInstance>();
 
-  // private moduleFactory: TWFactory;
   public factory: ModuleFactory;
+  private registry: ModuleRegistry;
 
   public storage: IStorage;
 
@@ -40,6 +41,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ) {
     super(network, options);
     this.factory = new ModuleFactory(network, storage, options);
+    this.registry = new ModuleRegistry(network, options);
     this.storage = storage;
   }
 
@@ -59,6 +61,19 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         : this.getProvider(),
     );
     return (await contract.moduleType()) as TModuleType;
+  }
+
+  /** */
+  public async getModuleList(walletAddress: string) {
+    const addressesWithModuleTypes = await this.registry.getModuleAddresses(
+      walletAddress,
+    );
+
+    return addressesWithModuleTypes.map(({ address, moduleType }) => ({
+      address,
+      moduleType,
+      metadata: () => this.getModule(address, moduleType).metadata.get(),
+    }));
   }
 
   /**
@@ -170,6 +185,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   private updateModuleSignerOrProvider() {
     this.factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
+    this.registry.updateSignerOrProvider(
+      this.getSigner() || this.getProvider(),
+    );
     for (const [, module] of this.moduleCache) {
       module.onNetworkUpdated(this.getSigner() || this.getProvider());
     }

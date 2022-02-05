@@ -4,7 +4,7 @@
 
 ## IStorage.uploadMetadataBatch() method
 
-Uploads metadata to IPFS
+Uploads JSON metadata to IPFS
 
 <b>Signature:</b>
 

@@ -21,7 +21,6 @@ declare class IpfsStorage implements IStorage
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [canResolve(uri)](./sdk.ipfsstorage.canresolve.md) |  |  |
 |  [get(hash)](./sdk.ipfsstorage.get.md) |  |  |
 |  [getUploadToken(contractAddress)](./sdk.ipfsstorage.getuploadtoken.md) |  |  |
 |  [upload(data, contractAddress, signerAddress)](./sdk.ipfsstorage.upload.md) |  |  |

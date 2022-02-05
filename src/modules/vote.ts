@@ -7,7 +7,7 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { IStorage, NetworkOrSignerOrProvider } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { ProposalOutputSchema, VoteModuleSchema } from "../schema/modules/vote";
+import { VoteModuleSchema } from "../schema/modules/vote";
 import {
   Proposal,
   ProposalExecutable,
@@ -15,7 +15,7 @@ import {
   VoteSettings,
 } from "../types/vote";
 import { fetchCurrencyMetadata, fetchCurrencyValue } from "../common/currency";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { VoteType } from "../enums";
 import deepEqual from "deep-equal";
 import { CurrencyValue } from "../types/currency";
@@ -38,7 +38,7 @@ import { UpdateableNetwork } from "../core/interfaces/module";
  * @public
  */
 export class VoteModule implements UpdateableNetwork {
-  static moduleType: string = "VoteERC20" as const;
+  static moduleType = "VoteERC20" as const;
   static schema = VoteModuleSchema;
   static contractFactory = VoteERC20__factory;
 

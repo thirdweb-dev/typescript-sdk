@@ -14,12 +14,10 @@ interface IStorage
 
 |  Method | Description |
 |  --- | --- |
-|  [canResolve(uri)](./sdk.istorage.canresolve.md) | Returns true if the URI is resolvable by the current storage interface.<!-- -->For example: If the storage is configured to point to IPFS, passing in ipfs://SOME\_HASH will return true in this function because that is a valid IPFS URI. |
-|  [get(hash)](./sdk.istorage.get.md) | Fetches data from storage. This method does not handle any deserialization. Its up to the caller to determine what the type of the data is. |
+|  [get(hash)](./sdk.istorage.get.md) | Fetches data from storage. This method expects to fetch JSON formatted data |
 |  [getUploadToken(contractAddress)](./sdk.istorage.getuploadtoken.md) | Fetches a one-time-use upload token that can used to upload a file to storage. |
-|  [resolveFullUrl(hash)](./sdk.istorage.resolvefullurl.md) | Resolves the full URL of a file for a given gateway.<!-- -->For example, if the hash of a file is <code>ipfs://bafkreib3u2u6ir2fsl5nkuwixfsb3l4xehri3psjv5yga4inuzsjunk2sy</code>, then the URL will be: "https://cloudflare-ipfs.com/ipfs/bafkreibnwjhx5s3r2rggdoy3hw7lr7wmgy4bas35oky3ed6eijklk2oyvq" if the gateway is <code>cloudflare-ipfs.com</code>. |
 |  [upload(data, contractAddress, signerAddress)](./sdk.istorage.upload.md) | Uploads a file to the storage. |
 |  [uploadBatch(files, fileStartNumber, contractAddress, signerAddress)](./sdk.istorage.uploadbatch.md) | Uploads a folder to storage. |
-|  [uploadMetadata(metadata, contractAddress, signerAddress)](./sdk.istorage.uploadmetadata.md) | Uploads metadata to IPFS |
-|  [uploadMetadataBatch(metadatas, fileStartNumber, contractAddress, signerAddress)](./sdk.istorage.uploadmetadatabatch.md) | Uploads metadata to IPFS |
+|  [uploadMetadata(metadata, contractAddress, signerAddress)](./sdk.istorage.uploadmetadata.md) | Uploads JSON metadata to IPFS |
+|  [uploadMetadataBatch(metadatas, fileStartNumber, contractAddress, signerAddress)](./sdk.istorage.uploadmetadatabatch.md) | Uploads JSON metadata to IPFS |
 

@@ -20,7 +20,7 @@ import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-c
 import { DropErc1155ModuleSchema } from "../schema/modules/drop-erc1155";
 
 export class DropErc1155Module extends Erc1155<DropERC1155> {
-  static moduleType: string = "DropERC1155" as const;
+  static moduleType = "DropERC1155" as const;
   static schema = DropErc1155ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = DropERC1155__factory;

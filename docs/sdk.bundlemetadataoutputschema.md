@@ -8,14 +8,14 @@
 
 ```typescript
 BundleMetadataOutputSchema: z.ZodObject<{
-    supply: z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>;
+    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
     metadata: z.ZodObject<z.extendShape<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
-        id: z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>;
+        id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
         uri: z.ZodString;
         image: z.ZodOptional<z.ZodString>;
         external_url: z.ZodOptional<z.ZodString>;
@@ -40,7 +40,7 @@ BundleMetadataOutputSchema: z.ZodObject<{
         animation_url?: string | undefined;
         properties?: Record<string, string | number | boolean | null> | undefined;
         name: string;
-        id: ethers.BigNumber;
+        id: string | number | bigint | ethers.BigNumber;
         uri: string;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -65,9 +65,9 @@ BundleMetadataOutputSchema: z.ZodObject<{
         animation_url?: string | undefined;
         properties?: Record<string, string | number | boolean | null> | undefined;
         name: string;
-        id: ethers.BigNumber;
+        id: string | number | bigint | ethers.BigNumber;
         uri: string;
     };
-    supply: ethers.BigNumber;
+    supply: string | number | bigint | ethers.BigNumber;
 }>
 ```

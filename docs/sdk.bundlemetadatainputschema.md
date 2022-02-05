@@ -8,7 +8,7 @@
 
 ```typescript
 BundleMetadataInputSchema: z.ZodObject<{
-    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
+    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
     metadata: z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
@@ -75,7 +75,7 @@ BundleMetadataInputSchema: z.ZodObject<{
         properties?: Record<string, any> | undefined;
         name: string;
     };
-    supply: ethers.BigNumber;
+    supply: string;
 }, {
     metadata: {
         [x: string]: Json;

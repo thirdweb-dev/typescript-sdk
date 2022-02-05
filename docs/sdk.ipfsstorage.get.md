@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-get(hash: string): Promise<string>;
+get(hash: string): Promise<Record<string, any>>;
 ```
 
 ## Parameters
@@ -18,5 +18,5 @@ get(hash: string): Promise<string>;
 
 <b>Returns:</b>
 
-Promise&lt;string&gt;
+Promise&lt;Record&lt;string, any&gt;&gt;
 

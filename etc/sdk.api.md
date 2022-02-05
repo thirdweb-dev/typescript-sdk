@@ -351,7 +351,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "DropERC1155";
     // Warning: (ae-forgotten-export) The symbol "ContractPrimarySale" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -500,7 +500,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "DropERC721";
     // (undocumented)
     primarySales: ContractPrimarySale<DropERC721>;
     // (undocumented)
@@ -764,7 +764,12 @@ export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<typ
 //
 // @internal (undocumented)
 export const MODULES_MAP: {
-    readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule;
+    readonly DropERC721: typeof DropErc721Module;
+    readonly TokenERC721: typeof TokenErc721Module;
+    readonly DropERC1155: typeof DropErc1155Module;
+    readonly TokenERC1155: typeof TokenErc1155Module;
+    readonly TokenERC20: typeof TokenErc20Module;
+    readonly VoteERC20: typeof VoteModule;
 };
 
 // Warning: (ae-incompatible-release-tags) The symbol "ModuleType" is marked as @public, but its signature references "MODULES_MAP" which is marked as @internal
@@ -888,8 +893,47 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getDropModule(moduleAddress: string): DropErc721Module;
     // @internal (undocumented)
     getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | TokenErc20Module | VoteModule | ts_toolbelt_out_Class_Instance.Instance<{
-        readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule;
+        readonly DropERC721: typeof DropErc721Module;
+        readonly TokenERC721: typeof TokenErc721Module;
+        readonly DropERC1155: typeof DropErc1155Module;
+        readonly TokenERC1155: typeof TokenErc1155Module;
+        readonly TokenERC20: typeof TokenErc20Module;
+        readonly VoteERC20: typeof VoteModule;
     }[TModuleType]>;
+    // (undocumented)
+    getModuleList(walletAddress: string): Promise<{
+        address: string;
+        moduleType: "DropERC721" | "TokenERC721" | "DropERC1155" | "TokenERC1155" | "TokenERC20" | "VoteERC20";
+        metadata: () => Promise<{
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+        }> | Promise<{
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            symbol: string;
+            name: string;
+        }> | Promise<{
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            proposal_start_time_in_seconds: number;
+            proposal_voting_time_in_seconds: number;
+            voting_delay_in_blocks: number;
+            voting_period_in_blocks: number;
+            voting_token_address: string;
+            voting_quorum_fraction: number;
+            proposal_token_threshold: ethers_2.BigNumber;
+        }>;
+    }[]>;
     getNFTModule(address: string): TokenErc721Module;
     getTokenModule(address: string): TokenErc20Module;
     getVoteModule(address: string): VoteModule;
@@ -914,7 +958,7 @@ export class TokenErc1155Module extends Erc1155<TokenERC1155> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "TokenERC1155";
     // (undocumented)
     primarySales: ContractPrimarySale<TokenERC1155>;
     // (undocumented)
@@ -1033,7 +1077,7 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "TokenERC20";
     // (undocumented)
     roles: ContractRoles<TokenERC20, typeof TokenErc20Module.moduleRoles[number]>;
     // (undocumented)
@@ -1144,7 +1188,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "TokenERC721";
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
     // (undocumented)
@@ -1317,7 +1361,7 @@ export class VoteModule implements UpdateableNetwork {
     // (undocumented)
     metadata: ContractMetadata<VoteERC20, typeof VoteModule.schema>;
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "VoteERC20";
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // Warning: (ae-forgotten-export) The symbol "ProposalExecutable" needs to be exported by the entry point index.d.ts
@@ -1332,8 +1376,8 @@ export class VoteModule implements UpdateableNetwork {
         }, {
             proposal_start_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
             proposal_voting_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
-            voting_delay: zod.ZodDefault<zod.ZodNumber>;
-            voting_period: zod.ZodDefault<zod.ZodNumber>;
+            voting_delay_in_blocks: zod.ZodDefault<zod.ZodNumber>;
+            voting_period_in_blocks: zod.ZodDefault<zod.ZodNumber>;
             voting_token_address: zod.ZodDefault<zod.ZodString>;
             voting_quorum_fraction: zod.ZodDefault<zod.ZodNumber>;
             proposal_token_threshold: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
@@ -1347,8 +1391,8 @@ export class VoteModule implements UpdateableNetwork {
             trusted_forwarder: string;
             proposal_start_time_in_seconds: number;
             proposal_voting_time_in_seconds: number;
-            voting_delay: number;
-            voting_period: number;
+            voting_delay_in_blocks: number;
+            voting_period_in_blocks: number;
             voting_token_address: string;
             voting_quorum_fraction: number;
             proposal_token_threshold: string;
@@ -1359,8 +1403,8 @@ export class VoteModule implements UpdateableNetwork {
             trusted_forwarder?: string | undefined;
             proposal_start_time_in_seconds?: number | undefined;
             proposal_voting_time_in_seconds?: number | undefined;
-            voting_delay?: number | undefined;
-            voting_period?: number | undefined;
+            voting_delay_in_blocks?: number | undefined;
+            voting_period_in_blocks?: number | undefined;
             voting_token_address?: string | undefined;
             voting_quorum_fraction?: number | undefined;
             name: string;
@@ -1376,8 +1420,8 @@ export class VoteModule implements UpdateableNetwork {
         }>, zod.extendShape<{
             proposal_start_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
             proposal_voting_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
-            voting_delay: zod.ZodDefault<zod.ZodNumber>;
-            voting_period: zod.ZodDefault<zod.ZodNumber>;
+            voting_delay_in_blocks: zod.ZodDefault<zod.ZodNumber>;
+            voting_period_in_blocks: zod.ZodDefault<zod.ZodNumber>;
             voting_token_address: zod.ZodDefault<zod.ZodString>;
             voting_quorum_fraction: zod.ZodDefault<zod.ZodNumber>;
             proposal_token_threshold: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
@@ -1391,8 +1435,8 @@ export class VoteModule implements UpdateableNetwork {
             name: string;
             proposal_start_time_in_seconds: number;
             proposal_voting_time_in_seconds: number;
-            voting_delay: number;
-            voting_period: number;
+            voting_delay_in_blocks: number;
+            voting_period_in_blocks: number;
             voting_token_address: string;
             voting_quorum_fraction: number;
             proposal_token_threshold: BigNumber;
@@ -1403,8 +1447,8 @@ export class VoteModule implements UpdateableNetwork {
             external_link?: string | undefined;
             proposal_start_time_in_seconds?: number | undefined;
             proposal_voting_time_in_seconds?: number | undefined;
-            voting_delay?: number | undefined;
-            voting_period?: number | undefined;
+            voting_delay_in_blocks?: number | undefined;
+            voting_period_in_blocks?: number | undefined;
             voting_token_address?: string | undefined;
             voting_quorum_fraction?: number | undefined;
             name: string;
@@ -1418,8 +1462,8 @@ export class VoteModule implements UpdateableNetwork {
         }, {
             proposal_start_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
             proposal_voting_time_in_seconds: zod.ZodDefault<zod.ZodNumber>;
-            voting_delay: zod.ZodDefault<zod.ZodNumber>;
-            voting_period: zod.ZodDefault<zod.ZodNumber>;
+            voting_delay_in_blocks: zod.ZodDefault<zod.ZodNumber>;
+            voting_period_in_blocks: zod.ZodDefault<zod.ZodNumber>;
             voting_token_address: zod.ZodDefault<zod.ZodString>;
             voting_quorum_fraction: zod.ZodDefault<zod.ZodNumber>;
             proposal_token_threshold: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
@@ -1430,8 +1474,8 @@ export class VoteModule implements UpdateableNetwork {
             name: string;
             proposal_start_time_in_seconds: number;
             proposal_voting_time_in_seconds: number;
-            voting_delay: number;
-            voting_period: number;
+            voting_delay_in_blocks: number;
+            voting_period_in_blocks: number;
             voting_token_address: string;
             voting_quorum_fraction: number;
             proposal_token_threshold: string;
@@ -1441,8 +1485,8 @@ export class VoteModule implements UpdateableNetwork {
             external_link?: string | undefined;
             proposal_start_time_in_seconds?: number | undefined;
             proposal_voting_time_in_seconds?: number | undefined;
-            voting_delay?: number | undefined;
-            voting_period?: number | undefined;
+            voting_delay_in_blocks?: number | undefined;
+            voting_period_in_blocks?: number | undefined;
             voting_token_address?: string | undefined;
             voting_quorum_fraction?: number | undefined;
             name: string;

@@ -4,7 +4,7 @@
 
 ## IStorage.uploadMetadata() method
 
-Uploads metadata to IPFS
+Uploads JSON metadata to IPFS
 
 <b>Signature:</b>
 

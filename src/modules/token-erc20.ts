@@ -14,7 +14,7 @@ import { BigNumber, BigNumberish } from "ethers";
 import { TokenMintInput } from "../schema/tokens/token";
 
 export class TokenErc20Module extends Erc20<TokenERC20> {
-  static moduleType: string = "TokenERC20" as const;
+  static moduleType = "TokenERC20" as const;
   static schema = TokenErc20ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = TokenERC20__factory;

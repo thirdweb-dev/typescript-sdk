@@ -4,12 +4,12 @@
 
 ## IStorage.get() method
 
-Fetches data from storage. This method does not handle any deserialization. Its up to the caller to determine what the type of the data is.
+Fetches data from storage. This method expects to fetch JSON formatted data
 
 <b>Signature:</b>
 
 ```typescript
-get(hash: string): Promise<string>;
+get(hash: string): Promise<Record<string, any>>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ get(hash: string): Promise<string>;
 
 <b>Returns:</b>
 
-Promise&lt;string&gt;
+Promise&lt;Record&lt;string, any&gt;&gt;
 
 - The data, if found.
 

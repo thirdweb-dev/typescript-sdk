@@ -33,6 +33,7 @@
 |  [TokenErc20Module](./sdk.tokenerc20module.md) |  |
 |  [TokenErc721Module](./sdk.tokenerc721module.md) | Create a collection of one-of-one NFTs. |
 |  [UploadError](./sdk.uploaderror.md) |  |
+|  [VoteModule](./sdk.votemodule.md) | Create a decentralized organization for token holders to vote on proposals. |
 |  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 
 ## Functions
