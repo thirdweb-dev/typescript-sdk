@@ -20,6 +20,7 @@ import { VoteType } from "../enums";
 import deepEqual from "deep-equal";
 import { CurrencyValue } from "../types/currency";
 import { UpdateableNetwork } from "../core/interfaces/module";
+import { ContractEncoder } from "../core/classes/contract-encoder";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -46,6 +47,7 @@ export class VoteModule implements UpdateableNetwork {
   private storage: IStorage;
 
   public metadata: ContractMetadata<VoteERC20, typeof VoteModule.schema>;
+  public encoder: ContractEncoder<VoteERC20>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -66,6 +68,7 @@ export class VoteModule implements UpdateableNetwork {
       VoteModule.schema,
       this.storage,
     );
+    this.encoder = new ContractEncoder(this.contractWrapper);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {

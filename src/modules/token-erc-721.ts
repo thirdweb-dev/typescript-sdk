@@ -35,6 +35,7 @@ import { Signer } from "@ethersproject/abstract-signer";
 import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import { AddressZero } from "@ethersproject/constants";
 import { v4 as uuidv4 } from "uuid";
+import { ContractEncoder } from "../core/classes/contract-encoder";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -68,6 +69,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
   >;
   public royalty: ContractRoyalty<TokenERC721, typeof TokenErc721Module.schema>;
   public primarySale: ContractPrimarySale<TokenERC721>;
+  public encoder: ContractEncoder<TokenERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -93,6 +95,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.primarySale = new ContractPrimarySale(this.contractWrapper);
+    this.encoder = new ContractEncoder(this.contractWrapper);
   }
 
   /** ******************************

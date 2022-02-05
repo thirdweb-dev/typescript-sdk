@@ -14,6 +14,7 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenErc1155ModuleSchema } from "../schema/modules/token-erc1155";
 import { BundleMetadata, BundleMetadataInput } from "../schema/tokens/bundle";
 import { TokenMintedEvent } from "@3rdweb/contracts/dist/TokenERC721";
+import { ContractEncoder } from "../core/classes/contract-encoder";
 
 export class TokenErc1155Module extends Erc1155<TokenERC1155> {
   static moduleType = "TokenERC1155" as const;
@@ -34,6 +35,7 @@ export class TokenErc1155Module extends Erc1155<TokenERC1155> {
     typeof TokenErc1155Module.schema
   >;
   public primarySales: ContractPrimarySale<TokenERC1155>;
+  public encoder: ContractEncoder<TokenERC1155>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -59,6 +61,7 @@ export class TokenErc1155Module extends Erc1155<TokenERC1155> {
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.primarySales = new ContractPrimarySale(this.contractWrapper);
+    this.encoder = new ContractEncoder(this.contractWrapper);
   }
 
   /** ******************************

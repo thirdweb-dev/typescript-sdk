@@ -23,6 +23,7 @@ import { DropErc721ClaimConditions } from "../core/classes/drop-erc721-claim-con
 import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
+import { ContractEncoder } from "../core/classes/contract-encoder";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -54,6 +55,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
   public royalty: ContractRoyalty<DropERC721, typeof DropErc721Module.schema>;
   public primarySales: ContractPrimarySale<DropERC721>;
   public claimConditions: DropErc721ClaimConditions;
+  public encoder: ContractEncoder<DropERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -84,6 +86,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
       this.metadata,
       this.storage,
     );
+    this.encoder = new ContractEncoder(this.contractWrapper);
   }
 
   /** ******************************

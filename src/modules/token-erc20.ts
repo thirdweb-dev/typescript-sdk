@@ -12,6 +12,7 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc20 } from "../core/classes/erc-20";
 import { BigNumber, BigNumberish } from "ethers";
 import { TokenMintInput } from "../schema/tokens/token";
+import { ContractEncoder } from "../core/classes/contract-encoder";
 
 export class TokenErc20Module extends Erc20<TokenERC20> {
   static moduleType = "TokenERC20" as const;
@@ -24,6 +25,7 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
     TokenERC20,
     typeof TokenErc20Module.moduleRoles[number]
   >;
+  encoder: ContractEncoder<TokenERC20>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -47,6 +49,7 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
       this.contractWrapper,
       TokenErc20Module.moduleRoles,
     );
+    this.encoder = new ContractEncoder(this.contractWrapper);
   }
 
   /** ******************************

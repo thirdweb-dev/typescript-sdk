@@ -60,7 +60,7 @@ describe("Vote Module", async () => {
     await currencyModule.delegateTo(samWallet.address);
   });
 
-  it.skip("should permit a proposal to be passed if it receives the right votes", async () => {
+  it("should permit a proposal to be passed if it receives the right votes", async () => {
     await sdk.updateSignerOrProvider(samWallet);
     await currencyModule.delegateTo(samWallet.address);
 
@@ -68,10 +68,10 @@ describe("Vote Module", async () => {
       {
         toAddress: currencyModule.getAddress(),
         nativeTokenValue: 0,
-        transactionData: currencyModule.contract.interface.encodeFunctionData(
-          "mint",
-          [bobWallet.address, ethers.utils.parseUnits("1", 18)],
-        ),
+        transactionData: currencyModule.encoder.encode("mint", [
+          bobWallet.address,
+          ethers.utils.parseUnits("1", 18),
+        ]),
       },
     ]);
 
@@ -131,17 +131,17 @@ describe("Vote Module", async () => {
     console.log(sum / blockTimes.length);
   });
 
-  it.skip("should permit a proposal to be passed if it receives the right votes", async () => {
+  it("should permit a proposal to be passed if it receives the right votes", async () => {
     await sdk.updateSignerOrProvider(samWallet);
     const description = "Mint Tokens";
     const proposalId = await voteModule.propose(description, [
       {
         toAddress: currencyModule.getAddress(),
         nativeTokenValue: 0,
-        transactionData: currencyModule.contract.interface.encodeFunctionData(
-          "mint",
-          [bobWallet.address, ethers.utils.parseUnits("1", 18)],
-        ),
+        transactionData: currencyModule.encoder.encode("mint", [
+          bobWallet.address,
+          ethers.utils.parseUnits("1", 18),
+        ]),
       },
     ]);
 
