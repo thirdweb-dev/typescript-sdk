@@ -129,7 +129,7 @@ before(async () => {
     await deployedModule.deployed();
 
     const deployedModuleType = await deployedModule.moduleType();
-    console.log(`Deployed module ${moduleType}: `, deployedModuleType);
+    console.log(`Deployed module ${moduleType}`);
     const tx = await thirdwebFactoryDeployer.addModuleImplementation(
       deployedModuleType,
       deployedModule.address,

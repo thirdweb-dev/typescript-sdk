@@ -1,5 +1,5 @@
 import { TWFactory, TWFactory__factory } from "@3rdweb/contracts";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { z } from "zod";
 import {
   DropErc1155Module,
@@ -56,14 +56,11 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
       );
 
     const encodedType = ethers.utils.formatBytes32String(moduleType);
-    console.log(
-      `Deploying ${moduleType} proxy - encodedType: ${encodedType} | encodedFunc: ${encodedFunc}`,
-    );
+    console.log(`Deploying ${moduleType} proxy`);
     const receipt = await this.sendTransaction("deployProxy", [
       encodedType,
       encodedFunc,
     ]);
-
     console.log(`${moduleType} proxy deployed successfully`);
     const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",
@@ -127,9 +124,9 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           contractURI,
           voteMetadata.trusted_forwarder,
           voteMetadata.voting_token_address,
-          voteMetadata.voting_delay,
-          voteMetadata.voting_period,
-          voteMetadata.proposal_token_threshold,
+          voteMetadata.voting_delay_in_blocks,
+          voteMetadata.voting_period_in_blocks,
+          BigNumber.from(voteMetadata.proposal_token_threshold),
           voteMetadata.voting_quorum_fraction,
         ];
       default:

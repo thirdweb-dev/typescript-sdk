@@ -15,7 +15,7 @@ import {
   VoteSettings,
 } from "../types/vote";
 import { fetchCurrencyMetadata, fetchCurrencyValue } from "../common/currency";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { VoteType } from "../enums";
 import deepEqual from "deep-equal";
 import { CurrencyValue } from "../types/currency";
@@ -112,9 +112,8 @@ export class VoteModule implements UpdateableNetwork {
    */
   public async getAll(): Promise<Proposal[]> {
     return Promise.all(
-      (await this.contractWrapper.readContract.getAllProposals())
-        .map((data) => ProposalOutputSchema.parse(data))
-        .map(async (data) => ({
+      (await this.contractWrapper.readContract.getAllProposals()).map(
+        async (data) => ({
           proposalId: data.proposalId,
           proposer: data.proposer,
           description: data.description,
@@ -122,8 +121,14 @@ export class VoteModule implements UpdateableNetwork {
           endBlock: data.endBlock,
           state: await this.contractWrapper.readContract.state(data.proposalId),
           votes: await this.getProposalVotes(data.proposalId),
-          executions: [],
-        })),
+          executions: data["values"].map((c, i) => ({
+            // TODO "values" here is not a valid property name
+            toAddress: data.targets[i],
+            nativeTokenValue: c,
+            transactionData: data.calldatas[i],
+          })),
+        }),
+      ),
     );
   }
 

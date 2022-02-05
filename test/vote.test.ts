@@ -40,7 +40,7 @@ describe("Vote Module", async () => {
       proposal_start_time_in_seconds: voteStartWaitTimeInSeconds,
       proposal_voting_time_in_seconds: voteWaitTimeInSeconds,
       voting_quorum_fraction: 1,
-      proposal_token_threshold: ethers.utils.parseUnits("1", 18).toString(),
+      proposal_token_threshold: ethers.utils.parseUnits("1", 18),
     });
     voteModule = sdk.getVoteModule(voteModuleAddress);
 
@@ -101,8 +101,8 @@ describe("Vote Module", async () => {
   });
   it("should be able to execute proposal even when `executions` is not passed", async () => {
     await sdk.updateSignerOrProvider(samWallet);
+    console.log(samWallet.address);
     await currencyModule.delegateTo(samWallet.address);
-
     const proposalId = await voteModule.propose("Mint Tokens");
     await voteModule.vote(proposalId.toString(), 1);
 
