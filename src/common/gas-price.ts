@@ -31,7 +31,12 @@ export async function getGasPriceForChain(
   }
   try {
     const data = await (await fetch(gasStationUrl)).json();
-    const gas = data[speed];
+    let gas = data[speed];
+
+    if (chainId === ChainId.Polygon || chainId === ChainId.Mumbai) {
+      // the minimum gas on chain is 30, +1 for priority. prevent gas station report false price and cause tx to fail.
+      gas = Math.max(gas, 31);
+    }
     if (gas > 0) {
       return Math.min(gas, maxGasPrice);
     }
