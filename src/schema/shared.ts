@@ -27,7 +27,6 @@ export const BigNumberSchema = z
   .union([z.string(), z.number(), z.bigint(), z.instanceof(BigNumber)])
   .transform((arg) => BigNumber.from(arg));
 
-
 export const BigNumberishSchema = BigNumberSchema.transform((arg) =>
   arg.toString(),
 );
