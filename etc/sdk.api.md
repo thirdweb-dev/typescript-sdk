@@ -82,7 +82,7 @@ export type BundleMetadataInput = z.input<typeof BundleMetadataInputSchema>;
 
 // @public (undocumented)
 export const BundleMetadataInputSchema: z.ZodObject<{
-    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
+    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
     metadata: z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
@@ -149,7 +149,7 @@ export const BundleMetadataInputSchema: z.ZodObject<{
         properties?: Record<string, any> | undefined;
         name: string;
     };
-    supply: ethers.BigNumber;
+    supply: string;
 }, {
     metadata: {
         [x: string]: Json;
@@ -169,14 +169,14 @@ export const BundleMetadataInputSchema: z.ZodObject<{
 
 // @public (undocumented)
 export const BundleMetadataOutputSchema: z.ZodObject<{
-    supply: z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>;
+    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
     metadata: z.ZodObject<z.extendShape<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
-        id: z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>;
+        id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
         uri: z.ZodString;
         image: z.ZodOptional<z.ZodString>;
         external_url: z.ZodOptional<z.ZodString>;
@@ -201,7 +201,7 @@ export const BundleMetadataOutputSchema: z.ZodObject<{
         animation_url?: string | undefined;
         properties?: Record<string, string | number | boolean | null> | undefined;
         name: string;
-        id: ethers.BigNumber;
+        id: string | number | bigint | ethers.BigNumber;
         uri: string;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -226,10 +226,10 @@ export const BundleMetadataOutputSchema: z.ZodObject<{
         animation_url?: string | undefined;
         properties?: Record<string, string | number | boolean | null> | undefined;
         name: string;
-        id: ethers.BigNumber;
+        id: string | number | bigint | ethers.BigNumber;
         uri: string;
     };
-    supply: ethers.BigNumber;
+    supply: string | number | bigint | ethers.BigNumber;
 }>;
 
 // @public
@@ -242,20 +242,20 @@ export type ClaimConditionInput = z.input<typeof PartialClaimConditionInputSchem
 export const ClaimConditionInputSchema: z.ZodObject<{
     startTime: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>;
-    maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>;
-    quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>;
-    waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>;
+    price: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
+    maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
+    quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
+    waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
     snapshot: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: string[] | undefined;
     startTime: number;
     currencyAddress: string;
-    price: ethers_2.BigNumber;
-    maxQuantity: ethers_2.BigNumber;
-    quantityLimitPerTransaction: ethers_2.BigNumber;
-    waitInSeconds: ethers_2.BigNumber;
+    price: string;
+    maxQuantity: string;
+    quantityLimitPerTransaction: string;
+    waitInSeconds: string;
     merkleRootHash: string | number[];
 }, {
     snapshot?: string[] | undefined;
@@ -272,14 +272,17 @@ export const ClaimConditionInputSchema: z.ZodObject<{
 export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     startTime: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>;
-    maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>;
-    quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>;
-    waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>;
+    price: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
+    maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
+    quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
+    waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
 }, {
     availableSupply: z.ZodDefault<z.ZodString>;
     currencyMetadata: z.ZodDefault<z.ZodUnknown>;
+    price: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>;
+    maxQuantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>;
+    quantityLimitPerTransaction: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>;
 }>, "strip", z.ZodTypeAny, {
     currencyMetadata?: unknown;
     startTime: number;
@@ -287,19 +290,19 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     price: ethers_2.BigNumber;
     maxQuantity: ethers_2.BigNumber;
     quantityLimitPerTransaction: ethers_2.BigNumber;
-    waitInSeconds: ethers_2.BigNumber;
+    waitInSeconds: string;
     merkleRootHash: string | number[];
     availableSupply: string;
 }, {
     startTime?: number | Date | undefined;
     currencyAddress?: string | undefined;
-    price?: string | number | bigint | ethers_2.BigNumber | undefined;
-    maxQuantity?: string | number | bigint | ethers_2.BigNumber | undefined;
-    quantityLimitPerTransaction?: string | number | bigint | ethers_2.BigNumber | undefined;
     waitInSeconds?: string | number | bigint | ethers_2.BigNumber | undefined;
     merkleRootHash?: string | number[] | undefined;
     availableSupply?: string | undefined;
     currencyMetadata?: unknown;
+    price: string | number | bigint | ethers_2.BigNumber;
+    maxQuantity: string | number | bigint | ethers_2.BigNumber;
+    quantityLimitPerTransaction: string | number | bigint | ethers_2.BigNumber;
 }>;
 
 // @public (undocumented)
@@ -804,20 +807,20 @@ export class NotFoundError extends Error {
 export const PartialClaimConditionInputSchema: z.ZodObject<{
     startTime: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>>;
     currencyAddress: z.ZodOptional<z.ZodDefault<z.ZodString>>;
-    price: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>>;
-    maxQuantity: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>>;
-    quantityLimitPerTransaction: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>>;
-    waitInSeconds: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>>>;
+    price: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>>;
+    maxQuantity: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>>;
+    quantityLimitPerTransaction: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>>;
+    waitInSeconds: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>>;
     merkleRootHash: z.ZodOptional<z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>>;
     snapshot: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString, "many">>>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: string[] | undefined;
     startTime?: number | undefined;
     currencyAddress?: string | undefined;
-    price?: ethers_2.BigNumber | undefined;
-    maxQuantity?: ethers_2.BigNumber | undefined;
-    quantityLimitPerTransaction?: ethers_2.BigNumber | undefined;
-    waitInSeconds?: ethers_2.BigNumber | undefined;
+    price?: string | undefined;
+    maxQuantity?: string | undefined;
+    quantityLimitPerTransaction?: string | undefined;
+    waitInSeconds?: string | undefined;
     merkleRootHash?: string | number[] | undefined;
 }, {
     snapshot?: string[] | undefined;
