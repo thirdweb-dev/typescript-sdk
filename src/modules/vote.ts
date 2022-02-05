@@ -121,8 +121,7 @@ export class VoteModule implements UpdateableNetwork {
           endBlock: data.endBlock,
           state: await this.contractWrapper.readContract.state(data.proposalId),
           votes: await this.getProposalVotes(data.proposalId),
-          executions: data["values"].map((c, i) => ({
-            // TODO "values" here is not a valid property name
+          executions: data[3].map((c, i) => ({
             toAddress: data.targets[i],
             nativeTokenValue: c,
             transactionData: data.calldatas[i],
