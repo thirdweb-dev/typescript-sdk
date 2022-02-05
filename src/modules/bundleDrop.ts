@@ -654,17 +654,17 @@ export class BundleDropModule
     tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ) {
+  ): Promise<TransactionReceipt> {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
 
     if (await this.isNewClaim()) {
-      await this.sendTransaction(
+      return await this.sendTransaction(
         "claim",
         [await this.getSignerAddress(), tokenId, quantity, claimData.proofs],
         claimData.overrides,
       );
     } else {
-      await this.sendContractTransaction(
+      return await this.sendContractTransaction(
         new Contract(this.address, OLD_CLAIM_ABI, this.providerOrSigner),
         "claim",
         [tokenId, quantity, claimData.proofs],
