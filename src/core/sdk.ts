@@ -60,13 +60,26 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         ? ethers.getDefaultProvider(this.options.readOnlyRpcUrl)
         : this.getProvider(),
     );
-    return (await contract.moduleType()) as TModuleType;
+    return (
+      ethers.utils
+        .toUtf8String(await contract.moduleType())
+        // eslint-disable-next-line no-control-regex
+        .replace(/\x00/g, "") as TModuleType
+    );
   }
 
   /** */
   public async getModuleList(walletAddress: string) {
-    const addressesWithModuleTypes = await this.registry.getModuleAddresses(
-      walletAddress,
+    const addresses = await this.registry.getModuleAddresses(walletAddress);
+
+    const addressesWithModuleTypes = await Promise.all(
+      addresses.map(async (adrr) => ({
+        address: adrr,
+        moduleType: await this.resolveModuleType(adrr).catch((err) => {
+          console.error(`failed to get module type for address: ${adrr}`, err);
+          return "DropERC721" as ModuleType;
+        }),
+      })),
     );
 
     return addressesWithModuleTypes.map(({ address, moduleType }) => ({

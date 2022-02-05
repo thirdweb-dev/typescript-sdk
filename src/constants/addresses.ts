@@ -2,8 +2,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 
 export const FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
-export const TW_REGISTRY_ADDRESS = "0x902a29f2cfe9f8580ad672AaAD7E917d85ca9a2E";
-export const TW_FACTORY_ADDRESS = "0x0";
+export const TW_REGISTRY_ADDRESS = "0x968d263f329c4f6b91c50349976a544B475320ed";
 
 export const CONTRACT_ADDRESSES: Record<
   SUPPORTED_CHAIN_ID | ChainId.Hardhat,
