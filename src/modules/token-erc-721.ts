@@ -54,7 +54,7 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
  * @public
  */
 export class TokenErc721Module extends Erc721<TokenERC721> {
-  static moduleType = "TokenERC721" as const;
+  static moduleType: string = "TokenERC721" as const;
   static schema = TokenErc721ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = TokenERC721__factory;

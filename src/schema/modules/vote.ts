@@ -6,7 +6,6 @@ import {
 import { BigNumberishSchema, BigNumberSchema } from "../shared";
 import { z } from "zod";
 import { AddressZero } from "@ethersproject/constants";
-import { BigNumber } from "ethers";
 
 export const VoteSettingsInputSchema = z.object({
   proposal_start_time_in_seconds: z.number().default(0),

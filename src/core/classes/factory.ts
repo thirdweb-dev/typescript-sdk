@@ -5,6 +5,7 @@ import {
   DropErc1155Module,
   DropErc721Module,
   MODULES_MAP,
+  SplitsModule,
   TokenErc1155Module,
   TokenErc20Module,
   VoteModule,
@@ -128,6 +129,15 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           voteMetadata.voting_period_in_blocks,
           BigNumber.from(voteMetadata.proposal_token_threshold),
           voteMetadata.voting_quorum_fraction,
+        ];
+      case SplitsModule.moduleType:
+        const splitsMetadata = SplitsModule.schema.deploy.parse(metadata);
+        return [
+          await this.getSignerAddress(),
+          contractURI,
+          FORWARDER_ADDRESS,
+          splitsMetadata.recipientSplits.map((s) => s.address),
+          splitsMetadata.recipientSplits.map((s) => s.shares),
         ];
       default:
         return [];

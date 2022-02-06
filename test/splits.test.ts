@@ -1,18 +1,15 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
-import { PackModule } from "../src/modules/pack";
-import { SplitsModule } from "../src/modules/royalty";
 import { appModule, sdk, signers } from "./before.test";
+import { SplitsModule } from "../src";
 
 global.fetch = require("node-fetch");
 
-const testTokenAddress = "0xf18feb8b2f58691d67c98db98b360840df340e74";
-const thirdwebRoyaltyAddress = "0xE00994EBDB59f70350E2cdeb897796F732331562";
+// const testTokenAddress = "0xf18feb8b2f58691d67c98db98b360840df340e74";
+// const thirdwebRoyaltyAddress = "0xE00994EBDB59f70350E2cdeb897796F732331562";
 
 describe("Splits Module", async () => {
   let splitsModule: SplitsModule;
-  let packModule: PackModule;
-
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -22,8 +19,8 @@ describe("Splits Module", async () => {
   });
 
   beforeEach(async () => {
-    sdk.setProviderOrSigner(adminWallet);
-    splitsModule = await appModule.deploySplitsModule({
+    sdk.updateSignerOrProvider(adminWallet);
+    const address = await sdk.factory.deploy(SplitsModule.moduleType, {
       name: "Splits Module",
       recipientSplits: [
         {
@@ -32,16 +29,11 @@ describe("Splits Module", async () => {
         },
       ],
     });
-
-    packModule = await appModule.deployPackModule({
-      name: "Pack Module",
-      sellerFeeBasisPoints: 1000,
-      feeRecipient: splitsModule.address,
-    });
+    splitsModule = sdk.getSplitsModule(address);
   });
 
   // TODO: Fix bug in the `getAllRecipients` function
-  it.skip("should return all recipients of splits", async () => {
+  it("should return all recipients of splits", async () => {
     const recipients = await splitsModule.getAllRecipients();
     assert.lengthOf(
       recipients,
@@ -67,7 +59,8 @@ describe("Splits Module", async () => {
       "There should be 3 recipients",
     );
   });
-  it("should return all the recipients along with their token balances", async () => {
+
+  it.skip("should return all the recipients along with their token balances", async () => {
     const balances = await splitsModule.balanceOfTokenAllRecipients(
       await appModule
         .deployTokenModule({
@@ -90,24 +83,4 @@ describe("Splits Module", async () => {
    * 2. Checking balances
    * 3. Funds are received when a module uses a splits address as a royalty recipient
    */
-
-  // TODO: Move to royalty test suite
-  it("should return the correct royalty recipient", async () => {
-    const recipient = await packModule.getRoyaltyRecipientAddress();
-    assert.equal(
-      recipient,
-      splitsModule.address,
-      "The default royalty recipient should be the project address",
-    );
-  });
-
-  // TODO: Move to royalty test suite
-  it("should return the correct royalty BPS", async () => {
-    const bps = await packModule.getRoyaltyBps();
-    assert.equal(
-      "1000",
-      bps.toString(),
-      "The royalty BPS should be 10000 (10%)",
-    );
-  });
 });

@@ -4,6 +4,7 @@ import { DropErc1155Module } from "./drop-erc-1155";
 import { TokenErc1155Module } from "./token-erc-1155";
 import { TokenErc20Module } from "./token-erc20";
 import { VoteModule } from "./vote";
+import { SplitsModule } from "./splits";
 
 /**
  * @internal
@@ -15,6 +16,7 @@ export const MODULES_MAP = {
   [TokenErc1155Module.moduleType]: TokenErc1155Module,
   [TokenErc20Module.moduleType]: TokenErc20Module,
   [VoteModule.moduleType]: VoteModule,
+  [SplitsModule.moduleType]: SplitsModule,
 } as const;
 
 export {
@@ -24,4 +26,5 @@ export {
   TokenErc1155Module,
   TokenErc20Module,
   VoteModule,
+  SplitsModule,
 };

@@ -42,7 +42,7 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
  * @public
  */
 export class DropErc721Module extends Erc721<DropERC721> {
-  static moduleType = "DropERC721" as const;
+  static moduleType: string = "DropERC721" as const;
   static schema = DropErc721ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = DropERC721__factory;

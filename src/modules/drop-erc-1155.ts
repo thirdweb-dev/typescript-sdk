@@ -21,7 +21,7 @@ import { DropErc1155ModuleSchema } from "../schema/modules/drop-erc1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 
 export class DropErc1155Module extends Erc1155<DropERC1155> {
-  static moduleType = "DropERC1155" as const;
+  static moduleType: string = "DropERC1155" as const;
   static schema = DropErc1155ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = DropERC1155__factory;

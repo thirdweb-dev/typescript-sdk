@@ -15,7 +15,7 @@ import { TokenMintInput } from "../schema/tokens/token";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 
 export class TokenErc20Module extends Erc20<TokenERC20> {
-  static moduleType = "TokenERC20" as const;
+  static moduleType: string = "TokenERC20" as const;
   static schema = TokenErc20ModuleSchema;
   static moduleRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = TokenERC20__factory;

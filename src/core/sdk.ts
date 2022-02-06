@@ -5,6 +5,7 @@ import {
   DropErc1155Module,
   DropErc721Module,
   MODULES_MAP,
+  SplitsModule,
   TokenErc20Module,
   VoteModule,
 } from "../modules";
@@ -185,6 +186,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public getVoteModule(address: string): VoteModule {
     return this.getModule(address, VoteModule.moduleType) as VoteModule;
+  }
+
+  /**
+   * Get an instance of a Splits module
+   * @param address - the address of the deployed module
+   * @returns the module
+   */
+  public getSplitsModule(address: string): SplitsModule {
+    return this.getModule(address, SplitsModule.moduleType) as SplitsModule;
   }
 
   /**

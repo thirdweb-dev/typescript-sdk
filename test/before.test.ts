@@ -10,6 +10,7 @@ import {
   DropErc1155Module,
   DropErc721Module,
   MODULES_MAP,
+  SplitsModule,
   ThirdwebSDK,
   TokenErc1155Module,
   TokenErc721Module,
@@ -106,7 +107,8 @@ before(async () => {
       moduleType === DropErc721Module.moduleType ||
       moduleType === TokenErc721Module.moduleType ||
       moduleType === DropErc1155Module.moduleType ||
-      moduleType === TokenErc1155Module.moduleType
+      moduleType === TokenErc1155Module.moduleType ||
+      moduleType === SplitsModule.moduleType
     );
   }
 
