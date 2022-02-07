@@ -556,7 +556,7 @@ export class BundleModule
     // TODO: reduce this duplication and provide common functions around
     // royalties through an interface. Currently this function is
     // duplicated across 4 modules
-    const { metadata } = await this.getMetadata();
+    const { metadata } = await this.getMetadata(false);
     const encoded: string[] = [];
     if (!metadata) {
       throw new Error("No metadata found, this module might be invalid!");

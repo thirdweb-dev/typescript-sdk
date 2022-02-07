@@ -140,4 +140,29 @@ describe("Splits Module", async () => {
       expect(metadata.is_royalty).to.equal(false);
     });
   });
+
+  describe("updates off-chain royalty recipient", () => {
+    it("should updates the metadata fee_recipient", async () => {
+      const newSplits = await appModule.deploySplitsModule({
+        name: "Splits Module",
+        recipientSplits: [
+          {
+            address: bobWallet.address,
+            shares: 1,
+          },
+        ],
+        isRoyalty: true,
+      });
+      await appModule.setModuleRoyaltyTreasury(
+        packModule.address,
+        newSplits.address,
+      );
+      expect(await appModule.getRoyaltyTreasury(packModule.address)).to.equal(
+        newSplits.address,
+      );
+      expect(await packModule.getRoyaltyRecipientAddress()).to.equal(
+        newSplits.address,
+      );
+    });
+  });
 });
