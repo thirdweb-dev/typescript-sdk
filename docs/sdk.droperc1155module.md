@@ -23,9 +23,10 @@ declare class DropErc1155Module extends Erc1155<DropERC1155>
 |  --- | --- | --- | --- |
 |  [claimConditions](./sdk.droperc1155module.claimconditions.md) |  | DropErc1155ClaimConditions |  |
 |  [contractFactory](./sdk.droperc1155module.contractfactory.md) | <code>static</code> | typeof DropERC1155\_\_factory |  |
+|  [encoder](./sdk.droperc1155module.encoder.md) |  | ContractEncoder&lt;DropERC1155&gt; |  |
 |  [metadata](./sdk.droperc1155module.metadata.md) |  | ContractMetadata&lt;DropERC1155, typeof DropErc1155Module.schema&gt; |  |
 |  [moduleRoles](./sdk.droperc1155module.moduleroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
-|  [moduleType](./sdk.droperc1155module.moduletype.md) | <code>static</code> | "DropERC1155" |  |
+|  [moduleType](./sdk.droperc1155module.moduletype.md) | <code>static</code> | string |  |
 |  [primarySales](./sdk.droperc1155module.primarysales.md) |  | ContractPrimarySale&lt;DropERC1155&gt; |  |
 |  [roles](./sdk.droperc1155module.roles.md) |  | ContractRoles&lt;DropERC1155, typeof DropErc1155Module.moduleRoles\[number\]&gt; |  |
 |  [royalty](./sdk.droperc1155module.royalty.md) |  | ContractRoyalty&lt;DropERC1155, typeof DropErc1155Module.schema&gt; |  |

@@ -28,6 +28,7 @@
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
+|  [SplitsModule](./sdk.splitsmodule.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
 |  [TokenErc1155Module](./sdk.tokenerc1155module.md) |  |
 |  [TokenErc20Module](./sdk.tokenerc20module.md) |  |

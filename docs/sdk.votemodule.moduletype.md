@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-static moduleType: "VoteERC20";
+static moduleType: string;
 ```

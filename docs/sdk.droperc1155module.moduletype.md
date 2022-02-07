@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-static moduleType: "DropERC1155";
+static moduleType: string;
 ```

@@ -9,7 +9,7 @@
 ```typescript
 getModuleList(walletAddress: string): Promise<{
         address: string;
-        moduleType: "DropERC721" | "TokenERC721" | "DropERC1155" | "TokenERC1155" | "TokenERC20" | "VoteERC20";
+        moduleType: string | number;
         metadata: () => Promise<{
             [x: string]: Json;
             description?: string | undefined;
@@ -38,6 +38,16 @@ getModuleList(walletAddress: string): Promise<{
             voting_token_address: string;
             voting_quorum_fraction: number;
             proposal_token_threshold: ethers$1.BigNumber;
+        }> | Promise<{
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            recipientSplits: {
+                address: string;
+                shares: ethers$1.BigNumber;
+            }[];
         }>;
     }[]>;
 ```
@@ -50,5 +60,5 @@ getModuleList(walletAddress: string): Promise<{
 
 <b>Returns:</b>
 
-Promise&lt;{ address: string; moduleType: "DropERC721" \| "TokenERC721" \| "DropERC1155" \| "TokenERC1155" \| "TokenERC20" \| "VoteERC20"; metadata: () =&gt; Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; seller\_fee\_basis\_points: number; fee\_recipient: string; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; symbol: string; name: string; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; proposal\_start\_time\_in\_seconds: number; proposal\_voting\_time\_in\_seconds: number; voting\_delay\_in\_blocks: number; voting\_period\_in\_blocks: number; voting\_token\_address: string; voting\_quorum\_fraction: number; proposal\_token\_threshold: ethers$1.BigNumber; }&gt;; }\[\]&gt;
+Promise&lt;{ address: string; moduleType: string \| number; metadata: () =&gt; Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; seller\_fee\_basis\_points: number; fee\_recipient: string; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; symbol: string; name: string; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; proposal\_start\_time\_in\_seconds: number; proposal\_voting\_time\_in\_seconds: number; voting\_delay\_in\_blocks: number; voting\_period\_in\_blocks: number; voting\_token\_address: string; voting\_quorum\_fraction: number; proposal\_token\_threshold: ethers$1.BigNumber; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; recipientSplits: { address: string; shares: ethers$1.BigNumber; }\[\]; }&gt;; }\[\]&gt;
 

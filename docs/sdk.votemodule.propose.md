@@ -9,7 +9,7 @@ Create Proposal
 <b>Signature:</b>
 
 ```typescript
-propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber>;
+propose(description: string, executions?: ProposalExecutable[]): Promise<TransactionResultWithId>;
 ```
 
 ## Parameters
@@ -21,9 +21,9 @@ propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumb
 
 <b>Returns:</b>
 
-Promise&lt;BigNumber&gt;
+Promise&lt;TransactionResultWithId&gt;
 
-- The id of the created proposal.
+- The id of the created proposal and the transaction receipt.
 
 ## Remarks
 

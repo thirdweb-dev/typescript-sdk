@@ -9,7 +9,7 @@ Execute Proposal
 <b>Signature:</b>
 
 ```typescript
-execute(proposalId: string): Promise<void>;
+execute(proposalId: string): TransactionResultPromise;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ execute(proposalId: string): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+TransactionResultPromise
 
 ## Remarks
 

@@ -33,6 +33,7 @@ declare class ThirdwebSDK extends RPCConnectionHandler
 |  [getDropModule(moduleAddress)](./sdk.thirdwebsdk.getdropmodule.md) |  | Get an instance of a Drop module |
 |  [getModuleList(walletAddress)](./sdk.thirdwebsdk.getmodulelist.md) |  |  |
 |  [getNFTModule(address)](./sdk.thirdwebsdk.getnftmodule.md) |  | Get an instance of a NFT Collection module |
+|  [getSplitsModule(address)](./sdk.thirdwebsdk.getsplitsmodule.md) |  | Get an instance of a Splits module |
 |  [getTokenModule(address)](./sdk.thirdwebsdk.gettokenmodule.md) |  | Get an instance of a Token module |
 |  [getVoteModule(address)](./sdk.thirdwebsdk.getvotemodule.md) |  | Get an instance of a Vote module |
 |  [resolveModuleType(moduleAddress)](./sdk.thirdwebsdk.resolvemoduletype.md) |  |  |

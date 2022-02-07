@@ -31,6 +31,8 @@ import { Networkish } from '@ethersproject/providers';
 import { Provider } from '@ethersproject/providers';
 import { Signer } from '@ethersproject/abstract-signer';
 import { Signer as Signer_2 } from 'ethers';
+import { Splits } from '@3rdweb/contracts';
+import { Splits__factory } from '@3rdweb/contracts';
 import { TokenERC1155 } from '@3rdweb/contracts';
 import { TokenERC1155__factory } from '@3rdweb/contracts';
 import { TokenERC20 } from '@3rdweb/contracts';
@@ -344,6 +346,10 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
     // (undocumented)
     static contractFactory: typeof DropERC1155__factory;
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // Warning: (ae-forgotten-export) The symbol "ContractEncoder" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    encoder: ContractEncoder<DropERC1155>;
     // Warning: (ae-forgotten-export) The symbol "ContractMetadata" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -351,7 +357,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: "DropERC1155";
+    static moduleType: string;
     // Warning: (ae-forgotten-export) The symbol "ContractPrimarySale" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -492,6 +498,8 @@ export class DropErc721Module extends Erc721<DropERC721> {
     static contractFactory: typeof DropERC721__factory;
     // @beta
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // (undocumented)
+    encoder: ContractEncoder<DropERC721>;
     // Warning: (ae-forgotten-export) The symbol "QueryAllParams" needs to be exported by the entry point index.d.ts
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
@@ -500,7 +508,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: "DropERC721";
+    static moduleType: string;
     // (undocumented)
     primarySales: ContractPrimarySale<DropERC721>;
     // (undocumented)
@@ -764,12 +772,7 @@ export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<typ
 //
 // @internal (undocumented)
 export const MODULES_MAP: {
-    readonly DropERC721: typeof DropErc721Module;
-    readonly TokenERC721: typeof TokenErc721Module;
-    readonly DropERC1155: typeof DropErc1155Module;
-    readonly TokenERC1155: typeof TokenErc1155Module;
-    readonly TokenERC20: typeof TokenErc20Module;
-    readonly VoteERC20: typeof VoteModule;
+    readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule | typeof SplitsModule;
 };
 
 // Warning: (ae-incompatible-release-tags) The symbol "ModuleType" is marked as @public, but its signature references "MODULES_MAP" which is marked as @internal
@@ -879,6 +882,178 @@ export type Snapshot = z.output<typeof SnapshotSchema>;
 // @internal (undocumented)
 export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
 
+// Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class SplitsModule implements UpdateableNetwork {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Splits>);
+    balanceOf(address: string): Promise<BigNumber>;
+    balanceOfAllRecipients(): Promise<{
+        [key: string]: BigNumber;
+    }>;
+    balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyValue>;
+    balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
+        [key: string]: CurrencyValue;
+    }>;
+    // (undocumented)
+    static contractFactory: typeof Splits__factory;
+    distribute(): TransactionResultPromise;
+    distributeToken(tokenAddress: string): TransactionResultPromise;
+    // (undocumented)
+    encoder: ContractEncoder<Splits>;
+    // (undocumented)
+    getAddress(): string;
+    // Warning: (ae-forgotten-export) The symbol "SplitRecipient" needs to be exported by the entry point index.d.ts
+    getAllRecipients(): Promise<SplitRecipient[]>;
+    getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
+    // (undocumented)
+    metadata: ContractMetadata<Splits, typeof SplitsModule.schema>;
+    // (undocumented)
+    static moduleType: string;
+    // (undocumented)
+    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    // (undocumented)
+    static schema: {
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            recipientSplits: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
+                address: zod.ZodString;
+                shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+            }, "strip", zod.ZodTypeAny, {
+                address: string;
+                shares: string;
+            }, {
+                address: string;
+                shares: string | number | bigint | BigNumber;
+            }>, "many">>;
+        }>, {
+            platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            recipientSplits: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
+                address: zod.ZodString;
+                shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+            }, "strip", zod.ZodTypeAny, {
+                address: string;
+                shares: string;
+            }, {
+                address: string;
+                shares: string | number | bigint | BigNumber;
+            }>, "many">>;
+        }>>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            name: string;
+            platform_fee_basis_points: number;
+            platform_fee_recipient: string;
+            recipientSplits: {
+                address: string;
+                shares: string;
+            }[];
+        }, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            platform_fee_basis_points?: number | undefined;
+            platform_fee_recipient?: string | undefined;
+            recipientSplits?: {
+                address: string;
+                shares: string | number | bigint | BigNumber;
+            }[] | undefined;
+            name: string;
+        }>;
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            image: zod.ZodOptional<zod.ZodString>;
+        }>, {
+            recipientSplits: zod.ZodArray<zod.ZodObject<zod.extendShape<{
+                address: zod.ZodString;
+                shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+            }, {
+                address: zod.ZodString;
+                shares: zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+            }>, "strip", zod.ZodTypeAny, {
+                address: string;
+                shares: BigNumber;
+            }, {
+                address: string;
+                shares: string | number | bigint | BigNumber;
+            }>, "many">;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            recipientSplits: {
+                address: string;
+                shares: BigNumber;
+            }[];
+        }, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            recipientSplits: {
+                address: string;
+                shares: string | number | bigint | BigNumber;
+            }[];
+        }>;
+        input: zod.ZodObject<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            recipientSplits: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
+                address: zod.ZodString;
+                shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+            }, "strip", zod.ZodTypeAny, {
+                address: string;
+                shares: string;
+            }, {
+                address: string;
+                shares: string | number | bigint | BigNumber;
+            }>, "many">>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            name: string;
+            recipientSplits: {
+                address: string;
+                shares: string;
+            }[];
+        }, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            recipientSplits?: {
+                address: string;
+                shares: string | number | bigint | BigNumber;
+            }[] | undefined;
+            name: string;
+        }>;
+    };
+    withdraw(walletAddress: string): TransactionResultPromise;
+    withdrawToken(walletAddress: string, tokenAddress: string): TransactionResultPromise;
+}
+
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
@@ -892,18 +1067,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getBundleModule(address: string): TokenErc1155Module;
     getDropModule(moduleAddress: string): DropErc721Module;
     // @internal (undocumented)
-    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | TokenErc20Module | VoteModule | ts_toolbelt_out_Class_Instance.Instance<{
-        readonly DropERC721: typeof DropErc721Module;
-        readonly TokenERC721: typeof TokenErc721Module;
-        readonly DropERC1155: typeof DropErc1155Module;
-        readonly TokenERC1155: typeof TokenErc1155Module;
-        readonly TokenERC20: typeof TokenErc20Module;
-        readonly VoteERC20: typeof VoteModule;
+    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | TokenErc20Module | VoteModule | SplitsModule | ts_toolbelt_out_Class_Instance.Instance<{
+        readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule | typeof SplitsModule;
     }[TModuleType]>;
     // (undocumented)
     getModuleList(walletAddress: string): Promise<{
         address: string;
-        moduleType: "DropERC721" | "TokenERC721" | "DropERC1155" | "TokenERC1155" | "TokenERC20" | "VoteERC20";
+        moduleType: string | number;
         metadata: () => Promise<{
             [x: string]: Json;
             description?: string | undefined;
@@ -932,9 +1102,20 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             voting_token_address: string;
             voting_quorum_fraction: number;
             proposal_token_threshold: ethers_2.BigNumber;
+        }> | Promise<{
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            recipientSplits: {
+                address: string;
+                shares: ethers_2.BigNumber;
+            }[];
         }>;
     }[]>;
     getNFTModule(address: string): TokenErc721Module;
+    getSplitsModule(address: string): SplitsModule;
     getTokenModule(address: string): TokenErc20Module;
     getVoteModule(address: string): VoteModule;
     // (undocumented)
@@ -950,6 +1131,8 @@ export class TokenErc1155Module extends Erc1155<TokenERC1155> {
     // (undocumented)
     static contractFactory: typeof TokenERC1155__factory;
     // (undocumented)
+    encoder: ContractEncoder<TokenERC1155>;
+    // (undocumented)
     metadata: ContractMetadata<TokenERC1155, typeof TokenErc1155Module.schema>;
     mint(metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<BundleMetadata>>;
     mintBatch(metadatas: BundleMetadataInput[]): Promise<TransactionResultWithId<BundleMetadata>[]>;
@@ -958,7 +1141,7 @@ export class TokenErc1155Module extends Erc1155<TokenERC1155> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: "TokenERC1155";
+    static moduleType: string;
     // (undocumented)
     primarySales: ContractPrimarySale<TokenERC1155>;
     // (undocumented)
@@ -1063,6 +1246,8 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
     static contractFactory: typeof TokenERC20__factory;
     // @alpha
     delegateTo(delegateeAddress: string): TransactionResultPromise;
+    // (undocumented)
+    encoder: ContractEncoder<TokenERC20>;
     getDelegation(): Promise<string>;
     getDelegationOf(account: string): Promise<string>;
     getVoteBalance(): Promise<BigNumber>;
@@ -1077,7 +1262,7 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: "TokenERC20";
+    static moduleType: string;
     // (undocumented)
     roles: ContractRoles<TokenERC20, typeof TokenErc20Module.moduleRoles[number]>;
     // (undocumented)
@@ -1165,6 +1350,8 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
     // (undocumented)
     static contractFactory: typeof TokenERC721__factory;
+    // (undocumented)
+    encoder: ContractEncoder<TokenERC721>;
     // Warning: (ae-forgotten-export) The symbol "NewSignaturePayload" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -1188,7 +1375,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: "TokenERC721";
+    static moduleType: string;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
     // (undocumented)
@@ -1338,18 +1525,17 @@ export type ValidModuleInstance = C.Instance<ValidModuleClass>;
 // @public (undocumented)
 export type ValueOf<T> = T[keyof T];
 
-// Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class VoteModule implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<VoteERC20>);
-    // Warning: (ae-forgotten-export) The symbol "CurrencyValue" needs to be exported by the entry point index.d.ts
     balance(): Promise<CurrencyValue>;
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     canExecute(proposalId: string): Promise<boolean>;
     // (undocumented)
     static contractFactory: typeof VoteERC20__factory;
-    execute(proposalId: string): Promise<void>;
+    // (undocumented)
+    encoder: ContractEncoder<VoteERC20>;
+    execute(proposalId: string): TransactionResultPromise;
     // Warning: (ae-forgotten-export) The symbol "Proposal" needs to be exported by the entry point index.d.ts
     get(proposalId: BigNumberish): Promise<Proposal>;
     // (undocumented)
@@ -1361,11 +1547,11 @@ export class VoteModule implements UpdateableNetwork {
     // (undocumented)
     metadata: ContractMetadata<VoteERC20, typeof VoteModule.schema>;
     // (undocumented)
-    static moduleType: "VoteERC20";
+    static moduleType: string;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // Warning: (ae-forgotten-export) The symbol "ProposalExecutable" needs to be exported by the entry point index.d.ts
-    propose(description: string, executions?: ProposalExecutable[]): Promise<BigNumber>;
+    propose(description: string, executions?: ProposalExecutable[]): Promise<TransactionResultWithId>;
     // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<{
@@ -1496,13 +1682,17 @@ export class VoteModule implements UpdateableNetwork {
     // Warning: (ae-forgotten-export) The symbol "VoteSettings" needs to be exported by the entry point index.d.ts
     settings(): Promise<VoteSettings>;
     // Warning: (ae-forgotten-export) The symbol "VoteType" needs to be exported by the entry point index.d.ts
-    vote(proposalId: string, voteType: VoteType, reason?: string): Promise<void>;
+    vote(proposalId: string, voteType: VoteType, reason?: string): TransactionResultPromise;
 }
 
 // @public
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/index.d.ts:3599:9 - (ae-forgotten-export) The symbol "CurrencyValue" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

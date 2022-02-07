@@ -9,7 +9,7 @@ Vote
 <b>Signature:</b>
 
 ```typescript
-vote(proposalId: string, voteType: VoteType, reason?: string): Promise<void>;
+vote(proposalId: string, voteType: VoteType, reason?: string): TransactionResultPromise;
 ```
 
 ## Parameters
@@ -22,7 +22,7 @@ vote(proposalId: string, voteType: VoteType, reason?: string): Promise<void>;
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+TransactionResultPromise
 
 ## Remarks
 
