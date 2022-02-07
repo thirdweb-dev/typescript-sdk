@@ -69,7 +69,7 @@ export class ContractWrapper<
   public override updateSignerOrProvider(
     network: NetworkOrSignerOrProvider,
   ): void {
-    // update the underlyiyng base class
+    // update the underlying base class
     super.updateSignerOrProvider(network);
     // re-connect the contract with the new signer / provider
     this.writeContract = this.writeContract.connect(

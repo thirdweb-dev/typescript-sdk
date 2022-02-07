@@ -1,21 +1,19 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
-import { appModule, sdk, signers } from "./before.test";
-import { SplitsModule } from "../src";
+import { sdk, signers } from "./before.test";
+import { SplitsModule, TokenErc20Module } from "../src";
 
 global.fetch = require("node-fetch");
-
-// const testTokenAddress = "0xf18feb8b2f58691d67c98db98b360840df340e74";
-// const thirdwebRoyaltyAddress = "0xE00994EBDB59f70350E2cdeb897796F732331562";
 
 describe("Splits Module", async () => {
   let splitsModule: SplitsModule;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+    bobWallet: SignerWithAddress,
+    abbyWallet: SignerWithAddress;
 
   before(() => {
-    [adminWallet, samWallet, bobWallet] = signers;
+    [adminWallet, samWallet, bobWallet, abbyWallet] = signers;
   });
 
   beforeEach(async () => {
@@ -24,7 +22,15 @@ describe("Splits Module", async () => {
       name: "Splits Module",
       recipientSplits: [
         {
+          address: samWallet.address,
+          shares: 1,
+        },
+        {
           address: bobWallet.address,
+          shares: 1,
+        },
+        {
+          address: abbyWallet.address,
           shares: 1,
         },
       ],
@@ -37,17 +43,17 @@ describe("Splits Module", async () => {
     const recipients = await splitsModule.getAllRecipients();
     assert.lengthOf(
       recipients,
-      2,
+      3,
       "There should be 3 split recipients on this contract",
     );
   });
 
   it("should return the correct slip percentage for an address", async () => {
     assert.equal(
-      (await splitsModule.getRecipientSplitPercentage(adminWallet.address))
+      (await splitsModule.getRecipientSplitPercentage(samWallet.address))
         .splitPercentage,
-      5,
-      "The Thirdweb wallet should have 5% share of all royalties",
+      33.33333,
+      "Each wallet should have 1/3rd of the split",
     );
   });
 
@@ -55,23 +61,20 @@ describe("Splits Module", async () => {
     const balances = await splitsModule.balanceOfAllRecipients();
     assert.equal(
       Object.keys(balances).length,
-      2,
+      3,
       "There should be 3 recipients",
     );
   });
 
-  it.skip("should return all the recipients along with their token balances", async () => {
-    const balances = await splitsModule.balanceOfTokenAllRecipients(
-      await appModule
-        .deployTokenModule({
-          name: "Test Token",
-          symbol: "TST",
-        })
-        .then((tokenModule) => tokenModule.address),
-    );
+  it("should return all the recipients along with their token balances", async () => {
+    const addr = await sdk.factory.deploy(TokenErc20Module.moduleType, {
+      name: "Test Token",
+      symbol: "TST",
+    });
+    const balances = await splitsModule.balanceOfTokenAllRecipients(addr);
     assert.equal(
       Object.keys(balances).length,
-      2,
+      3,
       "There should be 3 recipients",
     );
   });

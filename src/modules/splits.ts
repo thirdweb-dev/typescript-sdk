@@ -1,5 +1,4 @@
 import { UpdateableNetwork } from "../core/interfaces/module";
-import { VoteModuleSchema } from "../schema/modules/vote";
 import { IERC20__factory, Splits, Splits__factory } from "@3rdweb/contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
