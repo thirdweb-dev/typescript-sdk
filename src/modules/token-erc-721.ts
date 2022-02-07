@@ -14,9 +14,7 @@ import type {
 import { TokenErc721ModuleSchema } from "../schema/modules/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
-  IERC20__factory,
   ITokenERC721,
-  TokenERC20,
   TokenERC721,
   TokenERC721__factory,
 } from "@3rdweb/contracts";
@@ -32,10 +30,9 @@ import {
 } from "@3rdweb/contracts/dist/TokenERC721";
 import { hexlify, toUtf8Bytes } from "ethers/lib/utils";
 import { Signer } from "@ethersproject/abstract-signer";
-import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
-import { AddressZero } from "@ethersproject/constants";
 import { v4 as uuidv4 } from "uuid";
 import { ContractEncoder } from "../core/classes/contract-encoder";
+import { setErc20Allowance } from "../common/currency";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -273,7 +270,8 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
   ): TransactionResultPromise<NFTMetadataOwner> {
     const message = { ...this.mapPayload(mintRequest), uri: mintRequest.uri };
     const overrides = await this.contractWrapper.getCallOverrides();
-    await this.setAllowance(
+    await setErc20Allowance(
+      this.contractWrapper,
       BigNumber.from(message.price),
       mintRequest.currencyAddress,
       overrides,
@@ -396,39 +394,5 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
       validityStartTimestamp: mintRequest.mintStartTimeEpochSeconds,
       uid: mintRequest.id,
     } as ITokenERC721.MintRequestStructOutput;
-  }
-
-  // TODO clean this up - doesn't belong here
-  private async setAllowance(
-    value: BigNumber,
-    currencyAddress: string,
-    overrides: any,
-  ): Promise<any> {
-    if (
-      currencyAddress === NATIVE_TOKEN_ADDRESS ||
-      currencyAddress === AddressZero
-    ) {
-      overrides["value"] = value;
-    } else {
-      const signer = this.contractWrapper.getSigner();
-      const provider = this.contractWrapper.getProvider();
-      const erc20 = new ContractWrapper<TokenERC20>(
-        signer || provider,
-        currencyAddress,
-        IERC20__factory.abi,
-        this.options,
-      );
-      const owner = await this.contractWrapper.getSignerAddress();
-      const spender = this.contractWrapper.readContract.address;
-      const allowance = await erc20.readContract.allowance(owner, spender);
-
-      if (allowance.lt(value)) {
-        await erc20.sendTransaction("increaseAllowance", [
-          spender,
-          value.sub(allowance),
-        ]);
-      }
-      return overrides;
-    }
   }
 }

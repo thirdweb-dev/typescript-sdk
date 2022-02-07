@@ -7,6 +7,8 @@ if (!globalThis.File) {
   globalThis.File = require("@web-std/file").File;
 }
 
+export const MAX_BPS = 10_000;
+
 const isBrowser = () => typeof window !== "undefined";
 
 const fileOrBufferUnion = isBrowser()
@@ -33,7 +35,7 @@ export const BigNumberishSchema = BigNumberSchema.transform((arg) =>
 
 export const BasisPointsSchema = z
   .number()
-  .max(10_000, "Cannot exeed 100%")
+  .max(MAX_BPS, "Cannot exeed 100%")
   .min(0, "Cannot be below 0%");
 
 export const JsonLiteral = z.union([

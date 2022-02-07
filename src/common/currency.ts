@@ -4,6 +4,7 @@ import { BigNumber, BigNumberish } from "ethers";
 import {
   IERC20,
   IERC20__factory,
+  TokenERC20,
   TokenERC20__factory,
 } from "@3rdweb/contracts";
 import { ChainId, SUPPORTED_CHAIN_ID } from "../constants/chains";
@@ -17,32 +18,6 @@ export function isNativeToken(tokenAddress: string): boolean {
     tokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS ||
     tokenAddress.toLowerCase() === AddressZero
   );
-}
-
-export async function approveErc20Allowance(
-  contractToApprove: ContractWrapper<any>,
-  currencyAddress: string,
-  price: BigNumber,
-  quantity: BigNumberish,
-) {
-  const signer = contractToApprove.getSigner();
-  const provider = contractToApprove.getProvider();
-  const erc20 = new ContractWrapper<IERC20>(
-    signer || provider,
-    currencyAddress,
-    IERC20__factory.abi,
-    {},
-  );
-  const owner = await contractToApprove.getSignerAddress();
-  const spender = contractToApprove.readContract.address;
-  const allowance = await erc20.readContract.allowance(owner, spender);
-  const totalPrice = BigNumber.from(price).mul(BigNumber.from(quantity));
-  if (allowance.lt(totalPrice)) {
-    await erc20.sendTransaction("approve", [
-      spender,
-      allowance.add(totalPrice),
-    ]);
-  }
 }
 
 export async function fetchCurrencyMetadata(
@@ -95,4 +70,62 @@ export async function fetchCurrencyValue(
 
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
   return NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID];
+}
+
+export async function setErc20Allowance(
+  contractToApprove: ContractWrapper<any>,
+  value: BigNumber,
+  currencyAddress: string,
+  overrides: any,
+): Promise<any> {
+  if (isNativeToken(currencyAddress)) {
+    overrides["value"] = value;
+  } else {
+    const signer = contractToApprove.getSigner();
+    const provider = contractToApprove.getProvider();
+    const erc20 = new ContractWrapper<TokenERC20>(
+      signer || provider,
+      currencyAddress,
+      IERC20__factory.abi,
+      {},
+    );
+
+    const owner = await contractToApprove.getSignerAddress();
+    const spender = contractToApprove.readContract.address;
+    const allowance = await erc20.readContract.allowance(owner, spender);
+
+    if (allowance.lt(value)) {
+      await erc20.sendTransaction("increaseAllowance", [
+        spender,
+        value.sub(allowance),
+      ]);
+    }
+    return overrides;
+  }
+}
+
+export async function approveErc20Allowance(
+  contractToApprove: ContractWrapper<any>,
+  currencyAddress: string,
+  price: BigNumber,
+  quantity: BigNumberish,
+) {
+  const signer = contractToApprove.getSigner();
+  const provider = contractToApprove.getProvider();
+  const erc20 = new ContractWrapper<IERC20>(
+    signer || provider,
+    currencyAddress,
+    IERC20__factory.abi,
+    {},
+  );
+  const owner = await contractToApprove.getSignerAddress();
+  const spender = contractToApprove.readContract.address;
+  const allowance = await erc20.readContract.allowance(owner, spender);
+  const totalPrice = BigNumber.from(price).mul(BigNumber.from(quantity));
+  if (allowance.lt(totalPrice)) {
+    await erc20.sendTransaction("approve", [
+      spender,
+      allowance.add(totalPrice),
+    ]);
+  }
 }
