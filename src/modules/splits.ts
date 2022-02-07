@@ -2,7 +2,11 @@ import { UpdateableNetwork } from "../core/interfaces/module";
 import { VoteModuleSchema } from "../schema/modules/vote";
 import { IERC20__factory, Splits, Splits__factory } from "@3rdweb/contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { IStorage, NetworkOrSignerOrProvider } from "../core";
+import {
+  IStorage,
+  NetworkOrSignerOrProvider,
+  TransactionResultPromise,
+} from "../core";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";
@@ -232,10 +236,12 @@ export class SplitsModule implements UpdateableNetwork {
    *
    * @param walletAddress - The address to distributes the amount to
    */
-  public async withdraw(walletAddress: string): Promise<void> {
-    await this.contractWrapper.sendTransaction("release(address)", [
-      walletAddress,
-    ]);
+  public async withdraw(walletAddress: string): TransactionResultPromise {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("release(address)", [
+        walletAddress,
+      ]),
+    };
   }
 
   /**
@@ -247,11 +253,13 @@ export class SplitsModule implements UpdateableNetwork {
   public async withdrawToken(
     walletAddress: string,
     tokenAddress: string,
-  ): Promise<void> {
-    await this.contractWrapper.sendTransaction("release(address,address)", [
-      tokenAddress,
-      walletAddress,
-    ]);
+  ): TransactionResultPromise {
+    return {
+      receipt: await this.contractWrapper.sendTransaction(
+        "release(address,address)",
+        [tokenAddress, walletAddress],
+      ),
+    };
   }
 
   /**
@@ -264,8 +272,10 @@ export class SplitsModule implements UpdateableNetwork {
    * await module.distribute();
    * ```
    */
-  public async distribute(): Promise<void> {
-    await this.contractWrapper.sendTransaction("distribute()", []);
+  public async distribute(): TransactionResultPromise {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("distribute()", []),
+    };
   }
 
   /**
@@ -282,10 +292,13 @@ export class SplitsModule implements UpdateableNetwork {
    *
    * @param tokenAddress - The address of the currency contract to distribute funds
    */
-  public async distributeToken(tokenAddress: string): Promise<void> {
-    await this.contractWrapper.sendTransaction("distribute(address)", [
-      tokenAddress,
-    ]);
+  public async distributeToken(tokenAddress: string): TransactionResultPromise {
+    return {
+      receipt: await this.contractWrapper.sendTransaction(
+        "distribute(address)",
+        [tokenAddress],
+      ),
+    };
   }
 
   /** ******************************

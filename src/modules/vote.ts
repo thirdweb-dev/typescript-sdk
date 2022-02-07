@@ -4,7 +4,12 @@ import {
   VoteERC20__factory,
 } from "@3rdweb/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
-import { IStorage, NetworkOrSignerOrProvider } from "../core";
+import {
+  IStorage,
+  NetworkOrSignerOrProvider,
+  TransactionResultPromise,
+  TransactionResultWithId,
+} from "../core";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { VoteModuleSchema } from "../schema/modules/vote";
@@ -346,12 +351,12 @@ export class VoteModule implements UpdateableNetwork {
    *
    * @param description - The description of the proposal.
    * @param executions - A set of executable transactions that will be run if the proposal is passed and executed.
-   * @returns - The id of the created proposal.
+   * @returns - The id of the created proposal and the transaction receipt.
    */
   public async propose(
     description: string,
     executions?: ProposalExecutable[],
-  ): Promise<BigNumber> {
+  ): Promise<TransactionResultWithId> {
     if (!executions) {
       executions = [
         {
@@ -374,7 +379,10 @@ export class VoteModule implements UpdateableNetwork {
       "ProposalCreated",
       receipt?.logs,
     );
-    return event.proposalId;
+    return {
+      id: event.proposalId,
+      receipt,
+    };
   }
 
   /**
@@ -397,14 +405,18 @@ export class VoteModule implements UpdateableNetwork {
    * @param voteType - The position the voter is taking on their vote.
    * @param reason - (optional) The reason for the vote.
    */
-  public async vote(proposalId: string, voteType: VoteType, reason = "") {
+  public async vote(
+    proposalId: string,
+    voteType: VoteType,
+    reason = "",
+  ): TransactionResultPromise {
     await this.ensureExists(proposalId);
-
-    await this.contractWrapper.sendTransaction("castVoteWithReason", [
-      proposalId,
-      voteType,
-      reason,
-    ]);
+    return {
+      receipt: await this.contractWrapper.sendTransaction(
+        "castVoteWithReason",
+        [proposalId, voteType, reason],
+      ),
+    };
   }
 
   /**
@@ -421,7 +433,7 @@ export class VoteModule implements UpdateableNetwork {
    *
    * @param proposalId - The proposal id to execute.
    */
-  public async execute(proposalId: string) {
+  public async execute(proposalId: string): TransactionResultPromise {
     await this.ensureExists(proposalId);
 
     const proposal = await this.get(proposalId);
@@ -429,11 +441,13 @@ export class VoteModule implements UpdateableNetwork {
     const values = proposal.executions.map((p) => p.nativeTokenValue);
     const datas = proposal.executions.map((p) => p.transactionData);
     const descriptionHash = ethers.utils.id(proposal.description);
-    await this.contractWrapper.sendTransaction("execute", [
-      tos,
-      values,
-      datas,
-      descriptionHash,
-    ]);
+    return {
+      receipt: await this.contractWrapper.sendTransaction("execute", [
+        tos,
+        values,
+        datas,
+        descriptionHash,
+      ]),
+    };
   }
 }
