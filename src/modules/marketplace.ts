@@ -717,8 +717,11 @@ export class MarketplaceModule implements UpdateableNetwork {
   }
 
   /**
-   * Update a Direct listing with new metadata
-   * @param listing
+   * Update a Direct listing with new metadata.
+   *
+   * Note: cannot update a listing with a new quantity of 0. Use `cancelDirectListing` to remove a listing instead.
+   *
+   * @param listing - the new listing information
    */
   public async updateDirectListing(
     listing: DirectListing,
@@ -945,7 +948,7 @@ export class MarketplaceModule implements UpdateableNetwork {
       asset: await fetchTokenMetadataForContract(
         listing.assetContract,
         this.contractWrapper.getProvider(),
-        listing.tokenId.toString(),
+        listing.tokenId,
         this.storage,
       ),
       secondsUntilEnd: listing.endTime,
@@ -980,7 +983,7 @@ export class MarketplaceModule implements UpdateableNetwork {
       asset: await fetchTokenMetadataForContract(
         listing.assetContract,
         this.contractWrapper.getProvider(),
-        listing.tokenId.toString(),
+        listing.tokenId,
         this.storage,
       ),
       reservePriceCurrencyValuePerToken: await fetchCurrencyValue(

@@ -38,7 +38,7 @@ export async function fetchTokenMetadata(
 export async function fetchTokenMetadataForContract(
   contractAddress: string,
   provider: Provider,
-  tokenId: string,
+  tokenId: BigNumberish,
   storage: IStorage,
 ) {
   let uri: string | undefined;

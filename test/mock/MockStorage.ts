@@ -81,7 +81,7 @@ export class MockStorage implements IStorage {
     if (!(index in this.folders[cid])) {
       throw new NotFoundError(`${cid}/${index}`);
     }
-    return Promise.resolve(this.folders[cid][index.toString()]);
+    return Promise.resolve(JSON.parse(this.folders[cid][index.toString()]));
   }
 
   public async uploadMetadata(

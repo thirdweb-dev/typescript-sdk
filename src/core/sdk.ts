@@ -4,6 +4,7 @@ import { IStorage } from "./interfaces/IStorage";
 import {
   DropErc1155Module,
   DropErc721Module,
+  MarketplaceModule,
   MODULES_MAP,
   SplitsModule,
   TokenErc20Module,
@@ -195,6 +196,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public getSplitsModule(address: string): SplitsModule {
     return this.getModule(address, SplitsModule.moduleType) as SplitsModule;
+  }
+
+  /**
+   * Get an instance of a Marketplace module
+   * @param address - the address of the deployed module
+   * @returns the module
+   */
+  public getMarketplaceModule(address: string): MarketplaceModule {
+    return this.getModule(
+      address,
+      MarketplaceModule.moduleType,
+    ) as MarketplaceModule;
   }
 
   /**

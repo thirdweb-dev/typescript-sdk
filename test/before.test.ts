@@ -7,15 +7,10 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 import {
-  DropErc1155Module,
-  DropErc721Module,
   MarketplaceModule,
   MODULES_MAP,
-  SplitsModule,
   ThirdwebSDK,
-  TokenErc1155Module,
   TokenErc20Module,
-  TokenErc721Module,
   VoteModule,
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";

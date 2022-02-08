@@ -8,8 +8,6 @@ import {
 } from "../src";
 import { appModule, sdk, signers } from "./before.test";
 
-import { expect, assert } from "chai";
-
 global.fetch = require("node-fetch");
 
 describe("Market Module", async () => {
