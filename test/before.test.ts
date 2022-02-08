@@ -46,16 +46,6 @@ before(async () => {
   const defaultTransactionFeeBps = BigNumber.from(50);
   const defaultRecipient = signer.address;
 
-  // const wTokenDeployer = await new ethers.ContractFactory(
-  //   WETH9__factory.abi,
-  //   WETH9__factory.bytecode,
-  // )
-  //   .connect(signer)
-  //   .deploy();
-  // await wTokenDeployer.deployed();
-  // wrappedNativeTokenAddress = wTokenDeployer.address;
-  // console.log(wrappedNativeTokenAddress);
-
   await jsonProvider.send("hardhat_reset", []);
 
   const currencyTransferDeployer = await new ethers.ContractFactory(
@@ -81,7 +71,7 @@ before(async () => {
   );
   await deployTxFactory.wait();
   const thirdwebRegistryAddress = await thirdwebFactoryDeployer.registry();
-
+  registryAddress = thirdwebFactoryDeployer.address;
   console.log("TWFactory address: ", thirdwebFactoryDeployer.address);
   console.log("TWRegistry address: ", thirdwebRegistryAddress);
 
@@ -102,17 +92,6 @@ before(async () => {
   await thirdwebFactoryDeployer.deployed();
 
   console.log("TWFee address: ", thirdwebFeeDeployer.address);
-
-  function noThirdWebFee(moduleType: string) {
-    return (
-      moduleType === VoteModule.moduleType ||
-      moduleType === TokenErc20Module.moduleType
-    );
-  }
-
-  function needsWrappedNativeTokenAddres(moduleType: string) {
-    return moduleType === MarketplaceModule.moduleType;
-  }
 
   async function deployModule(
     moduleFactory: ethers.ContractFactory,

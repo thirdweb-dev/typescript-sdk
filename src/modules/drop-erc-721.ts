@@ -1,7 +1,13 @@
 import { ContractRoles } from "../core/classes/contract-roles";
 import { DropERC721, DropERC721__factory } from "@3rdweb/contracts";
 import { hexZeroPad } from "@ethersproject/bytes";
-import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
+import {
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  CallOverrides,
+  ethers,
+} from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -204,6 +210,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
       batch.metadataUris.length,
       batch.baseUri,
+      ethers.utils.toUtf8Bytes(""),
     ]);
     // TODO figure out how to type the return types of parseEventLogs
     const event = this.contractWrapper.parseEventLogs(

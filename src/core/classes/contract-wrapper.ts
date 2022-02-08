@@ -396,7 +396,17 @@ export class ContractWrapper<
       ),
     );
 
+    this.emit(EventType.Signature, {
+      status: "submitted",
+      message: hashToSign,
+      signature: "",
+    });
     const signature = await signer.signMessage(hashToSign);
+    this.emit(EventType.Signature, {
+      status: "completed",
+      message: hashToSign,
+      signature,
+    });
     const response = await fetch(
       "https://api.biconomy.io/api/v2/meta-tx/native",
       {
@@ -465,6 +475,12 @@ export class ContractWrapper<
 
     let signature: BytesLike;
 
+    this.emit(EventType.Signature, {
+      status: "submitted",
+      message,
+      signature: "",
+    });
+
     // if the executing function is "approve" and matches with erc20 approve signature
     // and if the token supports permit, then we use permit for gasless instead of approve.
     if (
@@ -526,7 +542,12 @@ export class ContractWrapper<
       type: messageType,
     });
 
-    // console.log("POST", this.options.transactionRelayerUrl, body);
+    this.emit(EventType.Signature, {
+      status: "completed",
+      message,
+      signature,
+    });
+
     const response = await fetch(this.options.gasless.openzeppelin.relayerUrl, {
       method: "POST",
       body,

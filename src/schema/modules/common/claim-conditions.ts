@@ -42,4 +42,5 @@ export const ClaimConditionOutputSchema = ClaimConditionInputSchema.omit({
   price: BigNumberSchema,
   maxQuantity: BigNumberSchema,
   quantityLimitPerTransaction: BigNumberSchema,
+  waitInSeconds: BigNumberSchema,
 });

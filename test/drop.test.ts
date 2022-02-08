@@ -8,6 +8,7 @@ import { appModule, sdk, signers } from "./before.test";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
+import { TokenErc20Module } from "../src";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
@@ -411,19 +412,20 @@ describe("Drop Module", async () => {
       assert.isFalse(canClaim);
     });
 
-    // TODO fix this test once the ERC20 module is done
     it("should check if an address has enough erc20 currency", async () => {
-      const currency = await appModule.deployCurrencyModule({
-        name: "test",
-        symbol: "test",
-      });
-      sdk.factory.deploy();
+      const currencyAddress = await sdk.factory.deploy(
+        TokenErc20Module.moduleType,
+        {
+          name: "test",
+          symbol: "test",
+        },
+      );
 
       await dropModule.claimConditions.set([
         {
           maxQuantity: 10,
           price: ethers.utils.parseUnits("1000000000000000"),
-          currencyAddress: currency.address,
+          currencyAddress,
         },
       ]);
       await sdk.updateSignerOrProvider(bobWallet);

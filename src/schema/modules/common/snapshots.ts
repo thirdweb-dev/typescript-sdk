@@ -21,7 +21,7 @@ export const SnapshotInputSchema = z.preprocess((arg) => {
   if (typeof arg === "string") {
     return JSON.parse(arg);
   } else {
-    return {};
+    return arg;
   }
 }, SnapshotSchema);
 

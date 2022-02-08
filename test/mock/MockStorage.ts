@@ -89,10 +89,6 @@ export class MockStorage implements IStorage {
     contractAddress?: string,
     _signerAddress?: string,
   ): Promise<string> {
-    if (typeof metadata === "string") {
-      return metadata;
-    }
-
     // since there's only single object, always use the first index
     const { metadataUris } = await this.uploadMetadataBatch(
       [metadata],
@@ -109,10 +105,9 @@ export class MockStorage implements IStorage {
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<UploadMetadataBatchResult> {
-    const metadataObjects = metadatas.filter((m) => typeof m !== "string");
     await this.batchUploadProperties(metadatas);
 
-    const metadataToUpload: string[] = metadataObjects.map((m: any) =>
+    const metadataToUpload: string[] = metadatas.map((m: any) =>
       JSON.stringify(m),
     );
 
@@ -139,16 +134,12 @@ export class MockStorage implements IStorage {
       }
 
       if (typeof val === "object") {
-        this.uploadProperties(val);
+        await this.uploadProperties(val);
       }
     }
   }
 
   private async batchUploadProperties(metadatas: JsonObject[]): Promise<any> {
-    if (typeof metadatas === "string") {
-      return metadatas;
-    }
-
     for (const file of metadatas) {
       if (typeof file === "string") {
         continue;

@@ -77,7 +77,7 @@ describe("IPFS Uploads", async () => {
     const meta = await storage.get(upload);
     assert.equal(
       meta.animation_url,
-      `${ipfsGatewayUrl}/QmUphf8LnNGdFwBevnxNkq8dxcZ4qxzzPjoNMDkSQfECKM/0`,
+      `${ipfsGatewayUrl}QmUphf8LnNGdFwBevnxNkq8dxcZ4qxzzPjoNMDkSQfECKM/0`,
     );
   });
 

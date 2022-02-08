@@ -1,7 +1,11 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";
 import { BigNumber, ethers } from "ethers";
-import { DropErc1155Module, DropErc721Module } from "../src/index";
+import {
+  DropErc1155Module,
+  DropErc721Module,
+  TokenErc20Module,
+} from "../src/index";
 import { appModule, sdk, signers } from "./before.test";
 import { AddressZero } from "@ethersproject/constants";
 import { ClaimEligibility } from "../src/enums";
@@ -439,16 +443,18 @@ describe("Bundle Drop Module", async () => {
     });
 
     it("should check if an address has enough erc20 currency", async () => {
-      const currency = await appModule.deployCurrencyModule({
-        name: "test",
-        symbol: "test",
-      });
+      const currency = sdk.getTokenModule(
+        await sdk.factory.deploy(TokenErc20Module.moduleType, {
+          name: "test",
+          symbol: "test",
+        }),
+      );
 
       await bdModule.claimConditions.set("0", [
         {
           maxQuantity: 10,
           price: ethers.utils.parseUnits("1000000000000000"),
-          currencyAddress: currency.address,
+          currencyAddress: currency.getAddress(),
         },
       ]);
       await sdk.updateSignerOrProvider(bobWallet);

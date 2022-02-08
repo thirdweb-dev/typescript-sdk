@@ -20,7 +20,6 @@ import { ProxyDeployedEvent } from "@3rdweb/contracts/dist/TWFactory";
 import { TokenErc721Module } from "../../modules/token-erc-721";
 import { FORWARDER_ADDRESS } from "../../constants/addresses";
 import { ChainlinkVrf } from "../../constants/chainlink";
-import { ChainId } from "../../constants/chains";
 
 export class ModuleFactory extends ContractWrapper<TWFactory> {
   private storage: IStorage;

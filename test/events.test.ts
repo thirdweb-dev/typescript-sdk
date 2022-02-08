@@ -1,34 +1,43 @@
 import { ethers, Wallet } from "ethers";
-import { DropModule, ThirdwebSDK } from "../src";
-import { EventType } from "../src/core/events";
-import { appModule, sdk } from "./before.test";
+import { registryAddress, sdk } from "./before.test";
+import { EventType } from "../src/constants/events";
+import { expect } from "chai";
+import { DropErc721Module, ThirdwebSDK } from "../src";
+import { AddressZero } from "@ethersproject/constants";
+
+global.fetch = require("node-fetch");
 
 describe("Events", async () => {
-  let dropModule: DropModule;
+  let dropModule: DropErc721Module;
 
   beforeEach(async () => {
-    dropModule = await appModule.deployDropModule({
-      name: "Test Drop",
-      maxSupply: 1000,
-      primarySaleRecipientAddress: ethers.constants.AddressZero,
-    });
+    dropModule = sdk.getDropModule(
+      await sdk.factory.deploy(DropErc721Module.moduleType, {
+        name: `Testing drop from SDK`,
+        description: "Test module from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        seller_fee_basis_points: 500,
+        fee_recipient: AddressZero,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: AddressZero,
+      }),
+    );
   });
 
-  it.skip("should emit Transaction events", async () => {
+  it("should emit Transaction events", async () => {
     let txStatus = "";
-    sdk.event.on(EventType.Transaction, (event) => {
+    sdk.on(EventType.Transaction, (event) => {
       console.log(event);
       // TODO: need to use chai-events
       if (!txStatus) {
-        expect(event.status).toBe("submitted");
-        expect(event.transactionHash).toBeTruthy();
+        expect(event.status).to.be("submitted");
       } else if (txStatus === "submitted") {
-        expect(event.status).toBe("completed");
-        expect(event.transactionHash).toBeTruthy();
+        expect(event.status).to.be("completed");
       }
       txStatus = event.status;
     });
-    await dropModule.setApproval(ethers.constants.AddressZero, true);
+    await dropModule.setApprovalForAll(ethers.constants.AddressZero, true);
   });
 
   it.skip("should emit Signature events", async () => {
@@ -36,16 +45,21 @@ describe("Events", async () => {
     const provider = ethers.getDefaultProvider(RPC_URL);
     const wallet = Wallet.createRandom().connect(provider);
     const esdk = new ThirdwebSDK(wallet, {
-      transactionRelayerUrl: "dummy_url",
+      gasless: {
+        openzeppelin: {
+          relayerUrl: "https://google.com", // TODO test relayer url?
+        },
+      },
+      thirdwebModuleFactory: registryAddress,
     });
-    sdk.event.on(EventType.Transaction, (event) => {
+    sdk.on(EventType.Transaction, (event) => {
       console.log(event);
     });
-    sdk.event.on(EventType.Signature, (event) => {
+    sdk.on(EventType.Signature, (event) => {
       console.log(event);
     });
     await esdk
-      .getDropModule(dropModule.address)
-      .setApproval(ethers.constants.AddressZero, true);
+      .getDropModule(dropModule.getAddress())
+      .setApprovalForAll(ethers.constants.AddressZero, true);
   });
 });
