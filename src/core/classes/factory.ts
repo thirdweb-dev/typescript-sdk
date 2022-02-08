@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   DropErc1155Module,
   DropErc721Module,
+  MarketplaceModule,
   MODULES_MAP,
   SplitsModule,
   TokenErc1155Module,
@@ -138,6 +139,16 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           FORWARDER_ADDRESS,
           splitsMetadata.recipientSplits.map((s) => s.address),
           splitsMetadata.recipientSplits.map((s) => s.shares),
+        ];
+      case MarketplaceModule.moduleType:
+        const marketplaceMetadata =
+          MarketplaceModule.schema.deploy.parse(metadata);
+        return [
+          await this.getSignerAddress(),
+          contractURI,
+          marketplaceMetadata.trusted_forwarder,
+          marketplaceMetadata.platform_fee_recipient,
+          marketplaceMetadata.platform_fee_basis_points,
         ];
       default:
         return [];

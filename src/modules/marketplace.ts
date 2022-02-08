@@ -2,13 +2,11 @@ import {
   ERC165__factory,
   IERC1155,
   IERC1155__factory,
-  IERC20__factory,
   IERC721,
   IERC721__factory,
   IMarketplace,
   Marketplace,
   Marketplace__factory,
-  TokenERC20,
 } from "@3rdweb/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
@@ -31,7 +29,6 @@ import {
   Offer,
 } from "../types/marketplace";
 import { ListingType } from "../enums";
-import ListingParametersStruct = IMarketplace.ListingParametersStruct;
 import { BigNumber, BigNumberish } from "ethers";
 import {
   fetchCurrencyValue,
@@ -46,7 +43,6 @@ import {
   ListingNotFoundError,
   WrongListingTypeError,
 } from "../common";
-import ListingStruct = IMarketplace.ListingStruct;
 import { fetchTokenMetadataForContract } from "../common/nft";
 import {
   InterfaceId_IERC1155,
@@ -55,6 +51,8 @@ import {
 import { isAddress } from "ethers/lib/utils";
 import { AddressZero } from "@ethersproject/constants";
 import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
+import ListingParametersStruct = IMarketplace.ListingParametersStruct;
+import ListingStruct = IMarketplace.ListingStruct;
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -271,7 +269,7 @@ export class MarketplaceModule implements UpdateableNetwork {
     listingId: BigNumberish,
   ): Promise<AuctionListing | DirectListing> {
     const listing = await this.contractWrapper.readContract.listings(listingId);
-    if (listing.listingId.toString() !== listingId.toString()) {
+    if (listing.assetContract === AddressZero) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
     }
     switch (listing.listingType) {
@@ -775,6 +773,7 @@ export class MarketplaceModule implements UpdateableNetwork {
     listingId: BigNumberish,
   ): TransactionResultPromise {
     const listing = await this.validateDirectListing(BigNumber.from(listingId));
+    // TODO this should actually remove the listing instead of setting the quantity to 0
     listing.quantity = 0;
     return this.updateDirectListing(listing);
   }
@@ -821,7 +820,7 @@ export class MarketplaceModule implements UpdateableNetwork {
    * Closes the Auction and executes the sale
    *
    * @param listingId - the auction  listing ud to close
-   * @param closeFor - optionally pass the address that should close the auction (owner or winning bid offeror)
+   * @param closeFor - optionally pass the address the auction creator address or winning bid offeror address to close the auction on their behalf
    */
   // TODO this closeFor_ param is confusing - cleanup interface between close / cancel
   public async closeAuctionListing(

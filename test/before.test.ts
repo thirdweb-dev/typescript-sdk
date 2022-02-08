@@ -9,13 +9,18 @@ import { ethers as hardhatEthers } from "hardhat";
 import {
   DropErc1155Module,
   DropErc721Module,
+  MarketplaceModule,
   MODULES_MAP,
   SplitsModule,
   ThirdwebSDK,
   TokenErc1155Module,
+  TokenErc20Module,
   TokenErc721Module,
+  VoteModule,
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
+import { getNativeTokenByChainId } from "../src/common/currency";
+import { ChainId } from "../src/constants/chains";
 
 const RPC_URL = "http://localhost:8545";
 
@@ -102,14 +107,15 @@ before(async () => {
 
   console.log("TWFee address: ", thirdwebFeeDeployer.address);
 
-  function needsThirdWebFeeDeployer(moduleType: string) {
+  function noThirdWebFee(moduleType: string) {
     return (
-      moduleType === DropErc721Module.moduleType ||
-      moduleType === TokenErc721Module.moduleType ||
-      moduleType === DropErc1155Module.moduleType ||
-      moduleType === TokenErc1155Module.moduleType ||
-      moduleType === SplitsModule.moduleType
+      moduleType === VoteModule.moduleType ||
+      moduleType === TokenErc20Module.moduleType
     );
+  }
+
+  function needsWrappedNativeTokenAddres(moduleType: string) {
+    return moduleType === MarketplaceModule.moduleType;
   }
 
   for (const moduleType in MODULES_MAP) {
@@ -122,10 +128,17 @@ before(async () => {
       contractFactory.bytecode,
     ).connect(signer);
 
-    if (needsThirdWebFeeDeployer(moduleType)) {
-      deployedModule = await moduleFactory.deploy(thirdwebFeeDeployer.address);
-    } else {
+    if (noThirdWebFee(moduleType)) {
       deployedModule = await moduleFactory.deploy();
+    } else if (needsWrappedNativeTokenAddres(moduleType)) {
+      const nativeTokenWrapperAddress = getNativeTokenByChainId(ChainId.Hardhat)
+        .wrapped.address;
+      deployedModule = await moduleFactory.deploy(
+        nativeTokenWrapperAddress,
+        thirdwebFeeDeployer.address,
+      );
+    } else {
+      deployedModule = await moduleFactory.deploy(thirdwebFeeDeployer.address);
     }
 
     await deployedModule.deployed();

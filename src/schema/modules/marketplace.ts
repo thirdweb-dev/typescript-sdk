@@ -2,6 +2,7 @@ import {
   CommonModuleOutputSchema,
   CommonModuleSchema,
   CommonPlatformFeeSchema,
+  CommonTrustedForwarderSchema,
 } from "./common";
 import { z } from "zod";
 import { BasisPointsSchema } from "../shared";
@@ -20,7 +21,7 @@ export const MarketplaceModuleOutput = CommonModuleOutputSchema.merge(
 
 export const MarketplaceModuleDeploy = MarketplaceModuleInput.merge(
   CommonPlatformFeeSchema,
-).merge(MarketplaceModuleInput);
+).merge(CommonTrustedForwarderSchema);
 
 export const MarketplaceModuleSchema = {
   deploy: MarketplaceModuleDeploy,

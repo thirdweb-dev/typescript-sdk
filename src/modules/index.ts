@@ -5,6 +5,7 @@ import { TokenErc1155Module } from "./token-erc-1155";
 import { TokenErc20Module } from "./token-erc20";
 import { VoteModule } from "./vote";
 import { SplitsModule } from "./splits";
+import { MarketplaceModule } from "./marketplace";
 
 /**
  * @internal
@@ -17,6 +18,7 @@ export const MODULES_MAP = {
   [TokenErc20Module.moduleType]: TokenErc20Module,
   [VoteModule.moduleType]: VoteModule,
   [SplitsModule.moduleType]: SplitsModule,
+  [MarketplaceModule.moduleType]: MarketplaceModule,
 } as const;
 
 export {
@@ -27,4 +29,5 @@ export {
   TokenErc20Module,
   VoteModule,
   SplitsModule,
+  MarketplaceModule,
 };
