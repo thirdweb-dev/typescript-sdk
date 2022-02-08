@@ -3,13 +3,15 @@ import {
   CommonModuleSchema,
   CommonPlatformFeeSchema,
   CommonRoyaltySchema,
+  CommonSymbolSchema,
   CommonTrustedForwarderSchema,
 } from "./common";
 
-export const PacksModuleInput = CommonModuleSchema.merge(CommonRoyaltySchema);
+export const PacksModuleInput =
+  CommonModuleSchema.merge(CommonRoyaltySchema).merge(CommonSymbolSchema);
 
 export const PacksModuleOutput =
-  CommonModuleOutputSchema.merge(CommonRoyaltySchema);
+  CommonModuleOutputSchema.merge(CommonRoyaltySchema).merge(CommonSymbolSchema);
 
 export const PacksModuleDeploy = PacksModuleInput.merge(
   CommonPlatformFeeSchema,

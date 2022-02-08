@@ -1,17 +1,17 @@
-import { INFTBundleCreateArgs } from "../src/modules/bundle";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BundleModule, PackMetadata, PackModule } from "../src/index";
-import { appModule, sdk, signers } from "./before.test";
+import { sdk, signers } from "./before.test";
 
-import { assert, expect } from "chai";
+import { assert } from "chai";
 import { BigNumber } from "ethers";
+import { BundleMetadataInput, PacksModule, TokenErc1155Module } from "../src";
+import { PackMetadata } from "../src/types/packs";
 
 global.fetch = require("node-fetch");
 
 // TODO: Write some actual pack module tests
 describe("Pack Module", async () => {
-  let packModule: PackModule;
-  let bundleModule: BundleModule;
+  let packModule: PacksModule;
+  let bundleModule: TokenErc1155Module;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -22,35 +22,39 @@ describe("Pack Module", async () => {
   });
 
   beforeEach(async () => {
-    sdk.setProviderOrSigner(adminWallet);
-    packModule = await appModule.deployPackModule({
-      name: "Pack Module",
-      sellerFeeBasisPoints: 1000,
-    });
+    sdk.updateSignerOrProvider(adminWallet);
+    packModule = sdk.getPackModule(
+      await sdk.factory.deploy(PacksModule.moduleType, {
+        name: "Pack Module",
+        seller_fee_basis_points: 1000,
+      }),
+    );
 
-    bundleModule = await appModule.deployBundleModule({
-      name: "NFT Module",
-      sellerFeeBasisPoints: 1000,
-    });
+    bundleModule = sdk.getBundleModule(
+      await sdk.factory.deploy(TokenErc1155Module.moduleType, {
+        name: "NFT Module",
+        seller_fee_basis_points: 1000,
+      }),
+    );
   });
 
   const createBundles = async () => {
-    const batch: INFTBundleCreateArgs[] = [];
+    const batch: BundleMetadataInput[] = [];
     for (let i = 0; i < 5; i++) {
       batch.push({
         metadata: {
           name: `NFT ${i}`,
         },
-        supply: 1000,
+        supply: BigNumber.from(1000),
       });
     }
 
-    await bundleModule.createAndMintBatch(batch);
+    await bundleModule.mintBatch(batch);
   };
 
   const createPacks = async (): Promise<PackMetadata[]> => {
     const packOne = await packModule.create({
-      assetContract: bundleModule.address,
+      assetContract: bundleModule.getAddress(),
       assets: [
         {
           tokenId: "0",
@@ -71,7 +75,7 @@ describe("Pack Module", async () => {
     });
 
     const packTwo = await packModule.create({
-      assetContract: bundleModule.address,
+      assetContract: bundleModule.getAddress(),
       assets: [
         {
           tokenId: "0",
@@ -92,7 +96,7 @@ describe("Pack Module", async () => {
       rewardsPerOpen: BigNumber.from(2),
     });
 
-    return [packOne, packTwo];
+    return [await packOne.data(), await packTwo.data()];
   };
 
   describe("Pack Creation", () => {
@@ -114,21 +118,21 @@ describe("Pack Module", async () => {
 
       const first = rewards.find(
         (reward) =>
-          reward.metadata.id === "0" &&
+          reward.metadata.id.toString() === "0" &&
           reward.supply.toNumber() === 50 &&
           reward.metadata.name === "NFT 0",
       );
 
       const second = rewards.find(
         (reward) =>
-          reward.metadata.id === "1" &&
+          reward.metadata.id.toString() === "1" &&
           reward.supply.toNumber() === 50 &&
           reward.metadata.name === "NFT 1",
       );
 
       const third = rewards.find(
         (reward) =>
-          reward.metadata.id === "2" &&
+          reward.metadata.id.toString() === "2" &&
           reward.supply.toNumber() === 50 &&
           reward.metadata.name === "NFT 2",
       );
@@ -155,8 +159,11 @@ describe("Pack Module", async () => {
       await createBundles();
     });
 
-    it("pack open returns valid reward", async () => {
+    it.skip("pack open returns valid reward", async () => {
       const pack = await createPacks();
+      // TODO how can we test this with VRF in the way?
+      const result = await packModule.open(pack[0].id);
+      assert.equal(result.length, 1);
     });
   });
 

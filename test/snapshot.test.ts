@@ -1,10 +1,10 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { ethers } from "ethers";
 import { JsonConvert } from "json2typescript";
-import { ClaimProof, Snapshot, ThirdwebSDK } from "../src/index";
-import chai = require("chai");
+import { ClaimProof, createSnapshot, IStorage, Snapshot } from "../src/index";
 
-import { appModule, sdk, signers } from "./before.test";
+import { sdk, signers } from "./before.test";
+import chai = require("chai");
+import { MockStorage } from "./mock/MockStorage";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
@@ -31,12 +31,15 @@ describe("Snapshots", async () => {
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
 
+  let storage: IStorage;
+
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
+    storage = new MockStorage();
   });
 
   beforeEach(async () => {
-    const result = await sdk.createSnapshot(leafs);
+    const result = await createSnapshot(leafs, storage);
     snapshot = result.snapshot;
     uri = result.snapshotUri;
     merkleRoot = result.merkleRoot;
@@ -53,7 +56,7 @@ describe("Snapshots", async () => {
     const duplicateLeafs = [...leafs, ...leafs];
 
     try {
-      await sdk.createSnapshot(duplicateLeafs);
+      await createSnapshot(duplicateLeafs, storage);
     } catch (error) {
       expect(error).to.have.property("message", "DUPLICATE_LEAFS", "");
       return;
@@ -86,9 +89,7 @@ describe("Snapshots", async () => {
   });
 
   it("should upload the snapshot to storage", async () => {
-    const rawSnapshotJson = JSON.parse(await sdk.getStorage().get(uri));
-    const convert = new JsonConvert();
-    const deserialized = convert.deserializeObject(rawSnapshotJson, Snapshot);
-    expect(deserialized).to.deep.equalInAnyOrder(snapshot);
+    const rawSnapshotJson = await storage.get(uri);
+    expect(rawSnapshotJson).to.deep.equalInAnyOrder(snapshot);
   });
 });

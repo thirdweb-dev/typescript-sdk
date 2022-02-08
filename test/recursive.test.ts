@@ -1,12 +1,11 @@
-import { recursiveResolveGatewayUrl } from "../src/common/ipfs";
 import { assert } from "chai";
-import { IpfsStorage } from "../src";
+import { IpfsStorage, JsonObject } from "../src";
 
 const ipfsGatewayUrl = "https://ipfs.thirdweb.com/ipfs/";
 const storage = new IpfsStorage(ipfsGatewayUrl);
 
 describe("Recursive Testing", async () => {
-  let json;
+  let json: JsonObject;
   beforeEach(async () => {
     json = {
       test: "test",
@@ -21,12 +20,10 @@ describe("Recursive Testing", async () => {
       },
     };
   });
-  it("should resolve all URLs when resolveGateway is set to true", async () => {
-    const resolveGateway = true;
-    if (resolveGateway) {
-      json = await recursiveResolveGatewayUrl(json, storage);
-    }
-    assert.notStrictEqual(json, {
+  it("should resolve all URLs", async () => {
+    const uri = await storage.uploadMetadata(json);
+    const jsonOutput = await storage.get(uri);
+    assert.notStrictEqual(jsonOutput, {
       test2:
         "https://ipfs.thirdweb.com/ipfs/QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
       test3: {
@@ -37,24 +34,6 @@ describe("Recursive Testing", async () => {
           test: "test",
           test2:
             "https://ipfs.thirdweb.com/ipfs/QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
-        },
-      },
-    });
-  });
-  it("should resolve all URLs when resolveGateway is set to true", async () => {
-    const resolveGateway = false;
-    if (resolveGateway) {
-      json = await recursiveResolveGatewayUrl(json, storage);
-    }
-    assert.notStrictEqual(json, {
-      test: "test",
-      test2: "ipfs://QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
-      test3: {
-        test: "test",
-        test2: "ipfs://QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
-        test3: {
-          test: "test",
-          test2: "ipfs://QmTJyQwBhbELaceUScbM29G3HRpk4GdKXMuVxAxGCGtXME",
         },
       },
     });

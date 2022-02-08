@@ -6,6 +6,7 @@ import {
   DropErc721Module,
   MarketplaceModule,
   MODULES_MAP,
+  PacksModule,
   SplitsModule,
   TokenErc1155Module,
   TokenErc20Module,
@@ -18,6 +19,8 @@ import { ContractWrapper } from "./contract-wrapper";
 import { ProxyDeployedEvent } from "@3rdweb/contracts/dist/TWFactory";
 import { TokenErc721Module } from "../../modules/token-erc-721";
 import { FORWARDER_ADDRESS } from "../../constants/addresses";
+import { ChainlinkVrf } from "../../constants/chainlink";
+import { ChainId } from "../../constants/chains";
 
 export class ModuleFactory extends ContractWrapper<TWFactory> {
   private storage: IStorage;
@@ -151,6 +154,20 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           marketplaceMetadata.trusted_forwarder,
           marketplaceMetadata.platform_fee_recipient,
           marketplaceMetadata.platform_fee_basis_points,
+        ];
+      case PacksModule.moduleType:
+        const packsMetadata = PacksModule.schema.deploy.parse(metadata);
+        const vrf = ChainlinkVrf[await this.getChainID()];
+        return [
+          await this.getSignerAddress(),
+          packsMetadata.name,
+          packsMetadata.symbol,
+          contractURI,
+          packsMetadata.trusted_forwarder,
+          packsMetadata.fee_recipient,
+          packsMetadata.seller_fee_basis_points,
+          vrf.fees,
+          vrf.keyHash,
         ];
       default:
         return [];

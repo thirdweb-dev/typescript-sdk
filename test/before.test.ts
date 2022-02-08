@@ -9,6 +9,7 @@ import { ethers as hardhatEthers } from "hardhat";
 import {
   MarketplaceModule,
   MODULES_MAP,
+  PacksModule,
   ThirdwebSDK,
   TokenErc20Module,
   VoteModule,
@@ -16,6 +17,7 @@ import {
 import { MockStorage } from "./mock/MockStorage";
 import { getNativeTokenByChainId } from "../src/common/currency";
 import { ChainId } from "../src/constants/chains";
+import { ChainlinkVrf } from "../src/constants/chainlink";
 
 const RPC_URL = "http://localhost:8545";
 
@@ -113,28 +115,47 @@ before(async () => {
     return moduleType === MarketplaceModule.moduleType;
   }
 
+  async function deployModule(
+    moduleFactory: ethers.ContractFactory,
+    moduleType: string,
+  ): Promise<ethers.Contract> {
+    switch (moduleType) {
+      case VoteModule.moduleType:
+      case TokenErc20Module.moduleType:
+        return await moduleFactory.deploy();
+      case MarketplaceModule.moduleType:
+        const nativeTokenWrapperAddress = getNativeTokenByChainId(
+          ChainId.Hardhat,
+        ).wrapped.address;
+        return await moduleFactory.deploy(
+          nativeTokenWrapperAddress,
+          thirdwebFeeDeployer.address,
+        );
+      case PacksModule.moduleType:
+        const vrf = ChainlinkVrf[ChainId.Hardhat];
+        return await moduleFactory.deploy(
+          vrf.vrfCoordinator,
+          vrf.linkTokenAddress,
+          thirdwebFeeDeployer.address,
+        );
+      default:
+        return await moduleFactory.deploy(thirdwebFeeDeployer.address);
+    }
+  }
+
   for (const moduleType in MODULES_MAP) {
     const module = MODULES_MAP[moduleType];
     const contractFactory = module.contractFactory;
-    let deployedModule: ethers.Contract;
 
     const moduleFactory = new ethers.ContractFactory(
       contractFactory.abi,
       contractFactory.bytecode,
     ).connect(signer);
 
-    if (noThirdWebFee(moduleType)) {
-      deployedModule = await moduleFactory.deploy();
-    } else if (needsWrappedNativeTokenAddres(moduleType)) {
-      const nativeTokenWrapperAddress = getNativeTokenByChainId(ChainId.Hardhat)
-        .wrapped.address;
-      deployedModule = await moduleFactory.deploy(
-        nativeTokenWrapperAddress,
-        thirdwebFeeDeployer.address,
-      );
-    } else {
-      deployedModule = await moduleFactory.deploy(thirdwebFeeDeployer.address);
-    }
+    const deployedModule: ethers.Contract = await deployModule(
+      moduleFactory,
+      moduleType,
+    );
 
     await deployedModule.deployed();
 

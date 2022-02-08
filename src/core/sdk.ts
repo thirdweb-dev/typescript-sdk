@@ -23,6 +23,7 @@ import type {
 import { TokenErc721Module } from "../modules/token-erc-721";
 import { TokenErc1155Module } from "../modules/token-erc-1155";
 import { ModuleRegistry } from "./classes/registry";
+import { PacksModule } from "../modules/packs";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
@@ -208,6 +209,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       address,
       MarketplaceModule.moduleType,
     ) as MarketplaceModule;
+  }
+
+  /**
+   * Get an instance of a Pack module
+   * @param address - the address of the deployed module
+   * @returns the module
+   */
+  public getPackModule(address: string): PacksModule {
+    return this.getModule(address, PacksModule.moduleType) as PacksModule;
   }
 
   /**
