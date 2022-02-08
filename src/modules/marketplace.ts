@@ -223,7 +223,7 @@ export class MarketplaceModule implements UpdateableNetwork {
   }
 
   public async getTimeBufferInSeconds(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.timeBuffer();
+    return this.contractWrapper.readContract.timeBuffer();
   }
 
   /**
@@ -570,7 +570,7 @@ export class MarketplaceModule implements UpdateableNetwork {
     );
     if (!valid) {
       throw new Error(
-        "The asset on this listing has been moved from the listers wallet, this listing is now invalid",
+        "The asset on this listing has been moved from the lister's wallet, this listing is now invalid",
       );
     }
     const quantity = BigNumber.from(_buyout.quantityDesired);
