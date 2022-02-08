@@ -2,22 +2,15 @@ import {
   CommonModuleOutputSchema,
   CommonModuleSchema,
   CommonPlatformFeeSchema,
+  CommonRoyaltySchema,
   CommonTrustedForwarderSchema,
 } from "./common";
-import { z } from "zod";
-import { BasisPointsSchema } from "../shared";
 
-const MarketplaceFeeInputSchema = z.object({
-  marketFeeBasisPoints: BasisPointsSchema,
-});
+export const MarketplaceModuleInput =
+  CommonModuleSchema.merge(CommonRoyaltySchema);
 
-export const MarketplaceModuleInput = CommonModuleSchema.merge(
-  MarketplaceFeeInputSchema,
-);
-
-export const MarketplaceModuleOutput = CommonModuleOutputSchema.merge(
-  MarketplaceFeeInputSchema,
-);
+export const MarketplaceModuleOutput =
+  CommonModuleOutputSchema.merge(CommonRoyaltySchema);
 
 export const MarketplaceModuleDeploy = MarketplaceModuleInput.merge(
   CommonPlatformFeeSchema,

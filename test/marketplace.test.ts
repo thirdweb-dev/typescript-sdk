@@ -52,7 +52,7 @@ describe("Marketplace Module", async () => {
     marketplaceModule = sdk.getMarketplaceModule(
       await sdk.factory.deploy(MarketplaceModule.moduleType, {
         name: "Test Marketplace",
-        marketFeeBasisPoints: 0,
+        seller_fee_basis_points: 0,
       }),
     );
     dummyNftModule = sdk.getNFTModule(
@@ -364,6 +364,8 @@ describe("Marketplace Module", async () => {
         directListingId,
         bobWallet.address,
       );
+
+      console.log("Offer accepted");
 
       const balance = await dummyNftModule.balanceOf(bobWallet.address);
       assert.equal(
@@ -712,11 +714,16 @@ describe("Marketplace Module", async () => {
     });
 
     it("should correctly close a direct listing", async () => {
-      let listing = await marketplaceModule.getDirectListing(directListingId);
+      const listing = await marketplaceModule.getDirectListing(directListingId);
       assert.equal(listing.quantity.toString(), "1");
       await marketplaceModule.cancelDirectListing(directListingId);
-      listing = await marketplaceModule.getDirectListing(directListingId);
-      assert.equal(listing.quantity.toString(), "0");
+      try {
+        await marketplaceModule.getDirectListing(directListingId);
+      } catch (e) {
+        if (!(e instanceof ListingNotFoundError)) {
+          throw e;
+        }
+      }
     });
 
     // Skipping until decision is made on this:
@@ -810,7 +817,7 @@ describe("Marketplace Module", async () => {
         ethers.utils
           .parseUnits("100000000000000000000")
           // eslint-disable-next-line line-comment-position
-          .add(ethers.utils.parseUnits("1.98")), // 2% taken out for royalties
+          .add(ethers.utils.parseUnits("1.97")), // 3% taken out for royalties
         "The buyer should have two additional tokens after the listing closes",
       );
     });
@@ -953,12 +960,12 @@ describe("Marketplace Module", async () => {
       await sdk.updateSignerOrProvider(adminWallet);
     });
 
-    it("should set the correct bid buffer default of 500 bps", async () => {
+    it("should set the correct bid buffer default of 15 minutes", async () => {
       const buffer = await marketplaceModule.getTimeBufferInSeconds();
       assert.equal(buffer.toNumber(), 15 * 60);
     });
 
-    it("should set the correct time buffer default of 15 minutes", async () => {
+    it("should set the correct time buffer default of 500 bps", async () => {
       const buffer = await marketplaceModule.getBidBufferBps();
       assert.equal(buffer.toNumber(), 500);
     });

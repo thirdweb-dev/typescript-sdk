@@ -86,14 +86,13 @@ export async function setErc20Allowance(
     const erc20 = new ContractWrapper<TokenERC20>(
       signer || provider,
       currencyAddress,
-      IERC20__factory.abi,
+      TokenERC20__factory.abi,
       {},
     );
 
     const owner = await contractToApprove.getSignerAddress();
     const spender = contractToApprove.readContract.address;
     const allowance = await erc20.readContract.allowance(owner, spender);
-
     if (allowance.lt(value)) {
       await erc20.sendTransaction("increaseAllowance", [
         spender,

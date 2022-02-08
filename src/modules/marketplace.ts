@@ -132,7 +132,7 @@ export class MarketplaceModule implements UpdateableNetwork {
   ): Promise<DirectListing> {
     const listing = await this.contractWrapper.readContract.listings(listingId);
 
-    if (listing.listingId.toString() !== listingId.toString()) {
+    if (listing.assetContract === AddressZero) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
     }
 
@@ -775,10 +775,12 @@ export class MarketplaceModule implements UpdateableNetwork {
   public async cancelDirectListing(
     listingId: BigNumberish,
   ): TransactionResultPromise {
-    const listing = await this.validateDirectListing(BigNumber.from(listingId));
-    // TODO this should actually remove the listing instead of setting the quantity to 0
-    listing.quantity = 0;
-    return this.updateDirectListing(listing);
+    return {
+      receipt: await this.contractWrapper.sendTransaction(
+        "cancelDirectListing",
+        [listingId],
+      ),
+    };
   }
 
   /**

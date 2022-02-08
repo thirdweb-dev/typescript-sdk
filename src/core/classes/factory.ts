@@ -102,6 +102,8 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
         const erc1155metadata = DropErc1155Module.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
+          erc1155metadata.name,
+          erc1155metadata.symbol,
           contractURI,
           FORWARDER_ADDRESS,
           await this.getSignerAddress(), // sales recipient
