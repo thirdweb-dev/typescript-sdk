@@ -383,7 +383,7 @@ export class AppModule
       this.providerOrSigner,
     );
 
-    const metadata = getContractMetadata(
+    const metadata = await getContractMetadata(
       this.providerOrSigner,
       moduleAddress,
       this.sdk.getStorage(),
