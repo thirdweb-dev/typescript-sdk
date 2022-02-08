@@ -1,16 +1,18 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { ethers } from "ethers";
-import { NATIVE_TOKEN_ADDRESS } from "../src";
-import { NFTModule } from "../src/modules/nft";
-import { NewSignaturePayload } from "../src/types/signature-minting/NewSignaturePayload";
-import { SignaturePayload } from "../src/types/signature-minting/SignaturePayload";
-import { appModule, sdk, signers } from "./before.test";
+import { TokenErc721Module } from "../src";
+import { sdk, signers } from "./before.test";
+import {
+  NewSignaturePayload,
+  SignaturePayload,
+} from "../src/schema/modules/common/signature";
+import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
 global.fetch = require("node-fetch");
 
 describe("Voucher Module", async () => {
-  let nftModule: NFTModule;
+  let nftModule: TokenErc721Module;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -23,13 +25,15 @@ describe("Voucher Module", async () => {
   });
 
   beforeEach(async () => {
-    sdk.setProviderOrSigner(adminWallet);
+    sdk.updateSignerOrProvider(adminWallet);
 
-    nftModule = await appModule.deployNftModule({
-      name: "OUCH VOUCH",
-      symbol: "VOUCH",
-      sellerFeeBasisPoints: 0,
-    });
+    nftModule = sdk.getNFTModule(
+      await sdk.factory.deploy(TokenErc721Module.moduleType, {
+        name: "OUCH VOUCH",
+        symbol: "VOUCH",
+        seller_fee_basis_points: 0,
+      }),
+    );
 
     meta = {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
@@ -112,12 +116,10 @@ describe("Voucher Module", async () => {
       const batch = await nftModule.generateSignatureBatch(input);
 
       for (const [i, v] of batch.entries()) {
-        const mintedId = await nftModule.mintWithSignature(
-          v.payload,
-          v.signature,
-        );
-        const nft = await nftModule.get(mintedId.toString());
-        assert.equal(input[i].metadata.name, nft.name);
+        const tx = await nftModule.mintWithSignature(v.payload, v.signature);
+        const mintedId = (await tx.data()).metadata.id;
+        const nft = await nftModule.get(mintedId);
+        assert.equal(input[i].metadata.name, nft.metadata.name);
       }
     });
   });
@@ -131,22 +133,22 @@ describe("Voucher Module", async () => {
     });
 
     it("should allow a valid voucher to mint", async () => {
-      await sdk.setProviderOrSigner(samWallet);
-      const newId = await nftModule.mintWithSignature(v1.payload, v1.signature);
+      await sdk.updateSignerOrProvider(samWallet);
+      const tx = await nftModule.mintWithSignature(v1.payload, v1.signature);
+      const newId = (await tx.data()).metadata.id;
       assert.equal(newId.toString(), "0");
 
-      await sdk.setProviderOrSigner(samWallet);
-      const newId2 = await nftModule.mintWithSignature(
-        v2.payload,
-        v2.signature,
-      );
+      await sdk.updateSignerOrProvider(samWallet);
+      const tx2 = await nftModule.mintWithSignature(v2.payload, v2.signature);
+      const newId2 = (await tx2.data()).metadata.id;
       assert.equal(newId2.toString(), "1");
     });
 
     it("should mint the right metadata", async () => {
-      const id = await nftModule.mintWithSignature(v1.payload, v1.signature);
-      const nft = await nftModule.get(id.toString());
-      expect(nft).to.haveOwnProperty("name", (meta.metadata as any).name);
+      const tx = await nftModule.mintWithSignature(v1.payload, v1.signature);
+      const id = (await tx.data()).metadata.id;
+      const nft = await nftModule.get(id);
+      assert.equal(nft.metadata.name, meta.metadata.name);
     });
   });
 });

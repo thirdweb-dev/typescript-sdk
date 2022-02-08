@@ -24,7 +24,6 @@ const RPC_URL = "http://localhost:8545";
 const jsonProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
 const defaultProvider = hardhatEthers.provider;
 
-let appModule: any;
 let registryAddress: string;
 let sdk: ThirdwebSDK;
 const ipfsGatewayUrl = "https://ipfs.thirdweb.com/ipfs/";
@@ -187,7 +186,6 @@ before(async () => {
 
 export {
   ipfsGatewayUrl,
-  appModule,
   sdk,
   signers,
   wrappedNativeTokenAddress,

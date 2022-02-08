@@ -1,6 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { JsonConvert } from "json2typescript";
-import { ClaimProof, createSnapshot, IStorage, Snapshot } from "../src/index";
+import { createSnapshot, IStorage, Snapshot } from "../src/index";
 
 import { sdk, signers } from "./before.test";
 import chai = require("chai");
@@ -74,7 +73,7 @@ describe("Snapshots", async () => {
   it("should contain a proof for every claim", () => {
     assert.lengthOf(snapshot.claims, leafs.length);
 
-    snapshot.claims.forEach((claim: ClaimProof) => {
+    snapshot.claims.forEach((claim) => {
       assert.isNotEmpty(claim.proof);
     });
   });
@@ -82,7 +81,7 @@ describe("Snapshots", async () => {
   it("should contain a claim for each leaf", () => {
     leafs.forEach((leaf) => {
       assert.notEqual(
-        snapshot.claims.find((c: ClaimProof) => c.address === leaf),
+        snapshot.claims.find((c) => c.address === leaf),
         undefined,
       );
     });
