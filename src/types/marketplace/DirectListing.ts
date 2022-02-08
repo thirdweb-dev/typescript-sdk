@@ -1,7 +1,7 @@
 import { BigNumberish } from "ethers";
-import { CurrencyValue } from "../../common/currency";
-import { NFTMetadata } from "../../common/nft";
 import { ListingType } from "../../enums/marketplace";
+import { NFTMetadata } from "../../schema/tokens/common";
+import { CurrencyValue } from "../currency";
 
 /**
  * Represents a marketplace direct listing.

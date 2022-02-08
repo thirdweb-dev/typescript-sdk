@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish } from "ethers";
-import { CurrencyValue } from "../../common/currency";
+import { CurrencyValue } from "../currency";
 
 export interface Offer {
   /**

@@ -27,6 +27,8 @@ import { IThirdwebModule } from '@3rdweb/contracts';
 import { IThirdwebPrimarySale } from '@3rdweb/contracts';
 import { IThirdwebRoyalty } from '@3rdweb/contracts';
 import { Log } from '@ethersproject/providers';
+import { Marketplace } from '@3rdweb/contracts';
+import { Marketplace__factory } from '@3rdweb/contracts';
 import { Networkish } from '@ethersproject/providers';
 import { Provider } from '@ethersproject/providers';
 import { Signer } from '@ethersproject/abstract-signer';
@@ -751,6 +753,164 @@ export class ListingNotFoundError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string);
 }
 
+// Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
+//
+// @public
+export class MarketplaceModule implements UpdateableNetwork {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Marketplace>);
+    // (undocumented)
+    acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): TransactionResultPromise;
+    buyoutAuctionListing(listingId: BigNumberish): TransactionResultPromise;
+    buyoutDirectListing(_buyout: {
+        listingId: BigNumberish;
+        quantityDesired: BigNumberish;
+    }): TransactionResultPromise;
+    buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): TransactionResultPromise;
+    cancelAuctionListing(listingId: BigNumberish): TransactionResultPromise;
+    cancelDirectListing(listingId: BigNumberish): TransactionResultPromise;
+    closeAuctionListing(listingId: BigNumberish, closeFor?: string): TransactionResultPromise;
+    // (undocumented)
+    static contractFactory: typeof Marketplace__factory;
+    // Warning: (ae-forgotten-export) The symbol "NewAuctionListing" needs to be exported by the entry point index.d.ts
+    createAuctionListing(listing: NewAuctionListing): Promise<TransactionResultWithId>;
+    // Warning: (ae-forgotten-export) The symbol "NewDirectListing" needs to be exported by the entry point index.d.ts
+    createDirectListing(listing: NewDirectListing): Promise<TransactionResultWithId>;
+    // (undocumented)
+    encoder: ContractEncoder<Marketplace>;
+    // Warning: (ae-forgotten-export) The symbol "Offer" needs to be exported by the entry point index.d.ts
+    getActiveOffer(listingId: BigNumberish, address: string): Promise<Offer | undefined>;
+    // (undocumented)
+    getAddress(): string;
+    // Warning: (ae-forgotten-export) The symbol "MarketplaceFilter" needs to be exported by the entry point index.d.ts
+    getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
+    // Warning: (ae-forgotten-export) The symbol "AuctionListing" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    getAuctionListing(listingId: BigNumberish): Promise<AuctionListing>;
+    getAuctionWinner(listingId: BigNumberish): Promise<string>;
+    // (undocumented)
+    getBidBufferBps(): Promise<BigNumber>;
+    // Warning: (ae-forgotten-export) The symbol "DirectListing" needs to be exported by the entry point index.d.ts
+    getDirectListing(listingId: BigNumberish): Promise<DirectListing>;
+    getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
+    // (undocumented)
+    getTimeBufferInSeconds(): Promise<BigNumber>;
+    getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
+    isRestrictedListerRoleOnly(): Promise<boolean>;
+    makeAuctionListingBid(bid: {
+        listingId: BigNumberish;
+        pricePerToken: BigNumberish;
+    }): TransactionResultPromise;
+    makeDirectListingOffer(offer: {
+        listingId: BigNumberish;
+        quantityDesired: BigNumberish;
+        currencyContractAddress: string;
+        pricePerToken: BigNumberish;
+    }): TransactionResultPromise;
+    // (undocumented)
+    metadata: ContractMetadata<Marketplace, typeof MarketplaceModule.schema>;
+    // (undocumented)
+    static moduleRoles: readonly ["admin", "lister"];
+    // (undocumented)
+    static moduleType: string;
+    // (undocumented)
+    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    // (undocumented)
+    roles: ContractRoles<Marketplace, typeof MarketplaceModule.moduleRoles[number]>;
+    // (undocumented)
+    static schema: {
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, {
+            platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, {
+            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+            platform_fee_basis_points: number;
+            platform_fee_recipient: string;
+            trusted_forwarder: string;
+        }, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            platform_fee_basis_points?: number | undefined;
+            platform_fee_recipient?: string | undefined;
+            trusted_forwarder?: string | undefined;
+            name: string;
+        }>;
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            image: zod.ZodOptional<zod.ZodString>;
+        }>, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+        }, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+        input: zod.ZodObject<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            fee_recipient: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+        }, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+    };
+    setBidBufferBps(bufferBps: BigNumberish): Promise<void>;
+    setRestrictedListerRoleOnly(isRestricted: boolean): TransactionResultPromise;
+    setTimeBufferInSeconds(bufferInSeconds: BigNumberish): Promise<void>;
+    updateAuctionListing(listing: AuctionListing): TransactionResultPromise;
+    updateDirectListing(listing: DirectListing): TransactionResultPromise;
+}
+
 // @public (undocumented)
 export class MissingOwnerRoleError extends Error {
     // @internal
@@ -772,7 +932,7 @@ export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<typ
 //
 // @internal (undocumented)
 export const MODULES_MAP: {
-    readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule | typeof SplitsModule;
+    readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule | typeof SplitsModule | typeof MarketplaceModule;
 };
 
 // Warning: (ae-incompatible-release-tags) The symbol "ModuleType" is marked as @public, but its signature references "MODULES_MAP" which is marked as @internal
@@ -882,8 +1042,6 @@ export type Snapshot = z.output<typeof SnapshotSchema>;
 // @internal (undocumented)
 export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
 
-// Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export class SplitsModule implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Splits>);
@@ -1066,9 +1224,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getBundleDropModule(address: string): DropErc1155Module;
     getBundleModule(address: string): TokenErc1155Module;
     getDropModule(moduleAddress: string): DropErc721Module;
+    getMarketplaceModule(address: string): MarketplaceModule;
     // @internal (undocumented)
-    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | TokenErc20Module | VoteModule | SplitsModule | ts_toolbelt_out_Class_Instance.Instance<{
-        readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule | typeof SplitsModule;
+    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | TokenErc20Module | VoteModule | SplitsModule | MarketplaceModule | ts_toolbelt_out_Class_Instance.Instance<{
+        readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule | typeof SplitsModule | typeof MarketplaceModule;
     }[TModuleType]>;
     // (undocumented)
     getModuleList(walletAddress: string): Promise<{
@@ -1692,7 +1851,7 @@ export class WrongListingTypeError extends Error {
 
 // Warnings were encountered during analysis:
 //
-// dist/index.d.ts:3599:9 - (ae-forgotten-export) The symbol "CurrencyValue" needs to be exported by the entry point index.d.ts
+// dist/index.d.ts:3603:9 - (ae-forgotten-export) The symbol "CurrencyValue" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
