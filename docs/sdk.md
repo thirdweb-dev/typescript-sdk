@@ -27,6 +27,7 @@
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
+|  [PacksModule](./sdk.packsmodule.md) |  |
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
 |  [SplitsModule](./sdk.splitsmodule.md) |  |

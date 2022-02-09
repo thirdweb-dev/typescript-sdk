@@ -24,35 +24,27 @@ export async function fetchCurrencyMetadata(
   provider: Provider,
   asset: string,
 ): Promise<Currency> {
-  try {
-    if (isNativeToken(asset)) {
-      const network = await provider.getNetwork();
-      const nativeToken = getNativeTokenByChainId(network.chainId);
-      return {
-        name: nativeToken.name,
-        symbol: nativeToken.symbol,
-        decimals: nativeToken.decimals,
-      };
-    } else {
-      const erc20 = TokenERC20__factory.connect(asset, provider);
-      const [name, symbol, decimals] = await Promise.all([
-        erc20.name(),
-        erc20.symbol(),
-        erc20.decimals(),
-      ]);
-      return {
-        name,
-        symbol,
-        decimals,
-      };
-    }
-    // eslint-disable-next-line no-empty
-  } catch (e) {}
-  return {
-    name: "",
-    symbol: "",
-    decimals: 0,
-  };
+  if (isNativeToken(asset)) {
+    const network = await provider.getNetwork();
+    const nativeToken = getNativeTokenByChainId(network.chainId);
+    return {
+      name: nativeToken.name,
+      symbol: nativeToken.symbol,
+      decimals: nativeToken.decimals,
+    };
+  } else {
+    const erc20 = TokenERC20__factory.connect(asset, provider);
+    const [name, symbol, decimals] = await Promise.all([
+      erc20.name(),
+      erc20.symbol(),
+      erc20.decimals(),
+    ]);
+    return {
+      name,
+      symbol,
+      decimals,
+    };
+  }
 }
 
 export async function fetchCurrencyValue(

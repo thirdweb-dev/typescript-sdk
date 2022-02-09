@@ -335,7 +335,6 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     );
 
     const chainId = await this.contractWrapper.getChainID();
-    const from = await this.contractWrapper.getSignerAddress();
     const signer = this.contractWrapper.getSigner() as Signer;
 
     return await Promise.all(
@@ -351,7 +350,6 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
           signature: (
             await this.contractWrapper.signTypedData(
               signer,
-              from,
               {
                 name: "SignatureMint721",
                 version: "1",

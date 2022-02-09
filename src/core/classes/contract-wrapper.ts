@@ -18,14 +18,7 @@ import {
 } from "../types";
 import { getGasPriceForChain } from "../../common/gas-price";
 import { EventType } from "../../constants/events";
-import {
-  ExternalProvider,
-  JsonRpcProvider,
-  JsonRpcSigner,
-  Log,
-  TransactionReceipt,
-  Web3Provider,
-} from "@ethersproject/providers";
+import { Log, TransactionReceipt } from "@ethersproject/providers";
 import invariant from "tiny-invariant";
 import {
   BiconomyForwarderAbi,
@@ -37,7 +30,8 @@ import {
   FORWARDER_ADDRESS,
   getContractAddressByChainId,
 } from "../../constants/addresses";
-import { signERC2612Permit } from "eth-permit";
+import { signEIP2612Permit } from "../../common/permit";
+import { signTypedDataInternal } from "../../common/sign";
 
 export class ContractWrapper<
   TContract extends BaseContract,
@@ -252,7 +246,6 @@ export class ContractWrapper<
 
   public async signTypedData(
     signer: ethers.Signer,
-    from: string,
     domain: {
       name: string;
       version: string;
@@ -262,29 +255,23 @@ export class ContractWrapper<
     types: any,
     message: any,
   ): Promise<BytesLike> {
-    if (
-      (
-        (signer?.provider as Web3Provider)?.provider as ExternalProvider & {
-          isWalletConnect?: boolean;
-        }
-      )?.isWalletConnect
-    ) {
-      const payload = ethers.utils._TypedDataEncoder.getPayload(
-        domain,
-        types,
-        message,
-      );
-      return await (signer?.provider as JsonRpcProvider).send(
-        "eth_signTypedData",
-        [from.toLowerCase(), JSON.stringify(payload)],
-      );
-    } else {
-      return await (signer as JsonRpcSigner)._signTypedData(
-        domain,
-        types,
-        message,
-      );
-    }
+    this.emit(EventType.Signature, {
+      status: "submitted",
+      message,
+      signature: "",
+    });
+    const { signature: sig } = await signTypedDataInternal(
+      signer,
+      domain,
+      types,
+      message,
+    );
+    this.emit(EventType.Signature, {
+      status: "completed",
+      message,
+      signature: sig,
+    });
+    return sig;
   }
 
   public parseEventLogs(eventName: string, logs?: Log[]): any {
@@ -485,48 +472,41 @@ export class ContractWrapper<
     // and if the token supports permit, then we use permit for gasless instead of approve.
     if (
       transaction.functionName === "approve" &&
-      transaction.functionArgs.length === 2 &&
-      this.writeContract.interface.functions["approve(address,uint256)"] &&
-      this.writeContract.interface.functions[
-        "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"
-      ]
+      transaction.functionArgs.length === 2
     ) {
       const spender = transaction.functionArgs[0];
       const amount = transaction.functionArgs[1];
-      const permit = await signERC2612Permit(
+      // TODO: support DAI permit by signDAIPermit
+      const { message: permit, signature: sig } = await signEIP2612Permit(
         signer,
         this.writeContract.address,
         transaction.from,
         spender,
         amount,
       );
-      message = { to: this.writeContract.address, ...permit };
-      signature = `${permit.r}${permit.s.substring(2)}${permit.v.toString(16)}`;
+
+      const { r, s, v } = ethers.utils.splitSignature(sig);
+
+      message = {
+        to: this.readContract.address,
+        owner: permit.owner,
+        spender: permit.spender,
+        value: BigNumber.from(permit.value).toString(),
+        nonce: BigNumber.from(permit.nonce).toString(),
+        deadline: BigNumber.from(permit.deadline).toString(),
+        r,
+        s,
+        v,
+      };
+      signature = sig;
     } else {
-      // wallet connect special 🦋
-      if (
-        (
-          (signer?.provider as Web3Provider)?.provider as ExternalProvider & {
-            isWalletConnect?: boolean;
-          }
-        )?.isWalletConnect
-      ) {
-        const payload = ethers.utils._TypedDataEncoder.getPayload(
-          domain,
-          types,
-          message,
-        );
-        signature = await (signer?.provider as JsonRpcProvider).send(
-          "eth_signTypedData",
-          [transaction.from.toLowerCase(), JSON.stringify(payload)],
-        );
-      } else {
-        signature = await (signer as JsonRpcSigner)._signTypedData(
-          domain,
-          types,
-          message,
-        );
-      }
+      const { signature: sig } = await signTypedDataInternal(
+        signer,
+        domain,
+        types,
+        message,
+      );
+      signature = sig;
     }
 
     let messageType = "forward";

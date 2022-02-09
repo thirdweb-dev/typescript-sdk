@@ -21,6 +21,7 @@ ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     price: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>;
     maxQuantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>;
     quantityLimitPerTransaction: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>;
+    waitInSeconds: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>;
 }>, "strip", z.ZodTypeAny, {
     currencyMetadata?: unknown;
     startTime: number;
@@ -28,18 +29,18 @@ ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     price: ethers$1.BigNumber;
     maxQuantity: ethers$1.BigNumber;
     quantityLimitPerTransaction: ethers$1.BigNumber;
-    waitInSeconds: string;
+    waitInSeconds: ethers$1.BigNumber;
     merkleRootHash: string | number[];
     availableSupply: string;
 }, {
     startTime?: number | Date | undefined;
     currencyAddress?: string | undefined;
-    waitInSeconds?: string | number | bigint | ethers$1.BigNumber | undefined;
     merkleRootHash?: string | number[] | undefined;
     availableSupply?: string | undefined;
     currencyMetadata?: unknown;
     price: string | number | bigint | ethers$1.BigNumber;
     maxQuantity: string | number | bigint | ethers$1.BigNumber;
     quantityLimitPerTransaction: string | number | bigint | ethers$1.BigNumber;
+    waitInSeconds: string | number | bigint | ethers$1.BigNumber;
 }>
 ```
