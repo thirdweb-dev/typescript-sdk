@@ -161,6 +161,12 @@ const ABI_V1_24_0 = [
   },
 ];
 
+export interface BatchToReveal {
+  batchId: BigNumber;
+  batchUri: string;
+  placeholderMetadata: NFTMetadata;
+}
+
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
  *
@@ -1172,7 +1178,7 @@ export class DropModule
     let receipt;
     let contract: BaseContract = this.contract;
 
-    if (await this.hasDelayReveal()) {
+    if (await this.hasDelayedReveal()) {
       receipt = await this.sendTransaction("lazyMint", [
         metadatas.length,
         baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
@@ -1200,7 +1206,7 @@ export class DropModule
    *
    * @internal
    */
-  private async generateDelayRevealKey(
+  private async hashDelayRevealPassword(
     batchTokenIndex: BigNumberish,
     password: string,
   ) {
@@ -1219,12 +1225,12 @@ export class DropModule
    *
    * @param metadatas - The metadata to include in the batch.
    */
-  public async createDelayRevealBatch(
+  public async createDelayedRevealBatch(
     placeholder: MetadataURIOrObject,
     metadatas: MetadataURIOrObject[],
     password: string,
   ): Promise<string[]> {
-    if (!(await this.hasDelayReveal())) {
+    if (!(await this.hasDelayedReveal())) {
       throw new Error("delay reveal unsupported");
     }
 
@@ -1244,7 +1250,7 @@ export class DropModule
     const baseUriId = await this.readOnlyContract.getBaseURICount();
     const encryptedBaseUri = await this.readOnlyContract.encryptDecrypt(
       ethers.utils.toUtf8Bytes(baseUri.endsWith("/") ? baseUri : `${baseUri}/`),
-      await this.generateDelayRevealKey(baseUriId, password),
+      await this.hashDelayRevealPassword(baseUriId, password),
     );
 
     const receipt = await this.sendTransaction("lazyMint", [
@@ -1263,7 +1269,7 @@ export class DropModule
   }
 
   public async reveal(batchId: BigNumberish, password: string) {
-    if (!(await this.hasDelayReveal())) {
+    if (!(await this.hasDelayedReveal())) {
       throw new Error("delay reveal unsupported");
     }
 
@@ -1271,7 +1277,7 @@ export class DropModule
       throw new Error("Password is required");
     }
 
-    const key = await this.generateDelayRevealKey(batchId, password);
+    const key = await this.hashDelayRevealPassword(batchId, password);
 
     // performing the reveal locally to make sure it'd succeed before sending the transaction
     try {
@@ -1296,8 +1302,8 @@ export class DropModule
   /**
    * Gets a list of token uris that needs to be revealed.
    */
-  public async getUnrevealList() {
-    if (!(await this.hasDelayReveal())) {
+  public async getBatchesToReveal(): Promise<BatchToReveal[]> {
+    if (!(await this.hasDelayedReveal())) {
       throw new Error("Contract does not support delay reveal");
     }
 
@@ -1344,12 +1350,11 @@ export class DropModule
 
     return tokenUris
       .map((uri, index) => ({
-        id: index,
-        uri,
-        metadata: tokenMetadatas[index],
-        revealed: revealed[index],
+        batchId: BigNumber.from(index),
+        batchUri: uri,
+        placeholderMetadata: tokenMetadatas[index],
       }))
-      .filter((b) => !b.revealed);
+      .filter((_, index) => !revealed[index]);
   }
 
   /**
@@ -1384,7 +1389,7 @@ export class DropModule
   /**
    * @internal
    */
-  private async hasDelayReveal(): Promise<boolean> {
+  private async hasDelayedReveal(): Promise<boolean> {
     await this.checkVersion();
     return this._version >= 2;
   }

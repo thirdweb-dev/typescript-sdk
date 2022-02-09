@@ -150,6 +150,7 @@ Output
 |  Interface | Description |
 |  --- | --- |
 |  [AuctionListing](./sdk.auctionlisting.md) | Represents a new marketplace auction listing. |
+|  [BatchToReveal](./sdk.batchtoreveal.md) |  |
 |  [BundleDropCreateClaimCondition](./sdk.bundledropcreateclaimcondition.md) | <b><i>(BETA)</i></b> |
 |  [BundleDropMetadata](./sdk.bundledropmetadata.md) | <b><i>(BETA)</i></b> |
 |  [BundleMetadata](./sdk.bundlemetadata.md) | <b><i>(BETA)</i></b> |

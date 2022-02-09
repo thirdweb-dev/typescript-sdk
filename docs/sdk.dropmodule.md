@@ -49,7 +49,7 @@ const module = sdk.getDropModule("{{module_address}}");
 |  [claim(quantity, proofs)](./sdk.dropmodule.claim.md) |  | Claim NFTs |
 |  [claimTo(quantity, addressToClaim, proofs)](./sdk.dropmodule.claimto.md) |  | Claim NFTs to Wallet |
 |  [createBatch(metadatas)](./sdk.dropmodule.createbatch.md) |  | <b><i>(BETA)</i></b> Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per module at the moment. |
-|  [createDelayRevealBatch(placeholder, metadatas, password)](./sdk.dropmodule.createdelayrevealbatch.md) |  | Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per module at the moment. |
+|  [createDelayedRevealBatch(placeholder, metadatas, password)](./sdk.dropmodule.createdelayedrevealbatch.md) |  | Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per module at the moment. |
 |  [get(tokenId)](./sdk.dropmodule.get.md) |  |  |
 |  [getActiveClaimCondition()](./sdk.dropmodule.getactiveclaimcondition.md) |  |  |
 |  [getActiveMintCondition()](./sdk.dropmodule.getactivemintcondition.md) |  |  |
@@ -58,6 +58,7 @@ const module = sdk.getDropModule("{{module_address}}");
 |  [getAllClaimed(queryParams)](./sdk.dropmodule.getallclaimed.md) |  |  |
 |  [getAllMintConditions()](./sdk.dropmodule.getallmintconditions.md) |  |  |
 |  [getAllUnclaimed(queryParams)](./sdk.dropmodule.getallunclaimed.md) |  |  |
+|  [getBatchesToReveal()](./sdk.dropmodule.getbatchestoreveal.md) |  | Gets a list of token uris that needs to be revealed. |
 |  [getClaimConditionsFactory()](./sdk.dropmodule.getclaimconditionsfactory.md) |  | Creates a claim condition factory |
 |  [getClaimIneligibilityReasons(quantity, addressToCheck)](./sdk.dropmodule.getclaimineligibilityreasons.md) |  | For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user. |
 |  [getDefaultSaleRecipient()](./sdk.dropmodule.getdefaultsalerecipient.md) |  |  |
@@ -65,7 +66,6 @@ const module = sdk.getDropModule("{{module_address}}");
 |  [getOwned(\_address)](./sdk.dropmodule.getowned.md) |  | Get Owned NFTs |
 |  [getRoyaltyBps()](./sdk.dropmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.dropmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
-|  [getUnrevealList()](./sdk.dropmodule.getunreveallist.md) |  | Gets a list of token uris that needs to be revealed. |
 |  [isApproved(address, operator)](./sdk.dropmodule.isapproved.md) |  |  |
 |  [isTransferRestricted()](./sdk.dropmodule.istransferrestricted.md) |  |  |
 |  [lazyMint(metadata)](./sdk.dropmodule.lazymint.md) |  |  |
