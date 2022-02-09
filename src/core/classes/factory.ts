@@ -18,7 +18,6 @@ import { NetworkOrSignerOrProvider, ValidModuleClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { ProxyDeployedEvent } from "@3rdweb/contracts/dist/TWFactory";
 import { TokenErc721Module } from "../../modules/token-erc-721";
-import { FORWARDER_ADDRESS } from "../../constants/addresses";
 import { ChainlinkVrf } from "../../constants/chainlink";
 
 export class ModuleFactory extends ContractWrapper<TWFactory> {
@@ -92,8 +91,8 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           erc721metadata.name,
           erc721metadata.symbol,
           contractURI,
-          FORWARDER_ADDRESS, // TODO: dont hardcode trusted forwarder
-          await this.getSignerAddress(), // sales recipient
+          erc721metadata.trusted_forwarder,
+          erc721metadata.primary_sale_recipient,
           erc721metadata.fee_recipient,
           erc721metadata.seller_fee_basis_points,
           erc721metadata.platform_fee_basis_points,
@@ -107,8 +106,8 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           erc1155metadata.name,
           erc1155metadata.symbol,
           contractURI,
-          FORWARDER_ADDRESS,
-          await this.getSignerAddress(), // sales recipient
+          erc1155metadata.trusted_forwarder,
+          erc1155metadata.primary_sale_recipient,
           erc1155metadata.fee_recipient,
           erc1155metadata.seller_fee_basis_points,
           erc1155metadata.platform_fee_basis_points,
@@ -140,7 +139,7 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
         return [
           await this.getSignerAddress(),
           contractURI,
-          FORWARDER_ADDRESS,
+          splitsMetadata.trusted_forwarder,
           splitsMetadata.recipientSplits.map((s) => s.address),
           splitsMetadata.recipientSplits.map((s) => s.shares),
         ];

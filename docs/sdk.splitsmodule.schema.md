@@ -8,7 +8,7 @@
 
 ```typescript
 static schema: {
-        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -43,13 +43,16 @@ static schema: {
                 address: string;
                 shares: string | number | bigint | BigNumber;
             }>, "many">>;
-        }>>, "strip", zod.ZodTypeAny, {
+        }>>, {
+            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+        }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
             name: string;
             platform_fee_basis_points: number;
             platform_fee_recipient: string;
+            trusted_forwarder: string;
             recipientSplits: {
                 address: string;
                 shares: string;
@@ -60,6 +63,7 @@ static schema: {
             external_link?: string | undefined;
             platform_fee_basis_points?: number | undefined;
             platform_fee_recipient?: string | undefined;
+            trusted_forwarder?: string | undefined;
             recipientSplits?: {
                 address: string;
                 shares: string | number | bigint | BigNumber;

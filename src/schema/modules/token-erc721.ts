@@ -2,6 +2,7 @@ import {
   CommonModuleOutputSchema,
   CommonModuleSchema,
   CommonPlatformFeeSchema,
+  CommonPrimarySaleSchema,
   CommonRoyaltySchema,
   CommonSymbolSchema,
   CommonTrustedForwarderSchema,
@@ -15,7 +16,9 @@ export const TokenErc721ModuleOutput =
 
 export const TokenErc721ModuleDeploy = TokenErc721ModuleInput.merge(
   CommonPlatformFeeSchema,
-).merge(CommonTrustedForwarderSchema);
+)
+  .merge(CommonPrimarySaleSchema)
+  .merge(CommonTrustedForwarderSchema);
 
 export const TokenErc721ModuleSchema = {
   deploy: TokenErc721ModuleDeploy,

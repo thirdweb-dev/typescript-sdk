@@ -39,6 +39,13 @@ export const CommonRoyaltySchema = z.object({
   fee_recipient: z.string().default(AddressZero),
 });
 
+export const CommonPrimarySaleSchema = z.object({
+  /**
+   * primary sale recipient address
+   */
+  primary_sale_recipient: z.string(),
+});
+
 export const CommonPlatformFeeSchema = z.object({
   /**
    * platform fee basis points

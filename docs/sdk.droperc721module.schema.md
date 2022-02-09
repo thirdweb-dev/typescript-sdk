@@ -8,7 +8,7 @@
 
 ```typescript
 static schema: {
-        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
@@ -24,6 +24,8 @@ static schema: {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
             platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
         }>, {
+            primary_sale_recipient: zod.ZodString;
+        }>, {
             trusted_forwarder: zod.ZodDefault<zod.ZodString>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
@@ -33,6 +35,7 @@ static schema: {
             name: string;
             seller_fee_basis_points: number;
             fee_recipient: string;
+            primary_sale_recipient: string;
             platform_fee_basis_points: number;
             platform_fee_recipient: string;
             trusted_forwarder: string;
@@ -49,6 +52,7 @@ static schema: {
             trusted_forwarder?: string | undefined;
             merkle?: Record<string, string> | undefined;
             name: string;
+            primary_sale_recipient: string;
         }>;
         output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;

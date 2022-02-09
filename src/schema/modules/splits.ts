@@ -2,6 +2,7 @@ import {
   CommonModuleOutputSchema,
   CommonModuleSchema,
   CommonPlatformFeeSchema,
+  CommonTrustedForwarderSchema,
 } from "./common";
 import { z } from "zod";
 import { BigNumberishSchema, BigNumberSchema } from "../shared";
@@ -26,7 +27,9 @@ export const SplitsModuleOutput = CommonModuleOutputSchema.extend({
 
 export const SplitsModuleDeploy = SplitsModuleInput.merge(
   CommonPlatformFeeSchema,
-).merge(SplitsModuleInput);
+)
+  .merge(SplitsModuleInput)
+  .merge(CommonTrustedForwarderSchema);
 
 export const SplitsModuleSchema = {
   deploy: SplitsModuleDeploy,

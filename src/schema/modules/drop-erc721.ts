@@ -2,6 +2,7 @@ import {
   CommonModuleOutputSchema,
   CommonModuleSchema,
   CommonPlatformFeeSchema,
+  CommonPrimarySaleSchema,
   CommonRoyaltySchema,
   CommonSymbolSchema,
   CommonTrustedForwarderSchema,
@@ -22,7 +23,9 @@ export const DropErc721ModuleOutput = CommonModuleOutputSchema.merge(
 
 export const DropErc721ModuleDeploy = DropErc721ModuleInput.merge(
   CommonPlatformFeeSchema,
-).merge(CommonTrustedForwarderSchema);
+)
+  .merge(CommonPrimarySaleSchema)
+  .merge(CommonTrustedForwarderSchema);
 
 export const DropErc721ModuleSchema = {
   deploy: DropErc721ModuleDeploy,
