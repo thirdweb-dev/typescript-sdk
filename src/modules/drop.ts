@@ -1279,30 +1279,26 @@ export class DropModule
 
     const key = await this.hashDelayRevealPassword(batchId, password);
 
-    console.log("DR-DEBUG: hashed key", key);
-
     // performing the reveal locally to make sure it'd succeed before sending the transaction
     try {
-      const decryptedUri = await this.readOnlyContract.callStatic.reveal(
-        batchId,
-        key,
-      );
-
-      console.log("DR-DEBUG: decryptedUri", decryptedUri);
+      const decryptedUri = await this.contract.callStatic.reveal(batchId, key);
 
       // basic sanity check for making sure decryptedUri is valid
       // this is optional because invalid decryption key would result in non-utf8 bytes and
       // ethers would throw when trying to decode it
       if (!decryptedUri.includes("://") || !decryptedUri.endsWith("/")) {
-        throw new Error("invalid password");
+        throw new Error(
+          `Error revealing batch ${batchId} - make sure your password is correct`,
+        );
       }
     } catch (e) {
       console.log(`Error revealing batch ${batchId}`, e);
-      throw new Error("invalid password");
+      throw new Error(
+        `Error revealing batch ${batchId} - make sure your password is correct`,
+      );
     }
 
-    const tx = await this.sendTransaction("reveal", [batchId, key]);
-    console.log("DR-DEBUG: reveal success", tx);
+    await this.sendTransaction("reveal", [batchId, key]);
   }
 
   /**
