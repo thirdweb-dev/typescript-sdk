@@ -2,19 +2,28 @@ import { AddressZero } from "@ethersproject/constants";
 import {
   ERC20__factory,
   ERC721__factory,
-  NFTCollection as NFTBundleContract,
-  NFTCollection__factory,
   SignatureMint1155,
   SignatureMint1155__factory,
 } from "@3rdweb/contracts";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BytesLike, ethers } from "ethers";
-import { ModuleType, Role, RolesMap } from "../common";
+import { BytesLike, ethers, Signer } from "ethers";
+import { ModuleType, NATIVE_TOKEN_ADDRESS, Role, RolesMap } from "../common";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
+import {
+  MintRequestStructOutput,
+  MintWithSignatureEvent,
+} from "@3rdweb/contracts/dist/SignatureMint1155";
+import {
+  Erc1155SignaturePayload,
+  NewErc1155SignaturePayload,
+} from "../types/signature-minting";
+import { hexlify } from "@ethersproject/bytes";
+import { toUtf8Bytes } from "ethers/lib/utils";
+import { v4 as uuidv4 } from "uuid";
 
 export interface TokenERC1155Metadata {
   supply: BigNumber;
@@ -31,10 +40,22 @@ export interface TokenERC1155CreateAndMintArgs {
   supply: BigNumberish;
 }
 
-export interface TokenERC1155AdditionalMintArgs {
+export interface TokenERC1155AlreadyMintedArgs {
   tokenId: BigNumberish;
   amount: BigNumberish;
 }
+
+const MintRequest = [
+  { name: "to", type: "address" },
+  { name: "tokenId", type: "uint256" },
+  { name: "uri", type: "string" },
+  { name: "quantity", type: "uint256" },
+  { name: "pricePerToken", type: "uint256" },
+  { name: "currency", type: "address" },
+  { name: "validityStartTimestamp", type: "uint128" },
+  { name: "validityEndTimestamp", type: "uint128" },
+  { name: "uid", type: "bytes32" },
+];
 
 /**
  * Create a collection of NFTs that lets you optionally mint multiple copies of each NFT.
@@ -280,14 +301,14 @@ export class SignatureMint1155Module
 
   public async mintAdditionalCopiesTo(
     to: string,
-    args: TokenERC1155AdditionalMintArgs,
+    args: TokenERC1155AlreadyMintedArgs,
   ) {
     await this.sendTransaction("mintTo", [to, args.tokenId, "", args.amount]);
   }
 
   public async mintAdditionalCopiesBatchTo(
     to: string,
-    args: TokenERC1155AdditionalMintArgs[],
+    args: TokenERC1155AlreadyMintedArgs[],
   ) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
@@ -318,20 +339,20 @@ export class SignatureMint1155Module
    * ```
    */
   public async burn(
-    args: TokenERC1155AdditionalMintArgs,
+    args: TokenERC1155AlreadyMintedArgs,
   ): Promise<TransactionReceipt> {
     return await this.burnFrom(await this.getSignerAddress(), args);
   }
 
   public async burnBatch(
-    args: TokenERC1155AdditionalMintArgs[],
+    args: TokenERC1155AlreadyMintedArgs[],
   ): Promise<TransactionReceipt> {
     return await this.burnBatchFrom(await this.getSignerAddress(), args);
   }
 
   public async burnFrom(
     account: string,
-    args: TokenERC1155AdditionalMintArgs,
+    args: TokenERC1155AlreadyMintedArgs,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [
       account,
@@ -342,7 +363,7 @@ export class SignatureMint1155Module
 
   public async burnBatchFrom(
     account: string,
-    args: TokenERC1155AdditionalMintArgs[],
+    args: TokenERC1155AlreadyMintedArgs[],
   ): Promise<TransactionReceipt> {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
@@ -352,7 +373,7 @@ export class SignatureMint1155Module
   public async transferFrom(
     from: string,
     to: string,
-    args: TokenERC1155AdditionalMintArgs,
+    args: TokenERC1155AlreadyMintedArgs,
     data: BytesLike = [0],
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("safeTransferFrom", [
@@ -393,7 +414,7 @@ export class SignatureMint1155Module
   public async transferBatchFrom(
     from: string,
     to: string,
-    args: INFTBundleBatchArgs[],
+    args: TokenERC1155AlreadyMintedArgs[],
     data: BytesLike = [0],
   ): Promise<TransactionReceipt> {
     const ids = args.map((a) => a.tokenId);
@@ -448,7 +469,7 @@ export class SignatureMint1155Module
    * @param _address - The address to check for token ownership
    * @returns An array of BundleMetadata objects that are owned by the address
    */
-  public async getOwned(_address?: string): Promise<BundleMetadata[]> {
+  public async getOwned(_address?: string): Promise<TokenERC1155Metadata[]> {
     const address = _address ? _address : await this.getSignerAddress();
     const maxId = await this.readOnlyContract.nextTokenIdToMint();
     const balances = await this.readOnlyContract.balanceOfBatch(
@@ -505,5 +526,159 @@ export class SignatureMint1155Module
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
   }
 
-  // Signature
+  // Signature based minting
+
+  public async mintWithSignature(
+    req: Erc1155SignaturePayload,
+    signature: string,
+  ): Promise<BigNumber> {
+    const message = { ...this.mapPayload(req), uri: req.uri };
+    const overrides = await this.getCallOverrides();
+    await this.setAllowance(
+      BigNumber.from(message.pricePerToken),
+      req.currencyAddress,
+      overrides,
+    );
+
+    const receipt = await this.sendTransaction(
+      "mintWithSignature",
+      [message, signature],
+      overrides,
+    );
+
+    const t = await this.parseLogs<MintWithSignatureEvent>(
+      "MintWithSignature",
+      receipt.logs,
+    );
+    if (t.length === 0) {
+      throw new Error("No MintWithSignature event found");
+    }
+
+    return t[0].args.tokenIdMinted;
+  }
+
+  public async verify(
+    mintRequest: Erc1155SignaturePayload,
+    signature: string,
+  ): Promise<boolean> {
+    const message = this.mapPayload(mintRequest);
+    const v = await this.readOnlyContract.verify(
+      { ...message, uri: mintRequest.uri },
+      signature,
+    );
+    return v[0];
+  }
+
+  public async generateSignatureBatch(
+    payloads: NewErc1155SignaturePayload[],
+  ): Promise<{ payload: Erc1155SignaturePayload; signature: string }[]> {
+    const resolveId = (mintRequest: NewErc1155SignaturePayload): string => {
+      if (mintRequest.id === undefined) {
+        const buffer = Buffer.alloc(16);
+        uuidv4({}, buffer);
+        return hexlify(toUtf8Bytes(buffer.toString("hex")));
+      } else {
+        return hexlify(mintRequest.id as string);
+      }
+    };
+
+    await this.onlyRoles(["minter"], await this.getSignerAddress());
+
+    const { metadataUris: uris } = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(payloads.map((r) => r.metadata));
+
+    const chainId = await this.getChainID();
+    const signer = this.getSigner() as Signer;
+
+    return await Promise.all(
+      payloads.map(async (m, i) => {
+        const id = resolveId(m);
+        const uri = uris[i];
+        return {
+          payload: {
+            ...m,
+            id,
+            uri,
+          },
+          signature: (
+            await this.signTypedDataEmitEvent(
+              signer,
+              {
+                name: "SignatureMint1155",
+                version: "1",
+                chainId,
+                verifyingContract: this.address,
+              },
+              { MintRequest },
+              {
+                uri,
+                ...(this.mapPayload(m) as any),
+                uid: id,
+              },
+            )
+          ).toString(),
+        };
+      }),
+    );
+  }
+
+  public async generateSignature(
+    mintRequest: NewErc1155SignaturePayload,
+  ): Promise<{ payload: Erc1155SignaturePayload; signature: string }> {
+    return (await this.generateSignatureBatch([mintRequest]))[0];
+  }
+
+  /**
+   * Maps a payload to the format expected by the contract
+   *
+   * @internal
+   *
+   * @param mintRequest - The payload to map.
+   * @returns - The mapped payload.
+   */
+  private mapPayload(
+    mintRequest: Erc1155SignaturePayload | NewErc1155SignaturePayload,
+  ): MintRequestStructOutput {
+    return {
+      to: mintRequest.to,
+      tokenId: mintRequest.tokenId,
+      quantity: mintRequest.quantity,
+      pricePerToken: mintRequest.price,
+      currency: mintRequest.currencyAddress,
+      validityEndTimestamp: mintRequest.mintEndTimeEpochSeconds,
+      validityStartTimestamp: mintRequest.mintStartTimeEpochSeconds,
+      uid: mintRequest.id,
+    } as MintRequestStructOutput;
+  }
+
+  // TODO: write in common place and stop duping
+  private async setAllowance(
+    value: BigNumber,
+    currencyAddress: string,
+    overrides: any,
+  ): Promise<any> {
+    if (
+      currencyAddress === NATIVE_TOKEN_ADDRESS ||
+      currencyAddress === AddressZero
+    ) {
+      overrides["value"] = value;
+    } else {
+      const erc20 = ERC20__factory.connect(
+        currencyAddress,
+        this.providerOrSigner,
+      );
+      const owner = await this.getSignerAddress();
+      const spender = this.address;
+      const allowance = await erc20.allowance(owner, spender);
+
+      if (allowance.lt(value)) {
+        await this.sendContractTransaction(erc20, "increaseAllowance", [
+          spender,
+          value.sub(allowance),
+        ]);
+      }
+      return overrides;
+    }
+  }
 }
