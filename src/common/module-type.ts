@@ -20,6 +20,7 @@ export enum ModuleType {
   VOTE = 10,
   BUNDLE_DROP = 11,
   MARKETPLACE = 12,
+  SIGNATURE_MINT_1155 = 13,
 }
 /**
  *
