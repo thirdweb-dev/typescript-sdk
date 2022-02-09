@@ -975,6 +975,36 @@ export class NotFoundError extends Error {
 }
 
 // @public (undocumented)
+export const OptionalPropertiesInput: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
+    key: z.ZodString;
+    value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
+}, "strip", z.ZodTypeAny, {
+    value?: any;
+    key: string;
+}, {
+    value?: any;
+    key: string;
+}>, "many">, {
+    value?: any;
+    key: string;
+}[], {
+    value?: any;
+    key: string;
+}[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, Record<string, any> | {
+    value?: any;
+    key: string;
+}[] | undefined, Record<string, any> | {
+    value?: any;
+    key: string;
+}[] | undefined>, Record<string, any> | undefined, Record<string, any> | {
+    value?: any;
+    key: string;
+}[] | undefined>;
+
+// @public (undocumented)
+export const OptionalPropertiesOutput: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
+
+// @public (undocumented)
 export class PacksModule implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Pack>);
     // (undocumented)

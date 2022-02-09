@@ -14,3 +14,4 @@ export type { Role } from "./common/role";
 export * from "./core/classes/ipfs-storage";
 export { CommonModuleSchema } from "./schema/modules/common";
 export * from "./schema/modules/common/claim-conditions";
+export * from "./schema/tokens/common/properties";

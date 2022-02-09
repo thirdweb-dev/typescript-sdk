@@ -61,6 +61,8 @@
 |  [ClaimConditionInputSchema](./sdk.claimconditioninputschema.md) |  |
 |  [ClaimConditionOutputSchema](./sdk.claimconditionoutputschema.md) |  |
 |  [CommonModuleSchema](./sdk.commonmoduleschema.md) |  |
+|  [OptionalPropertiesInput](./sdk.optionalpropertiesinput.md) |  |
+|  [OptionalPropertiesOutput](./sdk.optionalpropertiesoutput.md) |  |
 |  [PartialClaimConditionInputSchema](./sdk.partialclaimconditioninputschema.md) |  |
 
 ## Type Aliases
