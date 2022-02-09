@@ -696,34 +696,49 @@ describe("Drop Module", async () => {
         "my secret key",
       );
 
-      let unrevealList = await dropModule.revealer.getUnrevealList();
+      let unrevealList = await dropModule.revealer.getBatchesToReveal();
       expect(unrevealList.length).to.be.equal(3);
-      expect(unrevealList[0].id).to.be.equal(0);
-      expect(unrevealList[0].metadata.name).to.be.equal("Placeholder #1");
-      expect(unrevealList[1].id).to.be.equal(1);
-      expect(unrevealList[1].metadata.name).to.be.equal("Placeholder #2");
+      expect(unrevealList[0].batchId.toNumber()).to.be.equal(0);
+      expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
+        "Placeholder #1",
+      );
+      expect(unrevealList[1].batchId.toNumber()).to.be.equal(1);
+      expect(unrevealList[1].placeholderMetadata.name).to.be.equal(
+        "Placeholder #2",
+      );
       // skipped 2 because it is a revealed batch
-      expect(unrevealList[2].id).to.be.equal(3);
-      expect(unrevealList[2].metadata.name).to.be.equal("Placeholder #3");
-
-      await dropModule.revealer.reveal(unrevealList[0].id, "my secret key");
-
-      unrevealList = await dropModule.revealer.getUnrevealList();
-      expect(unrevealList.length).to.be.equal(2);
-      expect(unrevealList[0].id).to.be.equal(1);
-      expect(unrevealList[0].metadata.name).to.be.equal("Placeholder #2");
-      expect(unrevealList[1].id).to.be.equal(3);
-      expect(unrevealList[1].metadata.name).to.be.equal("Placeholder #3");
+      expect(unrevealList[2].batchId.toNumber()).to.be.equal(3);
+      expect(unrevealList[2].placeholderMetadata.name).to.be.equal(
+        "Placeholder #3",
+      );
 
       await dropModule.revealer.reveal(
-        unrevealList[unrevealList.length - 1].id,
+        unrevealList[0].batchId,
         "my secret key",
       );
 
-      unrevealList = await dropModule.revealer.getUnrevealList();
+      unrevealList = await dropModule.revealer.getBatchesToReveal();
+      expect(unrevealList.length).to.be.equal(2);
+      expect(unrevealList[0].batchId.toNumber()).to.be.equal(1);
+      expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
+        "Placeholder #2",
+      );
+      expect(unrevealList[1].batchId.toNumber()).to.be.equal(3);
+      expect(unrevealList[1].placeholderMetadata.name).to.be.equal(
+        "Placeholder #3",
+      );
+
+      await dropModule.revealer.reveal(
+        unrevealList[unrevealList.length - 1].batchId,
+        "my secret key",
+      );
+
+      unrevealList = await dropModule.revealer.getBatchesToReveal();
       expect(unrevealList.length).to.be.equal(1);
-      expect(unrevealList[0].id).to.be.equal(1);
-      expect(unrevealList[0].metadata.name).to.be.equal("Placeholder #2");
+      expect(unrevealList[0].batchId.toNumber()).to.be.equal(1);
+      expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
+        "Placeholder #2",
+      );
     });
 
     it("should not be able to re-used published password for next batch", async () => {

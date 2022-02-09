@@ -12,6 +12,7 @@ import {
   TransactionResultWithId,
 } from "../core";
 import { fetchTokenMetadata } from "./nft";
+import { BatchToReveal } from "../types/delayed-reveal";
 
 export class DelayedReveal<T extends DropERC721> {
   private contractWrapper: ContractWrapper<T>;
@@ -119,9 +120,9 @@ export class DelayedReveal<T extends DropERC721> {
   }
 
   /**
-   * Gets a list of token uris that needs to be revealed.
+   * Gets a list of batches that needs to be revealed.
    */
-  public async getUnrevealList() {
+  public async getBatchesToReveal(): Promise<BatchToReveal[]> {
     const count = await this.contractWrapper.readContract.getBaseURICount();
     if (count.isZero()) {
       return [];
@@ -165,12 +166,11 @@ export class DelayedReveal<T extends DropERC721> {
 
     return tokenUris
       .map((uri, index) => ({
-        id: index,
-        uri,
-        metadata: tokenMetadatas[index],
-        revealed: revealed[index],
+        batchId: BigNumber.from(index),
+        batchUri: uri,
+        placeholderMetadata: tokenMetadatas[index],
       }))
-      .filter((b) => !b.revealed);
+      .filter((_, index) => !revealed[index]);
   }
 
   /**
