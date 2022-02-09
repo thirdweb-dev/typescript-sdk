@@ -10,9 +10,11 @@ import {
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc20 } from "../core/classes/erc-20";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { TokenMintInput } from "../schema/tokens/token";
 import { ContractEncoder } from "../core/classes/contract-encoder";
+import { fetchTokenMetadata } from "../common/nft";
+import { fetchCurrencyMetadata } from "../common/currency";
 
 export class TokenErc20Module extends Erc20<TokenERC20> {
   static moduleType: string = "TokenERC20" as const;
@@ -123,7 +125,7 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
    * const toAddress = "{{wallet_address}}";
    *
    * // The amount of this token you want to mint
-   * const amount = ethers.utils.parseEther("1.5");
+   * const amount = "1.5";
    *
    * await module.mintTo(toAddress, amount);
    * ```
@@ -132,8 +134,15 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
     to: string,
     amount: BigNumberish,
   ): TransactionResultPromise {
+    const amountWithDecimals = ethers.utils.parseUnits(
+      BigNumber.from(amount).toString(),
+      await this.contractWrapper.readContract.decimals(),
+    );
     return {
-      receipt: await this.contractWrapper.sendTransaction("mint", [to, amount]),
+      receipt: await this.contractWrapper.sendTransaction("mint", [
+        to,
+        amountWithDecimals,
+      ]),
     };
   }
 
