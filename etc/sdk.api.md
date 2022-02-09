@@ -701,6 +701,8 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
     getRoyaltyBps(): Promise<BigNumberish_2>;
     getRoyaltyRecipientAddress(): Promise<string>;
+    // @internal (undocumented)
+    hasDelayedReveal(): Promise<boolean>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
