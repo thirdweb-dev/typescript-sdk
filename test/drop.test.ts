@@ -618,4 +618,149 @@ describe("Drop Module", async () => {
       BigNumber.from(1),
     );
   });
+
+  describe("Delay Reveal", () => {
+    it("metadata should reveal correctly", async () => {
+      await dropModule.revealer.createDelayRevealBatch(
+        {
+          name: "Placeholder #1",
+        },
+        [{ name: "NFT #1" }, { name: "NFT #2" }],
+        "my secret password",
+      );
+
+      expect((await dropModule.get("0")).metadata.name).to.be.equal(
+        "Placeholder #1",
+      );
+
+      await dropModule.revealer.reveal(0, "my secret password");
+
+      expect((await dropModule.get("0")).metadata.name).to.be.equal("NFT #1");
+    });
+
+    it("different reveal order and should return correct unreveal list", async () => {
+      await dropModule.revealer.createDelayRevealBatch(
+        {
+          name: "Placeholder #1",
+        },
+        [
+          {
+            name: "NFT #1",
+          },
+          {
+            name: "NFT #2",
+          },
+        ],
+        "my secret key",
+      );
+
+      await dropModule.revealer.createDelayRevealBatch(
+        {
+          name: "Placeholder #2",
+        },
+        [
+          {
+            name: "NFT #3",
+          },
+          {
+            name: "NFT #4",
+          },
+        ],
+        "my secret key",
+      );
+
+      await dropModule.createBatch([
+        {
+          name: "NFT #00",
+        },
+        {
+          name: "NFT #01",
+        },
+      ]);
+
+      await dropModule.revealer.createDelayRevealBatch(
+        {
+          name: "Placeholder #3",
+        },
+        [
+          {
+            name: "NFT #5",
+          },
+          {
+            name: "NFT #6",
+          },
+          {
+            name: "NFT #7",
+          },
+        ],
+        "my secret key",
+      );
+
+      let unrevealList = await dropModule.revealer.getUnrevealList();
+      expect(unrevealList.length).to.be.equal(3);
+      expect(unrevealList[0].id).to.be.equal(0);
+      expect(unrevealList[0].metadata.name).to.be.equal("Placeholder #1");
+      expect(unrevealList[1].id).to.be.equal(1);
+      expect(unrevealList[1].metadata.name).to.be.equal("Placeholder #2");
+      // skipped 2 because it is a revealed batch
+      expect(unrevealList[2].id).to.be.equal(3);
+      expect(unrevealList[2].metadata.name).to.be.equal("Placeholder #3");
+
+      await dropModule.revealer.reveal(unrevealList[0].id, "my secret key");
+
+      unrevealList = await dropModule.revealer.getUnrevealList();
+      expect(unrevealList.length).to.be.equal(2);
+      expect(unrevealList[0].id).to.be.equal(1);
+      expect(unrevealList[0].metadata.name).to.be.equal("Placeholder #2");
+      expect(unrevealList[1].id).to.be.equal(3);
+      expect(unrevealList[1].metadata.name).to.be.equal("Placeholder #3");
+
+      await dropModule.revealer.reveal(
+        unrevealList[unrevealList.length - 1].id,
+        "my secret key",
+      );
+
+      unrevealList = await dropModule.revealer.getUnrevealList();
+      expect(unrevealList.length).to.be.equal(1);
+      expect(unrevealList[0].id).to.be.equal(1);
+      expect(unrevealList[0].metadata.name).to.be.equal("Placeholder #2");
+    });
+
+    it("should not be able to re-used published password for next batch", async () => {
+      await dropModule.revealer.createDelayRevealBatch(
+        {
+          name: "Placeholder #1",
+        },
+        [{ name: "NFT #1" }, { name: "NFT #2" }],
+        "my secret password",
+      );
+      await dropModule.revealer.createDelayRevealBatch(
+        {
+          name: "Placeholder #2",
+        },
+        [{ name: "NFT #3" }, { name: "NFT #4" }],
+        "my secret password",
+      );
+      await dropModule.revealer.reveal(0, "my secret password");
+      const transactions = (
+        await adminWallet.provider.getBlockWithTransactions()
+      ).transactions;
+
+      const { index, _key } = dropModule.encoder.decode(
+        "reveal",
+        transactions[0].data,
+      );
+
+      // re-using broadcasted _key to decode :)
+      try {
+        await dropModule.revealer.reveal(index.add(1), _key);
+        assert.fail("should not be able to re-used published password");
+      } catch (e) {
+        expect(e.message).to.be.equal("invalid password");
+      }
+
+      // original password should work
+      await dropModule.revealer.reveal(1, "my secret password");
+    });
+  });
 });
