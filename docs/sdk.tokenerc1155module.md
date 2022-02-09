@@ -25,7 +25,7 @@ declare class TokenErc1155Module extends Erc1155<TokenERC1155>
 |  [encoder](./sdk.tokenerc1155module.encoder.md) |  | ContractEncoder&lt;TokenERC1155&gt; |  |
 |  [metadata](./sdk.tokenerc1155module.metadata.md) |  | ContractMetadata&lt;TokenERC1155, typeof TokenErc1155Module.schema&gt; |  |
 |  [moduleRoles](./sdk.tokenerc1155module.moduleroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
-|  [moduleType](./sdk.tokenerc1155module.moduletype.md) | <code>static</code> | string |  |
+|  [moduleType](./sdk.tokenerc1155module.moduletype.md) | <code>static</code> | "TokenERC1155" |  |
 |  [primarySales](./sdk.tokenerc1155module.primarysales.md) |  | ContractPrimarySale&lt;TokenERC1155&gt; |  |
 |  [roles](./sdk.tokenerc1155module.roles.md) |  | ContractRoles&lt;TokenERC1155, typeof TokenErc1155Module.moduleRoles\[number\]&gt; |  |
 |  [royalty](./sdk.tokenerc1155module.royalty.md) |  | ContractRoyalty&lt;TokenERC1155, typeof TokenErc1155Module.schema&gt; |  |

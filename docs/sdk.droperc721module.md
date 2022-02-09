@@ -40,7 +40,7 @@ const module = sdk.getDropModule("{{module_address}}");
 |  [encoder](./sdk.droperc721module.encoder.md) |  | ContractEncoder&lt;DropERC721&gt; |  |
 |  [metadata](./sdk.droperc721module.metadata.md) |  | ContractMetadata&lt;DropERC721, typeof DropErc721Module.schema&gt; |  |
 |  [moduleRoles](./sdk.droperc721module.moduleroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
-|  [moduleType](./sdk.droperc721module.moduletype.md) | <code>static</code> | string |  |
+|  [moduleType](./sdk.droperc721module.moduletype.md) | <code>static</code> | "DropERC721" |  |
 |  [primarySales](./sdk.droperc721module.primarysales.md) |  | ContractPrimarySale&lt;DropERC721&gt; |  |
 |  [roles](./sdk.droperc721module.roles.md) |  | ContractRoles&lt;DropERC721, typeof DropErc721Module.moduleRoles\[number\]&gt; |  |
 |  [royalty](./sdk.droperc721module.royalty.md) |  | ContractRoyalty&lt;DropERC721, typeof DropErc721Module.schema&gt; |  |

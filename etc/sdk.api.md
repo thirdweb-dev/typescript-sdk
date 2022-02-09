@@ -513,7 +513,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "DropERC721";
     // (undocumented)
     primarySales: ContractPrimarySale<DropERC721>;
     // (undocumented)
@@ -815,7 +815,7 @@ export class MarketplaceModule implements UpdateableNetwork {
     // (undocumented)
     static moduleRoles: readonly ["admin", "lister"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "Marketplace";
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -936,6 +936,14 @@ export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<typ
 // @internal (undocumented)
 export const MODULES_MAP: {
     readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule | typeof SplitsModule | typeof MarketplaceModule | typeof PacksModule;
+    readonly DropERC721: typeof DropErc721Module;
+    readonly TokenERC721: typeof TokenErc721Module;
+    readonly TokenERC1155: typeof TokenErc1155Module;
+    readonly TokenERC20: typeof TokenErc20Module;
+    readonly VoteERC20: typeof VoteModule;
+    readonly Splits: typeof SplitsModule;
+    readonly Marketplace: typeof MarketplaceModule;
+    readonly Pack: typeof PacksModule;
 };
 
 // Warning: (ae-incompatible-release-tags) The symbol "ModuleType" is marked as @public, but its signature references "MODULES_MAP" which is marked as @internal
@@ -1040,7 +1048,7 @@ export class PacksModule implements UpdateableNetwork {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "Pack";
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     open(packId: string): Promise<TransactionResultWithId<NFTMetadata>[]>;
@@ -1259,7 +1267,7 @@ export class SplitsModule implements UpdateableNetwork {
     // (undocumented)
     metadata: ContractMetadata<Splits, typeof SplitsModule.schema>;
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "Splits";
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -1420,6 +1428,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // @internal (undocumented)
     getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | TokenErc20Module | VoteModule | SplitsModule | MarketplaceModule | PacksModule | ts_toolbelt_out_Class_Instance.Instance<{
         readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule | typeof SplitsModule | typeof MarketplaceModule | typeof PacksModule;
+        readonly DropERC721: typeof DropErc721Module;
+        readonly TokenERC721: typeof TokenErc721Module;
+        readonly TokenERC1155: typeof TokenErc1155Module;
+        readonly TokenERC20: typeof TokenErc20Module;
+        readonly VoteERC20: typeof VoteModule;
+        readonly Splits: typeof SplitsModule;
+        readonly Marketplace: typeof MarketplaceModule;
+        readonly Pack: typeof PacksModule;
     }[TModuleType]>;
     // (undocumented)
     getModuleList(walletAddress: string): Promise<{
@@ -1493,7 +1509,7 @@ export class TokenErc1155Module extends Erc1155<TokenERC1155> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "TokenERC1155";
     // (undocumented)
     primarySales: ContractPrimarySale<TokenERC1155>;
     // (undocumented)
@@ -1614,7 +1630,7 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "TokenERC20";
     // (undocumented)
     roles: ContractRoles<TokenERC20, typeof TokenErc20Module.moduleRoles[number]>;
     // (undocumented)
@@ -1727,7 +1743,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "TokenERC721";
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
     // (undocumented)
@@ -1899,7 +1915,7 @@ export class VoteModule implements UpdateableNetwork {
     // (undocumented)
     metadata: ContractMetadata<VoteERC20, typeof VoteModule.schema>;
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "VoteERC20";
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // Warning: (ae-forgotten-export) The symbol "ProposalExecutable" needs to be exported by the entry point index.d.ts

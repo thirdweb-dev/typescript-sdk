@@ -16,7 +16,7 @@ import { SplitRecipient } from "../types/SplitRecipient";
 import { SplitsModuleSchema } from "../schema/modules/splits";
 
 export class SplitsModule implements UpdateableNetwork {
-  static moduleType: string = "Splits" as const;
+  static moduleType = "Splits" as const;
   static schema = SplitsModuleSchema;
   static contractFactory = Splits__factory;
 

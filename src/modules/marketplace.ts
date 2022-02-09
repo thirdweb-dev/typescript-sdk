@@ -71,7 +71,7 @@ import ListingStruct = IMarketplace.ListingStruct;
  * @public
  */
 export class MarketplaceModule implements UpdateableNetwork {
-  static moduleType: string = "Marketplace" as const;
+  static moduleType = "Marketplace" as const;
   static schema = MarketplaceModuleSchema;
   static moduleRoles = ["admin", "lister"] as const;
   static contractFactory = Marketplace__factory;

@@ -38,7 +38,7 @@ import { ChainlinkVrf } from "../constants/chainlink";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 
 export class PacksModule implements UpdateableNetwork {
-  static moduleType: string = "Pack" as const;
+  static moduleType = "Pack" as const;
   static schema = PacksModuleSchema;
   static moduleRoles = ["admin", "minter", "pauser", "transfer"] as const;
   static contractFactory = Pack__factory;

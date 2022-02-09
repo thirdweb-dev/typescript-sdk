@@ -39,7 +39,7 @@ const module = sdk.getNFTModule("{{module_address}}");
 |  [encoder](./sdk.tokenerc721module.encoder.md) |  | ContractEncoder&lt;TokenERC721&gt; |  |
 |  [metadata](./sdk.tokenerc721module.metadata.md) |  | ContractMetadata&lt;TokenERC721, typeof TokenErc721Module.schema&gt; |  |
 |  [moduleRoles](./sdk.tokenerc721module.moduleroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
-|  [moduleType](./sdk.tokenerc721module.moduletype.md) | <code>static</code> | string |  |
+|  [moduleType](./sdk.tokenerc721module.moduletype.md) | <code>static</code> | "TokenERC721" |  |
 |  [primarySale](./sdk.tokenerc721module.primarysale.md) |  | ContractPrimarySale&lt;TokenERC721&gt; |  |
 |  [roles](./sdk.tokenerc721module.roles.md) |  | ContractRoles&lt;TokenERC721, typeof TokenErc721Module.moduleRoles\[number\]&gt; |  |
 |  [royalty](./sdk.tokenerc721module.royalty.md) |  | ContractRoyalty&lt;TokenERC721, typeof TokenErc721Module.schema&gt; |  |
