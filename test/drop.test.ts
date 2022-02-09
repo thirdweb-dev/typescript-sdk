@@ -616,7 +616,7 @@ describe("Drop Module", async () => {
 
   describe("Delay Reveal", () => {
     it("metadata should reveal correctly", async () => {
-      await dropModule.createDelayRevealBatch(
+      await dropModule.createDelayedRevealBatch(
         {
           name: "Placeholder #1",
         },
@@ -634,7 +634,7 @@ describe("Drop Module", async () => {
     });
 
     it("different reveal order and should return correct unreveal list", async () => {
-      await dropModule.createDelayRevealBatch(
+      await dropModule.createDelayedRevealBatch(
         {
           name: "Placeholder #1",
         },
@@ -649,7 +649,7 @@ describe("Drop Module", async () => {
         "my secret key",
       );
 
-      await dropModule.createDelayRevealBatch(
+      await dropModule.createDelayedRevealBatch(
         {
           name: "Placeholder #2",
         },
@@ -673,7 +673,7 @@ describe("Drop Module", async () => {
         },
       ]);
 
-      await dropModule.createDelayRevealBatch(
+      await dropModule.createDelayedRevealBatch(
         {
           name: "Placeholder #3",
         },
@@ -691,45 +691,57 @@ describe("Drop Module", async () => {
         "my secret key",
       );
 
-      let unrevealList = await dropModule.getUnrevealList();
+      let unrevealList = await dropModule.getBatchesToReveal();
       expect(unrevealList.length).to.be.equal(3);
-      expect(unrevealList[0].id).to.be.equal(0);
-      expect(unrevealList[0].metadata.name).to.be.equal("Placeholder #1");
-      expect(unrevealList[1].id).to.be.equal(1);
-      expect(unrevealList[1].metadata.name).to.be.equal("Placeholder #2");
+      expect(unrevealList[0].batchId.toNumber()).to.be.equal(0);
+      expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
+        "Placeholder #1",
+      );
+      expect(unrevealList[1].batchId.toNumber()).to.be.equal(1);
+      expect(unrevealList[1].placeholderMetadata.name).to.be.equal(
+        "Placeholder #2",
+      );
       // skipped 2 because it is a revealed batch
-      expect(unrevealList[2].id).to.be.equal(3);
-      expect(unrevealList[2].metadata.name).to.be.equal("Placeholder #3");
+      expect(unrevealList[2].batchId.toNumber()).to.be.equal(3);
+      expect(unrevealList[2].placeholderMetadata.name).to.be.equal(
+        "Placeholder #3",
+      );
 
-      await dropModule.reveal(unrevealList[0].id, "my secret key");
+      await dropModule.reveal(unrevealList[0].batchId, "my secret key");
 
-      unrevealList = await dropModule.getUnrevealList();
+      unrevealList = await dropModule.getBatchesToReveal();
       expect(unrevealList.length).to.be.equal(2);
-      expect(unrevealList[0].id).to.be.equal(1);
-      expect(unrevealList[0].metadata.name).to.be.equal("Placeholder #2");
-      expect(unrevealList[1].id).to.be.equal(3);
-      expect(unrevealList[1].metadata.name).to.be.equal("Placeholder #3");
+      expect(unrevealList[0].batchId.toNumber()).to.be.equal(1);
+      expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
+        "Placeholder #2",
+      );
+      expect(unrevealList[1].batchId.toNumber()).to.be.equal(3);
+      expect(unrevealList[1].placeholderMetadata.name).to.be.equal(
+        "Placeholder #3",
+      );
 
       await dropModule.reveal(
-        unrevealList[unrevealList.length - 1].id,
+        unrevealList[unrevealList.length - 1].batchId,
         "my secret key",
       );
 
-      unrevealList = await dropModule.getUnrevealList();
+      unrevealList = await dropModule.getBatchesToReveal();
       expect(unrevealList.length).to.be.equal(1);
-      expect(unrevealList[0].id).to.be.equal(1);
-      expect(unrevealList[0].metadata.name).to.be.equal("Placeholder #2");
+      expect(unrevealList[0].batchId.toNumber()).to.be.equal(1);
+      expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
+        "Placeholder #2",
+      );
     });
 
     it("should not be able to re-used published password for next batch", async () => {
-      await dropModule.createDelayRevealBatch(
+      await dropModule.createDelayedRevealBatch(
         {
           name: "Placeholder #1",
         },
         [{ name: "NFT #1" }, { name: "NFT #2" }],
         "my secret password",
       );
-      await dropModule.createDelayRevealBatch(
+      await dropModule.createDelayedRevealBatch(
         {
           name: "Placeholder #2",
         },
@@ -827,7 +839,7 @@ describe("Drop Module", async () => {
 
     it("should error when using delayed reveal features", async () => {
       try {
-        await oldDropModule.createDelayRevealBatch(
+        await oldDropModule.createDelayedRevealBatch(
           {
             name: "test",
           },
@@ -926,7 +938,7 @@ describe("Drop Module", async () => {
 
     it("should error when using delayed reveal features", async () => {
       try {
-        await oldDropModule.createDelayRevealBatch(
+        await oldDropModule.createDelayedRevealBatch(
           {
             name: "test",
           },

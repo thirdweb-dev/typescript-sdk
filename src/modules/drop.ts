@@ -1389,7 +1389,7 @@ export class DropModule
   /**
    * @internal
    */
-  private async hasDelayedReveal(): Promise<boolean> {
+  public async hasDelayedReveal(): Promise<boolean> {
     await this.checkVersion();
     return this._version >= 2;
   }
