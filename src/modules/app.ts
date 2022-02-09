@@ -1,3 +1,4 @@
+import { SignatureMint1155Module } from "./signature-mint-1155";
 import {
   Coin__factory,
   DataStore__factory,
@@ -981,6 +982,66 @@ export class AppModule
       await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getDropModule(address);
+  }
+
+  /**
+   * Deploys a SignatureMint1155 module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed Drop module
+   */
+  public async deploySignatureMint1155Module(
+    metadata: DropModuleMetadata,
+  ): Promise<SignatureMint1155Module> {
+    invariant(
+      metadata.primarySaleRecipientAddress !== "" &&
+        isAddress(metadata.primarySaleRecipientAddress),
+      "Primary sale recipient address must be specified and must be a valid address",
+    );
+
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      DropModuleMetadata,
+    );
+
+    await this.verifyMetadata(metadata);
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
+
+    const address = await this._deployModule(
+      ModuleType.SIGNATURE_MINT_1155,
+      [
+        metadata.name,
+        metadata.symbol ? metadata.symbol : "",
+        metadataUri,
+        this.address,
+        await this.getForwarder(),
+        nativeTokenWrapperAddress,
+        metadata.primarySaleRecipientAddress,
+        metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+        metadata.primarySaleFeeBasisPoints
+          ? metadata.primarySaleFeeBasisPoints
+          : 0,
+      ],
+      LazyMintERC721__factory,
+    );
+    if (
+      metadata.feeRecipient &&
+      metadata.feeRecipient !== (await this.getRoyaltyTreasury())
+    ) {
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
+    return this.sdk.getSignatureMint1155Module(address);
   }
 
   /**

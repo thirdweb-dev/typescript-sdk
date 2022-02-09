@@ -1,3 +1,4 @@
+import { SignatureMint1155Module } from "../modules/signature-mint-1155";
 import { Forwarder__factory } from "@3rdweb/contracts";
 import { Provider } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
@@ -77,7 +78,8 @@ export type AnyContract =
   | typeof SplitsModule
   | typeof BundleDropModule
   | typeof MarketplaceModule
-  | typeof VoteModule;
+  | typeof VoteModule
+  | typeof SignatureMint1155Module;
 
 /**
  * The entrypoint to the SDK.
@@ -464,6 +466,16 @@ export class ThirdwebSDK implements IThirdwebSdk {
    */
   public getVoteModule(address: string): VoteModule {
     return this.getOrCreateModule(address, VoteModule);
+  }
+
+  /**
+   * @alpha
+   *
+   * @param address - The contract address of the given SignatureMint1155Module module.
+   * @returns The SignatureMint1155Module Module.
+   */
+  public getSignatureMint1155Module(address: string): SignatureMint1155Module {
+    return this.getOrCreateModule(address, SignatureMint1155Module);
   }
 
   /**
