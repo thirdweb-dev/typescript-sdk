@@ -362,7 +362,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
     // (undocumented)
     static moduleRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
-    static moduleType: string;
+    static moduleType: "DropERC1155";
     // Warning: (ae-forgotten-export) The symbol "ContractPrimarySale" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -935,9 +935,9 @@ export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<typ
 //
 // @internal (undocumented)
 export const MODULES_MAP: {
-    readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule | typeof SplitsModule | typeof MarketplaceModule | typeof PacksModule;
     readonly DropERC721: typeof DropErc721Module;
     readonly TokenERC721: typeof TokenErc721Module;
+    readonly DropERC1155: typeof DropErc1155Module;
     readonly TokenERC1155: typeof TokenErc1155Module;
     readonly TokenERC20: typeof TokenErc20Module;
     readonly VoteERC20: typeof VoteModule;
@@ -1427,9 +1427,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getMarketplaceModule(address: string): MarketplaceModule;
     // @internal (undocumented)
     getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | TokenErc20Module | VoteModule | SplitsModule | MarketplaceModule | PacksModule | ts_toolbelt_out_Class_Instance.Instance<{
-        readonly [x: string]: typeof DropErc721Module | typeof TokenErc721Module | typeof DropErc1155Module | typeof TokenErc1155Module | typeof TokenErc20Module | typeof VoteModule | typeof SplitsModule | typeof MarketplaceModule | typeof PacksModule;
         readonly DropERC721: typeof DropErc721Module;
         readonly TokenERC721: typeof TokenErc721Module;
+        readonly DropERC1155: typeof DropErc1155Module;
         readonly TokenERC1155: typeof TokenErc1155Module;
         readonly TokenERC20: typeof TokenErc20Module;
         readonly VoteERC20: typeof VoteModule;
@@ -1440,7 +1440,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // (undocumented)
     getModuleList(walletAddress: string): Promise<{
         address: string;
-        moduleType: string | number;
+        moduleType: "DropERC721" | "TokenERC721" | "DropERC1155" | "TokenERC1155" | "TokenERC20" | "VoteERC20" | "Splits" | "Marketplace" | "Pack";
         metadata: () => Promise<{
             [x: string]: Json;
             description?: string | undefined;

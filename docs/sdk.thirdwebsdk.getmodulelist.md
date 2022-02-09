@@ -9,7 +9,7 @@
 ```typescript
 getModuleList(walletAddress: string): Promise<{
         address: string;
-        moduleType: string | number;
+        moduleType: "DropERC721" | "TokenERC721" | "DropERC1155" | "TokenERC1155" | "TokenERC20" | "VoteERC20" | "Splits" | "Marketplace" | "Pack";
         metadata: () => Promise<{
             [x: string]: Json;
             description?: string | undefined;
@@ -60,5 +60,5 @@ getModuleList(walletAddress: string): Promise<{
 
 <b>Returns:</b>
 
-Promise&lt;{ address: string; moduleType: string \| number; metadata: () =&gt; Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; seller\_fee\_basis\_points: number; fee\_recipient: string; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; symbol: string; name: string; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; proposal\_start\_time\_in\_seconds: number; proposal\_voting\_time\_in\_seconds: number; voting\_delay\_in\_blocks: number; voting\_period\_in\_blocks: number; voting\_token\_address: string; voting\_quorum\_fraction: number; proposal\_token\_threshold: ethers$1.BigNumber; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; recipientSplits: { address: string; shares: ethers$1.BigNumber; }\[\]; }&gt;; }\[\]&gt;
+Promise&lt;{ address: string; moduleType: "DropERC721" \| "TokenERC721" \| "DropERC1155" \| "TokenERC1155" \| "TokenERC20" \| "VoteERC20" \| "Splits" \| "Marketplace" \| "Pack"; metadata: () =&gt; Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; seller\_fee\_basis\_points: number; fee\_recipient: string; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; symbol: string; name: string; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; proposal\_start\_time\_in\_seconds: number; proposal\_voting\_time\_in\_seconds: number; voting\_delay\_in\_blocks: number; voting\_period\_in\_blocks: number; voting\_token\_address: string; voting\_quorum\_fraction: number; proposal\_token\_threshold: ethers$1.BigNumber; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; recipientSplits: { address: string; shares: ethers$1.BigNumber; }\[\]; }&gt;; }\[\]&gt;
 
