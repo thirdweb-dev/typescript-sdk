@@ -33,6 +33,7 @@ import { Networkish } from '@ethersproject/providers';
 import { Pack } from '@3rdweb/contracts';
 import { Pack__factory } from '@3rdweb/contracts';
 import { Provider } from '@ethersproject/providers';
+import { Result } from '@ethersproject/abi';
 import { Signer } from '@ethersproject/abstract-signer';
 import { Signer as Signer_2 } from 'ethers';
 import { Splits } from '@3rdweb/contracts';
@@ -516,6 +517,10 @@ export class DropErc721Module extends Erc721<DropERC721> {
     static moduleType: "DropERC721";
     // (undocumented)
     primarySales: ContractPrimarySale<DropERC721>;
+    // Warning: (ae-forgotten-export) The symbol "DelayedReveal" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    revealer: DelayedReveal<DropERC721>;
     // (undocumented)
     roles: ContractRoles<DropERC721, typeof DropErc721Module.moduleRoles[number]>;
     // (undocumented)
