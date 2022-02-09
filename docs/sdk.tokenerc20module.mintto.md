@@ -35,7 +35,7 @@ Mint tokens to a specified address
 const toAddress = "{{wallet_address}}";
 
 // The amount of this token you want to mint
-const amount = ethers.utils.parseEther("1.5");
+const amount = "1.5";
 
 await module.mintTo(toAddress, amount);
 ```

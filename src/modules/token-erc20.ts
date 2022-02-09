@@ -13,8 +13,6 @@ import { Erc20 } from "../core/classes/erc-20";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { TokenMintInput } from "../schema/tokens/token";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import { fetchTokenMetadata } from "../common/nft";
-import { fetchCurrencyMetadata } from "../common/currency";
 
 export class TokenErc20Module extends Erc20<TokenERC20> {
   static moduleType: string = "TokenERC20" as const;
