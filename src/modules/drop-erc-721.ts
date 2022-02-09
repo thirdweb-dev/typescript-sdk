@@ -30,6 +30,7 @@ import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
+import { DelayedReveal } from "../common/delayed-reveal";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -62,6 +63,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
   public primarySales: ContractPrimarySale<DropERC721>;
   public claimConditions: DropErc721ClaimConditions;
   public encoder: ContractEncoder<DropERC721>;
+  public revealer: DelayedReveal<DropERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -93,6 +95,10 @@ export class DropErc721Module extends Erc721<DropERC721> {
       this.storage,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
+    this.revealer = new DelayedReveal<DropERC721>(
+      this.contractWrapper,
+      this.storage,
+    );
   }
 
   /** ******************************
@@ -207,9 +213,10 @@ export class DropErc721Module extends Erc721<DropERC721> {
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
     );
+    const baseUri = batch.baseUri;
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
       batch.metadataUris.length,
-      batch.baseUri,
+      baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
       ethers.utils.toUtf8Bytes(""),
     ]);
     // TODO figure out how to type the return types of parseEventLogs
@@ -321,25 +328,3 @@ export class DropErc721Module extends Erc721<DropERC721> {
     );
   }
 }
-
-/**
- *  JUST TS SANITY CHECK BELOW
- */
-
-// (async () => {
-//   // MODULE
-//   const module = new DropErc721Module("1", "0x0", new IpfsStorage(""));
-
-//   const metdata = await module.metadata.get();
-
-//   const txResult = await module.metadata.set({ name: "foo" });
-//   const metadata = await txResult.data();
-
-//   // TOKEN
-//   const data = await module.getAll();
-//   const owner = data[0].owner;
-//   const tokenMetadata = data[0].metadata;
-
-//   const d = await module.createBatch([]);
-//   const meta = await d[0].data();
-// })();
