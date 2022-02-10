@@ -953,4 +953,67 @@ describe("Drop Module", async () => {
       }
     });
   });
+
+  describe("Updating Claim Conditions", () => {
+    let module: DropModule;
+    let originalMerkleRoot: string;
+
+    beforeEach(async () => {
+      module = await appModule.deployDropModule({
+        name: "test",
+        primarySaleRecipientAddress: bobWallet.address,
+      });
+      await module.createBatch([
+        {
+          name: "test",
+        },
+      ]);
+
+      const factory = module.getClaimConditionsFactory();
+      await factory
+        .newClaimPhase({
+          startTime: new Date(),
+        })
+        .setSnapshot([w1.address, w2.address, bobWallet.address]);
+      await module.setClaimConditions(factory);
+
+      const { metadata } = await module.getMetadata();
+      originalMerkleRoot = Object.keys(metadata.merkle)[0];
+    });
+
+    it("should contain a valid merkle root", async () => {
+      assert.isDefined(originalMerkleRoot);
+    });
+
+    it("should still contain a valid merkle root after updating the conditions", async () => {
+      const factory = module.getClaimConditionsFactory();
+      const currentMintCondition = await module.getActiveClaimCondition();
+
+      const claimPhase = factory
+        .newClaimPhase({
+          startTime: new Date(),
+          maxQuantity: currentMintCondition.maxMintSupply,
+          maxQuantityPerTransaction:
+            currentMintCondition.quantityLimitPerTransaction,
+        })
+        .setPrice(
+          currentMintCondition.pricePerToken,
+          currentMintCondition.currency,
+        )
+        .setWaitTimeBetweenClaims(
+          currentMintCondition.waitTimeSecondsLimitPerTransaction,
+        );
+
+      if (currentMintCondition.merkleRoot.toString()) {
+        claimPhase.setMerkleRoot(currentMintCondition.merkleRoot.toString());
+      }
+
+      await module.setClaimConditions(factory);
+
+      const { metadata } = await module.getMetadata();
+      const originalRoot = Object.keys(metadata.merkle)[0];
+      assert.isDefined(originalRoot);
+      assert.equal(originalRoot, originalMerkleRoot);
+    });
+  });
 });

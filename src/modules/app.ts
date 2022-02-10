@@ -17,7 +17,7 @@ import {
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BigNumber, ethers, Signer } from "ethers";
+import { BigNumber, Contract, ethers, Signer } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { JsonConvert } from "json2typescript";
 import {
@@ -375,11 +375,32 @@ export class AppModule
     moduleAddress: string,
     treasury: string,
   ): Promise<TransactionReceipt> {
+    // Note: connecting module address contract. Only need to access setContractURI abi
+    // any Interface with setContractURI can be used.
+    const moduleContract = new Contract(
+      moduleAddress,
+      ProtocolControl__factory.createInterface(),
+      this.providerOrSigner,
+    );
+
+    const metadata = await getContractMetadata(
+      this.providerOrSigner,
+      moduleAddress,
+      this.sdk.getStorage(),
+      false,
+    );
+    const uri = await this.sdk.getStorage().uploadMetadata({
+      ...metadata,
+      fee_recipient: treasury,
+    });
+
+    // static call to make sure the call won't fail.
     try {
-      return await this.sendTransaction("setModuleRoyaltyTreasury", [
+      await this.contract.callStatic.setModuleRoyaltyTreasury(
         moduleAddress,
         treasury,
-      ]);
+      );
+      await moduleContract.callStatic.setContractURI(uri);
     } catch (e: any) {
       if (e?.message?.includes("provider shares too low")) {
         throw new Error(
@@ -388,6 +409,13 @@ export class AppModule
       }
       throw e;
     }
+
+    // can't multicall cause 2 different modules. sad.
+    await this.sendContractTransaction(moduleContract, "setContractURI", [uri]);
+    return await this.sendTransaction("setModuleRoyaltyTreasury", [
+      moduleAddress,
+      treasury,
+    ]);
   }
 
   /**

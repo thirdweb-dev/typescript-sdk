@@ -649,13 +649,19 @@ export class DropModule
     factory.allSnapshots().forEach((s) => {
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
+
     const { metadata } = await this.getMetadata(false);
     invariant(metadata, "Metadata is not set, this should never happen");
     const oldMerkle = metadata["merkle"];
-    if (factory.allSnapshots().length === 0 && "merkle" in metadata) {
-      metadata["merkle"] = {};
-    } else {
+
+    const defaultMerkleRoot = hexZeroPad([0], 32).toString();
+
+    if (factory.allSnapshots().length > 0) {
       metadata["merkle"] = merkleInfo;
+    } else if (
+      conditions.filter((c) => c.merkleRoot !== defaultMerkleRoot).length === 0
+    ) {
+      metadata["merkle"] = {};
     }
 
     const encoded = [];

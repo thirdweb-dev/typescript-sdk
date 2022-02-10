@@ -645,9 +645,12 @@ export class MarketplaceModule
         listing.assetContractAddress,
         this.providerOrSigner,
       );
+      // burned token would fail on ownerOf cuz invalid token
+      const tokenOwnerAddress = await asset
+        .ownerOf(listing.tokenId)
+        .catch(() => AddressZero);
       return (
-        (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
-        listing.sellerAddress.toLowerCase()
+        tokenOwnerAddress.toLowerCase() === listing.sellerAddress.toLowerCase()
       );
     } else {
       const asset = ERC1155__factory.connect(
