@@ -1461,6 +1461,8 @@ export enum ModuleType {
     // (undocumented)
     BUNDLE_DROP = 11,
     // (undocumented)
+    BUNDLE_SIGNATURE = 13,
+    // (undocumented)
     COLLECTION = 1,
     // (undocumented)
     CURRENCY = 0,
@@ -1478,8 +1480,6 @@ export enum ModuleType {
     NFT = 2,
     // (undocumented)
     PACK = 5,
-    // (undocumented)
-    SIGNATURE_MINT_1155 = 13,
     // (undocumented)
     SPLITS = 9,
     // (undocumented)
