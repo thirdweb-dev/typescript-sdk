@@ -39,6 +39,12 @@
 |  [VoteModule](./sdk.votemodule.md) | Create a decentralized organization for token holders to vote on proposals. |
 |  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 
+## Enumerations
+
+|  Enumeration | Description |
+|  --- | --- |
+|  [ChainId](./sdk.chainid.md) |  |
+
 ## Functions
 
 |  Function | Description |
@@ -64,6 +70,7 @@
 |  [OptionalPropertiesInput](./sdk.optionalpropertiesinput.md) |  |
 |  [OptionalPropertiesOutput](./sdk.optionalpropertiesoutput.md) |  |
 |  [PartialClaimConditionInputSchema](./sdk.partialclaimconditioninputschema.md) |  |
+|  [SUPPORTED\_CHAIN\_IDS](./sdk.supported_chain_ids.md) |  |
 
 ## Type Aliases
 
@@ -87,6 +94,7 @@
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [Role](./sdk.role.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |
+|  [SUPPORTED\_CHAIN\_ID](./sdk.supported_chain_id.md) |  |
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultPromise](./sdk.transactionresultpromise.md) |  |
 |  [TransactionResultWithId](./sdk.transactionresultwithid.md) |  |

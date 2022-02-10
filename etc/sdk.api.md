@@ -238,6 +238,44 @@ export const BundleMetadataOutputSchema: z.ZodObject<{
     supply: string | number | bigint | ethers.BigNumber;
 }>;
 
+// @public (undocumented)
+export enum ChainId {
+    // (undocumented)
+    Avalanche = 43114,
+    // (undocumented)
+    AvalancheFujiTestnet = 43113,
+    // (undocumented)
+    BSC = 56,
+    // (undocumented)
+    Fantom = 250,
+    // (undocumented)
+    FantomTestnet = 4002,
+    // (undocumented)
+    Goerli = 5,
+    // (undocumented)
+    Hardhat = 31337,
+    // (undocumented)
+    Harmony = 1666600000,
+    // (undocumented)
+    Kovan = 42,
+    // (undocumented)
+    Localhost = 1337,
+    // (undocumented)
+    Mainnet = 1,
+    // (undocumented)
+    Moonriver = 1285,
+    // (undocumented)
+    Mumbai = 80001,
+    // (undocumented)
+    Polygon = 137,
+    // (undocumented)
+    Rinkeby = 4,
+    // (undocumented)
+    Ropsten = 3,
+    // (undocumented)
+    xDai = 100
+}
+
 // @public
 export type ClaimCondition = z.output<typeof ClaimConditionOutputSchema>;
 
@@ -1427,6 +1465,12 @@ export class SplitsModule implements UpdateableNetwork {
     withdraw(walletAddress: string): TransactionResultPromise;
     withdrawToken(walletAddress: string, tokenAddress: string): TransactionResultPromise;
 }
+
+// @public (undocumented)
+export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet;
+
+// @public (undocumented)
+export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
 //
