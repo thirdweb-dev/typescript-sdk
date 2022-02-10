@@ -1,4 +1,3 @@
-import { IRoles } from "../../dist/common/role.d";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -1245,7 +1244,7 @@ export class MarketplaceModule
       ]),
     );
 
-    this.sendTransaction("multicall", [encoded]);
+    await this.sendTransaction("multicall", [encoded]);
   }
 
   public async allowListingFromAnyAsset() {
@@ -1270,7 +1269,7 @@ export class MarketplaceModule
         AddressZero,
       ]),
     );
-    this.sendTransaction("multicall", [encoded]);
+    await this.sendTransaction("multicall", [encoded]);
   }
 
   /**
