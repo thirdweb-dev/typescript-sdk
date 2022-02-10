@@ -18,12 +18,15 @@ import type {
   ModuleForModuleType,
   ModuleType,
   NetworkOrSignerOrProvider,
+  ValidModuleClass,
   ValidModuleInstance,
 } from "./types";
 import { TokenErc721Module } from "../modules/token-erc-721";
 import { TokenErc1155Module } from "../modules/token-erc-1155";
 import { ModuleRegistry } from "./classes/registry";
 import { PacksModule } from "../modules/packs";
+import { getContractAddressByChainId } from "../constants/addresses";
+import { z } from "zod";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
@@ -31,9 +34,16 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * the cache of modules that we have already seen
    */
   private moduleCache = new Map<string, ValidModuleInstance>();
-
-  public factory: ModuleFactory;
-  private registry: ModuleRegistry;
+  /**
+   * @internal
+   * should never be accessed directly, use {@link getFactory} instead
+   */
+  private _factory: Promise<ModuleFactory> | undefined;
+  /**
+   * @internal
+   * should never be accessed directly, use {@link getRegistry} instead
+   */
+  private _registry: Promise<ModuleRegistry> | undefined;
 
   public storage: IStorage;
 
@@ -43,9 +53,55 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage: IStorage = new IpfsStorage(),
   ) {
     super(network, options);
-    this.factory = new ModuleFactory(network, storage, options);
-    this.registry = new ModuleRegistry(network, options);
+    // this.factory = new ModuleFactory(network, storage, options);
+    // this.registry = new ModuleRegistry(network, options);
     this.storage = storage;
+  }
+
+  private async getRegistry(): Promise<ModuleRegistry> {
+    // if we already have a registry just return it back
+    if (this._registry) {
+      return this._registry;
+    }
+    // otherwise get the registry address for the active chain and get a new one
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+    const registryAddress = getContractAddressByChainId(chainId, "twRegistry");
+    return (this._registry = Promise.resolve(
+      new ModuleRegistry(registryAddress, this.getNetwork(), this.options),
+    ));
+  }
+
+  private async getFactory(): Promise<ModuleFactory> {
+    // if we already have a factory just return it back
+    if (this._factory) {
+      return this._factory;
+    }
+    // otherwise get the factory address for the active chain and get a new one
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+    const factoryAddress = getContractAddressByChainId(chainId, "twFactory");
+    return (this._factory = Promise.resolve(
+      new ModuleFactory(
+        factoryAddress,
+        this.getNetwork(),
+        this.storage,
+        this.options,
+      ),
+    ));
+  }
+
+  /**
+   * Deploys a new module
+   *
+   * @param moduleType - the type of module to deploy
+   * @param moduleMetadata - the metadata to deploy the module with
+   * @returns a promise of the address of the newly deployed module
+   */
+  public async deployModule<TModule extends ValidModuleClass>(
+    moduleType: TModule["moduleType"],
+    moduleMetadata: z.input<TModule["schema"]["deploy"]>,
+  ): Promise<string> {
+    const factory = await this.getFactory();
+    return await factory.deploy(moduleType, moduleMetadata);
   }
 
   /**
@@ -71,9 +127,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     );
   }
 
-  /** */
   public async getModuleList(walletAddress: string) {
-    const addresses = await this.registry.getModuleAddresses(walletAddress);
+    const addresses = await (
+      await this.getRegistry()
+    ).getModuleAddresses(walletAddress);
 
     const addressesWithModuleTypes = await Promise.all(
       addresses.map(async (adrr) => ({
@@ -230,10 +287,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   private updateModuleSignerOrProvider() {
-    this.factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
-    this.registry.updateSignerOrProvider(
-      this.getSigner() || this.getProvider(),
-    );
+    // has to be promises now
+    this.getFactory().then((factory) => {
+      factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
+    });
+    // has to be promises now
+    this.getRegistry().then((registry) => {
+      registry.updateSignerOrProvider(this.getSigner() || this.getProvider());
+    });
+
     for (const [, module] of this.moduleCache) {
       module.onNetworkUpdated(this.getSigner() || this.getProvider());
     }

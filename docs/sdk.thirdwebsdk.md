@@ -21,13 +21,13 @@ declare class ThirdwebSDK extends RPCConnectionHandler
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [factory](./sdk.thirdwebsdk.factory.md) |  | ModuleFactory |  |
 |  [storage](./sdk.thirdwebsdk.storage.md) |  | IStorage |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [deployModule(moduleType, moduleMetadata)](./sdk.thirdwebsdk.deploymodule.md) |  | Deploys a new module |
 |  [getBundleDropModule(address)](./sdk.thirdwebsdk.getbundledropmodule.md) |  | Get an instance of a Bundle Drop module |
 |  [getBundleModule(address)](./sdk.thirdwebsdk.getbundlemodule.md) |  | Get an instance of a Bundle module |
 |  [getDropModule(moduleAddress)](./sdk.thirdwebsdk.getdropmodule.md) |  | Get an instance of a Drop module |

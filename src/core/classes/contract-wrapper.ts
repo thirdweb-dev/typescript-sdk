@@ -26,10 +26,7 @@ import {
   getAndIncrementNonce,
 } from "../../common/forwarder";
 import { Forwarder__factory } from "@3rdweb/contracts";
-import {
-  FORWARDER_ADDRESS,
-  getContractAddressByChainId,
-} from "../../constants/addresses";
+import { getContractAddressByChainId } from "../../constants/addresses";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 
@@ -434,8 +431,7 @@ export class ContractWrapper<
     invariant(signer, "provider is not set");
     invariant(provider, "provider is not set");
     const forwarderAddress =
-      this.options.gasless.openzeppelin.relayerForwarderAddress ||
-      FORWARDER_ADDRESS;
+      this.options.gasless.openzeppelin.relayerForwarderAddress;
     const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
       transaction.from,

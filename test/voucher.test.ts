@@ -28,7 +28,7 @@ describe("Voucher Module", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     nftModule = sdk.getNFTModule(
-      await sdk.factory.deploy(TokenErc721Module.moduleType, {
+      await sdk.deployModule(TokenErc721Module.moduleType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
         seller_fee_basis_points: 0,

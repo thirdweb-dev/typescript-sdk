@@ -150,6 +150,9 @@ before(async () => {
     await tx.wait();
   }
 
+  process.env.registryAddress = thirdwebRegistryAddress;
+  process.env.factoryAddress = thirdwebFactoryDeployer.address;
+
   const storage = new MockStorage();
   sdk = new ThirdwebSDK(
     signer,
@@ -157,7 +160,6 @@ before(async () => {
       gasSettings: {
         maxPriceInGwei: 10000,
       },
-      thirdwebModuleFactory: thirdwebFactoryDeployer.address,
     },
     storage,
   );

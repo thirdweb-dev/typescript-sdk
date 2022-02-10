@@ -11,29 +11,29 @@ import {
   TokenErc1155Module,
   TokenErc20Module,
   VoteModule,
+  TokenErc721Module,
 } from "../../modules";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
 import { NetworkOrSignerOrProvider, ValidModuleClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { ProxyDeployedEvent } from "@3rdweb/contracts/dist/TWFactory";
-import { TokenErc721Module } from "../../modules/token-erc-721";
+
 import { ChainlinkVrf } from "../../constants/chainlink";
 
+/**
+ * @internal
+ */
 export class ModuleFactory extends ContractWrapper<TWFactory> {
   private storage: IStorage;
 
   constructor(
+    factoryAddr: string,
     network: NetworkOrSignerOrProvider,
     storage: IStorage,
     options?: SDKOptions,
   ) {
-    super(
-      network,
-      options?.thirdwebModuleFactory as string,
-      TWFactory__factory.abi,
-      options,
-    );
+    super(network, factoryAddr, TWFactory__factory.abi, options);
     this.storage = storage;
   }
 

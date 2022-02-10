@@ -67,6 +67,7 @@ const module = sdk.getMarketplaceModule("{{module_address}}");
 |  [getTimeBufferInSeconds()](./sdk.marketplacemodule.gettimebufferinseconds.md) |  |  |
 |  [getWinningBid(listingId)](./sdk.marketplacemodule.getwinningbid.md) |  | Get Highest Bid |
 |  [isRestrictedListerRoleOnly()](./sdk.marketplacemodule.isrestrictedlisterroleonly.md) |  | Get whether listing is restricted only to addresses with the Lister role |
+|  [isWinningBid(winningPrice, newBidPrice, bidBuffer)](./sdk.marketplacemodule.iswinningbid.md) |  | \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* PRIVATE FUNCTIONS \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* |
 |  [makeAuctionListingBid(bid)](./sdk.marketplacemodule.makeauctionlistingbid.md) |  | Bid On Auction |
 |  [makeDirectListingOffer(offer)](./sdk.marketplacemodule.makedirectlistingoffer.md) |  | Make an offer for a Direct Listing |
 |  [onNetworkUpdated(network)](./sdk.marketplacemodule.onnetworkupdated.md) |  |  |

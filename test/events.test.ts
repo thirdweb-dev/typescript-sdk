@@ -12,7 +12,7 @@ describe("Events", async () => {
 
   beforeEach(async () => {
     dropModule = sdk.getDropModule(
-      await sdk.factory.deploy(DropErc721Module.moduleType, {
+      await sdk.deployModule(DropErc721Module.moduleType, {
         name: `Testing drop from SDK`,
         description: "Test module from tests",
         image:
@@ -50,7 +50,6 @@ describe("Events", async () => {
           relayerUrl: "https://google.com", // TODO test relayer url?
         },
       },
-      thirdwebModuleFactory: registryAddress,
     });
     sdk.on(EventType.Transaction, (event) => {
       console.log(event);

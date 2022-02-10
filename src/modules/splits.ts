@@ -208,7 +208,7 @@ export class SplitsModule implements UpdateableNetwork {
 
   /**
    * Get the % of funds owed to a given address
-   * @param address
+   * @param address - the address to check percentage of
    */
   public async getRecipientSplitPercentage(
     address: string,

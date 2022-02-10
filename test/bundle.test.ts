@@ -22,7 +22,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.factory.deploy(TokenErc1155Module.moduleType, {
+    const address = await sdk.deployModule(TokenErc1155Module.moduleType, {
       name: `Testing bundle from SDK`,
       description: "Test module from tests",
       image:

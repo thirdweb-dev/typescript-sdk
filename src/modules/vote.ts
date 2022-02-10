@@ -141,7 +141,7 @@ export class VoteModule implements UpdateableNetwork {
 
   /**
    * Get the votes for a specific proposal
-   * @param proposalId the proposalId
+   * @param proposalId - the proposalId
    */
   public async getProposalVotes(
     proposalId: BigNumber,

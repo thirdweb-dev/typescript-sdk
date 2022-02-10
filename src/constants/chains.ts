@@ -21,6 +21,7 @@ export enum ChainId {
 export type SUPPORTED_CHAIN_ID =
   | ChainId.Mainnet
   | ChainId.Rinkeby
+  | ChainId.Goerli
   | ChainId.Mumbai
   | ChainId.Polygon
   | ChainId.Fantom
@@ -31,6 +32,7 @@ export type SUPPORTED_CHAIN_ID =
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   ChainId.Mainnet,
   ChainId.Rinkeby,
+  ChainId.Goerli,
   ChainId.Polygon,
   ChainId.Mumbai,
   ChainId.Fantom,

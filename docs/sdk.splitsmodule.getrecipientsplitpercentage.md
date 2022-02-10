@@ -16,7 +16,7 @@ getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  address | string |  |
+|  address | string | the address to check percentage of |
 
 <b>Returns:</b>
 

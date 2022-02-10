@@ -20,7 +20,7 @@ describe("Token Module", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.factory.deploy(TokenErc20Module.moduleType, {
+    const address = await sdk.deployModule(TokenErc20Module.moduleType, {
       name: `Testing token from SDK`,
       symbol: `TEST`,
       description: "Test module from tests",

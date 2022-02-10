@@ -48,7 +48,6 @@ import { TransactionReceipt } from '@ethersproject/providers';
 import * as ts_toolbelt_out_Any_Equals from 'ts-toolbelt/out/Any/Equals';
 import * as ts_toolbelt_out_Any_If from 'ts-toolbelt/out/Any/If';
 import * as ts_toolbelt_out_Class_Instance from 'ts-toolbelt/out/Class/Instance';
-import { TWFactory } from '@3rdweb/contracts';
 import { VoteERC20 } from '@3rdweb/contracts';
 import { VoteERC20__factory } from '@3rdweb/contracts';
 import { z } from 'zod';
@@ -813,6 +812,7 @@ export class MarketplaceModule implements UpdateableNetwork {
     getTimeBufferInSeconds(): Promise<BigNumber>;
     getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
     isRestrictedListerRoleOnly(): Promise<boolean>;
+    isWinningBid(winningPrice: BigNumberish, newBidPrice: BigNumberish, bidBuffer: BigNumberish): Promise<boolean>;
     makeAuctionListingBid(bid: {
         listingId: BigNumberish;
         pricePerToken: BigNumberish;
@@ -1434,10 +1434,7 @@ export class SplitsModule implements UpdateableNetwork {
 // @public (undocumented)
 export class ThirdwebSDK extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage?: IStorage);
-    // Warning: (ae-forgotten-export) The symbol "ModuleFactory" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    factory: ModuleFactory;
+    deployModule<TModule extends ValidModuleClass>(moduleType: TModule["moduleType"], moduleMetadata: z.input<TModule["schema"]["deploy"]>): Promise<string>;
     getBundleDropModule(address: string): DropErc1155Module;
     getBundleModule(address: string): TokenErc1155Module;
     getDropModule(moduleAddress: string): DropErc721Module;

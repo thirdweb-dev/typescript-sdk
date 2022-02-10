@@ -35,12 +35,9 @@ export const SDKOptionsSchema = z
         }),
       ])
       .optional(),
-    thirdwebModuleFactory: z.string().optional(),
   })
   .default({
     gasSettings: { maxPriceInGwei: 300, speed: "fastest" },
-    // TODO: default this to the production registry address
-    thirdwebModuleFactory: "",
   });
 
 export type SDKOptions = z.input<typeof SDKOptionsSchema>;
