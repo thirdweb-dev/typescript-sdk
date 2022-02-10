@@ -398,7 +398,7 @@ export class AppModule
 
     // static call to make sure the call won't fail.
     try {
-      await this.readOnlyContract.callStatic.setModuleRoyaltyTreasury(
+      await this.contract.callStatic.setModuleRoyaltyTreasury(
         moduleAddress,
         treasury,
       );

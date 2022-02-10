@@ -352,7 +352,7 @@ export class VoteModule extends Module<VotingGovernor> {
     const datas = proposal.executions.map((p) => p.transactionData);
     const descriptionHash = ethers.utils.id(proposal.description);
     try {
-      await this.readOnlyContract.callStatic.execute(
+      await this.contract.callStatic.execute(
         tos,
         values,
         datas,
