@@ -12,6 +12,7 @@ import {
   ProtocolControl,
   ProtocolControl__factory,
   Royalty__factory,
+  SignatureMint1155__factory,
   SignatureMint721__factory,
   Splits__factory,
   VotingGovernor__factory,
@@ -1021,8 +1022,6 @@ export class AppModule
     const address = await this._deployModule(
       ModuleType.SIGNATURE_MINT_1155,
       [
-        metadata.name,
-        metadata.symbol ? metadata.symbol : "",
         metadataUri,
         this.address,
         await this.getForwarder(),
@@ -1033,7 +1032,7 @@ export class AppModule
           ? metadata.primarySaleFeeBasisPoints
           : 0,
       ],
-      LazyMintERC721__factory,
+      SignatureMint1155__factory,
     );
     if (
       metadata.feeRecipient &&

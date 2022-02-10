@@ -24,11 +24,12 @@ import {
 import { hexlify } from "@ethersproject/bytes";
 import { toUtf8Bytes } from "ethers/lib/utils";
 import { v4 as uuidv4 } from "uuid";
+import { A } from "ts-toolbelt";
 
 export interface TokenERC1155Metadata {
   supply: BigNumber;
   metadata: NFTMetadata;
-  ownedByAddress: BigNumber;
+  quantityOwnedByAddress: BigNumber;
 }
 
 /**
@@ -131,7 +132,7 @@ export class SignatureMint1155Module
     return {
       supply,
       metadata,
-      ownedByAddress: BigNumber.from(ownedByAddress),
+      quantityOwnedByAddress: BigNumber.from(ownedByAddress),
     };
   }
 
@@ -267,7 +268,7 @@ export class SignatureMint1155Module
     to: string,
     args: TokenERC1155CreateAndMintArgs,
   ) {
-    const uri = await this.sdk.getStorage().uploadMetadata(args);
+    const uri = await this.sdk.getStorage().uploadMetadata(args.metadata);
     await this.sendTransaction("mintTo", [
       to,
       ethers.constants.MaxUint256,
@@ -284,10 +285,11 @@ export class SignatureMint1155Module
     to: string,
     args: TokenERC1155CreateAndMintArgs[],
   ) {
+    const metadatas = args.map((a) => a.metadata);
     const amounts = args.map((a) => a.supply);
     const { metadataUris: uris } = await this.sdk
       .getStorage()
-      .uploadMetadataBatch(args);
+      .uploadMetadataBatch(metadatas);
     const encoded = uris.map((uri, index) =>
       this.readOnlyContract.interface.encodeFunctionData("mintTo", [
         to,
@@ -535,7 +537,7 @@ export class SignatureMint1155Module
     const message = { ...this.mapPayload(req), uri: req.uri };
     const overrides = await this.getCallOverrides();
     await this.setAllowance(
-      BigNumber.from(message.pricePerToken),
+      BigNumber.from(message.pricePerToken).mul(req.quantity),
       req.currencyAddress,
       overrides,
     );
