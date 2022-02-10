@@ -34,6 +34,7 @@ describe("Pack Module", async () => {
       await sdk.factory.deploy(TokenErc1155Module.moduleType, {
         name: "NFT Module",
         seller_fee_basis_points: 1000,
+        primary_sale_recipient: adminWallet.address,
       }),
     );
   });

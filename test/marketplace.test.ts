@@ -59,6 +59,7 @@ describe("Marketplace Module", async () => {
       await sdk.factory.deploy(TokenErc721Module.moduleType, {
         name: "TEST NFT",
         seller_fee_basis_points: 100,
+        primary_sale_recipient: adminWallet.address,
       }),
     );
     await dummyNftModule.mintBatch([
@@ -79,6 +80,7 @@ describe("Marketplace Module", async () => {
       await sdk.factory.deploy(TokenErc1155Module.moduleType, {
         name: "TEST BUNDLE",
         seller_fee_basis_points: 100,
+        primary_sale_recipient: adminWallet.address,
       }),
     );
     await dummyBundleModule.mintBatch([
@@ -105,15 +107,15 @@ describe("Marketplace Module", async () => {
     await customTokenModule.mintBatchTo([
       {
         toAddress: bobWallet.address,
-        amount: ethers.utils.parseUnits("1000000000000000000000"),
+        amount: "1000000000000000000000",
       },
       {
         toAddress: samWallet.address,
-        amount: ethers.utils.parseUnits("100000000000000000000"),
+        amount: "100000000000000000000",
       },
       {
         toAddress: adminWallet.address,
-        amount: ethers.utils.parseUnits("100000000000000000000"),
+        amount: "100000000000000000000",
       },
     ]);
     tokenAddress = customTokenModule.getAddress();
@@ -275,7 +277,7 @@ describe("Marketplace Module", async () => {
       assert.equal(listing.type.toString(), ListingType.Auction.toString());
       assert.equal(listing.tokenId.toString(), "1");
 
-      assert.equal(listing.asset.id, "1");
+      assert.equal(listing.asset.id.toString(), "1");
       assert.equal(listing.asset.name, "Test 2");
     });
 
@@ -291,7 +293,7 @@ describe("Marketplace Module", async () => {
       assert.equal(listing.type.toString(), ListingType.Direct.toString());
       assert.equal(listing.tokenId.toString(), "0");
 
-      assert.equal(listing.asset.id, "0");
+      assert.equal(listing.asset.id.toString(), "0");
       assert.equal(listing.asset.name, "Test 0");
     });
 
@@ -817,8 +819,9 @@ describe("Marketplace Module", async () => {
         ethers.utils
           .parseUnits("100000000000000000000")
           // eslint-disable-next-line line-comment-position
-          .add(ethers.utils.parseUnits("1.97")), // 3% taken out for royalties
-        "The buyer should have two additional tokens after the listing closes",
+          .add(ethers.utils.parseUnits("1.98")), // 2% taken out for royalties
+        // TODO read the fee from the TWFee contract
+        "The buyer should have two additional tokens after the listing closesThe buyer should have two additional tokens after the listing closes",
       );
     });
   });

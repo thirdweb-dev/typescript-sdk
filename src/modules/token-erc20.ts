@@ -169,10 +169,14 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
   public async mintBatchTo(args: TokenMintInput[]): TransactionResultPromise {
     const encoded = [];
     for (const arg of args) {
+      const amountWithDecimals = ethers.utils.parseUnits(
+        BigNumber.from(arg.amount).toString(),
+        await this.contractWrapper.readContract.decimals(),
+      );
       encoded.push(
         this.contractWrapper.readContract.interface.encodeFunctionData("mint", [
           arg.toAddress,
-          arg.amount,
+          amountWithDecimals,
         ]),
       );
     }

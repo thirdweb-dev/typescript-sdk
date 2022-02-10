@@ -23,6 +23,7 @@ describe("Roles Module", async () => {
     bundleModule = sdk.getBundleModule(
       await sdk.factory.deploy(TokenErc1155Module.moduleType, {
         name: "NFT Module",
+        primary_sale_recipient: adminWallet.address,
         seller_fee_basis_points: 1000,
       }),
     );

@@ -27,6 +27,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
       description: "Test module from tests",
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      primary_sale_recipient: adminWallet.address,
       seller_fee_basis_points: 1000,
       fee_recipient: AddressZero,
       platform_fee_basis_points: 10,
