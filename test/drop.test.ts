@@ -763,7 +763,9 @@ describe("Drop Module", async () => {
         await dropModule.reveal(index.add(1), _key);
         assert.fail("should not be able to re-used published password");
       } catch (e) {
-        expect(e.message).to.be.equal("invalid password");
+        expect(e.message).to.be.equal(
+          "Error revealing batch 1 - make sure your password is correct",
+        );
       }
 
       // original password should work

@@ -1339,7 +1339,7 @@ export class DropModule
     // static call to verify and check on the revert messages for revealed status.
     const revealed = await Promise.all(
       countRangeArray.map((i) =>
-        this.readOnlyContract.callStatic
+        this.contract.callStatic
           .reveal(i, ethers.utils.toUtf8Bytes(""))
           .catch((err) => {
             if (err.message.includes("nothing to reveal")) {
@@ -1867,7 +1867,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
           }
         }
       }
-      await this.readOnlyContract.callStatic.claim(quantity, proofs, overrides);
+      await this.contract.callStatic.claim(quantity, proofs, overrides);
       return true;
     } catch (err) {
       return false;
