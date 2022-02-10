@@ -1336,17 +1336,9 @@ export class DropModule
       ),
     );
 
-    // static call to verify and check on the revert messages for revealed status.
-    const revealed = await Promise.all(
-      countRangeArray.map((i) =>
-        this.contract.callStatic
-          .reveal(i, ethers.utils.toUtf8Bytes(""))
-          .catch((err) => {
-            if (err.message.includes("nothing to reveal")) {
-              return true;
-            }
-            return false;
-          }),
+    const unrevealed = await Promise.all(
+      countRangeArray.map(
+        (i) => this.readOnlyContract.encryptedBaseURI(i).length > 0,
       ),
     );
 
@@ -1356,7 +1348,7 @@ export class DropModule
         batchUri: uri,
         placeholderMetadata: tokenMetadatas[index],
       }))
-      .filter((_, index) => !revealed[index]);
+      .filter((_, index) => unrevealed[index]);
   }
 
   /**
