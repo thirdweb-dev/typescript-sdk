@@ -1,3 +1,4 @@
+import { IRoles } from "../../dist/common/role.d";
 import {
   ERC1155__factory,
   ERC165__factory,
@@ -15,6 +16,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import {
   getCurrencyValue,
+  getRoleHash,
   getTokenMetadataUsingStorage,
   InterfaceId_IERC721,
   ModuleType,
@@ -1214,6 +1216,65 @@ export class MarketplaceModule
     isRestricted: boolean,
   ): Promise<void> {
     await this.sendTransaction("setRestrictedListerRoleOnly", [isRestricted]);
+  }
+
+  public async allowListingFromSpecificAssetOnly(contractAddress: string) {
+    if (!this.isV2()) {
+      throw Error(
+        "Not supported in this version of the contract, please upgrade",
+      );
+    }
+    const encoded = [];
+    const members = await this.getRoleMembers(RolesMap.asset);
+    if (AddressZero in members) {
+      encoded.push(
+        this.contract.interface.encodeFunctionData("revokeRole", [
+          getRoleHash(RolesMap.asset as Role),
+          AddressZero,
+        ]),
+      );
+    }
+    encoded.push(
+      this.contract.interface.encodeFunctionData("grantRole", [
+        getRoleHash(RolesMap.asset as Role),
+        contractAddress,
+      ]),
+    );
+
+    this.sendTransaction("multicall", [encoded]);
+  }
+
+  public async allowListingFromAnyAsset() {
+    if (!this.isV2()) {
+      throw Error(
+        "Not supported in this version of the contract, please upgrade",
+      );
+    }
+    const encoded = [];
+    const members = await this.getRoleMembers(RolesMap.asset);
+    for (const addr in members) {
+      encoded.push(
+        this.contract.interface.encodeFunctionData("revokeRole", [
+          getRoleHash(RolesMap.asset as Role),
+          addr,
+        ]),
+      );
+    }
+    encoded.push(
+      this.contract.interface.encodeFunctionData("grantRole", [
+        getRoleHash(RolesMap.asset as Role),
+        AddressZero,
+      ]),
+    );
+    this.sendTransaction("multicall", [encoded]);
+  }
+
+  /**
+   * @internal
+   */
+  private async isV2(): Promise<boolean> {
+    const version = await this.readOnlyContract.VERSION();
+    return version.toNumber() === 2;
   }
 
   /**

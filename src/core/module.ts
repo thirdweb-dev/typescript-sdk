@@ -287,16 +287,11 @@ export class Module<TContract extends BaseContract = BaseContract> {
    * @internal
    */
   protected async sendTransaction(
-    fn: keyof TContract["functions"],
+    fn: string,
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<TransactionReceipt> {
-    return this.sendContractTransaction(
-      this.contract,
-      fn as string,
-      args,
-      callOverrides,
-    );
+    return this.sendContractTransaction(this.contract, fn, args, callOverrides);
   }
 
   /**
