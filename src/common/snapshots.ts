@@ -3,6 +3,7 @@ import MerkleTree from "merkletreejs";
 import { SnapshotSchema } from "../schema/contracts/common/snapshots";
 import { SnapshotInfo } from "../types/claim-conditions/PublicClaimCondition";
 import { DuplicateLeafsError } from "./error";
+import keccak256 from "keccak256";
 
 /**
  * Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS
@@ -18,7 +19,6 @@ export async function createSnapshot(
     throw new DuplicateLeafsError();
   }
 
-  const { default: keccak256 } = await import("keccak256");
   const hashedLeafs = leafs.map((l) => keccak256(l));
   const tree = new MerkleTree(hashedLeafs, keccak256, {
     sort: true,
