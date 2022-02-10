@@ -1019,6 +1019,8 @@ export class AppModule
       await this.getChainID(),
     ).wrapped.address;
 
+    const royaltyTreasury = await this.getRoyaltyTreasury();
+
     const address = await this._deployModule(
       ModuleType.SIGNATURE_MINT_1155,
       [
@@ -1027,7 +1029,7 @@ export class AppModule
         await this.getForwarder(),
         nativeTokenWrapperAddress,
         metadata.primarySaleRecipientAddress,
-        metadata.feeRecipient,
+        metadata.feeRecipient ? metadata.feeRecipient : royaltyTreasury,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
         metadata.primarySaleFeeBasisPoints
           ? metadata.primarySaleFeeBasisPoints
@@ -1035,10 +1037,7 @@ export class AppModule
       ],
       SignatureMint1155__factory,
     );
-    if (
-      metadata.feeRecipient &&
-      metadata.feeRecipient !== (await this.getRoyaltyTreasury())
-    ) {
+    if (metadata.feeRecipient && metadata.feeRecipient !== royaltyTreasury) {
       await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getSignatureMint1155Module(address);
