@@ -81,13 +81,7 @@ before(async () => {
     TWFee__factory.bytecode,
   )
     .connect(signer)
-    .deploy(
-      trustedForwarderAddress,
-      defaultRecipient,
-      defaultRecipient,
-      defaultRoyaltyFeeBps,
-      defaultTransactionFeeBps,
-    );
+    .deploy(trustedForwarderAddress, thirdwebFactoryDeployer.address);
   console.log("Deploying the deployer");
   await thirdwebFactoryDeployer.deployed();
 

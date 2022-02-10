@@ -99,8 +99,9 @@ export class DelayedReveal<T extends DropERC721> {
     const key = await this.hashDelayRevealPasword(batchId, password);
     // performing the reveal locally to make sure it'd succeed before sending the transaction
     try {
-      const decryptedUri =
-        await this.contractWrapper.readContract.callStatic.reveal(batchId, key);
+      const decryptedUri = await this.contractWrapper
+        .callStatic()
+        .reveal(batchId, key);
       // basic sanity check for making sure decryptedUri is valid
       // this is optional because invalid decryption key would result in non-utf8 bytes and
       // ethers would throw when trying to decode it

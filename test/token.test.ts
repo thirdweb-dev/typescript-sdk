@@ -31,7 +31,7 @@ describe("Token Module", async () => {
   });
 
   it("should mint tokens", async () => {
-    await currencyModule.mint(ethers.utils.parseEther("20"));
+    await currencyModule.mint("20");
     assert.deepEqual(
       await currencyModule.totalSupply(),
       ethers.utils.parseEther("20"),
@@ -45,7 +45,7 @@ describe("Token Module", async () => {
   });
 
   it("should transfer tokens", async () => {
-    await currencyModule.mint(ethers.utils.parseEther("20"));
+    await currencyModule.mint(20);
     await currencyModule.transfer(
       samWallet.address,
       ethers.utils.parseEther("10"),

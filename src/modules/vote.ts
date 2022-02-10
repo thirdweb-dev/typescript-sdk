@@ -222,7 +222,7 @@ export class VoteModule implements UpdateableNetwork {
     const datas = proposal.executions.map((p) => p.transactionData);
     const descriptionHash = ethers.utils.id(proposal.description);
     try {
-      await this.contractWrapper.readContract.callStatic.execute(
+      await this.contractWrapper.callStatic().execute(
         tos,
         values,
         datas,

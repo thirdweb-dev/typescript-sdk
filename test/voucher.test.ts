@@ -31,6 +31,7 @@ describe("Voucher Module", async () => {
       await sdk.deployModule(TokenErc721Module.moduleType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
+        primary_sale_recipient: adminWallet.address,
         seller_fee_basis_points: 0,
       }),
     );
