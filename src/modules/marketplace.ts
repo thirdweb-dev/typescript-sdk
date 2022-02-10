@@ -76,7 +76,11 @@ export class MarketplaceModule
   private _isNewBuy = false;
   public static moduleType: ModuleType = ModuleType.MARKETPLACE;
 
-  public static roles = [RolesMap.admin, RolesMap.lister] as const;
+  public static roles = [
+    RolesMap.admin,
+    RolesMap.lister,
+    RolesMap.asset,
+  ] as const;
 
   /**
    * @override
