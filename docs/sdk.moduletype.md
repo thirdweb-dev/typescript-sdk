@@ -28,6 +28,7 @@ export declare enum ModuleType
 |  MARKETPLACE | <code>12</code> |  |
 |  NFT | <code>2</code> |  |
 |  PACK | <code>5</code> |  |
+|  SIGNATURE\_MINT\_1155 | <code>13</code> |  |
 |  SPLITS | <code>9</code> |  |
 |  TOKEN | <code>0</code> |  |
 |  VOTE | <code>10</code> |  |
