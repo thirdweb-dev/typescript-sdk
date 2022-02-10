@@ -986,12 +986,12 @@ export class AppModule
   }
 
   /**
-   * Deploys a SignatureMint1155 module
+   * Deploys a BundleSignature module
    *
    * @param metadata - The module metadata
-   * @returns - The deployed Drop module
+   * @returns - The deployed BundleSignature module
    */
-  public async deploySignatureMint1155Module(
+  public async deployBundleSignatureModule(
     metadata: DropModuleMetadata,
   ): Promise<SignatureMint1155Module> {
     invariant(
@@ -1040,7 +1040,7 @@ export class AppModule
     if (metadata.feeRecipient && metadata.feeRecipient !== royaltyTreasury) {
       await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
-    return this.sdk.getSignatureMint1155Module(address);
+    return this.sdk.getBundleSignatureModule(address);
   }
 
   /**

@@ -29,6 +29,7 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [balanceOfToken(tokenAddress)](./sdk.appmodule.balanceoftoken.md) |  | Check the balance of the project wallet in a particular ERC20 token contract |
 |  [deployBundleDropModule(metadata)](./sdk.appmodule.deploybundledropmodule.md) |  | Deploys a Bundle Drop module |
 |  [deployBundleModule(metadata)](./sdk.appmodule.deploybundlemodule.md) |  | Deploys a collection module. |
+|  [deployBundleSignatureModule(metadata)](./sdk.appmodule.deploybundlesignaturemodule.md) |  | Deploys a BundleSignature module |
 |  [deployCurrencyModule(metadata)](./sdk.appmodule.deploycurrencymodule.md) |  | Deploys a currency module. |
 |  [deployDropModule(metadata)](./sdk.appmodule.deploydropmodule.md) |  | Deploys a Drop module |
 |  [deployMarketModule(metadata)](./sdk.appmodule.deploymarketmodule.md) |  | Deploys a Marketplace module |
@@ -36,7 +37,6 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [deployNftModule(metadata)](./sdk.appmodule.deploynftmodule.md) |  | Deploys a NFT module. |
 |  [deployPackModule(metadata)](./sdk.appmodule.deploypackmodule.md) |  | Deploys a Pack module |
 |  [deployRoyaltySplitsModule(metadata)](./sdk.appmodule.deployroyaltysplitsmodule.md) |  | Deploys a Royalty Splits module |
-|  [deploySignatureMint1155Module(metadata)](./sdk.appmodule.deploysignaturemint1155module.md) |  | Deploys a SignatureMint1155 module |
 |  [deploySplitsModule(metadata)](./sdk.appmodule.deploysplitsmodule.md) |  | Deploys a Splits module |
 |  [deployTokenModule(metadata)](./sdk.appmodule.deploytokenmodule.md) |  | Deploys a token module. |
 |  [deployVoteModule(metadata)](./sdk.appmodule.deployvotemodule.md) |  | Deploys a Vote module |

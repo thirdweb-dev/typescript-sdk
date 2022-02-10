@@ -64,6 +64,7 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     protected connectContract(): ProtocolControl;
     deployBundleDropModule(metadata: BundleDropModuleMetadata): Promise<BundleDropModule>;
     deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
+    deployBundleSignatureModule(metadata: DropModuleMetadata): Promise<SignatureMint1155Module>;
     deployCurrencyModule(metadata: CurrencyModuleMetadata): Promise<CurrencyModule>;
     // @alpha
     deployDatastoreModule(metadata: DatastoreModuleMetadata): Promise<DatastoreModule>;
@@ -74,7 +75,6 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     deployNftModule(metadata: NftModuleMetadata): Promise<NFTModule>;
     deployPackModule(metadata: PackModuleMetadata): Promise<PackModule>;
     deployRoyaltySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
-    deploySignatureMint1155Module(metadata: DropModuleMetadata): Promise<SignatureMint1155Module>;
     deploySplitsModule(metadata: SplitsModuleMetadata): Promise<SplitsModule>;
     deployTokenModule(metadata: TokenModuleMetadata): Promise<TokenModule>;
     deployVoteModule(metadata: VoteModuleMetadata): Promise<VoteModule>;
@@ -1550,7 +1550,11 @@ export interface NewDirectListing {
 // @public (undocumented)
 export interface NewErc1155SignaturePayload extends NewSignaturePayload {
     // (undocumented)
+    primarySaleRecipient: string;
+    // (undocumented)
     quantity: BigNumberish_2;
+    // (undocumented)
+    royaltyRecipient: string;
     // (undocumented)
     tokenId: BigNumberish_2;
 }
@@ -2003,6 +2007,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
     getBundleDropModule(address: string): BundleDropModule;
     // (undocumented)
     getBundleModule(address: string): BundleModule;
+    // @alpha (undocumented)
+    getBundleSignatureModule(address: string): SignatureMint1155Module;
     // @deprecated (undocumented)
     getCollectionModule(address: string): CollectionModule;
     // (undocumented)
@@ -2025,8 +2031,6 @@ export class ThirdwebSDK implements IThirdwebSdk {
     getNFTModule(address: string): NFTModule;
     // (undocumented)
     getPackModule(address: string): PackModule;
-    // @alpha (undocumented)
-    getSignatureMint1155Module(address: string): SignatureMint1155Module;
     // @alpha (undocumented)
     getSplitsModule(address: string): SplitsModule;
     getStorage(): IStorage;

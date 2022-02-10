@@ -15,6 +15,8 @@ export interface NewErc1155SignaturePayload extends NewSignaturePayload
 
 |  Property | Type | Description |
 |  --- | --- | --- |
+|  [primarySaleRecipient](./sdk.newerc1155signaturepayload.primarysalerecipient.md) | string |  |
 |  [quantity](./sdk.newerc1155signaturepayload.quantity.md) | BigNumberish |  |
+|  [royaltyRecipient](./sdk.newerc1155signaturepayload.royaltyrecipient.md) | string |  |
 |  [tokenId](./sdk.newerc1155signaturepayload.tokenid.md) | BigNumberish |  |
 
