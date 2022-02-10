@@ -18,7 +18,7 @@ describe("Splits Module", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.factory.deploy(SplitsModule.moduleType, {
+    const address = await sdk.deployModule(SplitsModule.moduleType, {
       name: "Splits Module",
       recipientSplits: [
         {
@@ -67,7 +67,7 @@ describe("Splits Module", async () => {
   });
 
   it("should return all the recipients along with their token balances", async () => {
-    const addr = await sdk.factory.deploy(TokenErc20Module.moduleType, {
+    const addr = await sdk.deployModule(TokenErc20Module.moduleType, {
       name: "Test Token",
       symbol: "TST",
     });

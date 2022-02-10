@@ -1,12 +1,12 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
 import {
   AuctionAlreadyStartedError,
   ListingNotFoundError,
   WrongListingTypeError,
 } from "../src/common/error";
+import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import { ListingType } from "../src/enums/marketplace";
 import {
   MarketplaceModule,
@@ -50,13 +50,13 @@ describe("Marketplace Module", async () => {
     await sdk.updateSignerOrProvider(adminWallet);
 
     marketplaceModule = sdk.getMarketplaceModule(
-      await sdk.factory.deploy(MarketplaceModule.moduleType, {
+      await sdk.deployModule(MarketplaceModule.moduleType, {
         name: "Test Marketplace",
         seller_fee_basis_points: 0,
       }),
     );
     dummyNftModule = sdk.getNFTModule(
-      await sdk.factory.deploy(TokenErc721Module.moduleType, {
+      await sdk.deployModule(TokenErc721Module.moduleType, {
         name: "TEST NFT",
         seller_fee_basis_points: 100,
         primary_sale_recipient: adminWallet.address,
@@ -77,7 +77,7 @@ describe("Marketplace Module", async () => {
       },
     ]);
     dummyBundleModule = sdk.getBundleModule(
-      await sdk.factory.deploy(TokenErc1155Module.moduleType, {
+      await sdk.deployModule(TokenErc1155Module.moduleType, {
         name: "TEST BUNDLE",
         seller_fee_basis_points: 100,
         primary_sale_recipient: adminWallet.address,
@@ -99,7 +99,7 @@ describe("Marketplace Module", async () => {
     ]);
 
     customTokenModule = sdk.getTokenModule(
-      await sdk.factory.deploy(TokenErc20Module.moduleType, {
+      await sdk.deployModule(TokenErc20Module.moduleType, {
         name: "Test",
         symbol: "TEST",
       }),

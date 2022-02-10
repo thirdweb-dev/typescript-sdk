@@ -1,15 +1,11 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";
 import { BigNumber, ethers } from "ethers";
-import {
-  DropErc1155Module,
-  DropErc721Module,
-  TokenErc20Module,
-} from "../src/index";
-import { appModule, sdk, signers } from "./before.test";
+import { DropErc1155Module, TokenErc20Module } from "../src/index";
+import { sdk, signers } from "./before.test";
 import { AddressZero } from "@ethersproject/constants";
 import { ClaimEligibility } from "../src/enums";
-import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
+import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
 global.fetch = require("node-fetch");
 
@@ -36,7 +32,7 @@ describe("Bundle Drop Module", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.factory.deploy(DropErc1155Module.moduleType, {
+    const address = await sdk.deployModule(DropErc1155Module.moduleType, {
       name: `Testing bundle drop from SDK`,
       description: "Test module from tests",
       image:
@@ -445,7 +441,7 @@ describe("Bundle Drop Module", async () => {
 
     it("should check if an address has enough erc20 currency", async () => {
       const currency = sdk.getTokenModule(
-        await sdk.factory.deploy(TokenErc20Module.moduleType, {
+        await sdk.deployModule(TokenErc20Module.moduleType, {
           name: "test",
           symbol: "test",
         }),

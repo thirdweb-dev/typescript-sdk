@@ -4,11 +4,11 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
-import { appModule, sdk, signers } from "./before.test";
+import { sdk, signers } from "./before.test";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
-import { NATIVE_TOKEN_ADDRESS } from "../src/common/currency";
 import { TokenErc20Module } from "../src";
+import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
@@ -29,7 +29,7 @@ describe("Drop Module", async () => {
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.factory.deploy(DropErc721Module.moduleType, {
+    const address = await sdk.deployModule(DropErc721Module.moduleType, {
       name: `Testing drop from SDK`,
       description: "Test module from tests",
       image:
@@ -414,7 +414,7 @@ describe("Drop Module", async () => {
     });
 
     it("should check if an address has enough erc20 currency", async () => {
-      const currencyAddress = await sdk.factory.deploy(
+      const currencyAddress = await sdk.deployModule(
         TokenErc20Module.moduleType,
         {
           name: "test",

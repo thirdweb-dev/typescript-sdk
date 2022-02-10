@@ -24,14 +24,14 @@ describe("Pack Module", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
     packModule = sdk.getPackModule(
-      await sdk.factory.deploy(PacksModule.moduleType, {
+      await sdk.deployModule(PacksModule.moduleType, {
         name: "Pack Module",
         seller_fee_basis_points: 1000,
       }),
     );
 
     bundleModule = sdk.getBundleModule(
-      await sdk.factory.deploy(TokenErc1155Module.moduleType, {
+      await sdk.deployModule(TokenErc1155Module.moduleType, {
         name: "NFT Module",
         seller_fee_basis_points: 1000,
         primary_sale_recipient: adminWallet.address,

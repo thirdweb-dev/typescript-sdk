@@ -20,7 +20,7 @@ describe("Token Module", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.factory.deploy(TokenErc20Module.moduleType, {
+    const address = await sdk.deployModule(TokenErc20Module.moduleType, {
       name: `Testing token from SDK`,
       symbol: `TEST`,
       description: "Test module from tests",
@@ -77,7 +77,7 @@ describe("Token Module", async () => {
     await currencyModule.mintBatchTo(batch);
 
     for (const b of batch) {
-      const expectedBalance = BigNumber.from(10);
+      const expectedBalance = ethers.utils.parseUnits("10");
       const actualBalance = (await currencyModule.balanceOf(b.toAddress)).value;
 
       assert.deepEqual(

@@ -18,7 +18,7 @@ describe("NFT Module", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.factory.deploy(TokenErc721Module.moduleType, {
+    const address = await sdk.deployModule(TokenErc721Module.moduleType, {
       name: "NFT Module",
       description: "Test NFT module from tests",
       image:

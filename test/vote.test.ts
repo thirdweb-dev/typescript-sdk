@@ -25,7 +25,7 @@ describe("Vote Module", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    const tokenModuleAddress = await sdk.factory.deploy(
+    const tokenModuleAddress = await sdk.deployModule(
       TokenErc20Module.moduleType,
       {
         name: "DAOToken #1",
@@ -34,7 +34,7 @@ describe("Vote Module", async () => {
     );
     currencyModule = sdk.getTokenModule(tokenModuleAddress);
 
-    const voteModuleAddress = await sdk.factory.deploy(VoteModule.moduleType, {
+    const voteModuleAddress = await sdk.deployModule(VoteModule.moduleType, {
       name: "DAO #1",
       voting_token_address: currencyModule.getAddress(),
       proposal_start_time_in_seconds: voteStartWaitTimeInSeconds,
