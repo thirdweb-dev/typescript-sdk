@@ -27,7 +27,7 @@ describe("SignatureMint1155 Module", async () => {
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
     await sdk.setProviderOrSigner(adminWallet);
-    module = await appModule.deploySignatureMint1155Module({
+    module = await appModule.deployBundleSignatureModule({
       name: "Test Signature Mint 1155",
       primarySaleRecipientAddress: AddressZero,
     });
