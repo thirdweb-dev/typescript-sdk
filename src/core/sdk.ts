@@ -288,11 +288,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   private updateModuleSignerOrProvider() {
     // has to be promises now
-    this.getFactory().then((factory) => {
+    this._factory?.then((factory) => {
       factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
     });
     // has to be promises now
-    this.getRegistry().then((registry) => {
+    this._registry?.then((registry) => {
       registry.updateSignerOrProvider(this.getSigner() || this.getProvider());
     });
 

@@ -77,7 +77,7 @@ describe("Token Module", async () => {
     await currencyModule.mintBatchTo(batch);
 
     for (const b of batch) {
-      const expectedBalance = BigNumber.from(10);
+      const expectedBalance = ethers.utils.parseUnits("10");
       const actualBalance = (await currencyModule.balanceOf(b.toAddress)).value;
 
       assert.deepEqual(
