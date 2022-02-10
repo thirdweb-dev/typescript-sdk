@@ -4,7 +4,7 @@
 
 ## ThirdwebSDK.updateSignerOrProvider() method
 
-Update the active signer or provider for all modules
+Update the active signer or provider for all contracts
 
 <b>Signature:</b>
 

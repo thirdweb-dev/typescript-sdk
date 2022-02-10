@@ -1,7 +1,7 @@
 import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
-import { SnapshotInputSchema } from "../schema/modules/common/snapshots";
+import { SnapshotInputSchema } from "../schema/contracts/common/snapshots";
 import { approveErc20Allowance, isNativeToken } from "./currency";
 import { ClaimCondition } from "../types";
 import { ContractWrapper } from "../core/classes/contract-wrapper";

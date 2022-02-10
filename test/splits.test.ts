@@ -1,12 +1,12 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { sdk, signers } from "./before.test";
-import { SplitsModule, TokenErc20Module } from "../src";
+import { SplitsContract, TokenErc20Contract } from "../src";
 
 global.fetch = require("node-fetch");
 
-describe("Splits Module", async () => {
-  let splitsModule: SplitsModule;
+describe("Splits Contract", async () => {
+  let splitsContract: SplitsContract;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress,
@@ -18,8 +18,8 @@ describe("Splits Module", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployModule(SplitsModule.moduleType, {
-      name: "Splits Module",
+    const address = await sdk.deployContract(SplitsContract.contractType, {
+      name: "Splits Contract",
       recipientSplits: [
         {
           address: samWallet.address,
@@ -35,12 +35,12 @@ describe("Splits Module", async () => {
         },
       ],
     });
-    splitsModule = sdk.getSplitsModule(address);
+    splitsContract = sdk.getSplitsContract(address);
   });
 
   // TODO: Fix bug in the `getAllRecipients` function
   it("should return all recipients of splits", async () => {
-    const recipients = await splitsModule.getAllRecipients();
+    const recipients = await splitsContract.getAllRecipients();
     assert.lengthOf(
       recipients,
       3,
@@ -50,7 +50,7 @@ describe("Splits Module", async () => {
 
   it("should return the correct slip percentage for an address", async () => {
     assert.equal(
-      (await splitsModule.getRecipientSplitPercentage(samWallet.address))
+      (await splitsContract.getRecipientSplitPercentage(samWallet.address))
         .splitPercentage,
       33.33333,
       "Each wallet should have 1/3rd of the split",
@@ -58,7 +58,7 @@ describe("Splits Module", async () => {
   });
 
   it("should return all the recipients along with their balances", async () => {
-    const balances = await splitsModule.balanceOfAllRecipients();
+    const balances = await splitsContract.balanceOfAllRecipients();
     assert.equal(
       Object.keys(balances).length,
       3,
@@ -67,11 +67,11 @@ describe("Splits Module", async () => {
   });
 
   it("should return all the recipients along with their token balances", async () => {
-    const addr = await sdk.deployModule(TokenErc20Module.moduleType, {
+    const addr = await sdk.deployContract(TokenErc20Contract.contractType, {
       name: "Test Token",
       symbol: "TST",
     });
-    const balances = await splitsModule.balanceOfTokenAllRecipients(addr);
+    const balances = await splitsContract.balanceOfTokenAllRecipients(addr);
     assert.equal(
       Object.keys(balances).length,
       3,
@@ -84,6 +84,6 @@ describe("Splits Module", async () => {
    *
    * 1. Withdrawing royalties and assuring fund delivery
    * 2. Checking balances
-   * 3. Funds are received when a module uses a splits address as a royalty recipient
+   * 3. Funds are received when a contract uses a splits address as a royalty recipient
    */
 });

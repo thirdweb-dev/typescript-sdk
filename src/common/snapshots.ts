@@ -1,6 +1,6 @@
 import { IStorage } from "../core/interfaces/IStorage";
 import MerkleTree from "merkletreejs";
-import { SnapshotSchema } from "../schema/modules/common/snapshots";
+import { SnapshotSchema } from "../schema/contracts/common/snapshots";
 import { SnapshotInfo } from "../types/claim-conditions/PublicClaimCondition";
 import { DuplicateLeafsError } from "./error";
 

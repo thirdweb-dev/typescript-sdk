@@ -3,15 +3,19 @@ import { sdk, signers } from "./before.test";
 
 import { assert } from "chai";
 import { BigNumber } from "ethers";
-import { BundleMetadataInput, PacksModule, TokenErc1155Module } from "../src";
+import {
+  BundleMetadataInput,
+  PacksContract,
+  TokenErc1155Contract,
+} from "../src";
 import { PackMetadata } from "../src/types/packs";
 
 global.fetch = require("node-fetch");
 
-// TODO: Write some actual pack module tests
-describe("Pack Module", async () => {
-  let packModule: PacksModule;
-  let bundleModule: TokenErc1155Module;
+// TODO: Write some actual pack contract tests
+describe("Pack Contract", async () => {
+  let packContract: PacksContract;
+  let bundleContract: TokenErc1155Contract;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -23,16 +27,16 @@ describe("Pack Module", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    packModule = sdk.getPackModule(
-      await sdk.deployModule(PacksModule.moduleType, {
-        name: "Pack Module",
+    packContract = sdk.getPackContract(
+      await sdk.deployContract(PacksContract.contractType, {
+        name: "Pack Contract",
         seller_fee_basis_points: 1000,
       }),
     );
 
-    bundleModule = sdk.getBundleModule(
-      await sdk.deployModule(TokenErc1155Module.moduleType, {
-        name: "NFT Module",
+    bundleContract = sdk.getBundleContract(
+      await sdk.deployContract(TokenErc1155Contract.contractType, {
+        name: "NFT Contract",
         seller_fee_basis_points: 1000,
         primary_sale_recipient: adminWallet.address,
       }),
@@ -50,12 +54,12 @@ describe("Pack Module", async () => {
       });
     }
 
-    await bundleModule.mintBatch(batch);
+    await bundleContract.mintBatch(batch);
   };
 
   const createPacks = async (): Promise<PackMetadata[]> => {
-    const packOne = await packModule.create({
-      assetContract: bundleModule.getAddress(),
+    const packOne = await packContract.create({
+      assetContract: bundleContract.getAddress(),
       assets: [
         {
           tokenId: "0",
@@ -75,8 +79,8 @@ describe("Pack Module", async () => {
       },
     });
 
-    const packTwo = await packModule.create({
-      assetContract: bundleModule.getAddress(),
+    const packTwo = await packContract.create({
+      assetContract: bundleContract.getAddress(),
       assets: [
         {
           tokenId: "0",
@@ -115,7 +119,7 @@ describe("Pack Module", async () => {
 
     it("should return the correct rewards", async () => {
       const [pack] = await createPacks();
-      const rewards = await packModule.getNFTs(pack.id);
+      const rewards = await packContract.getNFTs(pack.id);
 
       const first = rewards.find(
         (reward) =>
@@ -145,8 +149,8 @@ describe("Pack Module", async () => {
 
     it("should return correct pack supply", async () => {
       const [packOne, packTwo] = await createPacks();
-      const balanceOne = await packModule.balance(packOne.id);
-      const balanceTwo = await packModule.balance(packTwo.id);
+      const balanceOne = await packContract.balance(packOne.id);
+      const balanceTwo = await packContract.balance(packTwo.id);
 
       assert.equal("150", packOne.currentSupply.toString());
       assert.equal("150", balanceOne.toString());
@@ -163,7 +167,7 @@ describe("Pack Module", async () => {
     it.skip("pack open returns valid reward", async () => {
       const pack = await createPacks();
       // TODO how can we test this with VRF in the way?
-      const result = await packModule.open(pack[0].id);
+      const result = await packContract.open(pack[0].id);
       assert.equal(result.length, 1);
     });
   });
@@ -176,17 +180,17 @@ describe("Pack Module", async () => {
     it("get owned returns pack metadata and balances", async () => {
       const pack = await createPacks();
 
-      let adminOwned = await packModule.getOwned();
+      let adminOwned = await packContract.getOwned();
       assert.equal(adminOwned.length, 2);
       assert.equal(adminOwned[0].ownedByAddress.toString(), "150");
       assert.equal(adminOwned[1].ownedByAddress.toString(), "75");
 
-      await packModule.transfer(samWallet.address, "0", BigNumber.from(50));
-      const samOwned = await packModule.getOwned(samWallet.address);
+      await packContract.transfer(samWallet.address, "0", BigNumber.from(50));
+      const samOwned = await packContract.getOwned(samWallet.address);
       assert.equal(samOwned.length, 1);
       assert.equal(samOwned[0].ownedByAddress.toString(), "50");
 
-      adminOwned = await packModule.getOwned();
+      adminOwned = await packContract.getOwned();
       assert.equal(adminOwned[0].ownedByAddress.toString(), "100");
     });
   });

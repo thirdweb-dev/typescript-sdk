@@ -2,12 +2,12 @@ import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { sdk, signers } from "./before.test";
-import { TokenErc721Module } from "../src/modules/token-erc-721";
+import { TokenErc721Contract } from "../src/contracts/token-erc-721";
 
 global.fetch = require("node-fetch");
 
-describe("NFT Module", async () => {
-  let nftModule: TokenErc721Module;
+describe("NFT Contract", async () => {
+  let nftContract: TokenErc721Contract;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -18,9 +18,9 @@ describe("NFT Module", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployModule(TokenErc721Module.moduleType, {
-      name: "NFT Module",
-      description: "Test NFT module from tests",
+    const address = await sdk.deployContract(TokenErc721Contract.contractType, {
+      name: "NFT Contract",
+      description: "Test NFT contract from tests",
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       primary_sale_recipient: adminWallet.address,
@@ -29,36 +29,36 @@ describe("NFT Module", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    nftModule = sdk.getNFTModule(address);
+    nftContract = sdk.getNFTContract(address);
   });
 
   it("should return nfts even if some are burned", async () => {
-    await nftModule.mint({
+    await nftContract.mint({
       name: "Test1",
     });
-    const token = await nftModule.mint({
+    const token = await nftContract.mint({
       name: "Test2",
     });
-    await nftModule.burn(token.id);
-    const nfts = await nftModule.getAll();
+    await nftContract.burn(token.id);
+    const nfts = await nftContract.getAll();
     expect(nfts).to.be.an("array").length(2);
   });
 
   it("should fetch a single nft", async () => {
-    await nftModule.mint({
+    await nftContract.mint({
       name: "Test1",
     });
-    const nft = await nftModule.get("0");
+    const nft = await nftContract.get("0");
     assert.isNotNull(nft);
     assert.equal(nft.metadata.name, "Test1");
   });
 
   it("should return an owner as zero address for an nft that is burned", async () => {
-    const token = await nftModule.mint({
+    const token = await nftContract.mint({
       name: "Test2",
     });
-    await nftModule.burn(token.id);
-    const nft = await nftModule.get("0");
+    await nftContract.burn(token.id);
+    const nft = await nftContract.get("0");
     assert.equal(nft.owner, AddressZero);
   });
 
@@ -71,7 +71,7 @@ describe("NFT Module", async () => {
         name: "Test2",
       },
     ];
-    const batch = await nftModule.mintBatch(metas);
+    const batch = await nftContract.mintBatch(metas);
     assert.lengthOf(batch, 2);
 
     for (const meta of metas) {
@@ -85,7 +85,7 @@ describe("NFT Module", async () => {
   it("should not be able to mint without permission", async () => {
     sdk.updateSignerOrProvider(samWallet);
     await expect(
-      nftModule.mint({
+      nftContract.mint({
         name: "Test2",
       }),
     ).to.throw;

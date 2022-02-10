@@ -25,16 +25,16 @@ export class ContractRoles<
    ****************************/
 
   /**
-   * Call this to get get a list of addresses for all supported roles on the module.
+   * Call this to get get a list of addresses for all supported roles on the contract.
    *
-   * @see {@link ModuleWithRoles.getRoleMembers | getRoleMembers} to get a list of addresses that are members of a specific role.
+   * @see {@link ContractWithRoles.getRoleMembers | getRoleMembers} to get a list of addresses that are members of a specific role.
    * @returns A record of {@link Role}s to lists of addresses that are members of the given role.
-   * @throws If the module does not support roles this will throw an {@link InvariantError}.
+   * @throws If the contract does not support roles this will throw an {@link InvariantError}.
    *
    * @public
    */
   public async getAllMembers(): Promise<Record<TRole, string[]>> {
-    invariant(this.roles.length, "this module has no support for roles");
+    invariant(this.roles.length, "this contract has no support for roles");
     const roles = {} as Record<TRole, string[]>;
     for (const role of this.roles) {
       roles[role] = await this.getRoleMembers(role);
@@ -47,11 +47,11 @@ export class ContractRoles<
    *
    * @param role - The {@link IRoles | role} to to get a memberlist for.
    * @returns The list of addresses that are members of the specific role.
-   * @throws If you are requestiong a role that does not exist on the module this will throw an {@link InvariantError}.
-   * @see {@link ModuleWithRoles.getAllRoleMembers | getAllRoleMembers} to get get a list of addresses for all supported roles on the module.
+   * @throws If you are requestiong a role that does not exist on the contract this will throw an {@link InvariantError}.
+   * @see {@link ContractWithRoles.getAllRoleMembers | getAllRoleMembers} to get get a list of addresses for all supported roles on the contract.
    * @example Say you want to get the list of addresses that are members of the {@link IRoles.minter | minter} role.
    * ```typescript
-   * const minterAddresses: string[] = await module.getRoleMemberList("minter");
+   * const minterAddresses: string[] = await contract.getRoleMemberList("minter");
    * ```
    *
    * @public
@@ -59,7 +59,7 @@ export class ContractRoles<
   public async getRoleMembers(role: TRole): Promise<string[]> {
     invariant(
       this.roles.includes(role),
-      `this module does not support the "${role}" role`,
+      `this contract does not support the "${role}" role`,
     );
 
     const roleHash = getRoleHash(role);
@@ -78,16 +78,16 @@ export class ContractRoles<
      *
      * Every role in the list will be overwritten with the new list of addresses provided with them.
 
-    * If you want to add or remove addresses for a single address use {@link ModuleWithRoles.grantRole | grantRole} and {@link ModuleWithRoles.grantRole | revokeRole} respectively instead.
+    * If you want to add or remove addresses for a single address use {@link ContractWithRoles.grantRole | grantRole} and {@link ContractWithRoles.grantRole | revokeRole} respectively instead.
      * @param rolesWithAddresses - A record of {@link Role}s to lists of addresses that should be members of the given role.
-     * @throws If you are requestiong a role that does not exist on the module this will throw an {@link InvariantError}.
+     * @throws If you are requestiong a role that does not exist on the contract this will throw an {@link InvariantError}.
      * @example Say you want to overwrite the list of addresses that are members of the {@link IRoles.minter | minter} role.
      * ```typescript
-     * const minterAddresses: string[] = await module.getRoleMemberList("minter");
-     * await module.setAllRoleMembers({
+     * const minterAddresses: string[] = await contract.getRoleMemberList("minter");
+     * await contract.setAllRoleMembers({
      *  minter: []
      * });
-     * console.log(await module.getRoleMemberList("minter")); // No matter what members had the role before, the new list will be set to []
+     * console.log(await contract.getRoleMemberList("minter")); // No matter what members had the role before, the new list will be set to []
      * ```
      * @public
      *
@@ -99,7 +99,7 @@ export class ContractRoles<
     invariant(roles.length, "you must provide at least one role to set");
     invariant(
       roles.every((role) => this.roles.includes(role)),
-      "this module does not support the given role",
+      "this contract does not support the given role",
     );
     const currentRoles = await this.getAllMembers();
     const encoded: string[] = [];
@@ -179,7 +179,7 @@ export class ContractRoles<
    * @param role - The {@link IRoles | role} to grant to the address
    * @param address - The address to grant the role to
    * @returns The transaction receipt
-   * @throws If you are trying to grant does not exist on the module this will throw an {@link InvariantError}.
+   * @throws If you are trying to grant does not exist on the contract this will throw an {@link InvariantError}.
    *
    * @public
    */
@@ -189,7 +189,7 @@ export class ContractRoles<
   ): TransactionResultPromise {
     invariant(
       this.roles.includes(role),
-      `this module does not support the "${role}" role`,
+      `this contract does not support the "${role}" role`,
     );
     return {
       receipt: await this.contractWrapper.sendTransaction("grantRole", [

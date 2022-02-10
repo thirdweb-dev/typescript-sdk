@@ -12,8 +12,8 @@
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
 |  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
-|  [DropErc1155Module](./sdk.droperc1155module.md) |  |
-|  [DropErc721Module](./sdk.droperc721module.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
+|  [DropErc1155Contract](./sdk.droperc1155contract.md) |  |
+|  [DropErc721Contract](./sdk.droperc721contract.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [DuplicateFileNameError](./sdk.duplicatefilenameerror.md) |  |
 |  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
 |  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
@@ -22,21 +22,21 @@
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
 |  [IpfsStorage](./sdk.ipfsstorage.md) |  |
 |  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
-|  [MarketplaceModule](./sdk.marketplacemodule.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
+|  [MarketplaceContract](./sdk.marketplacecontract.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
-|  [PacksModule](./sdk.packsmodule.md) |  |
+|  [PacksContract](./sdk.packscontract.md) |  |
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
-|  [SplitsModule](./sdk.splitsmodule.md) |  |
+|  [SplitsContract](./sdk.splitscontract.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
-|  [TokenErc1155Module](./sdk.tokenerc1155module.md) |  |
-|  [TokenErc20Module](./sdk.tokenerc20module.md) |  |
-|  [TokenErc721Module](./sdk.tokenerc721module.md) | Create a collection of one-of-one NFTs. |
+|  [TokenErc1155Contract](./sdk.tokenerc1155contract.md) |  |
+|  [TokenErc20Contract](./sdk.tokenerc20contract.md) |  |
+|  [TokenErc721Contract](./sdk.tokenerc721contract.md) | Create a collection of one-of-one NFTs. |
 |  [UploadError](./sdk.uploaderror.md) |  |
-|  [VoteModule](./sdk.votemodule.md) | Create a decentralized organization for token holders to vote on proposals. |
+|  [VoteContract](./sdk.votecontract.md) | Create a decentralized organization for token holders to vote on proposals. |
 |  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 
 ## Enumerations
@@ -66,7 +66,7 @@
 |  [BundleMetadataOutputSchema](./sdk.bundlemetadataoutputschema.md) |  |
 |  [ClaimConditionInputSchema](./sdk.claimconditioninputschema.md) |  |
 |  [ClaimConditionOutputSchema](./sdk.claimconditionoutputschema.md) |  |
-|  [CommonModuleSchema](./sdk.commonmoduleschema.md) |  |
+|  [CommonContractSchema](./sdk.commoncontractschema.md) |  |
 |  [OptionalPropertiesInput](./sdk.optionalpropertiesinput.md) |  |
 |  [OptionalPropertiesOutput](./sdk.optionalpropertiesoutput.md) |  |
 |  [PartialClaimConditionInputSchema](./sdk.partialclaimconditioninputschema.md) |  |
@@ -81,12 +81,12 @@
 |  [BundleMetadataInput](./sdk.bundlemetadatainput.md) |  |
 |  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
+|  [ContractForContractType](./sdk.contractforcontracttype.md) |  |
+|  [ContractType](./sdk.contracttype.md) |  |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [Json](./sdk.json.md) |  |
 |  [JsonObject](./sdk.jsonobject.md) |  |
-|  [ModuleForModuleType](./sdk.moduleformoduletype.md) |  |
-|  [ModuleType](./sdk.moduletype.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
@@ -98,7 +98,7 @@
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultPromise](./sdk.transactionresultpromise.md) |  |
 |  [TransactionResultWithId](./sdk.transactionresultwithid.md) |  |
-|  [ValidModuleClass](./sdk.validmoduleclass.md) |  |
-|  [ValidModuleInstance](./sdk.validmoduleinstance.md) |  |
+|  [ValidContractClass](./sdk.validcontractclass.md) |  |
+|  [ValidContractInstance](./sdk.validcontractinstance.md) |  |
 |  [ValueOf](./sdk.valueof.md) |  |
 

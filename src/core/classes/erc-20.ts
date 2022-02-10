@@ -4,7 +4,7 @@ import { BigNumber, BigNumberish } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResultPromise } from "../types";
 import { RestrictedTransferError } from "../../common";
-import { UpdateableNetwork } from "../interfaces/module";
+import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { Currency, CurrencyValue } from "../../types/currency";
 import {
@@ -29,7 +29,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
       this.options = SDKOptionsSchema.parse(options);
     } catch (optionParseError) {
       console.error(
-        "invalid module options object passed, falling back to default options",
+        "invalid contract options object passed, falling back to default options",
         optionParseError,
       );
       this.options = SDKOptionsSchema.parse({});
@@ -56,7 +56,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    *
    * @example
    * ```javascript
-   * const token = await module.get();
+   * const token = await contract.get();
    * console.log(token);
    * ```
    * @returns The token metadata
@@ -75,7 +75,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    *
    * @example
    * ```javascript
-   * const balance = await module.balance();
+   * const balance = await contract.balance();
    * console.log(balance);
    * ```
    *
@@ -95,7 +95,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * // Address of the wallet to check token balance
    * const address = "{{wallet_address}}";
    *
-   * const balance = await module.balanceOf(address);
+   * const balance = await contract.balanceOf(address);
    * console.log(balance);
    * ```
    *
@@ -124,7 +124,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * // Address of the wallet to check token allowance
    * const spenderAddress = "0x...";
    *
-   * const allowance = await module.allowanceOf(otherAddress);
+   * const allowance = await contract.allowanceOf(otherAddress);
    * console.log(allowance);
    * ```
    *
@@ -150,7 +150,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * // Address of the wallet to check token allowance
    * const spenderAddress = "0x...";
    *
-   * const allowance = await module.allowanceOf(address, spenderAddress);
+   * const allowance = await contract.allowanceOf(address, spenderAddress);
    * console.log(allowance);
    * ```
    *
@@ -161,7 +161,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   }
 
   /**
-   * Get whether users can transfer NFTs from this module
+   * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
     return this.contractWrapper.readContract.isTransferRestricted();
@@ -184,7 +184,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * // The amount of tokens you want to send
    * const amount = 0;
    *
-   * await module.transfer(toAddress, amount);
+   * await contract.transfer(toAddress, amount);
    * ```
    */
   public async transfer(
@@ -219,7 +219,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * const amount = 100
    *
    * // Note that the connected wallet must have approval to transfer the tokens of the fromAddress
-   * await module.transferFrom(fromAddress, toAddress, amount);
+   * await contract.transferFrom(fromAddress, toAddress, amount);
    * ```
    */
   public async transferFrom(
@@ -247,7 +247,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * // The number of tokens to give as allowance
    * const amount = 100
    *
-   * await module.setAllowance(spenderAddress, amount);
+   * await contract.setAllowance(spenderAddress, amount);
    * ```
    */
   public async setAllowance(
@@ -281,7 +281,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    *  }
    * ]
    *
-   * await module.transferBatch(data);
+   * await contract.transferBatch(data);
    * ```
    */
   public async transferBatch(args: TokenMintInput[]) {
@@ -304,7 +304,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * // The amount of this token you want to burn
    * const amount = 100;
    *
-   * await module.burn(amount);
+   * await contract.burn(amount);
    * ```
    */
   public async burn(amount: BigNumberish): TransactionResultPromise {
@@ -326,7 +326,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * // The amount of this token you want to burn
    * const amount = 100;
    *
-   * await module.burnFrom(holderAddress, amount);
+   * await contract.burnFrom(holderAddress, amount);
    * ```
    */
   public async burnFrom(
@@ -342,7 +342,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   }
 
   /**
-   * Set whether Tokens in this Module can be transferred or not.
+   * Set whether Tokens in this Contract can be transferred or not.
    * @param restricted - restricted whether to restrict or allow transfers
    */
   public async setRestrictedTransfer(

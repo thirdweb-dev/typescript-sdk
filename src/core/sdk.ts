@@ -1,49 +1,49 @@
-import { IThirdwebModule__factory } from "@3rdweb/contracts";
 import { ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
-  DropErc1155Module,
-  DropErc721Module,
-  MarketplaceModule,
-  MODULES_MAP,
-  SplitsModule,
-  TokenErc20Module,
-  VoteModule,
-} from "../modules";
+  DropErc1155Contract,
+  DropErc721Contract,
+  MarketplaceContract,
+  CONTRACTS_MAP,
+  SplitsContract,
+  TokenErc20Contract,
+  VoteContract,
+} from "../contracts";
 import { SDKOptions } from "../schema/sdk-options";
-import { ModuleFactory } from "./classes/factory";
+import { ContractFactory } from "./classes/factory";
 import { IpfsStorage } from "./classes/ipfs-storage";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
-  ModuleForModuleType,
-  ModuleType,
+  ContractForContractType,
+  ContractType,
   NetworkOrSignerOrProvider,
-  ValidModuleClass,
-  ValidModuleInstance,
+  ValidContractClass,
+  ValidContractInstance,
 } from "./types";
-import { TokenErc721Module } from "../modules/token-erc-721";
-import { TokenErc1155Module } from "../modules/token-erc-1155";
-import { ModuleRegistry } from "./classes/registry";
-import { PacksModule } from "../modules/packs";
+import { TokenErc721Contract } from "../contracts/token-erc-721";
+import { TokenErc1155Contract } from "../contracts/token-erc-1155";
+import { ContractRegistry } from "./classes/registry";
+import { PacksContract } from "../contracts/packs";
 import { getContractAddressByChainId } from "../constants/addresses";
 import { z } from "zod";
+import { IThirdwebModule__factory } from "@3rdweb/contracts";
 
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * @internal
-   * the cache of modules that we have already seen
+   * the cache of contracts that we have already seen
    */
-  private moduleCache = new Map<string, ValidModuleInstance>();
+  private contractCache = new Map<string, ValidContractInstance>();
   /**
    * @internal
    * should never be accessed directly, use {@link getFactory} instead
    */
-  private _factory: Promise<ModuleFactory> | undefined;
+  private _factory: Promise<ContractFactory> | undefined;
   /**
    * @internal
    * should never be accessed directly, use {@link getRegistry} instead
    */
-  private _registry: Promise<ModuleRegistry> | undefined;
+  private _registry: Promise<ContractRegistry> | undefined;
 
   public storage: IStorage;
 
@@ -53,12 +53,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage: IStorage = new IpfsStorage(),
   ) {
     super(network, options);
-    // this.factory = new ModuleFactory(network, storage, options);
-    // this.registry = new ModuleRegistry(network, options);
+    // this.factory = new ContractFactory(network, storage, options);
+    // this.registry = new ContractRegistry(network, options);
     this.storage = storage;
   }
 
-  private async getRegistry(): Promise<ModuleRegistry> {
+  private async getRegistry(): Promise<ContractRegistry> {
     // if we already have a registry just return it back
     if (this._registry) {
       return this._registry;
@@ -67,11 +67,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const chainId = (await this.getProvider().getNetwork()).chainId;
     const registryAddress = getContractAddressByChainId(chainId, "twRegistry");
     return (this._registry = Promise.resolve(
-      new ModuleRegistry(registryAddress, this.getNetwork(), this.options),
+      new ContractRegistry(registryAddress, this.getNetwork(), this.options),
     ));
   }
 
-  private async getFactory(): Promise<ModuleFactory> {
+  private async getFactory(): Promise<ContractFactory> {
     // if we already have a factory just return it back
     if (this._factory) {
       return this._factory;
@@ -80,7 +80,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const chainId = (await this.getProvider().getNetwork()).chainId;
     const factoryAddress = getContractAddressByChainId(chainId, "twFactory");
     return (this._factory = Promise.resolve(
-      new ModuleFactory(
+      new ContractFactory(
         factoryAddress,
         this.getNetwork(),
         this.storage,
@@ -90,31 +90,31 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   /**
-   * Deploys a new module
+   * Deploys a new contract
    *
-   * @param moduleType - the type of module to deploy
-   * @param moduleMetadata - the metadata to deploy the module with
-   * @returns a promise of the address of the newly deployed module
+   * @param contractType - the type of contract to deploy
+   * @param contractMetadata - the metadata to deploy the contract with
+   * @returns a promise of the address of the newly deployed contract
    */
-  public async deployModule<TModule extends ValidModuleClass>(
-    moduleType: TModule["moduleType"],
-    moduleMetadata: z.input<TModule["schema"]["deploy"]>,
+  public async deployContract<TContract extends ValidContractClass>(
+    contractType: TContract["contractType"],
+    contractMetadata: z.input<TContract["schema"]["deploy"]>,
   ): Promise<string> {
     const factory = await this.getFactory();
-    return await factory.deploy(moduleType, moduleMetadata);
+    return await factory.deploy(contractType, contractMetadata);
   }
 
   /**
    *
-   * @param moduleAddress - the address of the module to attempt to resolve the module type for
-   * @returns the {@link ModuleType} for the given module address
-   * @throws if the module type cannot be determined (is not a valid thirdweb module)
+   * @param contractAddress - the address of the contract to attempt to resolve the contract type for
+   * @returns the {@link ContractType} for the given contract address
+   * @throws if the contract type cannot be determined (is not a valid thirdweb contract)
    */
-  public async resolveModuleType<TModuleType extends ModuleType>(
-    moduleAddress: string,
+  public async resolveContractType<TContractType extends ContractType>(
+    contractAddress: string,
   ) {
     const contract = IThirdwebModule__factory.connect(
-      moduleAddress,
+      contractAddress,
       this.options.readOnlyRpcUrl
         ? ethers.getDefaultProvider(this.options.readOnlyRpcUrl)
         : this.getProvider(),
@@ -123,170 +123,181 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       ethers.utils
         .toUtf8String(await contract.moduleType())
         // eslint-disable-next-line no-control-regex
-        .replace(/\x00/g, "") as TModuleType
+        .replace(/\x00/g, "") as TContractType
     );
   }
 
-  public async getModuleList(walletAddress: string) {
+  public async getContractList(walletAddress: string) {
     const addresses = await (
       await this.getRegistry()
-    ).getModuleAddresses(walletAddress);
+    ).getContractAddresses(walletAddress);
 
-    const addressesWithModuleTypes = await Promise.all(
+    const addressesWithContractTypes = await Promise.all(
       addresses.map(async (adrr) => ({
         address: adrr,
-        moduleType: await this.resolveModuleType(adrr).catch((err) => {
-          console.error(`failed to get module type for address: ${adrr}`, err);
-          return "DropERC721" as ModuleType;
+        contractType: await this.resolveContractType(adrr).catch((err) => {
+          console.error(
+            `failed to get contract type for address: ${adrr}`,
+            err,
+          );
+          return "DropERC721" as ContractType;
         }),
       })),
     );
 
-    return addressesWithModuleTypes.map(({ address, moduleType }) => ({
+    return addressesWithContractTypes.map(({ address, contractType }) => ({
       address,
-      moduleType,
-      metadata: () => this.getModule(address, moduleType).metadata.get(),
+      contractType,
+      metadata: () => this.getContract(address, contractType).metadata.get(),
     }));
   }
 
   /**
    *
    * @internal
-   * @param address - the address of the module to instantiate
-   * @param moduleType - optional, the type of module to instantiate
-   * @returns a promise that resolves with the module instance
+   * @param address - the address of the contract to instantiate
+   * @param contractType - optional, the type of contract to instantiate
+   * @returns a promise that resolves with the contract instance
    */
-  public getModule<TModuleType extends ModuleType = ModuleType>(
+  public getContract<TContractType extends ContractType = ContractType>(
     address: string,
-    moduleType: TModuleType,
+    contractType: TContractType,
   ) {
-    // if we have a module in the cache we will return it
-    // we will do this **without** checking any module type things for simplicity, this may have to change in the future?
-    if (this.moduleCache.has(address)) {
-      return this.moduleCache.get(address) as ModuleForModuleType<TModuleType>;
+    // if we have a contract in the cache we will return it
+    // we will do this **without** checking any contract type things for simplicity, this may have to change in the future?
+    if (this.contractCache.has(address)) {
+      return this.contractCache.get(
+        address,
+      ) as ContractForContractType<TContractType>;
     }
-    const newModule = new MODULES_MAP[
+    const newContract = new CONTRACTS_MAP[
       // we have to do this as here because typescript is not smart enough to figure out
       // that the type is a key of the map (checked by the if statement above)
-      moduleType as keyof typeof MODULES_MAP
+      contractType as keyof typeof CONTRACTS_MAP
     ](this.getNetwork(), address, this.storage, this.options);
-    // if we have a module type && the module type is part of the map
+    // if we have a contract type && the contract type is part of the map
 
-    this.moduleCache.set(address, newModule);
+    this.contractCache.set(address, newContract);
 
-    // return the new module
-    return newModule;
+    // return the new contract
+    return newContract;
   }
 
   /**
-   * Get an instance of a Drop module
-   * @param moduleAddress - the address of the deployed module
-   * @returns the module
+   * Get an instance of a Drop contract
+   * @param contractAddress - the address of the deployed contract
+   * @returns the contract
    */
-  public getDropModule(moduleAddress: string): DropErc721Module {
-    return this.getModule(
-      moduleAddress,
-      DropErc721Module.moduleType,
-    ) as DropErc721Module;
+  public getDropContract(contractAddress: string): DropErc721Contract {
+    return this.getContract(
+      contractAddress,
+      DropErc721Contract.contractType,
+    ) as DropErc721Contract;
   }
 
   /**
-   * Get an instance of a NFT Collection module
-   * @param address - the address of the deployed module
-   * @returns the module
+   * Get an instance of a NFT Collection contract
+   * @param address - the address of the deployed contract
+   * @returns the contract
    */
-  public getNFTModule(address: string): TokenErc721Module {
-    return this.getModule(
+  public getNFTContract(address: string): TokenErc721Contract {
+    return this.getContract(
       address,
-      TokenErc721Module.moduleType,
-    ) as TokenErc721Module;
+      TokenErc721Contract.contractType,
+    ) as TokenErc721Contract;
   }
 
   /**
-   * Get an instance of a Bundle Drop module
-   * @param address - the address of the deployed module
-   * @returns the module
+   * Get an instance of a Bundle Drop contract
+   * @param address - the address of the deployed contract
+   * @returns the contract
    */
-  public getBundleDropModule(address: string): DropErc1155Module {
-    return this.getModule(
+  public getBundleDropContract(address: string): DropErc1155Contract {
+    return this.getContract(
       address,
-      DropErc1155Module.moduleType,
-    ) as DropErc1155Module;
+      DropErc1155Contract.contractType,
+    ) as DropErc1155Contract;
   }
 
   /**
-   * Get an instance of a Bundle module
-   * @param address - the address of the deployed module
-   * @returns the module
+   * Get an instance of a Bundle contract
+   * @param address - the address of the deployed contract
+   * @returns the contract
    */
-  public getBundleModule(address: string): TokenErc1155Module {
-    return this.getModule(
+  public getBundleContract(address: string): TokenErc1155Contract {
+    return this.getContract(
       address,
-      TokenErc1155Module.moduleType,
-    ) as TokenErc1155Module;
+      TokenErc1155Contract.contractType,
+    ) as TokenErc1155Contract;
   }
 
   /**
-   * Get an instance of a Token module
-   * @param address - the address of the deployed module
-   * @returns the module
+   * Get an instance of a Token contract
+   * @param address - the address of the deployed contract
+   * @returns the contract
    */
-  public getTokenModule(address: string): TokenErc20Module {
-    return this.getModule(
+  public getTokenContract(address: string): TokenErc20Contract {
+    return this.getContract(
       address,
-      TokenErc20Module.moduleType,
-    ) as TokenErc20Module;
+      TokenErc20Contract.contractType,
+    ) as TokenErc20Contract;
   }
 
   /**
-   * Get an instance of a Vote module
-   * @param address - the address of the deployed module
-   * @returns the module
+   * Get an instance of a Vote contract
+   * @param address - the address of the deployed contract
+   * @returns the contract
    */
-  public getVoteModule(address: string): VoteModule {
-    return this.getModule(address, VoteModule.moduleType) as VoteModule;
+  public getVoteContract(address: string): VoteContract {
+    return this.getContract(address, VoteContract.contractType) as VoteContract;
   }
 
   /**
-   * Get an instance of a Splits module
-   * @param address - the address of the deployed module
-   * @returns the module
+   * Get an instance of a Splits contract
+   * @param address - the address of the deployed contract
+   * @returns the contract
    */
-  public getSplitsModule(address: string): SplitsModule {
-    return this.getModule(address, SplitsModule.moduleType) as SplitsModule;
-  }
-
-  /**
-   * Get an instance of a Marketplace module
-   * @param address - the address of the deployed module
-   * @returns the module
-   */
-  public getMarketplaceModule(address: string): MarketplaceModule {
-    return this.getModule(
+  public getSplitsContract(address: string): SplitsContract {
+    return this.getContract(
       address,
-      MarketplaceModule.moduleType,
-    ) as MarketplaceModule;
+      SplitsContract.contractType,
+    ) as SplitsContract;
   }
 
   /**
-   * Get an instance of a Pack module
-   * @param address - the address of the deployed module
-   * @returns the module
+   * Get an instance of a Marketplace contract
+   * @param address - the address of the deployed contract
+   * @returns the contract
    */
-  public getPackModule(address: string): PacksModule {
-    return this.getModule(address, PacksModule.moduleType) as PacksModule;
+  public getMarketplaceContract(address: string): MarketplaceContract {
+    return this.getContract(
+      address,
+      MarketplaceContract.contractType,
+    ) as MarketplaceContract;
   }
 
   /**
-   * Update the active signer or provider for all modules
+   * Get an instance of a Pack contract
+   * @param address - the address of the deployed contract
+   * @returns the contract
+   */
+  public getPackContract(address: string): PacksContract {
+    return this.getContract(
+      address,
+      PacksContract.contractType,
+    ) as PacksContract;
+  }
+
+  /**
+   * Update the active signer or provider for all contracts
    * @param network - the new signer or provider
    */
   public override updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
     super.updateSignerOrProvider(network);
-    this.updateModuleSignerOrProvider();
+    this.updateContractSignerOrProvider();
   }
 
-  private updateModuleSignerOrProvider() {
+  private updateContractSignerOrProvider() {
     // has to be promises now
     this._factory?.then((factory) => {
       factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
@@ -296,8 +307,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       registry.updateSignerOrProvider(this.getSigner() || this.getProvider());
     });
 
-    for (const [, module] of this.moduleCache) {
-      module.onNetworkUpdated(this.getSigner() || this.getProvider());
+    for (const [, contract] of this.contractCache) {
+      contract.onNetworkUpdated(this.getSigner() || this.getProvider());
     }
   }
 }
@@ -307,10 +318,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 // (async () => {
 //   const sdk = new ThirdwebSDK("1");
 
-//   const dropModule = sdk.getDropModule("0x0");
+//   const dropContract = sdk.getDropContract("0x0");
 //   // metadata
-//   const metadata = await dropModule.metadata.get();
-//   const updated = await dropModule.metadata.update({
+//   const metadata = await dropContract.metadata.get();
+//   const updated = await dropContract.metadata.update({
 //     name: "foo",
 //     seller_fee_basis_points: 1,
 //   });
@@ -318,13 +329,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 //   const data = await updated.metadata();
 
 //   // roles
-//   const roles = await dropModule.roles.getAllMembers();
-//   const adminAddrs = await dropModule.roles.getRoleMembers("admin");
+//   const roles = await dropContract.roles.getAllMembers();
+//   const adminAddrs = await dropContract.roles.getRoleMembers("admin");
 
 //   // royalty
-//   const royalty = await dropModule.royalty.getRoyaltyInfo();
+//   const royalty = await dropContract.royalty.getRoyaltyInfo();
 
-//   const updatedRoyalty = await dropModule.royalty.setRoyaltyInfo({
+//   const updatedRoyalty = await dropContract.royalty.setRoyaltyInfo({
 //     fee_recipient: "0x0",
 //     seller_fee_basis_points: 500,
 //   });

@@ -1,14 +1,14 @@
 import { assert } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { TokenErc20Module } from "../src";
+import { TokenErc20Contract } from "../src";
 import { sdk, signers } from "./before.test";
 import { BigNumber, ethers } from "ethers";
 import { TokenMintInput } from "../src/schema/tokens/token";
 
 // global.fetch = require("node-fetch");
 
-describe("Token Module", async () => {
-  let currencyModule: TokenErc20Module;
+describe("Token Contract", async () => {
+  let currencyContract: TokenErc20Contract;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -20,43 +20,43 @@ describe("Token Module", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployModule(TokenErc20Module.moduleType, {
+    const address = await sdk.deployContract(TokenErc20Contract.contractType, {
       name: `Testing token from SDK`,
       symbol: `TEST`,
-      description: "Test module from tests",
+      description: "Test contract from tests",
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
     });
-    currencyModule = sdk.getTokenModule(address);
+    currencyContract = sdk.getTokenContract(address);
   });
 
   it("should mint tokens", async () => {
-    await currencyModule.mint("20");
+    await currencyContract.mint("20");
     assert.deepEqual(
-      await currencyModule.totalSupply(),
+      await currencyContract.totalSupply(),
       ethers.utils.parseEther("20"),
       `Wrong supply`,
     );
     assert.deepEqual(
-      (await currencyModule.balanceOf(adminWallet.address)).value,
+      (await currencyContract.balanceOf(adminWallet.address)).value,
       ethers.utils.parseEther("20"),
       `Wrong balance`,
     );
   });
 
   it("should transfer tokens", async () => {
-    await currencyModule.mint(20);
-    await currencyModule.transfer(
+    await currencyContract.mint(20);
+    await currencyContract.transfer(
       samWallet.address,
       ethers.utils.parseEther("10"),
     );
     assert.deepEqual(
-      (await currencyModule.balanceOf(adminWallet.address)).value,
+      (await currencyContract.balanceOf(adminWallet.address)).value,
       ethers.utils.parseEther("10"),
       `Wrong balance`,
     );
     assert.deepEqual(
-      (await currencyModule.balanceOf(samWallet.address)).value,
+      (await currencyContract.balanceOf(samWallet.address)).value,
       ethers.utils.parseEther("10"),
       `Wrong balance`,
     );
@@ -74,11 +74,12 @@ describe("Token Module", async () => {
       },
     ];
 
-    await currencyModule.mintBatchTo(batch);
+    await currencyContract.mintBatchTo(batch);
 
     for (const b of batch) {
       const expectedBalance = ethers.utils.parseUnits("10");
-      const actualBalance = (await currencyModule.balanceOf(b.toAddress)).value;
+      const actualBalance = (await currencyContract.balanceOf(b.toAddress))
+        .value;
 
       assert.deepEqual(
         actualBalance,
@@ -99,12 +100,13 @@ describe("Token Module", async () => {
         amount: 10,
       },
     ];
-    await currencyModule.mint(20);
-    await currencyModule.transferBatch(batch);
+    await currencyContract.mint(20);
+    await currencyContract.transferBatch(batch);
 
     for (const b of batch) {
       const expectedBalance = BigNumber.from(10);
-      const actualBalance = (await currencyModule.balanceOf(b.toAddress)).value;
+      const actualBalance = (await currencyContract.balanceOf(b.toAddress))
+        .value;
 
       assert.deepEqual(
         actualBalance,

@@ -7,12 +7,12 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 import {
-  MarketplaceModule,
-  MODULES_MAP,
-  PacksModule,
+  MarketplaceContract,
+  CONTRACTS_MAP,
+  PacksContract,
   ThirdwebSDK,
-  TokenErc20Module,
-  VoteModule,
+  TokenErc20Contract,
+  VoteContract,
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
 import { getNativeTokenByChainId } from "../src/common/currency";
@@ -87,59 +87,59 @@ before(async () => {
 
   console.log("TWFee address: ", thirdwebFeeDeployer.address);
 
-  async function deployModule(
-    moduleFactory: ethers.ContractFactory,
-    moduleType: string,
+  async function deployContract(
+    contractFactory: ethers.ContractFactory,
+    contractType: string,
   ): Promise<ethers.Contract> {
-    switch (moduleType) {
-      case VoteModule.moduleType:
-      case TokenErc20Module.moduleType:
-        return await moduleFactory.deploy();
-      case MarketplaceModule.moduleType:
+    switch (contractType) {
+      case VoteContract.contractType:
+      case TokenErc20Contract.contractType:
+        return await contractFactory.deploy();
+      case MarketplaceContract.contractType:
         const nativeTokenWrapperAddress = getNativeTokenByChainId(
           ChainId.Hardhat,
         ).wrapped.address;
-        return await moduleFactory.deploy(
+        return await contractFactory.deploy(
           nativeTokenWrapperAddress,
           thirdwebFeeDeployer.address,
         );
-      case PacksModule.moduleType:
+      case PacksContract.contractType:
         const vrf = ChainlinkVrf[ChainId.Hardhat];
-        return await moduleFactory.deploy(
+        return await contractFactory.deploy(
           vrf.vrfCoordinator,
           vrf.linkTokenAddress,
           thirdwebFeeDeployer.address,
         );
       default:
-        return await moduleFactory.deploy(thirdwebFeeDeployer.address);
+        return await contractFactory.deploy(thirdwebFeeDeployer.address);
     }
   }
 
-  for (const moduleType in MODULES_MAP) {
-    const module = MODULES_MAP[moduleType];
-    const contractFactory = module.contractFactory;
+  for (const contractType in CONTRACTS_MAP) {
+    const contract = CONTRACTS_MAP[contractType];
+    const factory = contract.contractFactory;
 
-    const moduleFactory = new ethers.ContractFactory(
-      contractFactory.abi,
-      contractFactory.bytecode,
+    const contractFactory = new ethers.ContractFactory(
+      factory.abi,
+      factory.bytecode,
     ).connect(signer);
 
-    const deployedModule: ethers.Contract = await deployModule(
-      moduleFactory,
-      moduleType,
+    const deployedContract: ethers.Contract = await deployContract(
+      contractFactory,
+      contractType,
     );
 
-    await deployedModule.deployed();
+    await deployedContract.deployed();
 
-    const deployedModuleType = await deployedModule.moduleType();
-    console.log(`Deployed module ${moduleType}`);
+    const deployedContractType = await deployedContract.moduleType();
+    console.log(`Deployed contract ${contractType}`);
     const tx = await thirdwebFactoryDeployer.addModuleImplementation(
-      deployedModuleType,
-      deployedModule.address,
+      deployedContractType,
+      deployedContract.address,
     );
     console.log(
-      `Setting deployed ${moduleType} as an approved implementation at address: `,
-      deployedModule.address,
+      `Setting deployed ${contractType} as an approved implementation at address: `,
+      deployedContract.address,
     );
     await tx.wait();
   }

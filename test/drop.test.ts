@@ -1,4 +1,4 @@
-import { DropErc721Module } from "../src/modules/drop-erc-721";
+import { DropErc721Contract } from "../src/contracts/drop-erc-721";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
@@ -7,7 +7,7 @@ import { MerkleTree } from "merkletreejs";
 import { sdk, signers } from "./before.test";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
-import { TokenErc20Module } from "../src";
+import { TokenErc20Contract } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -15,8 +15,8 @@ const keccak256 = require("keccak256");
 
 global.fetch = require("node-fetch");
 
-describe("Drop Module", async () => {
-  let dropModule: DropErc721Module;
+describe("Drop Contract", async () => {
+  let dropContract: DropErc721Contract;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,
@@ -29,9 +29,9 @@ describe("Drop Module", async () => {
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployModule(DropErc721Module.moduleType, {
+    const address = await sdk.deployContract(DropErc721Contract.contractType, {
       name: `Testing drop from SDK`,
-      description: "Test module from tests",
+      description: "Test contract from tests",
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
       primary_sale_recipient: adminWallet.address,
@@ -40,12 +40,12 @@ describe("Drop Module", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    dropModule = sdk.getDropModule(address);
+    dropContract = sdk.getDropContract(address);
   });
 
   it("should allow a snapshot to be set", async () => {
     console.log("Setting claim condition");
-    await dropModule.claimConditions.set([
+    await dropContract.claimConditions.set([
       {
         startTime: new Date().getTime() / 2000,
         snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
@@ -57,7 +57,7 @@ describe("Drop Module", async () => {
     ]);
     console.log("Claim condition set");
 
-    const metadata = await dropModule.metadata.get();
+    const metadata = await dropContract.metadata.get();
     const merkles = metadata.merkle;
 
     expect(merkles).have.property(
@@ -68,14 +68,14 @@ describe("Drop Module", async () => {
       "0x8a3552d60a98e0ade765adddad0a2e420ca9b1eef5f326ba7ab860bb4ea72c94",
     );
 
-    const roots = (await dropModule.claimConditions.getAll()).map(
+    const roots = (await dropContract.claimConditions.getAll()).map(
       (c) => c.merkleRootHash,
     );
     expect(roots).length(2);
   });
 
   it("should remove merkles from the metadata when claim conditions are removed", async () => {
-    await dropModule.claimConditions.set([
+    await dropContract.claimConditions.set([
       {
         startTime: new Date(),
         waitInSeconds: 10,
@@ -87,7 +87,7 @@ describe("Drop Module", async () => {
       },
     ]);
 
-    const metadata = await dropModule.metadata.get();
+    const metadata = await dropContract.metadata.get();
     const merkles = metadata.merkle;
 
     expect(merkles).have.property(
@@ -98,13 +98,13 @@ describe("Drop Module", async () => {
       "0x8a3552d60a98e0ade765adddad0a2e420ca9b1eef5f326ba7ab860bb4ea72c94",
     );
 
-    const roots = (await dropModule.claimConditions.getAll()).map(
+    const roots = (await dropContract.claimConditions.getAll()).map(
       (c) => c.merkleRootHash,
     );
     expect(roots).length(2);
 
-    await dropModule.claimConditions.set([{}]);
-    const newMetadata = await dropModule.metadata.get();
+    await dropContract.claimConditions.set([{}]);
+    const newMetadata = await dropContract.metadata.get();
     const newMerkles = newMetadata.merkle;
     expect(JSON.stringify(newMerkles)).to.eq("{}");
   });
@@ -129,7 +129,7 @@ describe("Drop Module", async () => {
     console.log("members", members);
 
     console.log("Setting claim condition");
-    await dropModule.claimConditions.set([{ snapshot: members }]);
+    await dropContract.claimConditions.set([{ snapshot: members }]);
     console.log("Claim condition set");
 
     console.log("Minting 100");
@@ -140,7 +140,7 @@ describe("Drop Module", async () => {
       });
     }
     console.log("calling lazy mint batch");
-    await dropModule.createBatch(metadata);
+    await dropContract.createBatch(metadata);
 
     console.log("Minted");
     console.log("Claiming");
@@ -152,7 +152,7 @@ describe("Drop Module", async () => {
     for (const member of testWallets) {
       console.log(member.address);
       await sdk.updateSignerOrProvider(member);
-      await dropModule.claim(1);
+      await dropContract.claim(1);
       console.log(`Address ${member.address} claimed successfully!`);
     }
   });
@@ -161,7 +161,7 @@ describe("Drop Module", async () => {
     const testWallets: SignerWithAddress[] = [bobWallet];
     const members = testWallets.map((w) => w.address);
 
-    await dropModule.claimConditions.set([{ snapshot: members }]);
+    await dropContract.claimConditions.set([{ snapshot: members }]);
 
     const metadata = [];
     for (let i = 0; i < 2; i++) {
@@ -170,7 +170,7 @@ describe("Drop Module", async () => {
       });
     }
     console.log("calling lazy mint batch");
-    await dropModule.createBatch(metadata);
+    await dropContract.createBatch(metadata);
 
     /**
      * Claiming 1 tokens with proofs: 0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9,0xb1a5bda84b83f7f014abcf0cf69cab5a4de1c3ececa8123a5e4aaacb01f63f83
@@ -178,13 +178,13 @@ describe("Drop Module", async () => {
 
     for (const member of testWallets) {
       await sdk.updateSignerOrProvider(member);
-      await dropModule.claim(1);
+      await dropContract.claim(1);
       console.log(`Address ${member.address} claimed successfully!`);
     }
 
     try {
       await sdk.updateSignerOrProvider(samWallet);
-      await dropModule.claim(1);
+      await dropContract.claim(1);
       assert.fail("should have thrown");
     } catch (e) {
       // expected
@@ -198,8 +198,8 @@ describe("Drop Module", async () => {
         name: `test ${i}`,
       });
     }
-    await dropModule.createBatch(metadatas);
-    const nfts = await dropModule.getAll();
+    await dropContract.createBatch(metadatas);
+    const nfts = await dropContract.getAll();
     expect(nfts.length).to.eq(10);
     let i = 0;
     nfts.forEach((nft) => {
@@ -210,7 +210,7 @@ describe("Drop Module", async () => {
 
   it("should not allow claiming to someone not in the merkle tree", async () => {
     console.log("Setting claim condition");
-    await dropModule.claimConditions.set(
+    await dropContract.claimConditions.set(
       [
         {
           snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
@@ -220,7 +220,7 @@ describe("Drop Module", async () => {
     );
     console.log("Claim condition set");
     console.log("Minting");
-    await dropModule.createBatch([
+    await dropContract.createBatch([
       { name: "name", description: "description" },
     ]);
     console.log("Minted");
@@ -228,7 +228,7 @@ describe("Drop Module", async () => {
     await sdk.updateSignerOrProvider(w1);
     console.log("Claiming");
     try {
-      await dropModule.claim(1);
+      await dropContract.claim(1);
     } catch (err: any) {
       expect(err).to.have.property(
         "message",
@@ -241,11 +241,11 @@ describe("Drop Module", async () => {
   });
 
   it("should allow claims with default settings", async () => {
-    await dropModule.createBatch([
+    await dropContract.createBatch([
       { name: "name", description: "description" },
     ]);
-    await dropModule.claimConditions.set([{}]);
-    await dropModule.claim(1);
+    await dropContract.claimConditions.set([{}]);
+    await dropContract.claim(1);
   });
 
   it("should generate valid proofs", async () => {
@@ -285,8 +285,8 @@ describe("Drop Module", async () => {
   });
 
   it("should return the newly claimed token", async () => {
-    await dropModule.claimConditions.set([{}]);
-    await dropModule.createBatch([
+    await dropContract.claimConditions.set([{}]);
+    await dropContract.createBatch([
       {
         name: "test 0",
       },
@@ -299,7 +299,7 @@ describe("Drop Module", async () => {
     ]);
 
     try {
-      await dropModule.createBatch([
+      await dropContract.createBatch([
         {
           name: "test 0",
         },
@@ -314,13 +314,13 @@ describe("Drop Module", async () => {
       expect(err).to.have.property("message", "Batch already created!", "");
     }
 
-    const token = await dropModule.claim(2);
+    const token = await dropContract.claim(2);
     assert.lengthOf(token, 2);
   });
 
   describe("eligibility", () => {
     beforeEach(async () => {
-      await dropModule.createBatch([
+      await dropContract.createBatch([
         {
           name: "test",
           description: "test",
@@ -330,57 +330,57 @@ describe("Drop Module", async () => {
 
     it("should return false if there isn't an active claim condition", async () => {
       const reasons =
-        await dropModule.claimConditions.getClaimIneligibilityReasons(
+        await dropContract.claimConditions.getClaimIneligibilityReasons(
           "1",
           bobWallet.address,
         );
 
       expect(reasons).to.include(ClaimEligibility.NoActiveClaimPhase);
       assert.lengthOf(reasons, 1);
-      const canClaim = await dropModule.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
       assert.isFalse(canClaim);
     });
 
     it("should check for the total supply", async () => {
-      await dropModule.claimConditions.set([{ maxQuantity: 1 }]);
+      await dropContract.claimConditions.set([{ maxQuantity: 1 }]);
 
       const reasons =
-        await dropModule.claimConditions.getClaimIneligibilityReasons(
+        await dropContract.claimConditions.getClaimIneligibilityReasons(
           "2",
           w1.address,
         );
       expect(reasons).to.include(ClaimEligibility.NotEnoughSupply);
-      const canClaim = await dropModule.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
       assert.isFalse(canClaim);
     });
 
     it("should check if an address has valid merkle proofs", async () => {
-      await dropModule.claimConditions.set([
+      await dropContract.claimConditions.set([
         { maxQuantity: 1, snapshot: [w2.address, adminWallet.address] },
       ]);
 
       const reasons =
-        await dropModule.claimConditions.getClaimIneligibilityReasons(
+        await dropContract.claimConditions.getClaimIneligibilityReasons(
           "1",
           w1.address,
         );
       expect(reasons).to.include(ClaimEligibility.AddressNotAllowed);
-      const canClaim = await dropModule.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
       assert.isFalse(canClaim);
     });
 
     it("should check if its been long enough since the last claim", async () => {
-      await dropModule.claimConditions.set([
+      await dropContract.claimConditions.set([
         {
           maxQuantity: 10,
           waitInSeconds: 24 * 60 * 60,
         },
       ]);
       await sdk.updateSignerOrProvider(bobWallet);
-      await dropModule.claim(1);
+      await dropContract.claim(1);
 
       const reasons =
-        await dropModule.claimConditions.getClaimIneligibilityReasons(
+        await dropContract.claimConditions.getClaimIneligibilityReasons(
           "1",
           bobWallet.address,
         );
@@ -388,12 +388,12 @@ describe("Drop Module", async () => {
       expect(reasons).to.include(
         ClaimEligibility.WaitBeforeNextClaimTransaction,
       );
-      const canClaim = await dropModule.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
       assert.isFalse(canClaim);
     });
 
     it("should check if an address has enough native currency", async () => {
-      await dropModule.claimConditions.set([
+      await dropContract.claimConditions.set([
         {
           maxQuantity: 10,
           price: ethers.utils.parseUnits("1000000000000000"),
@@ -403,26 +403,26 @@ describe("Drop Module", async () => {
       await sdk.updateSignerOrProvider(bobWallet);
 
       const reasons =
-        await dropModule.claimConditions.getClaimIneligibilityReasons(
+        await dropContract.claimConditions.getClaimIneligibilityReasons(
           "1",
           bobWallet.address,
         );
 
       expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
-      const canClaim = await dropModule.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
       assert.isFalse(canClaim);
     });
 
     it("should check if an address has enough erc20 currency", async () => {
-      const currencyAddress = await sdk.deployModule(
-        TokenErc20Module.moduleType,
+      const currencyAddress = await sdk.deployContract(
+        TokenErc20Contract.contractType,
         {
           name: "test",
           symbol: "test",
         },
       );
 
-      await dropModule.claimConditions.set([
+      await dropContract.claimConditions.set([
         {
           maxQuantity: 10,
           price: ethers.utils.parseUnits("1000000000000000"),
@@ -432,18 +432,18 @@ describe("Drop Module", async () => {
       await sdk.updateSignerOrProvider(bobWallet);
 
       const reasons =
-        await dropModule.claimConditions.getClaimIneligibilityReasons(
+        await dropContract.claimConditions.getClaimIneligibilityReasons(
           "1",
           bobWallet.address,
         );
 
       expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
-      const canClaim = await dropModule.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
       assert.isFalse(canClaim);
     });
 
     it("should return nothing if the claim is eligible", async () => {
-      await dropModule.claimConditions.set([
+      await dropContract.claimConditions.set([
         {
           maxQuantity: 10,
           price: ethers.utils.parseUnits("100"),
@@ -453,13 +453,13 @@ describe("Drop Module", async () => {
       ]);
 
       const reasons =
-        await dropModule.claimConditions.getClaimIneligibilityReasons(
+        await dropContract.claimConditions.getClaimIneligibilityReasons(
           "1",
           w1.address,
         );
       assert.lengthOf(reasons, 0);
 
-      const canClaim = await dropModule.claimConditions.canClaim(
+      const canClaim = await dropContract.claimConditions.canClaim(
         "1",
         w1.address,
       );
@@ -467,32 +467,32 @@ describe("Drop Module", async () => {
     });
   });
   it("should allow you to update claim conditions", async () => {
-    await dropModule.claimConditions.set([{}]);
+    await dropContract.claimConditions.set([{}]);
 
-    const conditions = await dropModule.claimConditions.getAll();
-    await dropModule.claimConditions.set([{}]);
+    const conditions = await dropContract.claimConditions.getAll();
+    await dropContract.claimConditions.set([{}]);
     assert.lengthOf(conditions, 1);
   });
   it("should be able to use claim as function expected", async () => {
-    await dropModule.createBatch([
+    await dropContract.createBatch([
       {
         name: "test",
       },
     ]);
-    await dropModule.claimConditions.set([{}]);
-    await dropModule.claim(1);
-    assert((await dropModule.getOwned()).length === 1);
+    await dropContract.claimConditions.set([{}]);
+    await dropContract.claim(1);
+    assert((await dropContract.getOwned()).length === 1);
   });
 
   it("should be able to use claimTo function as expected", async () => {
-    await dropModule.claimConditions.set([{}]);
-    await dropModule.createBatch([
+    await dropContract.claimConditions.set([{}]);
+    await dropContract.createBatch([
       {
         name: "test",
       },
     ]);
-    await dropModule.claimTo(samWallet.address, 1);
-    assert((await dropModule.getOwned(samWallet.address)).length === 1);
+    await dropContract.claimTo(samWallet.address, 1);
+    assert((await dropContract.getOwned(samWallet.address)).length === 1);
   });
 
   it("canClaim: 1 address", async () => {
@@ -502,16 +502,16 @@ describe("Drop Module", async () => {
         name: `test ${i}`,
       });
     }
-    await dropModule.createBatch(metadata);
+    await dropContract.createBatch(metadata);
 
-    await dropModule.claimConditions.set([{ snapshot: [w1.address] }]);
+    await dropContract.claimConditions.set([{ snapshot: [w1.address] }]);
 
     assert.isTrue(
-      await dropModule.claimConditions.canClaim(1, w1.address),
+      await dropContract.claimConditions.canClaim(1, w1.address),
       "can claim",
     );
     assert.isFalse(
-      await dropModule.claimConditions.canClaim(1, w2.address),
+      await dropContract.claimConditions.canClaim(1, w2.address),
       "!can claim",
     );
   });
@@ -523,57 +523,57 @@ describe("Drop Module", async () => {
         name: `test ${i}`,
       });
     }
-    await dropModule.createBatch(metadata);
+    await dropContract.createBatch(metadata);
 
     const members = [
       w1.address.toUpperCase().replace("0X", "0x"),
       w2.address.toLowerCase(),
       w3.address,
     ];
-    await dropModule.claimConditions.set([
+    await dropContract.claimConditions.set([
       {
         snapshot: members,
       },
     ]);
 
     assert.isTrue(
-      await dropModule.claimConditions.canClaim(1, w1.address),
+      await dropContract.claimConditions.canClaim(1, w1.address),
       "can claim",
     );
     assert.isTrue(
-      await dropModule.claimConditions.canClaim(1, w2.address),
+      await dropContract.claimConditions.canClaim(1, w2.address),
       "can claim",
     );
     assert.isTrue(
-      await dropModule.claimConditions.canClaim(1, w3.address),
+      await dropContract.claimConditions.canClaim(1, w3.address),
       "can claim",
     );
     assert.isFalse(
-      await dropModule.claimConditions.canClaim(1, bobWallet.address),
+      await dropContract.claimConditions.canClaim(1, bobWallet.address),
       "!can claim",
     );
   });
 
   it("set claim condition and reset claim condition", async () => {
-    await dropModule.claimConditions.set([
+    await dropContract.claimConditions.set([
       { startTime: new Date().getTime() / 2000 },
       { startTime: new Date().getTime() },
     ]);
-    expect((await dropModule.claimConditions.getAll()).length).to.be.equal(2);
+    expect((await dropContract.claimConditions.getAll()).length).to.be.equal(2);
 
-    await dropModule.claimConditions.set([]);
-    expect((await dropModule.claimConditions.getAll()).length).to.be.equal(0);
+    await dropContract.claimConditions.set([]);
+    expect((await dropContract.claimConditions.getAll()).length).to.be.equal(0);
   });
 
   it("set claim condition and update claim condition", async () => {
-    await dropModule.claimConditions.set([
+    await dropContract.claimConditions.set([
       { startTime: new Date().getTime() / 2000, maxQuantity: 1 },
       { startTime: new Date().getTime(), waitInSeconds: 60 },
     ]);
-    expect((await dropModule.claimConditions.getAll()).length).to.be.equal(2);
+    expect((await dropContract.claimConditions.getAll()).length).to.be.equal(2);
 
-    await dropModule.claimConditions.update(0, { waitInSeconds: 10 });
-    let updatedConditions = await dropModule.claimConditions.getAll();
+    await dropContract.claimConditions.update(0, { waitInSeconds: 10 });
+    let updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
       BigNumber.from(1),
     );
@@ -584,11 +584,11 @@ describe("Drop Module", async () => {
       BigNumber.from(60),
     );
 
-    await dropModule.claimConditions.update(1, {
+    await dropContract.claimConditions.update(1, {
       maxQuantity: 10,
       waitInSeconds: 10,
     });
-    updatedConditions = await dropModule.claimConditions.getAll();
+    updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
       BigNumber.from(1),
     );
@@ -601,17 +601,17 @@ describe("Drop Module", async () => {
   });
 
   it("set claim condition and update claim condition with diff timestamps should reorder", async () => {
-    await dropModule.claimConditions.set([
+    await dropContract.claimConditions.set([
       { startTime: new Date().getTime() / 2000, maxQuantity: 1 },
       { startTime: new Date().getTime(), maxQuantity: 2 },
     ]);
-    expect((await dropModule.claimConditions.getAll()).length).to.be.equal(2);
+    expect((await dropContract.claimConditions.getAll()).length).to.be.equal(2);
 
-    await dropModule.claimConditions.update(0, {
+    await dropContract.claimConditions.update(0, {
       startTime: new Date().getTime() * 2,
     });
     // max quantities should be inverted now
-    const updatedConditions = await dropModule.claimConditions.getAll();
+    const updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
       BigNumber.from(2),
     );
@@ -622,7 +622,7 @@ describe("Drop Module", async () => {
 
   describe("Delay Reveal", () => {
     it("metadata should reveal correctly", async () => {
-      await dropModule.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayRevealBatch(
         {
           name: "Placeholder #1",
         },
@@ -630,17 +630,17 @@ describe("Drop Module", async () => {
         "my secret password",
       );
 
-      expect((await dropModule.get("0")).metadata.name).to.be.equal(
+      expect((await dropContract.get("0")).metadata.name).to.be.equal(
         "Placeholder #1",
       );
 
-      await dropModule.revealer.reveal(0, "my secret password");
+      await dropContract.revealer.reveal(0, "my secret password");
 
-      expect((await dropModule.get("0")).metadata.name).to.be.equal("NFT #1");
+      expect((await dropContract.get("0")).metadata.name).to.be.equal("NFT #1");
     });
 
     it("different reveal order and should return correct unreveal list", async () => {
-      await dropModule.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayRevealBatch(
         {
           name: "Placeholder #1",
         },
@@ -655,7 +655,7 @@ describe("Drop Module", async () => {
         "my secret key",
       );
 
-      await dropModule.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayRevealBatch(
         {
           name: "Placeholder #2",
         },
@@ -670,7 +670,7 @@ describe("Drop Module", async () => {
         "my secret key",
       );
 
-      await dropModule.createBatch([
+      await dropContract.createBatch([
         {
           name: "NFT #00",
         },
@@ -679,7 +679,7 @@ describe("Drop Module", async () => {
         },
       ]);
 
-      await dropModule.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayRevealBatch(
         {
           name: "Placeholder #3",
         },
@@ -697,7 +697,7 @@ describe("Drop Module", async () => {
         "my secret key",
       );
 
-      let unrevealList = await dropModule.revealer.getBatchesToReveal();
+      let unrevealList = await dropContract.revealer.getBatchesToReveal();
       expect(unrevealList.length).to.be.equal(3);
       expect(unrevealList[0].batchId.toNumber()).to.be.equal(0);
       expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
@@ -713,12 +713,12 @@ describe("Drop Module", async () => {
         "Placeholder #3",
       );
 
-      await dropModule.revealer.reveal(
+      await dropContract.revealer.reveal(
         unrevealList[0].batchId,
         "my secret key",
       );
 
-      unrevealList = await dropModule.revealer.getBatchesToReveal();
+      unrevealList = await dropContract.revealer.getBatchesToReveal();
       expect(unrevealList.length).to.be.equal(2);
       expect(unrevealList[0].batchId.toNumber()).to.be.equal(1);
       expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
@@ -729,12 +729,12 @@ describe("Drop Module", async () => {
         "Placeholder #3",
       );
 
-      await dropModule.revealer.reveal(
+      await dropContract.revealer.reveal(
         unrevealList[unrevealList.length - 1].batchId,
         "my secret key",
       );
 
-      unrevealList = await dropModule.revealer.getBatchesToReveal();
+      unrevealList = await dropContract.revealer.getBatchesToReveal();
       expect(unrevealList.length).to.be.equal(1);
       expect(unrevealList[0].batchId.toNumber()).to.be.equal(1);
       expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
@@ -743,40 +743,40 @@ describe("Drop Module", async () => {
     });
 
     it("should not be able to re-used published password for next batch", async () => {
-      await dropModule.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayRevealBatch(
         {
           name: "Placeholder #1",
         },
         [{ name: "NFT #1" }, { name: "NFT #2" }],
         "my secret password",
       );
-      await dropModule.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayRevealBatch(
         {
           name: "Placeholder #2",
         },
         [{ name: "NFT #3" }, { name: "NFT #4" }],
         "my secret password",
       );
-      await dropModule.revealer.reveal(0, "my secret password");
+      await dropContract.revealer.reveal(0, "my secret password");
       const transactions = (
         await adminWallet.provider.getBlockWithTransactions()
       ).transactions;
 
-      const { index, _key } = dropModule.encoder.decode(
+      const { index, _key } = dropContract.encoder.decode(
         "reveal",
         transactions[0].data,
       );
 
       // re-using broadcasted _key to decode :)
       try {
-        await dropModule.revealer.reveal(index.add(1), _key);
+        await dropContract.revealer.reveal(index.add(1), _key);
         assert.fail("should not be able to re-used published password");
       } catch (e) {
         expect(e.message).to.be.equal("invalid password");
       }
 
       // original password should work
-      await dropModule.revealer.reveal(1, "my secret password");
+      await dropContract.revealer.reveal(1, "my secret password");
     });
   });
 });

@@ -351,7 +351,7 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
 }>;
 
 // @public (undocumented)
-export const CommonModuleSchema: z.ZodObject<{
+export const CommonContractSchema: z.ZodObject<{
     name: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
     image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
@@ -368,6 +368,31 @@ export const CommonModuleSchema: z.ZodObject<{
     name: string;
 }>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "ContractForContractType" is marked as @public, but its signature references "CONTRACTS_MAP" which is marked as @internal
+//
+// @public (undocumented)
+export type ContractForContractType<TContractType extends ContractType> = C.Instance<typeof CONTRACTS_MAP[TContractType]>;
+
+// Warning: (ae-internal-missing-underscore) The name "CONTRACTS_MAP" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const CONTRACTS_MAP: {
+    readonly DropERC721: typeof DropErc721Contract;
+    readonly TokenERC721: typeof TokenErc721Contract;
+    readonly DropERC1155: typeof DropErc1155Contract;
+    readonly TokenERC1155: typeof TokenErc1155Contract;
+    readonly TokenERC20: typeof TokenErc20Contract;
+    readonly VoteERC20: typeof VoteContract;
+    readonly Splits: typeof SplitsContract;
+    readonly Marketplace: typeof MarketplaceContract;
+    readonly Pack: typeof PacksContract;
+};
+
+// Warning: (ae-incompatible-release-tags) The symbol "ContractType" is marked as @public, but its signature references "CONTRACTS_MAP" which is marked as @internal
+//
+// @public (undocumented)
+export type ContractType = keyof typeof CONTRACTS_MAP;
+
 // Warning: (ae-incompatible-release-tags) The symbol "createSnapshot" is marked as @public, but its signature references "SnapshotInfo" which is marked as @internal
 //
 // @public
@@ -376,7 +401,7 @@ export function createSnapshot(leafs: string[], storage: IStorage): Promise<Snap
 // Warning: (ae-forgotten-export) The symbol "Erc1155" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export class DropErc1155Module extends Erc1155<DropERC1155> {
+export class DropErc1155Contract extends Erc1155<DropERC1155> {
     // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "ContractWrapper" needs to be exported by the entry point index.d.ts
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
@@ -388,6 +413,10 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
     claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): TransactionResultPromise;
     // (undocumented)
     static contractFactory: typeof DropERC1155__factory;
+    // (undocumented)
+    static contractRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static contractType: "DropERC1155";
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // Warning: (ae-forgotten-export) The symbol "ContractEncoder" needs to be exported by the entry point index.d.ts
     //
@@ -396,11 +425,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
     // Warning: (ae-forgotten-export) The symbol "ContractMetadata" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    metadata: ContractMetadata<DropERC1155, typeof DropErc1155Module.schema>;
-    // (undocumented)
-    static moduleRoles: readonly ["admin", "minter", "transfer"];
-    // (undocumented)
-    static moduleType: "DropERC1155";
+    metadata: ContractMetadata<DropERC1155, typeof DropErc1155Contract.schema>;
     // Warning: (ae-forgotten-export) The symbol "ContractPrimarySale" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -408,11 +433,11 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
     // Warning: (ae-forgotten-export) The symbol "ContractRoles" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    roles: ContractRoles<DropERC1155, typeof DropErc1155Module.moduleRoles[number]>;
+    roles: ContractRoles<DropERC1155, typeof DropErc1155Contract.contractRoles[number]>;
     // Warning: (ae-forgotten-export) The symbol "ContractRoyalty" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    royalty: ContractRoyalty<DropERC1155, typeof DropErc1155Module.schema>;
+    royalty: ContractRoyalty<DropERC1155, typeof DropErc1155Contract.schema>;
     // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
@@ -533,7 +558,7 @@ export class DropErc1155Module extends Erc1155<DropERC1155> {
 // Warning: (ae-forgotten-export) The symbol "Erc721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DropErc721Module extends Erc721<DropERC721> {
+export class DropErc721Contract extends Erc721<DropERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
     claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // Warning: (ae-forgotten-export) The symbol "DropErc721ClaimConditions" needs to be exported by the entry point index.d.ts
@@ -543,6 +568,10 @@ export class DropErc721Module extends Erc721<DropERC721> {
     claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     static contractFactory: typeof DropERC721__factory;
+    // (undocumented)
+    static contractRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static contractType: "DropERC721";
     // @beta
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
@@ -551,11 +580,7 @@ export class DropErc721Module extends Erc721<DropERC721> {
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
     // (undocumented)
-    metadata: ContractMetadata<DropERC721, typeof DropErc721Module.schema>;
-    // (undocumented)
-    static moduleRoles: readonly ["admin", "minter", "transfer"];
-    // (undocumented)
-    static moduleType: "DropERC721";
+    metadata: ContractMetadata<DropERC721, typeof DropErc721Contract.schema>;
     // (undocumented)
     primarySales: ContractPrimarySale<DropERC721>;
     // Warning: (ae-forgotten-export) The symbol "DelayedReveal" needs to be exported by the entry point index.d.ts
@@ -563,9 +588,9 @@ export class DropErc721Module extends Erc721<DropERC721> {
     // (undocumented)
     revealer: DelayedReveal<DropERC721>;
     // (undocumented)
-    roles: ContractRoles<DropERC721, typeof DropErc721Module.moduleRoles[number]>;
+    roles: ContractRoles<DropERC721, typeof DropErc721Contract.contractRoles[number]>;
     // (undocumented)
-    royalty: ContractRoyalty<DropERC721, typeof DropErc721Module.schema>;
+    royalty: ContractRoyalty<DropERC721, typeof DropErc721Contract.schema>;
     // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
@@ -809,7 +834,7 @@ export class ListingNotFoundError extends Error {
 // Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class MarketplaceModule implements UpdateableNetwork {
+export class MarketplaceContract implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Marketplace>);
     // (undocumented)
     acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): TransactionResultPromise;
@@ -824,6 +849,10 @@ export class MarketplaceModule implements UpdateableNetwork {
     closeAuctionListing(listingId: BigNumberish, closeFor?: string): TransactionResultPromise;
     // (undocumented)
     static contractFactory: typeof Marketplace__factory;
+    // (undocumented)
+    static contractRoles: readonly ["admin", "lister"];
+    // (undocumented)
+    static contractType: "Marketplace";
     // Warning: (ae-forgotten-export) The symbol "NewAuctionListing" needs to be exported by the entry point index.d.ts
     createAuctionListing(listing: NewAuctionListing): Promise<TransactionResultWithId>;
     // Warning: (ae-forgotten-export) The symbol "NewDirectListing" needs to be exported by the entry point index.d.ts
@@ -861,15 +890,11 @@ export class MarketplaceModule implements UpdateableNetwork {
         pricePerToken: BigNumberish;
     }): TransactionResultPromise;
     // (undocumented)
-    metadata: ContractMetadata<Marketplace, typeof MarketplaceModule.schema>;
-    // (undocumented)
-    static moduleRoles: readonly ["admin", "lister"];
-    // (undocumented)
-    static moduleType: "Marketplace";
+    metadata: ContractMetadata<Marketplace, typeof MarketplaceContract.schema>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
-    roles: ContractRoles<Marketplace, typeof MarketplaceModule.moduleRoles[number]>;
+    roles: ContractRoles<Marketplace, typeof MarketplaceContract.contractRoles[number]>;
     // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
@@ -976,31 +1001,6 @@ export class MissingRoleError extends Error {
     constructor(address: string, role: string);
 }
 
-// Warning: (ae-incompatible-release-tags) The symbol "ModuleForModuleType" is marked as @public, but its signature references "MODULES_MAP" which is marked as @internal
-//
-// @public (undocumented)
-export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<typeof MODULES_MAP[TModuleType]>;
-
-// Warning: (ae-internal-missing-underscore) The name "MODULES_MAP" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export const MODULES_MAP: {
-    readonly DropERC721: typeof DropErc721Module;
-    readonly TokenERC721: typeof TokenErc721Module;
-    readonly DropERC1155: typeof DropErc1155Module;
-    readonly TokenERC1155: typeof TokenErc1155Module;
-    readonly TokenERC20: typeof TokenErc20Module;
-    readonly VoteERC20: typeof VoteModule;
-    readonly Splits: typeof SplitsModule;
-    readonly Marketplace: typeof MarketplaceModule;
-    readonly Pack: typeof PacksModule;
-};
-
-// Warning: (ae-incompatible-release-tags) The symbol "ModuleType" is marked as @public, but its signature references "MODULES_MAP" which is marked as @internal
-//
-// @public (undocumented)
-export type ModuleType = keyof typeof MODULES_MAP;
-
 // @public (undocumented)
 export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 
@@ -1063,13 +1063,17 @@ export const OptionalPropertiesInput: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.
 export const OptionalPropertiesOutput: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
 
 // @public (undocumented)
-export class PacksModule implements UpdateableNetwork {
+export class PacksContract implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Pack>);
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber>;
     balanceOf(address: string, tokenId: string): Promise<BigNumber>;
     // (undocumented)
     static contractFactory: typeof Pack__factory;
+    // (undocumented)
+    static contractRoles: readonly ["admin", "minter", "pauser", "transfer"];
+    // (undocumented)
+    static contractType: "Pack";
     // Warning: (ae-forgotten-export) The symbol "IPackCreateArgs" needs to be exported by the entry point index.d.ts
     create(args: IPackCreateArgs): Promise<TransactionResultWithId<PackMetadata>>;
     // (undocumented)
@@ -1094,18 +1098,14 @@ export class PacksModule implements UpdateableNetwork {
     // (undocumented)
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
-    metadata: ContractMetadata<Pack, typeof PacksModule.schema>;
-    // (undocumented)
-    static moduleRoles: readonly ["admin", "minter", "pauser", "transfer"];
-    // (undocumented)
-    static moduleType: "Pack";
+    metadata: ContractMetadata<Pack, typeof PacksContract.schema>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     open(packId: string): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
-    roles: ContractRoles<Pack, typeof PacksModule.moduleRoles[number]>;
+    roles: ContractRoles<Pack, typeof PacksContract.contractRoles[number]>;
     // (undocumented)
-    royalty: ContractRoyalty<Pack, typeof PacksModule.schema>;
+    royalty: ContractRoyalty<Pack, typeof PacksContract.schema>;
     // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
@@ -1293,7 +1293,7 @@ export type Snapshot = z.output<typeof SnapshotSchema>;
 export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
 
 // @public (undocumented)
-export class SplitsModule implements UpdateableNetwork {
+export class SplitsContract implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Splits>);
     balanceOf(address: string): Promise<BigNumber>;
     balanceOfAllRecipients(): Promise<{
@@ -1305,6 +1305,8 @@ export class SplitsModule implements UpdateableNetwork {
     }>;
     // (undocumented)
     static contractFactory: typeof Splits__factory;
+    // (undocumented)
+    static contractType: "Splits";
     distribute(): TransactionResultPromise;
     distributeToken(tokenAddress: string): TransactionResultPromise;
     // (undocumented)
@@ -1315,9 +1317,7 @@ export class SplitsModule implements UpdateableNetwork {
     getAllRecipients(): Promise<SplitRecipient[]>;
     getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
     // (undocumented)
-    metadata: ContractMetadata<Splits, typeof SplitsModule.schema>;
-    // (undocumented)
-    static moduleType: "Splits";
+    metadata: ContractMetadata<Splits, typeof SplitsContract.schema>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -1477,27 +1477,25 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 // @public (undocumented)
 export class ThirdwebSDK extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage?: IStorage);
-    deployModule<TModule extends ValidModuleClass>(moduleType: TModule["moduleType"], moduleMetadata: z.input<TModule["schema"]["deploy"]>): Promise<string>;
-    getBundleDropModule(address: string): DropErc1155Module;
-    getBundleModule(address: string): TokenErc1155Module;
-    getDropModule(moduleAddress: string): DropErc721Module;
-    getMarketplaceModule(address: string): MarketplaceModule;
+    deployContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
+    getBundleContract(address: string): TokenErc1155Contract;
+    getBundleDropContract(address: string): DropErc1155Contract;
     // @internal (undocumented)
-    getModule<TModuleType extends ModuleType = ModuleType>(address: string, moduleType: TModuleType): DropErc721Module | TokenErc721Module | DropErc1155Module | TokenErc1155Module | TokenErc20Module | VoteModule | SplitsModule | MarketplaceModule | PacksModule | ts_toolbelt_out_Class_Instance.Instance<{
-        readonly DropERC721: typeof DropErc721Module;
-        readonly TokenERC721: typeof TokenErc721Module;
-        readonly DropERC1155: typeof DropErc1155Module;
-        readonly TokenERC1155: typeof TokenErc1155Module;
-        readonly TokenERC20: typeof TokenErc20Module;
-        readonly VoteERC20: typeof VoteModule;
-        readonly Splits: typeof SplitsModule;
-        readonly Marketplace: typeof MarketplaceModule;
-        readonly Pack: typeof PacksModule;
-    }[TModuleType]>;
+    getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): DropErc721Contract | TokenErc721Contract | DropErc1155Contract | TokenErc1155Contract | TokenErc20Contract | VoteContract | SplitsContract | MarketplaceContract | PacksContract | ts_toolbelt_out_Class_Instance.Instance<{
+        readonly DropERC721: typeof DropErc721Contract;
+        readonly TokenERC721: typeof TokenErc721Contract;
+        readonly DropERC1155: typeof DropErc1155Contract;
+        readonly TokenERC1155: typeof TokenErc1155Contract;
+        readonly TokenERC20: typeof TokenErc20Contract;
+        readonly VoteERC20: typeof VoteContract;
+        readonly Splits: typeof SplitsContract;
+        readonly Marketplace: typeof MarketplaceContract;
+        readonly Pack: typeof PacksContract;
+    }[TContractType]>;
     // (undocumented)
-    getModuleList(walletAddress: string): Promise<{
+    getContractList(walletAddress: string): Promise<{
         address: string;
-        moduleType: "DropERC721" | "TokenERC721" | "DropERC1155" | "TokenERC1155" | "TokenERC20" | "VoteERC20" | "Splits" | "Marketplace" | "Pack";
+        contractType: "DropERC721" | "TokenERC721" | "DropERC1155" | "TokenERC1155" | "TokenERC20" | "VoteERC20" | "Splits" | "Marketplace" | "Pack";
         metadata: () => Promise<{
             [x: string]: Json;
             description?: string | undefined;
@@ -1538,41 +1536,43 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             }[];
         }>;
     }[]>;
-    getNFTModule(address: string): TokenErc721Module;
-    getPackModule(address: string): PacksModule;
-    getSplitsModule(address: string): SplitsModule;
-    getTokenModule(address: string): TokenErc20Module;
-    getVoteModule(address: string): VoteModule;
+    getDropContract(contractAddress: string): DropErc721Contract;
+    getMarketplaceContract(address: string): MarketplaceContract;
+    getNFTContract(address: string): TokenErc721Contract;
+    getPackContract(address: string): PacksContract;
+    getSplitsContract(address: string): SplitsContract;
+    getTokenContract(address: string): TokenErc20Contract;
+    getVoteContract(address: string): VoteContract;
     // (undocumented)
-    resolveModuleType<TModuleType extends ModuleType>(moduleAddress: string): Promise<TModuleType>;
+    resolveContractType<TContractType extends ContractType>(contractAddress: string): Promise<TContractType>;
     // (undocumented)
     storage: IStorage;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 
 // @public (undocumented)
-export class TokenErc1155Module extends Erc1155<TokenERC1155> {
+export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
     // (undocumented)
     static contractFactory: typeof TokenERC1155__factory;
     // (undocumented)
+    static contractRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static contractType: "TokenERC1155";
+    // (undocumented)
     encoder: ContractEncoder<TokenERC1155>;
     // (undocumented)
-    metadata: ContractMetadata<TokenERC1155, typeof TokenErc1155Module.schema>;
+    metadata: ContractMetadata<TokenERC1155, typeof TokenErc1155Contract.schema>;
     mint(metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<BundleMetadata>>;
     mintBatch(metadatas: BundleMetadataInput[]): Promise<TransactionResultWithId<BundleMetadata>[]>;
     mintBatchTo(to: string, metadataWithSupply: BundleMetadataInput[]): Promise<TransactionResultWithId<BundleMetadata>[]>;
     mintTo(to: string, metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<BundleMetadata>>;
     // (undocumented)
-    static moduleRoles: readonly ["admin", "minter", "transfer"];
-    // (undocumented)
-    static moduleType: "TokenERC1155";
-    // (undocumented)
     primarySales: ContractPrimarySale<TokenERC1155>;
     // (undocumented)
-    roles: ContractRoles<TokenERC1155, typeof TokenErc1155Module.moduleRoles[number]>;
+    roles: ContractRoles<TokenERC1155, typeof TokenErc1155Contract.contractRoles[number]>;
     // (undocumented)
-    royalty: ContractRoyalty<TokenERC1155, typeof TokenErc1155Module.schema>;
+    royalty: ContractRoyalty<TokenERC1155, typeof TokenErc1155Contract.schema>;
     // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
@@ -1669,10 +1669,14 @@ export class TokenErc1155Module extends Erc1155<TokenERC1155> {
 // Warning: (ae-forgotten-export) The symbol "Erc20" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export class TokenErc20Module extends Erc20<TokenERC20> {
+export class TokenErc20Contract extends Erc20<TokenERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
     // (undocumented)
     static contractFactory: typeof TokenERC20__factory;
+    // (undocumented)
+    static contractRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static contractType: "TokenERC20";
     // @alpha
     delegateTo(delegateeAddress: string): TransactionResultPromise;
     // (undocumented)
@@ -1683,17 +1687,13 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
     // (undocumented)
     getVoteBalanceOf(account: string): Promise<BigNumber>;
     // (undocumented)
-    metadata: ContractMetadata<TokenERC20, typeof TokenErc20Module.schema>;
+    metadata: ContractMetadata<TokenERC20, typeof TokenErc20Contract.schema>;
     mint(amount: BigNumberish): TransactionResultPromise;
     // Warning: (ae-forgotten-export) The symbol "TokenMintInput" needs to be exported by the entry point index.d.ts
     mintBatchTo(args: TokenMintInput[]): TransactionResultPromise;
     mintTo(to: string, amount: BigNumberish): TransactionResultPromise;
     // (undocumented)
-    static moduleRoles: readonly ["admin", "minter", "transfer"];
-    // (undocumented)
-    static moduleType: "TokenERC20";
-    // (undocumented)
-    roles: ContractRoles<TokenERC20, typeof TokenErc20Module.moduleRoles[number]>;
+    roles: ContractRoles<TokenERC20, typeof TokenErc20Contract.contractRoles[number]>;
     // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
@@ -1775,10 +1775,14 @@ export class TokenErc20Module extends Erc20<TokenERC20> {
 }
 
 // @public
-export class TokenErc721Module extends Erc721<TokenERC721> {
+export class TokenErc721Contract extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
     // (undocumented)
     static contractFactory: typeof TokenERC721__factory;
+    // (undocumented)
+    static contractRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static contractType: "TokenERC721";
     // (undocumented)
     encoder: ContractEncoder<TokenERC721>;
     // Warning: (ae-forgotten-export) The symbol "NewSignaturePayload" needs to be exported by the entry point index.d.ts
@@ -1794,7 +1798,7 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
         signature: string;
     }[]>;
     // (undocumented)
-    metadata: ContractMetadata<TokenERC721, typeof TokenErc721Module.schema>;
+    metadata: ContractMetadata<TokenERC721, typeof TokenErc721Contract.schema>;
     mint(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintBatchTo(to: string, metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
@@ -1802,15 +1806,11 @@ export class TokenErc721Module extends Erc721<TokenERC721> {
     // Warning: (ae-forgotten-export) The symbol "SignaturePayload" needs to be exported by the entry point index.d.ts
     mintWithSignature(mintRequest: SignaturePayload, signature: string): TransactionResultPromise<NFTMetadataOwner>;
     // (undocumented)
-    static moduleRoles: readonly ["admin", "minter", "transfer"];
-    // (undocumented)
-    static moduleType: "TokenERC721";
-    // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
     // (undocumented)
-    roles: ContractRoles<TokenERC721, typeof TokenErc721Module.moduleRoles[number]>;
+    roles: ContractRoles<TokenERC721, typeof TokenErc721Contract.contractRoles[number]>;
     // (undocumented)
-    royalty: ContractRoyalty<TokenERC721, typeof TokenErc721Module.schema>;
+    royalty: ContractRoyalty<TokenERC721, typeof TokenErc721Contract.schema>;
     // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
@@ -1947,25 +1947,27 @@ export interface UploadMetadataBatchResult {
     metadataUris: string[];
 }
 
-// Warning: (ae-incompatible-release-tags) The symbol "ValidModuleClass" is marked as @public, but its signature references "MODULES_MAP" which is marked as @internal
+// Warning: (ae-incompatible-release-tags) The symbol "ValidContractClass" is marked as @public, but its signature references "CONTRACTS_MAP" which is marked as @internal
 //
 // @public (undocumented)
-export type ValidModuleClass = ValueOf<typeof MODULES_MAP>;
+export type ValidContractClass = ValueOf<typeof CONTRACTS_MAP>;
 
 // @public (undocumented)
-export type ValidModuleInstance = C.Instance<ValidModuleClass>;
+export type ValidContractInstance = C.Instance<ValidContractClass>;
 
 // @public (undocumented)
 export type ValueOf<T> = T[keyof T];
 
 // @public
-export class VoteModule implements UpdateableNetwork {
+export class VoteContract implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<VoteERC20>);
     balance(): Promise<CurrencyValue>;
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     canExecute(proposalId: string): Promise<boolean>;
     // (undocumented)
     static contractFactory: typeof VoteERC20__factory;
+    // (undocumented)
+    static contractType: "VoteERC20";
     // (undocumented)
     encoder: ContractEncoder<VoteERC20>;
     execute(proposalId: string): TransactionResultPromise;
@@ -1978,9 +1980,7 @@ export class VoteModule implements UpdateableNetwork {
     getProposalVotes(proposalId: BigNumber): Promise<ProposalVote[]>;
     hasVoted(proposalId: string, account?: string): Promise<boolean>;
     // (undocumented)
-    metadata: ContractMetadata<VoteERC20, typeof VoteModule.schema>;
-    // (undocumented)
-    static moduleType: "VoteERC20";
+    metadata: ContractMetadata<VoteERC20, typeof VoteContract.schema>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // Warning: (ae-forgotten-export) The symbol "ProposalExecutable" needs to be exported by the entry point index.d.ts

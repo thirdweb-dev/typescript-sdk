@@ -2,20 +2,20 @@ import { TWFactory, TWFactory__factory } from "@3rdweb/contracts";
 import { BigNumber, ethers } from "ethers";
 import { z } from "zod";
 import {
-  DropErc1155Module,
-  DropErc721Module,
-  MarketplaceModule,
-  MODULES_MAP,
-  PacksModule,
-  SplitsModule,
-  TokenErc1155Module,
-  TokenErc20Module,
-  VoteModule,
-  TokenErc721Module,
-} from "../../modules";
+  DropErc1155Contract,
+  DropErc721Contract,
+  MarketplaceContract,
+  CONTRACTS_MAP,
+  PacksContract,
+  SplitsContract,
+  TokenErc1155Contract,
+  TokenErc20Contract,
+  VoteContract,
+  TokenErc721Contract,
+} from "../../contracts";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
-import { NetworkOrSignerOrProvider, ValidModuleClass } from "../types";
+import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { ProxyDeployedEvent } from "@3rdweb/contracts/dist/TWFactory";
 
@@ -24,7 +24,7 @@ import { ChainlinkVrf } from "../../constants/chainlink";
 /**
  * @internal
  */
-export class ModuleFactory extends ContractWrapper<TWFactory> {
+export class ContractFactory extends ContractWrapper<TWFactory> {
   private storage: IStorage;
 
   constructor(
@@ -37,13 +37,13 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
     this.storage = storage;
   }
 
-  public async deploy<TModule extends ValidModuleClass>(
-    moduleType: TModule["moduleType"],
-    moduleMetadata: z.input<TModule["schema"]["deploy"]>,
+  public async deploy<TContract extends ValidContractClass>(
+    contractType: TContract["contractType"],
+    contractMetadata: z.input<TContract["schema"]["deploy"]>,
   ) {
-    const module = MODULES_MAP[moduleType];
-    const metadata = module.schema.deploy.parse(moduleMetadata);
-    const contractFactory = module.contractFactory;
+    const contract = CONTRACTS_MAP[contractType];
+    const metadata = contract.schema.deploy.parse(contractMetadata);
+    const contractFactory = contract.contractFactory;
     // TODO: is there any special pre-processing we need to do before uploading?
     const contractURI = await this.storage.uploadMetadata(
       metadata,
@@ -55,16 +55,16 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
       .getInterface(contractFactory.abi)
       .encodeFunctionData(
         "initialize",
-        await this.getDeployArguments(moduleType, metadata, contractURI),
+        await this.getDeployArguments(contractType, metadata, contractURI),
       );
 
-    const encodedType = ethers.utils.formatBytes32String(moduleType);
-    console.log(`Deploying ${moduleType} proxy`);
+    const encodedType = ethers.utils.formatBytes32String(contractType);
+    console.log(`Deploying ${contractType} proxy`);
     const receipt = await this.sendTransaction("deployProxy", [
       encodedType,
       encodedFunc,
     ]);
-    console.log(`${moduleType} proxy deployed successfully`);
+    console.log(`${contractType} proxy deployed successfully`);
     const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",
       receipt.logs,
@@ -77,15 +77,15 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
   }
 
   // TODO generic function to generate deploy initialize arguments
-  private async getDeployArguments<TModule extends ValidModuleClass>(
-    moduleType: TModule["moduleType"],
-    metadata: z.input<TModule["schema"]["deploy"]>,
+  private async getDeployArguments<TContract extends ValidContractClass>(
+    contractType: TContract["contractType"],
+    metadata: z.input<TContract["schema"]["deploy"]>,
     contractURI: string,
   ): Promise<any[]> {
-    switch (moduleType) {
-      case DropErc721Module.moduleType:
-      case TokenErc721Module.moduleType:
-        const erc721metadata = DropErc721Module.schema.deploy.parse(metadata);
+    switch (contractType) {
+      case DropErc721Contract.contractType:
+      case TokenErc721Contract.contractType:
+        const erc721metadata = DropErc721Contract.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           erc721metadata.name,
@@ -98,9 +98,10 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           erc721metadata.platform_fee_basis_points,
           erc721metadata.platform_fee_recipient,
         ];
-      case DropErc1155Module.moduleType:
-      case TokenErc1155Module.moduleType:
-        const erc1155metadata = DropErc1155Module.schema.deploy.parse(metadata);
+      case DropErc1155Contract.contractType:
+      case TokenErc1155Contract.contractType:
+        const erc1155metadata =
+          DropErc1155Contract.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           erc1155metadata.name,
@@ -113,8 +114,8 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           erc1155metadata.platform_fee_basis_points,
           erc1155metadata.platform_fee_recipient,
         ];
-      case TokenErc20Module.moduleType:
-        const erc20metadata = TokenErc20Module.schema.deploy.parse(metadata);
+      case TokenErc20Contract.contractType:
+        const erc20metadata = TokenErc20Contract.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           erc20metadata.name,
@@ -122,8 +123,8 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           contractURI,
           erc20metadata.trusted_forwarder,
         ];
-      case VoteModule.moduleType:
-        const voteMetadata = VoteModule.schema.deploy.parse(metadata);
+      case VoteContract.contractType:
+        const voteMetadata = VoteContract.schema.deploy.parse(metadata);
         return [
           voteMetadata.name,
           contractURI,
@@ -134,8 +135,8 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           BigNumber.from(voteMetadata.proposal_token_threshold),
           voteMetadata.voting_quorum_fraction,
         ];
-      case SplitsModule.moduleType:
-        const splitsMetadata = SplitsModule.schema.deploy.parse(metadata);
+      case SplitsContract.contractType:
+        const splitsMetadata = SplitsContract.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           contractURI,
@@ -143,9 +144,9 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           splitsMetadata.recipientSplits.map((s) => s.address),
           splitsMetadata.recipientSplits.map((s) => s.shares),
         ];
-      case MarketplaceModule.moduleType:
+      case MarketplaceContract.contractType:
         const marketplaceMetadata =
-          MarketplaceModule.schema.deploy.parse(metadata);
+          MarketplaceContract.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           contractURI,
@@ -153,8 +154,8 @@ export class ModuleFactory extends ContractWrapper<TWFactory> {
           marketplaceMetadata.platform_fee_recipient,
           marketplaceMetadata.platform_fee_basis_points,
         ];
-      case PacksModule.moduleType:
-        const packsMetadata = PacksModule.schema.deploy.parse(metadata);
+      case PacksContract.contractType:
+        const packsMetadata = PacksContract.schema.deploy.parse(metadata);
         const vrf = ChainlinkVrf[await this.getChainID()];
         return [
           await this.getSignerAddress(),

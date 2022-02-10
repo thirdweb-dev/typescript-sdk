@@ -1,12 +1,12 @@
 import { ethers, Wallet } from "ethers";
-import { DropErc1155Module, ThirdwebSDK } from "../src";
+import { DropErc1155Contract, ThirdwebSDK } from "../src";
 
 const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
 
 global.fetch = require("node-fetch");
 
 describe("Gasless Forwarder", async () => {
-  let bundleDropModule: DropErc1155Module;
+  let bundleDropContract: DropErc1155Contract;
 
   it.skip("should use sdk with biconomy", async () => {
     const BUNDLE_DROP_ADDRESS = "0xEBed8e37a32660dbCeeeC19cCBb952b7d214f008";
@@ -21,7 +21,7 @@ describe("Gasless Forwarder", async () => {
         },
       },
     });
-    const bundleDrop = sdk.getBundleDropModule(BUNDLE_DROP_ADDRESS);
+    const bundleDrop = sdk.getBundleDropContract(BUNDLE_DROP_ADDRESS);
     await bundleDrop.claim("0", 1, []);
   });
 
@@ -37,7 +37,7 @@ describe("Gasless Forwarder", async () => {
         },
       },
     });
-    const bundleDrop = sdk.getBundleDropModule(BUNDLE_DROP_ADDRESS);
+    const bundleDrop = sdk.getBundleDropContract(BUNDLE_DROP_ADDRESS);
     await bundleDrop.claim("0", 1, []);
   });
 });

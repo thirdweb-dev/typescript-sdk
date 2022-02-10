@@ -1,13 +1,13 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { TokenErc1155Module } from "../src/index";
+import { TokenErc1155Contract } from "../src/index";
 import { sdk, signers } from "./before.test";
 
 import { assert } from "chai";
 
 global.fetch = require("node-fetch");
 
-describe("Roles Module", async () => {
-  let bundleModule: TokenErc1155Module;
+describe("Roles Contract", async () => {
+  let bundleContract: TokenErc1155Contract;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -20,9 +20,9 @@ describe("Roles Module", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    bundleModule = sdk.getBundleModule(
-      await sdk.deployModule(TokenErc1155Module.moduleType, {
-        name: "NFT Module",
+    bundleContract = sdk.getBundleContract(
+      await sdk.deployContract(TokenErc1155Contract.contractType, {
+        name: "NFT Contract",
         primary_sale_recipient: adminWallet.address,
         seller_fee_basis_points: 1000,
       }),
@@ -33,11 +33,11 @@ describe("Roles Module", async () => {
     /**
      * This wallet owns only one token in the collection (that contains 6 tokens)
      */
-    const roles = await bundleModule.roles.getRoleMembers("admin");
+    const roles = await bundleContract.roles.getRoleMembers("admin");
     assert.include(
       roles,
       adminWallet.address,
-      "The app module should have a default admin",
+      "The app contract should have a default admin",
     );
   });
 
@@ -51,7 +51,7 @@ describe("Roles Module", async () => {
    */
 
   it("should override current roles in the contract", async () => {
-    await bundleModule.roles.setAllRoleMembers({
+    await bundleContract.roles.setAllRoleMembers({
       admin: [adminWallet.address],
       minter: [
         "0x553C5E856801b5876e80D32a192086b2035286C1",
@@ -60,7 +60,7 @@ describe("Roles Module", async () => {
       transfer: ["0x553C5E856801b5876e80D32a192086b2035286C1"],
     });
 
-    const newRoles = await bundleModule.roles.getAllMembers();
+    const newRoles = await bundleContract.roles.getAllMembers();
     assert.isTrue(
       newRoles.admin.length === 1 &&
         newRoles.admin.includes(adminWallet.address),
@@ -81,7 +81,7 @@ describe("Roles Module", async () => {
   });
 
   it("Replace all roles - confirm that all roles were replaced (not just added)", async () => {
-    await bundleModule.roles.setAllRoleMembers({
+    await bundleContract.roles.setAllRoleMembers({
       admin: [
         adminWallet.address,
         "0x553C5E856801b5876e80D32a192086b2035286C1",
@@ -92,7 +92,7 @@ describe("Roles Module", async () => {
       ],
       transfer: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
     });
-    const newRoles = await bundleModule.roles.getAllMembers();
+    const newRoles = await bundleContract.roles.getAllMembers();
     assert.isTrue(
       newRoles.admin.length === 2 &&
         newRoles.admin.includes(adminWallet.address) &&

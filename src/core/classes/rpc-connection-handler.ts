@@ -40,8 +40,10 @@ export class RPCConnectionHandler extends EventEmitter2 {
               switch (match[1]) {
                 case "http":
                   provider = new JsonRpcBatchProvider(network);
+                  break;
                 case "ws":
                   provider = new WebSocketProvider(network);
+                  break;
                 default:
                   break;
               }

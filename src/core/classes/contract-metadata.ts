@@ -43,7 +43,7 @@ export class ContractMetadata<
   }
   /**
    *
-   * @returns the metadata of the given module
+   * @returns the metadata of the given contract
    */
   public async get() {
     const uri = await this.contractWrapper.readContract.contractURI();

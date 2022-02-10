@@ -27,17 +27,17 @@ declare class ThirdwebSDK extends RPCConnectionHandler
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [deployModule(moduleType, moduleMetadata)](./sdk.thirdwebsdk.deploymodule.md) |  | Deploys a new module |
-|  [getBundleDropModule(address)](./sdk.thirdwebsdk.getbundledropmodule.md) |  | Get an instance of a Bundle Drop module |
-|  [getBundleModule(address)](./sdk.thirdwebsdk.getbundlemodule.md) |  | Get an instance of a Bundle module |
-|  [getDropModule(moduleAddress)](./sdk.thirdwebsdk.getdropmodule.md) |  | Get an instance of a Drop module |
-|  [getMarketplaceModule(address)](./sdk.thirdwebsdk.getmarketplacemodule.md) |  | Get an instance of a Marketplace module |
-|  [getModuleList(walletAddress)](./sdk.thirdwebsdk.getmodulelist.md) |  |  |
-|  [getNFTModule(address)](./sdk.thirdwebsdk.getnftmodule.md) |  | Get an instance of a NFT Collection module |
-|  [getPackModule(address)](./sdk.thirdwebsdk.getpackmodule.md) |  | Get an instance of a Pack module |
-|  [getSplitsModule(address)](./sdk.thirdwebsdk.getsplitsmodule.md) |  | Get an instance of a Splits module |
-|  [getTokenModule(address)](./sdk.thirdwebsdk.gettokenmodule.md) |  | Get an instance of a Token module |
-|  [getVoteModule(address)](./sdk.thirdwebsdk.getvotemodule.md) |  | Get an instance of a Vote module |
-|  [resolveModuleType(moduleAddress)](./sdk.thirdwebsdk.resolvemoduletype.md) |  |  |
-|  [updateSignerOrProvider(network)](./sdk.thirdwebsdk.updatesignerorprovider.md) |  | Update the active signer or provider for all modules |
+|  [deployContract(contractType, contractMetadata)](./sdk.thirdwebsdk.deploycontract.md) |  | Deploys a new contract |
+|  [getBundleContract(address)](./sdk.thirdwebsdk.getbundlecontract.md) |  | Get an instance of a Bundle contract |
+|  [getBundleDropContract(address)](./sdk.thirdwebsdk.getbundledropcontract.md) |  | Get an instance of a Bundle Drop contract |
+|  [getContractList(walletAddress)](./sdk.thirdwebsdk.getcontractlist.md) |  |  |
+|  [getDropContract(contractAddress)](./sdk.thirdwebsdk.getdropcontract.md) |  | Get an instance of a Drop contract |
+|  [getMarketplaceContract(address)](./sdk.thirdwebsdk.getmarketplacecontract.md) |  | Get an instance of a Marketplace contract |
+|  [getNFTContract(address)](./sdk.thirdwebsdk.getnftcontract.md) |  | Get an instance of a NFT Collection contract |
+|  [getPackContract(address)](./sdk.thirdwebsdk.getpackcontract.md) |  | Get an instance of a Pack contract |
+|  [getSplitsContract(address)](./sdk.thirdwebsdk.getsplitscontract.md) |  | Get an instance of a Splits contract |
+|  [getTokenContract(address)](./sdk.thirdwebsdk.gettokencontract.md) |  | Get an instance of a Token contract |
+|  [getVoteContract(address)](./sdk.thirdwebsdk.getvotecontract.md) |  | Get an instance of a Vote contract |
+|  [resolveContractType(contractAddress)](./sdk.thirdwebsdk.resolvecontracttype.md) |  |  |
+|  [updateSignerOrProvider(network)](./sdk.thirdwebsdk.updatesignerorprovider.md) |  | Update the active signer or provider for all contracts |
 

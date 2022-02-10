@@ -1,13 +1,13 @@
 import {
   SnapshotInfoSchema,
   SnapshotSchema,
-} from "../../schema/modules/common/snapshots";
+} from "../../schema/contracts/common/snapshots";
 import { z } from "zod";
 import {
   ClaimConditionInputSchema,
   ClaimConditionOutputSchema,
   PartialClaimConditionInputSchema,
-} from "../../schema/modules/common/claim-conditions";
+} from "../../schema/contracts/common/claim-conditions";
 // import { CurrencyValue } from "../../common/currency";
 
 /**

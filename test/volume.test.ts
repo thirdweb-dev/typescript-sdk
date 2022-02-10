@@ -1,18 +1,18 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
-  BundleDropModule,
+  BundleDropContract,
   NATIVE_TOKEN_ADDRESS,
   ThirdwebSDK,
 } from "../src/index";
-import { appModule, registryAddress, signers } from "./before.test";
+import { appContract, registryAddress, signers } from "./before.test";
 import { ethers } from "hardhat";
 import { expect, assert } from "chai";
 import { BigNumber } from "ethers";
 
 global.fetch = require("node-fetch");
 
-describe("Bundle Module (aka Collection Module)", async () => {
-  let bundleDropModule: BundleDropModule;
+describe("Bundle Contract (aka Collection Contract)", async () => {
+  let bundleDropContract: BundleDropContract;
 
   let adminWallet: SignerWithAddress;
   let testSigners: SignerWithAddress[];
@@ -27,7 +27,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
     }
     console.log("===WALLETS CREATED===");
     console.timeEnd("wallet");
-    const token = await appModule.deployCurrencyModule({
+    const token = await appContract.deployCurrencyContract({
       name: "Test Token",
       symbol: "TST",
     });
@@ -41,16 +41,16 @@ describe("Bundle Module (aka Collection Module)", async () => {
         console.log(signer);
       }
     });
-    bundleDropModule = await appModule.deployBundleDropModule({
+    bundleDropContract = await appContract.deployBundleDropContract({
       name: "test",
       description: "test",
       primarySaleRecipientAddress: "0x0000000000000000000000000000000000000000",
     });
-    await bundleDropModule.lazyMintBatch([{ name: "test" }]);
+    await bundleDropContract.lazyMintBatch([{ name: "test" }]);
 
-    console.log("bundleDropModule", bundleDropModule.address);
+    console.log("bundleDropContract", bundleDropContract.address);
 
-    const factory = bundleDropModule.getClaimConditionFactory();
+    const factory = bundleDropContract.getClaimConditionFactory();
     const claimPhase = factory.newClaimPhase({
       startTime: new Date(),
       maxQuantity: 30000,
@@ -59,7 +59,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
     claimPhase.setPrice(ethers.utils.parseEther("0.01"), NATIVE_TOKEN_ADDRESS);
     await claimPhase.setSnapshot(allowList);
 
-    await bundleDropModule.setClaimCondition("0", factory);
+    await bundleDropContract.setClaimCondition("0", factory);
     const sdk = new ThirdwebSDK(adminWallet, {
       ipfsGatewayUrl: "https://ipfs.thirdweb.com/ipfs/",
       registryContractAddress: registryAddress,
@@ -67,7 +67,7 @@ describe("Bundle Module (aka Collection Module)", async () => {
     });
     let error = false;
     await sdk
-      .getBundleDropModule(bundleDropModule.address)
+      .getBundleDropContract(bundleDropContract.address)
       .claim(0, 1)
       .catch((e) => {
         error = true;
@@ -87,7 +87,9 @@ describe("Bundle Module (aka Collection Module)", async () => {
         registryContractAddress: registryAddress,
         maxGasPriceInGwei: 10000,
       });
-      await testSdk.getBundleDropModule(bundleDropModule.address).claim(0, 1);
+      await testSdk
+        .getBundleDropContract(bundleDropContract.address)
+        .claim(0, 1);
       console.log("claimed", i);
     }
 

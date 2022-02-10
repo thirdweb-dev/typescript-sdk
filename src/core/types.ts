@@ -8,17 +8,16 @@ import {
 import { BigNumber, BytesLike } from "ethers";
 import { A, C } from "ts-toolbelt";
 import { If } from "ts-toolbelt/out/Any/If";
-import type { MODULES_MAP } from "../modules";
+import type { CONTRACTS_MAP } from "../contracts";
 
-export type ModuleType = keyof typeof MODULES_MAP;
+export type ContractType = keyof typeof CONTRACTS_MAP;
 
-export type ValidModuleClass = ValueOf<typeof MODULES_MAP>;
+export type ValidContractClass = ValueOf<typeof CONTRACTS_MAP>;
 
-export type ValidModuleInstance = C.Instance<ValidModuleClass>;
+export type ValidContractInstance = C.Instance<ValidContractClass>;
 
-export type ModuleForModuleType<TModuleType extends ModuleType> = C.Instance<
-  typeof MODULES_MAP[TModuleType]
->;
+export type ContractForContractType<TContractType extends ContractType> =
+  C.Instance<typeof CONTRACTS_MAP[TContractType]>;
 
 export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 export type ValueOf<T> = T[keyof T];

@@ -1,6 +1,6 @@
 import { IStorage } from "../interfaces/IStorage";
-import { SnapshotSchema } from "../../schema/modules/common/snapshots";
-import { DropErc721ModuleSchema } from "../../schema/modules/drop-erc721";
+import { SnapshotSchema } from "../../schema/contracts/common/snapshots";
+import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
 import {
   DropERC721,
@@ -24,7 +24,7 @@ import { createSnapshot } from "../../common";
 import {
   ClaimConditionInputSchema,
   ClaimConditionOutputSchema,
-} from "../../schema/modules/common/claim-conditions";
+} from "../../schema/contracts/common/claim-conditions";
 import { TransactionResultPromise } from "../index";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 
@@ -35,7 +35,7 @@ export class DropErc721ClaimConditions {
 
   constructor(
     contractWrapper: ContractWrapper<DropERC721>,
-    metadata: ContractMetadata<DropERC721, typeof DropErc721ModuleSchema>,
+    metadata: ContractMetadata<DropERC721, typeof DropErc721ContractSchema>,
     storage: IStorage,
   ) {
     this.storage = storage;
@@ -91,7 +91,7 @@ export class DropErc721ClaimConditions {
    * // Quantity of tokens to check if they are claimable
    * const quantity = 1;
    *
-   * await module.canClaim(quantity);
+   * await contract.canClaim(quantity);
    * ```
    */
   public async canClaim(

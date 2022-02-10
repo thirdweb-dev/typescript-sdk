@@ -1,22 +1,24 @@
 import { IThirdwebModule__factory } from "@3rdweb/contracts";
 import { Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
-import { ModuleType } from "../types";
+import { ContractType } from "../types";
 
 /**
  * @internal
  *
- * @param moduleAddress - the address of the module to check for a valid module type
- * @throws if the module type cannot be determined
- * @returns the module type
+ * @param contractAddress - the address of the contract to check for a valid contract type
+ * @throws if the contract type cannot be determined
+ * @returns the contract type
  */
-export async function getModuleTypeForAddress<TModuleType extends ModuleType>(
-  moduleAddress: string,
+export async function getContractTypeForAddress<
+  TContractType extends ContractType,
+>(
+  contractAddress: string,
   signerOrProvider: Signer | Provider,
-): Promise<TModuleType> {
+): Promise<TContractType> {
   const contract = IThirdwebModule__factory.connect(
-    moduleAddress,
+    contractAddress,
     signerOrProvider,
   );
-  return (await contract.moduleType()) as TModuleType;
+  return (await contract.moduleType()) as TContractType;
 }

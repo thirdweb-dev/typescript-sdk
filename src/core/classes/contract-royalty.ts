@@ -1,5 +1,5 @@
 import { IThirdwebRoyalty } from "@3rdweb/contracts";
-import { CommonRoyaltySchema } from "../../schema/modules/common";
+import { CommonRoyaltySchema } from "../../schema/contracts/common";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { z } from "zod";

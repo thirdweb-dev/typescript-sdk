@@ -2,19 +2,19 @@ import { ethers, Wallet } from "ethers";
 import { registryAddress, sdk } from "./before.test";
 import { EventType } from "../src/constants/events";
 import { expect } from "chai";
-import { DropErc721Module, ThirdwebSDK } from "../src";
+import { DropErc721Contract, ThirdwebSDK } from "../src";
 import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("node-fetch");
 
 describe("Events", async () => {
-  let dropModule: DropErc721Module;
+  let dropContract: DropErc721Contract;
 
   beforeEach(async () => {
-    dropModule = sdk.getDropModule(
-      await sdk.deployModule(DropErc721Module.moduleType, {
+    dropContract = sdk.getDropContract(
+      await sdk.deployContract(DropErc721Contract.contractType, {
         name: `Testing drop from SDK`,
-        description: "Test module from tests",
+        description: "Test contract from tests",
         image:
           "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
         primary_sale_recipient: AddressZero,
@@ -38,7 +38,7 @@ describe("Events", async () => {
       }
       txStatus = event.status;
     });
-    await dropModule.setApprovalForAll(ethers.constants.AddressZero, true);
+    await dropContract.setApprovalForAll(ethers.constants.AddressZero, true);
   });
 
   it.skip("should emit Signature events", async () => {
@@ -59,7 +59,7 @@ describe("Events", async () => {
       console.log(event);
     });
     await esdk
-      .getDropModule(dropModule.getAddress())
+      .getDropContract(dropContract.getAddress())
       .setApprovalForAll(ethers.constants.AddressZero, true);
   });
 });

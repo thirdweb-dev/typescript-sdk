@@ -5,7 +5,7 @@ import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResultPromise } from "../types";
 import { NotFoundError, RestrictedTransferError } from "../../common";
-import { UpdateableNetwork } from "../interfaces/module";
+import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import {
   BundleMetadata,
@@ -31,7 +31,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
       this.options = SDKOptionsSchema.parse(options);
     } catch (optionParseError) {
       console.error(
-        "invalid module options object passed, falling back to default options",
+        "invalid contract options object passed, falling back to default options",
         optionParseError,
       );
       this.options = SDKOptionsSchema.parse({});
@@ -58,7 +58,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    *
    * @example
    * ```javascript
-   * const nft = await module.get("0");
+   * const nft = await contract.get("0");
    * console.log(nft);
    * ```
    * @param tokenId - the tokenId of the NFT to retrieve
@@ -80,11 +80,11 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
   /**
    * Get All NFTs
    *
-   * @remarks Get all the data associated with every NFT in this module.
+   * @remarks Get all the data associated with every NFT in this contract.
    *
    * @example
    * ```javascript
-   * const nfts = await module.getAll();
+   * const nfts = await contract.getAll();
    * console.log(nfts);
    * ```
    * @returns The NFT metadata for all NFTs queried.
@@ -107,11 +107,11 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    * ```javascript
    * // Address of the wallet to get the NFTs of
    * const address = "{{wallet_address}}";
-   * const nfts = await module.getOwned(address);
+   * const nfts = await contract.getOwned(address);
    * console.log(nfts);
    * ```
    *
-   * @returns The NFT metadata for all NFTs in the module.
+   * @returns The NFT metadata for all NFTs in the contract.
    */
   public async getOwned(_address?: string): Promise<BundleMetadata[]> {
     const address = _address
@@ -148,14 +148,14 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
   /**
    * Get NFT Balance
    *
-   * @remarks Get a wallets NFT balance (number of NFTs in this module owned by the wallet).
+   * @remarks Get a wallets NFT balance (number of NFTs in this contract owned by the wallet).
    *
    * @example
    * ```javascript
    * // Address of the wallet to check NFT balance
    * const address = "{{wallet_address}}";
    *
-   * const balance = await module.balanceOf(address);
+   * const balance = await contract.balanceOf(address);
    * console.log(balance);
    * ```
    */
@@ -177,7 +177,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
   }
 
   /**
-   * Get whether users can transfer NFTs from this module
+   * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
     return this.contractWrapper.readContract.isTransferRestricted();
@@ -212,7 +212,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    * // The token ID of the NFT you want to send
    * const tokenId = "0";
    *
-   * await module.transfer(toAddress, tokenId);
+   * await contract.transfer(toAddress, tokenId);
    * ```
    */
   public async transfer(
@@ -276,7 +276,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
   }
 
   /**
-   * Set whether NFTs in this Module can be transferred or not.
+   * Set whether NFTs in this Contract can be transferred or not.
    * @param restricted whether to restrict or allow transfers
    */
   public async setRestrictedTransfer(
