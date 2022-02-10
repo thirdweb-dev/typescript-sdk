@@ -912,7 +912,7 @@ export class MarketplaceModule implements UpdateableNetwork {
    * PRIVATE FUNCTIONS
    *******************************/
 
-  public async isWinningBid(
+  private async isWinningBid(
     winningPrice: BigNumberish,
     newBidPrice: BigNumberish,
     bidBuffer: BigNumberish,

@@ -812,7 +812,6 @@ export class MarketplaceModule implements UpdateableNetwork {
     getTimeBufferInSeconds(): Promise<BigNumber>;
     getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
     isRestrictedListerRoleOnly(): Promise<boolean>;
-    isWinningBid(winningPrice: BigNumberish, newBidPrice: BigNumberish, bidBuffer: BigNumberish): Promise<boolean>;
     makeAuctionListingBid(bid: {
         listingId: BigNumberish;
         pricePerToken: BigNumberish;
