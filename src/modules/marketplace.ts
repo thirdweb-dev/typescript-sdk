@@ -1222,7 +1222,7 @@ export class MarketplaceModule
   }
 
   public async allowListingFromSpecificAssetOnly(contractAddress: string) {
-    if (!this.isV2()) {
+    if (!(await this.isV2())) {
       throw Error(
         "Not supported in this version of the contract, please upgrade",
       );
@@ -1248,7 +1248,7 @@ export class MarketplaceModule
   }
 
   public async allowListingFromAnyAsset() {
-    if (!this.isV2()) {
+    if (!(await this.isV2())) {
       throw Error(
         "Not supported in this version of the contract, please upgrade",
       );
