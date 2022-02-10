@@ -12,7 +12,11 @@ import {
 } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { NFTMetadata, NFTMetadataInput } from "../schema/tokens/common";
+import {
+  CommonNFTInput,
+  NFTMetadata,
+  NFTMetadataInput,
+} from "../schema/tokens/common";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { hexZeroPad } from "ethers/lib/utils";
 import { prepareClaim } from "../common/claim-conditions";
@@ -111,7 +115,7 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
     const batch = await this.storage.uploadMetadataBatch(
-      metadatas,
+      metadatas.map((m) => CommonNFTInput.parse(m)),
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),

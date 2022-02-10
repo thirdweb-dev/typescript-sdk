@@ -15,6 +15,7 @@ import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
 import { BundleMetadata, BundleMetadataInput } from "../schema/tokens/bundle";
 import { TokenMintedEvent } from "@3rdweb/contracts/dist/TokenERC721";
 import { ContractEncoder } from "../core/classes/contract-encoder";
+import { CommonNFTInput } from "../schema/tokens/common";
 
 export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
   static contractType = "TokenERC1155" as const;
@@ -132,7 +133,9 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
     to: string,
     metadataWithSupply: BundleMetadataInput,
   ): Promise<TransactionResultWithId<BundleMetadata>> {
-    const uri = await this.storage.uploadMetadata(metadataWithSupply.metadata);
+    const uri = await this.storage.uploadMetadata(
+      CommonNFTInput.parse(metadataWithSupply.metadata),
+    );
     const receipt = await this.contractWrapper.sendTransaction("mintTo", [
       to,
       uri,
@@ -226,7 +229,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
     const metadatas = metadataWithSupply.map((a) => a.metadata);
     const supplies = metadataWithSupply.map((a) => a.supply);
     const { metadataUris: uris } = await this.storage.uploadMetadataBatch(
-      metadatas,
+      metadatas.map((m) => CommonNFTInput.parse(m)),
     );
     const encoded = uris.map((uri, index) =>
       this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [

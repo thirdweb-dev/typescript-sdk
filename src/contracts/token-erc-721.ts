@@ -4,7 +4,11 @@ import {
   NewSignaturePayload,
   SignaturePayload,
 } from "../schema/contracts/common/signature";
-import { NFTMetadataInput, NFTMetadataOwner } from "../schema/tokens/common";
+import {
+  CommonNFTInput,
+  NFTMetadataInput,
+  NFTMetadataOwner,
+} from "../schema/tokens/common";
 import type {
   IStorage,
   NetworkOrSignerOrProvider,
@@ -149,7 +153,9 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
     to: string,
     metadata: NFTMetadataInput,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    const uri = await this.storage.uploadMetadata(metadata);
+    const uri = await this.storage.uploadMetadata(
+      CommonNFTInput.parse(metadata),
+    );
     const receipt = await this.contractWrapper.sendTransaction("mintTo", [
       to,
       uri,
@@ -231,7 +237,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
     metadatas: NFTMetadataInput[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     const { metadataUris: uris } = await this.storage.uploadMetadataBatch(
-      metadatas,
+      metadatas.map((m) => CommonNFTInput.parse(m)),
     );
     const encoded = uris.map((uri) =>
       this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [

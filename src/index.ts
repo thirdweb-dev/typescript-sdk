@@ -16,3 +16,5 @@ export { CommonContractSchema } from "./schema/contracts/common";
 export * from "./schema/contracts/common/claim-conditions";
 export * from "./schema/tokens/common/properties";
 export * from "./constants/chains";
+export * from "./schema/tokens/token";
+export * from "./schema/tokens/bundle";

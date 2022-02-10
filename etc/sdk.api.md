@@ -1689,7 +1689,6 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
     // (undocumented)
     metadata: ContractMetadata<TokenERC20, typeof TokenErc20Contract.schema>;
     mint(amount: BigNumberish): TransactionResultPromise;
-    // Warning: (ae-forgotten-export) The symbol "TokenMintInput" needs to be exported by the entry point index.d.ts
     mintBatchTo(args: TokenMintInput[]): TransactionResultPromise;
     mintTo(to: string, amount: BigNumberish): TransactionResultPromise;
     // (undocumented)
@@ -1917,6 +1916,21 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
     // (undocumented)
     verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
 }
+
+// @public (undocumented)
+export type TokenMintInput = z.input<typeof TokenMintInputSchema>;
+
+// @public (undocumented)
+export const TokenMintInputSchema: z.ZodObject<{
+    toAddress: z.ZodString;
+    amount: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
+}, "strip", z.ZodTypeAny, {
+    toAddress: string;
+    amount: string;
+}, {
+    toAddress: string;
+    amount: string | number | bigint | ethers.BigNumber;
+}>;
 
 // Warning: (ae-forgotten-export) The symbol "TransactionResultWithMetadata" needs to be exported by the entry point index.d.ts
 //

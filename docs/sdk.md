@@ -71,6 +71,7 @@
 |  [OptionalPropertiesOutput](./sdk.optionalpropertiesoutput.md) |  |
 |  [PartialClaimConditionInputSchema](./sdk.partialclaimconditioninputschema.md) |  |
 |  [SUPPORTED\_CHAIN\_IDS](./sdk.supported_chain_ids.md) |  |
+|  [TokenMintInputSchema](./sdk.tokenmintinputschema.md) |  |
 
 ## Type Aliases
 
@@ -95,6 +96,7 @@
 |  [Role](./sdk.role.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |
 |  [SUPPORTED\_CHAIN\_ID](./sdk.supported_chain_id.md) |  |
+|  [TokenMintInput](./sdk.tokenmintinput.md) |  |
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultPromise](./sdk.transactionresultpromise.md) |  |
 |  [TransactionResultWithId](./sdk.transactionresultwithid.md) |  |
