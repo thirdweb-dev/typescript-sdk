@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@3rdweb/contracts@^1.25.0-2":
+"@3rdweb/contracts@1.25.0-2":
   version "1.25.0-2"
   resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-1.25.0-2.tgz#a6f60bde6c1ec2fb91f41bd756214184cea2aadc"
   integrity sha512-poWt4cBC74Jb4rz18zDtO/+JeJG7+oE99SgFGd/yZzYlf8zHtrrlphJn+SACCdcW71l8MN5nNruNPcXFxlJVkg==
