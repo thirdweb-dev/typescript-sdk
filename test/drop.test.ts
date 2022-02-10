@@ -49,6 +49,7 @@ describe("Drop Contract", async () => {
       {
         startTime: new Date().getTime() / 2000,
         snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+        price: BigNumber.from(1),
       },
       {
         startTime: new Date(),
