@@ -1022,7 +1022,7 @@ export class AppModule
     const royaltyTreasury = await this.getRoyaltyTreasury();
 
     const address = await this._deployModule(
-      ModuleType.SIGNATURE_MINT_1155,
+      ModuleType.BUNDLE_SIGNATURE,
       [
         metadataUri,
         this.address,

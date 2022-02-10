@@ -79,7 +79,7 @@ export class SignatureMint1155Module
   extends ModuleWithRoles<SignatureMint1155>
   implements ITransferable
 {
-  public static moduleType: ModuleType = ModuleType.SIGNATURE_MINT_1155;
+  public static moduleType: ModuleType = ModuleType.BUNDLE_SIGNATURE;
 
   public static roles = [
     RolesMap.admin,
