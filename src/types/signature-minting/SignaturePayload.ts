@@ -15,6 +15,8 @@ export interface SignaturePayload extends NewSignaturePayload {
 export interface NewErc1155SignaturePayload extends NewSignaturePayload {
   tokenId: BigNumberish;
   quantity: BigNumberish;
+  royaltyRecipient: string;
+  primarySaleRecipient: string;
 }
 
 export interface Erc1155SignaturePayload extends NewErc1155SignaturePayload {

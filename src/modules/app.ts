@@ -1027,6 +1027,7 @@ export class AppModule
         await this.getForwarder(),
         nativeTokenWrapperAddress,
         metadata.primarySaleRecipientAddress,
+        metadata.feeRecipient,
         metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
         metadata.primarySaleFeeBasisPoints
           ? metadata.primarySaleFeeBasisPoints

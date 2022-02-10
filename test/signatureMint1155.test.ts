@@ -29,6 +29,7 @@ describe("SignatureMint1155 Module", async () => {
     await sdk.setProviderOrSigner(adminWallet);
     module = await appModule.deploySignatureMint1155Module({
       name: "Test Signature Mint 1155",
+      feeRecipient: appModule.address,
       primarySaleRecipientAddress: AddressZero,
     });
   });
@@ -76,6 +77,8 @@ describe("SignatureMint1155 Module", async () => {
     beforeEach(async () => {
       defaultPayload = {
         tokenId: ethers.constants.MaxUint256,
+        royaltyRecipient: AddressZero,
+        primarySaleRecipient: AddressZero,
         quantity: 10,
         price: ethers.utils.parseEther("0.001"),
         metadata: {
