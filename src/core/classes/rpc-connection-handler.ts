@@ -1,4 +1,8 @@
-import { Provider } from "@ethersproject/providers";
+import {
+  JsonRpcBatchProvider,
+  Provider,
+  WebSocketProvider,
+} from "@ethersproject/providers";
 import { ethers, Signer } from "ethers";
 import { EventEmitter2 } from "eventemitter2";
 import {
@@ -28,9 +32,28 @@ export class RPCConnectionHandler extends EventEmitter2 {
       if (Provider.isProvider(network)) {
         provider = network;
       } else if (!Signer.isSigner(network)) {
-        // if the provider is not set, we'll use the default provider
-        // this will happen if the passed in network is neither a signer nor a provider
-        provider = ethers.getDefaultProvider(network);
+        if (typeof network === "string") {
+          // try the JSON batch provider if available
+          try {
+            const match = network.match(/^(ws|http)s?:/i);
+            if (match) {
+              switch (match[1]) {
+                case "http":
+                  provider = new JsonRpcBatchProvider(network);
+                case "ws":
+                  provider = new WebSocketProvider(network);
+                default:
+                  break;
+              }
+            }
+          } catch (e) {
+            // fallback to the default provider
+            provider = ethers.getDefaultProvider(network);
+          }
+        } else {
+          // no a signer, not a provider, not a string? try with default provider
+          provider = ethers.getDefaultProvider(network);
+        }
       }
     }
 
