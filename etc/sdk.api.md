@@ -33,6 +33,7 @@ import { ProtocolControl } from '@3rdweb/contracts';
 import { Provider } from '@ethersproject/providers';
 import { Registry } from '@3rdweb/contracts';
 import { Royalty } from '@3rdweb/contracts';
+import { SignatureMint1155 } from '@3rdweb/contracts';
 import { SignatureMint721 } from '@3rdweb/contracts';
 import { Signer } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/providers';
@@ -47,10 +48,11 @@ export class AdminRoleMissingError extends Error {
 export type AllModuleMetadata = CollectionModuleMetadata | CommonModuleMetadata;
 
 // Warning: (ae-forgotten-export) The symbol "RegistryModule" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "SignatureMint1155Module" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "AnyContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule | typeof BundleDropModule | typeof MarketplaceModule | typeof VoteModule;
+export type AnyContract = typeof AppModule | typeof BundleModule | typeof NFTModule | typeof CurrencyModule | typeof MarketModule | typeof PackModule | typeof RegistryModule | typeof DropModule | typeof DatastoreModule | typeof SplitsModule | typeof BundleDropModule | typeof MarketplaceModule | typeof VoteModule | typeof SignatureMint1155Module;
 
 // Warning: (ae-forgotten-export) The symbol "IAppModule" needs to be exported by the entry point index.d.ts
 //
@@ -62,6 +64,7 @@ export class AppModule extends ModuleWithRoles<ProtocolControl> implements IAppM
     protected connectContract(): ProtocolControl;
     deployBundleDropModule(metadata: BundleDropModuleMetadata): Promise<BundleDropModule>;
     deployBundleModule(metadata: BundleModuleMetadata): Promise<CollectionModule>;
+    deployBundleSignatureModule(metadata: DropModuleMetadata): Promise<SignatureMint1155Module>;
     deployCurrencyModule(metadata: CurrencyModuleMetadata): Promise<CurrencyModule>;
     // @alpha
     deployDatastoreModule(metadata: DatastoreModuleMetadata): Promise<DatastoreModule>;
@@ -764,6 +767,12 @@ export class DuplicateLeafsError extends Error {
     constructor(message?: string);
 }
 
+// @public (undocumented)
+export interface Erc1155SignaturePayload extends NewErc1155SignaturePayload {
+    // (undocumented)
+    uri: string;
+}
+
 // @public
 export function estimateBlockAtTime(timeInEpochSeconds: number, provider: Provider): Promise<number>;
 
@@ -1036,6 +1045,8 @@ export class IpfsStorage implements IStorage {
 // @public
 export interface IRoles {
     admin: "admin";
+    // @internal
+    asset: "asset";
     // @alpha
     editor: "editor";
     lister: "lister";
@@ -1262,6 +1273,10 @@ export interface MarketplaceFilter {
 export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements IMarketplace {
     // (undocumented)
     acceptDirectListingOffer(listingId: BigNumberish_2, addressOfOfferor: string): Promise<void>;
+    // (undocumented)
+    allowListingFromAnyAsset(): Promise<void>;
+    // (undocumented)
+    allowListingFromSpecificAssetOnly(contractAddress: string): Promise<void>;
     buyoutAuctionListing(listingId: BigNumberish_2): Promise<void>;
     buyoutDirectListing(_buyout: {
         listingId: BigNumberish_2;
@@ -1315,7 +1330,7 @@ export class MarketplaceModule extends ModuleWithRoles<Marketplace> implements I
     // (undocumented)
     static moduleType: ModuleType;
     // (undocumented)
-    static roles: readonly ["admin", "lister"];
+    static roles: readonly ["admin", "lister", "asset"];
     // (undocumented)
     setBidBufferBps(buffer: BigNumberish_2): Promise<void>;
     // (undocumented)
@@ -1464,6 +1479,8 @@ export enum ModuleType {
     // (undocumented)
     PACK = 5,
     // (undocumented)
+    SIGNATURE_MINT_1155 = 13,
+    // (undocumented)
     SPLITS = 9,
     // (undocumented)
     TOKEN = 0,
@@ -1530,6 +1547,18 @@ export interface NewDirectListing {
     type?: "NewDirectListing";
 }
 
+// @public (undocumented)
+export interface NewErc1155SignaturePayload extends NewSignaturePayload {
+    // (undocumented)
+    primarySaleRecipient: string;
+    // (undocumented)
+    quantity: BigNumberish_2;
+    // (undocumented)
+    royaltyRecipient: string;
+    // (undocumented)
+    tokenId: BigNumberish_2;
+}
+
 // @public
 export interface NewSignaturePayload {
     currencyAddress: string;
@@ -1550,7 +1579,7 @@ export interface NewSplitRecipient {
 // Warning: (ae-internal-missing-underscore) The name "NFTContractTypes" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type NFTContractTypes = NFT | NFTCollection | LazyNFT | LazyMintERC721 | LazyMintERC1155;
+export type NFTContractTypes = NFT | NFTCollection | LazyNFT | LazyMintERC721 | LazyMintERC1155 | SignatureMint1155;
 
 // @public @deprecated
 export const NFTLabsSDK: typeof ThirdwebSDK;
@@ -1978,6 +2007,8 @@ export class ThirdwebSDK implements IThirdwebSdk {
     getBundleDropModule(address: string): BundleDropModule;
     // (undocumented)
     getBundleModule(address: string): BundleModule;
+    // @alpha (undocumented)
+    getBundleSignatureModule(address: string): SignatureMint1155Module;
     // @deprecated (undocumented)
     getCollectionModule(address: string): CollectionModule;
     // (undocumented)

@@ -1,3 +1,4 @@
+import { SignatureMint1155Module } from "./signature-mint-1155";
 import {
   Coin__factory,
   DataStore__factory,
@@ -11,6 +12,7 @@ import {
   ProtocolControl,
   ProtocolControl__factory,
   Royalty__factory,
+  SignatureMint1155__factory,
   SignatureMint721__factory,
   Splits__factory,
   VotingGovernor__factory,
@@ -981,6 +983,64 @@ export class AppModule
       await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
     }
     return this.sdk.getDropModule(address);
+  }
+
+  /**
+   * Deploys a BundleSignature module
+   *
+   * @param metadata - The module metadata
+   * @returns - The deployed BundleSignature module
+   */
+  public async deployBundleSignatureModule(
+    metadata: DropModuleMetadata,
+  ): Promise<SignatureMint1155Module> {
+    invariant(
+      metadata.primarySaleRecipientAddress !== "" &&
+        isAddress(metadata.primarySaleRecipientAddress),
+      "Primary sale recipient address must be specified and must be a valid address",
+    );
+
+    const serializedMetadata = this.jsonConvert.serializeObject(
+      await this._prepareMetadata(metadata),
+      DropModuleMetadata,
+    );
+
+    await this.verifyMetadata(metadata);
+
+    const metadataUri = await this.sdk
+      .getStorage()
+      .uploadMetadata(
+        serializedMetadata,
+        this.address,
+        await this.getSignerAddress(),
+      );
+
+    const nativeTokenWrapperAddress = getNativeTokenByChainId(
+      await this.getChainID(),
+    ).wrapped.address;
+
+    const royaltyTreasury = await this.getRoyaltyTreasury();
+
+    const address = await this._deployModule(
+      ModuleType.BUNDLE_SIGNATURE,
+      [
+        metadataUri,
+        this.address,
+        await this.getForwarder(),
+        nativeTokenWrapperAddress,
+        metadata.primarySaleRecipientAddress,
+        metadata.feeRecipient ? metadata.feeRecipient : royaltyTreasury,
+        metadata.sellerFeeBasisPoints ? metadata.sellerFeeBasisPoints : 0,
+        metadata.primarySaleFeeBasisPoints
+          ? metadata.primarySaleFeeBasisPoints
+          : 0,
+      ],
+      SignatureMint1155__factory,
+    );
+    if (metadata.feeRecipient && metadata.feeRecipient !== royaltyTreasury) {
+      await this.setModuleRoyaltyTreasury(address, metadata.feeRecipient);
+    }
+    return this.sdk.getBundleSignatureModule(address);
   }
 
   /**
