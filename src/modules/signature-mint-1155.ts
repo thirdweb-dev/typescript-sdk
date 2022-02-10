@@ -24,7 +24,6 @@ import {
 import { hexlify } from "@ethersproject/bytes";
 import { toUtf8Bytes } from "ethers/lib/utils";
 import { v4 as uuidv4 } from "uuid";
-import { A } from "ts-toolbelt";
 
 export interface TokenERC1155Metadata {
   supply: BigNumber;
