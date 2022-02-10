@@ -161,6 +161,7 @@ Output
 |  [Currency](./sdk.currency.md) | Currency metadata. |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
+|  [Erc1155SignaturePayload](./sdk.erc1155signaturepayload.md) |  |
 |  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
 |  [IAppModule](./sdk.iappmodule.md) |  |
 |  [IDropModule](./sdk.idropmodule.md) |  |
@@ -188,6 +189,7 @@ Output
 |  [NativeToken](./sdk.nativetoken.md) |  |
 |  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
 |  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
+|  [NewErc1155SignaturePayload](./sdk.newerc1155signaturepayload.md) |  |
 |  [NewSignaturePayload](./sdk.newsignaturepayload.md) | Represents a new <code>SignatureMint</code> request. |
 |  [NewSplitRecipient](./sdk.newsplitrecipient.md) | The NewSplitRecipient interface describes the structure of a new split recipient. The <code>shares</code> property is important for the calculation of the the total split.<!-- -->If there are two recipients each with 10 shares, they each will receive 50% of the total royalties.<!-- -->If there are two recipients each with 1 share, they each will receive 50% of the total royalties.<!-- -->I.e. the total number of shares is used to calculate the percentage of the total royalties that is allocated to each recipient. |
 |  [NFTMetadata](./sdk.nftmetadata.md) | The shared NFT metadata. |

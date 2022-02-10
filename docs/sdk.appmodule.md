@@ -29,6 +29,7 @@ export declare class AppModule extends ModuleWithRoles<ProtocolControl> implemen
 |  [balanceOfToken(tokenAddress)](./sdk.appmodule.balanceoftoken.md) |  | Check the balance of the project wallet in a particular ERC20 token contract |
 |  [deployBundleDropModule(metadata)](./sdk.appmodule.deploybundledropmodule.md) |  | Deploys a Bundle Drop module |
 |  [deployBundleModule(metadata)](./sdk.appmodule.deploybundlemodule.md) |  | Deploys a collection module. |
+|  [deployBundleSignatureModule(metadata)](./sdk.appmodule.deploybundlesignaturemodule.md) |  | Deploys a BundleSignature module |
 |  [deployCurrencyModule(metadata)](./sdk.appmodule.deploycurrencymodule.md) |  | Deploys a currency module. |
 |  [deployDropModule(metadata)](./sdk.appmodule.deploydropmodule.md) |  | Deploys a Drop module |
 |  [deployMarketModule(metadata)](./sdk.appmodule.deploymarketmodule.md) |  | Deploys a Marketplace module |

@@ -19,6 +19,7 @@ export declare enum ModuleType
 |  ACCESS\_NFT | <code>4</code> |  |
 |  BUNDLE | <code>1</code> |  |
 |  BUNDLE\_DROP | <code>11</code> |  |
+|  BUNDLE\_SIGNATURE | <code>13</code> |  |
 |  COLLECTION | <code>1</code> |  |
 |  CURRENCY | <code>0</code> |  |
 |  DATASTORE | <code>8</code> |  |

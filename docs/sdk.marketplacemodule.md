@@ -32,13 +32,15 @@ const module = sdk.getMarketplaceModule("{{module_address}}");
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [moduleType](./sdk.marketplacemodule.moduletype.md) | <code>static</code> | [ModuleType](./sdk.moduletype.md) |  |
-|  [roles](./sdk.marketplacemodule.roles.md) | <code>static</code> | readonly \["admin", "lister"\] |  |
+|  [roles](./sdk.marketplacemodule.roles.md) | <code>static</code> | readonly \["admin", "lister", "asset"\] |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [acceptDirectListingOffer(listingId, addressOfOfferor)](./sdk.marketplacemodule.acceptdirectlistingoffer.md) |  |  |
+|  [allowListingFromAnyAsset()](./sdk.marketplacemodule.allowlistingfromanyasset.md) |  |  |
+|  [allowListingFromSpecificAssetOnly(contractAddress)](./sdk.marketplacemodule.allowlistingfromspecificassetonly.md) |  |  |
 |  [buyoutAuctionListing(listingId)](./sdk.marketplacemodule.buyoutauctionlisting.md) |  | Buyout Auction |
 |  [buyoutDirectListing(\_buyout)](./sdk.marketplacemodule.buyoutdirectlisting.md) |  | Buy Listing |
 |  [buyoutListing(listingId, quantityDesired)](./sdk.marketplacemodule.buyoutlisting.md) |  |  |
