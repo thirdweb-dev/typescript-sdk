@@ -29,13 +29,13 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.Goerli]: {
     biconomyForwarder: AddressZero,
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
+    twFactory: "0xC966c8E15c104515A49F91C58DCcc65CC5a2CBA5",
+    twRegistry: "0xC6642e134E61A1888B9ff1f61E8003b9160c4e01",
   },
   [ChainId.Polygon]: {
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
-    twFactory: "0xC966c8E15c104515A49F91C58DCcc65CC5a2CBA5",
-    twRegistry: "0xC6642e134E61A1888B9ff1f61E8003b9160c4e01",
+    twFactory: AddressZero,
+    twRegistry: AddressZero,
   },
   [ChainId.Mumbai]: {
     biconomyForwarder: "0x9399BB24DBB5C4b782C70c2969F58716Ebbd6a3b",
