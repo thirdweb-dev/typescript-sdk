@@ -99,6 +99,13 @@ export class ContractWrapper<
   /**
    * @internal
    */
+  public callStatic() {
+    return this.writeContract.callStatic;
+  }
+
+  /**
+   * @internal
+   */
   public async getCallOverrides(): Promise<CallOverrides> {
     const chainId = await this.getChainID();
     const speed = this.options.gasSettings?.speed || "fastest";
