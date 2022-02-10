@@ -1316,29 +1316,31 @@ export class DropModule
 
     const countRangeArray = Array.from(Array(count.toNumber()).keys());
 
-    // first batch always start from 0. don't need to fetch the last batch so pop it from the range array
+    // map over to get the base uri indices, which should be the end token id of every batch
     const uriIndices = await Promise.all(
-      countRangeArray
-        .slice(0, countRangeArray.length - 1)
-        .map((i) => this.readOnlyContract.baseURIIndices(i)),
+      countRangeArray.map((i) => this.readOnlyContract.baseURIIndices(i)),
     );
+
+    // first batch always start from 0. don't need to fetch the last batch so pop it from the range array
+    const uriIndicesWithZeroStart = uriIndices.slice(0, uriIndices.length - 1);
 
     // returns the token uri for each batches. first batch always starts from token id 0.
     const tokenUris = await Promise.all(
-      Array.from([0, ...uriIndices]).map((i) =>
+      Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
         this.readOnlyContract.tokenURI(i),
       ),
     );
 
     const tokenMetadatas = await Promise.all(
-      Array.from([0, ...uriIndices]).map((i) =>
+      Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
         this.getTokenMetadata(i.toString()),
       ),
     );
 
-    const unrevealed = await Promise.all(
-      countRangeArray.map(
-        (i) => this.readOnlyContract.encryptedBaseURI(i).length > 0,
+    // index is the uri indicies, which is end token id. different from uris
+    const encryptedBaseUris = await Promise.all(
+      Array.from([...uriIndices]).map((i) =>
+        this.readOnlyContract.encryptedBaseURI(i),
       ),
     );
 
@@ -1348,7 +1350,9 @@ export class DropModule
         batchUri: uri,
         placeholderMetadata: tokenMetadatas[index],
       }))
-      .filter((_, index) => unrevealed[index]);
+      .filter(
+        (_, index) => ethers.utils.hexDataLength(encryptedBaseUris[index]) > 0,
+      );
   }
 
   /**
