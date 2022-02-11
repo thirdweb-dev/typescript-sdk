@@ -21,39 +21,8 @@ export class RPCConnectionHandler extends EventEmitter2 {
   constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
     super();
     this.network = network;
-    let provider: Provider | undefined;
-    if (Signer.isSigner(network)) {
-      this.signer = network;
-      if (network.provider) {
-        provider = network.provider;
-      }
-    }
-
-    if (options?.readOnlyRpcUrl) {
-      provider = this.getReadOnlyProvider(options.readOnlyRpcUrl);
-    }
-
-    if (!provider) {
-      if (Provider.isProvider(network)) {
-        provider = network;
-      } else if (!Signer.isSigner(network)) {
-        if (typeof network === "string") {
-          provider = this.getReadOnlyProvider(network);
-        } else {
-          // no a signer, not a provider, not a string? try with default provider
-          provider = ethers.getDefaultProvider(network);
-        }
-      }
-    }
-
-    if (!provider) {
-      // we should really never hit this case!
-      provider = ethers.getDefaultProvider();
-      console.error(
-        "No provider found, using default provider on default chain!",
-      );
-    }
-
+    const [signer, provider] = this.getSignerAndProvider(network, options);
+    this.signer = signer;
     this.provider = provider;
 
     try {
@@ -72,32 +41,8 @@ export class RPCConnectionHandler extends EventEmitter2 {
    * @param network - a network, signer or provider that ethers js can interpret
    */
   public updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
-    this.network = network;
-    let provider: Provider | undefined;
-    if (Signer.isSigner(network)) {
-      this.signer = network;
-      if (network.provider) {
-        provider = network.provider;
-      }
-    }
-    if (!provider) {
-      if (Provider.isProvider(network)) {
-        provider = network;
-      } else if (!Signer.isSigner(network)) {
-        // if the provider is not set, we'll use the default provider
-        // this will happen if the passed in network is neither a signer nor a provider
-        provider = ethers.getDefaultProvider(network);
-      }
-    }
-
-    if (!provider) {
-      // we should really never hit this case!
-      provider = ethers.getDefaultProvider();
-      console.error(
-        "No provider found, using default provider on default chain!",
-      );
-    }
-
+    const [signer, provider] = this.getSignerAndProvider(network, this.options);
+    this.signer = signer;
     this.provider = provider;
   }
 
@@ -131,6 +76,52 @@ export class RPCConnectionHandler extends EventEmitter2 {
    */
   public getProvider(): Provider {
     return this.provider;
+  }
+
+  /**********************
+   * PRIVATE FUNCTIONS
+   *********************/
+
+  private getSignerAndProvider(
+    network: NetworkOrSignerOrProvider,
+    options: SDKOptions,
+  ): [Signer | undefined, Provider] {
+    let signer: Signer | undefined;
+    let provider: Provider | undefined;
+
+    if (Signer.isSigner(network)) {
+      signer = network;
+      if (network.provider) {
+        provider = network.provider;
+      }
+    }
+
+    if (options?.readOnlyRpcUrl) {
+      provider = this.getReadOnlyProvider(options.readOnlyRpcUrl);
+    }
+
+    if (!provider) {
+      if (Provider.isProvider(network)) {
+        provider = network;
+      } else if (!Signer.isSigner(network)) {
+        if (typeof network === "string") {
+          provider = this.getReadOnlyProvider(network);
+        } else {
+          // no a signer, not a provider, not a string? try with default provider
+          provider = ethers.getDefaultProvider(network);
+        }
+      }
+    }
+
+    if (!provider) {
+      // we should really never hit this case!
+      provider = ethers.getDefaultProvider();
+      console.error(
+        "No provider found, using default provider on default chain!",
+      );
+    }
+
+    return [signer, provider];
   }
 
   private getReadOnlyProvider(network: string) {
