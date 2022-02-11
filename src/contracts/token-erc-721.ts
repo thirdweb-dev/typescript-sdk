@@ -250,6 +250,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    *
    * @remarks Mint an dynamic NFT with a previously generated signature.
    *
+   * @example
    * ```javascript
    * // see how to craft a payload to sign in the `generateSignature()` documentation
    * const { mintRequest, signature } = contract.generateSignature(payload);
@@ -313,6 +314,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    *
    * @remarks Takes in an NFT and some information about how it can be minted, uploads the metadata and signs it with your private key. The generated signature can then be used to mint an NFT using the exact payload and signature generated.
    *
+   * @example
    * ```javascript
    * const nftMetadata = {
    *   name: "Cool NFT #1",
