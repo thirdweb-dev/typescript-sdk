@@ -838,10 +838,7 @@ export class MarketplaceContract implements UpdateableNetwork {
     // (undocumented)
     acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): TransactionResultPromise;
     buyoutAuctionListing(listingId: BigNumberish): TransactionResultPromise;
-    buyoutDirectListing(_buyout: {
-        listingId: BigNumberish;
-        quantityDesired: BigNumberish;
-    }): TransactionResultPromise;
+    buyoutDirectListing(listingId: BigNumberish, quantityDesired: BigNumberish): TransactionResultPromise;
     buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): TransactionResultPromise;
     cancelAuctionListing(listingId: BigNumberish): TransactionResultPromise;
     cancelDirectListing(listingId: BigNumberish): TransactionResultPromise;
@@ -865,8 +862,6 @@ export class MarketplaceContract implements UpdateableNetwork {
     // Warning: (ae-forgotten-export) The symbol "MarketplaceFilter" needs to be exported by the entry point index.d.ts
     getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     // Warning: (ae-forgotten-export) The symbol "AuctionListing" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     getAuctionListing(listingId: BigNumberish): Promise<AuctionListing>;
     getAuctionWinner(listingId: BigNumberish): Promise<string>;
     // (undocumented)
@@ -878,10 +873,7 @@ export class MarketplaceContract implements UpdateableNetwork {
     getTimeBufferInSeconds(): Promise<BigNumber>;
     getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
     isRestrictedListerRoleOnly(): Promise<boolean>;
-    makeAuctionListingBid(bid: {
-        listingId: BigNumberish;
-        pricePerToken: BigNumberish;
-    }): TransactionResultPromise;
+    makeAuctionListingBid(listingId: BigNumberish, pricePerToken: BigNumberish): TransactionResultPromise;
     makeDirectListingOffer(offer: {
         listingId: BigNumberish;
         quantityDesired: BigNumberish;

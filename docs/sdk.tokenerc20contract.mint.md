@@ -4,7 +4,7 @@
 
 ## TokenErc20Contract.mint() method
 
-Mint Tokens
+Mint Tokens for the connected wallet
 
 <b>Signature:</b>
 
@@ -21,18 +21,4 @@ mint(amount: BigNumberish): TransactionResultPromise;
 <b>Returns:</b>
 
 TransactionResultPromise
-
-## Remarks
-
-Mint tokens to the connected wallet
-
-## Example
-
-
-```javascript
-// The amount of this token you want to mint
-const amount = ethers.utils.parseEther("1.5");
-
-await contract.mintTo(toAddress, amount);
-```
 

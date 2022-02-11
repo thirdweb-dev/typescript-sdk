@@ -49,25 +49,25 @@ const contract = sdk.getMarketplaceContract("{{contract_address}}");
 |  --- | --- | --- |
 |  [acceptDirectListingOffer(listingId, addressOfOfferor)](./sdk.marketplacecontract.acceptdirectlistingoffer.md) |  |  |
 |  [buyoutAuctionListing(listingId)](./sdk.marketplacecontract.buyoutauctionlisting.md) |  | Buyout Auction |
-|  [buyoutDirectListing(\_buyout)](./sdk.marketplacecontract.buyoutdirectlisting.md) |  | Buy Listing |
+|  [buyoutDirectListing(listingId, quantityDesired)](./sdk.marketplacecontract.buyoutdirectlisting.md) |  | Buy Listing |
 |  [buyoutListing(listingId, quantityDesired)](./sdk.marketplacecontract.buyoutlisting.md) |  | Convenience function to buy a Direct or Auction listing. |
 |  [cancelAuctionListing(listingId)](./sdk.marketplacecontract.cancelauctionlisting.md) |  | Cancel Auction Listing |
 |  [cancelDirectListing(listingId)](./sdk.marketplacecontract.canceldirectlisting.md) |  | Cancel Direct Listing |
-|  [closeAuctionListing(listingId, closeFor)](./sdk.marketplacecontract.closeauctionlisting.md) |  | Closes the Auction and executes the sale |
+|  [closeAuctionListing(listingId, closeFor)](./sdk.marketplacecontract.closeauctionlisting.md) |  | Close the Auction |
 |  [createAuctionListing(listing)](./sdk.marketplacecontract.createauctionlisting.md) |  | Create Auction |
 |  [createDirectListing(listing)](./sdk.marketplacecontract.createdirectlisting.md) |  | Create Direct Listing |
 |  [getActiveOffer(listingId, address)](./sdk.marketplacecontract.getactiveoffer.md) |  | Get the active offer on a listing |
 |  [getAddress()](./sdk.marketplacecontract.getaddress.md) |  |  |
-|  [getAllListings(filter)](./sdk.marketplacecontract.getalllistings.md) |  | Get all the listings in this Marketplace contract |
-|  [getAuctionListing(listingId)](./sdk.marketplacecontract.getauctionlisting.md) |  |  |
+|  [getAllListings(filter)](./sdk.marketplacecontract.getalllistings.md) |  | Get all the listings |
+|  [getAuctionListing(listingId)](./sdk.marketplacecontract.getauctionlisting.md) |  | Get an Auction listing by id |
 |  [getAuctionWinner(listingId)](./sdk.marketplacecontract.getauctionwinner.md) |  | Get Auction Winner |
 |  [getBidBufferBps()](./sdk.marketplacecontract.getbidbufferbps.md) |  |  |
-|  [getDirectListing(listingId)](./sdk.marketplacecontract.getdirectlisting.md) |  | \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* READ FUNCTIONS \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* |
-|  [getListing(listingId)](./sdk.marketplacecontract.getlisting.md) |  | Convenience function to get either a direct or auction listing. |
+|  [getDirectListing(listingId)](./sdk.marketplacecontract.getdirectlisting.md) |  | Get a direct listing by id |
+|  [getListing(listingId)](./sdk.marketplacecontract.getlisting.md) |  | Convenience function to get either a direct or auction listing |
 |  [getTimeBufferInSeconds()](./sdk.marketplacecontract.gettimebufferinseconds.md) |  |  |
 |  [getWinningBid(listingId)](./sdk.marketplacecontract.getwinningbid.md) |  | Get Highest Bid |
 |  [isRestrictedListerRoleOnly()](./sdk.marketplacecontract.isrestrictedlisterroleonly.md) |  | Get whether listing is restricted only to addresses with the Lister role |
-|  [makeAuctionListingBid(bid)](./sdk.marketplacecontract.makeauctionlistingbid.md) |  | Bid On Auction |
+|  [makeAuctionListingBid(listingId, pricePerToken)](./sdk.marketplacecontract.makeauctionlistingbid.md) |  | Bid On Auction |
 |  [makeDirectListingOffer(offer)](./sdk.marketplacecontract.makedirectlistingoffer.md) |  | Make an offer for a Direct Listing |
 |  [onNetworkUpdated(network)](./sdk.marketplacecontract.onnetworkupdated.md) |  |  |
 |  [setBidBufferBps(bufferBps)](./sdk.marketplacecontract.setbidbufferbps.md) |  | Set the Bid buffer: this is a percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items. |

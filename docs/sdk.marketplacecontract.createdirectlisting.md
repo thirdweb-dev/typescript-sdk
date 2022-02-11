@@ -48,6 +48,8 @@ const listing = {
   buyoutPricePerToken: "1",
 }
 
-await contract.createDirectListing(listing);
+const tx = await contract.createDirectListing(listing);
+const receipt = tx.receipt; // the transaction receipt
+const id = tx.id; // the id of the newly created listing
 ```
 

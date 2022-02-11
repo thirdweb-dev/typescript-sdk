@@ -37,15 +37,6 @@
     },
     "methods": [
       {
-        "name": "claim",
-        "summary": "Claim NFTs to the connected Wallet\n\n",
-        "remarks": "\n\nLet the currently connected wallet claim NFTs.\n\n",
-        "examples": {
-          "javascript": "const quantity = 1; // Quantity of the tokens you want to claim\n\nconst tx = await contract.claim(quantity);\nconst receipt = tx.receipt; // the transaction receipt\nconst claimedTokenId = tx.id; // the id of the NFT claimed\nconst claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata"
-        },
-        "signature": "claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;"
-      },
-      {
         "name": "claimTo",
         "summary": "Claim NFTs to a specific Wallet\n\n",
         "remarks": "\n\nLet the a specified wallet claim NFTs.\n\n",
@@ -83,7 +74,7 @@
       },
       {
         "name": "totalClaimedSupply",
-        "summary": "Get the claimed supply\n\n*\n\n",
+        "summary": "Get the claimed supply\n\n",
         "remarks": "\n\nGet the number of claimed NFTs in this Drop.\n\n*\n\n",
         "examples": {
           "javascript": "const claimedNFTCount = await contract.totalClaimedSupply();\nconsole.log(`NFTs claimed so far: ${claimedNFTCount}`);"
@@ -92,7 +83,7 @@
       },
       {
         "name": "totalUnclaimedSupply",
-        "summary": "Get the unclaimed supply\n\n*\n\n",
+        "summary": "Get the unclaimed supply\n\n",
         "remarks": "\n\nGet the number of unclaimed NFTs in this Drop.\n\n*\n\n",
         "examples": {
           "javascript": "const unclaimedNFTCount = await contract.totalUnclaimedSupply();\nconsole.log(`NFTs left to claim: ${unclaimedNFTCount}`);"
@@ -124,16 +115,16 @@
         "summary": "Buy Listing\n\n",
         "remarks": "\n\nBuy a specific direct listing from the marketplace.\n\n",
         "examples": {
-          "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n// Quantity of the asset you want to buy\nconst quantityDesired = 1;\n\nawait contract.buyoutDirectListing({ listingId, quantityDesired });"
+          "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n// Quantity of the asset you want to buy\nconst quantityDesired = 1;\n\nawait contract.buyoutDirectListing(listingId, quantityDesired);"
         },
-        "signature": "buyoutDirectListing(_buyout: {\n        listingId: BigNumberish;\n        quantityDesired: BigNumberish;\n    }): TransactionResultPromise;"
+        "signature": "buyoutDirectListing(listingId: BigNumberish, quantityDesired: BigNumberish): TransactionResultPromise;"
       },
       {
         "name": "cancelAuctionListing",
         "summary": "Cancel Auction Listing\n\n",
         "remarks": "\n\nCancel an auction listing on the marketplace\n\n",
         "examples": {
-          "javascript": "// The listing ID of the auction listing you want to cancel\nconst listingId = \"0\"\n\nawait contract.cancelAuctionListing(listingId);"
+          "javascript": "// The listing ID of the auction listing you want to cancel\nconst listingId = \"0\";\n\nawait contract.cancelAuctionListing(listingId);"
         },
         "signature": "cancelAuctionListing(listingId: BigNumberish): TransactionResultPromise;"
       },
@@ -142,16 +133,25 @@
         "summary": "Cancel Direct Listing\n\n",
         "remarks": "\n\nCancel a direct listing on the marketplace\n\n",
         "examples": {
-          "javascript": "// The listing ID of the direct listing you want to cancel\nconst listingId = \"0\"\n\nawait contract.cancelDirectListing(listingId);"
+          "javascript": "// The listing ID of the direct listing you want to cancel\nconst listingId = \"0\";\n\nawait contract.cancelDirectListing(listingId);"
         },
         "signature": "cancelDirectListing(listingId: BigNumberish): TransactionResultPromise;"
+      },
+      {
+        "name": "closeAuctionListing",
+        "summary": "Close the Auction\n\n",
+        "remarks": "\n\nCloses the Auction and executes the sale.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the auction listing you want to close\nconst listingId = \"0\";\nawait closeAuctionListing(listindId);"
+        },
+        "signature": "closeAuctionListing(listingId: BigNumberish, closeFor?: string): TransactionResultPromise;"
       },
       {
         "name": "createAuctionListing",
         "summary": "Create Auction\n\n",
         "remarks": "\n\nCreate a new auction where people can bid on an asset.\n\n",
         "examples": {
-          "javascript": "// Data of the auction you want to create\nconst auction = {\n  // address of the contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // in how many seconds with the listing open up\n  startTimeInSeconds: 0,\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: \"0x0000000000000000000000000000000000000000\",\n  // how much people would have to bid to instantly buy the asset\n  buyoutPricePerToken: \"10\",\n  // the minimum bid that will be accepted for the token\n  reservePricePerToken: \"1\",\n}\n\nawait contract.createAuctionListing(auction);"
+          "javascript": "// Data of the auction you want to create\nconst auction = {\n  // address of the contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // in how many seconds with the listing open up\n  startTimeInSeconds: 0,\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: \"0x0000000000000000000000000000000000000000\",\n  // how much people would have to bid to instantly buy the asset\n  buyoutPricePerToken: \"10\",\n  // the minimum bid that will be accepted for the token\n  reservePricePerToken: \"1\",\n}\n\nconst tx = await contract.createAuctionListing(auction);\nconst receipt = tx.receipt; // the transaction receipt\nconst id = tx.id; // the id of the newly created listing"
         },
         "signature": "createAuctionListing(listing: NewAuctionListing): Promise<TransactionResultWithId>;"
       },
@@ -160,7 +160,7 @@
         "summary": "Create Direct Listing\n\n",
         "remarks": "\n\nCreate a new listing on the marketplace where people can buy an asset directly.\n\n",
         "examples": {
-          "javascript": "// Data of the listing you want to create\nconst listing = {\n  // address of the contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // in how many seconds with the listing open up\n  startTimeInSeconds: 0,\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: \"0x0000000000000000000000000000000000000000\",\n  // how much the asset will be sold for\n  buyoutPricePerToken: \"1\",\n}\n\nawait contract.createDirectListing(listing);"
+          "javascript": "// Data of the listing you want to create\nconst listing = {\n  // address of the contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // in how many seconds with the listing open up\n  startTimeInSeconds: 0,\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: \"0x0000000000000000000000000000000000000000\",\n  // how much the asset will be sold for\n  buyoutPricePerToken: \"1\",\n}\n\nconst tx = await contract.createDirectListing(listing);\nconst receipt = tx.receipt; // the transaction receipt\nconst id = tx.id; // the id of the newly created listing"
         },
         "signature": "createDirectListing(listing: NewDirectListing): Promise<TransactionResultWithId>;"
       },
@@ -187,9 +187,9 @@
         "summary": "Bid On Auction\n\n",
         "remarks": "\n\nMake a bid on an auction listings\n\n",
         "examples": {
-          "javascript": "// The listing ID of the asset you want to bid on\nconst listingId = 0;\n// The price you are willing to bid for a single token of the listing\nconst pricePerToken = 1;\n\nawait contract.makeAuctionListingBid({ listingId, pricePerToken });"
+          "javascript": "// The listing ID of the asset you want to bid on\nconst listingId = 0;\n// The price you are willing to bid for a single token of the listing\nconst pricePerToken = 1;\n\nawait contract.makeAuctionListingBid(listingId, pricePerToken);"
         },
-        "signature": "makeAuctionListingBid(bid: {\n        listingId: BigNumberish;\n        pricePerToken: BigNumberish;\n    }): TransactionResultPromise;"
+        "signature": "makeAuctionListingBid(listingId: BigNumberish, pricePerToken: BigNumberish): TransactionResultPromise;"
       }
     ],
     "signature": "declare class MarketplaceContract implements UpdateableNetwork "
@@ -243,7 +243,7 @@
         "summary": "Open Pack\n\n",
         "remarks": "\n\nOpen a pack to burn it and obtain the reward asset inside.\n\n",
         "examples": {
-          "javascript": "// The pack ID of the asset you want to buy\nconst packId = \"0\";\nconst rewards = await contract.open(packId);\nconsole.log(rewards);"
+          "javascript": "// The pack ID of the asset you want to buy\nconst packId = \"0\";\nconst tx = await contract.open(packId);\nconst receipt = tx.receipt; // the transaction receipt\nconst packId = tx.id; // the id of the pack that was opened\nconst rewards = tx.data(); // the contents of the opened pack"
         },
         "signature": "open(packId: string): Promise<TransactionResultWithId<NFTMetadata>[]>;"
       },
@@ -324,15 +324,6 @@
     },
     "methods": [
       {
-        "name": "mint",
-        "summary": "Mint NFT\n\n",
-        "remarks": "\n\nMint an NFT with a specified supply.\n\n",
-        "examples": {
-          "javascript": "// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}\n\nconst metadataWithSupply = {\n  metadata,\n  supply: 1, // The number of this NFT you want to mint\n}\n\nawait contract.mint(metadataWithSupply);"
-        },
-        "signature": "mint(metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<BundleMetadata>>;"
-      },
-      {
         "name": "mintBatch",
         "summary": "Mint Many NFTs\n\n",
         "remarks": "\n\nMint many NFTs with specified supplies at once to the connected wallet\n\n",
@@ -370,15 +361,6 @@
       "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getTokenContract(\"{{contract_address}}\");"
     },
     "methods": [
-      {
-        "name": "mint",
-        "summary": "Mint Tokens\n\n",
-        "remarks": "\n\nMint tokens to the connected wallet\n\n",
-        "examples": {
-          "javascript": "// The amount of this token you want to mint\nconst amount = ethers.utils.parseEther(\"1.5\");\n\nawait contract.mintTo(toAddress, amount);"
-        },
-        "signature": "mint(amount: BigNumberish): TransactionResultPromise;"
-      },
       {
         "name": "mintBatchTo",
         "summary": "Mint Tokens To Many Wallets\n\n",
@@ -478,7 +460,7 @@
         "summary": "Create Proposal\n\n",
         "remarks": "\n\nCreate a new proposal for token holders to vote on.\n\n",
         "examples": {
-          "javascript": "// The description of the proposal you want to pass\nconst description = \"This is a great proposal - vote for it!\"\n// You can (optionally) pass in contract calls that will get executed when the proposal is executed.\nconst executions = [\n  {\n    // The contract you want to make a call to\n    toAddress: \"0x...\",\n    // The amount of the native currency to send in this transaction\n    nativeTokenValue: 0,\n    // Transaction data that will be executed when the proposal is executed\n    // This is an example transfer transaction with a token contract (which you would need to setup in code)\n    transactionData: tokenContract.contract.interface.encodeFunctionData(\n      \"transfer\", [\n        fromAddress,\n        amount,\n      ]\n    ),\n  }\n]\n\nconst proposal = await contract.propose(description, executions);"
+          "javascript": "// The description of the proposal you want to pass\nconst description = \"This is a great proposal - vote for it!\"\n// You can (optionally) pass in contract calls that will get executed when the proposal is executed.\nconst executions = [\n  {\n    // The contract you want to make a call to\n    toAddress: \"0x...\",\n    // The amount of the native currency to send in this transaction\n    nativeTokenValue: 0,\n    // Transaction data that will be executed when the proposal is executed\n    // This is an example transfer transaction with a token contract (which you would need to setup in code)\n    transactionData: tokenContract.encoder.encode(\n      \"transfer\", [\n        fromAddress,\n        amount,\n      ]\n    ),\n  }\n]\n\nconst proposal = await contract.propose(description, executions);"
         },
         "signature": "propose(description: string, executions?: ProposalExecutable[]): Promise<TransactionResultWithId>;"
       },

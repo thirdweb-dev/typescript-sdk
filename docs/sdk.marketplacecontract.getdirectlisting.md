@@ -4,7 +4,7 @@
 
 ## MarketplaceContract.getDirectListing() method
 
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* READ FUNCTIONS \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
+Get a direct listing by id
 
 <b>Signature:</b>
 
@@ -16,9 +16,11 @@ getDirectListing(listingId: BigNumberish): Promise<DirectListing>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listingId | BigNumberish |  |
+|  listingId | BigNumberish | the listind Id |
 
 <b>Returns:</b>
 
 Promise&lt;DirectListing&gt;
+
+the Direct listing object
 

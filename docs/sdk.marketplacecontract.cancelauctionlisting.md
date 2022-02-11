@@ -31,7 +31,7 @@ Cancel an auction listing on the marketplace
 
 ```javascript
 // The listing ID of the auction listing you want to cancel
-const listingId = "0"
+const listingId = "0";
 
 await contract.cancelAuctionListing(listingId);
 ```

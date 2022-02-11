@@ -50,6 +50,8 @@ const auction = {
   reservePricePerToken: "1",
 }
 
-await contract.createAuctionListing(auction);
+const tx = await contract.createAuctionListing(auction);
+const receipt = tx.receipt; // the transaction receipt
+const id = tx.id; // the id of the newly created listing
 ```
 

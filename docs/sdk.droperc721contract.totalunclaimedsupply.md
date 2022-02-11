@@ -6,8 +6,6 @@
 
 Get the unclaimed supply
 
-\*
-
 <b>Signature:</b>
 
 ```typescript

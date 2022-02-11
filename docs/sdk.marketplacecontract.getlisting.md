@@ -4,7 +4,7 @@
 
 ## MarketplaceContract.getListing() method
 
-Convenience function to get either a direct or auction listing.
+Convenience function to get either a direct or auction listing
 
 <b>Signature:</b>
 
@@ -16,9 +16,11 @@ getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listingId | BigNumberish |  |
+|  listingId | BigNumberish | the listing id |
 
 <b>Returns:</b>
 
 Promise&lt;AuctionListing \| DirectListing&gt;
+
+either a direct or auction listing
 

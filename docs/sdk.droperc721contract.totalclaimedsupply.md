@@ -6,8 +6,6 @@
 
 Get the claimed supply
 
-\*
-
 <b>Signature:</b>
 
 ```typescript

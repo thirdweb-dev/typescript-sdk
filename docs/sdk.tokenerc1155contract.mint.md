@@ -4,7 +4,7 @@
 
 ## TokenErc1155Contract.mint() method
 
-Mint NFT
+Mint NFT for the connected wallet
 
 <b>Signature:</b>
 
@@ -21,27 +21,4 @@ mint(metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<B
 <b>Returns:</b>
 
 Promise&lt;TransactionResultWithId&lt;BundleMetadata&gt;&gt;
-
-## Remarks
-
-Mint an NFT with a specified supply.
-
-## Example
-
-
-```javascript
-// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
-const metadata = {
-  name: "Cool NFT",
-  description: "This is a cool NFT",
-  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-}
-
-const metadataWithSupply = {
-  metadata,
-  supply: 1, // The number of this NFT you want to mint
-}
-
-await contract.mint(metadataWithSupply);
-```
 

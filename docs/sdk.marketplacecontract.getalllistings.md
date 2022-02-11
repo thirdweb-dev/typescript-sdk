@@ -4,7 +4,7 @@
 
 ## MarketplaceContract.getAllListings() method
 
-Get all the listings in this Marketplace contract
+Get all the listings
 
 <b>Signature:</b>
 
@@ -21,4 +21,13 @@ getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectList
 <b>Returns:</b>
 
 Promise&lt;(AuctionListing \| DirectListing)\[\]&gt;
+
+## Remarks
+
+Fetch all the active listings from this marketplace contract.
+
+```javascript
+const listings = await contract.getAllListings();
+const priceOfFirstListing = listings[0].price;
+```
 

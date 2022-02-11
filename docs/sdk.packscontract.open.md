@@ -32,7 +32,9 @@ Open a pack to burn it and obtain the reward asset inside.
 ```javascript
 // The pack ID of the asset you want to buy
 const packId = "0";
-const rewards = await contract.open(packId);
-console.log(rewards);
+const tx = await contract.open(packId);
+const receipt = tx.receipt; // the transaction receipt
+const packId = tx.id; // the id of the pack that was opened
+const rewards = tx.data(); // the contents of the opened pack
 ```
 

@@ -9,17 +9,15 @@ Buy Listing
 <b>Signature:</b>
 
 ```typescript
-buyoutDirectListing(_buyout: {
-        listingId: BigNumberish;
-        quantityDesired: BigNumberish;
-    }): TransactionResultPromise;
+buyoutDirectListing(listingId: BigNumberish, quantityDesired: BigNumberish): TransactionResultPromise;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_buyout | { listingId: BigNumberish; quantityDesired: BigNumberish; } |  |
+|  listingId | BigNumberish |  |
+|  quantityDesired | BigNumberish |  |
 
 <b>Returns:</b>
 
@@ -38,6 +36,6 @@ const listingId = 0;
 // Quantity of the asset you want to buy
 const quantityDesired = 1;
 
-await contract.buyoutDirectListing({ listingId, quantityDesired });
+await contract.buyoutDirectListing(listingId, quantityDesired);
 ```
 

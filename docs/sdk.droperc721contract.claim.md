@@ -4,7 +4,7 @@
 
 ## DropErc721Contract.claim() method
 
-Claim NFTs to the connected Wallet
+Claim NFTs to the connected wallet.
 
 <b>Signature:</b>
 
@@ -16,28 +16,12 @@ claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWi
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  quantity | BigNumberish | Quantity of the tokens you want to claim |
-|  proofs | BytesLike\[\] | Array of proofs |
+|  quantity | BigNumberish |  |
+|  proofs | BytesLike\[\] |  |
 
 <b>Returns:</b>
 
 Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
 
 - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
-
-## Remarks
-
-Let the currently connected wallet claim NFTs.
-
-## Example
-
-
-```javascript
-const quantity = 1; // Quantity of the tokens you want to claim
-
-const tx = await contract.claim(quantity);
-const receipt = tx.receipt; // the transaction receipt
-const claimedTokenId = tx.id; // the id of the NFT claimed
-const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
-```
 

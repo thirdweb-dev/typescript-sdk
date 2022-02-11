@@ -4,7 +4,7 @@
 
 ## MarketplaceContract.closeAuctionListing() method
 
-Closes the Auction and executes the sale
+Close the Auction
 
 <b>Signature:</b>
 
@@ -22,4 +22,17 @@ closeAuctionListing(listingId: BigNumberish, closeFor?: string): TransactionResu
 <b>Returns:</b>
 
 TransactionResultPromise
+
+## Remarks
+
+Closes the Auction and executes the sale.
+
+## Example
+
+
+```javascript
+// The listing ID of the auction listing you want to close
+const listingId = "0";
+await closeAuctionListing(listindId);
+```
 

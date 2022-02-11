@@ -9,17 +9,15 @@ Bid On Auction
 <b>Signature:</b>
 
 ```typescript
-makeAuctionListingBid(bid: {
-        listingId: BigNumberish;
-        pricePerToken: BigNumberish;
-    }): TransactionResultPromise;
+makeAuctionListingBid(listingId: BigNumberish, pricePerToken: BigNumberish): TransactionResultPromise;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  bid | { listingId: BigNumberish; pricePerToken: BigNumberish; } |  |
+|  listingId | BigNumberish |  |
+|  pricePerToken | BigNumberish |  |
 
 <b>Returns:</b>
 
@@ -38,6 +36,6 @@ const listingId = 0;
 // The price you are willing to bid for a single token of the listing
 const pricePerToken = 1;
 
-await contract.makeAuctionListingBid({ listingId, pricePerToken });
+await contract.makeAuctionListingBid(listingId, pricePerToken);
 ```
 

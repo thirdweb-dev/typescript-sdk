@@ -4,6 +4,8 @@
 
 ## MarketplaceContract.getAuctionListing() method
 
+Get an Auction listing by id
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,11 @@ getAuctionListing(listingId: BigNumberish): Promise<AuctionListing>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listingId | BigNumberish |  |
+|  listingId | BigNumberish | the listing Id |
 
 <b>Returns:</b>
 
 Promise&lt;AuctionListing&gt;
+
+the Auction listing object
 
