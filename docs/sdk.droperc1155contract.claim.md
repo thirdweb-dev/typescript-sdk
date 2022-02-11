@@ -9,7 +9,7 @@ Claim a token to the connected wallet
 <b>Signature:</b>
 
 ```typescript
-claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): TransactionResultPromise;
+claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -22,7 +22,7 @@ claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Tran
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 
 - Receipt for the transaction
 

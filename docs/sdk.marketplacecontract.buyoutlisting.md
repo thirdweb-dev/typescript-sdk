@@ -9,7 +9,7 @@ Convenience function to buy a Direct or Auction listing.
 <b>Signature:</b>
 
 ```typescript
-buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): TransactionResultPromise;
+buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Transact
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

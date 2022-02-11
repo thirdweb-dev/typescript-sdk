@@ -9,7 +9,7 @@ Update an Auction listing with new metadata
 <b>Signature:</b>
 
 ```typescript
-updateAuctionListing(listing: AuctionListing): TransactionResultPromise;
+updateAuctionListing(listing: AuctionListing): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ updateAuctionListing(listing: AuctionListing): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

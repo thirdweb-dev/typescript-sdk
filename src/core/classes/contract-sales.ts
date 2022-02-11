@@ -1,6 +1,6 @@
 import { IThirdwebPrimarySale } from "@3rdweb/contracts";
 import { ContractWrapper } from "./contract-wrapper";
-import { TransactionResultPromise } from "../types";
+import { TransactionResult } from "../types";
 
 export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
   private contractWrapper;
@@ -21,7 +21,7 @@ export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
    * Set the primary sale recipient
    * @param recipient - the wallet address
    */
-  public async setRecipient(recipient: string): TransactionResultPromise {
+  public async setRecipient(recipient: string): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "setPrimarySaleRecipient",

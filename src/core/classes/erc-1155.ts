@@ -3,7 +3,7 @@ import { DropERC1155, TokenERC1155 } from "@3rdweb/contracts";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
-import { NetworkOrSignerOrProvider, TransactionResultPromise } from "../types";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { NotFoundError, RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
@@ -220,7 +220,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
     tokenId: BigNumberish,
     amount: BigNumberish,
     data: BytesLike = [0],
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     if (await this.isTransferRestricted()) {
       throw new RestrictedTransferError(
         await this.contractWrapper.getSignerAddress(),
@@ -245,7 +245,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
   public async burn(
     tokenId: BigNumberish,
     amount: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     const account = await this.contractWrapper.getSignerAddress();
     return {
       receipt: await this.contractWrapper.sendTransaction("burn", [
@@ -266,7 +266,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
   public async setApprovalForAll(
     operator: string,
     approved: boolean,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("setApprovalForAll", [
         operator,
@@ -281,7 +281,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    */
   public async setRestrictedTransfer(
     restricted = false,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "setRestrictedTransfer",

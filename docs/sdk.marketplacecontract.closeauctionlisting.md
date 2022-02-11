@@ -9,7 +9,7 @@ Close the Auction
 <b>Signature:</b>
 
 ```typescript
-closeAuctionListing(listingId: BigNumberish, closeFor?: string): TransactionResultPromise;
+closeAuctionListing(listingId: BigNumberish, closeFor?: string): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -21,7 +21,7 @@ closeAuctionListing(listingId: BigNumberish, closeFor?: string): TransactionResu
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

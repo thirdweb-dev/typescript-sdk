@@ -14,7 +14,7 @@ makeDirectListingOffer(offer: {
         quantityDesired: BigNumberish;
         currencyContractAddress: string;
         pricePerToken: BigNumberish;
-    }): TransactionResultPromise;
+    }): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -25,5 +25,5 @@ makeDirectListingOffer(offer: {
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

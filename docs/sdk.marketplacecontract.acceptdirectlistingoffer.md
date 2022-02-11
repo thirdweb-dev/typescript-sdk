@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): TransactionResultPromise;
+acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -19,5 +19,5 @@ acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): Tra
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

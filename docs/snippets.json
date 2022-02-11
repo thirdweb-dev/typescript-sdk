@@ -14,7 +14,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to claim the NFTs\nconst address = \"{{wallet_address}}\";\n\n// The number of NFTs to claim\nconst quantity = 1;\n\n// The token ID of the NFT you want to claim\nconst tokenId = \"0\"\n\nawait contract.claimTo(address, tokenId, quantity);"
         },
-        "signature": "claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): TransactionResultPromise;"
+        "signature": "claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;"
       },
       {
         "name": "createBatch",
@@ -108,7 +108,7 @@
         "examples": {
           "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n\nawait contract.buyoutAuctionListing(listingId);"
         },
-        "signature": "buyoutAuctionListing(listingId: BigNumberish): TransactionResultPromise;"
+        "signature": "buyoutAuctionListing(listingId: BigNumberish): Promise<TransactionResult>;"
       },
       {
         "name": "buyoutDirectListing",
@@ -117,7 +117,7 @@
         "examples": {
           "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n// Quantity of the asset you want to buy\nconst quantityDesired = 1;\n\nawait contract.buyoutDirectListing(listingId, quantityDesired);"
         },
-        "signature": "buyoutDirectListing(listingId: BigNumberish, quantityDesired: BigNumberish): TransactionResultPromise;"
+        "signature": "buyoutDirectListing(listingId: BigNumberish, quantityDesired: BigNumberish): Promise<TransactionResult>;"
       },
       {
         "name": "cancelAuctionListing",
@@ -126,7 +126,7 @@
         "examples": {
           "javascript": "// The listing ID of the auction listing you want to cancel\nconst listingId = \"0\";\n\nawait contract.cancelAuctionListing(listingId);"
         },
-        "signature": "cancelAuctionListing(listingId: BigNumberish): TransactionResultPromise;"
+        "signature": "cancelAuctionListing(listingId: BigNumberish): Promise<TransactionResult>;"
       },
       {
         "name": "cancelDirectListing",
@@ -135,7 +135,7 @@
         "examples": {
           "javascript": "// The listing ID of the direct listing you want to cancel\nconst listingId = \"0\";\n\nawait contract.cancelDirectListing(listingId);"
         },
-        "signature": "cancelDirectListing(listingId: BigNumberish): TransactionResultPromise;"
+        "signature": "cancelDirectListing(listingId: BigNumberish): Promise<TransactionResult>;"
       },
       {
         "name": "closeAuctionListing",
@@ -144,7 +144,7 @@
         "examples": {
           "javascript": "// The listing ID of the auction listing you want to close\nconst listingId = \"0\";\nawait closeAuctionListing(listindId);"
         },
-        "signature": "closeAuctionListing(listingId: BigNumberish, closeFor?: string): TransactionResultPromise;"
+        "signature": "closeAuctionListing(listingId: BigNumberish, closeFor?: string): Promise<TransactionResult>;"
       },
       {
         "name": "createAuctionListing",
@@ -189,7 +189,7 @@
         "examples": {
           "javascript": "// The listing ID of the asset you want to bid on\nconst listingId = 0;\n// The price you are willing to bid for a single token of the listing\nconst pricePerToken = 1;\n\nawait contract.makeAuctionListingBid(listingId, pricePerToken);"
         },
-        "signature": "makeAuctionListingBid(listingId: BigNumberish, pricePerToken: BigNumberish): TransactionResultPromise;"
+        "signature": "makeAuctionListingBid(listingId: BigNumberish, pricePerToken: BigNumberish): Promise<TransactionResult>;"
       }
     ],
     "signature": "declare class MarketplaceContract implements UpdateableNetwork "
@@ -254,7 +254,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to send the pack to\nconst toAddress = \"0x...\";\n\n// The token ID of the pack you want to send\nconst tokenId = \"0\";\n\n// The number of packs you want to send\nconst amount = 1;\n\nawait contract.transfer(toAddress, tokenId, amount);"
         },
-        "signature": "transfer(to: string, tokenId: string, amount: BigNumber): TransactionResultPromise;"
+        "signature": "transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionResult>;"
       }
     ],
     "signature": "declare class PacksContract implements UpdateableNetwork "
@@ -292,7 +292,7 @@
         "examples": {
           "javascript": "await contract.distribute();"
         },
-        "signature": "distribute(): TransactionResultPromise;"
+        "signature": "distribute(): Promise<TransactionResult>;"
       },
       {
         "name": "distributeToken",
@@ -301,7 +301,7 @@
         "examples": {
           "javascript": "// The address of the currency to distribute funds\nconst tokenAddress = \"0x...\"\nawait contract.distributeToken(tokenAddress);"
         },
-        "signature": "distributeToken(tokenAddress: string): TransactionResultPromise;"
+        "signature": "distributeToken(tokenAddress: string): Promise<TransactionResult>;"
       },
       {
         "name": "getAllRecipients",
@@ -359,7 +359,7 @@
         "examples": {
           "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    toAddress: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 100, // How many tokens to mint to specified address\n  },\n {\n   toAddress: \"0x...\",\n   amount: 100,\n }\n]\n\nawait contract.mintBatchTo(data);"
         },
-        "signature": "mintBatchTo(args: TokenMintInput[]): TransactionResultPromise;"
+        "signature": "mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult>;"
       },
       {
         "name": "mintTo",
@@ -368,7 +368,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to mint the tokens to\nconst toAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to mint\nconst amount = \"1.5\";\n\nawait contract.mintTo(toAddress, amount);"
         },
-        "signature": "mintTo(to: string, amount: BigNumberish): TransactionResultPromise;"
+        "signature": "mintTo(to: string, amount: BigNumberish): Promise<TransactionResult>;"
       }
     ],
     "signature": "declare class TokenErc20Contract extends Erc20<TokenERC20> "
@@ -444,7 +444,7 @@
         "examples": {
           "javascript": "// The proposal ID ofthe proposal you want to execute\nconst proposalId = \"0\"\nawait contract.execute(proposalId);"
         },
-        "signature": "execute(proposalId: string): TransactionResultPromise;"
+        "signature": "execute(proposalId: string): Promise<TransactionResult>;"
       },
       {
         "name": "getAll",
@@ -480,7 +480,7 @@
         "examples": {
           "javascript": "// The proposal ID of the proposal you want to vote on\nconst proposalId = \"0\";\n// The vote type you want to cast, can be VoteType.Against, VoteType.For, or VoteType.Abstain\nconst voteType = VoteType.For;\n// The (optional) reason for the vote\nconst reason = \"I like this proposal!\";\n\nawait contract.vote(proposalId, voteType, reason);"
         },
-        "signature": "vote(proposalId: string, voteType: VoteType, reason?: string): TransactionResultPromise;"
+        "signature": "vote(proposalId: string, voteType: VoteType, reason?: string): Promise<TransactionResult>;"
       }
     ],
     "signature": "declare class VoteContract implements UpdateableNetwork "

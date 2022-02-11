@@ -9,7 +9,7 @@ Buyout Auction
 <b>Signature:</b>
 
 ```typescript
-buyoutAuctionListing(listingId: BigNumberish): TransactionResultPromise;
+buyoutAuctionListing(listingId: BigNumberish): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ buyoutAuctionListing(listingId: BigNumberish): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

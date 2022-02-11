@@ -5,7 +5,7 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import {
   IStorage,
   NetworkOrSignerOrProvider,
-  TransactionResultPromise,
+  TransactionResult,
 } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -119,7 +119,7 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
    *
    * @see mintTo
    */
-  public async mint(amount: BigNumberish): TransactionResultPromise {
+  public async mint(amount: BigNumberish): Promise<TransactionResult> {
     return this.mintTo(await this.contractWrapper.getSignerAddress(), amount);
   }
 
@@ -142,7 +142,7 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
   public async mintTo(
     to: string,
     amount: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     const amountWithDecimals = ethers.utils.parseUnits(
       BigNumber.from(amount).toString(),
       await this.contractWrapper.readContract.decimals(),
@@ -177,7 +177,7 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
    * await contract.mintBatchTo(data);
    * ```
    */
-  public async mintBatchTo(args: TokenMintInput[]): TransactionResultPromise {
+  public async mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult> {
     const encoded = [];
     for (const arg of args) {
       const amountWithDecimals = ethers.utils.parseUnits(
@@ -200,7 +200,9 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
    * @param delegateeAddress - delegatee wallet address
    * @alpha
    */
-  public async delegateTo(delegateeAddress: string): TransactionResultPromise {
+  public async delegateTo(
+    delegateeAddress: string,
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("delegate", [
         delegateeAddress,

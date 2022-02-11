@@ -3,7 +3,7 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   IStorage,
   NetworkOrSignerOrProvider,
-  TransactionResultPromise,
+  TransactionResult,
   TransactionResultWithId,
 } from "../core";
 import { ContractMetadata } from "../core/classes/contract-metadata";
@@ -447,7 +447,7 @@ export class PacksContract implements UpdateableNetwork {
     to: string,
     tokenId: string,
     amount: BigNumber,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("safeTransferFrom", [
         await this.contractWrapper.getSignerAddress(),
@@ -464,7 +464,7 @@ export class PacksContract implements UpdateableNetwork {
     to: string,
     args: IPackBatchArgs,
     data: BytesLike = [0],
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("safeTransferFrom", [
         from,
@@ -481,7 +481,7 @@ export class PacksContract implements UpdateableNetwork {
     to: string,
     args: IPackBatchArgs[],
     data: BytesLike = [0],
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
     return {
@@ -495,7 +495,7 @@ export class PacksContract implements UpdateableNetwork {
   public async setApproval(
     operator: string,
     approved = true,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("setApprovalForAll", [
         operator,
@@ -504,7 +504,7 @@ export class PacksContract implements UpdateableNetwork {
     };
   }
 
-  public async depositLink(amount: BigNumberish): TransactionResultPromise {
+  public async depositLink(amount: BigNumberish): Promise<TransactionResult> {
     const chainId = await this.contractWrapper.getChainID();
     const chainlink = ChainlinkVrf[chainId];
     const erc20 = IERC20__factory.connect(
@@ -522,7 +522,7 @@ export class PacksContract implements UpdateableNetwork {
 
   public async setRestrictedTransfer(
     restricted = false,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     await this.roles.onlyRoles(
       ["admin"],
       await this.contractWrapper.getSignerAddress(),

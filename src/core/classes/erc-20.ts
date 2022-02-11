@@ -2,7 +2,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { TokenERC20 } from "@3rdweb/contracts";
 import { BigNumber, BigNumberish } from "ethers";
 import { IStorage } from "../interfaces";
-import { NetworkOrSignerOrProvider, TransactionResultPromise } from "../types";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
@@ -190,7 +190,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   public async transfer(
     to: string,
     amount: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     if (await this.isTransferRestricted()) {
       throw new RestrictedTransferError(this.getAddress());
     }
@@ -226,7 +226,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     from: string,
     to: string,
     amount: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("transferFrom", [
         from,
@@ -253,7 +253,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   public async setAllowance(
     spender: string,
     amount: BigNumber,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("approve", [
         spender,
@@ -307,7 +307,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * await contract.burn(amount);
    * ```
    */
-  public async burn(amount: BigNumberish): TransactionResultPromise {
+  public async burn(amount: BigNumberish): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("burn", [amount]),
     };
@@ -332,7 +332,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   public async burnFrom(
     holder: string,
     amount: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("burnFrom", [
         holder,
@@ -347,7 +347,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    */
   public async setRestrictedTransfer(
     restricted = false,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "setRestrictedTransfer",

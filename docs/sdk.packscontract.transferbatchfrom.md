@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: BytesLike): TransactionResultPromise;
+transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: BytesLike): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: Bytes
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

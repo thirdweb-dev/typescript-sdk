@@ -25,7 +25,7 @@ import {
   ClaimConditionInputSchema,
   ClaimConditionOutputSchema,
 } from "../../schema/contracts/common/claim-conditions";
-import { TransactionResultPromise } from "../index";
+import { TransactionResult } from "../index";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 
 export class DropErc1155ClaimConditions {
@@ -244,7 +244,7 @@ export class DropErc1155ClaimConditions {
     tokenId: BigNumberish,
     claimConditionInputs: ClaimConditionInput[],
     resetClaimEligibilityForAll = false,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     // process inputs
     const snapshotInfos: SnapshotInfo[] = [];
     const inputsWithSnapshots: FilledConditionInput[] = await Promise.all(
@@ -330,7 +330,7 @@ export class DropErc1155ClaimConditions {
     tokenId: BigNumberish,
     index: number,
     claimConditionInput: ClaimConditionInput,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     const existingConditions = await this.getAll(tokenId);
     if (index >= existingConditions.length) {
       throw Error(

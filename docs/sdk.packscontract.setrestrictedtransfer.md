@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-setRestrictedTransfer(restricted?: boolean): TransactionResultPromise;
+setRestrictedTransfer(restricted?: boolean): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -18,5 +18,5 @@ setRestrictedTransfer(restricted?: boolean): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

@@ -7,7 +7,7 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import {
   IStorage,
   NetworkOrSignerOrProvider,
-  TransactionResultPromise,
+  TransactionResult,
   TransactionResultWithId,
 } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
@@ -406,7 +406,7 @@ export class VoteContract implements UpdateableNetwork {
     proposalId: string,
     voteType: VoteType,
     reason = "",
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     await this.ensureExists(proposalId);
     return {
       receipt: await this.contractWrapper.sendTransaction(
@@ -430,7 +430,7 @@ export class VoteContract implements UpdateableNetwork {
    *
    * @param proposalId - The proposal id to execute.
    */
-  public async execute(proposalId: string): TransactionResultPromise {
+  public async execute(proposalId: string): Promise<TransactionResult> {
     await this.ensureExists(proposalId);
 
     const proposal = await this.get(proposalId);

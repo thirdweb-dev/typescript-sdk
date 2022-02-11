@@ -51,8 +51,6 @@ export type TransactionResult<T = never> = If<
   TransactionResultWithMetadata<T>
 >;
 
-export type TransactionResultPromise<T = never> = Promise<TransactionResult<T>>;
-
 /**
  * Forward Request Message that's used for gasless transaction
  * @public

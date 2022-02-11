@@ -14,7 +14,7 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import {
   IStorage,
   NetworkOrSignerOrProvider,
-  TransactionResultPromise,
+  TransactionResult,
   TransactionResultWithId,
 } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
@@ -513,7 +513,7 @@ export class MarketplaceContract implements UpdateableNetwork {
     quantityDesired: BigNumberish;
     currencyContractAddress: string;
     pricePerToken: BigNumberish;
-  }): TransactionResultPromise {
+  }): Promise<TransactionResult> {
     if (isNativeToken(offer.currencyContractAddress)) {
       throw new Error(
         "You must use the wrapped native token address when making an offer with a native token",
@@ -554,7 +554,7 @@ export class MarketplaceContract implements UpdateableNetwork {
   public async acceptDirectListingOffer(
     listingId: BigNumberish,
     addressOfOfferor: string,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     /**
      * TODO:
      * - Provide better error handling if offer is too lower.
@@ -586,7 +586,7 @@ export class MarketplaceContract implements UpdateableNetwork {
   public async buyoutDirectListing(
     listingId: BigNumberish,
     quantityDesired: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     const listing = await this.validateDirectListing(BigNumber.from(listingId));
     const valid = await this.isStillValidDirectListing(
       listing,
@@ -630,7 +630,7 @@ export class MarketplaceContract implements UpdateableNetwork {
    */
   public async buyoutAuctionListing(
     listingId: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     const listing = await this.validateAuctionListing(
       BigNumber.from(listingId),
     );
@@ -646,7 +646,7 @@ export class MarketplaceContract implements UpdateableNetwork {
   public async buyoutListing(
     listingId: BigNumberish,
     quantityDesired?: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     const listing = await this.contractWrapper.readContract.listings(listingId);
     if (listing.listingId.toString() !== listingId.toString()) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
@@ -685,7 +685,7 @@ export class MarketplaceContract implements UpdateableNetwork {
   public async makeAuctionListingBid(
     listingId: BigNumberish,
     pricePerToken: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     const listing = await this.validateAuctionListing(
       BigNumber.from(listingId),
     );
@@ -746,7 +746,7 @@ export class MarketplaceContract implements UpdateableNetwork {
    */
   public async updateDirectListing(
     listing: DirectListing,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("updateListing", [
         listing.id,
@@ -766,7 +766,7 @@ export class MarketplaceContract implements UpdateableNetwork {
    */
   public async updateAuctionListing(
     listing: AuctionListing,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("updateListing", [
         listing.id,
@@ -795,7 +795,7 @@ export class MarketplaceContract implements UpdateableNetwork {
    */
   public async cancelDirectListing(
     listingId: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "cancelDirectListing",
@@ -819,7 +819,7 @@ export class MarketplaceContract implements UpdateableNetwork {
    */
   public async cancelAuctionListing(
     listingId: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     const listing = await this.validateAuctionListing(
       BigNumber.from(listingId),
     );
@@ -860,7 +860,7 @@ export class MarketplaceContract implements UpdateableNetwork {
   public async closeAuctionListing(
     listingId: BigNumberish,
     closeFor?: string,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     if (!closeFor) {
       closeFor = await this.contractWrapper.getSignerAddress();
     }
@@ -928,7 +928,7 @@ export class MarketplaceContract implements UpdateableNetwork {
    */
   public async setRestrictedListerRoleOnly(
     isRestricted: boolean,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "setRestrictedListerRoleOnly",

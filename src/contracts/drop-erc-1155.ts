@@ -7,7 +7,7 @@ import { ContractPrimarySale } from "../core/classes/contract-sales";
 import {
   IStorage,
   NetworkOrSignerOrProvider,
-  TransactionResultPromise,
+  TransactionResult,
   TransactionResultWithId,
 } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
@@ -188,7 +188,7 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
     tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     const claimData = await this.prepareClaim(tokenId, quantity, proofs);
     return {
       receipt: await this.contractWrapper.sendTransaction(
@@ -214,7 +214,7 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
     tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     const address = await this.contractWrapper.getSignerAddress();
     return this.claimTo(address, tokenId, quantity, proofs);
   }

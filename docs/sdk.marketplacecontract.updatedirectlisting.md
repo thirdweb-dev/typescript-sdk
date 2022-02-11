@@ -11,7 +11,7 @@ Note: cannot update a listing with a new quantity of 0. Use `cancelDirectListing
 <b>Signature:</b>
 
 ```typescript
-updateDirectListing(listing: DirectListing): TransactionResultPromise;
+updateDirectListing(listing: DirectListing): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -22,5 +22,5 @@ updateDirectListing(listing: DirectListing): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

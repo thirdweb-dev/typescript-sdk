@@ -9,7 +9,7 @@ Cancel Auction Listing
 <b>Signature:</b>
 
 ```typescript
-cancelAuctionListing(listingId: BigNumberish): TransactionResultPromise;
+cancelAuctionListing(listingId: BigNumberish): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ cancelAuctionListing(listingId: BigNumberish): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

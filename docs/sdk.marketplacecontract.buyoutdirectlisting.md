@@ -9,7 +9,7 @@ Buy Listing
 <b>Signature:</b>
 
 ```typescript
-buyoutDirectListing(listingId: BigNumberish, quantityDesired: BigNumberish): TransactionResultPromise;
+buyoutDirectListing(listingId: BigNumberish, quantityDesired: BigNumberish): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -21,7 +21,7 @@ buyoutDirectListing(listingId: BigNumberish, quantityDesired: BigNumberish): Tra
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

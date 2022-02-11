@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-depositLink(amount: BigNumberish): TransactionResultPromise;
+depositLink(amount: BigNumberish): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -18,5 +18,5 @@ depositLink(amount: BigNumberish): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

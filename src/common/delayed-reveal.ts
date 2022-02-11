@@ -6,11 +6,7 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../schema/tokens/common";
-import {
-  IStorage,
-  TransactionResultPromise,
-  TransactionResultWithId,
-} from "../core";
+import { IStorage, TransactionResult, TransactionResultWithId } from "../core";
 import { fetchTokenMetadata } from "./nft";
 import { BatchToReveal } from "../types/delayed-reveal";
 
@@ -92,7 +88,7 @@ export class DelayedReveal<T extends DropERC721> {
   public async reveal(
     batchId: BigNumberish,
     password: string,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     if (!password) {
       throw new Error("Password is required");
     }

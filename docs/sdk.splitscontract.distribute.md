@@ -9,11 +9,11 @@ Distribute Funds
 <b>Signature:</b>
 
 ```typescript
-distribute(): TransactionResultPromise;
+distribute(): Promise<TransactionResult>;
 ```
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

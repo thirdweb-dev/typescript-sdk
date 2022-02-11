@@ -4,7 +4,7 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   IStorage,
   NetworkOrSignerOrProvider,
-  TransactionResultPromise,
+  TransactionResult,
 } from "../core";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
@@ -251,7 +251,7 @@ export class SplitsContract implements UpdateableNetwork {
    *
    * @param walletAddress - The address to distributes the amount to
    */
-  public async withdraw(walletAddress: string): TransactionResultPromise {
+  public async withdraw(walletAddress: string): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("release(address)", [
         walletAddress,
@@ -268,7 +268,7 @@ export class SplitsContract implements UpdateableNetwork {
   public async withdrawToken(
     walletAddress: string,
     tokenAddress: string,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "release(address,address)",
@@ -287,7 +287,7 @@ export class SplitsContract implements UpdateableNetwork {
    * await contract.distribute();
    * ```
    */
-  public async distribute(): TransactionResultPromise {
+  public async distribute(): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("distribute()", []),
     };
@@ -307,7 +307,9 @@ export class SplitsContract implements UpdateableNetwork {
    *
    * @param tokenAddress - The address of the currency contract to distribute funds
    */
-  public async distributeToken(tokenAddress: string): TransactionResultPromise {
+  public async distributeToken(
+    tokenAddress: string,
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "distribute(address)",

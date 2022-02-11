@@ -9,7 +9,7 @@ Get whether listing is restricted only to addresses with the Lister role
 <b>Signature:</b>
 
 ```typescript
-setRestrictedListerRoleOnly(isRestricted: boolean): TransactionResultPromise;
+setRestrictedListerRoleOnly(isRestricted: boolean): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ setRestrictedListerRoleOnly(isRestricted: boolean): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

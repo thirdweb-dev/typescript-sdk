@@ -9,7 +9,7 @@ Distribute Funds
 <b>Signature:</b>
 
 ```typescript
-distributeToken(tokenAddress: string): TransactionResultPromise;
+distributeToken(tokenAddress: string): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ distributeToken(tokenAddress: string): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

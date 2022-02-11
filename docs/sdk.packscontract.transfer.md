@@ -9,7 +9,7 @@ Transfer Pack
 <b>Signature:</b>
 
 ```typescript
-transfer(to: string, tokenId: string, amount: BigNumber): TransactionResultPromise;
+transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -22,7 +22,7 @@ transfer(to: string, tokenId: string, amount: BigNumber): TransactionResultPromi
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

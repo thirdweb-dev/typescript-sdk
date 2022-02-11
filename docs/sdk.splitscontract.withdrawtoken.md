@@ -9,7 +9,7 @@ Triggers a transfer to account of the amount of a given currency they are owed.
 <b>Signature:</b>
 
 ```typescript
-withdrawToken(walletAddress: string, tokenAddress: string): TransactionResultPromise;
+withdrawToken(walletAddress: string, tokenAddress: string): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ withdrawToken(walletAddress: string, tokenAddress: string): TransactionResultPro
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

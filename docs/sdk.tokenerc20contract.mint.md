@@ -9,7 +9,7 @@ Mint Tokens for the connected wallet
 <b>Signature:</b>
 
 ```typescript
-mint(amount: BigNumberish): TransactionResultPromise;
+mint(amount: BigNumberish): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ mint(amount: BigNumberish): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

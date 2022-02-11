@@ -9,7 +9,7 @@ Triggers a transfer to account of the amount of native currency they are owed.
 <b>Signature:</b>
 
 ```typescript
-withdraw(walletAddress: string): TransactionResultPromise;
+withdraw(walletAddress: string): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ withdraw(walletAddress: string): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 

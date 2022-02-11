@@ -3,7 +3,7 @@ import { CommonRoyaltySchema } from "../../schema/contracts/common";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { z } from "zod";
-import { TransactionResultPromise } from "../types";
+import { TransactionResult } from "../types";
 
 // TODO: hide zod implementation from this class with nice types
 export class ContractRoyalty<
@@ -33,7 +33,7 @@ export class ContractRoyalty<
 
   public async setRoyaltyInfo(
     royaltyData: z.input<typeof CommonRoyaltySchema>,
-  ): TransactionResultPromise<z.output<typeof CommonRoyaltySchema>> {
+  ): Promise<TransactionResult<z.output<typeof CommonRoyaltySchema>>> {
     // read the metadata from the contract
     const oldMetadata = await this.metadata.get();
 

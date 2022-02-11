@@ -104,7 +104,6 @@
 |  [SUPPORTED\_CHAIN\_ID](./sdk.supported_chain_id.md) |  |
 |  [TokenMintInput](./sdk.tokenmintinput.md) |  |
 |  [TransactionResult](./sdk.transactionresult.md) |  |
-|  [TransactionResultPromise](./sdk.transactionresultpromise.md) |  |
 |  [TransactionResultWithId](./sdk.transactionresultwithid.md) |  |
 |  [ValidContractClass](./sdk.validcontractclass.md) |  |
 |  [ValidContractInstance](./sdk.validcontractinstance.md) |  |

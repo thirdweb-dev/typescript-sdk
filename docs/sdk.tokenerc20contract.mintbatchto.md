@@ -9,7 +9,7 @@ Mint Tokens To Many Wallets
 <b>Signature:</b>
 
 ```typescript
-mintBatchTo(args: TokenMintInput[]): TransactionResultPromise;
+mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ mintBatchTo(args: TokenMintInput[]): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

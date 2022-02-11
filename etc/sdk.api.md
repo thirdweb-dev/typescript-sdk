@@ -478,12 +478,12 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
     // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "ContractWrapper" needs to be exported by the entry point index.d.ts
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
-    claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): TransactionResultPromise;
+    claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
     // Warning: (ae-forgotten-export) The symbol "DropErc1155ClaimConditions" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
     claimConditions: DropErc1155ClaimConditions;
-    claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): TransactionResultPromise;
+    claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
     // (undocumented)
     static contractFactory: typeof DropERC1155__factory;
     // (undocumented)
@@ -909,13 +909,13 @@ export class ListingNotFoundError extends Error {
 export class MarketplaceContract implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Marketplace>);
     // (undocumented)
-    acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): TransactionResultPromise;
-    buyoutAuctionListing(listingId: BigNumberish): TransactionResultPromise;
-    buyoutDirectListing(listingId: BigNumberish, quantityDesired: BigNumberish): TransactionResultPromise;
-    buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): TransactionResultPromise;
-    cancelAuctionListing(listingId: BigNumberish): TransactionResultPromise;
-    cancelDirectListing(listingId: BigNumberish): TransactionResultPromise;
-    closeAuctionListing(listingId: BigNumberish, closeFor?: string): TransactionResultPromise;
+    acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<TransactionResult>;
+    buyoutAuctionListing(listingId: BigNumberish): Promise<TransactionResult>;
+    buyoutDirectListing(listingId: BigNumberish, quantityDesired: BigNumberish): Promise<TransactionResult>;
+    buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<TransactionResult>;
+    cancelAuctionListing(listingId: BigNumberish): Promise<TransactionResult>;
+    cancelDirectListing(listingId: BigNumberish): Promise<TransactionResult>;
+    closeAuctionListing(listingId: BigNumberish, closeFor?: string): Promise<TransactionResult>;
     // (undocumented)
     static contractFactory: typeof Marketplace__factory;
     // (undocumented)
@@ -946,13 +946,13 @@ export class MarketplaceContract implements UpdateableNetwork {
     getTimeBufferInSeconds(): Promise<BigNumber>;
     getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
     isRestrictedListerRoleOnly(): Promise<boolean>;
-    makeAuctionListingBid(listingId: BigNumberish, pricePerToken: BigNumberish): TransactionResultPromise;
+    makeAuctionListingBid(listingId: BigNumberish, pricePerToken: BigNumberish): Promise<TransactionResult>;
     makeDirectListingOffer(offer: {
         listingId: BigNumberish;
         quantityDesired: BigNumberish;
         currencyContractAddress: string;
         pricePerToken: BigNumberish;
-    }): TransactionResultPromise;
+    }): Promise<TransactionResult>;
     // (undocumented)
     metadata: ContractMetadata<Marketplace, typeof MarketplaceContract.schema>;
     // (undocumented)
@@ -1047,10 +1047,10 @@ export class MarketplaceContract implements UpdateableNetwork {
         }>;
     };
     setBidBufferBps(bufferBps: BigNumberish): Promise<void>;
-    setRestrictedListerRoleOnly(isRestricted: boolean): TransactionResultPromise;
+    setRestrictedListerRoleOnly(isRestricted: boolean): Promise<TransactionResult>;
     setTimeBufferInSeconds(bufferInSeconds: BigNumberish): Promise<void>;
-    updateAuctionListing(listing: AuctionListing): TransactionResultPromise;
-    updateDirectListing(listing: DirectListing): TransactionResultPromise;
+    updateAuctionListing(listing: AuctionListing): Promise<TransactionResult>;
+    updateDirectListing(listing: DirectListing): Promise<TransactionResult>;
 }
 
 // @public (undocumented)
@@ -1141,7 +1141,7 @@ export class PacksContract implements UpdateableNetwork {
     // Warning: (ae-forgotten-export) The symbol "IPackCreateArgs" needs to be exported by the entry point index.d.ts
     create(args: IPackCreateArgs): Promise<TransactionResultWithId<PackMetadata>>;
     // (undocumented)
-    depositLink(amount: BigNumberish): TransactionResultPromise;
+    depositLink(amount: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     encoder: ContractEncoder<Pack>;
     // Warning: (ae-forgotten-export) The symbol "PackMetadata" needs to be exported by the entry point index.d.ts
@@ -1270,16 +1270,16 @@ export class PacksContract implements UpdateableNetwork {
         }>;
     };
     // (undocumented)
-    setApproval(operator: string, approved?: boolean): TransactionResultPromise;
+    setApproval(operator: string, approved?: boolean): Promise<TransactionResult>;
     // (undocumented)
-    setRestrictedTransfer(restricted?: boolean): TransactionResultPromise;
-    transfer(to: string, tokenId: string, amount: BigNumber): TransactionResultPromise;
+    setRestrictedTransfer(restricted?: boolean): Promise<TransactionResult>;
+    transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionResult>;
     // (undocumented)
-    transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: BytesLike): TransactionResultPromise;
+    transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: BytesLike): Promise<TransactionResult>;
     // Warning: (ae-forgotten-export) The symbol "IPackBatchArgs" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): TransactionResultPromise;
+    transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): Promise<TransactionResult>;
 }
 
 // @public (undocumented)
@@ -1371,8 +1371,8 @@ export class SplitsContract implements UpdateableNetwork {
     static contractFactory: typeof Splits__factory;
     // (undocumented)
     static contractType: "Splits";
-    distribute(): TransactionResultPromise;
-    distributeToken(tokenAddress: string): TransactionResultPromise;
+    distribute(): Promise<TransactionResult>;
+    distributeToken(tokenAddress: string): Promise<TransactionResult>;
     // (undocumented)
     encoder: ContractEncoder<Splits>;
     // (undocumented)
@@ -1526,8 +1526,8 @@ export class SplitsContract implements UpdateableNetwork {
             name: string;
         }>;
     };
-    withdraw(walletAddress: string): TransactionResultPromise;
-    withdrawToken(walletAddress: string, tokenAddress: string): TransactionResultPromise;
+    withdraw(walletAddress: string): Promise<TransactionResult>;
+    withdrawToken(walletAddress: string, tokenAddress: string): Promise<TransactionResult>;
 }
 
 // @public (undocumented)
@@ -1742,7 +1742,7 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
     // (undocumented)
     static contractType: "TokenERC20";
     // @alpha
-    delegateTo(delegateeAddress: string): TransactionResultPromise;
+    delegateTo(delegateeAddress: string): Promise<TransactionResult>;
     // (undocumented)
     encoder: ContractEncoder<TokenERC20>;
     getDelegation(): Promise<string>;
@@ -1752,9 +1752,9 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
     getVoteBalanceOf(account: string): Promise<BigNumber>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC20, typeof TokenErc20Contract.schema>;
-    mint(amount: BigNumberish): TransactionResultPromise;
-    mintBatchTo(args: TokenMintInput[]): TransactionResultPromise;
-    mintTo(to: string, amount: BigNumberish): TransactionResultPromise;
+    mint(amount: BigNumberish): Promise<TransactionResult>;
+    mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult>;
+    mintTo(to: string, amount: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     roles: ContractRoles<TokenERC20, typeof TokenErc20Contract.contractRoles[number]>;
     // (undocumented)
@@ -1992,9 +1992,6 @@ export const TokenMintInputSchema: z.ZodObject<{
 export type TransactionResult<T = never> = If<A.Is<T, never, "equals">, Omit<TransactionResultWithMetadata, "data">, TransactionResultWithMetadata<T>>;
 
 // @public (undocumented)
-export type TransactionResultPromise<T = never> = Promise<TransactionResult<T>>;
-
-// @public (undocumented)
 export type TransactionResultWithId<T = never> = TransactionResult<T> & {
     id: BigNumber;
 };
@@ -2038,7 +2035,7 @@ export class VoteContract implements UpdateableNetwork {
     static contractType: "VoteERC20";
     // (undocumented)
     encoder: ContractEncoder<VoteERC20>;
-    execute(proposalId: string): TransactionResultPromise;
+    execute(proposalId: string): Promise<TransactionResult>;
     // Warning: (ae-forgotten-export) The symbol "Proposal" needs to be exported by the entry point index.d.ts
     get(proposalId: BigNumberish): Promise<Proposal>;
     // (undocumented)
@@ -2183,7 +2180,7 @@ export class VoteContract implements UpdateableNetwork {
     // Warning: (ae-forgotten-export) The symbol "VoteSettings" needs to be exported by the entry point index.d.ts
     settings(): Promise<VoteSettings>;
     // Warning: (ae-forgotten-export) The symbol "VoteType" needs to be exported by the entry point index.d.ts
-    vote(proposalId: string, voteType: VoteType, reason?: string): TransactionResultPromise;
+    vote(proposalId: string, voteType: VoteType, reason?: string): Promise<TransactionResult>;
 }
 
 // @public

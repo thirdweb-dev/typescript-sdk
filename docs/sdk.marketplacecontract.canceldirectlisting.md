@@ -9,7 +9,7 @@ Cancel Direct Listing
 <b>Signature:</b>
 
 ```typescript
-cancelDirectListing(listingId: BigNumberish): TransactionResultPromise;
+cancelDirectListing(listingId: BigNumberish): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ cancelDirectListing(listingId: BigNumberish): TransactionResultPromise;
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

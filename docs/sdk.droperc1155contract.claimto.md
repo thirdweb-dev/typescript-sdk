@@ -9,7 +9,7 @@ Claim NFTs to a specific Wallet
 <b>Signature:</b>
 
 ```typescript
-claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): TransactionResultPromise;
+claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -23,7 +23,7 @@ claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberis
 
 <b>Returns:</b>
 
-TransactionResultPromise
+Promise&lt;TransactionResult&gt;
 
 - Receipt for the transaction
 

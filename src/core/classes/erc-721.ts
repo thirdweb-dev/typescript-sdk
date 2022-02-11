@@ -8,7 +8,7 @@ import {
   QueryAllParams,
 } from "../../types/QueryParams";
 import { IStorage } from "../interfaces";
-import { NetworkOrSignerOrProvider, TransactionResultPromise } from "../types";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { NotFoundError, RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
@@ -221,7 +221,7 @@ export class Erc721<T extends DropERC721 | TokenERC721>
   public async transfer(
     to: string,
     tokenId: BigNumberish,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     if (await this.isTransferRestricted()) {
       throw new RestrictedTransferError(
         await this.contractWrapper.getSignerAddress(),
@@ -240,7 +240,7 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    * Burn a single NFT
    * @param tokenId - the token Id to burn
    */
-  public async burn(tokenId: BigNumberish): TransactionResultPromise {
+  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
     };
@@ -256,7 +256,7 @@ export class Erc721<T extends DropERC721 | TokenERC721>
   public async setApprovalForAll(
     operator: string,
     approved: boolean,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("setApprovalForAll", [
         operator,
@@ -271,7 +271,7 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    */
   public async setRestrictedTransfer(
     restricted = false,
-  ): TransactionResultPromise {
+  ): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "setRestrictedTransfer",
