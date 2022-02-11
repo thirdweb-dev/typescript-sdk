@@ -1,4 +1,5 @@
 import { BigNumber } from "ethers";
+import { isAddress } from "ethers/lib/utils";
 import { z } from "zod";
 import { Json } from "../core/types";
 
@@ -57,3 +58,12 @@ export const HexColor = z.union([
     .transform((val) => val.replace("#", "")),
   z.string().length(0),
 ]);
+
+export const AdressSchema = z.string().refine(
+  (arg) => isAddress(arg),
+  (out) => {
+    return {
+      message: `${out} is not a valid address`,
+    };
+  },
+);

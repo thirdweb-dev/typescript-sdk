@@ -17,9 +17,9 @@ static schema: {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;

@@ -351,6 +351,28 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
 }>;
 
 // @public (undocumented)
+export const CommonContractOutputSchema: z.ZodObject<z.extendShape<{
+    name: z.ZodString;
+    description: z.ZodOptional<z.ZodString>;
+    image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+    external_link: z.ZodOptional<z.ZodString>;
+}, {
+    image: z.ZodOptional<z.ZodString>;
+}>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+    [x: string]: Json;
+    description?: string | undefined;
+    image?: string | undefined;
+    external_link?: string | undefined;
+    name: string;
+}, {
+    [x: string]: Json;
+    description?: string | undefined;
+    image?: string | undefined;
+    external_link?: string | undefined;
+    name: string;
+}>;
+
+// @public (undocumented)
 export const CommonContractSchema: z.ZodObject<{
     name: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
@@ -366,6 +388,57 @@ export const CommonContractSchema: z.ZodObject<{
     image?: any;
     external_link?: string | undefined;
     name: string;
+}>;
+
+// @public (undocumented)
+export const CommonPlatformFeeSchema: z.ZodObject<{
+    platform_fee_basis_points: z.ZodDefault<z.ZodNumber>;
+    platform_fee_recipient: z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>;
+}, "strip", z.ZodTypeAny, {
+    platform_fee_basis_points: number;
+    platform_fee_recipient: string;
+}, {
+    platform_fee_basis_points?: number | undefined;
+    platform_fee_recipient?: string | undefined;
+}>;
+
+// @public (undocumented)
+export const CommonPrimarySaleSchema: z.ZodObject<{
+    primary_sale_recipient: z.ZodEffects<z.ZodString, string, string>;
+}, "strip", z.ZodTypeAny, {
+    primary_sale_recipient: string;
+}, {
+    primary_sale_recipient: string;
+}>;
+
+// @public (undocumented)
+export const CommonRoyaltySchema: z.ZodObject<{
+    seller_fee_basis_points: z.ZodDefault<z.ZodNumber>;
+    fee_recipient: z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>;
+}, "strip", z.ZodTypeAny, {
+    seller_fee_basis_points: number;
+    fee_recipient: string;
+}, {
+    seller_fee_basis_points?: number | undefined;
+    fee_recipient?: string | undefined;
+}>;
+
+// @public (undocumented)
+export const CommonSymbolSchema: z.ZodObject<{
+    symbol: z.ZodDefault<z.ZodOptional<z.ZodString>>;
+}, "strip", z.ZodTypeAny, {
+    symbol: string;
+}, {
+    symbol?: string | undefined;
+}>;
+
+// @public (undocumented)
+export const CommonTrustedForwarderSchema: z.ZodObject<{
+    trusted_forwarder: z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>;
+}, "strip", z.ZodTypeAny, {
+    trusted_forwarder: string;
+}, {
+    trusted_forwarder?: string | undefined;
 }>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "ContractForContractType" is marked as @public, but its signature references "CONTRACTS_MAP" which is marked as @internal
@@ -447,18 +520,18 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
-            primary_sale_recipient: zod.ZodString;
+            primary_sale_recipient: zod.ZodEffects<zod.ZodString, string, string>;
         }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
@@ -495,7 +568,7 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
             image: zod.ZodOptional<zod.ZodString>;
         }>, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
@@ -528,7 +601,7 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
@@ -599,18 +672,18 @@ export class DropErc721Contract extends Erc721<DropERC721> {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
-            primary_sale_recipient: zod.ZodString;
+            primary_sale_recipient: zod.ZodEffects<zod.ZodString, string, string>;
         }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
@@ -647,7 +720,7 @@ export class DropErc721Contract extends Erc721<DropERC721> {
             image: zod.ZodOptional<zod.ZodString>;
         }>, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
@@ -680,7 +753,7 @@ export class DropErc721Contract extends Erc721<DropERC721> {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
         }>, {
@@ -895,12 +968,12 @@ export class MarketplaceContract implements UpdateableNetwork {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
@@ -931,7 +1004,7 @@ export class MarketplaceContract implements UpdateableNetwork {
             image: zod.ZodOptional<zod.ZodString>;
         }>, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
@@ -956,7 +1029,7 @@ export class MarketplaceContract implements UpdateableNetwork {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
@@ -1106,14 +1179,14 @@ export class PacksContract implements UpdateableNetwork {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
@@ -1146,7 +1219,7 @@ export class PacksContract implements UpdateableNetwork {
             image: zod.ZodOptional<zod.ZodString>;
         }>, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
@@ -1175,7 +1248,7 @@ export class PacksContract implements UpdateableNetwork {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodTypeAny, {
@@ -1331,7 +1404,7 @@ export class SplitsContract implements UpdateableNetwork {
             }>, "many">>;
         }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
@@ -1349,7 +1422,7 @@ export class SplitsContract implements UpdateableNetwork {
                 shares: string | number | bigint | BigNumber;
             }>, "many">>;
         }>>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
@@ -1573,14 +1646,14 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
-            primary_sale_recipient: zod.ZodString;
+            primary_sale_recipient: zod.ZodEffects<zod.ZodString, string, string>;
         }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
@@ -1613,7 +1686,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
             image: zod.ZodOptional<zod.ZodString>;
         }>, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
@@ -1638,7 +1711,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
@@ -1695,9 +1768,9 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
@@ -1807,16 +1880,16 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
-            primary_sale_recipient: zod.ZodString;
+            primary_sale_recipient: zod.ZodEffects<zod.ZodString, string, string>;
         }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
@@ -1851,7 +1924,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
             image: zod.ZodOptional<zod.ZodString>;
         }>, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
@@ -1880,7 +1953,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
         }>, "strip", zod.ZodTypeAny, {
@@ -2003,7 +2076,7 @@ export class VoteContract implements UpdateableNetwork {
             voting_quorum_fraction: zod.ZodDefault<zod.ZodNumber>;
             proposal_token_threshold: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
         }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;

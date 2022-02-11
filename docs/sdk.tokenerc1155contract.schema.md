@@ -15,14 +15,14 @@ static schema: {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodString>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
-            primary_sale_recipient: zod.ZodString;
+            primary_sale_recipient: zod.ZodEffects<zod.ZodString, string, string>;
         }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
@@ -55,7 +55,7 @@ static schema: {
             image: zod.ZodOptional<zod.ZodString>;
         }>, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
             [x: string]: Json;
             description?: string | undefined;
@@ -80,7 +80,7 @@ static schema: {
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodString>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;

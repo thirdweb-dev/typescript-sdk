@@ -22,7 +22,7 @@ static schema: {
             voting_quorum_fraction: zod.ZodDefault<zod.ZodNumber>;
             proposal_token_threshold: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
         }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodString>;
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
             description?: string | undefined;
             image?: any;
