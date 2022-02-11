@@ -125,7 +125,10 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
    *   supply: 1000, // The number of this NFT you want to mint
    * }
    *
-   * await contract.mintTo(toAddress, metadataWithSupply);
+   * const tx = await contract.mintTo(toAddress, metadataWithSupply);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const tokenId = tx.id; // the id of the NFT minted
+   * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
   public async mintTo(
@@ -156,31 +159,9 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
   }
 
   /**
-   * Mint Many NFTs
+   * Mint Many NFTs for the connected wallet
    *
-   * @remarks Mint many NFTs with specified supplies at once to the connected wallet
-   *
-   * @example
-   * ```javascript
-   * // Custom metadata and supplies of your NFTs
-   * const metadataWithSupply = [{
-   *   supply: 50, // The number of this NFT you want to mint
-   *   metadata: {
-   *     name: "Cool NFT #1",
-   *     description: "This is a cool NFT",
-   *     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   *   },
-   * }, {
-   *   supply: 100,
-   *   metadata: {
-   *     name: "Cool NFT #2",
-   *     description: "This is a cool NFT",
-   *     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   *   },
-   * }];
-   *
-   * await contract.mintBatch(metadataWithSupply);
-   * ```
+   * @see mintBatchTo
    */
   public async mintBatch(
     metadatas: BundleMetadataInput[],
@@ -218,7 +199,11 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
    *   },
    * }];
    *
-   * await contract.mintBatchTo(toAddress, metadataWithSupply);
+   * const tx = await contract.mintBatchTo(toAddress, metadataWithSupply);
+   * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
+   * const tokenIds = tx.map((result) => result.id); // all the token ids minted
+   * const firstTokenId = tx[0].id; // token id of the first minted NFT
+   * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
   public async mintBatchTo(

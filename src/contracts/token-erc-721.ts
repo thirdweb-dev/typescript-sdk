@@ -203,10 +203,10 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    * }];
    *
    * const tx = await contract.mintBatchTo(toAddress, metadatas);
-   * const receipt = tx.receipt; // same transaction receipt for all minted NFTs
-   * const tokenIds = results.map((result) => result.id); // all the token ids minted
-   * const firstTokenId = results[0].id; // token id of the first minted NFT
-   * const firstNFT = await results[0].data(); // (optional) fetch details of the first minted NFT
+   * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
+   * const tokenIds = tx.map((result) => result.id); // all the token ids minted
+   * const firstTokenId = tx[0].id; // token id of the first minted NFT
+   * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
   public async mintBatchTo(
@@ -246,7 +246,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    *******************************/
 
   /**
-   * Mint an dynamicly generated NFT
+   * Mint a dynamicly generated NFT
    *
    * @remarks Mint an dynamic NFT with a previously generated signature.
    *

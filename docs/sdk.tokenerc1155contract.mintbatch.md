@@ -4,7 +4,7 @@
 
 ## TokenErc1155Contract.mintBatch() method
 
-Mint Many NFTs
+Mint Many NFTs for the connected wallet
 
 <b>Signature:</b>
 
@@ -21,32 +21,4 @@ mintBatch(metadatas: BundleMetadataInput[]): Promise<TransactionResultWithId<Bun
 <b>Returns:</b>
 
 Promise&lt;TransactionResultWithId&lt;BundleMetadata&gt;\[\]&gt;
-
-## Remarks
-
-Mint many NFTs with specified supplies at once to the connected wallet
-
-## Example
-
-
-```javascript
-// Custom metadata and supplies of your NFTs
-const metadataWithSupply = [{
-  supply: 50, // The number of this NFT you want to mint
-  metadata: {
-    name: "Cool NFT #1",
-    description: "This is a cool NFT",
-    image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-  },
-}, {
-  supply: 100,
-  metadata: {
-    name: "Cool NFT #2",
-    description: "This is a cool NFT",
-    image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-  },
-}];
-
-await contract.mintBatch(metadataWithSupply);
-```
 

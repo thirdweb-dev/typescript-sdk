@@ -8,16 +8,13 @@
 
 ```typescript
 static schema: {
-        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
             description: zod.ZodOptional<zod.ZodString>;
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
             symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
-        }>, {
-            platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, {
             trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
         }>, "strip", zod.ZodTypeAny, {
@@ -26,16 +23,12 @@ static schema: {
             external_link?: string | undefined;
             symbol: string;
             name: string;
-            platform_fee_basis_points: number;
-            platform_fee_recipient: string;
             trusted_forwarder: string;
         }, {
             symbol?: string | undefined;
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
-            platform_fee_basis_points?: number | undefined;
-            platform_fee_recipient?: string | undefined;
             trusted_forwarder?: string | undefined;
             name: string;
         }>;

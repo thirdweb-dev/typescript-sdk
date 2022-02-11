@@ -4,7 +4,7 @@
 
 ## TokenErc721Contract.mintWithSignature() method
 
-Mint an dynamicly generated NFT
+Mint a dynamicly generated NFT
 
 <b>Signature:</b>
 
