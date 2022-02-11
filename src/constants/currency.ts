@@ -28,6 +28,16 @@ export const NATIVE_TOKENS: Record<
       symbol: "WETH",
     },
   },
+  [ChainId.Goerli]: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x0bb7509324ce409f7bbc4b701f932eaca9736ab7",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
   [ChainId.Polygon]: {
     name: "Matic",
     symbol: "MATIC",
