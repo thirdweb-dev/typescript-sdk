@@ -10,7 +10,11 @@ import {
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { isNativeToken } from "../../common/currency";
+import {
+  fetchCurrencyMetadata,
+  fetchCurrencyValue,
+  isNativeToken,
+} from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   ClaimCondition,
@@ -332,13 +336,11 @@ export class DropErc721ClaimConditions {
   private async transformResultToClaimCondition(
     pm: IDropERC721.ClaimConditionStructOutput,
   ): Promise<ClaimCondition> {
-    // TODO have a dedicated class for currency manipulation that takes in a contractWrapper?
-    // const cv = await getCurrencyValue(
-    //   this.providerOrSigner,
-    //   pm.currency,
-    //   pm.pricePerToken,
-    // );
-    const cv = "";
+    const cv = await fetchCurrencyValue(
+      this.contractWrapper.getProvider(),
+      pm.currency,
+      pm.pricePerToken,
+    );
     return ClaimConditionOutputSchema.parse({
       startTime: new Date(BigNumber.from(pm.startTimestamp).toNumber() * 1000),
       maxQuantity: pm.maxClaimableSupply.toString(),
