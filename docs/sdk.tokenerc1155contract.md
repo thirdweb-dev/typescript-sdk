@@ -4,12 +4,26 @@
 
 ## TokenErc1155Contract class
 
+Setup a collection of one-of-one NFTs that are minted as users claim them.
+
 <b>Signature:</b>
 
 ```typescript
 declare class TokenErc1155Contract extends Erc1155<TokenERC1155> 
 ```
 <b>Extends:</b> Erc1155&lt;TokenERC1155&gt;
+
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+// You can switch out this provider with any wallet or provider setup you like.
+const provider = ethers.Wallet.createRandom();
+const sdk = new ThirdwebSDK(provider);
+const contract = sdk.getDropContract("{{contract_address}}");
+```
 
 ## Constructors
 

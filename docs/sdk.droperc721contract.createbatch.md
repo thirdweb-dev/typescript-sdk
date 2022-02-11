@@ -4,10 +4,7 @@
 
 ## DropErc721Contract.createBatch() method
 
-> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
-> 
-
-Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per contract at the moment.
+Create a batch of NFTs to be claimed in the future
 
 <b>Signature:</b>
 
@@ -24,6 +21,10 @@ createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTM
 <b>Returns:</b>
 
 Promise&lt;TransactionResultWithId&lt;NFTMetadata&gt;\[\]&gt;
+
+## Remarks
+
+Create batch allows you to create a batch of many NFTs in one transaction.
 
 ## Example
 

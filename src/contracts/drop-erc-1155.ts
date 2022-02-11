@@ -24,6 +24,22 @@ import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-c
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 
+/**
+ * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
+ * const contract = sdk.getBundleDropContract("{{contract_address}}");
+ * ```
+ *
+ * @public
+ */
 export class DropErc1155Contract extends Erc1155<DropERC1155> {
   static contractType = "DropERC1155" as const;
   static schema = DropErc1155ContractSchema;

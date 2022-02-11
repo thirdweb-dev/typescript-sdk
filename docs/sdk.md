@@ -12,7 +12,7 @@
 |  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
 |  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
 |  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
-|  [DropErc1155Contract](./sdk.droperc1155contract.md) |  |
+|  [DropErc1155Contract](./sdk.droperc1155contract.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [DropErc721Contract](./sdk.droperc721contract.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [DuplicateFileNameError](./sdk.duplicatefilenameerror.md) |  |
 |  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
@@ -27,13 +27,13 @@
 |  [MissingRoleError](./sdk.missingroleerror.md) |  |
 |  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
 |  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
-|  [PacksContract](./sdk.packscontract.md) |  |
+|  [PacksContract](./sdk.packscontract.md) | Create lootboxes of NFTs with rarity based open mechanics. |
 |  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
 |  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
-|  [SplitsContract](./sdk.splitscontract.md) |  |
+|  [SplitsContract](./sdk.splitscontract.md) | Create custom royalty splits to distribute funds. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
-|  [TokenErc1155Contract](./sdk.tokenerc1155contract.md) |  |
-|  [TokenErc20Contract](./sdk.tokenerc20contract.md) |  |
+|  [TokenErc1155Contract](./sdk.tokenerc1155contract.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
+|  [TokenErc20Contract](./sdk.tokenerc20contract.md) | Create a standard crypto token or crypto currency. |
 |  [TokenErc721Contract](./sdk.tokenerc721contract.md) | Create a collection of one-of-one NFTs. |
 |  [UploadError](./sdk.uploaderror.md) |  |
 |  [VoteContract](./sdk.votecontract.md) | Create a decentralized organization for token holders to vote on proposals. |

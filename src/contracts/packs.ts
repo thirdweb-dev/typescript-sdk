@@ -37,6 +37,22 @@ import { fetchCurrencyValue } from "../common/currency";
 import { ChainlinkVrf } from "../constants/chainlink";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 
+/**
+ * Create lootboxes of NFTs with rarity based open mechanics.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
+ * const contract = sdk.getPackContract("{{contract_address}}");
+ * ```
+ *
+ * @public
+ */
 export class PacksContract implements UpdateableNetwork {
   static contractType = "Pack" as const;
   static schema = PacksContractSchema;

@@ -51,11 +51,11 @@ const contract = sdk.getDropContract("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [claim(quantity, proofs)](./sdk.droperc721contract.claim.md) |  | Claim NFTs to your connected wallet. |
+|  [claim(quantity, proofs)](./sdk.droperc721contract.claim.md) |  | Claim NFTs to the connected Wallet |
 |  [claimTo(destinationAddress, quantity, proofs)](./sdk.droperc721contract.claimto.md) |  | Claim NFTs to a specific Wallet |
-|  [createBatch(metadatas)](./sdk.droperc721contract.createbatch.md) |  | <b><i>(BETA)</i></b> Create batch allows you to create a batch of tokens in one transaction. This function can only be called once per contract at the moment. |
+|  [createBatch(metadatas)](./sdk.droperc721contract.createbatch.md) |  | Create a batch of NFTs to be claimed in the future |
 |  [getAllClaimed(queryParams)](./sdk.droperc721contract.getallclaimed.md) |  | Get All Claimed NFTs |
 |  [getAllUnclaimed(queryParams)](./sdk.droperc721contract.getallunclaimed.md) |  | Get All Unclaimed NFTs |
-|  [totalClaimedSupply()](./sdk.droperc721contract.totalclaimedsupply.md) |  | Get the claimed supply for this Drop. |
-|  [totalUnclaimedSupply()](./sdk.droperc721contract.totalunclaimedsupply.md) |  | Get the unclaimed supply for this Drop. |
+|  [totalClaimedSupply()](./sdk.droperc721contract.totalclaimedsupply.md) |  | Get the claimed supply<!-- -->\* |
+|  [totalUnclaimedSupply()](./sdk.droperc721contract.totalunclaimedsupply.md) |  | Get the unclaimed supply<!-- -->\* |
 

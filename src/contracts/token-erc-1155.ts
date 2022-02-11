@@ -17,6 +17,22 @@ import { TokenMintedEvent } from "@3rdweb/contracts/dist/TokenERC721";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { CommonNFTInput } from "../schema/tokens/common";
 
+/**
+ * Setup a collection of one-of-one NFTs that are minted as users claim them.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
+ * const contract = sdk.getDropContract("{{contract_address}}");
+ * ```
+ *
+ * @public
+ */
 export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
   static contractType = "TokenERC1155" as const;
   static schema = TokenErc1155ContractSchema;

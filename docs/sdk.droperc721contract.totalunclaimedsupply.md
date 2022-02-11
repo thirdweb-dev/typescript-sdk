@@ -4,7 +4,9 @@
 
 ## DropErc721Contract.totalUnclaimedSupply() method
 
-Get the unclaimed supply for this Drop.
+Get the unclaimed supply
+
+\*
 
 <b>Signature:</b>
 
@@ -16,4 +18,18 @@ totalUnclaimedSupply(): Promise<BigNumber>;
 Promise&lt;BigNumber&gt;
 
 the unclaimed supply
+
+## Remarks
+
+Get the number of unclaimed NFTs in this Drop.
+
+\*
+
+## Example
+
+
+```javascript
+const unclaimedNFTCount = await contract.totalUnclaimedSupply();
+console.log(`NFTs left to claim: ${unclaimedNFTCount}`);
+```
 

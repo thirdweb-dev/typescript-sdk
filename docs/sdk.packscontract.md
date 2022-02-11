@@ -4,12 +4,26 @@
 
 ## PacksContract class
 
+Create lootboxes of NFTs with rarity based open mechanics.
+
 <b>Signature:</b>
 
 ```typescript
 declare class PacksContract implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
+
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+// You can switch out this provider with any wallet or provider setup you like.
+const provider = ethers.Wallet.createRandom();
+const sdk = new ThirdwebSDK(provider);
+const contract = sdk.getPackContract("{{contract_address}}");
+```
 
 ## Constructors
 

@@ -15,6 +15,22 @@ import { BigNumber } from "ethers";
 import { SplitRecipient } from "../types/SplitRecipient";
 import { SplitsContractSchema } from "../schema/contracts/splits";
 
+/**
+ * Create custom royalty splits to distribute funds.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
+ * const contract = sdk.getSplitsContract("{{contract_address}}");
+ * ```
+ *
+ * @public
+ */
 export class SplitsContract implements UpdateableNetwork {
   static contractType = "Splits" as const;
   static schema = SplitsContractSchema;

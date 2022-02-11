@@ -22,5 +22,19 @@ getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
 
 Promise&lt;NFTMetadataOwner\[\]&gt;
 
-The NFT metadata for all NFTs queried.
+The NFT metadata and their ownersfor all NFTs queried.
+
+## Remarks
+
+Fetch all the NFTs (and their owners) that have been claimed in this Drop.
+
+\*
+
+## Example
+
+
+```javascript
+const claimedNFTs = await contract.getAllClaimed();
+const firstOwner = claimedNFTs[0].owner;
+```
 

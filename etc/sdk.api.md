@@ -400,7 +400,7 @@ export function createSnapshot(leafs: string[], storage: IStorage): Promise<Snap
 
 // Warning: (ae-forgotten-export) The symbol "Erc1155" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
+// @public
 export class DropErc1155Contract extends Erc1155<DropERC1155> {
     // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "ContractWrapper" needs to be exported by the entry point index.d.ts
@@ -572,7 +572,6 @@ export class DropErc721Contract extends Erc721<DropERC721> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "DropERC721";
-    // @beta
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC721>;
@@ -1062,7 +1061,7 @@ export const OptionalPropertiesInput: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.
 // @public (undocumented)
 export const OptionalPropertiesOutput: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
 
-// @public (undocumented)
+// @public
 export class PacksContract implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Pack>);
     // (undocumented)
@@ -1292,7 +1291,7 @@ export type Snapshot = z.output<typeof SnapshotSchema>;
 // @internal (undocumented)
 export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
 
-// @public (undocumented)
+// @public
 export class SplitsContract implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Splits>);
     balanceOf(address: string): Promise<BigNumber>;
@@ -1550,7 +1549,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 
-// @public (undocumented)
+// @public
 export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
     // (undocumented)
@@ -1668,7 +1667,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
 
 // Warning: (ae-forgotten-export) The symbol "Erc20" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
+// @public
 export class TokenErc20Contract extends Erc20<TokenERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
     // (undocumented)

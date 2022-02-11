@@ -4,12 +4,26 @@
 
 ## SplitsContract class
 
+Create custom royalty splits to distribute funds.
+
 <b>Signature:</b>
 
 ```typescript
 declare class SplitsContract implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
+
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+// You can switch out this provider with any wallet or provider setup you like.
+const provider = ethers.Wallet.createRandom();
+const sdk = new ThirdwebSDK(provider);
+const contract = sdk.getSplitsContract("{{contract_address}}");
+```
 
 ## Constructors
 

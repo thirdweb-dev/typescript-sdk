@@ -4,12 +4,26 @@
 
 ## DropErc1155Contract class
 
+Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
+
 <b>Signature:</b>
 
 ```typescript
 declare class DropErc1155Contract extends Erc1155<DropERC1155> 
 ```
 <b>Extends:</b> Erc1155&lt;DropERC1155&gt;
+
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+// You can switch out this provider with any wallet or provider setup you like.
+const provider = ethers.Wallet.createRandom();
+const sdk = new ThirdwebSDK(provider);
+const contract = sdk.getBundleDropContract("{{contract_address}}");
+```
 
 ## Constructors
 

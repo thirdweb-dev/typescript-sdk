@@ -14,6 +14,22 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 import { TokenMintInput } from "../schema/tokens/token";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 
+/**
+ * Create a standard crypto token or crypto currency.
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@3rdweb/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const provider = ethers.Wallet.createRandom();
+ * const sdk = new ThirdwebSDK(provider);
+ * const contract = sdk.getTokenContract("{{contract_address}}");
+ * ```
+ *
+ * @public
+ */
 export class TokenErc20Contract extends Erc20<TokenERC20> {
   static contractType = "TokenERC20" as const;
   static schema = TokenErc20ContractSchema;

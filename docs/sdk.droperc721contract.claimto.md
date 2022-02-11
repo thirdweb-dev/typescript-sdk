@@ -37,6 +37,9 @@ Let the a specified wallet claim NFTs.
 const address = "{{wallet_address}}"; // Address of the wallet you want to claim the NFTs
 const quantity = 1; // Quantity of the tokens you want to claim
 
-await contract.claimTo(address, quantity);
+const tx = await contract.claimTo(address, quantity);
+const receipt = tx.receipt; // the transaction receipt
+const claimedTokenId = tx.id; // the id of the NFT claimed
+const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
 ```
 

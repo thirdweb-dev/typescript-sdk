@@ -4,12 +4,26 @@
 
 ## TokenErc20Contract class
 
+Create a standard crypto token or crypto currency.
+
 <b>Signature:</b>
 
 ```typescript
 declare class TokenErc20Contract extends Erc20<TokenERC20> 
 ```
 <b>Extends:</b> Erc20&lt;TokenERC20&gt;
+
+## Example
+
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+// You can switch out this provider with any wallet or provider setup you like.
+const provider = ethers.Wallet.createRandom();
+const sdk = new ThirdwebSDK(provider);
+const contract = sdk.getTokenContract("{{contract_address}}");
+```
 
 ## Constructors
 

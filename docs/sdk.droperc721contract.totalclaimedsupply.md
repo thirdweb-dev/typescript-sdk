@@ -4,7 +4,9 @@
 
 ## DropErc721Contract.totalClaimedSupply() method
 
-Get the claimed supply for this Drop.
+Get the claimed supply
+
+\*
 
 <b>Signature:</b>
 
@@ -15,5 +17,19 @@ totalClaimedSupply(): Promise<BigNumber>;
 
 Promise&lt;BigNumber&gt;
 
-the claimed supply
+the unclaimed supply
+
+## Remarks
+
+Get the number of claimed NFTs in this Drop.
+
+\*
+
+## Example
+
+
+```javascript
+const claimedNFTCount = await contract.totalClaimedSupply();
+console.log(`NFTs claimed so far: ${claimedNFTCount}`);
+```
 

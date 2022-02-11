@@ -51,6 +51,8 @@ const modules = json.members[0].members.filter(
     m.kind === "Class" && m.name.endsWith("Contract") && m.name !== "Contract",
 );
 
+console.log(modules);
+
 function parseExampleTag(docComment) {
   const exampleBlocks = docComment._customBlocks.filter(
     (b) => b._blockTag._tagName === "@example",
