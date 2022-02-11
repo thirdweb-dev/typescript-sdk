@@ -179,7 +179,7 @@ export class DropErc721Contract extends Erc721<DropERC721> {
   /**
    * Get the claimed supply
    *
-   * * @remarks Get the number of claimed NFTs in this Drop.
+   * @remarks Get the number of claimed NFTs in this Drop.
    *
    * * @example
    * ```javascript
@@ -195,7 +195,7 @@ export class DropErc721Contract extends Erc721<DropERC721> {
   /**
    * Get the unclaimed supply
    *
-   * * @remarks Get the number of unclaimed NFTs in this Drop.
+   * @remarks Get the number of unclaimed NFTs in this Drop.
    *
    * * @example
    * ```javascript
@@ -320,29 +320,7 @@ export class DropErc721Contract extends Erc721<DropERC721> {
   /**
    * Claim NFTs to the connected wallet.
    *
-   * @param quantity - Quantity of the tokens you want to claim
-   * @param proofs - Array of proofs
-   *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
-   */
-  /**
-   * Claim NFTs to the connected Wallet
-   *
-   * @remarks Let the currently connected wallet claim NFTs.
-   *
-   * @example
-   * ```javascript
-   * const quantity = 1; // Quantity of the tokens you want to claim
-   *
-   * const tx = await contract.claim(quantity);
-   * const receipt = tx.receipt; // the transaction receipt
-   * const claimedTokenId = tx.id; // the id of the NFT claimed
-   * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
-   * ```
-   *
-   * @param destinationAddress - Address you want to send the token to
-   * @param quantity - Quantity of the tokens you want to claim
-   * @param proofs - Array of proofs
+   * @see claimTo
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
