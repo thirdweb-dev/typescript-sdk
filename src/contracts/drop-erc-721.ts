@@ -111,8 +111,16 @@ export class DropErc721Contract extends Erc721<DropERC721> {
   /**
    * Get All Claimed NFTs
    *
+   * @remarks Fetch all the NFTs (and their owners) that have been claimed in this Drop.
+   *
+   * * @example
+   * ```javascript
+   * const claimedNFTs = await contract.getAllClaimed();
+   * const firstOwner = claimedNFTs[0].owner;
+   * ```
+   *
    * @param queryParams - optional filtering to only fetch a subset of results.
-   * @returns The NFT metadata for all NFTs queried.
+   * @returns The NFT metadata and their ownersfor all NFTs queried.
    */
   public async getAllClaimed(
     queryParams?: QueryAllParams,
@@ -132,6 +140,14 @@ export class DropErc721Contract extends Erc721<DropERC721> {
 
   /**
    * Get All Unclaimed NFTs
+   *
+   * @remarks Fetch all the NFTs that have been not been claimed yet in this Drop.
+   *
+   * * @example
+   * ```javascript
+   * const unclaimedNFTs = await contract.getAllUnclaimed();
+   * const firstUnclaimedNFT = unclaimedNFTs[0].name;
+   * ```
    *
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
@@ -161,8 +177,31 @@ export class DropErc721Contract extends Erc721<DropERC721> {
   }
 
   /**
-   * Get the unclaimed supply for this Drop.
+   * Get the claimed supply
    *
+   * * @remarks Get the number of claimed NFTs in this Drop.
+   *
+   * * @example
+   * ```javascript
+   * const claimedNFTCount = await contract.totalClaimedSupply();
+   * console.log(`NFTs claimed so far: ${claimedNFTCount}`);
+   * ```
+   * @returns the unclaimed supply
+   */
+  public async totalClaimedSupply(): Promise<BigNumber> {
+    return await this.contractWrapper.readContract.nextTokenIdToClaim();
+  }
+
+  /**
+   * Get the unclaimed supply
+   *
+   * * @remarks Get the number of unclaimed NFTs in this Drop.
+   *
+   * * @example
+   * ```javascript
+   * const unclaimedNFTCount = await contract.totalUnclaimedSupply();
+   * console.log(`NFTs left to claim: ${unclaimedNFTCount}`);
+   * ```
    * @returns the unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
@@ -171,25 +210,14 @@ export class DropErc721Contract extends Erc721<DropERC721> {
     );
   }
 
-  /**
-   * Get the claimed supply for this Drop.
-   *
-   * @returns the claimed supply
-   */
-  public async totalClaimedSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToClaim();
-  }
-
   /** ******************************
    * WRITE FUNCTIONS
    *******************************/
 
   /**
-   * Create batch allows you to create a batch of tokens
-   * in one transaction. This function can only be called
-   * once per contract at the moment.
+   * Create a batch of NFTs to be claimed in the future
    *
-   * @beta
+   * @remarks Create batch allows you to create a batch of many NFTs in one transaction.
    *
    * @example
    * ```javascript
@@ -249,7 +277,10 @@ export class DropErc721Contract extends Erc721<DropERC721> {
    * const address = "{{wallet_address}}"; // Address of the wallet you want to claim the NFTs
    * const quantity = 1; // Quantity of the tokens you want to claim
    *
-   * await contract.claimTo(address, quantity);
+   * const tx = await contract.claimTo(address, quantity);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const claimedTokenId = tx.id; // the id of the NFT claimed
+   * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
    * ```
    *
    * @param destinationAddress - Address you want to send the token to
@@ -287,8 +318,29 @@ export class DropErc721Contract extends Erc721<DropERC721> {
   }
 
   /**
-   * Claim NFTs to your connected wallet.
+   * Claim NFTs to the connected wallet.
    *
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param proofs - Array of proofs
+   *
+   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   */
+  /**
+   * Claim NFTs to the connected Wallet
+   *
+   * @remarks Let the currently connected wallet claim NFTs.
+   *
+   * @example
+   * ```javascript
+   * const quantity = 1; // Quantity of the tokens you want to claim
+   *
+   * const tx = await contract.claim(quantity);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const claimedTokenId = tx.id; // the id of the NFT claimed
+   * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
+   * ```
+   *
+   * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
    * @param proofs - Array of proofs
    *
