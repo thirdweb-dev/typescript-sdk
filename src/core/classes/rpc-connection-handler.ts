@@ -78,7 +78,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
     return this.provider;
   }
 
-  /**********************
+  /** ********************
    * PRIVATE FUNCTIONS
    *********************/
 
