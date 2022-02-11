@@ -10,11 +10,7 @@ import {
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import {
-  fetchCurrencyMetadata,
-  fetchCurrencyValue,
-  isNativeToken,
-} from "../../common/currency";
+import { fetchCurrencyValue, isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   ClaimCondition,

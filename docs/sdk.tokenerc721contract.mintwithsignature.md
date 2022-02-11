@@ -27,6 +27,9 @@ Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;&gt;
 
 Mint an dynamic NFT with a previously generated signature.
 
+## Example
+
+
 ```javascript
 // see how to craft a payload to sign in the `generateSignature()` documentation
 const { mintRequest, signature } = contract.generateSignature(payload);
