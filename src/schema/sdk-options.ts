@@ -3,7 +3,12 @@ import { z } from "zod";
 
 export const SDKOptionsSchema = z
   .object({
-    readOnlyRpcUrl: z.string().url().optional(),
+    readonlySettings: z
+      .object({
+        rpcUrl: z.string().url(),
+        chainId: z.number().optional(),
+      })
+      .optional(),
     gasSettings: z
       .object({
         maxPriceInGwei: z

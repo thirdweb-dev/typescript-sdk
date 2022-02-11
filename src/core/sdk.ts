@@ -115,9 +115,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ) {
     const contract = IThirdwebModule__factory.connect(
       contractAddress,
-      this.options.readOnlyRpcUrl
-        ? ethers.getDefaultProvider(this.options.readOnlyRpcUrl)
-        : this.getProvider(),
+      this.getProvider(),
     );
     return (
       ethers.utils

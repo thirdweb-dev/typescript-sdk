@@ -65,11 +65,9 @@ export class ContractWrapper<
       this.getSigner() || this.getProvider(),
     ) as TContract;
     // setup the read only contract
-    this.readContract = this.options.readOnlyRpcUrl
-      ? (this.writeContract.connect(
-          ethers.getDefaultProvider(this.options.readOnlyRpcUrl),
-        ) as TContract)
-      : this.writeContract;
+    this.readContract = this.writeContract.connect(
+      this.getProvider(),
+    ) as TContract;
   }
 
   /**

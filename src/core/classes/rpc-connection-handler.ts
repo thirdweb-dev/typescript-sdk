@@ -96,8 +96,11 @@ export class RPCConnectionHandler extends EventEmitter2 {
       }
     }
 
-    if (options?.readOnlyRpcUrl) {
-      provider = this.getReadOnlyProvider(options.readOnlyRpcUrl);
+    if (options?.readonlySettings) {
+      provider = this.getReadOnlyProvider(
+        options.readonlySettings.rpcUrl,
+        options.readonlySettings.chainId,
+      );
     }
 
     if (!provider) {
@@ -105,7 +108,10 @@ export class RPCConnectionHandler extends EventEmitter2 {
         provider = network;
       } else if (!Signer.isSigner(network)) {
         if (typeof network === "string") {
-          provider = this.getReadOnlyProvider(network);
+          provider = this.getReadOnlyProvider(
+            network,
+            options?.readonlySettings?.chainId,
+          );
         } else {
           // no a signer, not a provider, not a string? try with default provider
           provider = ethers.getDefaultProvider(network);
@@ -124,16 +130,16 @@ export class RPCConnectionHandler extends EventEmitter2 {
     return [signer, provider];
   }
 
-  private getReadOnlyProvider(network: string) {
+  private getReadOnlyProvider(network: string, chainId?: number) {
     try {
       const match = network.match(/^(ws|http)s?:/i);
       // try the JSON batch provider if available
       if (match) {
         switch (match[1]) {
           case "http":
-            return new JsonRpcBatchProvider(network);
+            return new JsonRpcBatchProvider(network, chainId);
           case "ws":
-            return new WebSocketProvider(network);
+            return new WebSocketProvider(network, chainId);
           default:
             return ethers.getDefaultProvider(network);
         }
