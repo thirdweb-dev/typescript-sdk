@@ -167,6 +167,16 @@ export interface AuctionListing {
     type: ListingType.Auction;
 }
 
+// @public (undocumented)
+export interface BatchToReveal {
+    // (undocumented)
+    batchId: BigNumber;
+    // (undocumented)
+    batchUri: string;
+    // (undocumented)
+    placeholderMetadata: NFTMetadata;
+}
+
 // @beta (undocumented)
 export interface BundleDropCreateClaimCondition {
     // (undocumented)
@@ -655,6 +665,7 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     protected connectContract(): LazyMintERC721;
     // @beta
     createBatch(metadatas: MetadataURIOrObject[]): Promise<string[]>;
+    createDelayedRevealBatch(placeholder: MetadataURIOrObject, metadatas: MetadataURIOrObject[], password: string): Promise<string[]>;
     // (undocumented)
     get(tokenId: string): Promise<NFTMetadataOwner>;
     // Warning: (ae-incompatible-release-tags) The symbol "getActiveClaimCondition" is marked as @public, but its signature references "ClaimCondition" which is marked as @beta
@@ -679,6 +690,7 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     getAllMintConditions(): Promise<PublicMintCondition[]>;
     // (undocumented)
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    getBatchesToReveal(): Promise<BatchToReveal[]>;
     getClaimConditionsFactory(): ClaimConditionFactory;
     getClaimIneligibilityReasons(quantity: BigNumberish_2, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // (undocumented)
@@ -692,11 +704,12 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
     getRoyaltyBps(): Promise<BigNumberish_2>;
     getRoyaltyRecipientAddress(): Promise<string>;
+    // @internal (undocumented)
+    hasDelayedReveal(): Promise<boolean>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
     isTransferRestricted(): Promise<boolean>;
-    isV1(): Promise<boolean>;
     // @deprecated (undocumented)
     lazyMint(metadata: MetadataURIOrObject): Promise<void>;
     // @deprecated (undocumented)
@@ -707,6 +720,8 @@ export class DropModule extends ModuleWithRoles<LazyMintERC721> implements ITran
     static moduleType: ModuleType;
     // (undocumented)
     ownerOf(tokenId: string): Promise<string>;
+    // (undocumented)
+    reveal(batchId: BigNumberish_2, password: string): Promise<void>;
     // (undocumented)
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)

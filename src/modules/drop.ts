@@ -60,7 +60,7 @@ export interface CreatePublicMintCondition {
 /**
  * @internal
  */
-const OLD_CLAIM_ABI_V1_22_0 = [
+const ABI_V1_22_0 = [
   {
     anonymous: false,
     inputs: [
@@ -113,6 +113,61 @@ const OLD_CLAIM_ABI_V1_22_0 = [
 ];
 
 /**
+ * @internal
+ */
+const ABI_V1_24_0 = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "startTokenId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "endTokenId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "baseURI",
+        type: "string",
+      },
+    ],
+    name: "LazyMintedTokens",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "_baseURIForTokens",
+        type: "string",
+      },
+    ],
+    name: "lazyMint",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
+export interface BatchToReveal {
+  batchId: BigNumber;
+  batchUri: string;
+  placeholderMetadata: NFTMetadata;
+}
+
+/**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
  *
  * @example
@@ -133,8 +188,8 @@ export class DropModule
   implements ITransferable
 {
   private _shouldCheckVersion = true;
-  private _isV1 = false;
-  private _isNewClaim = false;
+  private _isV0 = false;
+  private _version = 0;
   private v1Module: DropV1Module;
 
   public static moduleType: ModuleType = ModuleType.DROP;
@@ -222,7 +277,7 @@ export class DropModule
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
     // if v1 module then use v1
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.getAll(queryParams);
     }
     const start = BigNumber.from(queryParams?.start || 0).toNumber();
@@ -243,7 +298,7 @@ export class DropModule
   public async getAllUnclaimed(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.getAllUnclaimed();
     }
     const start = BigNumber.from(queryParams?.start || 0).toNumber();
@@ -269,7 +324,7 @@ export class DropModule
   public async getAllClaimed(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.getAllClaimed();
     }
     const start = BigNumber.from(queryParams?.start || 0).toNumber();
@@ -377,7 +432,7 @@ export class DropModule
    * @deprecated - Use {@link DropModule.getActiveClaimCondition} instead
    */
   public async getActiveMintCondition(): Promise<PublicMintCondition> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.getActiveMintCondition();
     }
     const index = await this.readOnlyContract.getIndexOfActiveCondition();
@@ -387,7 +442,7 @@ export class DropModule
   }
 
   public async getActiveClaimCondition(): Promise<ClaimCondition> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.getActiveClaimCondition();
     }
     const index = await this.readOnlyContract.getIndexOfActiveCondition();
@@ -399,7 +454,7 @@ export class DropModule
    * @deprecated - Use {@link DropModule.getAllClaimConditions} instead
    */
   public async getAllMintConditions(): Promise<PublicMintCondition[]> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.getAllMintConditions();
     }
 
@@ -419,7 +474,7 @@ export class DropModule
   }
 
   public async getAllClaimConditions(): Promise<ClaimCondition[]> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.getAllClaimConditions();
     }
     const claimCondition = await this.readOnlyContract.claimConditions();
@@ -434,7 +489,7 @@ export class DropModule
   }
 
   public async totalSupply(): Promise<BigNumber> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.totalSupply();
     }
     return await this.readOnlyContract.nextTokenIdToMint();
@@ -444,14 +499,14 @@ export class DropModule
    * @internal
    */
   public async maxTotalSupply(): Promise<BigNumber> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.maxTotalSupply();
     }
     return await this.readOnlyContract.nextTokenIdToMint();
   }
 
   public async totalUnclaimedSupply(): Promise<BigNumber> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.totalUnclaimedSupply();
     }
     return (await this.readOnlyContract.nextTokenIdToMint()).sub(
@@ -460,7 +515,7 @@ export class DropModule
   }
 
   public async totalClaimedSupply(): Promise<BigNumber> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.totalClaimedSupply();
     }
     return await this.readOnlyContract.nextTokenIdToClaim();
@@ -534,18 +589,18 @@ export class DropModule
    * @deprecated - The function has been deprecated. Use `createBatch` instead.
    */
   public async lazyMint(metadata: MetadataURIOrObject) {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       await this.v1Module.lazyMint(metadata);
       return;
     }
-    await this.lazyMintBatch([metadata]);
+    await this.createBatch([metadata]);
   }
 
   /**
-   * @deprecated - The function has been deprecated. Use `mintBatch` instead.
+   * @deprecated - The function has been deprecated. Use `createBatch` instead.
    */
   public async lazyMintBatch(metadatas: MetadataURIOrObject[]) {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       await this.v1Module.lazyMintBatch(metadatas);
       return;
     }
@@ -556,7 +611,7 @@ export class DropModule
    * @deprecated - Use {@link DropModule.setClaimCondition} instead
    */
   public async setMintConditions(factory: ClaimConditionFactory) {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.setMintConditions(factory);
     }
     return this.setClaimCondition(factory);
@@ -576,7 +631,7 @@ export class DropModule
    * @param factory - The claim condition factory.
    */
   public async setClaimCondition(factory: ClaimConditionFactory) {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.setClaimCondition(factory);
     }
     const conditions = (await factory.buildConditions()).map((c) => ({
@@ -630,7 +685,7 @@ export class DropModule
   }
 
   public async updateClaimConditions(factory: ClaimConditionFactory) {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.setClaimCondition(factory);
     }
     const conditions = (await factory.buildConditions()).map((c) => ({
@@ -702,7 +757,7 @@ export class DropModule
   public async setPublicMintConditions(
     conditions: CreatePublicMintCondition[],
   ) {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.setPublicMintConditions(conditions);
     }
     const now = BigNumber.from(Date.now()).div(1000);
@@ -842,7 +897,7 @@ export class DropModule
     if (addressToCheck === undefined) {
       addressToCheck = await this.getSignerAddress();
     }
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.canClaim(quantity, []);
     }
     return (
@@ -959,7 +1014,7 @@ export class DropModule
     // backward compatibility for < 1.22.0 claim
     const contract = new Contract(
       this.address,
-      OLD_CLAIM_ABI_V1_22_0,
+      ABI_V1_22_0,
       this.providerOrSigner,
     );
     const receipt = await this.sendContractTransaction(
@@ -1001,7 +1056,7 @@ export class DropModule
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<NFTMetadataOwner[]> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.claim(quantity, proofs);
     }
     const claimData = await this.prepareClaim(quantity, proofs);
@@ -1016,11 +1071,7 @@ export class DropModule
       );
     } else {
       // backward compatibility for < 1.22.0 claim
-      contract = new Contract(
-        this.address,
-        OLD_CLAIM_ABI_V1_22_0,
-        this.providerOrSigner,
-      );
+      contract = new Contract(this.address, ABI_V1_22_0, this.providerOrSigner);
       receipt = await this.sendContractTransaction(
         contract,
         "claim",
@@ -1122,19 +1173,33 @@ export class DropModule
   public async createBatch(
     metadatas: MetadataURIOrObject[],
   ): Promise<string[]> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.createBatch(metadatas);
     }
     const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
     const { baseUri } = await this.sdk
       .getStorage()
       .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
-    const receipt = await this.sendTransaction("lazyMint", [
-      metadatas.length,
-      baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
-    ]);
-    const event = this.parseEventLogs("LazyMintedTokens", receipt?.logs);
-    const [startingIndex, endingIndex]: BigNumber[] = event;
+
+    let receipt;
+    let contract: BaseContract = this.contract;
+
+    if (await this.hasDelayedReveal()) {
+      receipt = await this.sendTransaction("lazyMint", [
+        metadatas.length,
+        baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
+        ethers.utils.toUtf8Bytes(""),
+      ]);
+    } else {
+      contract = new Contract(this.address, ABI_V1_24_0, this.providerOrSigner);
+      receipt = await this.sendContractTransaction(contract, "lazyMint", [
+        metadatas.length,
+        baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
+      ]);
+    }
+
+    const events = this.parseLogs("LazyMintedTokens", receipt?.logs, contract);
+    const [startingIndex, endingIndex]: BigNumber[] = events[0].args;
     const tokenIds = [];
     for (let i = startingIndex; i.lte(endingIndex); i = i.add(1)) {
       tokenIds.push(i.toString());
@@ -1143,23 +1208,178 @@ export class DropModule
   }
 
   /**
+   * Algorithm to hash delay reveal password, so we don't broadcast the input password on-chain.
+   *
+   * @internal
+   */
+  private async hashDelayRevealPassword(
+    batchTokenIndex: BigNumberish,
+    password: string,
+  ) {
+    const chainId = await this.getChainID();
+    const contractAddress = this.address;
+    return ethers.utils.solidityKeccak256(
+      ["string", "uint256", "uint256", "address"],
+      [password, chainId, batchTokenIndex, contractAddress],
+    );
+  }
+
+  /**
+   * Create batch allows you to create a batch of tokens
+   * in one transaction. This function can only be called
+   * once per module at the moment.
+   *
+   * @param metadatas - The metadata to include in the batch.
+   */
+  public async createDelayedRevealBatch(
+    placeholder: MetadataURIOrObject,
+    metadatas: MetadataURIOrObject[],
+    password: string,
+  ): Promise<string[]> {
+    if (!(await this.hasDelayedReveal())) {
+      throw new Error("delay reveal unsupported");
+    }
+
+    if (!password) {
+      throw new Error("Password is required");
+    }
+
+    const { baseUri: placeholderUri } = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch([placeholder], this.address);
+
+    const startFileNumber = await this.readOnlyContract.nextTokenIdToMint();
+    const { baseUri } = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(metadatas, this.address, startFileNumber.toNumber());
+
+    const baseUriId = await this.readOnlyContract.getBaseURICount();
+    const encryptedBaseUri = await this.readOnlyContract.encryptDecrypt(
+      ethers.utils.toUtf8Bytes(baseUri.endsWith("/") ? baseUri : `${baseUri}/`),
+      await this.hashDelayRevealPassword(baseUriId, password),
+    );
+
+    const receipt = await this.sendTransaction("lazyMint", [
+      metadatas.length,
+      placeholderUri.endsWith("/") ? placeholderUri : `${placeholderUri}/`,
+      encryptedBaseUri,
+    ]);
+
+    const events = this.parseLogs("LazyMintedTokens", receipt?.logs);
+    const [startingIndex, endingIndex]: BigNumber[] = events[0].args;
+    const tokenIds = [];
+    for (let i = startingIndex; i.lte(endingIndex); i = i.add(1)) {
+      tokenIds.push(i.toString());
+    }
+    return tokenIds;
+  }
+
+  public async reveal(batchId: BigNumberish, password: string) {
+    if (!(await this.hasDelayedReveal())) {
+      throw new Error("delay reveal unsupported");
+    }
+
+    if (!password) {
+      throw new Error("Password is required");
+    }
+
+    const key = await this.hashDelayRevealPassword(batchId, password);
+
+    // performing the reveal locally to make sure it'd succeed before sending the transaction
+    try {
+      const decryptedUri = await this.contract.callStatic.reveal(batchId, key);
+
+      // basic sanity check for making sure decryptedUri is valid
+      // this is optional because invalid decryption key would result in non-utf8 bytes and
+      // ethers would throw when trying to decode it
+      if (!decryptedUri.includes("://") || !decryptedUri.endsWith("/")) {
+        throw new Error(
+          `Error revealing batch ${batchId} - make sure your password is correct`,
+        );
+      }
+    } catch (e) {
+      console.log(`Error revealing batch ${batchId}`, e);
+      throw new Error(
+        `Error revealing batch ${batchId} - make sure your password is correct`,
+      );
+    }
+
+    await this.sendTransaction("reveal", [batchId, key]);
+  }
+
+  /**
+   * Gets a list of token uris that needs to be revealed.
+   */
+  public async getBatchesToReveal(): Promise<BatchToReveal[]> {
+    if (!(await this.hasDelayedReveal())) {
+      throw new Error("Contract does not support delay reveal");
+    }
+
+    const count = await this.readOnlyContract.getBaseURICount();
+    if (count.isZero()) {
+      return [];
+    }
+
+    const countRangeArray = Array.from(Array(count.toNumber()).keys());
+
+    // map over to get the base uri indices, which should be the end token id of every batch
+    const uriIndices = await Promise.all(
+      countRangeArray.map((i) => this.readOnlyContract.baseURIIndices(i)),
+    );
+
+    // first batch always start from 0. don't need to fetch the last batch so pop it from the range array
+    const uriIndicesWithZeroStart = uriIndices.slice(0, uriIndices.length - 1);
+
+    // returns the token uri for each batches. first batch always starts from token id 0.
+    const tokenUris = await Promise.all(
+      Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
+        this.readOnlyContract.tokenURI(i),
+      ),
+    );
+
+    const tokenMetadatas = await Promise.all(
+      Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
+        this.getTokenMetadata(i.toString()),
+      ),
+    );
+
+    // index is the uri indicies, which is end token id. different from uris
+    const encryptedBaseUris = await Promise.all(
+      Array.from([...uriIndices]).map((i) =>
+        this.readOnlyContract.encryptedBaseURI(i),
+      ),
+    );
+
+    return tokenUris
+      .map((uri, index) => ({
+        batchId: BigNumber.from(index),
+        batchUri: uri,
+        placeholderMetadata: tokenMetadatas[index],
+      }))
+      .filter(
+        (_, index) => ethers.utils.hexDataLength(encryptedBaseUris[index]) > 0,
+      );
+  }
+
+  /**
    * @internal
    *
    * @returns - True if the batch has been created, false otherwise.
    */
   public async canCreateBatch(): Promise<boolean> {
-    if (await this.isV1()) {
+    if (await this.isV0()) {
       return this.v1Module.canCreateBatch();
     }
     return true;
   }
 
   /**
-   * Check if contract is v1 or v2. If the contract doesn't have nextTokenIdToMint = v1 contract.
+   * Check if contract is v0 or not. If the contract doesn't have nextTokenIdToMint = v0 contract.
+   * @internal
    */
-  async isV1(): Promise<boolean> {
+  private async isV0(): Promise<boolean> {
     await this.checkVersion();
-    return this._isV1;
+    return this._isV0;
   }
 
   /**
@@ -1167,7 +1387,15 @@ export class DropModule
    */
   private async isNewClaim(): Promise<boolean> {
     await this.checkVersion();
-    return this._isNewClaim;
+    return this._version >= 1;
+  }
+
+  /**
+   * @internal
+   */
+  public async hasDelayedReveal(): Promise<boolean> {
+    await this.checkVersion();
+    return this._version >= 2;
   }
 
   /**
@@ -1177,16 +1405,15 @@ export class DropModule
     if (this._shouldCheckVersion) {
       try {
         await this.readOnlyContract.nextTokenIdToMint();
-        this._isV1 = false;
+        this._isV0 = false;
       } catch (e) {
-        this._isV1 = true;
+        this._isV0 = true;
       }
 
       try {
-        await this.readOnlyContract.VERSION();
-        this._isNewClaim = true;
+        this._version = (await this.readOnlyContract.VERSION()).toNumber();
       } catch (e) {
-        this._isNewClaim = false;
+        this._version = 0;
       }
 
       this._shouldCheckVersion = false;
@@ -1642,7 +1869,7 @@ class DropV1Module extends ModuleWithRoles<Drop> implements ITransferable {
           }
         }
       }
-      await this.readOnlyContract.callStatic.claim(quantity, proofs, overrides);
+      await this.contract.callStatic.claim(quantity, proofs, overrides);
       return true;
     } catch (err) {
       return false;

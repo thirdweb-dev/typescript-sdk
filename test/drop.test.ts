@@ -14,7 +14,8 @@ import {
   signers,
   wrappedNativeTokenAddress,
 } from "./before.test";
-import { LazyMintERC721__factory } from "./old_factories/v1.22.0/LazyMintERC721";
+import { LazyMintERC721__factory as LazyMintERC721__factory_22 } from "./old_factories/v1.22.0/LazyMintERC721";
+import { LazyMintERC721__factory as LazyMintERC721__factory_24 } from "./old_factories/v1.24.0/LazyMintERC721";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
@@ -613,6 +614,165 @@ describe("Drop Module", async () => {
     expect((await dropModule.getAllClaimConditions()).length).to.be.equal(0);
   });
 
+  describe("Delay Reveal", () => {
+    it("metadata should reveal correctly", async () => {
+      await dropModule.createDelayedRevealBatch(
+        {
+          name: "Placeholder #1",
+        },
+        [{ name: "NFT #1" }, { name: "NFT #2" }],
+        "my secret password",
+      );
+
+      expect((await dropModule.get("0")).metadata.name).to.be.equal(
+        "Placeholder #1",
+      );
+
+      await dropModule.reveal(0, "my secret password");
+
+      expect((await dropModule.get("0")).metadata.name).to.be.equal("NFT #1");
+    });
+
+    it("different reveal order and should return correct unreveal list", async () => {
+      await dropModule.createDelayedRevealBatch(
+        {
+          name: "Placeholder #1",
+        },
+        [
+          {
+            name: "NFT #1",
+          },
+          {
+            name: "NFT #2",
+          },
+        ],
+        "my secret key",
+      );
+
+      await dropModule.createDelayedRevealBatch(
+        {
+          name: "Placeholder #2",
+        },
+        [
+          {
+            name: "NFT #3",
+          },
+          {
+            name: "NFT #4",
+          },
+        ],
+        "my secret key",
+      );
+
+      await dropModule.createBatch([
+        {
+          name: "NFT #00",
+        },
+        {
+          name: "NFT #01",
+        },
+      ]);
+
+      await dropModule.createDelayedRevealBatch(
+        {
+          name: "Placeholder #3",
+        },
+        [
+          {
+            name: "NFT #5",
+          },
+          {
+            name: "NFT #6",
+          },
+          {
+            name: "NFT #7",
+          },
+        ],
+        "my secret key",
+      );
+
+      let unrevealList = await dropModule.getBatchesToReveal();
+      expect(unrevealList.length).to.be.equal(3);
+      expect(unrevealList[0].batchId.toNumber()).to.be.equal(0);
+      expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
+        "Placeholder #1",
+      );
+      expect(unrevealList[1].batchId.toNumber()).to.be.equal(1);
+      expect(unrevealList[1].placeholderMetadata.name).to.be.equal(
+        "Placeholder #2",
+      );
+      // skipped 2 because it is a revealed batch
+      expect(unrevealList[2].batchId.toNumber()).to.be.equal(3);
+      expect(unrevealList[2].placeholderMetadata.name).to.be.equal(
+        "Placeholder #3",
+      );
+
+      await dropModule.reveal(unrevealList[0].batchId, "my secret key");
+
+      unrevealList = await dropModule.getBatchesToReveal();
+      expect(unrevealList.length).to.be.equal(2);
+      expect(unrevealList[0].batchId.toNumber()).to.be.equal(1);
+      expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
+        "Placeholder #2",
+      );
+      expect(unrevealList[1].batchId.toNumber()).to.be.equal(3);
+      expect(unrevealList[1].placeholderMetadata.name).to.be.equal(
+        "Placeholder #3",
+      );
+
+      await dropModule.reveal(
+        unrevealList[unrevealList.length - 1].batchId,
+        "my secret key",
+      );
+
+      unrevealList = await dropModule.getBatchesToReveal();
+      expect(unrevealList.length).to.be.equal(1);
+      expect(unrevealList[0].batchId.toNumber()).to.be.equal(1);
+      expect(unrevealList[0].placeholderMetadata.name).to.be.equal(
+        "Placeholder #2",
+      );
+    });
+
+    it("should not be able to re-used published password for next batch", async () => {
+      await dropModule.createDelayedRevealBatch(
+        {
+          name: "Placeholder #1",
+        },
+        [{ name: "NFT #1" }, { name: "NFT #2" }],
+        "my secret password",
+      );
+      await dropModule.createDelayedRevealBatch(
+        {
+          name: "Placeholder #2",
+        },
+        [{ name: "NFT #3" }, { name: "NFT #4" }],
+        "my secret password",
+      );
+      await dropModule.reveal(0, "my secret password");
+      const transactions = (
+        await adminWallet.provider.getBlockWithTransactions()
+      ).transactions;
+
+      const { index, _key } = dropModule.contract.interface.decodeFunctionData(
+        "reveal",
+        transactions[0].data,
+      );
+
+      // re-using broadcasted _key to decode :)
+      try {
+        await dropModule.reveal(index.add(1), _key);
+        assert.fail("should not be able to re-used published password");
+      } catch (e) {
+        expect(e.message).to.be.equal(
+          "Error revealing batch 1 - make sure your password is correct",
+        );
+      }
+
+      // original password should work
+      await dropModule.reveal(1, "my secret password");
+    });
+  });
+
   describe("v1.22.0 compatibility", () => {
     let oldDropModule: DropModule;
 
@@ -621,8 +781,8 @@ describe("Drop Module", async () => {
         .getStorage()
         .uploadMetadata({ name: "module" });
       const tx = await new ethers.ContractFactory(
-        LazyMintERC721__factory.abi,
-        LazyMintERC721__factory.bytecode,
+        LazyMintERC721__factory_22.abi,
+        LazyMintERC721__factory_22.bytecode,
       )
         .connect(adminWallet)
         .deploy(
@@ -677,6 +837,120 @@ describe("Drop Module", async () => {
       ]);
       await oldDropModule.claimTo(1, samWallet.address);
       assert((await oldDropModule.getOwned(samWallet.address)).length === 1);
+    });
+
+    it("should error when using delayed reveal features", async () => {
+      try {
+        await oldDropModule.createDelayedRevealBatch(
+          {
+            name: "test",
+          },
+          [{ name: "test" }],
+          "my secret password",
+        );
+        assert.fail("should not be able to use delayed reveal features");
+      } catch (e) {
+        expect(e.message).to.be.equal("delay reveal unsupported");
+      }
+    });
+  });
+
+  describe("v1.24.0 compatibility", () => {
+    let oldDropModule: DropModule;
+
+    beforeEach(async () => {
+      const contractUri = await sdk
+        .getStorage()
+        .uploadMetadata({ name: "module" });
+      const tx = await new ethers.ContractFactory(
+        LazyMintERC721__factory_24.abi,
+        LazyMintERC721__factory_24.bytecode,
+      )
+        .connect(adminWallet)
+        .deploy(
+          "Name",
+          "Symbol",
+          contractUri,
+          appModule.address,
+          ethers.constants.AddressZero,
+          wrappedNativeTokenAddress,
+          adminWallet.address,
+          0,
+          0,
+        );
+      await tx.deployed();
+      oldDropModule = sdk.getDropModule(tx.address);
+    });
+
+    it("should be able to create batch as expected", async () => {
+      expect((await oldDropModule.totalSupply()).toNumber()).to.be.equal(0);
+      await oldDropModule.createBatch([
+        {
+          name: "test 0",
+        },
+        {
+          name: "test 1",
+        },
+      ]);
+      expect((await oldDropModule.totalSupply()).toNumber()).to.be.equal(2);
+      await oldDropModule.createBatch([
+        {
+          name: "test 2",
+        },
+        {
+          name: "test 3",
+        },
+        {
+          name: "test 4",
+        },
+      ]);
+      expect((await oldDropModule.totalSupply()).toNumber()).to.be.equal(5);
+    });
+
+    it("should be able to use claim function as expected", async () => {
+      const factory = oldDropModule.getClaimConditionsFactory();
+      factory.newClaimPhase({
+        startTime: new Date(),
+      });
+      await oldDropModule.setClaimConditions(factory);
+      await oldDropModule.createBatch([
+        {
+          name: "test",
+        },
+      ]);
+      sdk.setProviderOrSigner(samWallet);
+      await oldDropModule.claim(1);
+      assert((await oldDropModule.getOwned(samWallet.address)).length === 1);
+    });
+
+    it("should be able to use claimTo function as expected", async () => {
+      const factory = oldDropModule.getClaimConditionsFactory();
+      factory.newClaimPhase({
+        startTime: new Date(),
+      });
+      await oldDropModule.setClaimConditions(factory);
+      await oldDropModule.createBatch([
+        {
+          name: "test",
+        },
+      ]);
+      await oldDropModule.claimTo(1, samWallet.address);
+      assert((await oldDropModule.getOwned(samWallet.address)).length === 1);
+    });
+
+    it("should error when using delayed reveal features", async () => {
+      try {
+        await oldDropModule.createDelayedRevealBatch(
+          {
+            name: "test",
+          },
+          [{ name: "test" }],
+          "my secret password",
+        );
+        assert.fail("should not be able to use delayed reveal features");
+      } catch (e) {
+        expect(e.message).to.be.equal("delay reveal unsupported");
+      }
     });
   });
 
