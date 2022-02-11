@@ -115,17 +115,9 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
    *******************************/
 
   /**
-   * Mint Tokens
+   * Mint Tokens for the connected wallet
    *
-   * @remarks Mint tokens to the connected wallet
-   *
-   * @example
-   * ```javascript
-   * // The amount of this token you want to mint
-   * const amount = ethers.utils.parseEther("1.5");
-   *
-   * await contract.mintTo(toAddress, amount);
-   * ```
+   * @see mintTo
    */
   public async mint(amount: BigNumberish): TransactionResultPromise {
     return this.mintTo(await this.contractWrapper.getSignerAddress(), amount);

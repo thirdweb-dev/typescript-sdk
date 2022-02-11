@@ -90,26 +90,9 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
    *******************************/
 
   /**
-   * Mint NFT
+   * Mint NFT for the connected wallet
    *
-   * @remarks Mint an NFT with a specified supply.
-   *
-   * @example
-   * ```javascript
-   * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
-   * const metadata = {
-   *   name: "Cool NFT",
-   *   description: "This is a cool NFT",
-   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   * }
-   *
-   * const metadataWithSupply = {
-   *   metadata,
-   *   supply: 1, // The number of this NFT you want to mint
-   * }
-   *
-   * await contract.mint(metadataWithSupply);
-   * ```
+   * @see mintTo
    */
   public async mint(
     metadataWithSupply: BundleMetadataInput,

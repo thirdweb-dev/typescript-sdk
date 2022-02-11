@@ -127,6 +127,12 @@ export class MarketplaceContract implements UpdateableNetwork {
    * READ FUNCTIONS
    *******************************/
 
+  /**
+   * Get a direct listing by id
+   *
+   * @param listingId the listind Id
+   * @returns the Direct listing object
+   */
   public async getDirectListing(
     listingId: BigNumberish,
   ): Promise<DirectListing> {
@@ -148,6 +154,12 @@ export class MarketplaceContract implements UpdateableNetwork {
     return await this.mapDirectListing(listing);
   }
 
+  /**
+   * Get an Auction listing by id
+   *
+   * @param listingId the listing Id
+   * @returns the Auction listing object
+   */
   public async getAuctionListing(
     listingId: BigNumberish,
   ): Promise<AuctionListing> {
@@ -262,8 +274,10 @@ export class MarketplaceContract implements UpdateableNetwork {
   }
 
   /**
-   * Convenience function to get either a direct or auction listing.
-   * @param listingId
+   * Convenience function to get either a direct or auction listing
+   *
+   * @param listingId the listing id
+   * @returns either a direct or auction listing
    */
   public async getListing(
     listingId: BigNumberish,
@@ -286,7 +300,15 @@ export class MarketplaceContract implements UpdateableNetwork {
   }
 
   /**
-   * Get all the listings in this Marketplace contract
+   * Get all the listings
+   *
+   * @remarks Fetch all the active listings from this marketplace contract.
+   *
+   * ```javascript
+   * const listings = await contract.getAllListings();
+   * const priceOfFirstListing = listings[0].price;
+   * ```
+   *
    * @param filter - optional filters
    */
   public async getAllListings(
@@ -368,7 +390,9 @@ export class MarketplaceContract implements UpdateableNetwork {
    *   buyoutPricePerToken: "1",
    * }
    *
-   * await contract.createDirectListing(listing);
+   * const tx = await contract.createDirectListing(listing);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const id = tx.id; // the id of the newly created listing
    * ```
    */
   public async createDirectListing(
@@ -436,7 +460,9 @@ export class MarketplaceContract implements UpdateableNetwork {
    *   reservePricePerToken: "1",
    * }
    *
-   * await contract.createAuctionListing(auction);
+   * const tx = await contract.createAuctionListing(auction);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const id = tx.id; // the id of the newly created listing
    * ```
    */
   public async createAuctionListing(
@@ -554,26 +580,24 @@ export class MarketplaceContract implements UpdateableNetwork {
    * // Quantity of the asset you want to buy
    * const quantityDesired = 1;
    *
-   * await contract.buyoutDirectListing({ listingId, quantityDesired });
+   * await contract.buyoutDirectListing(listingId, quantityDesired);
    * ```
    */
-  public async buyoutDirectListing(_buyout: {
-    listingId: BigNumberish;
-    quantityDesired: BigNumberish;
-  }): TransactionResultPromise {
-    const listing = await this.validateDirectListing(
-      BigNumber.from(_buyout.listingId),
-    );
+  public async buyoutDirectListing(
+    listingId: BigNumberish,
+    quantityDesired: BigNumberish,
+  ): TransactionResultPromise {
+    const listing = await this.validateDirectListing(BigNumber.from(listingId));
     const valid = await this.isStillValidDirectListing(
       listing,
-      _buyout.quantityDesired,
+      quantityDesired,
     );
     if (!valid) {
       throw new Error(
         "The asset on this listing has been moved from the lister's wallet, this listing is now invalid",
       );
     }
-    const quantity = BigNumber.from(_buyout.quantityDesired);
+    const quantity = BigNumber.from(quantityDesired);
     const value = BigNumber.from(listing.buyoutPrice).mul(quantity);
     const overrides = (await this.contractWrapper.getCallOverrides()) || {};
     await setErc20Allowance(
@@ -585,7 +609,7 @@ export class MarketplaceContract implements UpdateableNetwork {
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "buy",
-        [_buyout.listingId, quantity, listing.currencyContractAddress, value],
+        [listingId, quantity, listing.currencyContractAddress, value],
         overrides,
       ),
     };
@@ -611,10 +635,7 @@ export class MarketplaceContract implements UpdateableNetwork {
       BigNumber.from(listingId),
     );
 
-    return this.makeAuctionListingBid({
-      listingId,
-      pricePerToken: listing.buyoutPrice,
-    });
+    return this.makeAuctionListingBid(listingId, listing.buyoutPrice);
   }
 
   /**
@@ -636,7 +657,7 @@ export class MarketplaceContract implements UpdateableNetwork {
           quantityDesired !== undefined,
           "quantityDesired is required when buying out a direct listing",
         );
-        return await this.buyoutDirectListing({ listingId, quantityDesired });
+        return await this.buyoutDirectListing(listingId, quantityDesired);
       }
       case ListingType.Auction: {
         return await this.buyoutAuctionListing(listingId);
@@ -658,23 +679,23 @@ export class MarketplaceContract implements UpdateableNetwork {
    * // The price you are willing to bid for a single token of the listing
    * const pricePerToken = 1;
    *
-   * await contract.makeAuctionListingBid({ listingId, pricePerToken });
+   * await contract.makeAuctionListingBid(listingId, pricePerToken);
    * ```
    */
-  public async makeAuctionListingBid(bid: {
-    listingId: BigNumberish;
-    pricePerToken: BigNumberish;
-  }): TransactionResultPromise {
+  public async makeAuctionListingBid(
+    listingId: BigNumberish,
+    pricePerToken: BigNumberish,
+  ): TransactionResultPromise {
     const listing = await this.validateAuctionListing(
-      BigNumber.from(bid.listingId),
+      BigNumber.from(listingId),
     );
 
     const bidBuffer = await this.getBidBufferBps();
-    const winningBid = await this.getWinningBid(bid.listingId);
+    const winningBid = await this.getWinningBid(listingId);
     if (winningBid) {
       const isWinningBid = await this.isWinningBid(
         winningBid.pricePerToken,
-        bid.pricePerToken,
+        pricePerToken,
         bidBuffer,
       );
 
@@ -683,16 +704,16 @@ export class MarketplaceContract implements UpdateableNetwork {
         "Bid price is too low based on the current winning bid and the bid buffer",
       );
     } else {
-      const pricePerToken = BigNumber.from(bid.pricePerToken);
+      const tokenPrice = BigNumber.from(pricePerToken);
       const reservePrice = BigNumber.from(listing.reservePrice);
       invariant(
-        pricePerToken.gte(reservePrice),
+        tokenPrice.gte(reservePrice),
         "Bid price is too low based on reserve price",
       );
     }
 
     const quantity = BigNumber.from(listing.quantity);
-    const value = BigNumber.from(bid.pricePerToken).mul(quantity);
+    const value = BigNumber.from(pricePerToken).mul(quantity);
 
     const overrides = (await this.contractWrapper.getCallOverrides()) || {};
     await setErc20Allowance(
@@ -706,10 +727,10 @@ export class MarketplaceContract implements UpdateableNetwork {
       receipt: await this.contractWrapper.sendTransaction(
         "offer",
         [
-          bid.listingId,
+          listingId,
           listing.quantity,
           listing.currencyContractAddress,
-          bid.pricePerToken,
+          pricePerToken,
         ],
         overrides,
       ),
@@ -767,7 +788,7 @@ export class MarketplaceContract implements UpdateableNetwork {
    * @example
    * ```javascript
    * // The listing ID of the direct listing you want to cancel
-   * const listingId = "0"
+   * const listingId = "0";
    *
    * await contract.cancelDirectListing(listingId);
    * ```
@@ -791,7 +812,7 @@ export class MarketplaceContract implements UpdateableNetwork {
    * @example
    * ```javascript
    * // The listing ID of the auction listing you want to cancel
-   * const listingId = "0"
+   * const listingId = "0";
    *
    * await contract.cancelAuctionListing(listingId);
    * ```
@@ -822,12 +843,20 @@ export class MarketplaceContract implements UpdateableNetwork {
   }
 
   /**
-   * Closes the Auction and executes the sale
+   * Close the Auction
+   *
+   * @remarks Closes the Auction and executes the sale.
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the auction listing you want to close
+   * const listingId = "0";
+   * await closeAuctionListing(listindId);
+   * ```
    *
    * @param listingId - the auction  listing ud to close
    * @param closeFor - optionally pass the address the auction creator address or winning bid offeror address to close the auction on their behalf
    */
-  // TODO this closeFor_ param is confusing - cleanup interface between close / cancel
   public async closeAuctionListing(
     listingId: BigNumberish,
     closeFor?: string,

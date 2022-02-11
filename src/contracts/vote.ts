@@ -334,7 +334,7 @@ export class VoteContract implements UpdateableNetwork {
    *     nativeTokenValue: 0,
    *     // Transaction data that will be executed when the proposal is executed
    *     // This is an example transfer transaction with a token contract (which you would need to setup in code)
-   *     transactionData: tokenContract.contract.interface.encodeFunctionData(
+   *     transactionData: tokenContract.encoder.encode(
    *       "transfer", [
    *         fromAddress,
    *         amount,
