@@ -212,7 +212,7 @@ export class BundleDropModule extends ModuleWithRoles<LazyMintERC1155> implement
     burn(tokenId: BigNumberish_2, amount: BigNumberish_2): Promise<TransactionReceipt>;
     // (undocumented)
     canClaim(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToCheck?: string): Promise<boolean>;
-    claim(tokenId: BigNumberish_2, quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<void>;
+    claim(tokenId: BigNumberish_2, quantity: BigNumberish_2, proofs?: BytesLike[]): Promise<TransactionReceipt>;
     claimTo(tokenId: BigNumberish_2, quantity: BigNumberish_2, addressToClaim: string, proofs?: BytesLike[]): Promise<TransactionReceipt>;
     // @internal (undocumented)
     protected connectContract(): LazyMintERC1155;

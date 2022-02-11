@@ -9,7 +9,7 @@ Claim a token to yourself
 <b>Signature:</b>
 
 ```typescript
-claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<void>;
+claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionReceipt>;
 ```
 
 ## Parameters
@@ -22,7 +22,7 @@ claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Prom
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt&gt;
 
 - Receipt for the transaction
 
