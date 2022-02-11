@@ -37,6 +37,12 @@ export interface IRoles {
    * @public
    */
   lister: "lister";
+
+  /**
+   * The contract address allowed to list assets from
+   * @internal
+   */
+  asset: "asset";
 }
 
 /**
@@ -60,6 +66,7 @@ export const RolesMap: IRoles = {
   transfer: "transfer",
   editor: "editor",
   lister: "lister",
+  asset: "asset",
 } as const;
 
 /**
@@ -73,6 +80,7 @@ const _role: Record<Role, string> = {
   pauser: "PAUSER_ROLE",
   editor: "EDITOR_ROLE",
   lister: "LISTER_ROLE",
+  asset: "ASSET_ROLE",
 };
 
 /**

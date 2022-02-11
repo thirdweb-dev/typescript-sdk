@@ -1,64 +1,63 @@
+import { AddressZero } from "@ethersproject/constants";
 import {
   ERC20__factory,
   ERC721__factory,
-  NFTCollection as NFTBundleContract,
-  NFTCollection__factory,
+  SignatureMint1155,
+  SignatureMint1155__factory,
 } from "@3rdweb/contracts";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { BytesLike } from "ethers";
-import { ModuleType, Role, RolesMap } from "../common";
+import { BytesLike, ethers, Signer } from "ethers";
+import { ModuleType, NATIVE_TOKEN_ADDRESS, Role, RolesMap } from "../common";
 import { getTokenMetadata, NFTMetadata } from "../common/nft";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
-import { UnderlyingType } from "./pack";
+import {
+  MintRequestStructOutput,
+  MintWithSignatureEvent,
+} from "@3rdweb/contracts/dist/SignatureMint1155";
+import {
+  Erc1155SignaturePayload,
+  NewErc1155SignaturePayload,
+} from "../types/signature-minting";
+import { hexlify } from "@ethersproject/bytes";
+import { toUtf8Bytes } from "ethers/lib/utils";
+import { v4 as uuidv4 } from "uuid";
+
+export interface TokenERC1155Metadata {
+  supply: BigNumber;
+  metadata: NFTMetadata;
+  quantityOwnedByAddress: BigNumber;
+}
 
 /**
  * @beta
  */
 
-export interface BundleMetadata {
-  creator: string;
-  supply: BigNumber;
-  metadata: NFTMetadata;
-  ownedByAddress: BigNumber;
-  underlyingType: UnderlyingType;
-}
-
-export interface CollectionMetadata {
-  creator: string;
-  supply: BigNumber;
-  metadata: NFTMetadata;
-  ownedByAddress: BigNumber;
-}
-
-/**
- * @beta
- */
-
-export interface INFTBundleCreateArgs {
-  metadata: MetadataURIOrObject;
-  supply: BigNumberish;
-}
-export interface INFTCollectionCreateArgs {
+export interface TokenERC1155CreateAndMintArgs {
   metadata: MetadataURIOrObject;
   supply: BigNumberish;
 }
 
-/**
- * @beta
- */
-
-export interface INFTCollectionBatchArgs {
+export interface TokenERC1155AlreadyMintedArgs {
   tokenId: BigNumberish;
   amount: BigNumberish;
 }
 
-export interface INFTBundleBatchArgs {
-  tokenId: BigNumberish;
-  amount: BigNumberish;
-}
+const MintRequest = [
+  { name: "to", type: "address" },
+  { name: "royaltyRecipient", type: "address" },
+  { name: "primarySaleRecipient", type: "address" },
+  { name: "tokenId", type: "uint256" },
+  { name: "uri", type: "string" },
+  { name: "quantity", type: "uint256" },
+  { name: "pricePerToken", type: "uint256" },
+  { name: "currency", type: "address" },
+  { name: "validityStartTimestamp", type: "uint128" },
+  { name: "validityEndTimestamp", type: "uint128" },
+  { name: "uid", type: "bytes32" },
+];
 
 /**
  * Create a collection of NFTs that lets you optionally mint multiple copies of each NFT.
@@ -76,11 +75,11 @@ export interface INFTBundleBatchArgs {
  *
  * @public
  */
-export class BundleModule
-  extends ModuleWithRoles<NFTBundleContract>
+export class SignatureMint1155Module
+  extends ModuleWithRoles<SignatureMint1155>
   implements ITransferable
 {
-  public static moduleType: ModuleType = ModuleType.BUNDLE;
+  public static moduleType: ModuleType = ModuleType.BUNDLE_SIGNATURE;
 
   public static roles = [
     RolesMap.admin,
@@ -94,21 +93,24 @@ export class BundleModule
    * @internal
    */
   protected getModuleRoles(): readonly Role[] {
-    return BundleModule.roles;
+    return SignatureMint1155Module.roles;
   }
 
   /**
    * @internal
    */
-  protected connectContract(): NFTBundleContract {
-    return NFTCollection__factory.connect(this.address, this.providerOrSigner);
+  protected connectContract(): SignatureMint1155 {
+    return SignatureMint1155__factory.connect(
+      this.address,
+      this.providerOrSigner,
+    );
   }
 
   /**
    * @internal
    */
   protected getModuleType(): ModuleType {
-    return BundleModule.moduleType;
+    return SignatureMint1155Module.moduleType;
   }
 
   /**
@@ -117,21 +119,21 @@ export class BundleModule
    * @param tokenId - the unique token id of the nft
    * @returns A promise that resolves to a `BundleMetadata`.
    */
-  public async get(tokenId: string, address?: string): Promise<BundleMetadata> {
-    const [metadata, supply, ownedByAddress, state] = await Promise.all([
+  public async get(
+    tokenId: string,
+    address?: string,
+  ): Promise<TokenERC1155Metadata> {
+    const [metadata, supply, ownedByAddress] = await Promise.all([
       getTokenMetadata(this.readOnlyContract, tokenId, this.sdk.getStorage()),
       this.readOnlyContract
         .totalSupply(tokenId)
         .catch(() => BigNumber.from("0")),
       address ? (await this.balanceOf(address, tokenId)).toNumber() : 0,
-      this.readOnlyContract.tokenState(tokenId),
     ]);
     return {
-      creator: state.creator,
       supply,
       metadata,
-      ownedByAddress: BigNumber.from(ownedByAddress),
-      underlyingType: state.underlyingType,
+      quantityOwnedByAddress: BigNumber.from(ownedByAddress),
     };
   }
 
@@ -154,8 +156,8 @@ export class BundleModule
    *
    * @returns The NFT metadata for all NFTs in the module.
    */
-  public async getAll(address?: string): Promise<BundleMetadata[]> {
-    const maxId = (await this.readOnlyContract.nextTokenId()).toNumber();
+  public async getAll(address?: string): Promise<TokenERC1155Metadata[]> {
+    const maxId = (await this.readOnlyContract.nextTokenIdToMint()).toNumber();
     return await Promise.all(
       Array.from(Array(maxId).keys()).map((i) =>
         this.get(i.toString(), address),
@@ -259,194 +261,69 @@ export class BundleModule
     );
   }
 
-  // owner functions
-  public async create(metadata: MetadataURIOrObject): Promise<BundleMetadata> {
-    return (await this.createBatch([metadata]))[0];
+  public async createAndMint(args: TokenERC1155CreateAndMintArgs) {
+    await this.createAndMintTo(await this.getSignerAddress(), args);
   }
 
-  public async createBatch(
-    metadatas: MetadataURIOrObject[],
-  ): Promise<BundleMetadata[]> {
-    const metadataWithSupply = metadatas.map((m) => ({
-      metadata: m,
-      supply: 0,
-    }));
-    return this.createAndMintBatch(metadataWithSupply);
+  public async createAndMintTo(
+    to: string,
+    args: TokenERC1155CreateAndMintArgs,
+  ) {
+    const uri = await this.sdk.getStorage().uploadMetadata(args.metadata);
+    await this.sendTransaction("mintTo", [
+      to,
+      ethers.constants.MaxUint256,
+      uri,
+      args.supply,
+    ]);
   }
 
-  /**
-   * Mint NFT
-   *
-   * @remarks Mint an NFT with a specified supply.
-   *
-   * @example
-   * ```javascript
-   * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
-   * const metadata = {
-   *   name: "Cool NFT",
-   *   description: "This is a cool NFT",
-   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   * }
-   *
-   * const metadataWithSupply = {
-   *   metadata,
-   *   supply: 1, // The number of this NFT you want to mint
-   * }
-   *
-   * await module.createAndMint(metadataWithSupply);
-   * ```
-   */
-  public async createAndMint(
-    metadataWithSupply: INFTBundleCreateArgs,
-  ): Promise<BundleMetadata> {
-    return (await this.createAndMintBatch([metadataWithSupply]))[0];
+  public async createAndMintBatch(args: TokenERC1155CreateAndMintArgs[]) {
+    await this.createAndMintBatchTo(await this.getSignerAddress(), args);
   }
 
-  /**
-   * Mint Many NFTs
-   *
-   * @remarks Mint many different NFTs with specified supplies.
-   *
-   * @example
-   * ```javascript
-   * // Custom metadata and supplies of your NFTs
-   * const metadataWithSupply = [{
-   *   supply: 1, // The number of this NFT you want to mint
-   *   metadata: {
-   *     name: "Cool NFT #1",
-   *     description: "This is a cool NFT",
-   *     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   *   },
-   * }, {
-   *   supply: 1,
-   *   metadata: {
-   *     name: "Cool NFT #2",
-   *     description: "This is a cool NFT",
-   *     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   *   },
-   * }];
-   *
-   * await module.createAndMintBatch(metadataWithSupply);
-   * ```
-   */
-  public async createAndMintBatch(
-    metadataWithSupply: INFTBundleCreateArgs[],
-  ): Promise<BundleMetadata[]> {
-    const metadatas = metadataWithSupply.map((a) => a.metadata);
+  public async createAndMintBatchTo(
+    to: string,
+    args: TokenERC1155CreateAndMintArgs[],
+  ) {
+    const metadatas = args.map((a) => a.metadata);
+    const amounts = args.map((a) => a.supply);
     const { metadataUris: uris } = await this.sdk
       .getStorage()
       .uploadMetadataBatch(metadatas);
-    const supplies = metadataWithSupply.map((a) => a.supply);
-    const to = await this.getSignerAddress();
-    const receipt = await this.sendTransaction("createNativeTokens", [
-      to,
-      uris,
-      supplies,
-      [0],
-    ]);
-    const event = this.parseEventLogs("NativeTokens", receipt?.logs);
-    const tokenIds = event?.tokenIds;
-    return await Promise.all(
-      tokenIds.map((tokenId: BigNumber) => this.get(tokenId.toString())),
+    const encoded = uris.map((uri, index) =>
+      this.readOnlyContract.interface.encodeFunctionData("mintTo", [
+        to,
+        ethers.constants.MaxUint256,
+        uri,
+        amounts[index],
+      ]),
     );
+    await this.sendTransaction("multicall", [encoded]);
   }
 
-  public async createWithToken(
-    tokenContract: string,
-    tokenAmount: BigNumberish,
-    args: INFTBundleCreateArgs,
-  ) {
-    const token = ERC20__factory.connect(tokenContract, this.providerOrSigner);
-    const allowance = await token.allowance(
-      await this.getSignerAddress(),
-      this.address,
-    );
-    if (allowance < tokenAmount) {
-      await token.increaseAllowance(this.address, tokenAmount);
-    }
-    const uri = await this.sdk.getStorage().uploadMetadata(args.metadata);
-    await this.sendTransaction("wrapERC20", [
-      tokenContract,
-      tokenAmount,
-      args.supply,
-      uri,
-    ]);
-  }
-  public async createWithErc20(
-    tokenContract: string,
-    tokenAmount: BigNumberish,
-    args: INFTBundleCreateArgs,
-  ) {
-    return this.createWithToken(tokenContract, tokenAmount, args);
-  }
-
-  public async createWithNFT(
-    tokenContract: string,
-    tokenId: BigNumberish,
-    metadata: MetadataURIOrObject,
-  ) {
-    const asset = ERC721__factory.connect(tokenContract, this.providerOrSigner);
-
-    if (
-      !(await asset.isApprovedForAll(
-        await this.getSignerAddress(),
-        this.address,
-      ))
-    ) {
-      const isTokenApproved =
-        (await asset.getApproved(tokenId)).toLowerCase() ===
-        this.address.toLowerCase();
-      if (!isTokenApproved) {
-        await this.sendContractTransaction(asset, "setApprovalForAll", [
-          this.address,
-        ]);
-      }
-    }
-    const uri = await this.sdk.getStorage().uploadMetadata(metadata);
-    await this.sendTransaction("wrapERC721", [tokenContract, tokenId, uri]);
-  }
-  public async unwrapNFT(tokenId: BigNumberish): Promise<TransactionReceipt> {
-    return await this.sendTransaction("redeemERC721", [tokenId]);
-  }
-  public async unwrapToken(
-    tokenId: BigNumberish,
-    amount: BigNumberish,
-  ): Promise<TransactionReceipt> {
-    return await this.sendTransaction("redeemERC20", [tokenId, amount]);
-  }
-
-  public async createWithERC721(
-    tokenContract: string,
-    tokenId: BigNumberish,
-    metadata: MetadataURIOrObject,
-  ) {
-    return this.createWithNFT(tokenContract, tokenId, metadata);
-  }
-
-  public async mint(args: INFTBundleBatchArgs) {
-    await this.mintTo(await this.getSignerAddress(), args);
-  }
-
-  public async mintTo(
+  public async mintAdditionalCopiesTo(
     to: string,
-    args: INFTBundleBatchArgs,
-    data: BytesLike = [0],
+    args: TokenERC1155AlreadyMintedArgs,
   ) {
-    await this.sendTransaction("mint", [to, args.tokenId, args.amount, data]);
+    await this.sendTransaction("mintTo", [to, args.tokenId, "", args.amount]);
   }
 
-  public async mintBatch(args: INFTBundleBatchArgs[]) {
-    await this.mintBatchTo(await this.getSignerAddress(), args);
-  }
-
-  public async mintBatchTo(
+  public async mintAdditionalCopiesBatchTo(
     to: string,
-    args: INFTBundleBatchArgs[],
-    data: BytesLike = [0],
+    args: TokenERC1155AlreadyMintedArgs[],
   ) {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
-    await this.sendTransaction("mintBatch", [to, ids, amounts, data]);
+    const encoded = ids.map((id, index) =>
+      this.readOnlyContract.interface.encodeFunctionData("mintTo", [
+        to,
+        id,
+        "",
+        amounts[index],
+      ]),
+    );
+    await this.sendTransaction("multicall", [encoded]);
   }
 
   /**
@@ -464,19 +341,21 @@ export class BundleModule
    * await module.burn({ tokenId, amount });
    * ```
    */
-  public async burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt> {
+  public async burn(
+    args: TokenERC1155AlreadyMintedArgs,
+  ): Promise<TransactionReceipt> {
     return await this.burnFrom(await this.getSignerAddress(), args);
   }
 
   public async burnBatch(
-    args: INFTBundleBatchArgs[],
+    args: TokenERC1155AlreadyMintedArgs[],
   ): Promise<TransactionReceipt> {
     return await this.burnBatchFrom(await this.getSignerAddress(), args);
   }
 
   public async burnFrom(
     account: string,
-    args: INFTBundleBatchArgs,
+    args: TokenERC1155AlreadyMintedArgs,
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("burn", [
       account,
@@ -487,7 +366,7 @@ export class BundleModule
 
   public async burnBatchFrom(
     account: string,
-    args: INFTBundleBatchArgs[],
+    args: TokenERC1155AlreadyMintedArgs[],
   ): Promise<TransactionReceipt> {
     const ids = args.map((a) => a.tokenId);
     const amounts = args.map((a) => a.amount);
@@ -497,7 +376,7 @@ export class BundleModule
   public async transferFrom(
     from: string,
     to: string,
-    args: INFTBundleBatchArgs,
+    args: TokenERC1155AlreadyMintedArgs,
     data: BytesLike = [0],
   ): Promise<TransactionReceipt> {
     return await this.sendTransaction("safeTransferFrom", [
@@ -538,7 +417,7 @@ export class BundleModule
   public async transferBatchFrom(
     from: string,
     to: string,
-    args: INFTBundleBatchArgs[],
+    args: TokenERC1155AlreadyMintedArgs[],
     data: BytesLike = [0],
   ): Promise<TransactionReceipt> {
     const ids = args.map((a) => a.tokenId);
@@ -593,9 +472,9 @@ export class BundleModule
    * @param _address - The address to check for token ownership
    * @returns An array of BundleMetadata objects that are owned by the address
    */
-  public async getOwned(_address?: string): Promise<BundleMetadata[]> {
+  public async getOwned(_address?: string): Promise<TokenERC1155Metadata[]> {
     const address = _address ? _address : await this.getSignerAddress();
-    const maxId = await this.readOnlyContract.nextTokenId();
+    const maxId = await this.readOnlyContract.nextTokenIdToMint();
     const balances = await this.readOnlyContract.balanceOfBatch(
       Array(maxId.toNumber()).fill(address),
       Array.from(Array(maxId.toNumber()).keys()),
@@ -648,5 +527,163 @@ export class BundleModule
   ): Promise<TransactionReceipt> {
     await this.onlyRoles(["admin"], await this.getSignerAddress());
     return await this.sendTransaction("setRestrictedTransfer", [restricted]);
+  }
+
+  // Signature based minting
+
+  public async mintWithSignature(
+    req: Erc1155SignaturePayload,
+    signature: string,
+  ): Promise<BigNumber> {
+    const message = { ...this.mapPayload(req), uri: req.uri };
+    const overrides = await this.getCallOverrides();
+    await this.setAllowance(
+      BigNumber.from(message.pricePerToken).mul(req.quantity),
+      req.currencyAddress,
+      overrides,
+    );
+
+    const receipt = await this.sendTransaction(
+      "mintWithSignature",
+      [message, signature],
+      overrides,
+    );
+
+    const t = await this.parseLogs<MintWithSignatureEvent>(
+      "MintWithSignature",
+      receipt.logs,
+    );
+    if (t.length === 0) {
+      throw new Error("No MintWithSignature event found");
+    }
+
+    return t[0].args.tokenIdMinted;
+  }
+
+  public async verify(
+    mintRequest: Erc1155SignaturePayload,
+    signature: string,
+  ): Promise<boolean> {
+    const message = this.mapPayload(mintRequest);
+    const v = await this.readOnlyContract.verify(
+      { ...message, uri: mintRequest.uri },
+      signature,
+    );
+    return v[0];
+  }
+
+  public async generateSignatureBatch(
+    payloads: NewErc1155SignaturePayload[],
+  ): Promise<{ payload: Erc1155SignaturePayload; signature: string }[]> {
+    const resolveId = (mintRequest: NewErc1155SignaturePayload): string => {
+      if (mintRequest.id === undefined) {
+        const buffer = Buffer.alloc(16);
+        uuidv4({}, buffer);
+        return hexlify(toUtf8Bytes(buffer.toString("hex")));
+      } else {
+        return hexlify(mintRequest.id as string);
+      }
+    };
+
+    await this.onlyRoles(["minter"], await this.getSignerAddress());
+
+    const { metadataUris: uris } = await this.sdk
+      .getStorage()
+      .uploadMetadataBatch(payloads.map((r) => r.metadata));
+
+    const chainId = await this.getChainID();
+    const signer = this.getSigner() as Signer;
+
+    return await Promise.all(
+      payloads.map(async (m, i) => {
+        const id = resolveId(m);
+        const uri = uris[i];
+        return {
+          payload: {
+            ...m,
+            id,
+            uri,
+          },
+          signature: (
+            await this.signTypedDataEmitEvent(
+              signer,
+              {
+                name: "SignatureMint1155",
+                version: "1",
+                chainId,
+                verifyingContract: this.address,
+              },
+              { MintRequest },
+              {
+                uri,
+                ...(this.mapPayload(m) as any),
+                uid: id,
+              },
+            )
+          ).toString(),
+        };
+      }),
+    );
+  }
+
+  public async generateSignature(
+    mintRequest: NewErc1155SignaturePayload,
+  ): Promise<{ payload: Erc1155SignaturePayload; signature: string }> {
+    return (await this.generateSignatureBatch([mintRequest]))[0];
+  }
+
+  /**
+   * Maps a payload to the format expected by the contract
+   *
+   * @internal
+   *
+   * @param mintRequest - The payload to map.
+   * @returns - The mapped payload.
+   */
+  private mapPayload(
+    mintRequest: Erc1155SignaturePayload | NewErc1155SignaturePayload,
+  ): MintRequestStructOutput {
+    return {
+      to: mintRequest.to,
+      royaltyRecipient: mintRequest.royaltyRecipient,
+      primarySaleRecipient: mintRequest.primarySaleRecipient,
+      tokenId: mintRequest.tokenId,
+      quantity: mintRequest.quantity,
+      pricePerToken: mintRequest.price,
+      currency: mintRequest.currencyAddress,
+      validityEndTimestamp: mintRequest.mintEndTimeEpochSeconds,
+      validityStartTimestamp: mintRequest.mintStartTimeEpochSeconds,
+      uid: mintRequest.id,
+    } as MintRequestStructOutput;
+  }
+
+  // TODO: write in common place and stop duping
+  private async setAllowance(
+    value: BigNumber,
+    currencyAddress: string,
+    overrides: any,
+  ): Promise<any> {
+    if (
+      currencyAddress === NATIVE_TOKEN_ADDRESS ||
+      currencyAddress === AddressZero
+    ) {
+      overrides["value"] = value;
+    } else {
+      const erc20 = ERC20__factory.connect(
+        currencyAddress,
+        this.providerOrSigner,
+      );
+      const owner = await this.getSignerAddress();
+      const spender = this.address;
+      const allowance = await erc20.allowance(owner, spender);
+
+      if (allowance.lt(value)) {
+        await this.sendContractTransaction(erc20, "increaseAllowance", [
+          spender,
+          value.sub(allowance),
+        ]);
+      }
+      return overrides;
+    }
   }
 }

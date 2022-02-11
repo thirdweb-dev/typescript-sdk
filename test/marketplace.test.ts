@@ -1034,5 +1034,13 @@ describe("Marketplace Module", async () => {
         "The buyer should have no tokens to start",
       );
     });
+
+    it.skip("should allow restricting to specific assets", async () => {
+      await marketplaceModule.allowListingFromSpecificAssetOnly(
+        samWallet.address,
+      );
+      // should fail
+      directListingId = await createDirectListing(dummyNftModule.address, 0);
+    });
   });
 });
