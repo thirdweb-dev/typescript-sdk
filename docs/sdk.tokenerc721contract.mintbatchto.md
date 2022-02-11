@@ -32,7 +32,7 @@ Mint many NFTs at once to a specified wallet.
 
 ```javascript
 // Address of the wallet you want to mint the NFT to
-const toAddress = "{{wallet_address}}"
+const toAddress = "{{wallet_address}}";
 
 // Custom metadata of the NFTs you want to mint.
 const metadatas = [{
@@ -45,6 +45,10 @@ const metadatas = [{
   image: fs.readFileSync("path/to/other/image.png"),
 }];
 
-await contract.mintBatchTo(toAddress, metadatas);
+const tx = await contract.mintBatchTo(toAddress, metadatas);
+const receipt = tx.receipt; // same transaction receipt for all minted NFTs
+const tokenIds = results.map((result) => result.id); // all the token ids minted
+const firstTokenId = results[0].id; // token id of the first minted NFT
+const firstNFT = await results[0].data(); // (optional) fetch details of the first minted NFT
 ```
 

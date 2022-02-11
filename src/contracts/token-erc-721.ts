@@ -12,7 +12,6 @@ import {
 import type {
   IStorage,
   NetworkOrSignerOrProvider,
-  TransactionResultPromise,
   TransactionResultWithId,
 } from "../core";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
@@ -107,20 +106,9 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    *******************************/
 
   /**
-   * Mint NFT
+   * Mint an NFT to the connected wallet
    *
-   * @remarks Mint an NFT to the connected wallet.
-   *
-   * @example
-   * ```javascript
-   * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
-   * const metadata = {
-   *   name: "Cool NFT",
-   *   description: "This is a cool NFT",
-   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   * }
-   *
-   * await contract.mint(metadata);
+   * @see mintTo
    * ```
    */
   public async mint(
@@ -137,16 +125,19 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    * @example
    * ```javascript
    * // Address of the wallet you want to mint the NFT to
-   * const toAddress = "{{wallet_address}}"
+   * const toAddress = "{{wallet_address}}";
    *
    * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
    * const metadata = {
    *   name: "Cool NFT",
    *   description: "This is a cool NFT",
    *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   * }
+   * };
    *
-   * await contract.mintTo(toAddress, metadata);
+   * const tx = await contract.mintTo(toAddress, metadata);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const tokenId = tx.id; // the id of the NFT minted
+   * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
   public async mintTo(
@@ -176,27 +167,9 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
   }
 
   /**
-   * Mint Many NFTs
+   * Mint Many NFTs to the connected wallet
    *
-   * @remarks Mint many NFTs at once to the connected wallet
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet you want to mint the NFT to
-   * const toAddress = "{{wallet_address}}"
-   *
-   * // Custom metadata of the NFTs you want to mint.
-   * const metadatas = [{
-   *   name: "Cool NFT #1",
-   *   description: "This is a cool NFT",
-   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   * }, {
-   *   name: "Cool NFT #2",
-   *   description: "This is a cool NFT",
-   *   image: fs.readFileSync("path/to/other/image.png"),
-   * }];
-   *
-   * await contract.mintBatch(metadatas);
+   * @see mintBatchTo
    * ```
    */
   public async mintBatch(
@@ -216,7 +189,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    * @example
    * ```javascript
    * // Address of the wallet you want to mint the NFT to
-   * const toAddress = "{{wallet_address}}"
+   * const toAddress = "{{wallet_address}}";
    *
    * // Custom metadata of the NFTs you want to mint.
    * const metadatas = [{
@@ -229,7 +202,11 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    *   image: fs.readFileSync("path/to/other/image.png"),
    * }];
    *
-   * await contract.mintBatchTo(toAddress, metadatas);
+   * const tx = await contract.mintBatchTo(toAddress, metadatas);
+   * const receipt = tx.receipt; // same transaction receipt for all minted NFTs
+   * const tokenIds = results.map((result) => result.id); // all the token ids minted
+   * const firstTokenId = results[0].id; // token id of the first minted NFT
+   * const firstNFT = await results[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
   public async mintBatchTo(
@@ -269,14 +246,28 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    *******************************/
 
   /**
-   * Mint an NFT with a signature (gasless)
+   * Mint an dynamicly generated NFT
+   *
+   * @remarks Mint an dynamic NFT with a previously generated signature.
+   *
+   * ```javascript
+   * // see how to craft a payload to sign in the `generateSignature()` documentation
+   * const { mintRequest, signature } = contract.generateSignature(payload);
+   *
+   * // now anyone can mint the NFT
+   * const tx = contract.mintWithSignature(mintRequest, signature);
+   * const receipt = tx.receipt; // the mint transaction receipt
+   * const mintedId = tx.id; // the id of the NFT minted
+   * const mintedNFT = await tx.data(); // (optional) fetch the details of the minted NFT
+   * ```
+   *
    * @param mintRequest - the JSON payload corresponding to the NFT to mint
-   * @param signature - the user's signature
+   * @param signature - the generated signature
    */
   public async mintWithSignature(
     mintRequest: SignaturePayload,
     signature: string,
-  ): TransactionResultPromise<NFTMetadataOwner> {
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
     const message = { ...this.mapPayload(mintRequest), uri: mintRequest.uri };
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
@@ -297,9 +288,11 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
     if (t.length === 0) {
       throw new Error("No MintWithSignature event found");
     }
+    const id = t[0].args.tokenIdMinted;
     return {
+      id,
       receipt,
-      data: () => this.get(t[0].args.tokenIdMinted),
+      data: () => this.get(id),
     };
   }
 
@@ -315,12 +308,48 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
     return v[0];
   }
 
+  /**
+   * Generate a signature that can be used to mint a dynamic NFT
+   *
+   * @remarks Takes in an NFT and some information about how it can be minted, uploads the metadata and signs it with your private key. The generated signature can then be used to mint an NFT using the exact payload and signature generated.
+   *
+   * ```javascript
+   * const nftMetadata = {
+   *   name: "Cool NFT #1",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * };
+   *
+   * const now = Math.floor(Date.now() / 1000);
+   * const payload = {
+   *   metadta: nftMetadata, // The NFT to mint
+   *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
+   *   price: ethers.util.parseEther("0.5"), // the price to pay for minting
+   *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
+   *   mintStartTimeEpochSeconds: now, // can mint anytime from now
+   *   mintEndTimeEpochSeconds: now + 60 * 60 * 24 * 7, // to 24h from now
+   * };
+   *
+   * const { mintRequest, signature } = contract.generateSignature(payload);
+   * // now anynone can use these to mint the NFT using `mintWithSignature()`
+   * ```
+   * @param mintRequest the payload to sign
+   * @returns the signed payload and the corresponding signature
+   */
   public async generateSignature(
     mintRequest: NewSignaturePayload,
   ): Promise<{ payload: SignaturePayload; signature: string }> {
     return (await this.generateSignatureBatch([mintRequest]))[0];
   }
 
+  /**
+   * Genrate a batch of signatures that can be used to mint many dynamic NFTs.
+   *
+   * @see generateSignature
+   *
+   * @param mintRequests
+   * @returns an array of payloads and signatures
+   */
   public async generateSignatureBatch(
     mintRequests: NewSignaturePayload[],
   ): Promise<{ payload: SignaturePayload; signature: string }[]> {

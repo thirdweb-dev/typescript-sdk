@@ -4,6 +4,8 @@
 
 ## TokenErc721Contract.generateSignatureBatch() method
 
+Genrate a batch of signatures that can be used to mint many dynamic NFTs.
+
 <b>Signature:</b>
 
 ```typescript
@@ -22,4 +24,6 @@ generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
 <b>Returns:</b>
 
 Promise&lt;{ payload: SignaturePayload; signature: string; }\[\]&gt;
+
+an array of payloads and signatures
 

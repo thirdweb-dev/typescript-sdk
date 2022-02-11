@@ -32,15 +32,18 @@ Mint an NFT to a specified wallet.
 
 ```javascript
 // Address of the wallet you want to mint the NFT to
-const toAddress = "{{wallet_address}}"
+const toAddress = "{{wallet_address}}";
 
 // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
 const metadata = {
   name: "Cool NFT",
   description: "This is a cool NFT",
   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-}
+};
 
-await contract.mintTo(toAddress, metadata);
+const tx = await contract.mintTo(toAddress, metadata);
+const receipt = tx.receipt; // the transaction receipt
+const tokenId = tx.id; // the id of the NFT minted
+const nft = await tx.data(); // (optional) fetch details of minted NFT
 ```
 

@@ -4,6 +4,8 @@
 
 ## TokenErc721Contract.generateSignature() method
 
+Generate a signature that can be used to mint a dynamic NFT
+
 <b>Signature:</b>
 
 ```typescript
@@ -17,9 +19,36 @@ generateSignature(mintRequest: NewSignaturePayload): Promise<{
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequest | NewSignaturePayload |  |
+|  mintRequest | NewSignaturePayload | the payload to sign |
 
 <b>Returns:</b>
 
 Promise&lt;{ payload: SignaturePayload; signature: string; }&gt;
+
+the signed payload and the corresponding signature
+
+## Remarks
+
+Takes in an NFT and some information about how it can be minted, uploads the metadata and signs it with your private key. The generated signature can then be used to mint an NFT using the exact payload and signature generated.
+
+```javascript
+const nftMetadata = {
+  name: "Cool NFT #1",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+};
+
+const now = Math.floor(Date.now() / 1000);
+const payload = {
+  metadta: nftMetadata, // The NFT to mint
+  to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
+  price: ethers.util.parseEther("0.5"), // the price to pay for minting
+  currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
+  mintStartTimeEpochSeconds: now, // can mint anytime from now
+  mintEndTimeEpochSeconds: now + 60 * 60 * 24 * 7, // to 24h from now
+};
+
+const { mintRequest, signature } = contract.generateSignature(payload);
+// now anynone can use these to mint the NFT using `mintWithSignature()`
+```
 

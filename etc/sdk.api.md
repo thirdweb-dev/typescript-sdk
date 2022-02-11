@@ -1784,13 +1784,10 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
     // (undocumented)
     encoder: ContractEncoder<TokenERC721>;
     // Warning: (ae-forgotten-export) The symbol "NewSignaturePayload" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     generateSignature(mintRequest: NewSignaturePayload): Promise<{
         payload: SignaturePayload;
         signature: string;
     }>;
-    // (undocumented)
     generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
         payload: SignaturePayload;
         signature: string;
@@ -1802,7 +1799,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
     mintBatchTo(to: string, metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintTo(to: string, metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // Warning: (ae-forgotten-export) The symbol "SignaturePayload" needs to be exported by the entry point index.d.ts
-    mintWithSignature(mintRequest: SignaturePayload, signature: string): TransactionResultPromise<NFTMetadataOwner>;
+    mintWithSignature(mintRequest: SignaturePayload, signature: string): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
     // (undocumented)

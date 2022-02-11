@@ -4,7 +4,7 @@
 
 ## TokenErc721Contract.mintBatch() method
 
-Mint Many NFTs
+Mint Many NFTs to the connected wallet
 
 <b>Signature:</b>
 
@@ -21,29 +21,4 @@ mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMet
 <b>Returns:</b>
 
 Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
-
-## Remarks
-
-Mint many NFTs at once to the connected wallet
-
-## Example
-
-
-```javascript
-// Address of the wallet you want to mint the NFT to
-const toAddress = "{{wallet_address}}"
-
-// Custom metadata of the NFTs you want to mint.
-const metadatas = [{
-  name: "Cool NFT #1",
-  description: "This is a cool NFT",
-  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-}, {
-  name: "Cool NFT #2",
-  description: "This is a cool NFT",
-  image: fs.readFileSync("path/to/other/image.png"),
-}];
-
-await contract.mintBatch(metadatas);
-```
 

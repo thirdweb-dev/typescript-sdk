@@ -4,12 +4,12 @@
 
 ## TokenErc721Contract.mintWithSignature() method
 
-Mint an NFT with a signature (gasless)
+Mint an dynamicly generated NFT
 
 <b>Signature:</b>
 
 ```typescript
-mintWithSignature(mintRequest: SignaturePayload, signature: string): TransactionResultPromise<NFTMetadataOwner>;
+mintWithSignature(mintRequest: SignaturePayload, signature: string): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 ```
 
 ## Parameters
@@ -17,9 +17,24 @@ mintWithSignature(mintRequest: SignaturePayload, signature: string): Transaction
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  mintRequest | SignaturePayload | the JSON payload corresponding to the NFT to mint |
-|  signature | string | the user's signature |
+|  signature | string | the generated signature |
 
 <b>Returns:</b>
 
-TransactionResultPromise&lt;NFTMetadataOwner&gt;
+Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;&gt;
+
+## Remarks
+
+Mint an dynamic NFT with a previously generated signature.
+
+```javascript
+// see how to craft a payload to sign in the `generateSignature()` documentation
+const { mintRequest, signature } = contract.generateSignature(payload);
+
+// now anyone can mint the NFT
+const tx = contract.mintWithSignature(mintRequest, signature);
+const receipt = tx.receipt; // the mint transaction receipt
+const mintedId = tx.id; // the id of the NFT minted
+const mintedNFT = await tx.data(); // (optional) fetch the details of the minted NFT
+```
 

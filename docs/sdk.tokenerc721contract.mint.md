@@ -4,7 +4,7 @@
 
 ## TokenErc721Contract.mint() method
 
-Mint NFT
+Mint an NFT to the connected wallet
 
 <b>Signature:</b>
 
@@ -21,22 +21,4 @@ mint(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwn
 <b>Returns:</b>
 
 Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;&gt;
-
-## Remarks
-
-Mint an NFT to the connected wallet.
-
-## Example
-
-
-```javascript
-// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
-const metadata = {
-  name: "Cool NFT",
-  description: "This is a cool NFT",
-  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-}
-
-await contract.mint(metadata);
-```
 
