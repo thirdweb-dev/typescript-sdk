@@ -28,30 +28,17 @@ export class RPCConnectionHandler extends EventEmitter2 {
         provider = network.provider;
       }
     }
+
+    if (options?.readOnlyRpcUrl) {
+      provider = this.getReadOnlyProvider(options.readOnlyRpcUrl);
+    }
+
     if (!provider) {
       if (Provider.isProvider(network)) {
         provider = network;
       } else if (!Signer.isSigner(network)) {
         if (typeof network === "string") {
-          // try the JSON batch provider if available
-          try {
-            const match = network.match(/^(ws|http)s?:/i);
-            if (match) {
-              switch (match[1]) {
-                case "http":
-                  provider = new JsonRpcBatchProvider(network);
-                  break;
-                case "ws":
-                  provider = new WebSocketProvider(network);
-                  break;
-                default:
-                  break;
-              }
-            }
-          } catch (e) {
-            // fallback to the default provider
-            provider = ethers.getDefaultProvider(network);
-          }
+          provider = this.getReadOnlyProvider(network);
         } else {
           // no a signer, not a provider, not a string? try with default provider
           provider = ethers.getDefaultProvider(network);
@@ -144,5 +131,27 @@ export class RPCConnectionHandler extends EventEmitter2 {
    */
   public getProvider(): Provider {
     return this.provider;
+  }
+
+  private getReadOnlyProvider(network: string) {
+    try {
+      const match = network.match(/^(ws|http)s?:/i);
+      // try the JSON batch provider if available
+      if (match) {
+        switch (match[1]) {
+          case "http":
+            return new JsonRpcBatchProvider(network);
+          case "ws":
+            return new WebSocketProvider(network);
+          default:
+            return ethers.getDefaultProvider(network);
+        }
+      } else {
+        return ethers.getDefaultProvider(network);
+      }
+    } catch (e) {
+      // fallback to the default provider
+      return ethers.getDefaultProvider(network);
+    }
   }
 }
