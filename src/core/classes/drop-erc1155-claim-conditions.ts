@@ -28,6 +28,9 @@ import {
 import { TransactionResult } from "../index";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 
+/**
+ * Manages claim conditions for Bundle Drop contracts
+ */
 export class DropErc1155ClaimConditions {
   private contractWrapper;
   private metadata;
@@ -90,14 +93,13 @@ export class DropErc1155ClaimConditions {
   /**
    * Can Claim
    *
-   * @remarks Check if the drop can currently be claimed.
+   * @remarks Check if a particular NFT can currently be claimed by a given user.
    *
    * @example
    * ```javascript
-   * // Quantity of tokens to check if they are claimable
+   * // Quantity of tokens to check claimability of
    * const quantity = 1;
-   *
-   * await contract.canClaim(quantity);
+   * const canClaim = await contract.canClaim(quantity);
    * ```
    */
   public async canClaim(
@@ -234,10 +236,32 @@ export class DropErc1155ClaimConditions {
    *****************************************/
 
   /**
-   * Sets public mint conditions for the next minting using the
-   * claim condition factory.
+   * Set public mint conditions on a NFT
    *
-   * @param factory - The claim condition factory.
+   * @remarks Sets the public mint conditions that need to be fullfiled by users to claim a particular NFT in this bundle.
+   *
+   * @example
+   * ```javascript
+   * const now = Math.floor(new Date().getTime()) / 1000;
+   * const claimConditions = [
+   *   {
+   *     startTime: now, // start the presale now
+   *     maxQuantity: 2, // limit how many mints for this presale
+   *     price: ethers.utils.parseEther("0.01"), // presale price
+   *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+   *   },
+   *   {
+   *     startTime: now + 60 * 60 * 24, // 24h after presale, start public sale
+   *     price: ethers.utils.parseEther("0.08"), // public sale price
+   *   }
+   * ]);
+   *
+   * const tokenId = 0; // the id of the NFT to set claim conditions on
+   * await dropContract.claimConditions.set(tokenId, claimConditions);
+   * ```
+   *
+   * @param tokenId - The id of the NFT to set the claim conditions on
+   * @param claimConditionInputs - The claim conditions
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
   public async set(

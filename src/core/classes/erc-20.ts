@@ -13,6 +13,9 @@ import {
 } from "../../common/currency";
 import { TokenMintInput } from "../../schema/tokens/token";
 
+/**
+ * Standard ERC20 functions
+ */
 export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;

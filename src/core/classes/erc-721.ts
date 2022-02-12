@@ -14,6 +14,9 @@ import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { fetchTokenMetadata } from "../../common/nft";
 
+/**
+ * Standard ERC721 functions
+ */
 export class Erc721<T extends DropERC721 | TokenERC721>
   implements UpdateableNetwork
 {

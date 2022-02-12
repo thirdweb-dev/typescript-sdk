@@ -13,6 +13,9 @@ import {
 } from "../../schema/tokens/bundle";
 import { fetchTokenMetadata } from "../../common/nft";
 
+/**
+ * Standard ERC1155 functions
+ */
 export class Erc1155<T extends DropERC1155 | TokenERC1155>
   implements UpdateableNetwork
 {

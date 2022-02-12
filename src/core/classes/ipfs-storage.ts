@@ -34,6 +34,9 @@ interface CidWithFileName {
   fileNames: string[];
 }
 
+/**
+ * @internal
+ */
 export class IpfsStorage implements IStorage {
   private gatewayUrl: string;
 

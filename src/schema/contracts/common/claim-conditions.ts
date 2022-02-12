@@ -6,7 +6,7 @@ import {
   BytesLikeSchema,
 } from "../../shared";
 import { hexZeroPad } from "ethers/lib/utils";
-import { AddressZero } from "@ethersproject/constants";
+import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 
 export const ClaimConditionInputSchema = z.object({
   startTime: z
@@ -19,7 +19,7 @@ export const ClaimConditionInputSchema = z.object({
       }
     })
     .default(Math.floor(Date.now() / 1000)),
-  currencyAddress: z.string().default(AddressZero),
+  currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   price: BigNumberishSchema.default(0),
   maxQuantity: BigNumberishSchema.default(ethers.constants.MaxUint256),
   quantityLimitPerTransaction: BigNumberishSchema.default(

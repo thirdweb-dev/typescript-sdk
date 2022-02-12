@@ -12,6 +12,9 @@ import {
 } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
 
+/**
+ * @internal
+ */
 export class RPCConnectionHandler extends EventEmitter2 {
   private network: NetworkOrSignerOrProvider;
   private provider: Provider;

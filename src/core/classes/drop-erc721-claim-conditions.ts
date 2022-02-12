@@ -28,6 +28,9 @@ import {
 import { TransactionResult } from "../index";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 
+/**
+ * Manages claim conditions for NFT Drop contracts
+ */
 export class DropErc721ClaimConditions {
   private contractWrapper;
   private metadata;
@@ -88,10 +91,9 @@ export class DropErc721ClaimConditions {
    *
    * @example
    * ```javascript
-   * // Quantity of tokens to check if they are claimable
+   * // Quantity of tokens to check claimability of
    * const quantity = 1;
-   *
-   * await contract.canClaim(quantity);
+   * const canClaim = await contract.canClaim(quantity);
    * ```
    */
   public async canClaim(
@@ -219,10 +221,30 @@ export class DropErc721ClaimConditions {
    *****************************************/
 
   /**
-   * Sets public mint conditions for the next minting using the
-   * claim condition factory.
+   * Set public mint conditions
    *
-   * @param factory - The claim condition factory.
+   * @remarks Sets the public mint conditions that need to be fullfiled by users to claim NFTs.
+   *
+   * @example
+   * ```javascript
+   * const now = Math.floor(new Date().getTime()) / 1000;
+   * const claimConditions = [
+   *   {
+   *     startTime: now, // start the presale now
+   *     maxQuantity: 2, // limit how many mints for this presale
+   *     price: ethers.utils.parseEther("0.01"), // presale price
+   *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+   *   },
+   *   {
+   *     startTime: now + 60 * 60 * 24, // 24h after presale, start public sale
+   *     price: ethers.utils.parseEther("0.08"), // public sale price
+   *   }
+   * ]);
+   *
+   * await dropContract.claimConditions.set(claimConditions);
+   * ```
+   *
+   * @param claimConditionInputs - The claim conditions
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
   public async set(
@@ -304,6 +326,7 @@ export class DropErc721ClaimConditions {
 
   /**
    * Update a single claim condition with new data.
+   *
    * @param index the index of the claim condition to update, as given by the index from the result of `getAll()`
    * @param claimConditionInput the new data to update, previous data will be retained
    */
