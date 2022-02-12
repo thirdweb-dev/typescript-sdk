@@ -29,8 +29,8 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.Goerli]: {
     biconomyForwarder: AddressZero,
-    twFactory: "0xC966c8E15c104515A49F91C58DCcc65CC5a2CBA5",
-    twRegistry: "0xC6642e134E61A1888B9ff1f61E8003b9160c4e01",
+    twFactory: AddressZero,
+    twRegistry: AddressZero,
   },
   [ChainId.Polygon]: {
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
@@ -39,8 +39,8 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.Mumbai]: {
     biconomyForwarder: "0x9399BB24DBB5C4b782C70c2969F58716Ebbd6a3b",
-    twFactory: "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81",
-    twRegistry: "0x968d263f329c4f6b91c50349976a544B475320ed",
+    twFactory: "0x98A6691f929118A126FEE8A51a1c16d4376B4C7e",
+    twRegistry: "0xEa7DFc1040a1e0b4aC132EF479680dEbCf7DA2e9",
   },
   [ChainId.Avalanche]: {
     biconomyForwarder: "0x64CD353384109423a966dCd3Aa30D884C9b2E057",
