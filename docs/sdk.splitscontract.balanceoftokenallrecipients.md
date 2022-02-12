@@ -10,7 +10,13 @@ Returns all the recipients and their balances in a non-native currency.
 
 ```typescript
 balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
-        [key: string]: CurrencyValue;
+        [key: string]: {
+            symbol: string;
+            value: BigNumber;
+            name: string;
+            decimals: number;
+            displayValue: string;
+        };
     }>;
 ```
 
@@ -22,7 +28,7 @@ balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
 
 <b>Returns:</b>
 
-Promise&lt;{ \[key: string\]: CurrencyValue; }&gt;
+Promise&lt;{ \[key: string\]: { symbol: string; value: BigNumber; name: string; decimals: number; displayValue: string; }; }&gt;
 
 A map of recipient addresses to their balances in the specified currency.
 
