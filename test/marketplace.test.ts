@@ -58,7 +58,8 @@ describe("Marketplace Contract", async () => {
     dummyNftContract = sdk.getNFTContract(
       await sdk.deployContract(TokenErc721Contract.contractType, {
         name: "TEST NFT",
-        seller_fee_basis_points: 100,
+        seller_fee_basis_points: 200,
+        fee_recipient: adminWallet.address,
         primary_sale_recipient: adminWallet.address,
       }),
     );
@@ -749,7 +750,7 @@ describe("Marketplace Contract", async () => {
       }
     });
 
-    it("should distribute the tokens when a listing closes", async () => {
+    it.only("should distribute the tokens when a listing closes", async () => {
       const now = Math.floor(Date.now() / 1000);
       await sdk.updateSignerOrProvider(adminWallet);
       const listingId = (
@@ -812,9 +813,9 @@ describe("Marketplace Contract", async () => {
         ethers.utils
           .parseUnits("100000000000000000000")
           // eslint-disable-next-line line-comment-position
-          .add(ethers.utils.parseUnits("1.98")), // 2% taken out for royalties
+          .add(ethers.utils.parseUnits("2.00")), // 2% taken out for royalties
         // TODO read the fee from the TWFee contract
-        "The buyer should have two additional tokens after the listing closesThe buyer should have two additional tokens after the listing closes",
+        "The buyer should have two additional tokens after the listing closes",
       );
     });
   });
