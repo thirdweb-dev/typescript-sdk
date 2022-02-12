@@ -6,6 +6,8 @@
 
 Claim NFTs to the connected wallet.
 
+See [DropErc721Contract.claimTo()](./sdk.droperc721contract.claimto.md)
+
 <b>Signature:</b>
 
 ```typescript

@@ -6,6 +6,8 @@
 
 Genrate a batch of signatures that can be used to mint many dynamic NFTs.
 
+See [TokenErc721Contract.generateSignature()](./sdk.tokenerc721contract.generatesignature.md)
+
 <b>Signature:</b>
 
 ```typescript

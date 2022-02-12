@@ -53,7 +53,6 @@ const metadataWithSupply = [{
 
 const tx = await contract.mintBatchTo(toAddress, metadataWithSupply);
 const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
-const tokenIds = tx.map((result) => result.id); // all the token ids minted
 const firstTokenId = tx[0].id; // token id of the first minted NFT
 const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
 ```

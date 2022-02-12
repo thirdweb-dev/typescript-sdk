@@ -49,7 +49,7 @@ const contract = sdk.getBundleDropContract("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [claim(tokenId, quantity, proofs)](./sdk.droperc1155contract.claim.md) |  | Claim a token to the connected wallet |
+|  [claim(tokenId, quantity, proofs)](./sdk.droperc1155contract.claim.md) |  | Claim a token to the connected wallet<!-- -->See [DropErc1155Contract.claimTo()](./sdk.droperc1155contract.claimto.md) |
 |  [claimTo(destinationAddress, tokenId, quantity, proofs)](./sdk.droperc1155contract.claimto.md) |  | Claim NFTs to a specific Wallet |
 |  [createBatch(metadatas)](./sdk.droperc1155contract.createbatch.md) |  | Create a batch of NFTs to be claimed in the future |
 

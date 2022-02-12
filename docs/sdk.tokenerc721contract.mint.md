@@ -6,6 +6,8 @@
 
 Mint an NFT to the connected wallet
 
+See [TokenErc721Contract.mintTo()](./sdk.tokenerc721contract.mintto.md) \`\`\`
+
 <b>Signature:</b>
 
 ```typescript

@@ -50,7 +50,7 @@ const contract = sdk.getTokenContract("{{contract_address}}");
 |  [getDelegationOf(account)](./sdk.tokenerc20contract.getdelegationof.md) |  | Get a specific address voting delegatee address |
 |  [getVoteBalance()](./sdk.tokenerc20contract.getvotebalance.md) |  | Get your wallet voting power for the current checkpoints |
 |  [getVoteBalanceOf(account)](./sdk.tokenerc20contract.getvotebalanceof.md) |  |  |
-|  [mint(amount)](./sdk.tokenerc20contract.mint.md) |  | Mint Tokens for the connected wallet |
+|  [mint(amount)](./sdk.tokenerc20contract.mint.md) |  | Mint Tokens for the connected wallet<!-- -->See [TokenErc20Contract.mintTo()](./sdk.tokenerc20contract.mintto.md) |
 |  [mintBatchTo(args)](./sdk.tokenerc20contract.mintbatchto.md) |  | Mint Tokens To Many Wallets |
 |  [mintTo(to, amount)](./sdk.tokenerc20contract.mintto.md) |  | Mint Tokens |
 

@@ -6,7 +6,7 @@
 
 Call this to OVERWRITE the list of addresses that are members of specific roles.
 
-Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use  and  respectively instead.
+Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use [ContractRoles.grantRole()](./sdk.contractroles.grantrole.md) and [ContractRoles.revokeRole()](./sdk.contractroles.revokerole.md) respectively instead.
 
 <b>Signature:</b>
 

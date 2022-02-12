@@ -6,6 +6,8 @@
 
 Mint Many NFTs to the connected wallet
 
+See [TokenErc721Contract.mintBatchTo()](./sdk.tokenerc721contract.mintbatchto.md) \`\`\`
+
 <b>Signature:</b>
 
 ```typescript

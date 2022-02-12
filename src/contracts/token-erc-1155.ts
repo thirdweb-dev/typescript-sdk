@@ -95,7 +95,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
   /**
    * Mint NFT for the connected wallet
    *
-   * @see mintTo
+   * See {@link TokenErc1155Contract.mintTo}
    */
   public async mint(
     metadataWithSupply: BundleMetadataInput,
@@ -164,7 +164,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
   /**
    * Mint Many NFTs for the connected wallet
    *
-   * @see mintBatchTo
+   * See {@link TokenErc1155Contract.mintBatchTo}
    */
   public async mintBatch(
     metadatas: BundleMetadataInput[],
@@ -204,7 +204,6 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
    *
    * const tx = await contract.mintBatchTo(toAddress, metadataWithSupply);
    * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
-   * const tokenIds = tx.map((result) => result.id); // all the token ids minted
    * const firstTokenId = tx[0].id; // token id of the first minted NFT
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```

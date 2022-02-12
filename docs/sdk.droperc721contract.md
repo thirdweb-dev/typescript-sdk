@@ -50,7 +50,7 @@ const contract = sdk.getDropContract("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [claim(quantity, proofs)](./sdk.droperc721contract.claim.md) |  | Claim NFTs to the connected wallet. |
+|  [claim(quantity, proofs)](./sdk.droperc721contract.claim.md) |  | Claim NFTs to the connected wallet.<!-- -->See [DropErc721Contract.claimTo()](./sdk.droperc721contract.claimto.md) |
 |  [claimTo(destinationAddress, quantity, proofs)](./sdk.droperc721contract.claimto.md) |  | Claim unique NFTs to a specific Wallet |
 |  [createBatch(metadatas)](./sdk.droperc721contract.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
 |  [getAllClaimed(queryParams)](./sdk.droperc721contract.getallclaimed.md) |  | Get All Claimed NFTs |

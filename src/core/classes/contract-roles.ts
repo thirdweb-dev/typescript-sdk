@@ -27,7 +27,7 @@ export class ContractRoles<
   /**
    * Call this to get get a list of addresses for all supported roles on the contract.
    *
-   * @see getRoleMembers to get a list of addresses that are members of a specific role.
+   * See {@link ContractRoles.getRoleMembers} to get a list of addresses that are members of a specific role.
    * @returns A record of {@link Role}s to lists of addresses that are members of the given role.
    * @throws If the contract does not support roles this will throw an error.
    *
@@ -45,10 +45,10 @@ export class ContractRoles<
   /**
    * Call this to get a list of addresses that are members of a specific role.
    *
+   * See {@link ContractRoles.getAllMembers} to get get a list of addresses for all supported roles on the contract.
    * @param role - The Role to to get a memberlist for.
    * @returns The list of addresses that are members of the specific role.
    * @throws If you are requestiong a role that does not exist on the contract this will throw an error.
-   * @see getAllMembers to get get a list of addresses for all supported roles on the contract.
    *
    * @example Say you want to get the list of addresses that are members of the minter role.
    * ```javascript
@@ -78,7 +78,7 @@ export class ContractRoles<
    * Call this to OVERWRITE the list of addresses that are members of specific roles.
    *
    * Every role in the list will be overwritten with the new list of addresses provided with them.
-   * If you want to add or remove addresses for a single address use {@link grantRole()} and {@link revokeRole()} respectively instead.
+   * If you want to add or remove addresses for a single address use {@link ContractRoles.grantRole} and {@link ContractRoles.revokeRole} respectively instead.
    * @param rolesWithAddresses - A record of {@link Role}s to lists of addresses that should be members of the given role.
    * @throws If you are requestiong a role that does not exist on the contract this will throw an error.
    * @example Say you want to overwrite the list of addresses that are members of the minter role.

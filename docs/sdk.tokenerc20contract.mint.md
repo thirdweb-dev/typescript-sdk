@@ -6,6 +6,8 @@
 
 Mint Tokens for the connected wallet
 
+See [TokenErc20Contract.mintTo()](./sdk.tokenerc20contract.mintto.md)
+
 <b>Signature:</b>
 
 ```typescript
