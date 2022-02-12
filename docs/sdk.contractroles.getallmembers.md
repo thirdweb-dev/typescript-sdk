@@ -6,8 +6,6 @@
 
 Call this to get get a list of addresses for all supported roles on the contract.
 
-See [ContractRoles.getRoleMembers()](./sdk.contractroles.getrolemembers.md) to get a list of addresses that are members of a specific role.
-
 <b>Signature:</b>
 
 ```typescript
@@ -22,4 +20,8 @@ A record of [Role](./sdk.role.md)<!-- -->s to lists of addresses that are member
 ## Exceptions
 
 If the contract does not support roles this will throw an error.
+
+## Remarks
+
+See [ContractRoles.getRoleMembers()](./sdk.contractroles.getrolemembers.md) to get a list of addresses that are members of a specific role.
 

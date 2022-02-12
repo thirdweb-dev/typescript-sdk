@@ -6,8 +6,6 @@
 
 Mint NFT for the connected wallet
 
-See [TokenErc1155Contract.mintTo()](./sdk.tokenerc1155contract.mintto.md)
-
 <b>Signature:</b>
 
 ```typescript
@@ -23,4 +21,8 @@ mint(metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<B
 <b>Returns:</b>
 
 Promise&lt;TransactionResultWithId&lt;BundleMetadata&gt;&gt;
+
+## Remarks
+
+See [TokenErc1155Contract.mintTo()](./sdk.tokenerc1155contract.mintto.md)
 

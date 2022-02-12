@@ -95,7 +95,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
   /**
    * Mint NFT for the connected wallet
    *
-   * See {@link TokenErc1155Contract.mintTo}
+   * @remarks See {@link TokenErc1155Contract.mintTo}
    */
   public async mint(
     metadataWithSupply: BundleMetadataInput,
@@ -164,7 +164,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
   /**
    * Mint Many NFTs for the connected wallet
    *
-   * See {@link TokenErc1155Contract.mintBatchTo}
+   * @remarks See {@link TokenErc1155Contract.mintBatchTo}
    */
   public async mintBatch(
     metadatas: BundleMetadataInput[],

@@ -329,7 +329,7 @@ export class DropErc721Contract extends Erc721<DropERC721> {
   /**
    * Claim NFTs to the connected wallet.
    *
-   * See {@link DropErc721Contract.claimTo}
+   * @remarks See {@link DropErc721Contract.claimTo}
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */

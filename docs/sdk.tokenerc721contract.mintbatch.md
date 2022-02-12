@@ -6,8 +6,6 @@
 
 Mint Many NFTs to the connected wallet
 
-See [TokenErc721Contract.mintBatchTo()](./sdk.tokenerc721contract.mintbatchto.md) \`\`\`
-
 <b>Signature:</b>
 
 ```typescript
@@ -23,4 +21,8 @@ mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMet
 <b>Returns:</b>
 
 Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
+
+## Remarks
+
+See [TokenErc721Contract.mintBatchTo()](./sdk.tokenerc721contract.mintbatchto.md) \`\`\`
 

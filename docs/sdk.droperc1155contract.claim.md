@@ -6,8 +6,6 @@
 
 Claim a token to the connected wallet
 
-See [DropErc1155Contract.claimTo()](./sdk.droperc1155contract.claimto.md)
-
 <b>Signature:</b>
 
 ```typescript
@@ -27,4 +25,8 @@ claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Prom
 Promise&lt;TransactionResult&gt;
 
 - Receipt for the transaction
+
+## Remarks
+
+See [DropErc1155Contract.claimTo()](./sdk.droperc1155contract.claimto.md)
 

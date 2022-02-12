@@ -5,6 +5,9 @@ import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { MissingRoleError } from "../../common/error";
 
+/**
+ * Handles Contract roles and permissions
+ */
 export class ContractRoles<
   TContract extends AccessControlEnumerable,
   TRole extends Role,
@@ -27,7 +30,7 @@ export class ContractRoles<
   /**
    * Call this to get get a list of addresses for all supported roles on the contract.
    *
-   * See {@link ContractRoles.getRoleMembers} to get a list of addresses that are members of a specific role.
+   * @remarks See {@link ContractRoles.getRoleMembers} to get a list of addresses that are members of a specific role.
    * @returns A record of {@link Role}s to lists of addresses that are members of the given role.
    * @throws If the contract does not support roles this will throw an error.
    *
@@ -45,7 +48,7 @@ export class ContractRoles<
   /**
    * Call this to get a list of addresses that are members of a specific role.
    *
-   * See {@link ContractRoles.getAllMembers} to get get a list of addresses for all supported roles on the contract.
+   * @remarks See {@link ContractRoles.getAllMembers} to get get a list of addresses for all supported roles on the contract.
    * @param role - The Role to to get a memberlist for.
    * @returns The list of addresses that are members of the specific role.
    * @throws If you are requestiong a role that does not exist on the contract this will throw an error.

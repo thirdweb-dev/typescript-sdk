@@ -6,8 +6,6 @@
 
 Mint Tokens for the connected wallet
 
-See [TokenErc20Contract.mintTo()](./sdk.tokenerc20contract.mintto.md)
-
 <b>Signature:</b>
 
 ```typescript
@@ -23,4 +21,8 @@ mint(amount: BigNumberish): Promise<TransactionResult>;
 <b>Returns:</b>
 
 Promise&lt;TransactionResult&gt;
+
+## Remarks
+
+See [TokenErc20Contract.mintTo()](./sdk.tokenerc20contract.mintto.md)
 

@@ -20,8 +20,8 @@ declare class ContractRoles<TContract extends AccessControlEnumerable, TRole ext
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [getAllMembers()](./sdk.contractroles.getallmembers.md) |  | Call this to get get a list of addresses for all supported roles on the contract.<!-- -->See [ContractRoles.getRoleMembers()](./sdk.contractroles.getrolemembers.md) to get a list of addresses that are members of a specific role. |
-|  [getRoleMembers(role)](./sdk.contractroles.getrolemembers.md) |  | Call this to get a list of addresses that are members of a specific role.<!-- -->See [ContractRoles.getAllMembers()](./sdk.contractroles.getallmembers.md) to get get a list of addresses for all supported roles on the contract. |
+|  [getAllMembers()](./sdk.contractroles.getallmembers.md) |  | Call this to get get a list of addresses for all supported roles on the contract. |
+|  [getRoleMembers(role)](./sdk.contractroles.getrolemembers.md) |  | Call this to get a list of addresses that are members of a specific role. |
 |  [grantRole(role, address)](./sdk.contractroles.grantrole.md) |  | Call this to grant a role to a specific address. |
 |  [revokeRole(role, address)](./sdk.contractroles.revokerole.md) |  | Call this to revoke a role from a specific address. |
 |  [setAllRoleMembers(rolesWithAddresses)](./sdk.contractroles.setallrolemembers.md) |  | Call this to OVERWRITE the list of addresses that are members of specific roles.<!-- -->Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use [ContractRoles.grantRole()](./sdk.contractroles.grantrole.md) and [ContractRoles.revokeRole()](./sdk.contractroles.revokerole.md) respectively instead. |

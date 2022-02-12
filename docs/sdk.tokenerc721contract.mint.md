@@ -6,8 +6,6 @@
 
 Mint an NFT to the connected wallet
 
-See [TokenErc721Contract.mintTo()](./sdk.tokenerc721contract.mintto.md) \`\`\`
-
 <b>Signature:</b>
 
 ```typescript
@@ -23,4 +21,8 @@ mint(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwn
 <b>Returns:</b>
 
 Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;&gt;
+
+## Remarks
+
+See [TokenErc721Contract.mintTo()](./sdk.tokenerc721contract.mintto.md) \`\`\`
 
