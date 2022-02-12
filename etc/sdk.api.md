@@ -23,7 +23,7 @@ import { ethers as ethers_2 } from 'ethers';
 import * as _ethersproject_abstract_provider from '@ethersproject/abstract-provider';
 import { EventEmitter2 } from 'eventemitter2';
 import { If } from 'ts-toolbelt/out/Any/If';
-import { IThirdwebModule } from '@3rdweb/contracts';
+import { IThirdwebContract } from '@3rdweb/contracts';
 import { IThirdwebPrimarySale } from '@3rdweb/contracts';
 import { IThirdwebRoyalty } from '@3rdweb/contracts';
 import { Log } from '@ethersproject/providers';
@@ -464,7 +464,7 @@ export type ContractForContractType<TContractType extends ContractType> = C.Inst
 // Warning: (ae-forgotten-export) The symbol "IGenericSchemaType" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class ContractMetadata<TContract extends IThirdwebModule, TSchema extends IGenericSchemaType> {
+export class ContractMetadata<TContract extends IThirdwebContract, TSchema extends IGenericSchemaType> {
     constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema, storage: IStorage);
     // (undocumented)
     get(): Promise<z.output<TSchema["output"]>>;
@@ -514,7 +514,7 @@ export class ContractRoles<TContract extends AccessControlEnumerable, TRole exte
 }
 
 // @public
-export class ContractRoyalty<TContract extends IThirdwebRoyalty, TSchema extends IGenericSchemaType> {
+export class ContractRoyalty<TContract extends IThirdwebRoyalty & IThirdwebContract, TSchema extends IGenericSchemaType> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, TSchema>);
     // (undocumented)
     getRoyaltyInfo(): Promise<{

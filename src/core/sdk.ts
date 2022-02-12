@@ -26,7 +26,7 @@ import { ContractRegistry } from "./classes/registry";
 import { PacksContract } from "../contracts/packs";
 import { getContractAddressByChainId } from "../constants/addresses";
 import { z } from "zod";
-import { IThirdwebModule__factory } from "@3rdweb/contracts";
+import { IThirdwebContract__factory } from "@3rdweb/contracts";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -116,13 +116,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async resolveContractType<TContractType extends ContractType>(
     contractAddress: string,
   ) {
-    const contract = IThirdwebModule__factory.connect(
+    const contract = IThirdwebContract__factory.connect(
       contractAddress,
       this.getProvider(),
     );
     return (
       ethers.utils
-        .toUtf8String(await contract.moduleType())
+        .toUtf8String(await contract.contractType())
         // eslint-disable-next-line no-control-regex
         .replace(/\x00/g, "") as TContractType
     );

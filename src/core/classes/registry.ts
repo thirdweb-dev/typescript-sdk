@@ -17,9 +17,10 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
   ) {
     super(network, registryAddress, TWRegistry__factory.abi, options);
   }
+
   public async getContractAddresses(walletAddress: string) {
-    // TODO @fixme the filter here is necessary because for some reason getAllContracts returns a 0x0 address for the first entry
-    return (await this.readContract.getAllModules(walletAddress)).filter(
+    // TODO @fixme the filter here is necessary because for some reason getAll returns a 0x0 address for the first entry
+    return (await this.readContract.getAll(walletAddress)).filter(
       (adr) => isAddress(adr) && adr.toLowerCase() !== AddressZero,
     );
   }

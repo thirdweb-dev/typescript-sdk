@@ -1,4 +1,4 @@
-import { IThirdwebModule__factory } from "@3rdweb/contracts";
+import { IThirdwebContract__factory } from "@3rdweb/contracts";
 import { Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
 import { ContractType } from "../types";
@@ -16,9 +16,9 @@ export async function getContractTypeForAddress<
   contractAddress: string,
   signerOrProvider: Signer | Provider,
 ): Promise<TContractType> {
-  const contract = IThirdwebModule__factory.connect(
+  const contract = IThirdwebContract__factory.connect(
     contractAddress,
     signerOrProvider,
   );
-  return (await contract.moduleType()) as TContractType;
+  return (await contract.contractType()) as TContractType;
 }

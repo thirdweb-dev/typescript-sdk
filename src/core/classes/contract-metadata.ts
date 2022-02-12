@@ -1,4 +1,4 @@
-import { IThirdwebModule } from "@3rdweb/contracts";
+import { IThirdwebContract } from "@3rdweb/contracts";
 import { z } from "zod";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResult } from "../types";
@@ -14,7 +14,7 @@ export interface IGenericSchemaType {
  * Handles metadata for a Contract
  */
 export class ContractMetadata<
-  TContract extends IThirdwebModule,
+  TContract extends IThirdwebContract,
   TSchema extends IGenericSchemaType,
 > {
   private contractWrapper;
