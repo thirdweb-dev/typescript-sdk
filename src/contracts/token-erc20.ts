@@ -32,9 +32,12 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
  */
 export class TokenErc20Contract extends Erc20<TokenERC20> {
   static contractType = "TokenERC20" as const;
-  static schema = TokenErc20ContractSchema;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = TokenERC20__factory;
+  /**
+   * @internal
+   */
+  static schema = TokenErc20ContractSchema;
 
   public metadata: ContractMetadata<
     TokenERC20,

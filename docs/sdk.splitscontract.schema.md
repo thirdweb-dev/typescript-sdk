@@ -4,6 +4,8 @@
 
 ## SplitsContract.schema property
 
+internal
+
 <b>Signature:</b>
 
 ```typescript

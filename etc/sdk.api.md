@@ -511,7 +511,7 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
     //
     // (undocumented)
     royalty: ContractRoyalty<DropERC1155, typeof DropErc1155Contract.schema>;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
@@ -663,7 +663,7 @@ export class DropErc721Contract extends Erc721<DropERC721> {
     roles: ContractRoles<DropERC721, typeof DropErc721Contract.contractRoles[number]>;
     // (undocumented)
     royalty: ContractRoyalty<DropERC721, typeof DropErc721Contract.schema>;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
@@ -959,7 +959,7 @@ export class MarketplaceContract implements UpdateableNetwork {
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
     roles: ContractRoles<Marketplace, typeof MarketplaceContract.contractRoles[number]>;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
@@ -1170,7 +1170,6 @@ export class PacksContract implements UpdateableNetwork {
     roles: ContractRoles<Pack, typeof PacksContract.contractRoles[number]>;
     // (undocumented)
     royalty: ContractRoyalty<Pack, typeof PacksContract.schema>;
-    // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
@@ -1384,7 +1383,6 @@ export class SplitsContract implements UpdateableNetwork {
     metadata: ContractMetadata<Splits, typeof SplitsContract.schema>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
-    // (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
@@ -1637,7 +1635,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
     roles: ContractRoles<TokenERC1155, typeof TokenErc1155Contract.contractRoles[number]>;
     // (undocumented)
     royalty: ContractRoyalty<TokenERC1155, typeof TokenErc1155Contract.schema>;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
@@ -1757,7 +1755,7 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
     mintTo(to: string, amount: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     roles: ContractRoles<TokenERC20, typeof TokenErc20Contract.contractRoles[number]>;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
@@ -1864,7 +1862,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
     roles: ContractRoles<TokenERC721, typeof TokenErc721Contract.contractRoles[number]>;
     // (undocumented)
     royalty: ContractRoyalty<TokenERC721, typeof TokenErc721Contract.schema>;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
@@ -2050,7 +2048,7 @@ export class VoteContract implements UpdateableNetwork {
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // Warning: (ae-forgotten-export) The symbol "ProposalExecutable" needs to be exported by the entry point index.d.ts
     propose(description: string, executions?: ProposalExecutable[]): Promise<TransactionResultWithId>;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;

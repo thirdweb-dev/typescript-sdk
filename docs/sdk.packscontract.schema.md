@@ -4,6 +4,8 @@
 
 ## PacksContract.schema property
 
+internal
+
 <b>Signature:</b>
 
 ```typescript

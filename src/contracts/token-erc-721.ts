@@ -55,9 +55,12 @@ import { setErc20Allowance } from "../common/currency";
  */
 export class TokenErc721Contract extends Erc721<TokenERC721> {
   static contractType = "TokenERC721" as const;
-  static schema = TokenErc721ContractSchema;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = TokenERC721__factory;
+  /**
+   * @internal
+   */
+  static schema = TokenErc721ContractSchema;
 
   public metadata: ContractMetadata<
     TokenERC721,

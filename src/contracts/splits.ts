@@ -33,8 +33,11 @@ import { SplitsContractSchema } from "../schema/contracts/splits";
  */
 export class SplitsContract implements UpdateableNetwork {
   static contractType = "Splits" as const;
-  static schema = SplitsContractSchema;
   static contractFactory = Splits__factory;
+  /**
+   * internal
+   */
+  static schema = SplitsContractSchema;
 
   private contractWrapper: ContractWrapper<Splits>;
   private storage: IStorage;

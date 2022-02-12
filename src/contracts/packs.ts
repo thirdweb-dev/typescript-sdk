@@ -55,9 +55,12 @@ import { ContractRoyalty } from "../core/classes/contract-royalty";
  */
 export class PacksContract implements UpdateableNetwork {
   static contractType = "Pack" as const;
-  static schema = PacksContractSchema;
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
   static contractFactory = Pack__factory;
+  /**
+   * internal
+   */
+  static schema = PacksContractSchema;
 
   private contractWrapper: ContractWrapper<Pack>;
   private storage: IStorage;

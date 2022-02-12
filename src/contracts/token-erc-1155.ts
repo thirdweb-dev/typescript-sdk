@@ -28,16 +28,19 @@ import { CommonNFTInput } from "../schema/tokens/common";
  * // You can switch out this provider with any wallet or provider setup you like.
  * const provider = ethers.Wallet.createRandom();
  * const sdk = new ThirdwebSDK(provider);
- * const contract = sdk.getDropContract("{{contract_address}}");
+ * const contract = sdk.getBundleContract("{{contract_address}}");
  * ```
  *
  * @public
  */
 export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
   static contractType = "TokenERC1155" as const;
-  static schema = TokenErc1155ContractSchema;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = TokenERC1155__factory;
+  /**
+   * @internal
+   */
+  static schema = TokenErc1155ContractSchema;
 
   public metadata: ContractMetadata<
     TokenERC1155,

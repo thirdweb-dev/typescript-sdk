@@ -50,9 +50,12 @@ import { DelayedReveal } from "../common/delayed-reveal";
  */
 export class DropErc721Contract extends Erc721<DropERC721> {
   static contractType = "DropERC721" as const;
-  static schema = DropErc721ContractSchema;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = DropERC721__factory;
+  /**
+   * @internal
+   */
+  static schema = DropErc721ContractSchema;
 
   public metadata: ContractMetadata<
     DropERC721,
@@ -221,12 +224,18 @@ export class DropErc721Contract extends Erc721<DropERC721> {
    *
    * @example
    * ```javascript
-   * // The array of NFT metadata you want to create
-   * const nftMetadatasToCreate = [{ name: ..., description: ...}, { name: ... }, ...];
+   * // Custom metadata of the NFTs to create
+   * const metadatas = [{
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }, {
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }];
    *
-   * const results = await contract.createBatch(nftMetadatasToCreate); // uploads and creates the NFTs on chain
-   * const receipt = results[0].receipt; // same transaction receipt for all created NFTs
-   * const tokenIds = results.map((result) => result.id); // all the token ids created
+   * const results = await contract.createBatch(metadatas); // uploads and creates the NFTs on chain
    * const firstTokenId = results[0].id; // token id of the first created NFT
    * const firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT
    * ```

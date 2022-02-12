@@ -21,7 +21,7 @@
         "summary": "Create Many NFTs\n\n",
         "remarks": "\n\nCreate and mint NFTs.\n\n",
         "examples": {
-          "javascript": "// Custom metadata of the NFTs to create\nconst metadatas = [{\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}];\n\nawait contract.createBatch(metadatas);"
+          "javascript": "// Custom metadata of the NFTs to create\nconst metadatas = [{\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}];\n\nconst results = await contract.createBatch(metadatas); // uploads and creates the NFTs on chain\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
         },
         "signature": "createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;"
       }
@@ -50,7 +50,7 @@
         "summary": "Create a batch of NFTs to be claimed in the future\n\n",
         "remarks": "\n\nCreate batch allows you to create a batch of many NFTs in one transaction.\n\n",
         "examples": {
-          "javascript": "// The array of NFT metadata you want to create\nconst nftMetadatasToCreate = [{ name: ..., description: ...}, { name: ... }, ...];\n\nconst results = await contract.createBatch(nftMetadatasToCreate); // uploads and creates the NFTs on chain\nconst receipt = results[0].receipt; // same transaction receipt for all created NFTs\nconst tokenIds = results.map((result) => result.id); // all the token ids created\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
+          "javascript": "// Custom metadata of the NFTs to create\nconst metadatas = [{\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}];\n\nconst results = await contract.createBatch(metadatas); // uploads and creates the NFTs on chain\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
         },
         "signature": "createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;"
       },
@@ -320,7 +320,7 @@
     "summary": "Setup a collection of one-of-one NFTs that are minted as users claim them.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getDropContract(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@3rdweb/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getBundleContract(\"{{contract_address}}\");"
     },
     "methods": [
       {

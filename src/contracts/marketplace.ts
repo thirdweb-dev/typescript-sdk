@@ -72,9 +72,12 @@ import ListingStruct = IMarketplace.ListingStruct;
  */
 export class MarketplaceContract implements UpdateableNetwork {
   static contractType = "Marketplace" as const;
-  static schema = MarketplaceContractSchema;
   static contractRoles = ["admin", "lister"] as const;
   static contractFactory = Marketplace__factory;
+  /**
+   * @internal
+   */
+  static schema = MarketplaceContractSchema;
 
   private contractWrapper: ContractWrapper<Marketplace>;
   private storage: IStorage;

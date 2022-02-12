@@ -45,8 +45,11 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
  */
 export class VoteContract implements UpdateableNetwork {
   static contractType = "VoteERC20" as const;
-  static schema = VoteContractSchema;
   static contractFactory = VoteERC20__factory;
+  /**
+   * @internal
+   */
+  static schema = VoteContractSchema;
 
   private contractWrapper: ContractWrapper<VoteERC20>;
   private storage: IStorage;
