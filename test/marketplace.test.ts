@@ -750,7 +750,7 @@ describe("Marketplace Contract", async () => {
       }
     });
 
-    it.only("should distribute the tokens when a listing closes", async () => {
+    it("should distribute the tokens when a listing closes", async () => {
       const now = Math.floor(Date.now() / 1000);
       await sdk.updateSignerOrProvider(adminWallet);
       const listingId = (
