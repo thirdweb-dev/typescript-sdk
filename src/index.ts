@@ -2,6 +2,7 @@ export * from "./core";
 export * from "./contracts";
 export * from "./types";
 export * from "./common";
+export * from "./core/classes";
 export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";
 export type {
   NFTMetadataInput,

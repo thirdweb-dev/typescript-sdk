@@ -8,36 +8,26 @@
 
 |  Class | Description |
 |  --- | --- |
-|  [AdminRoleMissingError](./sdk.adminrolemissingerror.md) | Thrown when attempting to execute an admin-role function. |
-|  [AssetNotFoundError](./sdk.assetnotfounderror.md) |  |
-|  [AuctionAlreadyStartedError](./sdk.auctionalreadystartederror.md) | Thrown when attempting to update/cancel an auction that already started |
-|  [AuctionHasNotEndedError](./sdk.auctionhasnotendederror.md) | Thrown when attempting to close an auction that has not ended |
+|  [ContractEncoder](./sdk.contractencoder.md) |  |
+|  [ContractMetadata](./sdk.contractmetadata.md) |  |
+|  [ContractPrimarySale](./sdk.contractprimarysale.md) |  |
+|  [ContractRoles](./sdk.contractroles.md) |  |
+|  [ContractRoyalty](./sdk.contractroyalty.md) |  |
+|  [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Manages claim conditions for Bundle Drop contracts |
 |  [DropErc1155Contract](./sdk.droperc1155contract.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
+|  [DropErc721ClaimConditions](./sdk.droperc721claimconditions.md) | Manages claim conditions for NFT Drop contracts |
 |  [DropErc721Contract](./sdk.droperc721contract.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
-|  [DuplicateFileNameError](./sdk.duplicatefilenameerror.md) |  |
-|  [DuplicateLeafsError](./sdk.duplicateleafserror.md) | Thrown when attempting to create a snapshot with duplicate leafs |
-|  [FetchError](./sdk.fetcherror.md) | Thrown when data fails to fetch from storage. |
-|  [FileNameMissingError](./sdk.filenamemissingerror.md) |  |
-|  [FunctionDeprecatedError](./sdk.functiondeprecatederror.md) |  |
-|  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
-|  [IpfsStorage](./sdk.ipfsstorage.md) |  |
-|  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
+|  [Erc1155](./sdk.erc1155.md) | Standard ERC1155 functions |
+|  [Erc20](./sdk.erc20.md) | Standard ERC20 functions |
+|  [Erc721](./sdk.erc721.md) | Standard ERC721 functions |
 |  [MarketplaceContract](./sdk.marketplacecontract.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
-|  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |
-|  [MissingRoleError](./sdk.missingroleerror.md) |  |
-|  [NotEnoughTokensError](./sdk.notenoughtokenserror.md) |  |
-|  [NotFoundError](./sdk.notfounderror.md) | Error that may get thrown if IPFS returns nothing for a given uri. |
 |  [PacksContract](./sdk.packscontract.md) | Create lootboxes of NFTs with rarity based open mechanics. |
-|  [QuantityAboveLimitError](./sdk.quantityabovelimiterror.md) |  |
-|  [RestrictedTransferError](./sdk.restrictedtransfererror.md) | Thrown when attempting to transfer an asset that has restricted transferability |
 |  [SplitsContract](./sdk.splitscontract.md) | Create custom royalty splits to distribute funds. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
 |  [TokenErc1155Contract](./sdk.tokenerc1155contract.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [TokenErc20Contract](./sdk.tokenerc20contract.md) | Create a standard crypto token or crypto currency. |
 |  [TokenErc721Contract](./sdk.tokenerc721contract.md) | Create a collection of one-of-one NFTs. |
-|  [UploadError](./sdk.uploaderror.md) |  |
 |  [VoteContract](./sdk.votecontract.md) | Create a decentralized organization for token holders to vote on proposals. |
-|  [WrongListingTypeError](./sdk.wronglistingtypeerror.md) | Thrown when trying to retrieve a listing of the wrong type |
 
 ## Enumerations
 

@@ -366,7 +366,7 @@
         "summary": "Mint Tokens\n\n",
         "remarks": "\n\nMint tokens to a specified address.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet you want to mint the tokens to\nconst toAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to mint\nconst amount = \"1.5\";\n\nawait contract.mintTo(toAddress, amount);"
+          "javascript": "const toAddress = \"{{wallet_address}}\"; // Address of the wallet you want to mint the tokens to\nconst amount = \"1.5\"; // The amount of this token you want to mint\n\nawait contract.mintTo(toAddress, amount);"
         },
         "signature": "mintTo(to: string, amount: BigNumberish): Promise<TransactionResult>;"
       }

@@ -1,7 +1,7 @@
 import { BigNumberish } from "ethers";
 /**
  * Error that may get thrown if IPFS returns nothing for a given uri.
- * @public
+ * @internal
  */
 export class NotFoundError extends Error {
   /** @internal */
@@ -12,7 +12,7 @@ export class NotFoundError extends Error {
 
 /**
  * Error that may get thrown if an invalid address was passed
- * @public
+ * @internal
  */
 export class InvalidAddressError extends Error {
   /** @internal */
@@ -23,6 +23,9 @@ export class InvalidAddressError extends Error {
   }
 }
 
+/**
+ * @internal
+ */
 export class MissingRoleError extends Error {
   /** @internal */
   /** @internal */
@@ -31,6 +34,9 @@ export class MissingRoleError extends Error {
   }
 }
 
+/**
+ * @internal
+ */
 export class AssetNotFoundError extends Error {
   /** @internal */
   /** @internal */
@@ -39,6 +45,9 @@ export class AssetNotFoundError extends Error {
   }
 }
 
+/**
+ * @internal
+ */
 export class UploadError extends Error {
   /** @internal */
   constructor(message: string) {
@@ -46,6 +55,9 @@ export class UploadError extends Error {
   }
 }
 
+/**
+ * @internal
+ */
 export class FileNameMissingError extends Error {
   /** @internal */
   constructor() {
@@ -53,6 +65,9 @@ export class FileNameMissingError extends Error {
   }
 }
 
+/**
+ * @internal
+ */
 export class DuplicateFileNameError extends Error {
   /** @internal */
   constructor(fileName: string) {
@@ -62,6 +77,9 @@ export class DuplicateFileNameError extends Error {
   }
 }
 
+/**
+ * @internal
+ */
 export class NotEnoughTokensError extends Error {
   /** @internal */
   constructor(contractAddress: string, quantity: number, available: number) {
@@ -71,6 +89,9 @@ export class NotEnoughTokensError extends Error {
   }
 }
 
+/**
+ * @internal
+ */
 export class MissingOwnerRoleError extends Error {
   /** @internal */
   constructor() {
@@ -78,6 +99,9 @@ export class MissingOwnerRoleError extends Error {
   }
 }
 
+/**
+ * @internal
+ */
 export class QuantityAboveLimitError extends Error {
   /** @internal */
   constructor(quantity: string) {
@@ -87,6 +111,7 @@ export class QuantityAboveLimitError extends Error {
 
 /**
  * Thrown when data fails to fetch from storage.
+ * @internal
  */
 export class FetchError extends Error {
   public innerError?: Error;
@@ -100,6 +125,7 @@ export class FetchError extends Error {
 
 /**
  * Thrown when attempting to create a snapshot with duplicate leafs
+ * @internal
  */
 export class DuplicateLeafsError extends Error {
   constructor(message?: string) {
@@ -109,6 +135,7 @@ export class DuplicateLeafsError extends Error {
 
 /**
  * Thrown when attempting to update/cancel an auction that already started
+ * @internal
  */
 export class AuctionAlreadyStartedError extends Error {
   constructor(id?: string) {
@@ -118,6 +145,9 @@ export class AuctionAlreadyStartedError extends Error {
   }
 }
 
+/**
+ * @internal
+ */
 export class FunctionDeprecatedError extends Error {
   /** @internal */
   constructor(message: string) {
@@ -126,6 +156,7 @@ export class FunctionDeprecatedError extends Error {
 }
 /**
  * Thrown when trying to retrieve a listing from a marketplace that doesn't exist
+ * @internal
  */
 export class ListingNotFoundError extends Error {
   constructor(marketplaceContractAddress: string, listingId?: string) {
@@ -141,6 +172,7 @@ export class ListingNotFoundError extends Error {
 
 /**
  * Thrown when trying to retrieve a listing of the wrong type
+ * @internal
  */
 export class WrongListingTypeError extends Error {
   constructor(
@@ -163,6 +195,7 @@ export class WrongListingTypeError extends Error {
 
 /**
  * Thrown when attempting to transfer an asset that has restricted transferability
+ * @internal
  */
 export class RestrictedTransferError extends Error {
   constructor(assetAddress?: string) {
@@ -176,6 +209,7 @@ export class RestrictedTransferError extends Error {
 
 /**
  * Thrown when attempting to execute an admin-role function.
+ * @internal
  */
 export class AdminRoleMissingError extends Error {
   constructor(
@@ -193,6 +227,7 @@ export class AdminRoleMissingError extends Error {
 
 /**
  * Thrown when attempting to close an auction that has not ended
+ * @internal
  */
 export class AuctionHasNotEndedError extends Error {
   constructor(id?: string, endTime?: BigNumberish) {

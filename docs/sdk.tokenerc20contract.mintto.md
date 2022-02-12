@@ -31,11 +31,8 @@ Mint tokens to a specified address.
 
 
 ```javascript
-// Address of the wallet you want to mint the tokens to
-const toAddress = "{{wallet_address}}";
-
-// The amount of this token you want to mint
-const amount = "1.5";
+const toAddress = "{{wallet_address}}"; // Address of the wallet you want to mint the tokens to
+const amount = "1.5"; // The amount of this token you want to mint
 
 await contract.mintTo(toAddress, amount);
 ```
