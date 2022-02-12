@@ -10,7 +10,7 @@
 ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     startTime: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    price: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>, string, string | number | bigint | ethers$1.BigNumber>>;
+    price: z.ZodDefault<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>, string, string | number | bigint | ethers$1.BigNumber>>;
     quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>, string, string | number | bigint | ethers$1.BigNumber>>;
     waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>, string, string | number | bigint | ethers$1.BigNumber>>;

@@ -29,10 +29,12 @@ import {
   Offer,
 } from "../types/marketplace";
 import { ListingType } from "../enums";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
+  fetchCurrencyMetadata,
   fetchCurrencyValue,
   isNativeToken,
+  normalizePriceValue,
   setErc20Allowance,
 } from "../common/currency";
 import invariant from "tiny-invariant";
@@ -53,6 +55,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
 import ListingParametersStruct = IMarketplace.ListingParametersStruct;
 import ListingStruct = IMarketplace.ListingStruct;
+import { Price } from "../types/currency";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -509,46 +512,46 @@ export class MarketplaceContract implements UpdateableNetwork {
   /**
    * Make an offer for a Direct Listing
    *
-   * @param offer - the offer information
    */
-  public async makeDirectListingOffer(offer: {
-    listingId: BigNumberish;
-    quantityDesired: BigNumberish;
-    currencyContractAddress: string;
-    pricePerToken: BigNumberish;
-  }): Promise<TransactionResult> {
-    if (isNativeToken(offer.currencyContractAddress)) {
+  public async makeDirectListingOffer(
+    listingId: BigNumberish,
+    quantityDesired: BigNumberish,
+    currencyContractAddress: string,
+    pricePerToken: Price,
+  ): Promise<TransactionResult> {
+    if (isNativeToken(currencyContractAddress)) {
       throw new Error(
         "You must use the wrapped native token address when making an offer with a native token",
       );
     }
 
+    const normalizedPrice = await normalizePriceValue(
+      this.contractWrapper.getProvider(),
+      pricePerToken,
+      currencyContractAddress,
+    );
+
     try {
-      await this.getDirectListing(offer.listingId);
+      await this.getDirectListing(listingId);
     } catch (err) {
       console.error("Failed to get listing, err =", err);
-      throw new Error(`Error getting the listing with id ${offer.listingId}`);
+      throw new Error(`Error getting the listing with id ${listingId}`);
     }
 
-    const quantity = BigNumber.from(offer.quantityDesired);
-    const value = BigNumber.from(offer.pricePerToken).mul(quantity);
+    const quantity = BigNumber.from(quantityDesired);
+    const value = BigNumber.from(normalizedPrice).mul(quantity);
     const overrides = (await this.contractWrapper.getCallOverrides()) || {};
     await setErc20Allowance(
       this.contractWrapper,
       value,
-      offer.currencyContractAddress,
+      currencyContractAddress,
       overrides,
     );
 
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "offer",
-        [
-          offer.listingId,
-          offer.quantityDesired,
-          offer.currencyContractAddress,
-          offer.pricePerToken,
-        ],
+        [listingId, quantityDesired, currencyContractAddress, normalizedPrice],
         overrides,
       ),
     };
@@ -638,7 +641,15 @@ export class MarketplaceContract implements UpdateableNetwork {
       BigNumber.from(listingId),
     );
 
-    return this.makeAuctionListingBid(listingId, listing.buyoutPrice);
+    const currencyMetadata = await fetchCurrencyMetadata(
+      this.contractWrapper.getProvider(),
+      listing.assetContractAddress,
+    );
+
+    return this.makeAuctionListingBid(
+      listingId,
+      ethers.utils.formatUnits(listing.buyoutPrice, currencyMetadata.decimals),
+    );
   }
 
   /**
@@ -687,10 +698,16 @@ export class MarketplaceContract implements UpdateableNetwork {
    */
   public async makeAuctionListingBid(
     listingId: BigNumberish,
-    pricePerToken: BigNumberish,
+    pricePerToken: Price,
   ): Promise<TransactionResult> {
     const listing = await this.validateAuctionListing(
       BigNumber.from(listingId),
+    );
+
+    const normalizedPrice = await normalizePriceValue(
+      this.contractWrapper.getProvider(),
+      pricePerToken,
+      listing.currencyContractAddress,
     );
 
     const bidBuffer = await this.getBidBufferBps();
@@ -698,7 +715,7 @@ export class MarketplaceContract implements UpdateableNetwork {
     if (winningBid) {
       const isWinningBid = await this.isWinningBid(
         winningBid.pricePerToken,
-        pricePerToken,
+        normalizedPrice,
         bidBuffer,
       );
 
@@ -707,7 +724,7 @@ export class MarketplaceContract implements UpdateableNetwork {
         "Bid price is too low based on the current winning bid and the bid buffer",
       );
     } else {
-      const tokenPrice = BigNumber.from(pricePerToken);
+      const tokenPrice = normalizedPrice;
       const reservePrice = BigNumber.from(listing.reservePrice);
       invariant(
         tokenPrice.gte(reservePrice),
@@ -716,7 +733,7 @@ export class MarketplaceContract implements UpdateableNetwork {
     }
 
     const quantity = BigNumber.from(listing.quantity);
-    const value = BigNumber.from(pricePerToken).mul(quantity);
+    const value = normalizedPrice.mul(quantity);
 
     const overrides = (await this.contractWrapper.getCallOverrides()) || {};
     await setErc20Allowance(
@@ -733,7 +750,7 @@ export class MarketplaceContract implements UpdateableNetwork {
           listingId,
           listing.quantity,
           listing.currencyContractAddress,
-          pricePerToken,
+          normalizedPrice,
         ],
         overrides,
       ),

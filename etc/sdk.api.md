@@ -286,7 +286,7 @@ export type ClaimConditionInput = z.input<typeof PartialClaimConditionInputSchem
 export const ClaimConditionInputSchema: z.ZodObject<{
     startTime: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    price: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
+    price: z.ZodDefault<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
     quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
     waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
@@ -296,7 +296,7 @@ export const ClaimConditionInputSchema: z.ZodObject<{
     snapshot?: string[] | undefined;
     startTime: number;
     currencyAddress: string;
-    price: string;
+    price: string | number;
     maxQuantity: string;
     quantityLimitPerTransaction: string;
     waitInSeconds: string;
@@ -305,7 +305,7 @@ export const ClaimConditionInputSchema: z.ZodObject<{
     snapshot?: string[] | undefined;
     startTime?: number | Date | undefined;
     currencyAddress?: string | undefined;
-    price?: string | number | bigint | ethers_2.BigNumber | undefined;
+    price?: string | number | undefined;
     maxQuantity?: string | number | bigint | ethers_2.BigNumber | undefined;
     quantityLimitPerTransaction?: string | number | bigint | ethers_2.BigNumber | undefined;
     waitInSeconds?: string | number | bigint | ethers_2.BigNumber | undefined;
@@ -316,7 +316,7 @@ export const ClaimConditionInputSchema: z.ZodObject<{
 export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     startTime: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    price: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
+    price: z.ZodDefault<z.ZodUnion<[z.ZodString, z.ZodNumber]>>;
     maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
     quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
     waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>;
@@ -857,7 +857,9 @@ export class InvalidAddressError extends Error {
     constructor(address?: string);
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "IpfsStorage" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export class IpfsStorage implements IStorage {
     constructor(gatewayUrl?: string);
     // (undocumented)
@@ -870,7 +872,7 @@ export class IpfsStorage implements IStorage {
     uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
     // (undocumented)
     uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
-    // @internal (undocumented)
+    // (undocumented)
     uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<{
         baseUri: string;
         metadataUris: string[];
@@ -946,13 +948,9 @@ export class MarketplaceContract implements UpdateableNetwork {
     getTimeBufferInSeconds(): Promise<BigNumber>;
     getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
     isRestrictedListerRoleOnly(): Promise<boolean>;
-    makeAuctionListingBid(listingId: BigNumberish, pricePerToken: BigNumberish): Promise<TransactionResult>;
-    makeDirectListingOffer(offer: {
-        listingId: BigNumberish;
-        quantityDesired: BigNumberish;
-        currencyContractAddress: string;
-        pricePerToken: BigNumberish;
-    }): Promise<TransactionResult>;
+    makeAuctionListingBid(listingId: BigNumberish, pricePerToken: Price): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "Price" needs to be exported by the entry point index.d.ts
+    makeDirectListingOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContractAddress: string, pricePerToken: Price): Promise<TransactionResult>;
     // (undocumented)
     metadata: ContractMetadata<Marketplace, typeof MarketplaceContract.schema>;
     // (undocumented)
@@ -1285,7 +1283,7 @@ export class PacksContract implements UpdateableNetwork {
 export const PartialClaimConditionInputSchema: z.ZodObject<{
     startTime: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>>;
     currencyAddress: z.ZodOptional<z.ZodDefault<z.ZodString>>;
-    price: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>>;
+    price: z.ZodOptional<z.ZodDefault<z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     maxQuantity: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>>;
     quantityLimitPerTransaction: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>>;
     waitInSeconds: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>>>;
@@ -1295,7 +1293,7 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
     snapshot?: string[] | undefined;
     startTime?: number | undefined;
     currencyAddress?: string | undefined;
-    price?: string | undefined;
+    price?: string | number | undefined;
     maxQuantity?: string | undefined;
     quantityLimitPerTransaction?: string | undefined;
     waitInSeconds?: string | undefined;
@@ -1304,7 +1302,7 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
     snapshot?: string[] | undefined;
     startTime?: number | Date | undefined;
     currencyAddress?: string | undefined;
-    price?: string | number | bigint | ethers_2.BigNumber | undefined;
+    price?: string | number | undefined;
     maxQuantity?: string | number | bigint | ethers_2.BigNumber | undefined;
     quantityLimitPerTransaction?: string | number | bigint | ethers_2.BigNumber | undefined;
     waitInSeconds?: string | number | bigint | ethers_2.BigNumber | undefined;

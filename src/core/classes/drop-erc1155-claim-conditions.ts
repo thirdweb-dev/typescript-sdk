@@ -10,7 +10,11 @@ import {
 } from "@3rdweb/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { fetchCurrencyValue, isNativeToken } from "../../common/currency";
+import {
+  fetchCurrencyValue,
+  isNativeToken,
+  normalizePriceValue,
+} from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   ClaimCondition,
@@ -247,12 +251,12 @@ export class DropErc1155ClaimConditions {
    *   {
    *     startTime: now, // start the presale now
    *     maxQuantity: 2, // limit how many mints for this presale
-   *     price: ethers.utils.parseEther("0.01"), // presale price
+   *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    *   },
    *   {
    *     startTime: now + 60 * 60 * 24, // 24h after presale, start public sale
-   *     price: ethers.utils.parseEther("0.08"), // public sale price
+   *     price: 0.08, // public sale price
    *   }
    * ]);
    *
@@ -288,20 +292,19 @@ export class DropErc1155ClaimConditions {
     );
 
     // Convert processed inputs to the format the contract expects, and sort by timestamp
-    const sortedConditions: IDropERC1155.ClaimConditionStruct[] =
-      inputsWithSnapshots
-        .map((c) => this.convertToContractModel(c))
-        .sort((a, b) => {
-          const left = BigNumber.from(a.startTimestamp);
-          const right = BigNumber.from(b.startTimestamp);
-          if (left.eq(right)) {
-            return 0;
-          } else if (left.gt(right)) {
-            return 1;
-          } else {
-            return -1;
-          }
-        });
+    const sortedConditions: IDropERC1155.ClaimConditionStruct[] = (
+      await Promise.all(inputsWithSnapshots.map(this.convertToContractModel))
+    ).sort((a, b) => {
+      const left = BigNumber.from(a.startTimestamp);
+      const right = BigNumber.from(b.startTimestamp);
+      if (left.eq(right)) {
+        return 0;
+      } else if (left.gt(right)) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
 
     const merkleInfo: { [key: string]: string } = {};
     snapshotInfos.forEach((s) => {
@@ -361,12 +364,23 @@ export class DropErc1155ClaimConditions {
         `Index out of bounds - got index: ${index} with ${existingConditions.length} conditions`,
       );
     }
-    const updatedCondition = ClaimConditionOutputSchema.parse({
+    const mergedCondition = ClaimConditionOutputSchema.parse({
       ...existingConditions[index],
       ...claimConditionInput,
     });
-    existingConditions[index] = updatedCondition;
-    return await this.set(tokenId, existingConditions);
+
+    const newConditions: ClaimConditionInput[] = existingConditions.map(
+      (existing) => ({
+        ...existing,
+        price: existing.price.toString(),
+      }),
+    );
+
+    newConditions[index] = {
+      ...mergedCondition,
+      price: mergedCondition.price.toString(),
+    };
+    return await this.set(tokenId, newConditions);
   }
 
   /** ***************************************
@@ -398,20 +412,25 @@ export class DropErc1155ClaimConditions {
     });
   }
 
-  private convertToContractModel(
+  private async convertToContractModel(
     c: FilledConditionInput,
-  ): IDropERC1155.ClaimConditionStruct {
+  ): Promise<IDropERC1155.ClaimConditionStruct> {
+    const currency =
+      c.currencyAddress === AddressZero
+        ? NATIVE_TOKEN_ADDRESS
+        : c.currencyAddress;
     return {
       startTimestamp: BigNumber.from(c.startTime),
       maxClaimableSupply: c.maxQuantity,
       supplyClaimed: 0,
       quantityLimitPerTransaction: c.quantityLimitPerTransaction,
       waitTimeInSecondsBetweenClaims: c.waitInSeconds,
-      pricePerToken: c.price,
-      currency:
-        c.currencyAddress === AddressZero
-          ? NATIVE_TOKEN_ADDRESS
-          : c.currencyAddress,
+      pricePerToken: await normalizePriceValue(
+        this.contractWrapper.getProvider(),
+        c.price,
+        currency,
+      ),
+      currency,
       merkleRoot: c.merkleRootHash,
     };
   }

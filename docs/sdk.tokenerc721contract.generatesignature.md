@@ -45,7 +45,7 @@ const now = Math.floor(Date.now() / 1000);
 const payload = {
   metadta: nftMetadata, // The NFT to mint
   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
-  price: ethers.util.parseEther("0.5"), // the price to pay for minting
+  price: 0.5, // the price to pay for minting
   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
   mintStartTimeEpochSeconds: now, // can mint anytime from now
   mintEndTimeEpochSeconds: now + 60 * 60 * 24 * 7, // to 24h from now

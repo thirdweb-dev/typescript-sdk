@@ -3,6 +3,8 @@
  * @public
  */
 import { BigNumber } from "ethers";
+import { z } from "zod";
+import { PriceSchema } from "../schema/shared";
 
 export interface Currency {
   name: string;
@@ -26,3 +28,8 @@ export interface CurrencyValue extends Currency {
   value: BigNumber;
   displayValue: string;
 }
+
+/**
+ * Represents a currency price already formatted. ie. "1" for 1 ether.
+ */
+export type Price = z.input<typeof PriceSchema>;

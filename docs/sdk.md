@@ -20,7 +20,6 @@
 |  [FileNameMissingError](./sdk.filenamemissingerror.md) |  |
 |  [FunctionDeprecatedError](./sdk.functiondeprecatederror.md) |  |
 |  [InvalidAddressError](./sdk.invalidaddresserror.md) | Error that may get thrown if an invalid address was passed |
-|  [IpfsStorage](./sdk.ipfsstorage.md) |  |
 |  [ListingNotFoundError](./sdk.listingnotfounderror.md) | Thrown when trying to retrieve a listing from a marketplace that doesn't exist |
 |  [MarketplaceContract](./sdk.marketplacecontract.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MissingOwnerRoleError](./sdk.missingownerroleerror.md) |  |

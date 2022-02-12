@@ -9,7 +9,7 @@ Bid On Auction
 <b>Signature:</b>
 
 ```typescript
-makeAuctionListingBid(listingId: BigNumberish, pricePerToken: BigNumberish): Promise<TransactionResult>;
+makeAuctionListingBid(listingId: BigNumberish, pricePerToken: Price): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ makeAuctionListingBid(listingId: BigNumberish, pricePerToken: BigNumberish): Pro
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  listingId | BigNumberish |  |
-|  pricePerToken | BigNumberish |  |
+|  pricePerToken | Price |  |
 
 <b>Returns:</b>
 

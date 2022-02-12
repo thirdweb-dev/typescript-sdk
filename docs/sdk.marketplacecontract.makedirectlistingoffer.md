@@ -9,19 +9,17 @@ Make an offer for a Direct Listing
 <b>Signature:</b>
 
 ```typescript
-makeDirectListingOffer(offer: {
-        listingId: BigNumberish;
-        quantityDesired: BigNumberish;
-        currencyContractAddress: string;
-        pricePerToken: BigNumberish;
-    }): Promise<TransactionResult>;
+makeDirectListingOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContractAddress: string, pricePerToken: Price): Promise<TransactionResult>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  offer | { listingId: BigNumberish; quantityDesired: BigNumberish; currencyContractAddress: string; pricePerToken: BigNumberish; } | the offer information |
+|  listingId | BigNumberish |  |
+|  quantityDesired | BigNumberish |  |
+|  currencyContractAddress | string |  |
+|  pricePerToken | Price |  |
 
 <b>Returns:</b>
 

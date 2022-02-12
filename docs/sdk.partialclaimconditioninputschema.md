@@ -10,7 +10,7 @@
 PartialClaimConditionInputSchema: z.ZodObject<{
     startTime: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>>;
     currencyAddress: z.ZodOptional<z.ZodDefault<z.ZodString>>;
-    price: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>, string, string | number | bigint | ethers$1.BigNumber>>>;
+    price: z.ZodOptional<z.ZodDefault<z.ZodUnion<[z.ZodString, z.ZodNumber]>>>;
     maxQuantity: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>, string, string | number | bigint | ethers$1.BigNumber>>>;
     quantityLimitPerTransaction: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>, string, string | number | bigint | ethers$1.BigNumber>>>;
     waitInSeconds: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers$1.BigNumber, z.ZodTypeDef, ethers$1.BigNumber>]>, ethers$1.BigNumber, string | number | bigint | ethers$1.BigNumber>, string, string | number | bigint | ethers$1.BigNumber>>>;
@@ -20,7 +20,7 @@ PartialClaimConditionInputSchema: z.ZodObject<{
     snapshot?: string[] | undefined;
     startTime?: number | undefined;
     currencyAddress?: string | undefined;
-    price?: string | undefined;
+    price?: string | number | undefined;
     maxQuantity?: string | undefined;
     quantityLimitPerTransaction?: string | undefined;
     waitInSeconds?: string | undefined;
@@ -29,7 +29,7 @@ PartialClaimConditionInputSchema: z.ZodObject<{
     snapshot?: string[] | undefined;
     startTime?: number | Date | undefined;
     currencyAddress?: string | undefined;
-    price?: string | number | bigint | ethers$1.BigNumber | undefined;
+    price?: string | number | undefined;
     maxQuantity?: string | number | bigint | ethers$1.BigNumber | undefined;
     quantityLimitPerTransaction?: string | number | bigint | ethers$1.BigNumber | undefined;
     waitInSeconds?: string | number | bigint | ethers$1.BigNumber | undefined;

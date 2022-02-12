@@ -67,3 +67,8 @@ export const AdressSchema = z.string().refine(
     };
   },
 );
+
+export const PriceSchema = z.union([
+  z.string().regex(/^([0-9]+\.?[0-9]*|\.[0-9]+)$/, "Invalid price"),
+  z.number().min(0, "Price cannot be negative"),
+]);

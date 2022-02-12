@@ -67,7 +67,7 @@ const contract = sdk.getMarketplaceContract("{{contract_address}}");
 |  [getWinningBid(listingId)](./sdk.marketplacecontract.getwinningbid.md) |  | Get Highest Bid |
 |  [isRestrictedListerRoleOnly()](./sdk.marketplacecontract.isrestrictedlisterroleonly.md) |  | Get whether listing is restricted only to addresses with the Lister role |
 |  [makeAuctionListingBid(listingId, pricePerToken)](./sdk.marketplacecontract.makeauctionlistingbid.md) |  | Bid On Auction |
-|  [makeDirectListingOffer(offer)](./sdk.marketplacecontract.makedirectlistingoffer.md) |  | Make an offer for a Direct Listing |
+|  [makeDirectListingOffer(listingId, quantityDesired, currencyContractAddress, pricePerToken)](./sdk.marketplacecontract.makedirectlistingoffer.md) |  | Make an offer for a Direct Listing |
 |  [onNetworkUpdated(network)](./sdk.marketplacecontract.onnetworkupdated.md) |  |  |
 |  [setBidBufferBps(bufferBps)](./sdk.marketplacecontract.setbidbufferbps.md) |  | Set the Bid buffer: this is a percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items. |
 |  [setRestrictedListerRoleOnly(isRestricted)](./sdk.marketplacecontract.setrestrictedlisterroleonly.md) |  | Get whether listing is restricted only to addresses with the Lister role |

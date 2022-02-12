@@ -1,6 +1,6 @@
 import { AddressZero } from "@ethersproject/constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   IERC20,
   IERC20__factory,
@@ -11,12 +11,24 @@ import { ChainId, SUPPORTED_CHAIN_ID } from "../constants/chains";
 import { NATIVE_TOKEN_ADDRESS, NATIVE_TOKENS } from "../constants/currency";
 import { Provider } from "@ethersproject/providers";
 import { formatUnits } from "ethers/lib/utils";
-import { Currency, CurrencyValue, NativeToken } from "../types/currency";
+import { Currency, CurrencyValue, NativeToken, Price } from "../types/currency";
 
 export function isNativeToken(tokenAddress: string): boolean {
   return (
     tokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS ||
     tokenAddress.toLowerCase() === AddressZero
+  );
+}
+
+export async function normalizePriceValue(
+  provider: Provider,
+  inputPrice: Price,
+  currencyAddress: string,
+) {
+  const metadata = await fetchCurrencyMetadata(provider, currencyAddress);
+  return ethers.utils.parseUnits(
+    BigNumber.from(inputPrice).toString(),
+    metadata.decimals,
   );
 }
 
