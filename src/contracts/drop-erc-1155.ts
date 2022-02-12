@@ -108,9 +108,9 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
    *******************************/
 
   /**
-   * Create Many NFTs
+   * Create a batch of NFTs to be claimed in the future
    *
-   * @remarks Create and mint NFTs.
+   * @remarks Create batch allows you to create a batch of many NFTs in one transaction.
    *
    * @example
    * ```javascript
@@ -145,7 +145,6 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
       batch.metadataUris.length,
       `${batch.baseUri.endsWith("/") ? batch.baseUri : `${batch.baseUri}/`}`,
     ]);
-    // TODO figure out how to type the return types of parseEventLogs
     const event = this.contractWrapper.parseEventLogs(
       "LazyMintedTokens",
       receipt?.logs,
@@ -169,16 +168,14 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
    *
    * @example
    * ```javascript
-   * // Address of the wallet you want to claim the NFTs
-   * const address = "{{wallet_address}}";
+   * const address = "{{wallet_address}}"; // address of the wallet you want to claim the NFTs
+   * const tokenId = 0; // the id of the NFT you want to claim
+   * const quantity = 1; // how many NFTs you want to claim
    *
-   * // The number of NFTs to claim
-   * const quantity = 1;
-   *
-   * // The token ID of the NFT you want to claim
-   * const tokenId = "0"
-   *
-   * await contract.claimTo(address, tokenId, quantity);
+   * const tx = await contract.claimTo(address, quantity);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const claimedTokenId = tx.id; // the id of the NFT claimed
+   * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
    * ```
    *
    * @param destinationAddress - Address you want to send the token to

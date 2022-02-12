@@ -25,7 +25,7 @@ Promise&lt;TransactionResult&gt;
 
 ## Remarks
 
-Mint tokens to a specified address
+Mint tokens to a specified address.
 
 ## Example
 

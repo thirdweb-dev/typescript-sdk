@@ -4,7 +4,7 @@
 
 ## DropErc721Contract.createBatch() method
 
-Create a batch of NFTs to be claimed in the future
+Create a batch of unique NFTs to be claimed in the future
 
 <b>Signature:</b>
 
@@ -24,7 +24,7 @@ Promise&lt;TransactionResultWithId&lt;NFTMetadata&gt;\[\]&gt;
 
 ## Remarks
 
-Create batch allows you to create a batch of many NFTs in one transaction.
+Create batch allows you to create a batch of many unique NFTs in one transaction.
 
 ## Example
 

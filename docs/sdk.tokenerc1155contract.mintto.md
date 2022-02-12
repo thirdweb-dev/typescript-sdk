@@ -4,7 +4,7 @@
 
 ## TokenErc1155Contract.mintTo() method
 
-Mint NFT
+Mint an NFT with a limited supply
 
 <b>Signature:</b>
 
@@ -25,7 +25,7 @@ Promise&lt;TransactionResultWithId&lt;BundleMetadata&gt;&gt;
 
 ## Remarks
 
-Mint an NFT with a specified supply to a specified wallet.
+Mint an NFT with a limited supply to a specified wallet.
 
 ## Example
 

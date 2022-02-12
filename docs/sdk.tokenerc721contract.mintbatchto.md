@@ -4,7 +4,7 @@
 
 ## TokenErc721Contract.mintBatchTo() method
 
-Mint Many NFTs
+Mint Many unique NFTs
 
 <b>Signature:</b>
 
@@ -25,7 +25,7 @@ Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
 
 ## Remarks
 
-Mint many NFTs at once to a specified wallet.
+Mint many unique NFTs at once to a specified wallet.
 
 ## Example
 

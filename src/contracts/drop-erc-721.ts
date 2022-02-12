@@ -218,9 +218,9 @@ export class DropErc721Contract extends Erc721<DropERC721> {
    *******************************/
 
   /**
-   * Create a batch of NFTs to be claimed in the future
+   * Create a batch of unique NFTs to be claimed in the future
    *
-   * @remarks Create batch allows you to create a batch of many NFTs in one transaction.
+   * @remarks Create batch allows you to create a batch of many unique NFTs in one transaction.
    *
    * @example
    * ```javascript
@@ -277,14 +277,14 @@ export class DropErc721Contract extends Erc721<DropERC721> {
   }
 
   /**
-   * Claim NFTs to a specific Wallet
+   * Claim unique NFTs to a specific Wallet
    *
-   * @remarks Let the a specified wallet claim NFTs.
+   * @remarks Let the specified wallet claim NFTs.
    *
    * @example
    * ```javascript
-   * const address = "{{wallet_address}}"; // Address of the wallet you want to claim the NFTs
-   * const quantity = 1; // Quantity of the tokens you want to claim
+   * const address = "{{wallet_address}}"; // address of the wallet you want to claim the NFTs
+   * const quantity = 1; // how many unique NFTs you want to claim
    *
    * const tx = await contract.claimTo(address, quantity);
    * const receipt = tx.receipt; // the transaction receipt

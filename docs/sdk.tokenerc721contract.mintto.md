@@ -4,7 +4,7 @@
 
 ## TokenErc721Contract.mintTo() method
 
-Mint NFT
+Mint a unique NFT
 
 <b>Signature:</b>
 
@@ -25,7 +25,7 @@ Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;&gt;
 
 ## Remarks
 
-Mint an NFT to a specified wallet.
+Mint a unique NFT to a specified wallet.
 
 ## Example
 

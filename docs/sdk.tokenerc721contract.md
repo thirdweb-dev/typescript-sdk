@@ -52,8 +52,8 @@ const contract = sdk.getNFTContract("{{contract_address}}");
 |  [generateSignatureBatch(mintRequests)](./sdk.tokenerc721contract.generatesignaturebatch.md) |  | Genrate a batch of signatures that can be used to mint many dynamic NFTs. |
 |  [mint(metadata)](./sdk.tokenerc721contract.mint.md) |  | Mint an NFT to the connected wallet |
 |  [mintBatch(metadatas)](./sdk.tokenerc721contract.mintbatch.md) |  | Mint Many NFTs to the connected wallet |
-|  [mintBatchTo(to, metadatas)](./sdk.tokenerc721contract.mintbatchto.md) |  | Mint Many NFTs |
-|  [mintTo(to, metadata)](./sdk.tokenerc721contract.mintto.md) |  | Mint NFT |
+|  [mintBatchTo(to, metadatas)](./sdk.tokenerc721contract.mintbatchto.md) |  | Mint Many unique NFTs |
+|  [mintTo(to, metadata)](./sdk.tokenerc721contract.mintto.md) |  | Mint a unique NFT |
 |  [mintWithSignature(mintRequest, signature)](./sdk.tokenerc721contract.mintwithsignature.md) |  | Mint a dynamicly generated NFT |
 |  [verify(mintRequest, signature)](./sdk.tokenerc721contract.verify.md) |  |  |
 

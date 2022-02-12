@@ -4,7 +4,7 @@
 
 ## TokenErc1155Contract.mintBatchTo() method
 
-Mint Many NFTs
+Mint Many NFTs with limited supplies
 
 <b>Signature:</b>
 
@@ -25,7 +25,7 @@ Promise&lt;TransactionResultWithId&lt;BundleMetadata&gt;\[\]&gt;
 
 ## Remarks
 
-Mint many different NFTs with specified supplies to a specified wallet.
+Mint many different NFTs with limited supplies to a specified wallet.
 
 ## Example
 

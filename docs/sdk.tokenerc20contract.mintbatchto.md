@@ -24,7 +24,7 @@ Promise&lt;TransactionResult&gt;
 
 ## Remarks
 
-Mint tokens to many wallets
+Mint tokens to many wallets in one transaction.
 
 ## Example
 

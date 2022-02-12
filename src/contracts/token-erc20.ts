@@ -129,7 +129,7 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
   /**
    * Mint Tokens
    *
-   * @remarks Mint tokens to a specified address
+   * @remarks Mint tokens to a specified address.
    *
    * @example
    * ```javascript
@@ -161,7 +161,7 @@ export class TokenErc20Contract extends Erc20<TokenERC20> {
   /**
    * Mint Tokens To Many Wallets
    *
-   * @remarks Mint tokens to many wallets
+   * @remarks Mint tokens to many wallets in one transaction.
    *
    * @example
    * ```javascript

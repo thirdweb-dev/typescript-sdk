@@ -4,7 +4,7 @@
 
 ## DropErc721Contract.claimTo() method
 
-Claim NFTs to a specific Wallet
+Claim unique NFTs to a specific Wallet
 
 <b>Signature:</b>
 
@@ -28,14 +28,14 @@ Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
 
 ## Remarks
 
-Let the a specified wallet claim NFTs.
+Let the specified wallet claim NFTs.
 
 ## Example
 
 
 ```javascript
-const address = "{{wallet_address}}"; // Address of the wallet you want to claim the NFTs
-const quantity = 1; // Quantity of the tokens you want to claim
+const address = "{{wallet_address}}"; // address of the wallet you want to claim the NFTs
+const quantity = 1; // how many unique NFTs you want to claim
 
 const tx = await contract.claimTo(address, quantity);
 const receipt = tx.receipt; // the transaction receipt

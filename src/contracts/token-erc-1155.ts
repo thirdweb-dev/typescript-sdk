@@ -107,9 +107,9 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
   }
 
   /**
-   * Mint NFT
+   * Mint an NFT with a limited supply
    *
-   * @remarks Mint an NFT with a specified supply to a specified wallet.
+   * @remarks Mint an NFT with a limited supply to a specified wallet.
    *
    * @example
    * ```javascript
@@ -176,9 +176,9 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
   }
 
   /**
-   * Mint Many NFTs
+   * Mint Many NFTs with limited supplies
    *
-   * @remarks Mint many different NFTs with specified supplies to a specified wallet.
+   * @remarks Mint many different NFTs with limited supplies to a specified wallet.
    *
    * @example
    * ```javascript

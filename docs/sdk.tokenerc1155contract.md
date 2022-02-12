@@ -50,6 +50,6 @@ const contract = sdk.getBundleContract("{{contract_address}}");
 |  --- | --- | --- |
 |  [mint(metadataWithSupply)](./sdk.tokenerc1155contract.mint.md) |  | Mint NFT for the connected wallet |
 |  [mintBatch(metadatas)](./sdk.tokenerc1155contract.mintbatch.md) |  | Mint Many NFTs for the connected wallet |
-|  [mintBatchTo(to, metadataWithSupply)](./sdk.tokenerc1155contract.mintbatchto.md) |  | Mint Many NFTs |
-|  [mintTo(to, metadataWithSupply)](./sdk.tokenerc1155contract.mintto.md) |  | Mint NFT |
+|  [mintBatchTo(to, metadataWithSupply)](./sdk.tokenerc1155contract.mintbatchto.md) |  | Mint Many NFTs with limited supplies |
+|  [mintTo(to, metadataWithSupply)](./sdk.tokenerc1155contract.mintto.md) |  | Mint an NFT with a limited supply |
 

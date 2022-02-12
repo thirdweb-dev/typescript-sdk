@@ -121,9 +121,9 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
   }
 
   /**
-   * Mint NFT
+   * Mint a unique NFT
    *
-   * @remarks Mint an NFT to a specified wallet.
+   * @remarks Mint a unique NFT to a specified wallet.
    *
    * @example
    * ```javascript
@@ -185,9 +185,9 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
   }
 
   /**
-   * Mint Many NFTs
+   * Mint Many unique NFTs
    *
-   * @remarks Mint many NFTs at once to a specified wallet.
+   * @remarks Mint many unique NFTs at once to a specified wallet.
    *
    * @example
    * ```javascript
