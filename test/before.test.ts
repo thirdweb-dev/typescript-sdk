@@ -131,10 +131,9 @@ before(async () => {
 
     await deployedContract.deployed();
 
-    const deployedContractType = await deployedContract.moduleType();
+    const deployedContractType = await deployedContract.contractType();
     console.log(`Deployed contract ${contractType}`);
-    const tx = await thirdwebFactoryDeployer.addModuleImplementation(
-      deployedContractType,
+    const tx = await thirdwebFactoryDeployer.addImplementation(
       deployedContract.address,
     );
     console.log(
