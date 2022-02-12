@@ -16,8 +16,8 @@ buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listingId | BigNumberish |  |
-|  quantityDesired | BigNumberish |  |
+|  listingId | BigNumberish | the listing ID of the listing you want to buy |
+|  quantityDesired | BigNumberish | the quantity that you want to buy (for ERC1155 tokens) |
 
 <b>Returns:</b>
 

@@ -666,19 +666,14 @@ export class MarketplaceContract implements UpdateableNetwork {
 
     return this.makeAuctionListingBid(
       listingId,
-      parseFloat(
-        ethers.utils.formatUnits(
-          listing.buyoutPrice,
-          currencyMetadata.decimals,
-        ),
-      ),
+      ethers.utils.formatUnits(listing.buyoutPrice, currencyMetadata.decimals),
     );
   }
 
   /**
    * Convenience function to buy a Direct or Auction listing.
-   * @param listingId
-   * @param quantityDesired
+   * @param listingId - the listing ID of the listing you want to buy
+   * @param quantityDesired - the quantity that you want to buy (for ERC1155 tokens)
    */
   public async buyoutListing(
     listingId: BigNumberish,

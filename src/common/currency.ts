@@ -12,6 +12,7 @@ import { NATIVE_TOKEN_ADDRESS, NATIVE_TOKENS } from "../constants/currency";
 import { Provider } from "@ethersproject/providers";
 import { formatUnits } from "ethers/lib/utils";
 import { Currency, CurrencyValue, NativeToken, Price } from "../types/currency";
+import { PriceSchema } from "../schema/shared";
 
 export function isNativeToken(tokenAddress: string): boolean {
   return (
@@ -27,7 +28,7 @@ export async function normalizePriceValue(
 ) {
   const metadata = await fetchCurrencyMetadata(provider, currencyAddress);
   return ethers.utils.parseUnits(
-    BigNumber.from(inputPrice).toString(),
+    PriceSchema.parse(inputPrice),
     metadata.decimals,
   );
 }
