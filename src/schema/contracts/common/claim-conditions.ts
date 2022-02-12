@@ -1,5 +1,5 @@
-import { unknown, z } from "zod";
-import { ethers } from "ethers";
+import { z } from "zod";
+import { BigNumber, ethers } from "ethers";
 import {
   BigNumberishSchema,
   BigNumberSchema,
@@ -8,6 +8,7 @@ import {
 } from "../../shared";
 import { hexZeroPad } from "ethers/lib/utils";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
+import { CurrencyValueSchema } from "./currency";
 
 export const ClaimConditionInputSchema = z.object({
   startTime: z
@@ -38,8 +39,10 @@ export const ClaimConditionOutputSchema = ClaimConditionInputSchema.omit({
   snapshot: true,
 }).extend({
   availableSupply: z.string().default(""),
-  // TODO: implement currency type
-  currencyMetadata: z.unknown().default(unknown()),
+  currencyMetadata: CurrencyValueSchema.default({
+    value: BigNumber.from("0"),
+    displayValue: "0",
+  }),
   price: BigNumberSchema,
   maxQuantity: BigNumberSchema,
   quantityLimitPerTransaction: BigNumberSchema,
