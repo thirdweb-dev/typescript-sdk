@@ -27,3 +27,7 @@ Promise&lt;{ payload: SignaturePayload; signature: string; }\[\]&gt;
 
 an array of payloads and signatures
 
+## Remarks
+
+See [TokenErc721Contract.generateSignature()](./sdk.tokenerc721contract.generatesignature.md)
+

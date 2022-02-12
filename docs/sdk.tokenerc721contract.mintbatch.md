@@ -22,3 +22,7 @@ mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMet
 
 Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
 
+## Remarks
+
+See [TokenErc721Contract.mintBatchTo()](./sdk.tokenerc721contract.mintbatchto.md) \`\`\`
+

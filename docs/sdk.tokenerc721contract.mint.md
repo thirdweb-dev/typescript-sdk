@@ -22,3 +22,7 @@ mint(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwn
 
 Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;&gt;
 
+## Remarks
+
+See [TokenErc721Contract.mintTo()](./sdk.tokenerc721contract.mintto.md) \`\`\`
+

@@ -26,3 +26,7 @@ Promise&lt;TransactionResult&gt;
 
 - Receipt for the transaction
 
+## Remarks
+
+See [DropErc1155Contract.claimTo()](./sdk.droperc1155contract.claimto.md)
+

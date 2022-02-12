@@ -2,6 +2,9 @@ import { IThirdwebPrimarySale } from "@3rdweb/contracts";
 import { ContractWrapper } from "./contract-wrapper";
 import { TransactionResult } from "../types";
 
+/**
+ * Handles primary sales recipients for a Contract
+ */
 export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
   private contractWrapper;
 

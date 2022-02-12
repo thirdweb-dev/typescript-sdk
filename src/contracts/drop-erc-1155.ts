@@ -204,7 +204,7 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
   /**
    * Claim a token to the connected wallet
    *
-   * @see claimTo
+   * @remarks See {@link DropErc1155Contract.claimTo}
    *
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim

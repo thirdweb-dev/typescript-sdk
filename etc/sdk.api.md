@@ -53,23 +53,30 @@ import { VoteERC20__factory } from '@3rdweb/contracts';
 import { z } from 'zod';
 import * as zod from 'zod';
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "AdminRoleMissingError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class AdminRoleMissingError extends Error {
     constructor(address?: string, contractAddress?: string, message?: string);
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "AssetNotFoundError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export class AssetNotFoundError extends Error {
-    // @internal
     constructor(message?: string);
 }
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "AuctionAlreadyStartedError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class AuctionAlreadyStartedError extends Error {
     constructor(id?: string);
 }
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "AuctionHasNotEndedError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class AuctionHasNotEndedError extends Error {
     constructor(id?: string, endTime?: BigNumberish);
 }
@@ -441,10 +448,82 @@ export const CommonTrustedForwarderSchema: z.ZodObject<{
     trusted_forwarder?: string | undefined;
 }>;
 
+// @public
+export class ContractEncoder<TContract extends BaseContract> {
+    // Warning: (ae-forgotten-export) The symbol "ContractWrapper" needs to be exported by the entry point index.d.ts
+    constructor(contractWrapper: ContractWrapper<TContract>);
+    decode(fn: keyof TContract["functions"], encodedArgs: string): Result;
+    encode(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): string;
+}
+
 // Warning: (ae-incompatible-release-tags) The symbol "ContractForContractType" is marked as @public, but its signature references "CONTRACTS_MAP" which is marked as @internal
 //
 // @public (undocumented)
 export type ContractForContractType<TContractType extends ContractType> = C.Instance<typeof CONTRACTS_MAP[TContractType]>;
+
+// Warning: (ae-forgotten-export) The symbol "IGenericSchemaType" needs to be exported by the entry point index.d.ts
+//
+// @public
+export class ContractMetadata<TContract extends IThirdwebModule, TSchema extends IGenericSchemaType> {
+    constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema, storage: IStorage);
+    // (undocumented)
+    get(): Promise<z.output<TSchema["output"]>>;
+    // @internal (undocumented)
+    _parseAndUploadMetadata(metadata: z.input<TSchema["input"]>): Promise<string>;
+    // @internal (undocumented)
+    parseInputMetadata(metadata: any): z.input<TSchema["input"]>;
+    // @internal (undocumented)
+    parseOutputMetadata(metadata: any): z.output<TSchema["output"]>;
+    // (undocumented)
+    set(metadata: z.input<TSchema["input"]>): Promise<ts_toolbelt_out_Any_If.If<ts_toolbelt_out_Any_Equals.Equals<never, z.output<TSchema["output"]>>, Omit<{
+        receipt: _ethersproject_abstract_provider.TransactionReceipt;
+        data: () => Promise<unknown>;
+    }, "data">, {
+        receipt: _ethersproject_abstract_provider.TransactionReceipt;
+        data: () => Promise<z.output<TSchema["output"]>>;
+    }>>;
+    // (undocumented)
+    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<ts_toolbelt_out_Any_If.If<ts_toolbelt_out_Any_Equals.Equals<never, z.output<TSchema["output"]>>, Omit<{
+        receipt: _ethersproject_abstract_provider.TransactionReceipt;
+        data: () => Promise<unknown>;
+    }, "data">, {
+        receipt: _ethersproject_abstract_provider.TransactionReceipt;
+        data: () => Promise<z.output<TSchema["output"]>>;
+    }>>;
+}
+
+// @public
+export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
+    constructor(contractWrapper: ContractWrapper<TContract>);
+    getRecipient(): Promise<string>;
+    setRecipient(recipient: string): Promise<TransactionResult>;
+}
+
+// @public
+export class ContractRoles<TContract extends AccessControlEnumerable, TRole extends Role> {
+    constructor(contractWrapper: ContractWrapper<TContract>, roles: readonly TRole[]);
+    getAllMembers(): Promise<Record<TRole, string[]>>;
+    getRoleMembers(role: TRole): Promise<string[]>;
+    grantRole(role: TRole, address: string): Promise<TransactionResult>;
+    // @internal
+    onlyRoles(roles: TRole[], address: string): Promise<void>;
+    revokeRole(role: TRole, address: string): Promise<TransactionResult>;
+    setAllRoleMembers(rolesWithAddresses: {
+        [key in TRole]?: string[];
+    }): Promise<TransactionResult>;
+}
+
+// @public
+export class ContractRoyalty<TContract extends IThirdwebRoyalty, TSchema extends IGenericSchemaType> {
+    constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, TSchema>);
+    // (undocumented)
+    getRoyaltyInfo(): Promise<{
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+    }>;
+    // (undocumented)
+    setRoyaltyInfo(royaltyData: z.input<typeof CommonRoyaltySchema>): Promise<TransactionResult<z.output<typeof CommonRoyaltySchema>>>;
+}
 
 // Warning: (ae-internal-missing-underscore) The name "CONTRACTS_MAP" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -471,16 +550,24 @@ export type ContractType = keyof typeof CONTRACTS_MAP;
 // @public
 export function createSnapshot(leafs: string[], storage: IStorage): Promise<SnapshotInfo>;
 
-// Warning: (ae-forgotten-export) The symbol "Erc1155" needs to be exported by the entry point index.d.ts
-//
+// @public
+export class DropErc1155ClaimConditions {
+    // Warning: (ae-forgotten-export) The symbol "DropErc721ContractSchema" needs to be exported by the entry point index.d.ts
+    constructor(contractWrapper: ContractWrapper<DropERC1155>, metadata: ContractMetadata<DropERC1155, typeof DropErc721ContractSchema>, storage: IStorage);
+    canClaim(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
+    getActive(tokenId: BigNumberish): Promise<ClaimCondition>;
+    getAll(tokenId: BigNumberish): Promise<ClaimCondition[]>;
+    // Warning: (ae-forgotten-export) The symbol "ClaimEligibility" needs to be exported by the entry point index.d.ts
+    getClaimIneligibilityReasons(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    set(tokenId: BigNumberish, claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
+    update(tokenId: BigNumberish, index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
+}
+
 // @public
 export class DropErc1155Contract extends Erc1155<DropERC1155> {
     // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "ContractWrapper" needs to be exported by the entry point index.d.ts
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
     claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "DropErc1155ClaimConditions" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     claimConditions: DropErc1155ClaimConditions;
     claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
@@ -491,24 +578,14 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
     // (undocumented)
     static contractType: "DropERC1155";
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
-    // Warning: (ae-forgotten-export) The symbol "ContractEncoder" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     encoder: ContractEncoder<DropERC1155>;
-    // Warning: (ae-forgotten-export) The symbol "ContractMetadata" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof DropErc1155Contract.schema>;
-    // Warning: (ae-forgotten-export) The symbol "ContractPrimarySale" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     primarySales: ContractPrimarySale<DropERC1155>;
-    // Warning: (ae-forgotten-export) The symbol "ContractRoles" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     roles: ContractRoles<DropERC1155, typeof DropErc1155Contract.contractRoles[number]>;
-    // Warning: (ae-forgotten-export) The symbol "ContractRoyalty" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     royalty: ContractRoyalty<DropERC1155, typeof DropErc1155Contract.schema>;
     // @internal (undocumented)
@@ -628,14 +705,21 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
     };
 }
 
-// Warning: (ae-forgotten-export) The symbol "Erc721" needs to be exported by the entry point index.d.ts
-//
+// @public
+export class DropErc721ClaimConditions {
+    constructor(contractWrapper: ContractWrapper<DropERC721>, metadata: ContractMetadata<DropERC721, typeof DropErc721ContractSchema>, storage: IStorage);
+    canClaim(quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
+    getActive(): Promise<ClaimCondition>;
+    getAll(): Promise<ClaimCondition[]>;
+    getClaimIneligibilityReasons(quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
+    update(index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
+}
+
 // @public
 export class DropErc721Contract extends Erc721<DropERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
     claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    // Warning: (ae-forgotten-export) The symbol "DropErc721ClaimConditions" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     claimConditions: DropErc721ClaimConditions;
     claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
@@ -782,28 +866,125 @@ export class DropErc721Contract extends Erc721<DropERC721> {
     totalUnclaimedSupply(): Promise<BigNumber>;
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "DuplicateFileNameError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export class DuplicateFileNameError extends Error {
-    // @internal
     constructor(fileName: string);
 }
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "DuplicateLeafsError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class DuplicateLeafsError extends Error {
     constructor(message?: string);
 }
 
+// Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class FetchError extends Error {
+export class Erc1155<T extends DropERC1155 | TokenERC1155> implements UpdateableNetwork {
+    constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
+    balance(tokenId: BigNumberish): Promise<BigNumber>;
+    balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
+    burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
+    // (undocumented)
+    protected contractWrapper: ContractWrapper<T>;
+    get(tokenId: BigNumberish): Promise<BundleMetadata>;
+    // (undocumented)
+    getAddress(): string;
+    getAll(): Promise<BundleMetadata[]>;
+    getOwned(_address?: string): Promise<BundleMetadata[]>;
+    protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
+    isApproved(address: string, operator: string): Promise<boolean>;
+    isTransferRestricted(): Promise<boolean>;
+    // @internal (undocumented)
+    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    // (undocumented)
+    protected options: SDKOptions;
     // @internal
+    setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
+    setRestrictedTransfer(restricted?: boolean): Promise<TransactionResult>;
+    // (undocumented)
+    protected storage: IStorage;
+    totalSupply(tokenId: BigNumberish): Promise<BigNumber>;
+    transfer(to: string, tokenId: BigNumberish, amount: BigNumberish, data?: BytesLike): Promise<TransactionResult>;
+}
+
+// @public
+export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
+    constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
+    allowance(spender: string): Promise<BigNumber>;
+    allowanceOf(owner: string, spender: string): Promise<BigNumber>;
+    // Warning: (ae-forgotten-export) The symbol "CurrencyValue" needs to be exported by the entry point index.d.ts
+    balance(): Promise<CurrencyValue>;
+    balanceOf(address: string): Promise<CurrencyValue>;
+    burn(amount: BigNumberish): Promise<TransactionResult>;
+    burnFrom(holder: string, amount: BigNumberish): Promise<TransactionResult>;
+    // (undocumented)
+    protected contractWrapper: ContractWrapper<T>;
+    // Warning: (ae-forgotten-export) The symbol "Currency" needs to be exported by the entry point index.d.ts
+    get(): Promise<Currency>;
+    // (undocumented)
+    getAddress(): string;
+    isTransferRestricted(): Promise<boolean>;
+    // @internal (undocumented)
+    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    // (undocumented)
+    protected options: SDKOptions;
+    setAllowance(spender: string, amount: BigNumber): Promise<TransactionResult>;
+    setRestrictedTransfer(restricted?: boolean): Promise<TransactionResult>;
+    // (undocumented)
+    protected storage: IStorage;
+    totalSupply(): Promise<BigNumber>;
+    transfer(to: string, amount: BigNumberish): Promise<TransactionResult>;
+    transferBatch(args: TokenMintInput[]): Promise<void>;
+    transferFrom(from: string, to: string, amount: BigNumberish): Promise<TransactionResult>;
+}
+
+// @public
+export class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNetwork {
+    constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
+    balance(): Promise<BigNumber>;
+    balanceOf(address: string): Promise<BigNumber>;
+    burn(tokenId: BigNumberish): Promise<TransactionResult>;
+    // (undocumented)
+    protected contractWrapper: ContractWrapper<T>;
+    get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
+    // (undocumented)
+    getAddress(): string;
+    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
+    protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
+    isApproved(address: string, operator: string): Promise<boolean>;
+    isTransferRestricted(): Promise<boolean>;
+    // @internal (undocumented)
+    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    // (undocumented)
+    protected options: SDKOptions;
+    ownerOf(tokenId: BigNumberish): Promise<string>;
+    // @internal
+    setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
+    setRestrictedTransfer(restricted?: boolean): Promise<TransactionResult>;
+    // (undocumented)
+    protected storage: IStorage;
+    totalSupply(): Promise<BigNumber>;
+    transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;
+}
+
+// Warning: (ae-internal-missing-underscore) The name "FetchError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export class FetchError extends Error {
     constructor(message: string, innerError?: Error);
     // (undocumented)
     innerError?: Error;
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "FileNameMissingError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export class FileNameMissingError extends Error {
-    // @internal
     constructor();
 }
 
@@ -825,9 +1006,10 @@ export type ForwardRequestMessage = {
     data: BytesLike;
 };
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "FunctionDeprecatedError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export class FunctionDeprecatedError extends Error {
-    // @internal
     constructor(message: string);
 }
 
@@ -851,9 +1033,10 @@ export interface GaslessTransaction {
     to: string;
 }
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "InvalidAddressError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class InvalidAddressError extends Error {
-    // @internal
     constructor(address?: string);
 }
 
@@ -900,13 +1083,13 @@ export type JsonObject = {
     [key: string]: Json;
 };
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "ListingNotFoundError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class ListingNotFoundError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string);
 }
 
-// Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class MarketplaceContract implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Marketplace>);
@@ -1051,15 +1234,17 @@ export class MarketplaceContract implements UpdateableNetwork {
     updateDirectListing(listing: DirectListing): Promise<TransactionResult>;
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "MissingOwnerRoleError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export class MissingOwnerRoleError extends Error {
-    // @internal
     constructor();
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "MissingRoleError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export class MissingRoleError extends Error {
-    // @internal
     constructor(address: string, role: string);
 }
 
@@ -1082,15 +1267,17 @@ export type NFTMetadataOwner = {
     owner: string;
 };
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "NotEnoughTokensError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export class NotEnoughTokensError extends Error {
-    // @internal
     constructor(contractAddress: string, quantity: number, available: number);
 }
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "NotFoundError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class NotFoundError extends Error {
-    // @internal
     constructor(identifier?: string);
 }
 
@@ -1147,8 +1334,6 @@ export class PacksContract implements UpdateableNetwork {
     // (undocumented)
     getAddress(): string;
     getAll(): Promise<PackMetadata[]>;
-    // Warning: (ae-forgotten-export) The symbol "CurrencyValue" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     getLinkBalance(): Promise<CurrencyValue>;
     // Warning: (ae-forgotten-export) The symbol "PackNFTMetadata" needs to be exported by the entry point index.d.ts
@@ -1322,13 +1507,16 @@ export type PermitRequestMessage = {
     s: string;
 };
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "QuantityAboveLimitError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export class QuantityAboveLimitError extends Error {
-    // @internal
     constructor(quantity: string);
 }
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "RestrictedTransferError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class RestrictedTransferError extends Error {
     constructor(assetAddress?: string);
 }
@@ -1534,7 +1722,7 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
+// @public
 export class ThirdwebSDK extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage?: IStorage);
     deployContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
@@ -1726,8 +1914,6 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
     };
 }
 
-// Warning: (ae-forgotten-export) The symbol "Erc20" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class TokenErc20Contract extends Erc20<TokenERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
@@ -1992,9 +2178,10 @@ export type TransactionResultWithId<T = never> = TransactionResult<T> & {
     id: BigNumber;
 };
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "UploadError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export class UploadError extends Error {
-    // @internal
     constructor(message: string);
 }
 
@@ -2179,7 +2366,9 @@ export class VoteContract implements UpdateableNetwork {
     vote(proposalId: string, voteType: VoteType, reason?: string): Promise<TransactionResult>;
 }
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "WrongListingTypeError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }

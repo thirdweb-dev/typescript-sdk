@@ -22,3 +22,7 @@ mintBatch(metadatas: BundleMetadataInput[]): Promise<TransactionResultWithId<Bun
 
 Promise&lt;TransactionResultWithId&lt;BundleMetadata&gt;\[\]&gt;
 
+## Remarks
+
+See [TokenErc1155Contract.mintBatchTo()](./sdk.tokenerc1155contract.mintbatchto.md)
+

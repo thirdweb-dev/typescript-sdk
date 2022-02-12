@@ -5,6 +5,9 @@ import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { MissingRoleError } from "../../common/error";
 
+/**
+ * Handles Contract roles and permissions
+ */
 export class ContractRoles<
   TContract extends AccessControlEnumerable,
   TRole extends Role,
@@ -27,9 +30,9 @@ export class ContractRoles<
   /**
    * Call this to get get a list of addresses for all supported roles on the contract.
    *
-   * @see {@link ContractWithRoles.getRoleMembers | getRoleMembers} to get a list of addresses that are members of a specific role.
+   * @remarks See {@link ContractRoles.getRoleMembers} to get a list of addresses that are members of a specific role.
    * @returns A record of {@link Role}s to lists of addresses that are members of the given role.
-   * @throws If the contract does not support roles this will throw an {@link InvariantError}.
+   * @throws If the contract does not support roles this will throw an error.
    *
    * @public
    */
@@ -45,12 +48,13 @@ export class ContractRoles<
   /**
    * Call this to get a list of addresses that are members of a specific role.
    *
-   * @param role - The {@link IRoles | role} to to get a memberlist for.
+   * @remarks See {@link ContractRoles.getAllMembers} to get get a list of addresses for all supported roles on the contract.
+   * @param role - The Role to to get a memberlist for.
    * @returns The list of addresses that are members of the specific role.
-   * @throws If you are requestiong a role that does not exist on the contract this will throw an {@link InvariantError}.
-   * @see {@link ContractWithRoles.getAllRoleMembers | getAllRoleMembers} to get get a list of addresses for all supported roles on the contract.
-   * @example Say you want to get the list of addresses that are members of the {@link IRoles.minter | minter} role.
-   * ```typescript
+   * @throws If you are requestiong a role that does not exist on the contract this will throw an error.
+   *
+   * @example Say you want to get the list of addresses that are members of the minter role.
+   * ```javascript
    * const minterAddresses: string[] = await contract.getRoleMemberList("minter");
    * ```
    *
@@ -74,24 +78,23 @@ export class ContractRoles<
   }
 
   /**
-     * Call this to OVERWRITE the list of addresses that are members of specific roles.
-     *
-     * Every role in the list will be overwritten with the new list of addresses provided with them.
-
-    * If you want to add or remove addresses for a single address use {@link ContractWithRoles.grantRole | grantRole} and {@link ContractWithRoles.grantRole | revokeRole} respectively instead.
-     * @param rolesWithAddresses - A record of {@link Role}s to lists of addresses that should be members of the given role.
-     * @throws If you are requestiong a role that does not exist on the contract this will throw an {@link InvariantError}.
-     * @example Say you want to overwrite the list of addresses that are members of the {@link IRoles.minter | minter} role.
-     * ```typescript
-     * const minterAddresses: string[] = await contract.getRoleMemberList("minter");
-     * await contract.setAllRoleMembers({
-     *  minter: []
-     * });
-     * console.log(await contract.getRoleMemberList("minter")); // No matter what members had the role before, the new list will be set to []
-     * ```
-     * @public
-     *
-     * */
+   * Call this to OVERWRITE the list of addresses that are members of specific roles.
+   *
+   * Every role in the list will be overwritten with the new list of addresses provided with them.
+   * If you want to add or remove addresses for a single address use {@link ContractRoles.grantRole} and {@link ContractRoles.revokeRole} respectively instead.
+   * @param rolesWithAddresses - A record of {@link Role}s to lists of addresses that should be members of the given role.
+   * @throws If you are requestiong a role that does not exist on the contract this will throw an error.
+   * @example Say you want to overwrite the list of addresses that are members of the minter role.
+   * ```javascript
+   * const minterAddresses: string[] = await contract.getRoleMemberList("minter");
+   * await contract.setAllRoleMembers({
+   *  minter: []
+   * });
+   * console.log(await contract.getRoleMemberList("minter")); // No matter what members had the role before, the new list will be set to []
+   * ```
+   * @public
+   *
+   * */
   public async setAllRoleMembers(rolesWithAddresses: {
     [key in TRole]?: string[];
   }): Promise<TransactionResult> {
@@ -176,10 +179,10 @@ export class ContractRoles<
    *
    * Make sure you are sure you want to grant the role to the address.
    *
-   * @param role - The {@link IRoles | role} to grant to the address
+   * @param role - The {@link Role} to grant to the address
    * @param address - The address to grant the role to
    * @returns The transaction receipt
-   * @throws If you are trying to grant does not exist on the contract this will throw an {@link InvariantError}.
+   * @throws If you are trying to grant does not exist on the contract this will throw an error.
    *
    * @public
    */
@@ -193,6 +196,41 @@ export class ContractRoles<
     );
     return {
       receipt: await this.contractWrapper.sendTransaction("grantRole", [
+        getRoleHash(role),
+        address,
+      ]),
+    };
+  }
+
+  /**
+   * Call this to revoke a role from a specific address.
+   *
+   * @remarks
+   *
+   * -- Caution --
+   *
+   * This will let you remove yourself from the role, too.
+   * If you remove yourself from the admin role, you will no longer be able to administer the module.
+   * There is no way to recover from this.
+   *
+   * @param role - The {@link Role} to revoke
+   * @param address - The address to revoke the role from
+   * @returns The transaction receipt
+   * @throws If you are trying to revoke does not exist on the module this will throw an error.
+   *
+   * @public
+   */
+  public async revokeRole(
+    role: TRole,
+    address: string,
+  ): Promise<TransactionResult> {
+    invariant(
+      this.roles.includes(role),
+      `this contract does not support the "${role}" role`,
+    );
+    const revokeFunctionName = await this.getRevokeRoleFunctionName(address);
+    return {
+      receipt: await this.contractWrapper.sendTransaction(revokeFunctionName, [
         getRoleHash(role),
         address,
       ]),

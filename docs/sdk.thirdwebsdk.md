@@ -4,6 +4,8 @@
 
 ## ThirdwebSDK class
 
+The main entry point for the thirdweb SDK
+
 <b>Signature:</b>
 
 ```typescript

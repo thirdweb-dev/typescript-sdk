@@ -22,3 +22,7 @@ mint(metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<B
 
 Promise&lt;TransactionResultWithId&lt;BundleMetadata&gt;&gt;
 
+## Remarks
+
+See [TokenErc1155Contract.mintTo()](./sdk.tokenerc1155contract.mintto.md)
+

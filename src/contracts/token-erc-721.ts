@@ -111,7 +111,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
   /**
    * Mint an NFT to the connected wallet
    *
-   * @see mintTo
+   * @remarks See {@link TokenErc721Contract.mintTo}
    * ```
    */
   public async mint(
@@ -172,7 +172,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
   /**
    * Mint Many NFTs to the connected wallet
    *
-   * @see mintBatchTo
+   * @remarks See {@link TokenErc721Contract.mintBatchTo}
    * ```
    */
   public async mintBatch(
@@ -349,7 +349,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
   /**
    * Genrate a batch of signatures that can be used to mint many dynamic NFTs.
    *
-   * @see generateSignature
+   * @remarks See {@link TokenErc721Contract.generateSignature}
    *
    * @param mintRequests
    * @returns an array of payloads and signatures

@@ -22,3 +22,7 @@ mint(amount: BigNumberish): Promise<TransactionResult>;
 
 Promise&lt;TransactionResult&gt;
 
+## Remarks
+
+See [TokenErc20Contract.mintTo()](./sdk.tokenerc20contract.mintto.md)
+

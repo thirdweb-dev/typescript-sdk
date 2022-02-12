@@ -25,3 +25,7 @@ Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
 
 - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
 
+## Remarks
+
+See [DropErc721Contract.claimTo()](./sdk.droperc721contract.claimto.md)
+

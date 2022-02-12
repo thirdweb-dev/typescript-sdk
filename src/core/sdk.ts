@@ -28,6 +28,9 @@ import { getContractAddressByChainId } from "../constants/addresses";
 import { z } from "zod";
 import { IThirdwebModule__factory } from "@3rdweb/contracts";
 
+/**
+ * The main entry point for the thirdweb SDK
+ */
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * @internal

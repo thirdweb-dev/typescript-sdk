@@ -2,6 +2,9 @@ import { ContractWrapper } from "./contract-wrapper";
 import { BaseContract } from "ethers";
 import { Result } from "@ethersproject/abi";
 
+/**
+ * Encodes and decodes Contract functions
+ */
 export class ContractEncoder<TContract extends BaseContract> {
   private contractWrapper;
 
