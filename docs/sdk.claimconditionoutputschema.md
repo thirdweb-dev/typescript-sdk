@@ -17,14 +17,24 @@ ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
 }, {
     availableSupply: z.ZodDefault<z.ZodString>;
-    currencyMetadata: z.ZodDefault<z.ZodObject<{
+    currencyMetadata: z.ZodDefault<z.ZodObject<z.extendShape<{
+        name: z.ZodString;
+        symbol: z.ZodString;
+        decimals: z.ZodNumber;
+    }, {
         value: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
         displayValue: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
+    }>, "strip", z.ZodTypeAny, {
+        symbol: string;
         value: BigNumber;
+        name: string;
+        decimals: number;
         displayValue: string;
     }, {
+        symbol: string;
         value: string | number | bigint | BigNumber;
+        name: string;
+        decimals: number;
         displayValue: string;
     }>>;
     price: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
@@ -41,7 +51,10 @@ ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     merkleRootHash: string | number[];
     availableSupply: string;
     currencyMetadata: {
+        symbol: string;
         value: BigNumber;
+        name: string;
+        decimals: number;
         displayValue: string;
     };
 }, {
@@ -50,7 +63,10 @@ ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     merkleRootHash?: string | number[] | undefined;
     availableSupply?: string | undefined;
     currencyMetadata?: {
+        symbol: string;
         value: string | number | bigint | BigNumber;
+        name: string;
+        decimals: number;
         displayValue: string;
     } | undefined;
     price: string | number | bigint | BigNumber;

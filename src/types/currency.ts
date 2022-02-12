@@ -2,15 +2,14 @@
  * Currency metadata.
  * @public
  */
-import { BigNumber } from "ethers";
 import { z } from "zod";
+import {
+  CurrencySchema,
+  CurrencyValueSchema,
+} from "../schema/contracts/common/currency";
 import { PriceSchema } from "../schema/shared";
 
-export interface Currency {
-  name: string;
-  symbol: string;
-  decimals: number;
-}
+export type Currency = z.infer<typeof CurrencySchema>;
 
 export interface NativeToken extends Currency {
   wrapped: {
@@ -24,12 +23,10 @@ export interface NativeToken extends Currency {
  * Currency metadata & value.
  * @public
  */
-export interface CurrencyValue extends Currency {
-  value: BigNumber;
-  displayValue: string;
-}
+export type CurrencyValue = z.infer<typeof CurrencyValueSchema>;
 
 /**
  * Represents a currency price already formatted. ie. "1" for 1 ether.
+ * @public
  */
 export type Price = z.input<typeof PriceSchema>;

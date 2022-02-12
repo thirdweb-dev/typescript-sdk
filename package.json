@@ -1,6 +1,6 @@
 {
   "name": "@3rdweb/sdk",
-  "version": "2.0.0-25",
+  "version": "2.0.0-26",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -87,9 +87,7 @@
     "@web-std/file": "^3.0.0",
     "deep-equal": "^2.0.5",
     "eventemitter2": "^6.4.5",
-    "events": "^3.3.0",
     "form-data": "^4.0.0",
-    "json2typescript": "^1.5.0-rc.0",
     "keccak256": "^1.0.6",
     "tiny-invariant": "^1.2.0",
     "uuid": "^8.3.2",

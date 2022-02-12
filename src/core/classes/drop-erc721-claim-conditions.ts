@@ -29,7 +29,7 @@ import {
   ClaimConditionInputSchema,
   ClaimConditionOutputSchema,
 } from "../../schema/contracts/common/claim-conditions";
-import { TransactionResult } from "../index";
+import { TransactionResult } from "../types";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 
 /**
@@ -332,8 +332,8 @@ export class DropErc721ClaimConditions {
   /**
    * Update a single claim condition with new data.
    *
-   * @param index the index of the claim condition to update, as given by the index from the result of `getAll()`
-   * @param claimConditionInput the new data to update, previous data will be retained
+   * @param index - the index of the claim condition to update, as given by the index from the result of `getAll()`
+   * @param claimConditionInput - the new data to update, previous data will be retained
    */
   public async update(
     index: number,

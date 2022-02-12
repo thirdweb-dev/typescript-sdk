@@ -42,6 +42,9 @@ export const ClaimConditionOutputSchema = ClaimConditionInputSchema.omit({
   currencyMetadata: CurrencyValueSchema.default({
     value: BigNumber.from("0"),
     displayValue: "0",
+    symbol: "",
+    decimals: 18,
+    name: "",
   }),
   price: BigNumberSchema,
   maxQuantity: BigNumberSchema,
