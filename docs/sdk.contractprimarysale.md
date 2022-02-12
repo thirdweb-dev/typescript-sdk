@@ -4,6 +4,8 @@
 
 ## ContractPrimarySale class
 
+Handles primary sales recipients for a Contract
+
 <b>Signature:</b>
 
 ```typescript

@@ -4,6 +4,8 @@
 
 ## ContractEncoder class
 
+Encodes and decodes Contract functions
+
 <b>Signature:</b>
 
 ```typescript

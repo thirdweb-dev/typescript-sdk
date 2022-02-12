@@ -448,7 +448,7 @@ export const CommonTrustedForwarderSchema: z.ZodObject<{
     trusted_forwarder?: string | undefined;
 }>;
 
-// @public (undocumented)
+// @public
 export class ContractEncoder<TContract extends BaseContract> {
     // Warning: (ae-forgotten-export) The symbol "ContractWrapper" needs to be exported by the entry point index.d.ts
     constructor(contractWrapper: ContractWrapper<TContract>);
@@ -463,7 +463,7 @@ export type ContractForContractType<TContractType extends ContractType> = C.Inst
 
 // Warning: (ae-forgotten-export) The symbol "IGenericSchemaType" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
+// @public
 export class ContractMetadata<TContract extends IThirdwebModule, TSchema extends IGenericSchemaType> {
     constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema, storage: IStorage);
     // (undocumented)
@@ -492,14 +492,14 @@ export class ContractMetadata<TContract extends IThirdwebModule, TSchema extends
     }>>;
 }
 
-// @public (undocumented)
+// @public
 export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     getRecipient(): Promise<string>;
     setRecipient(recipient: string): Promise<TransactionResult>;
 }
 
-// @public (undocumented)
+// @public
 export class ContractRoles<TContract extends AccessControlEnumerable, TRole extends Role> {
     constructor(contractWrapper: ContractWrapper<TContract>, roles: readonly TRole[]);
     getAllMembers(): Promise<Record<TRole, string[]>>;
@@ -513,7 +513,7 @@ export class ContractRoles<TContract extends AccessControlEnumerable, TRole exte
     }): Promise<TransactionResult>;
 }
 
-// @public (undocumented)
+// @public
 export class ContractRoyalty<TContract extends IThirdwebRoyalty, TSchema extends IGenericSchemaType> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, TSchema>);
     // (undocumented)
@@ -1726,7 +1726,7 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
+// @public
 export class ThirdwebSDK extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage?: IStorage);
     deployContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;

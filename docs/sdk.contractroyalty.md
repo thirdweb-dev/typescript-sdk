@@ -4,6 +4,8 @@
 
 ## ContractRoyalty class
 
+Handles Contract royalites
+
 <b>Signature:</b>
 
 ```typescript

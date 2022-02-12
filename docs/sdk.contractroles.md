@@ -4,6 +4,8 @@
 
 ## ContractRoles class
 
+Handles Contract roles and permissions
+
 <b>Signature:</b>
 
 ```typescript

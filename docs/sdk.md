@@ -8,11 +8,11 @@
 
 |  Class | Description |
 |  --- | --- |
-|  [ContractEncoder](./sdk.contractencoder.md) |  |
-|  [ContractMetadata](./sdk.contractmetadata.md) |  |
-|  [ContractPrimarySale](./sdk.contractprimarysale.md) |  |
-|  [ContractRoles](./sdk.contractroles.md) |  |
-|  [ContractRoyalty](./sdk.contractroyalty.md) |  |
+|  [ContractEncoder](./sdk.contractencoder.md) | Encodes and decodes Contract functions |
+|  [ContractMetadata](./sdk.contractmetadata.md) | Handles metadata for a Contract |
+|  [ContractPrimarySale](./sdk.contractprimarysale.md) | Handles primary sales recipients for a Contract |
+|  [ContractRoles](./sdk.contractroles.md) | Handles Contract roles and permissions |
+|  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalites |
 |  [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Manages claim conditions for Bundle Drop contracts |
 |  [DropErc1155Contract](./sdk.droperc1155contract.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [DropErc721ClaimConditions](./sdk.droperc721claimconditions.md) | Manages claim conditions for NFT Drop contracts |
@@ -23,7 +23,7 @@
 |  [MarketplaceContract](./sdk.marketplacecontract.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [PacksContract](./sdk.packscontract.md) | Create lootboxes of NFTs with rarity based open mechanics. |
 |  [SplitsContract](./sdk.splitscontract.md) | Create custom royalty splits to distribute funds. |
-|  [ThirdwebSDK](./sdk.thirdwebsdk.md) |  |
+|  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
 |  [TokenErc1155Contract](./sdk.tokenerc1155contract.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [TokenErc20Contract](./sdk.tokenerc20contract.md) | Create a standard crypto token or crypto currency. |
 |  [TokenErc721Contract](./sdk.tokenerc721contract.md) | Create a collection of one-of-one NFTs. |

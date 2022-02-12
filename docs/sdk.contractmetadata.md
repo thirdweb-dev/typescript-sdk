@@ -4,6 +4,8 @@
 
 ## ContractMetadata class
 
+Handles metadata for a Contract
+
 <b>Signature:</b>
 
 ```typescript
