@@ -29,8 +29,8 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.Goerli]: {
     biconomyForwarder: AddressZero,
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
+    twFactory: "0x2c365584695014dF8Fad620a4E287f34dd40916f",
+    twRegistry: "0xD6E0b7322cA9af9A39C527223f0c01A7bc1055cc",
   },
   [ChainId.Polygon]: {
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
