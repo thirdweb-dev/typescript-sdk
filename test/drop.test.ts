@@ -49,7 +49,7 @@ describe("Drop Contract", async () => {
       {
         startTime: new Date().getTime() / 2000,
         snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
-        price: BigNumber.from(1),
+        price: 1,
       },
       {
         startTime: new Date(),
@@ -397,7 +397,7 @@ describe("Drop Contract", async () => {
       await dropContract.claimConditions.set([
         {
           maxQuantity: 10,
-          price: ethers.utils.parseUnits("1000000000000000"),
+          price: "1000000000000000",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
         },
       ]);
@@ -426,7 +426,7 @@ describe("Drop Contract", async () => {
       await dropContract.claimConditions.set([
         {
           maxQuantity: 10,
-          price: ethers.utils.parseUnits("1000000000000000"),
+          price: "1000000000000000",
           currencyAddress,
         },
       ]);
@@ -447,7 +447,7 @@ describe("Drop Contract", async () => {
       await dropContract.claimConditions.set([
         {
           maxQuantity: 10,
-          price: ethers.utils.parseUnits("100"),
+          price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
           snapshot: [w1.address, w2.address, w3.address],
         },

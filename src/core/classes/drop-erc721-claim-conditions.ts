@@ -275,7 +275,9 @@ export class DropErc721ClaimConditions {
 
     // Convert processed inputs to the format the contract expects, and sort by timestamp
     const sortedConditions: IDropERC721.ClaimConditionStruct[] = (
-      await Promise.all(inputsWithSnapshots.map(this.convertToContractModel))
+      await Promise.all(
+        inputsWithSnapshots.map((c) => this.convertToContractModel(c)),
+      )
     ).sort((a, b) => {
       const left = BigNumber.from(a.startTimestamp);
       const right = BigNumber.from(b.startTimestamp);

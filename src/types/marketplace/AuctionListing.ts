@@ -1,4 +1,4 @@
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { ListingType } from "../../enums/marketplace";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { CurrencyValue } from "../currency";
@@ -52,12 +52,12 @@ export interface AuctionListing {
   /**
    * The reserve price is the minimum price that a bid must be in order to be accepted.
    */
-  reservePrice: BigNumberish;
+  reservePrice: BigNumber;
 
   /**
    * The buyout price of the listing.
    */
-  buyoutPrice: BigNumberish;
+  buyoutPrice: BigNumber;
 
   /**
    * The `CurrencyValue` of the buyout price listing.

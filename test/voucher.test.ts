@@ -41,7 +41,7 @@ describe("Voucher Contract", async () => {
       metadata: {
         name: "OUCH VOUCH",
       },
-      price: ethers.utils.parseUnits("1", 18),
+      price: "1",
       to: samWallet.address,
 
       // Claimable for "24 hours"

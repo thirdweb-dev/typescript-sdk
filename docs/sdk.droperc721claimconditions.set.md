@@ -36,12 +36,12 @@ const claimConditions = [
   {
     startTime: now, // start the presale now
     maxQuantity: 2, // limit how many mints for this presale
-    price: ethers.utils.parseEther("0.01"), // presale price
+    price: 0.01, // presale price
     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
   },
   {
     startTime: now + 60 * 60 * 24, // 24h after presale, start public sale
-    price: ethers.utils.parseEther("0.08"), // public sale price
+    price: 0.08, // public sale price
   }
 ]);
 

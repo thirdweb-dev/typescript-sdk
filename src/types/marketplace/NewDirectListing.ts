@@ -1,4 +1,5 @@
 import { BigNumberish } from "ethers";
+import { Price } from "../currency";
 
 /**
  * Represents a new marketplace direct listing.
@@ -44,5 +45,5 @@ export interface NewDirectListing {
    * So if the `quantity = 10` and the `reserve price = 1`, then the buyout price
    * is 10 coins (of the configured currency).
    */
-  buyoutPricePerToken: BigNumberish;
+  buyoutPricePerToken: Price;
 }

@@ -47,7 +47,7 @@ const auction = {
   // how much people would have to bid to instantly buy the asset
   buyoutPricePerToken: "10",
   // the minimum bid that will be accepted for the token
-  reservePricePerToken: "1",
+  reservePricePerToken: "1.5",
 }
 
 const tx = await contract.createAuctionListing(auction);

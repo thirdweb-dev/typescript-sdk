@@ -1,4 +1,5 @@
 import { BigNumberish } from "ethers";
+import { Price } from "../currency";
 
 /**
  * Represents a new marketplace auction listing.
@@ -45,7 +46,7 @@ export interface NewAuctionListing {
    * So if the `quantity = 10` and the `reserve price = 1`, then the minimum bid
    * is 10 coins (of the configured currency).
    */
-  reservePricePerToken: BigNumberish;
+  reservePricePerToken: Price;
 
   /**
    * The buyout price of the listing.
@@ -53,5 +54,5 @@ export interface NewAuctionListing {
    * So if the `quantity = 10` and the `reserve price = 1`, then the buyout price
    * is 10 coins (of the configured currency).
    */
-  buyoutPricePerToken: BigNumberish;
+  buyoutPricePerToken: Price;
 }

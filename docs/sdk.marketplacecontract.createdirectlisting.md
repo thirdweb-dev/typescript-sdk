@@ -45,7 +45,7 @@ const listing = {
   // address of the currency contract that will be used to pay for the listing
   currencyContractAddress: "0x0000000000000000000000000000000000000000",
   // how much the asset will be sold for
-  buyoutPricePerToken: "1",
+  buyoutPricePerToken: "1.5",
 }
 
 const tx = await contract.createDirectListing(listing);

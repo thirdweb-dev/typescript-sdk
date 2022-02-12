@@ -417,7 +417,7 @@ describe("Bundle Drop Contract", async () => {
       await bdContract.claimConditions.set("0", [
         {
           maxQuantity: 10,
-          price: ethers.utils.parseUnits("1000000000000000"),
+          price: "1000000000000000",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
         },
       ]);
@@ -450,7 +450,7 @@ describe("Bundle Drop Contract", async () => {
       await bdContract.claimConditions.set("0", [
         {
           maxQuantity: 10,
-          price: ethers.utils.parseUnits("1000000000000000"),
+          price: "1000000000000000",
           currencyAddress: currency.getAddress(),
         },
       ]);
@@ -476,7 +476,7 @@ describe("Bundle Drop Contract", async () => {
       await bdContract.claimConditions.set("0", [
         {
           maxQuantity: 10,
-          price: ethers.utils.parseUnits("100"),
+          price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
           snapshot: [w1.address, w2.address, w3.address],
         },

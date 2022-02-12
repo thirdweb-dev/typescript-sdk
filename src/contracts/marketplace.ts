@@ -393,7 +393,7 @@ export class MarketplaceContract implements UpdateableNetwork {
    *   // address of the currency contract that will be used to pay for the listing
    *   currencyContractAddress: "0x0000000000000000000000000000000000000000",
    *   // how much the asset will be sold for
-   *   buyoutPricePerToken: "1",
+   *   buyoutPricePerToken: "1.5",
    * }
    *
    * const tx = await contract.createDirectListing(listing);
@@ -412,13 +412,19 @@ export class MarketplaceContract implements UpdateableNetwork {
       await this.contractWrapper.getSignerAddress(),
     );
 
+    const normalizedPricePerToken = await normalizePriceValue(
+      this.contractWrapper.getProvider(),
+      listing.buyoutPricePerToken,
+      listing.currencyContractAddress,
+    );
+
     const receipt = await this.contractWrapper.sendTransaction(
       "createListing",
       [
         {
           assetContract: listing.assetContractAddress,
           tokenId: listing.tokenId,
-          buyoutPricePerToken: listing.buyoutPricePerToken,
+          buyoutPricePerToken: normalizedPricePerToken,
           currencyToAccept: listing.currencyContractAddress,
           listingType: ListingType.Direct,
           quantityToList: listing.quantity,
@@ -463,7 +469,7 @@ export class MarketplaceContract implements UpdateableNetwork {
    *   // how much people would have to bid to instantly buy the asset
    *   buyoutPricePerToken: "10",
    *   // the minimum bid that will be accepted for the token
-   *   reservePricePerToken: "1",
+   *   reservePricePerToken: "1.5",
    * }
    *
    * const tx = await contract.createAuctionListing(auction);
@@ -482,17 +488,29 @@ export class MarketplaceContract implements UpdateableNetwork {
       await this.contractWrapper.getSignerAddress(),
     );
 
+    const normalizedPricePerToken = await normalizePriceValue(
+      this.contractWrapper.getProvider(),
+      listing.buyoutPricePerToken,
+      listing.currencyContractAddress,
+    );
+
+    const normalizedReservePrice = await normalizePriceValue(
+      this.contractWrapper.getProvider(),
+      listing.reservePricePerToken,
+      listing.currencyContractAddress,
+    );
+
     const receipt = await this.contractWrapper.sendTransaction(
       "createListing",
       [
         {
           assetContract: listing.assetContractAddress,
           tokenId: listing.tokenId,
-          buyoutPricePerToken: listing.buyoutPricePerToken,
+          buyoutPricePerToken: normalizedPricePerToken,
           currencyToAccept: listing.currencyContractAddress,
           listingType: ListingType.Auction,
           quantityToList: listing.quantity,
-          reservePricePerToken: listing.reservePricePerToken,
+          reservePricePerToken: normalizedReservePrice,
           secondsUntilEndTime: listing.listingDurationInSeconds,
           startTime: listing.startTimeInSeconds,
         } as ListingParametersStruct,
@@ -643,12 +661,17 @@ export class MarketplaceContract implements UpdateableNetwork {
 
     const currencyMetadata = await fetchCurrencyMetadata(
       this.contractWrapper.getProvider(),
-      listing.assetContractAddress,
+      listing.currencyContractAddress,
     );
 
     return this.makeAuctionListingBid(
       listingId,
-      ethers.utils.formatUnits(listing.buyoutPrice, currencyMetadata.decimals),
+      parseFloat(
+        ethers.utils.formatUnits(
+          listing.buyoutPrice,
+          currencyMetadata.decimals,
+        ),
+      ),
     );
   }
 
@@ -985,7 +1008,7 @@ export class MarketplaceContract implements UpdateableNetwork {
   ): Promise<DirectListing> {
     return {
       assetContractAddress: listing.assetContract,
-      buyoutPrice: listing.buyoutPricePerToken,
+      buyoutPrice: BigNumber.from(listing.buyoutPricePerToken),
       currencyContractAddress: listing.currency,
       buyoutCurrencyValuePerToken: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
@@ -1020,7 +1043,7 @@ export class MarketplaceContract implements UpdateableNetwork {
   ): Promise<AuctionListing> {
     return {
       assetContractAddress: listing.assetContract,
-      buyoutPrice: listing.buyoutPricePerToken,
+      buyoutPrice: BigNumber.from(listing.buyoutPricePerToken),
       currencyContractAddress: listing.currency,
       buyoutCurrencyValuePerToken: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
@@ -1042,7 +1065,7 @@ export class MarketplaceContract implements UpdateableNetwork {
         listing.currency,
         listing.reservePricePerToken,
       ),
-      reservePrice: listing.reservePricePerToken,
+      reservePrice: BigNumber.from(listing.reservePricePerToken),
       endTimeInEpochSeconds: listing.endTime,
       sellerAddress: listing.tokenOwner,
       type: ListingType.Auction,

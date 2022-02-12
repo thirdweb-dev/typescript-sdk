@@ -1,4 +1,4 @@
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { ListingType } from "../../enums/marketplace";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { CurrencyValue } from "../currency";
@@ -57,7 +57,7 @@ export interface DirectListing {
   /**
    * The buyout price of the listing.
    */
-  buyoutPrice: BigNumberish;
+  buyoutPrice: BigNumber;
 
   /**
    * The address of the seller.
