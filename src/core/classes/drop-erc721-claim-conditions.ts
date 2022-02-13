@@ -141,6 +141,10 @@ export class DropErc721ClaimConditions {
       ]);
     } catch (err: any) {
       if ((err.message as string).includes("no public mint condition.")) {
+        reasons.push(ClaimEligibility.NoClaimConditionSet);
+        return reasons;
+      }
+      if ((err.message as string).includes("no active mint condition.")) {
         reasons.push(ClaimEligibility.NoActiveClaimPhase);
         return reasons;
       }

@@ -336,7 +336,7 @@ describe("Drop Contract", async () => {
           bobWallet.address,
         );
 
-      expect(reasons).to.include(ClaimEligibility.NoActiveClaimPhase);
+      expect(reasons).to.include(ClaimEligibility.NoClaimConditionSet);
       assert.lengthOf(reasons, 1);
       const canClaim = await dropContract.claimConditions.canClaim(w1.address);
       assert.isFalse(canClaim);
@@ -619,6 +619,16 @@ describe("Drop Contract", async () => {
     expect(updatedConditions[1].maxQuantity).to.be.deep.equal(
       BigNumber.from(1),
     );
+  });
+
+  it("set claim condition in the future should not be claimable now", async () => {
+    await dropContract.claimConditions.set([
+      {
+        startTime: Math.floor(new Date().getTime() / 1000) + 60 * 60 * 24,
+      },
+    ]);
+    const canClaim = await dropContract.claimConditions.canClaim(1);
+    expect(canClaim).to.eq(false);
   });
 
   describe("Delay Reveal", () => {
