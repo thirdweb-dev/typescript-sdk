@@ -340,6 +340,16 @@ describe("Bundle Drop Contract", async () => {
       assert.isFalse(canClaim);
     });
 
+    it("set claim condition in the future should not be claimable now", async () => {
+      await bdContract.claimConditions.set(0, [
+        {
+          startTime: Math.floor(new Date().getTime() / 1000) + 60 * 60 * 24,
+        },
+      ]);
+      const canClaim = await bdContract.claimConditions.canClaim(0, 1);
+      expect(canClaim).to.eq(false);
+    });
+
     it("should check for the total supply", async () => {
       await bdContract.claimConditions.set("0", [
         {
