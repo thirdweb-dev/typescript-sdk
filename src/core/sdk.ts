@@ -70,7 +70,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const chainId = (await this.getProvider().getNetwork()).chainId;
     const registryAddress = getContractAddressByChainId(chainId, "twRegistry");
     return (this._registry = Promise.resolve(
-      new ContractRegistry(registryAddress, this.getNetwork(), this.options),
+      new ContractRegistry(registryAddress, this.getProvider(), this.options),
     ));
   }
 
@@ -85,7 +85,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     return (this._factory = Promise.resolve(
       new ContractFactory(
         factoryAddress,
-        this.getNetwork(),
+        this.getSignerOrProvider(),
         this.storage,
         this.options,
       ),
@@ -118,7 +118,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ) {
     const contract = IThirdwebContract__factory.connect(
       contractAddress,
-      this.getProvider(),
+      this.getSignerOrProvider(),
     );
     return (
       ethers.utils
@@ -175,7 +175,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       // we have to do this as here because typescript is not smart enough to figure out
       // that the type is a key of the map (checked by the if statement above)
       contractType as keyof typeof CONTRACTS_MAP
-    ](this.getNetwork(), address, this.storage, this.options);
+    ](this.getSignerOrProvider(), address, this.storage, this.options);
     // if we have a contract type && the contract type is part of the map
 
     this.contractCache.set(address, newContract);
@@ -301,15 +301,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   private updateContractSignerOrProvider() {
     // has to be promises now
     this._factory?.then((factory) => {
-      factory.updateSignerOrProvider(this.getSigner() || this.getProvider());
+      factory.updateSignerOrProvider(this.getSignerOrProvider());
     });
     // has to be promises now
     this._registry?.then((registry) => {
-      registry.updateSignerOrProvider(this.getSigner() || this.getProvider());
+      registry.updateSignerOrProvider(this.getSignerOrProvider());
     });
 
     for (const [, contract] of this.contractCache) {
-      contract.onNetworkUpdated(this.getSigner() || this.getProvider());
+      contract.onNetworkUpdated(this.getSignerOrProvider());
     }
   }
 }

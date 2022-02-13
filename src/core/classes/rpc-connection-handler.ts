@@ -16,14 +16,12 @@ import { NetworkOrSignerOrProvider } from "../types";
  * @internal
  */
 export class RPCConnectionHandler extends EventEmitter2 {
-  private network: NetworkOrSignerOrProvider;
   private provider: Provider;
-  private signer: Signer | undefined = undefined;
+  private signer: Signer | undefined;
   protected readonly options: SDKOptionsOutput;
 
   constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
     super();
-    this.network = network;
     const [signer, provider] = this.getSignerAndProvider(network, options);
     this.signer = signer;
     this.provider = provider;
@@ -48,15 +46,6 @@ export class RPCConnectionHandler extends EventEmitter2 {
     this.signer = signer;
     this.provider = provider;
   }
-
-  /**
-   *
-   * @returns the last updated network
-   */
-  public getNetwork() {
-    return this.network;
-  }
-
   /**
    *
    * @returns whether or not a signer is set, `true` if there is no signer so the class is in "read only" mode
@@ -66,7 +55,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
   }
 
   /**
-   *
+   * Explicitly get the active signer.
    * @returns the active signer, if there is one
    */
   public getSigner(): Signer | undefined {
@@ -74,11 +63,19 @@ export class RPCConnectionHandler extends EventEmitter2 {
   }
 
   /**
-   *
+   * Explicitly get the active signer.
    * @returns the active provider
    */
   public getProvider(): Provider {
     return this.provider;
+  }
+
+  /**
+   *
+   * @returns the current signer if there is one, otherwise the active provider
+   */
+  public getSignerOrProvider(): Signer | Provider {
+    return this.getSigner() || this.getProvider();
   }
 
   /** ********************

@@ -47,7 +47,7 @@ export class ContractWrapper<
     this.writeContract = new Contract(
       contractAddress,
       contractAbi,
-      this.getSigner() || this.getProvider(),
+      this.getSignerOrProvider(),
     ) as TContract;
     // setup the read only contract
     this.readContract = this.writeContract.connect(
@@ -62,7 +62,7 @@ export class ContractWrapper<
     super.updateSignerOrProvider(network);
     // re-connect the contract with the new signer / provider
     this.writeContract = this.writeContract.connect(
-      this.getSigner() || this.getProvider(),
+      this.getSignerOrProvider(),
     ) as TContract;
     // setup the read only contract
     this.readContract = this.writeContract.connect(
