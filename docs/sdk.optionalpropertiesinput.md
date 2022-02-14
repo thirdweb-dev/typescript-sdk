@@ -22,14 +22,14 @@ OptionalPropertiesInput: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.Z
 }[], {
     value?: any;
     key: string;
-}[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, Record<string, any> | {
+}[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
     value?: any;
     key: string;
-}[] | undefined, Record<string, any> | {
+}[] | Record<string, any> | undefined, {
     value?: any;
     key: string;
-}[] | undefined>, Record<string, any> | undefined, Record<string, any> | {
+}[] | Record<string, any> | undefined>, Record<string, any> | undefined, {
     value?: any;
     key: string;
-}[] | undefined>
+}[] | Record<string, any> | undefined>
 ```

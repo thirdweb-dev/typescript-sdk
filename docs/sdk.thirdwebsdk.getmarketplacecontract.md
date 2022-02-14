@@ -9,7 +9,7 @@ Get an instance of a Marketplace contract
 <b>Signature:</b>
 
 ```typescript
-getMarketplaceContract(address: string): MarketplaceContract;
+getMarketplaceContract(address: string): Marketplace;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getMarketplaceContract(address: string): MarketplaceContract;
 
 <b>Returns:</b>
 
-MarketplaceContract
+Marketplace
 
 the contract
 

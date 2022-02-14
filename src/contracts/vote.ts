@@ -38,13 +38,13 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
  * // You can switch out this provider with any wallet or provider setup you like.
  * const provider = ethers.Wallet.createRandom();
  * const sdk = new ThirdwebSDK(provider);
- * const contract = sdk.getVoteContract("{{contract_address}}");
+ * const vote = sdk.getVote("{{contract_address}}");
  * ```
  *
  * @public
  */
-export class VoteContract implements UpdateableNetwork {
-  static contractType = "VoteERC20" as const;
+export class Vote implements UpdateableNetwork {
+  static contractType = "vote" as const;
   static contractFactory = VoteERC20__factory;
   /**
    * @internal
@@ -54,7 +54,7 @@ export class VoteContract implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<VoteERC20>;
   private storage: IStorage;
 
-  public metadata: ContractMetadata<VoteERC20, typeof VoteContract.schema>;
+  public metadata: ContractMetadata<VoteERC20, typeof Vote.schema>;
   public encoder: ContractEncoder<VoteERC20>;
 
   constructor(
@@ -65,7 +65,7 @@ export class VoteContract implements UpdateableNetwork {
     contractWrapper = new ContractWrapper<VoteERC20>(
       network,
       address,
-      VoteContract.contractFactory.abi,
+      Vote.contractFactory.abi,
       options,
     ),
   ) {
@@ -73,7 +73,7 @@ export class VoteContract implements UpdateableNetwork {
     this.storage = storage;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      VoteContract.schema,
+      Vote.schema,
       this.storage,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);

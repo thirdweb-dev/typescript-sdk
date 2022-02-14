@@ -17,19 +17,19 @@ PartialClaimConditionInputSchema: z.ZodObject<{
     merkleRootHash: z.ZodOptional<z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>>;
     snapshot: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString, "many">>>;
 }, "strip", z.ZodTypeAny, {
+    price?: string | undefined;
+    currencyAddress?: string | undefined;
     snapshot?: string[] | undefined;
     startTime?: BigNumber | undefined;
-    currencyAddress?: string | undefined;
-    price?: string | undefined;
     maxQuantity?: string | undefined;
     quantityLimitPerTransaction?: string | undefined;
     waitInSeconds?: string | undefined;
     merkleRootHash?: string | number[] | undefined;
 }, {
+    price?: string | number | undefined;
+    currencyAddress?: string | undefined;
     snapshot?: string[] | undefined;
     startTime?: Date | undefined;
-    currencyAddress?: string | undefined;
-    price?: string | number | undefined;
     maxQuantity?: string | number | bigint | BigNumber | undefined;
     quantityLimitPerTransaction?: string | number | bigint | BigNumber | undefined;
     waitInSeconds?: string | number | bigint | BigNumber | undefined;

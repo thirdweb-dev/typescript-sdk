@@ -9,7 +9,7 @@ Get an instance of a Token contract
 <b>Signature:</b>
 
 ```typescript
-getTokenContract(address: string): TokenErc20Contract;
+getTokenContract(address: string): Token;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getTokenContract(address: string): TokenErc20Contract;
 
 <b>Returns:</b>
 
-TokenErc20Contract
+Token
 
 the contract
 

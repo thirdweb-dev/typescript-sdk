@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { TokenErc1155Contract } from "../src/index";
+import { NFTStackCollection } from "../src/index";
 import { sdk, signers } from "./before.test";
 
 import { assert } from "chai";
@@ -7,7 +7,7 @@ import { assert } from "chai";
 global.fetch = require("node-fetch");
 
 describe("Roles Contract", async () => {
-  let bundleContract: TokenErc1155Contract;
+  let bundleContract: NFTStackCollection;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -21,7 +21,7 @@ describe("Roles Contract", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     bundleContract = sdk.getBundleContract(
-      await sdk.deployContract(TokenErc1155Contract.contractType, {
+      await sdk.deployContract(NFTStackCollection.contractType, {
         name: "NFT Contract",
         primary_sale_recipient: adminWallet.address,
         seller_fee_basis_points: 1000,

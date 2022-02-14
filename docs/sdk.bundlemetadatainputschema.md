@@ -32,16 +32,16 @@ BundleMetadataInputSchema: z.ZodObject<{
         }[], {
             value?: any;
             key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, Record<string, any> | {
+        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
             value?: any;
             key: string;
-        }[] | undefined, Record<string, any> | {
+        }[] | Record<string, any> | undefined, {
             value?: any;
             key: string;
-        }[] | undefined>, Record<string, any> | undefined, Record<string, any> | {
+        }[] | Record<string, any> | undefined>, Record<string, any> | undefined, {
             value?: any;
             key: string;
-        }[] | undefined>;
+        }[] | Record<string, any> | undefined>;
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
@@ -58,10 +58,10 @@ BundleMetadataInputSchema: z.ZodObject<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | {
+        properties?: {
             value?: any;
             key: string;
-        }[] | undefined;
+        }[] | Record<string, any> | undefined;
         name: string;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -84,10 +84,10 @@ BundleMetadataInputSchema: z.ZodObject<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | {
+        properties?: {
             value?: any;
             key: string;
-        }[] | undefined;
+        }[] | Record<string, any> | undefined;
         name: string;
     };
     supply: string | number | bigint | ethers.BigNumber;

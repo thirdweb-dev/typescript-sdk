@@ -1,12 +1,12 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { sdk, signers } from "./before.test";
-import { SplitsContract, TokenErc20Contract } from "../src";
+import { Split, Token } from "../src";
 
 global.fetch = require("node-fetch");
 
 describe("Splits Contract", async () => {
-  let splitsContract: SplitsContract;
+  let splitsContract: Split;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress,
@@ -18,7 +18,7 @@ describe("Splits Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(SplitsContract.contractType, {
+    const address = await sdk.deployContract(Split.contractType, {
       name: "Splits Contract",
       recipientSplits: [
         {
@@ -67,7 +67,7 @@ describe("Splits Contract", async () => {
   });
 
   it("should return all the recipients along with their token balances", async () => {
-    const addr = await sdk.deployContract(TokenErc20Contract.contractType, {
+    const addr = await sdk.deployContract(Token.contractType, {
       name: "Test Token",
       symbol: "TST",
     });

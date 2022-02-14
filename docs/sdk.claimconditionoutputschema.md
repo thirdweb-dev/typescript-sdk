@@ -8,9 +8,9 @@
 
 ```typescript
 ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
-    startTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>;
-    currencyAddress: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
+    currencyAddress: z.ZodDefault<z.ZodString>;
+    startTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>;
     maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
@@ -43,9 +43,9 @@ ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     waitInSeconds: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
     startTime: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, Date, string | number | bigint | BigNumber>;
 }>, "strip", z.ZodTypeAny, {
-    startTime: Date;
-    currencyAddress: string;
     price: BigNumber;
+    currencyAddress: string;
+    startTime: Date;
     maxQuantity: BigNumber;
     quantityLimitPerTransaction: BigNumber;
     waitInSeconds: BigNumber;
@@ -69,8 +69,8 @@ ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         decimals: number;
         displayValue: string;
     } | undefined;
-    startTime: string | number | bigint | BigNumber;
     price: string | number | bigint | BigNumber;
+    startTime: string | number | bigint | BigNumber;
     maxQuantity: string | number | bigint | BigNumber;
     quantityLimitPerTransaction: string | number | bigint | BigNumber;
     waitInSeconds: string | number | bigint | BigNumber;

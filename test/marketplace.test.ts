@@ -9,10 +9,10 @@ import {
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import { ListingType } from "../src/enums/marketplace";
 import {
-  MarketplaceContract,
-  TokenErc1155Contract,
-  TokenErc20Contract,
-  TokenErc721Contract,
+  Marketplace,
+  NFTStackCollection,
+  Token,
+  NFTCollection,
 } from "../src/contracts";
 import { AuctionListing, DirectListing, Offer } from "../src/types/marketplace";
 import { fastForwardTime, jsonProvider, sdk, signers } from "./before.test";
@@ -29,10 +29,10 @@ let startingBalance = BigNumber.from("10000");
  * Bog and Sam and Abby wallets will be used for direct listings and auctions.
  */
 describe("Marketplace Contract", async () => {
-  let marketplaceContract: MarketplaceContract;
-  let dummyNftContract: TokenErc721Contract;
-  let dummyBundleContract: TokenErc1155Contract;
-  let customTokenContract: TokenErc20Contract;
+  let marketplaceContract: Marketplace;
+  let dummyNftContract: NFTCollection;
+  let dummyBundleContract: NFTStackCollection;
+  let customTokenContract: Token;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -50,13 +50,13 @@ describe("Marketplace Contract", async () => {
     await sdk.updateSignerOrProvider(adminWallet);
 
     marketplaceContract = sdk.getMarketplaceContract(
-      await sdk.deployContract(MarketplaceContract.contractType, {
+      await sdk.deployContract(Marketplace.contractType, {
         name: "Test Marketplace",
         seller_fee_basis_points: 0,
       }),
     );
     dummyNftContract = sdk.getNFTContract(
-      await sdk.deployContract(TokenErc721Contract.contractType, {
+      await sdk.deployContract(NFTCollection.contractType, {
         name: "TEST NFT",
         seller_fee_basis_points: 200,
         fee_recipient: adminWallet.address,
@@ -78,7 +78,7 @@ describe("Marketplace Contract", async () => {
       },
     ]);
     dummyBundleContract = sdk.getBundleContract(
-      await sdk.deployContract(TokenErc1155Contract.contractType, {
+      await sdk.deployContract(NFTStackCollection.contractType, {
         name: "TEST BUNDLE",
         seller_fee_basis_points: 100,
         primary_sale_recipient: adminWallet.address,
@@ -100,7 +100,7 @@ describe("Marketplace Contract", async () => {
     ]);
 
     customTokenContract = sdk.getTokenContract(
-      await sdk.deployContract(TokenErc20Contract.contractType, {
+      await sdk.deployContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
       }),

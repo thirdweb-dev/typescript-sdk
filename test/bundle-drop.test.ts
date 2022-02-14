@@ -1,7 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";
 import { BigNumber, ethers } from "ethers";
-import { DropErc1155Contract, TokenErc20Contract } from "../src/index";
+import { NFTStackDrop, Token } from "../src/index";
 import { sdk, signers } from "./before.test";
 import { AddressZero } from "@ethersproject/constants";
 import { ClaimEligibility } from "../src/enums";
@@ -16,7 +16,7 @@ use(deepEqualInAnyOrder);
 
 // TODO: Write some actual pack contract tests
 describe("Bundle Drop Contract", async () => {
-  let bdContract: DropErc1155Contract;
+  let bdContract: NFTStackDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,
@@ -32,7 +32,7 @@ describe("Bundle Drop Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(DropErc1155Contract.contractType, {
+    const address = await sdk.deployContract(NFTStackDrop.contractType, {
       name: `Testing bundle drop from SDK`,
       description: "Test contract from tests",
       image:
@@ -451,7 +451,7 @@ describe("Bundle Drop Contract", async () => {
 
     it("should check if an address has enough erc20 currency", async () => {
       const currency = sdk.getTokenContract(
-        await sdk.deployContract(TokenErc20Contract.contractType, {
+        await sdk.deployContract(Token.contractType, {
           name: "test",
           symbol: "test",
         }),

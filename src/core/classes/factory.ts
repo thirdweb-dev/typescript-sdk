@@ -2,16 +2,16 @@ import { TWFactory, TWFactory__factory } from "@3rdweb/contracts";
 import { BigNumber, ethers } from "ethers";
 import { z } from "zod";
 import {
-  DropErc1155Contract,
-  DropErc721Contract,
-  MarketplaceContract,
+  NFTStackDrop,
+  Marketplace,
   CONTRACTS_MAP,
-  PacksContract,
-  SplitsContract,
-  TokenErc1155Contract,
-  TokenErc20Contract,
-  VoteContract,
-  TokenErc721Contract,
+  Pack,
+  Split,
+  NFTStackCollection,
+  Token,
+  Vote,
+  NFTCollection,
+  NFTDrop,
 } from "../../contracts";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
@@ -76,16 +76,15 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     return events[0].args.proxy;
   }
 
-  // TODO generic function to generate deploy initialize arguments
   private async getDeployArguments<TContract extends ValidContractClass>(
     contractType: TContract["contractType"],
     metadata: z.input<TContract["schema"]["deploy"]>,
     contractURI: string,
   ): Promise<any[]> {
     switch (contractType) {
-      case DropErc721Contract.contractType:
-      case TokenErc721Contract.contractType:
-        const erc721metadata = DropErc721Contract.schema.deploy.parse(metadata);
+      case NFTDrop.contractType:
+      case NFTCollection.contractType:
+        const erc721metadata = NFTDrop.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           erc721metadata.name,
@@ -98,10 +97,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc721metadata.platform_fee_basis_points,
           erc721metadata.platform_fee_recipient,
         ];
-      case DropErc1155Contract.contractType:
-      case TokenErc1155Contract.contractType:
-        const erc1155metadata =
-          DropErc1155Contract.schema.deploy.parse(metadata);
+      case NFTStackDrop.contractType:
+      case NFTStackCollection.contractType:
+        const erc1155metadata = NFTStackDrop.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           erc1155metadata.name,
@@ -114,8 +112,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc1155metadata.platform_fee_basis_points,
           erc1155metadata.platform_fee_recipient,
         ];
-      case TokenErc20Contract.contractType:
-        const erc20metadata = TokenErc20Contract.schema.deploy.parse(metadata);
+      case Token.contractType:
+        const erc20metadata = Token.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           erc20metadata.name,
@@ -123,8 +121,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           contractURI,
           erc20metadata.trusted_forwarder,
         ];
-      case VoteContract.contractType:
-        const voteMetadata = VoteContract.schema.deploy.parse(metadata);
+      case Vote.contractType:
+        const voteMetadata = Vote.schema.deploy.parse(metadata);
         return [
           voteMetadata.name,
           contractURI,
@@ -135,8 +133,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           BigNumber.from(voteMetadata.proposal_token_threshold),
           voteMetadata.voting_quorum_fraction,
         ];
-      case SplitsContract.contractType:
-        const splitsMetadata = SplitsContract.schema.deploy.parse(metadata);
+      case Split.contractType:
+        const splitsMetadata = Split.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           contractURI,
@@ -144,9 +142,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           splitsMetadata.recipientSplits.map((s) => s.address),
           splitsMetadata.recipientSplits.map((s) => s.shares),
         ];
-      case MarketplaceContract.contractType:
-        const marketplaceMetadata =
-          MarketplaceContract.schema.deploy.parse(metadata);
+      case Marketplace.contractType:
+        const marketplaceMetadata = Marketplace.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           contractURI,
@@ -154,8 +151,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           marketplaceMetadata.platform_fee_recipient,
           marketplaceMetadata.platform_fee_basis_points,
         ];
-      case PacksContract.contractType:
-        const packsMetadata = PacksContract.schema.deploy.parse(metadata);
+      case Pack.contractType:
+        const packsMetadata = Pack.schema.deploy.parse(metadata);
         const vrf = ChainlinkVrf[await this.getChainID()];
         return [
           await this.getSignerAddress(),

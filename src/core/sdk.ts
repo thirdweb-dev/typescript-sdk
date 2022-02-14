@@ -1,13 +1,13 @@
 import { ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
-  DropErc1155Contract,
-  DropErc721Contract,
-  MarketplaceContract,
+  NFTStackDrop,
+  Marketplace,
   CONTRACTS_MAP,
-  SplitsContract,
-  TokenErc20Contract,
-  VoteContract,
+  Split,
+  Token,
+  Vote,
+  NFTDrop,
 } from "../contracts";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractFactory } from "./classes/factory";
@@ -20,10 +20,10 @@ import type {
   ValidContractClass,
   ValidContractInstance,
 } from "./types";
-import { TokenErc721Contract } from "../contracts/token-erc-721";
-import { TokenErc1155Contract } from "../contracts/token-erc-1155";
+import { NFTCollection } from "../contracts/nft-collection";
+import { NFTStackCollection } from "../contracts/nft-stack-collection";
 import { ContractRegistry } from "./classes/registry";
-import { PacksContract } from "../contracts/packs";
+import { Pack } from "../contracts/pack";
 import { getContractAddressByChainId } from "../constants/addresses";
 import { z } from "zod";
 import { IThirdwebContract__factory } from "@3rdweb/contracts";
@@ -189,11 +189,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param contractAddress - the address of the deployed contract
    * @returns the contract
    */
-  public getDropContract(contractAddress: string): DropErc721Contract {
-    return this.getContract(
-      contractAddress,
-      DropErc721Contract.contractType,
-    ) as DropErc721Contract;
+  public getDropContract(contractAddress: string): NFTDrop {
+    return this.getContract(contractAddress, NFTDrop.contractType) as NFTDrop;
   }
 
   /**
@@ -201,11 +198,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getNFTContract(address: string): TokenErc721Contract {
+  public getNFTContract(address: string): NFTCollection {
     return this.getContract(
       address,
-      TokenErc721Contract.contractType,
-    ) as TokenErc721Contract;
+      NFTCollection.contractType,
+    ) as NFTCollection;
   }
 
   /**
@@ -213,11 +210,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getBundleDropContract(address: string): DropErc1155Contract {
-    return this.getContract(
-      address,
-      DropErc1155Contract.contractType,
-    ) as DropErc1155Contract;
+  public getBundleDropContract(address: string): NFTStackDrop {
+    return this.getContract(address, NFTStackDrop.contractType) as NFTStackDrop;
   }
 
   /**
@@ -225,11 +219,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getBundleContract(address: string): TokenErc1155Contract {
+  public getBundleContract(address: string): NFTStackCollection {
     return this.getContract(
       address,
-      TokenErc1155Contract.contractType,
-    ) as TokenErc1155Contract;
+      NFTStackCollection.contractType,
+    ) as NFTStackCollection;
   }
 
   /**
@@ -237,11 +231,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getTokenContract(address: string): TokenErc20Contract {
-    return this.getContract(
-      address,
-      TokenErc20Contract.contractType,
-    ) as TokenErc20Contract;
+  public getTokenContract(address: string): Token {
+    return this.getContract(address, Token.contractType) as Token;
   }
 
   /**
@@ -249,8 +240,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getVoteContract(address: string): VoteContract {
-    return this.getContract(address, VoteContract.contractType) as VoteContract;
+  public getVoteContract(address: string): Vote {
+    return this.getContract(address, Vote.contractType) as Vote;
   }
 
   /**
@@ -258,11 +249,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getSplitsContract(address: string): SplitsContract {
-    return this.getContract(
-      address,
-      SplitsContract.contractType,
-    ) as SplitsContract;
+  public getSplitsContract(address: string): Split {
+    return this.getContract(address, Split.contractType) as Split;
   }
 
   /**
@@ -270,11 +258,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getMarketplaceContract(address: string): MarketplaceContract {
-    return this.getContract(
-      address,
-      MarketplaceContract.contractType,
-    ) as MarketplaceContract;
+  public getMarketplaceContract(address: string): Marketplace {
+    return this.getContract(address, Marketplace.contractType) as Marketplace;
   }
 
   /**
@@ -282,11 +267,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getPackContract(address: string): PacksContract {
-    return this.getContract(
-      address,
-      PacksContract.contractType,
-    ) as PacksContract;
+  public getPackContract(address: string): Pack {
+    return this.getContract(address, Pack.contractType) as Pack;
   }
 
   /**
@@ -313,35 +295,3 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     }
   }
 }
-
-// BELOW ARE TYPESCRIPT SANITY CHECKS
-
-// (async () => {
-//   const sdk = new ThirdwebSDK("1");
-
-//   const dropContract = sdk.getDropContract("0x0");
-//   // metadata
-//   const metadata = await dropContract.metadata.get();
-//   const updated = await dropContract.metadata.update({
-//     name: "foo",
-//     seller_fee_basis_points: 1,
-//   });
-//   const transaction = updated.transaction;
-//   const data = await updated.metadata();
-
-//   // roles
-//   const roles = await dropContract.roles.getAllMembers();
-//   const adminAddrs = await dropContract.roles.getRoleMembers("admin");
-
-//   // royalty
-//   const royalty = await dropContract.royalty.getRoyaltyInfo();
-
-//   const updatedRoyalty = await dropContract.royalty.setRoyaltyInfo({
-//     fee_recipient: "0x0",
-//     seller_fee_basis_points: 500,
-//   });
-
-//   const transaction2 = updatedRoyalty.transaction;
-//   // metadata key doesn't really make sense here? hm.
-//   const data2 = await updatedRoyalty.metadata();
-// })();

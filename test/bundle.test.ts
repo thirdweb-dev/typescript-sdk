@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { TokenErc1155Contract } from "../src/index";
+import { NFTStackCollection } from "../src/index";
 import { sdk, signers } from "./before.test";
 
 import { assert, expect } from "chai";
@@ -8,7 +8,7 @@ import { AddressZero } from "@ethersproject/constants";
 global.fetch = require("node-fetch");
 
 describe("Bundle Contract (aka Collection Contract)", async () => {
-  let bundleContract: TokenErc1155Contract;
+  let bundleContract: NFTStackCollection;
   // let nftContract: NFTContract;
   // let currencyContract: CurrencyContract;
 
@@ -22,20 +22,17 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(
-      TokenErc1155Contract.contractType,
-      {
-        name: `Testing bundle from SDK`,
-        description: "Test contract from tests",
-        image:
-          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-        primary_sale_recipient: adminWallet.address,
-        seller_fee_basis_points: 1000,
-        fee_recipient: AddressZero,
-        platform_fee_basis_points: 10,
-        platform_fee_recipient: AddressZero,
-      },
-    );
+    const address = await sdk.deployContract(NFTStackCollection.contractType, {
+      name: `Testing bundle from SDK`,
+      description: "Test contract from tests",
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      primary_sale_recipient: adminWallet.address,
+      seller_fee_basis_points: 1000,
+      fee_recipient: AddressZero,
+      platform_fee_basis_points: 10,
+      platform_fee_recipient: AddressZero,
+    });
     bundleContract = sdk.getBundleContract(address);
   });
 

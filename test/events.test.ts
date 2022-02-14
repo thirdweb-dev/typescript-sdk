@@ -2,17 +2,17 @@ import { ethers, Wallet } from "ethers";
 import { registryAddress, sdk } from "./before.test";
 import { EventType } from "../src/constants/events";
 import { expect } from "chai";
-import { DropErc721Contract, ThirdwebSDK } from "../src";
+import { NFTDrop, ThirdwebSDK } from "../src";
 import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("node-fetch");
 
 describe("Events", async () => {
-  let dropContract: DropErc721Contract;
+  let dropContract: NFTDrop;
 
   beforeEach(async () => {
     dropContract = sdk.getDropContract(
-      await sdk.deployContract(DropErc721Contract.contractType, {
+      await sdk.deployContract(NFTDrop.contractType, {
         name: `Testing drop from SDK`,
         description: "Test contract from tests",
         image:

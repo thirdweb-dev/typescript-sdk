@@ -7,12 +7,13 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 import {
-  MarketplaceContract,
+  Marketplace,
   CONTRACTS_MAP,
-  PacksContract,
+  Pack,
   ThirdwebSDK,
-  TokenErc20Contract,
-  VoteContract,
+  Token,
+  Vote,
+  ContractType,
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
 import { getNativeTokenByChainId } from "../src/common/currency";
@@ -89,13 +90,13 @@ before(async () => {
 
   async function deployContract(
     contractFactory: ethers.ContractFactory,
-    contractType: string,
+    contractType: ContractType,
   ): Promise<ethers.Contract> {
     switch (contractType) {
-      case VoteContract.contractType:
-      case TokenErc20Contract.contractType:
+      case Vote.contractType:
+      case Token.contractType:
         return await contractFactory.deploy();
-      case MarketplaceContract.contractType:
+      case Marketplace.contractType:
         const nativeTokenWrapperAddress = getNativeTokenByChainId(
           ChainId.Hardhat,
         ).wrapped.address;
@@ -103,7 +104,7 @@ before(async () => {
           nativeTokenWrapperAddress,
           thirdwebFeeDeployer.address,
         );
-      case PacksContract.contractType:
+      case Pack.contractType:
         const vrf = ChainlinkVrf[ChainId.Hardhat];
         return await contractFactory.deploy(
           vrf.vrfCoordinator,
@@ -126,12 +127,11 @@ before(async () => {
 
     const deployedContract: ethers.Contract = await deployContract(
       contractFactory,
-      contractType,
+      contractType as ContractType,
     );
 
     await deployedContract.deployed();
 
-    const deployedContractType = await deployedContract.contractType();
     console.log(`Deployed contract ${contractType}`);
     const tx = await thirdwebFactoryDeployer.addImplementation(
       deployedContract.address,

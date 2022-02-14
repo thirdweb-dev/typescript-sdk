@@ -14,20 +14,20 @@
 |  [ContractRoles](./sdk.contractroles.md) | Handles Contract roles and permissions |
 |  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalites |
 |  [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Manages claim conditions for Bundle Drop contracts |
-|  [DropErc1155Contract](./sdk.droperc1155contract.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [DropErc721ClaimConditions](./sdk.droperc721claimconditions.md) | Manages claim conditions for NFT Drop contracts |
-|  [DropErc721Contract](./sdk.droperc721contract.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [Erc1155](./sdk.erc1155.md) | Standard ERC1155 functions |
 |  [Erc20](./sdk.erc20.md) | Standard ERC20 functions |
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 functions |
-|  [MarketplaceContract](./sdk.marketplacecontract.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
-|  [PacksContract](./sdk.packscontract.md) | Create lootboxes of NFTs with rarity based open mechanics. |
-|  [SplitsContract](./sdk.splitscontract.md) | Create custom royalty splits to distribute funds. |
+|  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
+|  [NFTCollection](./sdk.nftcollection.md) | Create a collection of one-of-one NFTs. |
+|  [NFTDrop](./sdk.nftdrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
+|  [NFTStackCollection](./sdk.nftstackcollection.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
+|  [NFTStackDrop](./sdk.nftstackdrop.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
+|  [Pack](./sdk.pack.md) | Create lootboxes of NFTs with rarity based open mechanics. |
+|  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
-|  [TokenErc1155Contract](./sdk.tokenerc1155contract.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
-|  [TokenErc20Contract](./sdk.tokenerc20contract.md) | Create a standard crypto token or crypto currency. |
-|  [TokenErc721Contract](./sdk.tokenerc721contract.md) | Create a collection of one-of-one NFTs. |
-|  [VoteContract](./sdk.votecontract.md) | Create a decentralized organization for token holders to vote on proposals. |
+|  [Token](./sdk.token.md) | Create a standard crypto token or crypto currency. |
+|  [Vote](./sdk.vote.md) | Create a decentralized organization for token holders to vote on proposals. |
 
 ## Enumerations
 

@@ -5,7 +5,7 @@ import {
   IERC721,
   IERC721__factory,
   IMarketplace,
-  Marketplace,
+  Marketplace as MarketplaceContract,
   Marketplace__factory,
 } from "@3rdweb/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
@@ -68,13 +68,13 @@ import { Price } from "../types/currency";
  * // You can switch out this provider with any wallet or provider setup you like.
  * const provider = ethers.Wallet.createRandom();
  * const sdk = new ThirdwebSDK(provider);
- * const contract = sdk.getMarketplaceContract("{{contract_address}}");
+ * const marketplace = sdk.getMarketplace("{{contract_address}}");
  * ```
  *
  * @public
  */
-export class MarketplaceContract implements UpdateableNetwork {
-  static contractType = "Marketplace" as const;
+export class Marketplace implements UpdateableNetwork {
+  static contractType = "marketplace" as const;
   static contractRoles = ["admin", "lister"] as const;
   static contractFactory = Marketplace__factory;
   /**
@@ -82,28 +82,28 @@ export class MarketplaceContract implements UpdateableNetwork {
    */
   static schema = MarketplaceContractSchema;
 
-  private contractWrapper: ContractWrapper<Marketplace>;
+  private contractWrapper: ContractWrapper<MarketplaceContract>;
   private storage: IStorage;
 
   public metadata: ContractMetadata<
-    Marketplace,
-    typeof MarketplaceContract.schema
+    MarketplaceContract,
+    typeof Marketplace.schema
   >;
   public roles: ContractRoles<
-    Marketplace,
-    typeof MarketplaceContract.contractRoles[number]
+    MarketplaceContract,
+    typeof Marketplace.contractRoles[number]
   >;
-  public encoder: ContractEncoder<Marketplace>;
+  public encoder: ContractEncoder<MarketplaceContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
-    contractWrapper = new ContractWrapper<Marketplace>(
+    contractWrapper = new ContractWrapper<MarketplaceContract>(
       network,
       address,
-      MarketplaceContract.contractFactory.abi,
+      Marketplace.contractFactory.abi,
       options,
     ),
   ) {
@@ -111,12 +111,12 @@ export class MarketplaceContract implements UpdateableNetwork {
     this.storage = storage;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      MarketplaceContract.schema,
+      Marketplace.schema,
       this.storage,
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      MarketplaceContract.contractRoles,
+      Marketplace.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
   }

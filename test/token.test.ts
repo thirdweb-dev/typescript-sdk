@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { TokenErc20Contract } from "../src";
+import { Token } from "../src";
 import { sdk, signers } from "./before.test";
 import { BigNumber, ethers } from "ethers";
 import { TokenMintInput } from "../src/schema/tokens/token";
@@ -8,7 +8,7 @@ import { TokenMintInput } from "../src/schema/tokens/token";
 // global.fetch = require("node-fetch");
 
 describe("Token Contract", async () => {
-  let currencyContract: TokenErc20Contract;
+  let currencyContract: Token;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -20,7 +20,7 @@ describe("Token Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(TokenErc20Contract.contractType, {
+    const address = await sdk.deployContract(Token.contractType, {
       name: `Testing token from SDK`,
       symbol: `TEST`,
       description: "Test contract from tests",

@@ -1,4 +1,3 @@
-import { DropErc721Contract } from "../src/contracts/drop-erc-721";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
@@ -7,7 +6,7 @@ import { MerkleTree } from "merkletreejs";
 import { sdk, signers } from "./before.test";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
-import { TokenErc20Contract } from "../src";
+import { NFTDrop, Token } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -16,7 +15,7 @@ const keccak256 = require("keccak256");
 global.fetch = require("node-fetch");
 
 describe("Drop Contract", async () => {
-  let dropContract: DropErc721Contract;
+  let dropContract: NFTDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,
@@ -29,7 +28,7 @@ describe("Drop Contract", async () => {
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(DropErc721Contract.contractType, {
+    const address = await sdk.deployContract(NFTDrop.contractType, {
       name: `Testing drop from SDK`,
       description: "Test contract from tests",
       image:
@@ -415,13 +414,10 @@ describe("Drop Contract", async () => {
     });
 
     it("should check if an address has enough erc20 currency", async () => {
-      const currencyAddress = await sdk.deployContract(
-        TokenErc20Contract.contractType,
-        {
-          name: "test",
-          symbol: "test",
-        },
-      );
+      const currencyAddress = await sdk.deployContract(Token.contractType, {
+        name: "test",
+        symbol: "test",
+      });
 
       await dropContract.claimConditions.set([
         {

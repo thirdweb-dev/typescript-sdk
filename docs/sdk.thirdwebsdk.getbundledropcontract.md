@@ -9,7 +9,7 @@ Get an instance of a Bundle Drop contract
 <b>Signature:</b>
 
 ```typescript
-getBundleDropContract(address: string): DropErc1155Contract;
+getBundleDropContract(address: string): NFTStackDrop;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getBundleDropContract(address: string): DropErc1155Contract;
 
 <b>Returns:</b>
 
-DropErc1155Contract
+NFTStackDrop
 
 the contract
 

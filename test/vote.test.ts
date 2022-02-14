@@ -3,13 +3,13 @@ import { assert } from "chai";
 import { ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 import { sdk, signers } from "./before.test";
-import { TokenErc20Contract, VoteContract } from "../src";
+import { Token, VoteContract } from "../src";
 
 global.fetch = require("node-fetch");
 
 describe("Vote Contract", async () => {
   let voteContract: VoteContract;
-  let currencyContract: TokenErc20Contract;
+  let currencyContract: Token;
 
   const voteStartWaitTimeInSeconds = 0;
   const voteWaitTimeInSeconds = 5;
@@ -25,13 +25,10 @@ describe("Vote Contract", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    const tokenContractAddress = await sdk.deployContract(
-      TokenErc20Contract.contractType,
-      {
-        name: "DAOToken #1",
-        symbol: "DAO1",
-      },
-    );
+    const tokenContractAddress = await sdk.deployContract(Token.contractType, {
+      name: "DAOToken #1",
+      symbol: "DAO1",
+    });
     currencyContract = sdk.getTokenContract(tokenContractAddress);
 
     const voteContractAddress = await sdk.deployContract(

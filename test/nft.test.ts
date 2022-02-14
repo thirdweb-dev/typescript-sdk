@@ -1,13 +1,14 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
+import { NFTCollection } from "../src/contracts";
 import { sdk, signers } from "./before.test";
-import { TokenErc721Contract } from "../src/contracts/token-erc-721";
 
 global.fetch = require("node-fetch");
 
 describe("NFT Contract", async () => {
-  let nftContract: TokenErc721Contract;
+  type NewType = NFTCollection;
+  let nftContract: NewType;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -18,7 +19,7 @@ describe("NFT Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(TokenErc721Contract.contractType, {
+    const address = await sdk.deployContract(NFTCollection.contractType, {
       name: "NFT Contract",
       description: "Test NFT contract from tests",
       image:

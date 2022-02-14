@@ -18,18 +18,18 @@ ClaimConditionInputSchema: z.ZodObject<{
     snapshot: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: string[] | undefined;
-    startTime: BigNumber;
-    currencyAddress: string;
     price: string;
+    currencyAddress: string;
+    startTime: BigNumber;
     maxQuantity: string;
     quantityLimitPerTransaction: string;
     waitInSeconds: string;
     merkleRootHash: string | number[];
 }, {
+    price?: string | number | undefined;
+    currencyAddress?: string | undefined;
     snapshot?: string[] | undefined;
     startTime?: Date | undefined;
-    currencyAddress?: string | undefined;
-    price?: string | number | undefined;
     maxQuantity?: string | number | bigint | BigNumber | undefined;
     quantityLimitPerTransaction?: string | number | bigint | BigNumber | undefined;
     waitInSeconds?: string | number | bigint | BigNumber | undefined;

@@ -3,11 +3,7 @@ import { sdk, signers } from "./before.test";
 
 import { assert } from "chai";
 import { BigNumber } from "ethers";
-import {
-  BundleMetadataInput,
-  PacksContract,
-  TokenErc1155Contract,
-} from "../src";
+import { BundleMetadataInput, PacksContract, NFTStackCollection } from "../src";
 import { PackMetadata } from "../src/types/packs";
 
 global.fetch = require("node-fetch");
@@ -15,7 +11,7 @@ global.fetch = require("node-fetch");
 // TODO: Write some actual pack contract tests
 describe("Pack Contract", async () => {
   let packContract: PacksContract;
-  let bundleContract: TokenErc1155Contract;
+  let bundleContract: NFTStackCollection;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -35,7 +31,7 @@ describe("Pack Contract", async () => {
     );
 
     bundleContract = sdk.getBundleContract(
-      await sdk.deployContract(TokenErc1155Contract.contractType, {
+      await sdk.deployContract(NFTStackCollection.contractType, {
         name: "NFT Contract",
         seller_fee_basis_points: 1000,
         primary_sale_recipient: adminWallet.address,

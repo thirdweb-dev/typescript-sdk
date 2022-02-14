@@ -1,11 +1,10 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
-import { TokenErc721Contract } from "../src";
+import { NFTCollection } from "../src";
 import { sdk, signers } from "./before.test";
 import {
-  NewSignaturePayload,
-  SignaturePayload,
+  PayloadToSign,
   SignedPayload,
 } from "../src/schema/contracts/common/signature";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
@@ -13,13 +12,13 @@ import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 global.fetch = require("node-fetch");
 
 describe("Voucher Contract", async () => {
-  let nftContract: TokenErc721Contract;
+  let nftContract: NFTCollection;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
 
-  let meta: NewSignaturePayload;
+  let meta: PayloadToSign;
 
   before(() => {
     [adminWallet, samWallet, bobWallet] = signers;
@@ -29,7 +28,7 @@ describe("Voucher Contract", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     nftContract = sdk.getNFTContract(
-      await sdk.deployContract(TokenErc721Contract.contractType, {
+      await sdk.deployContract(NFTCollection.contractType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
         primary_sale_recipient: adminWallet.address,
