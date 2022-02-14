@@ -44,7 +44,9 @@ describe("Voucher Contract", async () => {
       },
       price: "1",
       to: samWallet.address,
-      mintEndTimeEpochSeconds: new Date(Date.now() + 60 * 60 * 24 * 1000),
+      mintEndTimeEpochSeconds: new Date(
+        Date.now() + 60 * 60 * 24 * 1000 * 1000,
+      ),
       mintStartTimeEpochSeconds: new Date(),
     };
   });

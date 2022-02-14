@@ -2,7 +2,7 @@ import { DropErc721Contract } from "../src/contracts/drop-erc-721";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import { sdk, signers } from "./before.test";
 import { createSnapshot } from "../src/common";
@@ -624,7 +624,7 @@ describe("Drop Contract", async () => {
   it("set claim condition in the future should not be claimable now", async () => {
     await dropContract.claimConditions.set([
       {
-        startTime: new Date(Date.now() + 60 * 60 * 24),
+        startTime: new Date(Date.now() + 60 * 60 * 24 * 1000),
       },
     ]);
     const canClaim = await dropContract.claimConditions.canClaim(1);
