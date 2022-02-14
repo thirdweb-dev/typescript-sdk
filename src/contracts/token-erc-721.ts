@@ -267,7 +267,6 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    * const mintedId = tx.id; // the id of the NFT minted
    * const mintedNFT = await tx.data(); // (optional) fetch the details of the minted NFT
    * ```
-   *
    * @param signedPayload - the previously generated payload and signature with {@link TokenErc721Contract.generateSignature}
    */
   public async mintWithSignature(

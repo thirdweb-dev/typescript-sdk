@@ -26,22 +26,23 @@ Promise&lt;TransactionResult&gt;
 
 ## Remarks
 
-Sets the public mint conditions that need to be fullfiled by users to claim a particular NFT in this bundle.
+Sets the public mint conditions that need to be fulfilled by users to claim a particular NFT in this bundle.
 
 ## Example
 
 
 ```javascript
-const now = Math.floor(new Date().getTime()) / 1000;
+const presaleStartTime = new Date();
+const publicSaleStartTime = new Date(Date.now() + 24_HOURS);
 const claimConditions = [
   {
-    startTime: now, // start the presale now
+    startTime: presaleStartTime, // start the presale now
     maxQuantity: 2, // limit how many mints for this presale
     price: 0.01, // presale price
     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
   },
   {
-    startTime: now + 60 * 60 * 24, // 24h after presale, start public sale
+    startTime: publicSaleStartTime, // 24h after presale, start public sale
     price: 0.08, // public sale price
   }
 ]);

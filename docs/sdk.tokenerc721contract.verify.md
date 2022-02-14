@@ -7,15 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
+verify(signedPayload: SignedPayload): Promise<boolean>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequest | SignaturePayload |  |
-|  signature | string |  |
+|  signedPayload | SignedPayload |  |
 
 <b>Returns:</b>
 

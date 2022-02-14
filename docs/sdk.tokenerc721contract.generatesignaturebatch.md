@@ -9,21 +9,18 @@ Genrate a batch of signatures that can be used to mint many dynamic NFTs.
 <b>Signature:</b>
 
 ```typescript
-generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
-        payload: SignaturePayload;
-        signature: string;
-    }[]>;
+generateSignatureBatch(mintRequests: PayloadToSign[]): Promise<SignedPayload[]>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequests | NewSignaturePayload\[\] |  |
+|  mintRequests | PayloadToSign\[\] |  |
 
 <b>Returns:</b>
 
-Promise&lt;{ payload: SignaturePayload; signature: string; }\[\]&gt;
+Promise&lt;SignedPayload\[\]&gt;
 
 an array of payloads and signatures
 

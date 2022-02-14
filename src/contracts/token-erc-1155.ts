@@ -16,6 +16,7 @@ import { BundleMetadata, BundleMetadataInput } from "../schema/tokens/bundle";
 import { TokenMintedEvent } from "@3rdweb/contracts/dist/TokenERC721";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { CommonNFTInput } from "../schema/tokens/common";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -143,6 +144,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
     );
     const receipt = await this.contractWrapper.sendTransaction("mintTo", [
       to,
+      ethers.constants.MaxUint256,
       uri,
       metadataWithSupply.supply,
     ]);
@@ -158,6 +160,32 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
       id,
       receipt,
       data: () => this.get(id.toString()),
+    };
+  }
+
+  /**
+   * Increase the supply of an existing NFT
+   *
+   * @param to - the address to mint to
+   * @param tokenId - the token id of the NFT to increase supply of
+   * @param additionalSupply - the additional amount to mint
+   */
+  public async increaseSupply(
+    to: string,
+    tokenId: BigNumberish,
+    additionalSupply: BigNumberish,
+  ): Promise<TransactionResultWithId<BundleMetadata>> {
+    const metadata = await this.getTokenMetadata(tokenId);
+    const receipt = await this.contractWrapper.sendTransaction("mintTo", [
+      to,
+      tokenId,
+      metadata.uri,
+      additionalSupply,
+    ]);
+    return {
+      id: BigNumber.from(tokenId),
+      receipt,
+      data: () => this.get(tokenId),
     };
   }
 
@@ -220,6 +248,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
     const encoded = uris.map((uri, index) =>
       this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [
         to,
+        ethers.constants.MaxUint256,
         uri,
         supplies[index],
       ]),

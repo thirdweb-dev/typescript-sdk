@@ -41,7 +41,7 @@ const contract = sdk.getBundleDropContract("{{contract_address}}");
 |  [contractType](./sdk.droperc1155contract.contracttype.md) | <code>static</code> | "DropERC1155" |  |
 |  [encoder](./sdk.droperc1155contract.encoder.md) |  | ContractEncoder&lt;DropERC1155&gt; |  |
 |  [metadata](./sdk.droperc1155contract.metadata.md) |  | ContractMetadata&lt;DropERC1155, typeof DropErc1155Contract.schema&gt; |  |
-|  [primarySales](./sdk.droperc1155contract.primarysales.md) |  | ContractPrimarySale&lt;DropERC1155&gt; |  |
+|  [primarySale](./sdk.droperc1155contract.primarysale.md) |  | ContractPrimarySale&lt;DropERC1155&gt; |  |
 |  [roles](./sdk.droperc1155contract.roles.md) |  | ContractRoles&lt;DropERC1155, typeof DropErc1155Contract.contractRoles\[number\]&gt; |  |
 |  [royalty](./sdk.droperc1155contract.royalty.md) |  | ContractRoyalty&lt;DropERC1155, typeof DropErc1155Contract.schema&gt; |  |
 

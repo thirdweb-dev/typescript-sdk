@@ -291,7 +291,7 @@ export type ClaimConditionInput = z.input<typeof PartialClaimConditionInputSchem
 
 // @public (undocumented)
 export const ClaimConditionInputSchema: z.ZodObject<{
-    startTime: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>;
+    startTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>;
     currencyAddress: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
@@ -301,7 +301,7 @@ export const ClaimConditionInputSchema: z.ZodObject<{
     snapshot: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: string[] | undefined;
-    startTime: number;
+    startTime: BigNumber;
     currencyAddress: string;
     price: string;
     maxQuantity: string;
@@ -310,7 +310,7 @@ export const ClaimConditionInputSchema: z.ZodObject<{
     merkleRootHash: string | number[];
 }, {
     snapshot?: string[] | undefined;
-    startTime?: number | Date | undefined;
+    startTime?: Date | undefined;
     currencyAddress?: string | undefined;
     price?: string | number | undefined;
     maxQuantity?: string | number | bigint | BigNumber | undefined;
@@ -321,7 +321,7 @@ export const ClaimConditionInputSchema: z.ZodObject<{
 
 // @public (undocumented)
 export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
-    startTime: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>;
+    startTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>;
     currencyAddress: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
@@ -354,8 +354,9 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     maxQuantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
     quantityLimitPerTransaction: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
     waitInSeconds: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    startTime: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, Date, string | number | bigint | BigNumber>;
 }>, "strip", z.ZodTypeAny, {
-    startTime: number;
+    startTime: Date;
     currencyAddress: string;
     price: BigNumber;
     maxQuantity: BigNumber;
@@ -371,7 +372,6 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         displayValue: string;
     };
 }, {
-    startTime?: number | Date | undefined;
     currencyAddress?: string | undefined;
     merkleRootHash?: string | number[] | undefined;
     availableSupply?: string | undefined;
@@ -382,6 +382,7 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         decimals: number;
         displayValue: string;
     } | undefined;
+    startTime: string | number | bigint | BigNumber;
     price: string | number | bigint | BigNumber;
     maxQuantity: string | number | bigint | BigNumber;
     quantityLimitPerTransaction: string | number | bigint | BigNumber;
@@ -614,7 +615,7 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof DropErc1155Contract.schema>;
     // (undocumented)
-    primarySales: ContractPrimarySale<DropERC1155>;
+    primarySale: ContractPrimarySale<DropERC1155>;
     // (undocumented)
     roles: ContractRoles<DropERC1155, typeof DropErc1155Contract.contractRoles[number]>;
     // (undocumented)
@@ -769,7 +770,7 @@ export class DropErc721Contract extends Erc721<DropERC721> {
     // (undocumented)
     metadata: ContractMetadata<DropERC721, typeof DropErc721Contract.schema>;
     // (undocumented)
-    primarySales: ContractPrimarySale<DropERC721>;
+    primarySale: ContractPrimarySale<DropERC721>;
     // Warning: (ae-forgotten-export) The symbol "DelayedReveal" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -1497,7 +1498,7 @@ export class PacksContract implements UpdateableNetwork {
 
 // @public (undocumented)
 export const PartialClaimConditionInputSchema: z.ZodObject<{
-    startTime: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>>;
+    startTime: z.ZodOptional<z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>>;
     currencyAddress: z.ZodOptional<z.ZodDefault<z.ZodString>>;
     price: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>>;
     maxQuantity: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>>;
@@ -1507,7 +1508,7 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
     snapshot: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString, "many">>>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: string[] | undefined;
-    startTime?: number | undefined;
+    startTime?: BigNumber | undefined;
     currencyAddress?: string | undefined;
     price?: string | undefined;
     maxQuantity?: string | undefined;
@@ -1516,7 +1517,7 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
     merkleRootHash?: string | number[] | undefined;
 }, {
     snapshot?: string[] | undefined;
-    startTime?: number | Date | undefined;
+    startTime?: Date | undefined;
     currencyAddress?: string | undefined;
     price?: string | number | undefined;
     maxQuantity?: string | number | bigint | BigNumber | undefined;
@@ -1846,6 +1847,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
     static contractType: "TokenERC1155";
     // (undocumented)
     encoder: ContractEncoder<TokenERC1155>;
+    increaseSupply(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<BundleMetadata>>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC1155, typeof TokenErc1155Contract.schema>;
     mint(metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<BundleMetadata>>;
@@ -1853,7 +1855,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
     mintBatchTo(to: string, metadataWithSupply: BundleMetadataInput[]): Promise<TransactionResultWithId<BundleMetadata>[]>;
     mintTo(to: string, metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<BundleMetadata>>;
     // (undocumented)
-    primarySales: ContractPrimarySale<TokenERC1155>;
+    primarySale: ContractPrimarySale<TokenERC1155>;
     // (undocumented)
     roles: ContractRoles<TokenERC1155, typeof TokenErc1155Contract.contractRoles[number]>;
     // (undocumented)
@@ -2060,23 +2062,17 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
     static contractType: "TokenERC721";
     // (undocumented)
     encoder: ContractEncoder<TokenERC721>;
-    // Warning: (ae-forgotten-export) The symbol "NewSignaturePayload" needs to be exported by the entry point index.d.ts
-    generateSignature(mintRequest: NewSignaturePayload): Promise<{
-        payload: SignaturePayload;
-        signature: string;
-    }>;
-    generateSignatureBatch(mintRequests: NewSignaturePayload[]): Promise<{
-        payload: SignaturePayload;
-        signature: string;
-    }[]>;
+    // Warning: (ae-forgotten-export) The symbol "PayloadToSign" needs to be exported by the entry point index.d.ts
+    generateSignature(mintRequest: PayloadToSign): Promise<SignedPayload>;
+    generateSignatureBatch(mintRequests: PayloadToSign[]): Promise<SignedPayload[]>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof TokenErc721Contract.schema>;
     mint(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintBatchTo(to: string, metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintTo(to: string, metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
-    // Warning: (ae-forgotten-export) The symbol "SignaturePayload" needs to be exported by the entry point index.d.ts
-    mintWithSignature(mintRequest: SignaturePayload, signature: string): Promise<TransactionResultWithId<NFTMetadataOwner>>;
+    // Warning: (ae-forgotten-export) The symbol "SignedPayload" needs to be exported by the entry point index.d.ts
+    mintWithSignature(signedPayload: SignedPayload): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
     // (undocumented)
@@ -2187,7 +2183,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
         }>;
     };
     // (undocumented)
-    verify(mintRequest: SignaturePayload, signature: string): Promise<boolean>;
+    verify(signedPayload: SignedPayload): Promise<boolean>;
 }
 
 // @public (undocumented)

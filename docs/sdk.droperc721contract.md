@@ -41,7 +41,7 @@ const contract = sdk.getDropContract("{{contract_address}}");
 |  [contractType](./sdk.droperc721contract.contracttype.md) | <code>static</code> | "DropERC721" |  |
 |  [encoder](./sdk.droperc721contract.encoder.md) |  | ContractEncoder&lt;DropERC721&gt; |  |
 |  [metadata](./sdk.droperc721contract.metadata.md) |  | ContractMetadata&lt;DropERC721, typeof DropErc721Contract.schema&gt; |  |
-|  [primarySales](./sdk.droperc721contract.primarysales.md) |  | ContractPrimarySale&lt;DropERC721&gt; |  |
+|  [primarySale](./sdk.droperc721contract.primarysale.md) |  | ContractPrimarySale&lt;DropERC721&gt; |  |
 |  [revealer](./sdk.droperc721contract.revealer.md) |  | DelayedReveal&lt;DropERC721&gt; |  |
 |  [roles](./sdk.droperc721contract.roles.md) |  | ContractRoles&lt;DropERC721, typeof DropErc721Contract.contractRoles\[number\]&gt; |  |
 |  [royalty](./sdk.droperc721contract.royalty.md) |  | ContractRoyalty&lt;DropERC721, typeof DropErc721Contract.schema&gt; |  |

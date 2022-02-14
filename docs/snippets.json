@@ -388,7 +388,7 @@
         "examples": {
           "javascript": "const nftMetadata = {\n  name: \"Cool NFT #1\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n};\n\nconst now = Math.floor(Date.now() / 1000);\nconst payload = {\n  metadta: nftMetadata, // The NFT to mint\n  to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)\n  price: 0.5, // the price to pay for minting\n  currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with\n  mintStartTimeEpochSeconds: now, // can mint anytime from now\n  mintEndTimeEpochSeconds: now + 60 * 60 * 24 * 7, // to 24h from now\n};\n\nconst { mintRequest, signature } = contract.generateSignature(payload);\n// now anynone can use these to mint the NFT using `mintWithSignature()`"
         },
-        "signature": "generateSignature(mintRequest: NewSignaturePayload): Promise<{\n        payload: SignaturePayload;\n        signature: string;\n    }>;"
+        "signature": "generateSignature(mintRequest: PayloadToSign): Promise<SignedPayload>;"
       },
       {
         "name": "mintBatchTo",
@@ -415,7 +415,7 @@
         "examples": {
           "javascript": "// see how to craft a payload to sign in the `generateSignature()` documentation\nconst { mintRequest, signature } = contract.generateSignature(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.mintWithSignature(mintRequest, signature);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted\nconst mintedNFT = await tx.data(); // (optional) fetch the details of the minted NFT"
         },
-        "signature": "mintWithSignature(mintRequest: SignaturePayload, signature: string): Promise<TransactionResultWithId<NFTMetadataOwner>>;"
+        "signature": "mintWithSignature(signedPayload: SignedPayload): Promise<TransactionResultWithId<NFTMetadataOwner>>;"
       }
     ],
     "signature": "declare class TokenErc721Contract extends Erc721<TokenERC721> "

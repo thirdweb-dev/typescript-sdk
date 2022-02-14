@@ -40,7 +40,7 @@ const contract = sdk.getBundleContract("{{contract_address}}");
 |  [contractType](./sdk.tokenerc1155contract.contracttype.md) | <code>static</code> | "TokenERC1155" |  |
 |  [encoder](./sdk.tokenerc1155contract.encoder.md) |  | ContractEncoder&lt;TokenERC1155&gt; |  |
 |  [metadata](./sdk.tokenerc1155contract.metadata.md) |  | ContractMetadata&lt;TokenERC1155, typeof TokenErc1155Contract.schema&gt; |  |
-|  [primarySales](./sdk.tokenerc1155contract.primarysales.md) |  | ContractPrimarySale&lt;TokenERC1155&gt; |  |
+|  [primarySale](./sdk.tokenerc1155contract.primarysale.md) |  | ContractPrimarySale&lt;TokenERC1155&gt; |  |
 |  [roles](./sdk.tokenerc1155contract.roles.md) |  | ContractRoles&lt;TokenERC1155, typeof TokenErc1155Contract.contractRoles\[number\]&gt; |  |
 |  [royalty](./sdk.tokenerc1155contract.royalty.md) |  | ContractRoyalty&lt;TokenERC1155, typeof TokenErc1155Contract.schema&gt; |  |
 
@@ -48,6 +48,7 @@ const contract = sdk.getBundleContract("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [increaseSupply(to, tokenId, additionalSupply)](./sdk.tokenerc1155contract.increasesupply.md) |  | Increase the supply of an existing NFT |
 |  [mint(metadataWithSupply)](./sdk.tokenerc1155contract.mint.md) |  | Mint NFT for the connected wallet |
 |  [mintBatch(metadatas)](./sdk.tokenerc1155contract.mintbatch.md) |  | Mint Many NFTs for the connected wallet |
 |  [mintBatchTo(to, metadataWithSupply)](./sdk.tokenerc1155contract.mintbatchto.md) |  | Mint Many NFTs with limited supplies |

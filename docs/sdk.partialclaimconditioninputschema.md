@@ -8,7 +8,7 @@
 
 ```typescript
 PartialClaimConditionInputSchema: z.ZodObject<{
-    startTime: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>>;
+    startTime: z.ZodOptional<z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>>;
     currencyAddress: z.ZodOptional<z.ZodDefault<z.ZodString>>;
     price: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>>;
     maxQuantity: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>>;
@@ -18,7 +18,7 @@ PartialClaimConditionInputSchema: z.ZodObject<{
     snapshot: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString, "many">>>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: string[] | undefined;
-    startTime?: number | undefined;
+    startTime?: BigNumber | undefined;
     currencyAddress?: string | undefined;
     price?: string | undefined;
     maxQuantity?: string | undefined;
@@ -27,7 +27,7 @@ PartialClaimConditionInputSchema: z.ZodObject<{
     merkleRootHash?: string | number[] | undefined;
 }, {
     snapshot?: string[] | undefined;
-    startTime?: number | Date | undefined;
+    startTime?: Date | undefined;
     currencyAddress?: string | undefined;
     price?: string | number | undefined;
     maxQuantity?: string | number | bigint | BigNumber | undefined;

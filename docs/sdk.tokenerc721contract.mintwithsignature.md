@@ -9,15 +9,14 @@ Mint a dynamicly generated NFT
 <b>Signature:</b>
 
 ```typescript
-mintWithSignature(mintRequest: SignaturePayload, signature: string): Promise<TransactionResultWithId<NFTMetadataOwner>>;
+mintWithSignature(signedPayload: SignedPayload): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequest | SignaturePayload | the JSON payload corresponding to the NFT to mint |
-|  signature | string | the generated signature |
+|  signedPayload | SignedPayload | the previously generated payload and signature with [TokenErc721Contract.generateSignature()](./sdk.tokenerc721contract.generatesignature.md) |
 
 <b>Returns:</b>
 

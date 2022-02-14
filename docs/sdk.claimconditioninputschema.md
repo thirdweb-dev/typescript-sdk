@@ -8,7 +8,7 @@
 
 ```typescript
 ClaimConditionInputSchema: z.ZodObject<{
-    startTime: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodDate, z.ZodNumber]>, number, number | Date>>;
+    startTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>;
     currencyAddress: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
@@ -18,7 +18,7 @@ ClaimConditionInputSchema: z.ZodObject<{
     snapshot: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: string[] | undefined;
-    startTime: number;
+    startTime: BigNumber;
     currencyAddress: string;
     price: string;
     maxQuantity: string;
@@ -27,7 +27,7 @@ ClaimConditionInputSchema: z.ZodObject<{
     merkleRootHash: string | number[];
 }, {
     snapshot?: string[] | undefined;
-    startTime?: number | Date | undefined;
+    startTime?: Date | undefined;
     currencyAddress?: string | undefined;
     price?: string | number | undefined;
     maxQuantity?: string | number | bigint | BigNumber | undefined;
