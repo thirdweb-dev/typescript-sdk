@@ -66,7 +66,7 @@ export class DropErc721Contract extends Erc721<DropERC721> {
     typeof DropErc721Contract.contractRoles[number]
   >;
   public royalty: ContractRoyalty<DropERC721, typeof DropErc721Contract.schema>;
-  public primarySales: ContractPrimarySale<DropERC721>;
+  public primarySale: ContractPrimarySale<DropERC721>;
   public claimConditions: DropErc721ClaimConditions;
   public encoder: ContractEncoder<DropERC721>;
   public revealer: DelayedReveal<DropERC721>;
@@ -94,7 +94,7 @@ export class DropErc721Contract extends Erc721<DropERC721> {
       DropErc721Contract.contractRoles,
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.primarySales = new ContractPrimarySale(this.contractWrapper);
+    this.primarySale = new ContractPrimarySale(this.contractWrapper);
     this.claimConditions = new DropErc721ClaimConditions(
       this.contractWrapper,
       this.metadata,

@@ -61,7 +61,7 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
     DropERC1155,
     typeof DropErc1155Contract.schema
   >;
-  public primarySales: ContractPrimarySale<DropERC1155>;
+  public primarySale: ContractPrimarySale<DropERC1155>;
   public claimConditions: DropErc1155ClaimConditions;
   public encoder: ContractEncoder<DropERC1155>;
 
@@ -88,7 +88,7 @@ export class DropErc1155Contract extends Erc1155<DropERC1155> {
       DropErc1155Contract.contractRoles,
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.primarySales = new ContractPrimarySale(this.contractWrapper);
+    this.primarySale = new ContractPrimarySale(this.contractWrapper);
     this.claimConditions = new DropErc1155ClaimConditions(
       this.contractWrapper,
       this.metadata,

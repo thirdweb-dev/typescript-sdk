@@ -20,9 +20,17 @@ export const SignaturePayloadOutput = SignaturePayloadInput.extend({
   mintEndTimeEpochSeconds: BigNumberSchema,
 });
 
-export type NewSignaturePayload = z.input<typeof SignaturePayloadInput>;
+/**
+ * @internal
+ */
 export type FilledSignaturePayload = z.output<typeof SignaturePayloadInput>;
-export type SignaturePayload = z.output<typeof SignaturePayloadOutput>;
+/**
+ * @internal
+ */
+export type PayloadWithUri = z.output<typeof SignaturePayloadOutput>;
+
+export type PayloadToSign = z.input<typeof SignaturePayloadInput>;
+export type SignedPayload = { payload: PayloadWithUri; signature: string };
 
 export const MintRequest = [
   { name: "to", type: "address" },

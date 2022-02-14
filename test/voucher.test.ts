@@ -6,6 +6,7 @@ import { sdk, signers } from "./before.test";
 import {
   NewSignaturePayload,
   SignaturePayload,
+  SignedPayload,
 } from "../src/schema/contracts/common/signature";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
@@ -49,29 +50,24 @@ describe("Voucher Contract", async () => {
   });
 
   describe("Generating Signatures", () => {
-    let voucher: SignaturePayload;
-    let signature: string, badSignature: string;
+    // let voucher: SignaturePayload;
+    // let signature: string, badSignature: string;
+    let goodPayload: SignedPayload;
+    let badPayload: SignedPayload;
 
     beforeEach(async () => {
-      const { payload: v, signature: s } = await nftContract.generateSignature(
-        meta,
-      );
-      const { signature: bS } = await nftContract.generateSignature({
-        ...meta,
-        price: 0,
-      });
-      voucher = v;
-      signature = s;
-      badSignature = bS;
+      goodPayload = await nftContract.generateSignature(meta);
+      badPayload = await nftContract.generateSignature(meta);
+      badPayload.payload.price = BigNumber.from(0);
     });
 
     it("should generate a valid signature", async () => {
-      const valid = await nftContract.verify(voucher, signature);
+      const valid = await nftContract.verify(goodPayload);
       assert.isTrue(valid, "This voucher should be valid");
     });
 
     it("should reject invalid signatures", async () => {
-      const invalid = await nftContract.verify(voucher, badSignature);
+      const invalid = await nftContract.verify(badPayload);
       assert.isFalse(
         invalid,
         "This voucher should be invalid because the signature is invalid",
@@ -79,8 +75,8 @@ describe("Voucher Contract", async () => {
     });
 
     it("should reject invalid vouchers", async () => {
-      voucher.price = BigNumber.from(0);
-      const invalidModified = await nftContract.verify(voucher, signature);
+      goodPayload.payload.price = BigNumber.from(0);
+      const invalidModified = await nftContract.verify(goodPayload);
       assert.isFalse(
         invalidModified,
         "This voucher should be invalid because the price was changed",
@@ -111,7 +107,7 @@ describe("Voucher Contract", async () => {
       const batch = await nftContract.generateSignatureBatch(input);
 
       for (const [i, v] of batch.entries()) {
-        const tx = await nftContract.mintWithSignature(v.payload, v.signature);
+        const tx = await nftContract.mintWithSignature(v);
         const mintedId = (await tx.data()).metadata.id;
         const nft = await nftContract.get(mintedId);
         assert.equal(input[i].metadata.name, nft.metadata.name);
@@ -120,8 +116,7 @@ describe("Voucher Contract", async () => {
   });
 
   describe("Claiming", async () => {
-    let v1: { payload: SignaturePayload; signature: string },
-      v2: { payload: SignaturePayload; signature: string };
+    let v1: SignedPayload, v2: SignedPayload;
 
     beforeEach(async () => {
       v1 = await nftContract.generateSignature(meta);
@@ -130,18 +125,18 @@ describe("Voucher Contract", async () => {
 
     it("should allow a valid voucher to mint", async () => {
       await sdk.updateSignerOrProvider(samWallet);
-      const tx = await nftContract.mintWithSignature(v1.payload, v1.signature);
+      const tx = await nftContract.mintWithSignature(v1);
       const newId = (await tx.data()).metadata.id;
       assert.equal(newId.toString(), "0");
 
       await sdk.updateSignerOrProvider(samWallet);
-      const tx2 = await nftContract.mintWithSignature(v2.payload, v2.signature);
+      const tx2 = await nftContract.mintWithSignature(v2);
       const newId2 = (await tx2.data()).metadata.id;
       assert.equal(newId2.toString(), "1");
     });
 
     it("should mint the right metadata", async () => {
-      const tx = await nftContract.mintWithSignature(v1.payload, v1.signature);
+      const tx = await nftContract.mintWithSignature(v1);
       const id = (await tx.data()).metadata.id;
       const nft = await nftContract.get(id);
       assert.equal(nft.metadata.name, meta.metadata.name);

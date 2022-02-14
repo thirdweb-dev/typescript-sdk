@@ -54,7 +54,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
     TokenERC1155,
     typeof TokenErc1155Contract.schema
   >;
-  public primarySales: ContractPrimarySale<TokenERC1155>;
+  public primarySale: ContractPrimarySale<TokenERC1155>;
   public encoder: ContractEncoder<TokenERC1155>;
 
   constructor(
@@ -80,7 +80,7 @@ export class TokenErc1155Contract extends Erc1155<TokenERC1155> {
       TokenErc1155Contract.contractRoles,
     );
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.primarySales = new ContractPrimarySale(this.contractWrapper);
+    this.primarySale = new ContractPrimarySale(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
   }
 
