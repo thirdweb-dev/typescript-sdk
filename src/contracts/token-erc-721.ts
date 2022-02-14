@@ -1,8 +1,10 @@
 import { BigNumber } from "ethers";
 import {
+  FilledSignaturePayload,
   MintRequest,
   NewSignaturePayload,
   SignaturePayload,
+  SignaturePayloadInput,
   SignaturePayloadOutput,
 } from "../schema/contracts/common/signature";
 import {
@@ -272,7 +274,10 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
     mintRequest: SignaturePayload,
     signature: string,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    const message = { ...this.mapPayload(mintRequest), uri: mintRequest.uri };
+    const message = {
+      ...this.mapPayloadToContractStruct(mintRequest),
+      uri: mintRequest.uri,
+    };
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
@@ -304,7 +309,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
     mintRequest: SignaturePayload,
     signature: string,
   ): Promise<boolean> {
-    const message = this.mapPayload(mintRequest);
+    const message = this.mapPayloadToContractStruct(mintRequest);
     const v = await this.contractWrapper.readContract.verify(
       { ...message, uri: mintRequest.uri },
       signature,
@@ -338,7 +343,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    * const { mintRequest, signature } = contract.generateSignature(payload);
    * // now anynone can use these to mint the NFT using `mintWithSignature()`
    * ```
-   * @param mintRequest the payload to sign
+   * @param mintRequest - the payload to sign
    * @returns the signed payload and the corresponding signature
    */
   public async generateSignature(
@@ -358,13 +363,13 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
   public async generateSignatureBatch(
     mintRequests: NewSignaturePayload[],
   ): Promise<{ payload: SignaturePayload; signature: string }[]> {
-    const resolveId = (mintRequest: NewSignaturePayload): string => {
-      if (mintRequest.id === undefined) {
+    const resolveId = (mintRequest: FilledSignaturePayload): string => {
+      if (mintRequest.uid === undefined) {
         const buffer = Buffer.alloc(16);
         uuidv4({}, buffer);
         return hexlify(toUtf8Bytes(buffer.toString("hex")));
       } else {
-        return hexlify(mintRequest.id as string);
+        return hexlify(mintRequest.uid as string);
       }
     };
 
@@ -373,23 +378,28 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
       await this.contractWrapper.getSignerAddress(),
     );
 
+    const parsedRequests: FilledSignaturePayload[] = mintRequests.map((m) =>
+      SignaturePayloadInput.parse(m),
+    );
+
     const { metadataUris: uris } = await this.storage.uploadMetadataBatch(
-      mintRequests.map((r) => r.metadata),
+      parsedRequests.map((r) => r.metadata),
     );
 
     const chainId = await this.contractWrapper.getChainID();
     const signer = this.contractWrapper.getSigner() as Signer;
 
     return await Promise.all(
-      mintRequests.map(async (m, i) => {
-        const id = resolveId(m);
+      parsedRequests.map(async (m, i) => {
+        const uid = resolveId(m);
         const uri = uris[i];
+        const finalPayload = SignaturePayloadOutput.parse({
+          ...m,
+          uid,
+          uri,
+        });
         return {
-          payload: SignaturePayloadOutput.parse({
-            ...m,
-            id,
-            uri,
-          }),
+          payload: finalPayload,
           signature: (
             await this.contractWrapper.signTypedData(
               signer,
@@ -401,9 +411,9 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
               },
               { MintRequest },
               {
+                ...this.mapPayloadToContractStruct(finalPayload),
                 uri,
-                ...(this.mapPayload(m) as any),
-                uid: id,
+                uid,
               },
             )
           ).toString(),
@@ -424,8 +434,8 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
    * @param mintRequest - The payload to map.
    * @returns - The mapped payload.
    */
-  private mapPayload(
-    mintRequest: SignaturePayload | NewSignaturePayload,
+  private mapPayloadToContractStruct(
+    mintRequest: SignaturePayload,
   ): ITokenERC721.MintRequestStructOutput {
     return {
       to: mintRequest.to,
@@ -433,7 +443,7 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
       currency: mintRequest.currencyAddress,
       validityEndTimestamp: mintRequest.mintEndTimeEpochSeconds,
       validityStartTimestamp: mintRequest.mintStartTimeEpochSeconds,
-      uid: mintRequest.id,
+      uid: mintRequest.uid,
     } as ITokenERC721.MintRequestStructOutput;
   }
 }

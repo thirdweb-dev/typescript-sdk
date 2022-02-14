@@ -74,3 +74,10 @@ export const PriceSchema = z
     z.number().min(0, "Price cannot be negative"),
   ])
   .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
+
+export const DateSchema = z
+  .date()
+  .default(new Date())
+  .transform((i) => {
+    return BigNumber.from(Math.floor(i.getTime() / 1000));
+  });

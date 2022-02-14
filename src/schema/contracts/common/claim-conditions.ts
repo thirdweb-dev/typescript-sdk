@@ -4,6 +4,7 @@ import {
   BigNumberishSchema,
   BigNumberSchema,
   BytesLikeSchema,
+  DateSchema,
   PriceSchema,
 } from "../../shared";
 import { hexZeroPad } from "ethers/lib/utils";
@@ -11,12 +12,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import { CurrencyValueSchema } from "./currency";
 
 export const ClaimConditionInputSchema = z.object({
-  startTime: z
-    .date()
-    .default(new Date())
-    .transform((i) => {
-      return BigNumber.from(Math.floor(i.getTime() / 1000));
-    }),
+  startTime: DateSchema,
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   price: PriceSchema.default(0),
   maxQuantity: BigNumberishSchema.default(ethers.constants.MaxUint256),

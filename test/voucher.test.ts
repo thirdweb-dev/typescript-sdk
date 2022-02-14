@@ -43,14 +43,8 @@ describe("Voucher Contract", async () => {
       },
       price: "1",
       to: samWallet.address,
-
-      // Claimable for "24 hours"
-      // Math.floor(Date.now() / 1000) + 60 * 60 * 24,
-      mintEndTimeEpochSeconds: ethers.BigNumber.from(
-        "0xffffffffffffffffffffffffffffffff",
-      ),
-      // Math.floor(Date.now() / 1000),
-      mintStartTimeEpochSeconds: 0,
+      mintEndTimeEpochSeconds: new Date(Date.now() + 60 * 60 * 24 * 1000),
+      mintStartTimeEpochSeconds: new Date(),
     };
   });
 
