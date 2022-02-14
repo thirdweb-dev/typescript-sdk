@@ -1,31 +1,38 @@
 # thirdweb-sdk
 
-### Docs
+### Installation
 
-https://docs.thirdweb.com
-
-### Api Reference
-
-https://nftlabs.github.io/nftlabs-sdk-ts/sdk.html
-
-### Testing
-
-Tests require a hardhat node to be running. One can be started by running `npx hardhat node` in a hardhat project. A hardhat project can be initialized using `npx hardhat init -y`. 
-
-#### Running all tests
+Install the latest version of the SDK with `npm` or `yarn`:
 
 ```bash
-$ yarn run test:all
+npm install @3rdweb/sdk@nightly
 ```
 
-#### Running a specific test file
+### Quick start
 
-```bash
-$ yarn run test test/pack.test.ts
+1. Deploy & customize your contracts on [your dashboard](https://thidweb.com)
+2. Interact with your contracts from your own code using the thirdwebSDK
+
+```javascript
+import { ThirdwebSDK } from "@3rdweb/sdk";
+
+// instantiate the SDK with a read only RPC url or a Signer to perform transactions
+const sdk = new ThirdwebSDK("your_rpc_url_or_signer");
+// access your deployed contracts
+const nftDrop = sdk.getDropContract("0x...");
+const marketplace = sdk.getMarketplaceContract("0x...");
+// Read from your contract
+const listings = await marketplace.getAllListings();
+// Perform transactions (requires a signer)
+await marketplace.buyoutDirectListing(listingId, quantityDesired);
 ```
 
-#### Running a matching set of tests
+### Api Reference & code examples
 
-```bash
-$ yarn run test test/pack.test.ts --grep "should allow you to buy a pack"
-```
+- [Step by step guides and recipes](https://portal.thirdweb.com)
+- [Api Reference and code examples](https://nftlabs.github.io/nftlabs-sdk-ts/sdk.html)
+
+### Get in touch
+
+- [Discord](https://discord.gg/thirdweb)
+- [Twitter](https://twitter.com/thirdweb_/)
