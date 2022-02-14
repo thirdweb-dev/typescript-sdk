@@ -12,15 +12,11 @@ import { CurrencyValueSchema } from "./currency";
 
 export const ClaimConditionInputSchema = z.object({
   startTime: z
-    .union([z.date(), z.number()])
+    .date()
+    .default(new Date())
     .transform((i) => {
-      if (typeof i === "number") {
-        return Math.floor(i);
-      } else {
-        return Math.floor(i.getTime() / 1000);
-      }
-    })
-    .default(Math.floor(Date.now() / 1000)),
+      return BigNumber.from(Math.floor(i.getTime() / 1000));
+    }),
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   price: PriceSchema.default(0),
   maxQuantity: BigNumberishSchema.default(ethers.constants.MaxUint256),
@@ -50,4 +46,5 @@ export const ClaimConditionOutputSchema = ClaimConditionInputSchema.omit({
   maxQuantity: BigNumberSchema,
   quantityLimitPerTransaction: BigNumberSchema,
   waitInSeconds: BigNumberSchema,
+  startTime: BigNumberSchema.transform((n) => new Date(n.toNumber() * 1000)),
 });

@@ -31,6 +31,7 @@ import {
 } from "../../schema/contracts/common/claim-conditions";
 import { TransactionResult } from "../index";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
+import { updateExsitingClaimConditions } from "../../common/claim-conditions";
 
 /**
  * Manages claim conditions for Bundle Drop contracts
@@ -361,28 +362,12 @@ export class DropErc1155ClaimConditions {
     claimConditionInput: ClaimConditionInput,
   ): Promise<TransactionResult> {
     const existingConditions = await this.getAll(tokenId);
-    if (index >= existingConditions.length) {
-      throw Error(
-        `Index out of bounds - got index: ${index} with ${existingConditions.length} conditions`,
-      );
-    }
-    const mergedCondition = ClaimConditionOutputSchema.parse({
-      ...existingConditions[index],
-      ...claimConditionInput,
-    });
-
-    const newConditions: ClaimConditionInput[] = existingConditions.map(
-      (existing) => ({
-        ...existing,
-        price: existing.price.toString(),
-      }),
+    const newConditionInputs = updateExsitingClaimConditions(
+      index,
+      claimConditionInput,
+      existingConditions,
     );
-
-    newConditions[index] = {
-      ...mergedCondition,
-      price: mergedCondition.price.toString(),
-    };
-    return await this.set(tokenId, newConditions);
+    return await this.set(tokenId, newConditionInputs);
   }
 
   /** ***************************************
@@ -398,7 +383,7 @@ export class DropErc1155ClaimConditions {
       pm.pricePerToken,
     );
     return ClaimConditionOutputSchema.parse({
-      startTime: new Date(BigNumber.from(pm.startTimestamp).toNumber() * 1000),
+      startTime: pm.startTimestamp,
       maxQuantity: pm.maxClaimableSupply.toString(),
       currentMintSupply: pm.supplyClaimed.toString(),
       availableSupply: BigNumber.from(pm.maxClaimableSupply)

@@ -47,7 +47,7 @@ describe("Drop Contract", async () => {
     console.log("Setting claim condition");
     await dropContract.claimConditions.set([
       {
-        startTime: new Date().getTime() / 2000,
+        startTime: new Date(Date.now() / 2),
         snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
         price: 1,
       },
@@ -83,7 +83,7 @@ describe("Drop Contract", async () => {
         snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
       },
       {
-        startTime: new Date().getTime() / 1000 + 1000,
+        startTime: new Date(Date.now() + 60 * 60 * 1000),
         snapshot: [bobWallet.address],
       },
     ]);
@@ -557,8 +557,8 @@ describe("Drop Contract", async () => {
 
   it("set claim condition and reset claim condition", async () => {
     await dropContract.claimConditions.set([
-      { startTime: new Date().getTime() / 2000 },
-      { startTime: new Date().getTime() },
+      { startTime: new Date(Date.now() / 2) },
+      { startTime: new Date() },
     ]);
     expect((await dropContract.claimConditions.getAll()).length).to.be.equal(2);
 
@@ -568,8 +568,8 @@ describe("Drop Contract", async () => {
 
   it("set claim condition and update claim condition", async () => {
     await dropContract.claimConditions.set([
-      { startTime: new Date().getTime() / 2000, maxQuantity: 1 },
-      { startTime: new Date().getTime(), waitInSeconds: 60 },
+      { startTime: new Date(Date.now() / 2), maxQuantity: 1 },
+      { startTime: new Date(), waitInSeconds: 60 },
     ]);
     expect((await dropContract.claimConditions.getAll()).length).to.be.equal(2);
 
@@ -603,13 +603,13 @@ describe("Drop Contract", async () => {
 
   it("set claim condition and update claim condition with diff timestamps should reorder", async () => {
     await dropContract.claimConditions.set([
-      { startTime: new Date().getTime() / 2000, maxQuantity: 1 },
-      { startTime: new Date().getTime(), maxQuantity: 2 },
+      { startTime: new Date(Date.now() / 2), maxQuantity: 1 },
+      { startTime: new Date(), maxQuantity: 2 },
     ]);
     expect((await dropContract.claimConditions.getAll()).length).to.be.equal(2);
 
     await dropContract.claimConditions.update(0, {
-      startTime: new Date().getTime() * 2,
+      startTime: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
     // max quantities should be inverted now
     const updatedConditions = await dropContract.claimConditions.getAll();
@@ -624,7 +624,7 @@ describe("Drop Contract", async () => {
   it("set claim condition in the future should not be claimable now", async () => {
     await dropContract.claimConditions.set([
       {
-        startTime: Math.floor(new Date().getTime() / 1000) + 60 * 60 * 24,
+        startTime: new Date(Date.now() + 60 * 60 * 24),
       },
     ]);
     const canClaim = await dropContract.claimConditions.canClaim(1);

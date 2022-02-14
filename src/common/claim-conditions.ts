@@ -3,9 +3,13 @@ import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { SnapshotInputSchema } from "../schema/contracts/common/snapshots";
 import { approveErc20Allowance, isNativeToken } from "./currency";
-import { ClaimCondition } from "../types";
+import { ClaimCondition, ClaimConditionInput } from "../types";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core";
+import {
+  ClaimConditionInputSchema,
+  ClaimConditionOutputSchema,
+} from "../schema/contracts/common/claim-conditions";
 
 /**
  * Returns proofs and the overrides required for the transaction.
@@ -58,4 +62,38 @@ export async function prepareClaim(
     overrides,
     proofs,
   };
+}
+
+export function updateExsitingClaimConditions(
+  index: number,
+  claimConditionInput: ClaimConditionInput,
+  existingConditions: ClaimCondition[],
+): ClaimConditionInput[] {
+  if (index >= existingConditions.length) {
+    throw Error(
+      `Index out of bounds - got index: ${index} with ${existingConditions.length} conditions`,
+    );
+  }
+  // merge input with existing claim condition
+  const newConditionParsed = ClaimConditionInputSchema.parse({
+    ...existingConditions[index],
+    price: existingConditions[index].price.toString(),
+    ...claimConditionInput,
+  });
+  // convert to output claim condition
+  const mergedConditionOutput =
+    ClaimConditionOutputSchema.parse(newConditionParsed);
+
+  return existingConditions.map((existingOutput, i) => {
+    let newConditionAtIndex;
+    if (i === index) {
+      newConditionAtIndex = mergedConditionOutput;
+    } else {
+      newConditionAtIndex = existingOutput;
+    }
+    return {
+      ...newConditionAtIndex,
+      price: newConditionAtIndex.price.toString(), // manually transform back to input price type
+    };
+  });
 }

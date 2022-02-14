@@ -343,7 +343,7 @@ describe("Bundle Drop Contract", async () => {
     it("set claim condition in the future should not be claimable now", async () => {
       await bdContract.claimConditions.set(0, [
         {
-          startTime: Math.floor(new Date().getTime() / 1000) + 60 * 60 * 24,
+          startTime: new Date(Date.now() + 60 * 60 * 24 * 1000),
         },
       ]);
       const canClaim = await bdContract.claimConditions.canClaim(0, 1);

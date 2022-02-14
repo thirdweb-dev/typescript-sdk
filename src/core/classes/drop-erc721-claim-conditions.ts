@@ -31,6 +31,7 @@ import {
 } from "../../schema/contracts/common/claim-conditions";
 import { TransactionResult } from "../types";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
+import { updateExsitingClaimConditions } from "../../common/claim-conditions";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -344,28 +345,12 @@ export class DropErc721ClaimConditions {
     claimConditionInput: ClaimConditionInput,
   ): Promise<TransactionResult> {
     const existingConditions = await this.getAll();
-    if (index >= existingConditions.length) {
-      throw Error(
-        `Index out of bounds - got index: ${index} with ${existingConditions.length} conditions`,
-      );
-    }
-    const mergedCondition = ClaimConditionOutputSchema.parse({
-      ...existingConditions[index],
-      ...claimConditionInput,
-    });
-
-    const newConditions: ClaimConditionInput[] = existingConditions.map(
-      (existing) => ({
-        ...existing,
-        price: existing.price.toString(),
-      }),
+    const newConditionInputs = updateExsitingClaimConditions(
+      index,
+      claimConditionInput,
+      existingConditions,
     );
-
-    newConditions[index] = {
-      ...mergedCondition,
-      price: mergedCondition.price.toString(),
-    };
-    return await this.set(newConditions);
+    return await this.set(newConditionInputs);
   }
 
   /** ***************************************
@@ -381,7 +366,7 @@ export class DropErc721ClaimConditions {
       pm.pricePerToken,
     );
     return ClaimConditionOutputSchema.parse({
-      startTime: new Date(BigNumber.from(pm.startTimestamp).toNumber() * 1000),
+      startTime: pm.startTimestamp,
       maxQuantity: pm.maxClaimableSupply.toString(),
       currentMintSupply: pm.supplyClaimed.toString(),
       availableSupply: BigNumber.from(pm.maxClaimableSupply)
@@ -405,7 +390,7 @@ export class DropErc721ClaimConditions {
         ? NATIVE_TOKEN_ADDRESS
         : c.currencyAddress;
     return {
-      startTimestamp: BigNumber.from(c.startTime),
+      startTimestamp: c.startTime,
       maxClaimableSupply: c.maxQuantity,
       supplyClaimed: 0,
       quantityLimitPerTransaction: c.quantityLimitPerTransaction,
