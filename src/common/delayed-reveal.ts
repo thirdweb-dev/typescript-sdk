@@ -117,7 +117,7 @@ export class DelayedReveal<T extends DropERC721> {
   }
 
   /**
-   * Gets a list of batches that needs to be revealed.
+   * Gets the list of unrevealed NFT batches.
    */
   public async getBatchesToReveal(): Promise<BatchToReveal[]> {
     const count = await this.contractWrapper.readContract.getBaseURICount();
@@ -127,37 +127,33 @@ export class DelayedReveal<T extends DropERC721> {
 
     const countRangeArray = Array.from(Array(count.toNumber()).keys());
 
-    // first batch always start from 0. don't need to fetch the last batch so pop it from the range array
-    const endTokenIndices = await Promise.all(
-      countRangeArray
-        .slice(0, countRangeArray.length - 1)
-        .map((i) => this.contractWrapper.readContract.baseURIIndices(i)),
+    // map over to get the base uri indices, which should be the end token id of every batch
+    const uriIndices = await Promise.all(
+      countRangeArray.map((i) =>
+        this.contractWrapper.readContract.baseURIIndices(i),
+      ),
     );
 
-    // returns the token uri for each batch. first batch always starts from token id 0.
+    // first batch always start from 0. don't need to fetch the last batch so pop it from the range array
+    const uriIndicesWithZeroStart = uriIndices.slice(0, uriIndices.length - 1);
+
+    // returns the token uri for each batches. first batch always starts from token id 0.
     const tokenUris = await Promise.all(
-      Array.from([0, ...endTokenIndices]).map((i) =>
+      Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
         this.contractWrapper.readContract.tokenURI(i),
       ),
     );
 
     const tokenMetadatas = await Promise.all(
-      Array.from([0, ...endTokenIndices]).map((tokenId) =>
-        this.getNftMetadata(tokenId),
+      Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
+        this.getNftMetadata(i.toString()),
       ),
     );
 
-    // static call to verify and check on the revert messages for revealed status.
-    const revealed = await Promise.all(
-      countRangeArray.map((i) =>
-        this.contractWrapper.readContract.callStatic
-          .reveal(i, ethers.utils.toUtf8Bytes(""))
-          .catch((err) => {
-            if (err.message.includes("nothing to reveal")) {
-              return true;
-            }
-            return false;
-          }),
+    // index is the uri indicies, which is end token id. different from uris
+    const encryptedBaseUris = await Promise.all(
+      Array.from([...uriIndices]).map((i) =>
+        this.contractWrapper.readContract.encryptedBaseURI(i),
       ),
     );
 
@@ -167,7 +163,9 @@ export class DelayedReveal<T extends DropERC721> {
         batchUri: uri,
         placeholderMetadata: tokenMetadatas[index],
       }))
-      .filter((_, index) => !revealed[index]);
+      .filter(
+        (_, index) => ethers.utils.hexDataLength(encryptedBaseUris[index]) > 0,
+      );
   }
 
   /**

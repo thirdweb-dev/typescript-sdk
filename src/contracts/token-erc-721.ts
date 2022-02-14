@@ -3,6 +3,7 @@ import {
   MintRequest,
   NewSignaturePayload,
   SignaturePayload,
+  SignaturePayloadOutput,
 } from "../schema/contracts/common/signature";
 import {
   CommonNFTInput,
@@ -384,11 +385,11 @@ export class TokenErc721Contract extends Erc721<TokenERC721> {
         const id = resolveId(m);
         const uri = uris[i];
         return {
-          payload: {
+          payload: SignaturePayloadOutput.parse({
             ...m,
             id,
             uri,
-          },
+          }),
           signature: (
             await this.contractWrapper.signTypedData(
               signer,

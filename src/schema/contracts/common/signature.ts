@@ -20,7 +20,7 @@ export const SignaturePayloadOutput = SignaturePayloadInput.extend({
 });
 
 export type NewSignaturePayload = z.input<typeof SignaturePayloadInput>;
-export type SignaturePayload = z.input<typeof SignaturePayloadOutput>;
+export type SignaturePayload = z.output<typeof SignaturePayloadOutput>;
 
 export const MintRequest = [
   { name: "to", type: "address" },

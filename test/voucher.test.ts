@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { TokenErc721Contract } from "../src";
 import { sdk, signers } from "./before.test";
 import {
@@ -56,7 +56,7 @@ describe("Voucher Contract", async () => {
 
   describe("Generating Signatures", () => {
     let voucher: SignaturePayload;
-    let signature, badSignature: string;
+    let signature: string, badSignature: string;
 
     beforeEach(async () => {
       const { payload: v, signature: s } = await nftContract.generateSignature(
@@ -85,7 +85,7 @@ describe("Voucher Contract", async () => {
     });
 
     it("should reject invalid vouchers", async () => {
-      voucher.price = 0;
+      voucher.price = BigNumber.from(0);
       const invalidModified = await nftContract.verify(voucher, signature);
       assert.isFalse(
         invalidModified,
@@ -126,7 +126,8 @@ describe("Voucher Contract", async () => {
   });
 
   describe("Claiming", async () => {
-    let v1, v2: { payload: SignaturePayload; signature: string };
+    let v1: { payload: SignaturePayload; signature: string },
+      v2: { payload: SignaturePayload; signature: string };
 
     beforeEach(async () => {
       v1 = await nftContract.generateSignature(meta);
