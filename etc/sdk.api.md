@@ -871,7 +871,7 @@ export class Marketplace implements UpdateableNetwork {
     // (undocumented)
     getTimeBufferInSeconds(): Promise<BigNumber>;
     getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
-    isRestrictedListerRoleOnly(): Promise<boolean>;
+    isRestrictedToListerRoleOnly(): Promise<boolean>;
     makeAuctionListingBid(listingId: BigNumberish, pricePerToken: Price): Promise<TransactionResult>;
     // Warning: (ae-forgotten-export) The symbol "Price" needs to be exported by the entry point index.d.ts
     makeDirectListingOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContractAddress: string, pricePerToken: Price): Promise<TransactionResult>;
@@ -969,7 +969,6 @@ export class Marketplace implements UpdateableNetwork {
         }>;
     };
     setBidBufferBps(bufferBps: BigNumberish): Promise<void>;
-    setRestrictedListerRoleOnly(isRestricted: boolean): Promise<TransactionResult>;
     setTimeBufferInSeconds(bufferInSeconds: BigNumberish): Promise<void>;
     updateAuctionListing(listing: AuctionListing): Promise<TransactionResult>;
     updateDirectListing(listing: DirectListing): Promise<TransactionResult>;

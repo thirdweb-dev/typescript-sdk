@@ -65,12 +65,11 @@ const marketplace = sdk.getMarketplace("{{contract_address}}");
 |  [getListing(listingId)](./sdk.marketplace.getlisting.md) |  | Convenience function to get either a direct or auction listing |
 |  [getTimeBufferInSeconds()](./sdk.marketplace.gettimebufferinseconds.md) |  |  |
 |  [getWinningBid(listingId)](./sdk.marketplace.getwinningbid.md) |  | Get Highest Bid |
-|  [isRestrictedListerRoleOnly()](./sdk.marketplace.isrestrictedlisterroleonly.md) |  | Get whether listing is restricted only to addresses with the Lister role |
+|  [isRestrictedToListerRoleOnly()](./sdk.marketplace.isrestrictedtolisterroleonly.md) |  | Get whether listing is restricted only to addresses with the Lister role |
 |  [makeAuctionListingBid(listingId, pricePerToken)](./sdk.marketplace.makeauctionlistingbid.md) |  | Bid On Auction |
 |  [makeDirectListingOffer(listingId, quantityDesired, currencyContractAddress, pricePerToken)](./sdk.marketplace.makedirectlistingoffer.md) |  | Make an offer for a Direct Listing |
 |  [onNetworkUpdated(network)](./sdk.marketplace.onnetworkupdated.md) |  |  |
 |  [setBidBufferBps(bufferBps)](./sdk.marketplace.setbidbufferbps.md) |  | Set the Bid buffer: this is a percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items. |
-|  [setRestrictedListerRoleOnly(isRestricted)](./sdk.marketplace.setrestrictedlisterroleonly.md) |  | Get whether listing is restricted only to addresses with the Lister role |
 |  [setTimeBufferInSeconds(bufferInSeconds)](./sdk.marketplace.settimebufferinseconds.md) |  | Set the Time buffer: this is measured in seconds (e.g. 15 minutes or 900 seconds). If a winning bid is made within the buffer of the auction closing (e.g. 15 minutes within the auction closing), the auction's closing time is increased by the buffer to prevent buyers from making last minute winning bids, and to give time to other buyers to make a higher bid if they wish to. |
 |  [updateAuctionListing(listing)](./sdk.marketplace.updateauctionlisting.md) |  | Update an Auction listing with new metadata |
 |  [updateDirectListing(listing)](./sdk.marketplace.updatedirectlisting.md) |  | Update a Direct listing with new metadata.<!-- -->Note: cannot update a listing with a new quantity of 0. Use <code>cancelDirectListing</code> to remove a listing instead. |

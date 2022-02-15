@@ -56,6 +56,7 @@ import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
 import ListingParametersStruct = IMarketplace.ListingParametersStruct;
 import ListingStruct = IMarketplace.ListingStruct;
 import { Price } from "../types/currency";
+import { getRoleHash } from "../common/role";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -363,8 +364,12 @@ export class Marketplace implements UpdateableNetwork {
   /**
    * Get whether listing is restricted only to addresses with the Lister role
    */
-  public async isRestrictedListerRoleOnly(): Promise<boolean> {
-    return this.contractWrapper.readContract.restrictedListerRoleOnly();
+  public async isRestrictedToListerRoleOnly(): Promise<boolean> {
+    const anyoneCanList = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("lister"),
+      AddressZero,
+    );
+    return !anyoneCanList;
   }
 
   /** ******************************
@@ -958,21 +963,6 @@ export class Marketplace implements UpdateableNetwork {
       BigNumber.from(bufferInSeconds),
       bidBuffer,
     ]);
-  }
-
-  /**
-   * Get whether listing is restricted only to addresses with the Lister role
-   * @param isRestricted
-   */
-  public async setRestrictedListerRoleOnly(
-    isRestricted: boolean,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "setRestrictedListerRoleOnly",
-        [isRestricted],
-      ),
-    };
   }
 
   /** ******************************
