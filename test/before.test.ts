@@ -1,7 +1,10 @@
 import {
   CurrencyTransferLib__factory,
+  TWFactory,
   TWFactory__factory,
   TWFee__factory,
+  TWRegistry,
+  TWRegistry__factory,
 } from "@3rdweb/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";
@@ -59,12 +62,22 @@ before(async () => {
   const currencyTransferAddress = currencyTransferDeployer.address;
   console.log("currencyTransferAddress", currencyTransferAddress);
 
-  const thirdwebFactoryDeployer = await new ethers.ContractFactory(
+  const registry = (await new ethers.ContractFactory(
+    TWRegistry__factory.abi,
+    TWRegistry__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(trustedForwarderAddress)) as TWRegistry;
+  const registryContract = await registry.deployed();
+  console.log("TWRegistry address: ", registry.address);
+
+  const thirdwebFactoryDeployer = (await new ethers.ContractFactory(
     TWFactory__factory.abi,
     TWFactory__factory.bytecode,
   )
     .connect(signer)
-    .deploy(trustedForwarderAddress);
+    .deploy(trustedForwarderAddress, registry.address)) as TWFactory;
+
   const deployTxFactory = thirdwebFactoryDeployer.deployTransaction;
   console.log(
     "Deploying TWFactory and TWRegistry at tx: ",
@@ -75,6 +88,11 @@ before(async () => {
   registryAddress = thirdwebFactoryDeployer.address;
   console.log("TWFactory address: ", thirdwebFactoryDeployer.address);
   console.log("TWRegistry address: ", thirdwebRegistryAddress);
+
+  await registryContract.grantRole(
+    await registryContract.OPERATOR_ROLE(),
+    thirdwebFactoryDeployer.address,
+  );
 
   console.log("Creating the deployer deployment");
   const thirdwebFeeDeployer = await new ethers.ContractFactory(

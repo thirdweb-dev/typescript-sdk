@@ -30,7 +30,7 @@ export const REMOTE_CONTRACT_TYPE = {
   [NFTStackCollection.contractType]: "TokenERC1155",
   [Token.contractType]: "TokenERC20",
   [Vote.contractType]: "VoteERC20",
-  [Split.contractType]: "Splits",
+  [Split.contractType]: "Split",
   [Marketplace.contractType]: "Marketplace",
   [Pack.contractType]: "Pack",
 };

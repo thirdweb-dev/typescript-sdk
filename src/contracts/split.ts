@@ -1,5 +1,9 @@
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { IERC20__factory, Splits, Splits__factory } from "@3rdweb/contracts";
+import {
+  IERC20__factory,
+  Split as SplitContract,
+  Split__factory,
+} from "@3rdweb/contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   IStorage,
@@ -33,24 +37,24 @@ import { SplitsContractSchema } from "../schema/contracts/splits";
  */
 export class Split implements UpdateableNetwork {
   static contractType = "split" as const;
-  static contractFactory = Splits__factory;
+  static contractFactory = Split__factory;
   /**
    * internal
    */
   static schema = SplitsContractSchema;
 
-  private contractWrapper: ContractWrapper<Splits>;
+  private contractWrapper: ContractWrapper<SplitContract>;
   private storage: IStorage;
 
-  public metadata: ContractMetadata<Splits, typeof Split.schema>;
-  public encoder: ContractEncoder<Splits>;
+  public metadata: ContractMetadata<SplitContract, typeof Split.schema>;
+  public encoder: ContractEncoder<SplitContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
-    contractWrapper = new ContractWrapper<Splits>(
+    contractWrapper = new ContractWrapper<SplitContract>(
       network,
       address,
       Split.contractFactory.abi,
