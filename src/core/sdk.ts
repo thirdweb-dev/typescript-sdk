@@ -189,7 +189,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param contractAddress - the address of the deployed contract
    * @returns the contract
    */
-  public getDropContract(contractAddress: string): NFTDrop {
+  public getNFTDrop(contractAddress: string): NFTDrop {
     return this.getContract(contractAddress, NFTDrop.contractType) as NFTDrop;
   }
 
@@ -198,7 +198,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getNFTContract(address: string): NFTCollection {
+  public getNFTCollection(address: string): NFTCollection {
     return this.getContract(
       address,
       NFTCollection.contractType,
@@ -210,7 +210,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getBundleDropContract(address: string): NFTStackDrop {
+  public getNFTStackDrop(address: string): NFTStackDrop {
     return this.getContract(address, NFTStackDrop.contractType) as NFTStackDrop;
   }
 
@@ -219,7 +219,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getBundleContract(address: string): NFTStackCollection {
+  public getNFTStackCollection(address: string): NFTStackCollection {
     return this.getContract(
       address,
       NFTStackCollection.contractType,
@@ -231,7 +231,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getTokenContract(address: string): Token {
+  public getToken(address: string): Token {
     return this.getContract(address, Token.contractType) as Token;
   }
 
@@ -240,7 +240,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getVoteContract(address: string): Vote {
+  public getVote(address: string): Vote {
     return this.getContract(address, Vote.contractType) as Vote;
   }
 
@@ -249,7 +249,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getSplitsContract(address: string): Split {
+  public getSplit(address: string): Split {
     return this.getContract(address, Split.contractType) as Split;
   }
 
@@ -258,7 +258,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getMarketplaceContract(address: string): Marketplace {
+  public getMarketplace(address: string): Marketplace {
     return this.getContract(address, Marketplace.contractType) as Marketplace;
   }
 
@@ -267,7 +267,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getPackContract(address: string): Pack {
+  public getPack(address: string): Pack {
     return this.getContract(address, Pack.contractType) as Pack;
   }
 

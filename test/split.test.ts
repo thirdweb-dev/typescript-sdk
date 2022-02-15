@@ -35,7 +35,7 @@ describe("Splits Contract", async () => {
         },
       ],
     });
-    splitsContract = sdk.getSplitsContract(address);
+    splitsContract = sdk.getSplit(address);
   });
 
   // TODO: Fix bug in the `getAllRecipients` function

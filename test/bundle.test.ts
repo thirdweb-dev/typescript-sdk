@@ -33,7 +33,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    bundleContract = sdk.getBundleContract(address);
+    bundleContract = sdk.getNFTStackCollection(address);
   });
 
   it("should return all owned collection tokens", async () => {

@@ -39,7 +39,7 @@ describe("Drop Contract", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    dropContract = sdk.getDropContract(address);
+    dropContract = sdk.getNFTDrop(address);
   });
 
   it("should allow a snapshot to be set", async () => {

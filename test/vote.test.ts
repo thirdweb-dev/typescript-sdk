@@ -29,7 +29,7 @@ describe("Vote Contract", async () => {
       name: "DAOToken #1",
       symbol: "DAO1",
     });
-    currencyContract = sdk.getTokenContract(tokenContractAddress);
+    currencyContract = sdk.getToken(tokenContractAddress);
 
     const voteContractAddress = await sdk.deployContract(Vote.contractType, {
       name: "DAO #1",
@@ -39,7 +39,7 @@ describe("Vote Contract", async () => {
       voting_quorum_fraction: 1,
       proposal_token_threshold: ethers.utils.parseUnits("1", 18),
     });
-    voteContract = sdk.getVoteContract(voteContractAddress);
+    voteContract = sdk.getVote(voteContractAddress);
 
     // step 1: mint 1000 governance tokens to my wallet
     await currencyContract.mintTo(

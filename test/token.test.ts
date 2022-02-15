@@ -27,7 +27,7 @@ describe("Token Contract", async () => {
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
     });
-    currencyContract = sdk.getTokenContract(address);
+    currencyContract = sdk.getToken(address);
   });
 
   it("should mint tokens", async () => {

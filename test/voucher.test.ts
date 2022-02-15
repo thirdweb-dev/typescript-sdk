@@ -27,7 +27,7 @@ describe("Voucher Contract", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    nftContract = sdk.getNFTContract(
+    nftContract = sdk.getNFTCollection(
       await sdk.deployContract(NFTCollection.contractType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",

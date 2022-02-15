@@ -11,7 +11,7 @@ describe("Events", async () => {
   let dropContract: NFTDrop;
 
   beforeEach(async () => {
-    dropContract = sdk.getDropContract(
+    dropContract = sdk.getNFTDrop(
       await sdk.deployContract(NFTDrop.contractType, {
         name: `Testing drop from SDK`,
         description: "Test contract from tests",
@@ -59,7 +59,7 @@ describe("Events", async () => {
       console.log(event);
     });
     await esdk
-      .getDropContract(dropContract.getAddress())
+      .getNFTDrop(dropContract.getAddress())
       .setApprovalForAll(ethers.constants.AddressZero, true);
   });
 });

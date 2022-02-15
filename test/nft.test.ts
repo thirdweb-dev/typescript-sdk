@@ -30,7 +30,7 @@ describe("NFT Contract", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    nftContract = sdk.getNFTContract(address);
+    nftContract = sdk.getNFTCollection(address);
   });
 
   it("should return nfts even if some are burned", async () => {

@@ -43,7 +43,7 @@ describe("Bundle Drop Contract", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    bdContract = sdk.getBundleDropContract(address);
+    bdContract = sdk.getNFTStackDrop(address);
   });
 
   it("should allow you to set claim conditions", async () => {
@@ -450,7 +450,7 @@ describe("Bundle Drop Contract", async () => {
     });
 
     it("should check if an address has enough erc20 currency", async () => {
-      const currency = sdk.getTokenContract(
+      const currency = sdk.getToken(
         await sdk.deployContract(Token.contractType, {
           name: "test",
           symbol: "test",
