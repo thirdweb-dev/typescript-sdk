@@ -6,8 +6,8 @@ import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
  */
 export const FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 
-const TWRegistry_testnet = "0x8B6B22F212A8265e694171bec4089AD1DAd68792";
-const TWFactory_testnet = "0xf0aa8AE97efA32cc6d9dDcF4a08F0C95802Ec039";
+const TWRegistry_testnet = "0x8ef9c7cCFf6Af2545F6dB1299F08ABa8421F264C";
+const TWFactory_testnet = "0x0f915b6fbb9bb127FC9841bb5B7d8387D9565892";
 
 /**
  * @internal
