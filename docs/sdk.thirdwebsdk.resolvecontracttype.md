@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-resolveContractType<TContractType extends ContractType>(contractAddress: string): Promise<TContractType>;
+resolveContractType(contractAddress: string): Promise<ContractType>;
 ```
 
 ## Parameters
@@ -18,7 +18,7 @@ resolveContractType<TContractType extends ContractType>(contractAddress: string)
 
 <b>Returns:</b>
 
-Promise&lt;TContractType&gt;
+Promise&lt;ContractType&gt;
 
 the [ContractType](./sdk.contracttype.md) for the given contract address
 

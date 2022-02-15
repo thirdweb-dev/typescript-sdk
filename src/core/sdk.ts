@@ -8,6 +8,9 @@ import {
   Token,
   Vote,
   NFTDrop,
+  NFTCollection,
+  NFTStackCollection,
+  Pack,
 } from "../contracts";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractFactory } from "./classes/factory";
@@ -20,10 +23,7 @@ import type {
   ValidContractClass,
   ValidContractInstance,
 } from "./types";
-import { NFTCollection } from "../contracts/nft-collection";
-import { NFTStackCollection } from "../contracts/nft-stack-collection";
 import { ContractRegistry } from "./classes/registry";
-import { Pack } from "../contracts/pack";
 import { getContractAddressByChainId } from "../constants/addresses";
 import { z } from "zod";
 import { IThirdwebContract__factory } from "@3rdweb/contracts";
@@ -48,7 +48,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   private _registry: Promise<ContractRegistry> | undefined;
 
-  public storage: IStorage;
+  private storage: IStorage;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -113,19 +113,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the {@link ContractType} for the given contract address
    * @throws if the contract type cannot be determined (is not a valid thirdweb contract)
    */
-  public async resolveContractType<TContractType extends ContractType>(
+  public async resolveContractType(
     contractAddress: string,
-  ) {
+  ): Promise<ContractType> {
     const contract = IThirdwebContract__factory.connect(
       contractAddress,
       this.getSignerOrProvider(),
     );
-    return (
-      ethers.utils
-        .toUtf8String(await contract.contractType())
-        // eslint-disable-next-line no-control-regex
-        .replace(/\x00/g, "") as TContractType
-    );
+    const remoteContractType = ethers.utils
+      .toUtf8String(await contract.contractType())
+      // eslint-disable-next-line no-control-regex
+      .replace(/\x00/g, "") as keyof typeof CONTRACTS_MAP;
+    return CONTRACTS_MAP[remoteContractType].contractType;
   }
 
   public async getContractList(walletAddress: string) {
@@ -141,7 +140,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             `failed to get contract type for address: ${adrr}`,
             err,
           );
-          return "DropERC721" as ContractType;
+          return "" as ContractType;
         }),
       })),
     );

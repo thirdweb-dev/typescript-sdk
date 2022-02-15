@@ -8,7 +8,7 @@ import {
 import { BigNumber, BytesLike } from "ethers";
 import { A, C } from "ts-toolbelt";
 import { If } from "ts-toolbelt/out/Any/If";
-import type { CONTRACTS_MAP } from "../contracts";
+import type { CONTRACTS_MAP } from "../contracts/maps";
 
 export type ContractType = keyof typeof CONTRACTS_MAP;
 

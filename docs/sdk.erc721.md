@@ -38,7 +38,6 @@ declare class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNe
 |  [getAddress()](./sdk.erc721.getaddress.md) |  |  |
 |  [getAll(queryParams)](./sdk.erc721.getall.md) |  | Get All NFTs |
 |  [getOwned(\_address)](./sdk.erc721.getowned.md) |  | Get Owned NFTs |
-|  [getTokenMetadata(tokenId)](./sdk.erc721.gettokenmetadata.md) |  | \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* PRIVATE FUNCTIONS \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* |
 |  [isApproved(address, operator)](./sdk.erc721.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
 |  [isTransferRestricted()](./sdk.erc721.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [ownerOf(tokenId)](./sdk.erc721.ownerof.md) |  | Get the current owner of a given NFT within this Contract |

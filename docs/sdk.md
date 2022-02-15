@@ -66,7 +66,6 @@
 |  [OptionalPropertiesInput](./sdk.optionalpropertiesinput.md) |  |
 |  [OptionalPropertiesOutput](./sdk.optionalpropertiesoutput.md) |  |
 |  [PartialClaimConditionInputSchema](./sdk.partialclaimconditioninputschema.md) |  |
-|  [REMOTE\_CONTRACT\_TYPE](./sdk.remote_contract_type.md) |  |
 |  [SUPPORTED\_CHAIN\_IDS](./sdk.supported_chain_ids.md) |  |
 |  [TokenMintInputSchema](./sdk.tokenmintinputschema.md) |  |
 

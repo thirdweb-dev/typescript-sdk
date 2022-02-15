@@ -277,6 +277,9 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    * PRIVATE FUNCTIONS
    *******************************/
 
+  /**
+   * @internal
+   */
   protected async getTokenMetadata(
     tokenId: BigNumberish,
   ): Promise<NFTMetadata> {

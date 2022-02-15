@@ -696,6 +696,7 @@ export class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNet
     // Warning: (ae-forgotten-export) The symbol "QueryAllParams" needs to be exported by the entry point index.d.ts
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
+    // @internal (undocumented)
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
     isTransferRestricted(): Promise<boolean>;
@@ -1792,17 +1793,19 @@ export class QuantityAboveLimitError extends Error {
     constructor(quantity: string);
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "REMOTE_CONTRACT_TYPE" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const REMOTE_CONTRACT_TYPE: {
-    "nft-drop": string;
-    "nft-collection": string;
-    "nft-stack-drop": string;
-    "nft-stack-collection": string;
-    token: string;
-    vote: string;
-    split: string;
-    marketplace: string;
-    pack: string;
+    readonly "nft-drop": "DropERC721";
+    readonly "nft-collection": "TokenERC721";
+    readonly "nft-stack-drop": "DropERC1155";
+    readonly "nft-stack-collection": "TokenERC1155";
+    readonly token: "TokenERC20";
+    readonly vote: "VoteERC20";
+    readonly split: "Split";
+    readonly marketplace: "Marketplace";
+    readonly pack: "Pack";
 };
 
 // Warning: (ae-internal-missing-underscore) The name "RestrictedTransferError" should be prefixed with an underscore because the declaration is marked as @internal
@@ -2089,9 +2092,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getToken(address: string): Token;
     getVote(address: string): Vote;
     // (undocumented)
-    resolveContractType<TContractType extends ContractType>(contractAddress: string): Promise<TContractType>;
-    // (undocumented)
-    storage: IStorage;
+    resolveContractType(contractAddress: string): Promise<ContractType>;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 
