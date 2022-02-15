@@ -48,7 +48,10 @@ function languageNameToKey(languageName) {
 
 const modules = json.members[0].members.filter(
   (m) =>
-    m.kind === "Class" && m.members.includes((m) => m.name === "contractType"),
+    m.kind === "Class" &&
+    m.members
+      .filter((cMember) => cMember.kind === "Property")
+      .findIndex((property) => property.name === "contractType") > -1,
 );
 
 function parseExampleTag(docComment) {
