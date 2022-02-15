@@ -6,6 +6,9 @@ import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
  */
 export const FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 
+const TWRegistry_testnet = "0x8B6B22F212A8265e694171bec4089AD1DAd68792";
+const TWFactory_testnet = "0xf0aa8AE97efA32cc6d9dDcF4a08F0C95802Ec039";
+
 /**
  * @internal
  */
@@ -24,13 +27,13 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.Rinkeby]: {
     biconomyForwarder: "0xFD4973FeB2031D4409fB57afEE5dF2051b171104",
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
+    twFactory: TWFactory_testnet,
+    twRegistry: TWRegistry_testnet,
   },
   [ChainId.Goerli]: {
     biconomyForwarder: AddressZero,
-    twFactory: "0x2c365584695014dF8Fad620a4E287f34dd40916f",
-    twRegistry: "0xD6E0b7322cA9af9A39C527223f0c01A7bc1055cc",
+    twFactory: TWFactory_testnet,
+    twRegistry: TWRegistry_testnet,
   },
   [ChainId.Polygon]: {
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
@@ -39,8 +42,8 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.Mumbai]: {
     biconomyForwarder: "0x9399BB24DBB5C4b782C70c2969F58716Ebbd6a3b",
-    twFactory: "0x98A6691f929118A126FEE8A51a1c16d4376B4C7e",
-    twRegistry: "0xEa7DFc1040a1e0b4aC132EF479680dEbCf7DA2e9",
+    twFactory: TWFactory_testnet,
+    twRegistry: TWRegistry_testnet,
   },
   [ChainId.Avalanche]: {
     biconomyForwarder: "0x64CD353384109423a966dCd3Aa30D884C9b2E057",
