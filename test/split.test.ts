@@ -20,7 +20,7 @@ describe("Splits Contract", async () => {
     sdk.updateSignerOrProvider(adminWallet);
     const address = await sdk.deployContract(Split.contractType, {
       name: "Splits Contract",
-      recipientSplits: [
+      recipients: [
         {
           address: samWallet.address,
           shares: 1,

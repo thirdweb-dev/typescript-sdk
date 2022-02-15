@@ -929,7 +929,7 @@ export class Marketplace implements UpdateableNetwork {
    * @param bufferBps
    */
   public async setBidBufferBps(bufferBps: BigNumberish): Promise<void> {
-    await this.roles.onlyRoles(
+    await this.roles.verify(
       ["admin"],
       await this.contractWrapper.getSignerAddress(),
     );
@@ -948,7 +948,7 @@ export class Marketplace implements UpdateableNetwork {
   public async setTimeBufferInSeconds(
     bufferInSeconds: BigNumberish,
   ): Promise<void> {
-    await this.roles.onlyRoles(
+    await this.roles.verify(
       ["admin"],
       await this.contractWrapper.getSignerAddress(),
     );

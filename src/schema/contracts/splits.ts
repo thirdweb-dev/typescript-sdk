@@ -18,11 +18,11 @@ const SplitRecipientOuputSchema = SplitRecipientInputSchema.extend({
 });
 
 export const SplitsContractInput = CommonContractSchema.extend({
-  recipientSplits: z.array(SplitRecipientInputSchema).default([]),
+  recipients: z.array(SplitRecipientInputSchema).default([]),
 });
 
 export const SplitsContractOutput = CommonContractOutputSchema.extend({
-  recipientSplits: z.array(SplitRecipientOuputSchema),
+  recipients: z.array(SplitRecipientOuputSchema),
 });
 
 export const SplitsContractDeploy = SplitsContractInput.merge(

@@ -59,11 +59,9 @@ const pack = sdk.getPack("{{contract_address}}");
 |  [getNFTs(packId)](./sdk.pack.getnfts.md) |  | Get Pack Reward Data |
 |  [getOwned(\_address)](./sdk.pack.getowned.md) |  | <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
 |  [isApproved(address, operator)](./sdk.pack.isapproved.md) |  |  |
-|  [isTransferRestricted()](./sdk.pack.istransferrestricted.md) |  |  |
 |  [onNetworkUpdated(network)](./sdk.pack.onnetworkupdated.md) |  |  |
 |  [open(packId)](./sdk.pack.open.md) |  | Open Pack |
 |  [setApproval(operator, approved)](./sdk.pack.setapproval.md) |  |  |
-|  [setRestrictedTransfer(restricted)](./sdk.pack.setrestrictedtransfer.md) |  |  |
 |  [transfer(to, tokenId, amount)](./sdk.pack.transfer.md) |  | Transfer Pack |
 |  [transferBatchFrom(from, to, args, data)](./sdk.pack.transferbatchfrom.md) |  |  |
 |  [transferFrom(from, to, args, data)](./sdk.pack.transferfrom.md) |  |  |

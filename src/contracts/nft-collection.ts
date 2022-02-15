@@ -36,10 +36,10 @@ import {
   TokenMintedEvent,
 } from "@3rdweb/contracts/dist/TokenERC721";
 import { hexlify, toUtf8Bytes } from "ethers/lib/utils";
-import { Signer } from "@ethersproject/abstract-signer";
 import { v4 as uuidv4 } from "uuid";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { setErc20Allowance } from "../common/currency";
+import invariant from "tiny-invariant";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -366,7 +366,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
       }
     };
 
-    await this.roles.onlyRoles(
+    await this.roles.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
@@ -380,7 +380,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
     );
 
     const chainId = await this.contractWrapper.getChainID();
-    const signer = this.contractWrapper.getSigner() as Signer;
+    const signer = this.contractWrapper.getSigner();
+    invariant(signer, "No signer available");
 
     return await Promise.all(
       parsedRequests.map(async (m, i) => {

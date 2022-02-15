@@ -30,17 +30,17 @@ export class ContractRoles<
   /**
    * Call this to get get a list of addresses for all supported roles on the contract.
    *
-   * @remarks See {@link ContractRoles.getRoleMembers} to get a list of addresses that are members of a specific role.
+   * @remarks See {@link ContractRoles.get} to get a list of addresses that are members of a specific role.
    * @returns A record of {@link Role}s to lists of addresses that are members of the given role.
    * @throws If the contract does not support roles this will throw an error.
    *
    * @public
    */
-  public async getAllMembers(): Promise<Record<TRole, string[]>> {
+  public async getAll(): Promise<Record<TRole, string[]>> {
     invariant(this.roles.length, "this contract has no support for roles");
     const roles = {} as Record<TRole, string[]>;
     for (const role of this.roles) {
-      roles[role] = await this.getRoleMembers(role);
+      roles[role] = await this.get(role);
     }
     return roles;
   }
@@ -48,7 +48,7 @@ export class ContractRoles<
   /**
    * Call this to get a list of addresses that are members of a specific role.
    *
-   * @remarks See {@link ContractRoles.getAllMembers} to get get a list of addresses for all supported roles on the contract.
+   * @remarks See {@link ContractRoles.getAll} to get get a list of addresses for all supported roles on the contract.
    * @param role - The Role to to get a memberlist for.
    * @returns The list of addresses that are members of the specific role.
    * @throws If you are requestiong a role that does not exist on the contract this will throw an error.
@@ -60,7 +60,7 @@ export class ContractRoles<
    *
    * @public
    */
-  public async getRoleMembers(role: TRole): Promise<string[]> {
+  public async get(role: TRole): Promise<string[]> {
     invariant(
       this.roles.includes(role),
       `this contract does not support the "${role}" role`,
@@ -81,13 +81,13 @@ export class ContractRoles<
    * Call this to OVERWRITE the list of addresses that are members of specific roles.
    *
    * Every role in the list will be overwritten with the new list of addresses provided with them.
-   * If you want to add or remove addresses for a single address use {@link ContractRoles.grantRole} and {@link ContractRoles.revokeRole} respectively instead.
+   * If you want to add or remove addresses for a single address use {@link ContractRoles.grant} and {@link ContractRoles.revoke} respectively instead.
    * @param rolesWithAddresses - A record of {@link Role}s to lists of addresses that should be members of the given role.
    * @throws If you are requestiong a role that does not exist on the contract this will throw an error.
    * @example Say you want to overwrite the list of addresses that are members of the minter role.
    * ```javascript
    * const minterAddresses: string[] = await contract.getRoleMemberList("minter");
-   * await contract.setAllRoleMembers({
+   * await contract.setAll({
    *  minter: []
    * });
    * console.log(await contract.getRoleMemberList("minter")); // No matter what members had the role before, the new list will be set to []
@@ -95,7 +95,7 @@ export class ContractRoles<
    * @public
    *
    * */
-  public async setAllRoleMembers(rolesWithAddresses: {
+  public async setAll(rolesWithAddresses: {
     [key in TRole]?: string[];
   }): Promise<TransactionResult> {
     const roles = Object.keys(rolesWithAddresses) as TRole[];
@@ -104,7 +104,7 @@ export class ContractRoles<
       roles.every((role) => this.roles.includes(role)),
       "this contract does not support the given role",
     );
-    const currentRoles = await this.getAllMembers();
+    const currentRoles = await this.getAll();
     const encoded: string[] = [];
     // add / remove admin role at the end so we don't revoke admin then grant
     roles
@@ -155,10 +155,10 @@ export class ContractRoles<
    *
    * @internal
    */
-  public async onlyRoles(roles: TRole[], address: string): Promise<void> {
+  public async verify(roles: TRole[], address: string): Promise<void> {
     await Promise.all(
       roles.map(async (role) => {
-        const members = await this.getRoleMembers(role);
+        const members = await this.get(role);
         if (
           !members.map((a) => a.toLowerCase()).includes(address.toLowerCase())
         ) {
@@ -186,10 +186,7 @@ export class ContractRoles<
    *
    * @public
    */
-  public async grantRole(
-    role: TRole,
-    address: string,
-  ): Promise<TransactionResult> {
+  public async grant(role: TRole, address: string): Promise<TransactionResult> {
     invariant(
       this.roles.includes(role),
       `this contract does not support the "${role}" role`,
@@ -220,7 +217,7 @@ export class ContractRoles<
    *
    * @public
    */
-  public async revokeRole(
+  public async revoke(
     role: TRole,
     address: string,
   ): Promise<TransactionResult> {

@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-static contractFactory: typeof Splits__factory;
+static contractFactory: typeof Split__factory;
 ```

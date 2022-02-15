@@ -16,7 +16,7 @@ static schema: {
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            recipientSplits: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
+            recipients: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
                 address: zod.ZodString;
                 shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
             }, "strip", zod.ZodTypeAny, {
@@ -35,7 +35,7 @@ static schema: {
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            recipientSplits: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
+            recipients: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
                 address: zod.ZodString;
                 shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
             }, "strip", zod.ZodTypeAny, {
@@ -55,7 +55,7 @@ static schema: {
             platform_fee_basis_points: number;
             platform_fee_recipient: string;
             trusted_forwarder: string;
-            recipientSplits: {
+            recipients: {
                 address: string;
                 shares: string;
             }[];
@@ -66,7 +66,7 @@ static schema: {
             platform_fee_basis_points?: number | undefined;
             platform_fee_recipient?: string | undefined;
             trusted_forwarder?: string | undefined;
-            recipientSplits?: {
+            recipients?: {
                 address: string;
                 shares: string | number | bigint | BigNumber;
             }[] | undefined;
@@ -80,7 +80,7 @@ static schema: {
         }, {
             image: zod.ZodOptional<zod.ZodString>;
         }>, {
-            recipientSplits: zod.ZodArray<zod.ZodObject<zod.extendShape<{
+            recipients: zod.ZodArray<zod.ZodObject<zod.extendShape<{
                 address: zod.ZodString;
                 shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
             }, {
@@ -99,7 +99,7 @@ static schema: {
             image?: string | undefined;
             external_link?: string | undefined;
             name: string;
-            recipientSplits: {
+            recipients: {
                 address: string;
                 shares: BigNumber;
             }[];
@@ -109,7 +109,7 @@ static schema: {
             image?: string | undefined;
             external_link?: string | undefined;
             name: string;
-            recipientSplits: {
+            recipients: {
                 address: string;
                 shares: string | number | bigint | BigNumber;
             }[];
@@ -120,7 +120,7 @@ static schema: {
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            recipientSplits: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
+            recipients: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
                 address: zod.ZodString;
                 shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
             }, "strip", zod.ZodTypeAny, {
@@ -135,7 +135,7 @@ static schema: {
             image?: any;
             external_link?: string | undefined;
             name: string;
-            recipientSplits: {
+            recipients: {
                 address: string;
                 shares: string;
             }[];
@@ -143,7 +143,7 @@ static schema: {
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
-            recipientSplits?: {
+            recipients?: {
                 address: string;
                 shares: string | number | bigint | BigNumber;
             }[] | undefined;

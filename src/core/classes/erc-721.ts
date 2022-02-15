@@ -13,6 +13,7 @@ import { NotFoundError, RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { fetchTokenMetadata } from "../../common/nft";
+import { getRoleHash } from "../../common/role";
 
 /**
  * Standard ERC721 functions
@@ -186,7 +187,11 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    return this.contractWrapper.readContract.isTransferRestricted();
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      AddressZero,
+    );
+    return !anyoneCanTransfer;
   }
 
   /**
@@ -265,21 +270,6 @@ export class Erc721<T extends DropERC721 | TokenERC721>
         operator,
         approved,
       ]),
-    };
-  }
-
-  /**
-   * Set whether NFTs in this Contract can be transferred or not.
-   * @param restricted - restricted whether to restrict or allow transfers
-   */
-  public async setRestrictedTransfer(
-    restricted = false,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "setRestrictedTransfer",
-        [restricted],
-      ),
     };
   }
 

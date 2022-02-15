@@ -4,7 +4,7 @@
 
 ## Erc20.isTransferRestricted() method
 
-Get whether users can transfer NFTs from this contract
+Get whether users can transfer tokens from this contract
 
 <b>Signature:</b>
 

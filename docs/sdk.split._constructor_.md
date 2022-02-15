@@ -9,7 +9,7 @@ Constructs a new instance of the `Split` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Splits>);
+constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Split$1>);
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStora
 |  address | string |  |
 |  storage | IStorage |  |
 |  options | SDKOptions |  |
-|  contractWrapper | ContractWrapper&lt;Splits&gt; |  |
+|  contractWrapper | ContractWrapper&lt;Split$1&gt; |  |
 

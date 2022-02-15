@@ -33,7 +33,7 @@ describe("Roles Contract", async () => {
     /**
      * This wallet owns only one token in the collection (that contains 6 tokens)
      */
-    const roles = await bundleContract.roles.getRoleMembers("admin");
+    const roles = await bundleContract.roles.get("admin");
     assert.include(
       roles,
       adminWallet.address,
@@ -51,7 +51,7 @@ describe("Roles Contract", async () => {
    */
 
   it("should override current roles in the contract", async () => {
-    await bundleContract.roles.setAllRoleMembers({
+    await bundleContract.roles.setAll({
       admin: [adminWallet.address],
       minter: [
         "0x553C5E856801b5876e80D32a192086b2035286C1",
@@ -60,7 +60,7 @@ describe("Roles Contract", async () => {
       transfer: ["0x553C5E856801b5876e80D32a192086b2035286C1"],
     });
 
-    const newRoles = await bundleContract.roles.getAllMembers();
+    const newRoles = await bundleContract.roles.getAll();
     assert.isTrue(
       newRoles.admin.length === 1 &&
         newRoles.admin.includes(adminWallet.address),
@@ -81,7 +81,7 @@ describe("Roles Contract", async () => {
   });
 
   it("Replace all roles - confirm that all roles were replaced (not just added)", async () => {
-    await bundleContract.roles.setAllRoleMembers({
+    await bundleContract.roles.setAll({
       admin: [
         adminWallet.address,
         "0x553C5E856801b5876e80D32a192086b2035286C1",
@@ -92,7 +92,7 @@ describe("Roles Contract", async () => {
       ],
       transfer: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
     });
-    const newRoles = await bundleContract.roles.getAllMembers();
+    const newRoles = await bundleContract.roles.getAll();
     assert.isTrue(
       newRoles.admin.length === 2 &&
         newRoles.admin.includes(adminWallet.address) &&

@@ -14,14 +14,12 @@ global.fetch = require("node-fetch");
 describe("Voucher Contract", async () => {
   let nftContract: NFTCollection;
 
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+  let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
   let meta: PayloadToSign;
 
   before(() => {
-    [adminWallet, samWallet, bobWallet] = signers;
+    [adminWallet, samWallet] = signers;
   });
 
   beforeEach(async () => {

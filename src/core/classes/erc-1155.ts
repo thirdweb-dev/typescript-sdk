@@ -12,6 +12,8 @@ import {
   BundleMetadataOutputSchema,
 } from "../../schema/tokens/bundle";
 import { fetchTokenMetadata } from "../../common/nft";
+import { AddressZero } from "@ethersproject/constants";
+import { getRoleHash } from "../../common/role";
 
 /**
  * Standard ERC1155 functions
@@ -183,7 +185,11 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    return this.contractWrapper.readContract.isTransferRestricted();
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      AddressZero,
+    );
+    return !anyoneCanTransfer;
   }
 
   /**
@@ -275,21 +281,6 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
         operator,
         approved,
       ]),
-    };
-  }
-
-  /**
-   * Set whether NFTs in this Contract can be transferred or not.
-   * @param restricted whether to restrict or allow transfers
-   */
-  public async setRestrictedTransfer(
-    restricted = false,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "setRestrictedTransfer",
-        [restricted],
-      ),
     };
   }
 

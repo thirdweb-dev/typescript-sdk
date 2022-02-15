@@ -49,7 +49,7 @@ describe("Vote Contract", async () => {
 
     // step 35: later grant role to the vote contract, so the contract can mint more tokens
     // should be separate function since you need gov token to deploy vote contract
-    await currencyContract.roles.grantRole("minter", voteContract.getAddress());
+    await currencyContract.roles.grant("minter", voteContract.getAddress());
 
     await sdk.updateSignerOrProvider(samWallet);
 

@@ -22,9 +22,9 @@ declare class ContractRoles<TContract extends AccessControlEnumerable, TRole ext
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [getAllMembers()](./sdk.contractroles.getallmembers.md) |  | Call this to get get a list of addresses for all supported roles on the contract. |
-|  [getRoleMembers(role)](./sdk.contractroles.getrolemembers.md) |  | Call this to get a list of addresses that are members of a specific role. |
-|  [grantRole(role, address)](./sdk.contractroles.grantrole.md) |  | Call this to grant a role to a specific address. |
-|  [revokeRole(role, address)](./sdk.contractroles.revokerole.md) |  | Call this to revoke a role from a specific address. |
-|  [setAllRoleMembers(rolesWithAddresses)](./sdk.contractroles.setallrolemembers.md) |  | Call this to OVERWRITE the list of addresses that are members of specific roles.<!-- -->Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use [ContractRoles.grantRole()](./sdk.contractroles.grantrole.md) and [ContractRoles.revokeRole()](./sdk.contractroles.revokerole.md) respectively instead. |
+|  [get(role)](./sdk.contractroles.get.md) |  | Call this to get a list of addresses that are members of a specific role. |
+|  [getAll()](./sdk.contractroles.getall.md) |  | Call this to get get a list of addresses for all supported roles on the contract. |
+|  [grant(role, address)](./sdk.contractroles.grant.md) |  | Call this to grant a role to a specific address. |
+|  [revoke(role, address)](./sdk.contractroles.revoke.md) |  | Call this to revoke a role from a specific address. |
+|  [setAll(rolesWithAddresses)](./sdk.contractroles.setall.md) |  | Call this to OVERWRITE the list of addresses that are members of specific roles.<!-- -->Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use [ContractRoles.grant()](./sdk.contractroles.grant.md) and [ContractRoles.revoke()](./sdk.contractroles.revoke.md) respectively instead. |
 

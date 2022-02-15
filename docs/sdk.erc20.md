@@ -39,9 +39,8 @@ declare class Erc20<T extends TokenERC20> implements UpdateableNetwork
 |  [burnFrom(holder, amount)](./sdk.erc20.burnfrom.md) |  | Burn Tokens |
 |  [get()](./sdk.erc20.get.md) |  | Get the token Metadata (name, symbol, etc...) |
 |  [getAddress()](./sdk.erc20.getaddress.md) |  |  |
-|  [isTransferRestricted()](./sdk.erc20.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
+|  [isTransferRestricted()](./sdk.erc20.istransferrestricted.md) |  | Get whether users can transfer tokens from this contract |
 |  [setAllowance(spender, amount)](./sdk.erc20.setallowance.md) |  | Allows the specified <code>spender</code> wallet to transfer the given <code>amount</code> of tokens to another wallet |
-|  [setRestrictedTransfer(restricted)](./sdk.erc20.setrestrictedtransfer.md) |  | Set whether Tokens in this Contract can be transferred or not. |
 |  [totalSupply()](./sdk.erc20.totalsupply.md) |  | The total supply for this Token |
 |  [transfer(to, amount)](./sdk.erc20.transfer.md) |  | Transfer Tokens |
 |  [transferBatch(args)](./sdk.erc20.transferbatch.md) |  | Transfer Tokens To Many Wallets |

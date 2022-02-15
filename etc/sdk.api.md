@@ -36,8 +36,8 @@ import { Provider } from '@ethersproject/providers';
 import { Result } from '@ethersproject/abi';
 import { Signer } from '@ethersproject/abstract-signer';
 import { Signer as Signer_2 } from 'ethers';
-import { Splits } from '@3rdweb/contracts';
-import { Splits__factory } from '@3rdweb/contracts';
+import { Split as Split_2 } from '@3rdweb/contracts';
+import { Split__factory } from '@3rdweb/contracts';
 import { TokenERC1155 } from '@3rdweb/contracts';
 import { TokenERC1155__factory } from '@3rdweb/contracts';
 import { TokenERC20 } from '@3rdweb/contracts';
@@ -534,15 +534,15 @@ export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
 // @public
 export class ContractRoles<TContract extends AccessControlEnumerable, TRole extends Role> {
     constructor(contractWrapper: ContractWrapper<TContract>, roles: readonly TRole[]);
-    getAllMembers(): Promise<Record<TRole, string[]>>;
-    getRoleMembers(role: TRole): Promise<string[]>;
-    grantRole(role: TRole, address: string): Promise<TransactionResult>;
-    // @internal
-    onlyRoles(roles: TRole[], address: string): Promise<void>;
-    revokeRole(role: TRole, address: string): Promise<TransactionResult>;
-    setAllRoleMembers(rolesWithAddresses: {
+    get(role: TRole): Promise<string[]>;
+    getAll(): Promise<Record<TRole, string[]>>;
+    grant(role: TRole, address: string): Promise<TransactionResult>;
+    revoke(role: TRole, address: string): Promise<TransactionResult>;
+    setAll(rolesWithAddresses: {
         [key in TRole]?: string[];
     }): Promise<TransactionResult>;
+    // @internal
+    verify(roles: TRole[], address: string): Promise<void>;
 }
 
 // @public
@@ -646,7 +646,6 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155> implements Updateable
     protected options: SDKOptions;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
-    setRestrictedTransfer(restricted?: boolean): Promise<TransactionResult>;
     // (undocumented)
     protected storage: IStorage;
     totalSupply(tokenId: BigNumberish): Promise<BigNumber>;
@@ -675,7 +674,6 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     // (undocumented)
     protected options: SDKOptions;
     setAllowance(spender: string, amount: BigNumber): Promise<TransactionResult>;
-    setRestrictedTransfer(restricted?: boolean): Promise<TransactionResult>;
     // (undocumented)
     protected storage: IStorage;
     totalSupply(): Promise<BigNumber>;
@@ -708,7 +706,6 @@ export class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNet
     ownerOf(tokenId: BigNumberish): Promise<string>;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
-    setRestrictedTransfer(restricted?: boolean): Promise<TransactionResult>;
     // (undocumented)
     protected storage: IStorage;
     totalSupply(): Promise<BigNumber>;
@@ -1628,8 +1625,6 @@ export class Pack implements UpdateableNetwork {
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
-    isTransferRestricted(): Promise<boolean>;
-    // (undocumented)
     metadata: ContractMetadata<Pack_2, typeof Pack.schema>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
@@ -1738,8 +1733,6 @@ export class Pack implements UpdateableNetwork {
     };
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionResult>;
-    // (undocumented)
-    setRestrictedTransfer(restricted?: boolean): Promise<TransactionResult>;
     transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionResult>;
     // (undocumented)
     transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: BytesLike): Promise<TransactionResult>;
@@ -1841,7 +1834,7 @@ export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
 
 // @public
 export class Split implements UpdateableNetwork {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Splits>);
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Split_2>);
     balanceOf(address: string): Promise<BigNumber>;
     balanceOfAllRecipients(): Promise<{
         [key: string]: BigNumber;
@@ -1857,20 +1850,20 @@ export class Split implements UpdateableNetwork {
         };
     }>;
     // (undocumented)
-    static contractFactory: typeof Splits__factory;
+    static contractFactory: typeof Split__factory;
     // (undocumented)
     static contractType: "split";
     distribute(): Promise<TransactionResult>;
     distributeToken(tokenAddress: string): Promise<TransactionResult>;
     // (undocumented)
-    encoder: ContractEncoder<Splits>;
+    encoder: ContractEncoder<Split_2>;
     // (undocumented)
     getAddress(): string;
     // Warning: (ae-forgotten-export) The symbol "SplitRecipient" needs to be exported by the entry point index.d.ts
     getAllRecipients(): Promise<SplitRecipient[]>;
     getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
     // (undocumented)
-    metadata: ContractMetadata<Splits, typeof Split.schema>;
+    metadata: ContractMetadata<Split_2, typeof Split.schema>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     static schema: {
@@ -1880,7 +1873,7 @@ export class Split implements UpdateableNetwork {
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            recipientSplits: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
+            recipients: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
                 address: zod.ZodString;
                 shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
             }, "strip", zod.ZodTypeAny, {
@@ -1899,7 +1892,7 @@ export class Split implements UpdateableNetwork {
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            recipientSplits: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
+            recipients: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
                 address: zod.ZodString;
                 shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
             }, "strip", zod.ZodTypeAny, {
@@ -1919,7 +1912,7 @@ export class Split implements UpdateableNetwork {
             platform_fee_basis_points: number;
             platform_fee_recipient: string;
             trusted_forwarder: string;
-            recipientSplits: {
+            recipients: {
                 address: string;
                 shares: string;
             }[];
@@ -1930,7 +1923,7 @@ export class Split implements UpdateableNetwork {
             platform_fee_basis_points?: number | undefined;
             platform_fee_recipient?: string | undefined;
             trusted_forwarder?: string | undefined;
-            recipientSplits?: {
+            recipients?: {
                 address: string;
                 shares: string | number | bigint | BigNumber;
             }[] | undefined;
@@ -1944,7 +1937,7 @@ export class Split implements UpdateableNetwork {
         }, {
             image: zod.ZodOptional<zod.ZodString>;
         }>, {
-            recipientSplits: zod.ZodArray<zod.ZodObject<zod.extendShape<{
+            recipients: zod.ZodArray<zod.ZodObject<zod.extendShape<{
                 address: zod.ZodString;
                 shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
             }, {
@@ -1963,7 +1956,7 @@ export class Split implements UpdateableNetwork {
             image?: string | undefined;
             external_link?: string | undefined;
             name: string;
-            recipientSplits: {
+            recipients: {
                 address: string;
                 shares: BigNumber;
             }[];
@@ -1973,7 +1966,7 @@ export class Split implements UpdateableNetwork {
             image?: string | undefined;
             external_link?: string | undefined;
             name: string;
-            recipientSplits: {
+            recipients: {
                 address: string;
                 shares: string | number | bigint | BigNumber;
             }[];
@@ -1984,7 +1977,7 @@ export class Split implements UpdateableNetwork {
             image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
             external_link: zod.ZodOptional<zod.ZodString>;
         }, {
-            recipientSplits: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
+            recipients: zod.ZodDefault<zod.ZodArray<zod.ZodObject<{
                 address: zod.ZodString;
                 shares: zod.ZodEffects<zod.ZodEffects<zod.ZodUnion<[zod.ZodString, zod.ZodNumber, zod.ZodBigInt, zod.ZodType<BigNumber, zod.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
             }, "strip", zod.ZodTypeAny, {
@@ -1999,7 +1992,7 @@ export class Split implements UpdateableNetwork {
             image?: any;
             external_link?: string | undefined;
             name: string;
-            recipientSplits: {
+            recipients: {
                 address: string;
                 shares: string;
             }[];
@@ -2007,7 +2000,7 @@ export class Split implements UpdateableNetwork {
             description?: string | undefined;
             image?: any;
             external_link?: string | undefined;
-            recipientSplits?: {
+            recipients?: {
                 address: string;
                 shares: string | number | bigint | BigNumber;
             }[] | undefined;
@@ -2080,7 +2073,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             image?: string | undefined;
             external_link?: string | undefined;
             name: string;
-            recipientSplits: {
+            recipients: {
                 address: string;
                 shares: ethers_2.BigNumber;
             }[];

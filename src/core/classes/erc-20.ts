@@ -12,6 +12,8 @@ import {
   fetchCurrencyValue,
 } from "../../common/currency";
 import { TokenMintInput } from "../../schema/tokens/token";
+import { getRoleHash } from "../../common/role";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * Standard ERC20 functions
@@ -164,10 +166,14 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   }
 
   /**
-   * Get whether users can transfer NFTs from this contract
+   * Get whether users can transfer tokens from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    return this.contractWrapper.readContract.isTransferRestricted();
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      AddressZero,
+    );
+    return !anyoneCanTransfer;
   }
 
   /** ******************************
@@ -341,21 +347,6 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
         holder,
         amount,
       ]),
-    };
-  }
-
-  /**
-   * Set whether Tokens in this Contract can be transferred or not.
-   * @param restricted - restricted whether to restrict or allow transfers
-   */
-  public async setRestrictedTransfer(
-    restricted = false,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "setRestrictedTransfer",
-        [restricted],
-      ),
     };
   }
 

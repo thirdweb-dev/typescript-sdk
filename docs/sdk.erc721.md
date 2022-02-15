@@ -42,7 +42,6 @@ declare class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNe
 |  [isApproved(address, operator)](./sdk.erc721.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
 |  [isTransferRestricted()](./sdk.erc721.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [ownerOf(tokenId)](./sdk.erc721.ownerof.md) |  | Get the current owner of a given NFT within this Contract |
-|  [setRestrictedTransfer(restricted)](./sdk.erc721.setrestrictedtransfer.md) |  | Set whether NFTs in this Contract can be transferred or not. |
 |  [totalSupply()](./sdk.erc721.totalsupply.md) |  | Get the total supply for this Contract. |
 |  [transfer(to, tokenId)](./sdk.erc721.transfer.md) |  | Transfer a single NFT |
 

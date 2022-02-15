@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-metadata: ContractMetadata<Splits, typeof Split.schema>;
+metadata: ContractMetadata<Split$1, typeof Split.schema>;
 ```

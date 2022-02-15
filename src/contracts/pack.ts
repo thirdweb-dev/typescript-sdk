@@ -238,10 +238,6 @@ export class Pack implements UpdateableNetwork {
     );
   }
 
-  public async isTransferRestricted(): Promise<boolean> {
-    return this.contractWrapper.readContract.isTransferRestricted();
-  }
-
   /**
    * `getOwned` is a convenience method for getting all owned tokens
    * for a particular wallet.
@@ -518,21 +514,6 @@ export class Pack implements UpdateableNetwork {
       await this.contractWrapper.getCallOverrides(),
     );
     return { receipt: await tx.wait() };
-  }
-
-  public async setRestrictedTransfer(
-    restricted = false,
-  ): Promise<TransactionResult> {
-    await this.roles.onlyRoles(
-      ["admin"],
-      await this.contractWrapper.getSignerAddress(),
-    );
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "setRestrictedTransfer",
-        [restricted],
-      ),
-    };
   }
 
   // TODO new withdraw LINK function in contract
