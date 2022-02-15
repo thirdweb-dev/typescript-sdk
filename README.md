@@ -24,8 +24,8 @@ import { ThirdwebSDK } from "@3rdweb/sdk";
 const sdk = new ThirdwebSDK("your_rpc_url_or_signer");
 
 // access your deployed contracts
-const nftDrop = sdk.getDropContract("0x...");
-const marketplace = sdk.getMarketplaceContract("0x...");
+const nftDrop = sdk.getNFTDrop("0x...");
+const marketplace = sdk.getMarketplace("0x...");
 
 // Read from your contract
 const listings = await marketplace.getAllListings();
