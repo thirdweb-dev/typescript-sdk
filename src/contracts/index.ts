@@ -23,6 +23,18 @@ export const CONTRACTS_MAP = {
   [Pack.contractType]: Pack,
 } as const;
 
+export const REMOTE_CONTRACT_TYPE = {
+  [NFTDrop.contractType]: "DropERC721",
+  [NFTCollection.contractType]: "TokenERC721",
+  [NFTStackDrop.contractType]: "DropERC1155",
+  [NFTStackCollection.contractType]: "TokenERC1155",
+  [Token.contractType]: "TokenERC20",
+  [Vote.contractType]: "VoteERC20",
+  [Split.contractType]: "Splits",
+  [Marketplace.contractType]: "Marketplace",
+  [Pack.contractType]: "Pack",
+};
+
 export {
   NFTDrop,
   NFTCollection,

@@ -12,6 +12,7 @@ import {
   Vote,
   NFTCollection,
   NFTDrop,
+  REMOTE_CONTRACT_TYPE,
 } from "../../contracts";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
@@ -44,6 +45,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     const contract = CONTRACTS_MAP[contractType];
     const metadata = contract.schema.deploy.parse(contractMetadata);
     const contractFactory = contract.contractFactory;
+
     // TODO: is there any special pre-processing we need to do before uploading?
     const contractURI = await this.storage.uploadMetadata(
       metadata,
@@ -58,7 +60,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         await this.getDeployArguments(contractType, metadata, contractURI),
       );
 
-    const encodedType = ethers.utils.formatBytes32String(contractType);
+    const contractName = REMOTE_CONTRACT_TYPE[contractType];
+    console.log(`Remote contractName : ${contractName}`);
+    const encodedType = ethers.utils.formatBytes32String(contractName);
     console.log(`Deploying ${contractType} proxy`);
     const receipt = await this.sendTransaction("deployProxy", [
       encodedType,

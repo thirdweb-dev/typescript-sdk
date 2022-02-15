@@ -3,12 +3,12 @@ import { assert } from "chai";
 import { ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 import { sdk, signers } from "./before.test";
-import { Token, VoteContract } from "../src";
+import { Token, Vote } from "../src";
 
 global.fetch = require("node-fetch");
 
 describe("Vote Contract", async () => {
-  let voteContract: VoteContract;
+  let voteContract: Vote;
   let currencyContract: Token;
 
   const voteStartWaitTimeInSeconds = 0;
@@ -31,17 +31,14 @@ describe("Vote Contract", async () => {
     });
     currencyContract = sdk.getTokenContract(tokenContractAddress);
 
-    const voteContractAddress = await sdk.deployContract(
-      VoteContract.contractType,
-      {
-        name: "DAO #1",
-        voting_token_address: currencyContract.getAddress(),
-        proposal_start_time_in_seconds: voteStartWaitTimeInSeconds,
-        proposal_voting_time_in_seconds: voteWaitTimeInSeconds,
-        voting_quorum_fraction: 1,
-        proposal_token_threshold: ethers.utils.parseUnits("1", 18),
-      },
-    );
+    const voteContractAddress = await sdk.deployContract(Vote.contractType, {
+      name: "DAO #1",
+      voting_token_address: currencyContract.getAddress(),
+      proposal_start_time_in_seconds: voteStartWaitTimeInSeconds,
+      proposal_voting_time_in_seconds: voteWaitTimeInSeconds,
+      voting_quorum_fraction: 1,
+      proposal_token_threshold: ethers.utils.parseUnits("1", 18),
+    });
     voteContract = sdk.getVoteContract(voteContractAddress);
 
     // step 1: mint 1000 governance tokens to my wallet

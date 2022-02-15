@@ -3,14 +3,14 @@ import { sdk, signers } from "./before.test";
 
 import { assert } from "chai";
 import { BigNumber } from "ethers";
-import { BundleMetadataInput, PacksContract, NFTStackCollection } from "../src";
+import { BundleMetadataInput, Pack, NFTStackCollection } from "../src";
 import { PackMetadata } from "../src/types/packs";
 
 global.fetch = require("node-fetch");
 
 // TODO: Write some actual pack contract tests
 describe("Pack Contract", async () => {
-  let packContract: PacksContract;
+  let packContract: Pack;
   let bundleContract: NFTStackCollection;
 
   let adminWallet: SignerWithAddress,
@@ -24,7 +24,7 @@ describe("Pack Contract", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
     packContract = sdk.getPackContract(
-      await sdk.deployContract(PacksContract.contractType, {
+      await sdk.deployContract(Pack.contractType, {
         name: "Pack Contract",
         seller_fee_basis_points: 1000,
       }),
