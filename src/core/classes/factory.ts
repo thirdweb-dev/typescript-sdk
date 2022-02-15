@@ -12,7 +12,7 @@ import {
   Vote,
   NFTCollection,
   NFTDrop,
-  REMOTE_CONTRACT_TYPE,
+  REMOTE_CONTRACT_NAME,
 } from "../../contracts";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
@@ -60,7 +60,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         await this.getDeployArguments(contractType, metadata, contractURI),
       );
 
-    const contractName = REMOTE_CONTRACT_TYPE[contractType];
+    const contractName = REMOTE_CONTRACT_NAME[contractType];
     console.log(`Remote contractName : ${contractName}`);
     const encodedType = ethers.utils.formatBytes32String(contractName);
     console.log(`Deploying ${contractType} proxy`);

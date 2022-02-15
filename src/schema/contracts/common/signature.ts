@@ -9,8 +9,8 @@ export const SignaturePayloadInput = z.object({
   to: z.string(),
   price: PriceSchema,
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
-  mintStartTimeEpochSeconds: DateSchema,
-  mintEndTimeEpochSeconds: DateSchema,
+  mintStartTime: DateSchema,
+  mintEndTime: DateSchema,
   uid: z.string().optional(),
   royaltyRecipient: z.string().default(AddressZero),
   primarySaleRecipient: z.string().default(AddressZero),
@@ -19,8 +19,8 @@ export const SignaturePayloadInput = z.object({
 export const SignaturePayloadOutput = SignaturePayloadInput.extend({
   uri: z.string(),
   price: BigNumberSchema,
-  mintStartTimeEpochSeconds: BigNumberSchema,
-  mintEndTimeEpochSeconds: BigNumberSchema,
+  mintStartTime: BigNumberSchema,
+  mintEndTime: BigNumberSchema,
 });
 
 /**

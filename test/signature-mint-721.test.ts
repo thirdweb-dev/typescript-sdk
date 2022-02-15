@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { assert } from "chai";
+import { BigNumber } from "ethers";
 import { NFTCollection } from "../src";
 import { sdk, signers } from "./before.test";
 import {
@@ -41,10 +41,8 @@ describe("Voucher Contract", async () => {
       },
       price: "1",
       to: samWallet.address,
-      mintEndTimeEpochSeconds: new Date(
-        Date.now() + 60 * 60 * 24 * 1000 * 1000,
-      ),
-      mintStartTimeEpochSeconds: new Date(),
+      mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
+      mintStartTime: new Date(),
     };
   });
 
@@ -55,18 +53,18 @@ describe("Voucher Contract", async () => {
     let badPayload: SignedPayload;
 
     beforeEach(async () => {
-      goodPayload = await nftContract.generateSignature(meta);
-      badPayload = await nftContract.generateSignature(meta);
+      goodPayload = await nftContract.signature.generate(meta);
+      badPayload = await nftContract.signature.generate(meta);
       badPayload.payload.price = BigNumber.from(0);
     });
 
     it("should generate a valid signature", async () => {
-      const valid = await nftContract.verify(goodPayload);
+      const valid = await nftContract.signature.verify(goodPayload);
       assert.isTrue(valid, "This voucher should be valid");
     });
 
     it("should reject invalid signatures", async () => {
-      const invalid = await nftContract.verify(badPayload);
+      const invalid = await nftContract.signature.verify(badPayload);
       assert.isFalse(
         invalid,
         "This voucher should be invalid because the signature is invalid",
@@ -75,7 +73,7 @@ describe("Voucher Contract", async () => {
 
     it("should reject invalid vouchers", async () => {
       goodPayload.payload.price = BigNumber.from(0);
-      const invalidModified = await nftContract.verify(goodPayload);
+      const invalidModified = await nftContract.signature.verify(goodPayload);
       assert.isFalse(
         invalidModified,
         "This voucher should be invalid because the price was changed",
@@ -103,11 +101,11 @@ describe("Voucher Contract", async () => {
           },
         },
       ];
-      const batch = await nftContract.generateSignatureBatch(input);
+      const batch = await nftContract.signature.generateBatch(input);
 
       for (const [i, v] of batch.entries()) {
-        const tx = await nftContract.mintWithSignature(v);
-        const mintedId = (await tx.data()).metadata.id;
+        const tx = await nftContract.signature.mint(v);
+        const mintedId = (await nftContract.get(tx.id)).metadata.id;
         const nft = await nftContract.get(mintedId);
         assert.equal(input[i].metadata.name, nft.metadata.name);
       }
@@ -118,26 +116,25 @@ describe("Voucher Contract", async () => {
     let v1: SignedPayload, v2: SignedPayload;
 
     beforeEach(async () => {
-      v1 = await nftContract.generateSignature(meta);
-      v2 = await nftContract.generateSignature(meta);
+      v1 = await nftContract.signature.generate(meta);
+      v2 = await nftContract.signature.generate(meta);
     });
 
     it("should allow a valid voucher to mint", async () => {
       await sdk.updateSignerOrProvider(samWallet);
-      const tx = await nftContract.mintWithSignature(v1);
-      const newId = (await tx.data()).metadata.id;
+      const tx = await nftContract.signature.mint(v1);
+      const newId = (await nftContract.get(tx.id)).metadata.id;
       assert.equal(newId.toString(), "0");
 
       await sdk.updateSignerOrProvider(samWallet);
-      const tx2 = await nftContract.mintWithSignature(v2);
-      const newId2 = (await tx2.data()).metadata.id;
+      const tx2 = await nftContract.signature.mint(v2);
+      const newId2 = (await nftContract.get(tx2.id)).metadata.id;
       assert.equal(newId2.toString(), "1");
     });
 
     it("should mint the right metadata", async () => {
-      const tx = await nftContract.mintWithSignature(v1);
-      const id = (await tx.data()).metadata.id;
-      const nft = await nftContract.get(id);
+      const tx = await nftContract.signature.mint(v1);
+      const nft = await nftContract.get(tx.id);
       assert.equal(nft.metadata.name, meta.metadata.name);
     });
   });

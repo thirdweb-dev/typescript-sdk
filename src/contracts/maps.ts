@@ -26,7 +26,7 @@ export const CONTRACTS_MAP = {
 /**
  * @internal
  */
-export const REMOTE_CONTRACT_TYPE = {
+export const REMOTE_CONTRACT_NAME = {
   [NFTDrop.contractType]: "DropERC721",
   [NFTCollection.contractType]: "TokenERC721",
   [NFTStackDrop.contractType]: "DropERC1155",
