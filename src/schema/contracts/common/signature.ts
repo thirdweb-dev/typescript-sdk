@@ -37,6 +37,8 @@ export type SignedPayload = { payload: PayloadWithUri; signature: string };
 
 export const MintRequest = [
   { name: "to", type: "address" },
+  { name: "royaltyRecipient", type: "address" },
+  { name: "primarySaleRecipient", type: "address" },
   { name: "uri", type: "string" },
   { name: "price", type: "uint256" },
   { name: "currency", type: "address" },

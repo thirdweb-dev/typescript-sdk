@@ -395,7 +395,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
         const signature = await this.contractWrapper.signTypedData(
           signer,
           {
-            name: "SignatureMint721",
+            name: "TokenERC721",
             version: "1",
             chainId,
             verifyingContract: this.contractWrapper.readContract.address,
