@@ -437,6 +437,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
       validityEndTimestamp: mintRequest.mintEndTimeEpochSeconds,
       validityStartTimestamp: mintRequest.mintStartTimeEpochSeconds,
       uid: mintRequest.uid,
+      royaltyRecipient: mintRequest.royaltyRecipient,
+      primarySaleRecipient: mintRequest.primarySaleRecipient,
     } as ITokenERC721.MintRequestStructOutput;
   }
 }

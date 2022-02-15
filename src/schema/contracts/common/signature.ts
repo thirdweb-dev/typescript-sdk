@@ -2,6 +2,7 @@ import { BigNumberSchema, DateSchema, PriceSchema } from "../../shared";
 import { z } from "zod";
 import { CommonNFTInput } from "../../tokens/common";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
+import { AddressZero } from "@ethersproject/constants";
 
 export const SignaturePayloadInput = z.object({
   metadata: CommonNFTInput,
@@ -11,6 +12,8 @@ export const SignaturePayloadInput = z.object({
   mintStartTimeEpochSeconds: DateSchema,
   mintEndTimeEpochSeconds: DateSchema,
   uid: z.string().optional(),
+  royaltyRecipient: z.string().default(AddressZero),
+  primarySaleRecipient: z.string().default(AddressZero),
 });
 
 export const SignaturePayloadOutput = SignaturePayloadInput.extend({
