@@ -1799,6 +1799,19 @@ export class QuantityAboveLimitError extends Error {
     constructor(quantity: string);
 }
 
+// @public (undocumented)
+export const REMOTE_CONTRACT_TYPE: {
+    "nft-drop": string;
+    "nft-collection": string;
+    "nft-stack-drop": string;
+    "nft-stack-collection": string;
+    token: string;
+    vote: string;
+    split: string;
+    marketplace: string;
+    pack: string;
+};
+
 // Warning: (ae-internal-missing-underscore) The name "RestrictedTransferError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -2017,8 +2030,6 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 export class ThirdwebSDK extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage?: IStorage);
     deployContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
-    getBundleContract(address: string): NFTStackCollection;
-    getBundleDropContract(address: string): NFTStackDrop;
     // @internal (undocumented)
     getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): NFTCollection | NFTStackDrop | NFTStackCollection | Token | Vote | Split | Marketplace | Pack | NFTDrop | ts_toolbelt_out_Class_Instance.Instance<{
         readonly "nft-drop": typeof NFTDrop;
@@ -2075,13 +2086,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             }[];
         }>;
     }[]>;
-    getDropContract(contractAddress: string): NFTDrop;
-    getMarketplaceContract(address: string): Marketplace;
-    getNFTContract(address: string): NFTCollection;
-    getPackContract(address: string): Pack;
-    getSplitsContract(address: string): Split;
-    getTokenContract(address: string): Token;
-    getVoteContract(address: string): Vote;
+    getMarketplace(address: string): Marketplace;
+    getNFTCollection(address: string): NFTCollection;
+    getNFTDrop(contractAddress: string): NFTDrop;
+    getNFTStackCollection(address: string): NFTStackCollection;
+    getNFTStackDrop(address: string): NFTStackDrop;
+    getPack(address: string): Pack;
+    getSplit(address: string): Split;
+    getToken(address: string): Token;
+    getVote(address: string): Vote;
     // (undocumented)
     resolveContractType<TContractType extends ContractType>(contractAddress: string): Promise<TContractType>;
     // (undocumented)
