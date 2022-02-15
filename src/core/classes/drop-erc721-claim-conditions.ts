@@ -26,7 +26,7 @@ import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../../enums";
 import { createSnapshot } from "../../common";
 import {
-  ClaimConditionInputSchema,
+  ClaimConditionInputArray,
   ClaimConditionOutputSchema,
 } from "../../schema/contracts/common/claim-conditions";
 import { TransactionResult } from "../types";
@@ -263,7 +263,7 @@ export class DropErc721ClaimConditions {
   ): Promise<TransactionResult> {
     // process inputs
     const snapshotInfos: SnapshotInfo[] = [];
-    const inputsWithSnapshots: FilledConditionInput[] = await Promise.all(
+    const inputsWithSnapshots = await Promise.all(
       claimConditionInputs.map(async (conditionInput) => {
         // check snapshots and upload if provided
         if (conditionInput.snapshot) {
@@ -275,15 +275,15 @@ export class DropErc721ClaimConditions {
           conditionInput.merkleRootHash = snapshotInfo.merkleRoot;
         }
         // fill condition with defaults values if not provided
-        return ClaimConditionInputSchema.parse(conditionInput);
+        return conditionInput;
       }),
     );
 
+    const parsedInputs = ClaimConditionInputArray.parse(inputsWithSnapshots);
+
     // Convert processed inputs to the format the contract expects, and sort by timestamp
     const sortedConditions: IDropERC721.ClaimConditionStruct[] = (
-      await Promise.all(
-        inputsWithSnapshots.map((c) => this.convertToContractModel(c)),
-      )
+      await Promise.all(parsedInputs.map((c) => this.convertToContractModel(c)))
     ).sort((a, b) => {
       const left = BigNumber.from(a.startTimestamp);
       const right = BigNumber.from(b.startTimestamp);

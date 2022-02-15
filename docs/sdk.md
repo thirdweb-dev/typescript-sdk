@@ -54,6 +54,7 @@
 |  --- | --- |
 |  [BundleMetadataInputSchema](./sdk.bundlemetadatainputschema.md) |  |
 |  [BundleMetadataOutputSchema](./sdk.bundlemetadataoutputschema.md) |  |
+|  [ClaimConditionInputArray](./sdk.claimconditioninputarray.md) |  |
 |  [ClaimConditionInputSchema](./sdk.claimconditioninputschema.md) |  |
 |  [ClaimConditionOutputSchema](./sdk.claimconditionoutputschema.md) |  |
 |  [CommonContractOutputSchema](./sdk.commoncontractoutputschema.md) |  |
