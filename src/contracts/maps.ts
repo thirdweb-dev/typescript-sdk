@@ -37,3 +37,18 @@ export const REMOTE_CONTRACT_TYPE = {
   [Marketplace.contractType]: "Marketplace",
   [Pack.contractType]: "Pack",
 } as const;
+
+/**
+ * @internal
+ */
+export const REMOTE_CONTRACT_TO_CONTRACT_TYPE = {
+  DropERC721: NFTDrop.contractType,
+  TokenERC721: NFTCollection.contractType,
+  DropERC1155: NFTStackDrop.contractType,
+  TokenERC1155: NFTStackCollection.contractType,
+  TokenERC20: Token.contractType,
+  VoteERC20: Vote.contractType,
+  Split: Split.contractType,
+  Marketplace: Marketplace.contractType,
+  Pack: Pack.contractType,
+} as const;

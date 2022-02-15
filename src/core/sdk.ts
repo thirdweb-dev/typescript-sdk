@@ -11,6 +11,7 @@ import {
   NFTCollection,
   NFTStackCollection,
   Pack,
+  REMOTE_CONTRACT_TO_CONTRACT_TYPE,
 } from "../contracts";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractFactory } from "./classes/factory";
@@ -123,8 +124,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const remoteContractType = ethers.utils
       .toUtf8String(await contract.contractType())
       // eslint-disable-next-line no-control-regex
-      .replace(/\x00/g, "") as keyof typeof CONTRACTS_MAP;
-    return CONTRACTS_MAP[remoteContractType].contractType;
+      .replace(/\x00/g, "") as keyof typeof REMOTE_CONTRACT_TO_CONTRACT_TYPE;
+
+    console.log("*** resolveContractType", remoteContractType);
+
+    return REMOTE_CONTRACT_TO_CONTRACT_TYPE[remoteContractType];
   }
 
   public async getContractList(walletAddress: string) {

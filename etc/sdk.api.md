@@ -1792,6 +1792,21 @@ export class QuantityAboveLimitError extends Error {
     constructor(quantity: string);
 }
 
+// Warning: (ae-internal-missing-underscore) The name "REMOTE_CONTRACT_TO_CONTRACT_TYPE" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
+    readonly DropERC721: "nft-drop";
+    readonly TokenERC721: "nft-collection";
+    readonly DropERC1155: "nft-stack-drop";
+    readonly TokenERC1155: "nft-stack-collection";
+    readonly TokenERC20: "token";
+    readonly VoteERC20: "vote";
+    readonly Split: "split";
+    readonly Marketplace: "marketplace";
+    readonly Pack: "pack";
+};
+
 // Warning: (ae-internal-missing-underscore) The name "REMOTE_CONTRACT_TYPE" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
