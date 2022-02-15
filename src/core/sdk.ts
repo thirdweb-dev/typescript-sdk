@@ -125,9 +125,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       .toUtf8String(await contract.contractType())
       // eslint-disable-next-line no-control-regex
       .replace(/\x00/g, "") as keyof typeof REMOTE_CONTRACT_TO_CONTRACT_TYPE;
-
-    console.log("*** resolveContractType", remoteContractType);
-
     return REMOTE_CONTRACT_TO_CONTRACT_TYPE[remoteContractType];
   }
 
