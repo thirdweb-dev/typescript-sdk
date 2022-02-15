@@ -24,6 +24,8 @@ export const ClaimConditionInputSchema = z.object({
   snapshot: z.optional(z.array(z.string())),
 });
 
+export const ClaimConditionInputArray = z.array(ClaimConditionInputSchema);
+
 export const PartialClaimConditionInputSchema =
   ClaimConditionInputSchema.partial();
 

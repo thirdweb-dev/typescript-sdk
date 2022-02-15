@@ -8,7 +8,6 @@ import {
   ClaimConditionOutputSchema,
   PartialClaimConditionInputSchema,
 } from "../../schema/contracts/common/claim-conditions";
-// import { CurrencyValue } from "../../common/currency";
 
 /**
  * Represents a claim condition fetched from the SDK
