@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@3rdweb/contracts@2.0.1-43":
-  version "2.0.1-43"
-  resolved "https://registry.yarnpkg.com/@3rdweb/contracts/-/contracts-2.0.1-43.tgz#0c68a6dda934d03e0ebe5311746c273a707a406e"
-  integrity sha512-H2GGW++UC77jRzIzCF4ID4/HbMYhCXQy7w9XLmp09fXiB3NaMa08Bw2rcF/imork1wWoXeNzXmC2PWuS7c76tg==
-
 "@babel/code-frame@7.12.11":
   version "7.12.11"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.11.tgz#f4ad435aa263db935b8f10f2c552d23fb716a63f"
@@ -767,6 +762,11 @@
     "@swc/core-win32-arm64-msvc" "1.2.140"
     "@swc/core-win32-ia32-msvc" "1.2.140"
     "@swc/core-win32-x64-msvc" "1.2.140"
+
+"@thirdweb-dev/contracts@2.0.1-43":
+  version "2.0.1-43"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.0.1-43.tgz#71d15db039b78dc1d1647c2a2fe4ce8483dee0a1"
+  integrity sha512-SPh/2jN7kuYG6qIHn65kUk4BvYC7CJyGtw7i0En4x7bplb+de6fdV6ipT3JkIIEVhuFqJnKKLcPyaatqcX52pA==
 
 "@types/abstract-leveldown@*":
   version "7.2.0"
