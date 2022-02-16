@@ -8,5 +8,5 @@
 
 |  Package | Description |
 |  --- | --- |
-|  [@3rdweb/sdk](./sdk.md) |  |
+|  [@thirdweb-dev/sdk](./sdk.md) |  |
 
