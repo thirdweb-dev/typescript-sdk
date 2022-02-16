@@ -1,4 +1,4 @@
-import { IThirdwebContract__factory } from "@3rdweb/contracts";
+import { IThirdwebContract__factory } from "@thirdweb-dev/contracts";
 import { Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
 import { ContractType } from "../types";

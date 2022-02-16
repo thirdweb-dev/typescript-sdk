@@ -7,7 +7,7 @@ import {
   IMarketplace,
   Marketplace as MarketplaceContract,
   Marketplace__factory,
-} from "@3rdweb/contracts";
+} from "@thirdweb-dev/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractEncoder } from "../core/classes/contract-encoder";

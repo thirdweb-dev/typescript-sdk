@@ -6,7 +6,7 @@ import {
   IERC20__factory,
   TokenERC20,
   TokenERC20__factory,
-} from "@3rdweb/contracts";
+} from "@thirdweb-dev/contracts";
 import { ChainId, SUPPORTED_CHAIN_ID } from "../constants/chains";
 import { NATIVE_TOKEN_ADDRESS, NATIVE_TOKENS } from "../constants/currency";
 import { Provider } from "@ethersproject/providers";

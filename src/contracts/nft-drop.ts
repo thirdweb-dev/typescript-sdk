@@ -1,5 +1,5 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import { DropERC721, DropERC721__factory } from "@3rdweb/contracts";
+import { DropERC721, DropERC721__factory } from "@thirdweb-dev/contracts";
 import { hexZeroPad } from "@ethersproject/bytes";
 import {
   BigNumber,

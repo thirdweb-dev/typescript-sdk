@@ -5,7 +5,7 @@
 Install the latest version of the SDK with `npm` or `yarn`:
 
 ```bash
-npm install @3rdweb/sdk@nightly
+npm install @thirdweb-dev/sdk@nightly
 ```
 
 ### Quick start
@@ -18,7 +18,7 @@ npm install @3rdweb/sdk@nightly
 2. Interact with your contracts from your own code using the thirdweb SDK
 
 ```javascript
-import { ThirdwebSDK } from "@3rdweb/sdk";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 // instantiate the SDK with a read only RPC url or a Signer to perform transactions
 const sdk = new ThirdwebSDK("your_rpc_url_or_signer");

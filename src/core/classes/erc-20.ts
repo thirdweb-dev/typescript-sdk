@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { TokenERC20 } from "@3rdweb/contracts";
+import { TokenERC20 } from "@thirdweb-dev/contracts";
 import { BigNumber, BigNumberish } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";

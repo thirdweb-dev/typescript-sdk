@@ -27,7 +27,7 @@ import type {
 import { ContractRegistry } from "./classes/registry";
 import { getContractAddressByChainId } from "../constants/addresses";
 import { z } from "zod";
-import { IThirdwebContract__factory } from "@3rdweb/contracts";
+import { IThirdwebContract__factory } from "@thirdweb-dev/contracts";
 
 /**
  * The main entry point for the thirdweb SDK

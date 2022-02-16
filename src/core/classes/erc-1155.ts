@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC1155, TokenERC1155 } from "@3rdweb/contracts";
+import { DropERC1155, TokenERC1155 } from "@thirdweb-dev/contracts";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";

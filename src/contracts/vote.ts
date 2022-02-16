@@ -2,7 +2,7 @@ import {
   IERC20__factory,
   VoteERC20,
   VoteERC20__factory,
-} from "@3rdweb/contracts";
+} from "@thirdweb-dev/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import {
   IStorage,

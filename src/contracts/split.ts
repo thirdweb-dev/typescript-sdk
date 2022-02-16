@@ -3,7 +3,7 @@ import {
   IERC20__factory,
   Split as SplitContract,
   Split__factory,
-} from "@3rdweb/contracts";
+} from "@thirdweb-dev/contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   IStorage,

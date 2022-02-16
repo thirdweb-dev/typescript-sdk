@@ -7,7 +7,7 @@ import {
   IDropERC1155,
   IERC20,
   IERC20__factory,
-} from "@3rdweb/contracts";
+} from "@thirdweb-dev/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import {

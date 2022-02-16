@@ -1,5 +1,5 @@
 import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
-import { TokenERC20, TokenERC20__factory } from "@3rdweb/contracts";
+import { TokenERC20, TokenERC20__factory } from "@thirdweb-dev/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {

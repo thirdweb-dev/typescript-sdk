@@ -14,14 +14,14 @@ import {
   IERC20__factory,
   Pack as PackContract,
   Pack__factory,
-} from "@3rdweb/contracts";
+} from "@thirdweb-dev/contracts";
 import { PacksContractSchema } from "../schema/contracts/packs";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { NFTMetadata } from "../schema/tokens/common";
 import {
   PackCreatedEvent,
   PackOpenRequestEvent,
-} from "@3rdweb/contracts/dist/Pack";
+} from "@thirdweb-dev/contracts/dist/Pack";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { fetchTokenMetadataForContract } from "../common/nft";
 import {

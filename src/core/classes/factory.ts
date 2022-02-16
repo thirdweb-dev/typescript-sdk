@@ -1,4 +1,4 @@
-import { TWFactory, TWFactory__factory } from "@3rdweb/contracts";
+import { TWFactory, TWFactory__factory } from "@thirdweb-dev/contracts";
 import { BigNumber, ethers } from "ethers";
 import { z } from "zod";
 import {
@@ -18,7 +18,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
 import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { ProxyDeployedEvent } from "@3rdweb/contracts/dist/TWFactory";
+import { ProxyDeployedEvent } from "@thirdweb-dev/contracts/dist/TWFactory";
 
 import { ChainlinkVrf } from "../../constants/chainlink";
 

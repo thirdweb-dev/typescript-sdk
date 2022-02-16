@@ -5,7 +5,7 @@ import {
   TWFee__factory,
   TWRegistry,
   TWRegistry__factory,
-} from "@3rdweb/contracts";
+} from "@thirdweb-dev/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";

@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { DropERC721 } from "@3rdweb/contracts";
+import { DropERC721 } from "@thirdweb-dev/contracts";
 import {
   CommonNFTInput,
   NFTMetadata,

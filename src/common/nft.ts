@@ -6,7 +6,7 @@ import {
   ERC165__factory,
   TokenERC1155__factory,
   TokenERC721__factory,
-} from "@3rdweb/contracts";
+} from "@thirdweb-dev/contracts";
 import { NotFoundError } from "./error";
 import {
   InterfaceId_IERC1155,

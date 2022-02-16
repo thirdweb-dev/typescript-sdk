@@ -1,4 +1,4 @@
-import { IThirdwebContract } from "@3rdweb/contracts";
+import { IThirdwebContract } from "@thirdweb-dev/contracts";
 import { z } from "zod";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResult } from "../types";

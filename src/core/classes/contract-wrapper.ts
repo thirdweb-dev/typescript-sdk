@@ -25,7 +25,7 @@ import {
   ForwardRequest,
   getAndIncrementNonce,
 } from "../../common/forwarder";
-import { Forwarder__factory } from "@3rdweb/contracts";
+import { Forwarder__factory } from "@thirdweb-dev/contracts";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";

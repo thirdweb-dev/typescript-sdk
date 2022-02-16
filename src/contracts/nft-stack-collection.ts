@@ -1,5 +1,5 @@
 import { Erc1155 } from "../core/classes/erc-1155";
-import { TokenERC1155, TokenERC1155__factory } from "@3rdweb/contracts";
+import { TokenERC1155, TokenERC1155__factory } from "@thirdweb-dev/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
@@ -13,7 +13,7 @@ import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
 import { BundleMetadata, BundleMetadataInput } from "../schema/tokens/bundle";
-import { TokenMintedEvent } from "@3rdweb/contracts/dist/TokenERC721";
+import { TokenMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { CommonNFTInput } from "../schema/tokens/common";
 import { BigNumber, BigNumberish, ethers } from "ethers";

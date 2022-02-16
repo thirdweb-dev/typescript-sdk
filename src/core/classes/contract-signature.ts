@@ -10,12 +10,12 @@ import {
 import { TransactionResultWithId } from "../types";
 import { setErc20Allowance } from "../../common/currency";
 import { BigNumber } from "ethers";
-import { MintWithSignatureEvent } from "@3rdweb/contracts/dist/TokenERC721";
+import { MintWithSignatureEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { v4 as uuidv4 } from "uuid";
 import { hexlify, toUtf8Bytes } from "ethers/lib/utils";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ITokenERC721, TokenERC721 } from "@3rdweb/contracts";
+import { ITokenERC721, TokenERC721 } from "@thirdweb-dev/contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
