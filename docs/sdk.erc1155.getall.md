@@ -9,11 +9,11 @@ Get All NFTs
 <b>Signature:</b>
 
 ```typescript
-getAll(): Promise<BundleMetadata[]>;
+getAll(): Promise<EditionMetadata[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;BundleMetadata\[\]&gt;
+Promise&lt;EditionMetadata\[\]&gt;
 
 The NFT metadata for all NFTs queried.
 

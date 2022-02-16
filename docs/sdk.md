@@ -15,14 +15,14 @@
 |  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalites |
 |  [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Manages claim conditions for Bundle Drop contracts |
 |  [DropErc721ClaimConditions](./sdk.droperc721claimconditions.md) | Manages claim conditions for NFT Drop contracts |
+|  [Edition](./sdk.edition.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
+|  [EditionDrop](./sdk.editiondrop.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [Erc1155](./sdk.erc1155.md) | Standard ERC1155 functions |
 |  [Erc20](./sdk.erc20.md) | Standard ERC20 functions |
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 functions |
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [NFTCollection](./sdk.nftcollection.md) | Create a collection of one-of-one NFTs. |
 |  [NFTDrop](./sdk.nftdrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
-|  [NFTStackCollection](./sdk.nftstackcollection.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
-|  [NFTStackDrop](./sdk.nftstackdrop.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [Pack](./sdk.pack.md) | Create lootboxes of NFTs with rarity based open mechanics. |
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
@@ -52,8 +52,6 @@
 
 |  Variable | Description |
 |  --- | --- |
-|  [BundleMetadataInputSchema](./sdk.bundlemetadatainputschema.md) |  |
-|  [BundleMetadataOutputSchema](./sdk.bundlemetadataoutputschema.md) |  |
 |  [ClaimConditionInputArray](./sdk.claimconditioninputarray.md) |  |
 |  [ClaimConditionInputSchema](./sdk.claimconditioninputschema.md) |  |
 |  [ClaimConditionOutputSchema](./sdk.claimconditionoutputschema.md) |  |
@@ -64,6 +62,8 @@
 |  [CommonRoyaltySchema](./sdk.commonroyaltyschema.md) |  |
 |  [CommonSymbolSchema](./sdk.commonsymbolschema.md) |  |
 |  [CommonTrustedForwarderSchema](./sdk.commontrustedforwarderschema.md) |  |
+|  [EditionMetadataInputSchema](./sdk.editionmetadatainputschema.md) |  |
+|  [EditionMetadataOutputSchema](./sdk.editionmetadataoutputschema.md) |  |
 |  [OptionalPropertiesInput](./sdk.optionalpropertiesinput.md) |  |
 |  [OptionalPropertiesOutput](./sdk.optionalpropertiesoutput.md) |  |
 |  [PartialClaimConditionInputSchema](./sdk.partialclaimconditioninputschema.md) |  |
@@ -75,12 +75,12 @@
 |  Type Alias | Description |
 |  --- | --- |
 |  [BufferOrStringWithName](./sdk.bufferorstringwithname.md) |  |
-|  [BundleMetadata](./sdk.bundlemetadata.md) |  |
-|  [BundleMetadataInput](./sdk.bundlemetadatainput.md) |  |
 |  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
 |  [ContractForContractType](./sdk.contractforcontracttype.md) |  |
 |  [ContractType](./sdk.contracttype.md) |  |
+|  [EditionMetadata](./sdk.editionmetadata.md) |  |
+|  [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [Json](./sdk.json.md) |  |

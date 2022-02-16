@@ -1,6 +1,6 @@
 export { NFTCollection } from "./nft-collection";
-export { NFTStackDrop } from "./nft-stack-drop";
-export { NFTStackCollection } from "./nft-stack-collection";
+export { EditionDrop } from "./edition-drop";
+export { Edition } from "./edition";
 export { Token } from "./token";
 export { Vote } from "./vote";
 export { Split } from "./split";

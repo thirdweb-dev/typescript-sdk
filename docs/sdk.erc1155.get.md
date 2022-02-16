@@ -9,7 +9,7 @@ Get a single NFT Metadata
 <b>Signature:</b>
 
 ```typescript
-get(tokenId: BigNumberish): Promise<BundleMetadata>;
+get(tokenId: BigNumberish): Promise<EditionMetadata>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ get(tokenId: BigNumberish): Promise<BundleMetadata>;
 
 <b>Returns:</b>
 
-Promise&lt;BundleMetadata&gt;
+Promise&lt;EditionMetadata&gt;
 
 The NFT metadata
 

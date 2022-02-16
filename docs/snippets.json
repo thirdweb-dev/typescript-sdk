@@ -1,4 +1,62 @@
 {
+  "Edition": {
+    "name": "Edition",
+    "summary": "Setup a collection of one-of-one NFTs that are minted as users claim them.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst edition = sdk.getEdition(\"{{contract_address}}\");"
+    },
+    "methods": [
+      {
+        "name": "mintBatchTo",
+        "summary": "Mint Many NFTs with limited supplies\n\n",
+        "remarks": "\n\nMint many different NFTs with limited supplies to a specified wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\"\n\n// Custom metadata and supplies of your NFTs\nconst metadataWithSupply = [{\n  supply: 50, // The number of this NFT you want to mint\n  metadata: {\n    name: \"Cool NFT #1\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}, {\n  supply: 100,\n  metadata: {\n    name: \"Cool NFT #2\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}];\n\nconst tx = await contract.mintBatchTo(toAddress, metadataWithSupply);\nconst receipt = tx[0].receipt; // same transaction receipt for all minted NFTs\nconst firstTokenId = tx[0].id; // token id of the first minted NFT\nconst firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT"
+        },
+        "signature": "mintBatchTo(to: string, metadataWithSupply: EditionMetadataInput[]): Promise<TransactionResultWithId<EditionMetadata>[]>;"
+      },
+      {
+        "name": "mintTo",
+        "summary": "Mint an NFT with a limited supply\n\n",
+        "remarks": "\n\nMint an NFT with a limited supply to a specified wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\"\n\n// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}\n\nconst metadataWithSupply = {\n  metadata,\n  supply: 1000, // The number of this NFT you want to mint\n}\n\nconst tx = await contract.mintTo(toAddress, metadataWithSupply);\nconst receipt = tx.receipt; // the transaction receipt\nconst tokenId = tx.id; // the id of the NFT minted\nconst nft = await tx.data(); // (optional) fetch details of minted NFT"
+        },
+        "signature": "mintTo(to: string, metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;"
+      }
+    ],
+    "signature": "declare class Edition extends Erc1155<TokenERC1155> "
+  },
+  "EditionDrop": {
+    "name": "EditionDrop",
+    "summary": "Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst editionDrop = sdk.getEditionDrop(\"{{contract_address}}\");"
+    },
+    "methods": [
+      {
+        "name": "claimTo",
+        "summary": "Claim NFTs to a specific Wallet\n\n",
+        "remarks": "\n\nLet the specified wallet claim NFTs.\n\n",
+        "examples": {
+          "javascript": "const address = \"{{wallet_address}}\"; // address of the wallet you want to claim the NFTs\nconst tokenId = 0; // the id of the NFT you want to claim\nconst quantity = 1; // how many NFTs you want to claim\n\nconst tx = await contract.claimTo(address, quantity);\nconst receipt = tx.receipt; // the transaction receipt\nconst claimedTokenId = tx.id; // the id of the NFT claimed\nconst claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata"
+        },
+        "signature": "claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;"
+      },
+      {
+        "name": "createBatch",
+        "summary": "Create a batch of NFTs to be claimed in the future\n\n",
+        "remarks": "\n\nCreate batch allows you to create a batch of many NFTs in one transaction.\n\n",
+        "examples": {
+          "javascript": "// Custom metadata of the NFTs to create\nconst metadatas = [{\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}];\n\nconst results = await contract.createBatch(metadatas); // uploads and creates the NFTs on chain\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
+        },
+        "signature": "createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;"
+      }
+    ],
+    "signature": "declare class EditionDrop extends Erc1155<DropERC1155> "
+  },
   "Marketplace": {
     "name": "Marketplace",
     "summary": "Create your own whitelabel marketplace that enables users to buy and sell any digital assets.\n\n",
@@ -193,64 +251,6 @@
       }
     ],
     "signature": "declare class NFTDrop extends Erc721<DropERC721> "
-  },
-  "NFTStackCollection": {
-    "name": "NFTStackCollection",
-    "summary": "Setup a collection of one-of-one NFTs that are minted as users claim them.\n\n",
-    "remarks": null,
-    "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst nftStackCollection = sdk.getNFTStackCollection(\"{{contract_address}}\");"
-    },
-    "methods": [
-      {
-        "name": "mintBatchTo",
-        "summary": "Mint Many NFTs with limited supplies\n\n",
-        "remarks": "\n\nMint many different NFTs with limited supplies to a specified wallet.\n\n",
-        "examples": {
-          "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\"\n\n// Custom metadata and supplies of your NFTs\nconst metadataWithSupply = [{\n  supply: 50, // The number of this NFT you want to mint\n  metadata: {\n    name: \"Cool NFT #1\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}, {\n  supply: 100,\n  metadata: {\n    name: \"Cool NFT #2\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}];\n\nconst tx = await contract.mintBatchTo(toAddress, metadataWithSupply);\nconst receipt = tx[0].receipt; // same transaction receipt for all minted NFTs\nconst firstTokenId = tx[0].id; // token id of the first minted NFT\nconst firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT"
-        },
-        "signature": "mintBatchTo(to: string, metadataWithSupply: BundleMetadataInput[]): Promise<TransactionResultWithId<BundleMetadata>[]>;"
-      },
-      {
-        "name": "mintTo",
-        "summary": "Mint an NFT with a limited supply\n\n",
-        "remarks": "\n\nMint an NFT with a limited supply to a specified wallet.\n\n",
-        "examples": {
-          "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\"\n\n// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}\n\nconst metadataWithSupply = {\n  metadata,\n  supply: 1000, // The number of this NFT you want to mint\n}\n\nconst tx = await contract.mintTo(toAddress, metadataWithSupply);\nconst receipt = tx.receipt; // the transaction receipt\nconst tokenId = tx.id; // the id of the NFT minted\nconst nft = await tx.data(); // (optional) fetch details of minted NFT"
-        },
-        "signature": "mintTo(to: string, metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<BundleMetadata>>;"
-      }
-    ],
-    "signature": "declare class NFTStackCollection extends Erc1155<TokenERC1155> "
-  },
-  "NFTStackDrop": {
-    "name": "NFTStackDrop",
-    "summary": "Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.\n\n",
-    "remarks": null,
-    "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst nftStackDrop = sdk.getNFTStackDrop(\"{{contract_address}}\");"
-    },
-    "methods": [
-      {
-        "name": "claimTo",
-        "summary": "Claim NFTs to a specific Wallet\n\n",
-        "remarks": "\n\nLet the specified wallet claim NFTs.\n\n",
-        "examples": {
-          "javascript": "const address = \"{{wallet_address}}\"; // address of the wallet you want to claim the NFTs\nconst tokenId = 0; // the id of the NFT you want to claim\nconst quantity = 1; // how many NFTs you want to claim\n\nconst tx = await contract.claimTo(address, quantity);\nconst receipt = tx.receipt; // the transaction receipt\nconst claimedTokenId = tx.id; // the id of the NFT claimed\nconst claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata"
-        },
-        "signature": "claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;"
-      },
-      {
-        "name": "createBatch",
-        "summary": "Create a batch of NFTs to be claimed in the future\n\n",
-        "remarks": "\n\nCreate batch allows you to create a batch of many NFTs in one transaction.\n\n",
-        "examples": {
-          "javascript": "// Custom metadata of the NFTs to create\nconst metadatas = [{\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}];\n\nconst results = await contract.createBatch(metadatas); // uploads and creates the NFTs on chain\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
-        },
-        "signature": "createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;"
-      }
-    ],
-    "signature": "declare class NFTStackDrop extends Erc1155<DropERC1155> "
   },
   "Pack": {
     "name": "Pack",

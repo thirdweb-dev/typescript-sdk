@@ -9,7 +9,7 @@ Get Owned NFTs
 <b>Signature:</b>
 
 ```typescript
-getOwned(_address?: string): Promise<BundleMetadata[]>;
+getOwned(_address?: string): Promise<EditionMetadata[]>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getOwned(_address?: string): Promise<BundleMetadata[]>;
 
 <b>Returns:</b>
 
-Promise&lt;BundleMetadata\[\]&gt;
+Promise&lt;EditionMetadata\[\]&gt;
 
 The NFT metadata for all NFTs in the contract.
 

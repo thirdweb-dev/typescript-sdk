@@ -18,8 +18,8 @@ import { DropERC1155 } from '@thirdweb-dev/contracts';
 import { DropERC1155__factory } from '@thirdweb-dev/contracts';
 import { DropERC721 } from '@thirdweb-dev/contracts';
 import { DropERC721__factory } from '@thirdweb-dev/contracts';
-import * as ethers from 'ethers';
-import { ethers as ethers_2 } from 'ethers';
+import { ethers } from 'ethers';
+import * as ethers_2 from 'ethers';
 import * as _ethersproject_abstract_provider from '@ethersproject/abstract-provider';
 import { EventEmitter2 } from 'eventemitter2';
 import { If } from 'ts-toolbelt/out/Any/If';
@@ -86,164 +86,6 @@ export type BufferOrStringWithName = {
     data: Buffer | string;
     name?: string;
 };
-
-// @public (undocumented)
-export type BundleMetadata = z.output<typeof BundleMetadataOutputSchema>;
-
-// @public (undocumented)
-export type BundleMetadataInput = z.input<typeof BundleMetadataInputSchema>;
-
-// @public (undocumented)
-export const BundleMetadataInputSchema: z.ZodObject<{
-    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
-    metadata: z.ZodObject<z.extendShape<{
-        name: z.ZodString;
-        description: z.ZodOptional<z.ZodString>;
-        image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-    }, {
-        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
-        properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
-            key: z.ZodString;
-            value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
-        }, "strip", z.ZodTypeAny, {
-            value?: any;
-            key: string;
-        }, {
-            value?: any;
-            key: string;
-        }>, "many">, {
-            value?: any;
-            key: string;
-        }[], {
-            value?: any;
-            key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>, Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>;
-    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
-        name: string;
-    }, {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
-        name: string;
-    }>;
-}, "strip", z.ZodTypeAny, {
-    metadata: {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
-        name: string;
-    };
-    supply: string;
-}, {
-    metadata: {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
-        name: string;
-    };
-    supply: string | number | bigint | ethers.BigNumber;
-}>;
-
-// @public (undocumented)
-export const BundleMetadataOutputSchema: z.ZodObject<{
-    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    metadata: z.ZodObject<z.extendShape<z.extendShape<{
-        name: z.ZodString;
-        description: z.ZodOptional<z.ZodString>;
-        image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-    }, {
-        id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-        uri: z.ZodString;
-        image: z.ZodOptional<z.ZodString>;
-        external_url: z.ZodOptional<z.ZodString>;
-    }>, {
-        animation_url: z.ZodOptional<z.ZodString>;
-        properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
-    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: string | undefined;
-        external_url?: string | undefined;
-        animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
-        name: string;
-        id: ethers.BigNumber;
-        uri: string;
-    }, {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: string | undefined;
-        external_url?: string | undefined;
-        animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
-        name: string;
-        id: string | number | bigint | ethers.BigNumber;
-        uri: string;
-    }>;
-}, "strip", z.ZodTypeAny, {
-    metadata: {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: string | undefined;
-        external_url?: string | undefined;
-        animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
-        name: string;
-        id: ethers.BigNumber;
-        uri: string;
-    };
-    supply: ethers.BigNumber;
-}, {
-    metadata: {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: string | undefined;
-        external_url?: string | undefined;
-        animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
-        name: string;
-        id: string | number | bigint | ethers.BigNumber;
-        uri: string;
-    };
-    supply: string | number | bigint | ethers.BigNumber;
-}>;
 
 // @public (undocumented)
 export enum ChainId {
@@ -593,8 +435,8 @@ export class ContractRoyalty<TContract extends IThirdwebRoyalty & IThirdwebContr
 export const CONTRACTS_MAP: {
     readonly "nft-drop": typeof NFTDrop;
     readonly "nft-collection": typeof NFTCollection;
-    readonly "nft-stack-drop": typeof NFTStackDrop;
-    readonly "nft-stack-collection": typeof NFTStackCollection;
+    readonly "edition-drop": typeof EditionDrop;
+    readonly edition: typeof Edition;
     readonly token: typeof Token;
     readonly vote: typeof Vote;
     readonly split: typeof Split;
@@ -650,6 +492,423 @@ export class DuplicateLeafsError extends Error {
     constructor(message?: string);
 }
 
+// @public
+export class Edition extends Erc1155<TokenERC1155> {
+    // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
+    // (undocumented)
+    static contractFactory: typeof TokenERC1155__factory;
+    // (undocumented)
+    static contractRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static contractType: "edition";
+    // (undocumented)
+    encoder: ContractEncoder<TokenERC1155>;
+    increaseSupply(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
+    // (undocumented)
+    metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
+    mint(metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;
+    mintBatch(metadatas: EditionMetadataInput[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
+    mintBatchTo(to: string, metadataWithSupply: EditionMetadataInput[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
+    mintTo(to: string, metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;
+    // (undocumented)
+    primarySale: ContractPrimarySale<TokenERC1155>;
+    // (undocumented)
+    roles: ContractRoles<TokenERC1155, typeof Edition.contractRoles[number]>;
+    // (undocumented)
+    royalty: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
+    // @internal (undocumented)
+    static schema: {
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
+        }>, {
+            platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
+        }>, {
+            primary_sale_recipient: zod.ZodEffects<zod.ZodString, string, string>;
+        }>, {
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+            primary_sale_recipient: string;
+            platform_fee_basis_points: number;
+            platform_fee_recipient: string;
+            trusted_forwarder: string;
+        }, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            platform_fee_basis_points?: number | undefined;
+            platform_fee_recipient?: string | undefined;
+            trusted_forwarder?: string | undefined;
+            name: string;
+            primary_sale_recipient: string;
+        }>;
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            image: zod.ZodOptional<zod.ZodString>;
+        }>, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+        }, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+        input: zod.ZodObject<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+        }, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            name: string;
+        }>;
+    };
+}
+
+// @public
+export class EditionDrop extends Erc1155<DropERC1155> {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
+    claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
+    // (undocumented)
+    claimConditions: DropErc1155ClaimConditions;
+    claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
+    // (undocumented)
+    static contractFactory: typeof DropERC1155__factory;
+    // (undocumented)
+    static contractRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static contractType: "edition-drop";
+    createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // (undocumented)
+    encoder: ContractEncoder<DropERC1155>;
+    // (undocumented)
+    metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
+    // (undocumented)
+    primarySale: ContractPrimarySale<DropERC1155>;
+    // (undocumented)
+    roles: ContractRoles<DropERC1155, typeof EditionDrop.contractRoles[number]>;
+    // (undocumented)
+    royalty: ContractRoyalty<DropERC1155, typeof EditionDrop.schema>;
+    // @internal (undocumented)
+    static schema: {
+        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
+        }>, {
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
+        }>, {
+            platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
+        }>, {
+            primary_sale_recipient: zod.ZodEffects<zod.ZodString, string, string>;
+        }>, {
+            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            symbol: string;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+            primary_sale_recipient: string;
+            platform_fee_basis_points: number;
+            platform_fee_recipient: string;
+            trusted_forwarder: string;
+            merkle: Record<string, string>;
+        }, {
+            symbol?: string | undefined;
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            platform_fee_basis_points?: number | undefined;
+            platform_fee_recipient?: string | undefined;
+            trusted_forwarder?: string | undefined;
+            merkle?: Record<string, string> | undefined;
+            name: string;
+            primary_sale_recipient: string;
+        }>;
+        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            image: zod.ZodOptional<zod.ZodString>;
+        }>, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
+        }>, {
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
+        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
+            [x: string]: Json;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            symbol: string;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+            merkle: Record<string, string>;
+        }, {
+            [x: string]: Json;
+            symbol?: string | undefined;
+            description?: string | undefined;
+            image?: string | undefined;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            merkle?: Record<string, string> | undefined;
+            name: string;
+        }>;
+        input: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
+            name: zod.ZodString;
+            description: zod.ZodOptional<zod.ZodString>;
+            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
+            external_link: zod.ZodOptional<zod.ZodString>;
+        }, {
+            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
+            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
+        }>, {
+            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
+        }>, {
+            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
+        }>, "strip", zod.ZodTypeAny, {
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            symbol: string;
+            name: string;
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+            merkle: Record<string, string>;
+        }, {
+            symbol?: string | undefined;
+            description?: string | undefined;
+            image?: any;
+            external_link?: string | undefined;
+            seller_fee_basis_points?: number | undefined;
+            fee_recipient?: string | undefined;
+            merkle?: Record<string, string> | undefined;
+            name: string;
+        }>;
+    };
+}
+
+// @public (undocumented)
+export type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
+
+// @public (undocumented)
+export type EditionMetadataInput = z.input<typeof EditionMetadataInputSchema>;
+
+// @public (undocumented)
+export const EditionMetadataInputSchema: z.ZodObject<{
+    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>;
+    metadata: z.ZodObject<z.extendShape<{
+        name: z.ZodString;
+        description: z.ZodOptional<z.ZodString>;
+        image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+    }, {
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
+        properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
+            key: z.ZodString;
+            value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
+        }, "strip", z.ZodTypeAny, {
+            value?: any;
+            key: string;
+        }, {
+            value?: any;
+            key: string;
+        }>, "many">, {
+            value?: any;
+            key: string;
+        }[], {
+            value?: any;
+            key: string;
+        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
+            value?: any;
+            key: string;
+        }[] | Record<string, any> | undefined, {
+            value?: any;
+            key: string;
+        }[] | Record<string, any> | undefined>, Record<string, any> | undefined, {
+            value?: any;
+            key: string;
+        }[] | Record<string, any> | undefined>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, any> | undefined;
+        name: string;
+    }, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: {
+            value?: any;
+            key: string;
+        }[] | Record<string, any> | undefined;
+        name: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    metadata: {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, any> | undefined;
+        name: string;
+    };
+    supply: string;
+}, {
+    metadata: {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: {
+            value?: any;
+            key: string;
+        }[] | Record<string, any> | undefined;
+        name: string;
+    };
+    supply: string | number | bigint | ethers_2.BigNumber;
+}>;
+
+// @public (undocumented)
+export const EditionMetadataOutputSchema: z.ZodObject<{
+    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>;
+    metadata: z.ZodObject<z.extendShape<z.extendShape<{
+        name: z.ZodString;
+        description: z.ZodOptional<z.ZodString>;
+        image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+    }, {
+        id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>;
+        uri: z.ZodString;
+        image: z.ZodOptional<z.ZodString>;
+        external_url: z.ZodOptional<z.ZodString>;
+    }>, {
+        animation_url: z.ZodOptional<z.ZodString>;
+        properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_url?: string | undefined;
+        animation_url?: string | undefined;
+        properties?: Record<string, string | number | boolean | null> | undefined;
+        name: string;
+        id: ethers_2.BigNumber;
+        uri: string;
+    }, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_url?: string | undefined;
+        animation_url?: string | undefined;
+        properties?: Record<string, string | number | boolean | null> | undefined;
+        name: string;
+        id: string | number | bigint | ethers_2.BigNumber;
+        uri: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    metadata: {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_url?: string | undefined;
+        animation_url?: string | undefined;
+        properties?: Record<string, string | number | boolean | null> | undefined;
+        name: string;
+        id: ethers_2.BigNumber;
+        uri: string;
+    };
+    supply: ethers_2.BigNumber;
+}, {
+    metadata: {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_url?: string | undefined;
+        animation_url?: string | undefined;
+        properties?: Record<string, string | number | boolean | null> | undefined;
+        name: string;
+        id: string | number | bigint | ethers_2.BigNumber;
+        uri: string;
+    };
+    supply: string | number | bigint | ethers_2.BigNumber;
+}>;
+
 // Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
 //
 // @public
@@ -660,18 +919,16 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155> implements Updateable
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
-    get(tokenId: BigNumberish): Promise<BundleMetadata>;
+    get(tokenId: BigNumberish): Promise<EditionMetadata>;
     // (undocumented)
     getAddress(): string;
-    getAll(): Promise<BundleMetadata[]>;
-    getOwned(_address?: string): Promise<BundleMetadata[]>;
+    getAll(): Promise<EditionMetadata[]>;
+    getOwned(_address?: string): Promise<EditionMetadata[]>;
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
     isTransferRestricted(): Promise<boolean>;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
-    // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     protected options: SDKOptions;
     // @internal
@@ -1318,264 +1575,6 @@ export type NFTMetadataOwner = {
     owner: string;
 };
 
-// @public
-export class NFTStackCollection extends Erc1155<TokenERC1155> {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
-    // (undocumented)
-    static contractFactory: typeof TokenERC1155__factory;
-    // (undocumented)
-    static contractRoles: readonly ["admin", "minter", "transfer"];
-    // (undocumented)
-    static contractType: "nft-stack-collection";
-    // (undocumented)
-    encoder: ContractEncoder<TokenERC1155>;
-    increaseSupply(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<BundleMetadata>>;
-    // (undocumented)
-    metadata: ContractMetadata<TokenERC1155, typeof NFTStackCollection.schema>;
-    mint(metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<BundleMetadata>>;
-    mintBatch(metadatas: BundleMetadataInput[]): Promise<TransactionResultWithId<BundleMetadata>[]>;
-    mintBatchTo(to: string, metadataWithSupply: BundleMetadataInput[]): Promise<TransactionResultWithId<BundleMetadata>[]>;
-    mintTo(to: string, metadataWithSupply: BundleMetadataInput): Promise<TransactionResultWithId<BundleMetadata>>;
-    // (undocumented)
-    primarySale: ContractPrimarySale<TokenERC1155>;
-    // (undocumented)
-    roles: ContractRoles<TokenERC1155, typeof NFTStackCollection.contractRoles[number]>;
-    // (undocumented)
-    royalty: ContractRoyalty<TokenERC1155, typeof NFTStackCollection.schema>;
-    // @internal (undocumented)
-    static schema: {
-        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
-            external_link: zod.ZodOptional<zod.ZodString>;
-        }, {
-            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
-        }>, {
-            platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
-        }>, {
-            primary_sale_recipient: zod.ZodEffects<zod.ZodString, string, string>;
-        }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
-        }>, "strip", zod.ZodTypeAny, {
-            description?: string | undefined;
-            image?: any;
-            external_link?: string | undefined;
-            name: string;
-            seller_fee_basis_points: number;
-            fee_recipient: string;
-            primary_sale_recipient: string;
-            platform_fee_basis_points: number;
-            platform_fee_recipient: string;
-            trusted_forwarder: string;
-        }, {
-            description?: string | undefined;
-            image?: any;
-            external_link?: string | undefined;
-            seller_fee_basis_points?: number | undefined;
-            fee_recipient?: string | undefined;
-            platform_fee_basis_points?: number | undefined;
-            platform_fee_recipient?: string | undefined;
-            trusted_forwarder?: string | undefined;
-            name: string;
-            primary_sale_recipient: string;
-        }>;
-        output: zod.ZodObject<zod.extendShape<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
-            external_link: zod.ZodOptional<zod.ZodString>;
-        }, {
-            image: zod.ZodOptional<zod.ZodString>;
-        }>, {
-            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
-        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_link?: string | undefined;
-            name: string;
-            seller_fee_basis_points: number;
-            fee_recipient: string;
-        }, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_link?: string | undefined;
-            seller_fee_basis_points?: number | undefined;
-            fee_recipient?: string | undefined;
-            name: string;
-        }>;
-        input: zod.ZodObject<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
-            external_link: zod.ZodOptional<zod.ZodString>;
-        }, {
-            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
-        }>, "strip", zod.ZodTypeAny, {
-            description?: string | undefined;
-            image?: any;
-            external_link?: string | undefined;
-            name: string;
-            seller_fee_basis_points: number;
-            fee_recipient: string;
-        }, {
-            description?: string | undefined;
-            image?: any;
-            external_link?: string | undefined;
-            seller_fee_basis_points?: number | undefined;
-            fee_recipient?: string | undefined;
-            name: string;
-        }>;
-    };
-}
-
-// @public
-export class NFTStackDrop extends Erc1155<DropERC1155> {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
-    claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
-    // (undocumented)
-    claimConditions: DropErc1155ClaimConditions;
-    claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
-    // (undocumented)
-    static contractFactory: typeof DropERC1155__factory;
-    // (undocumented)
-    static contractRoles: readonly ["admin", "minter", "transfer"];
-    // (undocumented)
-    static contractType: "nft-stack-drop";
-    createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
-    // (undocumented)
-    encoder: ContractEncoder<DropERC1155>;
-    // (undocumented)
-    metadata: ContractMetadata<DropERC1155, typeof NFTStackDrop.schema>;
-    // (undocumented)
-    primarySale: ContractPrimarySale<DropERC1155>;
-    // (undocumented)
-    roles: ContractRoles<DropERC1155, typeof NFTStackDrop.contractRoles[number]>;
-    // (undocumented)
-    royalty: ContractRoyalty<DropERC1155, typeof NFTStackDrop.schema>;
-    // @internal (undocumented)
-    static schema: {
-        deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
-            external_link: zod.ZodOptional<zod.ZodString>;
-        }, {
-            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
-        }>, {
-            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
-        }>, {
-            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
-        }>, {
-            platform_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            platform_fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
-        }>, {
-            primary_sale_recipient: zod.ZodEffects<zod.ZodString, string, string>;
-        }>, {
-            trusted_forwarder: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
-        }>, "strip", zod.ZodTypeAny, {
-            description?: string | undefined;
-            image?: any;
-            external_link?: string | undefined;
-            symbol: string;
-            name: string;
-            seller_fee_basis_points: number;
-            fee_recipient: string;
-            primary_sale_recipient: string;
-            platform_fee_basis_points: number;
-            platform_fee_recipient: string;
-            trusted_forwarder: string;
-            merkle: Record<string, string>;
-        }, {
-            symbol?: string | undefined;
-            description?: string | undefined;
-            image?: any;
-            external_link?: string | undefined;
-            seller_fee_basis_points?: number | undefined;
-            fee_recipient?: string | undefined;
-            platform_fee_basis_points?: number | undefined;
-            platform_fee_recipient?: string | undefined;
-            trusted_forwarder?: string | undefined;
-            merkle?: Record<string, string> | undefined;
-            name: string;
-            primary_sale_recipient: string;
-        }>;
-        output: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
-            external_link: zod.ZodOptional<zod.ZodString>;
-        }, {
-            image: zod.ZodOptional<zod.ZodString>;
-        }>, {
-            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
-        }>, {
-            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
-        }>, {
-            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
-        }>, "strip", zod.ZodLazy<zod.ZodType<Json, zod.ZodTypeDef, Json>>, {
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_link?: string | undefined;
-            symbol: string;
-            name: string;
-            seller_fee_basis_points: number;
-            fee_recipient: string;
-            merkle: Record<string, string>;
-        }, {
-            [x: string]: Json;
-            symbol?: string | undefined;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_link?: string | undefined;
-            seller_fee_basis_points?: number | undefined;
-            fee_recipient?: string | undefined;
-            merkle?: Record<string, string> | undefined;
-            name: string;
-        }>;
-        input: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<{
-            name: zod.ZodString;
-            description: zod.ZodOptional<zod.ZodString>;
-            image: zod.ZodOptional<zod.ZodUnion<[zod.ZodTypeAny, zod.ZodString]>>;
-            external_link: zod.ZodOptional<zod.ZodString>;
-        }, {
-            seller_fee_basis_points: zod.ZodDefault<zod.ZodNumber>;
-            fee_recipient: zod.ZodDefault<zod.ZodEffects<zod.ZodString, string, string>>;
-        }>, {
-            merkle: zod.ZodDefault<zod.ZodRecord<zod.ZodString, zod.ZodString>>;
-        }>, {
-            symbol: zod.ZodDefault<zod.ZodOptional<zod.ZodString>>;
-        }>, "strip", zod.ZodTypeAny, {
-            description?: string | undefined;
-            image?: any;
-            external_link?: string | undefined;
-            symbol: string;
-            name: string;
-            seller_fee_basis_points: number;
-            fee_recipient: string;
-            merkle: Record<string, string>;
-        }, {
-            symbol?: string | undefined;
-            description?: string | undefined;
-            image?: any;
-            external_link?: string | undefined;
-            seller_fee_basis_points?: number | undefined;
-            fee_recipient?: string | undefined;
-            merkle?: Record<string, string> | undefined;
-            name: string;
-        }>;
-    };
-}
-
 // Warning: (ae-internal-missing-underscore) The name "NotEnoughTokensError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1825,8 +1824,8 @@ export class QuantityAboveLimitError extends Error {
 export const REMOTE_CONTRACT_NAME: {
     readonly "nft-drop": "DropERC721";
     readonly "nft-collection": "TokenERC721";
-    readonly "nft-stack-drop": "DropERC1155";
-    readonly "nft-stack-collection": "TokenERC1155";
+    readonly "edition-drop": "DropERC1155";
+    readonly edition: "TokenERC1155";
     readonly token: "TokenERC20";
     readonly vote: "VoteERC20";
     readonly split: "Split";
@@ -1840,8 +1839,8 @@ export const REMOTE_CONTRACT_NAME: {
 export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly DropERC721: "nft-drop";
     readonly TokenERC721: "nft-collection";
-    readonly DropERC1155: "nft-stack-drop";
-    readonly TokenERC1155: "nft-stack-collection";
+    readonly DropERC1155: "edition-drop";
+    readonly TokenERC1155: "edition";
     readonly TokenERC20: "token";
     readonly VoteERC20: "vote";
     readonly Split: "split";
@@ -2068,11 +2067,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions, storage?: IStorage);
     deployContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
     // @internal (undocumented)
-    getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): NFTStackDrop | NFTStackCollection | Token | Vote | Split | Marketplace | Pack | NFTDrop | NFTCollection | ts_toolbelt_out_Class_Instance.Instance<{
+    getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): EditionDrop | Edition | Token | Vote | Split | Marketplace | Pack | NFTDrop | NFTCollection | ts_toolbelt_out_Class_Instance.Instance<{
         readonly "nft-drop": typeof NFTDrop;
         readonly "nft-collection": typeof NFTCollection;
-        readonly "nft-stack-drop": typeof NFTStackDrop;
-        readonly "nft-stack-collection": typeof NFTStackCollection;
+        readonly "edition-drop": typeof EditionDrop;
+        readonly edition: typeof Edition;
         readonly token: typeof Token;
         readonly vote: typeof Vote;
         readonly split: typeof Split;
@@ -2082,7 +2081,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // (undocumented)
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "split" | "nft-stack-drop" | "nft-stack-collection" | "token" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
+        contractType: "split" | "edition-drop" | "edition" | "token" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
         metadata: () => Promise<{
             [x: string]: Json;
             description?: string | undefined;
@@ -2110,7 +2109,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             voting_period_in_blocks: number;
             voting_token_address: string;
             voting_quorum_fraction: number;
-            proposal_token_threshold: ethers_2.BigNumber;
+            proposal_token_threshold: ethers.BigNumber;
         }> | Promise<{
             [x: string]: Json;
             description?: string | undefined;
@@ -2119,15 +2118,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             name: string;
             recipients: {
                 address: string;
-                shares: ethers_2.BigNumber;
+                shares: ethers.BigNumber;
             }[];
         }>;
     }[]>;
+    getEdition(address: string): Edition;
+    getEditionDrop(address: string): EditionDrop;
     getMarketplace(address: string): Marketplace;
     getNFTCollection(address: string): NFTCollection;
     getNFTDrop(contractAddress: string): NFTDrop;
-    getNFTStackCollection(address: string): NFTStackCollection;
-    getNFTStackDrop(address: string): NFTStackDrop;
     getPack(address: string): Pack;
     getSplit(address: string): Split;
     getToken(address: string): Token;
@@ -2241,13 +2240,13 @@ export type TokenMintInput = z.input<typeof TokenMintInputSchema>;
 // @public (undocumented)
 export const TokenMintInputSchema: z.ZodObject<{
     toAddress: z.ZodString;
-    amount: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
+    amount: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>;
 }, "strip", z.ZodTypeAny, {
     toAddress: string;
     amount: string;
 }, {
     toAddress: string;
-    amount: string | number | bigint | ethers.BigNumber;
+    amount: string | number | bigint | ethers_2.BigNumber;
 }>;
 
 // Warning: (ae-forgotten-export) The symbol "TransactionResultWithMetadata" needs to be exported by the entry point index.d.ts

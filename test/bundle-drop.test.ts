@@ -1,7 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";
 import { BigNumber, ethers } from "ethers";
-import { NFTStackDrop, Token } from "../src/index";
+import { EditionDrop, Token } from "../src/index";
 import { sdk, signers } from "./before.test";
 import { AddressZero } from "@ethersproject/constants";
 import { ClaimEligibility } from "../src/enums";
@@ -16,7 +16,7 @@ use(deepEqualInAnyOrder);
 
 // TODO: Write some actual pack contract tests
 describe("Bundle Drop Contract", async () => {
-  let bdContract: NFTStackDrop;
+  let bdContract: EditionDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,
@@ -32,7 +32,7 @@ describe("Bundle Drop Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(NFTStackDrop.contractType, {
+    const address = await sdk.deployContract(EditionDrop.contractType, {
       name: `Testing bundle drop from SDK`,
       description: "Test contract from tests",
       image:
@@ -43,7 +43,7 @@ describe("Bundle Drop Contract", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    bdContract = sdk.getNFTStackDrop(address);
+    bdContract = sdk.getEditionDrop(address);
   });
 
   it("should allow you to set claim conditions", async () => {

@@ -8,9 +8,9 @@ import { NotFoundError, RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import {
-  BundleMetadata,
-  BundleMetadataOutputSchema,
-} from "../../schema/tokens/bundle";
+  EditionMetadata,
+  EditionMetadataOutputSchema,
+} from "../../schema/tokens/edition";
 import { fetchTokenMetadata } from "../../common/nft";
 import { AddressZero } from "@ethersproject/constants";
 import { getRoleHash } from "../../common/role";
@@ -69,14 +69,14 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
    */
-  public async get(tokenId: BigNumberish): Promise<BundleMetadata> {
+  public async get(tokenId: BigNumberish): Promise<EditionMetadata> {
     const [supply, metadata] = await Promise.all([
       this.contractWrapper.readContract
         .totalSupply(tokenId)
         .catch(() => BigNumber.from(0)),
       this.getTokenMetadata(tokenId),
     ]);
-    return BundleMetadataOutputSchema.parse({
+    return EditionMetadataOutputSchema.parse({
       supply,
       metadata,
     });
@@ -94,7 +94,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    * ```
    * @returns The NFT metadata for all NFTs queried.
    */
-  public async getAll(): Promise<BundleMetadata[]> {
+  public async getAll(): Promise<EditionMetadata[]> {
     const maxId = (
       await this.contractWrapper.readContract.nextTokenIdToMint()
     ).toNumber();
@@ -118,7 +118,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(_address?: string): Promise<BundleMetadata[]> {
+  public async getOwned(_address?: string): Promise<EditionMetadata[]> {
     const address = _address
       ? _address
       : await this.contractWrapper.getSignerAddress();

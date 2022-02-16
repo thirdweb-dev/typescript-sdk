@@ -2,12 +2,12 @@ import { TWFactory, TWFactory__factory } from "@thirdweb-dev/contracts";
 import { BigNumber, ethers } from "ethers";
 import { z } from "zod";
 import {
-  NFTStackDrop,
+  EditionDrop,
   Marketplace,
   CONTRACTS_MAP,
   Pack,
   Split,
-  NFTStackCollection,
+  Edition,
   Token,
   Vote,
   NFTCollection,
@@ -101,9 +101,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc721metadata.platform_fee_basis_points,
           erc721metadata.platform_fee_recipient,
         ];
-      case NFTStackDrop.contractType:
-      case NFTStackCollection.contractType:
-        const erc1155metadata = NFTStackDrop.schema.deploy.parse(metadata);
+      case EditionDrop.contractType:
+      case Edition.contractType:
+        const erc1155metadata = EditionDrop.schema.deploy.parse(metadata);
         return [
           await this.getSignerAddress(),
           erc1155metadata.name,

@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
-  NFTStackDrop,
+  EditionDrop,
   Marketplace,
   CONTRACTS_MAP,
   Split,
@@ -9,7 +9,7 @@ import {
   Vote,
   NFTDrop,
   NFTCollection,
-  NFTStackCollection,
+  Edition,
   Pack,
   REMOTE_CONTRACT_TO_CONTRACT_TYPE,
 } from "../contracts";
@@ -206,24 +206,21 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   /**
-   * Get an instance of a Bundle Drop contract
+   * Get an instance of a Edition Drop contract
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getNFTStackDrop(address: string): NFTStackDrop {
-    return this.getContract(address, NFTStackDrop.contractType) as NFTStackDrop;
+  public getEditionDrop(address: string): EditionDrop {
+    return this.getContract(address, EditionDrop.contractType) as EditionDrop;
   }
 
   /**
-   * Get an instance of a Bundle contract
+   * Get an instance of an Edition contract
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getNFTStackCollection(address: string): NFTStackCollection {
-    return this.getContract(
-      address,
-      NFTStackCollection.contractType,
-    ) as NFTStackCollection;
+  public getEdition(address: string): Edition {
+    return this.getContract(address, Edition.contractType) as Edition;
   }
 
   /**

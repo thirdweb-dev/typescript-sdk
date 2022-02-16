@@ -1,6 +1,6 @@
 import { NFTCollection } from "./nft-collection";
-import { NFTStackDrop } from "./nft-stack-drop";
-import { NFTStackCollection } from "./nft-stack-collection";
+import { EditionDrop } from "./edition-drop";
+import { Edition } from "./edition";
 import { Token } from "./token";
 import { Vote } from "./vote";
 import { Split } from "./split";
@@ -14,8 +14,8 @@ import { NFTDrop } from "./nft-drop";
 export const CONTRACTS_MAP = {
   [NFTDrop.contractType]: NFTDrop,
   [NFTCollection.contractType]: NFTCollection,
-  [NFTStackDrop.contractType]: NFTStackDrop,
-  [NFTStackCollection.contractType]: NFTStackCollection,
+  [EditionDrop.contractType]: EditionDrop,
+  [Edition.contractType]: Edition,
   [Token.contractType]: Token,
   [Vote.contractType]: Vote,
   [Split.contractType]: Split,
@@ -29,8 +29,8 @@ export const CONTRACTS_MAP = {
 export const REMOTE_CONTRACT_NAME = {
   [NFTDrop.contractType]: "DropERC721",
   [NFTCollection.contractType]: "TokenERC721",
-  [NFTStackDrop.contractType]: "DropERC1155",
-  [NFTStackCollection.contractType]: "TokenERC1155",
+  [EditionDrop.contractType]: "DropERC1155",
+  [Edition.contractType]: "TokenERC1155",
   [Token.contractType]: "TokenERC20",
   [Vote.contractType]: "VoteERC20",
   [Split.contractType]: "Split",
@@ -44,8 +44,8 @@ export const REMOTE_CONTRACT_NAME = {
 export const REMOTE_CONTRACT_TO_CONTRACT_TYPE = {
   DropERC721: NFTDrop.contractType,
   TokenERC721: NFTCollection.contractType,
-  DropERC1155: NFTStackDrop.contractType,
-  TokenERC1155: NFTStackCollection.contractType,
+  DropERC1155: EditionDrop.contractType,
+  TokenERC1155: Edition.contractType,
   TokenERC20: Token.contractType,
   VoteERC20: Vote.contractType,
   Split: Split.contractType,

@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { NFTStackCollection } from "../src/index";
+import { Edition } from "../src/index";
 import { sdk, signers } from "./before.test";
 
 import { assert, expect } from "chai";
@@ -8,7 +8,7 @@ import { AddressZero } from "@ethersproject/constants";
 global.fetch = require("node-fetch");
 
 describe("Bundle Contract (aka Collection Contract)", async () => {
-  let bundleContract: NFTStackCollection;
+  let bundleContract: Edition;
   // let nftContract: NFTContract;
   // let currencyContract: CurrencyContract;
 
@@ -22,7 +22,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(NFTStackCollection.contractType, {
+    const address = await sdk.deployContract(Edition.contractType, {
       name: `Testing bundle from SDK`,
       description: "Test contract from tests",
       image:
@@ -33,7 +33,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    bundleContract = sdk.getNFTStackCollection(address);
+    bundleContract = sdk.getEdition(address);
   });
 
   it("should return all owned collection tokens", async () => {

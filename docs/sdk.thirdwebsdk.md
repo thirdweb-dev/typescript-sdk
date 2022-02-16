@@ -25,11 +25,11 @@ declare class ThirdwebSDK extends RPCConnectionHandler
 |  --- | --- | --- |
 |  [deployContract(contractType, contractMetadata)](./sdk.thirdwebsdk.deploycontract.md) |  | Deploys a new contract |
 |  [getContractList(walletAddress)](./sdk.thirdwebsdk.getcontractlist.md) |  |  |
+|  [getEdition(address)](./sdk.thirdwebsdk.getedition.md) |  | Get an instance of an Edition contract |
+|  [getEditionDrop(address)](./sdk.thirdwebsdk.geteditiondrop.md) |  | Get an instance of a Edition Drop contract |
 |  [getMarketplace(address)](./sdk.thirdwebsdk.getmarketplace.md) |  | Get an instance of a Marketplace contract |
 |  [getNFTCollection(address)](./sdk.thirdwebsdk.getnftcollection.md) |  | Get an instance of a NFT Collection contract |
 |  [getNFTDrop(contractAddress)](./sdk.thirdwebsdk.getnftdrop.md) |  | Get an instance of a Drop contract |
-|  [getNFTStackCollection(address)](./sdk.thirdwebsdk.getnftstackcollection.md) |  | Get an instance of a Bundle contract |
-|  [getNFTStackDrop(address)](./sdk.thirdwebsdk.getnftstackdrop.md) |  | Get an instance of a Bundle Drop contract |
 |  [getPack(address)](./sdk.thirdwebsdk.getpack.md) |  | Get an instance of a Pack contract |
 |  [getSplit(address)](./sdk.thirdwebsdk.getsplit.md) |  | Get an instance of a Splits contract |
 |  [getToken(address)](./sdk.thirdwebsdk.gettoken.md) |  | Get an instance of a Token contract |

@@ -9,7 +9,7 @@ export type {
   NFTMetadataOwner,
   NFTMetadata,
 } from "./schema/tokens/common";
-export * from "./schema/tokens/bundle";
+export * from "./schema/tokens/edition";
 
 export type { Role } from "./common/role";
 export * from "./core/classes/ipfs-storage";
@@ -18,5 +18,5 @@ export * from "./schema/contracts/common/claim-conditions";
 export * from "./schema/tokens/common/properties";
 export * from "./constants/chains";
 export * from "./schema/tokens/token";
-export * from "./schema/tokens/bundle";
+export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";

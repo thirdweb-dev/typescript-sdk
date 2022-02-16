@@ -8,12 +8,7 @@ import {
 } from "../src/common/error";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import { ListingType } from "../src/enums/marketplace";
-import {
-  Marketplace,
-  NFTStackCollection,
-  Token,
-  NFTCollection,
-} from "../src/contracts";
+import { Marketplace, Edition, Token, NFTCollection } from "../src/contracts";
 import { AuctionListing, DirectListing, Offer } from "../src/types/marketplace";
 import { fastForwardTime, jsonProvider, sdk, signers } from "./before.test";
 
@@ -31,7 +26,7 @@ let startingBalance = BigNumber.from("10000");
 describe("Marketplace Contract", async () => {
   let marketplaceContract: Marketplace;
   let dummyNftContract: NFTCollection;
-  let dummyBundleContract: NFTStackCollection;
+  let dummyBundleContract: Edition;
   let customTokenContract: Token;
 
   let adminWallet: SignerWithAddress,
@@ -77,8 +72,8 @@ describe("Marketplace Contract", async () => {
         name: "Test 4",
       },
     ]);
-    dummyBundleContract = sdk.getNFTStackCollection(
-      await sdk.deployContract(NFTStackCollection.contractType, {
+    dummyBundleContract = sdk.getEdition(
+      await sdk.deployContract(Edition.contractType, {
         name: "TEST BUNDLE",
         seller_fee_basis_points: 100,
         primary_sale_recipient: adminWallet.address,

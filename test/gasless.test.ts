@@ -1,12 +1,12 @@
 import { ethers, Wallet } from "ethers";
-import { NFTStackDrop, ThirdwebSDK } from "../src";
+import { EditionDrop, ThirdwebSDK } from "../src";
 
 const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
 
 global.fetch = require("node-fetch");
 
 describe("Gasless Forwarder", async () => {
-  let bundleDropContract: NFTStackDrop;
+  let bundleDropContract: EditionDrop;
 
   it.skip("should use sdk with biconomy", async () => {
     const BUNDLE_DROP_ADDRESS = "0xEBed8e37a32660dbCeeeC19cCBb952b7d214f008";
