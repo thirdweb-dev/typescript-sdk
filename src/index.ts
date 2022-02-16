@@ -20,3 +20,4 @@ export * from "./constants/chains";
 export * from "./schema/tokens/token";
 export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
+export { SDKOptions } from "./schema/sdk-options";
