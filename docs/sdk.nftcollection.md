@@ -17,7 +17,7 @@ declare class NFTCollection extends Erc721<TokenERC721>
 
 
 ```javascript
-import { ThirdwebSDK } from "@3rdweb/sdk";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 // You can switch out this provider with any wallet or provider setup you like.
 const provider = ethers.Wallet.createRandom();
