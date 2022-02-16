@@ -41,6 +41,16 @@ const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   await defaultProvider.send("evm_mine", [now + timeInSeconds]);
 };
 
+export const expectError = (e: unknown, message: string) => {
+  if (e instanceof Error) {
+    if (!e.message.includes(message)) {
+      throw e;
+    }
+  } else {
+    throw e;
+  }
+};
+
 before(async () => {
   signers = await hardhatEthers.getSigners();
   [signer] = signers;

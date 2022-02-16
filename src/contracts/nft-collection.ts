@@ -19,7 +19,7 @@ import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { TokenMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import { Erc721SignatureMinting } from "../core/classes/contract-signature";
+import { Erc721SignatureMinting } from "../core/classes/erc-721-signature-minting";
 
 /**
  * Create a collection of one-of-one NFTs.

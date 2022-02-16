@@ -76,7 +76,7 @@ import { getRoleHash } from "../common/role";
  */
 export class Marketplace implements UpdateableNetwork {
   static contractType = "marketplace" as const;
-  static contractRoles = ["admin", "lister"] as const;
+  static contractRoles = ["admin", "lister", "asset"] as const;
   static contractFactory = Marketplace__factory;
   /**
    * @internal
@@ -963,6 +963,43 @@ export class Marketplace implements UpdateableNetwork {
       BigNumber.from(bufferInSeconds),
       bidBuffer,
     ]);
+  }
+
+  /**
+   * Restrict listing NFTs only from the specified NFT contract address.
+   * It is possible to allow listing from multiple contract addresses.
+   * @param contractAddress - the NFT contract address
+   */
+  public async allowListingFromSpecificAssetOnly(contractAddress: string) {
+    const encoded = [];
+    const members = await this.roles.get("asset");
+    if (members.includes(AddressZero)) {
+      encoded.push(
+        this.encoder.encode("revokeRole", [getRoleHash("asset"), AddressZero]),
+      );
+    }
+    encoded.push(
+      this.encoder.encode("grantRole", [getRoleHash("asset"), contractAddress]),
+    );
+
+    await this.contractWrapper.multiCall(encoded);
+  }
+
+  /**
+   * Allow listings from any NFT contract
+   */
+  public async allowListingFromAnyAsset() {
+    const encoded = [];
+    const members = await this.roles.get("asset");
+    for (const addr in members) {
+      encoded.push(
+        this.encoder.encode("revokeRole", [getRoleHash("asset"), addr]),
+      );
+    }
+    encoded.push(
+      this.encoder.encode("grantRole", [getRoleHash("asset"), AddressZero]),
+    );
+    await this.contractWrapper.multiCall(encoded);
   }
 
   /** ******************************

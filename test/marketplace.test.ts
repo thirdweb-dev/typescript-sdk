@@ -10,7 +10,13 @@ import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import { ListingType } from "../src/enums/marketplace";
 import { Marketplace, Edition, Token, NFTCollection } from "../src/contracts";
 import { AuctionListing, DirectListing, Offer } from "../src/types/marketplace";
-import { fastForwardTime, jsonProvider, sdk, signers } from "./before.test";
+import {
+  expectError,
+  fastForwardTime,
+  jsonProvider,
+  sdk,
+  signers,
+} from "./before.test";
 
 global.fetch = require("node-fetch");
 
@@ -199,6 +205,23 @@ describe("Marketplace Contract", async () => {
         10,
       );
       assert.isDefined(listingId);
+    });
+
+    it("should be able to restrict listing", async () => {
+      await marketplaceContract.allowListingFromSpecificAssetOnly(
+        dummyBundleContract.getAddress(),
+      );
+      const listingId = await createDirectListing(
+        dummyBundleContract.getAddress(),
+        0,
+        10,
+      );
+      assert.isDefined(listingId);
+      try {
+        await createDirectListing(dummyNftContract.getAddress(), 0, 10);
+      } catch (e) {
+        expectError(e, "listing unapproved asset");
+      }
     });
   });
 

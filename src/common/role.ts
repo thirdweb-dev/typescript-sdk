@@ -11,6 +11,7 @@ const roleMap = {
   pauser: "PAUSER_ROLE",
   editor: "EDITOR_ROLE",
   lister: "LISTER_ROLE",
+  asset: "ASSET_ROLE",
 } as const;
 
 export type Role = keyof typeof roleMap;
