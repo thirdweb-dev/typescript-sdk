@@ -2065,7 +2065,7 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 //
 // @public
 export class ThirdwebSDK extends RPCConnectionHandler {
-    constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage?: IStorage);
+    constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions, storage?: IStorage);
     deployContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
     // @internal (undocumented)
     getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): NFTStackDrop | NFTStackCollection | Token | Vote | Split | Marketplace | Pack | NFTDrop | NFTCollection | ts_toolbelt_out_Class_Instance.Instance<{
