@@ -6,7 +6,7 @@ https://docs.thirdweb.com
 
 ### Api Reference
 
-https://nftlabs.github.io/nftlabs-sdk-ts/sdk.html
+https://thirdweb-dev.github.io/typescript-sdk/sdk.html
 
 ### Testing
 
