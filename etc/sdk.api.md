@@ -494,7 +494,6 @@ export class DuplicateLeafsError extends Error {
 
 // @public
 export class Edition extends Erc1155<TokenERC1155> {
-    // Warning: (ae-forgotten-export) The symbol "SDKOptions" needs to be exported by the entry point index.d.ts
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
     // (undocumented)
     static contractFactory: typeof TokenERC1155__factory;
@@ -1859,6 +1858,11 @@ export class RestrictedTransferError extends Error {
 //
 // @public (undocumented)
 export type Role = keyof typeof roleMap;
+
+// Warning: (ae-forgotten-export) The symbol "SDKOptionsSchema" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type SDKOptions = z.input<typeof SDKOptionsSchema>;
 
 // @public (undocumented)
 export type SignerOrProvider = Signer | Provider;

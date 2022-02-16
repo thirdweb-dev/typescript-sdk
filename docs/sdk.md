@@ -91,6 +91,7 @@
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [Role](./sdk.role.md) |  |
+|  [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |
 |  [SUPPORTED\_CHAIN\_ID](./sdk.supported_chain_id.md) |  |
 |  [TokenMintInput](./sdk.tokenmintinput.md) |  |
