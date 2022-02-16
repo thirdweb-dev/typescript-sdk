@@ -1,10 +1,10 @@
 {
-  "name": "@3rdweb/sdk",
+  "name": "@thirdweb-dev/sdk",
   "version": "2.0.0-nightly.3",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nftlabs/nftlabs-sdk-ts.git"
+    "url": "git+https://github.com/thirdweb-dev/typescript-sdk.git"
   },
   "license": "Apache-2.0",
   "source": "src/index.ts",
@@ -98,10 +98,10 @@
     "nanoid": "^3.1.31"
   },
   "bugs": {
-    "url": "https://github.com/nftlabs/nftlabs-sdk-ts/issues"
+    "url": "https://github.com/thirdweb-dev/typescript-sdk/issues"
   },
-  "homepage": "https://github.com/nftlabs/nftlabs-sdk-ts#readme",
-  "author": "NFTLabs",
+  "homepage": "https://github.com/thirdweb-dev/typescript-sdk#readme",
+  "author": "thirdweb",
   "tsup": {
     "entry": [
       "src/index.ts"
