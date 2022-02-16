@@ -35,9 +35,11 @@ const marketplace = sdk.getMarketplace("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
+|  [auction](./sdk.marketplace.auction.md) |  | MarketplaceAuction |  |
 |  [contractFactory](./sdk.marketplace.contractfactory.md) | <code>static</code> | typeof Marketplace\_\_factory |  |
-|  [contractRoles](./sdk.marketplace.contractroles.md) | <code>static</code> | readonly \["admin", "lister"\] |  |
+|  [contractRoles](./sdk.marketplace.contractroles.md) | <code>static</code> | readonly \["admin", "lister", "asset"\] |  |
 |  [contractType](./sdk.marketplace.contracttype.md) | <code>static</code> | "marketplace" |  |
+|  [direct](./sdk.marketplace.direct.md) |  | MarketplaceDirect |  |
 |  [encoder](./sdk.marketplace.encoder.md) |  | ContractEncoder&lt;Marketplace$1&gt; |  |
 |  [metadata](./sdk.marketplace.metadata.md) |  | ContractMetadata&lt;Marketplace$1, typeof Marketplace.schema&gt; |  |
 |  [roles](./sdk.marketplace.roles.md) |  | ContractRoles&lt;Marketplace$1, typeof Marketplace.contractRoles\[number\]&gt; |  |
@@ -46,31 +48,16 @@ const marketplace = sdk.getMarketplace("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [acceptDirectListingOffer(listingId, addressOfOfferor)](./sdk.marketplace.acceptdirectlistingoffer.md) |  |  |
-|  [buyoutAuctionListing(listingId)](./sdk.marketplace.buyoutauctionlisting.md) |  | Buyout Auction |
-|  [buyoutDirectListing(listingId, quantityDesired)](./sdk.marketplace.buyoutdirectlisting.md) |  | Buy Listing |
+|  [allowListingFromAnyAsset()](./sdk.marketplace.allowlistingfromanyasset.md) |  | Allow listings from any NFT contract |
+|  [allowListingFromSpecificAssetOnly(contractAddress)](./sdk.marketplace.allowlistingfromspecificassetonly.md) |  | Restrict listing NFTs only from the specified NFT contract address. It is possible to allow listing from multiple contract addresses. |
 |  [buyoutListing(listingId, quantityDesired)](./sdk.marketplace.buyoutlisting.md) |  | Convenience function to buy a Direct or Auction listing. |
-|  [cancelAuctionListing(listingId)](./sdk.marketplace.cancelauctionlisting.md) |  | Cancel Auction Listing |
-|  [cancelDirectListing(listingId)](./sdk.marketplace.canceldirectlisting.md) |  | Cancel Direct Listing |
-|  [closeAuctionListing(listingId, closeFor)](./sdk.marketplace.closeauctionlisting.md) |  | Close the Auction |
-|  [createAuctionListing(listing)](./sdk.marketplace.createauctionlisting.md) |  | Create Auction |
-|  [createDirectListing(listing)](./sdk.marketplace.createdirectlisting.md) |  | Create Direct Listing |
-|  [getActiveOffer(listingId, address)](./sdk.marketplace.getactiveoffer.md) |  | Get the active offer on a listing |
 |  [getAddress()](./sdk.marketplace.getaddress.md) |  |  |
 |  [getAllListings(filter)](./sdk.marketplace.getalllistings.md) |  | Get all the listings |
-|  [getAuctionListing(listingId)](./sdk.marketplace.getauctionlisting.md) |  | Get an Auction listing by id |
-|  [getAuctionWinner(listingId)](./sdk.marketplace.getauctionwinner.md) |  | Get Auction Winner |
-|  [getBidBufferBps()](./sdk.marketplace.getbidbufferbps.md) |  |  |
-|  [getDirectListing(listingId)](./sdk.marketplace.getdirectlisting.md) |  | Get a direct listing by id |
+|  [getBidBufferBps()](./sdk.marketplace.getbidbufferbps.md) |  | Get the buffer in basis points between offers |
 |  [getListing(listingId)](./sdk.marketplace.getlisting.md) |  | Convenience function to get either a direct or auction listing |
-|  [getTimeBufferInSeconds()](./sdk.marketplace.gettimebufferinseconds.md) |  |  |
-|  [getWinningBid(listingId)](./sdk.marketplace.getwinningbid.md) |  | Get Highest Bid |
+|  [getTimeBufferInSeconds()](./sdk.marketplace.gettimebufferinseconds.md) |  | get the buffer time in seconds between offers |
 |  [isRestrictedToListerRoleOnly()](./sdk.marketplace.isrestrictedtolisterroleonly.md) |  | Get whether listing is restricted only to addresses with the Lister role |
-|  [makeAuctionListingBid(listingId, pricePerToken)](./sdk.marketplace.makeauctionlistingbid.md) |  | Bid On Auction |
-|  [makeDirectListingOffer(listingId, quantityDesired, currencyContractAddress, pricePerToken)](./sdk.marketplace.makedirectlistingoffer.md) |  | Make an offer for a Direct Listing |
 |  [onNetworkUpdated(network)](./sdk.marketplace.onnetworkupdated.md) |  |  |
 |  [setBidBufferBps(bufferBps)](./sdk.marketplace.setbidbufferbps.md) |  | Set the Bid buffer: this is a percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items. |
 |  [setTimeBufferInSeconds(bufferInSeconds)](./sdk.marketplace.settimebufferinseconds.md) |  | Set the Time buffer: this is measured in seconds (e.g. 15 minutes or 900 seconds). If a winning bid is made within the buffer of the auction closing (e.g. 15 minutes within the auction closing), the auction's closing time is increased by the buffer to prevent buyers from making last minute winning bids, and to give time to other buyers to make a higher bid if they wish to. |
-|  [updateAuctionListing(listing)](./sdk.marketplace.updateauctionlisting.md) |  | Update an Auction listing with new metadata |
-|  [updateDirectListing(listing)](./sdk.marketplace.updatedirectlisting.md) |  | Update a Direct listing with new metadata.<!-- -->Note: cannot update a listing with a new quantity of 0. Use <code>cancelDirectListing</code> to remove a listing instead. |
 

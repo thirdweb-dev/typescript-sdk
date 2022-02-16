@@ -23,6 +23,7 @@ import * as ethers_2 from 'ethers';
 import * as _ethersproject_abstract_provider from '@ethersproject/abstract-provider';
 import { EventEmitter2 } from 'eventemitter2';
 import { If } from 'ts-toolbelt/out/Any/If';
+import { IMarketplace } from '@thirdweb-dev/contracts';
 import { IThirdwebContract } from '@thirdweb-dev/contracts';
 import { IThirdwebPrimarySale } from '@thirdweb-dev/contracts';
 import { IThirdwebRoyalty } from '@thirdweb-dev/contracts';
@@ -1119,47 +1120,35 @@ export class ListingNotFoundError extends Error {
 // @public
 export class Marketplace implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Marketplace_2>);
+    allowListingFromAnyAsset(): Promise<void>;
+    allowListingFromSpecificAssetOnly(contractAddress: string): Promise<void>;
+    // Warning: (ae-forgotten-export) The symbol "MarketplaceAuction" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    acceptDirectListingOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<TransactionResult>;
-    buyoutAuctionListing(listingId: BigNumberish): Promise<TransactionResult>;
-    buyoutDirectListing(listingId: BigNumberish, quantityDesired: BigNumberish): Promise<TransactionResult>;
+    auction: MarketplaceAuction;
     buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<TransactionResult>;
-    cancelAuctionListing(listingId: BigNumberish): Promise<TransactionResult>;
-    cancelDirectListing(listingId: BigNumberish): Promise<TransactionResult>;
-    closeAuctionListing(listingId: BigNumberish, closeFor?: string): Promise<TransactionResult>;
     // (undocumented)
     static contractFactory: typeof Marketplace__factory;
     // (undocumented)
-    static contractRoles: readonly ["admin", "lister"];
+    static contractRoles: readonly ["admin", "lister", "asset"];
     // (undocumented)
     static contractType: "marketplace";
-    // Warning: (ae-forgotten-export) The symbol "NewAuctionListing" needs to be exported by the entry point index.d.ts
-    createAuctionListing(listing: NewAuctionListing): Promise<TransactionResultWithId>;
-    // Warning: (ae-forgotten-export) The symbol "NewDirectListing" needs to be exported by the entry point index.d.ts
-    createDirectListing(listing: NewDirectListing): Promise<TransactionResultWithId>;
+    // Warning: (ae-forgotten-export) The symbol "MarketplaceDirect" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    direct: MarketplaceDirect;
     // (undocumented)
     encoder: ContractEncoder<Marketplace_2>;
-    // Warning: (ae-forgotten-export) The symbol "Offer" needs to be exported by the entry point index.d.ts
-    getActiveOffer(listingId: BigNumberish, address: string): Promise<Offer | undefined>;
     // (undocumented)
     getAddress(): string;
     // Warning: (ae-forgotten-export) The symbol "MarketplaceFilter" needs to be exported by the entry point index.d.ts
     getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
-    // Warning: (ae-forgotten-export) The symbol "AuctionListing" needs to be exported by the entry point index.d.ts
-    getAuctionListing(listingId: BigNumberish): Promise<AuctionListing>;
-    getAuctionWinner(listingId: BigNumberish): Promise<string>;
-    // (undocumented)
     getBidBufferBps(): Promise<BigNumber>;
+    // Warning: (ae-forgotten-export) The symbol "AuctionListing" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "DirectListing" needs to be exported by the entry point index.d.ts
-    getDirectListing(listingId: BigNumberish): Promise<DirectListing>;
     getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
-    // (undocumented)
     getTimeBufferInSeconds(): Promise<BigNumber>;
-    getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
     isRestrictedToListerRoleOnly(): Promise<boolean>;
-    makeAuctionListingBid(listingId: BigNumberish, pricePerToken: Price): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "Price" needs to be exported by the entry point index.d.ts
-    makeDirectListingOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContractAddress: string, pricePerToken: Price): Promise<TransactionResult>;
     // (undocumented)
     metadata: ContractMetadata<Marketplace_2, typeof Marketplace.schema>;
     // (undocumented)
@@ -1255,8 +1244,6 @@ export class Marketplace implements UpdateableNetwork {
     };
     setBidBufferBps(bufferBps: BigNumberish): Promise<void>;
     setTimeBufferInSeconds(bufferInSeconds: BigNumberish): Promise<void>;
-    updateAuctionListing(listing: AuctionListing): Promise<TransactionResult>;
-    updateDirectListing(listing: DirectListing): Promise<TransactionResult>;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "MissingOwnerRoleError" should be prefixed with an underscore because the declaration is marked as @internal

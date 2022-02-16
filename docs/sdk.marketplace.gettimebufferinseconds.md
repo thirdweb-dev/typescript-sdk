@@ -4,6 +4,8 @@
 
 ## Marketplace.getTimeBufferInSeconds() method
 
+get the buffer time in seconds between offers
+
 <b>Signature:</b>
 
 ```typescript

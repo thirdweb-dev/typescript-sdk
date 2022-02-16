@@ -4,6 +4,8 @@
 
 ## Marketplace.getBidBufferBps() method
 
+Get the buffer in basis points between offers
+
 <b>Signature:</b>
 
 ```typescript
