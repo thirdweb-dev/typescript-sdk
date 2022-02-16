@@ -47,7 +47,6 @@ import { TokenERC721__factory } from '@thirdweb-dev/contracts';
 import { TransactionReceipt } from '@ethersproject/providers';
 import * as ts_toolbelt_out_Any_Equals from 'ts-toolbelt/out/Any/Equals';
 import * as ts_toolbelt_out_Any_If from 'ts-toolbelt/out/Any/If';
-import * as ts_toolbelt_out_Class_Instance from 'ts-toolbelt/out/Class/Instance';
 import { VoteERC20 } from '@thirdweb-dev/contracts';
 import { VoteERC20__factory } from '@thirdweb-dev/contracts';
 import { z } from 'zod';
@@ -2071,17 +2070,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions, storage?: IStorage);
     deployContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
     // @internal (undocumented)
-    getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): EditionDrop | Edition | Token | Vote | Split | Marketplace | Pack | NFTDrop | NFTCollection | ts_toolbelt_out_Class_Instance.Instance<{
-        readonly "nft-drop": typeof NFTDrop;
-        readonly "nft-collection": typeof NFTCollection;
-        readonly "edition-drop": typeof EditionDrop;
-        readonly edition: typeof Edition;
-        readonly token: typeof Token;
-        readonly vote: typeof Vote;
-        readonly split: typeof Split;
-        readonly marketplace: typeof Marketplace;
-        readonly pack: typeof Pack;
-    }[TContractType]>;
+    getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // (undocumented)
     getContractList(walletAddress: string): Promise<{
         address: string;

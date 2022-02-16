@@ -163,7 +163,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public getContract<TContractType extends ContractType = ContractType>(
     address: string,
     contractType: TContractType,
-  ) {
+  ): ContractForContractType<TContractType> {
     // if we have a contract in the cache we will return it
     // we will do this **without** checking any contract type things for simplicity, this may have to change in the future?
     if (this.contractCache.has(address)) {
@@ -181,7 +181,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.contractCache.set(address, newContract);
 
     // return the new contract
-    return newContract;
+    return newContract as ContractForContractType<TContractType>;
   }
 
   /**
