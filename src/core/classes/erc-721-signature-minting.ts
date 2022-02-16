@@ -96,7 +96,6 @@ export class Erc721SignatureMinting {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = this.mapPayloadToContractStruct(mintRequest);
-    console.log(message);
     const verification: [boolean, string] =
       await this.contractWrapper.readContract.verify(message, signature);
     return verification[0];
