@@ -432,7 +432,12 @@ export class SignatureMint1155Module
     ]);
   }
 
-  public async setRoyaltyInfo(
+  /**
+   * Set the royalty recipient and fee for this contract
+   * @param recipientAddress
+   * @param fee
+   */
+  public async setDefaultRoyaltyInfo(
     recipientAddress: string,
     fee: number,
   ): Promise<TransactionReceipt> {
@@ -466,6 +471,11 @@ export class SignatureMint1155Module
     return await this.sendTransaction("multicall", [encoded]);
   }
 
+  /**
+   * Set the royalty recipient and fee for a particular token
+   * @param recipientAddress
+   * @param fee
+   */
   public async setTokenRoyaltyInfo(
     tokenId: BigNumberish,
     recipientAddress: string,
