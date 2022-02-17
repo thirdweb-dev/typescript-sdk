@@ -41,7 +41,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
   public async deploy<TContract extends ValidContractClass>(
     contractType: TContract["contractType"],
     contractMetadata: z.input<TContract["schema"]["deploy"]>,
-  ) {
+  ): Promise<string> {
     const contract = CONTRACTS_MAP[contractType];
     const metadata = contract.schema.deploy.parse(contractMetadata);
     const contractFactory = contract.contractFactory;

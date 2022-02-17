@@ -26,14 +26,9 @@ describe("Snapshots", async () => {
     "0x14fb3a9B317612ddc6d6Cc3c907CD9F2Aa091eE7",
   ];
 
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
-
   let storage: IStorage;
 
   beforeEach(async () => {
-    [adminWallet, samWallet, bobWallet] = signers;
     storage = new MockStorage();
   });
 

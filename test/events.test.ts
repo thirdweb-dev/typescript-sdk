@@ -12,7 +12,7 @@ describe("Events", async () => {
 
   beforeEach(async () => {
     dropContract = sdk.getNFTDrop(
-      await sdk.deployContract(NFTDrop.contractType, {
+      await sdk.deployer.deployContract(NFTDrop.contractType, {
         name: `Testing drop from SDK`,
         description: "Test contract from tests",
         image:

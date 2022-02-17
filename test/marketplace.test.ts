@@ -52,13 +52,13 @@ describe("Marketplace Contract", async () => {
     await sdk.updateSignerOrProvider(adminWallet);
 
     marketplaceContract = sdk.getMarketplace(
-      await sdk.deployContract(Marketplace.contractType, {
+      await sdk.deployer.deployContract(Marketplace.contractType, {
         name: "Test Marketplace",
         seller_fee_basis_points: 0,
       }),
     );
     dummyNftContract = sdk.getNFTCollection(
-      await sdk.deployContract(NFTCollection.contractType, {
+      await sdk.deployer.deployContract(NFTCollection.contractType, {
         name: "TEST NFT",
         seller_fee_basis_points: 200,
         fee_recipient: adminWallet.address,
@@ -80,7 +80,7 @@ describe("Marketplace Contract", async () => {
       },
     ]);
     dummyBundleContract = sdk.getEdition(
-      await sdk.deployContract(Edition.contractType, {
+      await sdk.deployer.deployContract(Edition.contractType, {
         name: "TEST BUNDLE",
         seller_fee_basis_points: 100,
         primary_sale_recipient: adminWallet.address,
@@ -102,7 +102,7 @@ describe("Marketplace Contract", async () => {
     ]);
 
     customTokenContract = sdk.getToken(
-      await sdk.deployContract(Token.contractType, {
+      await sdk.deployer.deployContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
       }),
@@ -896,7 +896,7 @@ describe("Marketplace Contract", async () => {
 
       auctionListing.buyoutPrice = ethers.utils.parseUnits("9");
 
-      await marketplaceContract.updateAuctionListing(auctionListing);
+      await marketplaceContract.auction.updateListing(auctionListing);
 
       const updatedListing = await marketplaceContract.auction.getListing(id);
       assert.equal(

@@ -17,6 +17,7 @@ import {
   Token,
   Vote,
   ContractType,
+  IStorage,
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
 import { getNativeTokenByChainId } from "../src/common/currency";
@@ -33,6 +34,7 @@ let sdk: ThirdwebSDK;
 const ipfsGatewayUrl = "https://ipfs.thirdweb.com/ipfs/";
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
+let storage: IStorage;
 
 let wrappedNativeTokenAddress: string;
 
@@ -56,10 +58,6 @@ before(async () => {
   [signer] = signers;
 
   const trustedForwarderAddress = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
-  const defaultRoyaltyFeeBps = BigNumber.from(100);
-  const defaultTransactionFeeBps = BigNumber.from(50);
-  const defaultRecipient = signer.address;
-
   await jsonProvider.send("hardhat_reset", []);
 
   const currencyTransferDeployer = await new ethers.ContractFactory(
@@ -174,7 +172,7 @@ before(async () => {
   process.env.registryAddress = thirdwebRegistryAddress;
   process.env.factoryAddress = thirdwebFactoryDeployer.address;
 
-  const storage = new MockStorage();
+  storage = new MockStorage();
   sdk = new ThirdwebSDK(
     signer,
     {
@@ -195,4 +193,5 @@ export {
   defaultProvider,
   registryAddress,
   fastForwardTime,
+  storage,
 };

@@ -48,6 +48,7 @@ import { TokenERC721__factory } from '@thirdweb-dev/contracts';
 import { TransactionReceipt } from '@ethersproject/providers';
 import * as ts_toolbelt_out_Any_Equals from 'ts-toolbelt/out/Any/Equals';
 import * as ts_toolbelt_out_Any_If from 'ts-toolbelt/out/Any/If';
+import { TWRegistry } from '@thirdweb-dev/contracts';
 import { VoteERC20 } from '@thirdweb-dev/contracts';
 import { VoteERC20__factory } from '@thirdweb-dev/contracts';
 import { z } from 'zod';
@@ -2055,10 +2056,10 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 // @public
 export class ThirdwebSDK extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions, storage?: IStorage);
-    deployContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "ContractDeployer" needs to be exported by the entry point index.d.ts
+    deployer: ContractDeployer;
     // @internal (undocumented)
     getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
-    // (undocumented)
     getContractList(walletAddress: string): Promise<{
         address: string;
         contractType: "split" | "edition-drop" | "edition" | "token" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
@@ -2233,6 +2234,11 @@ export const TokenMintInputSchema: z.ZodObject<{
 //
 // @public (undocumented)
 export type TransactionResult<T = never> = If<A.Is<T, never, "equals">, Omit<TransactionResultWithMetadata, "data">, TransactionResultWithMetadata<T>>;
+
+// @public (undocumented)
+export type TransactionResultWithAddress<T = never> = TransactionResult<T> & {
+    address: string;
+};
 
 // @public (undocumented)
 export type TransactionResultWithId<T = never> = TransactionResult<T> & {

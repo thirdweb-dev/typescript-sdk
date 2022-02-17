@@ -3,7 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber } from "ethers";
 import { MerkleTree } from "merkletreejs";
-import { sdk, signers } from "./before.test";
+import { sdk, signers, storage } from "./before.test";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { NFTDrop, Token } from "../src";
@@ -14,7 +14,7 @@ const keccak256 = require("keccak256");
 
 global.fetch = require("node-fetch");
 
-describe("Drop Contract", async () => {
+describe("NFT Drop Contract", async () => {
   let dropContract: NFTDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -28,7 +28,7 @@ describe("Drop Contract", async () => {
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(NFTDrop.contractType, {
+    const address = await sdk.deployer.deployNFTDrop({
       name: `Testing drop from SDK`,
       description: "Test contract from tests",
       image:
@@ -265,7 +265,7 @@ describe("Drop Contract", async () => {
       sortLeaves: true,
       sortPairs: true,
     });
-    const snapshot = await createSnapshot(members, sdk.storage);
+    const snapshot = await createSnapshot(members, storage);
     for (const leaf of members) {
       const expectedProof = tree.getHexProof(keccak256(leaf));
 
@@ -414,10 +414,13 @@ describe("Drop Contract", async () => {
     });
 
     it("should check if an address has enough erc20 currency", async () => {
-      const currencyAddress = await sdk.deployContract(Token.contractType, {
-        name: "test",
-        symbol: "test",
-      });
+      const currencyAddress = await sdk.deployer.deployContract(
+        Token.contractType,
+        {
+          name: "test",
+          symbol: "test",
+        },
+      );
 
       await dropContract.claimConditions.set([
         {
@@ -620,7 +623,7 @@ describe("Drop Contract", async () => {
   it("set claim condition in the future should not be claimable now", async () => {
     await dropContract.claimConditions.set([
       {
-        startTime: new Date(Date.now() + 60 * 60 * 24 * 1000),
+        startTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
       },
     ]);
     const canClaim = await dropContract.claimConditions.canClaim(1);

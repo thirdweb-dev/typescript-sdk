@@ -20,7 +20,7 @@ describe("Token Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(Token.contractType, {
+    const address = await sdk.deployer.deployContract(Token.contractType, {
       name: `Testing token from SDK`,
       symbol: `TEST`,
       description: "Test contract from tests",

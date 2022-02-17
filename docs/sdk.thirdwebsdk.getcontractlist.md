@@ -4,6 +4,8 @@
 
 ## ThirdwebSDK.getContractList() method
 
+Return all the contracts deployed by the specified address
+
 <b>Signature:</b>
 
 ```typescript
@@ -56,7 +58,7 @@ getContractList(walletAddress: string): Promise<{
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  walletAddress | string |  |
+|  walletAddress | string | the deployed address |
 
 <b>Returns:</b>
 

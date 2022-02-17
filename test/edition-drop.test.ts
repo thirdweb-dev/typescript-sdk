@@ -32,17 +32,20 @@ describe("Bundle Drop Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(EditionDrop.contractType, {
-      name: `Testing bundle drop from SDK`,
-      description: "Test contract from tests",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      primary_sale_recipient: adminWallet.address,
-      seller_fee_basis_points: 500,
-      fee_recipient: AddressZero,
-      platform_fee_basis_points: 10,
-      platform_fee_recipient: AddressZero,
-    });
+    const address = await sdk.deployer.deployContract(
+      EditionDrop.contractType,
+      {
+        name: `Testing bundle drop from SDK`,
+        description: "Test contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: adminWallet.address,
+        seller_fee_basis_points: 500,
+        fee_recipient: AddressZero,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: AddressZero,
+      },
+    );
     bdContract = sdk.getEditionDrop(address);
   });
 
@@ -451,7 +454,7 @@ describe("Bundle Drop Contract", async () => {
 
     it("should check if an address has enough erc20 currency", async () => {
       const currency = sdk.getToken(
-        await sdk.deployContract(Token.contractType, {
+        await sdk.deployer.deployContract(Token.contractType, {
           name: "test",
           symbol: "test",
         }),

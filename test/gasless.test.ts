@@ -21,7 +21,7 @@ describe("Gasless Forwarder", async () => {
         },
       },
     });
-    const bundleDrop = sdk.getBundleDropContract(BUNDLE_DROP_ADDRESS);
+    const bundleDrop = sdk.getEditionDrop(BUNDLE_DROP_ADDRESS);
     await bundleDrop.claim("0", 1, []);
   });
 

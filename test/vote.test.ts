@@ -25,20 +25,25 @@ describe("Vote Contract", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    const tokenContractAddress = await sdk.deployContract(Token.contractType, {
-      name: "DAOToken #1",
-      symbol: "DAO1",
-    });
+    const tokenContractAddress = await sdk.deployer.deployContract(
+      Token.contractType,
+      {
+        name: "DAOToken #1",
+        symbol: "DAO1",
+      },
+    );
     currencyContract = sdk.getToken(tokenContractAddress);
-
-    const voteContractAddress = await sdk.deployContract(Vote.contractType, {
-      name: "DAO #1",
-      voting_token_address: currencyContract.getAddress(),
-      proposal_start_time_in_seconds: voteStartWaitTimeInSeconds,
-      proposal_voting_time_in_seconds: voteWaitTimeInSeconds,
-      voting_quorum_fraction: 1,
-      proposal_token_threshold: ethers.utils.parseUnits("1", 18),
-    });
+    const voteContractAddress = await sdk.deployer.deployContract(
+      Vote.contractType,
+      {
+        name: "DAO #1",
+        voting_token_address: currencyContract.getAddress(),
+        proposal_start_time_in_seconds: voteStartWaitTimeInSeconds,
+        proposal_voting_time_in_seconds: voteWaitTimeInSeconds,
+        voting_quorum_fraction: 1,
+        proposal_token_threshold: ethers.utils.parseUnits("1", 18),
+      },
+    );
     voteContract = sdk.getVote(voteContractAddress);
 
     // step 1: mint 1000 governance tokens to my wallet

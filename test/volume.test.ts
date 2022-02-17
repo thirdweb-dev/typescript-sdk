@@ -6,8 +6,7 @@ import {
 } from "../src/index";
 import { appContract, registryAddress, signers } from "./before.test";
 import { ethers } from "hardhat";
-import { expect, assert } from "chai";
-import { BigNumber } from "ethers";
+import { assert } from "chai";
 
 global.fetch = require("node-fetch");
 

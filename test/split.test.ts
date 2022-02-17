@@ -18,7 +18,7 @@ describe("Splits Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployContract(Split.contractType, {
+    const address = await sdk.deployer.deployContract(Split.contractType, {
       name: "Splits Contract",
       recipients: [
         {
@@ -67,7 +67,7 @@ describe("Splits Contract", async () => {
   });
 
   it("should return all the recipients along with their token balances", async () => {
-    const addr = await sdk.deployContract(Token.contractType, {
+    const addr = await sdk.deployer.deployContract(Token.contractType, {
       name: "Test Token",
       symbol: "TST",
     });

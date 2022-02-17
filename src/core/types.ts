@@ -45,6 +45,10 @@ export type TransactionResultWithId<T = never> = TransactionResult<T> & {
   id: BigNumber;
 };
 
+export type TransactionResultWithAddress<T = never> = TransactionResult<T> & {
+  address: string;
+};
+
 export type TransactionResult<T = never> = If<
   A.Is<T, never, "equals">,
   Omit<TransactionResultWithMetadata, "data">,

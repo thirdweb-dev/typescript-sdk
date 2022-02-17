@@ -19,12 +19,17 @@ declare class ThirdwebSDK extends RPCConnectionHandler
 |  --- | --- | --- |
 |  [(constructor)(network, options, storage)](./sdk.thirdwebsdk._constructor_.md) |  | Constructs a new instance of the <code>ThirdwebSDK</code> class |
 
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [deployer](./sdk.thirdwebsdk.deployer.md) |  | ContractDeployer | New contract deployer |
+
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [deployContract(contractType, contractMetadata)](./sdk.thirdwebsdk.deploycontract.md) |  | Deploys a new contract |
-|  [getContractList(walletAddress)](./sdk.thirdwebsdk.getcontractlist.md) |  |  |
+|  [getContractList(walletAddress)](./sdk.thirdwebsdk.getcontractlist.md) |  | Return all the contracts deployed by the specified address |
 |  [getEdition(address)](./sdk.thirdwebsdk.getedition.md) |  | Get an instance of an Edition contract |
 |  [getEditionDrop(address)](./sdk.thirdwebsdk.geteditiondrop.md) |  | Get an instance of a Edition Drop contract |
 |  [getMarketplace(address)](./sdk.thirdwebsdk.getmarketplace.md) |  | Get an instance of a Marketplace contract |
