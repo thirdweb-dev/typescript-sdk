@@ -18,6 +18,9 @@ import {
   Vote,
 } from "../../contracts";
 
+/**
+ * Handles deploying new contracts
+ */
 export class ContractDeployer extends RPCConnectionHandler {
   /**
    * @internal

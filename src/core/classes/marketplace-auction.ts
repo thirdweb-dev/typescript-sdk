@@ -32,6 +32,9 @@ import {
 import { Price } from "../../types/currency";
 import invariant from "tiny-invariant";
 
+/**
+ * Handles auction listings
+ */
 export class MarketplaceAuction {
   private contractWrapper: ContractWrapper<Marketplace>;
   private storage: IStorage;

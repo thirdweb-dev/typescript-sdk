@@ -4,6 +4,8 @@
 
 ## Marketplace.auction property
 
+Handle direct listings, see [MarketplaceAuction](./sdk.marketplaceauction.md)
+
 <b>Signature:</b>
 
 ```typescript

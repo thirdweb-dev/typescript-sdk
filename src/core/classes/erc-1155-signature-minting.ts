@@ -18,7 +18,10 @@ import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
 
-export class Erc11155SignatureMinting {
+/**
+ * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
+ */
+export class Erc1155SignatureMinting {
   private contractWrapper: ContractWrapper<TokenERC1155>;
   private storage: IStorage;
   private roles: ContractRoles<

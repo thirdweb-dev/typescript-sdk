@@ -4,7 +4,7 @@
 
 ## DropErc1155ClaimConditions class
 
-Manages claim conditions for Bundle Drop contracts
+Manages claim conditions for Edition Drop contracts
 
 <b>Signature:</b>
 

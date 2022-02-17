@@ -288,6 +288,10 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    * PRIVATE FUNCTIONS
    *******************************/
 
+  /**
+   * @internal
+   * @param tokenId - the token Id to fetch
+   */
   protected async getTokenMetadata(
     tokenId: BigNumberish,
   ): Promise<NFTMetadata> {

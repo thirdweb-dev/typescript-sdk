@@ -34,7 +34,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 import { updateExsitingClaimConditions } from "../../common/claim-conditions";
 
 /**
- * Manages claim conditions for Bundle Drop contracts
+ * Manages claim conditions for Edition Drop contracts
  */
 export class DropErc1155ClaimConditions {
   private contractWrapper;

@@ -353,6 +353,30 @@ export const CommonTrustedForwarderSchema: z.ZodObject<{
     trusted_forwarder?: string | undefined;
 }>;
 
+// Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
+//
+// @public
+export class ContractDeployer extends RPCConnectionHandler {
+    constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage: IStorage);
+    // @internal
+    deployContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
+    deployEdition(metadata: z.input<typeof Edition.schema.deploy>): Promise<string>;
+    deployEditionDrop(metadata: z.input<typeof EditionDrop.schema.deploy>): Promise<string>;
+    deployMarketplace(metadata: z.input<typeof Marketplace.schema.deploy>): Promise<string>;
+    deployNFTCollection(metadata: z.input<typeof NFTCollection.schema.deploy>): Promise<string>;
+    deployNFTDrop(metadata: z.input<typeof NFTDrop.schema.deploy>): Promise<string>;
+    deployPack(metadata: z.input<typeof Pack.schema.deploy>): Promise<string>;
+    deploySplit(metadata: z.input<typeof Split.schema.deploy>): Promise<string>;
+    deployToken(metadata: z.input<typeof Token.schema.deploy>): Promise<string>;
+    deployVote(metadata: z.input<typeof Vote.schema.deploy>): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "ContractRegistry" needs to be exported by the entry point index.d.ts
+    //
+    // @internal (undocumented)
+    getRegistry(): Promise<ContractRegistry>;
+    // (undocumented)
+    updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
+}
+
 // @public
 export class ContractEncoder<TContract extends BaseContract> {
     // Warning: (ae-forgotten-export) The symbol "ContractWrapper" needs to be exported by the entry point index.d.ts
@@ -608,6 +632,8 @@ export class Edition extends Erc1155<TokenERC1155> {
             name: string;
         }>;
     };
+    // (undocumented)
+    signature: Erc1155SignatureMinting;
 }
 
 // @public
@@ -924,6 +950,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155> implements Updateable
     getAddress(): string;
     getAll(): Promise<EditionMetadata[]>;
     getOwned(_address?: string): Promise<EditionMetadata[]>;
+    // @internal (undocumented)
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
     isTransferRestricted(): Promise<boolean>;
@@ -937,6 +964,17 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155> implements Updateable
     protected storage: IStorage;
     totalSupply(tokenId: BigNumberish): Promise<BigNumber>;
     transfer(to: string, tokenId: BigNumberish, amount: BigNumberish, data?: BytesLike): Promise<TransactionResult>;
+}
+
+// @public
+export class Erc1155SignatureMinting {
+    constructor(contractWrapper: ContractWrapper<TokenERC1155>, roles: ContractRoles<TokenERC1155, typeof NFTCollection.contractRoles[number]>, storage: IStorage);
+    // Warning: (ae-forgotten-export) The symbol "PayloadToSign1155" needs to be exported by the entry point index.d.ts
+    generate(mintRequest: PayloadToSign1155): Promise<SignedPayload1155>;
+    generateBatch(payloadsToSign: PayloadToSign1155[]): Promise<SignedPayload1155[]>;
+    // Warning: (ae-forgotten-export) The symbol "SignedPayload1155" needs to be exported by the entry point index.d.ts
+    mint(signedPayload: SignedPayload1155): Promise<TransactionResultWithId>;
+    verify(signedPayload: SignedPayload1155): Promise<boolean>;
 }
 
 // @public
@@ -998,6 +1036,17 @@ export class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNet
     protected storage: IStorage;
     totalSupply(): Promise<BigNumber>;
     transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;
+}
+
+// @public
+export class Erc721SignatureMinting {
+    constructor(contractWrapper: ContractWrapper<TokenERC721>, roles: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>, storage: IStorage);
+    // Warning: (ae-forgotten-export) The symbol "PayloadToSign" needs to be exported by the entry point index.d.ts
+    generate(mintRequest: PayloadToSign): Promise<SignedPayload>;
+    generateBatch(payloadsToSign: PayloadToSign[]): Promise<SignedPayload[]>;
+    // Warning: (ae-forgotten-export) The symbol "SignedPayload" needs to be exported by the entry point index.d.ts
+    mint(signedPayload: SignedPayload): Promise<TransactionResultWithId>;
+    verify(signedPayload: SignedPayload): Promise<boolean>;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "FetchError" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1123,9 +1172,6 @@ export class Marketplace implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Marketplace_2>);
     allowListingFromAnyAsset(): Promise<void>;
     allowListingFromSpecificAssetOnly(contractAddress: string): Promise<void>;
-    // Warning: (ae-forgotten-export) The symbol "MarketplaceAuction" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     auction: MarketplaceAuction;
     buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
@@ -1134,9 +1180,6 @@ export class Marketplace implements UpdateableNetwork {
     static contractRoles: readonly ["admin", "lister", "asset"];
     // (undocumented)
     static contractType: "marketplace";
-    // Warning: (ae-forgotten-export) The symbol "MarketplaceDirect" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     direct: MarketplaceDirect;
     // (undocumented)
     encoder: ContractEncoder<Marketplace_2>;
@@ -1245,6 +1288,48 @@ export class Marketplace implements UpdateableNetwork {
     };
     setBidBufferBps(bufferBps: BigNumberish): Promise<void>;
     setTimeBufferInSeconds(bufferInSeconds: BigNumberish): Promise<void>;
+}
+
+// @public
+export class MarketplaceAuction {
+    constructor(contractWrapper: ContractWrapper<Marketplace_2>, storage: IStorage);
+    buyoutListing(listingId: BigNumberish): Promise<TransactionResult>;
+    cancelListing(listingId: BigNumberish): Promise<TransactionResult>;
+    closeListing(listingId: BigNumberish, closeFor?: string): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "NewAuctionListing" needs to be exported by the entry point index.d.ts
+    createListing(listing: NewAuctionListing): Promise<TransactionResultWithId>;
+    // (undocumented)
+    getAddress(): string;
+    getListing(listingId: BigNumberish): Promise<AuctionListing>;
+    getWinner(listingId: BigNumberish): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "Offer" needs to be exported by the entry point index.d.ts
+    getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "Price" needs to be exported by the entry point index.d.ts
+    makeBid(listingId: BigNumberish, pricePerToken: Price): Promise<TransactionResult>;
+    // @internal
+    mapListing(listing: IMarketplace.ListingStruct): Promise<AuctionListing>;
+    updateListing(listing: AuctionListing): Promise<TransactionResult>;
+}
+
+// @public
+export class MarketplaceDirect {
+    constructor(contractWrapper: ContractWrapper<Marketplace_2>, storage: IStorage);
+    // (undocumented)
+    acceptOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<TransactionResult>;
+    buyoutListing(listingId: BigNumberish, quantityDesired: BigNumberish): Promise<TransactionResult>;
+    cancelListing(listingId: BigNumberish): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "NewDirectListing" needs to be exported by the entry point index.d.ts
+    createListing(listing: NewDirectListing): Promise<TransactionResultWithId>;
+    getActiveOffer(listingId: BigNumberish, address: string): Promise<Offer | undefined>;
+    // (undocumented)
+    getAddress(): string;
+    getListing(listingId: BigNumberish): Promise<DirectListing>;
+    // @internal
+    isStillValidListing(listing: DirectListing, quantity?: BigNumberish): Promise<boolean>;
+    makeOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContractAddress: string, pricePerToken: Price): Promise<TransactionResult>;
+    // @internal
+    mapListing(listing: IMarketplace.ListingStruct): Promise<DirectListing>;
+    updateListing(listing: DirectListing): Promise<TransactionResult>;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "MissingOwnerRoleError" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1390,8 +1475,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
             name: string;
         }>;
     };
-    // Warning: (ae-forgotten-export) The symbol "Erc721SignatureMinting" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     signature: Erc721SignatureMinting;
 }
@@ -2051,12 +2134,9 @@ export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goe
 // @public (undocumented)
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 
-// Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class ThirdwebSDK extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions, storage?: IStorage);
-    // Warning: (ae-forgotten-export) The symbol "ContractDeployer" needs to be exported by the entry point index.d.ts
     deployer: ContractDeployer;
     // @internal (undocumented)
     getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;

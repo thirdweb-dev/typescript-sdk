@@ -8,3 +8,8 @@ export { DropErc1155ClaimConditions } from "./drop-erc1155-claim-conditions";
 export { Erc20 } from "./erc-20";
 export { Erc721 } from "./erc-721";
 export { Erc1155 } from "./erc-1155";
+export { Erc721SignatureMinting } from "./erc-721-signature-minting";
+export { Erc1155SignatureMinting } from "./erc-1155-signature-minting";
+export { MarketplaceDirect } from "./marketplace-direct";
+export { MarketplaceAuction } from "./marketplace-auction";
+export { ContractDeployer } from "./contract-deployer";

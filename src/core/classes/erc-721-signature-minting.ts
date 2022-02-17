@@ -18,6 +18,9 @@ import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
 
+/**
+ * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
+ */
 export class Erc721SignatureMinting {
   private contractWrapper: ContractWrapper<TokenERC721>;
   private storage: IStorage;

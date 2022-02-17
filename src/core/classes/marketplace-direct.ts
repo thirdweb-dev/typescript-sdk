@@ -38,6 +38,9 @@ import { IStorage } from "../interfaces";
 import invariant from "tiny-invariant";
 import { isAddress } from "ethers/lib/utils";
 
+/**
+ * Handles direct listings
+ */
 export class MarketplaceDirect {
   private contractWrapper: ContractWrapper<Marketplace>;
   private storage: IStorage;

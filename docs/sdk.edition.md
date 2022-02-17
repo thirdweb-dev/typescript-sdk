@@ -43,6 +43,7 @@ const edition = sdk.getEdition("{{contract_address}}");
 |  [primarySale](./sdk.edition.primarysale.md) |  | ContractPrimarySale&lt;TokenERC1155&gt; |  |
 |  [roles](./sdk.edition.roles.md) |  | ContractRoles&lt;TokenERC1155, typeof Edition.contractRoles\[number\]&gt; |  |
 |  [royalty](./sdk.edition.royalty.md) |  | ContractRoyalty&lt;TokenERC1155, typeof Edition.schema&gt; |  |
+|  [signature](./sdk.edition.signature.md) |  | Erc1155SignatureMinting |  |
 
 ## Methods
 

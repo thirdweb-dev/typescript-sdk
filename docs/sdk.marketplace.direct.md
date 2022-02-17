@@ -4,6 +4,8 @@
 
 ## Marketplace.direct property
 
+Handle direct listings, see [MarketplaceDirect](./sdk.marketplacedirect.md)
+
 <b>Signature:</b>
 
 ```typescript

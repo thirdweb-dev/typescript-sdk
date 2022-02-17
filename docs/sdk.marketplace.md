@@ -35,11 +35,11 @@ const marketplace = sdk.getMarketplace("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [auction](./sdk.marketplace.auction.md) |  | MarketplaceAuction |  |
+|  [auction](./sdk.marketplace.auction.md) |  | MarketplaceAuction | Handle direct listings, see [MarketplaceAuction](./sdk.marketplaceauction.md) |
 |  [contractFactory](./sdk.marketplace.contractfactory.md) | <code>static</code> | typeof Marketplace\_\_factory |  |
 |  [contractRoles](./sdk.marketplace.contractroles.md) | <code>static</code> | readonly \["admin", "lister", "asset"\] |  |
 |  [contractType](./sdk.marketplace.contracttype.md) | <code>static</code> | "marketplace" |  |
-|  [direct](./sdk.marketplace.direct.md) |  | MarketplaceDirect |  |
+|  [direct](./sdk.marketplace.direct.md) |  | MarketplaceDirect | Handle direct listings, see [MarketplaceDirect](./sdk.marketplacedirect.md) |
 |  [encoder](./sdk.marketplace.encoder.md) |  | ContractEncoder&lt;Marketplace$1&gt; |  |
 |  [metadata](./sdk.marketplace.metadata.md) |  | ContractMetadata&lt;Marketplace$1, typeof Marketplace.schema&gt; |  |
 |  [roles](./sdk.marketplace.roles.md) |  | ContractRoles&lt;Marketplace$1, typeof Marketplace.contractRoles\[number\]&gt; |  |

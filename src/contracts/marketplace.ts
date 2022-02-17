@@ -62,7 +62,13 @@ export class Marketplace implements UpdateableNetwork {
     typeof Marketplace.contractRoles[number]
   >;
   public encoder: ContractEncoder<MarketplaceContract>;
+  /**
+   * Handle direct listings, see {@link MarketplaceDirect}
+   */
   public direct: MarketplaceDirect;
+  /**
+   * Handle direct listings, see {@link MarketplaceAuction}
+   */
   public auction: MarketplaceAuction;
 
   constructor(

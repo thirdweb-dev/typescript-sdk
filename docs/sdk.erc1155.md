@@ -38,7 +38,6 @@ declare class Erc1155<T extends DropERC1155 | TokenERC1155> implements Updateabl
 |  [getAddress()](./sdk.erc1155.getaddress.md) |  |  |
 |  [getAll()](./sdk.erc1155.getall.md) |  | Get All NFTs |
 |  [getOwned(\_address)](./sdk.erc1155.getowned.md) |  | Get Owned NFTs |
-|  [getTokenMetadata(tokenId)](./sdk.erc1155.gettokenmetadata.md) |  | \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* PRIVATE FUNCTIONS \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* |
 |  [isApproved(address, operator)](./sdk.erc1155.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
 |  [isTransferRestricted()](./sdk.erc1155.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [totalSupply(tokenId)](./sdk.erc1155.totalsupply.md) |  | Returns the total supply of a specific token |
