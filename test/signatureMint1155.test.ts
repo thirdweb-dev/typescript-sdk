@@ -77,6 +77,7 @@ describe("SignatureMint1155 Module", async () => {
       defaultPayload = {
         tokenId: ethers.constants.MaxUint256,
         royaltyRecipient: AddressZero,
+        royaltyBps: 0,
         primarySaleRecipient: AddressZero,
         quantity: 10,
         price: ethers.utils.parseEther("0.001"),

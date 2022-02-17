@@ -48,6 +48,7 @@ export interface TokenERC1155AlreadyMintedArgs {
 const MintRequest = [
   { name: "to", type: "address" },
   { name: "royaltyRecipient", type: "address" },
+  { name: "royaltyBps", type: "uint256" },
   { name: "primarySaleRecipient", type: "address" },
   { name: "tokenId", type: "uint256" },
   { name: "uri", type: "string" },
@@ -646,6 +647,7 @@ export class SignatureMint1155Module
     return {
       to: mintRequest.to,
       royaltyRecipient: mintRequest.royaltyRecipient,
+      royaltyBps: mintRequest.royaltyBps,
       primarySaleRecipient: mintRequest.primarySaleRecipient,
       tokenId: mintRequest.tokenId,
       quantity: mintRequest.quantity,
