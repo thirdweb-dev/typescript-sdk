@@ -4,6 +4,8 @@
 
 ## NewErc1155SignaturePayload.quantity property
 
+The quantity to mint
+
 <b>Signature:</b>
 
 ```typescript

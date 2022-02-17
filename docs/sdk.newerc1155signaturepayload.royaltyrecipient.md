@@ -4,6 +4,8 @@
 
 ## NewErc1155SignaturePayload.royaltyRecipient property
 
+The royalty recipient address for this NFT
+
 <b>Signature:</b>
 
 ```typescript

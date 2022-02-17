@@ -4,6 +4,8 @@
 
 ## NewErc1155SignaturePayload.primarySaleRecipient property
 
+The primary sale recipient address for this NFT
+
 <b>Signature:</b>
 
 ```typescript
