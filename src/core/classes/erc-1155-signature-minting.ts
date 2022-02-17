@@ -181,7 +181,7 @@ export class Erc11155SignatureMinting {
             chainId,
             verifyingContract: this.contractWrapper.readContract.address,
           },
-          { MintRequest1155 },
+          { MintRequest: MintRequest1155 }, // TYPEHASH
           this.mapPayloadToContractStruct(finalPayload),
         );
         return {
