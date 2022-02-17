@@ -26,7 +26,35 @@ const sidebars = {
     {
       type: "category",
       label: "Contracts",
-      items: ["sdk.edition"],
+
+      items: [
+        {
+          type: "category",
+          label: "Edition",
+          link: { type: "doc", id: "sdk.edition" },
+          items: [
+            "sdk.edition.mint",
+            "sdk.edition.mintto",
+            "sdk.edition.mintbatch",
+            "sdk.edition.mintbatchto",
+            "sdk.edition.increasesupply",
+            { type: "ref", id: "sdk.erc1155.get" },
+          ],
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Common Interfaces",
+
+      items: [
+        {
+          type: "category",
+          label: "Erc1155",
+          link: { type: "doc", id: "sdk.erc1155" },
+          items: ["sdk.erc1155.get"],
+        },
+      ],
     },
   ],
 };
