@@ -1,11 +1,11 @@
 import {
-  FilledSignaturePayload,
-  MintRequest,
-  PayloadToSign,
-  PayloadWithUri,
-  SignaturePayloadInput,
-  SignaturePayloadOutput,
-  SignedPayload,
+  FilledSignaturePayload1155,
+  MintRequest1155,
+  PayloadToSign1155,
+  PayloadWithUri1155,
+  Signature1155PayloadInput,
+  Signature1155PayloadOutput,
+  SignedPayload1155,
 } from "../../schema/contracts/common/signature";
 import { TransactionResultWithId } from "../types";
 import { setErc20Allowance } from "../../common/currency";
@@ -13,23 +13,23 @@ import { BigNumber } from "ethers";
 import { MintWithSignatureEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ITokenERC721, TokenERC721 } from "@thirdweb-dev/contracts";
+import { ITokenERC1155, TokenERC1155 } from "@thirdweb-dev/contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
 
-export class Erc721SignatureMinting {
-  private contractWrapper: ContractWrapper<TokenERC721>;
+export class Erc11155SignatureMinting {
+  private contractWrapper: ContractWrapper<TokenERC1155>;
   private storage: IStorage;
   private roles: ContractRoles<
-    TokenERC721,
+    TokenERC1155,
     typeof NFTCollection.contractRoles[number]
   >;
 
   constructor(
-    contractWrapper: ContractWrapper<TokenERC721>,
+    contractWrapper: ContractWrapper<TokenERC1155>,
     roles: ContractRoles<
-      TokenERC721,
+      TokenERC1155,
       typeof NFTCollection.contractRoles[number]
     >,
     storage: IStorage,
@@ -57,7 +57,7 @@ export class Erc721SignatureMinting {
    * @param signedPayload - the previously generated payload and signature with {@link Erc721SignatureMinting.generate}
    */
   public async mint(
-    signedPayload: SignedPayload,
+    signedPayload: SignedPayload1155,
   ): Promise<TransactionResultWithId> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
@@ -65,7 +65,7 @@ export class Erc721SignatureMinting {
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
-      BigNumber.from(message.price),
+      BigNumber.from(message.pricePerToken),
       mintRequest.currencyAddress,
       overrides,
     );
@@ -92,7 +92,7 @@ export class Erc721SignatureMinting {
    * Verify that a payload is correctly signed
    * @param signedPayload - the payload to verify
    */
-  public async verify(signedPayload: SignedPayload): Promise<boolean> {
+  public async verify(signedPayload: SignedPayload1155): Promise<boolean> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = this.mapPayloadToContractStruct(mintRequest);
@@ -119,7 +119,8 @@ export class Erc721SignatureMinting {
    * const payload = {
    *   metadata: nftMetadata, // The NFT to mint
    *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
-   *   price: 0.5, // the price to pay for minting
+   *   quantity: 2, // the quantity of NFTs to mint
+   *   price: 0.5, // the price per NFT
    *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
    *   mintStartTime: now, // can mint anytime from now
    *   mintEndTime: endTime, // to 24h from now
@@ -131,7 +132,9 @@ export class Erc721SignatureMinting {
    * @param mintRequest - the payload to sign
    * @returns the signed payload and the corresponding signature
    */
-  public async generate(mintRequest: PayloadToSign): Promise<SignedPayload> {
+  public async generate(
+    mintRequest: PayloadToSign1155,
+  ): Promise<SignedPayload1155> {
     return (await this.generateBatch([mintRequest]))[0];
   }
 
@@ -144,15 +147,15 @@ export class Erc721SignatureMinting {
    * @returns an array of payloads and signatures
    */
   public async generateBatch(
-    payloadsToSign: PayloadToSign[],
-  ): Promise<SignedPayload[]> {
+    payloadsToSign: PayloadToSign1155[],
+  ): Promise<SignedPayload1155[]> {
     await this.roles.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
 
-    const parsedRequests: FilledSignaturePayload[] = payloadsToSign.map((m) =>
-      SignaturePayloadInput.parse(m),
+    const parsedRequests: FilledSignaturePayload1155[] = payloadsToSign.map(
+      (m) => Signature1155PayloadInput.parse(m),
     );
 
     const { metadataUris: uris } = await this.storage.uploadMetadataBatch(
@@ -166,19 +169,19 @@ export class Erc721SignatureMinting {
     return await Promise.all(
       parsedRequests.map(async (m, i) => {
         const uri = uris[i];
-        const finalPayload = SignaturePayloadOutput.parse({
+        const finalPayload = Signature1155PayloadOutput.parse({
           ...m,
           uri,
         });
         const signature = await this.contractWrapper.signTypedData(
           signer,
           {
-            name: "TokenERC721",
+            name: "TokenERC1155",
             version: "1",
             chainId,
             verifyingContract: this.contractWrapper.readContract.address,
           },
-          { MintRequest },
+          { MintRequest: MintRequest1155 }, // TYPEHASH
           this.mapPayloadToContractStruct(finalPayload),
         );
         return {
@@ -202,18 +205,20 @@ export class Erc721SignatureMinting {
    * @returns - The mapped payload.
    */
   private mapPayloadToContractStruct(
-    mintRequest: PayloadWithUri,
-  ): ITokenERC721.MintRequestStructOutput {
+    mintRequest: PayloadWithUri1155,
+  ): ITokenERC1155.MintRequestStructOutput {
     return {
       to: mintRequest.to,
-      price: mintRequest.price,
-      uri: mintRequest.uri,
-      currency: mintRequest.currencyAddress,
-      validityEndTimestamp: mintRequest.mintEndTime,
-      validityStartTimestamp: mintRequest.mintStartTime,
-      uid: mintRequest.uid,
       royaltyRecipient: mintRequest.royaltyRecipient,
       primarySaleRecipient: mintRequest.primarySaleRecipient,
-    } as ITokenERC721.MintRequestStructOutput;
+      tokenId: mintRequest.tokenId,
+      uri: mintRequest.uri,
+      quantity: mintRequest.quantity,
+      pricePerToken: mintRequest.price,
+      currency: mintRequest.currencyAddress,
+      validityStartTimestamp: mintRequest.mintStartTime,
+      validityEndTimestamp: mintRequest.mintEndTime,
+      uid: mintRequest.uid,
+    } as ITokenERC1155.MintRequestStructOutput;
   }
 }
