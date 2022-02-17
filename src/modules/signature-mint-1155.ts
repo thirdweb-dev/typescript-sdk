@@ -48,6 +48,7 @@ export interface TokenERC1155AlreadyMintedArgs {
 const MintRequest = [
   { name: "to", type: "address" },
   { name: "royaltyRecipient", type: "address" },
+  { name: "royaltyBps", type: "uint256" },
   { name: "primarySaleRecipient", type: "address" },
   { name: "tokenId", type: "uint256" },
   { name: "uri", type: "string" },
@@ -431,7 +432,15 @@ export class SignatureMint1155Module
     ]);
   }
 
-  public async setRoyaltyBps(amount: number): Promise<TransactionReceipt> {
+  /**
+   * Set the royalty recipient and fee for this contract
+   * @param recipientAddress
+   * @param fee
+   */
+  public async setDefaultRoyaltyInfo(
+    recipientAddress: string,
+    fee: number,
+  ): Promise<TransactionReceipt> {
     // TODO: reduce this duplication and provide common functions around
     // royalties through an interface. Currently this function is
     // duplicated across 4 modules
@@ -441,7 +450,8 @@ export class SignatureMint1155Module
       throw new Error("No metadata found, this module might be invalid!");
     }
 
-    metadata.seller_fee_basis_points = amount;
+    metadata.fee_recipient = recipientAddress;
+    metadata.seller_fee_basis_points = fee;
     const uri = await this.sdk.getStorage().uploadMetadata(
       {
         ...metadata,
@@ -450,12 +460,32 @@ export class SignatureMint1155Module
       await this.getSignerAddress(),
     );
     encoded.push(
-      this.contract.interface.encodeFunctionData("setRoyaltyBps", [amount]),
+      this.contract.interface.encodeFunctionData("setDefaultRoyaltyInfo", [
+        recipientAddress,
+        fee,
+      ]),
     );
     encoded.push(
       this.contract.interface.encodeFunctionData("setContractURI", [uri]),
     );
     return await this.sendTransaction("multicall", [encoded]);
+  }
+
+  /**
+   * Set the royalty recipient and fee for a particular token
+   * @param recipientAddress
+   * @param fee
+   */
+  public async setTokenRoyaltyInfo(
+    tokenId: BigNumberish,
+    recipientAddress: string,
+    fee: number,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setRoyaltyInfoForToken", [
+      tokenId,
+      recipientAddress,
+      fee,
+    ]);
   }
 
   public async setModuleMetadata(
@@ -497,25 +527,23 @@ export class SignatureMint1155Module
   }
 
   /**
-   * Gets the royalty BPS (basis points) of the contract
+   * Gets the royalty recipient and BPS (basis points) of the contract
    *
-   * @returns - The royalty BPS
+   * @returns - The royalty recipient and BPS
    */
-  public async getRoyaltyBps(): Promise<BigNumberish> {
-    return await this.readOnlyContract.royaltyBps();
+  public async getDefaultRoyaltyInfo(): Promise<[string, number]> {
+    return await this.readOnlyContract.getDefaultRoyaltyInfo();
   }
 
   /**
-   * Gets the address of the royalty recipient
+   * Gets the royalty recipient and BPS (basis points) of a particular token
    *
-   * @returns - The royalty BPS
+   * @returns - The royalty recipient and BPS
    */
-  public async getRoyaltyRecipientAddress(): Promise<string> {
-    const metadata = await this.getMetadata();
-    if (metadata.metadata?.fee_recipient !== undefined) {
-      return metadata.metadata.fee_recipient;
-    }
-    return "";
+  public async getTokenRoyaltyInfo(
+    tokenId: BigNumberish,
+  ): Promise<[string, number]> {
+    return await this.readOnlyContract.getRoyaltyInfoForToken(tokenId);
   }
 
   public async isTransferRestricted(): Promise<boolean> {
@@ -646,6 +674,7 @@ export class SignatureMint1155Module
     return {
       to: mintRequest.to,
       royaltyRecipient: mintRequest.royaltyRecipient,
+      royaltyBps: mintRequest.royaltyBps,
       primarySaleRecipient: mintRequest.primarySaleRecipient,
       tokenId: mintRequest.tokenId,
       quantity: mintRequest.quantity,

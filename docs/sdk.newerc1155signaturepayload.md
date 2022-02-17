@@ -15,8 +15,9 @@ export interface NewErc1155SignaturePayload extends NewSignaturePayload
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [primarySaleRecipient](./sdk.newerc1155signaturepayload.primarysalerecipient.md) | string |  |
-|  [quantity](./sdk.newerc1155signaturepayload.quantity.md) | BigNumberish |  |
-|  [royaltyRecipient](./sdk.newerc1155signaturepayload.royaltyrecipient.md) | string |  |
-|  [tokenId](./sdk.newerc1155signaturepayload.tokenid.md) | BigNumberish |  |
+|  [primarySaleRecipient](./sdk.newerc1155signaturepayload.primarysalerecipient.md) | string | The primary sale recipient address for this NFT |
+|  [quantity](./sdk.newerc1155signaturepayload.quantity.md) | BigNumberish | The quantity to mint |
+|  [royaltyBps](./sdk.newerc1155signaturepayload.royaltybps.md) | BigNumberish | The royalty fee in basis points for this NFT |
+|  [royaltyRecipient](./sdk.newerc1155signaturepayload.royaltyrecipient.md) | string | The royalty recipient address for this NFT |
+|  [tokenId](./sdk.newerc1155signaturepayload.tokenid.md) | BigNumberish | The token id to mint or ethers.constants.MaxUint256 if not specified |
 

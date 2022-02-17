@@ -4,6 +4,8 @@
 
 ## NewErc1155SignaturePayload.tokenId property
 
+The token id to mint or ethers.constants.MaxUint256 if not specified
+
 <b>Signature:</b>
 
 ```typescript

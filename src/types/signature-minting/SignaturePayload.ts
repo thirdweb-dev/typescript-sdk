@@ -13,9 +13,25 @@ export interface SignaturePayload extends NewSignaturePayload {
 }
 
 export interface NewErc1155SignaturePayload extends NewSignaturePayload {
+  /**
+   * The token id to mint or ethers.constants.MaxUint256 if not specified
+   */
   tokenId: BigNumberish;
+  /**
+   * The quantity to mint
+   */
   quantity: BigNumberish;
+  /**
+   * The royalty recipient address for this NFT
+   */
   royaltyRecipient: string;
+  /**
+   * The royalty fee in basis points for this NFT
+   */
+  royaltyBps: BigNumberish;
+  /**
+   * The primary sale recipient address for this NFT
+   */
   primarySaleRecipient: string;
 }
 

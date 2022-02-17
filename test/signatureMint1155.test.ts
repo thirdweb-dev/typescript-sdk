@@ -77,6 +77,7 @@ describe("SignatureMint1155 Module", async () => {
       defaultPayload = {
         tokenId: ethers.constants.MaxUint256,
         royaltyRecipient: AddressZero,
+        royaltyBps: 0,
         primarySaleRecipient: AddressZero,
         quantity: 10,
         price: ethers.utils.parseEther("0.001"),
@@ -110,6 +111,22 @@ describe("SignatureMint1155 Module", async () => {
         defaultPayload,
       );
       expect(await module.verify(payload, signature)).to.eq(true);
+    });
+
+    it("should be able to set a royalty per token", async () => {
+      await module.createAndMint({
+        metadata: {
+          name: "cool NFt",
+        },
+        supply: 10,
+      });
+      const [address, fee] = await module.getTokenRoyaltyInfo("0");
+      expect(address).to.eq(appModule.address);
+      expect(fee).to.eq(0);
+      await module.setTokenRoyaltyInfo("0", samWallet.address, 100);
+      const [newAddress, newFee] = await module.getTokenRoyaltyInfo("0");
+      expect(newAddress).to.eq(samWallet.address);
+      expect(newFee).to.eq(100);
     });
   });
 });

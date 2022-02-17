@@ -1564,13 +1564,10 @@ export interface NewDirectListing {
 
 // @public (undocumented)
 export interface NewErc1155SignaturePayload extends NewSignaturePayload {
-    // (undocumented)
     primarySaleRecipient: string;
-    // (undocumented)
     quantity: BigNumberish_2;
-    // (undocumented)
+    royaltyBps: BigNumberish_2;
     royaltyRecipient: string;
-    // (undocumented)
     tokenId: BigNumberish_2;
 }
 
