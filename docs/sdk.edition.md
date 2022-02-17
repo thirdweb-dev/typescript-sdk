@@ -4,7 +4,7 @@
 
 ## Edition class
 
-Setup a collection of one-of-one NFTs that are minted as users claim them.
+Create a collection of NFTs that lets you mint multiple copies of each NFT.
 
 <b>Signature:</b>
 

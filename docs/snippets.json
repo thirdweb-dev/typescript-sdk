@@ -1,7 +1,7 @@
 {
   "Edition": {
     "name": "Edition",
-    "summary": "Setup a collection of one-of-one NFTs that are minted as users claim them.\n\n",
+    "summary": "Create a collection of NFTs that lets you mint multiple copies of each NFT.\n\n",
     "remarks": null,
     "examples": {
       "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst edition = sdk.getEdition(\"{{contract_address}}\");"

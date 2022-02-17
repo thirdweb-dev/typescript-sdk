@@ -22,7 +22,7 @@ import { CommonNFTInput } from "../schema/tokens/common";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
 /**
- * Setup a collection of one-of-one NFTs that are minted as users claim them.
+ * Create a collection of NFTs that lets you mint multiple copies of each NFT.
  *
  * @example
  *
