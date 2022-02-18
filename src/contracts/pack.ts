@@ -59,7 +59,7 @@ export class Pack implements UpdateableNetwork {
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
   static contractFactory = Pack__factory;
   /**
-   * internal
+   * @internal
    */
   static schema = PacksContractSchema;
 

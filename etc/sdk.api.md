@@ -1755,6 +1755,7 @@ export class Pack implements UpdateableNetwork {
     roles: ContractRoles<Pack_2, typeof Pack.contractRoles[number]>;
     // (undocumented)
     royalty: ContractRoyalty<Pack_2, typeof Pack.schema>;
+    // @internal (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
@@ -2012,6 +2013,7 @@ export class Split implements UpdateableNetwork {
     metadata: ContractMetadata<Split_2, typeof Split.schema>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    // @internal (undocumented)
     static schema: {
         deploy: zod.ZodObject<zod.extendShape<zod.extendShape<zod.extendShape<zod.extendShape<{
             name: zod.ZodString;
