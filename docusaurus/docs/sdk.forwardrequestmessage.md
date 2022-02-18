@@ -1,5 +1,5 @@
 ---
-id: sdk.forwardrequestmessage
+slug: /sdk.forwardrequestmessage
 title: ForwardRequestMessage type
 hide_title: true
 ---

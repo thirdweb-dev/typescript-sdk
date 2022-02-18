@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.updatesignerorprovider
+slug: /sdk.thirdwebsdk.updatesignerorprovider
 title: ThirdwebSDK.updateSignerOrProvider() method
 hide_title: true
 ---

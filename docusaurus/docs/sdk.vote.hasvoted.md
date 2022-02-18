@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.hasvoted
+slug: /sdk.vote.hasvoted
 title: Vote.hasVoted() method
 hide_title: true
 ---

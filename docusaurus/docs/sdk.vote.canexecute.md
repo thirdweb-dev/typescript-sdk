@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.canexecute
+slug: /sdk.vote.canexecute
 title: Vote.canExecute() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.getaddress
+slug: /sdk.marketplace.getaddress
 title: Marketplace.getAddress() method
 hide_title: true
 ---

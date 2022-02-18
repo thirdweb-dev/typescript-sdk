@@ -1,5 +1,5 @@
 ---
-id: sdk.contractdeployer.deploysplit
+slug: /sdk.contractdeployer.deploysplit
 title: ContractDeployer.deploySplit() method
 hide_title: true
 ---

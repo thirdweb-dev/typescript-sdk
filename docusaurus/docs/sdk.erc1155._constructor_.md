@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155._constructor_
+slug: /sdk.erc1155._constructor_
 title: Erc1155.(constructor)
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.token.contractroles
+slug: /sdk.token.contractroles
 title: Token.contractRoles property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.commonsymbolschema
+slug: /sdk.commonsymbolschema
 title: CommonSymbolSchema variable
 hide_title: true
 ---

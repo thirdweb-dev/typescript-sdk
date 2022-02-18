@@ -1,5 +1,5 @@
 ---
-id: sdk.edition.mintbatch
+slug: /sdk.edition.mintbatch
 title: Edition.mintBatch() method
 hide_title: true
 ---

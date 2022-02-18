@@ -1,5 +1,5 @@
 ---
-id: sdk.fileorbuffer
+slug: /sdk.fileorbuffer
 title: FileOrBuffer type
 hide_title: true
 ---

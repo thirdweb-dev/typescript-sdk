@@ -1,5 +1,5 @@
 ---
-id: sdk.editiondrop
+slug: /sdk.editiondrop
 title: EditionDrop class
 hide_title: true
 ---

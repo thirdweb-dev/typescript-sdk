@@ -1,5 +1,5 @@
 ---
-id: sdk.edition.contractroles
+slug: /sdk.edition.contractroles
 title: Edition.contractRoles property
 hide_title: true
 ---

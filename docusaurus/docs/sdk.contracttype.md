@@ -1,5 +1,5 @@
 ---
-id: sdk.contracttype
+slug: /sdk.contracttype
 title: ContractType type
 hide_title: true
 ---

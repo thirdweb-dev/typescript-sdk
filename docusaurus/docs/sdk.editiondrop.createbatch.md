@@ -1,5 +1,5 @@
 ---
-id: sdk.editiondrop.createbatch
+slug: /sdk.editiondrop.createbatch
 title: EditionDrop.createBatch() method
 hide_title: true
 ---

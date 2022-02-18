@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.getedition
+slug: /sdk.thirdwebsdk.getedition
 title: ThirdwebSDK.getEdition() method
 hide_title: true
 ---

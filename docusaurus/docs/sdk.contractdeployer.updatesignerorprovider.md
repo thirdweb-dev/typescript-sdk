@@ -1,5 +1,5 @@
 ---
-id: sdk.contractdeployer.updatesignerorprovider
+slug: /sdk.contractdeployer.updatesignerorprovider
 title: ContractDeployer.updateSignerOrProvider() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.token.estimator
+slug: /sdk.token.estimator
 title: Token.estimator property
 hide_title: true
 ---

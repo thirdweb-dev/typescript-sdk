@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.getnftcollection
+slug: /sdk.thirdwebsdk.getnftcollection
 title: ThirdwebSDK.getNFTCollection() method
 hide_title: true
 ---

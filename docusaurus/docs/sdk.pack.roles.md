@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.roles
+slug: /sdk.pack.roles
 title: Pack.roles property
 hide_title: true
 ---

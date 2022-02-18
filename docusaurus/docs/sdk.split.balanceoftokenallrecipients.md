@@ -1,5 +1,5 @@
 ---
-id: sdk.split.balanceoftokenallrecipients
+slug: /sdk.split.balanceoftokenallrecipients
 title: Split.balanceOfTokenAllRecipients() method
 hide_title: true
 ---

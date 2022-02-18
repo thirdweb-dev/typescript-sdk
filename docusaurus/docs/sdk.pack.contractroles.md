@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.contractroles
+slug: /sdk.pack.contractroles
 title: Pack.contractRoles property
 hide_title: true
 ---

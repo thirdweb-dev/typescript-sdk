@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721.options
+slug: /sdk.erc721.options
 title: Erc721.options property
 hide_title: true
 ---

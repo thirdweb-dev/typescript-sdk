@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.estimator
+slug: /sdk.pack.estimator
 title: Pack.estimator property
 hide_title: true
 ---

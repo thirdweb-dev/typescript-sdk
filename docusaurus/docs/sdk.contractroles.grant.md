@@ -1,5 +1,5 @@
 ---
-id: sdk.contractroles.grant
+slug: /sdk.contractroles.grant
 title: ContractRoles.grant() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155.getaddress
+slug: /sdk.erc1155.getaddress
 title: Erc1155.getAddress() method
 hide_title: true
 ---

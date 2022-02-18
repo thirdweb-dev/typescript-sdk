@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20.totalsupply
+slug: /sdk.erc20.totalsupply
 title: Erc20.totalSupply() method
 hide_title: true
 ---

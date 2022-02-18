@@ -1,5 +1,5 @@
 ---
-id: sdk.split.getrecipientsplitpercentage
+slug: /sdk.split.getrecipientsplitpercentage
 title: Split.getRecipientSplitPercentage() method
 hide_title: true
 ---

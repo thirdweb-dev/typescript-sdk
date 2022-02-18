@@ -1,5 +1,5 @@
 ---
-id: sdk.valueof
+slug: /sdk.valueof
 title: ValueOf type
 hide_title: true
 ---

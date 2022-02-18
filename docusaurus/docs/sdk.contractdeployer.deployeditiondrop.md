@@ -1,5 +1,5 @@
 ---
-id: sdk.contractdeployer.deployeditiondrop
+slug: /sdk.contractdeployer.deployeditiondrop
 title: ContractDeployer.deployEditionDrop() method
 hide_title: true
 ---

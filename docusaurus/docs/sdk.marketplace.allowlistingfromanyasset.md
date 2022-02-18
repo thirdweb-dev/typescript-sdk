@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.allowlistingfromanyasset
+slug: /sdk.marketplace.allowlistingfromanyasset
 title: Marketplace.allowListingFromAnyAsset() method
 hide_title: true
 ---

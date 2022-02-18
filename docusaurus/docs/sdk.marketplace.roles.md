@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.roles
+slug: /sdk.marketplace.roles
 title: Marketplace.roles property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplacedirect._constructor_
+slug: /sdk.marketplacedirect._constructor_
 title: MarketplaceDirect.(constructor)
 hide_title: true
 ---

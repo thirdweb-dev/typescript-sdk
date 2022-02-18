@@ -1,5 +1,5 @@
 ---
-id: sdk
+slug: /sdk
 title: sdk package
 hide_title: true
 ---

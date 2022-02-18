@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection.contractroles
+slug: /sdk.nftcollection.contractroles
 title: NFTCollection.contractRoles property
 hide_title: true
 ---

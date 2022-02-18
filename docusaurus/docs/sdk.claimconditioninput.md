@@ -1,5 +1,5 @@
 ---
-id: sdk.claimconditioninput
+slug: /sdk.claimconditioninput
 title: ClaimConditionInput type
 hide_title: true
 ---

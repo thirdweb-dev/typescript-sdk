@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155.storage
+slug: /sdk.erc1155.storage
 title: Erc1155.storage property
 hide_title: true
 ---

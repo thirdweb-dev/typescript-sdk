@@ -1,5 +1,5 @@
 ---
-id: sdk.istorage.uploadmetadata
+slug: /sdk.istorage.uploadmetadata
 title: IStorage.uploadMetadata() method
 hide_title: true
 ---

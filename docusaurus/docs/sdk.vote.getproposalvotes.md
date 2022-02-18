@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.getproposalvotes
+slug: /sdk.vote.getproposalvotes
 title: Vote.getProposalVotes() method
 hide_title: true
 ---

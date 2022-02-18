@@ -1,5 +1,5 @@
 ---
-id: sdk.split.onnetworkupdated
+slug: /sdk.split.onnetworkupdated
 title: Split.onNetworkUpdated() method
 hide_title: true
 ---

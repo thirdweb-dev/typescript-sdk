@@ -1,5 +1,5 @@
 ---
-id: sdk.droperc1155claimconditions._constructor_
+slug: /sdk.droperc1155claimconditions._constructor_
 title: DropErc1155ClaimConditions.(constructor)
 hide_title: true
 ---

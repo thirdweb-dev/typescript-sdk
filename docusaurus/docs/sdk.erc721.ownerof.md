@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721.ownerof
+slug: /sdk.erc721.ownerof
 title: Erc721.ownerOf() method
 hide_title: true
 ---

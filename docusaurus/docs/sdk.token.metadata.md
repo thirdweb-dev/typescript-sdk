@@ -1,5 +1,5 @@
 ---
-id: sdk.token.metadata
+slug: /sdk.token.metadata
 title: Token.metadata property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.contractroyalty.settokenroyaltyinfo
+slug: /sdk.contractroyalty.settokenroyaltyinfo
 title: ContractRoyalty.setTokenRoyaltyInfo() method
 hide_title: true
 ---

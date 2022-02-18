@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplacedirect.createlisting
+slug: /sdk.marketplacedirect.createlisting
 title: MarketplaceDirect.createListing() method
 hide_title: true
 ---

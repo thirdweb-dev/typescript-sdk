@@ -1,5 +1,5 @@
 ---
-id: sdk.edition.royalty
+slug: /sdk.edition.royalty
 title: Edition.royalty property
 hide_title: true
 ---

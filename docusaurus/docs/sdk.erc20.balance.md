@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20.balance
+slug: /sdk.erc20.balance
 title: Erc20.balance() method
 hide_title: true
 ---

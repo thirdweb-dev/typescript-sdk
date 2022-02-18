@@ -1,5 +1,5 @@
 ---
-id: sdk.nftmetadata
+slug: /sdk.nftmetadata
 title: NFTMetadata type
 hide_title: true
 ---

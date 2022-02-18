@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplaceauction
+slug: /sdk.marketplaceauction
 title: MarketplaceAuction class
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.token._constructor_
+slug: /sdk.token._constructor_
 title: Token.(constructor)
 hide_title: true
 ---

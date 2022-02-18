@@ -1,5 +1,5 @@
 ---
-id: sdk.chainid
+slug: /sdk.chainid
 title: ChainId enum
 hide_title: true
 ---

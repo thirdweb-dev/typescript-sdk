@@ -1,5 +1,5 @@
 ---
-id: sdk.token.contracttype
+slug: /sdk.token.contracttype
 title: Token.contractType property
 hide_title: true
 ---

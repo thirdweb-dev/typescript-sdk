@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.encoder
+slug: /sdk.vote.encoder
 title: Vote.encoder property
 hide_title: true
 ---

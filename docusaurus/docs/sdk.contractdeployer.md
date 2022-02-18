@@ -1,5 +1,5 @@
 ---
-id: sdk.contractdeployer
+slug: /sdk.contractdeployer
 title: ContractDeployer class
 hide_title: true
 ---

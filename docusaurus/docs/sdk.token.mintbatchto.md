@@ -1,5 +1,5 @@
 ---
-id: sdk.token.mintbatchto
+slug: /sdk.token.mintbatchto
 title: Token.mintBatchTo() method
 hide_title: true
 ---

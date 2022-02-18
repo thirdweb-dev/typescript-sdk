@@ -1,5 +1,5 @@
 ---
-id: sdk.partialclaimconditioninputschema
+slug: /sdk.partialclaimconditioninputschema
 title: PartialClaimConditionInputSchema variable
 hide_title: true
 ---

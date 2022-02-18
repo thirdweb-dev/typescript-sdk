@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.getaddress
+slug: /sdk.pack.getaddress
 title: Pack.getAddress() method
 hide_title: true
 ---

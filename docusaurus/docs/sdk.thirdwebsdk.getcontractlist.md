@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.getcontractlist
+slug: /sdk.thirdwebsdk.getcontractlist
 title: ThirdwebSDK.getContractList() method
 hide_title: true
 ---

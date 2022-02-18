@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.getlinkbalance
+slug: /sdk.pack.getlinkbalance
 title: Pack.getLinkBalance() method
 hide_title: true
 ---

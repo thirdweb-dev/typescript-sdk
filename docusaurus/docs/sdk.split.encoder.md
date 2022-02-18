@@ -1,5 +1,5 @@
 ---
-id: sdk.split.encoder
+slug: /sdk.split.encoder
 title: Split.encoder property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.editiondrop._constructor_
+slug: /sdk.editiondrop._constructor_
 title: EditionDrop.(constructor)
 hide_title: true
 ---

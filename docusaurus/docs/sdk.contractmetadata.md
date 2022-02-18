@@ -1,5 +1,5 @@
 ---
-id: sdk.contractmetadata
+slug: /sdk.contractmetadata
 title: ContractMetadata class
 hide_title: true
 ---

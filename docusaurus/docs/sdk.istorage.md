@@ -1,5 +1,5 @@
 ---
-id: sdk.istorage
+slug: /sdk.istorage
 title: IStorage interface
 hide_title: true
 ---

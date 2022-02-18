@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.onnetworkupdated
+slug: /sdk.pack.onnetworkupdated
 title: Pack.onNetworkUpdated() method
 hide_title: true
 ---

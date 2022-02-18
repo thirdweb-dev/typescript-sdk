@@ -1,5 +1,5 @@
 ---
-id: sdk.token.roles
+slug: /sdk.token.roles
 title: Token.roles property
 hide_title: true
 ---

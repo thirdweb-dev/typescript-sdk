@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplaceauction._constructor_
+slug: /sdk.marketplaceauction._constructor_
 title: MarketplaceAuction.(constructor)
 hide_title: true
 ---

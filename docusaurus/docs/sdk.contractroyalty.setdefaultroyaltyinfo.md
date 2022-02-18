@@ -1,5 +1,5 @@
 ---
-id: sdk.contractroyalty.setdefaultroyaltyinfo
+slug: /sdk.contractroyalty.setdefaultroyaltyinfo
 title: ContractRoyalty.setDefaultRoyaltyInfo() method
 hide_title: true
 ---

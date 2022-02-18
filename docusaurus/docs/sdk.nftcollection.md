@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection
+slug: /sdk.nftcollection
 title: NFTCollection class
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.getvote
+slug: /sdk.thirdwebsdk.getvote
 title: ThirdwebSDK.getVote() method
 hide_title: true
 ---

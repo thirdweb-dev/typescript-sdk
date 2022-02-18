@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20.transferbatch
+slug: /sdk.erc20.transferbatch
 title: Erc20.transferBatch() method
 hide_title: true
 ---

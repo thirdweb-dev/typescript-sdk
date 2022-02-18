@@ -1,5 +1,5 @@
 ---
-id: sdk.commoncontractschema
+slug: /sdk.commoncontractschema
 title: CommonContractSchema variable
 hide_title: true
 ---

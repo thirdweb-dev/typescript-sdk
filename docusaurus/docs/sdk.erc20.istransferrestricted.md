@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20.istransferrestricted
+slug: /sdk.erc20.istransferrestricted
 title: Erc20.isTransferRestricted() method
 hide_title: true
 ---

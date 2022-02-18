@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace
+slug: /sdk.marketplace
 title: Marketplace class
 hide_title: true
 ---

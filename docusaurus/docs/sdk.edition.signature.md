@@ -1,5 +1,5 @@
 ---
-id: sdk.edition.signature
+slug: /sdk.edition.signature
 title: Edition.signature property
 hide_title: true
 ---

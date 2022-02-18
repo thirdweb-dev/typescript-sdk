@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721.istransferrestricted
+slug: /sdk.erc721.istransferrestricted
 title: Erc721.isTransferRestricted() method
 hide_title: true
 ---

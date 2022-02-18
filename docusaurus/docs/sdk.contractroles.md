@@ -1,5 +1,5 @@
 ---
-id: sdk.contractroles
+slug: /sdk.contractroles
 title: ContractRoles class
 hide_title: true
 ---

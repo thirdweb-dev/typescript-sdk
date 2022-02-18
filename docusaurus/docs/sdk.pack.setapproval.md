@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.setapproval
+slug: /sdk.pack.setapproval
 title: Pack.setApproval() method
 hide_title: true
 ---

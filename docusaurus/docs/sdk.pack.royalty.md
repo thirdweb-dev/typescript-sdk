@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.royalty
+slug: /sdk.pack.royalty
 title: Pack.royalty property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721.storage
+slug: /sdk.erc721.storage
 title: Erc721.storage property
 hide_title: true
 ---

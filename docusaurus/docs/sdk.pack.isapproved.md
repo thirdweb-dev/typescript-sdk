@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.isapproved
+slug: /sdk.pack.isapproved
 title: Pack.isApproved() method
 hide_title: true
 ---

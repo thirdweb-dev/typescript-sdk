@@ -1,5 +1,5 @@
 ---
-id: sdk.contractroyalty
+slug: /sdk.contractroyalty
 title: ContractRoyalty class
 hide_title: true
 ---

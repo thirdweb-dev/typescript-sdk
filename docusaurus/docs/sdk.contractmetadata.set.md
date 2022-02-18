@@ -1,5 +1,5 @@
 ---
-id: sdk.contractmetadata.set
+slug: /sdk.contractmetadata.set
 title: ContractMetadata.set() method
 hide_title: true
 ---

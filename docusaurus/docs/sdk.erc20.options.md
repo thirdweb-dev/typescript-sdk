@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20.options
+slug: /sdk.erc20.options
 title: Erc20.options property
 hide_title: true
 ---

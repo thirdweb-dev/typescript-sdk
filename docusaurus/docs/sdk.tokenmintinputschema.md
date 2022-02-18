@@ -1,5 +1,5 @@
 ---
-id: sdk.tokenmintinputschema
+slug: /sdk.tokenmintinputschema
 title: TokenMintInputSchema variable
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplacedirect.buyoutlisting
+slug: /sdk.marketplacedirect.buyoutlisting
 title: MarketplaceDirect.buyoutListing() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.edition.mint
+slug: /sdk.edition.mint
 title: Edition.mint() method
 hide_title: true
 ---

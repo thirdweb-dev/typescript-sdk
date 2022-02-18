@@ -1,5 +1,5 @@
 ---
-id: sdk.commontrustedforwarderschema
+slug: /sdk.commontrustedforwarderschema
 title: CommonTrustedForwarderSchema variable
 hide_title: true
 ---

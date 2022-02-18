@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.metadata
+slug: /sdk.marketplace.metadata
 title: Marketplace.metadata property
 hide_title: true
 ---

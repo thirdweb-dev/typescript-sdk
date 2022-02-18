@@ -1,5 +1,5 @@
 ---
-id: sdk.commonroyaltyschema
+slug: /sdk.commonroyaltyschema
 title: CommonRoyaltySchema variable
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.split.contracttype
+slug: /sdk.split.contracttype
 title: Split.contractType property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.commonplatformfeeschema
+slug: /sdk.commonplatformfeeschema
 title: CommonPlatformFeeSchema variable
 hide_title: true
 ---

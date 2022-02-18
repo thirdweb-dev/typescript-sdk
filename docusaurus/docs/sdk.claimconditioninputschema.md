@@ -1,5 +1,5 @@
 ---
-id: sdk.claimconditioninputschema
+slug: /sdk.claimconditioninputschema
 title: ClaimConditionInputSchema variable
 hide_title: true
 ---

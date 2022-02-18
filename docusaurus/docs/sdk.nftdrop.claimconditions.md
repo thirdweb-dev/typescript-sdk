@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.claimconditions
+slug: /sdk.nftdrop.claimconditions
 title: NFTDrop.claimConditions property
 hide_title: true
 ---

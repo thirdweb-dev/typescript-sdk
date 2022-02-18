@@ -1,5 +1,5 @@
 ---
-id: sdk.split.withdraw
+slug: /sdk.split.withdraw
 title: Split.withdraw() method
 hide_title: true
 ---

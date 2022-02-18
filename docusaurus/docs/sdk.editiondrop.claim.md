@@ -1,5 +1,5 @@
 ---
-id: sdk.editiondrop.claim
+slug: /sdk.editiondrop.claim
 title: EditionDrop.claim() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.edition.roles
+slug: /sdk.edition.roles
 title: Edition.roles property
 hide_title: true
 ---

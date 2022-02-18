@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20.get
+slug: /sdk.erc20.get
 title: Erc20.get() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20.burnfrom
+slug: /sdk.erc20.burnfrom
 title: Erc20.burnFrom() method
 hide_title: true
 ---

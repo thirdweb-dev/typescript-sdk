@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplacedirect.getactiveoffer
+slug: /sdk.marketplacedirect.getactiveoffer
 title: MarketplaceDirect.getActiveOffer() method
 hide_title: true
 ---

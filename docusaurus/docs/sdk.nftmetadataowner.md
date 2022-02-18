@@ -1,5 +1,5 @@
 ---
-id: sdk.nftmetadataowner
+slug: /sdk.nftmetadataowner
 title: NFTMetadataOwner type
 hide_title: true
 ---

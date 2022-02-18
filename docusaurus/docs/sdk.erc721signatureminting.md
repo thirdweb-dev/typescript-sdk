@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721signatureminting
+slug: /sdk.erc721signatureminting
 title: Erc721SignatureMinting class
 hide_title: true
 ---

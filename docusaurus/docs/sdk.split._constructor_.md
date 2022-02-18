@@ -1,5 +1,5 @@
 ---
-id: sdk.split._constructor_
+slug: /sdk.split._constructor_
 title: Split.(constructor)
 hide_title: true
 ---

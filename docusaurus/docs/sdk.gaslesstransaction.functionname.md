@@ -1,5 +1,5 @@
 ---
-id: sdk.gaslesstransaction.functionname
+slug: /sdk.gaslesstransaction.functionname
 title: GaslessTransaction.functionName property
 hide_title: true
 ---

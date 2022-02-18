@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.estimator
+slug: /sdk.marketplace.estimator
 title: Marketplace.estimator property
 hide_title: true
 ---

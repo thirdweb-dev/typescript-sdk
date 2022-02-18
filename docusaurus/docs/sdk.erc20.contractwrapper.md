@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20.contractwrapper
+slug: /sdk.erc20.contractwrapper
 title: Erc20.contractWrapper property
 hide_title: true
 ---

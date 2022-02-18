@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.getpack
+slug: /sdk.thirdwebsdk.getpack
 title: ThirdwebSDK.getPack() method
 hide_title: true
 ---

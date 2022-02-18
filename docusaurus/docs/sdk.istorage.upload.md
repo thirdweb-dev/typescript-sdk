@@ -1,5 +1,5 @@
 ---
-id: sdk.istorage.upload
+slug: /sdk.istorage.upload
 title: IStorage.upload() method
 hide_title: true
 ---

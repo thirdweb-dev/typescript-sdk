@@ -1,5 +1,5 @@
 ---
-id: sdk.gaslesstransaction.calloverrides
+slug: /sdk.gaslesstransaction.calloverrides
 title: GaslessTransaction.callOverrides property
 hide_title: true
 ---

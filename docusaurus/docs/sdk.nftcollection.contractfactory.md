@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection.contractfactory
+slug: /sdk.nftcollection.contractfactory
 title: NFTCollection.contractFactory property
 hide_title: true
 ---

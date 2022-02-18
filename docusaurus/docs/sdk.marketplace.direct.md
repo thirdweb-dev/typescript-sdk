@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.direct
+slug: /sdk.marketplace.direct
 title: Marketplace.direct property
 hide_title: true
 ---

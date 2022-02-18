@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.metadata
+slug: /sdk.nftdrop.metadata
 title: NFTDrop.metadata property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.token.contractfactory
+slug: /sdk.token.contractfactory
 title: Token.contractFactory property
 hide_title: true
 ---

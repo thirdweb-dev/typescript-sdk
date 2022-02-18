@@ -1,5 +1,5 @@
 ---
-id: sdk.editiondrop.claimconditions
+slug: /sdk.editiondrop.claimconditions
 title: EditionDrop.claimConditions property
 hide_title: true
 ---

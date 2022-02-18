@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.transfer
+slug: /sdk.pack.transfer
 title: Pack.transfer() method
 hide_title: true
 ---

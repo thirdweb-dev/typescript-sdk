@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.totalunclaimedsupply
+slug: /sdk.nftdrop.totalunclaimedsupply
 title: NFTDrop.totalUnclaimedSupply() method
 hide_title: true
 ---

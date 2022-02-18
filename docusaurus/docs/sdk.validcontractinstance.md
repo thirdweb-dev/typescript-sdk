@@ -1,5 +1,5 @@
 ---
-id: sdk.validcontractinstance
+slug: /sdk.validcontractinstance
 title: ValidContractInstance type
 hide_title: true
 ---

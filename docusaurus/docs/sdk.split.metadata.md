@@ -1,5 +1,5 @@
 ---
-id: sdk.split.metadata
+slug: /sdk.split.metadata
 title: Split.metadata property
 hide_title: true
 ---

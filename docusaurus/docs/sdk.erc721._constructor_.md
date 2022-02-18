@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721._constructor_
+slug: /sdk.erc721._constructor_
 title: Erc721.(constructor)
 hide_title: true
 ---

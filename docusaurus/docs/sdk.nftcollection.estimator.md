@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection.estimator
+slug: /sdk.nftcollection.estimator
 title: NFTCollection.estimator property
 hide_title: true
 ---

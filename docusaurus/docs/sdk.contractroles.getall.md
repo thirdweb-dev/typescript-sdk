@@ -1,5 +1,5 @@
 ---
-id: sdk.contractroles.getall
+slug: /sdk.contractroles.getall
 title: ContractRoles.getAll() method
 hide_title: true
 ---

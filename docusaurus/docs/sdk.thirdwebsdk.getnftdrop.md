@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.getnftdrop
+slug: /sdk.thirdwebsdk.getnftdrop
 title: ThirdwebSDK.getNFTDrop() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.contractprimarysale.setrecipient
+slug: /sdk.contractprimarysale.setrecipient
 title: ContractPrimarySale.setRecipient() method
 hide_title: true
 ---

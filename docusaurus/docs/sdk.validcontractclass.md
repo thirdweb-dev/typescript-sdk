@@ -1,5 +1,5 @@
 ---
-id: sdk.validcontractclass
+slug: /sdk.validcontractclass
 title: ValidContractClass type
 hide_title: true
 ---

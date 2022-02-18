@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplaceauction.updatelisting
+slug: /sdk.marketplaceauction.updatelisting
 title: MarketplaceAuction.updateListing() method
 hide_title: true
 ---

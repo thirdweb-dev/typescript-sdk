@@ -1,5 +1,5 @@
 ---
-id: sdk.edition.mintto
+slug: /sdk.edition.mintto
 title: Edition.mintTo() method
 hide_title: true
 ---

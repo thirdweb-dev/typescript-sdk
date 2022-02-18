@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721
+slug: /sdk.erc721
 title: Erc721 class
 hide_title: true
 ---

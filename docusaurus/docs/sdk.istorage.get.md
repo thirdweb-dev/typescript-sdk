@@ -1,5 +1,5 @@
 ---
-id: sdk.istorage.get
+slug: /sdk.istorage.get
 title: IStorage.get() method
 hide_title: true
 ---

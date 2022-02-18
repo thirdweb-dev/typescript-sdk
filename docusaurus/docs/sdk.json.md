@@ -1,5 +1,5 @@
 ---
-id: sdk.json
+slug: /sdk.json
 title: Json type
 hide_title: true
 ---

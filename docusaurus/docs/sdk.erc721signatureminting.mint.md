@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721signatureminting.mint
+slug: /sdk.erc721signatureminting.mint
 title: Erc721SignatureMinting.mint() method
 hide_title: true
 ---

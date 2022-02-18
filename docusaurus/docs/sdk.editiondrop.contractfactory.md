@@ -1,5 +1,5 @@
 ---
-id: sdk.editiondrop.contractfactory
+slug: /sdk.editiondrop.contractfactory
 title: EditionDrop.contractFactory property
 hide_title: true
 ---

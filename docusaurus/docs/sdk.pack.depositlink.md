@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.depositlink
+slug: /sdk.pack.depositlink
 title: Pack.depositLink() method
 hide_title: true
 ---

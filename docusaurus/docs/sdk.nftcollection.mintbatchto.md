@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection.mintbatchto
+slug: /sdk.nftcollection.mintbatchto
 title: NFTCollection.mintBatchTo() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection.contracttype
+slug: /sdk.nftcollection.contracttype
 title: NFTCollection.contractType property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155.getowned
+slug: /sdk.erc1155.getowned
 title: Erc1155.getOwned() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.droperc721claimconditions.getclaimineligibilityreasons
+slug: /sdk.droperc721claimconditions.getclaimineligibilityreasons
 title: DropErc721ClaimConditions.getClaimIneligibilityReasons() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplaceauction.createlisting
+slug: /sdk.marketplaceauction.createlisting
 title: MarketplaceAuction.createListing() method
 hide_title: true
 ---

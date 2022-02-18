@@ -1,5 +1,5 @@
 ---
-id: sdk.contractencoder.decode
+slug: /sdk.contractencoder.decode
 title: ContractEncoder.decode() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.editiondrop.estimator
+slug: /sdk.editiondrop.estimator
 title: EditionDrop.estimator property
 hide_title: true
 ---

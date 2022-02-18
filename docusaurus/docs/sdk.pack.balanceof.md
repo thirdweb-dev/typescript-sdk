@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.balanceof
+slug: /sdk.pack.balanceof
 title: Pack.balanceOf() method
 hide_title: true
 ---

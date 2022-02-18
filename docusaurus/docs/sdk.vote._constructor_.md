@@ -1,5 +1,5 @@
 ---
-id: sdk.vote._constructor_
+slug: /sdk.vote._constructor_
 title: Vote.(constructor)
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection._constructor_
+slug: /sdk.nftcollection._constructor_
 title: NFTCollection.(constructor)
 hide_title: true
 ---

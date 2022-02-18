@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.open
+slug: /sdk.pack.open
 title: Pack.open() method
 hide_title: true
 ---

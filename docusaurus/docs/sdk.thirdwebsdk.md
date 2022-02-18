@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk
+slug: /sdk.thirdwebsdk
 title: ThirdwebSDK class
 hide_title: true
 ---

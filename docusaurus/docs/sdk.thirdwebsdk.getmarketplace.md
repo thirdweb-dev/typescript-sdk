@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.getmarketplace
+slug: /sdk.thirdwebsdk.getmarketplace
 title: ThirdwebSDK.getMarketplace() method
 hide_title: true
 ---

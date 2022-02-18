@@ -1,5 +1,5 @@
 ---
-id: sdk.permitrequestmessage
+slug: /sdk.permitrequestmessage
 title: PermitRequestMessage type
 hide_title: true
 ---

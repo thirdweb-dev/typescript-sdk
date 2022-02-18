@@ -1,5 +1,5 @@
 ---
-id: sdk.edition.metadata
+slug: /sdk.edition.metadata
 title: Edition.metadata property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.role
+slug: /sdk.role
 title: Role type
 hide_title: true
 ---

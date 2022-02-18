@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.contracttype
+slug: /sdk.pack.contracttype
 title: Pack.contractType property
 hide_title: true
 ---

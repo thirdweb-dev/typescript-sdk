@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk._constructor_
+slug: /sdk.thirdwebsdk._constructor_
 title: ThirdwebSDK.(constructor)
 hide_title: true
 ---

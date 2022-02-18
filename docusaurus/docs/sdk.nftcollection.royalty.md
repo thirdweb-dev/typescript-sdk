@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection.royalty
+slug: /sdk.nftcollection.royalty
 title: NFTCollection.royalty property
 hide_title: true
 ---

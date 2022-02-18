@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.royalty
+slug: /sdk.nftdrop.royalty
 title: NFTDrop.royalty property
 hide_title: true
 ---

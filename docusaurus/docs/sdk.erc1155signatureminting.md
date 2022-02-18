@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155signatureminting
+slug: /sdk.erc1155signatureminting
 title: Erc1155SignatureMinting class
 hide_title: true
 ---

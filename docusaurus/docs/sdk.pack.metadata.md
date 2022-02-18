@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.metadata
+slug: /sdk.pack.metadata
 title: Pack.metadata property
 hide_title: true
 ---

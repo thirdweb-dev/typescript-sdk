@@ -1,5 +1,5 @@
 ---
-id: sdk.jsonobject
+slug: /sdk.jsonobject
 title: JsonObject type
 hide_title: true
 ---

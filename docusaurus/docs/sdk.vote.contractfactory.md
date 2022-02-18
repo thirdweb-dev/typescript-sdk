@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.contractfactory
+slug: /sdk.vote.contractfactory
 title: Vote.contractFactory property
 hide_title: true
 ---

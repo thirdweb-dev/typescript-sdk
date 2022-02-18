@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20.allowance
+slug: /sdk.erc20.allowance
 title: Erc20.allowance() method
 hide_title: true
 ---

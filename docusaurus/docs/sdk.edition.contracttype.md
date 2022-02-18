@@ -1,5 +1,5 @@
 ---
-id: sdk.edition.contracttype
+slug: /sdk.edition.contracttype
 title: Edition.contractType property
 hide_title: true
 ---

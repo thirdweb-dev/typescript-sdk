@@ -1,5 +1,5 @@
 ---
-id: sdk.transactionresultwithid
+slug: /sdk.transactionresultwithid
 title: TransactionResultWithId type
 hide_title: true
 ---

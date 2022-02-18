@@ -1,5 +1,5 @@
 ---
-id: sdk.sdkoptions
+slug: /sdk.sdkoptions
 title: SDKOptions type
 hide_title: true
 ---

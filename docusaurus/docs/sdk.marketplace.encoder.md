@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.encoder
+slug: /sdk.marketplace.encoder
 title: Marketplace.encoder property
 hide_title: true
 ---

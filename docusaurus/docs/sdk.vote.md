@@ -1,5 +1,5 @@
 ---
-id: sdk.vote
+slug: /sdk.vote
 title: Vote class
 hide_title: true
 ---

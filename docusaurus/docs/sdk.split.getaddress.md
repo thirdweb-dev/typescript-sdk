@@ -1,5 +1,5 @@
 ---
-id: sdk.split.getaddress
+slug: /sdk.split.getaddress
 title: Split.getAddress() method
 hide_title: true
 ---

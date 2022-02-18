@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155.balanceof
+slug: /sdk.erc1155.balanceof
 title: Erc1155.balanceOf() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplacedirect.acceptoffer
+slug: /sdk.marketplacedirect.acceptoffer
 title: MarketplaceDirect.acceptOffer() method
 hide_title: true
 ---

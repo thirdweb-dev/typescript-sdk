@@ -1,5 +1,5 @@
 ---
-id: sdk.split
+slug: /sdk.split
 title: Split class
 hide_title: true
 ---

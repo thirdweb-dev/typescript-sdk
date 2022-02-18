@@ -1,5 +1,5 @@
 ---
-id: sdk.nftmetadatainput
+slug: /sdk.nftmetadatainput
 title: NFTMetadataInput type
 hide_title: true
 ---

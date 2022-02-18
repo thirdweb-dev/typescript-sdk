@@ -1,5 +1,5 @@
 ---
-id: sdk.contractdeployer.deploynftcollection
+slug: /sdk.contractdeployer.deploynftcollection
 title: ContractDeployer.deployNFTCollection() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155.contractwrapper
+slug: /sdk.erc1155.contractwrapper
 title: Erc1155.contractWrapper property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.claimconditioninputarray
+slug: /sdk.claimconditioninputarray
 title: ClaimConditionInputArray variable
 hide_title: true
 ---

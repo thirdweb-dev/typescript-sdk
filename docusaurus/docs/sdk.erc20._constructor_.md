@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20._constructor_
+slug: /sdk.erc20._constructor_
 title: Erc20.(constructor)
 hide_title: true
 ---

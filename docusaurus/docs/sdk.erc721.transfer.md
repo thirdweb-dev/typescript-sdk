@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721.transfer
+slug: /sdk.erc721.transfer
 title: Erc721.transfer() method
 hide_title: true
 ---

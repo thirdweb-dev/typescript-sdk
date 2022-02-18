@@ -1,5 +1,5 @@
 ---
-id: sdk.pack
+slug: /sdk.pack
 title: Pack class
 hide_title: true
 ---

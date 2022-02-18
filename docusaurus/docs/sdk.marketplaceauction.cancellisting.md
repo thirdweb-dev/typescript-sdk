@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplaceauction.cancellisting
+slug: /sdk.marketplaceauction.cancellisting
 title: MarketplaceAuction.cancelListing() method
 hide_title: true
 ---

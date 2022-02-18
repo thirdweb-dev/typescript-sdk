@@ -1,5 +1,5 @@
 ---
-id: sdk.bufferorstringwithname
+slug: /sdk.bufferorstringwithname
 title: BufferOrStringWithName type
 hide_title: true
 ---

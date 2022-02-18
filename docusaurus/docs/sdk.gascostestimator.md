@@ -1,5 +1,5 @@
 ---
-id: sdk.gascostestimator
+slug: /sdk.gascostestimator
 title: GasCostEstimator class
 hide_title: true
 ---

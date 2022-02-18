@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721signatureminting.generate
+slug: /sdk.erc721signatureminting.generate
 title: Erc721SignatureMinting.generate() method
 hide_title: true
 ---

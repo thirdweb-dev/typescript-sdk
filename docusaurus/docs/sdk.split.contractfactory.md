@@ -1,5 +1,5 @@
 ---
-id: sdk.split.contractfactory
+slug: /sdk.split.contractfactory
 title: Split.contractFactory property
 hide_title: true
 ---

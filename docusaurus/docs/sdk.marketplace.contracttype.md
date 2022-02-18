@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.contracttype
+slug: /sdk.marketplace.contracttype
 title: Marketplace.contractType property
 hide_title: true
 ---

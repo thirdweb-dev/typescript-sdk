@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.deployer
+slug: /sdk.thirdwebsdk.deployer
 title: ThirdwebSDK.deployer property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.getowned
+slug: /sdk.pack.getowned
 title: Pack.getOwned() method
 hide_title: true
 ---

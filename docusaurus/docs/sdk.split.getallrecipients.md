@@ -1,5 +1,5 @@
 ---
-id: sdk.split.getallrecipients
+slug: /sdk.split.getallrecipients
 title: Split.getAllRecipients() method
 hide_title: true
 ---

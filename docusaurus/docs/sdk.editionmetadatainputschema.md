@@ -1,5 +1,5 @@
 ---
-id: sdk.editionmetadatainputschema
+slug: /sdk.editionmetadatainputschema
 title: EditionMetadataInputSchema variable
 hide_title: true
 ---

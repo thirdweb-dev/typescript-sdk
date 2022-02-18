@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.contractroles
+slug: /sdk.nftdrop.contractroles
 title: NFTDrop.contractRoles property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplacedirect
+slug: /sdk.marketplacedirect
 title: MarketplaceDirect class
 hide_title: true
 ---

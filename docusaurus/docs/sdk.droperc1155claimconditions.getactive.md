@@ -1,5 +1,5 @@
 ---
-id: sdk.droperc1155claimconditions.getactive
+slug: /sdk.droperc1155claimconditions.getactive
 title: DropErc1155ClaimConditions.getActive() method
 hide_title: true
 ---

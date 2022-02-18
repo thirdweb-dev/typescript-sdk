@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.create
+slug: /sdk.pack.create
 title: Pack.create() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.claimcondition
+slug: /sdk.claimcondition
 title: ClaimCondition type
 hide_title: true
 ---

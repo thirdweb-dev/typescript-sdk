@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplaceauction.getwinningbid
+slug: /sdk.marketplaceauction.getwinningbid
 title: MarketplaceAuction.getWinningBid() method
 hide_title: true
 ---

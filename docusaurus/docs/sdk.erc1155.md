@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155
+slug: /sdk.erc1155
 title: Erc1155 class
 hide_title: true
 ---

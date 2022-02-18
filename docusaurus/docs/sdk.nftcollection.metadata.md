@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection.metadata
+slug: /sdk.nftcollection.metadata
 title: NFTCollection.metadata property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.commonprimarysaleschema
+slug: /sdk.commonprimarysaleschema
 title: CommonPrimarySaleSchema variable
 hide_title: true
 ---

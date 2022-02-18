@@ -1,5 +1,5 @@
 ---
-id: sdk.contractroyalty._constructor_
+slug: /sdk.contractroyalty._constructor_
 title: ContractRoyalty.(constructor)
 hide_title: true
 ---

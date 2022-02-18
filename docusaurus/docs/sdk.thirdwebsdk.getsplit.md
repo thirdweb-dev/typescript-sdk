@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.getsplit
+slug: /sdk.thirdwebsdk.getsplit
 title: ThirdwebSDK.getSplit() method
 hide_title: true
 ---

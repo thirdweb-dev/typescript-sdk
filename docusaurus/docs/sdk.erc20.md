@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20
+slug: /sdk.erc20
 title: Erc20 class
 hide_title: true
 ---

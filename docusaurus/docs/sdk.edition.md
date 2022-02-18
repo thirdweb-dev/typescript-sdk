@@ -1,5 +1,5 @@
 ---
-id: sdk.edition
+slug: /sdk.edition
 title: Edition class
 hide_title: true
 ---

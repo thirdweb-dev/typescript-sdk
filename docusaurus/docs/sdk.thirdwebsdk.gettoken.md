@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.gettoken
+slug: /sdk.thirdwebsdk.gettoken
 title: ThirdwebSDK.getToken() method
 hide_title: true
 ---

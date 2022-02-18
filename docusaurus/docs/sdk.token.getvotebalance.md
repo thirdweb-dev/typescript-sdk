@@ -1,5 +1,5 @@
 ---
-id: sdk.token.getvotebalance
+slug: /sdk.token.getvotebalance
 title: Token.getVoteBalance() method
 hide_title: true
 ---

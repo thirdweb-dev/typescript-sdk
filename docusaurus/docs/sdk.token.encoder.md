@@ -1,5 +1,5 @@
 ---
-id: sdk.token.encoder
+slug: /sdk.token.encoder
 title: Token.encoder property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20.getaddress
+slug: /sdk.erc20.getaddress
 title: Erc20.getAddress() method
 hide_title: true
 ---

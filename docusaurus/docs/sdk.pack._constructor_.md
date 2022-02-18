@@ -1,5 +1,5 @@
 ---
-id: sdk.pack._constructor_
+slug: /sdk.pack._constructor_
 title: Pack.(constructor)
 hide_title: true
 ---

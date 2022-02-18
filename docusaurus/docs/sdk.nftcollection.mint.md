@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection.mint
+slug: /sdk.nftcollection.mint
 title: NFTCollection.mint() method
 hide_title: true
 ---

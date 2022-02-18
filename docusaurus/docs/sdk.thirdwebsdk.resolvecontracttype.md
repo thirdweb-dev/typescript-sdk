@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.resolvecontracttype
+slug: /sdk.thirdwebsdk.resolvecontracttype
 title: ThirdwebSDK.resolveContractType() method
 hide_title: true
 ---

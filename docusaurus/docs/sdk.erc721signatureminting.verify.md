@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721signatureminting.verify
+slug: /sdk.erc721signatureminting.verify
 title: Erc721SignatureMinting.verify() method
 hide_title: true
 ---

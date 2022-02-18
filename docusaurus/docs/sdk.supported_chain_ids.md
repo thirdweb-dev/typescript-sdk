@@ -1,5 +1,5 @@
 ---
-id: sdk.supported_chain_ids
+slug: /sdk.supported_chain_ids
 title: SUPPORTED\_CHAIN\_IDS variable
 hide_title: true
 ---

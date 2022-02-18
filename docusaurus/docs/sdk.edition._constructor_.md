@@ -1,5 +1,5 @@
 ---
-id: sdk.edition._constructor_
+slug: /sdk.edition._constructor_
 title: Edition.(constructor)
 hide_title: true
 ---

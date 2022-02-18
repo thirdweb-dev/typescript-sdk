@@ -1,5 +1,5 @@
 ---
-id: sdk.split.distributetoken
+slug: /sdk.split.distributetoken
 title: Split.distributeToken() method
 hide_title: true
 ---

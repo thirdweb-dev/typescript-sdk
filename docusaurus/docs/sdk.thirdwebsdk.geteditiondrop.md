@@ -1,5 +1,5 @@
 ---
-id: sdk.thirdwebsdk.geteditiondrop
+slug: /sdk.thirdwebsdk.geteditiondrop
 title: ThirdwebSDK.getEditionDrop() method
 hide_title: true
 ---

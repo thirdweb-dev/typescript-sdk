@@ -1,5 +1,5 @@
 ---
-id: sdk.edition.primarysale
+slug: /sdk.edition.primarysale
 title: Edition.primarySale property
 hide_title: true
 ---

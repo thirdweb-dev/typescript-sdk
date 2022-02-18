@@ -1,5 +1,5 @@
 ---
-id: sdk.contractencoder._constructor_
+slug: /sdk.contractencoder._constructor_
 title: ContractEncoder.(constructor)
 hide_title: true
 ---

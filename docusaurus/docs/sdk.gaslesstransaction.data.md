@@ -1,5 +1,5 @@
 ---
-id: sdk.gaslesstransaction.data
+slug: /sdk.gaslesstransaction.data
 title: GaslessTransaction.data property
 hide_title: true
 ---

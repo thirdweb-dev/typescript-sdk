@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection.primarysale
+slug: /sdk.nftcollection.primarysale
 title: NFTCollection.primarySale property
 hide_title: true
 ---

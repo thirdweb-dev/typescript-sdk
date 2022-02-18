@@ -1,5 +1,5 @@
 ---
-id: sdk.token
+slug: /sdk.token
 title: Token class
 hide_title: true
 ---

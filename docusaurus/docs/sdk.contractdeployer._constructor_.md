@@ -1,5 +1,5 @@
 ---
-id: sdk.contractdeployer._constructor_
+slug: /sdk.contractdeployer._constructor_
 title: ContractDeployer.(constructor)
 hide_title: true
 ---

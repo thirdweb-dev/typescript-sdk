@@ -1,5 +1,5 @@
 ---
-id: sdk.gaslesstransaction.gaslimit
+slug: /sdk.gaslesstransaction.gaslimit
 title: GaslessTransaction.gasLimit property
 hide_title: true
 ---

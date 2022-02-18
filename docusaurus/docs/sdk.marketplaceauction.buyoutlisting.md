@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplaceauction.buyoutlisting
+slug: /sdk.marketplaceauction.buyoutlisting
 title: MarketplaceAuction.buyoutListing() method
 hide_title: true
 ---

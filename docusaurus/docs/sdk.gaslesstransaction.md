@@ -1,5 +1,5 @@
 ---
-id: sdk.gaslesstransaction
+slug: /sdk.gaslesstransaction
 title: GaslessTransaction interface
 hide_title: true
 ---

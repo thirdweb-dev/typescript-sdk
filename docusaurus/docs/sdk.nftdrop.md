@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop
+slug: /sdk.nftdrop
 title: NFTDrop class
 hide_title: true
 ---

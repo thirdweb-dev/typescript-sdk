@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.encoder
+slug: /sdk.nftdrop.encoder
 title: NFTDrop.encoder property
 hide_title: true
 ---

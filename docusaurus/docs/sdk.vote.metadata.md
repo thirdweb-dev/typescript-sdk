@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.metadata
+slug: /sdk.vote.metadata
 title: Vote.metadata property
 hide_title: true
 ---

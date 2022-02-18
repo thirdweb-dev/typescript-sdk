@@ -1,5 +1,5 @@
 ---
-id: sdk.istorage.uploadbatch
+slug: /sdk.istorage.uploadbatch
 title: IStorage.uploadBatch() method
 hide_title: true
 ---

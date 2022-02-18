@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.contractfactory
+slug: /sdk.pack.contractfactory
 title: Pack.contractFactory property
 hide_title: true
 ---

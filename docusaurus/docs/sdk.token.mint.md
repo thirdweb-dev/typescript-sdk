@@ -1,5 +1,5 @@
 ---
-id: sdk.token.mint
+slug: /sdk.token.mint
 title: Token.mint() method
 hide_title: true
 ---

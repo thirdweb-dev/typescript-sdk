@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection.encoder
+slug: /sdk.nftcollection.encoder
 title: NFTCollection.encoder property
 hide_title: true
 ---

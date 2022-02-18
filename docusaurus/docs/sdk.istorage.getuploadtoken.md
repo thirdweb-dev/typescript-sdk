@@ -1,5 +1,5 @@
 ---
-id: sdk.istorage.getuploadtoken
+slug: /sdk.istorage.getuploadtoken
 title: IStorage.getUploadToken() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.networkorsignerorprovider
+slug: /sdk.networkorsignerorprovider
 title: NetworkOrSignerOrProvider type
 hide_title: true
 ---

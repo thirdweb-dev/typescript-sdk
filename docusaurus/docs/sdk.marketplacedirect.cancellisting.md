@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplacedirect.cancellisting
+slug: /sdk.marketplacedirect.cancellisting
 title: MarketplaceDirect.cancelListing() method
 hide_title: true
 ---

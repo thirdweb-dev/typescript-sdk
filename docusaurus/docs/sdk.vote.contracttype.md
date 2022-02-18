@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.contracttype
+slug: /sdk.vote.contracttype
 title: Vote.contractType property
 hide_title: true
 ---

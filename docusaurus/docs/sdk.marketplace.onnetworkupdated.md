@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.onnetworkupdated
+slug: /sdk.marketplace.onnetworkupdated
 title: Marketplace.onNetworkUpdated() method
 hide_title: true
 ---

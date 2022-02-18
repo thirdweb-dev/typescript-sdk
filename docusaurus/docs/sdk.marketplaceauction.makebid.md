@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplaceauction.makebid
+slug: /sdk.marketplaceauction.makebid
 title: MarketplaceAuction.makeBid() method
 hide_title: true
 ---

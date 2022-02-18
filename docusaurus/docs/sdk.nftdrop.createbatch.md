@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.createbatch
+slug: /sdk.nftdrop.createbatch
 title: NFTDrop.createBatch() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.estimator
+slug: /sdk.vote.estimator
 title: Vote.estimator property
 hide_title: true
 ---

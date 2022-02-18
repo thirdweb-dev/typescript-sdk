@@ -1,5 +1,5 @@
 ---
-id: sdk.split.balanceoftoken
+slug: /sdk.split.balanceoftoken
 title: Split.balanceOfToken() method
 hide_title: true
 ---

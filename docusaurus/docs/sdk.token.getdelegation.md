@@ -1,5 +1,5 @@
 ---
-id: sdk.token.getdelegation
+slug: /sdk.token.getdelegation
 title: Token.getDelegation() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.signerorprovider
+slug: /sdk.signerorprovider
 title: SignerOrProvider type
 hide_title: true
 ---

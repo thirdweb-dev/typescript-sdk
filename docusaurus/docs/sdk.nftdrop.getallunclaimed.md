@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.getallunclaimed
+slug: /sdk.nftdrop.getallunclaimed
 title: NFTDrop.getAllUnclaimed() method
 hide_title: true
 ---

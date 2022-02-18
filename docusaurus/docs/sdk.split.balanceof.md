@@ -1,5 +1,5 @@
 ---
-id: sdk.split.balanceof
+slug: /sdk.split.balanceof
 title: Split.balanceOf() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.createsnapshot
+slug: /sdk.createsnapshot
 title: createSnapshot() function
 hide_title: true
 ---

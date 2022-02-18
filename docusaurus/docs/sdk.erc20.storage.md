@@ -1,5 +1,5 @@
 ---
-id: sdk.erc20.storage
+slug: /sdk.erc20.storage
 title: Erc20.storage property
 hide_title: true
 ---

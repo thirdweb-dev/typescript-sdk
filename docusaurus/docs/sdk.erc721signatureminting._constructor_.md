@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721signatureminting._constructor_
+slug: /sdk.erc721signatureminting._constructor_
 title: Erc721SignatureMinting.(constructor)
 hide_title: true
 ---

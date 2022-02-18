@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.contractroles
+slug: /sdk.marketplace.contractroles
 title: Marketplace.contractRoles property
 hide_title: true
 ---

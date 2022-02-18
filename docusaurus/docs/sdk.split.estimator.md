@@ -1,5 +1,5 @@
 ---
-id: sdk.split.estimator
+slug: /sdk.split.estimator
 title: Split.estimator property
 hide_title: true
 ---

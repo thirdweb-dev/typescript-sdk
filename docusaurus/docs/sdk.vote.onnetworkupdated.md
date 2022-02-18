@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.onnetworkupdated
+slug: /sdk.vote.onnetworkupdated
 title: Vote.onNetworkUpdated() method
 hide_title: true
 ---

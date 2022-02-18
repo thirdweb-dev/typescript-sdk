@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.contractfactory
+slug: /sdk.marketplace.contractfactory
 title: Marketplace.contractFactory property
 hide_title: true
 ---

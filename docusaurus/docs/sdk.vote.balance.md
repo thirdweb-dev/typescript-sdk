@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.balance
+slug: /sdk.vote.balance
 title: Vote.balance() method
 hide_title: true
 ---

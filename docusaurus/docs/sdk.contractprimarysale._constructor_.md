@@ -1,5 +1,5 @@
 ---
-id: sdk.contractprimarysale._constructor_
+slug: /sdk.contractprimarysale._constructor_
 title: ContractPrimarySale.(constructor)
 hide_title: true
 ---

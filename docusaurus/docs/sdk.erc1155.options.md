@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155.options
+slug: /sdk.erc1155.options
 title: Erc1155.options property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.isrestrictedtolisterroleonly
+slug: /sdk.marketplace.isrestrictedtolisterroleonly
 title: Marketplace.isRestrictedToListerRoleOnly() method
 hide_title: true
 ---

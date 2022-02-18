@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.transferbatchfrom
+slug: /sdk.pack.transferbatchfrom
 title: Pack.transferBatchFrom() method
 hide_title: true
 ---

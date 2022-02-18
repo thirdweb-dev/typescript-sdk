@@ -1,5 +1,5 @@
 ---
-id: sdk.nftcollection.signature
+slug: /sdk.nftcollection.signature
 title: NFTCollection.signature property
 hide_title: true
 ---

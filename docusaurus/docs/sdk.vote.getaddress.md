@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.getaddress
+slug: /sdk.vote.getaddress
 title: Vote.getAddress() method
 hide_title: true
 ---

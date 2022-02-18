@@ -1,5 +1,5 @@
 ---
-id: sdk.editiondrop.encoder
+slug: /sdk.editiondrop.encoder
 title: EditionDrop.encoder property
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.edition.increasesupply
+slug: /sdk.edition.increasesupply
 title: Edition.increaseSupply() method
 hide_title: true
 ---

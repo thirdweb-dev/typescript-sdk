@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.setbidbufferbps
+slug: /sdk.marketplace.setbidbufferbps
 title: Marketplace.setBidBufferBps() method
 hide_title: true
 ---

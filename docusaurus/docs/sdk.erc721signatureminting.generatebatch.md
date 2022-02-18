@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721signatureminting.generatebatch
+slug: /sdk.erc721signatureminting.generatebatch
 title: Erc721SignatureMinting.generateBatch() method
 hide_title: true
 ---

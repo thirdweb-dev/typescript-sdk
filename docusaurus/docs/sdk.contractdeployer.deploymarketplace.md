@@ -1,5 +1,5 @@
 ---
-id: sdk.contractdeployer.deploymarketplace
+slug: /sdk.contractdeployer.deploymarketplace
 title: ContractDeployer.deployMarketplace() method
 hide_title: true
 ---

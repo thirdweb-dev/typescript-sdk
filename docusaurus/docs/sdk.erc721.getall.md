@@ -1,5 +1,5 @@
 ---
-id: sdk.erc721.getall
+slug: /sdk.erc721.getall
 title: Erc721.getAll() method
 hide_title: true
 ---

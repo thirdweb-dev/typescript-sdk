@@ -1,5 +1,5 @@
 ---
-id: sdk.droperc1155claimconditions.update
+slug: /sdk.droperc1155claimconditions.update
 title: DropErc1155ClaimConditions.update() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155.isapproved
+slug: /sdk.erc1155.isapproved
 title: Erc1155.isApproved() method
 hide_title: true
 ---

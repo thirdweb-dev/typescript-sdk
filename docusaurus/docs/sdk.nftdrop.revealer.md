@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.revealer
+slug: /sdk.nftdrop.revealer
 title: NFTDrop.revealer property
 hide_title: true
 ---

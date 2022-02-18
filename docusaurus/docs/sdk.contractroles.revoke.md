@@ -1,5 +1,5 @@
 ---
-id: sdk.contractroles.revoke
+slug: /sdk.contractroles.revoke
 title: ContractRoles.revoke() method
 hide_title: true
 ---

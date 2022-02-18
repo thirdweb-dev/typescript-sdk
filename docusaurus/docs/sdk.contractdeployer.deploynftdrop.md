@@ -1,5 +1,5 @@
 ---
-id: sdk.contractdeployer.deploynftdrop
+slug: /sdk.contractdeployer.deploynftdrop
 title: ContractDeployer.deployNFTDrop() method
 hide_title: true
 ---

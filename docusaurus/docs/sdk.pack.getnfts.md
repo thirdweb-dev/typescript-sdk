@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.getnfts
+slug: /sdk.pack.getnfts
 title: Pack.getNFTs() method
 hide_title: true
 ---

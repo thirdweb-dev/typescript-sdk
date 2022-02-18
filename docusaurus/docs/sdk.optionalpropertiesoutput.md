@@ -1,5 +1,5 @@
 ---
-id: sdk.optionalpropertiesoutput
+slug: /sdk.optionalpropertiesoutput
 title: OptionalPropertiesOutput variable
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.encoder
+slug: /sdk.pack.encoder
 title: Pack.encoder property
 hide_title: true
 ---

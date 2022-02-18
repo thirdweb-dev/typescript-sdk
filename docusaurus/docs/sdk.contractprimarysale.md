@@ -1,5 +1,5 @@
 ---
-id: sdk.contractprimarysale
+slug: /sdk.contractprimarysale
 title: ContractPrimarySale class
 hide_title: true
 ---

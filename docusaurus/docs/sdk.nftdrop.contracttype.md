@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.contracttype
+slug: /sdk.nftdrop.contracttype
 title: NFTDrop.contractType property
 hide_title: true
 ---

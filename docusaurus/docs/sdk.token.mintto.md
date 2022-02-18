@@ -1,5 +1,5 @@
 ---
-id: sdk.token.mintto
+slug: /sdk.token.mintto
 title: Token.mintTo() method
 hide_title: true
 ---

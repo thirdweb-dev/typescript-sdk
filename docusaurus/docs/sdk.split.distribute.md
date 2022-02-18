@@ -1,5 +1,5 @@
 ---
-id: sdk.split.distribute
+slug: /sdk.split.distribute
 title: Split.distribute() method
 hide_title: true
 ---

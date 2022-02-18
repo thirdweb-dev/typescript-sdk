@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.balance
+slug: /sdk.pack.balance
 title: Pack.balance() method
 hide_title: true
 ---

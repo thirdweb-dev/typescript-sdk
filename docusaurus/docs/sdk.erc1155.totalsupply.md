@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155.totalsupply
+slug: /sdk.erc1155.totalsupply
 title: Erc1155.totalSupply() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.allowlistingfromspecificassetonly
+slug: /sdk.marketplace.allowlistingfromspecificassetonly
 title: Marketplace.allowListingFromSpecificAssetOnly() method
 hide_title: true
 ---

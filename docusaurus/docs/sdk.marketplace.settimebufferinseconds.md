@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplace.settimebufferinseconds
+slug: /sdk.marketplace.settimebufferinseconds
 title: Marketplace.setTimeBufferInSeconds() method
 hide_title: true
 ---

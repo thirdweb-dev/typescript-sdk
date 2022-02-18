@@ -63,7 +63,7 @@ async function main() {
 
       const header = [
         "---",
-        `id: ${id}`,
+        `slug: /${id}`,
         `title: ${title}`,
         `hide_title: true`,
         "---",

@@ -1,5 +1,5 @@
 ---
-id: sdk.contractdeployer.deploytoken
+slug: /sdk.contractdeployer.deploytoken
 title: ContractDeployer.deployToken() method
 hide_title: true
 ---

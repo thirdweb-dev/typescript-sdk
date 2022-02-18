@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.settings
+slug: /sdk.vote.settings
 title: Vote.settings() method
 hide_title: true
 ---

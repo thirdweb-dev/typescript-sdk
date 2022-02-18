@@ -1,5 +1,5 @@
 ---
-id: sdk.pack.get
+slug: /sdk.pack.get
 title: Pack.get() method
 hide_title: true
 ---

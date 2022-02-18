@@ -1,5 +1,5 @@
 ---
-id: sdk.contractdeployer.deployvote
+slug: /sdk.contractdeployer.deployvote
 title: ContractDeployer.deployVote() method
 hide_title: true
 ---

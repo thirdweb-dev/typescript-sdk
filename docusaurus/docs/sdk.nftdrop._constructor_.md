@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop._constructor_
+slug: /sdk.nftdrop._constructor_
 title: NFTDrop.(constructor)
 hide_title: true
 ---

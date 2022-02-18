@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.claimto
+slug: /sdk.nftdrop.claimto
 title: NFTDrop.claimTo() method
 hide_title: true
 ---

@@ -1,5 +1,5 @@
 ---
-id: sdk.nftdrop.primarysale
+slug: /sdk.nftdrop.primarysale
 title: NFTDrop.primarySale property
 hide_title: true
 ---

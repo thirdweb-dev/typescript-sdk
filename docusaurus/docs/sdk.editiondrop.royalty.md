@@ -1,5 +1,5 @@
 ---
-id: sdk.editiondrop.royalty
+slug: /sdk.editiondrop.royalty
 title: EditionDrop.royalty property
 hide_title: true
 ---

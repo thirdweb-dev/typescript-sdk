@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155signatureminting.generatebatch
+slug: /sdk.erc1155signatureminting.generatebatch
 title: Erc1155SignatureMinting.generateBatch() method
 hide_title: true
 ---

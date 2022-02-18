@@ -1,5 +1,5 @@
 ---
-id: sdk.erc1155.burn
+slug: /sdk.erc1155.burn
 title: Erc1155.burn() method
 hide_title: true
 ---

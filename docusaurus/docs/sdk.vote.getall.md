@@ -1,5 +1,5 @@
 ---
-id: sdk.vote.getall
+slug: /sdk.vote.getall
 title: Vote.getAll() method
 hide_title: true
 ---

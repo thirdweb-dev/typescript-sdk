@@ -1,5 +1,5 @@
 ---
-id: sdk.marketplacedirect.updatelisting
+slug: /sdk.marketplacedirect.updatelisting
 title: MarketplaceDirect.updateListing() method
 hide_title: true
 ---
