@@ -1,12 +1,10 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { BigNumber } from "ethers";
-import { Edition, NFTCollection } from "../src";
+import { Edition } from "../src";
 import { sdk, signers } from "./before.test";
 import {
-  PayloadToSign,
   PayloadToSign1155,
-  SignedPayload,
   SignedPayload1155,
 } from "../src/schema/contracts/common/signature";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
@@ -28,7 +26,7 @@ describe("Edition sig minting", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     editionContract = sdk.getEdition(
-      await sdk.deployContract(Edition.contractType, {
+      await sdk.deployer.deployContract(Edition.contractType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
         primary_sale_recipient: adminWallet.address,

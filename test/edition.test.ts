@@ -4,6 +4,7 @@ import { sdk, signers } from "./before.test";
 
 import { assert, expect } from "chai";
 import { AddressZero } from "@ethersproject/constants";
+import { ethers } from "ethers";
 
 global.fetch = require("node-fetch");
 
@@ -36,6 +37,16 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     bundleContract = sdk.getEdition(address);
   });
 
+  it("gas cost", async () => {
+    const cost = await bundleContract.estimator.gasCostOf("mintTo", [
+      adminWallet.address,
+      ethers.constants.MaxUint256,
+      "mock://12398172398172389/0",
+      1,
+    ]);
+    expect(parseFloat(cost)).gt(0);
+  });
+
   it("should return all owned collection tokens", async () => {
     await bundleContract.mint({
       metadata: {
@@ -57,14 +68,14 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
 
   // TODO: This test should move to the royalty suite
   it("updates the bps in both the metadata and on-chain", async () => {
-    const currentBps = (await bundleContract.royalty.getRoyaltyInfo())
+    const currentBps = (await bundleContract.royalty.getDefaultRoyaltyInfo())
       .seller_fee_basis_points;
     assert.equal(currentBps, 1000);
     const cMetadata = await bundleContract.metadata.get();
     assert.equal(cMetadata.seller_fee_basis_points, 1000);
 
     const testBPS = 100;
-    await bundleContract.royalty.setRoyaltyInfo({
+    await bundleContract.royalty.setDefaultRoyaltyInfo({
       seller_fee_basis_points: testBPS,
     });
     const newMetadata = await bundleContract.metadata.get();
@@ -75,7 +86,8 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
       "Fetching the BPS from the metadata should return 100",
     );
     assert.equal(
-      (await bundleContract.royalty.getRoyaltyInfo()).seller_fee_basis_points,
+      (await bundleContract.royalty.getDefaultRoyaltyInfo())
+        .seller_fee_basis_points,
       testBPS,
       "Fetching the BPS with the tx should return 100",
     );

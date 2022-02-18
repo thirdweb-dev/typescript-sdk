@@ -130,8 +130,21 @@ export class ContractWrapper<
     });
   }
 
+  /**
+   * @internal
+   */
   public async multiCall(encoded: string[]): Promise<TransactionReceipt> {
     return this.sendTransaction("multicall", [encoded]);
+  }
+
+  /**
+   * @internal
+   */
+  public async estimateGas(
+    fn: keyof TContract["functions"],
+    args: any[],
+  ): Promise<BigNumber> {
+    return this.writeContract.estimateGas[fn as string](...args);
   }
 
   /**

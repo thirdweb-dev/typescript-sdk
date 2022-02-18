@@ -26,6 +26,7 @@ import deepEqual from "deep-equal";
 import { CurrencyValue } from "../types/currency";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractEncoder } from "../core/classes/contract-encoder";
+import { GasCostEstimator } from "../core/classes";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -56,6 +57,7 @@ export class Vote implements UpdateableNetwork {
 
   public metadata: ContractMetadata<VoteERC20, typeof Vote.schema>;
   public encoder: ContractEncoder<VoteERC20>;
+  public estimator: GasCostEstimator<VoteERC20>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -77,6 +79,7 @@ export class Vote implements UpdateableNetwork {
       this.storage,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {

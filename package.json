@@ -85,7 +85,7 @@
     "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
-    "@thirdweb-dev/contracts": "2.0.1-43",
+    "@thirdweb-dev/contracts": "2.0.1-46",
     "@web-std/file": "^3.0.0",
     "deep-equal": "^2.0.5",
     "eventemitter2": "^6.4.5",

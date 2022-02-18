@@ -24,6 +24,7 @@ import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
 import { getRoleHash } from "../common/role";
 import { MarketplaceDirect } from "../core/classes/marketplace-direct";
 import { MarketplaceAuction } from "../core/classes/marketplace-auction";
+import { GasCostEstimator } from "../core/classes";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -62,6 +63,7 @@ export class Marketplace implements UpdateableNetwork {
     typeof Marketplace.contractRoles[number]
   >;
   public encoder: ContractEncoder<MarketplaceContract>;
+  public estimator: GasCostEstimator<MarketplaceContract>;
   /**
    * Handle direct listings, see {@link MarketplaceDirect}
    */
@@ -95,6 +97,7 @@ export class Marketplace implements UpdateableNetwork {
       Marketplace.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
     this.direct = new MarketplaceDirect(this.contractWrapper, this.storage);
     this.auction = new MarketplaceAuction(this.contractWrapper, this.storage);
   }

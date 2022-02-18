@@ -13,7 +13,7 @@
 |  [ContractMetadata](./sdk.contractmetadata.md) | Handles metadata for a Contract |
 |  [ContractPrimarySale](./sdk.contractprimarysale.md) | Handles primary sales recipients for a Contract |
 |  [ContractRoles](./sdk.contractroles.md) | Handles Contract roles and permissions |
-|  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalites |
+|  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalties |
 |  [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Manages claim conditions for Edition Drop contracts |
 |  [DropErc721ClaimConditions](./sdk.droperc721claimconditions.md) | Manages claim conditions for NFT Drop contracts |
 |  [Edition](./sdk.edition.md) | Create a collection of NFTs that lets you mint multiple copies of each NFT. |
@@ -23,6 +23,7 @@
 |  [Erc20](./sdk.erc20.md) | Standard ERC20 functions |
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 functions |
 |  [Erc721SignatureMinting](./sdk.erc721signatureminting.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
+|  [GasCostEstimator](./sdk.gascostestimator.md) | Estimates the gas cost of Contract calls |
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MarketplaceAuction](./sdk.marketplaceauction.md) | Handles auction listings |
 |  [MarketplaceDirect](./sdk.marketplacedirect.md) | Handles direct listings |

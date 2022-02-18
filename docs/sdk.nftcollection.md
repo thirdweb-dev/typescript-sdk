@@ -39,6 +39,7 @@ const nftCollection = sdk.getNFTCollection("{{contract_address}}");
 |  [contractRoles](./sdk.nftcollection.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.nftcollection.contracttype.md) | <code>static</code> | "nft-collection" |  |
 |  [encoder](./sdk.nftcollection.encoder.md) |  | ContractEncoder&lt;TokenERC721&gt; |  |
+|  [estimator](./sdk.nftcollection.estimator.md) |  | GasCostEstimator&lt;TokenERC721&gt; |  |
 |  [metadata](./sdk.nftcollection.metadata.md) |  | ContractMetadata&lt;TokenERC721, typeof NFTCollection.schema&gt; |  |
 |  [primarySale](./sdk.nftcollection.primarysale.md) |  | ContractPrimarySale&lt;TokenERC721&gt; |  |
 |  [roles](./sdk.nftcollection.roles.md) |  | ContractRoles&lt;TokenERC721, typeof NFTCollection.contractRoles\[number\]&gt; |  |

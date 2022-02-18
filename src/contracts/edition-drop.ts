@@ -23,6 +23,7 @@ import { prepareClaim } from "../common/claim-conditions";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -58,6 +59,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public primarySale: ContractPrimarySale<DropERC1155>;
   public claimConditions: DropErc1155ClaimConditions;
   public encoder: ContractEncoder<DropERC1155>;
+  public estimator: GasCostEstimator<DropERC1155>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -89,6 +91,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       this.storage,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
   }
 
   /** ******************************

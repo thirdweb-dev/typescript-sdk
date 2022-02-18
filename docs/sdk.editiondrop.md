@@ -40,6 +40,7 @@ const editionDrop = sdk.getEditionDrop("{{contract_address}}");
 |  [contractRoles](./sdk.editiondrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.editiondrop.contracttype.md) | <code>static</code> | "edition-drop" |  |
 |  [encoder](./sdk.editiondrop.encoder.md) |  | ContractEncoder&lt;DropERC1155&gt; |  |
+|  [estimator](./sdk.editiondrop.estimator.md) |  | GasCostEstimator&lt;DropERC1155&gt; |  |
 |  [metadata](./sdk.editiondrop.metadata.md) |  | ContractMetadata&lt;DropERC1155, typeof EditionDrop.schema&gt; |  |
 |  [primarySale](./sdk.editiondrop.primarysale.md) |  | ContractPrimarySale&lt;DropERC1155&gt; |  |
 |  [roles](./sdk.editiondrop.roles.md) |  | ContractRoles&lt;DropERC1155, typeof EditionDrop.contractRoles\[number\]&gt; |  |

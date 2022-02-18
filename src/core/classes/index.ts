@@ -13,3 +13,4 @@ export { Erc1155SignatureMinting } from "./erc-1155-signature-minting";
 export { MarketplaceDirect } from "./marketplace-direct";
 export { MarketplaceAuction } from "./marketplace-auction";
 export { ContractDeployer } from "./contract-deployer";
+export { GasCostEstimator } from "./gas-cost-estimator";

@@ -21,6 +21,7 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { CommonNFTInput } from "../schema/tokens/common";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -55,6 +56,7 @@ export class Edition extends Erc1155<TokenERC1155> {
   public royalty: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
   public primarySale: ContractPrimarySale<TokenERC1155>;
   public encoder: ContractEncoder<TokenERC1155>;
+  public estimator: GasCostEstimator<TokenERC1155>;
   public signature: Erc1155SignatureMinting;
 
   constructor(
@@ -79,6 +81,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.primarySale = new ContractPrimarySale(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
     this.signature = new Erc1155SignatureMinting(
       this.contractWrapper,
       this.roles,

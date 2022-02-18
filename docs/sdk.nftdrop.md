@@ -40,6 +40,7 @@ const nftDrop = sdk.getNFTDrop("{{contract_address}}");
 |  [contractRoles](./sdk.nftdrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.nftdrop.contracttype.md) | <code>static</code> | "nft-drop" |  |
 |  [encoder](./sdk.nftdrop.encoder.md) |  | ContractEncoder&lt;DropERC721&gt; |  |
+|  [estimator](./sdk.nftdrop.estimator.md) |  | GasCostEstimator&lt;DropERC721&gt; |  |
 |  [metadata](./sdk.nftdrop.metadata.md) |  | ContractMetadata&lt;DropERC721, typeof NFTDrop.schema&gt; |  |
 |  [primarySale](./sdk.nftdrop.primarysale.md) |  | ContractPrimarySale&lt;DropERC721&gt; |  |
 |  [revealer](./sdk.nftdrop.revealer.md) |  | DelayedReveal&lt;DropERC721&gt; |  |

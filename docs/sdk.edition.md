@@ -39,6 +39,7 @@ const edition = sdk.getEdition("{{contract_address}}");
 |  [contractRoles](./sdk.edition.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.edition.contracttype.md) | <code>static</code> | "edition" |  |
 |  [encoder](./sdk.edition.encoder.md) |  | ContractEncoder&lt;TokenERC1155&gt; |  |
+|  [estimator](./sdk.edition.estimator.md) |  | GasCostEstimator&lt;TokenERC1155&gt; |  |
 |  [metadata](./sdk.edition.metadata.md) |  | ContractMetadata&lt;TokenERC1155, typeof Edition.schema&gt; |  |
 |  [primarySale](./sdk.edition.primarysale.md) |  | ContractPrimarySale&lt;TokenERC1155&gt; |  |
 |  [roles](./sdk.edition.roles.md) |  | ContractRoles&lt;TokenERC1155, typeof Edition.contractRoles\[number\]&gt; |  |
