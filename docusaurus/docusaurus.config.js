@@ -38,19 +38,20 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: "thirdweb SDK",
+        // title: "thirdweb SDK",
         logo: {
-          alt: "thirdweb Logo",
-          src: "img/logo.svg",
-          href: "/sdk",
+          alt: "thirdweb SDK",
+          src: "img/thirdweb.png",
+          href: "/",
+          srcDark: "img/thirdweb-white.png",
         },
         items: [
-          {
-            type: "doc",
-            docId: "sdk",
-            position: "left",
-            label: "Documentation",
-          },
+          // {
+          //   type: "doc",
+          //   docId: "sdk",
+          //   position: "left",
+          //   label: "Documentation",
+          // },
           {
             href: "https://portal.thirdweb.com",
             label: "Guides",
@@ -69,17 +70,17 @@ const config = {
         ],
       },
       footer: {
-        style: "dark",
+        style: "light",
         links: [
-          {
-            title: "Docs",
-            items: [
-              {
-                label: "Tutorial",
-                to: "/docs/intro",
-              },
-            ],
-          },
+          // {
+          //   title: "Docs",
+          //   items: [
+          //     {
+          //       label: "Tutorial",
+          //       to: "/docs/intro",
+          //     },
+          //   ],
+          // },
           {
             title: "Community",
             items: [
@@ -91,6 +92,10 @@ const config = {
                 label: "Twitter",
                 href: "https://twitter.com/thirdweb_",
               },
+              {
+                label: "GitHub",
+                href: "https://github.com/thirdweb-dev/typescript-sdk",
+              },
             ],
           },
           {
@@ -98,7 +103,7 @@ const config = {
             items: [
               {
                 label: "Dashboard",
-                href: "https://portal.thirdweb.com/dashboard",
+                href: "https://thirdweb.com/dashboard",
               },
               {
                 label: "Blog",
@@ -107,10 +112,6 @@ const config = {
               {
                 label: "Guides",
                 href: "https://portal.thirdweb.com",
-              },
-              {
-                label: "GitHub",
-                href: "https://github.com/facebook/docusaurus",
               },
             ],
           },
