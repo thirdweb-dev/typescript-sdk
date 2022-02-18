@@ -4,7 +4,7 @@
 
 ## ContractRoyalty class
 
-Handles Contract royalites
+Handles Contract royalties
 
 <b>Signature:</b>
 
@@ -22,6 +22,8 @@ declare class ContractRoyalty<TContract extends IThirdwebRoyalty & IThirdwebCont
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [getRoyaltyInfo()](./sdk.contractroyalty.getroyaltyinfo.md) |  |  |
-|  [setRoyaltyInfo(royaltyData)](./sdk.contractroyalty.setroyaltyinfo.md) |  |  |
+|  [getDefaultRoyaltyInfo()](./sdk.contractroyalty.getdefaultroyaltyinfo.md) |  | Gets the royalty recipient and BPS (basis points) of the contract |
+|  [getTokenRoyaltyInfo(tokenId)](./sdk.contractroyalty.gettokenroyaltyinfo.md) |  | Gets the royalty recipient and BPS (basis points) of a particular token |
+|  [setDefaultRoyaltyInfo(royaltyData)](./sdk.contractroyalty.setdefaultroyaltyinfo.md) |  | Set the royalty recipient and fee for a contract |
+|  [setTokenRoyaltyInfo(tokenId, royaltyData)](./sdk.contractroyalty.settokenroyaltyinfo.md) |  | Set the royalty recipient and fee for a particular token |
 

@@ -445,13 +445,22 @@ export class ContractRoles<TContract extends AccessControlEnumerable, TRole exte
 // @public
 export class ContractRoyalty<TContract extends IThirdwebRoyalty & IThirdwebContract, TSchema extends IGenericSchemaType> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, TSchema>);
-    // (undocumented)
-    getRoyaltyInfo(): Promise<{
+    getDefaultRoyaltyInfo(): Promise<{
         seller_fee_basis_points: number;
         fee_recipient: string;
     }>;
-    // (undocumented)
-    setRoyaltyInfo(royaltyData: z.input<typeof CommonRoyaltySchema>): Promise<TransactionResult<z.output<typeof CommonRoyaltySchema>>>;
+    getTokenRoyaltyInfo(tokenId: BigNumberish): Promise<{
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+    }>;
+    setDefaultRoyaltyInfo(royaltyData: z.input<typeof CommonRoyaltySchema>): Promise<TransactionResult<z.output<typeof CommonRoyaltySchema>>>;
+    setTokenRoyaltyInfo(tokenId: BigNumberish, royaltyData: z.input<typeof CommonRoyaltySchema>): Promise<{
+        receipt: _ethersproject_abstract_provider.TransactionReceipt;
+        data: () => Promise<{
+            seller_fee_basis_points: number;
+            fee_recipient: string;
+        }>;
+    }>;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "CONTRACTS_MAP" should be prefixed with an underscore because the declaration is marked as @internal
