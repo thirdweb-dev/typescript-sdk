@@ -14,8 +14,8 @@ import { resolveOrGenerateId } from "../../../common/signature-minting";
 
 export const SignaturePayloadInput = z.object({
   metadata: CommonNFTInput,
-  to: z.string(),
-  price: PriceSchema,
+  to: z.string().default(AddressZero),
+  price: PriceSchema.default(0),
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   mintStartTime: DateSchema,
   mintEndTime: DateSchema,
