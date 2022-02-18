@@ -1,4 +1,5 @@
 import {
+  BasisPointsSchema,
   BigNumberishSchema,
   BigNumberSchema,
   DateSchema,
@@ -23,11 +24,13 @@ export const SignaturePayloadInput = z.object({
     .optional()
     .transform((arg) => resolveOrGenerateId(arg)),
   royaltyRecipient: z.string().default(AddressZero),
+  royaltyBps: BasisPointsSchema.default(0),
   primarySaleRecipient: z.string().default(AddressZero),
 });
 
 export const SignaturePayloadOutput = SignaturePayloadInput.extend({
   uri: z.string(),
+  royaltyBps: BigNumberSchema,
   price: BigNumberSchema,
   mintStartTime: BigNumberSchema,
   mintEndTime: BigNumberSchema,
@@ -72,9 +75,10 @@ export type SignedPayload1155 = {
   signature: string;
 };
 
-export const MintRequest = [
+export const MintRequest721 = [
   { name: "to", type: "address" },
   { name: "royaltyRecipient", type: "address" },
+  { name: "royaltyBps", type: "uint256" },
   { name: "primarySaleRecipient", type: "address" },
   { name: "uri", type: "string" },
   { name: "price", type: "uint256" },
@@ -87,6 +91,7 @@ export const MintRequest = [
 export const MintRequest1155 = [
   { name: "to", type: "address" },
   { name: "royaltyRecipient", type: "address" },
+  { name: "royaltyBps", type: "uint256" },
   { name: "primarySaleRecipient", type: "address" },
   { name: "tokenId", type: "uint256" },
   { name: "uri", type: "string" },

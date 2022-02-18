@@ -212,8 +212,6 @@ export class Erc1155SignatureMinting {
   ): ITokenERC1155.MintRequestStructOutput {
     return {
       to: mintRequest.to,
-      royaltyRecipient: mintRequest.royaltyRecipient,
-      primarySaleRecipient: mintRequest.primarySaleRecipient,
       tokenId: mintRequest.tokenId,
       uri: mintRequest.uri,
       quantity: mintRequest.quantity,
@@ -222,6 +220,9 @@ export class Erc1155SignatureMinting {
       validityStartTimestamp: mintRequest.mintStartTime,
       validityEndTimestamp: mintRequest.mintEndTime,
       uid: mintRequest.uid,
+      royaltyRecipient: mintRequest.royaltyRecipient,
+      royaltyBps: mintRequest.royaltyBps,
+      primarySaleRecipient: mintRequest.primarySaleRecipient,
     } as ITokenERC1155.MintRequestStructOutput;
   }
 }
