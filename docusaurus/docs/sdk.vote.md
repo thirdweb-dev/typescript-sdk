@@ -43,6 +43,7 @@ const vote = sdk.getVote("{{contract_address}}");
 |  [contractFactory](./sdk.vote.contractfactory.md) | <code>static</code> | typeof VoteERC20\_\_factory |  |
 |  [contractType](./sdk.vote.contracttype.md) | <code>static</code> | "vote" |  |
 |  [encoder](./sdk.vote.encoder.md) |  | ContractEncoder&lt;VoteERC20&gt; |  |
+|  [estimator](./sdk.vote.estimator.md) |  | GasCostEstimator&lt;VoteERC20&gt; |  |
 |  [metadata](./sdk.vote.metadata.md) |  | ContractMetadata&lt;VoteERC20, typeof Vote.schema&gt; |  |
 
 ## Methods

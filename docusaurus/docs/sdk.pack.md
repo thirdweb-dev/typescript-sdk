@@ -44,6 +44,7 @@ const pack = sdk.getPack("{{contract_address}}");
 |  [contractRoles](./sdk.pack.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
 |  [contractType](./sdk.pack.contracttype.md) | <code>static</code> | "pack" |  |
 |  [encoder](./sdk.pack.encoder.md) |  | ContractEncoder&lt;Pack$1&gt; |  |
+|  [estimator](./sdk.pack.estimator.md) |  | GasCostEstimator&lt;Pack$1&gt; |  |
 |  [metadata](./sdk.pack.metadata.md) |  | ContractMetadata&lt;Pack$1, typeof Pack.schema&gt; |  |
 |  [roles](./sdk.pack.roles.md) |  | ContractRoles&lt;Pack$1, typeof Pack.contractRoles\[number\]&gt; |  |
 |  [royalty](./sdk.pack.royalty.md) |  | ContractRoyalty&lt;Pack$1, typeof Pack.schema&gt; |  |

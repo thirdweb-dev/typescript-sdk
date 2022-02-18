@@ -44,6 +44,7 @@ const token = sdk.getToken("{{contract_address}}");
 |  [contractRoles](./sdk.token.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.token.contracttype.md) | <code>static</code> | "token" |  |
 |  [encoder](./sdk.token.encoder.md) |  | ContractEncoder&lt;TokenERC20&gt; |  |
+|  [estimator](./sdk.token.estimator.md) |  | GasCostEstimator&lt;TokenERC20&gt; |  |
 |  [metadata](./sdk.token.metadata.md) |  | ContractMetadata&lt;TokenERC20, typeof Token.schema&gt; |  |
 |  [roles](./sdk.token.roles.md) |  | ContractRoles&lt;TokenERC20, typeof Token.contractRoles\[number\]&gt; |  |
 
