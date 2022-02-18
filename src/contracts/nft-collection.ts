@@ -20,6 +20,7 @@ import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { TokenMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { Erc721SignatureMinting } from "../core/classes/erc-721-signature-minting";
+import { GasCostEstimator } from "../core/classes";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -54,6 +55,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
   public royalty: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
   public primarySale: ContractPrimarySale<TokenERC721>;
   public encoder: ContractEncoder<TokenERC721>;
+  public estimator: GasCostEstimator<TokenERC721>;
   public signature: Erc721SignatureMinting;
 
   constructor(
@@ -81,6 +83,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.primarySale = new ContractPrimarySale(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
     this.signature = new Erc721SignatureMinting(
       this.contractWrapper,
       this.roles,

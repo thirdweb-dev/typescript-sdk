@@ -18,6 +18,7 @@ import { fetchCurrencyValue } from "../common/currency";
 import { BigNumber } from "ethers";
 import { SplitRecipient } from "../types/SplitRecipient";
 import { SplitsContractSchema } from "../schema/contracts/splits";
+import { GasCostEstimator } from "../core/classes";
 
 /**
  * Create custom royalty splits to distribute funds.
@@ -48,6 +49,7 @@ export class Split implements UpdateableNetwork {
 
   public metadata: ContractMetadata<SplitContract, typeof Split.schema>;
   public encoder: ContractEncoder<SplitContract>;
+  public estimator: GasCostEstimator<SplitContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -69,6 +71,7 @@ export class Split implements UpdateableNetwork {
       this.storage,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {

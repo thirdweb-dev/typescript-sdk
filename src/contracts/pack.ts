@@ -36,6 +36,7 @@ import { CurrencyValue } from "../types/currency";
 import { fetchCurrencyValue } from "../common/currency";
 import { ChainlinkVrf } from "../constants/chainlink";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { GasCostEstimator } from "../core/classes";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -68,6 +69,7 @@ export class Pack implements UpdateableNetwork {
   public metadata: ContractMetadata<PackContract, typeof Pack.schema>;
   public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
   public encoder: ContractEncoder<PackContract>;
+  public estimator: GasCostEstimator<PackContract>;
   public royalty: ContractRoyalty<PackContract, typeof Pack.schema>;
 
   constructor(
@@ -92,6 +94,7 @@ export class Pack implements UpdateableNetwork {
     this.roles = new ContractRoles(this.contractWrapper, Pack.contractRoles);
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.encoder = new ContractEncoder(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {

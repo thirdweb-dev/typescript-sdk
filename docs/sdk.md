@@ -23,6 +23,7 @@
 |  [Erc20](./sdk.erc20.md) | Standard ERC20 functions |
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 functions |
 |  [Erc721SignatureMinting](./sdk.erc721signatureminting.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
+|  [GasCostEstimator](./sdk.gascostestimator.md) | Estimates the gas cost of Contract calls |
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MarketplaceAuction](./sdk.marketplaceauction.md) | Handles auction listings |
 |  [MarketplaceDirect](./sdk.marketplacedirect.md) | Handles direct listings |

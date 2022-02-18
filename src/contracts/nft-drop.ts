@@ -31,6 +31,7 @@ import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { DelayedReveal } from "../common/delayed-reveal";
+import { GasCostEstimator } from "../core/classes";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -63,6 +64,7 @@ export class NFTDrop extends Erc721<DropERC721> {
   public primarySale: ContractPrimarySale<DropERC721>;
   public claimConditions: DropErc721ClaimConditions;
   public encoder: ContractEncoder<DropERC721>;
+  public estimator: GasCostEstimator<DropERC721>;
   public revealer: DelayedReveal<DropERC721>;
 
   constructor(
@@ -92,6 +94,7 @@ export class NFTDrop extends Erc721<DropERC721> {
       this.storage,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
     this.revealer = new DelayedReveal<DropERC721>(
       this.contractWrapper,
       this.storage,

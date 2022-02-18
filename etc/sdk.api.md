@@ -537,6 +537,8 @@ export class Edition extends Erc1155<TokenERC1155> {
     static contractType: "edition";
     // (undocumented)
     encoder: ContractEncoder<TokenERC1155>;
+    // (undocumented)
+    estimator: GasCostEstimator<TokenERC1155>;
     increaseSupply(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
@@ -661,6 +663,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC1155>;
+    // (undocumented)
+    estimator: GasCostEstimator<DropERC1155>;
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
     // (undocumented)
@@ -1100,6 +1104,12 @@ export class FunctionDeprecatedError extends Error {
 }
 
 // @public
+export class GasCostEstimator<TContract extends BaseContract> {
+    constructor(contractWrapper: ContractWrapper<TContract>);
+    gasCostOf(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): Promise<string>;
+}
+
+// @public
 export interface GaslessTransaction {
     // (undocumented)
     callOverrides: CallOverrides_2;
@@ -1192,6 +1202,8 @@ export class Marketplace implements UpdateableNetwork {
     direct: MarketplaceDirect;
     // (undocumented)
     encoder: ContractEncoder<Marketplace_2>;
+    // (undocumented)
+    estimator: GasCostEstimator<Marketplace_2>;
     // (undocumented)
     getAddress(): string;
     // Warning: (ae-forgotten-export) The symbol "MarketplaceFilter" needs to be exported by the entry point index.d.ts
@@ -1370,6 +1382,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
     // (undocumented)
     encoder: ContractEncoder<TokenERC721>;
     // (undocumented)
+    estimator: GasCostEstimator<TokenERC721>;
+    // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
     mint(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
@@ -1504,6 +1518,8 @@ export class NFTDrop extends Erc721<DropERC721> {
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC721>;
+    // (undocumented)
+    estimator: GasCostEstimator<DropERC721>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
     // (undocumented)
@@ -1715,6 +1731,8 @@ export class Pack implements UpdateableNetwork {
     depositLink(amount: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     encoder: ContractEncoder<Pack_2>;
+    // (undocumented)
+    estimator: GasCostEstimator<Pack_2>;
     // Warning: (ae-forgotten-export) The symbol "PackMetadata" needs to be exported by the entry point index.d.ts
     get(packId: string): Promise<PackMetadata>;
     // (undocumented)
@@ -1984,6 +2002,8 @@ export class Split implements UpdateableNetwork {
     // (undocumented)
     encoder: ContractEncoder<Split_2>;
     // (undocumented)
+    estimator: GasCostEstimator<Split_2>;
+    // (undocumented)
     getAddress(): string;
     // Warning: (ae-forgotten-export) The symbol "SplitRecipient" needs to be exported by the entry point index.d.ts
     getAllRecipients(): Promise<SplitRecipient[]>;
@@ -2151,7 +2171,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "split" | "edition-drop" | "edition" | "token" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
+        contractType: "split" | "edition-drop" | "edition" | "nft-drop" | "nft-collection" | "token" | "vote" | "marketplace" | "pack";
         metadata: () => Promise<{
             [x: string]: Json;
             description?: string | undefined;
@@ -2219,6 +2239,8 @@ export class Token extends Erc20<TokenERC20> {
     delegateTo(delegateeAddress: string): Promise<TransactionResult>;
     // (undocumented)
     encoder: ContractEncoder<TokenERC20>;
+    // (undocumented)
+    estimator: GasCostEstimator<TokenERC20>;
     getDelegation(): Promise<string>;
     getDelegationOf(account: string): Promise<string>;
     getVoteBalance(): Promise<BigNumber>;
@@ -2374,6 +2396,8 @@ export class Vote implements UpdateableNetwork {
     static contractType: "vote";
     // (undocumented)
     encoder: ContractEncoder<VoteERC20>;
+    // (undocumented)
+    estimator: GasCostEstimator<VoteERC20>;
     execute(proposalId: string): Promise<TransactionResult>;
     // Warning: (ae-forgotten-export) The symbol "Proposal" needs to be exported by the entry point index.d.ts
     get(proposalId: BigNumberish): Promise<Proposal>;

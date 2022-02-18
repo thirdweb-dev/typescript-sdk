@@ -4,6 +4,7 @@ import { sdk, signers } from "./before.test";
 
 import { assert, expect } from "chai";
 import { AddressZero } from "@ethersproject/constants";
+import { ethers } from "ethers";
 
 global.fetch = require("node-fetch");
 
@@ -34,6 +35,16 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
       platform_fee_recipient: AddressZero,
     });
     bundleContract = sdk.getEdition(address);
+  });
+
+  it("gas cost", async () => {
+    const cost = await bundleContract.estimator.gasCostOf("mintTo", [
+      adminWallet.address,
+      ethers.constants.MaxUint256,
+      "mock://12398172398172389/0",
+      1,
+    ]);
+    expect(parseFloat(cost)).gt(0);
   });
 
   it("should return all owned collection tokens", async () => {
