@@ -1,6 +1,6 @@
 import {
   FilledSignaturePayload,
-  MintRequest,
+  MintRequest721,
   PayloadToSign,
   PayloadWithUri,
   SignaturePayloadInput,
@@ -181,7 +181,7 @@ export class Erc721SignatureMinting {
             chainId,
             verifyingContract: this.contractWrapper.readContract.address,
           },
-          { MintRequest },
+          { MintRequest: MintRequest721 },
           this.mapPayloadToContractStruct(finalPayload),
         );
         return {
@@ -216,6 +216,7 @@ export class Erc721SignatureMinting {
       validityStartTimestamp: mintRequest.mintStartTime,
       uid: mintRequest.uid,
       royaltyRecipient: mintRequest.royaltyRecipient,
+      royaltyBps: mintRequest.royaltyBps,
       primarySaleRecipient: mintRequest.primarySaleRecipient,
     } as ITokenERC721.MintRequestStructOutput;
   }
