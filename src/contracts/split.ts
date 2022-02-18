@@ -39,7 +39,7 @@ export class Split implements UpdateableNetwork {
   static contractType = "split" as const;
   static contractFactory = Split__factory;
   /**
-   * internal
+   * @internal
    */
   static schema = SplitsContractSchema;
 
