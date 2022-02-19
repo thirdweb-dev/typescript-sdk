@@ -19,7 +19,7 @@ import {
 } from "../../types";
 import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../../enums";
-import { createSnapshot } from "../../common";
+import { createSnapshot, hashLeafNode } from "../../common";
 import {
   ClaimConditionInputArray,
   ClaimConditionOutputSchema,
@@ -171,9 +171,8 @@ export class DropErc1155ClaimConditions {
       const merkleLower = claimCondition.merkleRootHash.toString();
       const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
       if (proofs.length === 0) {
-        const hashedAddress = ethers.utils
-          .keccak256(addressToCheck)
-          .toLowerCase();
+        // TODO get ClaimerProofs should return the max quantity per wallet too
+        const hashedAddress = hashLeafNode(addressToCheck, 0).toLowerCase();
         if (hashedAddress !== merkleLower) {
           reasons.push(ClaimEligibility.AddressNotAllowed);
         }

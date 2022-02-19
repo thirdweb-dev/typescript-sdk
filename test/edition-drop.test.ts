@@ -244,8 +244,15 @@ describe("Edition Drop Contract", async () => {
         snapshot: [w1.address],
       },
     ]);
-    await sdk.updateSignerOrProvider(w1);
 
+    await sdk.updateSignerOrProvider(w1);
+    console.log(
+      await bdContract.claimConditions.getClaimIneligibilityReasons(
+        "0",
+        1,
+        w1.address,
+      ),
+    );
     const canClaimW1 = await bdContract.claimConditions.canClaim("0", 1);
     assert.isTrue(canClaimW1, "w1 should be able to claim");
 

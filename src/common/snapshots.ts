@@ -14,7 +14,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 export async function createSnapshot(
   leafs: string[],
   storage: IStorage,
-  maxClaimablePerAddress?: BigNumberish[],
+  maxClaimablePerAddress?: number[],
 ): Promise<SnapshotInfo> {
   const hasDuplicates = new Set(leafs).size < leafs.length;
   if (hasDuplicates) {
@@ -25,16 +25,11 @@ export async function createSnapshot(
   if (maxClaimablePerAddress) {
     maxClaimable = maxClaimablePerAddress;
   } else {
-    maxClaimable = Array(leafs.length).fill(BigNumber.from(0));
+    maxClaimable = Array(leafs.length).fill(0);
   }
 
   const hashedLeafs = leafs.map((l, index) =>
-    keccak256(
-      ethers.utils.defaultAbiCoder.encode(
-        ["string", "uint256"],
-        [l, maxClaimable[index]],
-      ),
-    ),
+    hashLeafNode(l, maxClaimable[index]),
   );
   const tree = new MerkleTree(hashedLeafs, keccak256, {
     sort: true,
@@ -57,4 +52,14 @@ export async function createSnapshot(
     snapshotUri: uri,
     snapshot,
   };
+}
+
+export function hashLeafNode(
+  address: string,
+  maxClaimableAmount: BigNumberish,
+): string {
+  return ethers.utils.solidityKeccak256(
+    ["address", "uint256"],
+    [address, BigNumber.from(maxClaimableAmount)],
+  );
 }
