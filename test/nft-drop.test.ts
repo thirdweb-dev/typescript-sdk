@@ -1,7 +1,7 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import { sdk, signers, storage } from "./before.test";
 import { createSnapshot } from "../src/common";
@@ -59,6 +59,7 @@ describe("NFT Drop Contract", async () => {
 
     const metadata = await dropContract.metadata.get();
     const merkles = metadata.merkle;
+    console.log(merkles);
 
     expect(merkles).have.property(
       "0x887a9d7f2b1fca2ff8c07e1e02d906bc2cda73495a8da7494165adcd81875164",
@@ -267,7 +268,11 @@ describe("NFT Drop Contract", async () => {
     });
     const snapshot = await createSnapshot(members, storage);
     for (const leaf of members) {
-      const expectedProof = tree.getHexProof(keccak256(leaf));
+      const expectedProof = tree.getHexProof(
+        keccak256(
+          ethers.utils.defaultAbiCoder.encode(["string", "uint256"], [leaf, 0]),
+        ),
+      );
 
       const actualProof = snapshot.snapshot.claims.find(
         (c) => c.address === leaf,
