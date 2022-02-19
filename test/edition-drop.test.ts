@@ -15,7 +15,7 @@ const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 use(deepEqualInAnyOrder);
 
 // TODO: Write some actual pack contract tests
-describe("Bundle Drop Contract", async () => {
+describe("Edition Drop Contract", async () => {
   let bdContract: EditionDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,

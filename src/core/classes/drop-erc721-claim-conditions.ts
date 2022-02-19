@@ -2,12 +2,7 @@ import { IStorage } from "../interfaces/IStorage";
 import { SnapshotSchema } from "../../schema/contracts/common/snapshots";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
-import {
-  DropERC721,
-  IDropERC721,
-  IERC20,
-  IERC20__factory,
-} from "@thirdweb-dev/contracts";
+import { DropERC721, IERC20, IERC20__factory } from "@thirdweb-dev/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
@@ -32,6 +27,7 @@ import {
 import { TransactionResult } from "../types";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 import { updateExsitingClaimConditions } from "../../common/claim-conditions";
+import { IDropClaimCondition } from "@thirdweb-dev/contracts/dist/IDropERC1155";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -108,6 +104,7 @@ export class DropErc721ClaimConditions {
     if (addressToCheck === undefined) {
       addressToCheck = await this.contractWrapper.getSignerAddress();
     }
+    // TODO switch to use verifyClaim
     return (
       (await this.getClaimIneligibilityReasons(quantity, addressToCheck))
         .length === 0
@@ -282,7 +279,7 @@ export class DropErc721ClaimConditions {
     const parsedInputs = ClaimConditionInputArray.parse(inputsWithSnapshots);
 
     // Convert processed inputs to the format the contract expects, and sort by timestamp
-    const sortedConditions: IDropERC721.ClaimConditionStruct[] = (
+    const sortedConditions: IDropClaimCondition.ClaimConditionStruct[] = (
       await Promise.all(parsedInputs.map((c) => this.convertToContractModel(c)))
     ).sort((a, b) => {
       const left = BigNumber.from(a.startTimestamp);
@@ -359,7 +356,7 @@ export class DropErc721ClaimConditions {
    *****************************************/
 
   private async transformResultToClaimCondition(
-    pm: IDropERC721.ClaimConditionStructOutput,
+    pm: IDropClaimCondition.ClaimConditionStructOutput,
   ): Promise<ClaimCondition> {
     const cv = await fetchCurrencyValue(
       this.contractWrapper.getProvider(),
@@ -385,7 +382,7 @@ export class DropErc721ClaimConditions {
 
   private async convertToContractModel(
     c: FilledConditionInput,
-  ): Promise<IDropERC721.ClaimConditionStruct> {
+  ): Promise<IDropClaimCondition.ClaimConditionStruct> {
     const currency =
       c.currencyAddress === AddressZero
         ? NATIVE_TOKEN_ADDRESS

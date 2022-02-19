@@ -24,6 +24,8 @@ import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-c
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { ClaimVerification } from "../types";
+import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -142,11 +144,12 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       batch.metadataUris.length,
       `${batch.baseUri.endsWith("/") ? batch.baseUri : `${batch.baseUri}/`}`,
     ]);
-    const event = this.contractWrapper.parseEventLogs(
-      "LazyMintedTokens",
+    const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
+      "TokensLazyMinted",
       receipt?.logs,
     );
-    const [startingIndex, endingIndex]: BigNumber[] = event;
+    const startingIndex = event[0].args.startTokenId;
+    const endingIndex = event[0].args.endTokenId;
     const results = [];
     for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
       results.push({
@@ -188,12 +191,24 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
-    const claimData = await this.prepareClaim(tokenId, quantity, proofs);
+    const claimVerification = await this.prepareClaim(
+      tokenId,
+      quantity,
+      proofs,
+    );
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "claim",
-        [destinationAddress, tokenId, quantity, claimData.proofs],
-        claimData.overrides,
+        [
+          destinationAddress,
+          tokenId,
+          quantity,
+          claimVerification.currencyAddress,
+          claimVerification.price,
+          claimVerification.proofs,
+          claimVerification.maxQuantityPerTransaction,
+        ],
+        claimVerification.overrides,
       ),
     };
   }
@@ -231,7 +246,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ) {
+  ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.claimConditions.getActive(tokenId),

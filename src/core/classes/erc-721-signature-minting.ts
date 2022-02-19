@@ -10,13 +10,13 @@ import {
 import { TransactionResultWithId } from "../types";
 import { setErc20Allowance } from "../../common/currency";
 import { BigNumber } from "ethers";
-import { MintWithSignatureEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { ITokenERC721, TokenERC721 } from "@thirdweb-dev/contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
+import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 
 /**
  * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -77,8 +77,8 @@ export class Erc721SignatureMinting {
       [message, signature],
       overrides,
     );
-    const t = this.contractWrapper.parseLogs<MintWithSignatureEvent>(
-      "MintWithSignature",
+    const t = this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+      "TokensMintedWithSignature",
       receipt.logs,
     );
     if (t.length === 0) {

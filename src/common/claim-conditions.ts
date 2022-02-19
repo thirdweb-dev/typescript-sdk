@@ -1,9 +1,13 @@
-import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
+import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { SnapshotInputSchema } from "../schema/contracts/common/snapshots";
 import { approveErc20Allowance, isNativeToken } from "./currency";
-import { ClaimCondition, ClaimConditionInput } from "../types";
+import {
+  ClaimCondition,
+  ClaimConditionInput,
+  ClaimVerification,
+} from "../types";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core";
 import {
@@ -23,10 +27,7 @@ export async function prepareClaim(
   contractWrapper: ContractWrapper<any>,
   storage: IStorage,
   proofs: BytesLike[] = [hexZeroPad([0], 32)],
-): Promise<{
-  overrides: CallOverrides;
-  proofs: BytesLike[];
-}> {
+): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
 
   if (!activeClaimCondition.merkleRootHash.toString().startsWith(AddressZero)) {
@@ -61,6 +62,9 @@ export async function prepareClaim(
   return {
     overrides,
     proofs,
+    maxQuantityPerTransaction: BigNumber.from(0), // TODO grab this from metadata
+    price,
+    currencyAddress,
   };
 }
 

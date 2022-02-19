@@ -8,6 +8,7 @@ import {
   ClaimConditionOutputSchema,
   PartialClaimConditionInputSchema,
 } from "../../schema/contracts/common/claim-conditions";
+import { BigNumber, BytesLike, CallOverrides } from "ethers";
 
 /**
  * Represents a claim condition fetched from the SDK
@@ -35,3 +36,11 @@ export type ClaimConditionInput = z.input<
  * @internal
  */
 export type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
+
+export type ClaimVerification = {
+  overrides: CallOverrides;
+  proofs: BytesLike[];
+  maxQuantityPerTransaction: BigNumber;
+  price: BigNumber;
+  currencyAddress: string;
+};

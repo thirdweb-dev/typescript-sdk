@@ -19,8 +19,8 @@ import { PacksContractSchema } from "../schema/contracts/packs";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { NFTMetadata } from "../schema/tokens/common";
 import {
-  PackCreatedEvent,
-  PackOpenRequestEvent,
+  PackAddedEvent,
+  PackOpenRequestedEvent,
 } from "@thirdweb-dev/contracts/dist/Pack";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { fetchTokenMetadataForContract } from "../common/nft";
@@ -299,8 +299,8 @@ export class Pack implements UpdateableNetwork {
     const receipt = await this.contractWrapper.sendTransaction("openPack", [
       packId,
     ]);
-    const logs = this.contractWrapper.parseLogs<PackOpenRequestEvent>(
-      "PackOpenRequest",
+    const logs = this.contractWrapper.parseLogs<PackOpenRequestedEvent>(
+      "PackOpenRequested",
       receipt?.logs,
     );
     if (logs.length === 0) {
@@ -412,8 +412,8 @@ export class Pack implements UpdateableNetwork {
     );
 
     const receipt = await tx.wait();
-    const log = this.contractWrapper.parseLogs<PackCreatedEvent>(
-      "PackCreated",
+    const log = this.contractWrapper.parseLogs<PackAddedEvent>(
+      "PackAdded",
       receipt.logs,
     );
     if (log.length === 0) {

@@ -335,7 +335,7 @@ describe("NFT Drop Contract", async () => {
           bobWallet.address,
         );
 
-      expect(reasons).to.include(ClaimEligibility.NoClaimConditionSet);
+      expect(reasons).to.include(ClaimEligibility.NoActiveClaimPhase);
       assert.lengthOf(reasons, 1);
       const canClaim = await dropContract.claimConditions.canClaim(w1.address);
       assert.isFalse(canClaim);
