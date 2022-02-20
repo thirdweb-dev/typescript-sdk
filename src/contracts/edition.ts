@@ -38,6 +38,7 @@ import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
  * ```
  *
  * @public
+ * @inheritDoc
  */
 export class Edition extends Erc1155<TokenERC1155> {
   static contractType = "edition" as const;

@@ -17,6 +17,7 @@ import { getRoleHash } from "../../common/role";
 
 /**
  * Standard ERC1155 functions
+ * @public
  */
 export class Erc1155<T extends DropERC1155 | TokenERC1155>
   implements UpdateableNetwork

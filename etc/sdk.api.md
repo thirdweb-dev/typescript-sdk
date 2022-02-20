@@ -429,7 +429,7 @@ export class ContractEncoder<TContract extends BaseContract> {
 // @public (undocumented)
 export type ContractForContractType<TContractType extends ContractType> = C.Instance<typeof CONTRACTS_MAP[TContractType]>;
 
-// Warning: (ae-forgotten-export) The symbol "IGenericSchemaType" needs to be exported by the entry point index.d.ts
+// Warning: (ae-incompatible-release-tags) The symbol "ContractMetadata" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
 export class ContractMetadata<TContract extends IThirdwebContract, TSchema extends IGenericSchemaType> {
@@ -481,6 +481,8 @@ export class ContractRoles<TContract extends AccessControlEnumerable, TRole exte
     verify(roles: TRole[], address: string): Promise<void>;
 }
 
+// Warning: (ae-incompatible-release-tags) The symbol "ContractRoyalty" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
+//
 // @public
 export class ContractRoyalty<TContract extends IThirdwebRoyalty & IThirdwebContract, TSchema extends IGenericSchemaType> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, TSchema>);
@@ -1172,6 +1174,18 @@ export interface GaslessTransaction {
 //
 // @internal
 export function hashLeafNode(address: string, maxClaimableAmount: BigNumberish): string;
+
+// Warning: (ae-internal-missing-underscore) The name "IGenericSchemaType" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export interface IGenericSchemaType {
+    // (undocumented)
+    deploy: z.AnyZodObject;
+    // (undocumented)
+    input: z.AnyZodObject;
+    // (undocumented)
+    output: z.AnyZodObject;
+}
 
 // Warning: (ae-internal-missing-underscore) The name "InvalidAddressError" should be prefixed with an underscore because the declaration is marked as @internal
 //

@@ -31,6 +31,7 @@ import { IDropClaimCondition } from "@thirdweb-dev/contracts/dist/IDropERC1155";
 
 /**
  * Manages claim conditions for NFT Drop contracts
+ * @public
  */
 export class DropErc721ClaimConditions {
   private contractWrapper;

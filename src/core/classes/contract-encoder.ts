@@ -4,6 +4,7 @@ import { Result } from "@ethersproject/abi";
 
 /**
  * Encodes and decodes Contract functions
+ * @public
  */
 export class ContractEncoder<TContract extends BaseContract> {
   private contractWrapper;

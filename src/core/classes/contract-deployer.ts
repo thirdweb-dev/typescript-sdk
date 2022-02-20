@@ -20,6 +20,7 @@ import {
 
 /**
  * Handles deploying new contracts
+ * @public
  */
 export class ContractDeployer extends RPCConnectionHandler {
   /**

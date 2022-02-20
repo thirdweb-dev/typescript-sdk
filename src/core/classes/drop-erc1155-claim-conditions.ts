@@ -31,6 +31,7 @@ import { IDropClaimCondition } from "@thirdweb-dev/contracts/dist/IDropERC1155";
 
 /**
  * Manages claim conditions for Edition Drop contracts
+ * @public
  */
 export class DropErc1155ClaimConditions {
   private contractWrapper;

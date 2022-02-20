@@ -17,6 +17,7 @@ import { AddressZero } from "@ethersproject/constants";
 
 /**
  * Standard ERC20 functions
+ * @public
  */
 export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   protected contractWrapper: ContractWrapper<T>;

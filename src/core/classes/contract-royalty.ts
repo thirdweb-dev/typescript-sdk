@@ -8,6 +8,7 @@ import { BigNumberish } from "ethers";
 
 /**
  * Handles Contract royalties
+ * @public
  */
 export class ContractRoyalty<
   TContract extends IThirdwebRoyalty & IThirdwebContract,

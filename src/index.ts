@@ -1,10 +1,10 @@
 import fetch from "node-fetch";
 
 export * from "./core";
-export * from "./contracts";
+export * from "./core/classes";
 export * from "./types";
 export * from "./common";
-export * from "./core/classes";
+export * from "./contracts";
 export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";
 export type {
   NFTMetadataInput,

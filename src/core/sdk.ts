@@ -27,6 +27,7 @@ import { ContractDeployer } from "./classes/contract-deployer";
 
 /**
  * The main entry point for the thirdweb SDK
+ * @public
  */
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
