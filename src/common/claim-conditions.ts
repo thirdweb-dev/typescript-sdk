@@ -29,6 +29,7 @@ export async function prepareClaim(
   proofs: BytesLike[] = [hexZeroPad([0], 32)],
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
+  let maxClaimable = 0;
 
   if (!activeClaimCondition.merkleRootHash.toString().startsWith(AddressZero)) {
     const snapshot = await storage.get(
@@ -42,6 +43,7 @@ export async function prepareClaim(
       throw new Error("No claim found for this address");
     }
     proofs = item.proof;
+    maxClaimable = item.maxClaimable;
   }
 
   const overrides = (await contractWrapper.getCallOverrides()) || {};
@@ -62,7 +64,7 @@ export async function prepareClaim(
   return {
     overrides,
     proofs,
-    maxQuantityPerTransaction: BigNumber.from(0), // TODO grab this from metadata
+    maxQuantityPerTransaction: BigNumber.from(maxClaimable),
     price,
     currencyAddress,
   };

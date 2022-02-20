@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";
 import { BigNumber } from "ethers";
 import { EditionDrop, Token } from "../src/index";
-import { sdk, signers } from "./before.test";
+import { expectError, sdk, signers } from "./before.test";
 import { AddressZero } from "@ethersproject/constants";
 import { ClaimEligibility } from "../src/enums";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
@@ -187,6 +187,28 @@ describe("Edition Drop Contract", async () => {
         async (t) => (await t.data()).name === token.name,
       );
       assert.isDefined(found);
+    }
+  });
+
+  it("should allow setting max claims per wallet", async () => {
+    await bdContract.createBatch([
+      { name: "name", description: "description" },
+    ]);
+    await bdContract.claimConditions.set(0, [
+      {
+        snapshot: {
+          addresses: [w1.address, w2.address],
+          maxClaimablePerAddress: [2, 1],
+        },
+      },
+    ]);
+    await sdk.updateSignerOrProvider(w1);
+    const tx = await bdContract.claim(0, 2);
+    try {
+      await sdk.updateSignerOrProvider(w2);
+      await bdContract.claim(0, 2);
+    } catch (e) {
+      expectError(e, "invalid quantity proof");
     }
   });
 

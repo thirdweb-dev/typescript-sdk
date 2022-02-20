@@ -3,7 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
-import { sdk, signers, storage } from "./before.test";
+import { expectError, sdk, signers, storage } from "./before.test";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { NFTDrop, Token } from "../src";
@@ -271,6 +271,32 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claim(1);
   });
 
+  it("should allow setting max claims per wallet", async () => {
+    await dropContract.createBatch([
+      { name: "name", description: "description" },
+      { name: "name2", description: "description" },
+      { name: "name3", description: "description" },
+      { name: "name4", description: "description" },
+    ]);
+    await dropContract.claimConditions.set([
+      {
+        snapshot: {
+          addresses: [w1.address, w2.address],
+          maxClaimablePerAddress: [2, 1],
+        },
+      },
+    ]);
+    await sdk.updateSignerOrProvider(w1);
+    const tx = await dropContract.claim(2);
+    expect(tx.length).to.eq(2);
+    try {
+      await sdk.updateSignerOrProvider(w2);
+      await dropContract.claim(2);
+    } catch (e) {
+      expectError(e, "invalid quantity proof");
+    }
+  });
+
   it("should generate valid proofs", async () => {
     const members = [
       bobWallet.address,
@@ -282,7 +308,9 @@ describe("NFT Drop Contract", async () => {
       w4.address,
     ];
 
-    const hashedLeafs = members.map((l) => keccak256(l));
+    const hashedLeafs = members.map((l) =>
+      ethers.utils.solidityKeccak256(["address", "uint256"], [l, 0]),
+    );
     const tree = new MerkleTree(hashedLeafs, keccak256, {
       sort: true,
       sortLeaves: true,
@@ -292,9 +320,7 @@ describe("NFT Drop Contract", async () => {
     const snapshot = await createSnapshot(input, storage);
     for (const leaf of members) {
       const expectedProof = tree.getHexProof(
-        keccak256(
-          ethers.utils.defaultAbiCoder.encode(["string", "uint256"], [leaf, 0]),
-        ),
+        ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
       );
 
       const actualProof = snapshot.snapshot.claims.find(
@@ -305,9 +331,10 @@ describe("NFT Drop Contract", async () => {
 
       const verified = tree.verify(
         actualProof?.proof as string[],
-        keccak256(leaf),
+        ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
         tree.getHexRoot(),
       );
+      expect(verified).to.eq(true);
       console.log("Leaf verified =", leaf, verified);
     }
   });
