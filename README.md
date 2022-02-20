@@ -37,7 +37,7 @@ await marketplace.buyoutDirectListing(listingId, quantityDesired);
 ### Api Reference & code examples
 
 - [Step by step guides and recipes](https://portal.thirdweb.com)
-- [Api Reference and code examples](https://nftlabs.github.io/nftlabs-sdk-ts/sdk.html)
+- [Api Reference and code examples](https://typescript-sdk.thirdweb.com)
 
 ### Get in touch
 
