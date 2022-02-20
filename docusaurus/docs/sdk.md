@@ -44,13 +44,32 @@ hide_title: true
 |  Enumeration | Description |
 |  --- | --- |
 |  [ChainId](./sdk.chainid.md) |  |
+|  [UnderlyingType](./sdk.underlyingtype.md) |  |
 
 ## Interfaces
 
 |  Interface | Description |
 |  --- | --- |
+|  [AuctionListing](./sdk.auctionlisting.md) | Represents a new marketplace auction listing. |
+|  [BatchToReveal](./sdk.batchtoreveal.md) |  |
+|  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
 |  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
+|  [IPackBatchArgs](./sdk.ipackbatchargs.md) | <b><i>(BETA)</i></b> |
+|  [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
 |  [IStorage](./sdk.istorage.md) |  |
+|  [NativeToken](./sdk.nativetoken.md) |  |
+|  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
+|  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
+|  [Offer](./sdk.offer.md) |  |
+|  [PackMetadata](./sdk.packmetadata.md) |  |
+|  [PackMetadataWithBalance](./sdk.packmetadatawithbalance.md) |  |
+|  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
+|  [Proposal](./sdk.proposal.md) |  |
+|  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
+|  [ProposalVote](./sdk.proposalvote.md) |  |
+|  [QueryAllParams](./sdk.queryallparams.md) |  |
+|  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
+|  [VoteSettings](./sdk.votesettings.md) |  |
 
 ## Variables
 
@@ -66,6 +85,7 @@ hide_title: true
 |  [CommonRoyaltySchema](./sdk.commonroyaltyschema.md) |  |
 |  [CommonSymbolSchema](./sdk.commonsymbolschema.md) |  |
 |  [CommonTrustedForwarderSchema](./sdk.commontrustedforwarderschema.md) |  |
+|  [DEFAULT\_QUERY\_ALL\_COUNT](./sdk.default_query_all_count.md) |  |
 |  [EditionMetadataInputSchema](./sdk.editionmetadatainputschema.md) |  |
 |  [EditionMetadataOutputSchema](./sdk.editionmetadataoutputschema.md) |  |
 |  [OptionalPropertiesInput](./sdk.optionalpropertiesinput.md) |  |
@@ -81,20 +101,20 @@ hide_title: true
 |  [BufferOrStringWithName](./sdk.bufferorstringwithname.md) |  |
 |  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
-|  [ClaimVerification](./sdk.claimverification.md) |  |
 |  [ContractForContractType](./sdk.contractforcontracttype.md) |  |
 |  [ContractType](./sdk.contracttype.md) |  |
+|  [Currency](./sdk.currency.md) | Currency metadata. |
+|  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [EditionMetadata](./sdk.editionmetadata.md) |  |
-|  [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [Json](./sdk.json.md) |  |
 |  [JsonObject](./sdk.jsonobject.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
-|  [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
+|  [Price](./sdk.price.md) | Represents a currency price already formatted. ie. "1" for 1 ether. |
 |  [Role](./sdk.role.md) |  |
 |  [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |

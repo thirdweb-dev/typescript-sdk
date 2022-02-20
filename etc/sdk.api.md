@@ -18,8 +18,8 @@ import { DropERC1155 } from '@thirdweb-dev/contracts';
 import { DropERC1155__factory } from '@thirdweb-dev/contracts';
 import { DropERC721 } from '@thirdweb-dev/contracts';
 import { DropERC721__factory } from '@thirdweb-dev/contracts';
-import { ethers } from 'ethers';
-import * as ethers_2 from 'ethers';
+import * as ethers from 'ethers';
+import { ethers as ethers_2 } from 'ethers';
 import * as _ethersproject_abstract_provider from '@ethersproject/abstract-provider';
 import { EventEmitter2 } from 'eventemitter2';
 import { If } from 'ts-toolbelt/out/Any/If';
@@ -80,6 +80,37 @@ export class AuctionAlreadyStartedError extends Error {
 // @internal
 export class AuctionHasNotEndedError extends Error {
     constructor(id?: string, endTime?: BigNumberish);
+}
+
+// @public
+export interface AuctionListing {
+    asset: NFTMetadata;
+    assetContractAddress: string;
+    buyoutCurrencyValuePerToken: CurrencyValue;
+    buyoutPrice: BigNumber;
+    currencyContractAddress: string;
+    endTimeInEpochSeconds: BigNumberish;
+    id: string;
+    quantity: BigNumberish;
+    reservePrice: BigNumber;
+    reservePriceCurrencyValuePerToken: CurrencyValue;
+    sellerAddress: string;
+    startTimeInEpochSeconds: BigNumberish;
+    tokenId: BigNumberish;
+    // Warning: (ae-forgotten-export) The symbol "ListingType" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    type: ListingType.Auction;
+}
+
+// @public (undocumented)
+export interface BatchToReveal {
+    // (undocumented)
+    batchId: BigNumber;
+    // (undocumented)
+    batchUri: string;
+    // (undocumented)
+    placeholderMetadata: NFTMetadata;
 }
 
 // @public (undocumented)
@@ -292,7 +323,9 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     waitInSeconds: string | number | bigint | BigNumber;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "ClaimVerification" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export type ClaimVerification = {
     overrides: CallOverrides;
     proofs: BytesLike[];
@@ -529,6 +562,36 @@ export type ContractType = keyof typeof CONTRACTS_MAP;
 // @internal
 export function createSnapshot(snapshotInput: SnapshotInput, storage: IStorage): Promise<SnapshotInfo>;
 
+// Warning: (ae-forgotten-export) The symbol "CurrencySchema" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type Currency = z.infer<typeof CurrencySchema>;
+
+// Warning: (ae-forgotten-export) The symbol "CurrencyValueSchema" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type CurrencyValue = z.infer<typeof CurrencyValueSchema>;
+
+// @public (undocumented)
+export const DEFAULT_QUERY_ALL_COUNT = 100;
+
+// @public
+export interface DirectListing {
+    asset: NFTMetadata;
+    assetContractAddress: string;
+    buyoutCurrencyValuePerToken: CurrencyValue;
+    buyoutPrice: BigNumber;
+    currencyContractAddress: string;
+    id: string;
+    quantity: BigNumberish;
+    secondsUntilEnd: BigNumberish;
+    sellerAddress: string;
+    startTimeInSeconds: BigNumberish;
+    tokenId: BigNumberish;
+    // (undocumented)
+    type: ListingType.Direct;
+}
+
 // @public
 export class DropErc1155ClaimConditions {
     // Warning: (ae-forgotten-export) The symbol "DropErc721ContractSchema" needs to be exported by the entry point index.d.ts
@@ -583,9 +646,13 @@ export class Edition extends Erc1155<TokenERC1155> {
     increaseSupply(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
+    // Warning: (ae-incompatible-release-tags) The symbol "mint" is marked as @public, but its signature references "EditionMetadataInput" which is marked as @internal
     mint(metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;
+    // Warning: (ae-incompatible-release-tags) The symbol "mintBatch" is marked as @public, but its signature references "EditionMetadataInput" which is marked as @internal
     mintBatch(metadatas: EditionMetadataInput[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "mintBatchTo" is marked as @public, but its signature references "EditionMetadataInput" which is marked as @internal
     mintBatchTo(to: string, metadataWithSupply: EditionMetadataInput[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "mintTo" is marked as @public, but its signature references "EditionMetadataInput" which is marked as @internal
     mintTo(to: string, metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC1155>;
@@ -701,6 +768,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "edition-drop";
+    // Warning: (ae-incompatible-release-tags) The symbol "createBatch" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC1155>;
@@ -834,12 +902,14 @@ export class EditionDrop extends Erc1155<DropERC1155> {
 // @public (undocumented)
 export type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "EditionMetadataInput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export type EditionMetadataInput = z.input<typeof EditionMetadataInputSchema>;
 
 // @public (undocumented)
 export const EditionMetadataInputSchema: z.ZodObject<{
-    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>;
+    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
     metadata: z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
@@ -921,19 +991,19 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         }[] | Record<string, any> | undefined;
         name: string;
     };
-    supply: string | number | bigint | ethers_2.BigNumber;
+    supply: string | number | bigint | ethers.BigNumber;
 }>;
 
 // @public (undocumented)
 export const EditionMetadataOutputSchema: z.ZodObject<{
-    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>;
+    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
     metadata: z.ZodObject<z.extendShape<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
-        id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>;
+        id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
         uri: z.ZodString;
         image: z.ZodOptional<z.ZodString>;
         external_url: z.ZodOptional<z.ZodString>;
@@ -948,7 +1018,7 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         animation_url?: string | undefined;
         properties?: Record<string, string | number | boolean | null> | undefined;
         name: string;
-        id: ethers_2.BigNumber;
+        id: ethers.BigNumber;
         uri: string;
     }, {
         [x: string]: Json;
@@ -958,7 +1028,7 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         animation_url?: string | undefined;
         properties?: Record<string, string | number | boolean | null> | undefined;
         name: string;
-        id: string | number | bigint | ethers_2.BigNumber;
+        id: string | number | bigint | ethers.BigNumber;
         uri: string;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -970,10 +1040,10 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         animation_url?: string | undefined;
         properties?: Record<string, string | number | boolean | null> | undefined;
         name: string;
-        id: ethers_2.BigNumber;
+        id: ethers.BigNumber;
         uri: string;
     };
-    supply: ethers_2.BigNumber;
+    supply: ethers.BigNumber;
 }, {
     metadata: {
         [x: string]: Json;
@@ -983,10 +1053,10 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         animation_url?: string | undefined;
         properties?: Record<string, string | number | boolean | null> | undefined;
         name: string;
-        id: string | number | bigint | ethers_2.BigNumber;
+        id: string | number | bigint | ethers.BigNumber;
         uri: string;
     };
-    supply: string | number | bigint | ethers_2.BigNumber;
+    supply: string | number | bigint | ethers.BigNumber;
 }>;
 
 // Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
@@ -1036,14 +1106,12 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     allowance(spender: string): Promise<BigNumber>;
     allowanceOf(owner: string, spender: string): Promise<BigNumber>;
-    // Warning: (ae-forgotten-export) The symbol "CurrencyValue" needs to be exported by the entry point index.d.ts
     balance(): Promise<CurrencyValue>;
     balanceOf(address: string): Promise<CurrencyValue>;
     burn(amount: BigNumberish): Promise<TransactionResult>;
     burnFrom(holder: string, amount: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
-    // Warning: (ae-forgotten-export) The symbol "Currency" needs to be exported by the entry point index.d.ts
     get(): Promise<Currency>;
     // (undocumented)
     getAddress(): string;
@@ -1072,7 +1140,6 @@ export class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNet
     get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
     // (undocumented)
     getAddress(): string;
-    // Warning: (ae-forgotten-export) The symbol "QueryAllParams" needs to be exported by the entry point index.d.ts
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
     // @internal (undocumented)
@@ -1194,6 +1261,33 @@ export class InvalidAddressError extends Error {
     constructor(address?: string);
 }
 
+// @beta (undocumented)
+export interface IPackBatchArgs {
+    // (undocumented)
+    amount: BigNumberish;
+    // (undocumented)
+    tokenId: BigNumberish;
+}
+
+// @public (undocumented)
+export interface IPackCreateArgs {
+    // (undocumented)
+    assetContract: string;
+    // (undocumented)
+    assets: {
+        tokenId: BigNumberish;
+        amount: BigNumberish;
+    }[];
+    // Warning: (ae-incompatible-release-tags) The symbol "metadata" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
+    //
+    // (undocumented)
+    metadata: NFTMetadataInput;
+    // (undocumented)
+    rewardsPerOpen?: BigNumberish;
+    // (undocumented)
+    secondsUntilOpenStart?: BigNumberish;
+}
+
 // Warning: (ae-internal-missing-underscore) The name "IpfsStorage" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1267,8 +1361,6 @@ export class Marketplace implements UpdateableNetwork {
     // Warning: (ae-forgotten-export) The symbol "MarketplaceFilter" needs to be exported by the entry point index.d.ts
     getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     getBidBufferBps(): Promise<BigNumber>;
-    // Warning: (ae-forgotten-export) The symbol "AuctionListing" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "DirectListing" needs to be exported by the entry point index.d.ts
     getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
     getTimeBufferInSeconds(): Promise<BigNumber>;
     isRestrictedToListerRoleOnly(): Promise<boolean>;
@@ -1375,15 +1467,12 @@ export class MarketplaceAuction {
     buyoutListing(listingId: BigNumberish): Promise<TransactionResult>;
     cancelListing(listingId: BigNumberish): Promise<TransactionResult>;
     closeListing(listingId: BigNumberish, closeFor?: string): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "NewAuctionListing" needs to be exported by the entry point index.d.ts
     createListing(listing: NewAuctionListing): Promise<TransactionResultWithId>;
     // (undocumented)
     getAddress(): string;
     getListing(listingId: BigNumberish): Promise<AuctionListing>;
     getWinner(listingId: BigNumberish): Promise<string>;
-    // Warning: (ae-forgotten-export) The symbol "Offer" needs to be exported by the entry point index.d.ts
     getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
-    // Warning: (ae-forgotten-export) The symbol "Price" needs to be exported by the entry point index.d.ts
     makeBid(listingId: BigNumberish, pricePerToken: Price): Promise<TransactionResult>;
     // @internal
     mapListing(listing: IMarketplace.ListingStruct): Promise<AuctionListing>;
@@ -1397,7 +1486,6 @@ export class MarketplaceDirect {
     acceptOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<TransactionResult>;
     buyoutListing(listingId: BigNumberish, quantityDesired: BigNumberish): Promise<TransactionResult>;
     cancelListing(listingId: BigNumberish): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "NewDirectListing" needs to be exported by the entry point index.d.ts
     createListing(listing: NewDirectListing): Promise<TransactionResultWithId>;
     getActiveOffer(listingId: BigNumberish, address: string): Promise<Offer | undefined>;
     // (undocumented)
@@ -1426,7 +1514,44 @@ export class MissingRoleError extends Error {
 }
 
 // @public (undocumented)
+export interface NativeToken extends Currency {
+    // (undocumented)
+    wrapped: {
+        address: string;
+        name: string;
+        symbol: string;
+    };
+}
+
+// @public (undocumented)
 export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
+
+// @public
+export interface NewAuctionListing {
+    assetContractAddress: string;
+    buyoutPricePerToken: Price;
+    currencyContractAddress: string;
+    listingDurationInSeconds: BigNumberish;
+    quantity: BigNumberish;
+    reservePricePerToken: Price;
+    startTimeInSeconds: BigNumberish;
+    tokenId: BigNumberish;
+    // (undocumented)
+    type?: "NewAuctionListing";
+}
+
+// @public
+export interface NewDirectListing {
+    assetContractAddress: string;
+    buyoutPricePerToken: Price;
+    currencyContractAddress: string;
+    listingDurationInSeconds: BigNumberish;
+    quantity: BigNumberish;
+    startTimeInSeconds: BigNumberish;
+    tokenId: BigNumberish;
+    // (undocumented)
+    type?: "NewDirectListing";
+}
 
 // @public
 export class NFTCollection extends Erc721<TokenERC721> {
@@ -1443,9 +1568,13 @@ export class NFTCollection extends Erc721<TokenERC721> {
     estimator: GasCostEstimator<TokenERC721>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
+    // Warning: (ae-incompatible-release-tags) The symbol "mint" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     mint(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
+    // Warning: (ae-incompatible-release-tags) The symbol "mintBatch" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "mintBatchTo" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     mintBatchTo(to: string, metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "mintTo" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     mintTo(to: string, metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
@@ -1573,6 +1702,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "nft-drop";
+    // Warning: (ae-incompatible-release-tags) The symbol "createBatch" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC721>;
@@ -1717,8 +1847,9 @@ export class NFTDrop extends Erc721<DropERC721> {
 export type NFTMetadata = z.output<typeof CommonNFTOutput>;
 
 // Warning: (ae-forgotten-export) The symbol "CommonNFTInput" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "NFTMetadataInput" should be prefixed with an underscore because the declaration is marked as @internal
 //
-// @public (undocumented)
+// @internal (undocumented)
 export type NFTMetadataInput = z.input<typeof CommonNFTInput>;
 
 // @public (undocumented)
@@ -1739,6 +1870,16 @@ export class NotEnoughTokensError extends Error {
 // @internal
 export class NotFoundError extends Error {
     constructor(identifier?: string);
+}
+
+// @public (undocumented)
+export interface Offer {
+    buyerAddress: string;
+    currencyContractAddress: string;
+    currencyValue: CurrencyValue;
+    listingId: BigNumberish;
+    pricePerToken: BigNumber;
+    quantityDesired: BigNumberish;
 }
 
 // @public (undocumented)
@@ -1783,7 +1924,6 @@ export class Pack implements UpdateableNetwork {
     static contractRoles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
     static contractType: "pack";
-    // Warning: (ae-forgotten-export) The symbol "IPackCreateArgs" needs to be exported by the entry point index.d.ts
     create(args: IPackCreateArgs): Promise<TransactionResultWithId<PackMetadata>>;
     // (undocumented)
     depositLink(amount: BigNumberish): Promise<TransactionResult>;
@@ -1791,16 +1931,13 @@ export class Pack implements UpdateableNetwork {
     encoder: ContractEncoder<Pack_2>;
     // (undocumented)
     estimator: GasCostEstimator<Pack_2>;
-    // Warning: (ae-forgotten-export) The symbol "PackMetadata" needs to be exported by the entry point index.d.ts
     get(packId: string): Promise<PackMetadata>;
     // (undocumented)
     getAddress(): string;
     getAll(): Promise<PackMetadata[]>;
     // (undocumented)
     getLinkBalance(): Promise<CurrencyValue>;
-    // Warning: (ae-forgotten-export) The symbol "PackNFTMetadata" needs to be exported by the entry point index.d.ts
     getNFTs(packId: string): Promise<PackNFTMetadata[]>;
-    // Warning: (ae-forgotten-export) The symbol "PackMetadataWithBalance" needs to be exported by the entry point index.d.ts
     getOwned(_address?: string): Promise<PackMetadataWithBalance[]>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
@@ -1915,12 +2052,42 @@ export class Pack implements UpdateableNetwork {
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionResult>;
     transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionResult>;
+    // Warning: (ae-incompatible-release-tags) The symbol "transferBatchFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
+    //
     // (undocumented)
     transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: BytesLike): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "IPackBatchArgs" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-incompatible-release-tags) The symbol "transferFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
     //
     // (undocumented)
     transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): Promise<TransactionResult>;
+}
+
+// @public (undocumented)
+export interface PackMetadata {
+    // (undocumented)
+    creator: string;
+    // (undocumented)
+    currentSupply: BigNumber;
+    // (undocumented)
+    id: string;
+    // (undocumented)
+    metadata: NFTMetadata;
+    // (undocumented)
+    openStart: Date | null;
+}
+
+// @public (undocumented)
+export interface PackMetadataWithBalance extends PackMetadata {
+    // (undocumented)
+    ownedByAddress: BigNumber;
+}
+
+// @public (undocumented)
+export interface PackNFTMetadata {
+    // (undocumented)
+    metadata: NFTMetadata;
+    // (undocumented)
+    supply: BigNumber;
 }
 
 // @public (undocumented)
@@ -1981,11 +2148,58 @@ export type PermitRequestMessage = {
     s: string;
 };
 
+// Warning: (ae-forgotten-export) The symbol "PriceSchema" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type Price = z.input<typeof PriceSchema>;
+
+// @public (undocumented)
+export interface Proposal {
+    description: string;
+    // (undocumented)
+    endBlock: BigNumber;
+    executions: ProposalExecutable[];
+    proposalId: BigNumber;
+    proposer: string;
+    // (undocumented)
+    startBlock: BigNumber;
+    // Warning: (ae-forgotten-export) The symbol "ProposalState" needs to be exported by the entry point index.d.ts
+    state: ProposalState;
+    votes: ProposalVote[];
+}
+
+// @public (undocumented)
+export interface ProposalExecutable {
+    nativeTokenValue: BigNumberish;
+    toAddress: string;
+    transactionData: BytesLike;
+}
+
+// @public (undocumented)
+export interface ProposalVote {
+    // (undocumented)
+    count: BigNumber;
+    // (undocumented)
+    label: string;
+    // Warning: (ae-forgotten-export) The symbol "VoteType" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    type: VoteType;
+}
+
 // Warning: (ae-internal-missing-underscore) The name "QuantityAboveLimitError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export class QuantityAboveLimitError extends Error {
     constructor(quantity: string);
+}
+
+// @public (undocumented)
+export interface QueryAllParams {
+    // (undocumented)
+    count: BigNumberish;
+    // (undocumented)
+    start: BigNumberish;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "REMOTE_CONTRACT_NAME" should be prefixed with an underscore because the declaration is marked as @internal
@@ -2084,7 +2298,6 @@ export class Split implements UpdateableNetwork {
     estimator: GasCostEstimator<Split_2>;
     // (undocumented)
     getAddress(): string;
-    // Warning: (ae-forgotten-export) The symbol "SplitRecipient" needs to be exported by the entry point index.d.ts
     getAllRecipients(): Promise<SplitRecipient[]>;
     getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
     // (undocumented)
@@ -2237,6 +2450,12 @@ export class Split implements UpdateableNetwork {
     withdrawToken(walletAddress: string, tokenAddress: string): Promise<TransactionResult>;
 }
 
+// @public
+export interface SplitRecipient {
+    address: string;
+    splitPercentage: number;
+}
+
 // @public (undocumented)
 export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet;
 
@@ -2251,7 +2470,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "split" | "edition-drop" | "edition" | "nft-drop" | "nft-collection" | "token" | "vote" | "marketplace" | "pack";
+        contractType: "split" | "edition-drop" | "edition" | "token" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
         metadata: () => Promise<{
             [x: string]: Json;
             description?: string | undefined;
@@ -2279,7 +2498,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             voting_period_in_blocks: number;
             voting_token_address: string;
             voting_quorum_fraction: number;
-            proposal_token_threshold: ethers.BigNumber;
+            proposal_token_threshold: ethers_2.BigNumber;
         }> | Promise<{
             [x: string]: Json;
             description?: string | undefined;
@@ -2288,7 +2507,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             name: string;
             recipients: {
                 address: string;
-                shares: ethers.BigNumber;
+                shares: ethers_2.BigNumber;
             }[];
         }>;
     }[]>;
@@ -2412,13 +2631,13 @@ export type TokenMintInput = z.input<typeof TokenMintInputSchema>;
 // @public (undocumented)
 export const TokenMintInputSchema: z.ZodObject<{
     toAddress: z.ZodString;
-    amount: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers_2.BigNumber, z.ZodTypeDef, ethers_2.BigNumber>]>, ethers_2.BigNumber, string | number | bigint | ethers_2.BigNumber>, string, string | number | bigint | ethers_2.BigNumber>;
+    amount: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
 }, "strip", z.ZodTypeAny, {
     toAddress: string;
     amount: string;
 }, {
     toAddress: string;
-    amount: string | number | bigint | ethers_2.BigNumber;
+    amount: string | number | bigint | ethers.BigNumber;
 }>;
 
 // Warning: (ae-forgotten-export) The symbol "TransactionResultWithMetadata" needs to be exported by the entry point index.d.ts
@@ -2435,6 +2654,16 @@ export type TransactionResultWithAddress<T = never> = TransactionResult<T> & {
 export type TransactionResultWithId<T = never> = TransactionResult<T> & {
     id: BigNumber;
 };
+
+// @public (undocumented)
+export enum UnderlyingType {
+    // (undocumented)
+    ERC20 = 1,
+    // (undocumented)
+    ERC721 = 2,
+    // (undocumented)
+    None = 0
+}
 
 // Warning: (ae-internal-missing-underscore) The name "UploadError" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -2479,19 +2708,16 @@ export class Vote implements UpdateableNetwork {
     // (undocumented)
     estimator: GasCostEstimator<VoteERC20>;
     execute(proposalId: string): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "Proposal" needs to be exported by the entry point index.d.ts
     get(proposalId: BigNumberish): Promise<Proposal>;
     // (undocumented)
     getAddress(): string;
     getAll(): Promise<Proposal[]>;
-    // Warning: (ae-forgotten-export) The symbol "ProposalVote" needs to be exported by the entry point index.d.ts
     getProposalVotes(proposalId: BigNumber): Promise<ProposalVote[]>;
     hasVoted(proposalId: string, account?: string): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<VoteERC20, typeof Vote.schema>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
-    // Warning: (ae-forgotten-export) The symbol "ProposalExecutable" needs to be exported by the entry point index.d.ts
     propose(description: string, executions?: ProposalExecutable[]): Promise<TransactionResultWithId>;
     // @internal (undocumented)
     static schema: {
@@ -2620,10 +2846,24 @@ export class Vote implements UpdateableNetwork {
             proposal_token_threshold: string | number | bigint | BigNumber;
         }>;
     };
-    // Warning: (ae-forgotten-export) The symbol "VoteSettings" needs to be exported by the entry point index.d.ts
     settings(): Promise<VoteSettings>;
-    // Warning: (ae-forgotten-export) The symbol "VoteType" needs to be exported by the entry point index.d.ts
     vote(proposalId: string, voteType: VoteType, reason?: string): Promise<TransactionResult>;
+}
+
+// @public (undocumented)
+export interface VoteSettings {
+    // (undocumented)
+    proposalTokenThreshold: string;
+    // (undocumented)
+    votingDelay: string;
+    // (undocumented)
+    votingPeriod: string;
+    // (undocumented)
+    votingQuorumFraction: string;
+    // (undocumented)
+    votingTokenAddress: string;
+    // (undocumented)
+    votingTokenMetadata: Currency;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "WrongListingTypeError" should be prefixed with an underscore because the declaration is marked as @internal

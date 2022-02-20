@@ -12,5 +12,11 @@ export const EditionMetadataInputSchema = z.object({
   metadata: CommonNFTInput,
 });
 
+/**
+ * @public
+ */
 export type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
+/**
+ * @internal
+ */
 export type EditionMetadataInput = z.input<typeof EditionMetadataInputSchema>;

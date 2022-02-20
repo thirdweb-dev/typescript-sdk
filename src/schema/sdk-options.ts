@@ -1,6 +1,9 @@
 import { FORWARDER_ADDRESS } from "../constants/addresses";
 import { z } from "zod";
 
+/**
+ * @internal
+ */
 export const SDKOptionsSchema = z
   .object({
     readonlySettings: z
@@ -45,5 +48,11 @@ export const SDKOptionsSchema = z
     gasSettings: { maxPriceInGwei: 300, speed: "fastest" },
   });
 
+/**
+ * @public
+ */
 export type SDKOptions = z.input<typeof SDKOptionsSchema>;
+/**
+ * @internal
+ */
 export type SDKOptionsOutput = z.output<typeof SDKOptionsSchema>;

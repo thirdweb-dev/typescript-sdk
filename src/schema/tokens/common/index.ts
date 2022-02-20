@@ -37,6 +37,15 @@ export const CommonNFTOutput = CommonTokenOutput.extend({
   properties: OptionalPropertiesOutput,
 });
 
+/**
+ * @internal
+ */
 export type NFTMetadataInput = z.input<typeof CommonNFTInput>;
+/**
+ * @public
+ */
 export type NFTMetadata = z.output<typeof CommonNFTOutput>;
+/**
+ * @public
+ */
 export type NFTMetadataOwner = { metadata: NFTMetadata; owner: string };
