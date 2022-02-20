@@ -9,6 +9,7 @@ import {
 import { IStorage, TransactionResult, TransactionResultWithId } from "../core";
 import { fetchTokenMetadata } from "./nft";
 import { BatchToReveal } from "../types/delayed-reveal";
+import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
 
 export class DelayedReveal<T extends DropERC721> {
   private contractWrapper: ContractWrapper<T>;
@@ -65,11 +66,12 @@ export class DelayedReveal<T extends DropERC721> {
       encryptedBaseUri,
     ]);
 
-    const events = this.contractWrapper.parseLogs(
-      "LazyMintedTokens",
+    const events = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
+      "TokensLazyMinted",
       receipt?.logs,
     );
-    const [startingIndex, endingIndex]: BigNumber[] = events[0].args;
+    const startingIndex = events[0].args.startTokenId;
+    const endingIndex = events[0].args.endTokenId;
     const results = [];
     for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
       results.push({

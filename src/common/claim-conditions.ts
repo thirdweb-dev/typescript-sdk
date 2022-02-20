@@ -1,9 +1,13 @@
-import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
+import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
-import { SnapshotInputSchema } from "../schema/contracts/common/snapshots";
+import { SnapshotJSONInputSchema } from "../schema/contracts/common/snapshots";
 import { approveErc20Allowance, isNativeToken } from "./currency";
-import { ClaimCondition, ClaimConditionInput } from "../types";
+import {
+  ClaimCondition,
+  ClaimConditionInput,
+  ClaimVerification,
+} from "../types";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core";
 import {
@@ -23,17 +27,15 @@ export async function prepareClaim(
   contractWrapper: ContractWrapper<any>,
   storage: IStorage,
   proofs: BytesLike[] = [hexZeroPad([0], 32)],
-): Promise<{
-  overrides: CallOverrides;
-  proofs: BytesLike[];
-}> {
+): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
+  let maxClaimable = 0;
 
   if (!activeClaimCondition.merkleRootHash.toString().startsWith(AddressZero)) {
     const snapshot = await storage.get(
       merkleMetadata[activeClaimCondition.merkleRootHash.toString()],
     );
-    const snapshotData = SnapshotInputSchema.parse(snapshot);
+    const snapshotData = SnapshotJSONInputSchema.parse(snapshot);
     const item = snapshotData.claims.find(
       (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
     );
@@ -41,6 +43,7 @@ export async function prepareClaim(
       throw new Error("No claim found for this address");
     }
     proofs = item.proof;
+    maxClaimable = item.maxClaimable;
   }
 
   const overrides = (await contractWrapper.getCallOverrides()) || {};
@@ -61,6 +64,9 @@ export async function prepareClaim(
   return {
     overrides,
     proofs,
+    maxQuantityPerTransaction: BigNumber.from(maxClaimable),
+    price,
+    currencyAddress,
   };
 }
 

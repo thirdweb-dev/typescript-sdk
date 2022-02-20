@@ -16,7 +16,7 @@ import {
   EditionMetadata,
   EditionMetadataInput,
 } from "../schema/tokens/edition";
-import { TokenMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
+import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { CommonNFTInput } from "../schema/tokens/common";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -152,8 +152,8 @@ export class Edition extends Erc1155<TokenERC1155> {
       uri,
       metadataWithSupply.supply,
     ]);
-    const event = this.contractWrapper.parseLogs<TokenMintedEvent>(
-      "TokenMinted",
+    const event = this.contractWrapper.parseLogs<TokensMintedEvent>(
+      "TokensMinted",
       receipt?.logs,
     );
     if (event.length === 0) {
@@ -258,8 +258,8 @@ export class Edition extends Erc1155<TokenERC1155> {
       ]),
     );
     const receipt = await this.contractWrapper.multiCall(encoded);
-    const events = this.contractWrapper.parseLogs<TokenMintedEvent>(
-      "TokenMinted",
+    const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
+      "TokensMinted",
       receipt.logs,
     );
     if (events.length === 0 || events.length < metadatas.length) {

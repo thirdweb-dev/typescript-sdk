@@ -10,6 +10,7 @@ import {
 import { hexZeroPad } from "ethers/lib/utils";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import { CurrencyValueSchema } from "./currency";
+import { SnapshotInputSchema } from "./snapshots";
 
 export const ClaimConditionInputSchema = z.object({
   startTime: DateSchema,
@@ -21,7 +22,7 @@ export const ClaimConditionInputSchema = z.object({
   ),
   waitInSeconds: BigNumberishSchema.default(0),
   merkleRootHash: BytesLikeSchema.default(hexZeroPad([0], 32)),
-  snapshot: z.optional(z.array(z.string())),
+  snapshot: z.optional(SnapshotInputSchema),
 });
 
 export const ClaimConditionInputArray = z.array(ClaimConditionInputSchema);

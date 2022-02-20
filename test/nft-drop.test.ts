@@ -1,9 +1,9 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
-import { sdk, signers, storage } from "./before.test";
+import { expectError, sdk, signers, storage } from "./before.test";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { NFTDrop, Token } from "../src";
@@ -47,25 +47,28 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set([
       {
         startTime: new Date(Date.now() / 2),
-        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+        snapshot: {
+          addresses: [bobWallet.address, samWallet.address, abbyWallet.address],
+        },
         price: 1,
       },
       {
         startTime: new Date(),
-        snapshot: [bobWallet.address],
+        snapshot: { addresses: [bobWallet.address] },
       },
     ]);
     console.log("Claim condition set");
 
     const metadata = await dropContract.metadata.get();
     const merkles = metadata.merkle;
+    console.log(merkles);
 
     expect(merkles).have.property(
-      "0x887a9d7f2b1fca2ff8c07e1e02d906bc2cda73495a8da7494165adcd81875164",
+      "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
     );
 
     expect(merkles).have.property(
-      "0x8a3552d60a98e0ade765adddad0a2e420ca9b1eef5f326ba7ab860bb4ea72c94",
+      "0xb1a60ad68b77609a455696695fbdd02b850d03ec285e7fe1f4c4093797457b24",
     );
 
     const roots = (await dropContract.claimConditions.getAll()).map(
@@ -79,11 +82,13 @@ describe("NFT Drop Contract", async () => {
       {
         startTime: new Date(),
         waitInSeconds: 10,
-        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+        snapshot: {
+          addresses: [bobWallet.address, samWallet.address, abbyWallet.address],
+        },
       },
       {
         startTime: new Date(Date.now() + 60 * 60 * 1000),
-        snapshot: [bobWallet.address],
+        snapshot: { addresses: [bobWallet.address] },
       },
     ]);
 
@@ -91,11 +96,11 @@ describe("NFT Drop Contract", async () => {
     const merkles = metadata.merkle;
 
     expect(merkles).have.property(
-      "0x887a9d7f2b1fca2ff8c07e1e02d906bc2cda73495a8da7494165adcd81875164",
+      "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
     );
 
     expect(merkles).have.property(
-      "0x8a3552d60a98e0ade765adddad0a2e420ca9b1eef5f326ba7ab860bb4ea72c94",
+      "0xb1a60ad68b77609a455696695fbdd02b850d03ec285e7fe1f4c4093797457b24",
     );
 
     const roots = (await dropContract.claimConditions.getAll()).map(
@@ -129,7 +134,13 @@ describe("NFT Drop Contract", async () => {
     console.log("members", members);
 
     console.log("Setting claim condition");
-    await dropContract.claimConditions.set([{ snapshot: members }]);
+    await dropContract.claimConditions.set([
+      {
+        snapshot: {
+          addresses: members,
+        },
+      },
+    ]);
     console.log("Claim condition set");
 
     console.log("Minting 100");
@@ -161,7 +172,13 @@ describe("NFT Drop Contract", async () => {
     const testWallets: SignerWithAddress[] = [bobWallet];
     const members = testWallets.map((w) => w.address);
 
-    await dropContract.claimConditions.set([{ snapshot: members }]);
+    await dropContract.claimConditions.set([
+      {
+        snapshot: {
+          addresses: members,
+        },
+      },
+    ]);
 
     const metadata = [];
     for (let i = 0; i < 2; i++) {
@@ -213,7 +230,13 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set(
       [
         {
-          snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+          snapshot: {
+            addresses: [
+              bobWallet.address,
+              samWallet.address,
+              abbyWallet.address,
+            ],
+          },
         },
       ],
       false,
@@ -248,6 +271,32 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claim(1);
   });
 
+  it("should allow setting max claims per wallet", async () => {
+    await dropContract.createBatch([
+      { name: "name", description: "description" },
+      { name: "name2", description: "description" },
+      { name: "name3", description: "description" },
+      { name: "name4", description: "description" },
+    ]);
+    await dropContract.claimConditions.set([
+      {
+        snapshot: {
+          addresses: [w1.address, w2.address],
+          maxClaimablePerAddress: [2, 1],
+        },
+      },
+    ]);
+    await sdk.updateSignerOrProvider(w1);
+    const tx = await dropContract.claim(2);
+    expect(tx.length).to.eq(2);
+    try {
+      await sdk.updateSignerOrProvider(w2);
+      await dropContract.claim(2);
+    } catch (e) {
+      expectError(e, "invalid quantity proof");
+    }
+  });
+
   it("should generate valid proofs", async () => {
     const members = [
       bobWallet.address,
@@ -259,15 +308,20 @@ describe("NFT Drop Contract", async () => {
       w4.address,
     ];
 
-    const hashedLeafs = members.map((l) => keccak256(l));
+    const hashedLeafs = members.map((l) =>
+      ethers.utils.solidityKeccak256(["address", "uint256"], [l, 0]),
+    );
     const tree = new MerkleTree(hashedLeafs, keccak256, {
       sort: true,
       sortLeaves: true,
       sortPairs: true,
     });
-    const snapshot = await createSnapshot(members, storage);
+    const input = { addresses: members };
+    const snapshot = await createSnapshot(input, storage);
     for (const leaf of members) {
-      const expectedProof = tree.getHexProof(keccak256(leaf));
+      const expectedProof = tree.getHexProof(
+        ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
+      );
 
       const actualProof = snapshot.snapshot.claims.find(
         (c) => c.address === leaf,
@@ -277,9 +331,10 @@ describe("NFT Drop Contract", async () => {
 
       const verified = tree.verify(
         actualProof?.proof as string[],
-        keccak256(leaf),
+        ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
         tree.getHexRoot(),
       );
+      expect(verified).to.eq(true);
       console.log("Leaf verified =", leaf, verified);
     }
   });
@@ -335,7 +390,7 @@ describe("NFT Drop Contract", async () => {
           bobWallet.address,
         );
 
-      expect(reasons).to.include(ClaimEligibility.NoClaimConditionSet);
+      expect(reasons).to.include(ClaimEligibility.NoActiveClaimPhase);
       assert.lengthOf(reasons, 1);
       const canClaim = await dropContract.claimConditions.canClaim(w1.address);
       assert.isFalse(canClaim);
@@ -356,7 +411,10 @@ describe("NFT Drop Contract", async () => {
 
     it("should check if an address has valid merkle proofs", async () => {
       await dropContract.claimConditions.set([
-        { maxQuantity: 1, snapshot: [w2.address, adminWallet.address] },
+        {
+          maxQuantity: 1,
+          snapshot: { addresses: [w2.address, adminWallet.address] },
+        },
       ]);
 
       const reasons =
@@ -448,7 +506,7 @@ describe("NFT Drop Contract", async () => {
           maxQuantity: 10,
           price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
-          snapshot: [w1.address, w2.address, w3.address],
+          snapshot: { addresses: [w1.address, w2.address, w3.address] },
         },
       ]);
 
@@ -504,7 +562,9 @@ describe("NFT Drop Contract", async () => {
     }
     await dropContract.createBatch(metadata);
 
-    await dropContract.claimConditions.set([{ snapshot: [w1.address] }]);
+    await dropContract.claimConditions.set([
+      { snapshot: { addresses: [w1.address] } },
+    ]);
 
     assert.isTrue(
       await dropContract.claimConditions.canClaim(1, w1.address),
@@ -532,7 +592,7 @@ describe("NFT Drop Contract", async () => {
     ];
     await dropContract.claimConditions.set([
       {
-        snapshot: members,
+        snapshot: { addresses: members },
       },
     ]);
 

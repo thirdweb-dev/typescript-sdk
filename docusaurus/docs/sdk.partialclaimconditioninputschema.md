@@ -20,9 +20,21 @@ PartialClaimConditionInputSchema: z.ZodObject<{
     quantityLimitPerTransaction: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>>;
     waitInSeconds: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>>;
     merkleRootHash: z.ZodOptional<z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>>;
-    snapshot: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString, "many">>>;
+    snapshot: z.ZodOptional<z.ZodOptional<z.ZodObject<{
+        addresses: z.ZodArray<z.ZodString, "many">;
+        maxClaimablePerAddress: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
+    }, "strip", z.ZodTypeAny, {
+        maxClaimablePerAddress?: number[] | undefined;
+        addresses: string[];
+    }, {
+        maxClaimablePerAddress?: number[] | undefined;
+        addresses: string[];
+    }>>>;
 }, "strip", z.ZodTypeAny, {
-    snapshot?: string[] | undefined;
+    snapshot?: {
+        maxClaimablePerAddress?: number[] | undefined;
+        addresses: string[];
+    } | undefined;
     startTime?: BigNumber | undefined;
     currencyAddress?: string | undefined;
     price?: string | undefined;
@@ -31,7 +43,10 @@ PartialClaimConditionInputSchema: z.ZodObject<{
     waitInSeconds?: string | undefined;
     merkleRootHash?: string | number[] | undefined;
 }, {
-    snapshot?: string[] | undefined;
+    snapshot?: {
+        maxClaimablePerAddress?: number[] | undefined;
+        addresses: string[];
+    } | undefined;
     startTime?: Date | undefined;
     currencyAddress?: string | undefined;
     price?: string | number | undefined;

@@ -49,7 +49,7 @@ hide_title: true
 
 |  Function | Description |
 |  --- | --- |
-|  [createSnapshot(leafs, storage)](./sdk.createsnapshot.md) | Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS |
+|  [hashLeafNode(address, maxClaimableAmount)](./sdk.hashleafnode.md) |  |
 
 ## Interfaces
 
@@ -87,6 +87,7 @@ hide_title: true
 |  [BufferOrStringWithName](./sdk.bufferorstringwithname.md) |  |
 |  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
+|  [ClaimVerification](./sdk.claimverification.md) |  |
 |  [ContractForContractType](./sdk.contractforcontracttype.md) |  |
 |  [ContractType](./sdk.contracttype.md) |  |
 |  [EditionMetadata](./sdk.editionmetadata.md) |  |
@@ -103,6 +104,7 @@ hide_title: true
 |  [Role](./sdk.role.md) |  |
 |  [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |
+|  [SnapshotInput](./sdk.snapshotinput.md) | Input model to pass a snapshot of addresses + amount claimable for a claim condition |
 |  [SUPPORTED\_CHAIN\_ID](./sdk.supported_chain_id.md) |  |
 |  [TokenMintInput](./sdk.tokenmintinput.md) |  |
 |  [TransactionResult](./sdk.transactionresult.md) |  |

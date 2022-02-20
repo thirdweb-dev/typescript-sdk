@@ -1,8 +1,8 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import { EditionDrop, Token } from "../src/index";
-import { sdk, signers } from "./before.test";
+import { expectError, sdk, signers } from "./before.test";
 import { AddressZero } from "@ethersproject/constants";
 import { ClaimEligibility } from "../src/enums";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
@@ -15,7 +15,7 @@ const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 use(deepEqualInAnyOrder);
 
 // TODO: Write some actual pack contract tests
-describe("Bundle Drop Contract", async () => {
+describe("Edition Drop Contract", async () => {
   let bdContract: EditionDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -84,7 +84,9 @@ describe("Bundle Drop Contract", async () => {
     await bdContract.claimConditions.set("0", [
       {
         maxQuantity: 1000,
-        snapshot: members,
+        snapshot: {
+          addresses: members,
+        },
       },
     ]);
 
@@ -120,7 +122,9 @@ describe("Bundle Drop Contract", async () => {
     await bdContract.claimConditions.set("0", [
       {
         maxQuantity: 1000,
-        snapshot: members,
+        snapshot: {
+          addresses: members,
+        },
       },
     ]);
     testWallets.push(w4);
@@ -186,6 +190,28 @@ describe("Bundle Drop Contract", async () => {
     }
   });
 
+  it("should allow setting max claims per wallet", async () => {
+    await bdContract.createBatch([
+      { name: "name", description: "description" },
+    ]);
+    await bdContract.claimConditions.set(0, [
+      {
+        snapshot: {
+          addresses: [w1.address, w2.address],
+          maxClaimablePerAddress: [2, 1],
+        },
+      },
+    ]);
+    await sdk.updateSignerOrProvider(w1);
+    const tx = await bdContract.claim(0, 2);
+    try {
+      await sdk.updateSignerOrProvider(w2);
+      await bdContract.claim(0, 2);
+    } catch (e) {
+      expectError(e, "invalid quantity proof");
+    }
+  });
+
   it("should allow a default claim condition to be used to claim", async () => {
     await bdContract.createBatch([
       {
@@ -241,11 +267,20 @@ describe("Bundle Drop Contract", async () => {
   it("should return the correct status if a token can be claimed", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [w1.address],
+        snapshot: {
+          addresses: [w1.address],
+        },
       },
     ]);
-    await sdk.updateSignerOrProvider(w1);
 
+    await sdk.updateSignerOrProvider(w1);
+    console.log(
+      await bdContract.claimConditions.getClaimIneligibilityReasons(
+        "0",
+        1,
+        w1.address,
+      ),
+    );
     const canClaimW1 = await bdContract.claimConditions.canClaim("0", 1);
     assert.isTrue(canClaimW1, "w1 should be able to claim");
 
@@ -257,7 +292,9 @@ describe("Bundle Drop Contract", async () => {
   it("canClaim: 1 address", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [w1.address],
+        snapshot: {
+          addresses: [w1.address],
+        },
       },
     ]);
 
@@ -274,11 +311,13 @@ describe("Bundle Drop Contract", async () => {
   it("canClaim: 3 address", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [
-          w1.address.toUpperCase().replace("0X", "0x"),
-          w2.address.toLowerCase(),
-          w3.address,
-        ],
+        snapshot: {
+          addresses: [
+            w1.address.toUpperCase().replace("0X", "0x"),
+            w2.address.toLowerCase(),
+            w3.address,
+          ],
+        },
       },
     ]);
 
@@ -379,7 +418,7 @@ describe("Bundle Drop Contract", async () => {
       await bdContract.claimConditions.set("0", [
         {
           maxQuantity: 1,
-          snapshot: [w2.address, adminWallet.address],
+          snapshot: { addresses: [w2.address, adminWallet.address] },
         },
       ]);
 
@@ -491,7 +530,7 @@ describe("Bundle Drop Contract", async () => {
           maxQuantity: 10,
           price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
-          snapshot: [w1.address, w2.address, w3.address],
+          snapshot: { addresses: [w1.address, w2.address, w3.address] },
         },
       ]);
 
@@ -554,13 +593,20 @@ describe("Bundle Drop Contract", async () => {
 
       await bdContract.claimConditions.set("1", [
         {
-          snapshot: [w1.address, w2.address, bobWallet.address],
+          snapshot: { addresses: [w1.address, w2.address, bobWallet.address] },
         },
       ]);
 
       await bdContract.claimConditions.set("2", [
         {
-          snapshot: [w3.address, w1.address, w2.address, adminWallet.address],
+          snapshot: {
+            addresses: [
+              w3.address,
+              w1.address,
+              w2.address,
+              adminWallet.address,
+            ],
+          },
         },
       ]);
 

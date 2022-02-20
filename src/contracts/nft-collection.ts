@@ -17,10 +17,10 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { TokenMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { Erc721SignatureMinting } from "../core/classes/erc-721-signature-minting";
 import { GasCostEstimator } from "../core/classes";
+import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -141,8 +141,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
       to,
       uri,
     ]);
-    const event = this.contractWrapper.parseLogs<TokenMintedEvent>(
-      "TokenMinted",
+    const event = this.contractWrapper.parseLogs<TokensMintedEvent>(
+      "TokensMinted",
       receipt?.logs,
     );
     if (event.length === 0) {
@@ -212,8 +212,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
       ]),
     );
     const receipt = await this.contractWrapper.multiCall(encoded);
-    const events = this.contractWrapper.parseLogs<TokenMintedEvent>(
-      "TokenMinted",
+    const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
+      "TokensMinted",
       receipt.logs,
     );
     if (events.length === 0 || events.length < metadatas.length) {

@@ -1,13 +1,7 @@
 import { ContractRoles } from "../core/classes/contract-roles";
 import { DropERC721, DropERC721__factory } from "@thirdweb-dev/contracts";
 import { hexZeroPad } from "@ethersproject/bytes";
-import {
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  CallOverrides,
-  ethers,
-} from "ethers";
+import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -32,6 +26,9 @@ import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { DelayedReveal } from "../common/delayed-reveal";
 import { GasCostEstimator } from "../core/classes";
+import { ClaimVerification } from "../types";
+import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155";
+import { TokensClaimedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -253,12 +250,12 @@ export class NFTDrop extends Erc721<DropERC721> {
       baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
       ethers.utils.toUtf8Bytes(""),
     ]);
-    // TODO figure out how to type the return types of parseEventLogs
-    const event = this.contractWrapper.parseEventLogs(
-      "LazyMintedTokens",
+    const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
+      "TokensLazyMinted",
       receipt?.logs,
     );
-    const [startingIndex, endingIndex]: BigNumber[] = event;
+    const startingIndex = event[0].args.startTokenId;
+    const endingIndex = event[0].args.endTokenId;
     const results = [];
     for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
       results.push({
@@ -297,17 +294,24 @@ export class NFTDrop extends Erc721<DropERC721> {
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const claimData = await this.prepareClaim(quantity, proofs);
+    const claimVerification = await this.prepareClaim(quantity, proofs);
     const receipt = await this.contractWrapper.sendTransaction(
       "claim",
-      [destinationAddress, quantity, claimData.proofs],
-      claimData.overrides,
+      [
+        destinationAddress,
+        quantity,
+        claimVerification.currencyAddress,
+        claimVerification.price,
+        claimVerification.proofs,
+        claimVerification.maxQuantityPerTransaction,
+      ],
+      claimVerification.overrides,
     );
-    const event = this.contractWrapper.parseEventLogs(
-      "ClaimedTokens",
+    const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
+      "TokensClaimed",
       receipt?.logs,
     );
-    const startingIndex: BigNumber = event.startTokenId;
+    const startingIndex: BigNumber = event[0].args.startTokenId;
     const endingIndex = startingIndex.add(quantity);
     const results = [];
     for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
@@ -350,10 +354,7 @@ export class NFTDrop extends Erc721<DropERC721> {
   private async prepareClaim(
     quantity: BigNumberish,
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
-  ): Promise<{
-    overrides: CallOverrides;
-    proofs: BytesLike[];
-  }> {
+  ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.claimConditions.getActive(),

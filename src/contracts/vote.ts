@@ -27,6 +27,7 @@ import { CurrencyValue } from "../types/currency";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes";
+import { ProposalCreatedEvent } from "@thirdweb-dev/contracts/dist/VoteERC20";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -378,12 +379,12 @@ export class Vote implements UpdateableNetwork {
       datas,
       description,
     ]);
-    const event = this.contractWrapper.parseEventLogs(
+    const event = this.contractWrapper.parseLogs<ProposalCreatedEvent>(
       "ProposalCreated",
       receipt?.logs,
     );
     return {
-      id: event.proposalId,
+      id: event[0].args.proposalId,
       receipt,
     };
   }

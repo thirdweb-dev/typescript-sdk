@@ -37,6 +37,7 @@ import {
 import { IStorage } from "../interfaces";
 import invariant from "tiny-invariant";
 import { isAddress } from "ethers/lib/utils";
+import { ListingAddedEvent } from "@thirdweb-dev/contracts/dist/Marketplace";
 
 /**
  * Handles direct listings
@@ -181,12 +182,12 @@ export class MarketplaceDirect {
       ],
     );
 
-    const event = this.contractWrapper.parseEventLogs(
-      "NewListing",
+    const event = this.contractWrapper.parseLogs<ListingAddedEvent>(
+      "ListingAdded",
       receipt?.logs,
     );
     return {
-      id: event.listingId,
+      id: event[0].args.listingId,
       receipt,
     };
   }

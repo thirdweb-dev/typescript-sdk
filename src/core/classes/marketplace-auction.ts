@@ -31,6 +31,7 @@ import {
 } from "../../common/marketplace";
 import { Price } from "../../types/currency";
 import invariant from "tiny-invariant";
+import { ListingAddedEvent } from "@thirdweb-dev/contracts/dist/Marketplace";
 
 /**
  * Handles auction listings
@@ -222,12 +223,12 @@ export class MarketplaceAuction {
       ],
     );
 
-    const event = this.contractWrapper.parseEventLogs(
-      "NewListing",
+    const event = this.contractWrapper.parseLogs<ListingAddedEvent>(
+      "ListingAdded",
       receipt?.logs,
     );
     return {
-      id: event.listingId,
+      id: event[0].args.listingId,
       receipt,
     };
   }

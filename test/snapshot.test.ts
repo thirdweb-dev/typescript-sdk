@@ -1,9 +1,6 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { createSnapshot, IStorage, Snapshot } from "../src/index";
-
-import { sdk, signers } from "./before.test";
-import chai = require("chai");
 import { MockStorage } from "./mock/MockStorage";
+import chai = require("chai");
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
@@ -26,6 +23,8 @@ describe("Snapshots", async () => {
     "0x14fb3a9B317612ddc6d6Cc3c907CD9F2Aa091eE7",
   ];
 
+  const maxClaim = [0, 0, 0, 0];
+
   let storage: IStorage;
 
   beforeEach(async () => {
@@ -33,7 +32,13 @@ describe("Snapshots", async () => {
   });
 
   beforeEach(async () => {
-    const result = await createSnapshot(leafs, storage);
+    const result = await createSnapshot(
+      {
+        addresses: leafs,
+        maxClaimablePerAddress: maxClaim,
+      },
+      storage,
+    );
     snapshot = result.snapshot;
     uri = result.snapshotUri;
     merkleRoot = result.merkleRoot;
@@ -42,12 +47,15 @@ describe("Snapshots", async () => {
   it("should generate a valid merkle root from a list of addresses", async () => {
     assert.equal(
       merkleRoot,
-      "0xed194a7138dce33f7dfbcfa95492f4eb414fae6cf51e8994ad70d209579a609d",
+      "0xe0c95ec2a9cc03bb25cdf2f3c9092a00698716373e4e34715498a68167fe4acd",
     );
   });
 
   it("should warn about duplicate leafs", async () => {
-    const duplicateLeafs = [...leafs, ...leafs];
+    const duplicateLeafs = {
+      addresses: [...leafs, ...leafs],
+      maxClaimablePerAddress: maxClaim,
+    };
 
     try {
       await createSnapshot(duplicateLeafs, storage);
