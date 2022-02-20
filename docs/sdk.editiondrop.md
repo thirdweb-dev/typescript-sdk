@@ -22,7 +22,7 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 // You can switch out this provider with any wallet or provider setup you like.
 const provider = ethers.Wallet.createRandom();
 const sdk = new ThirdwebSDK(provider);
-const editionDrop = sdk.getEditionDrop("{{contract_address}}");
+const contract = sdk.getEditionDrop("{{contract_address}}");
 ```
 
 ## Constructors
