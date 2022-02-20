@@ -41,7 +41,7 @@ import { TokensClaimedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
  * // You can switch out this provider with any wallet or provider setup you like.
  * const provider = ethers.Wallet.createRandom();
  * const sdk = new ThirdwebSDK(provider);
- * const nftDrop = sdk.getNFTDrop("{{contract_address}}");
+ * const contract = sdk.getNFTDrop("{{contract_address}}");
  * ```
  *
  * @public

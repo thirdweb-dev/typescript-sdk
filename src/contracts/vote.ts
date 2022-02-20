@@ -40,7 +40,7 @@ import { ProposalCreatedEvent } from "@thirdweb-dev/contracts/dist/VoteERC20";
  * // You can switch out this provider with any wallet or provider setup you like.
  * const provider = ethers.Wallet.createRandom();
  * const sdk = new ThirdwebSDK(provider);
- * const vote = sdk.getVote("{{contract_address}}");
+ * const contract = sdk.getVote("{{contract_address}}");
  * ```
  *
  * @public

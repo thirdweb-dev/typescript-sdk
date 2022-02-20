@@ -37,7 +37,7 @@ import { GasCostEstimator } from "../core/classes";
  * // You can switch out this provider with any wallet or provider setup you like.
  * const provider = ethers.Wallet.createRandom();
  * const sdk = new ThirdwebSDK(provider);
- * const marketplace = sdk.getMarketplace("{{contract_address}}");
+ * const contract = sdk.getMarketplace("{{contract_address}}");
  * ```
  *
  * @public
