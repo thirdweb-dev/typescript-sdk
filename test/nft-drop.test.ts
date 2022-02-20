@@ -47,12 +47,14 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set([
       {
         startTime: new Date(Date.now() / 2),
-        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+        snapshot: {
+          addresses: [bobWallet.address, samWallet.address, abbyWallet.address],
+        },
         price: 1,
       },
       {
         startTime: new Date(),
-        snapshot: [bobWallet.address],
+        snapshot: { addresses: [bobWallet.address] },
       },
     ]);
     console.log("Claim condition set");
@@ -80,11 +82,13 @@ describe("NFT Drop Contract", async () => {
       {
         startTime: new Date(),
         waitInSeconds: 10,
-        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+        snapshot: {
+          addresses: [bobWallet.address, samWallet.address, abbyWallet.address],
+        },
       },
       {
         startTime: new Date(Date.now() + 60 * 60 * 1000),
-        snapshot: [bobWallet.address],
+        snapshot: { addresses: [bobWallet.address] },
       },
     ]);
 
@@ -130,7 +134,13 @@ describe("NFT Drop Contract", async () => {
     console.log("members", members);
 
     console.log("Setting claim condition");
-    await dropContract.claimConditions.set([{ snapshot: members }]);
+    await dropContract.claimConditions.set([
+      {
+        snapshot: {
+          addresses: members,
+        },
+      },
+    ]);
     console.log("Claim condition set");
 
     console.log("Minting 100");
@@ -162,7 +172,13 @@ describe("NFT Drop Contract", async () => {
     const testWallets: SignerWithAddress[] = [bobWallet];
     const members = testWallets.map((w) => w.address);
 
-    await dropContract.claimConditions.set([{ snapshot: members }]);
+    await dropContract.claimConditions.set([
+      {
+        snapshot: {
+          addresses: members,
+        },
+      },
+    ]);
 
     const metadata = [];
     for (let i = 0; i < 2; i++) {
@@ -214,7 +230,13 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set(
       [
         {
-          snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+          snapshot: {
+            addresses: [
+              bobWallet.address,
+              samWallet.address,
+              abbyWallet.address,
+            ],
+          },
         },
       ],
       false,
@@ -266,7 +288,8 @@ describe("NFT Drop Contract", async () => {
       sortLeaves: true,
       sortPairs: true,
     });
-    const snapshot = await createSnapshot(members, storage);
+    const input = { addresses: members };
+    const snapshot = await createSnapshot(input, storage);
     for (const leaf of members) {
       const expectedProof = tree.getHexProof(
         keccak256(
@@ -361,7 +384,10 @@ describe("NFT Drop Contract", async () => {
 
     it("should check if an address has valid merkle proofs", async () => {
       await dropContract.claimConditions.set([
-        { maxQuantity: 1, snapshot: [w2.address, adminWallet.address] },
+        {
+          maxQuantity: 1,
+          snapshot: { addresses: [w2.address, adminWallet.address] },
+        },
       ]);
 
       const reasons =
@@ -453,7 +479,7 @@ describe("NFT Drop Contract", async () => {
           maxQuantity: 10,
           price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
-          snapshot: [w1.address, w2.address, w3.address],
+          snapshot: { addresses: [w1.address, w2.address, w3.address] },
         },
       ]);
 
@@ -509,7 +535,9 @@ describe("NFT Drop Contract", async () => {
     }
     await dropContract.createBatch(metadata);
 
-    await dropContract.claimConditions.set([{ snapshot: [w1.address] }]);
+    await dropContract.claimConditions.set([
+      { snapshot: { addresses: [w1.address] } },
+    ]);
 
     assert.isTrue(
       await dropContract.claimConditions.canClaim(1, w1.address),
@@ -537,7 +565,7 @@ describe("NFT Drop Contract", async () => {
     ];
     await dropContract.claimConditions.set([
       {
-        snapshot: members,
+        snapshot: { addresses: members },
       },
     ]);
 

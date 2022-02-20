@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import { EditionDrop, Token } from "../src/index";
 import { sdk, signers } from "./before.test";
 import { AddressZero } from "@ethersproject/constants";
@@ -84,7 +84,9 @@ describe("Edition Drop Contract", async () => {
     await bdContract.claimConditions.set("0", [
       {
         maxQuantity: 1000,
-        snapshot: members,
+        snapshot: {
+          addresses: members,
+        },
       },
     ]);
 
@@ -120,7 +122,9 @@ describe("Edition Drop Contract", async () => {
     await bdContract.claimConditions.set("0", [
       {
         maxQuantity: 1000,
-        snapshot: members,
+        snapshot: {
+          addresses: members,
+        },
       },
     ]);
     testWallets.push(w4);
@@ -241,7 +245,9 @@ describe("Edition Drop Contract", async () => {
   it("should return the correct status if a token can be claimed", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [w1.address],
+        snapshot: {
+          addresses: [w1.address],
+        },
       },
     ]);
 
@@ -264,7 +270,9 @@ describe("Edition Drop Contract", async () => {
   it("canClaim: 1 address", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [w1.address],
+        snapshot: {
+          addresses: [w1.address],
+        },
       },
     ]);
 
@@ -281,11 +289,13 @@ describe("Edition Drop Contract", async () => {
   it("canClaim: 3 address", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [
-          w1.address.toUpperCase().replace("0X", "0x"),
-          w2.address.toLowerCase(),
-          w3.address,
-        ],
+        snapshot: {
+          addresses: [
+            w1.address.toUpperCase().replace("0X", "0x"),
+            w2.address.toLowerCase(),
+            w3.address,
+          ],
+        },
       },
     ]);
 
@@ -386,7 +396,7 @@ describe("Edition Drop Contract", async () => {
       await bdContract.claimConditions.set("0", [
         {
           maxQuantity: 1,
-          snapshot: [w2.address, adminWallet.address],
+          snapshot: { addresses: [w2.address, adminWallet.address] },
         },
       ]);
 
@@ -498,7 +508,7 @@ describe("Edition Drop Contract", async () => {
           maxQuantity: 10,
           price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
-          snapshot: [w1.address, w2.address, w3.address],
+          snapshot: { addresses: [w1.address, w2.address, w3.address] },
         },
       ]);
 
@@ -561,13 +571,20 @@ describe("Edition Drop Contract", async () => {
 
       await bdContract.claimConditions.set("1", [
         {
-          snapshot: [w1.address, w2.address, bobWallet.address],
+          snapshot: { addresses: [w1.address, w2.address, bobWallet.address] },
         },
       ]);
 
       await bdContract.claimConditions.set("2", [
         {
-          snapshot: [w3.address, w1.address, w2.address, adminWallet.address],
+          snapshot: {
+            addresses: [
+              w3.address,
+              w1.address,
+              w2.address,
+              adminWallet.address,
+            ],
+          },
         },
       ]);
 
