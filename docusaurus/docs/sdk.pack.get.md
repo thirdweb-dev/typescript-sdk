@@ -9,7 +9,7 @@ hide_title: true
 
 ## Pack.get() method
 
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* READ FUNCTIONS \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
+Get a pack by id
 
 <b>Signature:</b>
 
@@ -21,8 +21,10 @@ get(packId: string): Promise<PackMetadata>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  packId | string |  |
+|  packId | string | the id of the pack to fetch |
 
 <b>Returns:</b>
 
 Promise&lt;PackMetadata&gt;
+
+the pack metadata

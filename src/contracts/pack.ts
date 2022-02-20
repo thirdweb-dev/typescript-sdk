@@ -109,6 +109,11 @@ export class Pack implements UpdateableNetwork {
    * READ FUNCTIONS
    *******************************/
 
+  /**
+   * Get a pack by id
+   * @param packId - the id of the pack to fetch
+   * @returns the pack metadata
+   */
   public async get(packId: string): Promise<PackMetadata> {
     const [meta, state, supply] = await Promise.all([
       fetchTokenMetadataForContract(

@@ -52,7 +52,7 @@ const pack = sdk.getPack("{{contract_address}}");
 |  [balanceOf(address, tokenId)](./sdk.pack.balanceof.md) |  | Get Pack Balance |
 |  [create(args)](./sdk.pack.create.md) |  | Create Pack |
 |  [depositLink(amount)](./sdk.pack.depositlink.md) |  |  |
-|  [get(packId)](./sdk.pack.get.md) |  | \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* READ FUNCTIONS \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* |
+|  [get(packId)](./sdk.pack.get.md) |  | Get a pack by id |
 |  [getAddress()](./sdk.pack.getaddress.md) |  |  |
 |  [getAll()](./sdk.pack.getall.md) |  | Get Pack Data |
 |  [getLinkBalance()](./sdk.pack.getlinkbalance.md) |  |  |
