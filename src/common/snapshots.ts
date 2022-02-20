@@ -1,7 +1,13 @@
 import { IStorage } from "../core/interfaces/IStorage";
 import MerkleTree from "merkletreejs";
-import { SnapshotSchema } from "../schema/contracts/common/snapshots";
-import { SnapshotInfo } from "../types/claim-conditions/PublicClaimCondition";
+import {
+  SnapshotInputSchema,
+  SnapshotSchema,
+} from "../schema/contracts/common/snapshots";
+import {
+  SnapshotInfo,
+  SnapshotInput,
+} from "../types/claim-conditions/claim-conditions";
 import { DuplicateLeafsError } from "./error";
 import keccak256 from "keccak256";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -10,25 +16,31 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  * Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS
  * @param leafs - the list of addresses to hash
  * @returns the generated snapshot and URI
+ * @internal
  */
 export async function createSnapshot(
-  leafs: string[],
+  snapshotInput: SnapshotInput,
   storage: IStorage,
-  maxClaimablePerAddress?: number[],
 ): Promise<SnapshotInfo> {
-  const hasDuplicates = new Set(leafs).size < leafs.length;
+  const input = SnapshotInputSchema.parse(snapshotInput);
+  const hasDuplicates = new Set(input.addresses).size < input.addresses.length;
   if (hasDuplicates) {
     throw new DuplicateLeafsError();
   }
 
   let maxClaimable: BigNumberish[];
-  if (maxClaimablePerAddress) {
-    maxClaimable = maxClaimablePerAddress;
+  if (input.maxClaimablePerAddress) {
+    if (input.maxClaimablePerAddress.length !== input.addresses.length) {
+      throw new Error(
+        "maxClaimablePerAddress array must be the same length as as the addresses array",
+      );
+    }
+    maxClaimable = input.maxClaimablePerAddress;
   } else {
-    maxClaimable = Array(leafs.length).fill(0);
+    maxClaimable = Array(input.addresses.length).fill(0);
   }
 
-  const hashedLeafs = leafs.map((l, index) =>
+  const hashedLeafs = input.addresses.map((l, index) =>
     hashLeafNode(l, maxClaimable[index]),
   );
   const tree = new MerkleTree(hashedLeafs, keccak256, {
@@ -37,10 +49,11 @@ export async function createSnapshot(
 
   const snapshot = SnapshotSchema.parse({
     merkleRoot: tree.getHexRoot(),
-    claims: leafs.map((l, index) => {
+    claims: input.addresses.map((l, index) => {
       const proof = tree.getHexProof(hashedLeafs[index]);
       return {
         address: l,
+        maxClaimable: maxClaimable[index],
         proof,
       };
     }),

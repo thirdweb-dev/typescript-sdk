@@ -1,4 +1,4 @@
-export * from "./claim-conditions/PublicClaimCondition";
+export * from "./claim-conditions/claim-conditions";
 // export * from "./marketplace";
 // export * from "./ContractMetadata";
 // export * from "./signature-minting";

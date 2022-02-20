@@ -1,5 +1,6 @@
 import {
   SnapshotInfoSchema,
+  SnapshotInputSchema,
   SnapshotSchema,
 } from "../../schema/contracts/common/snapshots";
 import { z } from "zod";
@@ -24,6 +25,11 @@ export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
  * @internal
  */
 export type Snapshot = z.output<typeof SnapshotSchema>;
+
+/**
+ * Input model to pass a snapshot of addresses + amount claimable for a claim condition
+ */
+export type SnapshotInput = z.output<typeof SnapshotInputSchema>;
 
 /**
  * Input model to create a claim condition with optional snapshot of wallets

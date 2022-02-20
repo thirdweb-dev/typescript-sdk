@@ -17,7 +17,7 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../schema/tokens/common";
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { BigNumberish, BytesLike } from "ethers";
 import { hexZeroPad } from "ethers/lib/utils";
 import { prepareClaim } from "../common/claim-conditions";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
