@@ -1,3 +1,5 @@
+require("isomorphic-fetch");
+
 export * from "./core";
 export * from "./contracts";
 export * from "./types";

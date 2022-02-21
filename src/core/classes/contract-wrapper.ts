@@ -30,12 +30,6 @@ import { getContractAddressByChainId } from "../../constants/addresses";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 
-if (!globalThis.fetch) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  globalThis.fetch = require("node-fetch");
-}
-
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
