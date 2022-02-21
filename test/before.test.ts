@@ -143,7 +143,7 @@ before(async () => {
   }
 
   for (const contractType in CONTRACTS_MAP) {
-    const contract = CONTRACTS_MAP[contractType];
+    const contract = CONTRACTS_MAP[contractType as ContractType];
     const factory = contract.contractFactory;
 
     const contractFactory = new ethers.ContractFactory(
