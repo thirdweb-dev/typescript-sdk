@@ -25,12 +25,12 @@ import {
 export class ContractDeployer extends RPCConnectionHandler {
   /**
    * @internal
-   * should never be accessed directly, use {@link getFactory} instead
+   * should never be accessed directly, use {@link ContractDeployer.getFactory} instead
    */
   private _factory: Promise<ContractFactory> | undefined;
   /**
    * @internal
-   * should never be accessed directly, use {@link getRegistry} instead
+   * should never be accessed directly, use {@link ContractDeployer.getRegistry} instead
    */
   private _registry: Promise<ContractRegistry> | undefined;
   private storage: IStorage;

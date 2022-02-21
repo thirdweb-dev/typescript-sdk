@@ -21,7 +21,7 @@ setBidBufferBps(bufferBps: BigNumberish): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  bufferBps | BigNumberish |  |
+|  bufferBps | BigNumberish | the bps value |
 
 <b>Returns:</b>
 

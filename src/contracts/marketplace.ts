@@ -117,7 +117,7 @@ export class Marketplace implements UpdateableNetwork {
   /**
    * Convenience function to get either a direct or auction listing
    *
-   * @param listingId the listing id
+   * @param listingId - the listing id
    * @returns either a direct or auction listing
    */
   public async getListing(
@@ -255,7 +255,7 @@ export class Marketplace implements UpdateableNetwork {
 
   /**
    * Set the Bid buffer: this is a percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.
-   * @param bufferBps
+   * @param bufferBps - the bps value
    */
   public async setBidBufferBps(bufferBps: BigNumberish): Promise<void> {
     await this.roles.verify(
@@ -272,7 +272,7 @@ export class Marketplace implements UpdateableNetwork {
 
   /**
    * Set the Time buffer: this is measured in seconds (e.g. 15 minutes or 900 seconds). If a winning bid is made within the buffer of the auction closing (e.g. 15 minutes within the auction closing), the auction's closing time is increased by the buffer to prevent buyers from making last minute winning bids, and to give time to other buyers to make a higher bid if they wish to.
-   * @param bufferInSeconds
+   * @param bufferInSeconds - the seconds value
    */
   public async setTimeBufferInSeconds(
     bufferInSeconds: BigNumberish,

@@ -417,7 +417,7 @@ export class MarketplaceAuction {
 
   /**
    * Update an Auction listing with new metadata
-   * @param listing
+   * @param listing - the listing id to update
    */
   public async updateListing(
     listing: AuctionListing,

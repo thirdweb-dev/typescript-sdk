@@ -16,8 +16,8 @@ decode(fn: keyof TContract["functions"], encodedArgs: string): Result;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  fn | keyof TContract\["functions"\] |  |
-|  encodedArgs | string |  |
+|  fn | keyof TContract\["functions"\] | the function to decode |
+|  encodedArgs | string | the encoded arguments |
 
 <b>Returns:</b>
 
