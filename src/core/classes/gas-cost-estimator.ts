@@ -19,8 +19,16 @@ export class GasCostEstimator<TContract extends BaseContract> {
     fn: keyof TContract["functions"],
     args: Parameters<TContract["functions"][typeof fn]>,
   ): Promise<string> {
-    const price = await this.contractWrapper.getProvider().getGasPrice();
+    const price = await this.contractWrapper.getPreferredGasPrice();
     const gasUnits = await this.contractWrapper.estimateGas(fn, args);
     return ethers.utils.formatEther(gasUnits.mul(price));
+  }
+
+  /**
+   * Returns the current gas price in gwei
+   */
+  public async currentGasPriceInGwei(): Promise<string> {
+    const price = await this.contractWrapper.getProvider().getGasPrice();
+    return ethers.utils.formatUnits(price, "gwei");
   }
 }

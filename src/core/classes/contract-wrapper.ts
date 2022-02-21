@@ -16,7 +16,6 @@ import {
   NetworkOrSignerOrProvider,
   PermitRequestMessage,
 } from "../types";
-import { getGasPriceForChain } from "../../common/gas-price";
 import { EventType } from "../../constants/events";
 import { Log, TransactionReceipt } from "@ethersproject/providers";
 import invariant from "tiny-invariant";
@@ -100,21 +99,37 @@ export class ContractWrapper<
    * @internal
    */
   public async getCallOverrides(): Promise<CallOverrides> {
-    const chainId = await this.getChainID();
-    const speed = this.options.gasSettings?.speed || "fastest";
-    const maxGasPrice = this.options.gasSettings?.maxPriceInGwei || 300;
-    const gasPriceChain = await getGasPriceForChain(
-      chainId,
-      speed,
-      maxGasPrice,
-    );
-    if (!gasPriceChain) {
-      return {};
-    }
-    // TODO: support EIP-1559 by try-catch, provider.getFeeData();
     return {
-      gasPrice: ethers.utils.parseUnits(gasPriceChain.toString(), "gwei"),
+      gasPrice: await this.getPreferredGasPrice(),
     };
+  }
+
+  /**
+   * Calculates the gas price for transactions according to user preferences
+   */
+  public async getPreferredGasPrice(): Promise<BigNumber> {
+    const gasPrice = await this.getProvider().getGasPrice();
+    const speed = this.options.gasSettings.speed;
+    const maxGasPrice = this.options.gasSettings.maxPriceInGwei;
+    let txGasPrice = gasPrice;
+    let extraTip;
+    switch (speed) {
+      case "standard":
+        extraTip = BigNumber.from(1); // min 1 wei
+        break;
+      case "fast":
+        extraTip = gasPrice.div(100).mul(5); // + 5%
+        break;
+      case "fastest":
+        extraTip = gasPrice.div(100).mul(10); // + 10%
+        break;
+    }
+    txGasPrice = txGasPrice.add(extraTip);
+    const max = BigNumber.from(maxGasPrice);
+    if (txGasPrice.gt(max)) {
+      txGasPrice = max;
+    }
+    return ethers.utils.parseUnits(txGasPrice.toString(), "gwei");
   }
 
   /**

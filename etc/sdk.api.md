@@ -1145,6 +1145,7 @@ export class FunctionDeprecatedError extends Error {
 // @public
 export class GasCostEstimator<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
+    currentGasPriceInGwei(): Promise<string>;
     gasCostOf(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): Promise<string>;
 }
 

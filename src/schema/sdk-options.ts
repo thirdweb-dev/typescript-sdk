@@ -15,9 +15,7 @@ export const SDKOptionsSchema = z
           .number()
           .min(1, "gas price cannot be less than 1")
           .default(300),
-        speed: z
-          .enum(["safeLow", "standard", "fast", "fastest"])
-          .default("fastest"),
+        speed: z.enum(["standard", "fast", "fastest"]).default("fastest"),
       })
       .default({ maxPriceInGwei: 300, speed: "fastest" }),
     gasless: z
