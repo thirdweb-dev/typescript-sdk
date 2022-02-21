@@ -45,12 +45,6 @@ hide_title: true
 |  --- | --- |
 |  [ChainId](./sdk.chainid.md) |  |
 
-## Functions
-
-|  Function | Description |
-|  --- | --- |
-|  [hashLeafNode(address, maxClaimableAmount)](./sdk.hashleafnode.md) |  |
-
 ## Interfaces
 
 |  Interface | Description |

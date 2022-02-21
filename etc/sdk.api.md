@@ -1168,7 +1168,9 @@ export interface GaslessTransaction {
     to: string;
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "hashLeafNode" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export function hashLeafNode(address: string, maxClaimableAmount: BigNumberish): string;
 
 // Warning: (ae-internal-missing-underscore) The name "InvalidAddressError" should be prefixed with an underscore because the declaration is marked as @internal

@@ -67,6 +67,12 @@ export async function createSnapshot(
   };
 }
 
+/**
+ * Hash an address and the corresponding claimable amount
+ * @internal
+ * @param address
+ * @param maxClaimableAmount
+ */
 export function hashLeafNode(
   address: string,
   maxClaimableAmount: BigNumberish,
