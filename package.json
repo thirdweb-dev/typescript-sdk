@@ -50,7 +50,7 @@
     "@types/lodash.isequal": "^4.5.5",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.7",
-    "@types/node-fetch": "^2",
+    "@types/node-fetch": "^3",
     "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
