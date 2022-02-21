@@ -92,19 +92,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
     );
   }
 
-  public addTransferEventListener(
-    listener: (from: string, to: string, tokenId: BigNumber) => void,
-  ) {
-    this.contractWrapper.readContract.on("Transfer", (from, to, tokenId) => {
-      console.log("Transfer", from, to, tokenId);
-      listener(from, to, tokenId);
-    });
-  }
-
-  public removeTransferEventListeners() {
-    this.contractWrapper.readContract.removeAllListeners("Transfer");
-  }
-
   /** ******************************
    * WRITE FUNCTIONS
    *******************************/
@@ -241,5 +228,23 @@ export class NFTCollection extends Erc721<TokenERC721> {
         data: () => this.get(id),
       };
     });
+  }
+
+  /**
+   * @internal
+   */
+  public addTransferEventListener(
+    listener: (from: string, to: string, tokenId: BigNumber) => void,
+  ) {
+    this.contractWrapper.readContract.on("Transfer", (from, to, tokenId) => {
+      listener(from, to, tokenId);
+    });
+  }
+
+  /**
+   * @internal
+   */
+  public removeTransferEventListeners() {
+    this.contractWrapper.readContract.removeAllListeners("Transfer");
   }
 }

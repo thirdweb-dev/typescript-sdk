@@ -21,9 +21,3 @@ export * from "./schema/tokens/token";
 export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
 export type { SDKOptions } from "./schema/sdk-options";
-
-if (!globalThis.fetch) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  globalThis.fetch = require("node-fetch");
-}

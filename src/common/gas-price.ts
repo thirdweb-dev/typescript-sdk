@@ -1,5 +1,11 @@
 import { ChainId } from "../constants/chains";
 
+if (!globalThis.fetch) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  globalThis.fetch = require("node-fetch");
+}
+
 /**
  * @internal
  */

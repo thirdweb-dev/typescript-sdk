@@ -55,9 +55,7 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [addTransferEventListener(listener)](./sdk.nftcollection.addtransfereventlistener.md) |  |  |
 |  [mint(metadata)](./sdk.nftcollection.mint.md) |  | Mint an NFT to the connected wallet |
 |  [mintBatch(metadatas)](./sdk.nftcollection.mintbatch.md) |  | Mint Many NFTs to the connected wallet |
 |  [mintBatchTo(to, metadatas)](./sdk.nftcollection.mintbatchto.md) |  | Mint Many unique NFTs |
 |  [mintTo(to, metadata)](./sdk.nftcollection.mintto.md) |  | Mint a unique NFT |
-|  [removeTransferEventListeners()](./sdk.nftcollection.removetransfereventlisteners.md) |  |  |

@@ -21,7 +21,11 @@ if (!globalThis.FormData) {
   globalThis.FormData = require("form-data");
 }
 
-// const thirdwebIpfsServerUrl = "http://localhost:3002";
+if (!globalThis.fetch) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  globalThis.fetch = require("node-fetch");
+}
 
 /**
  * @internal
