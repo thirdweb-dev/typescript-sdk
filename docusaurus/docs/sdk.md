@@ -85,12 +85,25 @@ hide_title: true
 |  [CommonRoyaltySchema](./sdk.commonroyaltyschema.md) |  |
 |  [CommonSymbolSchema](./sdk.commonsymbolschema.md) |  |
 |  [CommonTrustedForwarderSchema](./sdk.commontrustedforwarderschema.md) |  |
+|  [CurrencySchema](./sdk.currencyschema.md) |  |
+|  [CurrencyValueSchema](./sdk.currencyvalueschema.md) |  |
 |  [DEFAULT\_QUERY\_ALL\_COUNT](./sdk.default_query_all_count.md) |  |
 |  [EditionMetadataInputSchema](./sdk.editionmetadatainputschema.md) |  |
 |  [EditionMetadataOutputSchema](./sdk.editionmetadataoutputschema.md) |  |
+|  [MerkleSchema](./sdk.merkleschema.md) |  |
+|  [MintRequest1155](./sdk.mintrequest1155.md) |  |
+|  [MintRequest721](./sdk.mintrequest721.md) |  |
 |  [OptionalPropertiesInput](./sdk.optionalpropertiesinput.md) |  |
 |  [OptionalPropertiesOutput](./sdk.optionalpropertiesoutput.md) |  |
 |  [PartialClaimConditionInputSchema](./sdk.partialclaimconditioninputschema.md) |  |
+|  [Signature1155PayloadInput](./sdk.signature1155payloadinput.md) |  |
+|  [Signature1155PayloadOutput](./sdk.signature1155payloadoutput.md) |  |
+|  [SignaturePayloadInput](./sdk.signaturepayloadinput.md) |  |
+|  [SignaturePayloadOutput](./sdk.signaturepayloadoutput.md) |  |
+|  [SnapshotInfoSchema](./sdk.snapshotinfoschema.md) |  |
+|  [SnapshotInputSchema](./sdk.snapshotinputschema.md) |  |
+|  [SnapshotJSONInputSchema](./sdk.snapshotjsoninputschema.md) |  |
+|  [SnapshotSchema](./sdk.snapshotschema.md) |  |
 |  [SUPPORTED\_CHAIN\_IDS](./sdk.supported_chain_ids.md) |  |
 |  [TokenMintInputSchema](./sdk.tokenmintinputschema.md) |  |
 
@@ -113,10 +126,14 @@ hide_title: true
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
+|  [PayloadToSign](./sdk.payloadtosign.md) |  |
+|  [PayloadToSign1155](./sdk.payloadtosign1155.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [Price](./sdk.price.md) | Represents a currency price already formatted. ie. "1" for 1 ether. |
 |  [Role](./sdk.role.md) |  |
 |  [SDKOptions](./sdk.sdkoptions.md) |  |
+|  [SignedPayload](./sdk.signedpayload.md) |  |
+|  [SignedPayload1155](./sdk.signedpayload1155.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |
 |  [SnapshotInput](./sdk.snapshotinput.md) | Input model to pass a snapshot of addresses + amount claimable for a claim condition |
 |  [SUPPORTED\_CHAIN\_ID](./sdk.supported_chain_id.md) |  |
