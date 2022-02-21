@@ -13,5 +13,6 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-declare type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
+export declare type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
 ```
+<b>References:</b> [EditionMetadataOutputSchema](./sdk.editionmetadataoutputschema.md)

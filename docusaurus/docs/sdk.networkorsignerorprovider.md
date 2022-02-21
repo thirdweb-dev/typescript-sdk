@@ -12,5 +12,5 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-declare type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
+export declare type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 ```

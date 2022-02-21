@@ -14,7 +14,7 @@ Handles direct listings
 <b>Signature:</b>
 
 ```typescript
-declare class MarketplaceDirect 
+export declare class MarketplaceDirect 
 ```
 
 ## Constructors
@@ -35,4 +35,4 @@ declare class MarketplaceDirect
 |  [getAddress()](./sdk.marketplacedirect.getaddress.md) |  |  |
 |  [getListing(listingId)](./sdk.marketplacedirect.getlisting.md) |  | Get a direct listing by id |
 |  [makeOffer(listingId, quantityDesired, currencyContractAddress, pricePerToken)](./sdk.marketplacedirect.makeoffer.md) |  | Make an offer for a Direct Listing |
-|  [updateListing(listing)](./sdk.marketplacedirect.updatelisting.md) |  | Update a Direct listing with new metadata.<!-- -->Note: cannot update a listing with a new quantity of 0. Use <code>cancelDirectListing</code> to remove a listing instead. |
+|  [updateListing(listing)](./sdk.marketplacedirect.updatelisting.md) |  | Update a Direct listing with new metadata.Note: cannot update a listing with a new quantity of 0. Use <code>cancelDirectListing</code> to remove a listing instead. |

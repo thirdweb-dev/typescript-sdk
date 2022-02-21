@@ -17,12 +17,12 @@ set(tokenId: BigNumberish, claimConditionInputs: ClaimConditionInput[], resetCla
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  tokenId | BigNumberish | The id of the NFT to set the claim conditions on |
-|  claimConditionInputs | ClaimConditionInput\[\] | The claim conditions |
+|  claimConditionInputs | [ClaimConditionInput](./sdk.claimconditioninput.md)<!-- -->\[\] | The claim conditions |
 |  resetClaimEligibilityForAll | boolean | Whether to reset the state of who already claimed NFTs previously |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
 
 ## Remarks
 

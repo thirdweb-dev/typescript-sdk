@@ -14,7 +14,7 @@ Handles auction listings
 <b>Signature:</b>
 
 ```typescript
-declare class MarketplaceAuction 
+export declare class MarketplaceAuction 
 ```
 
 ## Constructors

@@ -16,11 +16,11 @@ create(args: IPackCreateArgs): Promise<TransactionResultWithId<PackMetadata>>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | IPackCreateArgs | Args for the pack creation |
+|  args | [IPackCreateArgs](./sdk.ipackcreateargs.md) | Args for the pack creation |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResultWithId&lt;PackMetadata&gt;&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->&gt;&gt;
 
 - The newly created pack metadata
 

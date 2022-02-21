@@ -16,4 +16,4 @@ getLinkBalance(): Promise<CurrencyValue>;
 ```
 <b>Returns:</b>
 
-Promise&lt;CurrencyValue&gt;
+Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)&gt;

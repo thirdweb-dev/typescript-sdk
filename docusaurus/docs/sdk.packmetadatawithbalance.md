@@ -13,9 +13,9 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-interface PackMetadataWithBalance extends PackMetadata 
+export interface PackMetadataWithBalance extends PackMetadata 
 ```
-<b>Extends:</b> PackMetadata
+<b>Extends:</b> [PackMetadata](./sdk.packmetadata.md)
 
 ## Properties
 

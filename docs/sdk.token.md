@@ -9,9 +9,9 @@ Create a standard crypto token or crypto currency.
 <b>Signature:</b>
 
 ```typescript
-declare class Token extends Erc20<TokenERC20> 
+export declare class Token extends Erc20<TokenERC20> 
 ```
-<b>Extends:</b> Erc20&lt;TokenERC20&gt;
+<b>Extends:</b> [Erc20](./sdk.erc20.md)<!-- -->&lt;TokenERC20&gt;
 
 ## Example
 
@@ -38,10 +38,10 @@ const contract = sdk.getToken("{{contract_address}}");
 |  [contractFactory](./sdk.token.contractfactory.md) | <code>static</code> | typeof TokenERC20\_\_factory |  |
 |  [contractRoles](./sdk.token.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.token.contracttype.md) | <code>static</code> | "token" |  |
-|  [encoder](./sdk.token.encoder.md) |  | ContractEncoder&lt;TokenERC20&gt; |  |
-|  [estimator](./sdk.token.estimator.md) |  | GasCostEstimator&lt;TokenERC20&gt; |  |
-|  [metadata](./sdk.token.metadata.md) |  | ContractMetadata&lt;TokenERC20, typeof Token.schema&gt; |  |
-|  [roles](./sdk.token.roles.md) |  | ContractRoles&lt;TokenERC20, typeof Token.contractRoles\[number\]&gt; |  |
+|  [encoder](./sdk.token.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;TokenERC20&gt; |  |
+|  [estimator](./sdk.token.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TokenERC20&gt; |  |
+|  [metadata](./sdk.token.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC20, typeof Token.schema&gt; |  |
+|  [roles](./sdk.token.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC20, typeof [Token.contractRoles](./sdk.token.contractroles.md)<!-- -->\[number\]&gt; |  |
 
 ## Methods
 

@@ -17,17 +17,17 @@ CurrencyValueSchema: z.ZodObject<z.extendShape<{
     symbol: z.ZodString;
     decimals: z.ZodNumber;
 }, {
-    value: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
+    value: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<import("ethers").BigNumber, z.ZodTypeDef, import("ethers").BigNumber>]>, import("ethers").BigNumber, string | number | bigint | import("ethers").BigNumber>;
     displayValue: z.ZodString;
 }>, "strip", z.ZodTypeAny, {
     symbol: string;
-    value: ethers.BigNumber;
+    value: import("ethers").BigNumber;
     name: string;
     decimals: number;
     displayValue: string;
 }, {
     symbol: string;
-    value: string | number | bigint | ethers.BigNumber;
+    value: string | number | bigint | import("ethers").BigNumber;
     name: string;
     decimals: number;
     displayValue: string;

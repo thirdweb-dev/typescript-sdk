@@ -8,7 +8,7 @@
 <b>Signature:</b>
 
 ```typescript
-interface QueryAllParams 
+export interface QueryAllParams 
 ```
 
 ## Properties

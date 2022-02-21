@@ -12,5 +12,6 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-declare type FileOrBuffer = File | Buffer | BufferOrStringWithName;
+export declare type FileOrBuffer = File | Buffer | BufferOrStringWithName;
 ```
+<b>References:</b> [BufferOrStringWithName](./sdk.bufferorstringwithname.md)

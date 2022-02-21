@@ -21,8 +21,8 @@ updateListing(listing: AuctionListing): Promise<TransactionResult>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listing | AuctionListing | the listing id to update |
+|  listing | [AuctionListing](./sdk.auctionlisting.md) | the listing id to update |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

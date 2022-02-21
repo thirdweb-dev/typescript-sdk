@@ -28,7 +28,7 @@ claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberis
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 - Receipt for the transaction
 

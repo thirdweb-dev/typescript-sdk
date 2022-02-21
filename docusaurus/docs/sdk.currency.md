@@ -9,10 +9,9 @@ hide_title: true
 
 ## Currency type
 
-Currency metadata.
-
 <b>Signature:</b>
 
 ```typescript
-declare type Currency = z.infer<typeof CurrencySchema>;
+export declare type Currency = z.infer<typeof CurrencySchema>;
 ```
+<b>References:</b> [CurrencySchema](./sdk.currencyschema.md)

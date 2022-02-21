@@ -14,9 +14,9 @@ Setup a collection of NFTs with a customizable number of each NFT that are minte
 <b>Signature:</b>
 
 ```typescript
-declare class EditionDrop extends Erc1155<DropERC1155> 
+export declare class EditionDrop extends Erc1155<DropERC1155> 
 ```
-<b>Extends:</b> Erc1155&lt;DropERC1155&gt;
+<b>Extends:</b> [Erc1155](./sdk.erc1155.md)&lt;DropERC1155&gt;
 
 ## Example
 
@@ -40,16 +40,16 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [claimConditions](./sdk.editiondrop.claimconditions.md) |  | DropErc1155ClaimConditions |  |
+|  [claimConditions](./sdk.editiondrop.claimconditions.md) |  | [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) |  |
 |  [contractFactory](./sdk.editiondrop.contractfactory.md) | <code>static</code> | typeof DropERC1155\_\_factory |  |
 |  [contractRoles](./sdk.editiondrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.editiondrop.contracttype.md) | <code>static</code> | "edition-drop" |  |
-|  [encoder](./sdk.editiondrop.encoder.md) |  | ContractEncoder&lt;DropERC1155&gt; |  |
-|  [estimator](./sdk.editiondrop.estimator.md) |  | GasCostEstimator&lt;DropERC1155&gt; |  |
-|  [metadata](./sdk.editiondrop.metadata.md) |  | ContractMetadata&lt;DropERC1155, typeof EditionDrop.schema&gt; |  |
-|  [primarySale](./sdk.editiondrop.primarysale.md) |  | ContractPrimarySale&lt;DropERC1155&gt; |  |
-|  [roles](./sdk.editiondrop.roles.md) |  | ContractRoles&lt;DropERC1155, typeof EditionDrop.contractRoles\[number\]&gt; |  |
-|  [royalty](./sdk.editiondrop.royalty.md) |  | ContractRoyalty&lt;DropERC1155, typeof EditionDrop.schema&gt; |  |
+|  [encoder](./sdk.editiondrop.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)&lt;DropERC1155&gt; |  |
+|  [estimator](./sdk.editiondrop.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)&lt;DropERC1155&gt; |  |
+|  [metadata](./sdk.editiondrop.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)&lt;DropERC1155, typeof EditionDrop.schema&gt; |  |
+|  [primarySale](./sdk.editiondrop.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)&lt;DropERC1155&gt; |  |
+|  [roles](./sdk.editiondrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)&lt;DropERC1155, typeof [EditionDrop.contractRoles](./sdk.editiondrop.contractroles.md)\[number\]&gt; |  |
+|  [royalty](./sdk.editiondrop.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)&lt;DropERC1155, typeof EditionDrop.schema&gt; |  |
 
 ## Methods
 

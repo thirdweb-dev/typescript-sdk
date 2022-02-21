@@ -14,12 +14,12 @@ hide_title: true
 ```typescript
 TokenMintInputSchema: z.ZodObject<{
     toAddress: z.ZodString;
-    amount: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
+    amount: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<import("ethers").BigNumber, z.ZodTypeDef, import("ethers").BigNumber>]>, import("ethers").BigNumber, string | number | bigint | import("ethers").BigNumber>, string, string | number | bigint | import("ethers").BigNumber>;
 }, "strip", z.ZodTypeAny, {
     toAddress: string;
     amount: string;
 }, {
     toAddress: string;
-    amount: string | number | bigint | ethers.BigNumber;
+    amount: string | number | bigint | import("ethers").BigNumber;
 }>
 ```

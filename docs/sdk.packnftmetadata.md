@@ -8,13 +8,13 @@
 <b>Signature:</b>
 
 ```typescript
-interface PackNFTMetadata 
+export interface PackNFTMetadata 
 ```
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [metadata](./sdk.packnftmetadata.metadata.md) | NFTMetadata |  |
+|  [metadata](./sdk.packnftmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [supply](./sdk.packnftmetadata.supply.md) | BigNumber |  |
 

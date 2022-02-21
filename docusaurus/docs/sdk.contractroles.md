@@ -14,7 +14,7 @@ Handles Contract roles and permissions
 <b>Signature:</b>
 
 ```typescript
-declare class ContractRoles<TContract extends AccessControlEnumerable, TRole extends Role> 
+export declare class ContractRoles<TContract extends AccessControlEnumerable, TRole extends Role> 
 ```
 
 ## Constructors
@@ -31,4 +31,4 @@ declare class ContractRoles<TContract extends AccessControlEnumerable, TRole ext
 |  [getAll()](./sdk.contractroles.getall.md) |  | Call this to get get a list of addresses for all supported roles on the contract. |
 |  [grant(role, address)](./sdk.contractroles.grant.md) |  | Call this to grant a role to a specific address. |
 |  [revoke(role, address)](./sdk.contractroles.revoke.md) |  | Call this to revoke a role from a specific address. |
-|  [setAll(rolesWithAddresses)](./sdk.contractroles.setall.md) |  | Call this to OVERWRITE the list of addresses that are members of specific roles.<!-- -->Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use [ContractRoles.grant()](./sdk.contractroles.grant.md) and [ContractRoles.revoke()](./sdk.contractroles.revoke.md) respectively instead. |
+|  [setAll(rolesWithAddresses)](./sdk.contractroles.setall.md) |  | Call this to OVERWRITE the list of addresses that are members of specific roles.Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use [ContractRoles.grant()](./sdk.contractroles.grant.md) and [ContractRoles.revoke()](./sdk.contractroles.revoke.md) respectively instead. |

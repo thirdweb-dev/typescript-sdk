@@ -21,11 +21,11 @@ createListing(listing: NewDirectListing): Promise<TransactionResultWithId>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listing | NewDirectListing |  |
+|  listing | [NewDirectListing](./sdk.newdirectlisting.md) |  |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResultWithId&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&gt;
 
 ## Remarks
 

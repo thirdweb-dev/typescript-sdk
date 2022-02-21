@@ -14,5 +14,5 @@ Represents a currency price already formatted. ie. "1" for 1 ether.
 <b>Signature:</b>
 
 ```typescript
-declare type Price = z.input<typeof PriceSchema>;
+export declare type Price = z.input<typeof PriceSchema>;
 ```

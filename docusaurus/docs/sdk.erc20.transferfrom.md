@@ -27,7 +27,7 @@ transferFrom(from: string, to: string, amount: BigNumberish): Promise<Transactio
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

@@ -12,5 +12,5 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-declare type SignerOrProvider = Signer | Provider;
+export declare type SignerOrProvider = Signer | Provider;
 ```

@@ -26,7 +26,7 @@
         "signature": "mintTo(to: string, metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;"
       }
     ],
-    "signature": "declare class Edition extends Erc1155<TokenERC1155> "
+    "signature": "export declare class Edition extends Erc1155<TokenERC1155> "
   },
   "EditionDrop": {
     "name": "EditionDrop",
@@ -55,7 +55,7 @@
         "signature": "createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;"
       }
     ],
-    "signature": "declare class EditionDrop extends Erc1155<DropERC1155> "
+    "signature": "export declare class EditionDrop extends Erc1155<DropERC1155> "
   },
   "Marketplace": {
     "name": "Marketplace",
@@ -65,7 +65,7 @@
       "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getMarketplace(\"{{contract_address}}\");"
     },
     "methods": [],
-    "signature": "declare class Marketplace implements UpdateableNetwork "
+    "signature": "export declare class Marketplace implements UpdateableNetwork "
   },
   "NFTCollection": {
     "name": "NFTCollection",
@@ -94,7 +94,7 @@
         "signature": "mintTo(to: string, metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;"
       }
     ],
-    "signature": "declare class NFTCollection extends Erc721<TokenERC721> "
+    "signature": "export declare class NFTCollection extends Erc721<TokenERC721> "
   },
   "NFTDrop": {
     "name": "NFTDrop",
@@ -159,7 +159,7 @@
         "signature": "totalUnclaimedSupply(): Promise<BigNumber>;"
       }
     ],
-    "signature": "declare class NFTDrop extends Erc721<DropERC721> "
+    "signature": "export declare class NFTDrop extends Erc721<DropERC721> "
   },
   "Pack": {
     "name": "Pack",
@@ -224,7 +224,7 @@
         "signature": "transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionResult>;"
       }
     ],
-    "signature": "declare class Pack implements UpdateableNetwork "
+    "signature": "export declare class Pack implements UpdateableNetwork "
   },
   "Split": {
     "name": "Split",
@@ -280,7 +280,7 @@
         "signature": "getAllRecipients(): Promise<SplitRecipient[]>;"
       }
     ],
-    "signature": "declare class Split implements UpdateableNetwork "
+    "signature": "export declare class Split implements UpdateableNetwork "
   },
   "Token": {
     "name": "Token",
@@ -309,7 +309,7 @@
         "signature": "mintTo(to: string, amount: BigNumberish): Promise<TransactionResult>;"
       }
     ],
-    "signature": "declare class Token extends Erc20<TokenERC20> "
+    "signature": "export declare class Token extends Erc20<TokenERC20> "
   },
   "Vote": {
     "name": "Vote",
@@ -374,6 +374,6 @@
         "signature": "vote(proposalId: string, voteType: VoteType, reason?: string): Promise<TransactionResult>;"
       }
     ],
-    "signature": "declare class Vote implements UpdateableNetwork "
+    "signature": "export declare class Vote implements UpdateableNetwork "
   }
 }

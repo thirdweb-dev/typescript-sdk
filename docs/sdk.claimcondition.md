@@ -9,5 +9,7 @@ Represents a claim condition fetched from the SDK
 <b>Signature:</b>
 
 ```typescript
-declare type ClaimCondition = z.output<typeof ClaimConditionOutputSchema>;
+export declare type ClaimCondition = z.output<typeof ClaimConditionOutputSchema>;
 ```
+<b>References:</b> [ClaimConditionOutputSchema](./sdk.claimconditionoutputschema.md)
+

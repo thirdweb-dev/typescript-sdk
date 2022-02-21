@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-declare type SignedPayload = {
+export declare type SignedPayload = {
     payload: PayloadWithUri;
     signature: string;
 };

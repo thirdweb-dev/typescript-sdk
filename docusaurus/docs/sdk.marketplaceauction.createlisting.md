@@ -21,11 +21,11 @@ createListing(listing: NewAuctionListing): Promise<TransactionResultWithId>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listing | NewAuctionListing |  |
+|  listing | [NewAuctionListing](./sdk.newauctionlisting.md) |  |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResultWithId&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&gt;
 
 ## Remarks
 

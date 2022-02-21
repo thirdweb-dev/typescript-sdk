@@ -12,5 +12,5 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-metadata: ContractMetadata<Split$1, typeof Split.schema>;
+metadata: ContractMetadata<SplitContract, typeof Split.schema>;
 ```

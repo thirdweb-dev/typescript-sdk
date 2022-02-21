@@ -27,7 +27,7 @@ vote(proposalId: string, voteType: VoteType, reason?: string): Promise<Transacti
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

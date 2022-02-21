@@ -12,7 +12,7 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-interface ProposalVote 
+export interface ProposalVote 
 ```
 
 ## Properties

@@ -26,4 +26,4 @@ getActiveOffer(listingId: BigNumberish, address: string): Promise<Offer | undefi
 
 <b>Returns:</b>
 
-Promise&lt;Offer \| undefined&gt;
+Promise&lt;[Offer](./sdk.offer.md) \| undefined&gt;

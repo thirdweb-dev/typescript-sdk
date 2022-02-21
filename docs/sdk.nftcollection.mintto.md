@@ -21,7 +21,7 @@ mintTo(to: string, metadata: NFTMetadataInput): Promise<TransactionResultWithId<
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;&gt;
 
 ## Remarks
 

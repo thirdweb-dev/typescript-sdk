@@ -16,9 +16,9 @@ setDefaultRoyaltyInfo(royaltyData: z.input<typeof CommonRoyaltySchema>): Promise
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  royaltyData | z.input&lt;typeof CommonRoyaltySchema&gt; | the royalty recipient and fee |
+|  royaltyData | z.input&lt;typeof [CommonRoyaltySchema](./sdk.commonroyaltyschema.md)<!-- -->&gt; | the royalty recipient and fee |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&lt;z.output&lt;typeof CommonRoyaltySchema&gt;&gt;&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&lt;z.output&lt;typeof [CommonRoyaltySchema](./sdk.commonroyaltyschema.md)<!-- -->&gt;&gt;&gt;
 

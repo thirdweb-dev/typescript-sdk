@@ -12,7 +12,7 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-interface Proposal 
+export interface Proposal 
 ```
 
 ## Properties
@@ -21,9 +21,9 @@ interface Proposal
 |  --- | --- | --- |
 |  [description](./sdk.proposal.description.md) | string | The description of the proposal. |
 |  [endBlock](./sdk.proposal.endblock.md) | BigNumber |  |
-|  [executions](./sdk.proposal.executions.md) | ProposalExecutable\[\] | All executions that have been proposed for the proposal. |
+|  [executions](./sdk.proposal.executions.md) | [ProposalExecutable](./sdk.proposalexecutable.md)\[\] | All executions that have been proposed for the proposal. |
 |  [proposalId](./sdk.proposal.proposalid.md) | BigNumber | The unique identifier of the proposal. |
 |  [proposer](./sdk.proposal.proposer.md) | string | The address of the wallet that created the proposal. |
 |  [startBlock](./sdk.proposal.startblock.md) | BigNumber |  |
 |  [state](./sdk.proposal.state.md) | ProposalState | The current state of the proposal. |
-|  [votes](./sdk.proposal.votes.md) | ProposalVote\[\] | All votes that have been casted on the proposal. |
+|  [votes](./sdk.proposal.votes.md) | [ProposalVote](./sdk.proposalvote.md)\[\] | All votes that have been casted on the proposal. |

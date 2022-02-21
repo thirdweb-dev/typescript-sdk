@@ -8,7 +8,7 @@
 <b>Signature:</b>
 
 ```typescript
-interface IStorage 
+export interface IStorage 
 ```
 
 ## Methods

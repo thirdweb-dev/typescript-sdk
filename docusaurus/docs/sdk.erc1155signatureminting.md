@@ -14,7 +14,7 @@ Enables generating dynamic ERC1155 NFTs with rules and an associated signature, 
 <b>Signature:</b>
 
 ```typescript
-declare class Erc1155SignatureMinting 
+export declare class Erc1155SignatureMinting 
 ```
 
 ## Constructors

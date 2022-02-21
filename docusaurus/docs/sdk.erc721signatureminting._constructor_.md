@@ -22,5 +22,5 @@ constructor(contractWrapper: ContractWrapper<TokenERC721>, roles: ContractRoles<
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;TokenERC721&gt; |  |
-|  roles | ContractRoles&lt;TokenERC721, typeof NFTCollection.contractRoles\[number\]&gt; |  |
-|  storage | IStorage |  |
+|  roles | [ContractRoles](./sdk.contractroles.md)&lt;TokenERC721, typeof [NFTCollection.contractRoles](./sdk.nftcollection.contractroles.md)\[number\]&gt; |  |
+|  storage | [IStorage](./sdk.istorage.md) |  |

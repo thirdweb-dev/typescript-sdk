@@ -26,7 +26,7 @@ mintTo(to: string, metadataWithSupply: EditionMetadataInput): Promise<Transactio
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResultWithId&lt;EditionMetadata&gt;&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&lt;[EditionMetadata](./sdk.editionmetadata.md)&gt;&gt;
 
 ## Remarks
 

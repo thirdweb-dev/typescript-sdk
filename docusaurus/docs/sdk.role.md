@@ -13,5 +13,5 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-declare type Role = keyof typeof roleMap;
+export declare type Role = keyof typeof roleMap;
 ```

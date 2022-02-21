@@ -13,7 +13,7 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-interface IStorage 
+export interface IStorage 
 ```
 
 ## Methods

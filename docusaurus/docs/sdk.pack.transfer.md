@@ -27,7 +27,7 @@ transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionRes
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

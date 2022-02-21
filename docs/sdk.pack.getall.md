@@ -13,7 +13,7 @@ getAll(): Promise<PackMetadata[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;PackMetadata\[\]&gt;
+Promise&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->\[\]&gt;
 
 The NFT metadata for all NFTs in the contract.
 

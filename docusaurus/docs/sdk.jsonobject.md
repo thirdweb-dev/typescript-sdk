@@ -12,7 +12,8 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-declare type JsonObject = {
+export declare type JsonObject = {
     [key: string]: Json;
 };
 ```
+<b>References:</b> [Json](./sdk.json.md)

@@ -17,6 +17,6 @@ constructor(contractWrapper: ContractWrapper<DropERC1155>, metadata: ContractMet
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;DropERC1155&gt; |  |
-|  metadata | ContractMetadata&lt;DropERC1155, typeof DropErc721ContractSchema&gt; |  |
-|  storage | IStorage |  |
+|  metadata | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;DropERC1155, typeof DropErc721ContractSchema&gt; |  |
+|  storage | [IStorage](./sdk.istorage.md) |  |
 

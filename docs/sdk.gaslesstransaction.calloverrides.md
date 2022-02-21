@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-callOverrides: CallOverrides$1;
+callOverrides: CallOverrides;
 ```

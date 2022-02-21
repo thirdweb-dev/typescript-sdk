@@ -25,7 +25,7 @@ getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
 
 <b>Returns:</b>
 
-Promise&lt;NFTMetadataOwner\[\]&gt;
+Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)\[\]&gt;
 
 The NFT metadata for all NFTs in the contract.
 

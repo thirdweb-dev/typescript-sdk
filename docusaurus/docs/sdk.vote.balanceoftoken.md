@@ -25,6 +25,6 @@ balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
 
 <b>Returns:</b>
 
-Promise&lt;CurrencyValue&gt;
+Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)&gt;
 
 - The balance of the project in the native token of the chain

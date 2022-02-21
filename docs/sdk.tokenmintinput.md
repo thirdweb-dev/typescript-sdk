@@ -7,5 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-declare type TokenMintInput = z.input<typeof TokenMintInputSchema>;
+export declare type TokenMintInput = z.input<typeof TokenMintInputSchema>;
 ```
+<b>References:</b> [TokenMintInputSchema](./sdk.tokenmintinputschema.md)
+

@@ -23,4 +23,4 @@ depositLink(amount: BigNumberish): Promise<TransactionResult>;
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

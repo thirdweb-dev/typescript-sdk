@@ -12,7 +12,8 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-declare type TransactionResultWithId<T = never> = TransactionResult<T> & {
+export declare type TransactionResultWithId<T = never> = TransactionResult<T> & {
     id: BigNumber;
 };
 ```
+<b>References:</b> [TransactionResult](./sdk.transactionresult.md)

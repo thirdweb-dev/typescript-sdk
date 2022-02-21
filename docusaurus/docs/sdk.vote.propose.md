@@ -22,11 +22,11 @@ propose(description: string, executions?: ProposalExecutable[]): Promise<Transac
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  description | string | The description of the proposal. |
-|  executions | ProposalExecutable\[\] | A set of executable transactions that will be run if the proposal is passed and executed. |
+|  executions | [ProposalExecutable](./sdk.proposalexecutable.md)\[\] | A set of executable transactions that will be run if the proposal is passed and executed. |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResultWithId&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&gt;
 
 - The id of the created proposal and the transaction receipt.
 

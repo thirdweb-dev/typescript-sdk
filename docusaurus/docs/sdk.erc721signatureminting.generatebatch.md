@@ -21,11 +21,11 @@ generateBatch(payloadsToSign: PayloadToSign[]): Promise<SignedPayload[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  payloadsToSign | PayloadToSign\[\] | the payloads to sign |
+|  payloadsToSign | [PayloadToSign](./sdk.payloadtosign.md)\[\] | the payloads to sign |
 
 <b>Returns:</b>
 
-Promise&lt;SignedPayload\[\]&gt;
+Promise&lt;[SignedPayload](./sdk.signedpayload.md)\[\]&gt;
 
 an array of payloads and signatures
 

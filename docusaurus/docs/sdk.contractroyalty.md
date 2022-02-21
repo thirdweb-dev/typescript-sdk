@@ -14,7 +14,7 @@ Handles Contract royalties
 <b>Signature:</b>
 
 ```typescript
-declare class ContractRoyalty<TContract extends IThirdwebRoyalty & IThirdwebContract, TSchema extends IGenericSchemaType> 
+export declare class ContractRoyalty<TContract extends IThirdwebRoyalty & IThirdwebContract, TSchema extends IGenericSchemaType> 
 ```
 
 ## Constructors

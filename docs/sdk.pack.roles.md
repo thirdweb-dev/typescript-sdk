@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-roles: ContractRoles<Pack$1, typeof Pack.contractRoles[number]>;
+roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
 ```

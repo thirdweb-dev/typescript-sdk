@@ -9,7 +9,7 @@ Create lootboxes of NFTs with rarity based open mechanics.
 <b>Signature:</b>
 
 ```typescript
-declare class Pack implements UpdateableNetwork 
+export declare class Pack implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
 
@@ -38,11 +38,11 @@ const contract = sdk.getPack("{{contract_address}}");
 |  [contractFactory](./sdk.pack.contractfactory.md) | <code>static</code> | typeof Pack\_\_factory |  |
 |  [contractRoles](./sdk.pack.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
 |  [contractType](./sdk.pack.contracttype.md) | <code>static</code> | "pack" |  |
-|  [encoder](./sdk.pack.encoder.md) |  | ContractEncoder&lt;Pack$1&gt; |  |
-|  [estimator](./sdk.pack.estimator.md) |  | GasCostEstimator&lt;Pack$1&gt; |  |
-|  [metadata](./sdk.pack.metadata.md) |  | ContractMetadata&lt;Pack$1, typeof Pack.schema&gt; |  |
-|  [roles](./sdk.pack.roles.md) |  | ContractRoles&lt;Pack$1, typeof Pack.contractRoles\[number\]&gt; |  |
-|  [royalty](./sdk.pack.royalty.md) |  | ContractRoyalty&lt;Pack$1, typeof Pack.schema&gt; |  |
+|  [encoder](./sdk.pack.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;PackContract&gt; |  |
+|  [estimator](./sdk.pack.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;PackContract&gt; |  |
+|  [metadata](./sdk.pack.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;PackContract, typeof Pack.schema&gt; |  |
+|  [roles](./sdk.pack.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;PackContract, typeof [Pack.contractRoles](./sdk.pack.contractroles.md)<!-- -->\[number\]&gt; |  |
+|  [royalty](./sdk.pack.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;PackContract, typeof Pack.schema&gt; |  |
 
 ## Methods
 

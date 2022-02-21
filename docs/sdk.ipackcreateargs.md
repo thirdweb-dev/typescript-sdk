@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-interface IPackCreateArgs 
+export interface IPackCreateArgs 
 ```
 
 ## Properties
