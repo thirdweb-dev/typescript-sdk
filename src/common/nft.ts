@@ -13,6 +13,12 @@ import {
   InterfaceId_IERC721,
 } from "../constants/contract";
 
+if (!globalThis.fetch) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  globalThis.fetch = require("node-fetch");
+}
+
 /**
  * fetches the token metadata
  * @param tokenId - the id (to get it back in the output)
