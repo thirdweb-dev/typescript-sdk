@@ -1,4 +1,4 @@
-require("isomorphic-fetch");
+import "isomorphic-fetch";
 
 export * from "./core";
 export * from "./contracts";
