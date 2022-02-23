@@ -41,6 +41,7 @@ import { ListingAddedEvent } from "@thirdweb-dev/contracts/dist/Marketplace";
 
 /**
  * Handles direct listings
+ * @public
  */
 export class MarketplaceDirect {
   private contractWrapper: ContractWrapper<Marketplace>;

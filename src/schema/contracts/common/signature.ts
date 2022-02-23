@@ -12,6 +12,9 @@ import { AddressZero } from "@ethersproject/constants";
 import { ethers } from "ethers";
 import { resolveOrGenerateId } from "../../../common/signature-minting";
 
+/**
+ * @internal
+ */
 export const SignaturePayloadInput = z.object({
   metadata: CommonNFTInput,
   to: z.string().default(AddressZero),
@@ -28,6 +31,9 @@ export const SignaturePayloadInput = z.object({
   primarySaleRecipient: z.string().default(AddressZero),
 });
 
+/**
+ * @internal
+ */
 export const SignaturePayloadOutput = SignaturePayloadInput.extend({
   uri: z.string(),
   royaltyBps: BigNumberSchema,
@@ -36,22 +42,28 @@ export const SignaturePayloadOutput = SignaturePayloadInput.extend({
   mintEndTime: BigNumberSchema,
 });
 
+/**
+ * @internal
+ */
 export const Signature1155PayloadInput = SignaturePayloadInput.extend({
   tokenId: BigNumberishSchema.default(ethers.constants.MaxUint256),
   quantity: BigNumberishSchema,
 });
 
+/**
+ * @internal
+ */
 export const Signature1155PayloadOutput = SignaturePayloadOutput.extend({
   tokenId: BigNumberSchema,
   quantity: BigNumberSchema,
 });
 
 /**
- * @internal
+ * @public
  */
 export type FilledSignaturePayload = z.output<typeof SignaturePayloadInput>;
 /**
- * @internal
+ * @public
  */
 export type PayloadWithUri = z.output<typeof SignaturePayloadOutput>;
 
@@ -59,17 +71,22 @@ export type PayloadToSign = z.input<typeof SignaturePayloadInput>;
 export type SignedPayload = { payload: PayloadWithUri; signature: string };
 
 /**
- * @internal
+ * @public
  */
 export type FilledSignaturePayload1155 = z.output<
   typeof Signature1155PayloadInput
 >;
 /**
- * @internal
+ * @public
  */
 export type PayloadWithUri1155 = z.output<typeof Signature1155PayloadOutput>;
-
+/**
+ * @public
+ */
 export type PayloadToSign1155 = z.input<typeof Signature1155PayloadInput>;
+/**
+ * @public
+ */
 export type SignedPayload1155 = {
   payload: PayloadWithUri1155;
   signature: string;

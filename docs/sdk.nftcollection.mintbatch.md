@@ -24,5 +24,5 @@ Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
 
 ## Remarks
 
-See [NFTCollection.mintBatchTo()](./sdk.nftcollection.mintbatchto.md) \`\`\`
+See [NFTCollection.mintBatchTo()](./sdk.nftcollection.mintbatchto.md)
 

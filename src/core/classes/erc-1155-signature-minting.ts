@@ -20,6 +20,7 @@ import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts/dist/Tok
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
+ * @public
  */
 export class Erc1155SignatureMinting {
   private contractWrapper: ContractWrapper<TokenERC1155>;

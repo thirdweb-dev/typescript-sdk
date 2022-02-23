@@ -1,3 +1,6 @@
+/**
+ * @public
+ */
 export enum EventType {
   /**
    * The event is triggered when the transaction is submitted and completed.

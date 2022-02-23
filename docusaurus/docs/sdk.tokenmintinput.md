@@ -9,6 +9,7 @@ hide_title: true
 
 ## TokenMintInput type
 
+
 <b>Signature:</b>
 
 ```typescript

@@ -4,6 +4,7 @@ import { Result } from "@ethersproject/abi";
 
 /**
  * Encodes and decodes Contract functions
+ * @public
  */
 export class ContractEncoder<TContract extends BaseContract> {
   private contractWrapper;
@@ -28,8 +29,8 @@ export class ContractEncoder<TContract extends BaseContract> {
 
   /**
    * Decode encoded call data for a given function
-   * @param fn
-   * @param encodedArgs
+   * @param fn - the function to decode
+   * @param encodedArgs - the encoded arguments
    */
   public decode(fn: keyof TContract["functions"], encodedArgs: string): Result {
     return this.contractWrapper.readContract.interface.decodeFunctionData(

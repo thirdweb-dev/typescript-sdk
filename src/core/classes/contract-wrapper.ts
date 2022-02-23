@@ -30,6 +30,9 @@ import { getContractAddressByChainId } from "../../constants/addresses";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 
+/**
+ * @internal
+ */
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {

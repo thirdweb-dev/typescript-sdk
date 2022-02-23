@@ -9,6 +9,7 @@ hide_title: true
 
 ## IStorage interface
 
+
 <b>Signature:</b>
 
 ```typescript

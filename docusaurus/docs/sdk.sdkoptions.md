@@ -9,6 +9,7 @@ hide_title: true
 
 ## SDKOptions type
 
+
 <b>Signature:</b>
 
 ```typescript

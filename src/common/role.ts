@@ -14,6 +14,9 @@ const roleMap = {
   asset: "ASSET_ROLE",
 } as const;
 
+/**
+ * @public
+ */
 export type Role = keyof typeof roleMap;
 
 /**

@@ -7,20 +7,20 @@ import {
   TWRegistry__factory,
 } from "@thirdweb-dev/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 import {
-  Marketplace,
   CONTRACTS_MAP,
+  ContractType,
+  getNativeTokenByChainId,
+  IStorage,
+  Marketplace,
   Pack,
   ThirdwebSDK,
   Token,
   Vote,
-  ContractType,
-  IStorage,
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
-import { getNativeTokenByChainId } from "../src/common/currency";
 import { ChainId } from "../src/constants/chains";
 import { ChainlinkVrf } from "../src/constants/chainlink";
 

@@ -4,6 +4,7 @@
 
 ## EditionMetadataInput type
 
+
 <b>Signature:</b>
 
 ```typescript

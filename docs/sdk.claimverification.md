@@ -4,6 +4,7 @@
 
 ## ClaimVerification type
 
+
 <b>Signature:</b>
 
 ```typescript

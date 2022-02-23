@@ -4,6 +4,7 @@
 
 ## SUPPORTED\_CHAIN\_ID type
 
+
 <b>Signature:</b>
 
 ```typescript

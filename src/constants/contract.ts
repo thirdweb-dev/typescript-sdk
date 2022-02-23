@@ -3,6 +3,9 @@
  */
 import { arrayify } from "ethers/lib/utils";
 
+/**
+ * @internal
+ */
 export const InterfaceId_IERC721 = arrayify("0x80ac58cd");
 
 /**

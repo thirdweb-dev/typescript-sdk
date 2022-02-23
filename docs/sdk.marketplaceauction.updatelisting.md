@@ -16,7 +16,7 @@ updateListing(listing: AuctionListing): Promise<TransactionResult>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listing | AuctionListing |  |
+|  listing | AuctionListing | the listing id to update |
 
 <b>Returns:</b>
 

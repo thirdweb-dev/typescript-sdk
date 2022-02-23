@@ -9,6 +9,7 @@ hide_title: true
 
 ## Role type
 
+
 <b>Signature:</b>
 
 ```typescript

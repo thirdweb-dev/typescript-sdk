@@ -17,6 +17,7 @@ import { getRoleHash } from "../../common/role";
 
 /**
  * Standard ERC721 functions
+ * @public
  */
 export class Erc721<T extends DropERC721 | TokenERC721>
   implements UpdateableNetwork

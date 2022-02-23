@@ -9,6 +9,7 @@ hide_title: true
 
 ## NFTMetadataOwner type
 
+
 <b>Signature:</b>
 
 ```typescript

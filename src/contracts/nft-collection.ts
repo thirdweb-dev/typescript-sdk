@@ -100,7 +100,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * Mint an NFT to the connected wallet
    *
    * @remarks See {@link NFTCollection.mintTo}
-   * ```
    */
   public async mint(
     metadata: NFTMetadataInput,
@@ -161,7 +160,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * Mint Many NFTs to the connected wallet
    *
    * @remarks See {@link NFTCollection.mintBatchTo}
-   * ```
    */
   public async mintBatch(
     metadatas: NFTMetadataInput[],

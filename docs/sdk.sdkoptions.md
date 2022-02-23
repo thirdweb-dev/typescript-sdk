@@ -4,6 +4,7 @@
 
 ## SDKOptions type
 
+
 <b>Signature:</b>
 
 ```typescript

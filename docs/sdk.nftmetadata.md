@@ -4,6 +4,7 @@
 
 ## NFTMetadata type
 
+
 <b>Signature:</b>
 
 ```typescript

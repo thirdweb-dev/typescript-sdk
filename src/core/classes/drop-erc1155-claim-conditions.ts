@@ -31,6 +31,7 @@ import { IDropClaimCondition } from "@thirdweb-dev/contracts/dist/IDropERC1155";
 
 /**
  * Manages claim conditions for Edition Drop contracts
+ * @public
  */
 export class DropErc1155ClaimConditions {
   private contractWrapper;
@@ -125,9 +126,10 @@ export class DropErc1155ClaimConditions {
 
   /**
    * For any claim conditions that a particular wallet is violating,
-   * this function returns human readable information about the
+   * this function returns human-readable information about the
    * breaks in the condition that can be used to inform the user.
    *
+   * @param tokenId - the token id to check
    * @param quantity - The desired quantity that would be claimed.
    * @param addressToCheck - The wallet address, defaults to the connected wallet.
    *
@@ -350,8 +352,9 @@ export class DropErc1155ClaimConditions {
 
   /**
    * Update a single claim condition with new data.
-   * @param index the index of the claim condition to update, as given by the index from the result of `getAll()`
-   * @param claimConditionInput the new data to update, previous data will be retained
+   * @param tokenId - the token id to update
+   * @param index - the index of the claim condition to update, as given by the index from the result of `getAll()`
+   * @param claimConditionInput - the new data to update, previous data will be retained
    */
   public async update(
     tokenId: BigNumberish,

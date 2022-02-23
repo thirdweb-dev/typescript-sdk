@@ -37,6 +37,9 @@ const _optionalProperties = z
   ])
   .optional();
 
+/**
+ * @internal
+ */
 export const OptionalPropertiesInput = z
   .preprocess((val) => {
     const knownVal = val as z.input<typeof _optionalProperties>;
@@ -56,4 +59,7 @@ export const OptionalPropertiesInput = z
     return properties;
   });
 
+/**
+ * @internal
+ */
 export const OptionalPropertiesOutput = z.record(JsonLiteral).optional();
