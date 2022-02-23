@@ -25,7 +25,7 @@ distributeToken(tokenAddress: string): Promise<TransactionResult>;
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

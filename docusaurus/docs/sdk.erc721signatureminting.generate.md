@@ -21,11 +21,11 @@ generate(mintRequest: PayloadToSign): Promise<SignedPayload>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequest | [PayloadToSign](./sdk.payloadtosign.md) | the payload to sign |
+|  mintRequest | PayloadToSign | the payload to sign |
 
 <b>Returns:</b>
 
-Promise&lt;[SignedPayload](./sdk.signedpayload.md)&gt;
+Promise&lt;SignedPayload&gt;
 
 the signed payload and the corresponding signature
 

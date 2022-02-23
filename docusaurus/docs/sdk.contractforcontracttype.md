@@ -12,6 +12,5 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export declare type ContractForContractType<TContractType extends ContractType> = C.Instance<typeof CONTRACTS_MAP[TContractType]>;
+declare type ContractForContractType<TContractType extends ContractType> = C.Instance<typeof CONTRACTS_MAP[TContractType]>;
 ```
-<b>References:</b> [ContractType](./sdk.contracttype.md)

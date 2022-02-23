@@ -25,7 +25,7 @@ getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectList
 
 <b>Returns:</b>
 
-Promise&lt;([AuctionListing](./sdk.auctionlisting.md) \| [DirectListing](./sdk.directlisting.md))\[\]&gt;
+Promise&lt;(AuctionListing \| DirectListing)\[\]&gt;
 
 ## Remarks
 

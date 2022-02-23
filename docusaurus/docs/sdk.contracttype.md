@@ -12,5 +12,5 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export declare type ContractType = keyof typeof CONTRACTS_MAP;
+declare type ContractType = keyof typeof CONTRACTS_MAP;
 ```

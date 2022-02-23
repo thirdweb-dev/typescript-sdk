@@ -7,9 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type JsonObject = {
+declare type JsonObject = {
     [key: string]: Json;
 };
 ```
-<b>References:</b> [Json](./sdk.json.md)
-

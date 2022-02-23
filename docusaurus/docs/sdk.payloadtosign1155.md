@@ -12,6 +12,5 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export declare type PayloadToSign1155 = z.input<typeof Signature1155PayloadInput>;
+declare type PayloadToSign1155 = z.input<typeof Signature1155PayloadInput>;
 ```
-<b>References:</b> [Signature1155PayloadInput](./sdk.signature1155payloadinput.md)

@@ -13,9 +13,8 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export declare type NFTMetadataOwner = {
+declare type NFTMetadataOwner = {
     metadata: NFTMetadata;
     owner: string;
 };
 ```
-<b>References:</b> [NFTMetadata](./sdk.nftmetadata.md)

@@ -9,16 +9,16 @@ Constructs a new instance of the `Split` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SplitContract>);
+constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Split$1>);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  network | NetworkOrSignerOrProvider |  |
 |  address | string |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
-|  options | [SDKOptions](./sdk.sdkoptions.md) |  |
-|  contractWrapper | ContractWrapper&lt;SplitContract&gt; |  |
+|  storage | IStorage |  |
+|  options | SDKOptions |  |
+|  contractWrapper | ContractWrapper&lt;Split$1&gt; |  |
 

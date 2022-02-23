@@ -12,5 +12,5 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-estimator: GasCostEstimator<SplitContract>;
+estimator: GasCostEstimator<Split$1>;
 ```

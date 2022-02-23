@@ -20,7 +20,7 @@ get(packId: string): Promise<PackMetadata>;
 
 <b>Returns:</b>
 
-Promise&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->&gt;
+Promise&lt;PackMetadata&gt;
 
 the pack metadata
 

@@ -9,14 +9,14 @@ transaction message contains information that's needed to execute a gasless tran
 <b>Signature:</b>
 
 ```typescript
-export interface GaslessTransaction 
+interface GaslessTransaction 
 ```
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [callOverrides](./sdk.gaslesstransaction.calloverrides.md) | CallOverrides |  |
+|  [callOverrides](./sdk.gaslesstransaction.calloverrides.md) | CallOverrides$1 |  |
 |  [chainId](./sdk.gaslesstransaction.chainid.md) | number |  |
 |  [data](./sdk.gaslesstransaction.data.md) | string |  |
 |  [from](./sdk.gaslesstransaction.from.md) | string |  |

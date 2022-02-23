@@ -21,11 +21,11 @@ mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | [TokenMintInput](./sdk.tokenmintinput.md)\[\] |  |
+|  args | TokenMintInput\[\] |  |
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

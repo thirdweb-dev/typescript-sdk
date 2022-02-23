@@ -7,7 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type Json = JsonLiteralOrFileOrBuffer | JsonObject | Json[];
+declare type Json = JsonLiteralOrFileOrBuffer | JsonObject | Json[];
 ```
-<b>References:</b> [JsonObject](./sdk.jsonobject.md)<!-- -->, [Json](./sdk.json.md)
-

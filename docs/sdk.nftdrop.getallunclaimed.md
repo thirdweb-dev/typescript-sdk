@@ -16,11 +16,11 @@ getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  queryParams | [QueryAllParams](./sdk.queryallparams.md) | optional filtering to only fetch a subset of results. |
+|  queryParams | QueryAllParams | optional filtering to only fetch a subset of results. |
 
 <b>Returns:</b>
 
-Promise&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->\[\]&gt;
+Promise&lt;NFTMetadata\[\]&gt;
 
 The NFT metadata for all NFTs queried.
 

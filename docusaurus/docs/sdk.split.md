@@ -14,7 +14,7 @@ Create custom royalty splits to distribute funds.
 <b>Signature:</b>
 
 ```typescript
-export declare class Split implements UpdateableNetwork 
+declare class Split implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
 
@@ -42,9 +42,9 @@ const contract = sdk.getSplit("{{contract_address}}");
 |  --- | --- | --- | --- |
 |  [contractFactory](./sdk.split.contractfactory.md) | <code>static</code> | typeof Split\_\_factory |  |
 |  [contractType](./sdk.split.contracttype.md) | <code>static</code> | "split" |  |
-|  [encoder](./sdk.split.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)&lt;SplitContract&gt; |  |
-|  [estimator](./sdk.split.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)&lt;SplitContract&gt; |  |
-|  [metadata](./sdk.split.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)&lt;SplitContract, typeof Split.schema&gt; |  |
+|  [encoder](./sdk.split.encoder.md) |  | ContractEncoder&lt;Split$1&gt; |  |
+|  [estimator](./sdk.split.estimator.md) |  | GasCostEstimator&lt;Split$1&gt; |  |
+|  [metadata](./sdk.split.metadata.md) |  | ContractMetadata&lt;Split$1, typeof Split.schema&gt; |  |
 
 ## Methods
 

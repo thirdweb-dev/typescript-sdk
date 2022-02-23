@@ -26,7 +26,7 @@ mintTo(to: string, amount: BigNumberish): Promise<TransactionResult>;
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

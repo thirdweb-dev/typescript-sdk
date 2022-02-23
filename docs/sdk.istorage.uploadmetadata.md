@@ -16,7 +16,7 @@ uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: s
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | [JsonObject](./sdk.jsonobject.md) | The metadata to be uploaded. |
+|  metadata | JsonObject | The metadata to be uploaded. |
 |  contractAddress | string | Optional. The contract address the data belongs to. |
 |  signerAddress | string | Optional. The address of the signer. |
 

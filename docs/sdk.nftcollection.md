@@ -9,9 +9,9 @@ Create a collection of one-of-one NFTs.
 <b>Signature:</b>
 
 ```typescript
-export declare class NFTCollection extends Erc721<TokenERC721> 
+declare class NFTCollection extends Erc721<TokenERC721> 
 ```
-<b>Extends:</b> [Erc721](./sdk.erc721.md)<!-- -->&lt;TokenERC721&gt;
+<b>Extends:</b> Erc721&lt;TokenERC721&gt;
 
 ## Example
 
@@ -38,13 +38,13 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 |  [contractFactory](./sdk.nftcollection.contractfactory.md) | <code>static</code> | typeof TokenERC721\_\_factory |  |
 |  [contractRoles](./sdk.nftcollection.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.nftcollection.contracttype.md) | <code>static</code> | "nft-collection" |  |
-|  [encoder](./sdk.nftcollection.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;TokenERC721&gt; |  |
-|  [estimator](./sdk.nftcollection.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TokenERC721&gt; |  |
-|  [metadata](./sdk.nftcollection.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC721, typeof NFTCollection.schema&gt; |  |
-|  [primarySale](./sdk.nftcollection.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;TokenERC721&gt; |  |
-|  [roles](./sdk.nftcollection.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC721, typeof [NFTCollection.contractRoles](./sdk.nftcollection.contractroles.md)<!-- -->\[number\]&gt; |  |
-|  [royalty](./sdk.nftcollection.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;TokenERC721, typeof NFTCollection.schema&gt; |  |
-|  [signature](./sdk.nftcollection.signature.md) |  | [Erc721SignatureMinting](./sdk.erc721signatureminting.md) |  |
+|  [encoder](./sdk.nftcollection.encoder.md) |  | ContractEncoder&lt;TokenERC721&gt; |  |
+|  [estimator](./sdk.nftcollection.estimator.md) |  | GasCostEstimator&lt;TokenERC721&gt; |  |
+|  [metadata](./sdk.nftcollection.metadata.md) |  | ContractMetadata&lt;TokenERC721, typeof NFTCollection.schema&gt; |  |
+|  [primarySale](./sdk.nftcollection.primarysale.md) |  | ContractPrimarySale&lt;TokenERC721&gt; |  |
+|  [roles](./sdk.nftcollection.roles.md) |  | ContractRoles&lt;TokenERC721, typeof NFTCollection.contractRoles\[number\]&gt; |  |
+|  [royalty](./sdk.nftcollection.royalty.md) |  | ContractRoyalty&lt;TokenERC721, typeof NFTCollection.schema&gt; |  |
+|  [signature](./sdk.nftcollection.signature.md) |  | Erc721SignatureMinting |  |
 
 ## Methods
 

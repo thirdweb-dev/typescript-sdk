@@ -12,7 +12,7 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export declare type SignedPayload = {
+declare type SignedPayload = {
     payload: PayloadWithUri;
     signature: string;
 };

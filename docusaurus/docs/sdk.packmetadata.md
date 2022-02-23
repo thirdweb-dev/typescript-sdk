@@ -12,7 +12,7 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export interface PackMetadata 
+interface PackMetadata 
 ```
 
 ## Properties
@@ -22,5 +22,5 @@ export interface PackMetadata
 |  [creator](./sdk.packmetadata.creator.md) | string |  |
 |  [currentSupply](./sdk.packmetadata.currentsupply.md) | BigNumber |  |
 |  [id](./sdk.packmetadata.id.md) | string |  |
-|  [metadata](./sdk.packmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) |  |
+|  [metadata](./sdk.packmetadata.metadata.md) | NFTMetadata |  |
 |  [openStart](./sdk.packmetadata.openstart.md) | Date &#124; null |  |

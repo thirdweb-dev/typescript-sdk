@@ -23,7 +23,7 @@ claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberis
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
+Promise&lt;TransactionResult&gt;
 
 - Receipt for the transaction
 

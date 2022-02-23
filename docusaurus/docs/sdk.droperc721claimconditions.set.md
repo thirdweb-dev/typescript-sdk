@@ -21,12 +21,12 @@ set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: b
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  claimConditionInputs | [ClaimConditionInput](./sdk.claimconditioninput.md)\[\] | The claim conditions |
+|  claimConditionInputs | ClaimConditionInput\[\] | The claim conditions |
 |  resetClaimEligibilityForAll | boolean | Whether to reset the state of who already claimed NFTs previously |
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

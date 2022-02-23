@@ -21,9 +21,9 @@ transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): 
 |  --- | --- | --- |
 |  from | string |  |
 |  to | string |  |
-|  args | [IPackBatchArgs](./sdk.ipackbatchargs.md) |  |
+|  args | IPackBatchArgs |  |
 |  data | BytesLike |  |
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
+Promise&lt;TransactionResult&gt;

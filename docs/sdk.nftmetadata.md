@@ -8,5 +8,5 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type NFTMetadata = z.output<typeof CommonNFTOutput>;
+declare type NFTMetadata = z.output<typeof CommonNFTOutput>;
 ```

@@ -13,7 +13,7 @@ hide_title: true
 
 ```typescript
 EditionMetadataInputSchema: z.ZodObject<{
-    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<import("ethers").BigNumber, z.ZodTypeDef, import("ethers").BigNumber>]>, import("ethers").BigNumber, string | number | bigint | import("ethers").BigNumber>, string, string | number | bigint | import("ethers").BigNumber>;
+    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
     metadata: z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
@@ -47,8 +47,8 @@ EditionMetadataInputSchema: z.ZodObject<{
             value?: any;
             key: string;
         }[] | Record<string, any> | undefined>;
-    }>, "strip", z.ZodLazy<z.ZodType<import("../..").Json, z.ZodTypeDef, import("../..").Json>>, {
-        [x: string]: import("../..").Json;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
         description?: string | undefined;
         image?: any;
         external_url?: any;
@@ -57,7 +57,7 @@ EditionMetadataInputSchema: z.ZodObject<{
         properties?: Record<string, any> | undefined;
         name: string;
     }, {
-        [x: string]: import("../..").Json;
+        [x: string]: Json;
         description?: string | undefined;
         image?: any;
         external_url?: any;
@@ -71,7 +71,7 @@ EditionMetadataInputSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     metadata: {
-        [x: string]: import("../..").Json;
+        [x: string]: Json;
         description?: string | undefined;
         image?: any;
         external_url?: any;
@@ -83,7 +83,7 @@ EditionMetadataInputSchema: z.ZodObject<{
     supply: string;
 }, {
     metadata: {
-        [x: string]: import("../..").Json;
+        [x: string]: Json;
         description?: string | undefined;
         image?: any;
         external_url?: any;
@@ -95,6 +95,6 @@ EditionMetadataInputSchema: z.ZodObject<{
         }[] | Record<string, any> | undefined;
         name: string;
     };
-    supply: string | number | bigint | import("ethers").BigNumber;
+    supply: string | number | bigint | ethers.BigNumber;
 }>
 ```

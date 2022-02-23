@@ -20,7 +20,7 @@ getListing(listingId: BigNumberish): Promise<DirectListing>;
 
 <b>Returns:</b>
 
-Promise&lt;[DirectListing](./sdk.directlisting.md)<!-- -->&gt;
+Promise&lt;DirectListing&gt;
 
 the Direct listing object
 

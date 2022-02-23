@@ -25,6 +25,6 @@ getPack(address: string): Pack;
 
 <b>Returns:</b>
 
-[Pack](./sdk.pack.md)
+Pack
 
 the contract

@@ -9,7 +9,7 @@ Manages claim conditions for Edition Drop contracts
 <b>Signature:</b>
 
 ```typescript
-export declare class DropErc1155ClaimConditions 
+declare class DropErc1155ClaimConditions 
 ```
 
 ## Constructors

@@ -20,7 +20,7 @@ getNFTs(packId: string): Promise<PackNFTMetadata[]>;
 
 <b>Returns:</b>
 
-Promise&lt;[PackNFTMetadata](./sdk.packnftmetadata.md)<!-- -->\[\]&gt;
+Promise&lt;PackNFTMetadata\[\]&gt;
 
 The NFT metadata for all NFTs in the contract.
 

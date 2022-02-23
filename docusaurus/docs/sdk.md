@@ -8,61 +8,6 @@ hide_title: true
 
 ## sdk package
 
-The [thirdweb](https://thirdweb.com) typescript sdk.
-
-## Remarks
-
-Please keep in mind that the thirdweb typescript sdk and [Admin Dashboard](https://thirdweb.com/dashboard) are currently in Early Access.
-
-Should you find bugs or in the case you need help please reach out to us in [Discord](https://discord.gg/thirdweb). (We also have 🍪 )
-
-## Example
-
-To get you started here's how you would instantiate the SDK and fetch some NFTs
-
-1. Install the sdk
-
-```shell
-npm install @thirdweb-dev/sdk
-```
-2. Get your NFT contract address from the [Admin Dashboard](https://thirdweb.com/dashboard).
-
-3. Write the tiniest amount of code!
-
-```typescript
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
-
-const sdk = new ThirdwebSDK(provider);
-const contractAddress = "0x..."; // your contract address from step 2
-const nftContract = sdk.getNFTCollection(contractAddress);
-
- const nftListWithOwnerAddress = await nftContract.getAllWithOwner();
- console.log(nftListWithOwnerAddress);
-```
-
-```
-Output
-=> [
-      {
-         owner: "0x...",
-         metadata: {
-           name: "...",
-           description: "...",
-           image: "..."
-         },
-      },
-      {
-         owner: "0x...",
-         metadata: {
-           name: "...",
-           description: "...",
-           image: "..."
-         },
-      },
-      ...
-   ]
-```
-
 ## Classes
 
 |  Class | Description |
@@ -171,7 +116,7 @@ Output
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
 |  [ContractForContractType](./sdk.contractforcontracttype.md) |  |
 |  [ContractType](./sdk.contracttype.md) |  |
-|  [Currency](./sdk.currency.md) |  |
+|  [Currency](./sdk.currency.md) | Currency metadata. |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [EditionMetadata](./sdk.editionmetadata.md) |  |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |

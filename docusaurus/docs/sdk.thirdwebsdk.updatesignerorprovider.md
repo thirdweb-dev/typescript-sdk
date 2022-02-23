@@ -21,7 +21,7 @@ updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) | the new signer or provider |
+|  network | NetworkOrSignerOrProvider | the new signer or provider |
 
 <b>Returns:</b>
 

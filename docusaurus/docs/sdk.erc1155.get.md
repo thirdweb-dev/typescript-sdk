@@ -25,7 +25,7 @@ get(tokenId: BigNumberish): Promise<EditionMetadata>;
 
 <b>Returns:</b>
 
-Promise&lt;[EditionMetadata](./sdk.editionmetadata.md)&gt;
+Promise&lt;EditionMetadata&gt;
 
 The NFT metadata
 

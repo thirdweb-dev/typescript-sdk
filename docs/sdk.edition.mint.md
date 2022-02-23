@@ -20,7 +20,7 @@ mint(metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[EditionMetadata](./sdk.editionmetadata.md)<!-- -->&gt;&gt;
+Promise&lt;TransactionResultWithId&lt;EditionMetadata&gt;&gt;
 
 ## Remarks
 

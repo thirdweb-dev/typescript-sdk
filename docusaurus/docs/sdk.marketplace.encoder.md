@@ -12,5 +12,5 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-encoder: ContractEncoder<MarketplaceContract>;
+encoder: ContractEncoder<Marketplace$1>;
 ```

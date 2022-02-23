@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-metadata: ContractMetadata<MarketplaceContract, typeof Marketplace.schema>;
+metadata: ContractMetadata<Marketplace$1, typeof Marketplace.schema>;
 ```

@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-encoder: ContractEncoder<PackContract>;
+encoder: ContractEncoder<Pack$1>;
 ```

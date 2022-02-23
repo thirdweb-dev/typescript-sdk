@@ -20,7 +20,7 @@ getMarketplace(address: string): Marketplace;
 
 <b>Returns:</b>
 
-[Marketplace](./sdk.marketplace.md)
+Marketplace
 
 the contract
 

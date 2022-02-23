@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type BufferOrStringWithName = {
+declare type BufferOrStringWithName = {
     data: Buffer | string;
     name?: string;
 };

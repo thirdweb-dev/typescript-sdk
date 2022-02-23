@@ -13,7 +13,7 @@ getAll(): Promise<ClaimCondition[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[ClaimCondition](./sdk.claimcondition.md)<!-- -->\[\]&gt;
+Promise&lt;ClaimCondition\[\]&gt;
 
 the claim conditions metadata
 

@@ -22,7 +22,7 @@ transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionRes
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
+Promise&lt;TransactionResult&gt;
 
 ## Remarks
 

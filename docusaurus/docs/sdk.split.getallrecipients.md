@@ -18,7 +18,7 @@ getAllRecipients(): Promise<SplitRecipient[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[SplitRecipient](./sdk.splitrecipient.md)\[\]&gt;
+Promise&lt;SplitRecipient\[\]&gt;
 
 ## Remarks
 

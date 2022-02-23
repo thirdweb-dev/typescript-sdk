@@ -12,9 +12,9 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export interface NativeToken extends Currency 
+interface NativeToken extends Currency 
 ```
-<b>Extends:</b> [Currency](./sdk.currency.md)
+<b>Extends:</b> Currency
 
 ## Properties
 

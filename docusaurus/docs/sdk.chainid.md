@@ -12,7 +12,7 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export declare enum ChainId 
+declare enum ChainId 
 ```
 
 ## Enumeration Members

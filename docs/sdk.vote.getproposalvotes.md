@@ -20,5 +20,5 @@ getProposalVotes(proposalId: BigNumber): Promise<ProposalVote[]>;
 
 <b>Returns:</b>
 
-Promise&lt;[ProposalVote](./sdk.proposalvote.md)<!-- -->\[\]&gt;
+Promise&lt;ProposalVote\[\]&gt;
 

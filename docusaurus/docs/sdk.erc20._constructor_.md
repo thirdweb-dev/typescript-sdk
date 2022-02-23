@@ -22,5 +22,5 @@ constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SD
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;T&gt; |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
-|  options | [SDKOptions](./sdk.sdkoptions.md) |  |
+|  storage | IStorage |  |
+|  options | SDKOptions |  |

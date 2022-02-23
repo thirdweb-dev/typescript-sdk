@@ -25,6 +25,6 @@ getOwned(_address?: string): Promise<PackMetadataWithBalance[]>;
 
 <b>Returns:</b>
 
-Promise&lt;[PackMetadataWithBalance](./sdk.packmetadatawithbalance.md)\[\]&gt;
+Promise&lt;PackMetadataWithBalance\[\]&gt;
 
 An array of PackMetadataWithBalance objects that are owned by the address

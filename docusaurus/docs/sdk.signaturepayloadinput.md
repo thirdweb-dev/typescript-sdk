@@ -46,8 +46,8 @@ SignaturePayloadInput: z.ZodObject<{
             value?: any;
             key: string;
         }[] | Record<string, any> | undefined>;
-    }>, "strip", z.ZodLazy<z.ZodType<import("../../..").Json, z.ZodTypeDef, import("../../..").Json>>, {
-        [x: string]: import("../../..").Json;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
         description?: string | undefined;
         image?: any;
         external_url?: any;
@@ -56,7 +56,7 @@ SignaturePayloadInput: z.ZodObject<{
         properties?: Record<string, any> | undefined;
         name: string;
     }, {
-        [x: string]: import("../../..").Json;
+        [x: string]: Json;
         description?: string | undefined;
         image?: any;
         external_url?: any;
@@ -71,8 +71,8 @@ SignaturePayloadInput: z.ZodObject<{
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers.BigNumber, Date | undefined>;
-    mintEndTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers.BigNumber, Date | undefined>;
+    mintStartTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers$1.BigNumber, Date | undefined>;
+    mintEndTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers$1.BigNumber, Date | undefined>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     royaltyRecipient: z.ZodDefault<z.ZodString>;
     royaltyBps: z.ZodDefault<z.ZodNumber>;
@@ -81,7 +81,7 @@ SignaturePayloadInput: z.ZodObject<{
     currencyAddress: string;
     price: string;
     metadata: {
-        [x: string]: import("../../..").Json;
+        [x: string]: Json;
         description?: string | undefined;
         image?: any;
         external_url?: any;
@@ -91,8 +91,8 @@ SignaturePayloadInput: z.ZodObject<{
         name: string;
     };
     to: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
+    mintStartTime: ethers$1.BigNumber;
+    mintEndTime: ethers$1.BigNumber;
     uid: string;
     royaltyRecipient: string;
     royaltyBps: number;
@@ -108,7 +108,7 @@ SignaturePayloadInput: z.ZodObject<{
     royaltyBps?: number | undefined;
     primarySaleRecipient?: string | undefined;
     metadata: {
-        [x: string]: import("../../..").Json;
+        [x: string]: Json;
         description?: string | undefined;
         image?: any;
         external_url?: any;

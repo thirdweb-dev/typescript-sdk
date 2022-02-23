@@ -13,7 +13,7 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export interface QueryAllParams 
+interface QueryAllParams 
 ```
 
 ## Properties

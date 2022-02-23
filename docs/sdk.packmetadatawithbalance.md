@@ -8,9 +8,9 @@
 <b>Signature:</b>
 
 ```typescript
-export interface PackMetadataWithBalance extends PackMetadata 
+interface PackMetadataWithBalance extends PackMetadata 
 ```
-<b>Extends:</b> [PackMetadata](./sdk.packmetadata.md)
+<b>Extends:</b> PackMetadata
 
 ## Properties
 

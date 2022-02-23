@@ -20,7 +20,7 @@ getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
 
 <b>Returns:</b>
 
-Promise&lt;[AuctionListing](./sdk.auctionlisting.md) \| [DirectListing](./sdk.directlisting.md)<!-- -->&gt;
+Promise&lt;AuctionListing \| DirectListing&gt;
 
 either a direct or auction listing
 

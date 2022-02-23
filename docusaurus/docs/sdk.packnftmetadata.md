@@ -13,12 +13,12 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export interface PackNFTMetadata 
+interface PackNFTMetadata 
 ```
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [metadata](./sdk.packnftmetadata.metadata.md) | [NFTMetadata](./sdk.nftmetadata.md) |  |
+|  [metadata](./sdk.packnftmetadata.metadata.md) | NFTMetadata |  |
 |  [supply](./sdk.packnftmetadata.supply.md) | BigNumber |  |

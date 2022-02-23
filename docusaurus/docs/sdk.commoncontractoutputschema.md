@@ -19,14 +19,14 @@ CommonContractOutputSchema: z.ZodObject<z.extendShape<{
     external_link: z.ZodOptional<z.ZodString>;
 }, {
     image: z.ZodOptional<z.ZodString>;
-}>, "strip", z.ZodLazy<z.ZodType<import("../../..").Json, z.ZodTypeDef, import("../../..").Json>>, {
-    [x: string]: import("../../..").Json;
+}>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+    [x: string]: Json;
     description?: string | undefined;
     image?: string | undefined;
     external_link?: string | undefined;
     name: string;
 }, {
-    [x: string]: import("../../..").Json;
+    [x: string]: Json;
     description?: string | undefined;
     image?: string | undefined;
     external_link?: string | undefined;

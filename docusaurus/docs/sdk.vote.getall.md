@@ -18,7 +18,7 @@ getAll(): Promise<Proposal[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[Proposal](./sdk.proposal.md)\[\]&gt;
+Promise&lt;Proposal\[\]&gt;
 
 - All the proposals in the contract.
 

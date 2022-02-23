@@ -23,8 +23,8 @@ updateListing(listing: DirectListing): Promise<TransactionResult>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listing | [DirectListing](./sdk.directlisting.md) | the new listing information |
+|  listing | DirectListing | the new listing information |
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
+Promise&lt;TransactionResult&gt;

@@ -14,7 +14,7 @@ Standard ERC20 functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc20<T extends TokenERC20> implements UpdateableNetwork 
+declare class Erc20<T extends TokenERC20> implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
 
@@ -29,8 +29,8 @@ export declare class Erc20<T extends TokenERC20> implements UpdateableNetwork
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc20.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
-|  [options](./sdk.erc20.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
-|  [storage](./sdk.erc20.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
+|  [options](./sdk.erc20.options.md) |  | SDKOptions |  |
+|  [storage](./sdk.erc20.storage.md) |  | IStorage |  |
 
 ## Methods
 

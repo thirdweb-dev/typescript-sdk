@@ -8,7 +8,5 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
+declare type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
 ```
-<b>References:</b> [EditionMetadataOutputSchema](./sdk.editionmetadataoutputschema.md)
-

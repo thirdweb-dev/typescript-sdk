@@ -8,5 +8,5 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type SDKOptions = z.input<typeof SDKOptionsSchema>;
+declare type SDKOptions = z.input<typeof SDKOptionsSchema>;
 ```

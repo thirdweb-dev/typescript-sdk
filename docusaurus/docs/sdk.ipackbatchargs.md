@@ -16,7 +16,7 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export interface IPackBatchArgs 
+interface IPackBatchArgs 
 ```
 
 ## Properties

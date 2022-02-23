@@ -12,6 +12,5 @@ hide_title: true
 <b>Signature:</b>
 
 ```typescript
-export declare type TokenMintInput = z.input<typeof TokenMintInputSchema>;
+declare type TokenMintInput = z.input<typeof TokenMintInputSchema>;
 ```
-<b>References:</b> [TokenMintInputSchema](./sdk.tokenmintinputschema.md)

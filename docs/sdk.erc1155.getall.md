@@ -13,7 +13,7 @@ getAll(): Promise<EditionMetadata[]>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[EditionMetadata](./sdk.editionmetadata.md)<!-- -->\[\]&gt;
+Promise&lt;EditionMetadata\[\]&gt;
 
 The NFT metadata for all NFTs queried.
 

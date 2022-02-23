@@ -20,7 +20,7 @@ open(packId: string): Promise<TransactionResultWithId<NFTMetadata>[]>;
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->&gt;\[\]&gt;
+Promise&lt;TransactionResultWithId&lt;NFTMetadata&gt;\[\]&gt;
 
 ## Remarks
 

@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export interface BatchToReveal 
+interface BatchToReveal 
 ```
 
 ## Properties
@@ -16,5 +16,5 @@ export interface BatchToReveal
 |  --- | --- | --- |
 |  [batchId](./sdk.batchtoreveal.batchid.md) | BigNumber |  |
 |  [batchUri](./sdk.batchtoreveal.batchuri.md) | string |  |
-|  [placeholderMetadata](./sdk.batchtoreveal.placeholdermetadata.md) | [NFTMetadata](./sdk.nftmetadata.md) |  |
+|  [placeholderMetadata](./sdk.batchtoreveal.placeholdermetadata.md) | NFTMetadata |  |
 

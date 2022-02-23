@@ -19,5 +19,5 @@ acceptOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<Transact
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
+Promise&lt;TransactionResult&gt;
 

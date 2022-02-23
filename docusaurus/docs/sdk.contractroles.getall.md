@@ -20,7 +20,7 @@ getAll(): Promise<Record<TRole, string[]>>;
 
 Promise&lt;Record&lt;TRole, string\[\]&gt;&gt;
 
-A record of [Role](./sdk.role.md)s to lists of addresses that are members of the given role.
+A record of [Role](./sdk.role.md)<!-- -->s to lists of addresses that are members of the given role.
 
 ## Exceptions
 

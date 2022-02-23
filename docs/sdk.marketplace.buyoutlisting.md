@@ -21,5 +21,5 @@ buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
+Promise&lt;TransactionResult&gt;
 

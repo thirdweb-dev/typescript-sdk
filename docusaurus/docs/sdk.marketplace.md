@@ -14,7 +14,7 @@ Create your own whitelabel marketplace that enables users to buy and sell any di
 <b>Signature:</b>
 
 ```typescript
-export declare class Marketplace implements UpdateableNetwork 
+declare class Marketplace implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
 
@@ -40,15 +40,15 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [auction](./sdk.marketplace.auction.md) |  | [MarketplaceAuction](./sdk.marketplaceauction.md) | Handle direct listings, see [MarketplaceAuction](./sdk.marketplaceauction.md) |
+|  [auction](./sdk.marketplace.auction.md) |  | MarketplaceAuction | Handle direct listings, see [MarketplaceAuction](./sdk.marketplaceauction.md) |
 |  [contractFactory](./sdk.marketplace.contractfactory.md) | <code>static</code> | typeof Marketplace\_\_factory |  |
 |  [contractRoles](./sdk.marketplace.contractroles.md) | <code>static</code> | readonly \["admin", "lister", "asset"\] |  |
 |  [contractType](./sdk.marketplace.contracttype.md) | <code>static</code> | "marketplace" |  |
-|  [direct](./sdk.marketplace.direct.md) |  | [MarketplaceDirect](./sdk.marketplacedirect.md) | Handle direct listings, see [MarketplaceDirect](./sdk.marketplacedirect.md) |
-|  [encoder](./sdk.marketplace.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)&lt;MarketplaceContract&gt; |  |
-|  [estimator](./sdk.marketplace.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)&lt;MarketplaceContract&gt; |  |
-|  [metadata](./sdk.marketplace.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)&lt;MarketplaceContract, typeof Marketplace.schema&gt; |  |
-|  [roles](./sdk.marketplace.roles.md) |  | [ContractRoles](./sdk.contractroles.md)&lt;MarketplaceContract, typeof [Marketplace.contractRoles](./sdk.marketplace.contractroles.md)\[number\]&gt; |  |
+|  [direct](./sdk.marketplace.direct.md) |  | MarketplaceDirect | Handle direct listings, see [MarketplaceDirect](./sdk.marketplacedirect.md) |
+|  [encoder](./sdk.marketplace.encoder.md) |  | ContractEncoder&lt;Marketplace$1&gt; |  |
+|  [estimator](./sdk.marketplace.estimator.md) |  | GasCostEstimator&lt;Marketplace$1&gt; |  |
+|  [metadata](./sdk.marketplace.metadata.md) |  | ContractMetadata&lt;Marketplace$1, typeof Marketplace.schema&gt; |  |
+|  [roles](./sdk.marketplace.roles.md) |  | ContractRoles&lt;Marketplace$1, typeof Marketplace.contractRoles\[number\]&gt; |  |
 
 ## Methods
 

@@ -9,7 +9,7 @@ Handles auction listings
 <b>Signature:</b>
 
 ```typescript
-export declare class MarketplaceAuction 
+declare class MarketplaceAuction 
 ```
 
 ## Constructors

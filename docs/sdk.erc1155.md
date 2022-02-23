@@ -9,7 +9,7 @@ Standard ERC1155 functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc1155<T extends DropERC1155 | TokenERC1155> implements UpdateableNetwork 
+declare class Erc1155<T extends DropERC1155 | TokenERC1155> implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
 
@@ -24,8 +24,8 @@ export declare class Erc1155<T extends DropERC1155 | TokenERC1155> implements Up
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc1155.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
-|  [options](./sdk.erc1155.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
-|  [storage](./sdk.erc1155.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
+|  [options](./sdk.erc1155.options.md) |  | SDKOptions |  |
+|  [storage](./sdk.erc1155.storage.md) |  | IStorage |  |
 
 ## Methods
 

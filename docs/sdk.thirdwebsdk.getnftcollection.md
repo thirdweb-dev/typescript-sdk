@@ -20,7 +20,7 @@ getNFTCollection(address: string): NFTCollection;
 
 <b>Returns:</b>
 
-[NFTCollection](./sdk.nftcollection.md)
+NFTCollection
 
 the contract
 

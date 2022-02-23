@@ -14,7 +14,7 @@ Create a decentralized organization for token holders to vote on proposals.
 <b>Signature:</b>
 
 ```typescript
-export declare class Vote implements UpdateableNetwork 
+declare class Vote implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
 
@@ -42,9 +42,9 @@ const contract = sdk.getVote("{{contract_address}}");
 |  --- | --- | --- | --- |
 |  [contractFactory](./sdk.vote.contractfactory.md) | <code>static</code> | typeof VoteERC20\_\_factory |  |
 |  [contractType](./sdk.vote.contracttype.md) | <code>static</code> | "vote" |  |
-|  [encoder](./sdk.vote.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)&lt;VoteERC20&gt; |  |
-|  [estimator](./sdk.vote.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)&lt;VoteERC20&gt; |  |
-|  [metadata](./sdk.vote.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)&lt;VoteERC20, typeof Vote.schema&gt; |  |
+|  [encoder](./sdk.vote.encoder.md) |  | ContractEncoder&lt;VoteERC20&gt; |  |
+|  [estimator](./sdk.vote.estimator.md) |  | GasCostEstimator&lt;VoteERC20&gt; |  |
+|  [metadata](./sdk.vote.metadata.md) |  | ContractMetadata&lt;VoteERC20, typeof Vote.schema&gt; |  |
 
 ## Methods
 

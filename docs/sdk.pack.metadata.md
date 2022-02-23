@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-metadata: ContractMetadata<PackContract, typeof Pack.schema>;
+metadata: ContractMetadata<Pack$1, typeof Pack.schema>;
 ```

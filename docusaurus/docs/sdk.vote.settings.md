@@ -18,4 +18,4 @@ settings(): Promise<VoteSettings>;
 ```
 <b>Returns:</b>
 
-Promise&lt;[VoteSettings](./sdk.votesettings.md)&gt;
+Promise&lt;VoteSettings&gt;

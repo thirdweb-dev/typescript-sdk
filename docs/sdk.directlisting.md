@@ -9,16 +9,16 @@ Represents a marketplace direct listing.
 <b>Signature:</b>
 
 ```typescript
-export interface DirectListing 
+interface DirectListing 
 ```
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [asset](./sdk.directlisting.asset.md) | [NFTMetadata](./sdk.nftmetadata.md) | The asset being listed. |
+|  [asset](./sdk.directlisting.asset.md) | NFTMetadata | The asset being listed. |
 |  [assetContractAddress](./sdk.directlisting.assetcontractaddress.md) | string | The address of the asset being listed. |
-|  [buyoutCurrencyValuePerToken](./sdk.directlisting.buyoutcurrencyvaluepertoken.md) | [CurrencyValue](./sdk.currencyvalue.md) | The <code>CurrencyValue</code> of the listing. Useful for displaying the price information. |
+|  [buyoutCurrencyValuePerToken](./sdk.directlisting.buyoutcurrencyvaluepertoken.md) | CurrencyValue | The <code>CurrencyValue</code> of the listing. Useful for displaying the price information. |
 |  [buyoutPrice](./sdk.directlisting.buyoutprice.md) | BigNumber | The buyout price of the listing. |
 |  [currencyContractAddress](./sdk.directlisting.currencycontractaddress.md) | string | The address of the currency to accept for the listing. |
 |  [id](./sdk.directlisting.id.md) | string | The id of the listing. |

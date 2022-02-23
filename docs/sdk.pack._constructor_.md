@@ -9,16 +9,16 @@ Constructs a new instance of the `Pack` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<PackContract>);
+constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Pack$1>);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  network | NetworkOrSignerOrProvider |  |
 |  address | string |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
-|  options | [SDKOptions](./sdk.sdkoptions.md) |  |
-|  contractWrapper | ContractWrapper&lt;PackContract&gt; |  |
+|  storage | IStorage |  |
+|  options | SDKOptions |  |
+|  contractWrapper | ContractWrapper&lt;Pack$1&gt; |  |
 

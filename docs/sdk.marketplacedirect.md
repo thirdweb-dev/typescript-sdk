@@ -9,7 +9,7 @@ Handles direct listings
 <b>Signature:</b>
 
 ```typescript
-export declare class MarketplaceDirect 
+declare class MarketplaceDirect 
 ```
 
 ## Constructors

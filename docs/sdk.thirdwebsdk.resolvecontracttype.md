@@ -18,7 +18,7 @@ resolveContractType(contractAddress: string): Promise<ContractType>;
 
 <b>Returns:</b>
 
-Promise&lt;[ContractType](./sdk.contracttype.md)<!-- -->&gt;
+Promise&lt;ContractType&gt;
 
 the [ContractType](./sdk.contracttype.md) for the given contract address
 

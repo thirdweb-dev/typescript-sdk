@@ -26,7 +26,7 @@ setAllowance(spender: string, amount: BigNumber): Promise<TransactionResult>;
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
+Promise&lt;TransactionResult&gt;
 
 ## Example
 

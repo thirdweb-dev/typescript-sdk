@@ -25,11 +25,11 @@ setAll(rolesWithAddresses: {
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  rolesWithAddresses | { \[key in TRole\]?: string\[\]; } | A record of [Role](./sdk.role.md)s to lists of addresses that should be members of the given role. |
+|  rolesWithAddresses | { \[key in TRole\]?: string\[\]; } | A record of [Role](./sdk.role.md)<!-- -->s to lists of addresses that should be members of the given role. |
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
+Promise&lt;TransactionResult&gt;
 
 ## Exceptions
 
