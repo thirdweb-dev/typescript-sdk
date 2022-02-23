@@ -7,11 +7,13 @@ import {
   TokenERC20,
   TokenERC20__factory,
 } from "@thirdweb-dev/contracts";
-import { ChainId, SUPPORTED_CHAIN_ID } from "../constants/chains";
-import { NATIVE_TOKEN_ADDRESS, NATIVE_TOKENS } from "../constants/currency";
+import {
+  getNativeTokenByChainId,
+  NATIVE_TOKEN_ADDRESS,
+} from "../constants/currency";
 import { Provider } from "@ethersproject/providers";
 import { formatUnits } from "ethers/lib/utils";
-import { Currency, CurrencyValue, NativeToken, Price } from "../types/currency";
+import { Currency, CurrencyValue, Price } from "../types/currency";
 import { PriceSchema } from "../schema/shared";
 
 export function isNativeToken(tokenAddress: string): boolean {
@@ -71,10 +73,6 @@ export async function fetchCurrencyValue(
     value: BigNumber.from(price),
     displayValue: formatUnits(price, metadata.decimals),
   };
-}
-
-export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
-  return NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID];
 }
 
 export async function setErc20Allowance(

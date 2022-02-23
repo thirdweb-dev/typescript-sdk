@@ -1,5 +1,8 @@
 import { BigNumberish } from "ethers";
 
+/**
+ * @internal
+ */
 export const DEFAULT_QUERY_ALL_COUNT = 100;
 
 /**

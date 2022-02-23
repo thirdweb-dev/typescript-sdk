@@ -28,6 +28,7 @@ hide_title: true
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 functions |
 |  [Erc721SignatureMinting](./sdk.erc721signatureminting.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
 |  [GasCostEstimator](./sdk.gascostestimator.md) | Estimates the gas cost of Contract calls |
+|  [IpfsStorage](./sdk.ipfsstorage.md) | IPFS Storage implementation, accepts custom IPFS gateways |
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MarketplaceAuction](./sdk.marketplaceauction.md) | Handles auction listings |
 |  [MarketplaceDirect](./sdk.marketplacedirect.md) | Handles direct listings |
@@ -45,10 +46,17 @@ hide_title: true
 |  --- | --- |
 |  [ChainId](./sdk.chainid.md) |  |
 |  [ClaimEligibility](./sdk.claimeligibility.md) |  |
+|  [EventType](./sdk.eventtype.md) |  |
 |  [ListingType](./sdk.listingtype.md) |  |
 |  [ProposalState](./sdk.proposalstate.md) |  |
 |  [UnderlyingType](./sdk.underlyingtype.md) |  |
 |  [VoteType](./sdk.votetype.md) |  |
+
+## Functions
+
+|  Function | Description |
+|  --- | --- |
+|  [getNativeTokenByChainId(chainId)](./sdk.getnativetokenbychainid.md) | Returns the native token for a given chain |
 
 ## Interfaces
 
@@ -79,23 +87,10 @@ hide_title: true
 
 |  Variable | Description |
 |  --- | --- |
-|  [CommonContractOutputSchema](./sdk.commoncontractoutputschema.md) |  |
-|  [CommonContractSchema](./sdk.commoncontractschema.md) |  |
-|  [CommonPlatformFeeSchema](./sdk.commonplatformfeeschema.md) |  |
-|  [CommonPrimarySaleSchema](./sdk.commonprimarysaleschema.md) |  |
-|  [CommonRoyaltySchema](./sdk.commonroyaltyschema.md) |  |
-|  [CommonSymbolSchema](./sdk.commonsymbolschema.md) |  |
-|  [CommonTrustedForwarderSchema](./sdk.commontrustedforwarderschema.md) |  |
-|  [DEFAULT\_QUERY\_ALL\_COUNT](./sdk.default_query_all_count.md) |  |
-|  [MerkleSchema](./sdk.merkleschema.md) |  |
 |  [MintRequest1155](./sdk.mintrequest1155.md) |  |
 |  [MintRequest721](./sdk.mintrequest721.md) |  |
-|  [OptionalPropertiesInput](./sdk.optionalpropertiesinput.md) |  |
-|  [OptionalPropertiesOutput](./sdk.optionalpropertiesoutput.md) |  |
-|  [SnapshotInfoSchema](./sdk.snapshotinfoschema.md) |  |
-|  [SnapshotInputSchema](./sdk.snapshotinputschema.md) |  |
-|  [SnapshotJSONInputSchema](./sdk.snapshotjsoninputschema.md) |  |
-|  [SnapshotSchema](./sdk.snapshotschema.md) |  |
+|  [NATIVE\_TOKEN\_ADDRESS](./sdk.native_token_address.md) |  |
+|  [NATIVE\_TOKENS](./sdk.native_tokens.md) |  |
 |  [SUPPORTED\_CHAIN\_IDS](./sdk.supported_chain_ids.md) |  |
 
 ## Type Aliases
@@ -121,6 +116,7 @@ hide_title: true
 |  [JsonObject](./sdk.jsonobject.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
+|  [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
 |  [PayloadToSign](./sdk.payloadtosign.md) |  |
 |  [PayloadToSign1155](./sdk.payloadtosign1155.md) |  |

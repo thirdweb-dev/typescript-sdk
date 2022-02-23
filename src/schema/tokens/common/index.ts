@@ -10,6 +10,9 @@ import {
   OptionalPropertiesOutput,
 } from "./properties";
 
+/**
+ * @internal
+ */
 export const CommonTokenInput = z
   .object({
     name: z.string().nonempty({ message: "A name is required." }),
@@ -19,6 +22,9 @@ export const CommonTokenInput = z
   })
   .catchall(z.lazy(() => JsonSchema));
 
+/**
+ * @internal
+ */
 export const CommonTokenOutput = CommonTokenInput.extend({
   id: BigNumberSchema,
   uri: z.string(),
@@ -26,19 +32,25 @@ export const CommonTokenOutput = CommonTokenInput.extend({
   external_url: z.string().optional(),
 });
 
+/**
+ * @internal
+ */
 export const CommonNFTInput = CommonTokenInput.extend({
   animation_url: FileBufferOrStringSchema.optional(),
   background_color: HexColor.optional(),
   properties: OptionalPropertiesInput,
 });
 
+/**
+ * @internal
+ */
 export const CommonNFTOutput = CommonTokenOutput.extend({
   animation_url: z.string().optional(),
   properties: OptionalPropertiesOutput,
 });
 
 /**
- * @internal
+ * @public
  */
 export type NFTMetadataInput = z.input<typeof CommonNFTInput>;
 /**

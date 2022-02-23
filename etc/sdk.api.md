@@ -155,6 +155,21 @@ export enum ChainId {
     xDai = 100
 }
 
+// Warning: (ae-internal-missing-underscore) The name "ChainlinkInfo" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export type ChainlinkInfo = {
+    vrfCoordinator: string;
+    linkTokenAddress: string;
+    keyHash: string;
+    fees: BigNumber;
+};
+
+// Warning: (ae-internal-missing-underscore) The name "ChainlinkVrf" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const ChainlinkVrf: Record<number, ChainlinkInfo>;
+
 // Warning: (ae-incompatible-release-tags) The symbol "ClaimCondition" is marked as @public, but its signature references "ClaimConditionOutputSchema" which is marked as @internal
 //
 // @public
@@ -358,7 +373,9 @@ export type ClaimVerification = {
     currencyAddress: string;
 };
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "CommonContractOutputSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const CommonContractOutputSchema: z.ZodObject<z.extendShape<{
     name: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
@@ -380,7 +397,9 @@ export const CommonContractOutputSchema: z.ZodObject<z.extendShape<{
     name: string;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "CommonContractSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const CommonContractSchema: z.ZodObject<{
     name: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
@@ -398,7 +417,9 @@ export const CommonContractSchema: z.ZodObject<{
     name: string;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "CommonPlatformFeeSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const CommonPlatformFeeSchema: z.ZodObject<{
     platform_fee_basis_points: z.ZodDefault<z.ZodNumber>;
     platform_fee_recipient: z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>;
@@ -410,7 +431,9 @@ export const CommonPlatformFeeSchema: z.ZodObject<{
     platform_fee_recipient?: string | undefined;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "CommonPrimarySaleSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const CommonPrimarySaleSchema: z.ZodObject<{
     primary_sale_recipient: z.ZodEffects<z.ZodString, string, string>;
 }, "strip", z.ZodTypeAny, {
@@ -419,7 +442,9 @@ export const CommonPrimarySaleSchema: z.ZodObject<{
     primary_sale_recipient: string;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "CommonRoyaltySchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const CommonRoyaltySchema: z.ZodObject<{
     seller_fee_basis_points: z.ZodDefault<z.ZodNumber>;
     fee_recipient: z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>;
@@ -431,7 +456,9 @@ export const CommonRoyaltySchema: z.ZodObject<{
     fee_recipient?: string | undefined;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "CommonSymbolSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const CommonSymbolSchema: z.ZodObject<{
     symbol: z.ZodDefault<z.ZodOptional<z.ZodString>>;
 }, "strip", z.ZodTypeAny, {
@@ -440,13 +467,24 @@ export const CommonSymbolSchema: z.ZodObject<{
     symbol?: string | undefined;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "CommonTrustedForwarderSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const CommonTrustedForwarderSchema: z.ZodObject<{
     trusted_forwarder: z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>;
 }, "strip", z.ZodTypeAny, {
     trusted_forwarder: string;
 }, {
     trusted_forwarder?: string | undefined;
+}>;
+
+// Warning: (ae-internal-missing-underscore) The name "CONTRACT_ADDRESSES" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const CONTRACT_ADDRESSES: Record<SUPPORTED_CHAIN_ID, {
+    biconomyForwarder: string;
+    twFactory: string;
+    twRegistry: string;
 }>;
 
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
@@ -551,7 +589,9 @@ export class ContractRoyalty<TContract extends IThirdwebRoyalty & IThirdwebContr
         seller_fee_basis_points: number;
         fee_recipient: string;
     }>;
+    // Warning: (ae-incompatible-release-tags) The symbol "setDefaultRoyaltyInfo" is marked as @public, but its signature references "CommonRoyaltySchema" which is marked as @internal
     setDefaultRoyaltyInfo(royaltyData: z.input<typeof CommonRoyaltySchema>): Promise<TransactionResult<z.output<typeof CommonRoyaltySchema>>>;
+    // Warning: (ae-incompatible-release-tags) The symbol "setTokenRoyaltyInfo" is marked as @public, but its signature references "CommonRoyaltySchema" which is marked as @internal
     setTokenRoyaltyInfo(tokenId: BigNumberish, royaltyData: z.input<typeof CommonRoyaltySchema>): Promise<{
         receipt: _ethersproject_abstract_provider.TransactionReceipt;
         data: () => Promise<{
@@ -637,7 +677,14 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
     displayValue: string;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "DEFAULT_IPFS_GATEWAY" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const DEFAULT_IPFS_GATEWAY = "https://cloudflare-ipfs.com/ipfs/";
+
+// Warning: (ae-internal-missing-underscore) The name "DEFAULT_QUERY_ALL_COUNT" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const DEFAULT_QUERY_ALL_COUNT = 100;
 
 // @public
@@ -828,7 +875,6 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "edition-drop";
-    // Warning: (ae-incompatible-release-tags) The symbol "createBatch" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC1155>;
@@ -1232,6 +1278,12 @@ export class Erc721SignatureMinting {
     verify(signedPayload: SignedPayload): Promise<boolean>;
 }
 
+// @public (undocumented)
+export enum EventType {
+    Signature = "signature",
+    Transaction = "transaction"
+}
+
 // Warning: (ae-internal-missing-underscore) The name "FetchError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -1265,6 +1317,11 @@ export type FilledSignaturePayload = z.output<typeof SignaturePayloadInput>;
 //
 // @public (undocumented)
 export type FilledSignaturePayload1155 = z.output<typeof Signature1155PayloadInput>;
+
+// Warning: (ae-internal-missing-underscore) The name "FORWARDER_ADDRESS" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 
 // @public
 export type ForwardRequestMessage = {
@@ -1309,6 +1366,19 @@ export interface GaslessTransaction {
     to: string;
 }
 
+// Warning: (ae-internal-missing-underscore) The name "getContractAddressByChainId" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getContractAddressByChainId(chainId: SUPPORTED_CHAIN_ID | ChainId.Hardhat, contractName: keyof typeof CONTRACT_ADDRESSES[SUPPORTED_CHAIN_ID]): string;
+
+// @public
+export function getNativeTokenByChainId(chainId: ChainId): NativeToken;
+
+// Warning: (ae-internal-missing-underscore) The name "getRoleHash" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getRoleHash(role: Role): BytesLike;
+
 // Warning: (ae-internal-missing-underscore) The name "hashLeafNode" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -1325,6 +1395,16 @@ export interface IGenericSchemaType {
     // (undocumented)
     output: z.AnyZodObject;
 }
+
+// Warning: (ae-internal-missing-underscore) The name "InterfaceId_IERC1155" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const InterfaceId_IERC1155: Uint8Array;
+
+// Warning: (ae-internal-missing-underscore) The name "InterfaceId_IERC721" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const InterfaceId_IERC721: Uint8Array;
 
 // Warning: (ae-internal-missing-underscore) The name "InvalidAddressError" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -1350,8 +1430,6 @@ export interface IPackCreateArgs {
         tokenId: BigNumberish;
         amount: BigNumberish;
     }[];
-    // Warning: (ae-incompatible-release-tags) The symbol "metadata" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
-    //
     // (undocumented)
     metadata: NFTMetadataInput;
     // (undocumented)
@@ -1360,22 +1438,14 @@ export interface IPackCreateArgs {
     secondsUntilOpenStart?: BigNumberish;
 }
 
-// Warning: (ae-internal-missing-underscore) The name "IpfsStorage" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
+// @public
 export class IpfsStorage implements IStorage {
     constructor(gatewayUrl?: string);
-    // (undocumented)
     get(hash: string): Promise<Record<string, any>>;
-    // (undocumented)
     getUploadToken(contractAddress: string): Promise<string>;
-    // (undocumented)
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    // (undocumented)
     uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
-    // (undocumented)
     uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
-    // (undocumented)
     uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<{
         baseUri: string;
         metadataUris: string[];
@@ -1579,7 +1649,9 @@ export class MarketplaceDirect {
     updateListing(listing: DirectListing): Promise<TransactionResult>;
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "MerkleSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const MerkleSchema: z.ZodObject<{
     merkle: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>;
 }, "strip", z.ZodTypeAny, {
@@ -1613,6 +1685,12 @@ export class MissingOwnerRoleError extends Error {
 export class MissingRoleError extends Error {
     constructor(address: string, role: string);
 }
+
+// @public (undocumented)
+export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+
+// @public (undocumented)
+export const NATIVE_TOKENS: Record<SUPPORTED_CHAIN_ID | ChainId.Hardhat, NativeToken>;
 
 // @public (undocumented)
 export interface NativeToken extends Currency {
@@ -1671,13 +1749,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
     estimator: GasCostEstimator<TokenERC721>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
-    // Warning: (ae-incompatible-release-tags) The symbol "mint" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     mint(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
-    // Warning: (ae-incompatible-release-tags) The symbol "mintBatch" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    // Warning: (ae-incompatible-release-tags) The symbol "mintBatchTo" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     mintBatchTo(to: string, metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    // Warning: (ae-incompatible-release-tags) The symbol "mintTo" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     mintTo(to: string, metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
@@ -1807,7 +1881,6 @@ export class NFTDrop extends Erc721<DropERC721> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "nft-drop";
-    // Warning: (ae-incompatible-release-tags) The symbol "createBatch" is marked as @public, but its signature references "NFTMetadataInput" which is marked as @internal
     createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC721>;
@@ -1952,9 +2025,8 @@ export class NFTDrop extends Erc721<DropERC721> {
 export type NFTMetadata = z.output<typeof CommonNFTOutput>;
 
 // Warning: (ae-forgotten-export) The symbol "CommonNFTInput" needs to be exported by the entry point index.d.ts
-// Warning: (ae-internal-missing-underscore) The name "NFTMetadataInput" should be prefixed with an underscore because the declaration is marked as @internal
 //
-// @internal (undocumented)
+// @public (undocumented)
 export type NFTMetadataInput = z.input<typeof CommonNFTInput>;
 
 // @public (undocumented)
@@ -1987,7 +2059,9 @@ export interface Offer {
     quantityDesired: BigNumberish;
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "OptionalPropertiesInput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const OptionalPropertiesInput: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
     key: z.ZodString;
     value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
@@ -2014,7 +2088,9 @@ export const OptionalPropertiesInput: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.
     key: string;
 }[] | Record<string, any> | undefined>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "OptionalPropertiesOutput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const OptionalPropertiesOutput: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
 
 // @public
@@ -2274,6 +2350,11 @@ export type PermitRequestMessage = {
     r: string;
     s: string;
 };
+
+// Warning: (ae-internal-missing-underscore) The name "PINATA_IPFS_URL" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const PINATA_IPFS_URL = "https://api.pinata.cloud/pinning/pinFileToIPFS";
 
 // Warning: (ae-forgotten-export) The symbol "PriceSchema" needs to be exported by the entry point index.d.ts
 //
@@ -2890,13 +2971,19 @@ export type SignedPayload1155 = {
 // @public (undocumented)
 export type SignerOrProvider = Signer | Provider;
 
+// Warning: (ae-incompatible-release-tags) The symbol "Snapshot" is marked as @public, but its signature references "SnapshotSchema" which is marked as @internal
+//
 // @public (undocumented)
 export type Snapshot = z.output<typeof SnapshotSchema>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "SnapshotInfo" is marked as @public, but its signature references "SnapshotInfoSchema" which is marked as @internal
+//
 // @public (undocumented)
 export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "SnapshotInfoSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const SnapshotInfoSchema: z.ZodObject<{
     merkleRoot: z.ZodString;
     snapshotUri: z.ZodString;
@@ -2954,10 +3041,14 @@ export const SnapshotInfoSchema: z.ZodObject<{
     };
 }>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "SnapshotInput" is marked as @public, but its signature references "SnapshotInputSchema" which is marked as @internal
+//
 // @public
 export type SnapshotInput = z.output<typeof SnapshotInputSchema>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "SnapshotInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const SnapshotInputSchema: z.ZodObject<{
     addresses: z.ZodArray<z.ZodString, "many">;
     maxClaimablePerAddress: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
@@ -2969,7 +3060,9 @@ export const SnapshotInputSchema: z.ZodObject<{
     addresses: string[];
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "SnapshotJSONInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const SnapshotJSONInputSchema: z.ZodEffects<z.ZodObject<{
     merkleRoot: z.ZodString;
     claims: z.ZodArray<z.ZodObject<{
@@ -3015,7 +3108,9 @@ export const SnapshotJSONInputSchema: z.ZodEffects<z.ZodObject<{
     }[];
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "SnapshotSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const SnapshotSchema: z.ZodObject<{
     merkleRoot: z.ZodString;
     claims: z.ZodArray<z.ZodObject<{
@@ -3436,6 +3531,11 @@ export type TransactionResultWithAddress<T = never> = TransactionResult<T> & {
 export type TransactionResultWithId<T = never> = TransactionResult<T> & {
     id: BigNumber;
 };
+
+// Warning: (ae-internal-missing-underscore) The name "TW_IPFS_SERVER_URL" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co";
 
 // @public (undocumented)
 export enum UnderlyingType {

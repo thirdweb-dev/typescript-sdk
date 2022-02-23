@@ -60,6 +60,7 @@ export * from "./core/classes";
 export * from "./types";
 export * from "./enums";
 export * from "./common";
+export * from "./constants";
 export * from "./contracts";
 export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";
 export type {

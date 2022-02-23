@@ -8,6 +8,9 @@ import { AddressZero } from "@ethersproject/constants";
 import { z } from "zod";
 import { FORWARDER_ADDRESS } from "../../../constants/addresses";
 
+/**
+ * @internal
+ */
 export const CommonContractSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
@@ -15,10 +18,16 @@ export const CommonContractSchema = z.object({
   external_link: z.string().url().optional(),
 });
 
+/**
+ * @internal
+ */
 export const CommonContractOutputSchema = CommonContractSchema.extend({
   image: z.string().optional(),
 }).catchall(z.lazy(() => JsonSchema));
 
+/**
+ * @internal
+ */
 export const CommonRoyaltySchema = z.object({
   /**
    * The amount of royalty collected on all royalties represented as basis points.
@@ -40,6 +49,9 @@ export const CommonRoyaltySchema = z.object({
   fee_recipient: AdressSchema.default(AddressZero),
 });
 
+/**
+ * @internal
+ */
 export const CommonPrimarySaleSchema = z.object({
   /**
    * primary sale recipient address
@@ -47,6 +59,9 @@ export const CommonPrimarySaleSchema = z.object({
   primary_sale_recipient: AdressSchema,
 });
 
+/**
+ * @internal
+ */
 export const CommonPlatformFeeSchema = z.object({
   /**
    * platform fee basis points
@@ -58,10 +73,16 @@ export const CommonPlatformFeeSchema = z.object({
   platform_fee_recipient: AdressSchema.default(AddressZero),
 });
 
+/**
+ * @internal
+ */
 export const CommonTrustedForwarderSchema = z.object({
   trusted_forwarder: AdressSchema.default(FORWARDER_ADDRESS),
 });
 
+/**
+ * @internal
+ */
 export const CommonSymbolSchema = z.object({
   symbol: z.string().optional().default(""),
 });

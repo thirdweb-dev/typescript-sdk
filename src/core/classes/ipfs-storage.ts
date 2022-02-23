@@ -33,6 +33,7 @@ interface CidWithFileName {
 }
 
 /**
+ * IPFS Storage implementation, accepts custom IPFS gateways
  * @public
  */
 export class IpfsStorage implements IStorage {
@@ -42,6 +43,9 @@ export class IpfsStorage implements IStorage {
     this.gatewayUrl = `${gatewayUrl.replace(/\/$/, "")}/`;
   }
 
+  /**
+   * {@inheritDoc IStorage.upload}
+   */
   public async upload(
     data: string | FileOrBuffer,
     contractAddress?: string,
@@ -56,6 +60,9 @@ export class IpfsStorage implements IStorage {
     return `${cid}0`;
   }
 
+  /**
+   * {@inheritDoc IStorage.uploadBatch}
+   */
   public async uploadBatch(
     files: (string | FileOrBuffer)[],
     fileStartNumber = 0,
@@ -72,6 +79,9 @@ export class IpfsStorage implements IStorage {
     return `ipfs://${cid}/`;
   }
 
+  /**
+   * {@inheritDoc IStorage.getUploadToken}
+   */
   public async getUploadToken(contractAddress: string): Promise<string> {
     const headers = {
       "X-App-Name": `CONSOLE-TS-SDK-${contractAddress}`,
@@ -87,12 +97,18 @@ export class IpfsStorage implements IStorage {
     return body;
   }
 
+  /**
+   * {@inheritDoc IStorage.get}
+   */
   public async get(hash: string): Promise<Record<string, any>> {
     const res = await this._get(hash);
     const json = await res.json();
     return replaceHashWithGatewayUrl(json, "ipfs://", this.gatewayUrl);
   }
 
+  /**
+   * {@inheritDoc IStorage.uploadMetadata}
+   */
   public async uploadMetadata(
     metadata: JsonObject,
     contractAddress?: string,
@@ -109,7 +125,7 @@ export class IpfsStorage implements IStorage {
   }
 
   /**
-   * @internal
+   * {@inheritDoc IStorage.uploadMetadataBatch}
    */
   public async uploadMetadataBatch(
     metadatas: JsonObject[],
