@@ -10,15 +10,15 @@ hide_title: true
 ## EventType enum
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare enum EventType 
+export declare enum EventType 
 ```
 
 ## Enumeration Members
 
 |  Member | Value | Description |
 |  --- | --- | --- |
-|  Signature | <code>&quot;signature&quot;</code> | The event is triggered when wallet sign message is requested and completed.<!-- -->status: "submitted" &#124; "completed" message: message to sign signature: signature of the message (only available when status is "completed") |
-|  Transaction | <code>&quot;transaction&quot;</code> | The event is triggered when the transaction is submitted and completed. The transaction is submitted when it is sent to the relayer or the blockchain. The transaction is completed when it is confirmed by the blockchain.<!-- -->status: "submitted" &#124; "completed" transactionHash: string of the transaction hash |
+|  Signature | <code>&quot;signature&quot;</code> | The event is triggered when wallet sign message is requested and completed.status: "submitted" &#124; "completed" message: message to sign signature: signature of the message (only available when status is "completed") |
+|  Transaction | <code>&quot;transaction&quot;</code> | The event is triggered when the transaction is submitted and completed. The transaction is submitted when it is sent to the relayer or the blockchain. The transaction is completed when it is confirmed by the blockchain.status: "submitted" &#124; "completed" transactionHash: string of the transaction hash |

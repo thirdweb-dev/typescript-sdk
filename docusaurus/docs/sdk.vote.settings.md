@@ -11,11 +11,11 @@ hide_title: true
 
 Get the Vote contract configuration
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 settings(): Promise<VoteSettings>;
 ```
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;VoteSettings&gt;
+Promise&lt;[VoteSettings](./sdk.votesettings.md)&gt;

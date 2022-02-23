@@ -9,7 +9,7 @@ hide_title: true
 
 ## ThirdwebSDK.resolveContractType() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 resolveContractType(contractAddress: string): Promise<ContractType>;
@@ -21,9 +21,9 @@ resolveContractType(contractAddress: string): Promise<ContractType>;
 |  --- | --- | --- |
 |  contractAddress | string | the address of the contract to attempt to resolve the contract type for |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;ContractType&gt;
+Promise&lt;[ContractType](./sdk.contracttype.md)&gt;
 
 the [ContractType](./sdk.contracttype.md) for the given contract address
 

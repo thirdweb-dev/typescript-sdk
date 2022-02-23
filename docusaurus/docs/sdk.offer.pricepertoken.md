@@ -11,7 +11,7 @@ hide_title: true
 
 The amount of coins offered per token.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 pricePerToken: BigNumber;

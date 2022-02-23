@@ -11,7 +11,7 @@ hide_title: true
 
 Set the Time buffer: this is measured in seconds (e.g. 15 minutes or 900 seconds). If a winning bid is made within the buffer of the auction closing (e.g. 15 minutes within the auction closing), the auction's closing time is increased by the buffer to prevent buyers from making last minute winning bids, and to give time to other buyers to make a higher bid if they wish to.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setTimeBufferInSeconds(bufferInSeconds: BigNumberish): Promise<void>;
@@ -23,6 +23,6 @@ setTimeBufferInSeconds(bufferInSeconds: BigNumberish): Promise<void>;
 |  --- | --- | --- |
 |  bufferInSeconds | BigNumberish | the seconds value |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;

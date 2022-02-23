@@ -9,7 +9,7 @@ hide_title: true
 
 ## IPackCreateArgs.secondsUntilOpenStart property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 secondsUntilOpenStart?: BigNumberish;

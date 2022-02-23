@@ -11,11 +11,11 @@ hide_title: true
 
 Get the buffer in basis points between offers
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getBidBufferBps(): Promise<BigNumber>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;

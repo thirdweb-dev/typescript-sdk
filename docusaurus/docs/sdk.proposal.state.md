@@ -11,7 +11,7 @@ hide_title: true
 
 The current state of the proposal.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 state: ProposalState;

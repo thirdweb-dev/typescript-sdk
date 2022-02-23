@@ -11,7 +11,7 @@ hide_title: true
 
 Constructs a new instance of the `Edition` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
@@ -21,8 +21,8 @@ constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStora
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | NetworkOrSignerOrProvider |  |
+|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  address | string |  |
-|  storage | IStorage |  |
-|  options | SDKOptions |  |
+|  storage | [IStorage](./sdk.istorage.md) |  |
+|  options | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  contractWrapper | ContractWrapper&lt;TokenERC1155&gt; |  |

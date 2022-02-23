@@ -10,7 +10,7 @@ hide_title: true
 ## SUPPORTED\_CHAIN\_IDS variable
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[]

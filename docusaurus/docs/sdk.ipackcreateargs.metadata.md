@@ -9,7 +9,7 @@ hide_title: true
 
 ## IPackCreateArgs.metadata property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 metadata: NFTMetadataInput;

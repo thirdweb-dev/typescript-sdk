@@ -11,7 +11,7 @@ hide_title: true
 
 Genrate a batch of signatures that can be used to mint many dynamic NFTs.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 generateBatch(payloadsToSign: PayloadToSign1155[]): Promise<SignedPayload1155[]>;
@@ -21,11 +21,11 @@ generateBatch(payloadsToSign: PayloadToSign1155[]): Promise<SignedPayload1155[]>
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  payloadsToSign | PayloadToSign1155\[\] | the payloads to sign |
+|  payloadsToSign | [PayloadToSign1155](./sdk.payloadtosign1155.md)\[\] | the payloads to sign |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;SignedPayload1155\[\]&gt;
+Promise&lt;[SignedPayload1155](./sdk.signedpayload1155.md)\[\]&gt;
 
 an array of payloads and signatures
 

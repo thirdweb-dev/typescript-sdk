@@ -9,7 +9,7 @@ hide_title: true
 
 ## Edition.royalty property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 royalty: ContractRoyalty<TokenERC1155, typeof Edition.schema>;

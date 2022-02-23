@@ -11,7 +11,7 @@ hide_title: true
 
 Call this to get a list of addresses that are members of a specific role.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get(role: TRole): Promise<string[]>;
@@ -23,7 +23,7 @@ get(role: TRole): Promise<string[]>;
 |  --- | --- | --- |
 |  role | TRole | The Role to to get a memberlist for. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string\[\]&gt;
 

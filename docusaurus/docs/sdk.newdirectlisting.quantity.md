@@ -13,7 +13,7 @@ The quantity of tokens to include in the listing.
 
 For ERC721s, this value should always be 1 (and will be forced internally regardless of what is passed here).
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 quantity: BigNumberish;

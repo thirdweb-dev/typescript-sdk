@@ -9,7 +9,7 @@ hide_title: true
 
 ## Token.getVoteBalanceOf() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getVoteBalanceOf(account: string): Promise<BigNumber>;
@@ -21,6 +21,6 @@ getVoteBalanceOf(account: string): Promise<BigNumber>;
 |  --- | --- | --- |
 |  account | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;

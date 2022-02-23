@@ -11,12 +11,12 @@ hide_title: true
 
 Standard ERC721 functions
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNetwork 
+export declare class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNetwork 
 ```
-<b>Implements:</b> UpdateableNetwork
+**Implements:** UpdateableNetwork
 
 ## Constructors
 
@@ -29,8 +29,8 @@ declare class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNe
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc721.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
-|  [options](./sdk.erc721.options.md) |  | SDKOptions |  |
-|  [storage](./sdk.erc721.storage.md) |  | IStorage |  |
+|  [options](./sdk.erc721.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
+|  [storage](./sdk.erc721.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
 ## Methods
 

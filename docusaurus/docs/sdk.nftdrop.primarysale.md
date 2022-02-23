@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTDrop.primarySale property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 primarySale: ContractPrimarySale<DropERC721>;

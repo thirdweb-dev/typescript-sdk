@@ -11,7 +11,7 @@ hide_title: true
 
 Get a pack by id
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get(packId: string): Promise<PackMetadata>;
@@ -23,8 +23,8 @@ get(packId: string): Promise<PackMetadata>;
 |  --- | --- | --- |
 |  packId | string | the id of the pack to fetch |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;PackMetadata&gt;
+Promise&lt;[PackMetadata](./sdk.packmetadata.md)&gt;
 
 the pack metadata

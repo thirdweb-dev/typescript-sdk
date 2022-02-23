@@ -11,7 +11,7 @@ hide_title: true
 
 Get non-native Token Funds owed to a particular wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyValue>;
@@ -24,9 +24,9 @@ balanceOfToken(walletAddress: string, tokenAddress: string): Promise<CurrencyVal
 |  walletAddress | string |  |
 |  tokenAddress | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;CurrencyValue&gt;
+Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)&gt;
 
 ## Remarks
 

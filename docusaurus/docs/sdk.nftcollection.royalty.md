@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTCollection.royalty property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 royalty: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;

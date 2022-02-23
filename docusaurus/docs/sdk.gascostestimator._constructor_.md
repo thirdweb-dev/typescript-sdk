@@ -11,7 +11,7 @@ hide_title: true
 
 Constructs a new instance of the `GasCostEstimator` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(contractWrapper: ContractWrapper<TContract>);

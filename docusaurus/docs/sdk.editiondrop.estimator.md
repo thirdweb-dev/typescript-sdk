@@ -9,7 +9,7 @@ hide_title: true
 
 ## EditionDrop.estimator property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 estimator: GasCostEstimator<DropERC1155>;

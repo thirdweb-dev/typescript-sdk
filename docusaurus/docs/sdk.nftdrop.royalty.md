@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTDrop.royalty property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 royalty: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;

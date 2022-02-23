@@ -11,7 +11,7 @@ hide_title: true
 
 Mint Tokens
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mintTo(to: string, amount: BigNumberish): Promise<TransactionResult>;
@@ -24,9 +24,9 @@ mintTo(to: string, amount: BigNumberish): Promise<TransactionResult>;
 |  to | string |  |
 |  amount | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

@@ -11,7 +11,7 @@ hide_title: true
 
 Transfer Pack
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionResult>;
@@ -25,9 +25,9 @@ transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionRes
 |  tokenId | string |  |
 |  amount | BigNumber |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

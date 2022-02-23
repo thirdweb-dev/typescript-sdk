@@ -11,11 +11,11 @@ hide_title: true
 
 Get whether users can transfer NFTs from this contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 isTransferRestricted(): Promise<boolean>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;boolean&gt;

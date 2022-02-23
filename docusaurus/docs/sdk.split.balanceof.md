@@ -11,7 +11,7 @@ hide_title: true
 
 Get Funds owed to a particular wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balanceOf(address: string): Promise<BigNumber>;
@@ -23,7 +23,7 @@ balanceOf(address: string): Promise<BigNumber>;
 |  --- | --- | --- |
 |  address | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;
 

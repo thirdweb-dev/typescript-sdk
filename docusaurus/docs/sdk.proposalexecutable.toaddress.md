@@ -11,7 +11,7 @@ hide_title: true
 
 The address of the contract that the proposal will execute a transaction on. If the proposal is sending a token to a wallet, this address should be the address of the wallet that will be receiving the tokens.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 toAddress: string;

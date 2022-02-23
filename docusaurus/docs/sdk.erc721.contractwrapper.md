@@ -9,7 +9,7 @@ hide_title: true
 
 ## Erc721.contractWrapper property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 protected contractWrapper: ContractWrapper<T>;

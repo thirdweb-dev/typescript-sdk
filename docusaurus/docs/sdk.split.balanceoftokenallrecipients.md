@@ -11,7 +11,7 @@ hide_title: true
 
 Returns all the recipients and their balances in a non-native currency.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
@@ -31,7 +31,7 @@ balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
 |  --- | --- | --- |
 |  tokenAddress | string | The address of the currency to check the balances in. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;{ \[key: string\]: { symbol: string; value: BigNumber; name: string; decimals: number; displayValue: string; }; }&gt;
 

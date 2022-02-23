@@ -20,5 +20,5 @@ setDefaultRoyaltyInfo(royaltyData: z.input<typeof CommonRoyaltySchema>): Promise
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&lt;z.output&lt;typeof CommonRoyaltySchema&gt;&gt;&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&lt;z.output&lt;typeof CommonRoyaltySchema&gt;&gt;&gt;
 

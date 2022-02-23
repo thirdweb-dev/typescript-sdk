@@ -11,7 +11,7 @@ hide_title: true
 
 Generate a signature that can be used to mint a dynamic NFT
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 generate(mintRequest: PayloadToSign): Promise<SignedPayload>;
@@ -21,11 +21,11 @@ generate(mintRequest: PayloadToSign): Promise<SignedPayload>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequest | PayloadToSign | the payload to sign |
+|  mintRequest | [PayloadToSign](./sdk.payloadtosign.md) | the payload to sign |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;SignedPayload&gt;
+Promise&lt;[SignedPayload](./sdk.signedpayload.md)&gt;
 
 the signed payload and the corresponding signature
 

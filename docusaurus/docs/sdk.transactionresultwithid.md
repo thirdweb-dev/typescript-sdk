@@ -9,10 +9,11 @@ hide_title: true
 
 ## TransactionResultWithId type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type TransactionResultWithId<T = never> = TransactionResult<T> & {
+export declare type TransactionResultWithId<T = never> = TransactionResult<T> & {
     id: BigNumber;
 };
 ```
+**References:** [TransactionResult](./sdk.transactionresult.md)

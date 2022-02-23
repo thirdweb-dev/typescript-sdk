@@ -9,10 +9,11 @@ hide_title: true
 
 ## TransactionResultWithAddress type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type TransactionResultWithAddress<T = never> = TransactionResult<T> & {
+export declare type TransactionResultWithAddress<T = never> = TransactionResult<T> & {
     address: string;
 };
 ```
+**References:** [TransactionResult](./sdk.transactionresult.md)

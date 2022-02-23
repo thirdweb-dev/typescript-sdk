@@ -9,7 +9,7 @@ hide_title: true
 
 ## PackMetadata.id property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 id: string;

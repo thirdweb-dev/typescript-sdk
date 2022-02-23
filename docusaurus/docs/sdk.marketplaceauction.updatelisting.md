@@ -11,7 +11,7 @@ hide_title: true
 
 Update an Auction listing with new metadata
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 updateListing(listing: AuctionListing): Promise<TransactionResult>;
@@ -21,8 +21,8 @@ updateListing(listing: AuctionListing): Promise<TransactionResult>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listing | AuctionListing | the listing id to update |
+|  listing | [AuctionListing](./sdk.auctionlisting.md) | the listing id to update |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

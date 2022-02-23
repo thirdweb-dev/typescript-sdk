@@ -11,7 +11,7 @@ hide_title: true
 
 Get an instance of an Edition contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getEdition(address: string): Edition;
@@ -23,8 +23,8 @@ getEdition(address: string): Edition;
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
 
-<b>Returns:</b>
+**Returns:**
 
-Edition
+[Edition](./sdk.edition.md)
 
 the contract

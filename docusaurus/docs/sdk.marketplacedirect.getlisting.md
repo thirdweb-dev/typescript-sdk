@@ -11,7 +11,7 @@ hide_title: true
 
 Get a direct listing by id
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getListing(listingId: BigNumberish): Promise<DirectListing>;
@@ -23,8 +23,8 @@ getListing(listingId: BigNumberish): Promise<DirectListing>;
 |  --- | --- | --- |
 |  listingId | BigNumberish | the listing id |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;DirectListing&gt;
+Promise&lt;[DirectListing](./sdk.directlisting.md)&gt;
 
 the Direct listing object

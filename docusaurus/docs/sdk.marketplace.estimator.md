@@ -9,8 +9,8 @@ hide_title: true
 
 ## Marketplace.estimator property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-estimator: GasCostEstimator<Marketplace$1>;
+estimator: GasCostEstimator<MarketplaceContract>;
 ```

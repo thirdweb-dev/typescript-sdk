@@ -11,12 +11,12 @@ hide_title: true
 
 Handles deploying new contracts
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class ContractDeployer extends RPCConnectionHandler 
+export declare class ContractDeployer extends RPCConnectionHandler 
 ```
-<b>Extends:</b> RPCConnectionHandler
+**Extends:** RPCConnectionHandler
 
 ## Constructors
 

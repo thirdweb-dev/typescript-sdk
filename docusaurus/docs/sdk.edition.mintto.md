@@ -11,7 +11,7 @@ hide_title: true
 
 Mint an NFT with a limited supply
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mintTo(to: string, metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;
@@ -22,11 +22,11 @@ mintTo(to: string, metadataWithSupply: EditionMetadataInput): Promise<Transactio
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  to | string |  |
-|  metadataWithSupply | EditionMetadataInput |  |
+|  metadataWithSupply | [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResultWithId&lt;EditionMetadata&gt;&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&lt;[EditionMetadata](./sdk.editionmetadata.md)&gt;&gt;
 
 ## Remarks
 

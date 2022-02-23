@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTDrop.metadata property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;

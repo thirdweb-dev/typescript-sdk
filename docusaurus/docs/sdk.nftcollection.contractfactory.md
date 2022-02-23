@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTCollection.contractFactory property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractFactory: typeof TokenERC721__factory;

@@ -9,9 +9,9 @@ IPFS Storage implementation, accepts custom IPFS gateways
 <b>Signature:</b>
 
 ```typescript
-declare class IpfsStorage implements IStorage 
+export declare class IpfsStorage implements IStorage 
 ```
-<b>Implements:</b> IStorage
+<b>Implements:</b> [IStorage](./sdk.istorage.md)
 
 ## Constructors
 

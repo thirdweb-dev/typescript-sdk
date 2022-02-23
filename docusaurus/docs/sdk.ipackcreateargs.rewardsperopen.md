@@ -9,7 +9,7 @@ hide_title: true
 
 ## IPackCreateArgs.rewardsPerOpen property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 rewardsPerOpen?: BigNumberish;

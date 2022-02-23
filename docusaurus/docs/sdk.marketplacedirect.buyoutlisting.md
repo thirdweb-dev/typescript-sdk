@@ -11,7 +11,7 @@ hide_title: true
 
 Buy Listing
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 buyoutListing(listingId: BigNumberish, quantityDesired: BigNumberish): Promise<TransactionResult>;
@@ -24,9 +24,9 @@ buyoutListing(listingId: BigNumberish, quantityDesired: BigNumberish): Promise<T
 |  listingId | BigNumberish |  |
 |  quantityDesired | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

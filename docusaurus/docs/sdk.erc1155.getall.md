@@ -11,14 +11,14 @@ hide_title: true
 
 Get All NFTs
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getAll(): Promise<EditionMetadata[]>;
 ```
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;EditionMetadata\[\]&gt;
+Promise&lt;[EditionMetadata](./sdk.editionmetadata.md)\[\]&gt;
 
 The NFT metadata for all NFTs queried.
 

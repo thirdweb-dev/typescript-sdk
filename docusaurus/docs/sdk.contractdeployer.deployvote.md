@@ -11,7 +11,7 @@ hide_title: true
 
 Deploys a new Vote contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 deployVote(metadata: z.input<typeof Vote.schema.deploy>): Promise<string>;
@@ -23,7 +23,7 @@ deployVote(metadata: z.input<typeof Vote.schema.deploy>): Promise<string>;
 |  --- | --- | --- |
 |  metadata | z.input&lt;typeof Vote.schema.deploy&gt; | the contract metadata |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

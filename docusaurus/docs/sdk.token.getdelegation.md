@@ -11,12 +11,12 @@ hide_title: true
 
 Get your voting delegatee address
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getDelegation(): Promise<string>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

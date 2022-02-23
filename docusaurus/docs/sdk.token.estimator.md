@@ -9,7 +9,7 @@ hide_title: true
 
 ## Token.estimator property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 estimator: GasCostEstimator<TokenERC20>;

@@ -9,7 +9,7 @@ hide_title: true
 
 ## ContractDeployer.updateSignerOrProvider() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
@@ -19,8 +19,8 @@ updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | NetworkOrSignerOrProvider |  |
+|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void

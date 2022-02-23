@@ -9,7 +9,7 @@ hide_title: true
 
 ## VoteSettings.proposalTokenThreshold property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 proposalTokenThreshold: string;

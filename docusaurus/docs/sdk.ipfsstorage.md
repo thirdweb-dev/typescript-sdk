@@ -11,12 +11,12 @@ hide_title: true
 
 IPFS Storage implementation, accepts custom IPFS gateways
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class IpfsStorage implements IStorage 
+export declare class IpfsStorage implements IStorage 
 ```
-<b>Implements:</b> IStorage
+**Implements:** [IStorage](./sdk.istorage.md)
 
 ## Constructors
 

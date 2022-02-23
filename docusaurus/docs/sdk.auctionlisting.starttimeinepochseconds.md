@@ -11,7 +11,7 @@ hide_title: true
 
 The start time of the listing.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 startTimeInEpochSeconds: BigNumberish;

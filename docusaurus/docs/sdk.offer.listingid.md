@@ -11,7 +11,7 @@ hide_title: true
 
 The id of the listing.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 listingId: BigNumberish;

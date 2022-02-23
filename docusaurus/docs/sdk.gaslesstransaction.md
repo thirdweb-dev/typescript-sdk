@@ -11,17 +11,17 @@ hide_title: true
 
 transaction message contains information that's needed to execute a gasless transaction
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-interface GaslessTransaction 
+export interface GaslessTransaction 
 ```
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [callOverrides](./sdk.gaslesstransaction.calloverrides.md) | CallOverrides$1 |  |
+|  [callOverrides](./sdk.gaslesstransaction.calloverrides.md) | CallOverrides |  |
 |  [chainId](./sdk.gaslesstransaction.chainid.md) | number |  |
 |  [data](./sdk.gaslesstransaction.data.md) | string |  |
 |  [from](./sdk.gaslesstransaction.from.md) | string |  |

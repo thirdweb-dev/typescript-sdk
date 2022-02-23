@@ -9,7 +9,7 @@ hide_title: true
 
 ## Pack.balance() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balance(tokenId: string): Promise<BigNumber>;
@@ -21,6 +21,6 @@ balance(tokenId: string): Promise<BigNumber>;
 |  --- | --- | --- |
 |  tokenId | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;

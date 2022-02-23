@@ -11,7 +11,7 @@ hide_title: true
 
 Uploads JSON metadata to IPFS
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
@@ -21,10 +21,10 @@ uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: s
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | JsonObject | The metadata to be uploaded. |
+|  metadata | [JsonObject](./sdk.jsonobject.md) | The metadata to be uploaded. |
 |  contractAddress | string | Optional. The contract address the data belongs to. |
 |  signerAddress | string | Optional. The address of the signer. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;

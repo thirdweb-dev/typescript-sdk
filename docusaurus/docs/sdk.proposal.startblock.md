@@ -9,7 +9,7 @@ hide_title: true
 
 ## Proposal.startBlock property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 startBlock: BigNumber;

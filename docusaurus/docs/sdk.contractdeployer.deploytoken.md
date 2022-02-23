@@ -11,7 +11,7 @@ hide_title: true
 
 Deploys a new Token contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 deployToken(metadata: z.input<typeof Token.schema.deploy>): Promise<string>;
@@ -23,7 +23,7 @@ deployToken(metadata: z.input<typeof Token.schema.deploy>): Promise<string>;
 |  --- | --- | --- |
 |  metadata | z.input&lt;typeof Token.schema.deploy&gt; | the contract metadata |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

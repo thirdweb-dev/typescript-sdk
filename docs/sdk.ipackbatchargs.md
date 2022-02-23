@@ -11,7 +11,7 @@
 <b>Signature:</b>
 
 ```typescript
-interface IPackBatchArgs 
+export interface IPackBatchArgs 
 ```
 
 ## Properties

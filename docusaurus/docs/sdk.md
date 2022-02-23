@@ -66,7 +66,7 @@ hide_title: true
 |  [BatchToReveal](./sdk.batchtoreveal.md) |  |
 |  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
 |  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
-|  [IPackBatchArgs](./sdk.ipackbatchargs.md) | <b><i>(BETA)</i></b> |
+|  [IPackBatchArgs](./sdk.ipackbatchargs.md) | **<i>(BETA)</i>** |
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
 |  [IStorage](./sdk.istorage.md) |  |
 |  [NativeToken](./sdk.nativetoken.md) |  |

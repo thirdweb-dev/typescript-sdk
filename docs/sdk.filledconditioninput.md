@@ -8,5 +8,5 @@
 <b>Signature:</b>
 
 ```typescript
-declare type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
+export declare type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
 ```

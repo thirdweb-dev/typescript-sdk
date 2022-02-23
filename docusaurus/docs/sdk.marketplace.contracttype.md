@@ -9,7 +9,7 @@ hide_title: true
 
 ## Marketplace.contractType property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractType: "marketplace";

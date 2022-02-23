@@ -9,7 +9,7 @@ hide_title: true
 
 ## BatchToReveal.placeholderMetadata property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 placeholderMetadata: NFTMetadata;

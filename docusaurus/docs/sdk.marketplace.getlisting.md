@@ -11,7 +11,7 @@ hide_title: true
 
 Convenience function to get either a direct or auction listing
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
@@ -23,8 +23,8 @@ getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
 |  --- | --- | --- |
 |  listingId | BigNumberish | the listing id |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;AuctionListing \| DirectListing&gt;
+Promise&lt;[AuctionListing](./sdk.auctionlisting.md) \| [DirectListing](./sdk.directlisting.md)&gt;
 
 either a direct or auction listing

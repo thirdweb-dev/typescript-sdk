@@ -10,8 +10,8 @@ hide_title: true
 ## PayloadWithUri1155 type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type PayloadWithUri1155 = z.output<typeof Signature1155PayloadOutput>;
+export declare type PayloadWithUri1155 = z.output<typeof Signature1155PayloadOutput>;
 ```

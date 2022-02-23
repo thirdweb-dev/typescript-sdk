@@ -11,7 +11,7 @@ hide_title: true
 
 Constructs a new instance of the `DropErc721ClaimConditions` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(contractWrapper: ContractWrapper<DropERC721>, metadata: ContractMetadata<DropERC721, typeof DropErc721ContractSchema>, storage: IStorage);
@@ -22,5 +22,5 @@ constructor(contractWrapper: ContractWrapper<DropERC721>, metadata: ContractMeta
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;DropERC721&gt; |  |
-|  metadata | ContractMetadata&lt;DropERC721, typeof DropErc721ContractSchema&gt; |  |
-|  storage | IStorage |  |
+|  metadata | [ContractMetadata](./sdk.contractmetadata.md)&lt;DropERC721, typeof DropErc721ContractSchema&gt; |  |
+|  storage | [IStorage](./sdk.istorage.md) |  |

@@ -9,8 +9,8 @@ hide_title: true
 
 ## Pack.royalty property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-royalty: ContractRoyalty<Pack$1, typeof Pack.schema>;
+royalty: ContractRoyalty<PackContract, typeof Pack.schema>;
 ```

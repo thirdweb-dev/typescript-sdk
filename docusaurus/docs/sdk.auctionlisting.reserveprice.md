@@ -11,7 +11,7 @@ hide_title: true
 
 The reserve price is the minimum price that a bid must be in order to be accepted.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 reservePrice: BigNumber;

@@ -11,7 +11,7 @@ hide_title: true
 
 Get All NFTs
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
@@ -21,11 +21,11 @@ getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  queryParams | QueryAllParams | optional filtering to only fetch a subset of results. |
+|  queryParams | [QueryAllParams](./sdk.queryallparams.md) | optional filtering to only fetch a subset of results. |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;NFTMetadataOwner\[\]&gt;
+Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)\[\]&gt;
 
 The NFT metadata for all NFTs queried.
 

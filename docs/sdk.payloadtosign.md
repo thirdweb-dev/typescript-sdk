@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-declare type PayloadToSign = z.input<typeof SignaturePayloadInput>;
+export declare type PayloadToSign = z.input<typeof SignaturePayloadInput>;
 ```

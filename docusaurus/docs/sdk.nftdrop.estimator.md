@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTDrop.estimator property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 estimator: GasCostEstimator<DropERC721>;

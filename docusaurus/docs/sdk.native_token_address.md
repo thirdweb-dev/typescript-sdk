@@ -10,7 +10,7 @@ hide_title: true
 ## NATIVE\_TOKEN\_ADDRESS variable
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"

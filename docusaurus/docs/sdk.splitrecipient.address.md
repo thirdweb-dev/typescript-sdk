@@ -11,7 +11,7 @@ hide_title: true
 
 The address of the recipient
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 address: string;

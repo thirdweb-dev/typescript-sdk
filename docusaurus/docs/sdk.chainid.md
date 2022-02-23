@@ -10,10 +10,10 @@ hide_title: true
 ## ChainId enum
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare enum ChainId 
+export declare enum ChainId 
 ```
 
 ## Enumeration Members

@@ -11,7 +11,7 @@ hide_title: true
 
 Get an instance of a Edition Drop contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getEditionDrop(address: string): EditionDrop;
@@ -23,8 +23,8 @@ getEditionDrop(address: string): EditionDrop;
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
 
-<b>Returns:</b>
+**Returns:**
 
-EditionDrop
+[EditionDrop](./sdk.editiondrop.md)
 
 the contract

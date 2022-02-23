@@ -16,11 +16,11 @@ mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMet
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadatas | NFTMetadataInput\[\] |  |
+|  metadatas | [NFTMetadataInput](./sdk.nftmetadatainput.md)<!-- -->\[\] |  |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;\[\]&gt;
 
 ## Remarks
 

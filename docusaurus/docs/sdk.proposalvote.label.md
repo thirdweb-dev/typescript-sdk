@@ -9,7 +9,7 @@ hide_title: true
 
 ## ProposalVote.label property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 label: string;

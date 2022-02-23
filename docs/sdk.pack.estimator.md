@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-estimator: GasCostEstimator<Pack$1>;
+estimator: GasCostEstimator<PackContract>;
 ```

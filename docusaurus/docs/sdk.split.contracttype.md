@@ -9,7 +9,7 @@ hide_title: true
 
 ## Split.contractType property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractType: "split";

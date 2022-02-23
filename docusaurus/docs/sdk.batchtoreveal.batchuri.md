@@ -9,7 +9,7 @@ hide_title: true
 
 ## BatchToReveal.batchUri property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 batchUri: string;

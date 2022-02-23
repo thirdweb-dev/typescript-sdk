@@ -9,7 +9,7 @@ hide_title: true
 
 ## VoteSettings.votingDelay property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 votingDelay: string;

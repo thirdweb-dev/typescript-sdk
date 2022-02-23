@@ -9,7 +9,7 @@ hide_title: true
 
 ## Edition.signature property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 signature: Erc1155SignatureMinting;

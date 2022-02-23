@@ -11,7 +11,7 @@ hide_title: true
 
 The duration of the listing in seconds.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 listingDurationInSeconds: BigNumberish;

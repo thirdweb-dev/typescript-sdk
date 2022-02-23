@@ -13,5 +13,5 @@ settings(): Promise<VoteSettings>;
 ```
 <b>Returns:</b>
 
-Promise&lt;VoteSettings&gt;
+Promise&lt;[VoteSettings](./sdk.votesettings.md)<!-- -->&gt;
 

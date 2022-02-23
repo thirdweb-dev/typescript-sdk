@@ -11,7 +11,7 @@ hide_title: true
 
 Number of seconds until the auction expires.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 endTimeInEpochSeconds: BigNumberish;

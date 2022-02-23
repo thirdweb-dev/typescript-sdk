@@ -9,7 +9,7 @@ hide_title: true
 
 ## AuctionListing.type property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 type: ListingType.Auction;

@@ -11,7 +11,7 @@ hide_title: true
 
 `getOwned` is a convenience method for getting all owned tokens for a particular wallet.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getOwned(_address?: string): Promise<PackMetadataWithBalance[]>;
@@ -23,8 +23,8 @@ getOwned(_address?: string): Promise<PackMetadataWithBalance[]>;
 |  --- | --- | --- |
 |  \_address | string | The address to check for token ownership |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;PackMetadataWithBalance\[\]&gt;
+Promise&lt;[PackMetadataWithBalance](./sdk.packmetadatawithbalance.md)\[\]&gt;
 
 An array of PackMetadataWithBalance objects that are owned by the address

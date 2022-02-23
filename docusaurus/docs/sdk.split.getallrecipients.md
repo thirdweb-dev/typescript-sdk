@@ -11,14 +11,14 @@ hide_title: true
 
 Get Recipients of this splits contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getAllRecipients(): Promise<SplitRecipient[]>;
 ```
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;SplitRecipient\[\]&gt;
+Promise&lt;[SplitRecipient](./sdk.splitrecipient.md)\[\]&gt;
 
 ## Remarks
 

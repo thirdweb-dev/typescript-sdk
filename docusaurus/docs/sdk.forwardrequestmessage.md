@@ -11,10 +11,10 @@ hide_title: true
 
 Forward Request Message that's used for gasless transaction
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type ForwardRequestMessage = {
+export declare type ForwardRequestMessage = {
     from: string;
     to: string;
     value: string;

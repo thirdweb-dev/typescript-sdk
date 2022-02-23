@@ -11,7 +11,7 @@ hide_title: true
 
 Gets the royalty recipient and BPS (basis points) of the contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getDefaultRoyaltyInfo(): Promise<{
@@ -19,7 +19,7 @@ getDefaultRoyaltyInfo(): Promise<{
         fee_recipient: string;
     }>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;{ seller\_fee\_basis\_points: number; fee\_recipient: string; }&gt;
 

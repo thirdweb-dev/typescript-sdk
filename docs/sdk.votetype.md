@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-declare enum VoteType 
+export declare enum VoteType 
 ```
 
 ## Enumeration Members

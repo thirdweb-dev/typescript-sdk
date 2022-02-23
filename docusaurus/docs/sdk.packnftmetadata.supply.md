@@ -9,7 +9,7 @@ hide_title: true
 
 ## PackNFTMetadata.supply property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 supply: BigNumber;

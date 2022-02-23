@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-interface ProposalVote 
+export interface ProposalVote 
 ```
 
 ## Properties
@@ -16,5 +16,5 @@ interface ProposalVote
 |  --- | --- | --- |
 |  [count](./sdk.proposalvote.count.md) | BigNumber |  |
 |  [label](./sdk.proposalvote.label.md) | string |  |
-|  [type](./sdk.proposalvote.type.md) | VoteType |  |
+|  [type](./sdk.proposalvote.type.md) | [VoteType](./sdk.votetype.md) |  |
 

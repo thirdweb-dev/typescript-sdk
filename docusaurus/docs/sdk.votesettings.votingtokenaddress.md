@@ -9,7 +9,7 @@ hide_title: true
 
 ## VoteSettings.votingTokenAddress property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 votingTokenAddress: string;

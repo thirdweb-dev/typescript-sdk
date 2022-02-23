@@ -11,7 +11,7 @@ hide_title: true
 
 The description of the proposal.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 description: string;

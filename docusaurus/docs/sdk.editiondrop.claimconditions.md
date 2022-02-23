@@ -9,7 +9,7 @@ hide_title: true
 
 ## EditionDrop.claimConditions property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 claimConditions: DropErc1155ClaimConditions;

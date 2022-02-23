@@ -9,8 +9,8 @@ hide_title: true
 
 ## ContractType type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type ContractType = keyof typeof CONTRACTS_MAP;
+export declare type ContractType = keyof typeof CONTRACTS_MAP;
 ```

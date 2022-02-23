@@ -11,25 +11,25 @@ hide_title: true
 
 Represents a marketplace direct listing.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-interface DirectListing 
+export interface DirectListing 
 ```
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [asset](./sdk.directlisting.asset.md) | NFTMetadata | The asset being listed. |
+|  [asset](./sdk.directlisting.asset.md) | [NFTMetadata](./sdk.nftmetadata.md) | The asset being listed. |
 |  [assetContractAddress](./sdk.directlisting.assetcontractaddress.md) | string | The address of the asset being listed. |
-|  [buyoutCurrencyValuePerToken](./sdk.directlisting.buyoutcurrencyvaluepertoken.md) | CurrencyValue | The <code>CurrencyValue</code> of the listing. Useful for displaying the price information. |
+|  [buyoutCurrencyValuePerToken](./sdk.directlisting.buyoutcurrencyvaluepertoken.md) | [CurrencyValue](./sdk.currencyvalue.md) | The <code>CurrencyValue</code> of the listing. Useful for displaying the price information. |
 |  [buyoutPrice](./sdk.directlisting.buyoutprice.md) | BigNumber | The buyout price of the listing. |
 |  [currencyContractAddress](./sdk.directlisting.currencycontractaddress.md) | string | The address of the currency to accept for the listing. |
 |  [id](./sdk.directlisting.id.md) | string | The id of the listing. |
-|  [quantity](./sdk.directlisting.quantity.md) | BigNumberish | The quantity of tokens to include in the listing.<!-- -->For ERC721s, this value should always be 1 (and will be forced internally regardless of what is passed here). |
+|  [quantity](./sdk.directlisting.quantity.md) | BigNumberish | The quantity of tokens to include in the listing.For ERC721s, this value should always be 1 (and will be forced internally regardless of what is passed here). |
 |  [secondsUntilEnd](./sdk.directlisting.secondsuntilend.md) | BigNumberish | Number of seconds until the listing expires. |
 |  [sellerAddress](./sdk.directlisting.selleraddress.md) | string | The address of the seller. |
 |  [startTimeInSeconds](./sdk.directlisting.starttimeinseconds.md) | BigNumberish | The start time of the listing. |
 |  [tokenId](./sdk.directlisting.tokenid.md) | BigNumberish | The ID of the token to list. |
-|  [type](./sdk.directlisting.type.md) | ListingType.Direct |  |
+|  [type](./sdk.directlisting.type.md) | [ListingType.Direct](./sdk.listingtype.md) |  |

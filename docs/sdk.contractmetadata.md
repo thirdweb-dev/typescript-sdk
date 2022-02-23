@@ -9,7 +9,7 @@ Handles metadata for a Contract
 <b>Signature:</b>
 
 ```typescript
-declare class ContractMetadata<TContract extends IThirdwebContract, TSchema extends IGenericSchemaType> 
+export declare class ContractMetadata<TContract extends IThirdwebContract, TSchema extends IGenericSchemaType> 
 ```
 
 ## Constructors

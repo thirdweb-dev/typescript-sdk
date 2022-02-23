@@ -11,7 +11,7 @@ hide_title: true
 
 Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setAllowance(spender: string, amount: BigNumber): Promise<TransactionResult>;
@@ -24,9 +24,9 @@ setAllowance(spender: string, amount: BigNumber): Promise<TransactionResult>;
 |  spender | string |  |
 |  amount | BigNumber |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Example
 

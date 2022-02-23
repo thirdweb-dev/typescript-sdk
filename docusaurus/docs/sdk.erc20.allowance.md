@@ -11,7 +11,7 @@ hide_title: true
 
 Get Token Allowance
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 allowance(spender: string): Promise<BigNumber>;
@@ -23,7 +23,7 @@ allowance(spender: string): Promise<BigNumber>;
 |  --- | --- | --- |
 |  spender | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;
 

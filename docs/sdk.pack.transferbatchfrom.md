@@ -16,10 +16,10 @@ transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: Bytes
 |  --- | --- | --- |
 |  from | string |  |
 |  to | string |  |
-|  args | IPackBatchArgs\[\] |  |
+|  args | [IPackBatchArgs](./sdk.ipackbatchargs.md)<!-- -->\[\] |  |
 |  data | BytesLike |  |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
 

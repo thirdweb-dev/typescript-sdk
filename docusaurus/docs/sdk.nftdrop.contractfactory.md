@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTDrop.contractFactory property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractFactory: typeof DropERC721__factory;

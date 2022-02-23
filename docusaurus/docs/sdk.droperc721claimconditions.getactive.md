@@ -11,13 +11,13 @@ hide_title: true
 
 Get the currently active claim condition
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getActive(): Promise<ClaimCondition>;
 ```
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;ClaimCondition&gt;
+Promise&lt;[ClaimCondition](./sdk.claimcondition.md)&gt;
 
 the claim condition metadata

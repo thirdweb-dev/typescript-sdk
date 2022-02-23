@@ -11,7 +11,7 @@ hide_title: true
 
 The address of the buyer who made the offer.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 buyerAddress: string;

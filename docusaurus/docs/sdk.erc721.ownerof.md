@@ -11,7 +11,7 @@ hide_title: true
 
 Get the current owner of a given NFT within this Contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 ownerOf(tokenId: BigNumberish): Promise<string>;
@@ -23,7 +23,7 @@ ownerOf(tokenId: BigNumberish): Promise<string>;
 |  --- | --- | --- |
 |  tokenId | BigNumberish | the tokenId of the NFT |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

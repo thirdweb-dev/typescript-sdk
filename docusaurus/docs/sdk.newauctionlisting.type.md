@@ -9,7 +9,7 @@ hide_title: true
 
 ## NewAuctionListing.type property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 type?: "NewAuctionListing";

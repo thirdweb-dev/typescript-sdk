@@ -11,7 +11,7 @@ hide_title: true
 
 Get the votes for a specific proposal
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getProposalVotes(proposalId: BigNumber): Promise<ProposalVote[]>;
@@ -23,6 +23,6 @@ getProposalVotes(proposalId: BigNumber): Promise<ProposalVote[]>;
 |  --- | --- | --- |
 |  proposalId | BigNumber | the proposalId |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;ProposalVote\[\]&gt;
+Promise&lt;[ProposalVote](./sdk.proposalvote.md)\[\]&gt;

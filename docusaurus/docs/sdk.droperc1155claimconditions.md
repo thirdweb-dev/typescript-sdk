@@ -11,10 +11,10 @@ hide_title: true
 
 Manages claim conditions for Edition Drop contracts
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class DropErc1155ClaimConditions 
+export declare class DropErc1155ClaimConditions 
 ```
 
 ## Constructors

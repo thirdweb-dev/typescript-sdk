@@ -11,7 +11,7 @@ hide_title: true
 
 Get an instance of a Marketplace contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getMarketplace(address: string): Marketplace;
@@ -23,8 +23,8 @@ getMarketplace(address: string): Marketplace;
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
 
-<b>Returns:</b>
+**Returns:**
 
-Marketplace
+[Marketplace](./sdk.marketplace.md)
 
 the contract

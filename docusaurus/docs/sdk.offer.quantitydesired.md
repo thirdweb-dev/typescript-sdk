@@ -11,7 +11,7 @@ hide_title: true
 
 The quantity of tokens to be bought.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 quantityDesired: BigNumberish;

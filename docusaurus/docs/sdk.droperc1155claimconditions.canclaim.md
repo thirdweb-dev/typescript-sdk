@@ -11,7 +11,7 @@ hide_title: true
 
 Can Claim
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 canClaim(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
@@ -25,7 +25,7 @@ canClaim(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string)
 |  quantity | BigNumberish |  |
 |  addressToCheck | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;boolean&gt;
 

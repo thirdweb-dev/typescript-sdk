@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTDrop.revealer property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 revealer: DelayedReveal<DropERC721>;

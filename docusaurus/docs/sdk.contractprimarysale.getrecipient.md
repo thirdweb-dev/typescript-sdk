@@ -11,12 +11,12 @@ hide_title: true
 
 Get the primary sale recipient.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getRecipient(): Promise<string>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

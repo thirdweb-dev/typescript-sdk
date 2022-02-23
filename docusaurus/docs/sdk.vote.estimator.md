@@ -9,7 +9,7 @@ hide_title: true
 
 ## Vote.estimator property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 estimator: GasCostEstimator<VoteERC20>;

@@ -11,9 +11,9 @@ hide_title: true
 
 The reserve price is the minimum price that a bid must be in order to be accepted, per token.
 
-So if the `quantity = 10` and the `reserve price = 1`<!-- -->, then the minimum bid is 10 coins (of the configured currency).
+So if the `quantity = 10` and the `reserve price = 1`, then the minimum bid is 10 coins (of the configured currency).
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 reservePricePerToken: Price;

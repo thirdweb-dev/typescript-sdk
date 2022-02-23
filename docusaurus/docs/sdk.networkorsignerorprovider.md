@@ -9,8 +9,8 @@ hide_title: true
 
 ## NetworkOrSignerOrProvider type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
+export declare type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 ```

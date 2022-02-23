@@ -9,7 +9,7 @@ Enables generating dynamic ERC721 NFTs with rules and an associated signature, w
 <b>Signature:</b>
 
 ```typescript
-declare class Erc721SignatureMinting 
+export declare class Erc721SignatureMinting 
 ```
 
 ## Constructors

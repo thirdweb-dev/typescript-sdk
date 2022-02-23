@@ -11,11 +11,11 @@ hide_title: true
 
 The total supply for this Token
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 totalSupply(): Promise<BigNumber>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;

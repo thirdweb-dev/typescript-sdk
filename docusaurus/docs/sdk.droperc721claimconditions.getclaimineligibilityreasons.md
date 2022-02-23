@@ -11,7 +11,7 @@ hide_title: true
 
 For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getClaimIneligibilityReasons(quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
@@ -24,6 +24,6 @@ getClaimIneligibilityReasons(quantity: BigNumberish, addressToCheck?: string): P
 |  quantity | BigNumberish | The desired quantity that would be claimed. |
 |  addressToCheck | string | The wallet address, defaults to the connected wallet. |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;ClaimEligibility\[\]&gt;
+Promise&lt;[ClaimEligibility](./sdk.claimeligibility.md)\[\]&gt;

@@ -11,7 +11,7 @@ hide_title: true
 
 Check the balance of the project wallet in a particular ERC20 token contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
@@ -23,8 +23,8 @@ balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
 |  --- | --- | --- |
 |  tokenAddress | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;CurrencyValue&gt;
+Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)&gt;
 
 - The balance of the project in the native token of the chain

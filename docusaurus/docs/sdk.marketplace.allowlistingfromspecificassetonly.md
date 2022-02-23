@@ -11,7 +11,7 @@ hide_title: true
 
 Restrict listing NFTs only from the specified NFT contract address. It is possible to allow listing from multiple contract addresses.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 allowListingFromSpecificAssetOnly(contractAddress: string): Promise<void>;
@@ -23,6 +23,6 @@ allowListingFromSpecificAssetOnly(contractAddress: string): Promise<void>;
 |  --- | --- | --- |
 |  contractAddress | string | the NFT contract address |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;

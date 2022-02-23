@@ -9,8 +9,8 @@ hide_title: true
 
 ## GaslessTransaction.callOverrides property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-callOverrides: CallOverrides$1;
+callOverrides: CallOverrides;
 ```

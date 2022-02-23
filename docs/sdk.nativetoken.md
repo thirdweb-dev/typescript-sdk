@@ -7,9 +7,9 @@
 <b>Signature:</b>
 
 ```typescript
-interface NativeToken extends Currency 
+export interface NativeToken extends Currency 
 ```
-<b>Extends:</b> Currency
+<b>Extends:</b> [Currency](./sdk.currency.md)
 
 ## Properties
 

@@ -11,7 +11,7 @@ hide_title: true
 
 Deploys a new Marketplace contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 deployMarketplace(metadata: z.input<typeof Marketplace.schema.deploy>): Promise<string>;
@@ -23,7 +23,7 @@ deployMarketplace(metadata: z.input<typeof Marketplace.schema.deploy>): Promise<
 |  --- | --- | --- |
 |  metadata | z.input&lt;typeof Marketplace.schema.deploy&gt; | the contract metadata |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

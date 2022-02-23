@@ -9,7 +9,7 @@ hide_title: true
 
 ## Vote.contractType property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractType: "vote";

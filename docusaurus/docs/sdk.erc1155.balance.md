@@ -11,7 +11,7 @@ hide_title: true
 
 Get NFT Balance for the currently connected wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balance(tokenId: BigNumberish): Promise<BigNumber>;
@@ -23,6 +23,6 @@ balance(tokenId: BigNumberish): Promise<BigNumber>;
 |  --- | --- | --- |
 |  tokenId | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;

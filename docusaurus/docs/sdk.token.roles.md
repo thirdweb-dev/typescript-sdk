@@ -9,7 +9,7 @@ hide_title: true
 
 ## Token.roles property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;

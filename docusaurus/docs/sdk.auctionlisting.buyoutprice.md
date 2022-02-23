@@ -11,7 +11,7 @@ hide_title: true
 
 The buyout price of the listing.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 buyoutPrice: BigNumber;

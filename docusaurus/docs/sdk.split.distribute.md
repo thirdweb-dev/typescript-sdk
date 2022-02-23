@@ -11,14 +11,14 @@ hide_title: true
 
 Distribute Funds
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 distribute(): Promise<TransactionResult>;
 ```
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

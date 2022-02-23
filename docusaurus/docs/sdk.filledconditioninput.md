@@ -10,8 +10,8 @@ hide_title: true
 ## FilledConditionInput type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
+export declare type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
 ```

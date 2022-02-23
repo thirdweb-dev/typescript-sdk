@@ -9,7 +9,7 @@ hide_title: true
 
 ## GaslessTransaction.chainId property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 chainId: number;

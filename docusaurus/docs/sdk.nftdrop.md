@@ -11,12 +11,12 @@ hide_title: true
 
 Setup a collection of one-of-one NFTs that are minted as users claim them.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class NFTDrop extends Erc721<DropERC721> 
+export declare class NFTDrop extends Erc721<DropERC721> 
 ```
-<b>Extends:</b> Erc721&lt;DropERC721&gt;
+**Extends:** [Erc721](./sdk.erc721.md)&lt;DropERC721&gt;
 
 ## Example
 
@@ -40,17 +40,17 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [claimConditions](./sdk.nftdrop.claimconditions.md) |  | DropErc721ClaimConditions |  |
+|  [claimConditions](./sdk.nftdrop.claimconditions.md) |  | [DropErc721ClaimConditions](./sdk.droperc721claimconditions.md) |  |
 |  [contractFactory](./sdk.nftdrop.contractfactory.md) | <code>static</code> | typeof DropERC721\_\_factory |  |
 |  [contractRoles](./sdk.nftdrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.nftdrop.contracttype.md) | <code>static</code> | "nft-drop" |  |
-|  [encoder](./sdk.nftdrop.encoder.md) |  | ContractEncoder&lt;DropERC721&gt; |  |
-|  [estimator](./sdk.nftdrop.estimator.md) |  | GasCostEstimator&lt;DropERC721&gt; |  |
-|  [metadata](./sdk.nftdrop.metadata.md) |  | ContractMetadata&lt;DropERC721, typeof NFTDrop.schema&gt; |  |
-|  [primarySale](./sdk.nftdrop.primarysale.md) |  | ContractPrimarySale&lt;DropERC721&gt; |  |
+|  [encoder](./sdk.nftdrop.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)&lt;DropERC721&gt; |  |
+|  [estimator](./sdk.nftdrop.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)&lt;DropERC721&gt; |  |
+|  [metadata](./sdk.nftdrop.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)&lt;DropERC721, typeof NFTDrop.schema&gt; |  |
+|  [primarySale](./sdk.nftdrop.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)&lt;DropERC721&gt; |  |
 |  [revealer](./sdk.nftdrop.revealer.md) |  | DelayedReveal&lt;DropERC721&gt; |  |
-|  [roles](./sdk.nftdrop.roles.md) |  | ContractRoles&lt;DropERC721, typeof NFTDrop.contractRoles\[number\]&gt; |  |
-|  [royalty](./sdk.nftdrop.royalty.md) |  | ContractRoyalty&lt;DropERC721, typeof NFTDrop.schema&gt; |  |
+|  [roles](./sdk.nftdrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)&lt;DropERC721, typeof [NFTDrop.contractRoles](./sdk.nftdrop.contractroles.md)\[number\]&gt; |  |
+|  [royalty](./sdk.nftdrop.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)&lt;DropERC721, typeof NFTDrop.schema&gt; |  |
 
 ## Methods
 

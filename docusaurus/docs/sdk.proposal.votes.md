@@ -11,7 +11,7 @@ hide_title: true
 
 All votes that have been casted on the proposal.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 votes: ProposalVote[];

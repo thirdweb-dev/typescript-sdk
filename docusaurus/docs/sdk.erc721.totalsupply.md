@@ -11,12 +11,12 @@ hide_title: true
 
 Get the total supply for this Contract.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 totalSupply(): Promise<BigNumber>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;
 

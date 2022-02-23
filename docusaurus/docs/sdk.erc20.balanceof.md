@@ -11,7 +11,7 @@ hide_title: true
 
 Get Token Balance
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balanceOf(address: string): Promise<CurrencyValue>;
@@ -23,9 +23,9 @@ balanceOf(address: string): Promise<CurrencyValue>;
 |  --- | --- | --- |
 |  address | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;CurrencyValue&gt;
+Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)&gt;
 
 The balance of a specific wallet.
 
