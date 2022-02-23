@@ -9,6 +9,7 @@ hide_title: true
 
 ## ClaimVerification type
 
+
 <b>Signature:</b>
 
 ```typescript

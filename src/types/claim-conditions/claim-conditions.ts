@@ -18,12 +18,12 @@ import { BigNumber, BytesLike, CallOverrides } from "ethers";
 export type ClaimCondition = z.output<typeof ClaimConditionOutputSchema>;
 
 /**
- * @internal
+ * @public
  */
 export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
 
 /**
- * @internal
+ * @public
  */
 export type Snapshot = z.output<typeof SnapshotSchema>;
 
@@ -42,12 +42,12 @@ export type ClaimConditionInput = z.input<
 >;
 
 /**
- * @internal
+ * @public
  */
 export type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
 
 /**
- * @internal
+ * @public
  */
 export type ClaimVerification = {
   overrides: CallOverrides;

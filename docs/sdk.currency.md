@@ -4,7 +4,6 @@
 
 ## Currency type
 
-Currency metadata.
 
 <b>Signature:</b>
 

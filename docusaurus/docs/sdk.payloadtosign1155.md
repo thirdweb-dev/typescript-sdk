@@ -9,6 +9,7 @@ hide_title: true
 
 ## PayloadToSign1155 type
 
+
 <b>Signature:</b>
 
 ```typescript

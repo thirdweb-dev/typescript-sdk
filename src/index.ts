@@ -58,6 +58,7 @@ import "cross-fetch/polyfill";
 export * from "./core";
 export * from "./core/classes";
 export * from "./types";
+export * from "./enums";
 export * from "./common";
 export * from "./contracts";
 export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";

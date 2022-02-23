@@ -4,6 +4,7 @@
 
 ## SignedPayload1155 type
 
+
 <b>Signature:</b>
 
 ```typescript

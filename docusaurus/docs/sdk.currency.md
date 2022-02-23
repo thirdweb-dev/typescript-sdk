@@ -9,7 +9,6 @@ hide_title: true
 
 ## Currency type
 
-Currency metadata.
 
 <b>Signature:</b>
 

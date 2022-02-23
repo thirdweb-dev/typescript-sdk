@@ -12,6 +12,9 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import { CurrencyValueSchema } from "./currency";
 import { SnapshotInputSchema } from "./snapshots";
 
+/**
+ * @internal
+ */
 export const ClaimConditionInputSchema = z.object({
   startTime: DateSchema,
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
@@ -25,11 +28,20 @@ export const ClaimConditionInputSchema = z.object({
   snapshot: z.optional(SnapshotInputSchema),
 });
 
+/**
+ * @internal
+ */
 export const ClaimConditionInputArray = z.array(ClaimConditionInputSchema);
 
+/**
+ * @internal
+ */
 export const PartialClaimConditionInputSchema =
   ClaimConditionInputSchema.partial();
 
+/**
+ * @internal
+ */
 export const ClaimConditionOutputSchema = ClaimConditionInputSchema.omit({
   snapshot: true,
 }).extend({

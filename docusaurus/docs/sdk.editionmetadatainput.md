@@ -9,6 +9,7 @@ hide_title: true
 
 ## EditionMetadataInput type
 
+
 <b>Signature:</b>
 
 ```typescript

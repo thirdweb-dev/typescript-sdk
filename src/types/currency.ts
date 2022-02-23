@@ -9,6 +9,9 @@ import {
 } from "../schema/contracts/common/currency";
 import { PriceSchema } from "../schema/shared";
 
+/**
+ * @public
+ */
 export type Currency = z.infer<typeof CurrencySchema>;
 
 export interface NativeToken extends Currency {

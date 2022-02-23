@@ -97,8 +97,6 @@ export interface AuctionListing {
     sellerAddress: string;
     startTimeInEpochSeconds: BigNumberish;
     tokenId: BigNumberish;
-    // Warning: (ae-forgotten-export) The symbol "ListingType" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     type: ListingType.Auction;
 }
@@ -157,13 +155,19 @@ export enum ChainId {
     xDai = 100
 }
 
+// Warning: (ae-incompatible-release-tags) The symbol "ClaimCondition" is marked as @public, but its signature references "ClaimConditionOutputSchema" which is marked as @internal
+//
 // @public
 export type ClaimCondition = z.output<typeof ClaimConditionOutputSchema>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "ClaimConditionInput" is marked as @public, but its signature references "PartialClaimConditionInputSchema" which is marked as @internal
+//
 // @public
 export type ClaimConditionInput = z.input<typeof PartialClaimConditionInputSchema>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "ClaimConditionInputArray" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const ClaimConditionInputArray: z.ZodArray<z.ZodObject<{
     startTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>;
     currencyAddress: z.ZodDefault<z.ZodString>;
@@ -208,7 +212,9 @@ export const ClaimConditionInputArray: z.ZodArray<z.ZodObject<{
     merkleRootHash?: string | number[] | undefined;
 }>, "many">;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "ClaimConditionInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const ClaimConditionInputSchema: z.ZodObject<{
     startTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>;
     currencyAddress: z.ZodDefault<z.ZodString>;
@@ -253,7 +259,9 @@ export const ClaimConditionInputSchema: z.ZodObject<{
     merkleRootHash?: string | number[] | undefined;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "ClaimConditionOutputSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     startTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>;
     currencyAddress: z.ZodDefault<z.ZodString>;
@@ -323,9 +331,25 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     waitInSeconds: string | number | bigint | BigNumber;
 }>;
 
-// Warning: (ae-internal-missing-underscore) The name "ClaimVerification" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
+// @public (undocumented)
+export enum ClaimEligibility {
+    // (undocumented)
+    AddressNotAllowed = "This address is not on the allowlist.",
+    // (undocumented)
+    AlreadyClaimed = "You have already claimed the token.",
+    // (undocumented)
+    NoActiveClaimPhase = "There is no active claim phase at the moment. Please check back in later.",
+    // (undocumented)
+    NoClaimConditionSet = "There is no claim condition set.",
+    // (undocumented)
+    NotEnoughSupply = "There is not enough supply to claim.",
+    // (undocumented)
+    NotEnoughTokens = "There are not enough tokens in the wallet to pay for the claim.",
+    // (undocumented)
+    WaitBeforeNextClaimTransaction = "Not enough time since last claim transaction. Please wait."
+}
+
+// @public (undocumented)
 export type ClaimVerification = {
     overrides: CallOverrides;
     proofs: BytesLike[];
@@ -562,10 +586,14 @@ export type ContractType = keyof typeof CONTRACTS_MAP;
 // @internal
 export function createSnapshot(snapshotInput: SnapshotInput, storage: IStorage): Promise<SnapshotInfo>;
 
-// @public
+// Warning: (ae-incompatible-release-tags) The symbol "Currency" is marked as @public, but its signature references "CurrencySchema" which is marked as @internal
+//
+// @public (undocumented)
 export type Currency = z.infer<typeof CurrencySchema>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "CurrencySchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const CurrencySchema: z.ZodObject<{
     name: z.ZodString;
     symbol: z.ZodString;
@@ -580,10 +608,14 @@ export const CurrencySchema: z.ZodObject<{
     decimals: number;
 }>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "CurrencyValue" is marked as @public, but its signature references "CurrencyValueSchema" which is marked as @internal
+//
 // @public
 export type CurrencyValue = z.infer<typeof CurrencyValueSchema>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "CurrencyValueSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
     name: z.ZodString;
     symbol: z.ZodString;
@@ -632,7 +664,6 @@ export class DropErc1155ClaimConditions {
     canClaim(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
     getActive(tokenId: BigNumberish): Promise<ClaimCondition>;
     getAll(tokenId: BigNumberish): Promise<ClaimCondition[]>;
-    // Warning: (ae-forgotten-export) The symbol "ClaimEligibility" needs to be exported by the entry point index.d.ts
     getClaimIneligibilityReasons(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
     set(tokenId: BigNumberish, claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
     update(tokenId: BigNumberish, index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
@@ -679,13 +710,9 @@ export class Edition extends Erc1155<TokenERC1155> {
     increaseSupply(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
-    // Warning: (ae-incompatible-release-tags) The symbol "mint" is marked as @public, but its signature references "EditionMetadataInput" which is marked as @internal
     mint(metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;
-    // Warning: (ae-incompatible-release-tags) The symbol "mintBatch" is marked as @public, but its signature references "EditionMetadataInput" which is marked as @internal
     mintBatch(metadatas: EditionMetadataInput[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
-    // Warning: (ae-incompatible-release-tags) The symbol "mintBatchTo" is marked as @public, but its signature references "EditionMetadataInput" which is marked as @internal
     mintBatchTo(to: string, metadataWithSupply: EditionMetadataInput[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
-    // Warning: (ae-incompatible-release-tags) The symbol "mintTo" is marked as @public, but its signature references "EditionMetadataInput" which is marked as @internal
     mintTo(to: string, metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC1155>;
@@ -932,15 +959,19 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     };
 }
 
+// Warning: (ae-incompatible-release-tags) The symbol "EditionMetadata" is marked as @public, but its signature references "EditionMetadataOutputSchema" which is marked as @internal
+//
 // @public (undocumented)
 export type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
 
-// Warning: (ae-internal-missing-underscore) The name "EditionMetadataInput" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-incompatible-release-tags) The symbol "EditionMetadataInput" is marked as @public, but its signature references "EditionMetadataInputSchema" which is marked as @internal
 //
-// @internal (undocumented)
+// @public (undocumented)
 export type EditionMetadataInput = z.input<typeof EditionMetadataInputSchema>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "EditionMetadataInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const EditionMetadataInputSchema: z.ZodObject<{
     supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
     metadata: z.ZodObject<z.extendShape<{
@@ -1027,7 +1058,9 @@ export const EditionMetadataInputSchema: z.ZodObject<{
     supply: string | number | bigint | ethers.BigNumber;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "EditionMetadataOutputSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const EditionMetadataOutputSchema: z.ZodObject<{
     supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
     metadata: z.ZodObject<z.extendShape<z.extendShape<{
@@ -1218,19 +1251,19 @@ export class FileNameMissingError extends Error {
 // @public (undocumented)
 export type FileOrBuffer = File | Buffer | BufferOrStringWithName;
 
-// Warning: (ae-internal-missing-underscore) The name "FilledConditionInput" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-incompatible-release-tags) The symbol "FilledConditionInput" is marked as @public, but its signature references "ClaimConditionInputSchema" which is marked as @internal
 //
-// @internal (undocumented)
+// @public (undocumented)
 export type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
 
-// Warning: (ae-internal-missing-underscore) The name "FilledSignaturePayload" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-incompatible-release-tags) The symbol "FilledSignaturePayload" is marked as @public, but its signature references "SignaturePayloadInput" which is marked as @internal
 //
-// @internal (undocumented)
+// @public (undocumented)
 export type FilledSignaturePayload = z.output<typeof SignaturePayloadInput>;
 
-// Warning: (ae-internal-missing-underscore) The name "FilledSignaturePayload1155" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-incompatible-release-tags) The symbol "FilledSignaturePayload1155" is marked as @public, but its signature references "Signature1155PayloadInput" which is marked as @internal
 //
-// @internal (undocumented)
+// @public (undocumented)
 export type FilledSignaturePayload1155 = z.output<typeof Signature1155PayloadInput>;
 
 // @public
@@ -1375,6 +1408,14 @@ export type JsonObject = {
 // @internal
 export class ListingNotFoundError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string);
+}
+
+// @public (undocumented)
+export enum ListingType {
+    // (undocumented)
+    Auction = 1,
+    // (undocumented)
+    Direct = 0
 }
 
 // @public
@@ -2154,7 +2195,9 @@ export interface PackNFTMetadata {
     supply: BigNumber;
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "PartialClaimConditionInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const PartialClaimConditionInputSchema: z.ZodObject<{
     startTime: z.ZodOptional<z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>>;
     currencyAddress: z.ZodOptional<z.ZodDefault<z.ZodString>>;
@@ -2199,20 +2242,24 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
     merkleRootHash?: string | number[] | undefined;
 }>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "PayloadToSign" is marked as @public, but its signature references "SignaturePayloadInput" which is marked as @internal
+//
 // @public (undocumented)
 export type PayloadToSign = z.input<typeof SignaturePayloadInput>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "PayloadToSign1155" is marked as @public, but its signature references "Signature1155PayloadInput" which is marked as @internal
+//
 // @public (undocumented)
 export type PayloadToSign1155 = z.input<typeof Signature1155PayloadInput>;
 
-// Warning: (ae-internal-missing-underscore) The name "PayloadWithUri" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-incompatible-release-tags) The symbol "PayloadWithUri" is marked as @public, but its signature references "SignaturePayloadOutput" which is marked as @internal
 //
-// @internal (undocumented)
+// @public (undocumented)
 export type PayloadWithUri = z.output<typeof SignaturePayloadOutput>;
 
-// Warning: (ae-internal-missing-underscore) The name "PayloadWithUri1155" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-incompatible-release-tags) The symbol "PayloadWithUri1155" is marked as @public, but its signature references "Signature1155PayloadOutput" which is marked as @internal
 //
-// @internal (undocumented)
+// @public (undocumented)
 export type PayloadWithUri1155 = z.output<typeof Signature1155PayloadOutput>;
 
 // @public
@@ -2243,7 +2290,6 @@ export interface Proposal {
     proposer: string;
     // (undocumented)
     startBlock: BigNumber;
-    // Warning: (ae-forgotten-export) The symbol "ProposalState" needs to be exported by the entry point index.d.ts
     state: ProposalState;
     votes: ProposalVote[];
 }
@@ -2256,13 +2302,31 @@ export interface ProposalExecutable {
 }
 
 // @public (undocumented)
+export enum ProposalState {
+    // (undocumented)
+    Active = 1,
+    // (undocumented)
+    Canceled = 2,
+    // (undocumented)
+    Defeated = 3,
+    // (undocumented)
+    Executed = 7,
+    // (undocumented)
+    Expired = 6,
+    // (undocumented)
+    Pending = 0,
+    // (undocumented)
+    Queued = 5,
+    // (undocumented)
+    Succeeded = 4
+}
+
+// @public (undocumented)
 export interface ProposalVote {
     // (undocumented)
     count: BigNumber;
     // (undocumented)
     label: string;
-    // Warning: (ae-forgotten-export) The symbol "VoteType" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     type: VoteType;
 }
@@ -2329,7 +2393,9 @@ export type Role = keyof typeof roleMap;
 // @public (undocumented)
 export type SDKOptions = z.input<typeof SDKOptionsSchema>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "Signature1155PayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
     metadata: z.ZodObject<z.extendShape<{
         name: z.ZodString;
@@ -2447,7 +2513,9 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
     quantity: string | number | bigint | ethers_2.BigNumber;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "Signature1155PayloadOutput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<{
     metadata: z.ZodObject<z.extendShape<{
         name: z.ZodString;
@@ -2573,7 +2641,9 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     quantity: string | number | bigint | ethers_2.BigNumber;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "SignaturePayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const SignaturePayloadInput: z.ZodObject<{
     metadata: z.ZodObject<z.extendShape<{
         name: z.ZodString;
@@ -2684,7 +2754,9 @@ export const SignaturePayloadInput: z.ZodObject<{
     };
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "SignaturePayloadOutput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
     metadata: z.ZodObject<z.extendShape<{
         name: z.ZodString;
@@ -2818,14 +2890,10 @@ export type SignedPayload1155 = {
 // @public (undocumented)
 export type SignerOrProvider = Signer | Provider;
 
-// Warning: (ae-internal-missing-underscore) The name "Snapshot" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
+// @public (undocumented)
 export type Snapshot = z.output<typeof SnapshotSchema>;
 
-// Warning: (ae-internal-missing-underscore) The name "SnapshotInfo" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
+// @public (undocumented)
 export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
 
 // @public (undocumented)
@@ -3335,10 +3403,14 @@ export class Token extends Erc20<TokenERC20> {
     };
 }
 
+// Warning: (ae-incompatible-release-tags) The symbol "TokenMintInput" is marked as @public, but its signature references "TokenMintInputSchema" which is marked as @internal
+//
 // @public (undocumented)
 export type TokenMintInput = z.input<typeof TokenMintInputSchema>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "TokenMintInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const TokenMintInputSchema: z.ZodObject<{
     toAddress: z.ZodString;
     amount: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
@@ -3576,17 +3648,22 @@ export interface VoteSettings {
     votingTokenMetadata: Currency;
 }
 
+// @public (undocumented)
+export enum VoteType {
+    // (undocumented)
+    Abstain = 2,
+    // (undocumented)
+    Against = 0,
+    // (undocumented)
+    For = 1
+}
+
 // Warning: (ae-internal-missing-underscore) The name "WrongListingTypeError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
-
-// Warnings were encountered during analysis:
-//
-// dist/index.d.ts:1207:5 - (ae-incompatible-release-tags) The symbol "payload" is marked as @public, but its signature references "PayloadWithUri" which is marked as @internal
-// dist/index.d.ts:1220:5 - (ae-incompatible-release-tags) The symbol "payload" is marked as @public, but its signature references "PayloadWithUri1155" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 
