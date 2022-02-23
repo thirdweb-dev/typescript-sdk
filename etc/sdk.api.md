@@ -1616,6 +1616,8 @@ export interface NewDirectListing {
 // @public
 export class NFTCollection extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
+    // @internal (undocumented)
+    addTransferEventListener(listener: (from: string, to: string, tokenId: BigNumber) => void): void;
     // (undocumented)
     static contractFactory: typeof TokenERC721__factory;
     // (undocumented)
@@ -1638,6 +1640,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
     mintTo(to: string, metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
+    // @internal (undocumented)
+    removeTransferEventListeners(): void;
     // (undocumented)
     roles: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>;
     // (undocumented)

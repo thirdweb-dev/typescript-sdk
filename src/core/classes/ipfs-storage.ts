@@ -21,8 +21,6 @@ if (!globalThis.FormData) {
   globalThis.FormData = require("form-data");
 }
 
-// const thirdwebIpfsServerUrl = "http://localhost:3002";
-
 /**
  * @internal
  */

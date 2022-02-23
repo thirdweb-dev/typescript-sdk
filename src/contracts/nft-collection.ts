@@ -21,6 +21,7 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { Erc721SignatureMinting } from "../core/classes/erc-721-signature-minting";
 import { GasCostEstimator } from "../core/classes";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
+import { BigNumber } from "ethers";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -225,5 +226,23 @@ export class NFTCollection extends Erc721<TokenERC721> {
         data: () => this.get(id),
       };
     });
+  }
+
+  /**
+   * @internal
+   */
+  public addTransferEventListener(
+    listener: (from: string, to: string, tokenId: BigNumber) => void,
+  ) {
+    this.contractWrapper.readContract.on("Transfer", (from, to, tokenId) => {
+      listener(from, to, tokenId);
+    });
+  }
+
+  /**
+   * @internal
+   */
+  public removeTransferEventListeners() {
+    this.contractWrapper.readContract.removeAllListeners("Transfer");
   }
 }
