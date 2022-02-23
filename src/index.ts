@@ -1,4 +1,4 @@
-import "isomorphic-fetch";
+import "cross-fetch/polyfill";
 
 /**
  * The {@link https://thirdweb.com | thirdweb} typescript sdk.
