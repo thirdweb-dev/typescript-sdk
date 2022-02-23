@@ -16,7 +16,7 @@ export function replaceFilePropertiesWithHashes(
   object: Record<string, any>,
   cids: string[],
 ) {
-  const keys = Object.keys(object).sort();
+  const keys = Object.keys(object);
   for (const key in keys) {
     const val = object[keys[key]];
     const isFile = val instanceof File || val instanceof Buffer;
@@ -45,7 +45,7 @@ export function replaceHashWithGatewayUrl(
   scheme: string,
   gatewayUrl: string,
 ): Record<string, any> {
-  const keys = Object.keys(object).sort();
+  const keys = Object.keys(object);
   for (const key in keys) {
     const val = object[keys[key]];
     object[keys[key]] = resolveGatewayUrl(val, scheme, gatewayUrl);
