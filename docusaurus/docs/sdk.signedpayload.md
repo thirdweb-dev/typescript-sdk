@@ -9,11 +9,12 @@ hide_title: true
 
 ## SignedPayload type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type SignedPayload = {
+export declare type SignedPayload = {
     payload: PayloadWithUri;
     signature: string;
 };
 ```
+**References:** [PayloadWithUri](./sdk.payloadwithuri.md)

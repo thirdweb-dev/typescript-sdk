@@ -11,7 +11,7 @@ hide_title: true
 
 Triggers a transfer to account of the amount of native currency they are owed.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withdraw(walletAddress: string): Promise<TransactionResult>;
@@ -23,6 +23,6 @@ withdraw(walletAddress: string): Promise<TransactionResult>;
 |  --- | --- | --- |
 |  walletAddress | string | The address to distributes the amount to |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

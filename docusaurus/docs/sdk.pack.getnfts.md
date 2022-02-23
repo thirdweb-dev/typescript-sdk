@@ -11,7 +11,7 @@ hide_title: true
 
 Get Pack Reward Data
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getNFTs(packId: string): Promise<PackNFTMetadata[]>;
@@ -23,9 +23,9 @@ getNFTs(packId: string): Promise<PackNFTMetadata[]>;
 |  --- | --- | --- |
 |  packId | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;PackNFTMetadata\[\]&gt;
+Promise&lt;[PackNFTMetadata](./sdk.packnftmetadata.md)\[\]&gt;
 
 The NFT metadata for all NFTs in the contract.
 

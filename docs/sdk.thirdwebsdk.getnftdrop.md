@@ -20,7 +20,7 @@ getNFTDrop(contractAddress: string): NFTDrop;
 
 <b>Returns:</b>
 
-NFTDrop
+[NFTDrop](./sdk.nftdrop.md)
 
 the contract
 

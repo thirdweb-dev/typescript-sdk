@@ -9,7 +9,7 @@ hide_title: true
 
 ## Vote.encoder property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 encoder: ContractEncoder<VoteERC20>;

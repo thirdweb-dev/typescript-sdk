@@ -11,9 +11,9 @@ hide_title: true
 
 The buyout price of the listing.
 
-So if the `quantity = 10` and the `reserve price = 1`<!-- -->, then the buyout price is 10 coins (of the configured currency).
+So if the `quantity = 10` and the `reserve price = 1`, then the buyout price is 10 coins (of the configured currency).
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 buyoutPricePerToken: Price;

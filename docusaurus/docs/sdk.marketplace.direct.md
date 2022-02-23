@@ -11,7 +11,7 @@ hide_title: true
 
 Handle direct listings, see [MarketplaceDirect](./sdk.marketplacedirect.md)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 direct: MarketplaceDirect;

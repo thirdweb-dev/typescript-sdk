@@ -9,7 +9,7 @@ hide_title: true
 
 ## Token.metadata property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 metadata: ContractMetadata<TokenERC20, typeof Token.schema>;

@@ -16,11 +16,11 @@ mint(metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadataWithSupply | EditionMetadataInput |  |
+|  metadataWithSupply | [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResultWithId&lt;EditionMetadata&gt;&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[EditionMetadata](./sdk.editionmetadata.md)<!-- -->&gt;&gt;
 
 ## Remarks
 

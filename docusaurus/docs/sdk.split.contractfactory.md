@@ -9,7 +9,7 @@ hide_title: true
 
 ## Split.contractFactory property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractFactory: typeof Split__factory;

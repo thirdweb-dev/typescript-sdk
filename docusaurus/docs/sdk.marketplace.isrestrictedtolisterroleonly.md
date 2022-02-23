@@ -11,11 +11,11 @@ hide_title: true
 
 Get whether listing is restricted only to addresses with the Lister role
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 isRestrictedToListerRoleOnly(): Promise<boolean>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;boolean&gt;

@@ -11,7 +11,7 @@ hide_title: true
 
 Returns the total supply of a specific token
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 totalSupply(tokenId: BigNumberish): Promise<BigNumber>;
@@ -23,7 +23,7 @@ totalSupply(tokenId: BigNumberish): Promise<BigNumber>;
 |  --- | --- | --- |
 |  tokenId | BigNumberish | The token ID to get the total supply of |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;
 

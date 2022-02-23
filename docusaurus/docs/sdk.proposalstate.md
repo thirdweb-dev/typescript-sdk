@@ -9,10 +9,10 @@ hide_title: true
 
 ## ProposalState enum
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare enum ProposalState 
+export declare enum ProposalState 
 ```
 
 ## Enumeration Members

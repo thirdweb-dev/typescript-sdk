@@ -11,7 +11,7 @@ hide_title: true
 
 Create Direct Listing
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 createListing(listing: NewDirectListing): Promise<TransactionResultWithId>;
@@ -21,11 +21,11 @@ createListing(listing: NewDirectListing): Promise<TransactionResultWithId>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listing | NewDirectListing |  |
+|  listing | [NewDirectListing](./sdk.newdirectlisting.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResultWithId&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&gt;
 
 ## Remarks
 

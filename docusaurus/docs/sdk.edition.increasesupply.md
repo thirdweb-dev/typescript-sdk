@@ -11,7 +11,7 @@ hide_title: true
 
 Increase the supply of an existing NFT
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 increaseSupply(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
@@ -25,6 +25,6 @@ increaseSupply(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish
 |  tokenId | BigNumberish | the token id of the NFT to increase supply of |
 |  additionalSupply | BigNumberish | the additional amount to mint |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResultWithId&lt;EditionMetadata&gt;&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&lt;[EditionMetadata](./sdk.editionmetadata.md)&gt;&gt;

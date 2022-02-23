@@ -11,10 +11,10 @@ hide_title: true
 
 Encodes and decodes Contract functions
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class ContractEncoder<TContract extends BaseContract> 
+export declare class ContractEncoder<TContract extends BaseContract> 
 ```
 
 ## Constructors

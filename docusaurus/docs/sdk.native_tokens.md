@@ -10,7 +10,7 @@ hide_title: true
 ## NATIVE\_TOKENS variable
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 NATIVE_TOKENS: Record<SUPPORTED_CHAIN_ID | ChainId.Hardhat, NativeToken>

@@ -11,8 +11,8 @@ hide_title: true
 
 Represents a claim condition fetched from the SDK
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type ClaimCondition = z.output<typeof ClaimConditionOutputSchema>;
+export declare type ClaimCondition = z.output<typeof ClaimConditionOutputSchema>;
 ```

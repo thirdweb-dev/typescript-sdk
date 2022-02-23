@@ -11,7 +11,7 @@ hide_title: true
 
 Deploys a new EditionDrop contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 deployEditionDrop(metadata: z.input<typeof EditionDrop.schema.deploy>): Promise<string>;
@@ -23,7 +23,7 @@ deployEditionDrop(metadata: z.input<typeof EditionDrop.schema.deploy>): Promise<
 |  --- | --- | --- |
 |  metadata | z.input&lt;typeof EditionDrop.schema.deploy&gt; | the contract metadata |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

@@ -9,7 +9,7 @@ hide_title: true
 
 ## EditionDrop.contractType property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractType: "edition-drop";

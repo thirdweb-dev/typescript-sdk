@@ -9,7 +9,7 @@ hide_title: true
 
 ## Vote.metadata property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 metadata: ContractMetadata<VoteERC20, typeof Vote.schema>;

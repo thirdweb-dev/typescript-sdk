@@ -9,7 +9,7 @@ hide_title: true
 
 ## EditionDrop.metadata property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;

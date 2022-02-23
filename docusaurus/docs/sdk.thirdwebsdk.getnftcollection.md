@@ -11,7 +11,7 @@ hide_title: true
 
 Get an instance of a NFT Collection contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getNFTCollection(address: string): NFTCollection;
@@ -23,8 +23,8 @@ getNFTCollection(address: string): NFTCollection;
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
 
-<b>Returns:</b>
+**Returns:**
 
-NFTCollection
+[NFTCollection](./sdk.nftcollection.md)
 
 the contract

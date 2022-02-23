@@ -9,7 +9,7 @@ hide_title: true
 
 ## Erc20.options property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 protected options: SDKOptions;

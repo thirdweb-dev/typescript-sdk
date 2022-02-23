@@ -11,7 +11,7 @@ hide_title: true
 
 The address of the currency to accept for the listing.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 currencyContractAddress: string;

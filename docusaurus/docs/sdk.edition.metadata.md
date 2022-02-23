@@ -9,7 +9,7 @@ hide_title: true
 
 ## Edition.metadata property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;

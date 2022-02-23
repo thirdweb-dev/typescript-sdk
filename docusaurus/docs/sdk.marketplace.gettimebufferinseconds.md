@@ -11,11 +11,11 @@ hide_title: true
 
 get the buffer time in seconds between offers
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getTimeBufferInSeconds(): Promise<BigNumber>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;

@@ -9,5 +9,5 @@ Input model to create a claim condition with optional snapshot of wallets
 <b>Signature:</b>
 
 ```typescript
-declare type ClaimConditionInput = z.input<typeof PartialClaimConditionInputSchema>;
+export declare type ClaimConditionInput = z.input<typeof PartialClaimConditionInputSchema>;
 ```

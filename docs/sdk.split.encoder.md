@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-encoder: ContractEncoder<Split$1>;
+encoder: ContractEncoder<SplitContract>;
 ```

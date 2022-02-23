@@ -9,7 +9,7 @@ hide_title: true
 
 ## Token.contractFactory property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractFactory: typeof TokenERC20__factory;

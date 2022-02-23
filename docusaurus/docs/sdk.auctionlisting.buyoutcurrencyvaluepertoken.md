@@ -11,7 +11,7 @@ hide_title: true
 
 The `CurrencyValue` of the buyout price listing. Useful for displaying the price information.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 buyoutCurrencyValuePerToken: CurrencyValue;

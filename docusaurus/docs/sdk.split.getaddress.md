@@ -9,11 +9,11 @@ hide_title: true
 
 ## Split.getAddress() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getAddress(): string;
 ```
-<b>Returns:</b>
+**Returns:**
 
 string

@@ -8,5 +8,5 @@
 <b>Signature:</b>
 
 ```typescript
-declare type FilledSignaturePayload1155 = z.output<typeof Signature1155PayloadInput>;
+export declare type FilledSignaturePayload1155 = z.output<typeof Signature1155PayloadInput>;
 ```

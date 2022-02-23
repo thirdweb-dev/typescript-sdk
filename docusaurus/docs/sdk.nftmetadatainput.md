@@ -10,8 +10,8 @@ hide_title: true
 ## NFTMetadataInput type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type NFTMetadataInput = z.input<typeof CommonNFTInput>;
+export declare type NFTMetadataInput = z.input<typeof CommonNFTInput>;
 ```

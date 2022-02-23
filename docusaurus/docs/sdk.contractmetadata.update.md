@@ -9,14 +9,14 @@ hide_title: true
 
 ## ContractMetadata.update() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-update(metadata: Partial<z.input<TSchema["input"]>>): Promise<ts_toolbelt_out_Any_If.If<ts_toolbelt_out_Any_Equals.Equals<never, z.output<TSchema["output"]>>, Omit<{
-        receipt: _ethersproject_abstract_provider.TransactionReceipt;
+update(metadata: Partial<z.input<TSchema["input"]>>): Promise<import("ts-toolbelt/out/Any/If").If<import("ts-toolbelt/out/Any/Equals").Equals<never, z.output<TSchema["output"]>>, Omit<{
+        receipt: import("@ethersproject/abstract-provider").TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data">, {
-        receipt: _ethersproject_abstract_provider.TransactionReceipt;
+        receipt: import("@ethersproject/abstract-provider").TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
     }>>;
 ```
@@ -27,6 +27,6 @@ update(metadata: Partial<z.input<TSchema["input"]>>): Promise<ts_toolbelt_out_An
 |  --- | --- | --- |
 |  metadata | Partial&lt;z.input&lt;TSchema\["input"\]&gt;&gt; |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;ts\_toolbelt\_out\_Any\_If.If&lt;ts\_toolbelt\_out\_Any\_Equals.Equals&lt;never, z.output&lt;TSchema\["output"\]&gt;&gt;, Omit&lt;{ receipt: \_ethersproject\_abstract\_provider.TransactionReceipt; data: () =&gt; Promise&lt;unknown&gt;; }, "data"&gt;, { receipt: \_ethersproject\_abstract\_provider.TransactionReceipt; data: () =&gt; Promise&lt;z.output&lt;TSchema\["output"\]&gt;&gt;; }&gt;&gt;
+Promise&lt;import("ts-toolbelt/out/Any/If").If&lt;import("ts-toolbelt/out/Any/Equals").Equals&lt;never, z.output&lt;TSchema\["output"\]&gt;&gt;, Omit&lt;{ receipt: import("@ethersproject/abstract-provider").TransactionReceipt; data: () =&gt; Promise&lt;unknown&gt;; }, "data"&gt;, { receipt: import("@ethersproject/abstract-provider").TransactionReceipt; data: () =&gt; Promise&lt;z.output&lt;TSchema\["output"\]&gt;&gt;; }&gt;&gt;

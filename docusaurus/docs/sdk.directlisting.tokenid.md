@@ -11,7 +11,7 @@ hide_title: true
 
 The ID of the token to list.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 tokenId: BigNumberish;

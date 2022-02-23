@@ -22,7 +22,7 @@ claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Prom
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
 
 - Receipt for the transaction
 

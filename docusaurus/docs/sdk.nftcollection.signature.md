@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTCollection.signature property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 signature: Erc721SignatureMinting;

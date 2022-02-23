@@ -10,11 +10,12 @@ hide_title: true
 ## NFTMetadataOwner type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type NFTMetadataOwner = {
+export declare type NFTMetadataOwner = {
     metadata: NFTMetadata;
     owner: string;
 };
 ```
+**References:** [NFTMetadata](./sdk.nftmetadata.md)

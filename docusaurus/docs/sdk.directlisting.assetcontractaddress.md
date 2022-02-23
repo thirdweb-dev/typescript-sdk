@@ -11,7 +11,7 @@ hide_title: true
 
 The address of the asset being listed.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 assetContractAddress: string;

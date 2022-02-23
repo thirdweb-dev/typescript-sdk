@@ -9,7 +9,7 @@ hide_title: true
 
 ## Pack.setApproval() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setApproval(operator: string, approved?: boolean): Promise<TransactionResult>;
@@ -22,6 +22,6 @@ setApproval(operator: string, approved?: boolean): Promise<TransactionResult>;
 |  operator | string |  |
 |  approved | boolean |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

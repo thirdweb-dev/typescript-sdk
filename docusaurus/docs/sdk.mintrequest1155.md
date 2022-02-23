@@ -9,7 +9,7 @@ hide_title: true
 
 ## MintRequest1155 variable
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 MintRequest1155: {

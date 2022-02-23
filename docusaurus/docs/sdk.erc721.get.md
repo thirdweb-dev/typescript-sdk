@@ -11,7 +11,7 @@ hide_title: true
 
 Get a single NFT Metadata
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
@@ -23,9 +23,9 @@ get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
 |  --- | --- | --- |
 |  tokenId | BigNumberish | the tokenId of the NFT to retrieve |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;NFTMetadataOwner&gt;
+Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)&gt;
 
 The NFT metadata
 

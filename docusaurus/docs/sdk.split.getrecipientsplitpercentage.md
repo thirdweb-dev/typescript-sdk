@@ -11,7 +11,7 @@ hide_title: true
 
 Get the % of funds owed to a given address
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
@@ -23,6 +23,6 @@ getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
 |  --- | --- | --- |
 |  address | string | the address to check percentage of |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;SplitRecipient&gt;
+Promise&lt;[SplitRecipient](./sdk.splitrecipient.md)&gt;

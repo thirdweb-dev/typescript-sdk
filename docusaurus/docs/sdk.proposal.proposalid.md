@@ -11,7 +11,7 @@ hide_title: true
 
 The unique identifier of the proposal.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 proposalId: BigNumber;

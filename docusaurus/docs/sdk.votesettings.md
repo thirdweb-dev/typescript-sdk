@@ -9,10 +9,10 @@ hide_title: true
 
 ## VoteSettings interface
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-interface VoteSettings 
+export interface VoteSettings 
 ```
 
 ## Properties
@@ -24,4 +24,4 @@ interface VoteSettings
 |  [votingPeriod](./sdk.votesettings.votingperiod.md) | string |  |
 |  [votingQuorumFraction](./sdk.votesettings.votingquorumfraction.md) | string |  |
 |  [votingTokenAddress](./sdk.votesettings.votingtokenaddress.md) | string |  |
-|  [votingTokenMetadata](./sdk.votesettings.votingtokenmetadata.md) | Currency |  |
+|  [votingTokenMetadata](./sdk.votesettings.votingtokenmetadata.md) | [Currency](./sdk.currency.md) |  |

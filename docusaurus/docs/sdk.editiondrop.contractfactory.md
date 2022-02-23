@@ -9,7 +9,7 @@ hide_title: true
 
 ## EditionDrop.contractFactory property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractFactory: typeof DropERC1155__factory;

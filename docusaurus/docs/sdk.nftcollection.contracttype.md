@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTCollection.contractType property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractType: "nft-collection";

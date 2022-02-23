@@ -11,10 +11,10 @@ hide_title: true
 
 Handles auction listings
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class MarketplaceAuction 
+export declare class MarketplaceAuction 
 ```
 
 ## Constructors

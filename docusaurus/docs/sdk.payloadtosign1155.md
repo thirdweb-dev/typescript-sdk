@@ -10,8 +10,8 @@ hide_title: true
 ## PayloadToSign1155 type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type PayloadToSign1155 = z.input<typeof Signature1155PayloadInput>;
+export declare type PayloadToSign1155 = z.input<typeof Signature1155PayloadInput>;
 ```

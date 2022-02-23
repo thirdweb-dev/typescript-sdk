@@ -10,10 +10,10 @@ hide_title: true
 ## QueryAllParams interface
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-interface QueryAllParams 
+export interface QueryAllParams 
 ```
 
 ## Properties

@@ -11,7 +11,7 @@ hide_title: true
 
 The currency contract address of the offer token.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 currencyContractAddress: string;

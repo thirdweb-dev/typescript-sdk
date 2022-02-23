@@ -9,10 +9,10 @@ hide_title: true
 
 ## BufferOrStringWithName type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type BufferOrStringWithName = {
+export declare type BufferOrStringWithName = {
     data: Buffer | string;
     name?: string;
 };

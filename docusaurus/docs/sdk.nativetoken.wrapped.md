@@ -9,7 +9,7 @@ hide_title: true
 
 ## NativeToken.wrapped property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 wrapped: {

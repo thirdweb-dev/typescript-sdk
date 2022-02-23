@@ -10,10 +10,10 @@ hide_title: true
 ## ClaimVerification type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type ClaimVerification = {
+export declare type ClaimVerification = {
     overrides: CallOverrides;
     proofs: BytesLike[];
     maxQuantityPerTransaction: BigNumber;

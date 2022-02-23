@@ -11,7 +11,7 @@ hide_title: true
 
 Set the primary sale recipient
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setRecipient(recipient: string): Promise<TransactionResult>;
@@ -23,6 +23,6 @@ setRecipient(recipient: string): Promise<TransactionResult>;
 |  --- | --- | --- |
 |  recipient | string | the wallet address |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

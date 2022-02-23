@@ -11,7 +11,7 @@ hide_title: true
 
 Deploys a new Pack contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 deployPack(metadata: z.input<typeof Pack.schema.deploy>): Promise<string>;
@@ -23,7 +23,7 @@ deployPack(metadata: z.input<typeof Pack.schema.deploy>): Promise<string>;
 |  --- | --- | --- |
 |  metadata | z.input&lt;typeof Pack.schema.deploy&gt; | the contract metadata |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

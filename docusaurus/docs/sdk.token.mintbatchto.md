@@ -11,7 +11,7 @@ hide_title: true
 
 Mint Tokens To Many Wallets
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult>;
@@ -21,11 +21,11 @@ mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | TokenMintInput\[\] |  |
+|  args | [TokenMintInput](./sdk.tokenmintinput.md)\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

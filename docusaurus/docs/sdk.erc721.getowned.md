@@ -11,7 +11,7 @@ hide_title: true
 
 Get Owned NFTs
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
@@ -23,9 +23,9 @@ getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
 |  --- | --- | --- |
 |  \_address | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;NFTMetadataOwner\[\]&gt;
+Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)\[\]&gt;
 
 The NFT metadata for all NFTs in the contract.
 

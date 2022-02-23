@@ -11,7 +11,7 @@ hide_title: true
 
 Deploys a new NFTDrop contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 deployNFTDrop(metadata: z.input<typeof NFTDrop.schema.deploy>): Promise<string>;
@@ -23,7 +23,7 @@ deployNFTDrop(metadata: z.input<typeof NFTDrop.schema.deploy>): Promise<string>;
 |  --- | --- | --- |
 |  metadata | z.input&lt;typeof NFTDrop.schema.deploy&gt; | the contract metadata |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

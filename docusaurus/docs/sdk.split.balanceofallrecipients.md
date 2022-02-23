@@ -11,14 +11,14 @@ hide_title: true
 
 Returns all the recipients and their balances in the native currency.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balanceOfAllRecipients(): Promise<{
         [key: string]: BigNumber;
     }>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;{ \[key: string\]: BigNumber; }&gt;
 

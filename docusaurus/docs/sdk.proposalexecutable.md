@@ -9,10 +9,10 @@ hide_title: true
 
 ## ProposalExecutable interface
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-interface ProposalExecutable 
+export interface ProposalExecutable 
 ```
 
 ## Properties

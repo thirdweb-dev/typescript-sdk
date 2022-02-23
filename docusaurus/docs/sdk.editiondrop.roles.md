@@ -9,7 +9,7 @@ hide_title: true
 
 ## EditionDrop.roles property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 roles: ContractRoles<DropERC1155, typeof EditionDrop.contractRoles[number]>;

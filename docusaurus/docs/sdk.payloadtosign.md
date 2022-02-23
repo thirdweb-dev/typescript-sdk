@@ -9,8 +9,8 @@ hide_title: true
 
 ## PayloadToSign type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type PayloadToSign = z.input<typeof SignaturePayloadInput>;
+export declare type PayloadToSign = z.input<typeof SignaturePayloadInput>;
 ```

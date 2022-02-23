@@ -9,7 +9,7 @@ hide_title: true
 
 ## QueryAllParams.start property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 start: BigNumberish;

@@ -11,7 +11,7 @@ hide_title: true
 
 The address of the wallet that created the proposal.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 proposer: string;

@@ -11,7 +11,7 @@ hide_title: true
 
 The transaction payload that will be executed if the proposal is approved.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 transactionData: BytesLike;

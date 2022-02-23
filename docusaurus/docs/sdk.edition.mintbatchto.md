@@ -11,7 +11,7 @@ hide_title: true
 
 Mint Many NFTs with limited supplies
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mintBatchTo(to: string, metadataWithSupply: EditionMetadataInput[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
@@ -22,11 +22,11 @@ mintBatchTo(to: string, metadataWithSupply: EditionMetadataInput[]): Promise<Tra
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  to | string |  |
-|  metadataWithSupply | EditionMetadataInput\[\] |  |
+|  metadataWithSupply | [EditionMetadataInput](./sdk.editionmetadatainput.md)\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResultWithId&lt;EditionMetadata&gt;\[\]&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&lt;[EditionMetadata](./sdk.editionmetadata.md)&gt;\[\]&gt;
 
 ## Remarks
 

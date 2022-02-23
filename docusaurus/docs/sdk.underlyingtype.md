@@ -9,10 +9,10 @@ hide_title: true
 
 ## UnderlyingType enum
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare enum UnderlyingType 
+export declare enum UnderlyingType 
 ```
 
 ## Enumeration Members

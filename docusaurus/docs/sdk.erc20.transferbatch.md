@@ -11,7 +11,7 @@ hide_title: true
 
 Transfer Tokens To Many Wallets
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 transferBatch(args: TokenMintInput[]): Promise<void>;
@@ -21,9 +21,9 @@ transferBatch(args: TokenMintInput[]): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | TokenMintInput\[\] |  |
+|  args | [TokenMintInput](./sdk.tokenmintinput.md)\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;
 

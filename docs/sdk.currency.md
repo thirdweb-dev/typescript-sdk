@@ -8,5 +8,5 @@
 <b>Signature:</b>
 
 ```typescript
-declare type Currency = z.infer<typeof CurrencySchema>;
+export declare type Currency = z.infer<typeof CurrencySchema>;
 ```

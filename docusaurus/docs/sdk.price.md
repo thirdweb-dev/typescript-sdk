@@ -11,8 +11,8 @@ hide_title: true
 
 Represents a currency price already formatted. ie. "1" for 1 ether.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type Price = z.input<typeof PriceSchema>;
+export declare type Price = z.input<typeof PriceSchema>;
 ```

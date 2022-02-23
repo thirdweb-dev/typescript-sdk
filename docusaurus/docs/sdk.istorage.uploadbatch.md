@@ -11,7 +11,7 @@ hide_title: true
 
 Uploads a folder to storage.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
@@ -21,12 +21,12 @@ uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contract
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  files | (string &#124; FileOrBuffer)\[\] | An array of the data to be uploaded. Can be a files or buffers (which will be loaded), or strings. (can be mixed, too) |
+|  files | (string &#124; [FileOrBuffer](./sdk.fileorbuffer.md))\[\] | An array of the data to be uploaded. Can be a files or buffers (which will be loaded), or strings. (can be mixed, too) |
 |  fileStartNumber | number | Optional. The first file file name begins with. |
 |  contractAddress | string | Optional. The contract address the data belongs to. |
 |  signerAddress | string | Optional. The address of the signer. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

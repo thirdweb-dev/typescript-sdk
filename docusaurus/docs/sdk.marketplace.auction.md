@@ -11,7 +11,7 @@ hide_title: true
 
 Handle direct listings, see [MarketplaceAuction](./sdk.marketplaceauction.md)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 auction: MarketplaceAuction;

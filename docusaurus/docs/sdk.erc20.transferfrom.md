@@ -11,7 +11,7 @@ hide_title: true
 
 Transfer Tokens From Address
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 transferFrom(from: string, to: string, amount: BigNumberish): Promise<TransactionResult>;
@@ -25,9 +25,9 @@ transferFrom(from: string, to: string, amount: BigNumberish): Promise<Transactio
 |  to | string |  |
 |  amount | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

@@ -11,7 +11,7 @@ hide_title: true
 
 Call this to revoke a role from a specific address.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 revoke(role: TRole, address: string): Promise<TransactionResult>;
@@ -24,9 +24,9 @@ revoke(role: TRole, address: string): Promise<TransactionResult>;
 |  role | TRole | The [Role](./sdk.role.md) to revoke |
 |  address | string | The address to revoke the role from |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 The transaction receipt
 

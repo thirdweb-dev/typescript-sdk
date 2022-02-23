@@ -9,8 +9,9 @@ hide_title: true
 
 ## Json type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type Json = JsonLiteralOrFileOrBuffer | JsonObject | Json[];
+export declare type Json = JsonLiteralOrFileOrBuffer | JsonObject | Json[];
 ```
+**References:** [JsonObject](./sdk.jsonobject.md), [Json](./sdk.json.md)

@@ -7,7 +7,9 @@
 <b>Signature:</b>
 
 ```typescript
-declare type TransactionResultWithAddress<T = never> = TransactionResult<T> & {
+export declare type TransactionResultWithAddress<T = never> = TransactionResult<T> & {
     address: string;
 };
 ```
+<b>References:</b> [TransactionResult](./sdk.transactionresult.md)
+

@@ -11,7 +11,7 @@ hide_title: true
 
 Get an instance of a Splits contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getSplit(address: string): Split;
@@ -23,8 +23,8 @@ getSplit(address: string): Split;
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
 
-<b>Returns:</b>
+**Returns:**
 
-Split
+[Split](./sdk.split.md)
 
 the contract

@@ -9,7 +9,7 @@ hide_title: true
 
 ## NewDirectListing.type property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 type?: "NewDirectListing";

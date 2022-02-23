@@ -10,8 +10,8 @@ hide_title: true
 ## FilledSignaturePayload type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type FilledSignaturePayload = z.output<typeof SignaturePayloadInput>;
+export declare type FilledSignaturePayload = z.output<typeof SignaturePayloadInput>;
 ```

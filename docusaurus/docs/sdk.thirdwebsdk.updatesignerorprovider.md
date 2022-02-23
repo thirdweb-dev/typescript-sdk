@@ -11,7 +11,7 @@ hide_title: true
 
 Update the active signer or provider for all contracts
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
@@ -21,8 +21,8 @@ updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | NetworkOrSignerOrProvider | the new signer or provider |
+|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) | the new signer or provider |
 
-<b>Returns:</b>
+**Returns:**
 
 void

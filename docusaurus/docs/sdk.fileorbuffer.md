@@ -9,8 +9,9 @@ hide_title: true
 
 ## FileOrBuffer type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type FileOrBuffer = File | Buffer | BufferOrStringWithName;
+export declare type FileOrBuffer = File | Buffer | BufferOrStringWithName;
 ```
+**References:** [BufferOrStringWithName](./sdk.bufferorstringwithname.md)

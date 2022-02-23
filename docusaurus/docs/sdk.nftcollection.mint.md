@@ -11,7 +11,7 @@ hide_title: true
 
 Mint an NFT to the connected wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mint(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
@@ -21,11 +21,11 @@ mint(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwn
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | NFTMetadataInput |  |
+|  metadata | [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)&gt;&gt;
 
 ## Remarks
 

@@ -11,7 +11,7 @@ hide_title: true
 
 Create a batch of NFTs to be claimed in the future
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
@@ -21,11 +21,11 @@ createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTM
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadatas | NFTMetadataInput\[\] |  |
+|  metadatas | [NFTMetadataInput](./sdk.nftmetadatainput.md)\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResultWithId&lt;NFTMetadata&gt;\[\]&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&lt;[NFTMetadata](./sdk.nftmetadata.md)&gt;\[\]&gt;
 
 ## Remarks
 

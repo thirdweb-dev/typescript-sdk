@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-declare enum ProposalState 
+export declare enum ProposalState 
 ```
 
 ## Enumeration Members

@@ -9,7 +9,7 @@ hide_title: true
 
 ## PackMetadataWithBalance.ownedByAddress property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 ownedByAddress: BigNumber;

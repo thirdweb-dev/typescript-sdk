@@ -11,7 +11,7 @@ hide_title: true
 
 Get whether this wallet has approved transfers from the given operator
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 isApproved(address: string, operator: string): Promise<boolean>;
@@ -24,6 +24,6 @@ isApproved(address: string, operator: string): Promise<boolean>;
 |  address | string | the wallet address |
 |  operator | string | the operator address |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;boolean&gt;

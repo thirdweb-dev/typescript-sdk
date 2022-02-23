@@ -11,7 +11,7 @@ hide_title: true
 
 The amount of a native token that may be sent if a proposal is executing a token transfer.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 nativeTokenValue: BigNumberish;

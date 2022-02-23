@@ -9,7 +9,7 @@ hide_title: true
 
 ## PackMetadata.openStart property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 openStart: Date | null;

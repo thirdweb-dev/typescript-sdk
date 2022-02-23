@@ -9,8 +9,9 @@ hide_title: true
 
 ## ValidContractClass type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type ValidContractClass = ValueOf<typeof CONTRACTS_MAP>;
+export declare type ValidContractClass = ValueOf<typeof CONTRACTS_MAP>;
 ```
+**References:** [ValueOf](./sdk.valueof.md)

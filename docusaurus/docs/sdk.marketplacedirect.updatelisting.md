@@ -13,7 +13,7 @@ Update a Direct listing with new metadata.
 
 Note: cannot update a listing with a new quantity of 0. Use `cancelDirectListing` to remove a listing instead.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 updateListing(listing: DirectListing): Promise<TransactionResult>;
@@ -23,8 +23,8 @@ updateListing(listing: DirectListing): Promise<TransactionResult>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listing | DirectListing | the new listing information |
+|  listing | [DirectListing](./sdk.directlisting.md) | the new listing information |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

@@ -11,7 +11,7 @@ hide_title: true
 
 Constructs a new instance of the `Erc1155` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
@@ -22,5 +22,5 @@ constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SD
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;T&gt; |  |
-|  storage | IStorage |  |
-|  options | SDKOptions |  |
+|  storage | [IStorage](./sdk.istorage.md) |  |
+|  options | [SDKOptions](./sdk.sdkoptions.md) |  |

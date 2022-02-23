@@ -9,7 +9,7 @@ hide_title: true
 
 ## VoteSettings.votingQuorumFraction property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 votingQuorumFraction: string;

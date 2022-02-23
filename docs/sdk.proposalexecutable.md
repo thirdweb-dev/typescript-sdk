@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-interface ProposalExecutable 
+export interface ProposalExecutable 
 ```
 
 ## Properties

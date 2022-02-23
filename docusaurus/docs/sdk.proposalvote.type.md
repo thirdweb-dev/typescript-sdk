@@ -9,7 +9,7 @@ hide_title: true
 
 ## ProposalVote.type property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 type: VoteType;

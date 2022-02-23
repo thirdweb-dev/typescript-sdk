@@ -10,8 +10,8 @@ hide_title: true
 ## Currency type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type Currency = z.infer<typeof CurrencySchema>;
+export declare type Currency = z.infer<typeof CurrencySchema>;
 ```

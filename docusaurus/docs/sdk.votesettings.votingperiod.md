@@ -9,7 +9,7 @@ hide_title: true
 
 ## VoteSettings.votingPeriod property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 votingPeriod: string;

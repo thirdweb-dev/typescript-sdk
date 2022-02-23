@@ -9,7 +9,7 @@ Handles deploying new contracts
 <b>Signature:</b>
 
 ```typescript
-declare class ContractDeployer extends RPCConnectionHandler 
+export declare class ContractDeployer extends RPCConnectionHandler 
 ```
 <b>Extends:</b> RPCConnectionHandler
 

@@ -9,7 +9,7 @@ Represents a new marketplace direct listing.
 <b>Signature:</b>
 
 ```typescript
-interface NewDirectListing 
+export interface NewDirectListing 
 ```
 
 ## Properties
@@ -17,7 +17,7 @@ interface NewDirectListing
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [assetContractAddress](./sdk.newdirectlisting.assetcontractaddress.md) | string | The address of the asset being listed. |
-|  [buyoutPricePerToken](./sdk.newdirectlisting.buyoutpricepertoken.md) | Price | The buyout price of the listing.<!-- -->So if the <code>quantity = 10</code> and the <code>reserve price = 1</code>, then the buyout price is 10 coins (of the configured currency). |
+|  [buyoutPricePerToken](./sdk.newdirectlisting.buyoutpricepertoken.md) | [Price](./sdk.price.md) | The buyout price of the listing.<!-- -->So if the <code>quantity = 10</code> and the <code>reserve price = 1</code>, then the buyout price is 10 coins (of the configured currency). |
 |  [currencyContractAddress](./sdk.newdirectlisting.currencycontractaddress.md) | string | The address of the currency to accept for the listing. |
 |  [listingDurationInSeconds](./sdk.newdirectlisting.listingdurationinseconds.md) | BigNumberish | The duration of the listing in seconds. |
 |  [quantity](./sdk.newdirectlisting.quantity.md) | BigNumberish | The quantity of tokens to include in the listing.<!-- -->For ERC721s, this value should always be 1 (and will be forced internally regardless of what is passed here). |

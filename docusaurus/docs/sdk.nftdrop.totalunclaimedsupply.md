@@ -11,12 +11,12 @@ hide_title: true
 
 Get the unclaimed supply
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 totalUnclaimedSupply(): Promise<BigNumber>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;
 

@@ -9,10 +9,10 @@ hide_title: true
 
 ## ListingType enum
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare enum ListingType 
+export declare enum ListingType 
 ```
 
 ## Enumeration Members

@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTDrop.roles property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;

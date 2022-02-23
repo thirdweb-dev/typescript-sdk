@@ -11,7 +11,7 @@ hide_title: true
 
 Fetches a one-time-use upload token that can used to upload a file to storage.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getUploadToken(contractAddress: string): Promise<string>;
@@ -23,7 +23,7 @@ getUploadToken(contractAddress: string): Promise<string>;
 |  --- | --- | --- |
 |  contractAddress | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

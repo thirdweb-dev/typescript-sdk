@@ -11,12 +11,12 @@ hide_title: true
 
 The main entry point for the thirdweb SDK
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class ThirdwebSDK extends RPCConnectionHandler 
+export declare class ThirdwebSDK extends RPCConnectionHandler 
 ```
-<b>Extends:</b> RPCConnectionHandler
+**Extends:** RPCConnectionHandler
 
 ## Constructors
 
@@ -28,7 +28,7 @@ declare class ThirdwebSDK extends RPCConnectionHandler
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [deployer](./sdk.thirdwebsdk.deployer.md) |  | ContractDeployer | New contract deployer |
+|  [deployer](./sdk.thirdwebsdk.deployer.md) |  | [ContractDeployer](./sdk.contractdeployer.md) | New contract deployer |
 
 ## Methods
 

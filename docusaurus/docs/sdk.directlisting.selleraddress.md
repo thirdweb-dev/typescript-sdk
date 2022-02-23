@@ -11,7 +11,7 @@ hide_title: true
 
 The address of the seller.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 sellerAddress: string;

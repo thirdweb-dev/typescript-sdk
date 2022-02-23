@@ -11,18 +11,18 @@ hide_title: true
 
 Returns the native token for a given chain
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare function getNativeTokenByChainId(chainId: ChainId): NativeToken;
+export declare function getNativeTokenByChainId(chainId: ChainId): NativeToken;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  chainId | ChainId | the chain id |
+|  chainId | [ChainId](./sdk.chainid.md) | the chain id |
 
-<b>Returns:</b>
+**Returns:**
 
-NativeToken
+[NativeToken](./sdk.nativetoken.md)

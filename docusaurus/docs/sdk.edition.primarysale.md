@@ -9,7 +9,7 @@ hide_title: true
 
 ## Edition.primarySale property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 primarySale: ContractPrimarySale<TokenERC1155>;

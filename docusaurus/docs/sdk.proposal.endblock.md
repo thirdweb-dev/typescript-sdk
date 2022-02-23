@@ -9,7 +9,7 @@ hide_title: true
 
 ## Proposal.endBlock property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 endBlock: BigNumber;

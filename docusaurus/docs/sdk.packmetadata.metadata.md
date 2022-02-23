@@ -9,7 +9,7 @@ hide_title: true
 
 ## PackMetadata.metadata property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 metadata: NFTMetadata;

@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-interface IPackCreateArgs 
+export interface IPackCreateArgs 
 ```
 
 ## Properties
@@ -16,7 +16,7 @@ interface IPackCreateArgs
 |  --- | --- | --- |
 |  [assetContract](./sdk.ipackcreateargs.assetcontract.md) | string |  |
 |  [assets](./sdk.ipackcreateargs.assets.md) | { tokenId: BigNumberish; amount: BigNumberish; }\[\] |  |
-|  [metadata](./sdk.ipackcreateargs.metadata.md) | NFTMetadataInput |  |
+|  [metadata](./sdk.ipackcreateargs.metadata.md) | [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
 |  [rewardsPerOpen?](./sdk.ipackcreateargs.rewardsperopen.md) | BigNumberish | <i>(Optional)</i> |
 |  [secondsUntilOpenStart?](./sdk.ipackcreateargs.secondsuntilopenstart.md) | BigNumberish | <i>(Optional)</i> |
 

@@ -11,7 +11,7 @@ hide_title: true
 
 Close the Auction
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 closeListing(listingId: BigNumberish, closeFor?: string): Promise<TransactionResult>;
@@ -24,9 +24,9 @@ closeListing(listingId: BigNumberish, closeFor?: string): Promise<TransactionRes
 |  listingId | BigNumberish | the auction listing ud to close |
 |  closeFor | string | optionally pass the address the auction creator address or winning bid offeror address to close the auction on their behalf |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

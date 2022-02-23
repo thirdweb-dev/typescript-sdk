@@ -11,7 +11,7 @@ hide_title: true
 
 Deploys a new Split contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 deploySplit(metadata: z.input<typeof Split.schema.deploy>): Promise<string>;
@@ -23,7 +23,7 @@ deploySplit(metadata: z.input<typeof Split.schema.deploy>): Promise<string>;
 |  --- | --- | --- |
 |  metadata | z.input&lt;typeof Split.schema.deploy&gt; | the contract metadata |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

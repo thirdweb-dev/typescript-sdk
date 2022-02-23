@@ -9,7 +9,7 @@ hide_title: true
 
 ## ProposalVote.count property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 count: BigNumber;

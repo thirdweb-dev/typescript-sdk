@@ -9,10 +9,11 @@ hide_title: true
 
 ## JsonObject type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type JsonObject = {
+export declare type JsonObject = {
     [key: string]: Json;
 };
 ```
+**References:** [Json](./sdk.json.md)

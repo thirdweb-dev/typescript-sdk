@@ -9,10 +9,10 @@ hide_title: true
 
 ## ClaimEligibility enum
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare enum ClaimEligibility 
+export declare enum ClaimEligibility 
 ```
 
 ## Enumeration Members

@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTCollection.contractRoles property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractRoles: readonly ["admin", "minter", "transfer"];

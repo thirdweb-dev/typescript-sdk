@@ -11,7 +11,7 @@ hide_title: true
 
 Deploys a new NFTCollection contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 deployNFTCollection(metadata: z.input<typeof NFTCollection.schema.deploy>): Promise<string>;
@@ -23,7 +23,7 @@ deployNFTCollection(metadata: z.input<typeof NFTCollection.schema.deploy>): Prom
 |  --- | --- | --- |
 |  metadata | z.input&lt;typeof NFTCollection.schema.deploy&gt; | the contract metadata |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

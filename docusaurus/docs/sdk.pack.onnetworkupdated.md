@@ -9,7 +9,7 @@ hide_title: true
 
 ## Pack.onNetworkUpdated() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
@@ -19,8 +19,8 @@ onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | NetworkOrSignerOrProvider |  |
+|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void

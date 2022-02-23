@@ -11,7 +11,7 @@ hide_title: true
 
 Convenience function to buy a Direct or Auction listing.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<TransactionResult>;
@@ -24,6 +24,6 @@ buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<
 |  listingId | BigNumberish | the listing ID of the listing you want to buy |
 |  quantityDesired | BigNumberish | the quantity that you want to buy (for ERC1155 tokens) |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

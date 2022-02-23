@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-royalty: ContractRoyalty<Pack$1, typeof Pack.schema>;
+royalty: ContractRoyalty<PackContract, typeof Pack.schema>;
 ```

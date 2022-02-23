@@ -9,7 +9,7 @@ Encodes and decodes Contract functions
 <b>Signature:</b>
 
 ```typescript
-declare class ContractEncoder<TContract extends BaseContract> 
+export declare class ContractEncoder<TContract extends BaseContract> 
 ```
 
 ## Constructors

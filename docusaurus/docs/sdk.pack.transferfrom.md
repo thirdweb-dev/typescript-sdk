@@ -9,7 +9,7 @@ hide_title: true
 
 ## Pack.transferFrom() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): Promise<TransactionResult>;
@@ -21,9 +21,9 @@ transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): 
 |  --- | --- | --- |
 |  from | string |  |
 |  to | string |  |
-|  args | IPackBatchArgs |  |
+|  args | [IPackBatchArgs](./sdk.ipackbatchargs.md) |  |
 |  data | BytesLike |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

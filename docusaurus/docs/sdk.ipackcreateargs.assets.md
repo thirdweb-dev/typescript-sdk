@@ -9,7 +9,7 @@ hide_title: true
 
 ## IPackCreateArgs.assets property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 assets: {

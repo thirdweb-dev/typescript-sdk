@@ -9,7 +9,7 @@ hide_title: true
 
 ## Marketplace.contractFactory property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractFactory: typeof Marketplace__factory;

@@ -11,7 +11,7 @@ hide_title: true
 
 Fetches data from storage. This method expects to fetch JSON formatted data
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get(hash: string): Promise<Record<string, any>>;
@@ -23,7 +23,7 @@ get(hash: string): Promise<Record<string, any>>;
 |  --- | --- | --- |
 |  hash | string | The Hash of the file to fetch |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;Record&lt;string, any&gt;&gt;
 

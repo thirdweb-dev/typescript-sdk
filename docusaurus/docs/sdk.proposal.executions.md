@@ -11,7 +11,7 @@ hide_title: true
 
 All executions that have been proposed for the proposal.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 executions: ProposalExecutable[];

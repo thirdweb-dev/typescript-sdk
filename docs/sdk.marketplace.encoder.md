@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-encoder: ContractEncoder<Marketplace$1>;
+encoder: ContractEncoder<MarketplaceContract>;
 ```

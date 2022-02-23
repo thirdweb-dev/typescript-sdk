@@ -9,7 +9,7 @@ hide_title: true
 
 ## PackMetadata.currentSupply property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 currentSupply: BigNumber;

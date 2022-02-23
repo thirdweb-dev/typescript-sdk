@@ -11,7 +11,7 @@ hide_title: true
 
 Decode encoded call data for a given function
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 decode(fn: keyof TContract["functions"], encodedArgs: string): Result;
@@ -24,6 +24,6 @@ decode(fn: keyof TContract["functions"], encodedArgs: string): Result;
 |  fn | keyof TContract\["functions"\] | the function to decode |
 |  encodedArgs | string | the encoded arguments |
 
-<b>Returns:</b>
+**Returns:**
 
 Result

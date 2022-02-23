@@ -11,7 +11,7 @@ hide_title: true
 
 Distribute Funds
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 distributeToken(tokenAddress: string): Promise<TransactionResult>;
@@ -23,9 +23,9 @@ distributeToken(tokenAddress: string): Promise<TransactionResult>;
 |  --- | --- | --- |
 |  tokenAddress | string | The address of the currency contract to distribute funds |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

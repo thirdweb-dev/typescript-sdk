@@ -11,7 +11,7 @@ hide_title: true
 
 Mint Many NFTs for the connected wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mintBatch(metadatas: EditionMetadataInput[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
@@ -21,11 +21,11 @@ mintBatch(metadatas: EditionMetadataInput[]): Promise<TransactionResultWithId<Ed
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadatas | EditionMetadataInput\[\] |  |
+|  metadatas | [EditionMetadataInput](./sdk.editionmetadatainput.md)\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResultWithId&lt;EditionMetadata&gt;\[\]&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&lt;[EditionMetadata](./sdk.editionmetadata.md)&gt;\[\]&gt;
 
 ## Remarks
 

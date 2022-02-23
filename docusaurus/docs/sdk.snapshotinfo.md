@@ -10,8 +10,8 @@ hide_title: true
 ## SnapshotInfo type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
+export declare type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
 ```

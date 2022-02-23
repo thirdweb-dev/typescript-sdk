@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTCollection.estimator property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 estimator: GasCostEstimator<TokenERC721>;

@@ -9,9 +9,9 @@ Create a collection of NFTs that lets you mint multiple copies of each NFT.
 <b>Signature:</b>
 
 ```typescript
-declare class Edition extends Erc1155<TokenERC1155> 
+export declare class Edition extends Erc1155<TokenERC1155> 
 ```
-<b>Extends:</b> Erc1155&lt;TokenERC1155&gt;
+<b>Extends:</b> [Erc1155](./sdk.erc1155.md)<!-- -->&lt;TokenERC1155&gt;
 
 ## Example
 
@@ -38,13 +38,13 @@ const contract = sdk.getEdition("{{contract_address}}");
 |  [contractFactory](./sdk.edition.contractfactory.md) | <code>static</code> | typeof TokenERC1155\_\_factory |  |
 |  [contractRoles](./sdk.edition.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.edition.contracttype.md) | <code>static</code> | "edition" |  |
-|  [encoder](./sdk.edition.encoder.md) |  | ContractEncoder&lt;TokenERC1155&gt; |  |
-|  [estimator](./sdk.edition.estimator.md) |  | GasCostEstimator&lt;TokenERC1155&gt; |  |
-|  [metadata](./sdk.edition.metadata.md) |  | ContractMetadata&lt;TokenERC1155, typeof Edition.schema&gt; |  |
-|  [primarySale](./sdk.edition.primarysale.md) |  | ContractPrimarySale&lt;TokenERC1155&gt; |  |
-|  [roles](./sdk.edition.roles.md) |  | ContractRoles&lt;TokenERC1155, typeof Edition.contractRoles\[number\]&gt; |  |
-|  [royalty](./sdk.edition.royalty.md) |  | ContractRoyalty&lt;TokenERC1155, typeof Edition.schema&gt; |  |
-|  [signature](./sdk.edition.signature.md) |  | Erc1155SignatureMinting |  |
+|  [encoder](./sdk.edition.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;TokenERC1155&gt; |  |
+|  [estimator](./sdk.edition.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TokenERC1155&gt; |  |
+|  [metadata](./sdk.edition.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC1155, typeof Edition.schema&gt; |  |
+|  [primarySale](./sdk.edition.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;TokenERC1155&gt; |  |
+|  [roles](./sdk.edition.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC1155, typeof [Edition.contractRoles](./sdk.edition.contractroles.md)<!-- -->\[number\]&gt; |  |
+|  [royalty](./sdk.edition.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;TokenERC1155, typeof Edition.schema&gt; |  |
+|  [signature](./sdk.edition.signature.md) |  | [Erc1155SignatureMinting](./sdk.erc1155signatureminting.md) |  |
 
 ## Methods
 

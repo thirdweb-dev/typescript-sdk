@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTDrop.claimConditions property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 claimConditions: DropErc721ClaimConditions;

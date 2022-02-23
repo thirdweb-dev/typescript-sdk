@@ -11,7 +11,7 @@ hide_title: true
 
 Uploads a file to the storage.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
@@ -21,11 +21,11 @@ upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: st
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  data | string &#124; FileOrBuffer | The data to be uploaded. Can be a file/buffer (which will be loaded), or a string. |
+|  data | string &#124; [FileOrBuffer](./sdk.fileorbuffer.md) | The data to be uploaded. Can be a file/buffer (which will be loaded), or a string. |
 |  contractAddress | string | Optional. The contract address the data belongs to. |
 |  signerAddress | string | Optional. The address of the signer. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

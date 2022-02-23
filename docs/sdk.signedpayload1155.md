@@ -8,8 +8,10 @@
 <b>Signature:</b>
 
 ```typescript
-declare type SignedPayload1155 = {
+export declare type SignedPayload1155 = {
     payload: PayloadWithUri1155;
     signature: string;
 };
 ```
+<b>References:</b> [PayloadWithUri1155](./sdk.payloadwithuri1155.md)
+

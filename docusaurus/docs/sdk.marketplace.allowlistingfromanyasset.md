@@ -11,11 +11,11 @@ hide_title: true
 
 Allow listings from any NFT contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 allowListingFromAnyAsset(): Promise<void>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;

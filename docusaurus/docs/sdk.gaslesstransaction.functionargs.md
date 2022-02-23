@@ -9,7 +9,7 @@ hide_title: true
 
 ## GaslessTransaction.functionArgs property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 functionArgs: any[];

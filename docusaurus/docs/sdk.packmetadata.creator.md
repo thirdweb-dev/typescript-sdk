@@ -9,7 +9,7 @@ hide_title: true
 
 ## PackMetadata.creator property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 creator: string;

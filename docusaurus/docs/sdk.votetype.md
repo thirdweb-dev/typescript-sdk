@@ -9,10 +9,10 @@ hide_title: true
 
 ## VoteType enum
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare enum VoteType 
+export declare enum VoteType 
 ```
 
 ## Enumeration Members

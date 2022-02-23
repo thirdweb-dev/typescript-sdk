@@ -11,7 +11,7 @@ hide_title: true
 
 New contract deployer
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 deployer: ContractDeployer;

@@ -9,7 +9,7 @@ hide_title: true
 
 ## EditionDrop.primarySale property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 primarySale: ContractPrimarySale<DropERC1155>;

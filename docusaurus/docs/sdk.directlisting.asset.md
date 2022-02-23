@@ -11,7 +11,7 @@ hide_title: true
 
 The asset being listed.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 asset: NFTMetadata;

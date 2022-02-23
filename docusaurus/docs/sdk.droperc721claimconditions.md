@@ -11,10 +11,10 @@ hide_title: true
 
 Manages claim conditions for NFT Drop contracts
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class DropErc721ClaimConditions 
+export declare class DropErc721ClaimConditions 
 ```
 
 ## Constructors

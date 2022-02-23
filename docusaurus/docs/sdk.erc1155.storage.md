@@ -9,7 +9,7 @@ hide_title: true
 
 ## Erc1155.storage property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 protected storage: IStorage;

@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTCollection.metadata property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;

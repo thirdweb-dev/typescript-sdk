@@ -9,12 +9,12 @@ hide_title: true
 
 ## ContractMetadata.get() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get(): Promise<z.output<TSchema["output"]>>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;z.output&lt;TSchema\["output"\]&gt;&gt;
 

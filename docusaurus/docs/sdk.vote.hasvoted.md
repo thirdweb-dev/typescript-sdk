@@ -11,7 +11,7 @@ hide_title: true
 
 Check If Wallet Voted
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 hasVoted(proposalId: string, account?: string): Promise<boolean>;
@@ -24,7 +24,7 @@ hasVoted(proposalId: string, account?: string): Promise<boolean>;
 |  proposalId | string | The unique identifier of a proposal . |
 |  account | string | (optional) wallet account address. Defaults to connected signer. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;boolean&gt;
 

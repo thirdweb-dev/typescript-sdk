@@ -9,7 +9,7 @@ hide_title: true
 
 ## QueryAllParams.count property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 count: BigNumberish;

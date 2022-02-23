@@ -11,12 +11,12 @@ hide_title: true
 
 Get the claimed supply
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 totalClaimedSupply(): Promise<BigNumber>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;
 
