@@ -530,7 +530,7 @@ export class ModuleWithRoles<
       this.roles.includes(role),
       `this module does not support the "${role}" role`,
     );
-    const contract = this.contract;
+    const contract = this.readOnlyContract;
     const roleHash = getRoleHash(role);
     const count = (await contract.getRoleMemberCount(roleHash)).toNumber();
     return await Promise.all(
