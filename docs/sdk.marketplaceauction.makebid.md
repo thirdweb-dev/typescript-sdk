@@ -17,11 +17,11 @@ makeBid(listingId: BigNumberish, pricePerToken: Price): Promise<TransactionResul
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  listingId | BigNumberish |  |
-|  pricePerToken | Price |  |
+|  pricePerToken | [Price](./sdk.price.md) |  |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
 
 ## Remarks
 

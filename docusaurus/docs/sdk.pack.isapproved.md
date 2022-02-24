@@ -9,7 +9,7 @@ hide_title: true
 
 ## Pack.isApproved() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 isApproved(address: string, operator: string): Promise<boolean>;
@@ -22,6 +22,6 @@ isApproved(address: string, operator: string): Promise<boolean>;
 |  address | string |  |
 |  operator | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;boolean&gt;

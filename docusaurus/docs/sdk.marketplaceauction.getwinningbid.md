@@ -11,7 +11,7 @@ hide_title: true
 
 Get Highest Bid
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
@@ -23,9 +23,9 @@ getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
 |  --- | --- | --- |
 |  listingId | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;Offer \| undefined&gt;
+Promise&lt;[Offer](./sdk.offer.md) \| undefined&gt;
 
 ## Remarks
 

@@ -9,11 +9,11 @@ hide_title: true
 
 ## Pack.getLinkBalance() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getLinkBalance(): Promise<CurrencyValue>;
 ```
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;CurrencyValue&gt;
+Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)&gt;

@@ -9,7 +9,7 @@ hide_title: true
 
 ## GaslessTransaction.functionName property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 functionName: string;

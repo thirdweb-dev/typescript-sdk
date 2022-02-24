@@ -11,7 +11,7 @@ hide_title: true
 
 Get Auction Winner
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getWinner(listingId: BigNumberish): Promise<string>;
@@ -23,7 +23,7 @@ getWinner(listingId: BigNumberish): Promise<string>;
 |  --- | --- | --- |
 |  listingId | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

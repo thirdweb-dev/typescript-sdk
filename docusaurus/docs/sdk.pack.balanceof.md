@@ -11,7 +11,7 @@ hide_title: true
 
 Get Pack Balance
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balanceOf(address: string, tokenId: string): Promise<BigNumber>;
@@ -24,7 +24,7 @@ balanceOf(address: string, tokenId: string): Promise<BigNumber>;
 |  address | string |  |
 |  tokenId | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;
 

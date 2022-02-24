@@ -9,8 +9,8 @@ hide_title: true
 
 ## Pack.encoder property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-encoder: ContractEncoder<Pack$1>;
+encoder: ContractEncoder<PackContract>;
 ```

@@ -9,7 +9,7 @@ hide_title: true
 
 ## Vote.contractFactory property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractFactory: typeof VoteERC20__factory;

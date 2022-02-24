@@ -1,9 +1,15 @@
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 import { NativeToken } from "../types/currency";
 
+/**
+ * @public
+ */
 export const NATIVE_TOKEN_ADDRESS =
   "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
+/**
+ * @public
+ */
 export const NATIVE_TOKENS: Record<
   SUPPORTED_CHAIN_ID | ChainId.Hardhat,
   NativeToken
@@ -109,3 +115,12 @@ export const NATIVE_TOKENS: Record<
     },
   },
 };
+
+/**
+ * Returns the native token for a given chain
+ * @param chainId - the chain id
+ * @public
+ */
+export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
+  return NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID];
+}

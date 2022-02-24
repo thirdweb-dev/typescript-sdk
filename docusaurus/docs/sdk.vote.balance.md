@@ -11,13 +11,13 @@ hide_title: true
 
 Check the balance of the project wallet in the native token of the chain
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balance(): Promise<CurrencyValue>;
 ```
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;CurrencyValue&gt;
+Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)&gt;
 
 - The balance of the project in the native token of the chain

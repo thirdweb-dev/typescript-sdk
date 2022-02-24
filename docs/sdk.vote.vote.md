@@ -17,12 +17,12 @@ vote(proposalId: string, voteType: VoteType, reason?: string): Promise<Transacti
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  proposalId | string | The proposal to cast a vote on. |
-|  voteType | VoteType | The position the voter is taking on their vote. |
+|  voteType | [VoteType](./sdk.votetype.md) | The position the voter is taking on their vote. |
 |  reason | string | (optional) The reason for the vote. |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
 
 ## Remarks
 

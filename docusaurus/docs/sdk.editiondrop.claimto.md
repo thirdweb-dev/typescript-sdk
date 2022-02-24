@@ -11,7 +11,7 @@ hide_title: true
 
 Claim NFTs to a specific Wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
@@ -26,9 +26,9 @@ claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberis
 |  quantity | BigNumberish | Quantity of the tokens you want to claim |
 |  proofs | BytesLike\[\] | Array of proofs |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 - Receipt for the transaction
 

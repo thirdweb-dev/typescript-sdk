@@ -11,14 +11,14 @@ hide_title: true
 
 Get Pack Data
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getAll(): Promise<PackMetadata[]>;
 ```
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;PackMetadata\[\]&gt;
+Promise&lt;[PackMetadata](./sdk.packmetadata.md)\[\]&gt;
 
 The NFT metadata for all NFTs in the contract.
 

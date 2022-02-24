@@ -11,14 +11,14 @@ hide_title: true
 
 Get Token Balance for the currently connected wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balance(): Promise<CurrencyValue>;
 ```
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;CurrencyValue&gt;
+Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)&gt;
 
 The balance of a specific wallet.
 

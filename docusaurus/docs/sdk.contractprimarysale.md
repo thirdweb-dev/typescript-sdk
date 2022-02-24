@@ -11,10 +11,10 @@ hide_title: true
 
 Handles primary sales recipients for a Contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class ContractPrimarySale<TContract extends IThirdwebPrimarySale> 
+export declare class ContractPrimarySale<TContract extends IThirdwebPrimarySale> 
 ```
 
 ## Constructors

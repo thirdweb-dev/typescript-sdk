@@ -9,8 +9,8 @@ hide_title: true
 
 ## Split.estimator property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-estimator: GasCostEstimator<Split$1>;
+estimator: GasCostEstimator<SplitContract>;
 ```

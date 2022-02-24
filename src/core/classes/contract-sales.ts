@@ -4,6 +4,7 @@ import { TransactionResult } from "../types";
 
 /**
  * Handles primary sales recipients for a Contract
+ * @public
  */
 export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
   private contractWrapper;

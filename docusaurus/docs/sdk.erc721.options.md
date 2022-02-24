@@ -9,7 +9,7 @@ hide_title: true
 
 ## Erc721.options property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 protected options: SDKOptions;

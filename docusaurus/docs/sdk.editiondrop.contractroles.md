@@ -9,7 +9,7 @@ hide_title: true
 
 ## EditionDrop.contractRoles property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractRoles: readonly ["admin", "minter", "transfer"];

@@ -9,8 +9,8 @@ hide_title: true
 
 ## Marketplace.encoder property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-encoder: ContractEncoder<Marketplace$1>;
+encoder: ContractEncoder<MarketplaceContract>;
 ```

@@ -11,7 +11,7 @@ hide_title: true
 
 Get an Auction listing by id
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getListing(listingId: BigNumberish): Promise<AuctionListing>;
@@ -23,8 +23,8 @@ getListing(listingId: BigNumberish): Promise<AuctionListing>;
 |  --- | --- | --- |
 |  listingId | BigNumberish | the listing Id |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;AuctionListing&gt;
+Promise&lt;[AuctionListing](./sdk.auctionlisting.md)&gt;
 
 the Auction listing object

@@ -9,7 +9,7 @@ hide_title: true
 
 ## Pack.contractRoles property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractRoles: readonly ["admin", "minter", "pauser", "transfer"];

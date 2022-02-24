@@ -11,7 +11,7 @@ hide_title: true
 
 Burn a single NFT
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 burn(tokenId: BigNumberish): Promise<TransactionResult>;
@@ -23,6 +23,6 @@ burn(tokenId: BigNumberish): Promise<TransactionResult>;
 |  --- | --- | --- |
 |  tokenId | BigNumberish | the token Id to burn |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

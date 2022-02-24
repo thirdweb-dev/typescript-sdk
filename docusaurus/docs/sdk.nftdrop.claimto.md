@@ -11,7 +11,7 @@ hide_title: true
 
 Claim unique NFTs to a specific Wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
@@ -25,9 +25,9 @@ claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]
 |  quantity | BigNumberish | Quantity of the tokens you want to claim |
 |  proofs | BytesLike\[\] | Array of proofs |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)&gt;\[\]&gt;
 
 - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
 

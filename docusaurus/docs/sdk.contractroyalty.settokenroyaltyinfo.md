@@ -11,11 +11,11 @@ hide_title: true
 
 Set the royalty recipient and fee for a particular token
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setTokenRoyaltyInfo(tokenId: BigNumberish, royaltyData: z.input<typeof CommonRoyaltySchema>): Promise<{
-        receipt: _ethersproject_abstract_provider.TransactionReceipt;
+        receipt: import("@ethersproject/abstract-provider").TransactionReceipt;
         data: () => Promise<{
             seller_fee_basis_points: number;
             fee_recipient: string;
@@ -30,6 +30,6 @@ setTokenRoyaltyInfo(tokenId: BigNumberish, royaltyData: z.input<typeof CommonRoy
 |  tokenId | BigNumberish | the token id |
 |  royaltyData | z.input&lt;typeof CommonRoyaltySchema&gt; | the royalty recipient and fee |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;{ receipt: \_ethersproject\_abstract\_provider.TransactionReceipt; data: () =&gt; Promise&lt;{ seller\_fee\_basis\_points: number; fee\_recipient: string; }&gt;; }&gt;
+Promise&lt;{ receipt: import("@ethersproject/abstract-provider").TransactionReceipt; data: () =&gt; Promise&lt;{ seller\_fee\_basis\_points: number; fee\_recipient: string; }&gt;; }&gt;

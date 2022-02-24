@@ -1,3 +1,6 @@
+/**
+ * @public
+ */
 export enum ChainId {
   Mainnet = 1,
   Ropsten = 3,
@@ -18,6 +21,9 @@ export enum ChainId {
   AvalancheFujiTestnet = 43113,
 }
 
+/**
+ * @public
+ */
 export type SUPPORTED_CHAIN_ID =
   | ChainId.Mainnet
   | ChainId.Rinkeby
@@ -29,6 +35,9 @@ export type SUPPORTED_CHAIN_ID =
   | ChainId.Avalanche
   | ChainId.AvalancheFujiTestnet;
 
+/**
+ * @public
+ */
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   ChainId.Mainnet,
   ChainId.Rinkeby,

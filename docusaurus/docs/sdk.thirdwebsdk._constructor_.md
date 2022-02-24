@@ -11,7 +11,7 @@ hide_title: true
 
 Constructs a new instance of the `ThirdwebSDK` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions, storage?: IStorage);
@@ -21,6 +21,6 @@ constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions, storage?: 
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | NetworkOrSignerOrProvider |  |
-|  options | SDKOptions |  |
-|  storage | IStorage |  |
+|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  options | [SDKOptions](./sdk.sdkoptions.md) |  |
+|  storage | [IStorage](./sdk.istorage.md) |  |

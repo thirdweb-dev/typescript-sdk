@@ -9,8 +9,8 @@ hide_title: true
 
 ## Split.encoder property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-encoder: ContractEncoder<Split$1>;
+encoder: ContractEncoder<SplitContract>;
 ```

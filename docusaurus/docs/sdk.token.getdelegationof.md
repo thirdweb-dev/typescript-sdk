@@ -11,7 +11,7 @@ hide_title: true
 
 Get a specific address voting delegatee address
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getDelegationOf(account: string): Promise<string>;
@@ -23,7 +23,7 @@ getDelegationOf(account: string): Promise<string>;
 |  --- | --- | --- |
 |  account | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

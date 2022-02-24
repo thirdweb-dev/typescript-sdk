@@ -9,13 +9,14 @@ const config = {
   title: "thirdweb SDK",
   tagline:
     "Typescript SDK for deploying and interacting with thirdweb contracts",
-  url: "https://thirdweb.com",
+  url: "https://typescript-docs.thirdweb.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "thidweb-dev", // Usually your GitHub org/user name.
   projectName: "typescript-sdk", // Usually your repo name.
+  trailingSlash: false,
 
   presets: [
     [

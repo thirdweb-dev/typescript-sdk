@@ -1,9 +1,14 @@
 import { readFileSync } from "fs";
 import { ipfsGatewayUrl } from "./before.test";
 
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { BufferOrStringWithName } from "../src/types/BufferOrStringWithName";
-import { DuplicateFileNameError, FileOrBuffer, IpfsStorage } from "../src";
+import {
+  DuplicateFileNameError,
+  FileOrBuffer,
+  IpfsStorage,
+  NFTMetadataInput,
+} from "../src";
 
 global.fetch = require("node-fetch");
 
@@ -204,6 +209,32 @@ describe("IPFS Uploads", async () => {
       metadata3.image ===
         "ipfs://QmTpv5cWy677mgABsgJgwZ6pe2bEpSWQTvcCb8Hmj3ac8E/3",
     );
+  });
+
+  it("should upload properties in right order", async () => {
+    const sampleObjects: NFTMetadataInput[] = [];
+    for (let i = 0; i < 30; i++) {
+      const nft: NFTMetadataInput = {
+        name: `${i}`,
+        image: readFileSync(`test/images/${i % 5}.jpg`),
+      };
+      sampleObjects.push(nft);
+    }
+    const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
+      sampleObjects,
+    );
+    assert(baseUri.startsWith("ipfs://") && baseUri.endsWith("/"));
+    assert(metadataUris.length === sampleObjects.length);
+    const metadatas = await Promise.all(
+      metadataUris.map(async (m) => await storage.get(m)),
+    );
+    for (let i = 0; i < metadatas.length; i++) {
+      const expected = sampleObjects[i];
+      const downloaded = metadatas[i];
+      console.log(downloaded);
+      expect(downloaded.name).to.be.eq(expected.name);
+      expect(downloaded.image.endsWith(`${i}`)).to.eq(true);
+    }
   });
 
   // TODO make passing straight urls passthrough storage or handled at higher level

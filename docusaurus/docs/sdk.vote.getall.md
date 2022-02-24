@@ -11,14 +11,14 @@ hide_title: true
 
 Get All Proposals
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getAll(): Promise<Proposal[]>;
 ```
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;Proposal\[\]&gt;
+Promise&lt;[Proposal](./sdk.proposal.md)\[\]&gt;
 
 - All the proposals in the contract.
 

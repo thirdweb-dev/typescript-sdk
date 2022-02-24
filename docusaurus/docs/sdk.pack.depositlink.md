@@ -9,7 +9,7 @@ hide_title: true
 
 ## Pack.depositLink() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 depositLink(amount: BigNumberish): Promise<TransactionResult>;
@@ -21,6 +21,6 @@ depositLink(amount: BigNumberish): Promise<TransactionResult>;
 |  --- | --- | --- |
 |  amount | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

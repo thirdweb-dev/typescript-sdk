@@ -9,8 +9,9 @@ hide_title: true
 
 ## EditionMetadataInput type
 
-<b>Signature:</b>
+
+**Signature:**
 
 ```typescript
-declare type EditionMetadataInput = z.input<typeof EditionMetadataInputSchema>;
+export declare type EditionMetadataInput = z.input<typeof EditionMetadataInputSchema>;
 ```

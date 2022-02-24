@@ -7,6 +7,7 @@ import { MissingRoleError } from "../../common/error";
 
 /**
  * Handles Contract roles and permissions
+ * @public
  */
 export class ContractRoles<
   TContract extends AccessControlEnumerable,

@@ -9,7 +9,7 @@ hide_title: true
 
 ## Edition.estimator property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 estimator: GasCostEstimator<TokenERC1155>;

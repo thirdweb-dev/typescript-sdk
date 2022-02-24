@@ -9,7 +9,7 @@ hide_title: true
 
 ## Edition.contractFactory property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractFactory: typeof TokenERC1155__factory;

@@ -11,7 +11,7 @@ hide_title: true
 
 Open Pack
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 open(packId: string): Promise<TransactionResultWithId<NFTMetadata>[]>;
@@ -23,9 +23,9 @@ open(packId: string): Promise<TransactionResultWithId<NFTMetadata>[]>;
 |  --- | --- | --- |
 |  packId | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResultWithId&lt;NFTMetadata&gt;\[\]&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&lt;[NFTMetadata](./sdk.nftmetadata.md)&gt;\[\]&gt;
 
 ## Remarks
 

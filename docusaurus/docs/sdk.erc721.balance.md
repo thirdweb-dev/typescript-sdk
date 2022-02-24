@@ -11,11 +11,11 @@ hide_title: true
 
 Get NFT Balance for the currently connected wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balance(): Promise<BigNumber>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;

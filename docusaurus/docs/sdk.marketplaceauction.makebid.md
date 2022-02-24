@@ -11,7 +11,7 @@ hide_title: true
 
 Bid On Auction
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 makeBid(listingId: BigNumberish, pricePerToken: Price): Promise<TransactionResult>;
@@ -22,11 +22,11 @@ makeBid(listingId: BigNumberish, pricePerToken: Price): Promise<TransactionResul
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  listingId | BigNumberish |  |
-|  pricePerToken | Price |  |
+|  pricePerToken | [Price](./sdk.price.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

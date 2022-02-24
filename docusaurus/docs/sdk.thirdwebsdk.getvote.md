@@ -11,7 +11,7 @@ hide_title: true
 
 Get an instance of a Vote contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getVote(address: string): Vote;
@@ -23,8 +23,8 @@ getVote(address: string): Vote;
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
 
-<b>Returns:</b>
+**Returns:**
 
-Vote
+[Vote](./sdk.vote.md)
 
 the contract

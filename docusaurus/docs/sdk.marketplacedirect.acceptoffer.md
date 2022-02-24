@@ -9,7 +9,7 @@ hide_title: true
 
 ## MarketplaceDirect.acceptOffer() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 acceptOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<TransactionResult>;
@@ -22,6 +22,6 @@ acceptOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<Transact
 |  listingId | BigNumberish |  |
 |  addressOfOfferor | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

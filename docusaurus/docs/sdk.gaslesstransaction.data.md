@@ -9,7 +9,7 @@ hide_title: true
 
 ## GaslessTransaction.data property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 data: string;

@@ -9,8 +9,8 @@ hide_title: true
 
 ## ValueOf type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type ValueOf<T> = T[keyof T];
+export declare type ValueOf<T> = T[keyof T];
 ```

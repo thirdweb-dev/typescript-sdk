@@ -11,18 +11,18 @@ hide_title: true
 
 Constructs a new instance of the `Marketplace` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Marketplace$1>);
+constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<MarketplaceContract>);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | NetworkOrSignerOrProvider |  |
+|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  address | string |  |
-|  storage | IStorage |  |
-|  options | SDKOptions |  |
-|  contractWrapper | ContractWrapper&lt;Marketplace$1&gt; |  |
+|  storage | [IStorage](./sdk.istorage.md) |  |
+|  options | [SDKOptions](./sdk.sdkoptions.md) |  |
+|  contractWrapper | ContractWrapper&lt;MarketplaceContract&gt; |  |

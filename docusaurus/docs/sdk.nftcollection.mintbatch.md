@@ -11,7 +11,7 @@ hide_title: true
 
 Mint Many NFTs to the connected wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
@@ -21,12 +21,12 @@ mintBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMet
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadatas | NFTMetadataInput\[\] |  |
+|  metadatas | [NFTMetadataInput](./sdk.nftmetadatainput.md)\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResultWithId&lt;NFTMetadataOwner&gt;\[\]&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)&gt;\[\]&gt;
 
 ## Remarks
 
-See [NFTCollection.mintBatchTo()](./sdk.nftcollection.mintbatchto.md) \`\`\`
+See [NFTCollection.mintBatchTo()](./sdk.nftcollection.mintbatchto.md)

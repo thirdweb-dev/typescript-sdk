@@ -9,7 +9,7 @@ hide_title: true
 
 ## Marketplace.contractRoles property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractRoles: readonly ["admin", "lister", "asset"];

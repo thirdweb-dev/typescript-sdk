@@ -9,7 +9,7 @@ hide_title: true
 
 ## Edition.roles property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 roles: ContractRoles<TokenERC1155, typeof Edition.contractRoles[number]>;

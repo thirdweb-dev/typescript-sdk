@@ -20,7 +20,7 @@ getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectList
 
 <b>Returns:</b>
 
-Promise&lt;(AuctionListing \| DirectListing)\[\]&gt;
+Promise&lt;([AuctionListing](./sdk.auctionlisting.md) \| [DirectListing](./sdk.directlisting.md)<!-- -->)\[\]&gt;
 
 ## Remarks
 

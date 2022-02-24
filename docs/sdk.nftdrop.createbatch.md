@@ -16,11 +16,11 @@ createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTM
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadatas | NFTMetadataInput\[\] | The metadata to include in the batch. |
+|  metadatas | [NFTMetadataInput](./sdk.nftmetadatainput.md)<!-- -->\[\] | The metadata to include in the batch. |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResultWithId&lt;NFTMetadata&gt;\[\]&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->&gt;\[\]&gt;
 
 ## Remarks
 

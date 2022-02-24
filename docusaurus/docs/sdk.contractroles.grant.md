@@ -11,7 +11,7 @@ hide_title: true
 
 Call this to grant a role to a specific address.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 grant(role: TRole, address: string): Promise<TransactionResult>;
@@ -24,9 +24,9 @@ grant(role: TRole, address: string): Promise<TransactionResult>;
 |  role | TRole | The [Role](./sdk.role.md) to grant to the address |
 |  address | string | The address to grant the role to |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 The transaction receipt
 

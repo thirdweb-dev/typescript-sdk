@@ -9,7 +9,7 @@ hide_title: true
 
 ## Token.encoder property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 encoder: ContractEncoder<TokenERC20>;

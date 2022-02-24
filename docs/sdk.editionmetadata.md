@@ -4,8 +4,9 @@
 
 ## EditionMetadata type
 
+
 <b>Signature:</b>
 
 ```typescript
-declare type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
+export declare type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
 ```

@@ -21,5 +21,5 @@ getClaimIneligibilityReasons(quantity: BigNumberish, addressToCheck?: string): P
 
 <b>Returns:</b>
 
-Promise&lt;ClaimEligibility\[\]&gt;
+Promise&lt;[ClaimEligibility](./sdk.claimeligibility.md)<!-- -->\[\]&gt;
 

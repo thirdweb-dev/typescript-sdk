@@ -53,6 +53,15 @@ async function main() {
         if (line.startsWith("|")) {
           line = line.replace(/\\\|/g, "&#124;");
         }
+        if (line.includes("<b>")) {
+          line = line.replace(/<b>/g, "**");
+        }
+        if (line.includes("</b>")) {
+          line = line.replace(/<\/b>/g, "**");
+        }
+        if (line.includes("<!-- -->")) {
+          line = line.replace(/<!-- -->/g, "");
+        }
         if (!skip) {
           output.push(line);
         }

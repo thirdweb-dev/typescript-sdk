@@ -9,8 +9,8 @@ hide_title: true
 
 ## Marketplace.metadata property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-metadata: ContractMetadata<Marketplace$1, typeof Marketplace.schema>;
+metadata: ContractMetadata<MarketplaceContract, typeof Marketplace.schema>;
 ```

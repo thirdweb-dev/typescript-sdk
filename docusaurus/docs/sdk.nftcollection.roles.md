@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTCollection.roles property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 roles: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>;

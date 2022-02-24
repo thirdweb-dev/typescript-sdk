@@ -9,8 +9,8 @@ hide_title: true
 
 ## SignerOrProvider type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare type SignerOrProvider = Signer$1 | Provider;
+export declare type SignerOrProvider = Signer | Provider;
 ```

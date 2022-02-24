@@ -9,9 +9,9 @@ hide_title: true
 
 ## DropErc1155ClaimConditions.getClaimIneligibilityReasons() method
 
-For any claim conditions that a particular wallet is violating, this function returns human readable information about the breaks in the condition that can be used to inform the user.
+For any claim conditions that a particular wallet is violating, this function returns human-readable information about the breaks in the condition that can be used to inform the user.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getClaimIneligibilityReasons(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
@@ -21,10 +21,10 @@ getClaimIneligibilityReasons(tokenId: BigNumberish, quantity: BigNumberish, addr
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  tokenId | BigNumberish |  |
+|  tokenId | BigNumberish | the token id to check |
 |  quantity | BigNumberish | The desired quantity that would be claimed. |
 |  addressToCheck | string | The wallet address, defaults to the connected wallet. |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;ClaimEligibility\[\]&gt;
+Promise&lt;[ClaimEligibility](./sdk.claimeligibility.md)\[\]&gt;

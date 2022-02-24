@@ -11,7 +11,7 @@ hide_title: true
 
 Triggers a transfer to account of the amount of a given currency they are owed.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 withdrawToken(walletAddress: string, tokenAddress: string): Promise<TransactionResult>;
@@ -24,6 +24,6 @@ withdrawToken(walletAddress: string, tokenAddress: string): Promise<TransactionR
 |  walletAddress | string | The address to distributes the amount to |
 |  tokenAddress | string | The address of the currency contract to distribute funds |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

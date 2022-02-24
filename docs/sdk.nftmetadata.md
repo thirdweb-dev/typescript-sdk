@@ -4,8 +4,9 @@
 
 ## NFTMetadata type
 
+
 <b>Signature:</b>
 
 ```typescript
-declare type NFTMetadata = z.output<typeof CommonNFTOutput>;
+export declare type NFTMetadata = z.output<typeof CommonNFTOutput>;
 ```

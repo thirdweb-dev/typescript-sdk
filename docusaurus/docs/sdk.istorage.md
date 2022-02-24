@@ -9,10 +9,11 @@ hide_title: true
 
 ## IStorage interface
 
-<b>Signature:</b>
+
+**Signature:**
 
 ```typescript
-interface IStorage 
+export interface IStorage 
 ```
 
 ## Methods

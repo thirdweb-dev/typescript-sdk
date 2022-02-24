@@ -11,7 +11,7 @@ hide_title: true
 
 Constructs a new instance of the `Erc721SignatureMinting` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(contractWrapper: ContractWrapper<TokenERC721>, roles: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>, storage: IStorage);
@@ -22,5 +22,5 @@ constructor(contractWrapper: ContractWrapper<TokenERC721>, roles: ContractRoles<
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;TokenERC721&gt; |  |
-|  roles | ContractRoles&lt;TokenERC721, typeof NFTCollection.contractRoles\[number\]&gt; |  |
-|  storage | IStorage |  |
+|  roles | [ContractRoles](./sdk.contractroles.md)&lt;TokenERC721, typeof [NFTCollection.contractRoles](./sdk.nftcollection.contractroles.md)\[number\]&gt; |  |
+|  storage | [IStorage](./sdk.istorage.md) |  |

@@ -9,8 +9,8 @@ hide_title: true
 
 ## Marketplace.roles property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-roles: ContractRoles<Marketplace$1, typeof Marketplace.contractRoles[number]>;
+roles: ContractRoles<MarketplaceContract, typeof Marketplace.contractRoles[number]>;
 ```

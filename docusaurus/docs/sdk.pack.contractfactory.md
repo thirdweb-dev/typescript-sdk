@@ -9,7 +9,7 @@ hide_title: true
 
 ## Pack.contractFactory property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static contractFactory: typeof Pack__factory;

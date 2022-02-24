@@ -11,10 +11,10 @@ hide_title: true
 
 Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class Erc1155SignatureMinting 
+export declare class Erc1155SignatureMinting 
 ```
 
 ## Constructors

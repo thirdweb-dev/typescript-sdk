@@ -11,7 +11,7 @@ hide_title: true
 
 Estimates the cost of gas in native token of the current chain
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 gasCostOf(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): Promise<string>;
@@ -24,7 +24,7 @@ gasCostOf(fn: keyof TContract["functions"], args: Parameters<TContract["function
 |  fn | keyof TContract\["functions"\] |  |
 |  args | Parameters&lt;TContract\["functions"\]\[typeof fn\]&gt; |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

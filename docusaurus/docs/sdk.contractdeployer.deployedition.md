@@ -11,7 +11,7 @@ hide_title: true
 
 Deploys a new Edition contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 deployEdition(metadata: z.input<typeof Edition.schema.deploy>): Promise<string>;
@@ -23,7 +23,7 @@ deployEdition(metadata: z.input<typeof Edition.schema.deploy>): Promise<string>;
 |  --- | --- | --- |
 |  metadata | z.input&lt;typeof Edition.schema.deploy&gt; | the contract metadata |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

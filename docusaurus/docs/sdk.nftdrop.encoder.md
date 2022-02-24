@@ -9,7 +9,7 @@ hide_title: true
 
 ## NFTDrop.encoder property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 encoder: ContractEncoder<DropERC721>;

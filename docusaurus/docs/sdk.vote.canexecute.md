@@ -11,7 +11,7 @@ hide_title: true
 
 Can Execute
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 canExecute(proposalId: string): Promise<boolean>;
@@ -23,7 +23,7 @@ canExecute(proposalId: string): Promise<boolean>;
 |  --- | --- | --- |
 |  proposalId | string | The proposal ID to check. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;boolean&gt;
 

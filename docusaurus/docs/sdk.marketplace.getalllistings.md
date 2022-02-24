@@ -11,7 +11,7 @@ hide_title: true
 
 Get all the listings
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
@@ -23,9 +23,9 @@ getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectList
 |  --- | --- | --- |
 |  filter | MarketplaceFilter | optional filters |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;(AuctionListing \| DirectListing)\[\]&gt;
+Promise&lt;([AuctionListing](./sdk.auctionlisting.md) \| [DirectListing](./sdk.directlisting.md))\[\]&gt;
 
 ## Remarks
 

@@ -9,8 +9,9 @@ hide_title: true
 
 ## TokenMintInput type
 
-<b>Signature:</b>
+
+**Signature:**
 
 ```typescript
-declare type TokenMintInput = z.input<typeof TokenMintInputSchema>;
+export declare type TokenMintInput = z.input<typeof TokenMintInputSchema>;
 ```

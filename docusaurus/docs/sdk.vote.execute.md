@@ -11,7 +11,7 @@ hide_title: true
 
 Execute Proposal
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 execute(proposalId: string): Promise<TransactionResult>;
@@ -23,9 +23,9 @@ execute(proposalId: string): Promise<TransactionResult>;
 |  --- | --- | --- |
 |  proposalId | string | The proposal id to execute. |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

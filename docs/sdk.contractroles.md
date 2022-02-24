@@ -9,7 +9,7 @@ Handles Contract roles and permissions
 <b>Signature:</b>
 
 ```typescript
-declare class ContractRoles<TContract extends AccessControlEnumerable, TRole extends Role> 
+export declare class ContractRoles<TContract extends AccessControlEnumerable, TRole extends Role> 
 ```
 
 ## Constructors

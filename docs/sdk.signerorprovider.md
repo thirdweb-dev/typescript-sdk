@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-declare type SignerOrProvider = Signer$1 | Provider;
+export declare type SignerOrProvider = Signer | Provider;
 ```

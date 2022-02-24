@@ -11,7 +11,7 @@ hide_title: true
 
 Get a proposal by id.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get(proposalId: BigNumberish): Promise<Proposal>;
@@ -23,8 +23,8 @@ get(proposalId: BigNumberish): Promise<Proposal>;
 |  --- | --- | --- |
 |  proposalId | BigNumberish | The proposal id to get. |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;Proposal&gt;
+Promise&lt;[Proposal](./sdk.proposal.md)&gt;
 
 - The proposal.

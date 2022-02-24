@@ -11,7 +11,7 @@ hide_title: true
 
 Get the active offer on a listing
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getActiveOffer(listingId: BigNumberish, address: string): Promise<Offer | undefined>;
@@ -24,6 +24,6 @@ getActiveOffer(listingId: BigNumberish, address: string): Promise<Offer | undefi
 |  listingId | BigNumberish | the listing id |
 |  address | string | the address that made the offer |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;Offer \| undefined&gt;
+Promise&lt;[Offer](./sdk.offer.md) \| undefined&gt;

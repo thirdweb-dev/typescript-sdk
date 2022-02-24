@@ -11,10 +11,10 @@ hide_title: true
 
 Handles metadata for a Contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-declare class ContractMetadata<TContract extends IThirdwebContract, TSchema extends IGenericSchemaType> 
+export declare class ContractMetadata<TContract extends IThirdwebContract, TSchema extends IGenericSchemaType> 
 ```
 
 ## Constructors

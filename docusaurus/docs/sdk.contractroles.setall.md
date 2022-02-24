@@ -13,7 +13,7 @@ Call this to OVERWRITE the list of addresses that are members of specific roles.
 
 Every role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use [ContractRoles.grant()](./sdk.contractroles.grant.md) and [ContractRoles.revoke()](./sdk.contractroles.revoke.md) respectively instead.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setAll(rolesWithAddresses: {
@@ -25,11 +25,11 @@ setAll(rolesWithAddresses: {
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  rolesWithAddresses | { \[key in TRole\]?: string\[\]; } | A record of [Role](./sdk.role.md)<!-- -->s to lists of addresses that should be members of the given role. |
+|  rolesWithAddresses | { \[key in TRole\]?: string\[\]; } | A record of [Role](./sdk.role.md)s to lists of addresses that should be members of the given role. |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Exceptions
 

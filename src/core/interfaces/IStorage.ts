@@ -11,6 +11,9 @@ export interface UploadMetadataBatchResult {
   metadataUris: string[];
 }
 
+/**
+ * @public
+ */
 export interface IStorage {
   /**
    * Fetches a one-time-use upload token that can used to upload

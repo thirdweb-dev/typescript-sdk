@@ -11,9 +11,9 @@ Return all the contracts deployed by the specified address
 ```typescript
 getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "split" | "edition-drop" | "edition" | "nft-drop" | "nft-collection" | "token" | "vote" | "marketplace" | "pack";
+        contractType: "split" | "edition-drop" | "edition" | "token" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
         metadata: () => Promise<{
-            [x: string]: Json;
+            [x: string]: import("./types").Json;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
@@ -21,14 +21,14 @@ getContractList(walletAddress: string): Promise<{
             seller_fee_basis_points: number;
             fee_recipient: string;
         }> | Promise<{
-            [x: string]: Json;
+            [x: string]: import("./types").Json;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
             symbol: string;
             name: string;
         }> | Promise<{
-            [x: string]: Json;
+            [x: string]: import("./types").Json;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
@@ -39,16 +39,16 @@ getContractList(walletAddress: string): Promise<{
             voting_period_in_blocks: number;
             voting_token_address: string;
             voting_quorum_fraction: number;
-            proposal_token_threshold: ethers$1.BigNumber;
+            proposal_token_threshold: ethers.BigNumber;
         }> | Promise<{
-            [x: string]: Json;
+            [x: string]: import("./types").Json;
             description?: string | undefined;
             image?: string | undefined;
             external_link?: string | undefined;
             name: string;
             recipients: {
                 address: string;
-                shares: ethers$1.BigNumber;
+                shares: ethers.BigNumber;
             }[];
         }>;
     }[]>;
@@ -62,5 +62,5 @@ getContractList(walletAddress: string): Promise<{
 
 <b>Returns:</b>
 
-Promise&lt;{ address: string; contractType: "split" \| "edition-drop" \| "edition" \| "nft-drop" \| "nft-collection" \| "token" \| "vote" \| "marketplace" \| "pack"; metadata: () =&gt; Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; seller\_fee\_basis\_points: number; fee\_recipient: string; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; symbol: string; name: string; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; proposal\_start\_time\_in\_seconds: number; proposal\_voting\_time\_in\_seconds: number; voting\_delay\_in\_blocks: number; voting\_period\_in\_blocks: number; voting\_token\_address: string; voting\_quorum\_fraction: number; proposal\_token\_threshold: ethers$1.BigNumber; }&gt; \| Promise&lt;{ \[x: string\]: Json; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; recipients: { address: string; shares: ethers$1.BigNumber; }\[\]; }&gt;; }\[\]&gt;
+Promise&lt;{ address: string; contractType: "split" \| "edition-drop" \| "edition" \| "token" \| "vote" \| "marketplace" \| "pack" \| "nft-drop" \| "nft-collection"; metadata: () =&gt; Promise&lt;{ \[x: string\]: import("./types").[Json](./sdk.json.md)<!-- -->; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; seller\_fee\_basis\_points: number; fee\_recipient: string; }&gt; \| Promise&lt;{ \[x: string\]: import("./types").[Json](./sdk.json.md)<!-- -->; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; symbol: string; name: string; }&gt; \| Promise&lt;{ \[x: string\]: import("./types").[Json](./sdk.json.md)<!-- -->; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; proposal\_start\_time\_in\_seconds: number; proposal\_voting\_time\_in\_seconds: number; voting\_delay\_in\_blocks: number; voting\_period\_in\_blocks: number; voting\_token\_address: string; voting\_quorum\_fraction: number; proposal\_token\_threshold: ethers.BigNumber; }&gt; \| Promise&lt;{ \[x: string\]: import("./types").[Json](./sdk.json.md)<!-- -->; description?: string \| undefined; image?: string \| undefined; external\_link?: string \| undefined; name: string; recipients: { address: string; shares: ethers.BigNumber; }\[\]; }&gt;; }\[\]&gt;
 

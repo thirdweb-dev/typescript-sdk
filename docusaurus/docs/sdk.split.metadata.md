@@ -9,8 +9,8 @@ hide_title: true
 
 ## Split.metadata property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-metadata: ContractMetadata<Split$1, typeof Split.schema>;
+metadata: ContractMetadata<SplitContract, typeof Split.schema>;
 ```

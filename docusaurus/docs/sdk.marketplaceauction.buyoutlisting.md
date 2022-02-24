@@ -11,7 +11,7 @@ hide_title: true
 
 Buyout Auction
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 buyoutListing(listingId: BigNumberish): Promise<TransactionResult>;
@@ -23,9 +23,9 @@ buyoutListing(listingId: BigNumberish): Promise<TransactionResult>;
 |  --- | --- | --- |
 |  listingId | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

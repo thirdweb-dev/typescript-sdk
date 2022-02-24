@@ -11,7 +11,7 @@ hide_title: true
 
 Update a single claim condition with new data.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 update(tokenId: BigNumberish, index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
@@ -21,10 +21,10 @@ update(tokenId: BigNumberish, index: number, claimConditionInput: ClaimCondition
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  tokenId | BigNumberish |  |
+|  tokenId | BigNumberish | the token id to update |
 |  index | number | the index of the claim condition to update, as given by the index from the result of <code>getAll()</code> |
-|  claimConditionInput | ClaimConditionInput | the new data to update, previous data will be retained |
+|  claimConditionInput | [ClaimConditionInput](./sdk.claimconditioninput.md) | the new data to update, previous data will be retained |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;

@@ -11,7 +11,7 @@ hide_title: true
 
 Create Auction
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 createListing(listing: NewAuctionListing): Promise<TransactionResultWithId>;
@@ -21,11 +21,11 @@ createListing(listing: NewAuctionListing): Promise<TransactionResultWithId>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listing | NewAuctionListing |  |
+|  listing | [NewAuctionListing](./sdk.newauctionlisting.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResultWithId&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)&gt;
 
 ## Remarks
 

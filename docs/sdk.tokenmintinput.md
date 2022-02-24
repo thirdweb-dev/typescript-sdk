@@ -4,8 +4,9 @@
 
 ## TokenMintInput type
 
+
 <b>Signature:</b>
 
 ```typescript
-declare type TokenMintInput = z.input<typeof TokenMintInputSchema>;
+export declare type TokenMintInput = z.input<typeof TokenMintInputSchema>;
 ```

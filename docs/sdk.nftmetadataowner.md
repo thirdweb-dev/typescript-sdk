@@ -4,11 +4,14 @@
 
 ## NFTMetadataOwner type
 
+
 <b>Signature:</b>
 
 ```typescript
-declare type NFTMetadataOwner = {
+export declare type NFTMetadataOwner = {
     metadata: NFTMetadata;
     owner: string;
 };
 ```
+<b>References:</b> [NFTMetadata](./sdk.nftmetadata.md)
+

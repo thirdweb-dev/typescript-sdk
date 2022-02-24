@@ -11,7 +11,7 @@ hide_title: true
 
 Get an instance of a Token contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getToken(address: string): Token;
@@ -23,8 +23,8 @@ getToken(address: string): Token;
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
 
-<b>Returns:</b>
+**Returns:**
 
-Token
+[Token](./sdk.token.md)
 
 the contract

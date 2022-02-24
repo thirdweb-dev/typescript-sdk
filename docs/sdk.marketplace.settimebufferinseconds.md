@@ -16,7 +16,7 @@ setTimeBufferInSeconds(bufferInSeconds: BigNumberish): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  bufferInSeconds | BigNumberish |  |
+|  bufferInSeconds | BigNumberish | the seconds value |
 
 <b>Returns:</b>
 

@@ -9,8 +9,8 @@ hide_title: true
 
 ## Pack.roles property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-roles: ContractRoles<Pack$1, typeof Pack.contractRoles[number]>;
+roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
 ```

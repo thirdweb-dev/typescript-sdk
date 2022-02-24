@@ -4,6 +4,9 @@ import { IStorage } from "../interfaces/IStorage";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 
+/**
+ * @internal
+ */
 export interface IGenericSchemaType {
   deploy: z.AnyZodObject;
   input: z.AnyZodObject;
@@ -12,6 +15,7 @@ export interface IGenericSchemaType {
 
 /**
  * Handles metadata for a Contract
+ * @public
  */
 export class ContractMetadata<
   TContract extends IThirdwebContract,

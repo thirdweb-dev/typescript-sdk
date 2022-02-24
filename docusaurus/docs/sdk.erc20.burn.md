@@ -11,7 +11,7 @@ hide_title: true
 
 Burn Tokens
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 burn(amount: BigNumberish): Promise<TransactionResult>;
@@ -23,9 +23,9 @@ burn(amount: BigNumberish): Promise<TransactionResult>;
 |  --- | --- | --- |
 |  amount | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

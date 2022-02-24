@@ -13,36 +13,42 @@ import { BigNumber, BytesLike, CallOverrides } from "ethers";
 
 /**
  * Represents a claim condition fetched from the SDK
+ * @public
  */
 export type ClaimCondition = z.output<typeof ClaimConditionOutputSchema>;
 
 /**
- * @internal
+ * @public
  */
 export type SnapshotInfo = z.output<typeof SnapshotInfoSchema>;
 
 /**
- * @internal
+ * @public
  */
 export type Snapshot = z.output<typeof SnapshotSchema>;
 
 /**
  * Input model to pass a snapshot of addresses + amount claimable for a claim condition
+ * @public
  */
 export type SnapshotInput = z.output<typeof SnapshotInputSchema>;
 
 /**
  * Input model to create a claim condition with optional snapshot of wallets
+ * @public
  */
 export type ClaimConditionInput = z.input<
   typeof PartialClaimConditionInputSchema
 >;
 
 /**
- * @internal
+ * @public
  */
 export type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
 
+/**
+ * @public
+ */
 export type ClaimVerification = {
   overrides: CallOverrides;
   proofs: BytesLike[];

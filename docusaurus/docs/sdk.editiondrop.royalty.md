@@ -9,7 +9,7 @@ hide_title: true
 
 ## EditionDrop.royalty property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 royalty: ContractRoyalty<DropERC1155, typeof EditionDrop.schema>;

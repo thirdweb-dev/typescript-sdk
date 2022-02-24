@@ -35,6 +35,7 @@ import { ListingAddedEvent } from "@thirdweb-dev/contracts/dist/Marketplace";
 
 /**
  * Handles auction listings
+ * @public
  */
 export class MarketplaceAuction {
   private contractWrapper: ContractWrapper<Marketplace>;
@@ -416,7 +417,7 @@ export class MarketplaceAuction {
 
   /**
    * Update an Auction listing with new metadata
-   * @param listing
+   * @param listing - the listing id to update
    */
   public async updateListing(
     listing: AuctionListing,

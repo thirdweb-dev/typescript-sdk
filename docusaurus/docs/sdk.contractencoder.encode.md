@@ -11,7 +11,7 @@ hide_title: true
 
 Encodes the given contract function with argument
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 encode(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): string;
@@ -24,7 +24,7 @@ encode(fn: keyof TContract["functions"], args: Parameters<TContract["functions"]
 |  fn | keyof TContract\["functions"\] |  |
 |  args | Parameters&lt;TContract\["functions"\]\[typeof fn\]&gt; |  |
 
-<b>Returns:</b>
+**Returns:**
 
 string
 

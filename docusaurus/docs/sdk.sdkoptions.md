@@ -9,8 +9,9 @@ hide_title: true
 
 ## SDKOptions type
 
-<b>Signature:</b>
+
+**Signature:**
 
 ```typescript
-declare type SDKOptions = z.input<typeof SDKOptionsSchema>;
+export declare type SDKOptions = z.input<typeof SDKOptionsSchema>;
 ```

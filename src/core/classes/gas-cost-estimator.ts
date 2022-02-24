@@ -3,6 +3,7 @@ import { BaseContract, ethers } from "ethers";
 
 /**
  * Estimates the gas cost of Contract calls
+ * @public
  */
 export class GasCostEstimator<TContract extends BaseContract> {
   private contractWrapper;

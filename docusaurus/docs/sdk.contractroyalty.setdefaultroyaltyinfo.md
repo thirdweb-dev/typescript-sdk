@@ -11,7 +11,7 @@ hide_title: true
 
 Set the royalty recipient and fee for a contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setDefaultRoyaltyInfo(royaltyData: z.input<typeof CommonRoyaltySchema>): Promise<TransactionResult<z.output<typeof CommonRoyaltySchema>>>;
@@ -23,6 +23,6 @@ setDefaultRoyaltyInfo(royaltyData: z.input<typeof CommonRoyaltySchema>): Promise
 |  --- | --- | --- |
 |  royaltyData | z.input&lt;typeof CommonRoyaltySchema&gt; | the royalty recipient and fee |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&lt;z.output&lt;typeof CommonRoyaltySchema&gt;&gt;&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&lt;z.output&lt;typeof CommonRoyaltySchema&gt;&gt;&gt;

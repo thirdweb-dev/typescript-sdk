@@ -19,9 +19,9 @@ makeOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContra
 |  listingId | BigNumberish |  |
 |  quantityDesired | BigNumberish |  |
 |  currencyContractAddress | string |  |
-|  pricePerToken | Price |  |
+|  pricePerToken | [Price](./sdk.price.md) |  |
 
 <b>Returns:</b>
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
 

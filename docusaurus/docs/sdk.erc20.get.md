@@ -11,14 +11,14 @@ hide_title: true
 
 Get the token Metadata (name, symbol, etc...)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get(): Promise<Currency>;
 ```
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;Currency&gt;
+Promise&lt;[Currency](./sdk.currency.md)&gt;
 
 The token metadata
 

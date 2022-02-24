@@ -11,12 +11,12 @@ hide_title: true
 
 Get your wallet voting power for the current checkpoints
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getVoteBalance(): Promise<BigNumber>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;
 

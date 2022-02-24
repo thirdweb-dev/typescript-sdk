@@ -11,7 +11,7 @@ hide_title: true
 
 Mint Tokens for the connected wallet
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mint(amount: BigNumberish): Promise<TransactionResult>;
@@ -23,9 +23,9 @@ mint(amount: BigNumberish): Promise<TransactionResult>;
 |  --- | --- | --- |
 |  amount | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

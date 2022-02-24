@@ -11,7 +11,7 @@ hide_title: true
 
 Get an instance of a Pack contract
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getPack(address: string): Pack;
@@ -23,8 +23,8 @@ getPack(address: string): Pack;
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
 
-<b>Returns:</b>
+**Returns:**
 
-Pack
+[Pack](./sdk.pack.md)
 
 the contract

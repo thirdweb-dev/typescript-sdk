@@ -9,7 +9,7 @@ hide_title: true
 
 ## GaslessTransaction.gasLimit property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 gasLimit: BigNumber;

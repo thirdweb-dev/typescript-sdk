@@ -11,7 +11,7 @@ hide_title: true
 
 Set the Bid buffer: this is a percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setBidBufferBps(bufferBps: BigNumberish): Promise<void>;
@@ -21,8 +21,8 @@ setBidBufferBps(bufferBps: BigNumberish): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  bufferBps | BigNumberish |  |
+|  bufferBps | BigNumberish | the bps value |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;

@@ -11,7 +11,7 @@ hide_title: true
 
 Constructs a new instance of the `ContractRoyalty` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, TSchema>);
@@ -22,4 +22,4 @@ constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetad
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;TContract&gt; |  |
-|  metadata | ContractMetadata&lt;TContract, TSchema&gt; |  |
+|  metadata | [ContractMetadata](./sdk.contractmetadata.md)&lt;TContract, TSchema&gt; |  |

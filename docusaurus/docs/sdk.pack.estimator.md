@@ -9,8 +9,8 @@ hide_title: true
 
 ## Pack.estimator property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-estimator: GasCostEstimator<Pack$1>;
+estimator: GasCostEstimator<PackContract>;
 ```

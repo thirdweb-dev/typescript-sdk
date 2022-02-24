@@ -11,7 +11,7 @@ hide_title: true
 
 Get NFT Balance
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
@@ -24,7 +24,7 @@ balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
 |  address | string |  |
 |  tokenId | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;BigNumber&gt;
 

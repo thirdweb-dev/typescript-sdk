@@ -11,7 +11,7 @@ hide_title: true
 
 Transfer a single NFT
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 transfer(to: string, tokenId: BigNumberish, amount: BigNumberish, data?: BytesLike): Promise<TransactionResult>;
@@ -26,9 +26,9 @@ transfer(to: string, tokenId: BigNumberish, amount: BigNumberish, data?: BytesLi
 |  amount | BigNumberish |  |
 |  data | BytesLike |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;TransactionResult&gt;
+Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
 
 ## Remarks
 

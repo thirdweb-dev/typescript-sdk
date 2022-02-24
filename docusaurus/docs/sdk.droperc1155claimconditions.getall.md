@@ -11,7 +11,7 @@ hide_title: true
 
 Get all the claim conditions
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getAll(tokenId: BigNumberish): Promise<ClaimCondition[]>;
@@ -23,8 +23,8 @@ getAll(tokenId: BigNumberish): Promise<ClaimCondition[]>;
 |  --- | --- | --- |
 |  tokenId | BigNumberish |  |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;ClaimCondition\[\]&gt;
+Promise&lt;[ClaimCondition](./sdk.claimcondition.md)\[\]&gt;
 
 the claim conditions metadata
