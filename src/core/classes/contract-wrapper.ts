@@ -102,9 +102,46 @@ export class ContractWrapper<
    * @internal
    */
   public async getCallOverrides(): Promise<CallOverrides> {
-    return {
-      gasPrice: await this.getPreferredGasPrice(),
-    };
+    const feeData = await this.getProvider().getFeeData();
+    const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
+    if (supports1559) {
+      const baseFeePerGas = BigNumber.from(feeData.maxFeePerGas);
+      const maxPriorityFeePerGas = this.getPreferredPriorityFee(
+        BigNumber.from(feeData.maxPriorityFeePerGas),
+      );
+      const maxFeePerGas = baseFeePerGas.add(maxPriorityFeePerGas);
+      return {
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+      };
+    } else {
+      return {
+        gasPrice: await this.getPreferredGasPrice(),
+      };
+    }
+  }
+
+  /**
+   * Calculates the priority fee per gas according to user preferences
+   * @param defaultPriorityFeePerGas - the base priority fee
+   */
+  private getPreferredPriorityFee(
+    defaultPriorityFeePerGas: BigNumber,
+  ): BigNumber {
+    const speed = this.options.gasSettings.speed;
+    let extraTip;
+    switch (speed) {
+      case "standard":
+        extraTip = BigNumber.from(0); // default is 2.5 gwei
+        break;
+      case "fast":
+        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10% - 2.75 gwei
+        break;
+      case "fastest":
+        extraTip = defaultPriorityFeePerGas.div(100).mul(20); // + 20% - 3 gwei
+        break;
+    }
+    return defaultPriorityFeePerGas.add(extraTip);
   }
 
   /**
