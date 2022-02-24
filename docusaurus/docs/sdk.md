@@ -107,6 +107,7 @@ hide_title: true
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [EditionMetadata](./sdk.editionmetadata.md) |  |
 |  [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
+|  [EditionMetadataOwner](./sdk.editionmetadataowner.md) |  |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [FilledConditionInput](./sdk.filledconditioninput.md) |  |
 |  [FilledSignaturePayload](./sdk.filledsignaturepayload.md) |  |

@@ -1185,6 +1185,85 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
     supply: string | number | bigint | BigNumber;
 }>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "EditionMetadataOwner" is marked as @public, but its signature references "EditionMetadataWithOwnerOutputSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type EditionMetadataOwner = z.output<typeof EditionMetadataWithOwnerOutputSchema>;
+
+// Warning: (ae-internal-missing-underscore) The name "EditionMetadataWithOwnerOutputSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
+    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    metadata: z.ZodObject<z.extendShape<z.extendShape<{
+        name: z.ZodString;
+        description: z.ZodOptional<z.ZodString>;
+        image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+    }, {
+        id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+        uri: z.ZodString;
+        image: z.ZodOptional<z.ZodString>;
+        external_url: z.ZodOptional<z.ZodString>;
+    }>, {
+        animation_url: z.ZodOptional<z.ZodString>;
+        properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_url?: string | undefined;
+        animation_url?: string | undefined;
+        properties?: Record<string, string | number | boolean | null> | undefined;
+        name: string;
+        id: BigNumber;
+        uri: string;
+    }, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_url?: string | undefined;
+        animation_url?: string | undefined;
+        properties?: Record<string, string | number | boolean | null> | undefined;
+        name: string;
+        id: string | number | bigint | BigNumber;
+        uri: string;
+    }>;
+}, {
+    owner: z.ZodString;
+    quantityOwned: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+}>, "strip", z.ZodTypeAny, {
+    metadata: {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_url?: string | undefined;
+        animation_url?: string | undefined;
+        properties?: Record<string, string | number | boolean | null> | undefined;
+        name: string;
+        id: BigNumber;
+        uri: string;
+    };
+    owner: string;
+    supply: BigNumber;
+    quantityOwned: BigNumber;
+}, {
+    metadata: {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_url?: string | undefined;
+        animation_url?: string | undefined;
+        properties?: Record<string, string | number | boolean | null> | undefined;
+        name: string;
+        id: string | number | bigint | BigNumber;
+        uri: string;
+    };
+    owner: string;
+    supply: string | number | bigint | BigNumber;
+    quantityOwned: string | number | bigint | BigNumber;
+}>;
+
 // Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
 //
 // @public
@@ -1199,7 +1278,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155> implements Updateable
     // (undocumented)
     getAddress(): string;
     getAll(): Promise<EditionMetadata[]>;
-    getOwned(_address?: string): Promise<EditionMetadata[]>;
+    getOwned(_address?: string): Promise<EditionMetadataOwner[]>;
     // @internal (undocumented)
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;

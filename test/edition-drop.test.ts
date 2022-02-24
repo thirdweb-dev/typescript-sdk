@@ -203,7 +203,7 @@ describe("Edition Drop Contract", async () => {
       },
     ]);
     await sdk.updateSignerOrProvider(w1);
-    const tx = await bdContract.claim(0, 2);
+    await bdContract.claim(0, 2);
     try {
       await sdk.updateSignerOrProvider(w2);
       await bdContract.claim(0, 2);
@@ -580,8 +580,17 @@ describe("Edition Drop Contract", async () => {
       },
     ]);
     await bdContract.claimConditions.set("0", [{}]);
-    await bdContract.claimTo(samWallet.address, "0", 1);
-    assert((await bdContract.getOwned(samWallet.address)).length > 0);
+    await bdContract.claimTo(samWallet.address, "0", 3);
+    assert((await bdContract.getOwned(samWallet.address)).length === 1);
+    assert(
+      (await bdContract.getOwned(samWallet.address))[0].owner ===
+        samWallet.address,
+    );
+    assert(
+      (
+        await bdContract.getOwned(samWallet.address)
+      )[0].quantityOwned.toNumber() === 3,
+    );
   });
 
   describe("setting merkle claim conditions", () => {
