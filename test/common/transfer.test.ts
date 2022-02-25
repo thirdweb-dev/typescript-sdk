@@ -28,7 +28,8 @@ describe("ITransferable", async () => {
       await sdk.setProviderOrSigner(samWallet);
       await tokenModule.transfer(bobWallet.address, 1000);
     } catch (err) {
-      if (err instanceof RestrictedTransferError) {
+      console.log(err);
+      if ((err as Error).message.includes("Transfers are restricted")) {
         return;
       }
       throw err;
