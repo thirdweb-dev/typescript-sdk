@@ -9,7 +9,6 @@ import {
   getCurrencyMetadata,
   getCurrencyValue,
 } from "../common/currency";
-import { RestrictedTransferError } from "../common/error";
 import { ModuleWithRoles } from "../core/module";
 import { MetadataURIOrObject } from "../core/types";
 import { ITransferable } from "../interfaces/contracts/ITransferable";
@@ -199,10 +198,6 @@ export class TokenModule
     to: string,
     amount: BigNumberish,
   ): Promise<TransactionReceipt> {
-    if (await this.isTransferRestricted()) {
-      throw new RestrictedTransferError(this.address);
-    }
-
     return await this.sendTransaction("transfer", [to, amount]);
   }
 
