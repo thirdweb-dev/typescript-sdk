@@ -200,7 +200,29 @@ export class ContractWrapper<
     if (!func) {
       throw new Error("invalid function");
     }
-    return await func(...args, callOverrides);
+    try {
+      return await func(...args, callOverrides);
+    } catch (e) {
+      throw this.readableErrorWithRevertReason(e);
+    }
+  }
+
+  private readableErrorWithRevertReason(e: any): Error {
+    if (e instanceof Error) {
+      const erasedError = e as any;
+      if (erasedError.reason && erasedError.code) {
+        // this is definitely a ethers.js error, try to extract error message in body
+        const regex = /.*message\\":\\"([a-zA-Z0-9 -_.]+)\\",.*/;
+        const matches = e.message.match(regex) || [];
+        if (matches?.length > 0) {
+          console.log(matches[1]);
+          return new Error(
+            `Contract transaction failed with message: "${matches[1]}"\n\n reason: "${erasedError.reason}"\n code: "${erasedError.code}"`,
+          );
+        }
+      }
+    }
+    return e;
   }
 
   /**
@@ -256,8 +278,7 @@ export class ContractWrapper<
       callOverrides,
     };
 
-    const txHash = await this.defaultGaslessSendFunction(tx);
-    return txHash;
+    return await this.defaultGaslessSendFunction(tx);
   }
 
   public async signTypedData(
