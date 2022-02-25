@@ -4,7 +4,6 @@ import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
-import { NotFoundError, RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import {
@@ -15,6 +14,7 @@ import {
 import { fetchTokenMetadata } from "../../common/nft";
 import { AddressZero } from "@ethersproject/constants";
 import { getRoleHash } from "../../common/role";
+import { NotFoundError } from "../../common";
 
 /**
  * Standard ERC1155 functions
@@ -239,11 +239,6 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
     amount: BigNumberish,
     data: BytesLike = [0],
   ): Promise<TransactionResult> {
-    if (await this.isTransferRestricted()) {
-      throw new RestrictedTransferError(
-        await this.contractWrapper.getSignerAddress(),
-      );
-    }
     const from = await this.contractWrapper.getSignerAddress();
     return {
       receipt: await this.contractWrapper.sendTransaction("safeTransferFrom", [

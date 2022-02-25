@@ -9,11 +9,11 @@ import {
 } from "../../types/QueryParams";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
-import { NotFoundError, RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { fetchTokenMetadata } from "../../common/nft";
 import { getRoleHash } from "../../common/role";
+import { NotFoundError } from "../../common";
 
 /**
  * Standard ERC721 functions
@@ -231,11 +231,6 @@ export class Erc721<T extends DropERC721 | TokenERC721>
     to: string,
     tokenId: BigNumberish,
   ): Promise<TransactionResult> {
-    if (await this.isTransferRestricted()) {
-      throw new RestrictedTransferError(
-        await this.contractWrapper.getSignerAddress(),
-      );
-    }
     const from = await this.contractWrapper.getSignerAddress();
     return {
       receipt: await this.contractWrapper.sendTransaction(

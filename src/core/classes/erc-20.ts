@@ -3,7 +3,6 @@ import { TokenERC20 } from "@thirdweb-dev/contracts";
 import { BigNumber, BigNumberish } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
-import { RestrictedTransferError } from "../../common";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { Currency, CurrencyValue } from "../../types/currency";
@@ -201,9 +200,6 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     to: string,
     amount: BigNumberish,
   ): Promise<TransactionResult> {
-    if (await this.isTransferRestricted()) {
-      throw new RestrictedTransferError(this.getAddress());
-    }
     return {
       receipt: await this.contractWrapper.sendTransaction("transfer", [
         to,
