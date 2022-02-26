@@ -872,7 +872,6 @@ export class Edition extends Erc1155<TokenERC1155> {
         name: string;
         }>;
     };
-    // (undocumented)
     signature: Erc1155SignatureMinting;
 }
 

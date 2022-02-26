@@ -78,8 +78,14 @@ function parseExampleTag(docComment) {
 }
 
 const parseSignature = (m) => {
+  console.log(m.excerptTokens)
   return m.excerptTokens
-    ? m.excerptTokens.map((t) => t.text).join("")
+    ? m.excerptTokens.map((t) => {
+        if(t.kind === 'Reference') {
+          return `[${t.text}](https://typescript-docs.thirdweb.com/sdk.${t.text.toLowerCase()})`
+        }
+        return t.text
+      }).join("")
     : undefined;
 };
 
@@ -106,7 +112,7 @@ const parseMembers = (members = [], kind = "Method") => {
     .filter((m) => !!m);
 };
 
-const moduleMap = modules.reduce((acc, m) => {
+const moduleMap = modules.slice(0,1).reduce((acc, m) => {
   const parserContext = tsdocParser.parseString(m.docComment);
   const docComment = parserContext.docComment;
   const examples = parseExampleTag(docComment);
@@ -119,7 +125,8 @@ const moduleMap = modules.reduce((acc, m) => {
         ? Formatter.renderDocNode(docComment.remarksBlock.content)
         : null,
       examples,
-      methods: parseMembers(m.members),
+      methods: parseMembers(m.members, "Method"),
+      properties: parseMembers(m.members, "Property"),
       signature: parseSignature(m),
     };
   }
