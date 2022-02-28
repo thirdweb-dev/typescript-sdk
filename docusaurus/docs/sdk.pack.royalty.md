@@ -31,7 +31,7 @@ contract.royalty.setDefaultRoyaltyInfo({
   fee_recipient: "0x..."
 });
 // override royalty for a particular pack
-contract.royalty.getTokenRoyaltyInfo(packId, {
+contract.royalty.setTokenRoyaltyInfo(packId, {
   seller_fee_basis_points: 500, // 5%
   fee_recipient: "0x..."
 });

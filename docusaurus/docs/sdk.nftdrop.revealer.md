@@ -25,7 +25,7 @@ Create a batch of encrypted NFTs that can be revealed at a later time.
 
 
 ```javascript
-// the real NFTs, these will be encrypted until your reveal them!
+// the real NFTs, these will be encrypted until you reveal them
 const realNFTs = [{
   name: "Common NFT #1",
   description: "Common NFT, one of many.",
@@ -35,7 +35,7 @@ const realNFTs = [{
   description: "You got a Super Rare NFT!",
   image: fs.readFileSync("path/to/image.png"),
 }];
-// A placeholder NFT that people will get immediately in their wallet, until the reveal happens!
+// A placeholder NFT that people will get immediately in their wallet, and will be converted to the real NFT at reveal time
 const placeholderNFT = {
   name: "Hidden NFT",
   description: "Will be revealed next week!"
@@ -46,7 +46,7 @@ await contract.revealer.createDelayRevealBatch(
   realNFTs,
   "my secret password",
 );
-// Whenever you're ready, reveal your NFTs at any time!
+// Whenever you're ready, reveal your NFTs at any time
 const batchId = 0; // the batch to reveal
 await contract.revealer.reveal(batchId, "my secret password");
 ```
