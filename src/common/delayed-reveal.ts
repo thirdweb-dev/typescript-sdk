@@ -11,6 +11,10 @@ import { fetchTokenMetadata } from "./nft";
 import { BatchToReveal } from "../types/delayed-reveal";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
 
+/**
+ * Handles delayed reveal logic
+ * @public
+ */
 export class DelayedReveal<T extends DropERC721> {
   private contractWrapper: ContractWrapper<T>;
   private storage: IStorage;
@@ -40,7 +44,7 @@ export class DelayedReveal<T extends DropERC721> {
    *   description: "Will be revealed next week!"
    * };
    * // Create and encrypt the NFTs
-   * await contract.revealer.createDelayRevealBatch(
+   * await contract.revealer.createDelayedRevealBatch(
    *   placeholderNFT,
    *   realNFTs,
    *   "my secret password",
@@ -53,7 +57,7 @@ export class DelayedReveal<T extends DropERC721> {
    * @param metadatas - the final NFTs that will be hidden
    * @param password - the password that will be used to reveal these NFTs
    */
-  public async createDelayRevealBatch(
+  public async createDelayedRevealBatch(
     placeholder: NFTMetadataInput,
     metadatas: NFTMetadataInput[],
     password: string,

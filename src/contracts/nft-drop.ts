@@ -122,7 +122,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    *   description: "Will be revealed next week!"
    * };
    * // Create and encrypt the NFTs
-   * await contract.revealer.createDelayRevealBatch(
+   * await contract.revealer.createDelayedRevealBatch(
    *   placeholderNFT,
    *   realNFTs,
    *   "my secret password",

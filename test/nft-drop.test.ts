@@ -692,7 +692,7 @@ describe("NFT Drop Contract", async () => {
 
   describe("Delay Reveal", () => {
     it("metadata should reveal correctly", async () => {
-      await dropContract.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayedRevealBatch(
         {
           name: "Placeholder #1",
         },
@@ -710,7 +710,7 @@ describe("NFT Drop Contract", async () => {
     });
 
     it("different reveal order and should return correct unreveal list", async () => {
-      await dropContract.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayedRevealBatch(
         {
           name: "Placeholder #1",
         },
@@ -725,7 +725,7 @@ describe("NFT Drop Contract", async () => {
         "my secret key",
       );
 
-      await dropContract.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayedRevealBatch(
         {
           name: "Placeholder #2",
         },
@@ -749,7 +749,7 @@ describe("NFT Drop Contract", async () => {
         },
       ]);
 
-      await dropContract.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayedRevealBatch(
         {
           name: "Placeholder #3",
         },
@@ -813,14 +813,14 @@ describe("NFT Drop Contract", async () => {
     });
 
     it("should not be able to re-used published password for next batch", async () => {
-      await dropContract.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayedRevealBatch(
         {
           name: "Placeholder #1",
         },
         [{ name: "NFT #1" }, { name: "NFT #2" }],
         "my secret password",
       );
-      await dropContract.revealer.createDelayRevealBatch(
+      await dropContract.revealer.createDelayedRevealBatch(
         {
           name: "Placeholder #2",
         },
