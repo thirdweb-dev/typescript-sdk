@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type ValidContractInstance = C.Instance<ValidContractClass>;
+export declare type ValidContractInstance = Instance<ValidContractClass>;
 ```
 <b>References:</b> [ValidContractClass](./sdk.validcontractclass.md)
 

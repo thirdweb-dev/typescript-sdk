@@ -6,18 +6,38 @@ import {
   TransactionReceipt,
 } from "@ethersproject/providers";
 import { BigNumber, BytesLike } from "ethers";
-import { A, C } from "ts-toolbelt";
-import { If } from "ts-toolbelt/out/Any/If";
 import type { CONTRACTS_MAP } from "../contracts/maps";
+
+// --- utility types extracted from from ts-toolbelt --- //
+
+// class instance
+type List<A = any> = ReadonlyArray<A>;
+type Class<P extends List = any[], R extends object = object> = {
+  new (...args: P): R;
+};
+type Instance<C extends Class> = C extends Class<any[], infer R> ? R : any;
+
+// if
+type TBoolean = 0 | 1;
+type If<B extends TBoolean, Then, Else = never> = B extends 1 ? Then : Else;
+
+// equals
+type Equals<A1, A2> = (<A>() => A extends A2 ? 1 : 0) extends <
+  A,
+>() => A extends A1 ? 1 : 0
+  ? 1
+  : 0;
+
+// --- end utility types --- //
 
 export type ContractType = keyof typeof CONTRACTS_MAP;
 
 export type ValidContractClass = ValueOf<typeof CONTRACTS_MAP>;
 
-export type ValidContractInstance = C.Instance<ValidContractClass>;
+export type ValidContractInstance = Instance<ValidContractClass>;
 
 export type ContractForContractType<TContractType extends ContractType> =
-  C.Instance<typeof CONTRACTS_MAP[TContractType]>;
+  Instance<typeof CONTRACTS_MAP[TContractType]>;
 
 export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
 export type ValueOf<T> = T[keyof T];
@@ -50,7 +70,7 @@ export type TransactionResultWithAddress<T = never> = TransactionResult<T> & {
 };
 
 export type TransactionResult<T = never> = If<
-  A.Is<T, never, "equals">,
+  Equals<T, never>,
   Omit<TransactionResultWithMetadata, "data">,
   TransactionResultWithMetadata<T>
 >;
