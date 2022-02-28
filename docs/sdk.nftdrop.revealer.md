@@ -4,8 +4,45 @@
 
 ## NFTDrop.revealer property
 
+Delayed reveal
+
 <b>Signature:</b>
 
 ```typescript
 revealer: DelayedReveal<DropERC721>;
 ```
+
+## Remarks
+
+Create a batch of encrypted NFTs that can be revealed at a later time.
+
+## Example
+
+
+```javascript
+// the real NFTs, these will be encrypted until your reveal them!
+const realNFTs = [{
+  name: "Common NFT #1",
+  description: "Common NFT, one of many.",
+  image: fs.readFileSync("path/to/image.png"),
+}, {
+  name: "Super Rare NFT #2",
+  description: "You got a Super Rare NFT!",
+  image: fs.readFileSync("path/to/image.png"),
+}];
+// A placeholder NFT that people will get immediately in their wallet, until the reveal happens!
+const placeholderNFT = {
+  name: "Hidden NFT",
+  description: "Will be revealed next week!"
+};
+// Create and encrypt the NFTs
+await contract.revealer.createDelayRevealBatch(
+  placeholderNFT,
+  realNFTs,
+  "my secret password",
+);
+// Whenever you're ready, reveal your NFTs at any time!
+const batchId = 0; // the batch to reveal
+await contract.revealer.reveal(batchId, "my secret password");
+```
+

@@ -70,6 +70,23 @@ export class Pack implements UpdateableNetwork {
   public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
   public encoder: ContractEncoder<PackContract>;
   public estimator: GasCostEstimator<PackContract>;
+  /**
+   * Configure royalties
+   * @remarks Set your own royalties for the entire contract or per pack
+   * @example
+   * ```javascript
+   * // royalties on the whole contract
+   * contract.royalty.setDefaultRoyaltyInfo({
+   *   seller_fee_basis_points: 100, // 1%
+   *   fee_recipient: "0x..."
+   * });
+   * // override royalty for a particular pack
+   * contract.royalty.getTokenRoyaltyInfo(packId, {
+   *   seller_fee_basis_points: 500, // 5%
+   *   fee_recipient: "0x..."
+   * });
+   * ```
+   */
   public royalty: ContractRoyalty<PackContract, typeof Pack.schema>;
 
   constructor(

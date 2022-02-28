@@ -52,16 +52,57 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    */
   static schema = DropErc1155ContractSchema;
 
+  public primarySale: ContractPrimarySale<DropERC1155>;
+  public encoder: ContractEncoder<DropERC1155>;
+  public estimator: GasCostEstimator<DropERC1155>;
   public metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
   public roles: ContractRoles<
     DropERC1155,
     typeof EditionDrop.contractRoles[number]
   >;
+  /**
+   * Configure royalties
+   * @remarks Set your own royalties for the entire contract or per token
+   * @example
+   * ```javascript
+   * // royalties on the whole contract
+   * contract.royalty.setDefaultRoyaltyInfo({
+   *   seller_fee_basis_points: 100, // 1%
+   *   fee_recipient: "0x..."
+   * });
+   * // override royalty for a particular token
+   * contract.royalty.getTokenRoyaltyInfo(tokenId, {
+   *   seller_fee_basis_points: 500, // 5%
+   *   fee_recipient: "0x..."
+   * });
+   * ```
+   */
   public royalty: ContractRoyalty<DropERC1155, typeof EditionDrop.schema>;
-  public primarySale: ContractPrimarySale<DropERC1155>;
+  /**
+   * Configure claim conditions for each NFT
+   * @remarks Define who can claim each NFT in the edition, when and how many.
+   * @example
+   * ```javascript
+   * const presaleStartTime = new Date();
+   * const publicSaleStartTime = new Date(Date.now() + 24_HOURS);
+   * const claimConditions = [
+   *   {
+   *     startTime: presaleStartTime, // start the presale now
+   *     maxQuantity: 2, // limit how many mints for this presale
+   *     price: 0.01, // presale price
+   *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+   *   },
+   *   {
+   *     startTime: publicSaleStartTime, // 24h after presale, start public sale
+   *     price: 0.08, // public sale price
+   *   }
+   * ]);
+   *
+   * const tokenId = 0; // the id of the NFT to set claim conditions on
+   * await contract.claimConditions.set(tokenId, claimConditions);
+   * ```
+   */
   public claimConditions: DropErc1155ClaimConditions;
-  public encoder: ContractEncoder<DropERC1155>;
-  public estimator: GasCostEstimator<DropERC1155>;
 
   constructor(
     network: NetworkOrSignerOrProvider,

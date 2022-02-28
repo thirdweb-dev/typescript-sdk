@@ -779,7 +779,6 @@ export class Edition extends Erc1155<TokenERC1155> {
     primarySale: ContractPrimarySale<TokenERC1155>;
     // (undocumented)
     roles: ContractRoles<TokenERC1155, typeof Edition.contractRoles[number]>;
-    // (undocumented)
     royalty: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
     // @internal (undocumented)
     static schema: {
@@ -879,7 +878,6 @@ export class Edition extends Erc1155<TokenERC1155> {
 export class EditionDrop extends Erc1155<DropERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
     claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
-    // (undocumented)
     claimConditions: DropErc1155ClaimConditions;
     claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
     // (undocumented)
@@ -899,7 +897,6 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     primarySale: ContractPrimarySale<DropERC1155>;
     // (undocumented)
     roles: ContractRoles<DropERC1155, typeof EditionDrop.contractRoles[number]>;
-    // (undocumented)
     royalty: ContractRoyalty<DropERC1155, typeof EditionDrop.schema>;
     // @internal (undocumented)
     static schema: {
@@ -1851,7 +1848,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
     removeTransferEventListeners(): void;
     // (undocumented)
     roles: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>;
-    // (undocumented)
     royalty: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
     // @internal (undocumented)
     static schema: {
@@ -1956,7 +1952,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
         name: string;
         }>;
     };
-    // (undocumented)
     signature: Erc721SignatureMinting;
 }
 
@@ -1964,7 +1959,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
 export class NFTDrop extends Erc721<DropERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
     claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    // (undocumented)
     claimConditions: DropErc721ClaimConditions;
     claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
@@ -1985,12 +1979,9 @@ export class NFTDrop extends Erc721<DropERC721> {
     // (undocumented)
     primarySale: ContractPrimarySale<DropERC721>;
     // Warning: (ae-forgotten-export) The symbol "DelayedReveal" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     revealer: DelayedReveal<DropERC721>;
     // (undocumented)
     roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
-    // (undocumented)
     royalty: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
     // @internal (undocumented)
     static schema: {
@@ -2221,7 +2212,6 @@ export class Pack implements UpdateableNetwork {
     open(packId: string): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     roles: ContractRoles<Pack_2, typeof Pack.contractRoles[number]>;
-    // (undocumented)
     royalty: ContractRoyalty<Pack_2, typeof Pack.schema>;
     // @internal (undocumented)
     static schema: {

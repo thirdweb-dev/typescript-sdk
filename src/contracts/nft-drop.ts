@@ -55,13 +55,83 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   static schema = DropErc721ContractSchema;
 
-  public metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
-  public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
-  public royalty: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
-  public primarySale: ContractPrimarySale<DropERC721>;
-  public claimConditions: DropErc721ClaimConditions;
   public encoder: ContractEncoder<DropERC721>;
   public estimator: GasCostEstimator<DropERC721>;
+  public metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
+  public primarySale: ContractPrimarySale<DropERC721>;
+  public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
+  /**
+   * Configure royalties
+   * @remarks Set your own royalties for the entire contract or per token
+   * @example
+   * ```javascript
+   * // royalties on the whole contract
+   * contract.royalty.setDefaultRoyaltyInfo({
+   *   seller_fee_basis_points: 100, // 1%
+   *   fee_recipient: "0x..."
+   * });
+   * // override royalty for a particular token
+   * contract.royalty.getTokenRoyaltyInfo(tokenId, {
+   *   seller_fee_basis_points: 500, // 5%
+   *   fee_recipient: "0x..."
+   * });
+   * ```
+   */
+  public royalty: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
+  /**
+   * Configure claim conditions
+   * @remarks Define who can claim NFTs in the collection, when and how many.
+   * @example
+   * ```javascript
+   * const presaleStartTime = new Date();
+   * const publicSaleStartTime = new Date(Date.now() + 24_HOURS);
+   * const claimConditions = [
+   *   {
+   *     startTime: presaleStartTime, // start the presale now
+   *     maxQuantity: 2, // limit how many mints for this presale
+   *     price: 0.01, // presale price
+   *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+   *   },
+   *   {
+   *     startTime: publicSaleStartTime, // 24h after presale, start public sale
+   *     price: 0.08, // public sale price
+   *   }
+   * ]);
+   * await dropContract.claimConditions.set(claimConditions);
+   * ```
+   */
+  public claimConditions: DropErc721ClaimConditions;
+  /**
+   * Delayed reveal
+   * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
+   * @example
+   * ```javascript
+   * // the real NFTs, these will be encrypted until your reveal them!
+   * const realNFTs = [{
+   *   name: "Common NFT #1",
+   *   description: "Common NFT, one of many.",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }, {
+   *   name: "Super Rare NFT #2",
+   *   description: "You got a Super Rare NFT!",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }];
+   * // A placeholder NFT that people will get immediately in their wallet, until the reveal happens!
+   * const placeholderNFT = {
+   *   name: "Hidden NFT",
+   *   description: "Will be revealed next week!"
+   * };
+   * // Create and encrypt the NFTs
+   * await contract.revealer.createDelayRevealBatch(
+   *   placeholderNFT,
+   *   realNFTs,
+   *   "my secret password",
+   * );
+   * // Whenever you're ready, reveal your NFTs at any time!
+   * const batchId = 0; // the batch to reveal
+   * await contract.revealer.reveal(batchId, "my secret password");
+   * ```
+   */
   public revealer: DelayedReveal<DropERC721>;
 
   constructor(

@@ -4,8 +4,31 @@
 
 ## NFTDrop.royalty property
 
+Configure royalties
+
 <b>Signature:</b>
 
 ```typescript
 royalty: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
 ```
+
+## Remarks
+
+Set your own royalties for the entire contract or per token
+
+## Example
+
+
+```javascript
+// royalties on the whole contract
+contract.royalty.setDefaultRoyaltyInfo({
+  seller_fee_basis_points: 100, // 1%
+  fee_recipient: "0x..."
+});
+// override royalty for a particular token
+contract.royalty.getTokenRoyaltyInfo(tokenId, {
+  seller_fee_basis_points: 500, // 5%
+  fee_recipient: "0x..."
+});
+```
+
