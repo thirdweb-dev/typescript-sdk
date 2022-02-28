@@ -756,10 +756,10 @@
     "@swc/core-win32-ia32-msvc" "1.2.144"
     "@swc/core-win32-x64-msvc" "1.2.144"
 
-"@thirdweb-dev/contracts@2.0.1-47":
-  version "2.0.1-47"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.0.1-47.tgz#73d8ed9c8f403e88e4bb53df6fae7bf853a0321f"
-  integrity sha512-4zEBN9RbCBXG39dayD9gV0MWg9HDbGmphnqHsM/8rNblm9bFvroJ6W/uG0e/7q588/Q+oByauKPPNoTb9F9NCg==
+"@thirdweb-dev/contracts@2.0.1-53":
+  version "2.0.1-53"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.0.1-53.tgz#abbb526e135a3c3a3a7b2f1a9498fc6d6f41ea70"
+  integrity sha512-hgiadaVpM/qZj12WEvKvU9gr7lvgvvOLycWZmh/jZNP3QOVbLumUcVP8LZ1zCS7IUeUNGKJ4STqfWbUkLr5CvA==
 
 "@types/abstract-leveldown@*":
   version "7.2.0"
@@ -4613,11 +4613,6 @@ ts-node@7.0.1:
     mkdirp "^0.5.1"
     source-map-support "^0.5.6"
     yn "^2.0.0"
-
-ts-toolbelt@^9.6.0:
-  version "9.6.0"
-  resolved "https://registry.yarnpkg.com/ts-toolbelt/-/ts-toolbelt-9.6.0.tgz#50a25426cfed500d4a09bd1b3afb6f28879edfd5"
-  integrity sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==
 
 tsconfig-paths@^3.12.0, tsconfig-paths@^3.5.0:
   version "3.12.0"

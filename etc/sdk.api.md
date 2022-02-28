@@ -6,13 +6,11 @@
 
 /// <reference types="node" />
 
-import { A } from 'ts-toolbelt';
 import { AccessControlEnumerable } from '@thirdweb-dev/contracts';
 import { BaseContract } from 'ethers';
 import { BigNumber } from 'ethers';
 import { BigNumberish } from 'ethers';
 import { BytesLike } from 'ethers';
-import { C } from 'ts-toolbelt';
 import { CallOverrides } from 'ethers';
 import { CallOverrides as CallOverrides_2 } from '@ethersproject/contracts';
 import { ContractInterface } from 'ethers';
@@ -20,11 +18,9 @@ import { DropERC1155 } from '@thirdweb-dev/contracts';
 import { DropERC1155__factory } from '@thirdweb-dev/contracts';
 import { DropERC721 } from '@thirdweb-dev/contracts';
 import { DropERC721__factory } from '@thirdweb-dev/contracts';
-import { Equals } from 'ts-toolbelt/out/Any/Equals';
 import { ethers } from 'ethers';
 import { EventEmitter2 } from 'eventemitter2';
 import { extendShape } from 'zod';
-import { If } from 'ts-toolbelt/out/Any/If';
 import { IMarketplace } from '@thirdweb-dev/contracts';
 import { IThirdwebContract } from '@thirdweb-dev/contracts';
 import { IThirdwebPrimarySale } from '@thirdweb-dev/contracts';
@@ -533,10 +529,11 @@ export class ContractEncoder<TContract extends BaseContract> {
     encode(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "Instance" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractForContractType" is marked as @public, but its signature references "CONTRACTS_MAP" which is marked as @internal
 //
 // @public (undocumented)
-export type ContractForContractType<TContractType extends ContractType> = C.Instance<typeof CONTRACTS_MAP[TContractType]>;
+export type ContractForContractType<TContractType extends ContractType> = Instance<typeof CONTRACTS_MAP[TContractType]>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "ContractMetadata" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
@@ -552,21 +549,21 @@ export class ContractMetadata<TContract extends IThirdwebContract, TSchema exten
     // @internal (undocumented)
     parseOutputMetadata(metadata: any): z.output<TSchema["output"]>;
     // (undocumented)
-    set(metadata: z.input<TSchema["input"]>): Promise<If<Equals<never, z.output<TSchema["output"]>>, Omit<{
-    receipt: TransactionReceipt_2;
-    data: () => Promise<unknown>;
-    }, "data">, {
-    receipt: TransactionReceipt_2;
-    data: () => Promise<z.output<TSchema["output"]>>;
-    }>>;
+    set(metadata: z.input<TSchema["input"]>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+        receipt: TransactionReceipt_2;
+        data: () => Promise<unknown>;
+    }, "data"> : {
+        receipt: TransactionReceipt_2;
+        data: () => Promise<z.output<TSchema["output"]>>;
+    }>;
     // (undocumented)
-    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<If<Equals<never, z.output<TSchema["output"]>>, Omit<{
-    receipt: TransactionReceipt_2;
-    data: () => Promise<unknown>;
-    }, "data">, {
-    receipt: TransactionReceipt_2;
-    data: () => Promise<z.output<TSchema["output"]>>;
-    }>>;
+    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+        receipt: TransactionReceipt_2;
+        data: () => Promise<unknown>;
+    }, "data"> : {
+        receipt: TransactionReceipt_2;
+        data: () => Promise<z.output<TSchema["output"]>>;
+    }>;
 }
 
 // @public
@@ -3599,10 +3596,12 @@ export const TokenMintInputSchema: z.ZodObject<{
     amount: string | number | bigint | BigNumber;
 }>;
 
+// Warning: (ae-forgotten-export) The symbol "If" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "Equals" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "TransactionResultWithMetadata" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export type TransactionResult<T = never> = If<A.Is<T, never, "equals">, Omit<TransactionResultWithMetadata, "data">, TransactionResultWithMetadata<T>>;
+export type TransactionResult<T = never> = If<Equals<T, never>, Omit<TransactionResultWithMetadata, "data">, TransactionResultWithMetadata<T>>;
 
 // @public (undocumented)
 export type TransactionResultWithAddress<T = never> = TransactionResult<T> & {
@@ -3652,7 +3651,7 @@ export interface UploadMetadataBatchResult {
 export type ValidContractClass = ValueOf<typeof CONTRACTS_MAP>;
 
 // @public (undocumented)
-export type ValidContractInstance = C.Instance<ValidContractClass>;
+export type ValidContractInstance = Instance<ValidContractClass>;
 
 // @public (undocumented)
 export type ValueOf<T> = T[keyof T];
