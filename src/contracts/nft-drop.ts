@@ -71,7 +71,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    *   fee_recipient: "0x..."
    * });
    * // override royalty for a particular token
-   * contract.royalty.getTokenRoyaltyInfo(tokenId, {
+   * contract.royalty.setTokenRoyaltyInfo(tokenId, {
    *   seller_fee_basis_points: 500, // 5%
    *   fee_recipient: "0x..."
    * });
@@ -106,7 +106,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
    * @example
    * ```javascript
-   * // the real NFTs, these will be encrypted until your reveal them!
+   * // the real NFTs, these will be encrypted until you reveal them
    * const realNFTs = [{
    *   name: "Common NFT #1",
    *   description: "Common NFT, one of many.",
@@ -116,7 +116,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    *   description: "You got a Super Rare NFT!",
    *   image: fs.readFileSync("path/to/image.png"),
    * }];
-   * // A placeholder NFT that people will get immediately in their wallet, until the reveal happens!
+   * // A placeholder NFT that people will get immediately in their wallet, and will be converted to the real NFT at reveal time
    * const placeholderNFT = {
    *   name: "Hidden NFT",
    *   description: "Will be revealed next week!"
@@ -127,7 +127,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    *   realNFTs,
    *   "my secret password",
    * );
-   * // Whenever you're ready, reveal your NFTs at any time!
+   * // Whenever you're ready, reveal your NFTs at any time
    * const batchId = 0; // the batch to reveal
    * await contract.revealer.reveal(batchId, "my secret password");
    * ```

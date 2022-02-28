@@ -67,7 +67,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
    *   fee_recipient: "0x..."
    * });
    * // override royalty for a particular token
-   * contract.royalty.getTokenRoyaltyInfo(tokenId, {
+   * contract.royalty.setTokenRoyaltyInfo(tokenId, {
    *   seller_fee_basis_points: 500, // 5%
    *   fee_recipient: "0x..."
    * });
