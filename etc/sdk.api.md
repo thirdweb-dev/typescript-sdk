@@ -699,6 +699,14 @@ export const DEFAULT_IPFS_GATEWAY = "https://cloudflare-ipfs.com/ipfs/";
 export const DEFAULT_QUERY_ALL_COUNT = 100;
 
 // @public
+export class DelayedReveal<T extends DropERC721> {
+    constructor(contractWrapper: ContractWrapper<T>, storage: IStorage);
+    createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string): Promise<TransactionResultWithId[]>;
+    getBatchesToReveal(): Promise<BatchToReveal[]>;
+    reveal(batchId: BigNumberish, password: string): Promise<TransactionResult>;
+}
+
+// @public
 export interface DirectListing {
     asset: NFTMetadata;
     assetContractAddress: string;
@@ -1975,7 +1983,6 @@ export class NFTDrop extends Erc721<DropERC721> {
     metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
     // (undocumented)
     primarySale: ContractPrimarySale<DropERC721>;
-    // Warning: (ae-forgotten-export) The symbol "DelayedReveal" needs to be exported by the entry point index.d.ts
     revealer: DelayedReveal<DropERC721>;
     // (undocumented)
     roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;

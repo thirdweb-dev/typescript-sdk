@@ -1,14 +1,14 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { ContractWrapper } from "./contract-wrapper";
 import { DropERC721 } from "@thirdweb-dev/contracts";
 import {
   CommonNFTInput,
   NFTMetadata,
   NFTMetadataInput,
-} from "../schema/tokens/common";
-import { IStorage, TransactionResult, TransactionResultWithId } from "../core";
-import { fetchTokenMetadata } from "./nft";
-import { BatchToReveal } from "../types/delayed-reveal";
+} from "../../schema/tokens/common";
+import { IStorage, TransactionResult, TransactionResultWithId } from "../index";
+import { fetchTokenMetadata } from "../../common/nft";
+import { BatchToReveal } from "../../types/delayed-reveal";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
 
 /**

@@ -48,7 +48,7 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [estimator](./sdk.nftdrop.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)&lt;DropERC721&gt; |  |
 |  [metadata](./sdk.nftdrop.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)&lt;DropERC721, typeof NFTDrop.schema&gt; |  |
 |  [primarySale](./sdk.nftdrop.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)&lt;DropERC721&gt; |  |
-|  [revealer](./sdk.nftdrop.revealer.md) |  | DelayedReveal&lt;DropERC721&gt; | Delayed reveal |
+|  [revealer](./sdk.nftdrop.revealer.md) |  | [DelayedReveal](./sdk.delayedreveal.md)&lt;DropERC721&gt; | Delayed reveal |
 |  [roles](./sdk.nftdrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)&lt;DropERC721, typeof [NFTDrop.contractRoles](./sdk.nftdrop.contractroles.md)\[number\]&gt; |  |
 |  [royalty](./sdk.nftdrop.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)&lt;DropERC721, typeof NFTDrop.schema&gt; | Configure royalties |
 

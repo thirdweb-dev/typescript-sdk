@@ -24,7 +24,7 @@ import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import { DelayedReveal } from "../common/delayed-reveal";
+import { DelayedReveal } from "../core/classes/delayed-reveal";
 import { GasCostEstimator } from "../core/classes";
 import { ClaimVerification } from "../types";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155";
