@@ -53,10 +53,41 @@ export class Edition extends Erc1155<TokenERC1155> {
     TokenERC1155,
     typeof Edition.contractRoles[number]
   >;
-  public royalty: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
   public primarySale: ContractPrimarySale<TokenERC1155>;
   public encoder: ContractEncoder<TokenERC1155>;
   public estimator: GasCostEstimator<TokenERC1155>;
+  /**
+   * Configure royalties
+   * @remarks Set your own royalties for the entire contract or per token
+   * @example
+   * ```javascript
+   * // royalties on the whole contract
+   * contract.royalty.setDefaultRoyaltyInfo({
+   *   seller_fee_basis_points: 100, // 1%
+   *   fee_recipient: "0x..."
+   * });
+   * // override royalty for a particular token
+   * contract.royalty.setTokenRoyaltyInfo(tokenId, {
+   *   seller_fee_basis_points: 500, // 5%
+   *   fee_recipient: "0x..."
+   * });
+   * ```
+   */
+  public royalty: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
+  /**
+   * Signature Minting
+   * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
+   * @example
+   * ```javascript
+   * // see how to craft a payload to sign in the `generateSignature()` documentation
+   * const signedPayload = contract.signature.generate(payload);
+   *
+   * // now anyone can mint the NFT
+   * const tx = contract.signature.mint(signedPayload);
+   * const receipt = tx.receipt; // the mint transaction receipt
+   * const mintedId = tx.id; // the id of the NFT minted
+   * ```
+   */
   public signature: Erc1155SignatureMinting;
 
   constructor(

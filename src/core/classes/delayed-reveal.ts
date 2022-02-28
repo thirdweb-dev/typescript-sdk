@@ -1,16 +1,20 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { ContractWrapper } from "./contract-wrapper";
 import { DropERC721 } from "@thirdweb-dev/contracts";
 import {
   CommonNFTInput,
   NFTMetadata,
   NFTMetadataInput,
-} from "../schema/tokens/common";
-import { IStorage, TransactionResult, TransactionResultWithId } from "../core";
-import { fetchTokenMetadata } from "./nft";
-import { BatchToReveal } from "../types/delayed-reveal";
+} from "../../schema/tokens/common";
+import { IStorage, TransactionResult, TransactionResultWithId } from "../index";
+import { fetchTokenMetadata } from "../../common/nft";
+import { BatchToReveal } from "../../types/delayed-reveal";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
 
+/**
+ * Handles delayed reveal logic
+ * @public
+ */
 export class DelayedReveal<T extends DropERC721> {
   private contractWrapper: ContractWrapper<T>;
   private storage: IStorage;
@@ -22,11 +26,38 @@ export class DelayedReveal<T extends DropERC721> {
 
   /**
    * Create a batch of encrypted NFTs that can be revealed at a later time.
+   * @example
+   * ```javascript
+   * // the real NFTs, these will be encrypted until your reveal them!
+   * const realNFTs = [{
+   *   name: "Common NFT #1",
+   *   description: "Common NFT, one of many.",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }, {
+   *   name: "Super Rare NFT #2",
+   *   description: "You got a Super Rare NFT!",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }];
+   * // A placeholder NFT that people will get immediately in their wallet, until the reveal happens!
+   * const placeholderNFT = {
+   *   name: "Hidden NFT",
+   *   description: "Will be revealed next week!"
+   * };
+   * // Create and encrypt the NFTs
+   * await contract.revealer.createDelayedRevealBatch(
+   *   placeholderNFT,
+   *   realNFTs,
+   *   "my secret password",
+   * );
+   * // Whenever you're ready, reveal your NFTs at any time!
+   * const batchId = 0; // the batch to reveal
+   * await contract.revealer.reveal(batchId, "my secret password");
+   * ```
    * @param placeholder - the placeholder NFT to show before the reveal
    * @param metadatas - the final NFTs that will be hidden
    * @param password - the password that will be used to reveal these NFTs
    */
-  public async createDelayRevealBatch(
+  public async createDelayedRevealBatch(
     placeholder: NFTMetadataInput,
     metadatas: NFTMetadataInput[],
     password: string,

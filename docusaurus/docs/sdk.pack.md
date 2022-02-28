@@ -47,7 +47,7 @@ const contract = sdk.getPack("{{contract_address}}");
 |  [estimator](./sdk.pack.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)&lt;PackContract&gt; |  |
 |  [metadata](./sdk.pack.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)&lt;PackContract, typeof Pack.schema&gt; |  |
 |  [roles](./sdk.pack.roles.md) |  | [ContractRoles](./sdk.contractroles.md)&lt;PackContract, typeof [Pack.contractRoles](./sdk.pack.contractroles.md)\[number\]&gt; |  |
-|  [royalty](./sdk.pack.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)&lt;PackContract, typeof Pack.schema&gt; |  |
+|  [royalty](./sdk.pack.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)&lt;PackContract, typeof Pack.schema&gt; | Configure royalties |
 
 ## Methods
 

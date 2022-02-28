@@ -14,3 +14,4 @@ export * from "./marketplace-direct";
 export * from "./marketplace-auction";
 export * from "./contract-deployer";
 export * from "./gas-cost-estimator";
+export * from "./delayed-reveal";
