@@ -58,10 +58,10 @@ export class DropErc721ClaimConditions {
    * @returns the claim condition metadata
    */
   public async getActive(): Promise<ClaimCondition> {
-    const index =
-      await this.contractWrapper.readContract.getIndexOfActiveCondition();
-    const mc = await this.contractWrapper.readContract.getClaimConditionAtIndex(
-      index,
+    const id =
+      await this.contractWrapper.readContract.getActiveClaimConditionId();
+    const mc = await this.contractWrapper.readContract.getClaimConditionById(
+      id,
     );
     return await this.transformResultToClaimCondition(mc);
   }
@@ -73,12 +73,13 @@ export class DropErc721ClaimConditions {
    */
   public async getAll(): Promise<ClaimCondition[]> {
     const claimCondition =
-      await this.contractWrapper.readContract.claimConditions();
-    const count = claimCondition.totalConditionCount.toNumber();
+      await this.contractWrapper.readContract.claimCondition();
+    const startId = claimCondition.currentStartId.toNumber();
+    const count = claimCondition.count.toNumber();
     const conditions = [];
-    for (let i = 0; i < count; i++) {
+    for (let i = startId; i < startId + count; i++) {
       conditions.push(
-        await this.contractWrapper.readContract.getClaimConditionAtIndex(i),
+        await this.contractWrapper.readContract.getClaimConditionById(i),
       );
     }
     return Promise.all(
@@ -135,7 +136,7 @@ export class DropErc721ClaimConditions {
 
     try {
       [activeConditionIndex, claimCondition] = await Promise.all([
-        this.contractWrapper.readContract.getIndexOfActiveCondition(),
+        this.contractWrapper.readContract.getActiveClaimConditionId(),
         this.getActive(),
       ]);
     } catch (err: any) {
@@ -173,8 +174,8 @@ export class DropErc721ClaimConditions {
     }
 
     // check for claim timestamp between claims
-    const timestampForNextClaim =
-      await this.contractWrapper.readContract.getTimestampForNextValidClaim(
+    const [, timestampForNextClaim] =
+      await this.contractWrapper.readContract.getClaimTimestamp(
         activeConditionIndex,
         addressToCheck,
       );
