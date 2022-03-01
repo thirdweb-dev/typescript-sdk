@@ -250,10 +250,16 @@ export class MarketplaceDirect {
      * - Provide better error handling if offer is too low.
      */
     await this.validateListing(BigNumber.from(listingId));
+    const offer = await this.contractWrapper.readContract.offers(
+      listingId,
+      addressOfOfferor,
+    );
     return {
       receipt: await this.contractWrapper.sendTransaction("acceptOffer", [
         listingId,
         addressOfOfferor,
+        offer.currency,
+        offer.pricePerToken,
       ]),
     };
   }

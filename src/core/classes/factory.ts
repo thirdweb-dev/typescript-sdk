@@ -124,6 +124,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc20metadata.symbol,
           contractURI,
           erc20metadata.trusted_forwarder,
+          erc20metadata.primary_sale_recipient,
+          erc20metadata.platform_fee_recipient,
+          erc20metadata.platform_fee_basis_points,
         ];
       case Vote.contractType:
         const voteMetadata = Vote.schema.deploy.parse(metadata);

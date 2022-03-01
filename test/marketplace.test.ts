@@ -105,6 +105,7 @@ describe("Marketplace Contract", async () => {
       await sdk.deployer.deployContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
+        primary_sale_recipient: adminWallet.address,
       }),
     );
     await customTokenContract.mintBatchTo([

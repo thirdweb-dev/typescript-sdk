@@ -2,6 +2,8 @@ import {
   CommonContractOutputSchema,
   CommonContractSchema,
   CommonSymbolSchema,
+  CommonPlatformFeeSchema,
+  CommonPrimarySaleSchema,
   CommonTrustedForwarderSchema,
 } from "./common";
 
@@ -12,8 +14,10 @@ export const TokenErc20ContractOutput =
   CommonContractOutputSchema.merge(CommonSymbolSchema);
 
 export const TokenErc20ContractDeploy = TokenErc20ContractInput.merge(
-  CommonTrustedForwarderSchema,
-);
+  CommonPlatformFeeSchema,
+)
+  .merge(CommonPrimarySaleSchema)
+  .merge(CommonTrustedForwarderSchema);
 
 export const TokenErc20ContractSchema = {
   deploy: TokenErc20ContractDeploy,
