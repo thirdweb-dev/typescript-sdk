@@ -66,15 +66,15 @@ export class DelayedReveal<T extends DropERC721> {
       throw new Error("Password is required");
     }
 
-    const startFileNumber =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
-
     const { baseUri: placeholderUri } = await this.storage.uploadMetadataBatch(
       [CommonNFTInput.parse(placeholder)],
-      startFileNumber.toNumber(),
+      0,
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
     );
+
+    const startFileNumber =
+      await this.contractWrapper.readContract.nextTokenIdToMint();
 
     const batch = await this.storage.uploadMetadataBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),
