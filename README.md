@@ -1,4 +1,6 @@
-# thirdweb-sdk
+# Thirdweb SDK
+
+[Looking for version 1 (legacy)? Click here.](https://github.com/thirdweb-dev/typescript-sdk/tree/v1)
 
 ### Installation
 

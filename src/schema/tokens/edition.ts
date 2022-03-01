@@ -13,6 +13,15 @@ export const EditionMetadataOutputSchema = z.object({
 /**
  * @internal
  */
+export const EditionMetadataWithOwnerOutputSchema =
+  EditionMetadataOutputSchema.extend({
+    owner: z.string(),
+    quantityOwned: BigNumberSchema,
+  });
+
+/**
+ * @internal
+ */
 export const EditionMetadataInputSchema = z.object({
   supply: BigNumberishSchema,
   metadata: CommonNFTInput,
@@ -22,6 +31,12 @@ export const EditionMetadataInputSchema = z.object({
  * @public
  */
 export type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
+/**
+ * @public
+ */
+export type EditionMetadataOwner = z.output<
+  typeof EditionMetadataWithOwnerOutputSchema
+>;
 /**
  * @public
  */

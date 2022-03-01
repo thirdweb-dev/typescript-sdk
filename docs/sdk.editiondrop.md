@@ -35,7 +35,7 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [claimConditions](./sdk.editiondrop.claimconditions.md) |  | [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) |  |
+|  [claimConditions](./sdk.editiondrop.claimconditions.md) |  | [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Configure claim conditions for each NFT |
 |  [contractFactory](./sdk.editiondrop.contractfactory.md) | <code>static</code> | typeof DropERC1155\_\_factory |  |
 |  [contractRoles](./sdk.editiondrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.editiondrop.contracttype.md) | <code>static</code> | "edition-drop" |  |
@@ -44,7 +44,7 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 |  [metadata](./sdk.editiondrop.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;DropERC1155, typeof EditionDrop.schema&gt; |  |
 |  [primarySale](./sdk.editiondrop.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;DropERC1155&gt; |  |
 |  [roles](./sdk.editiondrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;DropERC1155, typeof [EditionDrop.contractRoles](./sdk.editiondrop.contractroles.md)<!-- -->\[number\]&gt; |  |
-|  [royalty](./sdk.editiondrop.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;DropERC1155, typeof EditionDrop.schema&gt; |  |
+|  [royalty](./sdk.editiondrop.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;DropERC1155, typeof EditionDrop.schema&gt; | Configure royalties |
 
 ## Methods
 

@@ -12,6 +12,6 @@ hide_title: true
 **Signature:**
 
 ```typescript
-export declare type ValidContractInstance = C.Instance<ValidContractClass>;
+export declare type ValidContractInstance = Instance<ValidContractClass>;
 ```
 **References:** [ValidContractClass](./sdk.validcontractclass.md)

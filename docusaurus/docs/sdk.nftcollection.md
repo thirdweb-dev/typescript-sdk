@@ -48,8 +48,8 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 |  [metadata](./sdk.nftcollection.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)&lt;TokenERC721, typeof NFTCollection.schema&gt; |  |
 |  [primarySale](./sdk.nftcollection.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)&lt;TokenERC721&gt; |  |
 |  [roles](./sdk.nftcollection.roles.md) |  | [ContractRoles](./sdk.contractroles.md)&lt;TokenERC721, typeof [NFTCollection.contractRoles](./sdk.nftcollection.contractroles.md)\[number\]&gt; |  |
-|  [royalty](./sdk.nftcollection.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)&lt;TokenERC721, typeof NFTCollection.schema&gt; |  |
-|  [signature](./sdk.nftcollection.signature.md) |  | [Erc721SignatureMinting](./sdk.erc721signatureminting.md) |  |
+|  [royalty](./sdk.nftcollection.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)&lt;TokenERC721, typeof NFTCollection.schema&gt; | Configure royalties |
+|  [signature](./sdk.nftcollection.signature.md) |  | [Erc721SignatureMinting](./sdk.erc721signatureminting.md) | Signature Minting |
 
 ## Methods
 

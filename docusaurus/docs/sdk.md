@@ -18,6 +18,7 @@ hide_title: true
 |  [ContractPrimarySale](./sdk.contractprimarysale.md) | Handles primary sales recipients for a Contract |
 |  [ContractRoles](./sdk.contractroles.md) | Handles Contract roles and permissions |
 |  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalties |
+|  [DelayedReveal](./sdk.delayedreveal.md) | Handles delayed reveal logic |
 |  [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Manages claim conditions for Edition Drop contracts |
 |  [DropErc721ClaimConditions](./sdk.droperc721claimconditions.md) | Manages claim conditions for NFT Drop contracts |
 |  [Edition](./sdk.edition.md) | Create a collection of NFTs that lets you mint multiple copies of each NFT. |
@@ -107,6 +108,7 @@ hide_title: true
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [EditionMetadata](./sdk.editionmetadata.md) |  |
 |  [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
+|  [EditionMetadataOwner](./sdk.editionmetadataowner.md) |  |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [FilledConditionInput](./sdk.filledconditioninput.md) |  |
 |  [FilledSignaturePayload](./sdk.filledsignaturepayload.md) |  |

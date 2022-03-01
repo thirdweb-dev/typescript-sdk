@@ -9,8 +9,35 @@ hide_title: true
 
 ## NFTDrop.claimConditions property
 
+Configure claim conditions
+
 **Signature:**
 
 ```typescript
 claimConditions: DropErc721ClaimConditions;
+```
+
+## Remarks
+
+Define who can claim NFTs in the collection, when and how many.
+
+## Example
+
+
+```javascript
+const presaleStartTime = new Date();
+const publicSaleStartTime = new Date(Date.now() + 24_HOURS);
+const claimConditions = [
+  {
+    startTime: presaleStartTime, // start the presale now
+    maxQuantity: 2, // limit how many mints for this presale
+    price: 0.01, // presale price
+    snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+  },
+  {
+    startTime: publicSaleStartTime, // 24h after presale, start public sale
+    price: 0.08, // public sale price
+  }
+]);
+await dropContract.claimConditions.set(claimConditions);
 ```

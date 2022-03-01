@@ -58,13 +58,13 @@ export class DropErc1155ClaimConditions {
    * @returns the claim condition metadata
    */
   public async getActive(tokenId: BigNumberish): Promise<ClaimCondition> {
-    const index =
-      await this.contractWrapper.readContract.getIndexOfActiveCondition(
+    const id =
+      await this.contractWrapper.readContract.getActiveClaimConditionId(
         tokenId,
       );
-    const mc = await this.contractWrapper.readContract.getClaimConditionAtIndex(
+    const mc = await this.contractWrapper.readContract.getClaimConditionById(
       tokenId,
-      index,
+      id,
     );
     return await this.transformResultToClaimCondition(mc);
   }
@@ -76,12 +76,13 @@ export class DropErc1155ClaimConditions {
    */
   public async getAll(tokenId: BigNumberish): Promise<ClaimCondition[]> {
     const claimCondition =
-      await this.contractWrapper.readContract.claimConditions(tokenId);
-    const count = claimCondition.totalConditionCount.toNumber();
+      await this.contractWrapper.readContract.claimCondition(tokenId);
+    const startId = claimCondition.currentStartId.toNumber();
+    const count = claimCondition.count.toNumber();
     const conditions = [];
-    for (let i = 0; i < count; i++) {
+    for (let i = startId; i < startId + count; i++) {
       conditions.push(
-        await this.contractWrapper.readContract.getClaimConditionAtIndex(
+        await this.contractWrapper.readContract.getClaimConditionById(
           tokenId,
           i,
         ),
@@ -149,7 +150,7 @@ export class DropErc1155ClaimConditions {
 
     try {
       [activeConditionIndex, claimCondition] = await Promise.all([
-        this.contractWrapper.readContract.getIndexOfActiveCondition(tokenId),
+        this.contractWrapper.readContract.getActiveClaimConditionId(tokenId),
         this.getActive(tokenId),
       ]);
     } catch (err: any) {
@@ -183,8 +184,8 @@ export class DropErc1155ClaimConditions {
     }
 
     // check for claim timestamp between claims
-    const timestampForNextClaim =
-      await this.contractWrapper.readContract.getTimestampForNextValidClaim(
+    const [, timestampForNextClaim] =
+      await this.contractWrapper.readContract.getClaimTimestamp(
         tokenId,
         activeConditionIndex,
         addressToCheck,

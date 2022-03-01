@@ -86,7 +86,9 @@ export class ContractWrapper<
   public async getSignerAddress(): Promise<string> {
     const signer = this.getSigner();
     if (!signer) {
-      throw new Error("cannot get signer address without valid signer");
+      throw new Error(
+        "This action requires a connected wallet to sign the transaction. Please pass a valid signer to the SDK.",
+      );
     }
     return await signer.getAddress();
   }
@@ -252,7 +254,34 @@ export class ContractWrapper<
     if (!func) {
       throw new Error("invalid function");
     }
-    return await func(...args, callOverrides);
+    try {
+      return await func(...args, callOverrides);
+    } catch (e) {
+      throw await this.readableErrorWithRevertReason(e);
+    }
+  }
+
+  private async readableErrorWithRevertReason(e: any): Promise<Error> {
+    if (e instanceof Error) {
+      const erasedError = e as any;
+      if (erasedError.reason && erasedError.code) {
+        // this is definitely a ethers.js error, try to extract error message in body
+        const regex =
+          /.*?message\\":\\"([^"]*)\\".*?data\\":\\"([^"]*)\\".*?from\\":\\"([^"]*)\\".*?to\\":\\"([^"]*)\\"/;
+        const matches = e.message.match(regex) || [];
+        if (matches?.length > 3) {
+          const message = matches[1];
+          const data = matches[2];
+          const from = matches[3];
+          const to = matches[4];
+          const network = await this.getProvider().getNetwork();
+          return new Error(
+            `Contract transaction failed: "${message}"\n\nTransaction info:\n- from: "${from}"\n- to: "${to}"\n- chain: "${network.name}" (${network.chainId})\n- data: "${data}"\n`,
+          );
+        }
+      }
+    }
+    return e;
   }
 
   /**
@@ -308,8 +337,7 @@ export class ContractWrapper<
       callOverrides,
     };
 
-    const txHash = await this.defaultGaslessSendFunction(tx);
-    return txHash;
+    return await this.defaultGaslessSendFunction(tx);
   }
 
   public async signTypedData(
@@ -340,25 +368,6 @@ export class ContractWrapper<
       signature: sig,
     });
     return sig;
-  }
-
-  public parseEventLogs(eventName: string, logs?: Log[]): any {
-    if (!logs) {
-      return null;
-    }
-
-    for (const log of logs) {
-      try {
-        const event = this.writeContract.interface.decodeEventLog(
-          eventName,
-          log.data,
-          log.topics,
-        );
-        return event;
-        // eslint-disable-next-line no-empty
-      } catch (e) {}
-    }
-    return null;
   }
 
   public parseLogs<T = any>(eventName: string, logs?: Log[]): T[] {

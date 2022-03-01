@@ -4,8 +4,28 @@
 
 ## Edition.signature property
 
+Signature Minting
+
 <b>Signature:</b>
 
 ```typescript
 signature: Erc1155SignatureMinting;
 ```
+
+## Remarks
+
+Generate dynamic NFTs with your own signature, and let others mint them using that signature.
+
+## Example
+
+
+```javascript
+// see how to craft a payload to sign in the `generateSignature()` documentation
+const signedPayload = contract.signature.generate(payload);
+
+// now anyone can mint the NFT
+const tx = contract.signature.mint(signedPayload);
+const receipt = tx.receipt; // the mint transaction receipt
+const mintedId = tx.id; // the id of the NFT minted
+```
+

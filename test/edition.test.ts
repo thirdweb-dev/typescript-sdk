@@ -59,11 +59,22 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     const nfts = await bundleContract.getOwned(adminWallet.address);
     expect(nfts).to.be.an("array").length(1);
     expect(nfts[0].metadata.image).to.be.equal("fake://myownfakeipfs");
+    expect(nfts[0].owner).to.be.equal(adminWallet.address);
+    expect(nfts[0].quantityOwned.toNumber()).to.be.equal(100);
+    expect(nfts[0].supply.toNumber()).to.be.equal(100);
 
     const bobsNfts = await bundleContract.getOwned(bobWallet.address);
     expect(bobsNfts)
       .to.be.an("array")
       .length(0, "Bob should not have any nfts");
+
+    await bundleContract.transfer(bobWallet.address, 0, 20);
+    const adminNft = await bundleContract.getOwned(adminWallet.address);
+    expect(adminNft[0].quantityOwned.toNumber()).to.be.equal(80);
+    const bobsNftsAfterTransfer = await bundleContract.getOwned(
+      bobWallet.address,
+    );
+    expect(bobsNftsAfterTransfer[0].quantityOwned.toNumber()).to.be.equal(20);
   });
 
   // TODO: This test should move to the royalty suite

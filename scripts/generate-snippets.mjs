@@ -77,13 +77,21 @@ function parseExampleTag(docComment) {
   return examples;
 }
 
-const parseSignature = (m) => {
-  return m.excerptTokens
-    ? m.excerptTokens.map((t) => t.text).join("")
-    : undefined;
+const baseDocUrl = "https://typescript-docs.thirdweb.com/sdk.";
+
+const extractReferenceLink = (m, kind, contractName) => {
+  if (kind === "Property") {
+    return m.excerptTokens
+      .filter((e) => e.kind === "Reference")
+      .map((e) => `${baseDocUrl}${e.text.toLowerCase()}`)[0];
+  }
+  if (kind === "Method") {
+    return `${baseDocUrl}${contractName}.${m.name}`;
+  }
+  return `${baseDocUrl}${m.name}`;
 };
 
-const parseMembers = (members = [], kind = "Method") => {
+const parseMembers = (members, kind, contractName) => {
   const validMembers = members.filter((m) => m.kind === kind);
   return validMembers
     .map((m) => {
@@ -98,7 +106,7 @@ const parseMembers = (members = [], kind = "Method") => {
             ? Formatter.renderDocNode(docComment.remarksBlock.content)
             : null,
           examples,
-          signature: parseSignature(m),
+          reference: extractReferenceLink(m, kind, contractName),
         };
       }
       return null;
@@ -119,8 +127,9 @@ const moduleMap = modules.reduce((acc, m) => {
         ? Formatter.renderDocNode(docComment.remarksBlock.content)
         : null,
       examples,
-      methods: parseMembers(m.members),
-      signature: parseSignature(m),
+      methods: parseMembers(m.members, "Method", m.name),
+      properties: parseMembers(m.members, "Property", m.name),
+      reference: extractReferenceLink(m),
     };
   }
 
