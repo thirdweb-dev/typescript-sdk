@@ -1,4 +1,8 @@
-# thirdweb-sdk
+# Thirdweb SDK (legacy)
+
+> This is an **legacy** version of Thirdweb SDK.
+
+> [Looking for version 2? Click here!](https://github.com/thirdweb-dev/typescript-sdk)
 
 ### Docs
 
