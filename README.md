@@ -1,8 +1,6 @@
 # Thirdweb SDK
 
-> This is an **nightly** version of Thirdweb SDK. It is not ready for production use, but it is ready to be taste-tested!
-
-> [Looking for version 1? Click here!](https://github.com/thirdweb-dev/typescript-sdk/tree/v1)
+[Looking for version 1 (legacy)? Click here.](https://github.com/thirdweb-dev/typescript-sdk/tree/v1)
 
 ### Installation
 
