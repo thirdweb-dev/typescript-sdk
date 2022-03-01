@@ -828,9 +828,9 @@ describe("NFT Drop Contract", async () => {
         "my secret password",
       );
       await dropContract.revealer.reveal(0, "my secret password");
-      const transactions = (
-        await adminWallet.provider.getBlockWithTransactions()
-      ).transactions;
+      const transactions =
+        (await adminWallet.provider?.getBlockWithTransactions("latest"))
+          ?.transactions ?? [];
 
       const { index, _key } = dropContract.encoder.decode(
         "reveal",
@@ -842,7 +842,7 @@ describe("NFT Drop Contract", async () => {
         await dropContract.revealer.reveal(index.add(1), _key);
         assert.fail("should not be able to re-used published password");
       } catch (e) {
-        expect(e.message).to.be.equal("invalid password");
+        expect((e as Error).message).to.be.equal("invalid password");
       }
 
       // original password should work
