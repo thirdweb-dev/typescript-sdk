@@ -155,10 +155,10 @@ export class ContractWrapper<
         extraTip = BigNumber.from(0); // default is 2.5 gwei for ETH, 31 gwei for polygon
         break;
       case "fast":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10% - 2.75 gwei / 34 gwei
+        extraTip = defaultPriorityFeePerGas.div(100).mul(5); // + 5% - 2.625 gwei / 32.5 gwei
         break;
       case "fastest":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(20); // + 20% - 3 gwei / 37 gwei
+        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10% - 2.75 gwei / 34.1 gwei
         break;
     }
     let txGasPrice = defaultPriorityFeePerGas.add(extraTip);
