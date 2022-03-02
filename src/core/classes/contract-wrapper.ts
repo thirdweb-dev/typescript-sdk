@@ -156,7 +156,7 @@ export class ContractWrapper<
         break;
     }
     let txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const max = BigNumber.from(maxGasPrice);
+    const max = ethers.utils.parseUnits(maxGasPrice.toString(), "gwei");
     if (txGasPrice.gt(max)) {
       txGasPrice = max;
     }
@@ -184,11 +184,11 @@ export class ContractWrapper<
         break;
     }
     txGasPrice = txGasPrice.add(extraTip);
-    const max = BigNumber.from(maxGasPrice);
+    const max = ethers.utils.parseUnits(maxGasPrice.toString(), "gwei");
     if (txGasPrice.gt(max)) {
       txGasPrice = max;
     }
-    return ethers.utils.parseUnits(txGasPrice.toString(), "gwei");
+    return txGasPrice;
   }
 
   /**
