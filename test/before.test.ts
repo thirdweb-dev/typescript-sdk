@@ -60,16 +60,6 @@ before(async () => {
   const trustedForwarderAddress = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
   await jsonProvider.send("hardhat_reset", []);
 
-  const currencyTransferDeployer = await new ethers.ContractFactory(
-    CurrencyTransferLib__factory.abi,
-    CurrencyTransferLib__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy();
-  await currencyTransferDeployer.deployed();
-  const currencyTransferAddress = currencyTransferDeployer.address;
-  console.log("currencyTransferAddress", currencyTransferAddress);
-
   const registry = (await new ethers.ContractFactory(
     TWRegistry__factory.abi,
     TWRegistry__factory.bytecode,
@@ -120,7 +110,6 @@ before(async () => {
   ): Promise<ethers.Contract> {
     switch (contractType) {
       case Vote.contractType:
-      case Token.contractType:
         return await contractFactory.deploy();
       case Marketplace.contractType:
         const nativeTokenWrapperAddress = getNativeTokenByChainId(

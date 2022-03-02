@@ -70,6 +70,7 @@ describe("Splits Contract", async () => {
     const addr = await sdk.deployer.deployContract(Token.contractType, {
       name: "Test Token",
       symbol: "TST",
+      primary_sale_recipient: adminWallet.address,
     });
     const balances = await splitsContract.balanceOfTokenAllRecipients(addr);
     assert.equal(

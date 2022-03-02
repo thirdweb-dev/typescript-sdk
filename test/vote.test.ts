@@ -30,6 +30,7 @@ describe("Vote Contract", async () => {
       {
         name: "DAOToken #1",
         symbol: "DAO1",
+        primary_sale_recipient: adminWallet.address,
       },
     );
     currencyContract = sdk.getToken(tokenContractAddress);
@@ -71,7 +72,7 @@ describe("Vote Contract", async () => {
         {
           toAddress: currencyContract.getAddress(),
           nativeTokenValue: 0,
-          transactionData: currencyContract.encoder.encode("mint", [
+          transactionData: currencyContract.encoder.encode("mintTo", [
             bobWallet.address,
             ethers.utils.parseUnits("1", 18),
           ]),
@@ -143,7 +144,7 @@ describe("Vote Contract", async () => {
         {
           toAddress: currencyContract.getAddress(),
           nativeTokenValue: 0,
-          transactionData: currencyContract.encoder.encode("mint", [
+          transactionData: currencyContract.encoder.encode("mintTo", [
             bobWallet.address,
             ethers.utils.parseUnits("1", 18),
           ]),

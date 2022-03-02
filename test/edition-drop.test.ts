@@ -496,6 +496,7 @@ describe("Edition Drop Contract", async () => {
         await sdk.deployer.deployContract(Token.contractType, {
           name: "test",
           symbol: "test",
+          primary_sale_recipient: adminWallet.address,
         }),
       );
 

@@ -26,6 +26,7 @@ describe("Token Contract", async () => {
       description: "Test contract from tests",
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      primary_sale_recipient: adminWallet.address,
     });
     currencyContract = sdk.getToken(address);
   });
