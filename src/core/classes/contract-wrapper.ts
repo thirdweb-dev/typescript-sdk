@@ -142,6 +142,7 @@ export class ContractWrapper<
     defaultPriorityFeePerGas: BigNumber,
   ): BigNumber {
     const speed = this.options.gasSettings.speed;
+    const maxGasPrice = this.options.gasSettings.maxPriceInGwei;
     let extraTip;
     switch (speed) {
       case "standard":
@@ -154,7 +155,12 @@ export class ContractWrapper<
         extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 20% - 2.75 gwei / 36 gwei
         break;
     }
-    return defaultPriorityFeePerGas.add(extraTip);
+    let txGasPrice = defaultPriorityFeePerGas.add(extraTip);
+    const max = BigNumber.from(maxGasPrice);
+    if (txGasPrice.gt(max)) {
+      txGasPrice = max;
+    }
+    return txGasPrice;
   }
 
   /**
