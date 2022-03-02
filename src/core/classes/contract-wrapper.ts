@@ -16,7 +16,6 @@ import {
   NetworkOrSignerOrProvider,
   PermitRequestMessage,
 } from "../types";
-import { getGasPriceForChain } from "../../common/gas-price";
 import { EventType } from "../../constants/events";
 import { Log, TransactionReceipt } from "@ethersproject/providers";
 import invariant from "tiny-invariant";
@@ -29,6 +28,8 @@ import { Forwarder__factory } from "@thirdweb-dev/contracts";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
+import { getPolygonGasPriorityFee } from "../../common/gas-price";
+import { ChainId } from "../../constants";
 
 /**
  * @internal
@@ -105,21 +106,89 @@ export class ContractWrapper<
    * @internal
    */
   public async getCallOverrides(): Promise<CallOverrides> {
-    const chainId = await this.getChainID();
-    const speed = this.options.gasSettings?.speed || "fastest";
-    const maxGasPrice = this.options.gasSettings?.maxPriceInGwei || 300;
-    const gasPriceChain = await getGasPriceForChain(
-      chainId,
-      speed,
-      maxGasPrice,
-    );
-    if (!gasPriceChain) {
-      return {};
+    const feeData = await this.getProvider().getFeeData();
+    const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
+    if (supports1559) {
+      const chainId = await this.getChainID();
+      let defaultPriorityFee: BigNumber;
+      if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
+        // for polygon, get fee data from gas station
+        defaultPriorityFee = await getPolygonGasPriorityFee(chainId);
+      } else {
+        // otherwise get it from ethers
+        defaultPriorityFee = BigNumber.from(feeData.maxPriorityFeePerGas);
+      }
+      // then add additional fee based on user preferences
+      const maxPriorityFeePerGas =
+        this.getPreferredPriorityFee(defaultPriorityFee);
+      const baseMaxFeePerGas = BigNumber.from(feeData.maxFeePerGas);
+      const maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
+      return {
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+      };
+    } else {
+      return {
+        gasPrice: await this.getPreferredGasPrice(),
+      };
     }
-    // TODO: support EIP-1559 by try-catch, provider.getFeeData();
-    return {
-      gasPrice: ethers.utils.parseUnits(gasPriceChain.toString(), "gwei"),
-    };
+  }
+
+  /**
+   * Calculates the priority fee per gas according to user preferences
+   * @param defaultPriorityFeePerGas - the base priority fee
+   */
+  private getPreferredPriorityFee(
+    defaultPriorityFeePerGas: BigNumber,
+  ): BigNumber {
+    const speed = this.options.gasSettings.speed;
+    const maxGasPrice = this.options.gasSettings.maxPriceInGwei;
+    let extraTip;
+    switch (speed) {
+      case "standard":
+        extraTip = BigNumber.from(0); // default is 2.5 gwei for ETH, 31 gwei for polygon
+        break;
+      case "fast":
+        extraTip = defaultPriorityFeePerGas.div(100).mul(5); // + 10% - 2.625 gwei / 33 gwei
+        break;
+      case "fastest":
+        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 20% - 2.75 gwei / 36 gwei
+        break;
+    }
+    let txGasPrice = defaultPriorityFeePerGas.add(extraTip);
+    const max = BigNumber.from(maxGasPrice);
+    if (txGasPrice.gt(max)) {
+      txGasPrice = max;
+    }
+    return txGasPrice;
+  }
+
+  /**
+   * Calculates the gas price for transactions according to user preferences
+   */
+  public async getPreferredGasPrice(): Promise<BigNumber> {
+    const gasPrice = await this.getProvider().getGasPrice();
+    const speed = this.options.gasSettings.speed;
+    const maxGasPrice = this.options.gasSettings.maxPriceInGwei;
+    let txGasPrice = gasPrice;
+    let extraTip;
+    switch (speed) {
+      case "standard":
+        extraTip = BigNumber.from(1); // min 1 wei
+        break;
+      case "fast":
+        extraTip = gasPrice.div(100).mul(5); // + 5%
+        break;
+      case "fastest":
+        extraTip = gasPrice.div(100).mul(10); // + 10%
+        break;
+    }
+    txGasPrice = txGasPrice.add(extraTip);
+    const max = BigNumber.from(maxGasPrice);
+    if (txGasPrice.gt(max)) {
+      txGasPrice = max;
+    }
+    return ethers.utils.parseUnits(txGasPrice.toString(), "gwei");
   }
 
   /**

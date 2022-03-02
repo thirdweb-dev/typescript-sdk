@@ -1,42 +1,39 @@
 import { ChainId } from "../constants/chains";
+import { BigNumber, ethers } from "ethers";
 
 /**
  * @internal
  */
-function getGasStationUrl(chainId?: number): string | null {
-  if (!chainId) {
-    return null;
+function getGasStationUrl(chainId: ChainId.Polygon | ChainId.Mumbai): string {
+  switch (chainId) {
+    case ChainId.Polygon:
+      return "https://gasstation-mainnet.matic.network/v2";
+    case ChainId.Mumbai:
+      return "https://gasstation-mumbai.matic.today/v2";
   }
-
-  if (chainId === ChainId.Polygon) {
-    return "https://gasstation-mainnet.matic.network";
-  }
-
-  return null;
 }
+
+const MIN_POLYGON_GAS_PRICE = ethers.utils.parseUnits("31", "gwei");
 
 /**
  *
  * @returns the gas price
  * @internal
  */
-export async function getGasPriceForChain(
-  chainId: number,
-  speed: string,
-  maxGasPrice: number,
-): Promise<number | null> {
+export async function getPolygonGasPriorityFee(
+  chainId: ChainId.Polygon | ChainId.Mumbai,
+): Promise<BigNumber> {
   const gasStationUrl = getGasStationUrl(chainId);
-  if (!gasStationUrl) {
-    return null;
-  }
   try {
     const data = await (await fetch(gasStationUrl)).json();
-    const gas = data[speed];
-    if (gas > 0) {
-      return Math.min(gas, maxGasPrice);
+    // take the standard speed here, SDK options will define the extra tip
+    const priorityFee = data["standard"]["maxPriorityFee"];
+    if (priorityFee > 0) {
+      const fixedFee = parseFloat(priorityFee).toFixed(9);
+      return ethers.utils.parseUnits(fixedFee, "gwei");
     }
   } catch (e) {
     console.error("failed to fetch gas", e);
   }
-  return null;
+  return MIN_POLYGON_GAS_PRICE;
 }

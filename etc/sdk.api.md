@@ -1437,6 +1437,7 @@ export class FunctionDeprecatedError extends Error {
 // @public
 export class GasCostEstimator<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
+    currentGasPriceInGwei(): Promise<string>;
     gasCostOf(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): Promise<string>;
 }
 
@@ -3513,13 +3514,18 @@ export class Token extends Erc20<TokenERC20> {
     roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
     // @internal (undocumented)
     static schema: {
-        deploy: ZodObject<extendShape<extendShape<    {
+        deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
         }, {
         symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, {
+        platform_fee_basis_points: ZodDefault<ZodNumber>;
+        platform_fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        primary_sale_recipient: ZodEffects<ZodString, string, string>;
         }>, {
         trusted_forwarder: ZodDefault<ZodEffects<ZodString, string, string>>;
         }>, "strip", ZodTypeAny, {
@@ -3528,14 +3534,20 @@ export class Token extends Erc20<TokenERC20> {
         external_link?: string | undefined;
         symbol: string;
         name: string;
+        primary_sale_recipient: string;
+        platform_fee_basis_points: number;
+        platform_fee_recipient: string;
         trusted_forwarder: string;
         }, {
         symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
         trusted_forwarder?: string | undefined;
         name: string;
+        primary_sale_recipient: string;
         }>;
         output: ZodObject<extendShape<extendShape<    {
         name: ZodString;
