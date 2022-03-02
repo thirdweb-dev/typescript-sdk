@@ -11,11 +11,11 @@ hide_title: true
 
 Returns the current gas price in gwei
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 currentGasPriceInGwei(): Promise<string>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;

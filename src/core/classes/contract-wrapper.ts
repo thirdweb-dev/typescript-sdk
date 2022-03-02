@@ -28,6 +28,8 @@ import { Forwarder__factory } from "@thirdweb-dev/contracts";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
+import { getPolygonGasPriorityFee } from "../../common/gas-price";
+import { ChainId } from "../../constants";
 
 /**
  * @internal
@@ -107,11 +109,20 @@ export class ContractWrapper<
     const feeData = await this.getProvider().getFeeData();
     const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
     if (supports1559) {
-      const baseFeePerGas = BigNumber.from(feeData.maxFeePerGas);
-      const maxPriorityFeePerGas = this.getPreferredPriorityFee(
-        BigNumber.from(feeData.maxPriorityFeePerGas),
-      );
-      const maxFeePerGas = baseFeePerGas.add(maxPriorityFeePerGas);
+      const chainId = await this.getChainID();
+      let defaultPriorityFee: BigNumber;
+      if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
+        // for polygon, get fee data from gas station
+        defaultPriorityFee = await getPolygonGasPriorityFee(chainId);
+      } else {
+        // otherwise get it from ethers
+        defaultPriorityFee = BigNumber.from(feeData.maxPriorityFeePerGas);
+      }
+      // then add additional fee based on user preferences
+      const maxPriorityFeePerGas =
+        this.getPreferredPriorityFee(defaultPriorityFee);
+      const baseMaxFeePerGas = BigNumber.from(feeData.maxFeePerGas);
+      const maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
       return {
         maxFeePerGas,
         maxPriorityFeePerGas,
@@ -134,13 +145,13 @@ export class ContractWrapper<
     let extraTip;
     switch (speed) {
       case "standard":
-        extraTip = BigNumber.from(0); // default is 2.5 gwei
+        extraTip = BigNumber.from(0); // default is 2.5 gwei for ETH, 31 gwei for polygon
         break;
       case "fast":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10% - 2.75 gwei
+        extraTip = defaultPriorityFeePerGas.div(100).mul(5); // + 10% - 2.625 gwei / 33 gwei
         break;
       case "fastest":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(20); // + 20% - 3 gwei
+        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 20% - 2.75 gwei / 36 gwei
         break;
     }
     return defaultPriorityFeePerGas.add(extraTip);
