@@ -477,6 +477,7 @@ describe("NFT Drop Contract", async () => {
         {
           name: "test",
           symbol: "test",
+          primary_sale_recipient: adminWallet.address,
         },
       );
 
