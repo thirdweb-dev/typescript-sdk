@@ -228,10 +228,12 @@ export class Marketplace implements UpdateableNetwork {
    * Convenience function to buy a Direct or Auction listing.
    * @param listingId - the listing ID of the listing you want to buy
    * @param quantityDesired - the quantity that you want to buy (for ERC1155 tokens)
+   * @param receiver - optional receiver of the bought listing if different from the connected wallet (for direct listings only)
    */
   public async buyoutListing(
     listingId: BigNumberish,
     quantityDesired?: BigNumberish,
+    receiver?: string,
   ): Promise<TransactionResult> {
     const listing = await this.contractWrapper.readContract.listings(listingId);
     if (listing.listingId.toString() !== listingId.toString()) {
@@ -243,7 +245,11 @@ export class Marketplace implements UpdateableNetwork {
           quantityDesired !== undefined,
           "quantityDesired is required when buying out a direct listing",
         );
-        return await this.direct.buyoutListing(listingId, quantityDesired);
+        return await this.direct.buyoutListing(
+          listingId,
+          quantityDesired,
+          receiver,
+        );
       }
       case ListingType.Auction: {
         return await this.auction.buyoutListing(listingId);

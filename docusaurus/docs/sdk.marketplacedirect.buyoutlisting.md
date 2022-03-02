@@ -14,15 +14,16 @@ Buy Listing
 **Signature:**
 
 ```typescript
-buyoutListing(listingId: BigNumberish, quantityDesired: BigNumberish): Promise<TransactionResult>;
+buyoutListing(listingId: BigNumberish, quantityDesired: BigNumberish, receiver?: string): Promise<TransactionResult>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listingId | BigNumberish |  |
-|  quantityDesired | BigNumberish |  |
+|  listingId | BigNumberish | The listing id to buy |
+|  quantityDesired | BigNumberish | the quantity to buy |
+|  receiver | string | optional receiver of the bought listing if different from the connected wallet |
 
 **Returns:**
 

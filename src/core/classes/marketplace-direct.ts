@@ -278,10 +278,15 @@ export class MarketplaceDirect {
    *
    * await contract.direct.buyoutListing(listingId, quantityDesired);
    * ```
+   *
+   * @param listingId - The listing id to buy
+   * @param quantityDesired - the quantity to buy
+   * @param receiver - optional receiver of the bought listing if different from the connected wallet
    */
   public async buyoutListing(
     listingId: BigNumberish,
     quantityDesired: BigNumberish,
+    receiver?: string,
   ): Promise<TransactionResult> {
     const listing = await this.validateListing(BigNumber.from(listingId));
     const valid = await this.isStillValidListing(listing, quantityDesired);
@@ -290,7 +295,9 @@ export class MarketplaceDirect {
         "The asset on this listing has been moved from the lister's wallet, this listing is now invalid",
       );
     }
-    const receiver = await this.contractWrapper.getSignerAddress();
+    const buyFor = receiver
+      ? receiver
+      : await this.contractWrapper.getSignerAddress();
     const quantity = BigNumber.from(quantityDesired);
     const value = BigNumber.from(listing.buyoutPrice).mul(quantity);
     const overrides = (await this.contractWrapper.getCallOverrides()) || {};
@@ -303,7 +310,7 @@ export class MarketplaceDirect {
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "buy",
-        [listingId, receiver, quantity, listing.currencyContractAddress, value],
+        [listingId, buyFor, quantity, listing.currencyContractAddress, value],
         overrides,
       ),
     };

@@ -1589,7 +1589,7 @@ export class Marketplace implements UpdateableNetwork {
     allowListingFromAnyAsset(): Promise<void>;
     allowListingFromSpecificAssetOnly(contractAddress: string): Promise<void>;
     auction: MarketplaceAuction;
-    buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<TransactionResult>;
+    buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish, receiver?: string): Promise<TransactionResult>;
     // (undocumented)
     static contractFactory: typeof Marketplace__factory;
     // (undocumented)
@@ -1729,7 +1729,7 @@ export class MarketplaceDirect {
     constructor(contractWrapper: ContractWrapper<Marketplace_2>, storage: IStorage);
     // (undocumented)
     acceptOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<TransactionResult>;
-    buyoutListing(listingId: BigNumberish, quantityDesired: BigNumberish): Promise<TransactionResult>;
+    buyoutListing(listingId: BigNumberish, quantityDesired: BigNumberish, receiver?: string): Promise<TransactionResult>;
     cancelListing(listingId: BigNumberish): Promise<TransactionResult>;
     createListing(listing: NewDirectListing): Promise<TransactionResultWithId>;
     getActiveOffer(listingId: BigNumberish, address: string): Promise<Offer | undefined>;

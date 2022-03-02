@@ -9,7 +9,7 @@ Convenience function to buy a Direct or Auction listing.
 <b>Signature:</b>
 
 ```typescript
-buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<TransactionResult>;
+buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish, receiver?: string): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -18,6 +18,7 @@ buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish): Promise<
 |  --- | --- | --- |
 |  listingId | BigNumberish | the listing ID of the listing you want to buy |
 |  quantityDesired | BigNumberish | the quantity that you want to buy (for ERC1155 tokens) |
+|  receiver | string | optional receiver of the bought listing if different from the connected wallet (for direct listings only) |
 
 <b>Returns:</b>
 

@@ -23,7 +23,7 @@ export declare class MarketplaceDirect
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [acceptOffer(listingId, addressOfOfferor)](./sdk.marketplacedirect.acceptoffer.md) |  |  |
-|  [buyoutListing(listingId, quantityDesired)](./sdk.marketplacedirect.buyoutlisting.md) |  | Buy Listing |
+|  [buyoutListing(listingId, quantityDesired, receiver)](./sdk.marketplacedirect.buyoutlisting.md) |  | Buy Listing |
 |  [cancelListing(listingId)](./sdk.marketplacedirect.cancellisting.md) |  | Cancel Direct Listing |
 |  [createListing(listing)](./sdk.marketplacedirect.createlisting.md) |  | Create Direct Listing |
 |  [getActiveOffer(listingId, address)](./sdk.marketplacedirect.getactiveoffer.md) |  | Get the active offer on a listing |
