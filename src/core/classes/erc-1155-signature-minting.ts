@@ -50,7 +50,7 @@ export class Erc1155SignatureMinting {
    *
    * @example
    * ```javascript
-   * // see how to craft a payload to sign in the `generateSignature()` documentation
+   * // see how to craft a payload to sign in the `generate()` documentation
    * const signedPayload = contract.signature.generate(payload);
    *
    * // now anyone can mint the NFT
@@ -131,7 +131,7 @@ export class Erc1155SignatureMinting {
    * };
    *
    * const signedPayload = contract.signature.generate(payload);
-   * // now anyone can use these to mint the NFT using `mintWithSignature()`
+   * // now anyone can use these to mint the NFT using `contract.signature.mint(signedPayload)`
    * ```
    * @param mintRequest - the payload to sign
    * @returns the signed payload and the corresponding signature

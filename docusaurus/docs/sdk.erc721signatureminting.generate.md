@@ -55,5 +55,5 @@ const payload = {
 };
 
 const signedPayload = contract.signature.generate(payload);
-// now anyone can use these to mint the NFT using `mintWithSignature()`
+// now anyone can use these to mint the NFT using `contract.signature.mint(signedPayload)`
 ```

@@ -41,7 +41,7 @@
         "summary": "Signature Minting\n\n",
         "remarks": "\n\nGenerate dynamic NFTs with your own signature, and let others mint them using that signature.\n\n",
         "examples": {
-          "javascript": "// see how to craft a payload to sign in the `generateSignature()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
+          "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
         },
         "reference": "https://typescript-docs.thirdweb.com/sdk.erc1155signatureminting"
       }
@@ -150,7 +150,7 @@
         "summary": "Signature Minting\n\n",
         "remarks": "\n\nGenerate dynamic NFTs with your own signature, and let others mint them using that signature.\n\n",
         "examples": {
-          "javascript": "// see how to craft a payload to sign in the `generateSignature()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
+          "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
         },
         "reference": "https://typescript-docs.thirdweb.com/sdk.erc721signatureminting"
       }

@@ -25,7 +25,7 @@ Generate dynamic NFTs with your own signature, and let others mint them using th
 
 
 ```javascript
-// see how to craft a payload to sign in the `generateSignature()` documentation
+// see how to craft a payload to sign in the `contract.signature.generate()` documentation
 const signedPayload = contract.signature.generate(payload);
 
 // now anyone can mint the NFT
