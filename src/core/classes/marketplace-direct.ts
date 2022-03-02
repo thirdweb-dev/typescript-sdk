@@ -176,7 +176,7 @@ export class MarketplaceDirect {
           currencyToAccept: listing.currencyContractAddress,
           listingType: ListingType.Direct,
           quantityToList: listing.quantity,
-          reservePricePerToken: listing.buyoutPricePerToken,
+          reservePricePerToken: normalizedPricePerToken,
           secondsUntilEndTime: listing.listingDurationInSeconds,
           startTime: listing.startTimeInSeconds,
         } as IMarketplace.ListingParametersStruct,

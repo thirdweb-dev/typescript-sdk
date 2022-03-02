@@ -134,7 +134,7 @@ describe("Marketplace Contract", async () => {
     return (
       await marketplaceContract.direct.createListing({
         assetContractAddress: contractAddress,
-        buyoutPricePerToken: "10",
+        buyoutPricePerToken: 0.1,
         currencyContractAddress: tokenAddress,
         startTimeInSeconds: Math.floor(Date.now() / 1000),
         listingDurationInSeconds: 60 * 60 * 24,
@@ -153,13 +153,13 @@ describe("Marketplace Contract", async () => {
     return (
       await marketplaceContract.auction.createListing({
         assetContractAddress: contractAddress,
-        buyoutPricePerToken: "10",
+        buyoutPricePerToken: 0.1,
         currencyContractAddress: tokenAddress,
         startTimeInSeconds: startTime,
         listingDurationInSeconds: 60 * 60 * 24,
         tokenId,
         quantity,
-        reservePricePerToken: "1",
+        reservePricePerToken: 0.05,
       })
     ).id;
   };
@@ -474,7 +474,7 @@ describe("Marketplace Contract", async () => {
 
     it("should allow bids to be made on auction listings", async () => {
       await sdk.updateSignerOrProvider(bobWallet);
-      await marketplaceContract.auction.makeBid(auctionListingId, 1);
+      await marketplaceContract.auction.makeBid(auctionListingId, 0.06);
 
       let winningBid = (await marketplaceContract.auction.getWinningBid(
         auctionListingId,
@@ -483,7 +483,7 @@ describe("Marketplace Contract", async () => {
       assert.equal(winningBid.buyerAddress, bobWallet.address);
       assert.equal(
         winningBid.pricePerToken.toString(),
-        ethers.utils.parseUnits("1").toString(),
+        ethers.utils.parseUnits("0.06").toString(),
       );
       assert.equal(
         winningBid.listingId.toString(),
@@ -492,7 +492,7 @@ describe("Marketplace Contract", async () => {
 
       // Make a higher winning bid
       await sdk.updateSignerOrProvider(samWallet);
-      await marketplaceContract.auction.makeBid(auctionListingId, 2);
+      await marketplaceContract.auction.makeBid(auctionListingId, 0.09);
 
       winningBid = (await marketplaceContract.auction.getWinningBid(
         auctionListingId,
@@ -500,7 +500,7 @@ describe("Marketplace Contract", async () => {
       assert.equal(winningBid.buyerAddress, samWallet.address);
       assert.equal(
         winningBid.pricePerToken.toString(),
-        ethers.utils.parseUnits("2").toString(),
+        ethers.utils.parseUnits("0.09").toString(),
       );
       assert.equal(
         winningBid.listingId.toString(),
@@ -685,14 +685,14 @@ describe("Marketplace Contract", async () => {
       const id = (
         await marketplaceContract.auction.createListing({
           assetContractAddress: dummyNftContract.getAddress(),
-          buyoutPricePerToken: 10,
+          buyoutPricePerToken: 0.1,
           currencyContractAddress: tokenAddress,
           // to start tomorrow so we can update it
           startTimeInSeconds: Math.floor(Date.now() / 1000 + 60 * 60 * 24),
           listingDurationInSeconds: 60 * 60 * 24,
           tokenId: "0",
           quantity: 1,
-          reservePricePerToken: 1,
+          reservePricePerToken: 0.05,
         })
       ).id;
       await marketplaceContract.auction.cancelListing(id);
@@ -849,7 +849,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should allow you to update a direct listing", async () => {
-      const buyoutPrice = ethers.utils.parseUnits("10");
+      const buyoutPrice = ethers.utils.parseUnits("0.1");
 
       const directListing = await marketplaceContract.direct.getListing(
         directListingId,
