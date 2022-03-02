@@ -8,7 +8,7 @@ import {
 } from "../src/common/error";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import { ListingType } from "../src/enums/marketplace";
-import { Marketplace, Edition, Token, NFTCollection } from "../src/contracts";
+import { Edition, Marketplace, NFTCollection, Token } from "../src/contracts";
 import { AuctionListing, DirectListing, Offer } from "../src/types/marketplace";
 import {
   expectError,
@@ -22,7 +22,6 @@ import { isWinningBid } from "../src/common/marketplace";
 global.fetch = require("node-fetch");
 
 let tokenAddress = NATIVE_TOKEN_ADDRESS;
-let startingBalance = BigNumber.from("10000");
 
 /**
  * Throughout these tests, the admin wallet will be the deployer
@@ -111,19 +110,18 @@ describe("Marketplace Contract", async () => {
     await customTokenContract.mintBatchTo([
       {
         toAddress: bobWallet.address,
-        amount: "1000000000000000000000",
+        amount: 1000,
       },
       {
         toAddress: samWallet.address,
-        amount: "100000000000000000000",
+        amount: 1000,
       },
       {
         toAddress: adminWallet.address,
-        amount: "100000000000000000000",
+        amount: 1000,
       },
     ]);
     tokenAddress = customTokenContract.getAddress();
-    startingBalance = BigNumber.from("100000000000000000000");
   });
 
   const createDirectListing = async (
@@ -162,16 +160,6 @@ describe("Marketplace Contract", async () => {
         reservePricePerToken: 0.05,
       })
     ).id;
-  };
-
-  const provider = ethers.getDefaultProvider();
-  const checkTokenBalance = async (address: string): Promise<BigNumber> => {
-    if (tokenAddress === NATIVE_TOKEN_ADDRESS) {
-      return provider.getBalance(address);
-    } else {
-      const balance = await customTokenContract.balanceOf(address);
-      return BigNumber.from(balance.value);
-    }
   };
 
   describe("Listing", () => {
@@ -711,7 +699,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should throw an error when trying to close an auction that already started (with bids)", async () => {
-      await marketplaceContract.auction.makeBid(auctionListingId, "2");
+      await marketplaceContract.auction.makeBid(auctionListingId, 0.06);
       try {
         await marketplaceContract.auction.cancelListing(auctionListingId);
         assert.fail("should have thrown an error");
@@ -816,8 +804,8 @@ describe("Marketplace Contract", async () => {
       );
       assert.deepEqual(
         oldTokenBalance.value,
-        ethers.utils.parseUnits("100000000000000000000"),
-        "The buyer should have 100000000000000000000 tokens to start",
+        ethers.utils.parseUnits("1000"),
+        "The buyer should have 1000 tokens to start",
       );
 
       await marketplaceContract.auction.closeListing(listingId);
@@ -828,7 +816,7 @@ describe("Marketplace Contract", async () => {
       assert.deepEqual(
         newTokenBalance.value,
         ethers.utils
-          .parseUnits("100000000000000000000")
+          .parseUnits("1000")
           // eslint-disable-next-line line-comment-position
           .add(ethers.utils.parseUnits("2.00")), // 2% taken out for royalties
         // TODO read the fee from the TWFee contract
