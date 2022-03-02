@@ -110,6 +110,11 @@ export class ContractWrapper<
     const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
     if (supports1559) {
       const chainId = await this.getChainID();
+      const block = await this.getProvider().getBlock("latest");
+      const baseBlockFee =
+        block && block.baseFeePerGas
+          ? block.baseFeePerGas
+          : ethers.utils.parseUnits("1", "gwei");
       let defaultPriorityFee: BigNumber;
       if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
         // for polygon, get fee data from gas station
@@ -121,7 +126,8 @@ export class ContractWrapper<
       // then add additional fee based on user preferences
       const maxPriorityFeePerGas =
         this.getPreferredPriorityFee(defaultPriorityFee);
-      const baseMaxFeePerGas = BigNumber.from(feeData.maxFeePerGas);
+      // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
+      const baseMaxFeePerGas = baseBlockFee.mul(2);
       const maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
       return {
         maxFeePerGas,
@@ -149,16 +155,20 @@ export class ContractWrapper<
         extraTip = BigNumber.from(0); // default is 2.5 gwei for ETH, 31 gwei for polygon
         break;
       case "fast":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(5); // + 10% - 2.625 gwei / 33 gwei
+        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10% - 2.75 gwei / 34 gwei
         break;
       case "fastest":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 20% - 2.75 gwei / 36 gwei
+        extraTip = defaultPriorityFeePerGas.div(100).mul(20); // + 20% - 3 gwei / 37 gwei
         break;
     }
     let txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const max = ethers.utils.parseUnits(maxGasPrice.toString(), "gwei");
+    const max = ethers.utils.parseUnits(maxGasPrice.toString(), "gwei"); // no more than max gas setting
+    const min = ethers.utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
     if (txGasPrice.gt(max)) {
       txGasPrice = max;
+    }
+    if (txGasPrice.lt(min)) {
+      txGasPrice = min;
     }
     return txGasPrice;
   }
