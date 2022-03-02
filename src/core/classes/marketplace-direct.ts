@@ -250,10 +250,16 @@ export class MarketplaceDirect {
      * - Provide better error handling if offer is too low.
      */
     await this.validateListing(BigNumber.from(listingId));
+    const offer = await this.contractWrapper.readContract.offers(
+      listingId,
+      addressOfOfferor,
+    );
     return {
       receipt: await this.contractWrapper.sendTransaction("acceptOffer", [
         listingId,
         addressOfOfferor,
+        offer.currency,
+        offer.pricePerToken,
       ]),
     };
   }
@@ -284,6 +290,7 @@ export class MarketplaceDirect {
         "The asset on this listing has been moved from the lister's wallet, this listing is now invalid",
       );
     }
+    const receiver = await this.contractWrapper.getSignerAddress();
     const quantity = BigNumber.from(quantityDesired);
     const value = BigNumber.from(listing.buyoutPrice).mul(quantity);
     const overrides = (await this.contractWrapper.getCallOverrides()) || {};
@@ -296,7 +303,7 @@ export class MarketplaceDirect {
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "buy",
-        [listingId, quantity, listing.currencyContractAddress, value],
+        [listingId, receiver, quantity, listing.currencyContractAddress, value],
         overrides,
       ),
     };

@@ -142,7 +142,7 @@ export class Token extends Erc20<TokenERC20> {
       await this.contractWrapper.readContract.decimals(),
     );
     return {
-      receipt: await this.contractWrapper.sendTransaction("mint", [
+      receipt: await this.contractWrapper.sendTransaction("mintTo", [
         to,
         amountWithDecimals,
       ]),
@@ -179,10 +179,10 @@ export class Token extends Erc20<TokenERC20> {
         await this.contractWrapper.readContract.decimals(),
       );
       encoded.push(
-        this.contractWrapper.readContract.interface.encodeFunctionData("mint", [
-          arg.toAddress,
-          amountWithDecimals,
-        ]),
+        this.contractWrapper.readContract.interface.encodeFunctionData(
+          "mintTo",
+          [arg.toAddress, amountWithDecimals],
+        ),
       );
     }
     return { receipt: await this.contractWrapper.multiCall(encoded) };

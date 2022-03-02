@@ -27,10 +27,6 @@ import { MAX_BPS } from "../schema/shared";
  * This is particularly useful for direct listings where the token
  * being listed may be moved before the listing is actually closed.
  *
- * TODO: Ask Jake/Krishang: do we need to also check the owners balance of the token,
- * based on the listing quantity? I.e. query the balance of the tokenId, and check if
- * the seller holds enough of the token
- *
  * @internal
  * @param provider - The connected provider
  * @param marketplaceAddress - The address of the marketplace contract
