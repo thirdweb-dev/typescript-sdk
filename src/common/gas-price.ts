@@ -14,6 +14,21 @@ function getGasStationUrl(chainId: ChainId.Polygon | ChainId.Mumbai): string {
 }
 
 const MIN_POLYGON_GAS_PRICE = ethers.utils.parseUnits("31", "gwei");
+const MIN_MUMBAI_GAS_PRICE = ethers.utils.parseUnits("1", "gwei");
+
+/**
+ * @internal
+ */
+function getDefaultGasFee(
+  chainId: ChainId.Polygon | ChainId.Mumbai,
+): BigNumber {
+  switch (chainId) {
+    case ChainId.Polygon:
+      return MIN_POLYGON_GAS_PRICE;
+    case ChainId.Mumbai:
+      return MIN_MUMBAI_GAS_PRICE;
+  }
+}
 
 /**
  *
@@ -35,5 +50,5 @@ export async function getPolygonGasPriorityFee(
   } catch (e) {
     console.error("failed to fetch gas", e);
   }
-  return MIN_POLYGON_GAS_PRICE;
+  return getDefaultGasFee(chainId);
 }
