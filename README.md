@@ -39,7 +39,7 @@ await marketplace.buyoutDirectListing(listingId, quantityDesired);
 ### Api Reference & code examples
 
 - [Step by step guides and recipes](https://portal.thirdweb.com)
-- [Api Reference and code examples](https://typescript-sdk.thirdweb.com)
+- [Api Reference and code examples](https://typescript-docs.thirdweb.com)
 
 ### Get in touch
 
