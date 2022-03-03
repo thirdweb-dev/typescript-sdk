@@ -238,14 +238,6 @@ export class IpfsStorage implements IStorage {
     signerAddress?: string,
   ): Promise<CidWithFileName> {
     const token = await this.getUploadToken(contractAddress || "");
-    const metadata = {
-      name: `CONSOLE-TS-SDK-${contractAddress}`,
-      keyvalues: {
-        sdk: "typescript",
-        contractAddress,
-        signerAddress,
-      },
-    };
     const data = new FormData();
     const fileNames: string[] = [];
     files.forEach((file, i) => {
@@ -273,7 +265,7 @@ export class IpfsStorage implements IStorage {
         fileName = `${i + fileStartNumber}`;
       }
 
-      const filepath = `files/${fileName}`;
+      const filepath = `${fileName}`;
       if (fileNames.indexOf(fileName) > -1) {
         throw new DuplicateFileNameError(fileName);
       }
@@ -287,21 +279,31 @@ export class IpfsStorage implements IStorage {
       }
     });
 
-    data.append("pinataMetadata", JSON.stringify(metadata));
-    const res = await fetch(PINATA_IPFS_URL, {
+    const res = await fetch(`${PINATA_IPFS_URL}?wrap-with-directory=true`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
       },
       body: data as any,
     });
-    const body = await res.json();
+    const text = await res.text();
+    const hashes = text
+      .split("\n")
+      .map((t) => t.trim())
+      .filter((t) => t.length);
+    const cid = hashes[hashes.length - 1];
+
+    console.log("BODUY = ", "'", cid);
+    const body = JSON.parse(cid);
+    console.log("status", body.Hash);
     if (!res.ok) {
       console.log(body);
-      throw new UploadError("Failed to upload files to IPFS");
+      throw new UploadError(
+        `Failed to upload files to IPFS - status code = . ${res.status}`,
+      );
     }
     return {
-      cid: body.IpfsHash,
+      cid: body.Hash,
       fileNames,
     };
   }

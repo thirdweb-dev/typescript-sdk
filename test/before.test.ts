@@ -31,7 +31,7 @@ const defaultProvider = hardhatEthers.provider;
 
 let registryAddress: string;
 let sdk: ThirdwebSDK;
-const ipfsGatewayUrl = "https://ipfs.thirdweb.com/ipfs/";
+const ipfsGatewayUrl = "https://thirdweb-ipfs-api.zeet-nftlabs.zeet.app/ipfs/";
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: IStorage;

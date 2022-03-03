@@ -130,11 +130,9 @@ describe("IPFS Uploads", async () => {
       },
     ];
     const cid = await storage.uploadBatch(sampleObjects);
-    console.log("filenames", cid);
+    const response = await getFile(`${cid}test.jpeg`);
     assert(
-      (await getFile(`${cid}test.jpeg`)).headers
-        ?.get("content-type")
-        ?.toString() === "image/jpeg",
+      response.headers?.get("content-type")?.toString() === "image/jpeg",
       `${cid}`,
     );
   });
@@ -157,6 +155,8 @@ describe("IPFS Uploads", async () => {
       readFileSync("test/test.mp4"),
     ];
     const cid = await storage.uploadBatch(sampleObjects);
+
+    console.log("cid", cid);
     assert(
       (await getFile(`${cid}0`)).headers?.get("content-type")?.toString() ===
         "image/jpeg",
