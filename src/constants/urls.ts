@@ -5,7 +5,8 @@ export const DEFAULT_IPFS_GATEWAY = "https://cloudflare-ipfs.com/ipfs/";
 /**
  * @internal
  */
-export const TW_IPFS_SERVER_URL = "http://localhost:3002";
+export const TW_IPFS_SERVER_URL =
+  "https://nftlabs-ipfs-server-zeet.zeet-nftlabs.zeet.app";
 /**
  * @internal
  */
