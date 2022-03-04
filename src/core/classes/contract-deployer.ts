@@ -17,6 +17,7 @@ import {
   Token,
   Vote,
 } from "../../contracts";
+import { EditionContractMetadata } from "../../types/deploy/deploy-metadata";
 
 /**
  * Handles deploying new contracts
@@ -52,7 +53,12 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployNFTCollection(
     metadata: z.input<typeof NFTCollection.schema.deploy>,
   ): Promise<string> {
-    return await this.deployContract(NFTCollection.contractType, metadata);
+    return await this.deployContract(NFTCollection.contractType, {
+      name: "",
+      description: "",
+      image: "",
+      trusted_forwarder: "",
+    });
   }
 
   /**
@@ -83,9 +89,10 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deployEditionDrop(
-    metadata: z.input<typeof EditionDrop.schema.deploy>,
+    metadata: EditionContractMetadata,
   ): Promise<string> {
-    return await this.deployContract(EditionDrop.contractType, metadata);
+    const parsed = EditionDrop.schema.deploy.parse(metadata);
+    return await this.deployContract(EditionDrop.contractType, parsed);
   }
 
   /**
