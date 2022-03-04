@@ -46,8 +46,10 @@ const module = sdk.getNFTModule("{{module_address}}");
 |  [get(tokenId)](./sdk.nftmodule.get.md) |  | Fetches an NFT from storage with the resolved metadata. |
 |  [getAll()](./sdk.nftmodule.getall.md) |  | Get All NFTs |
 |  [getAllWithOwner()](./sdk.nftmodule.getallwithowner.md) |  |  |
+|  [getDefaultSaleRecipient()](./sdk.nftmodule.getdefaultsalerecipient.md) |  |  |
 |  [getModuleRoles()](./sdk.nftmodule.getmoduleroles.md) |  |  |
 |  [getOwned(\_address)](./sdk.nftmodule.getowned.md) |  | Get Owned NFTs |
+|  [getPrimarySaleRecipient()](./sdk.nftmodule.getprimarysalerecipient.md) |  |  |
 |  [getRoyaltyBps()](./sdk.nftmodule.getroyaltybps.md) |  | Gets the royalty BPS (basis points) of the contract |
 |  [getRoyaltyRecipientAddress()](./sdk.nftmodule.getroyaltyrecipientaddress.md) |  | Gets the address of the royalty recipient |
 |  [getWithOwner(tokenId)](./sdk.nftmodule.getwithowner.md) |  |  |
@@ -61,6 +63,7 @@ const module = sdk.getNFTModule("{{module_address}}");
 |  [mintWithSignature(req, signature)](./sdk.nftmodule.mintwithsignature.md) |  |  |
 |  [ownerOf(tokenId)](./sdk.nftmodule.ownerof.md) |  | Checks the owner of a particular NFT |
 |  [setApproval(operator, approved)](./sdk.nftmodule.setapproval.md) |  |  |
+|  [setDefaultSaleRecipient(recipient)](./sdk.nftmodule.setdefaultsalerecipient.md) |  | Set the default primary sales recipient for this contract |
 |  [setModuleMetadata(metadata)](./sdk.nftmodule.setmodulemetadata.md) |  |  |
 |  [setPrimarySaleRecipient(address)](./sdk.nftmodule.setprimarysalerecipient.md) |  | Set the default primary sales recipient for this contract |
 |  [setRestrictedTransfer(restricted)](./sdk.nftmodule.setrestrictedtransfer.md) |  |  |

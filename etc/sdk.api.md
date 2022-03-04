@@ -1647,10 +1647,14 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     // (undocumented)
     getAllWithOwner(): Promise<NFTMetadataOwner[]>;
     // (undocumented)
+    getDefaultSaleRecipient(): Promise<string>;
+    // (undocumented)
     protected getModuleRoles(): readonly Role[];
     // @internal (undocumented)
     protected getModuleType(): ModuleType;
     getOwned(_address?: string): Promise<NFTMetadata[]>;
+    // (undocumented)
+    getPrimarySaleRecipient(): Promise<string>;
     getRoyaltyBps(): Promise<BigNumberish_2>;
     getRoyaltyRecipientAddress(): Promise<string>;
     // (undocumented)
@@ -1675,6 +1679,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     static roles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
+    setDefaultSaleRecipient(recipient: string): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
     setPrimarySaleRecipient(address: string): Promise<TransactionReceipt>;
