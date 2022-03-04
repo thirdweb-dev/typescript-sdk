@@ -1677,6 +1677,7 @@ export class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITra
     setApproval(operator: string, approved?: boolean): Promise<TransactionReceipt>;
     // (undocumented)
     setModuleMetadata(metadata: MetadataURIOrObject): Promise<TransactionReceipt>;
+    setPrimarySaleRecipient(address: string): Promise<TransactionReceipt>;
     // (undocumented)
     setRestrictedTransfer(restricted?: boolean): Promise<TransactionReceipt>;
     // (undocumented)

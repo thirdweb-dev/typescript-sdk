@@ -62,6 +62,7 @@ const module = sdk.getNFTModule("{{module_address}}");
 |  [ownerOf(tokenId)](./sdk.nftmodule.ownerof.md) |  | Checks the owner of a particular NFT |
 |  [setApproval(operator, approved)](./sdk.nftmodule.setapproval.md) |  |  |
 |  [setModuleMetadata(metadata)](./sdk.nftmodule.setmodulemetadata.md) |  |  |
+|  [setPrimarySaleRecipient(address)](./sdk.nftmodule.setprimarysalerecipient.md) |  | Set the default primary sales recipient for this contract |
 |  [setRestrictedTransfer(restricted)](./sdk.nftmodule.setrestrictedtransfer.md) |  |  |
 |  [setRoyaltyBps(amount)](./sdk.nftmodule.setroyaltybps.md) |  |  |
 |  [totalSupply()](./sdk.nftmodule.totalsupply.md) |  |  |
