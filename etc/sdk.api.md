@@ -1617,15 +1617,12 @@ export class Marketplace implements UpdateableNetwork {
     roles: ContractRoles<Marketplace_2, typeof Marketplace.contractRoles[number]>;
     // @internal (undocumented)
     static schema: {
-        deploy: ZodObject<extendShape<extendShape<extendShape<    {
+        deploy: ZodObject<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
         }, {
-        seller_fee_basis_points: ZodDefault<ZodNumber>;
-        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
-        }>, {
         platform_fee_basis_points: ZodDefault<ZodNumber>;
         platform_fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
         }>, {
@@ -1635,8 +1632,6 @@ export class Marketplace implements UpdateableNetwork {
         image?: any;
         external_link?: string | undefined;
         name: string;
-        seller_fee_basis_points: number;
-        fee_recipient: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
         trusted_forwarder: string;
@@ -1644,61 +1639,45 @@ export class Marketplace implements UpdateableNetwork {
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
-        seller_fee_basis_points?: number | undefined;
-        fee_recipient?: string | undefined;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarder?: string | undefined;
         name: string;
         }>;
-        output: ZodObject<extendShape<extendShape<    {
+        output: ZodObject<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
         }, {
         image: ZodOptional<ZodString>;
-        }>, {
-        seller_fee_basis_points: ZodDefault<ZodNumber>;
-        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
         name: string;
-        seller_fee_basis_points: number;
-        fee_recipient: string;
         }, {
         [x: string]: Json;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
-        seller_fee_basis_points?: number | undefined;
-        fee_recipient?: string | undefined;
         name: string;
         }>;
-        input: ZodObject<extendShape<    {
+        input: ZodObject<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
-        }, {
-        seller_fee_basis_points: ZodDefault<ZodNumber>;
-        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
-        }>, "strip", ZodTypeAny, {
+        }, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
         name: string;
-        seller_fee_basis_points: number;
-        fee_recipient: string;
         }, {
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
-        seller_fee_basis_points?: number | undefined;
-        fee_recipient?: string | undefined;
         name: string;
         }>;
     };
@@ -3437,38 +3416,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             image?: string | undefined;
             external_link?: string | undefined;
             name: string;
-            seller_fee_basis_points: number;
-            fee_recipient: string;
-        }> | Promise<{
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_link?: string | undefined;
-            symbol: string;
-            name: string;
-        }> | Promise<{
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_link?: string | undefined;
-            name: string;
-            proposal_start_time_in_seconds: number;
-            proposal_voting_time_in_seconds: number;
-            voting_delay_in_blocks: number;
-            voting_period_in_blocks: number;
-            voting_token_address: string;
-            voting_quorum_fraction: number;
-            proposal_token_threshold: ethers.BigNumber;
-        }> | Promise<{
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_link?: string | undefined;
-            name: string;
-            recipients: {
-                address: string;
-                shares: ethers.BigNumber;
-            }[];
         }>;
     }[]>;
     getEdition(address: string): Edition;
