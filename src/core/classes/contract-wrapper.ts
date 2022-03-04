@@ -523,7 +523,9 @@ export class ContractWrapper<
       }
       return resp.txHash;
     }
-    throw new Error("relay transaction failed");
+    throw new Error(
+      `relay transaction failed with status: ${response.status} (${response.statusText})`,
+    );
   }
 
   private async defenderSendFunction(
@@ -640,6 +642,8 @@ export class ContractWrapper<
       const result = JSON.parse(resp.result);
       return result.txHash;
     }
-    throw new Error("relay transaction failed");
+    throw new Error(
+      `relay transaction failed with status: ${response.status} (${response.statusText})`,
+    );
   }
 }

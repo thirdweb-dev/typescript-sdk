@@ -18,7 +18,7 @@ yarn add @thirdweb-dev/sdk@nightly ethers
 
 1. Deploy & customize your contracts
 
-- Using your [thirdweb dashboard](https://thidweb.com/dashboard) (recommended)
+- Using your [thirdweb dashboard](https://thirdweb.com/dashboard) (recommended)
 - Using the SDK directly (for advanced use cases)
 
 2. Interact with your contracts from your own code using the thirdweb SDK
