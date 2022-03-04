@@ -9,9 +9,36 @@ hide_title: true
 
 ## SDKOptions type
 
+All these configuration options are optional with sane defaults:
+
+```javascript
+{
+  readonlySettings: {
+    rpcUrl, // force read calls to go through your own RPC url
+    chainId, // reduce RPC calls by sepcifying your chain ID
+  },
+  gasSettings: {
+    maxPriceInGwei, // Maximum gas price for transactions (default 300 gwei)
+    speed, // the tx speed setting: 'standard'|'fast|'fastest' (default: 'fastest')
+  },
+  gasless: {
+    // By specifying a gasless configuration - all transactions will get forwarded to enable gasless transactions
+    openzeppelin: {
+      relayerUrl, // your OZ Defender relayer URL
+      relayerForwarderAddress, // the OZ defender relayer address (defaults to the standard one)
+    },
+    biconomy: {
+      apiId, // your Biconomy API Id
+      apiKey, // your Biconomy API Key
+      deadlineSeconds, // your Biconomy timeout preference
+    },
+  },
+}
+```
 
 **Signature:**
 
 ```typescript
 export declare type SDKOptions = z.input<typeof SDKOptionsSchema>;
 ```
+**References:** [SDKOptionsSchema](./sdk.sdkoptionsschema.md)

@@ -79,4 +79,4 @@ export * from "./constants/chains";
 export * from "./schema/tokens/token";
 export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
-export type { SDKOptions } from "./schema/sdk-options";
+export type { SDKOptions, SDKOptionsSchema } from "./schema/sdk-options";

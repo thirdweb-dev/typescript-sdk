@@ -88,6 +88,7 @@
 |  [MintRequest721](./sdk.mintrequest721.md) |  |
 |  [NATIVE\_TOKEN\_ADDRESS](./sdk.native_token_address.md) |  |
 |  [NATIVE\_TOKENS](./sdk.native_tokens.md) |  |
+|  [SDKOptionsSchema](./sdk.sdkoptionsschema.md) |  |
 |  [SUPPORTED\_CHAIN\_IDS](./sdk.supported_chain_ids.md) |  |
 
 ## Type Aliases
@@ -123,7 +124,32 @@
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [Price](./sdk.price.md) | Represents a currency price already formatted. ie. "1" for 1 ether. |
 |  [Role](./sdk.role.md) |  |
-|  [SDKOptions](./sdk.sdkoptions.md) |  |
+|  [SDKOptions](./sdk.sdkoptions.md) | All these configuration options are optional with sane defaults:
+```javascript
+{
+  readonlySettings: {
+    rpcUrl, // force read calls to go through your own RPC url
+    chainId, // reduce RPC calls by sepcifying your chain ID
+  },
+  gasSettings: {
+    maxPriceInGwei, // Maximum gas price for transactions (default 300 gwei)
+    speed, // the tx speed setting: 'standard'|'fast|'fastest' (default: 'fastest')
+  },
+  gasless: {
+    // By specifying a gasless configuration - all transactions will get forwarded to enable gasless transactions
+    openzeppelin: {
+      relayerUrl, // your OZ Defender relayer URL
+      relayerForwarderAddress, // the OZ defender relayer address (defaults to the standard one)
+    },
+    biconomy: {
+      apiId, // your Biconomy API Id
+      apiKey, // your Biconomy API Key
+      deadlineSeconds, // your Biconomy timeout preference
+    },
+  },
+}
+```
+ |
 |  [SignedPayload](./sdk.signedpayload.md) |  |
 |  [SignedPayload1155](./sdk.signedpayload1155.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |

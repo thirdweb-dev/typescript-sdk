@@ -2535,10 +2535,122 @@ export class RestrictedTransferError extends Error {
 // @public (undocumented)
 export type Role = keyof typeof roleMap;
 
-// Warning: (ae-forgotten-export) The symbol "SDKOptionsSchema" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
+// @public
 export type SDKOptions = z.input<typeof SDKOptionsSchema>;
+
+// @public (undocumented)
+export const SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
+    readonlySettings: z.ZodOptional<z.ZodObject<{
+        rpcUrl: z.ZodString;
+        chainId: z.ZodOptional<z.ZodNumber>;
+    }, "strip", z.ZodTypeAny, {
+        chainId?: number | undefined;
+        rpcUrl: string;
+    }, {
+        chainId?: number | undefined;
+        rpcUrl: string;
+    }>>;
+    gasSettings: z.ZodDefault<z.ZodObject<{
+        maxPriceInGwei: z.ZodDefault<z.ZodNumber>;
+        speed: z.ZodDefault<z.ZodEnum<["standard", "fast", "fastest"]>>;
+    }, "strip", z.ZodTypeAny, {
+        maxPriceInGwei: number;
+        speed: "standard" | "fast" | "fastest";
+    }, {
+        maxPriceInGwei?: number | undefined;
+        speed?: "standard" | "fast" | "fastest" | undefined;
+    }>>;
+    gasless: z.ZodOptional<z.ZodUnion<[z.ZodObject<{
+        openzeppelin: z.ZodObject<{
+            relayerUrl: z.ZodString;
+            relayerForwarderAddress: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            relayerUrl: string;
+            relayerForwarderAddress: string;
+        }, {
+            relayerForwarderAddress?: string | undefined;
+            relayerUrl: string;
+        }>;
+    }, "strip", z.ZodTypeAny, {
+        openzeppelin: {
+            relayerUrl: string;
+            relayerForwarderAddress: string;
+        };
+    }, {
+        openzeppelin: {
+            relayerForwarderAddress?: string | undefined;
+            relayerUrl: string;
+        };
+    }>, z.ZodObject<{
+        biconomy: z.ZodObject<{
+            apiId: z.ZodString;
+            apiKey: z.ZodString;
+            deadlineSeconds: z.ZodDefault<z.ZodNumber>;
+        }, "strip", z.ZodTypeAny, {
+            apiId: string;
+            apiKey: string;
+            deadlineSeconds: number;
+        }, {
+            deadlineSeconds?: number | undefined;
+            apiId: string;
+            apiKey: string;
+        }>;
+    }, "strip", z.ZodTypeAny, {
+        biconomy: {
+            apiId: string;
+            apiKey: string;
+            deadlineSeconds: number;
+        };
+    }, {
+        biconomy: {
+            deadlineSeconds?: number | undefined;
+            apiId: string;
+            apiKey: string;
+        };
+    }>]>>;
+}, "strip", z.ZodTypeAny, {
+    readonlySettings?: {
+        chainId?: number | undefined;
+        rpcUrl: string;
+    } | undefined;
+    gasless?: {
+        openzeppelin: {
+            relayerUrl: string;
+            relayerForwarderAddress: string;
+        };
+    } | {
+        biconomy: {
+            apiId: string;
+            apiKey: string;
+            deadlineSeconds: number;
+        };
+    } | undefined;
+    gasSettings: {
+        maxPriceInGwei: number;
+        speed: "standard" | "fast" | "fastest";
+    };
+}, {
+    readonlySettings?: {
+        chainId?: number | undefined;
+        rpcUrl: string;
+    } | undefined;
+    gasSettings?: {
+        maxPriceInGwei?: number | undefined;
+        speed?: "standard" | "fast" | "fastest" | undefined;
+    } | undefined;
+    gasless?: {
+        openzeppelin: {
+            relayerForwarderAddress?: string | undefined;
+            relayerUrl: string;
+        };
+    } | {
+        biconomy: {
+            deadlineSeconds?: number | undefined;
+            apiId: string;
+            apiKey: string;
+        };
+    } | undefined;
+}>>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature1155PayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
 //
