@@ -533,6 +533,16 @@ export class NFTModule
     return "";
   }
 
+  /**
+   * Set the default primary sales recipient for this contract
+   * @param address - the wallet that should receive the proceeds from primary sales
+   */
+  public async setPrimarySaleRecipient(
+    address: string,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setDefaultSaleRecipient", [address]);
+  }
+
   public async isTransferRestricted(): Promise<boolean> {
     return this.readOnlyContract.transfersRestricted();
   }
