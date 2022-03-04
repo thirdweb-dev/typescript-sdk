@@ -543,6 +543,24 @@ export class NFTModule
     return await this.sendTransaction("setDefaultSaleRecipient", [address]);
   }
 
+  public async getPrimarySaleRecipient(): Promise<string> {
+    return await this.readOnlyContract.defaultSaleRecipient();
+  }
+
+  public async getDefaultSaleRecipient(): Promise<string> {
+    return await this.readOnlyContract.defaultSaleRecipient();
+  }
+
+  /**
+   * Set the default primary sales recipient for this contract
+   * @param recipient - the wallet that should receive the proceeds from primary sales
+   */
+  public async setDefaultSaleRecipient(
+    recipient: string,
+  ): Promise<TransactionReceipt> {
+    return await this.sendTransaction("setDefaultSaleRecipient", [recipient]);
+  }
+
   public async isTransferRestricted(): Promise<boolean> {
     return this.readOnlyContract.transfersRestricted();
   }
