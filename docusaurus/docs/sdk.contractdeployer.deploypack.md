@@ -14,14 +14,14 @@ Deploys a new Pack contract
 **Signature:**
 
 ```typescript
-deployPack(metadata: z.input<typeof Pack.schema.deploy>): Promise<string>;
+deployPack(metadata: NFTContractDeployMetadata): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | z.input&lt;typeof Pack.schema.deploy&gt; | the contract metadata |
+|  metadata | [NFTContractDeployMetadata](./sdk.nftcontractdeploymetadata.md) | the contract metadata |
 
 **Returns:**
 

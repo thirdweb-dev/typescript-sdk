@@ -504,15 +504,15 @@ export class ContractDeployer extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage: IStorage);
     // @internal
     deployContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
-    deployEdition(metadata: z.input<typeof Edition.schema.deploy>): Promise<string>;
-    deployEditionDrop(metadata: z.input<typeof EditionDrop.schema.deploy>): Promise<string>;
-    deployMarketplace(metadata: z.input<typeof Marketplace.schema.deploy>): Promise<string>;
-    deployNFTCollection(metadata: z.input<typeof NFTCollection.schema.deploy>): Promise<string>;
-    deployNFTDrop(metadata: z.input<typeof NFTDrop.schema.deploy>): Promise<string>;
-    deployPack(metadata: z.input<typeof Pack.schema.deploy>): Promise<string>;
-    deploySplit(metadata: z.input<typeof Split.schema.deploy>): Promise<string>;
-    deployToken(metadata: z.input<typeof Token.schema.deploy>): Promise<string>;
-    deployVote(metadata: z.input<typeof Vote.schema.deploy>): Promise<string>;
+    deployEdition(metadata: NFTContractDeployMetadata): Promise<string>;
+    deployEditionDrop(metadata: NFTContractDeployMetadata): Promise<string>;
+    deployMarketplace(metadata: MarketplaceContractDeployMetadata): Promise<string>;
+    deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
+    deployNFTDrop(metadata: NFTContractDeployMetadata): Promise<string>;
+    deployPack(metadata: NFTContractDeployMetadata): Promise<string>;
+    deploySplit(metadata: SplitContractDeployMetadata): Promise<string>;
+    deployToken(metadata: TokenContractDeployMetadata): Promise<string>;
+    deployVote(metadata: VoteContractDeployMetadata): Promise<string>;
     // Warning: (ae-forgotten-export) The symbol "ContractRegistry" needs to be exported by the entry point index.d.ts
     //
     // @internal (undocumented)
@@ -1703,6 +1703,14 @@ export class MarketplaceAuction {
     updateListing(listing: AuctionListing): Promise<TransactionResult>;
 }
 
+// @public (undocumented)
+export type MarketplaceContractDeployMetadata = {
+    name: string;
+    trusted_forwarder?: string;
+    platform_fee_recipient?: string;
+    platform_fee_basis_points?: number;
+};
+
 // @public
 export class MarketplaceDirect {
     constructor(contractWrapper: ContractWrapper<Marketplace_2>, storage: IStorage);
@@ -1939,6 +1947,18 @@ export class NFTCollection extends Erc721<TokenERC721> {
     };
     signature: Erc721SignatureMinting;
 }
+
+// @public (undocumented)
+export type NFTContractDeployMetadata = {
+    name: string;
+    symbol?: string;
+    trusted_forwarder?: string;
+    primary_sale_recipient?: string;
+    fee_recipient?: string;
+    seller_fee_basis_points?: number;
+    platform_fee_recipient?: string;
+    platform_fee_basis_points?: number;
+};
 
 // @public
 export class NFTDrop extends Erc721<DropERC721> {
@@ -3501,11 +3521,24 @@ export class Split implements UpdateableNetwork {
     withdrawToken(walletAddress: string, tokenAddress: string): Promise<TransactionResult>;
 }
 
+// @public (undocumented)
+export type SplitContractDeployMetadata = {
+    name: string;
+    trusted_forwarder?: string;
+    recipients: SplitRecipientInput[];
+};
+
 // @public
 export interface SplitRecipient {
     address: string;
     splitPercentage: number;
 }
+
+// @public (undocumented)
+export type SplitRecipientInput = {
+    address: string;
+    shares: BigNumberish;
+};
 
 // @public (undocumented)
 export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet;
@@ -3655,6 +3688,16 @@ export class Token extends Erc20<TokenERC20> {
     };
 }
 
+// @public (undocumented)
+export type TokenContractDeployMetadata = {
+    name: string;
+    symbol?: string;
+    trusted_forwarder?: string;
+    primary_sale_recipient?: string;
+    platform_fee_recipient?: string;
+    platform_fee_basis_points?: number;
+};
+
 // Warning: (ae-incompatible-release-tags) The symbol "TokenMintInput" is marked as @public, but its signature references "TokenMintInputSchema" which is marked as @internal
 //
 // @public (undocumented)
@@ -3772,7 +3815,7 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
-        voting_token_address: ZodDefault<ZodString>;
+        voting_token_address: ZodString;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
         proposal_token_threshold: ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
         }>, {
@@ -3799,9 +3842,9 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds?: number | undefined;
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
-        voting_token_address?: string | undefined;
         voting_quorum_fraction?: number | undefined;
         name: string;
+        voting_token_address: string;
         proposal_token_threshold: string | number | bigint | BigNumber;
         }>;
         output: ZodObject<extendShape<extendShape<    {
@@ -3816,7 +3859,7 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
-        voting_token_address: ZodDefault<ZodString>;
+        voting_token_address: ZodString;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
         proposal_token_threshold: ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
         }, {
@@ -3843,9 +3886,9 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds?: number | undefined;
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
-        voting_token_address?: string | undefined;
         voting_quorum_fraction?: number | undefined;
         name: string;
+        voting_token_address: string;
         proposal_token_threshold: string | number | bigint | BigNumber;
         }>;
         input: ZodObject<extendShape<    {
@@ -3858,7 +3901,7 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
-        voting_token_address: ZodDefault<ZodString>;
+        voting_token_address: ZodString;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
         proposal_token_threshold: ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
         }>, "strip", ZodTypeAny, {
@@ -3881,15 +3924,26 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds?: number | undefined;
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
-        voting_token_address?: string | undefined;
         voting_quorum_fraction?: number | undefined;
         name: string;
+        voting_token_address: string;
         proposal_token_threshold: string | number | bigint | BigNumber;
         }>;
     };
     settings(): Promise<VoteSettings>;
     vote(proposalId: string, voteType: VoteType, reason?: string): Promise<TransactionResult>;
 }
+
+// @public (undocumented)
+export type VoteContractDeployMetadata = {
+    name: string;
+    trusted_forwarder?: string;
+    voting_token_address: string;
+    voting_delay_in_blocks?: number;
+    voting_period_in_blocks?: number;
+    proposal_token_threshold?: BigNumberish;
+    voting_quorum_fraction?: number;
+};
 
 // @public (undocumented)
 export interface VoteSettings {

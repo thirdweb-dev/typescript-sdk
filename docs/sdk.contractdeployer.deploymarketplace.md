@@ -9,14 +9,14 @@ Deploys a new Marketplace contract
 <b>Signature:</b>
 
 ```typescript
-deployMarketplace(metadata: z.input<typeof Marketplace.schema.deploy>): Promise<string>;
+deployMarketplace(metadata: MarketplaceContractDeployMetadata): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | z.input&lt;typeof Marketplace.schema.deploy&gt; | the contract metadata |
+|  metadata | [MarketplaceContractDeployMetadata](./sdk.marketplacecontractdeploymetadata.md) | the contract metadata |
 
 <b>Returns:</b>
 

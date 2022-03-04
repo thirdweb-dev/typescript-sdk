@@ -9,14 +9,14 @@ Deploys a new NFTDrop contract
 <b>Signature:</b>
 
 ```typescript
-deployNFTDrop(metadata: z.input<typeof NFTDrop.schema.deploy>): Promise<string>;
+deployNFTDrop(metadata: NFTContractDeployMetadata): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | z.input&lt;typeof NFTDrop.schema.deploy&gt; | the contract metadata |
+|  metadata | [NFTContractDeployMetadata](./sdk.nftcontractdeploymetadata.md) | the contract metadata |
 
 <b>Returns:</b>
 

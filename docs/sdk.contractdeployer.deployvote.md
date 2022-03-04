@@ -9,14 +9,14 @@ Deploys a new Vote contract
 <b>Signature:</b>
 
 ```typescript
-deployVote(metadata: z.input<typeof Vote.schema.deploy>): Promise<string>;
+deployVote(metadata: VoteContractDeployMetadata): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | z.input&lt;typeof Vote.schema.deploy&gt; | the contract metadata |
+|  metadata | [VoteContractDeployMetadata](./sdk.votecontractdeploymetadata.md) | the contract metadata |
 
 <b>Returns:</b>
 

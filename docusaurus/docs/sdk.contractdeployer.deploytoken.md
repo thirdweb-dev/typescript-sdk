@@ -14,14 +14,14 @@ Deploys a new Token contract
 **Signature:**
 
 ```typescript
-deployToken(metadata: z.input<typeof Token.schema.deploy>): Promise<string>;
+deployToken(metadata: TokenContractDeployMetadata): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | z.input&lt;typeof Token.schema.deploy&gt; | the contract metadata |
+|  metadata | [TokenContractDeployMetadata](./sdk.tokencontractdeploymetadata.md) | the contract metadata |
 
 **Returns:**
 

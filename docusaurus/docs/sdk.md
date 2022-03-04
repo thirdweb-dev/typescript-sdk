@@ -117,7 +117,9 @@ hide_title: true
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [Json](./sdk.json.md) |  |
 |  [JsonObject](./sdk.jsonobject.md) |  |
+|  [MarketplaceContractDeployMetadata](./sdk.marketplacecontractdeploymetadata.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  [NFTContractDeployMetadata](./sdk.nftcontractdeploymetadata.md) |  |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
@@ -160,7 +162,10 @@ hide_title: true
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |
 |  [SnapshotInput](./sdk.snapshotinput.md) | Input model to pass a snapshot of addresses + amount claimable for a claim condition |
+|  [SplitContractDeployMetadata](./sdk.splitcontractdeploymetadata.md) |  |
+|  [SplitRecipientInput](./sdk.splitrecipientinput.md) |  |
 |  [SUPPORTED\_CHAIN\_ID](./sdk.supported_chain_id.md) |  |
+|  [TokenContractDeployMetadata](./sdk.tokencontractdeploymetadata.md) |  |
 |  [TokenMintInput](./sdk.tokenmintinput.md) |  |
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultWithAddress](./sdk.transactionresultwithaddress.md) |  |
@@ -168,3 +173,4 @@ hide_title: true
 |  [ValidContractClass](./sdk.validcontractclass.md) |  |
 |  [ValidContractInstance](./sdk.validcontractinstance.md) |  |
 |  [ValueOf](./sdk.valueof.md) |  |
+|  [VoteContractDeployMetadata](./sdk.votecontractdeploymetadata.md) |  |

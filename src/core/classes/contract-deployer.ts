@@ -17,7 +17,13 @@ import {
   Token,
   Vote,
 } from "../../contracts";
-import { EditionContractMetadata } from "../../types/deploy/deploy-metadata";
+import {
+  MarketplaceContractDeployMetadata,
+  NFTContractDeployMetadata,
+  SplitContractDeployMetadata,
+  TokenContractDeployMetadata,
+  VoteContractDeployMetadata,
+} from "../../types/deploy/deploy-metadata";
 
 /**
  * Handles deploying new contracts
@@ -51,14 +57,9 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deployNFTCollection(
-    metadata: z.input<typeof NFTCollection.schema.deploy>,
+    metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployContract(NFTCollection.contractType, {
-      name: "",
-      description: "",
-      image: "",
-      trusted_forwarder: "",
-    });
+    return await this.deployContract(NFTCollection.contractType, metadata);
   }
 
   /**
@@ -67,7 +68,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deployNFTDrop(
-    metadata: z.input<typeof NFTDrop.schema.deploy>,
+    metadata: NFTContractDeployMetadata,
   ): Promise<string> {
     return await this.deployContract(NFTDrop.contractType, metadata);
   }
@@ -78,7 +79,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deployEdition(
-    metadata: z.input<typeof Edition.schema.deploy>,
+    metadata: NFTContractDeployMetadata,
   ): Promise<string> {
     return await this.deployContract(Edition.contractType, metadata);
   }
@@ -89,7 +90,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deployEditionDrop(
-    metadata: EditionContractMetadata,
+    metadata: NFTContractDeployMetadata,
   ): Promise<string> {
     const parsed = EditionDrop.schema.deploy.parse(metadata);
     return await this.deployContract(EditionDrop.contractType, parsed);
@@ -101,7 +102,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deployToken(
-    metadata: z.input<typeof Token.schema.deploy>,
+    metadata: TokenContractDeployMetadata,
   ): Promise<string> {
     return await this.deployContract(Token.contractType, metadata);
   }
@@ -112,7 +113,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deployMarketplace(
-    metadata: z.input<typeof Marketplace.schema.deploy>,
+    metadata: MarketplaceContractDeployMetadata,
   ): Promise<string> {
     return await this.deployContract(Marketplace.contractType, metadata);
   }
@@ -123,7 +124,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deployPack(
-    metadata: z.input<typeof Pack.schema.deploy>,
+    metadata: NFTContractDeployMetadata,
   ): Promise<string> {
     return await this.deployContract(Pack.contractType, metadata);
   }
@@ -134,7 +135,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deploySplit(
-    metadata: z.input<typeof Split.schema.deploy>,
+    metadata: SplitContractDeployMetadata,
   ): Promise<string> {
     return await this.deployContract(Split.contractType, metadata);
   }
@@ -145,7 +146,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deployVote(
-    metadata: z.input<typeof Vote.schema.deploy>,
+    metadata: VoteContractDeployMetadata,
   ): Promise<string> {
     return await this.deployContract(Vote.contractType, metadata);
   }
