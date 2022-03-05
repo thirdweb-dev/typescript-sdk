@@ -14,14 +14,14 @@ Deploys a new Split contract
 **Signature:**
 
 ```typescript
-deploySplit(metadata: z.input<typeof Split.schema.deploy>): Promise<string>;
+deploySplit(metadata: SplitContractDeployMetadata): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | z.input&lt;typeof Split.schema.deploy&gt; | the contract metadata |
+|  metadata | [SplitContractDeployMetadata](./sdk.splitcontractdeploymetadata.md) | the contract metadata |
 
 **Returns:**
 

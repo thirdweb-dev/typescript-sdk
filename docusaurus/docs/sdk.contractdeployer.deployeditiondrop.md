@@ -14,14 +14,14 @@ Deploys a new EditionDrop contract
 **Signature:**
 
 ```typescript
-deployEditionDrop(metadata: z.input<typeof EditionDrop.schema.deploy>): Promise<string>;
+deployEditionDrop(metadata: NFTContractDeployMetadata): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | z.input&lt;typeof EditionDrop.schema.deploy&gt; | the contract metadata |
+|  metadata | [NFTContractDeployMetadata](./sdk.nftcontractdeploymetadata.md) | the contract metadata |
 
 **Returns:**
 

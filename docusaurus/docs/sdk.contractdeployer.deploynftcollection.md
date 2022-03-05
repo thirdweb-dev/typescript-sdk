@@ -14,14 +14,14 @@ Deploys a new NFTCollection contract
 **Signature:**
 
 ```typescript
-deployNFTCollection(metadata: z.input<typeof NFTCollection.schema.deploy>): Promise<string>;
+deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | z.input&lt;typeof NFTCollection.schema.deploy&gt; | the contract metadata |
+|  metadata | [NFTContractDeployMetadata](./sdk.nftcontractdeploymetadata.md) | the contract metadata |
 
 **Returns:**
 

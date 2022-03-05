@@ -49,6 +49,7 @@ export const SDKOptionsSchema = z
 /**
  * @public
  * All these configuration options are optional with sane defaults:
+ * @example
  * ```javascript
  * {
  *   readonlySettings: {
