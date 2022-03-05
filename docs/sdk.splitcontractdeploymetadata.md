@@ -2,17 +2,21 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [SplitContractDeployMetadata](./sdk.splitcontractdeploymetadata.md)
 
-## SplitContractDeployMetadata type
+## SplitContractDeployMetadata interface
 
+Options for deploying Split contract
 
 <b>Signature:</b>
 
 ```typescript
-export declare type SplitContractDeployMetadata = {
-    name: string;
-    trusted_forwarder?: string;
-    recipients: SplitRecipientInput[];
-};
+export interface SplitContractDeployMetadata 
 ```
-<b>References:</b> [SplitRecipientInput](./sdk.splitrecipientinput.md)
+
+## Properties
+
+|  Property | Type | Description |
+|  --- | --- | --- |
+|  [name](./sdk.splitcontractdeploymetadata.name.md) | string | name of the contract |
+|  [recipients](./sdk.splitcontractdeploymetadata.recipients.md) | [SplitRecipientInput](./sdk.splitrecipientinput.md)<!-- -->\[\] | The list of recipients and their share of the split |
+|  [trusted\_forwarder?](./sdk.splitcontractdeploymetadata.trusted_forwarder.md) | string | <i>(Optional)</i> The gasless forwarder address (Biconomy or OZ Defender) |
 

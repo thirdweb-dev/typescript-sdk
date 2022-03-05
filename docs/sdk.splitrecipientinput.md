@@ -2,14 +2,19 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [SplitRecipientInput](./sdk.splitrecipientinput.md)
 
-## SplitRecipientInput type
+## SplitRecipientInput interface
 
 
 <b>Signature:</b>
 
 ```typescript
-export declare type SplitRecipientInput = {
-    address: string;
-    shares: BigNumberish;
-};
+export interface SplitRecipientInput 
 ```
+
+## Properties
+
+|  Property | Type | Description |
+|  --- | --- | --- |
+|  [address](./sdk.splitrecipientinput.address.md) | string | The recipient address |
+|  [shares](./sdk.splitrecipientinput.shares.md) | BigNumberish | the shares that address is owed from the total funds |
+

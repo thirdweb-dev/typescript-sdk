@@ -70,9 +70,11 @@ hide_title: true
 |  [IPackBatchArgs](./sdk.ipackbatchargs.md) | **<i>(BETA)</i>** |
 |  [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
 |  [IStorage](./sdk.istorage.md) |  |
+|  [MarketplaceContractDeployMetadata](./sdk.marketplacecontractdeploymetadata.md) | Options for deploying a Marketplace contract |
 |  [NativeToken](./sdk.nativetoken.md) |  |
 |  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
 |  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
+|  [NFTContractDeployMetadata](./sdk.nftcontractdeploymetadata.md) | Options for deploying an NFT contract |
 |  [Offer](./sdk.offer.md) |  |
 |  [PackMetadata](./sdk.packmetadata.md) |  |
 |  [PackMetadataWithBalance](./sdk.packmetadatawithbalance.md) |  |
@@ -81,7 +83,11 @@ hide_title: true
 |  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
 |  [ProposalVote](./sdk.proposalvote.md) |  |
 |  [QueryAllParams](./sdk.queryallparams.md) |  |
+|  [SplitContractDeployMetadata](./sdk.splitcontractdeploymetadata.md) | Options for deploying Split contract |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
+|  [SplitRecipientInput](./sdk.splitrecipientinput.md) |  |
+|  [TokenContractDeployMetadata](./sdk.tokencontractdeploymetadata.md) | Options for deploying a Token contract |
+|  [VoteContractDeployMetadata](./sdk.votecontractdeploymetadata.md) | Options for deploying a Vote contract |
 |  [VoteSettings](./sdk.votesettings.md) |  |
 
 ## Variables
@@ -117,9 +123,7 @@ hide_title: true
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [Json](./sdk.json.md) |  |
 |  [JsonObject](./sdk.jsonobject.md) |  |
-|  [MarketplaceContractDeployMetadata](./sdk.marketplacecontractdeploymetadata.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
-|  [NFTContractDeployMetadata](./sdk.nftcontractdeploymetadata.md) |  |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
@@ -130,42 +134,14 @@ hide_title: true
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [Price](./sdk.price.md) | Represents a currency price already formatted. ie. "1" for 1 ether. |
 |  [Role](./sdk.role.md) |  |
-|  [SDKOptions](./sdk.sdkoptions.md) | All these configuration options are optional with sane defaults:
-```javascript
-{
-  readonlySettings: {
-    rpcUrl, // force read calls to go through your own RPC url
-    chainId, // reduce RPC calls by sepcifying your chain ID
-  },
-  gasSettings: {
-    maxPriceInGwei, // Maximum gas price for transactions (default 300 gwei)
-    speed, // the tx speed setting: 'standard'|'fast|'fastest' (default: 'fastest')
-  },
-  gasless: {
-    // By specifying a gasless configuration - all transactions will get forwarded to enable gasless transactions
-    openzeppelin: {
-      relayerUrl, // your OZ Defender relayer URL
-      relayerForwarderAddress, // the OZ defender relayer address (defaults to the standard one)
-    },
-    biconomy: {
-      apiId, // your Biconomy API Id
-      apiKey, // your Biconomy API Key
-      deadlineSeconds, // your Biconomy timeout preference
-    },
-  },
-}
-```
- |
+|  [SDKOptions](./sdk.sdkoptions.md) | All these configuration options are optional with sane defaults: |
 |  [SignedPayload](./sdk.signedpayload.md) |  |
 |  [SignedPayload1155](./sdk.signedpayload1155.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |
 |  [SnapshotInput](./sdk.snapshotinput.md) | Input model to pass a snapshot of addresses + amount claimable for a claim condition |
-|  [SplitContractDeployMetadata](./sdk.splitcontractdeploymetadata.md) |  |
-|  [SplitRecipientInput](./sdk.splitrecipientinput.md) |  |
 |  [SUPPORTED\_CHAIN\_ID](./sdk.supported_chain_id.md) |  |
-|  [TokenContractDeployMetadata](./sdk.tokencontractdeploymetadata.md) |  |
 |  [TokenMintInput](./sdk.tokenmintinput.md) |  |
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultWithAddress](./sdk.transactionresultwithaddress.md) |  |
@@ -173,4 +149,3 @@ hide_title: true
 |  [ValidContractClass](./sdk.validcontractclass.md) |  |
 |  [ValidContractInstance](./sdk.validcontractinstance.md) |  |
 |  [ValueOf](./sdk.valueof.md) |  |
-|  [VoteContractDeployMetadata](./sdk.votecontractdeploymetadata.md) |  |

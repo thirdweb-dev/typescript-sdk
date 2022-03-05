@@ -1703,13 +1703,13 @@ export class MarketplaceAuction {
     updateListing(listing: AuctionListing): Promise<TransactionResult>;
 }
 
-// @public (undocumented)
-export type MarketplaceContractDeployMetadata = {
+// @public
+export interface MarketplaceContractDeployMetadata {
     name: string;
-    trusted_forwarder?: string;
-    platform_fee_recipient?: string;
     platform_fee_basis_points?: number;
-};
+    platform_fee_recipient?: string;
+    trusted_forwarder?: string;
+}
 
 // @public
 export class MarketplaceDirect {
@@ -1948,17 +1948,17 @@ export class NFTCollection extends Erc721<TokenERC721> {
     signature: Erc721SignatureMinting;
 }
 
-// @public (undocumented)
-export type NFTContractDeployMetadata = {
+// @public
+export interface NFTContractDeployMetadata {
+    fee_recipient?: string;
     name: string;
+    platform_fee_basis_points?: number;
+    platform_fee_recipient?: string;
+    primary_sale_recipient?: string;
+    seller_fee_basis_points?: number;
     symbol?: string;
     trusted_forwarder?: string;
-    primary_sale_recipient?: string;
-    fee_recipient?: string;
-    seller_fee_basis_points?: number;
-    platform_fee_recipient?: string;
-    platform_fee_basis_points?: number;
-};
+}
 
 // @public
 export class NFTDrop extends Erc721<DropERC721> {
@@ -3521,12 +3521,12 @@ export class Split implements UpdateableNetwork {
     withdrawToken(walletAddress: string, tokenAddress: string): Promise<TransactionResult>;
 }
 
-// @public (undocumented)
-export type SplitContractDeployMetadata = {
+// @public
+export interface SplitContractDeployMetadata {
     name: string;
-    trusted_forwarder?: string;
     recipients: SplitRecipientInput[];
-};
+    trusted_forwarder?: string;
+}
 
 // @public
 export interface SplitRecipient {
@@ -3535,10 +3535,10 @@ export interface SplitRecipient {
 }
 
 // @public (undocumented)
-export type SplitRecipientInput = {
+export interface SplitRecipientInput {
     address: string;
     shares: BigNumberish;
-};
+}
 
 // @public (undocumented)
 export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet;
@@ -3688,15 +3688,15 @@ export class Token extends Erc20<TokenERC20> {
     };
 }
 
-// @public (undocumented)
-export type TokenContractDeployMetadata = {
+// @public
+export interface TokenContractDeployMetadata {
     name: string;
+    platform_fee_basis_points?: number;
+    platform_fee_recipient?: string;
+    primary_sale_recipient?: string;
     symbol?: string;
     trusted_forwarder?: string;
-    primary_sale_recipient?: string;
-    platform_fee_recipient?: string;
-    platform_fee_basis_points?: number;
-};
+}
 
 // Warning: (ae-incompatible-release-tags) The symbol "TokenMintInput" is marked as @public, but its signature references "TokenMintInputSchema" which is marked as @internal
 //
@@ -3934,16 +3934,16 @@ export class Vote implements UpdateableNetwork {
     vote(proposalId: string, voteType: VoteType, reason?: string): Promise<TransactionResult>;
 }
 
-// @public (undocumented)
-export type VoteContractDeployMetadata = {
+// @public
+export interface VoteContractDeployMetadata {
     name: string;
+    proposal_token_threshold?: BigNumberish;
     trusted_forwarder?: string;
-    voting_token_address: string;
     voting_delay_in_blocks?: number;
     voting_period_in_blocks?: number;
-    proposal_token_threshold?: BigNumberish;
     voting_quorum_fraction?: number;
-};
+    voting_token_address: string;
+}
 
 // @public (undocumented)
 export interface VoteSettings {

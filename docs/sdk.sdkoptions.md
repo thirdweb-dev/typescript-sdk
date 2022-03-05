@@ -6,6 +6,16 @@
 
 All these configuration options are optional with sane defaults:
 
+<b>Signature:</b>
+
+```typescript
+export declare type SDKOptions = z.input<typeof SDKOptionsSchema>;
+```
+<b>References:</b> [SDKOptionsSchema](./sdk.sdkoptionsschema.md)
+
+## Example
+
+
 ```javascript
 {
   readonlySettings: {
@@ -30,11 +40,4 @@ All these configuration options are optional with sane defaults:
   },
 }
 ```
-
-<b>Signature:</b>
-
-```typescript
-export declare type SDKOptions = z.input<typeof SDKOptionsSchema>;
-```
-<b>References:</b> [SDKOptionsSchema](./sdk.sdkoptionsschema.md)
 

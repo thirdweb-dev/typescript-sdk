@@ -2,19 +2,25 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [VoteContractDeployMetadata](./sdk.votecontractdeploymetadata.md)
 
-## VoteContractDeployMetadata type
+## VoteContractDeployMetadata interface
 
+Options for deploying a Vote contract
 
 <b>Signature:</b>
 
 ```typescript
-export declare type VoteContractDeployMetadata = {
-    name: string;
-    trusted_forwarder?: string;
-    voting_token_address: string;
-    voting_delay_in_blocks?: number;
-    voting_period_in_blocks?: number;
-    proposal_token_threshold?: BigNumberish;
-    voting_quorum_fraction?: number;
-};
+export interface VoteContractDeployMetadata 
 ```
+
+## Properties
+
+|  Property | Type | Description |
+|  --- | --- | --- |
+|  [name](./sdk.votecontractdeploymetadata.name.md) | string | name of the contract |
+|  [proposal\_token\_threshold?](./sdk.votecontractdeploymetadata.proposal_token_threshold.md) | BigNumberish | <i>(Optional)</i> The minimum amount in governance token owned to be able to vote |
+|  [trusted\_forwarder?](./sdk.votecontractdeploymetadata.trusted_forwarder.md) | string | <i>(Optional)</i> The gasless forwarder address (Biconomy or OZ Defender) |
+|  [voting\_delay\_in\_blocks?](./sdk.votecontractdeploymetadata.voting_delay_in_blocks.md) | number | <i>(Optional)</i> The delay in blocks before voting can begin on proposals |
+|  [voting\_period\_in\_blocks?](./sdk.votecontractdeploymetadata.voting_period_in_blocks.md) | number | <i>(Optional)</i> The duration in blocks of the open voting window |
+|  [voting\_quorum\_fraction?](./sdk.votecontractdeploymetadata.voting_quorum_fraction.md) | number | <i>(Optional)</i> The minimum fraction to be met to pass a proposal |
+|  [voting\_token\_address](./sdk.votecontractdeploymetadata.voting_token_address.md) | string | The address of the governance token contract representing votes |
+
