@@ -176,7 +176,13 @@ export class AppModule
           address,
           this.sdk.getStorage(),
           resolveGateway,
-        ),
+        ).catch((err) => {
+          console.error(
+            `failed to load metadata for contract: ${address}`,
+            err,
+          );
+          return undefined;
+        }),
       ),
     );
     return addresses

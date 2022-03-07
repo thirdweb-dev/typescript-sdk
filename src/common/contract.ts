@@ -69,9 +69,17 @@ export async function getContractMetadata(
     };
     return entity;
   } catch (e) {
-    throw new Error(
+    console.error(
       `Failed to parse metadata for contract ${address} with uri ${uri}`,
     );
+    console.error(e);
+    // return error contract metadata
+    return {
+      uri: "",
+      name: "Failed to module load metadata",
+      description:
+        "Something went wrong when loading this module's metadata, you can check your console logs for more information.",
+    } as ContractMetadata;
   }
 }
 
