@@ -126,7 +126,10 @@ export class Erc721SignatureMinting {
    *   price: 0.5, // the price to pay for minting
    *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
    *   mintStartTime: now, // can mint anytime from now
-   *   mintEndTime: endTime, // to 24h from now
+   *   mintEndTime: endTime, // to 24h from now,
+   *   royaltyRecipient: "0x...", // custom royalty recipient for this NFT
+   *   royaltyBps: 100, // custom royalty fees for this NFT (in bps)
+   *   primarySaleRecipient: "0x...", // custom sale recipient for this NFT
    * };
    *
    * const signedPayload = contract.signature.generate(payload);
