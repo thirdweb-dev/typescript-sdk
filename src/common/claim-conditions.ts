@@ -31,19 +31,33 @@ export async function prepareClaim(
   const addressToClaim = await contractWrapper.getSignerAddress();
   let maxClaimable = 0;
 
-  if (!activeClaimCondition.merkleRootHash.toString().startsWith(AddressZero)) {
-    const snapshot = await storage.get(
-      merkleMetadata[activeClaimCondition.merkleRootHash.toString()],
-    );
-    const snapshotData = SnapshotJSONInputSchema.parse(snapshot);
-    const item = snapshotData.claims.find(
-      (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
-    );
-    if (item === undefined) {
-      throw new Error("No claim found for this address");
+  try {
+    if (
+      !activeClaimCondition.merkleRootHash.toString().startsWith(AddressZero)
+    ) {
+      const snapshot = await storage.get(
+        merkleMetadata[activeClaimCondition.merkleRootHash.toString()],
+      );
+      const snapshotData = SnapshotJSONInputSchema.parse(snapshot);
+      const item = snapshotData.claims.find(
+        (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
+      );
+      if (item === undefined) {
+        throw new Error("No claim found for this address");
+      }
+      proofs = item.proof;
+      maxClaimable = item.maxClaimable;
     }
-    proofs = item.proof;
-    maxClaimable = item.maxClaimable;
+  } catch (e) {
+    // have to handle the valid error case that we *do* want to throw on
+    if ((e as Error)?.message === "No claim found for this address") {
+      throw e;
+    }
+    // other errors we wanna ignore and try to continue
+    console.warn(
+      "failed to check claim condition merkle root hash, continuing anyways",
+      e,
+    );
   }
 
   const overrides = (await contractWrapper.getCallOverrides()) || {};
