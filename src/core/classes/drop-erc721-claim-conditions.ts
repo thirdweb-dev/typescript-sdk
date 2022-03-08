@@ -420,6 +420,10 @@ export class DropErc721ClaimConditions {
     }
     const metadata = await this.metadata.get();
     const snapshotUri = metadata.merkle[merkleRoot];
+    if (!snapshotUri) {
+      console.log("Couldn't find merkle tree for root", merkleRoot);
+      return [];
+    }
     const snapshot = await this.storage.get(snapshotUri);
     const snapshotData = SnapshotSchema.parse(snapshot);
     const item = snapshotData.claims.find(
