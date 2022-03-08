@@ -173,13 +173,17 @@ export class DropErc1155ClaimConditions {
     );
     if (merkleRootArray.length > 0) {
       const merkleLower = claimCondition.merkleRootHash.toString();
-      const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
-      if (proofs.length === 0) {
-        // TODO get ClaimerProofs should return the max quantity per wallet too
-        const hashedAddress = hashLeafNode(addressToCheck, 0).toLowerCase();
-        if (hashedAddress !== merkleLower) {
-          reasons.push(ClaimEligibility.AddressNotAllowed);
+      try {
+        const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
+        if (proofs.length === 0) {
+          // TODO get ClaimerProofs should return the max quantity per wallet too
+          const hashedAddress = hashLeafNode(addressToCheck, 0).toLowerCase();
+          if (hashedAddress !== merkleLower) {
+            reasons.push(ClaimEligibility.AddressNotAllowed);
+          }
         }
+      } catch (e) {
+        console.log("Couldn't verify eligibility for merkle root", merkleLower);
       }
       // TODO: compute proofs to root, need browser compatibility
     }
@@ -439,10 +443,6 @@ export class DropErc1155ClaimConditions {
     }
     const metadata = await this.metadata.get();
     const snapshotUri = metadata.merkle[merkleRoot];
-    if (!snapshotUri) {
-      console.log("Couldn't find merkle tree for root", merkleRoot);
-      return [];
-    }
     const snapshot = await this.storage.get(snapshotUri);
     const snapshotData = SnapshotSchema.parse(snapshot);
     const item = snapshotData.claims.find(
