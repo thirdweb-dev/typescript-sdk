@@ -159,7 +159,8 @@ export class DropErc1155ClaimConditions {
         return reasons;
       }
       console.error("Failed to get active claim condition", err);
-      throw new Error("Failed to get active claim condition");
+      reasons.push(ClaimEligibility.Unknown);
+      return reasons;
     }
 
     if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {

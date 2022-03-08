@@ -12,4 +12,6 @@ export enum ClaimEligibility {
   NoActiveClaimPhase = "There is no active claim phase at the moment. Please check back in later.",
 
   NoClaimConditionSet = "There is no claim condition set.",
+
+  Unknown = "No claim conditions found.",
 }

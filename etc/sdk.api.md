@@ -371,6 +371,8 @@ export enum ClaimEligibility {
     // (undocumented)
     NotEnoughTokens = "There are not enough tokens in the wallet to pay for the claim.",
     // (undocumented)
+    Unknown = "No claim conditions found.",
+    // (undocumented)
     WaitBeforeNextClaimTransaction = "Not enough time since last claim transaction. Please wait."
 }
 
