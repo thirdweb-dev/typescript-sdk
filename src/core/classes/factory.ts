@@ -94,7 +94,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc721metadata.name,
           erc721metadata.symbol,
           contractURI,
-          erc721metadata.trusted_forwarder,
+          [erc721metadata.trusted_forwarder],
           erc721metadata.primary_sale_recipient,
           erc721metadata.fee_recipient,
           erc721metadata.seller_fee_basis_points,
@@ -109,7 +109,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc1155metadata.name,
           erc1155metadata.symbol,
           contractURI,
-          erc1155metadata.trusted_forwarder,
+          [erc1155metadata.trusted_forwarder],
           erc1155metadata.primary_sale_recipient,
           erc1155metadata.fee_recipient,
           erc1155metadata.seller_fee_basis_points,
@@ -123,7 +123,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc20metadata.name,
           erc20metadata.symbol,
           contractURI,
-          erc20metadata.trusted_forwarder,
+          [erc20metadata.trusted_forwarder],
           erc20metadata.primary_sale_recipient,
           erc20metadata.platform_fee_recipient,
           erc20metadata.platform_fee_basis_points,
@@ -133,7 +133,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         return [
           voteMetadata.name,
           contractURI,
-          voteMetadata.trusted_forwarder,
+          [voteMetadata.trusted_forwarder],
           voteMetadata.voting_token_address,
           voteMetadata.voting_delay_in_blocks,
           voteMetadata.voting_period_in_blocks,
@@ -145,7 +145,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         return [
           await this.getSignerAddress(),
           contractURI,
-          splitsMetadata.trusted_forwarder,
+          [splitsMetadata.trusted_forwarder],
           splitsMetadata.recipients.map((s) => s.address),
           splitsMetadata.recipients.map((s) => s.shares),
         ];
@@ -154,7 +154,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         return [
           await this.getSignerAddress(),
           contractURI,
-          marketplaceMetadata.trusted_forwarder,
+          [marketplaceMetadata.trusted_forwarder],
           marketplaceMetadata.platform_fee_recipient,
           marketplaceMetadata.platform_fee_basis_points,
         ];
@@ -166,7 +166,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           packsMetadata.name,
           packsMetadata.symbol,
           contractURI,
-          packsMetadata.trusted_forwarder,
+          [packsMetadata.trusted_forwarder],
           packsMetadata.fee_recipient,
           packsMetadata.seller_fee_basis_points,
           vrf.fees,

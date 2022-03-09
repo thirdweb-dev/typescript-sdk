@@ -210,7 +210,7 @@ describe("Marketplace Contract", async () => {
       try {
         await createDirectListing(dummyNftContract.getAddress(), 0, 10);
       } catch (e) {
-        expectError(e, "listing unapproved asset");
+        expectError(e, "unapproved asset.");
       }
     });
   });
