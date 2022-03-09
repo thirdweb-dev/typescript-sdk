@@ -756,10 +756,10 @@
     "@swc/core-win32-ia32-msvc" "1.2.151"
     "@swc/core-win32-x64-msvc" "1.2.151"
 
-"@thirdweb-dev/contracts@2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.0.1.tgz#f89b8af69be4a368b33a3853fb2481d1134ee401"
-  integrity sha512-3gmiNFwVyrURZcCp2gLWelkQjTSroIu9Zj3y3RHU1ZlbPC4YHy/nUsSnMmITcV2XlOl41O2hyinLX5zYpZzCWw==
+"@thirdweb-dev/contracts@2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.1.1.tgz#aae1994becc39abaefe934a10c8ba7d729827d8c"
+  integrity sha512-8EVV7hsM0AgxQVUv4oyLGRCt+cPUMFSf+eylbG7oYZ8f2V8tT0AZ58+ZAvC+pLfS3D1FPTMvOHW0IZwoC0DW8Q==
 
 "@types/abstract-leveldown@*":
   version "7.2.0"
@@ -3426,9 +3426,9 @@ merkle-patricia-tree@^4.2.2, merkle-patricia-tree@^4.2.3:
     semaphore-async-await "^1.5.1"
 
 merkletreejs@^0.2.24:
-  version "0.2.30"
-  resolved "https://registry.yarnpkg.com/merkletreejs/-/merkletreejs-0.2.30.tgz#d29743aecd0f6a3339e4a16882f9dbaff0631cf7"
-  integrity sha512-gBKGRAx8CUjAneaE48U92ObjTp2lD6iYk61ub12NI1YjpNgJ12ROGN+PlZ4G5RyKcs81ArGHRDOt08wkojMGgg==
+  version "0.2.31"
+  resolved "https://registry.yarnpkg.com/merkletreejs/-/merkletreejs-0.2.31.tgz#c8ae7bebf1678c0f92d6d8266aeddd3d97cc0c37"
+  integrity sha512-dnK2sE43OebmMe5Qnq1wXvvMIjZjm1u6CcB2KeW6cghlN4p21OpCUr2p56KTVf20KJItNChVsGnimcscp9f+yw==
   dependencies:
     bignumber.js "^9.0.1"
     buffer-reverse "^1.0.1"
