@@ -3244,17 +3244,18 @@ export const SnapshotInfoSchema: z.ZodObject<{
     snapshotUri: z.ZodString;
     snapshot: z.ZodObject<{
         merkleRoot: z.ZodString;
-        claims: z.ZodArray<z.ZodObject<{
+        claims: z.ZodArray<z.ZodObject<z.extendShape<{
             address: z.ZodString;
-            maxClaimable: z.ZodNumber;
+            maxClaimable: z.ZodDefault<z.ZodNumber>;
+        }, {
             proof: z.ZodArray<z.ZodString, "many">;
-        }, "strip", z.ZodTypeAny, {
+        }>, "strip", z.ZodTypeAny, {
             address: string;
             maxClaimable: number;
             proof: string[];
         }, {
+            maxClaimable?: number | undefined;
             address: string;
-            maxClaimable: number;
             proof: string[];
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
@@ -3267,8 +3268,8 @@ export const SnapshotInfoSchema: z.ZodObject<{
     }, {
         merkleRoot: string;
         claims: {
+            maxClaimable?: number | undefined;
             address: string;
-            maxClaimable: number;
             proof: string[];
         }[];
     }>;
@@ -3289,8 +3290,8 @@ export const SnapshotInfoSchema: z.ZodObject<{
     snapshot: {
         merkleRoot: string;
         claims: {
+            maxClaimable?: number | undefined;
             address: string;
-            maxClaimable: number;
             proof: string[];
         }[];
     };
@@ -3318,70 +3319,23 @@ export const SnapshotInputSchema: z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodStrin
     address: string;
 }>, "many">]>;
 
-// Warning: (ae-internal-missing-underscore) The name "SnapshotJSONInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export const SnapshotJSONInputSchema: z.ZodEffects<z.ZodObject<{
-    merkleRoot: z.ZodString;
-    claims: z.ZodArray<z.ZodObject<{
-        address: z.ZodString;
-        maxClaimable: z.ZodNumber;
-        proof: z.ZodArray<z.ZodString, "many">;
-    }, "strip", z.ZodTypeAny, {
-        address: string;
-        maxClaimable: number;
-        proof: string[];
-    }, {
-        address: string;
-        maxClaimable: number;
-        proof: string[];
-    }>, "many">;
-}, "strip", z.ZodTypeAny, {
-    merkleRoot: string;
-    claims: {
-        address: string;
-        maxClaimable: number;
-        proof: string[];
-    }[];
-}, {
-    merkleRoot: string;
-    claims: {
-        address: string;
-        maxClaimable: number;
-        proof: string[];
-    }[];
-}>, {
-    merkleRoot: string;
-    claims: {
-        address: string;
-        maxClaimable: number;
-        proof: string[];
-    }[];
-}, {
-    merkleRoot: string;
-    claims: {
-        address: string;
-        maxClaimable: number;
-        proof: string[];
-    }[];
-}>;
-
 // Warning: (ae-internal-missing-underscore) The name "SnapshotSchema" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export const SnapshotSchema: z.ZodObject<{
     merkleRoot: z.ZodString;
-    claims: z.ZodArray<z.ZodObject<{
+    claims: z.ZodArray<z.ZodObject<z.extendShape<{
         address: z.ZodString;
-        maxClaimable: z.ZodNumber;
+        maxClaimable: z.ZodDefault<z.ZodNumber>;
+    }, {
         proof: z.ZodArray<z.ZodString, "many">;
-    }, "strip", z.ZodTypeAny, {
+    }>, "strip", z.ZodTypeAny, {
         address: string;
         maxClaimable: number;
         proof: string[];
     }, {
+        maxClaimable?: number | undefined;
         address: string;
-        maxClaimable: number;
         proof: string[];
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
@@ -3394,8 +3348,8 @@ export const SnapshotSchema: z.ZodObject<{
 }, {
     merkleRoot: string;
     claims: {
+        maxClaimable?: number | undefined;
         address: string;
-        maxClaimable: number;
         proof: string[];
     }[];
 }>;
