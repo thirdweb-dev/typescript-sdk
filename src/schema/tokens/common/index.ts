@@ -18,7 +18,7 @@ export const CommonTokenInput = z
     name: z.string().nonempty({ message: "A name is required." }),
     description: z.string().optional(),
     image: FileBufferOrStringSchema.optional(),
-    external_url: FileBufferOrStringSchema.optional(),
+    external_url: z.string().optional(),
   })
   .catchall(z.lazy(() => JsonSchema));
 

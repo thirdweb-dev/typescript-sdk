@@ -16,6 +16,9 @@ export interface VoteContractDeployMetadata
 
 |  Property | Type | Description |
 |  --- | --- | --- |
+|  [description?](./sdk.votecontractdeploymetadata.description.md) | string | <i>(Optional)</i> Optional description of the contract |
+|  [external\_link?](./sdk.votecontractdeploymetadata.external_link.md) | string | <i>(Optional)</i> Optional url for the contract |
+|  [image?](./sdk.votecontractdeploymetadata.image.md) | FileBufferOrString | <i>(Optional)</i> Optional image for the contract |
 |  [name](./sdk.votecontractdeploymetadata.name.md) | string | name of the contract |
 |  [proposal\_token\_threshold?](./sdk.votecontractdeploymetadata.proposal_token_threshold.md) | BigNumberish | <i>(Optional)</i> The minimum amount in governance token owned to be able to vote |
 |  [trusted\_forwarder?](./sdk.votecontractdeploymetadata.trusted_forwarder.md) | string | <i>(Optional)</i> The gasless forwarder address (Biconomy or OZ Defender) |

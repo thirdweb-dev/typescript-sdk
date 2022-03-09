@@ -21,6 +21,9 @@ export interface SplitContractDeployMetadata
 
 |  Property | Type | Description |
 |  --- | --- | --- |
+|  [description?](./sdk.splitcontractdeploymetadata.description.md) | string | <i>(Optional)</i> Optional description of the contract |
+|  [external\_link?](./sdk.splitcontractdeploymetadata.external_link.md) | string | <i>(Optional)</i> Optional url for the contract |
+|  [image?](./sdk.splitcontractdeploymetadata.image.md) | FileBufferOrString | <i>(Optional)</i> Optional image for the contract |
 |  [name](./sdk.splitcontractdeploymetadata.name.md) | string | name of the contract |
 |  [recipients](./sdk.splitcontractdeploymetadata.recipients.md) | [SplitRecipientInput](./sdk.splitrecipientinput.md)\[\] | The list of recipients and their share of the split |
 |  [trusted\_forwarder?](./sdk.splitcontractdeploymetadata.trusted_forwarder.md) | string | <i>(Optional)</i> The gasless forwarder address (Biconomy or OZ Defender) |

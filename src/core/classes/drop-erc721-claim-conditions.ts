@@ -1,5 +1,8 @@
 import { IStorage } from "../interfaces/IStorage";
-import { SnapshotSchema } from "../../schema/contracts/common/snapshots";
+import {
+  SnapshotInputSchema,
+  SnapshotSchema,
+} from "../../schema/contracts/common/snapshots";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
 import { DropERC721, IERC20, IERC20__factory } from "@thirdweb-dev/contracts";
@@ -275,7 +278,7 @@ export class DropErc721ClaimConditions {
         // check snapshots and upload if provided
         if (conditionInput.snapshot) {
           const snapshotInfo = await createSnapshot(
-            conditionInput.snapshot,
+            SnapshotInputSchema.parse(conditionInput.snapshot),
             this.storage,
           );
           snapshotInfos.push(snapshotInfo);

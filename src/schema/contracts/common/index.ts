@@ -14,7 +14,7 @@ import { FORWARDER_ADDRESS } from "../../../constants/addresses";
 export const CommonContractSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
-  image: FileBufferOrStringSchema.optional(), // TODO - FileBufferOrStringSchema, requires recursive upload in IStorage
+  image: FileBufferOrStringSchema.optional(),
   external_link: z.string().url().optional(),
 });
 

@@ -47,14 +47,12 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set([
       {
         startTime: new Date(Date.now() / 2),
-        snapshot: {
-          addresses: [bobWallet.address, samWallet.address, abbyWallet.address],
-        },
+        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
         price: 1,
       },
       {
         startTime: new Date(),
-        snapshot: { addresses: [bobWallet.address] },
+        snapshot: [bobWallet.address],
       },
     ]);
     console.log("Claim condition set");
@@ -82,13 +80,11 @@ describe("NFT Drop Contract", async () => {
       {
         startTime: new Date(),
         waitInSeconds: 10,
-        snapshot: {
-          addresses: [bobWallet.address, samWallet.address, abbyWallet.address],
-        },
+        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
       },
       {
         startTime: new Date(Date.now() + 60 * 60 * 1000),
-        snapshot: { addresses: [bobWallet.address] },
+        snapshot: [bobWallet.address],
       },
     ]);
 
@@ -136,9 +132,7 @@ describe("NFT Drop Contract", async () => {
     console.log("Setting claim condition");
     await dropContract.claimConditions.set([
       {
-        snapshot: {
-          addresses: members,
-        },
+        snapshot: members,
       },
     ]);
     console.log("Claim condition set");
@@ -174,9 +168,7 @@ describe("NFT Drop Contract", async () => {
 
     await dropContract.claimConditions.set([
       {
-        snapshot: {
-          addresses: members,
-        },
+        snapshot: members,
       },
     ]);
 
@@ -230,13 +222,7 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set(
       [
         {
-          snapshot: {
-            addresses: [
-              bobWallet.address,
-              samWallet.address,
-              abbyWallet.address,
-            ],
-          },
+          snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
         },
       ],
       false,
@@ -280,10 +266,10 @@ describe("NFT Drop Contract", async () => {
     ]);
     await dropContract.claimConditions.set([
       {
-        snapshot: {
-          addresses: [w1.address, w2.address],
-          maxClaimablePerAddress: [2, 1],
-        },
+        snapshot: [
+          { address: w1.address, maxClaimable: 2 },
+          { address: w2.address, maxClaimable: 1 },
+        ],
       },
     ]);
     await sdk.updateSignerOrProvider(w1);
@@ -316,7 +302,10 @@ describe("NFT Drop Contract", async () => {
       sortLeaves: true,
       sortPairs: true,
     });
-    const input = { addresses: members };
+    const input = members.map((address) => ({
+      address,
+      maxClaimable: 0,
+    }));
     const snapshot = await createSnapshot(input, storage);
     for (const leaf of members) {
       const expectedProof = tree.getHexProof(
@@ -413,7 +402,7 @@ describe("NFT Drop Contract", async () => {
       await dropContract.claimConditions.set([
         {
           maxQuantity: 1,
-          snapshot: { addresses: [w2.address, adminWallet.address] },
+          snapshot: [w2.address, adminWallet.address],
         },
       ]);
 
@@ -507,7 +496,7 @@ describe("NFT Drop Contract", async () => {
           maxQuantity: 10,
           price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
-          snapshot: { addresses: [w1.address, w2.address, w3.address] },
+          snapshot: [w1.address, w2.address, w3.address],
         },
       ]);
 
@@ -529,7 +518,7 @@ describe("NFT Drop Contract", async () => {
   it("should verify claim correctly after resetting claim conditions", async () => {
     await dropContract.claimConditions.set([
       {
-        snapshot: { addresses: [w1.address] },
+        snapshot: [w1.address],
       },
     ]);
 
@@ -552,7 +541,7 @@ describe("NFT Drop Contract", async () => {
   it("should verify claim correctly after updating claim conditions", async () => {
     await dropContract.claimConditions.set([
       {
-        snapshot: { addresses: [w1.address] },
+        snapshot: [w1.address],
       },
     ]);
 
@@ -564,9 +553,7 @@ describe("NFT Drop Contract", async () => {
     expect(reasons).to.contain(ClaimEligibility.AddressNotAllowed);
 
     await dropContract.claimConditions.update(0, {
-      snapshot: {
-        addresses: [w1.address, w2.address],
-      },
+      snapshot: [w1.address, w2.address],
     });
     const reasons2 =
       await dropContract.claimConditions.getClaimIneligibilityReasons(
@@ -614,9 +601,7 @@ describe("NFT Drop Contract", async () => {
     }
     await dropContract.createBatch(metadata);
 
-    await dropContract.claimConditions.set([
-      { snapshot: { addresses: [w1.address] } },
-    ]);
+    await dropContract.claimConditions.set([{ snapshot: [w1.address] }]);
 
     assert.isTrue(
       await dropContract.claimConditions.canClaim(1, w1.address),
@@ -644,7 +629,7 @@ describe("NFT Drop Contract", async () => {
     ];
     await dropContract.claimConditions.set([
       {
-        snapshot: { addresses: members },
+        snapshot: members,
       },
     ]);
 

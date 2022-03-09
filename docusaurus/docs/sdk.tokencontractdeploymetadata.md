@@ -21,6 +21,9 @@ export interface TokenContractDeployMetadata
 
 |  Property | Type | Description |
 |  --- | --- | --- |
+|  [description?](./sdk.tokencontractdeploymetadata.description.md) | string | <i>(Optional)</i> Optional description of the contract |
+|  [external\_link?](./sdk.tokencontractdeploymetadata.external_link.md) | string | <i>(Optional)</i> Optional url for the contract |
+|  [image?](./sdk.tokencontractdeploymetadata.image.md) | FileBufferOrString | <i>(Optional)</i> Optional image for the contract |
 |  [name](./sdk.tokencontractdeploymetadata.name.md) | string | name of the contract |
 |  [platform\_fee\_basis\_points?](./sdk.tokencontractdeploymetadata.platform_fee_basis_points.md) | number | <i>(Optional)</i> The percentage (in basis points) of platform fees |
 |  [platform\_fee\_recipient?](./sdk.tokencontractdeploymetadata.platform_fee_recipient.md) | string | <i>(Optional)</i> The address that will receive the proceeds from platform fees |

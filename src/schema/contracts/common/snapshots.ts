@@ -10,10 +10,24 @@ export const MerkleSchema = z.object({
 /**
  * @internal
  */
-export const SnapshotInputSchema = z.object({
-  addresses: z.array(z.string()),
-  maxClaimablePerAddress: z.optional(z.array(z.number())),
+export const SnapshotAddress = z.object({
+  address: z.string(),
+  maxClaimable: z.number().default(0),
 });
+
+/**
+ * @internal
+ */
+export const SnapshotInputSchema = z.union([
+  z.array(z.string()).transform((strings) =>
+    strings.map((address) =>
+      SnapshotAddress.parse({
+        address,
+      }),
+    ),
+  ),
+  z.array(SnapshotAddress),
+]);
 
 /**
  * @internal

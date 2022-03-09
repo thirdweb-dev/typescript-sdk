@@ -1,4 +1,5 @@
 import { BigNumberish } from "ethers";
+import { FileBufferOrString } from "../../schema";
 
 /**
  * Options for deploying an NFT contract
@@ -9,6 +10,18 @@ export interface NFTContractDeployMetadata {
    * name of the contract
    */
   name: string;
+  /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
   /**
    * Symbol for the NFTs
    */
@@ -49,6 +62,18 @@ export interface TokenContractDeployMetadata {
    */
   name: string;
   /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
+  /**
    * Symbol for the NFTs
    */
   symbol?: string;
@@ -80,6 +105,18 @@ export interface MarketplaceContractDeployMetadata {
    */
   name: string;
   /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
+  /**
    * The gasless forwarder address (Biconomy or OZ Defender)
    */
   trusted_forwarder?: string;
@@ -102,6 +139,18 @@ export interface VoteContractDeployMetadata {
    * name of the contract
    */
   name: string;
+  /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
   /**
    * The gasless forwarder address (Biconomy or OZ Defender)
    */
@@ -151,6 +200,18 @@ export interface SplitContractDeployMetadata {
    * name of the contract
    */
   name: string;
+  /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
   /**
    * The gasless forwarder address (Biconomy or OZ Defender)
    */

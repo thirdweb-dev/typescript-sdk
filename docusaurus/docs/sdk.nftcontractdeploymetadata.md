@@ -21,7 +21,10 @@ export interface NFTContractDeployMetadata
 
 |  Property | Type | Description |
 |  --- | --- | --- |
+|  [description?](./sdk.nftcontractdeploymetadata.description.md) | string | <i>(Optional)</i> Optional description of the contract |
+|  [external\_link?](./sdk.nftcontractdeploymetadata.external_link.md) | string | <i>(Optional)</i> Optional url for the contract |
 |  [fee\_recipient?](./sdk.nftcontractdeploymetadata.fee_recipient.md) | string | <i>(Optional)</i> The address that will receive the proceeds from secondary sales (royalties) |
+|  [image?](./sdk.nftcontractdeploymetadata.image.md) | FileBufferOrString | <i>(Optional)</i> Optional image for the contract |
 |  [name](./sdk.nftcontractdeploymetadata.name.md) | string | name of the contract |
 |  [platform\_fee\_basis\_points?](./sdk.nftcontractdeploymetadata.platform_fee_basis_points.md) | number | <i>(Optional)</i> The percentage (in basis points) of platform fees |
 |  [platform\_fee\_recipient?](./sdk.nftcontractdeploymetadata.platform_fee_recipient.md) | string | <i>(Optional)</i> The address that will receive the proceeds from platform fees |

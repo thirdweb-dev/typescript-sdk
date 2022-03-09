@@ -23,6 +23,7 @@ const fileOrBufferUnion = isBrowser()
     ]);
 
 export const FileBufferOrStringSchema = z.union(fileOrBufferUnion);
+export type FileBufferOrString = z.output<typeof FileBufferOrStringSchema>;
 
 export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
 

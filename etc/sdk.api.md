@@ -201,21 +201,24 @@ export const ClaimConditionInputArray: z.ZodArray<z.ZodObject<{
     quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
-    snapshot: z.ZodOptional<z.ZodObject<{
-        addresses: z.ZodArray<z.ZodString, "many">;
-        maxClaimablePerAddress: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
+    snapshot: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
+        address: string;
+        maxClaimable: number;
+    }[], string[]>, z.ZodArray<z.ZodObject<{
+        address: z.ZodString;
+        maxClaimable: z.ZodDefault<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
+        address: string;
+        maxClaimable: number;
     }, {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    }>>;
+        maxClaimable?: number | undefined;
+        address: string;
+    }>, "many">]>>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    } | undefined;
+        address: string;
+        maxClaimable: number;
+    }[] | undefined;
     startTime: BigNumber;
     currencyAddress: string;
     price: string;
@@ -224,10 +227,10 @@ export const ClaimConditionInputArray: z.ZodArray<z.ZodObject<{
     waitInSeconds: string;
     merkleRootHash: string | number[];
 }, {
-    snapshot?: {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    } | undefined;
+    snapshot?: string[] | {
+        maxClaimable?: number | undefined;
+        address: string;
+    }[] | undefined;
     startTime?: Date | undefined;
     currencyAddress?: string | undefined;
     price?: string | number | undefined;
@@ -248,21 +251,24 @@ export const ClaimConditionInputSchema: z.ZodObject<{
     quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
-    snapshot: z.ZodOptional<z.ZodObject<{
-        addresses: z.ZodArray<z.ZodString, "many">;
-        maxClaimablePerAddress: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
+    snapshot: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
+        address: string;
+        maxClaimable: number;
+    }[], string[]>, z.ZodArray<z.ZodObject<{
+        address: z.ZodString;
+        maxClaimable: z.ZodDefault<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
+        address: string;
+        maxClaimable: number;
     }, {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    }>>;
+        maxClaimable?: number | undefined;
+        address: string;
+    }>, "many">]>>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    } | undefined;
+        address: string;
+        maxClaimable: number;
+    }[] | undefined;
     startTime: BigNumber;
     currencyAddress: string;
     price: string;
@@ -271,10 +277,10 @@ export const ClaimConditionInputSchema: z.ZodObject<{
     waitInSeconds: string;
     merkleRootHash: string | number[];
 }, {
-    snapshot?: {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    } | undefined;
+    snapshot?: string[] | {
+        maxClaimable?: number | undefined;
+        address: string;
+    }[] | undefined;
     startTime?: Date | undefined;
     currencyAddress?: string | undefined;
     price?: string | number | undefined;
@@ -295,16 +301,19 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
-    snapshot: z.ZodOptional<z.ZodObject<{
-        addresses: z.ZodArray<z.ZodString, "many">;
-        maxClaimablePerAddress: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
+    snapshot: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
+        address: string;
+        maxClaimable: number;
+    }[], string[]>, z.ZodArray<z.ZodObject<{
+        address: z.ZodString;
+        maxClaimable: z.ZodDefault<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
+        address: string;
+        maxClaimable: number;
     }, {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    }>>;
+        maxClaimable?: number | undefined;
+        address: string;
+    }>, "many">]>>;
 }, {
     availableSupply: z.ZodDefault<z.ZodString>;
     currencyMetadata: z.ZodDefault<z.ZodObject<z.extendShape<{
@@ -334,9 +343,9 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     startTime: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, Date, string | number | bigint | BigNumber>;
 }>, "strip", z.ZodTypeAny, {
     snapshot?: {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    } | undefined;
+        address: string;
+        maxClaimable: number;
+    }[] | undefined;
     startTime: Date;
     currencyAddress: string;
     price: BigNumber;
@@ -353,10 +362,10 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         displayValue: string;
     };
 }, {
-    snapshot?: {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    } | undefined;
+    snapshot?: string[] | {
+        maxClaimable?: number | undefined;
+        address: string;
+    }[] | undefined;
     currencyAddress?: string | undefined;
     merkleRootHash?: string | number[] | undefined;
     availableSupply?: string | undefined;
@@ -936,7 +945,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         }>, {
         merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
         }>, {
-        symbol: ZodDefault<ZodOptional<ZodString>>;
+        symbol: ZodDefault<ZodOptional<ZodString>>; /**
+        * @internal
+        */
         }>, {
         platform_fee_basis_points: ZodDefault<ZodNumber>;
         platform_fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
@@ -984,7 +995,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         }>, {
         merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
         }>, {
-        symbol: ZodDefault<ZodOptional<ZodString>>;
+        symbol: ZodDefault<ZodOptional<ZodString>>; /**
+        * @internal
+        */
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
@@ -1017,7 +1030,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         }>, {
         merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
         }>, {
-        symbol: ZodDefault<ZodOptional<ZodString>>;
+        symbol: ZodDefault<ZodOptional<ZodString>>; /**
+        * @internal
+        */
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -1059,7 +1074,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_url: z.ZodOptional<z.ZodString>;
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
@@ -1092,7 +1107,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -1101,7 +1116,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -1115,7 +1130,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -1127,7 +1142,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -1148,7 +1163,7 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_url: z.ZodOptional<z.ZodString>;
     }, {
         id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
         uri: z.ZodString;
@@ -1220,7 +1235,7 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_url: z.ZodOptional<z.ZodString>;
     }, {
         id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
         uri: z.ZodString;
@@ -1725,6 +1740,10 @@ export class MarketplaceAuction {
 
 // @public
 export interface MarketplaceContractDeployMetadata {
+    description?: string;
+    external_link?: string;
+    // Warning: (ae-forgotten-export) The symbol "FileBufferOrString" needs to be exported by the entry point index.d.ts
+    image?: FileBufferOrString;
     name: string;
     platform_fee_basis_points?: number;
     platform_fee_recipient?: string;
@@ -1970,7 +1989,10 @@ export class NFTCollection extends Erc721<TokenERC721> {
 
 // @public
 export interface NFTContractDeployMetadata {
+    description?: string;
+    external_link?: string;
     fee_recipient?: string;
+    image?: FileBufferOrString;
     name: string;
     platform_fee_basis_points?: number;
     platform_fee_recipient?: string;
@@ -2388,21 +2410,24 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
     quantityLimitPerTransaction: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>>;
     waitInSeconds: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>>;
     merkleRootHash: z.ZodOptional<z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>>;
-    snapshot: z.ZodOptional<z.ZodOptional<z.ZodObject<{
-        addresses: z.ZodArray<z.ZodString, "many">;
-        maxClaimablePerAddress: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
+    snapshot: z.ZodOptional<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
+        address: string;
+        maxClaimable: number;
+    }[], string[]>, z.ZodArray<z.ZodObject<{
+        address: z.ZodString;
+        maxClaimable: z.ZodDefault<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
+        address: string;
+        maxClaimable: number;
     }, {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    }>>>;
+        maxClaimable?: number | undefined;
+        address: string;
+    }>, "many">]>>>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    } | undefined;
+        address: string;
+        maxClaimable: number;
+    }[] | undefined;
     startTime?: BigNumber | undefined;
     currencyAddress?: string | undefined;
     price?: string | undefined;
@@ -2411,10 +2436,10 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
     waitInSeconds?: string | undefined;
     merkleRootHash?: string | number[] | undefined;
 }, {
-    snapshot?: {
-        maxClaimablePerAddress?: number[] | undefined;
-        addresses: string[];
-    } | undefined;
+    snapshot?: string[] | {
+        maxClaimable?: number | undefined;
+        address: string;
+    }[] | undefined;
     startTime?: Date | undefined;
     currencyAddress?: string | undefined;
     price?: string | number | undefined;
@@ -2700,7 +2725,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_url: z.ZodOptional<z.ZodString>;
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
@@ -2733,7 +2758,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -2742,7 +2767,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -2770,7 +2795,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -2800,7 +2825,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -2820,7 +2845,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_url: z.ZodOptional<z.ZodString>;
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
@@ -2853,7 +2878,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -2862,7 +2887,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -2896,7 +2921,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -2923,7 +2948,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -2947,7 +2972,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_url: z.ZodOptional<z.ZodString>;
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
@@ -2980,7 +3005,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -2989,7 +3014,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -3014,7 +3039,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -3041,7 +3066,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -3060,7 +3085,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_url: z.ZodOptional<z.ZodString>;
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
@@ -3093,7 +3118,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -3102,7 +3127,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -3133,7 +3158,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -3158,7 +3183,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: any;
+        external_url?: string | undefined;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -3191,6 +3216,20 @@ export type SignerOrProvider = Signer | Provider;
 //
 // @public (undocumented)
 export type Snapshot = z.output<typeof SnapshotSchema>;
+
+// Warning: (ae-internal-missing-underscore) The name "SnapshotAddress" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const SnapshotAddress: z.ZodObject<{
+    address: z.ZodString;
+    maxClaimable: z.ZodDefault<z.ZodNumber>;
+}, "strip", z.ZodTypeAny, {
+    address: string;
+    maxClaimable: number;
+}, {
+    maxClaimable?: number | undefined;
+    address: string;
+}>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "SnapshotInfo" is marked as @public, but its signature references "SnapshotInfoSchema" which is marked as @internal
 //
@@ -3265,16 +3304,19 @@ export type SnapshotInput = z.output<typeof SnapshotInputSchema>;
 // Warning: (ae-internal-missing-underscore) The name "SnapshotInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const SnapshotInputSchema: z.ZodObject<{
-    addresses: z.ZodArray<z.ZodString, "many">;
-    maxClaimablePerAddress: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
+export const SnapshotInputSchema: z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
+    address: string;
+    maxClaimable: number;
+}[], string[]>, z.ZodArray<z.ZodObject<{
+    address: z.ZodString;
+    maxClaimable: z.ZodDefault<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
-    maxClaimablePerAddress?: number[] | undefined;
-    addresses: string[];
+    address: string;
+    maxClaimable: number;
 }, {
-    maxClaimablePerAddress?: number[] | undefined;
-    addresses: string[];
-}>;
+    maxClaimable?: number | undefined;
+    address: string;
+}>, "many">]>;
 
 // Warning: (ae-internal-missing-underscore) The name "SnapshotJSONInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -3541,6 +3583,9 @@ export class Split implements UpdateableNetwork {
 
 // @public
 export interface SplitContractDeployMetadata {
+    description?: string;
+    external_link?: string;
+    image?: FileBufferOrString;
     name: string;
     recipients: SplitRecipientInput[];
     trusted_forwarder?: string;
@@ -3708,6 +3753,9 @@ export class Token extends Erc20<TokenERC20> {
 
 // @public
 export interface TokenContractDeployMetadata {
+    description?: string;
+    external_link?: string;
+    image?: FileBufferOrString;
     name: string;
     platform_fee_basis_points?: number;
     platform_fee_recipient?: string;
@@ -3954,6 +4002,9 @@ export class Vote implements UpdateableNetwork {
 
 // @public
 export interface VoteContractDeployMetadata {
+    description?: string;
+    external_link?: string;
+    image?: FileBufferOrString;
     name: string;
     proposal_token_threshold?: BigNumberish;
     trusted_forwarder?: string;

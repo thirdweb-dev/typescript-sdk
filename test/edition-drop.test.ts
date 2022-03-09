@@ -31,20 +31,17 @@ describe("Edition Drop Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployer.deployContract(
-      EditionDrop.contractType,
-      {
-        name: `Testing bundle drop from SDK`,
-        description: "Test contract from tests",
-        image:
-          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-        primary_sale_recipient: adminWallet.address,
-        seller_fee_basis_points: 500,
-        fee_recipient: AddressZero,
-        platform_fee_basis_points: 10,
-        platform_fee_recipient: AddressZero,
-      },
-    );
+    const address = await sdk.deployer.deployEditionDrop({
+      name: `Testing bundle drop from SDK`,
+      description: "Test contract from tests",
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      primary_sale_recipient: adminWallet.address,
+      seller_fee_basis_points: 500,
+      fee_recipient: AddressZero,
+      platform_fee_basis_points: 10,
+      platform_fee_recipient: AddressZero,
+    });
     bdContract = sdk.getEditionDrop(address);
   });
 
@@ -83,9 +80,7 @@ describe("Edition Drop Contract", async () => {
     await bdContract.claimConditions.set("0", [
       {
         maxQuantity: 1000,
-        snapshot: {
-          addresses: members,
-        },
+        snapshot: members,
       },
     ]);
 
@@ -121,9 +116,7 @@ describe("Edition Drop Contract", async () => {
     await bdContract.claimConditions.set("0", [
       {
         maxQuantity: 1000,
-        snapshot: {
-          addresses: members,
-        },
+        snapshot: members,
       },
     ]);
     testWallets.push(w4);
@@ -195,10 +188,10 @@ describe("Edition Drop Contract", async () => {
     ]);
     await bdContract.claimConditions.set(0, [
       {
-        snapshot: {
-          addresses: [w1.address, w2.address],
-          maxClaimablePerAddress: [2, 1],
-        },
+        snapshot: [
+          { address: w1.address, maxClaimable: 2 },
+          { address: w2.address, maxClaimable: 1 },
+        ],
       },
     ]);
     await sdk.updateSignerOrProvider(w1);
@@ -266,9 +259,7 @@ describe("Edition Drop Contract", async () => {
   it("should return the correct status if a token can be claimed", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: {
-          addresses: [w1.address],
-        },
+        snapshot: [w1.address],
       },
     ]);
 
@@ -291,9 +282,7 @@ describe("Edition Drop Contract", async () => {
   it("canClaim: 1 address", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: {
-          addresses: [w1.address],
-        },
+        snapshot: [w1.address],
       },
     ]);
 
@@ -310,13 +299,11 @@ describe("Edition Drop Contract", async () => {
   it("canClaim: 3 address", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: {
-          addresses: [
-            w1.address.toUpperCase().replace("0X", "0x"),
-            w2.address.toLowerCase(),
-            w3.address,
-          ],
-        },
+        snapshot: [
+          w1.address.toUpperCase().replace("0X", "0x"),
+          w2.address.toLowerCase(),
+          w3.address,
+        ],
       },
     ]);
 
@@ -417,7 +404,7 @@ describe("Edition Drop Contract", async () => {
       await bdContract.claimConditions.set("0", [
         {
           maxQuantity: 1,
-          snapshot: { addresses: [w2.address, adminWallet.address] },
+          snapshot: [w2.address, adminWallet.address],
         },
       ]);
 
@@ -530,7 +517,7 @@ describe("Edition Drop Contract", async () => {
           maxQuantity: 10,
           price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
-          snapshot: { addresses: [w1.address, w2.address, w3.address] },
+          snapshot: [w1.address, w2.address, w3.address],
         },
       ]);
 
@@ -602,20 +589,13 @@ describe("Edition Drop Contract", async () => {
 
       await bdContract.claimConditions.set("1", [
         {
-          snapshot: { addresses: [w1.address, w2.address, bobWallet.address] },
+          snapshot: [w1.address, w2.address, bobWallet.address],
         },
       ]);
 
       await bdContract.claimConditions.set("2", [
         {
-          snapshot: {
-            addresses: [
-              w3.address,
-              w1.address,
-              w2.address,
-              adminWallet.address,
-            ],
-          },
+          snapshot: [w3.address, w1.address, w2.address, adminWallet.address],
         },
       ]);
 
