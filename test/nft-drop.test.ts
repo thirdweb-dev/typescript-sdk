@@ -525,6 +525,57 @@ describe("NFT Drop Contract", async () => {
       assert.isTrue(canClaim);
     });
   });
+
+  it("should verify claim correctly after resetting claim conditions", async () => {
+    await dropContract.claimConditions.set([
+      {
+        snapshot: { addresses: [w1.address] },
+      },
+    ]);
+
+    const reasons =
+      await dropContract.claimConditions.getClaimIneligibilityReasons(
+        "1",
+        w2.address,
+      );
+    expect(reasons).to.contain(ClaimEligibility.AddressNotAllowed);
+
+    await dropContract.claimConditions.set([{}]);
+    const reasons2 =
+      await dropContract.claimConditions.getClaimIneligibilityReasons(
+        "1",
+        w2.address,
+      );
+    expect(reasons2.length).to.eq(0);
+  });
+
+  it("should verify claim correctly after updating claim conditions", async () => {
+    await dropContract.claimConditions.set([
+      {
+        snapshot: { addresses: [w1.address] },
+      },
+    ]);
+
+    const reasons =
+      await dropContract.claimConditions.getClaimIneligibilityReasons(
+        "1",
+        w2.address,
+      );
+    expect(reasons).to.contain(ClaimEligibility.AddressNotAllowed);
+
+    await dropContract.claimConditions.update(0, {
+      snapshot: {
+        addresses: [w1.address, w2.address],
+      },
+    });
+    const reasons2 =
+      await dropContract.claimConditions.getClaimIneligibilityReasons(
+        "1",
+        w2.address,
+      );
+    expect(reasons2.length).to.eq(0);
+  });
+
   it("should allow you to update claim conditions", async () => {
     await dropContract.claimConditions.set([{}]);
 

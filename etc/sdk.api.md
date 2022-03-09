@@ -295,6 +295,16 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     quantityLimitPerTransaction: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
+    snapshot: z.ZodOptional<z.ZodObject<{
+        addresses: z.ZodArray<z.ZodString, "many">;
+        maxClaimablePerAddress: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
+    }, "strip", z.ZodTypeAny, {
+        maxClaimablePerAddress?: number[] | undefined;
+        addresses: string[];
+    }, {
+        maxClaimablePerAddress?: number[] | undefined;
+        addresses: string[];
+    }>>;
 }, {
     availableSupply: z.ZodDefault<z.ZodString>;
     currencyMetadata: z.ZodDefault<z.ZodObject<z.extendShape<{
@@ -323,6 +333,10 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     waitInSeconds: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
     startTime: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, Date, string | number | bigint | BigNumber>;
 }>, "strip", z.ZodTypeAny, {
+    snapshot?: {
+        maxClaimablePerAddress?: number[] | undefined;
+        addresses: string[];
+    } | undefined;
     startTime: Date;
     currencyAddress: string;
     price: BigNumber;
@@ -339,6 +353,10 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         displayValue: string;
     };
 }, {
+    snapshot?: {
+        maxClaimablePerAddress?: number[] | undefined;
+        addresses: string[];
+    } | undefined;
     currencyAddress?: string | undefined;
     merkleRootHash?: string | number[] | undefined;
     availableSupply?: string | undefined;

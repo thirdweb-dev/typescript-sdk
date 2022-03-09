@@ -42,9 +42,7 @@ export const PartialClaimConditionInputSchema =
 /**
  * @internal
  */
-export const ClaimConditionOutputSchema = ClaimConditionInputSchema.omit({
-  snapshot: true,
-}).extend({
+export const ClaimConditionOutputSchema = ClaimConditionInputSchema.extend({
   availableSupply: z.string().default(""),
   currencyMetadata: CurrencyValueSchema.default({
     value: BigNumber.from("0"),

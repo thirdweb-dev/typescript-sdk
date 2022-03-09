@@ -19,7 +19,7 @@ import {
 } from "../../types";
 import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../../enums";
-import { createSnapshot, hashLeafNode } from "../../common";
+import { createSnapshot } from "../../common";
 import {
   ClaimConditionInputArray,
   ClaimConditionOutputSchema,
@@ -158,7 +158,6 @@ export class DropErc1155ClaimConditions {
         reasons.push(ClaimEligibility.NoActiveClaimPhase);
         return reasons;
       }
-      console.error("Failed to get active claim condition", err);
       reasons.push(ClaimEligibility.Unknown);
       return reasons;
     }
@@ -173,19 +172,25 @@ export class DropErc1155ClaimConditions {
     );
     if (merkleRootArray.length > 0) {
       const merkleLower = claimCondition.merkleRootHash.toString();
+      const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
       try {
-        const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
-        if (proofs.length === 0) {
-          // TODO get ClaimerProofs should return the max quantity per wallet too
-          const hashedAddress = hashLeafNode(addressToCheck, 0).toLowerCase();
-          if (hashedAddress !== merkleLower) {
-            reasons.push(ClaimEligibility.AddressNotAllowed);
-          }
+        const [validMerkleProof] =
+          await this.contractWrapper.readContract.verifyClaimMerkleProof(
+            activeConditionIndex,
+            addressToCheck,
+            tokenId,
+            quantity,
+            proofs.proof,
+            proofs.maxClaimable,
+          );
+        if (!validMerkleProof) {
+          reasons.push(ClaimEligibility.AddressNotAllowed);
+          return reasons;
         }
       } catch (e) {
-        console.log("Couldn't verify eligibility for merkle root", merkleLower);
+        reasons.push(ClaimEligibility.AddressNotAllowed);
+        return reasons;
       }
-      // TODO: compute proofs to root, need browser compatibility
     }
 
     // check for claim timestamp between claims
@@ -437,7 +442,7 @@ export class DropErc1155ClaimConditions {
   private async getClaimerProofs(
     merkleRoot: string,
     addressToClaim?: string,
-  ): Promise<string[]> {
+  ): Promise<{ maxClaimable: number; proof: string[] }> {
     if (!addressToClaim) {
       addressToClaim = await this.contractWrapper.getSignerAddress();
     }
@@ -450,8 +455,14 @@ export class DropErc1155ClaimConditions {
     );
 
     if (item === undefined) {
-      return [];
+      return {
+        proof: [],
+        maxClaimable: 0,
+      };
     }
-    return item.proof;
+    return {
+      proof: item.proof,
+      maxClaimable: item.maxClaimable,
+    };
   }
 }
