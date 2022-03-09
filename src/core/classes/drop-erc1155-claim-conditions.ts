@@ -1,36 +1,20 @@
 import { IStorage } from "../interfaces/IStorage";
-import {
-  SnapshotInputSchema,
-  SnapshotSchema,
-} from "../../schema/contracts/common/snapshots";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
 import { DropERC1155, IERC20, IERC20__factory } from "@thirdweb-dev/contracts";
-import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import {
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-} from "../../common/currency";
+import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
-import {
-  ClaimCondition,
-  ClaimConditionInput,
-  FilledConditionInput,
-  SnapshotInfo,
-} from "../../types";
+import { ClaimCondition, ClaimConditionInput } from "../../types";
 import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../../enums";
-import { createSnapshot } from "../../common";
-import {
-  ClaimConditionInputArray,
-  ClaimConditionOutputSchema,
-} from "../../schema/contracts/common/claim-conditions";
 import { TransactionResult } from "../index";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
-import { updateExsitingClaimConditions } from "../../common/claim-conditions";
-import { IDropClaimCondition } from "@thirdweb-dev/contracts/dist/IDropERC1155";
+import {
+  getClaimerProofs,
+  processClaimConditionInputs,
+  transformResultToClaimCondition,
+  updateExsitingClaimConditions,
+} from "../../common/claim-conditions";
 
 /**
  * Manages claim conditions for Edition Drop contracts
@@ -69,7 +53,13 @@ export class DropErc1155ClaimConditions {
       tokenId,
       id,
     );
-    return await this.transformResultToClaimCondition(mc);
+    const metadata = await this.metadata.get();
+    return await transformResultToClaimCondition(
+      mc,
+      this.contractWrapper.getProvider(),
+      metadata.merkle,
+      this.storage,
+    );
   }
 
   /**
@@ -91,8 +81,16 @@ export class DropErc1155ClaimConditions {
         ),
       );
     }
+    const metadata = await this.metadata.get();
     return Promise.all(
-      conditions.map((c) => this.transformResultToClaimCondition(c)),
+      conditions.map((c) =>
+        transformResultToClaimCondition(
+          c,
+          this.contractWrapper.getProvider(),
+          metadata.merkle,
+          this.storage,
+        ),
+      ),
     );
   }
 
@@ -175,7 +173,13 @@ export class DropErc1155ClaimConditions {
     );
     if (merkleRootArray.length > 0) {
       const merkleLower = claimCondition.merkleRootHash.toString();
-      const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
+      const metadata = await this.metadata.get();
+      const proofs = await getClaimerProofs(
+        addressToCheck,
+        merkleLower,
+        metadata.merkle,
+        this.storage,
+      );
       try {
         const [validMerkleProof] =
           await this.contractWrapper.readContract.verifyClaimMerkleProof(
@@ -288,39 +292,12 @@ export class DropErc1155ClaimConditions {
     resetClaimEligibilityForAll = false,
   ): Promise<TransactionResult> {
     // process inputs
-    const snapshotInfos: SnapshotInfo[] = [];
-    const inputsWithSnapshots = await Promise.all(
-      claimConditionInputs.map(async (conditionInput) => {
-        // check snapshots and upload if provided
-        if (conditionInput.snapshot) {
-          const snapshotInfo = await createSnapshot(
-            SnapshotInputSchema.parse(conditionInput.snapshot),
-            this.storage,
-          );
-          snapshotInfos.push(snapshotInfo);
-          conditionInput.merkleRootHash = snapshotInfo.merkleRoot;
-        }
-        // fill condition with defaults values if not provided
-        return conditionInput;
-      }),
-    );
-
-    const parsedInputs = ClaimConditionInputArray.parse(inputsWithSnapshots);
-
-    // Convert processed inputs to the format the contract expects, and sort by timestamp
-    const sortedConditions: IDropClaimCondition.ClaimConditionStruct[] = (
-      await Promise.all(parsedInputs.map((c) => this.convertToContractModel(c)))
-    ).sort((a, b) => {
-      const left = BigNumber.from(a.startTimestamp);
-      const right = BigNumber.from(b.startTimestamp);
-      if (left.eq(right)) {
-        return 0;
-      } else if (left.gt(right)) {
-        return 1;
-      } else {
-        return -1;
-      }
-    });
+    const { snapshotInfos, sortedConditions } =
+      await processClaimConditionInputs(
+        claimConditionInputs,
+        this.contractWrapper.getProvider(),
+        this.storage,
+      );
 
     const merkleInfo: { [key: string]: string } = {};
     snapshotInfos.forEach((s) => {
@@ -382,108 +359,5 @@ export class DropErc1155ClaimConditions {
       existingConditions,
     );
     return await this.set(tokenId, newConditionInputs);
-  }
-
-  /** ***************************************
-   * PRIVATE FUNCTIONS
-   *****************************************/
-
-  private async transformResultToClaimCondition(
-    pm: IDropClaimCondition.ClaimConditionStructOutput,
-  ): Promise<ClaimCondition> {
-    const cv = await fetchCurrencyValue(
-      this.contractWrapper.getProvider(),
-      pm.currency,
-      pm.pricePerToken,
-    );
-    const snapshotData = await this.fetchSnapshot(pm.merkleRoot);
-    return ClaimConditionOutputSchema.parse({
-      startTime: pm.startTimestamp,
-      maxQuantity: pm.maxClaimableSupply.toString(),
-      currentMintSupply: pm.supplyClaimed.toString(),
-      availableSupply: BigNumber.from(pm.maxClaimableSupply)
-        .sub(pm.supplyClaimed)
-        .toString(),
-      quantityLimitPerTransaction: pm.quantityLimitPerTransaction.toString(),
-      waitInSeconds: pm.waitTimeInSecondsBetweenClaims.toString(),
-      price: BigNumber.from(pm.pricePerToken),
-      currency: pm.currency,
-      currencyAddress: pm.currency,
-      currencyMetadata: cv,
-      merkleRootHash: pm.merkleRoot,
-      snapshot: snapshotData,
-    });
-  }
-
-  private async convertToContractModel(
-    c: FilledConditionInput,
-  ): Promise<IDropClaimCondition.ClaimConditionStruct> {
-    const currency =
-      c.currencyAddress === AddressZero
-        ? NATIVE_TOKEN_ADDRESS
-        : c.currencyAddress;
-    return {
-      startTimestamp: BigNumber.from(c.startTime),
-      maxClaimableSupply: c.maxQuantity,
-      supplyClaimed: 0,
-      quantityLimitPerTransaction: c.quantityLimitPerTransaction,
-      waitTimeInSecondsBetweenClaims: c.waitInSeconds,
-      pricePerToken: await normalizePriceValue(
-        this.contractWrapper.getProvider(),
-        c.price,
-        currency,
-      ),
-      currency,
-      merkleRoot: c.merkleRootHash,
-    };
-  }
-
-  /**
-   * Fetches the proof for the current signer for a particular wallet.
-   *
-   * @param merkleRoot - The merkle root of the condition to check.
-   * @returns - The proof for the current signer for the specified condition.
-   */
-  private async getClaimerProofs(
-    merkleRoot: string,
-    addressToClaim?: string,
-  ): Promise<{ maxClaimable: number; proof: string[] }> {
-    if (!addressToClaim) {
-      addressToClaim = await this.contractWrapper.getSignerAddress();
-    }
-    const claims = await this.fetchSnapshot(merkleRoot);
-    if (claims === undefined) {
-      return {
-        proof: [],
-        maxClaimable: 0,
-      };
-    }
-    const item = claims.find(
-      (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
-    );
-    if (item === undefined) {
-      return {
-        proof: [],
-        maxClaimable: 0,
-      };
-    }
-    return {
-      proof: item.proof,
-      maxClaimable: item.maxClaimable,
-    };
-  }
-
-  private async fetchSnapshot(merkleRoot: string) {
-    const metadata = await this.metadata.get();
-    const snapshotUri = metadata.merkle[merkleRoot];
-    let snapshot = undefined;
-    if (snapshotUri) {
-      const raw = await this.storage.get(snapshotUri);
-      const snapshotData = SnapshotSchema.parse(raw);
-      if (merkleRoot === snapshotData.merkleRoot) {
-        snapshot = snapshotData.claims;
-      }
-    }
-    return snapshot;
   }
 }
