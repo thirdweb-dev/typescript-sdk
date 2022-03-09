@@ -38,24 +38,11 @@ export const SnapshotSchema = z.object({
    */
   merkleRoot: z.string(),
   claims: z.array(
-    z.object({
-      address: z.string(),
-      maxClaimable: z.number(),
+    SnapshotAddress.extend({
       proof: z.array(z.string()),
     }),
   ),
 });
-
-/**
- * @internal
- */
-export const SnapshotJSONInputSchema = z.preprocess((arg) => {
-  if (typeof arg === "string") {
-    return JSON.parse(arg);
-  } else {
-    return arg;
-  }
-}, SnapshotSchema);
 
 /**
  * @internal

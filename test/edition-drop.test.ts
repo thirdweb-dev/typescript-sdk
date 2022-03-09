@@ -6,6 +6,7 @@ import { expectError, sdk, signers } from "./before.test";
 import { AddressZero } from "@ethersproject/constants";
 import { ClaimEligibility } from "../src/enums";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
+import invariant from "tiny-invariant";
 
 global.fetch = require("node-fetch");
 
@@ -547,6 +548,23 @@ describe("Edition Drop Contract", async () => {
     await bdContract.claimConditions.update(BigNumber.from("0"), 0, {});
     const conditions = await bdContract.claimConditions.getAll(0);
     assert.lengthOf(conditions, 1);
+  });
+
+  it("should return snapshot data on claim conditions", async () => {
+    await bdContract.createBatch([
+      { name: "test", description: "test" },
+      { name: "test", description: "test" },
+    ]);
+
+    await bdContract.claimConditions.set(0, [
+      {
+        snapshot: [samWallet.address],
+      },
+    ]);
+    const conditions = await bdContract.claimConditions.getAll(0);
+    assert.lengthOf(conditions, 1);
+    invariant(conditions[0].snapshot);
+    expect(conditions[0].snapshot[0].address).to.eq(samWallet.address);
   });
 
   it("should be able to use claim as function expected", async () => {
