@@ -38,9 +38,7 @@ export const SnapshotSchema = z.object({
    */
   merkleRoot: z.string(),
   claims: z.array(
-    z.object({
-      address: z.string(),
-      maxClaimable: z.number(),
+    SnapshotAddress.extend({
       proof: z.array(z.string()),
     }),
   ),

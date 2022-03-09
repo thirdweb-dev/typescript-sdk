@@ -376,6 +376,7 @@ export class DropErc721ClaimConditions {
       pm.currency,
       pm.pricePerToken,
     );
+    const snapshotData = await this.fetchSnapshot(pm.merkleRoot);
     return ClaimConditionOutputSchema.parse({
       startTime: pm.startTimestamp,
       maxQuantity: pm.maxClaimableSupply.toString(),
@@ -390,6 +391,7 @@ export class DropErc721ClaimConditions {
       currencyAddress: pm.currency,
       currencyMetadata: cv,
       merkleRootHash: pm.merkleRoot,
+      snapshot: snapshotData,
     });
   }
 
@@ -429,11 +431,14 @@ export class DropErc721ClaimConditions {
     if (!addressToClaim) {
       addressToClaim = await this.contractWrapper.getSignerAddress();
     }
-    const metadata = await this.metadata.get();
-    const snapshotUri = metadata.merkle[merkleRoot];
-    const snapshot = await this.storage.get(snapshotUri);
-    const snapshotData = SnapshotSchema.parse(snapshot);
-    const item = snapshotData.claims.find(
+    const claims = await this.fetchSnapshot(merkleRoot);
+    if (claims === undefined) {
+      return {
+        proof: [],
+        maxClaimable: 0,
+      };
+    }
+    const item = claims.find(
       (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
     );
 
@@ -447,5 +452,19 @@ export class DropErc721ClaimConditions {
       proof: item.proof,
       maxClaimable: item.maxClaimable,
     };
+  }
+
+  private async fetchSnapshot(merkleRoot: string) {
+    const metadata = await this.metadata.get();
+    const snapshotUri = metadata.merkle[merkleRoot];
+    let snapshot = undefined;
+    if (snapshotUri) {
+      const raw = await this.storage.get(snapshotUri);
+      const snapshotData = SnapshotSchema.parse(raw);
+      if (merkleRoot === snapshotData.merkleRoot) {
+        snapshot = snapshotData.claims;
+      }
+    }
+    return snapshot;
   }
 }
