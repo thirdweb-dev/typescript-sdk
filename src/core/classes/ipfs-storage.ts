@@ -238,6 +238,12 @@ export class IpfsStorage implements IStorage {
     signerAddress?: string,
   ): Promise<CidWithFileName> {
     const token = await this.getUploadToken(contractAddress || "");
+    const name = `CONSOLE-TS-SDK-${contractAddress}`;
+    const metadata = {
+      sdk: "typescript",
+      contractAddress,
+      signerAddress,
+    };
     const data = new FormData();
     const fileNames: string[] = [];
     files.forEach((file, i) => {
@@ -278,24 +284,18 @@ export class IpfsStorage implements IStorage {
         data.append("file", new Blob([fileData as any]), filepath);
       }
     });
+    data.append("name", name);
+    data.append("meta", JSON.stringify(metadata));
+    data.append("wrapWithDirectory", "true");
 
-    const res = await fetch(`${PINATA_IPFS_URL}?wrap-with-directory=true`, {
+    const res = await fetch(`${PINATA_IPFS_URL}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
       },
       body: data as any,
     });
-    const text = await res.text();
-    const hashes = text
-      .split("\n")
-      .map((t) => t.trim())
-      .filter((t) => t.length);
-    const cid = hashes[hashes.length - 1];
-
-    console.log("BODUY = ", "'", cid);
-    const body = JSON.parse(cid);
-    console.log("status", body.Hash);
+    const body = await res.json();
     if (!res.ok) {
       console.log(body);
       throw new UploadError(
@@ -303,7 +303,7 @@ export class IpfsStorage implements IStorage {
       );
     }
     return {
-      cid: body.Hash,
+      cid: body?.pin.cid,
       fileNames,
     };
   }

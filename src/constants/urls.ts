@@ -10,4 +10,4 @@ export const TW_IPFS_SERVER_URL =
 /**
  * @internal
  */
-export const PINATA_IPFS_URL = `https://thirdweb-ipfs-api.zeet-nftlabs.zeet.app/api/v0/add`;
+export const PINATA_IPFS_URL = `https://thirdweb-ipfs-api.zeet-nftlabs.zeet.app/v1/upload/file`;
