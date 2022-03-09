@@ -8,6 +8,7 @@ import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { NFTDrop, Token } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
+import invariant from "tiny-invariant";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
@@ -73,6 +74,23 @@ describe("NFT Drop Contract", async () => {
       (c) => c.merkleRootHash,
     );
     expect(roots).length(2);
+  });
+
+  it("should return snapshot data on claim conditions", async () => {
+    await dropContract.createBatch([
+      { name: "test", description: "test" },
+      { name: "test", description: "test" },
+    ]);
+
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [samWallet.address],
+      },
+    ]);
+    const conditions = await dropContract.claimConditions.getAll();
+    assert.lengthOf(conditions, 1);
+    invariant(conditions[0].snapshot);
+    expect(conditions[0].snapshot[0].address).to.eq(samWallet.address);
   });
 
   it("should remove merkles from the metadata when claim conditions are removed", async () => {

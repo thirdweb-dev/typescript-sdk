@@ -1,7 +1,7 @@
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
-import { SnapshotJSONInputSchema } from "../schema/contracts/common/snapshots";
+import { SnapshotSchema } from "../schema/contracts/common/snapshots";
 import { approveErc20Allowance, isNativeToken } from "./currency";
 import {
   ClaimCondition,
@@ -38,7 +38,7 @@ export async function prepareClaim(
       const snapshot = await storage.get(
         merkleMetadata[activeClaimCondition.merkleRootHash.toString()],
       );
-      const snapshotData = SnapshotJSONInputSchema.parse(snapshot);
+      const snapshotData = SnapshotSchema.parse(snapshot);
       const item = snapshotData.claims.find(
         (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
       );

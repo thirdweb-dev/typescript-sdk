@@ -47,17 +47,6 @@ export const SnapshotSchema = z.object({
 /**
  * @internal
  */
-export const SnapshotJSONInputSchema = z.preprocess((arg) => {
-  if (typeof arg === "string") {
-    return JSON.parse(arg);
-  } else {
-    return arg;
-  }
-}, SnapshotSchema);
-
-/**
- * @internal
- */
 export const SnapshotInfoSchema = z.object({
   merkleRoot: z.string(),
   snapshotUri: z.string(),
