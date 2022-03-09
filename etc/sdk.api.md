@@ -2883,7 +2883,6 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
 }, {
     uri: z.ZodString;
     royaltyBps: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    price: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
     mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
     mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
 }>, {
@@ -2892,7 +2891,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
 }>, "strip", z.ZodTypeAny, {
     uri: string;
     currencyAddress: string;
-    price: ethers.BigNumber;
+    price: string;
     metadata: {
         [x: string]: Json;
         description?: string | undefined;
@@ -2914,12 +2913,12 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     quantity: ethers.BigNumber;
 }, {
     currencyAddress?: string | undefined;
+    price?: string | number | undefined;
     to?: string | undefined;
     uid?: string | undefined;
     royaltyRecipient?: string | undefined;
     primarySaleRecipient?: string | undefined;
     uri: string;
-    price: string | number | bigint | ethers.BigNumber;
     metadata: {
         [x: string]: Json;
         description?: string | undefined;
@@ -3124,13 +3123,12 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
 }, {
     uri: z.ZodString;
     royaltyBps: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    price: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
     mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
     mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
 }>, "strip", z.ZodTypeAny, {
     uri: string;
     currencyAddress: string;
-    price: ethers.BigNumber;
+    price: string;
     metadata: {
         [x: string]: Json;
         description?: string | undefined;
@@ -3150,12 +3148,12 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
     primarySaleRecipient: string;
 }, {
     currencyAddress?: string | undefined;
+    price?: string | number | undefined;
     to?: string | undefined;
     uid?: string | undefined;
     royaltyRecipient?: string | undefined;
     primarySaleRecipient?: string | undefined;
     uri: string;
-    price: string | number | bigint | ethers.BigNumber;
     metadata: {
         [x: string]: Json;
         description?: string | undefined;

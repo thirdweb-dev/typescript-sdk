@@ -242,7 +242,6 @@ export class ContractWrapper<
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
-
     if (
       this.options?.gasless &&
       ("openzeppelin" in this.options.gasless ||

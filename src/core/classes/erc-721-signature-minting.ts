@@ -8,7 +8,7 @@ import {
   SignedPayload,
 } from "../../schema/contracts/common/signature";
 import { TransactionResultWithId } from "../types";
-import { setErc20Allowance } from "../../common/currency";
+import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
@@ -65,7 +65,7 @@ export class Erc721SignatureMinting {
   ): Promise<TransactionResultWithId> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
-    const message = this.mapPayloadToContractStruct(mintRequest);
+    const message = await this.mapPayloadToContractStruct(mintRequest);
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
@@ -99,7 +99,7 @@ export class Erc721SignatureMinting {
   public async verify(signedPayload: SignedPayload): Promise<boolean> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
-    const message = this.mapPayloadToContractStruct(mintRequest);
+    const message = await this.mapPayloadToContractStruct(mintRequest);
     const verification: [boolean, string] =
       await this.contractWrapper.readContract.verify(message, signature);
     return verification[0];
@@ -186,7 +186,7 @@ export class Erc721SignatureMinting {
             verifyingContract: this.contractWrapper.readContract.address,
           },
           { MintRequest: MintRequest721 },
-          this.mapPayloadToContractStruct(finalPayload),
+          await this.mapPayloadToContractStruct(finalPayload),
         );
         return {
           payload: finalPayload,
@@ -208,12 +208,17 @@ export class Erc721SignatureMinting {
    * @param mintRequest - The payload to map.
    * @returns - The mapped payload.
    */
-  private mapPayloadToContractStruct(
+  private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri,
-  ): ITokenERC721.MintRequestStructOutput {
+  ): Promise<ITokenERC721.MintRequestStructOutput> {
+    const normalizedPricePerToken = await normalizePriceValue(
+      this.contractWrapper.getProvider(),
+      mintRequest.price,
+      mintRequest.currencyAddress,
+    );
     return {
       to: mintRequest.to,
-      price: mintRequest.price,
+      price: normalizedPricePerToken,
       uri: mintRequest.uri,
       currency: mintRequest.currencyAddress,
       validityEndTimestamp: mintRequest.mintEndTime,

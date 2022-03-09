@@ -37,7 +37,6 @@ export const SignaturePayloadInput = z.object({
 export const SignaturePayloadOutput = SignaturePayloadInput.extend({
   uri: z.string(),
   royaltyBps: BigNumberSchema,
-  price: BigNumberSchema,
   mintStartTime: BigNumberSchema,
   mintEndTime: BigNumberSchema,
 });

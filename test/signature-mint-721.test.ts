@@ -1,7 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
-import { BigNumber } from "ethers";
-import { NFTCollection } from "../src";
+import { BigNumber, ethers } from "ethers";
+import { NFTCollection, Token } from "../src";
 import { sdk, signers } from "./before.test";
 import {
   PayloadToSign,
@@ -13,6 +13,8 @@ global.fetch = require("node-fetch");
 
 describe("NFT sig minting", async () => {
   let nftContract: NFTCollection;
+  let customTokenContract: Token;
+  let tokenAddress: string;
 
   let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
@@ -44,6 +46,25 @@ describe("NFT sig minting", async () => {
       mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
       mintStartTime: new Date(),
     };
+
+    customTokenContract = sdk.getToken(
+      await sdk.deployer.deployContract(Token.contractType, {
+        name: "Test",
+        symbol: "TEST",
+        primary_sale_recipient: adminWallet.address,
+      }),
+    );
+    await customTokenContract.mintBatchTo([
+      {
+        toAddress: samWallet.address,
+        amount: 1000,
+      },
+      {
+        toAddress: adminWallet.address,
+        amount: 1000,
+      },
+    ]);
+    tokenAddress = customTokenContract.getAddress();
   });
 
   describe("Generating Signatures", () => {
@@ -55,7 +76,7 @@ describe("NFT sig minting", async () => {
     beforeEach(async () => {
       goodPayload = await nftContract.signature.generate(meta);
       badPayload = await nftContract.signature.generate(meta);
-      badPayload.payload.price = BigNumber.from(0);
+      badPayload.payload.price = "0";
     });
 
     it("should generate a valid signature", async () => {
@@ -72,7 +93,7 @@ describe("NFT sig minting", async () => {
     });
 
     it("should reject invalid vouchers", async () => {
-      goodPayload.payload.price = BigNumber.from(0);
+      goodPayload.payload.price = "0";
       const invalidModified = await nftContract.signature.verify(goodPayload);
       assert.isFalse(
         invalidModified,
@@ -136,6 +157,46 @@ describe("NFT sig minting", async () => {
       const tx = await nftContract.signature.mint(v1);
       const nft = await nftContract.get(tx.id);
       assert.equal(nft.metadata.name, meta.metadata.name);
+    });
+
+    it("should mint the right custom token price", async () => {
+      const oldBalance = await samWallet.getBalance();
+      const payload = await nftContract.signature.generate({
+        price: 1,
+        currencyAddress: tokenAddress,
+        metadata: {
+          name: "custom token test",
+        },
+        mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
+        mintStartTime: new Date(),
+      });
+      await sdk.updateSignerOrProvider(samWallet);
+      await nftContract.signature.mint(payload);
+      const newBalance = await samWallet.getBalance();
+      assert(
+        oldBalance.sub(newBalance).gte(BigNumber.from(1)),
+        "balance doesn't match",
+      );
+    });
+
+    it("should mint the right native price", async () => {
+      const oldBalance = await samWallet.getBalance();
+      const payload = await nftContract.signature.generate({
+        price: 1,
+        metadata: {
+          name: "native token test",
+        },
+        mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
+        mintStartTime: new Date(),
+      });
+      await sdk.updateSignerOrProvider(samWallet);
+      await nftContract.signature.mint(payload);
+      const newBalance = await samWallet.getBalance();
+      console.log(ethers.utils.formatEther(newBalance.sub(oldBalance)));
+      assert(
+        oldBalance.sub(newBalance).gte(BigNumber.from(1)),
+        "balance doesn't match",
+      );
     });
   });
 });

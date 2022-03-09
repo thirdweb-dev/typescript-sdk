@@ -8,8 +8,7 @@ import {
   SignedPayload1155,
 } from "../../schema/contracts/common/signature";
 import { TransactionResultWithId } from "../types";
-import { setErc20Allowance } from "../../common/currency";
-import { BigNumber } from "ethers";
+import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { ITokenERC1155, TokenERC1155 } from "@thirdweb-dev/contracts";
@@ -65,11 +64,11 @@ export class Erc1155SignatureMinting {
   ): Promise<TransactionResultWithId> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
-    const message = this.mapPayloadToContractStruct(mintRequest);
+    const message = await this.mapPayloadToContractStruct(mintRequest);
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
-      BigNumber.from(message.pricePerToken),
+      message.pricePerToken.mul(message.quantity),
       mintRequest.currencyAddress,
       overrides,
     );
@@ -99,7 +98,7 @@ export class Erc1155SignatureMinting {
   public async verify(signedPayload: SignedPayload1155): Promise<boolean> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
-    const message = this.mapPayloadToContractStruct(mintRequest);
+    const message = await this.mapPayloadToContractStruct(mintRequest);
     const verification: [boolean, string] =
       await this.contractWrapper.readContract.verify(message, signature);
     return verification[0];
@@ -189,7 +188,7 @@ export class Erc1155SignatureMinting {
             verifyingContract: this.contractWrapper.readContract.address,
           },
           { MintRequest: MintRequest1155 }, // TYPEHASH
-          this.mapPayloadToContractStruct(finalPayload),
+          await this.mapPayloadToContractStruct(finalPayload),
         );
         return {
           payload: finalPayload,
@@ -211,15 +210,20 @@ export class Erc1155SignatureMinting {
    * @param mintRequest - The payload to map.
    * @returns - The mapped payload.
    */
-  private mapPayloadToContractStruct(
+  private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri1155,
-  ): ITokenERC1155.MintRequestStructOutput {
+  ): Promise<ITokenERC1155.MintRequestStructOutput> {
+    const normalizedPricePerToken = await normalizePriceValue(
+      this.contractWrapper.getProvider(),
+      mintRequest.price,
+      mintRequest.currencyAddress,
+    );
     return {
       to: mintRequest.to,
       tokenId: mintRequest.tokenId,
       uri: mintRequest.uri,
       quantity: mintRequest.quantity,
-      pricePerToken: mintRequest.price,
+      pricePerToken: normalizedPricePerToken,
       currency: mintRequest.currencyAddress,
       validityStartTimestamp: mintRequest.mintStartTime,
       validityEndTimestamp: mintRequest.mintEndTime,
