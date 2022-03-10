@@ -9,7 +9,7 @@ hide_title: true
 
 ## Marketplace.setBidBufferBps() method
 
-Set the Bid buffer: this is a percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.
+Set the Auction bid buffer
 
 **Signature:**
 
@@ -26,3 +26,16 @@ setBidBufferBps(bufferBps: BigNumberish): Promise<void>;
 **Returns:**
 
 Promise&lt;void&gt;
+
+## Remarks
+
+A percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.
+
+## Example
+
+
+```javascript
+// the bid buffer in basis points
+const bufferBps = 500;
+await contract.setBidBufferBps(bufferBps);
+```

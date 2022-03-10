@@ -9,7 +9,7 @@ hide_title: true
 
 ## Marketplace.auction property
 
-Auctions.
+Auctions
 
 **Signature:**
 

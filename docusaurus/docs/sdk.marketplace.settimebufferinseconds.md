@@ -9,7 +9,7 @@ hide_title: true
 
 ## Marketplace.setTimeBufferInSeconds() method
 
-Set the Time buffer: this is measured in seconds (e.g. 15 minutes or 900 seconds). If a winning bid is made within the buffer of the auction closing (e.g. 15 minutes within the auction closing), the auction's closing time is increased by the buffer to prevent buyers from making last minute winning bids, and to give time to other buyers to make a higher bid if they wish to.
+Set the Auction Time buffer:
 
 **Signature:**
 
@@ -26,3 +26,16 @@ setTimeBufferInSeconds(bufferInSeconds: BigNumberish): Promise<void>;
 **Returns:**
 
 Promise&lt;void&gt;
+
+## Remarks
+
+Measured in seconds (e.g. 15 minutes or 900 seconds). If a winning bid is made within the buffer of the auction closing (e.g. 15 minutes within the auction closing), the auction's closing time is increased by the buffer to prevent buyers from making last minute winning bids, and to give time to other buyers to make a higher bid if they wish to.
+
+## Example
+
+
+```javascript
+// the time buffer in seconds
+const bufferInSeconds = 60;
+await contract.setTimeBufferInSeconds(bufferInSeconds);
+```

@@ -99,7 +99,7 @@ export class Marketplace implements UpdateableNetwork {
    */
   public direct: MarketplaceDirect;
   /**
-   * Auctions.
+   * Auctions
    * @remarks Create and manage auctions in your marketplace.
    * @example
    * ```javascript
@@ -287,7 +287,7 @@ export class Marketplace implements UpdateableNetwork {
    *******************************/
 
   /**
-   * Purchase listed NFTs
+   * Purchase NFTs
    * @remarks Buy a Direct or Auction listing on your marketplace.
    * @example
    * ```javascript
@@ -296,7 +296,7 @@ export class Marketplace implements UpdateableNetwork {
    * // Quantity of the asset you want to buy
    * const quantityDesired = 1;
    *
-   * await contract.direct.buyoutListing(listingId, quantityDesired);
+   * await contract.buyoutListing(listingId, quantityDesired);
    * ```
    * @param listingId - the listing ID of the listing you want to buy
    * @param quantityDesired - the quantity that you want to buy (for ERC1155 tokens)
@@ -332,7 +332,14 @@ export class Marketplace implements UpdateableNetwork {
   }
 
   /**
-   * Set the Bid buffer: this is a percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.
+   * Set the Auction bid buffer
+   * @remarks A percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.
+   * @example
+   * ```javascript
+   * // the bid buffer in basis points
+   * const bufferBps = 500;
+   * await contract.setBidBufferBps(bufferBps);
+   * ```
    * @param bufferBps - the bps value
    */
   public async setBidBufferBps(bufferBps: BigNumberish): Promise<void> {
@@ -349,7 +356,14 @@ export class Marketplace implements UpdateableNetwork {
   }
 
   /**
-   * Set the Time buffer: this is measured in seconds (e.g. 15 minutes or 900 seconds). If a winning bid is made within the buffer of the auction closing (e.g. 15 minutes within the auction closing), the auction's closing time is increased by the buffer to prevent buyers from making last minute winning bids, and to give time to other buyers to make a higher bid if they wish to.
+   * Set the Auction Time buffer:
+   * @remarks Measured in seconds (e.g. 15 minutes or 900 seconds). If a winning bid is made within the buffer of the auction closing (e.g. 15 minutes within the auction closing), the auction's closing time is increased by the buffer to prevent buyers from making last minute winning bids, and to give time to other buyers to make a higher bid if they wish to.
+   * @example
+   * ```javascript
+   * // the time buffer in seconds
+   * const bufferInSeconds = 60;
+   * await contract.setTimeBufferInSeconds(bufferInSeconds);
+   * ```
    * @param bufferInSeconds - the seconds value
    */
   public async setTimeBufferInSeconds(

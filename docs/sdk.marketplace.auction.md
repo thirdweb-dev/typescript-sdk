@@ -4,7 +4,7 @@
 
 ## Marketplace.auction property
 
-Auctions.
+Auctions
 
 <b>Signature:</b>
 

@@ -4,7 +4,7 @@
 
 ## Marketplace.buyoutListing() method
 
-Purchase listed NFTs
+Purchase NFTs
 
 <b>Signature:</b>
 
@@ -37,6 +37,6 @@ const listingId = 0;
 // Quantity of the asset you want to buy
 const quantityDesired = 1;
 
-await contract.direct.buyoutListing(listingId, quantityDesired);
+await contract.buyoutListing(listingId, quantityDesired);
 ```
 
