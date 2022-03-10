@@ -756,10 +756,10 @@
     "@swc/core-win32-ia32-msvc" "1.2.151"
     "@swc/core-win32-x64-msvc" "1.2.151"
 
-"@thirdweb-dev/contracts@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.1.1.tgz#aae1994becc39abaefe934a10c8ba7d729827d8c"
-  integrity sha512-8EVV7hsM0AgxQVUv4oyLGRCt+cPUMFSf+eylbG7oYZ8f2V8tT0AZ58+ZAvC+pLfS3D1FPTMvOHW0IZwoC0DW8Q==
+"@thirdweb-dev/contracts@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.1.2.tgz#9804c5f1b89ae68b46b24f6572ec3a4dd416f61d"
+  integrity sha512-W1TLhMrnPUJQFuSy9Ukshei8i2dD46NsZ5Yj7yp1StNZGzjz6pd5q/g01OonBmJRbGCkEkpUi9s/opVoewTpJg==
 
 "@types/abstract-leveldown@*":
   version "7.2.0"
