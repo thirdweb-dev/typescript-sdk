@@ -4,7 +4,7 @@
 
 ## Split.withdraw() method
 
-Triggers a transfer to account of the amount of native currency they are owed.
+Withdraw Funds
 
 <b>Signature:</b>
 
@@ -21,4 +21,17 @@ withdraw(walletAddress: string): Promise<TransactionResult>;
 <b>Returns:</b>
 
 Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
+
+## Remarks
+
+Triggers a transfer to account of the amount of native currency they are owed.
+
+## Example
+
+
+```javascript
+// the wallet address that wants to withdraw their funds
+const walletAddress = "{{wallet_address}}"
+await contract.withdraw(walletAddress);
+```
 

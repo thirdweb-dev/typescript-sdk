@@ -29,7 +29,7 @@ Promise&lt;BigNumber&gt;
 
 ## Remarks
 
-Get the amount of funds in the native currency held by the contract thats owed to a specific recipient.
+Get the amount of funds in the native currency held by the contract that is owed to a specific recipient.
 
 ## Example
 

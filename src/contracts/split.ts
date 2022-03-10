@@ -162,7 +162,7 @@ export class Split implements UpdateableNetwork {
   /**
    * Get Funds owed to a particular wallet
    *
-   * @remarks Get the amount of funds in the native currency held by the contract thats owed to a specific recipient.
+   * @remarks Get the amount of funds in the native currency held by the contract that is owed to a specific recipient.
    *
    * @example
    * ```javascript
@@ -257,7 +257,15 @@ export class Split implements UpdateableNetwork {
    *******************************/
 
   /**
-   * Triggers a transfer to account of the amount of native currency they are owed.
+   * Withdraw Funds
+   * @remarks Triggers a transfer to account of the amount of native currency they are owed.
+   *
+   * @example
+   * ```javascript
+   * // the wallet address that wants to withdraw their funds
+   * const walletAddress = "{{wallet_address}}"
+   * await contract.withdraw(walletAddress);
+   * ```
    *
    * @param walletAddress - The address to distributes the amount to
    */

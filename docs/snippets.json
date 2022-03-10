@@ -302,7 +302,7 @@
         "summary": "Get Pack Balance\n\n",
         "remarks": "\n\nGet a wallets pack balance (number of a specific packs in this contract owned by the wallet).\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check pack balance\nconst address = \"{{wallet_address}}\"\";\n// The token ID of the pack you want to check the wallets balance of\nconst tokenId = \"0\"\n\nconst balance = await contract.balanceOf(address, tokenId);\nconsole.log(balance);"
+          "javascript": "// Address of the wallet to check pack balance\nconst address = \"{{wallet_address}}\";\n// The token ID of the pack you want to check the wallets balance of\nconst tokenId = \"0\"\n\nconst balance = await contract.balanceOf(address, tokenId);\nconsole.log(balance);"
         },
         "reference": "https://typescript-docs.thirdweb.com/sdk.Pack.balanceOf"
       },
@@ -376,7 +376,7 @@
       {
         "name": "balanceOf",
         "summary": "Get Funds owed to a particular wallet\n\n",
-        "remarks": "\n\nGet the amount of funds in the native currency held by the contract thats owed to a specific recipient.\n\n",
+        "remarks": "\n\nGet the amount of funds in the native currency held by the contract that is owed to a specific recipient.\n\n",
         "examples": {
           "javascript": "// The address to check the funds of\nconst address = \"{{wallet_address}}\";\nconst funds = await contract.balanceOf(address);\nconsole.log(funds);"
         },
@@ -417,6 +417,15 @@
           "javascript": "const recipients = await contract.getAllRecipients();\nconsole.log(recipients);"
         },
         "reference": "https://typescript-docs.thirdweb.com/sdk.Split.getAllRecipients"
+      },
+      {
+        "name": "withdraw",
+        "summary": "Withdraw Funds\n\n",
+        "remarks": "\n\nTriggers a transfer to account of the amount of native currency they are owed.\n\n",
+        "examples": {
+          "javascript": "// the wallet address that wants to withdraw their funds\nconst walletAddress = \"{{wallet_address}}\"\nawait contract.withdraw(walletAddress);"
+        },
+        "reference": "https://typescript-docs.thirdweb.com/sdk.Split.withdraw"
       }
     ],
     "properties": [],

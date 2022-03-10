@@ -60,5 +60,5 @@ const contract = sdk.getSplit("{{contract_address}}");
 |  [getAllRecipients()](./sdk.split.getallrecipients.md) |  | Get Recipients of this splits contract |
 |  [getRecipientSplitPercentage(address)](./sdk.split.getrecipientsplitpercentage.md) |  | Get the % of funds owed to a given address |
 |  [onNetworkUpdated(network)](./sdk.split.onnetworkupdated.md) |  |  |
-|  [withdraw(walletAddress)](./sdk.split.withdraw.md) |  | Triggers a transfer to account of the amount of native currency they are owed. |
+|  [withdraw(walletAddress)](./sdk.split.withdraw.md) |  | Withdraw Funds |
 |  [withdrawToken(walletAddress, tokenAddress)](./sdk.split.withdrawtoken.md) |  | Triggers a transfer to account of the amount of a given currency they are owed. |
