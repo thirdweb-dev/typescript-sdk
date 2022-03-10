@@ -7,7 +7,7 @@ import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 export const FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 
 const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
-const TWFactory_address = "0x26d03F39140486CA9448Ce014353195CacffC36c";
+const TWFactory_address = "0x11c34F062Cb10a20B9F463E12Ff9dA62D76FDf65";
 
 /**
  * @internal
@@ -52,8 +52,8 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.AvalancheFujiTestnet]: {
     biconomyForwarder: "0x6271Ca63D30507f2Dcbf99B52787032506D75BBF",
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
   [ChainId.Fantom]: {
     biconomyForwarder: AddressZero,
@@ -62,8 +62,8 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.FantomTestnet]: {
     biconomyForwarder: AddressZero,
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
 };
 
