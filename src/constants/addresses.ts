@@ -7,7 +7,7 @@ import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 export const FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 
 const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
-const TWFactory_address = "0x2d8f1A615815F02965dE56b8F4f283128AA8faEB";
+const TWFactory_address = "0x26d03F39140486CA9448Ce014353195CacffC36c";
 
 /**
  * @internal
