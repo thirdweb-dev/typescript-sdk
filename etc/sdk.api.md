@@ -1996,7 +1996,7 @@ export interface NFTContractDeployMetadata {
     name: string;
     platform_fee_basis_points?: number;
     platform_fee_recipient?: string;
-    primary_sale_recipient?: string;
+    primary_sale_recipient: string;
     seller_fee_basis_points?: number;
     symbol?: string;
     trusted_forwarder?: string;
@@ -3713,7 +3713,7 @@ export interface TokenContractDeployMetadata {
     name: string;
     platform_fee_basis_points?: number;
     platform_fee_recipient?: string;
-    primary_sale_recipient?: string;
+    primary_sale_recipient: string;
     symbol?: string;
     trusted_forwarder?: string;
 }

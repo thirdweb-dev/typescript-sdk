@@ -9,5 +9,5 @@ The address that will receive the proceeds from primary sales
 <b>Signature:</b>
 
 ```typescript
-primary_sale_recipient?: string;
+primary_sale_recipient: string;
 ```

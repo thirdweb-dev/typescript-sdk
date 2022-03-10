@@ -46,6 +46,15 @@ describe("Edition Drop Contract", async () => {
     bdContract = sdk.getEditionDrop(address);
   });
 
+  it("should estimate gas cost", async () => {
+    const cost = await bdContract.estimator.gasCostOf("lazyMint", [
+      1000,
+      "mock://12398172398172389/0",
+    ]);
+    console.log("gas cost", cost);
+    expect(parseFloat(cost)).gt(0);
+  });
+
   it("should allow you to set claim conditions", async () => {
     await bdContract.createBatch([
       { name: "test", description: "test" },

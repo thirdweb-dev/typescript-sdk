@@ -171,6 +171,23 @@ describe("Marketplace Contract", async () => {
       assert.isDefined(listingId);
     });
 
+    // TODO deploy WETH on hardhat
+    it.skip("should list acuction with native token", async () => {
+      const tx = await marketplaceContract.auction.createListing({
+        assetContractAddress: dummyNftContract.getAddress(),
+        buyoutPricePerToken: 1,
+        currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+        startTimeInSeconds: 0,
+        listingDurationInSeconds: 60 * 60 * 24,
+        tokenId: 0,
+        quantity: 1,
+        reservePricePerToken: 0.0001,
+      });
+      const id = tx.id;
+      sdk.updateSignerOrProvider(samWallet);
+      await marketplaceContract.auction.makeBid(id, 0.1);
+    });
+
     it("should list direct listings with 1155s", async () => {
       const listingId = await createDirectListing(
         dummyBundleContract.getAddress(),
@@ -332,6 +349,7 @@ describe("Marketplace Contract", async () => {
       directListingId = await createDirectListing(
         dummyNftContract.getAddress(),
         0,
+        10,
       );
       auctionListingId = await createAuctionListing(
         dummyNftContract.getAddress(),
@@ -353,9 +371,9 @@ describe("Marketplace Contract", async () => {
 
       await marketplaceContract.direct.makeOffer(
         directListingId,
-        1,
+        10,
         tokenAddress,
-        8,
+        0.034,
       );
 
       console.log("Offer made");
@@ -462,6 +480,22 @@ describe("Marketplace Contract", async () => {
         adminWallet.address,
       );
       assert.isUndefined(offer);
+    });
+
+    it("should allow bids by the same person", async () => {
+      await sdk.updateSignerOrProvider(bobWallet);
+      await marketplaceContract.auction.makeBid(auctionListingId, 0.06);
+      await marketplaceContract.auction.makeBid(auctionListingId, 0.08);
+
+      const winningBid = (await marketplaceContract.auction.getWinningBid(
+        auctionListingId,
+      )) as Offer;
+
+      assert.equal(winningBid.buyerAddress, bobWallet.address);
+      assert.equal(
+        winningBid.pricePerToken.toString(),
+        ethers.utils.parseUnits("0.08").toString(),
+      );
     });
 
     it("should allow bids to be made on auction listings", async () => {

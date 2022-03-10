@@ -229,8 +229,10 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    *
    * // The token ID of the NFT you want to send
    * const tokenId = "0";
+   * // How many copies of the NFTs to transfer
+   * const amount = 3;
    *
-   * await contract.transfer(toAddress, tokenId);
+   * await contract.transfer(toAddress, tokenId, amount);
    * ```
    */
   public async transfer(

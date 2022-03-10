@@ -170,7 +170,7 @@ export class MarketplaceAuction {
    *   // how many of the asset you want to list
    *   quantity: 1,
    *   // address of the currency contract that will be used to pay for the listing
-   *   currencyContractAddress: "0x0000000000000000000000000000000000000000",
+   *   currencyContractAddress: NATIVE_TOKEN_ADDRESS,
    *   // how much people would have to bid to instantly buy the asset
    *   buyoutPricePerToken: "10",
    *   // the minimum bid that will be accepted for the token
@@ -283,7 +283,6 @@ export class MarketplaceAuction {
     pricePerToken: Price,
   ): Promise<TransactionResult> {
     const listing = await this.validateListing(BigNumber.from(listingId));
-
     const normalizedPrice = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       pricePerToken,
@@ -322,7 +321,6 @@ export class MarketplaceAuction {
       listing.currencyContractAddress,
       overrides,
     );
-
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "offer",

@@ -251,7 +251,7 @@ export class DropErc721ClaimConditions {
    * @example
    * ```javascript
    * const presaleStartTime = new Date();
-   * const publicSaleStartTime = new Date(Date.now() + 24_HOURS);
+   * const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
