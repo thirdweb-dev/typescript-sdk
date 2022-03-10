@@ -27,6 +27,6 @@ export interface TokenContractDeployMetadata
 |  [name](./sdk.tokencontractdeploymetadata.name.md) | string | name of the contract |
 |  [platform\_fee\_basis\_points?](./sdk.tokencontractdeploymetadata.platform_fee_basis_points.md) | number | <i>(Optional)</i> The percentage (in basis points) of platform fees |
 |  [platform\_fee\_recipient?](./sdk.tokencontractdeploymetadata.platform_fee_recipient.md) | string | <i>(Optional)</i> The address that will receive the proceeds from platform fees |
-|  [primary\_sale\_recipient?](./sdk.tokencontractdeploymetadata.primary_sale_recipient.md) | string | <i>(Optional)</i> The address that will receive the proceeds from primary sales |
+|  [primary\_sale\_recipient](./sdk.tokencontractdeploymetadata.primary_sale_recipient.md) | string | The address that will receive the proceeds from primary sales |
 |  [symbol?](./sdk.tokencontractdeploymetadata.symbol.md) | string | <i>(Optional)</i> Symbol for the NFTs |
 |  [trusted\_forwarder?](./sdk.tokencontractdeploymetadata.trusted_forwarder.md) | string | <i>(Optional)</i> The gasless forwarder address (Biconomy or OZ Defender) |

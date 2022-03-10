@@ -44,7 +44,7 @@ const nftMetadata = {
 };
 
 const startTime = new Date();
-const endTime = new Date(Date.now() + 24_HOURS);
+const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
 const payload = {
   metadata: nftMetadata, // The NFT to mint
   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)

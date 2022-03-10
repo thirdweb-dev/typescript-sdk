@@ -33,7 +33,7 @@ export interface NFTContractDeployMetadata {
   /**
    * The address that will receive the proceeds from primary sales
    */
-  primary_sale_recipient?: string;
+  primary_sale_recipient: string;
   /**
    * The address that will receive the proceeds from secondary sales (royalties)
    */
@@ -84,7 +84,7 @@ export interface TokenContractDeployMetadata {
   /**
    * The address that will receive the proceeds from primary sales
    */
-  primary_sale_recipient?: string;
+  primary_sale_recipient: string;
   /**
    * The address that will receive the proceeds from platform fees
    */

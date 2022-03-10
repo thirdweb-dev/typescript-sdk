@@ -43,6 +43,8 @@ const toAddress = "{{wallet_address}}";
 
 // The token ID of the NFT you want to send
 const tokenId = "0";
+// How many copies of the NFTs to transfer
+const amount = 3;
 
-await contract.transfer(toAddress, tokenId);
+await contract.transfer(toAddress, tokenId, amount);
 ```
