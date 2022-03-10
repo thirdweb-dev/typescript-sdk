@@ -31,6 +31,9 @@ Promise&lt;([AuctionListing](./sdk.auctionlisting.md) \| [DirectListing](./sdk.d
 
 Fetch all the active listings from this marketplace contract.
 
+## Example
+
+
 ```javascript
 const listings = await contract.getAllListings();
 const priceOfFirstListing = listings[0].price;

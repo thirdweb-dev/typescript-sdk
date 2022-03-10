@@ -9,7 +9,7 @@ hide_title: true
 
 ## Marketplace.buyoutListing() method
 
-Convenience function to buy a Direct or Auction listing.
+Purchase listed NFTs
 
 **Signature:**
 
@@ -28,3 +28,19 @@ buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish, receiver?
 **Returns:**
 
 Promise&lt;[TransactionResult](./sdk.transactionresult.md)&gt;
+
+## Remarks
+
+Buy a Direct or Auction listing on your marketplace.
+
+## Example
+
+
+```javascript
+// The listing ID of the asset you want to buy
+const listingId = 0;
+// Quantity of the asset you want to buy
+const quantityDesired = 1;
+
+await contract.direct.buyoutListing(listingId, quantityDesired);
+```

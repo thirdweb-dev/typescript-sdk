@@ -40,11 +40,11 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [auction](./sdk.marketplace.auction.md) |  | [MarketplaceAuction](./sdk.marketplaceauction.md) | Handle direct listings, see [MarketplaceAuction](./sdk.marketplaceauction.md) |
+|  [auction](./sdk.marketplace.auction.md) |  | [MarketplaceAuction](./sdk.marketplaceauction.md) | Auctions. |
 |  [contractFactory](./sdk.marketplace.contractfactory.md) | <code>static</code> | typeof Marketplace\_\_factory |  |
 |  [contractRoles](./sdk.marketplace.contractroles.md) | <code>static</code> | readonly \["admin", "lister", "asset"\] |  |
 |  [contractType](./sdk.marketplace.contracttype.md) | <code>static</code> | "marketplace" |  |
-|  [direct](./sdk.marketplace.direct.md) |  | [MarketplaceDirect](./sdk.marketplacedirect.md) | Handle direct listings, see [MarketplaceDirect](./sdk.marketplacedirect.md) |
+|  [direct](./sdk.marketplace.direct.md) |  | [MarketplaceDirect](./sdk.marketplacedirect.md) | Direct listings |
 |  [encoder](./sdk.marketplace.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)&lt;MarketplaceContract&gt; |  |
 |  [estimator](./sdk.marketplace.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)&lt;MarketplaceContract&gt; |  |
 |  [metadata](./sdk.marketplace.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)&lt;MarketplaceContract, typeof Marketplace.schema&gt; |  |
@@ -56,7 +56,7 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 |  --- | --- | --- |
 |  [allowListingFromAnyAsset()](./sdk.marketplace.allowlistingfromanyasset.md) |  | Allow listings from any NFT contract |
 |  [allowListingFromSpecificAssetOnly(contractAddress)](./sdk.marketplace.allowlistingfromspecificassetonly.md) |  | Restrict listing NFTs only from the specified NFT contract address. It is possible to allow listing from multiple contract addresses. |
-|  [buyoutListing(listingId, quantityDesired, receiver)](./sdk.marketplace.buyoutlisting.md) |  | Convenience function to buy a Direct or Auction listing. |
+|  [buyoutListing(listingId, quantityDesired, receiver)](./sdk.marketplace.buyoutlisting.md) |  | Purchase listed NFTs |
 |  [getAddress()](./sdk.marketplace.getaddress.md) |  |  |
 |  [getAllListings(filter)](./sdk.marketplace.getalllistings.md) |  | Get all the listings |
 |  [getBidBufferBps()](./sdk.marketplace.getbidbufferbps.md) |  | Get the buffer in basis points between offers |

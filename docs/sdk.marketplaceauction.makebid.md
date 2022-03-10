@@ -36,6 +36,6 @@ const listingId = 0;
 // The price you are willing to bid for a single token of the listing
 const pricePerToken = 1;
 
-await contract.auction.makeListingBid(listingId, pricePerToken);
+await contract.auction.makeBid(listingId, pricePerToken);
 ```
 

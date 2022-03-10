@@ -104,8 +104,46 @@
     "examples": {
       "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getMarketplace(\"{{contract_address}}\");"
     },
-    "methods": [],
-    "properties": [],
+    "methods": [
+      {
+        "name": "buyoutListing",
+        "summary": "Purchase listed NFTs\n\n",
+        "remarks": "\n\nBuy a Direct or Auction listing on your marketplace.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n// Quantity of the asset you want to buy\nconst quantityDesired = 1;\n\nawait contract.direct.buyoutListing(listingId, quantityDesired);"
+        },
+        "reference": "https://typescript-docs.thirdweb.com/sdk.Marketplace.buyoutListing"
+      },
+      {
+        "name": "getAllListings",
+        "summary": "Get all the listings\n\n",
+        "remarks": "\n\nFetch all the active listings from this marketplace contract.\n\n",
+        "examples": {
+          "javascript": "const listings = await contract.getAllListings();\nconst priceOfFirstListing = listings[0].price;"
+        },
+        "reference": "https://typescript-docs.thirdweb.com/sdk.Marketplace.getAllListings"
+      }
+    ],
+    "properties": [
+      {
+        "name": "auction",
+        "summary": "Auctions.\n\n",
+        "remarks": "\n\nCreate and manage auctions in your marketplace.\n\n",
+        "examples": {
+          "javascript": "// Data of the auction you want to create\nconst auction = {\n  // address of the contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // in how many seconds with the listing open up\n  startTimeInSeconds: 0,\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: NATIVE_TOKEN_ADDRESS,\n  // how much people would have to bid to instantly buy the asset\n  buyoutPricePerToken: \"10\",\n  // the minimum bid that will be accepted for the token\n  reservePricePerToken: \"1.5\",\n}\n\nconst tx = await contract.auction.createListing(auction);\nconst receipt = tx.receipt; // the transaction receipt\nconst listingId = tx.id; // the id of the newly created listing\n\n// And on the buyers side:\n// The price you are willing to bid for a single token of the listing\nconst pricePerToken = 2.6;\nawait contract.auction.makeBid(listingId, pricePerToken);"
+        },
+        "reference": "https://typescript-docs.thirdweb.com/sdk.marketplaceauction"
+      },
+      {
+        "name": "direct",
+        "summary": "Direct listings\n\n",
+        "remarks": "\n\nCreate and manage direct listings in your marketplace.\n\n",
+        "examples": {
+          "javascript": "// Data of the listing you want to create\nconst listing = {\n  // address of the NFT contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // in how many seconds will the listing open up\n  startTimeInSeconds: 0,\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: NATIVE_TOKEN_ADDRESS,\n  // how much the asset will be sold for\n  buyoutPricePerToken: \"1.5\",\n}\n\nconst tx = await contract.direct.createListing(listing);\nconst receipt = tx.receipt; // the transaction receipt\nconst listingId = tx.id; // the id of the newly created listing\n\n// And on the buyers side:\n// Quantity of the asset you want to buy\nconst quantityDesired = 1;\nawait contract.direct.buyoutListing(listingId, quantityDesired);"
+        },
+        "reference": "https://typescript-docs.thirdweb.com/sdk.marketplacedirect"
+      }
+    ],
     "reference": "https://typescript-docs.thirdweb.com/sdk.Marketplace"
   },
   "NFTCollection": {

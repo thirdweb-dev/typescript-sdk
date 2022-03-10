@@ -7,11 +7,11 @@
 Install the latest version of the SDK with `npm`:
 
 ```bash
-npm install @thirdweb-dev/sdk@nightly ethers
+npm install @thirdweb-dev/sdk ethers
 ```
 or with `yarn`:
 ```bash
-yarn add @thirdweb-dev/sdk@nightly ethers
+yarn add @thirdweb-dev/sdk ethers
 ```
 
 ### Quick start

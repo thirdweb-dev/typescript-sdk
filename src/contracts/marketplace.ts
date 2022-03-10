@@ -54,6 +54,8 @@ export class Marketplace implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<MarketplaceContract>;
   private storage: IStorage;
 
+  public encoder: ContractEncoder<MarketplaceContract>;
+  public estimator: GasCostEstimator<MarketplaceContract>;
   public metadata: ContractMetadata<
     MarketplaceContract,
     typeof Marketplace.schema
@@ -62,14 +64,74 @@ export class Marketplace implements UpdateableNetwork {
     MarketplaceContract,
     typeof Marketplace.contractRoles[number]
   >;
-  public encoder: ContractEncoder<MarketplaceContract>;
-  public estimator: GasCostEstimator<MarketplaceContract>;
   /**
-   * Handle direct listings, see {@link MarketplaceDirect}
+   * Direct listings
+   * @remarks Create and manage direct listings in your marketplace.
+   * @example
+   * ```javascript
+   * // Data of the listing you want to create
+   * const listing = {
+   *   // address of the NFT contract the asset you want to list is on
+   *   assetContractAddress: "0x...",
+   *   // token ID of the asset you want to list
+   *   tokenId: "0",
+   *   // in how many seconds will the listing open up
+   *   startTimeInSeconds: 0,
+   *   // how long the listing will be open for
+   *   listingDurationInSeconds: 86400,
+   *   // how many of the asset you want to list
+   *   quantity: 1,
+   *   // address of the currency contract that will be used to pay for the listing
+   *   currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+   *   // how much the asset will be sold for
+   *   buyoutPricePerToken: "1.5",
+   * }
+   *
+   * const tx = await contract.direct.createListing(listing);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const listingId = tx.id; // the id of the newly created listing
+   *
+   * // And on the buyers side:
+   * // Quantity of the asset you want to buy
+   * const quantityDesired = 1;
+   * await contract.direct.buyoutListing(listingId, quantityDesired);
+   * ```
    */
   public direct: MarketplaceDirect;
   /**
-   * Handle direct listings, see {@link MarketplaceAuction}
+   * Auctions.
+   * @remarks Create and manage auctions in your marketplace.
+   * @example
+   * ```javascript
+   * // Data of the auction you want to create
+   * const auction = {
+   *   // address of the contract the asset you want to list is on
+   *   assetContractAddress: "0x...",
+   *   // token ID of the asset you want to list
+   *   tokenId: "0",
+   *   // in how many seconds with the listing open up
+   *   startTimeInSeconds: 0,
+   *   // how long the listing will be open for
+   *   listingDurationInSeconds: 86400,
+   *   // how many of the asset you want to list
+   *   quantity: 1,
+   *   // address of the currency contract that will be used to pay for the listing
+   *   currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+   *   // how much people would have to bid to instantly buy the asset
+   *   buyoutPricePerToken: "10",
+   *   // the minimum bid that will be accepted for the token
+   *   reservePricePerToken: "1.5",
+   * }
+   *
+   * const tx = await contract.auction.createListing(auction);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const listingId = tx.id; // the id of the newly created listing
+   *
+   * // And on the buyers side:
+   * // The price you are willing to bid for a single token of the listing
+   * const pricePerToken = 2.6;
+   * await contract.auction.makeBid(listingId, pricePerToken);
+   * ```
    */
   public auction: MarketplaceAuction;
 
@@ -144,7 +206,7 @@ export class Marketplace implements UpdateableNetwork {
    * Get all the listings
    *
    * @remarks Fetch all the active listings from this marketplace contract.
-   *
+   * @example
    * ```javascript
    * const listings = await contract.getAllListings();
    * const priceOfFirstListing = listings[0].price;
@@ -225,7 +287,17 @@ export class Marketplace implements UpdateableNetwork {
    *******************************/
 
   /**
-   * Convenience function to buy a Direct or Auction listing.
+   * Purchase listed NFTs
+   * @remarks Buy a Direct or Auction listing on your marketplace.
+   * @example
+   * ```javascript
+   * // The listing ID of the asset you want to buy
+   * const listingId = 0;
+   * // Quantity of the asset you want to buy
+   * const quantityDesired = 1;
+   *
+   * await contract.direct.buyoutListing(listingId, quantityDesired);
+   * ```
    * @param listingId - the listing ID of the listing you want to buy
    * @param quantityDesired - the quantity that you want to buy (for ERC1155 tokens)
    * @param receiver - optional receiver of the bought listing if different from the connected wallet (for direct listings only)
