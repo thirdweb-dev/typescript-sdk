@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "2.0.0-nightly.45",
+  "version": "2.0.0-nightly.47",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -84,7 +84,7 @@
     "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
-    "@thirdweb-dev/contracts": "2.0.1",
+    "@thirdweb-dev/contracts": "2.1.2",
     "@web-std/file": "^3.0.0",
     "cross-fetch": "^3.1.5",
     "deep-equal": "^2.0.5",
