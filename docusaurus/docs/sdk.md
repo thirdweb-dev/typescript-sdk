@@ -38,7 +38,7 @@ hide_title: true
 |  [Pack](./sdk.pack.md) | Create lootboxes of NFTs with rarity based open mechanics. |
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
-|  [Token](./sdk.token.md) | Create a standard crypto token or crypto currency. |
+|  [Token](./sdk.token.md) | Create a standard crypto token or cryptocurrency. |
 |  [Vote](./sdk.vote.md) | Create a decentralized organization for token holders to vote on proposals. |
 
 ## Enumerations

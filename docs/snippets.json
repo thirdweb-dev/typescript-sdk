@@ -631,7 +631,7 @@
   },
   "Token": {
     "name": "Token",
-    "summary": "Create a standard crypto token or crypto currency.\n\n",
+    "summary": "Create a standard crypto token or cryptocurrency.\n\n",
     "remarks": null,
     "examples": {
       "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getToken(\"{{contract_address}}\");"
