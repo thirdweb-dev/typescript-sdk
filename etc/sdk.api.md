@@ -3837,7 +3837,7 @@ export class Vote implements UpdateableNetwork {
         voting_period_in_blocks: ZodDefault<ZodNumber>;
         voting_token_address: ZodString;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
-        proposal_token_threshold: ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+        proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }>, {
         trusted_forwarder: ZodDefault<ZodEffects<ZodString, string, string>>;
         }>, "strip", ZodTypeAny, {
@@ -3863,9 +3863,9 @@ export class Vote implements UpdateableNetwork {
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
         voting_quorum_fraction?: number | undefined;
+        proposal_token_threshold?: string | number | bigint | BigNumber | undefined;
         name: string;
         voting_token_address: string;
-        proposal_token_threshold: string | number | bigint | BigNumber;
         }>;
         output: ZodObject<extendShape<extendShape<    {
         name: ZodString;
@@ -3881,7 +3881,7 @@ export class Vote implements UpdateableNetwork {
         voting_period_in_blocks: ZodDefault<ZodNumber>;
         voting_token_address: ZodString;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
-        proposal_token_threshold: ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+        proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }, {
         proposal_token_threshold: ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
         }>>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
@@ -3923,7 +3923,7 @@ export class Vote implements UpdateableNetwork {
         voting_period_in_blocks: ZodDefault<ZodNumber>;
         voting_token_address: ZodString;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
-        proposal_token_threshold: ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+        proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -3945,9 +3945,9 @@ export class Vote implements UpdateableNetwork {
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
         voting_quorum_fraction?: number | undefined;
+        proposal_token_threshold?: string | number | bigint | BigNumber | undefined;
         name: string;
         voting_token_address: string;
-        proposal_token_threshold: string | number | bigint | BigNumber;
         }>;
     };
     settings(): Promise<VoteSettings>;

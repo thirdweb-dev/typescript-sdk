@@ -13,7 +13,7 @@ export const VoteSettingsInputSchema = z.object({
   voting_period_in_blocks: z.number().default(1),
   voting_token_address: z.string(),
   voting_quorum_fraction: z.number().default(0),
-  proposal_token_threshold: BigNumberishSchema,
+  proposal_token_threshold: BigNumberishSchema.default(1),
 });
 
 export const VoteSettingsOuputSchema = VoteSettingsInputSchema.extend({
