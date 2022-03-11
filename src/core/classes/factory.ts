@@ -21,6 +21,11 @@ import { ContractWrapper } from "./contract-wrapper";
 import { ProxyDeployedEvent } from "@thirdweb-dev/contracts/dist/TWFactory";
 
 import { ChainlinkVrf } from "../../constants/chainlink";
+import {
+  CONTRACT_ADDRESSES,
+  OZ_DEFENDER_FORWARDER_ADDRESS,
+  SUPPORTED_CHAIN_IDS,
+} from "../../constants";
 
 /**
  * @internal
@@ -85,6 +90,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     metadata: z.input<TContract["schema"]["deploy"]>,
     contractURI: string,
   ): Promise<any[]> {
+    const defaultTrustedForwarders = await this.getDefaultTrustedForwarders();
     switch (contractType) {
       case NFTDrop.contractType:
       case NFTCollection.contractType:
@@ -94,7 +100,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc721metadata.name,
           erc721metadata.symbol,
           contractURI,
-          [erc721metadata.trusted_forwarder],
+          defaultTrustedForwarders.concat(erc721metadata.trusted_forwarder),
           erc721metadata.primary_sale_recipient,
           erc721metadata.fee_recipient,
           erc721metadata.seller_fee_basis_points,
@@ -109,7 +115,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc1155metadata.name,
           erc1155metadata.symbol,
           contractURI,
-          [erc1155metadata.trusted_forwarder],
+          defaultTrustedForwarders.concat(erc1155metadata.trusted_forwarder),
           erc1155metadata.primary_sale_recipient,
           erc1155metadata.fee_recipient,
           erc1155metadata.seller_fee_basis_points,
@@ -123,7 +129,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc20metadata.name,
           erc20metadata.symbol,
           contractURI,
-          [erc20metadata.trusted_forwarder],
+          defaultTrustedForwarders.concat(erc20metadata.trusted_forwarder),
           erc20metadata.primary_sale_recipient,
           erc20metadata.platform_fee_recipient,
           erc20metadata.platform_fee_basis_points,
@@ -133,7 +139,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         return [
           voteMetadata.name,
           contractURI,
-          [voteMetadata.trusted_forwarder],
+          defaultTrustedForwarders.concat(voteMetadata.trusted_forwarder),
           voteMetadata.voting_token_address,
           voteMetadata.voting_delay_in_blocks,
           voteMetadata.voting_period_in_blocks,
@@ -145,7 +151,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         return [
           await this.getSignerAddress(),
           contractURI,
-          [splitsMetadata.trusted_forwarder],
+          defaultTrustedForwarders.concat(splitsMetadata.trusted_forwarder),
           splitsMetadata.recipients.map((s) => s.address),
           splitsMetadata.recipients.map((s) => s.shares),
         ];
@@ -154,7 +160,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         return [
           await this.getSignerAddress(),
           contractURI,
-          [marketplaceMetadata.trusted_forwarder],
+          defaultTrustedForwarders.concat(
+            marketplaceMetadata.trusted_forwarder,
+          ),
           marketplaceMetadata.platform_fee_recipient,
           marketplaceMetadata.platform_fee_basis_points,
         ];
@@ -166,7 +174,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           packsMetadata.name,
           packsMetadata.symbol,
           contractURI,
-          [packsMetadata.trusted_forwarder],
+          defaultTrustedForwarders.concat(packsMetadata.trusted_forwarder),
           packsMetadata.fee_recipient,
           packsMetadata.seller_fee_basis_points,
           vrf.fees,
@@ -175,5 +183,16 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       default:
         return [];
     }
+  }
+
+  private async getDefaultTrustedForwarders(): Promise<string[]> {
+    const chainId = await this.getChainID();
+    const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
+    return chainEnum
+      ? [
+          OZ_DEFENDER_FORWARDER_ADDRESS,
+          CONTRACT_ADDRESSES[chainEnum].biconomyForwarder,
+        ]
+      : [OZ_DEFENDER_FORWARDER_ADDRESS];
   }
 }

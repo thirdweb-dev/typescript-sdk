@@ -6,7 +6,6 @@ import {
 } from "../../shared";
 import { AddressZero } from "@ethersproject/constants";
 import { z } from "zod";
-import { FORWARDER_ADDRESS } from "../../../constants/addresses";
 
 /**
  * @internal
@@ -77,7 +76,7 @@ export const CommonPlatformFeeSchema = z.object({
  * @internal
  */
 export const CommonTrustedForwarderSchema = z.object({
-  trusted_forwarder: AdressSchema.default(FORWARDER_ADDRESS),
+  trusted_forwarder: z.array(AdressSchema).default([]),
 });
 
 /**

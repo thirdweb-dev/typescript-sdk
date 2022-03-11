@@ -9,7 +9,7 @@ hide_title: true
 
 ## Token class
 
-Create a standard crypto token or crypto currency.
+Create a standard crypto token or cryptocurrency.
 
 **Signature:**
 

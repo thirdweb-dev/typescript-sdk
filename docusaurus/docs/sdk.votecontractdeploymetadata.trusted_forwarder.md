@@ -9,10 +9,10 @@ hide_title: true
 
 ## VoteContractDeployMetadata.trusted\_forwarder property
 
-The gasless forwarder address (Biconomy or OZ Defender)
+Custom gasless trusted forwarder addresses
 
 **Signature:**
 
 ```typescript
-trusted_forwarder?: string;
+trusted_forwarder?: string[];
 ```
