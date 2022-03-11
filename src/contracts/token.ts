@@ -1,24 +1,22 @@
-import {
-  SDKOptions,
-  TokenErc20ContractSchema,
-  TokenMintInput,
-} from "../schema";
+import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
 import { TokenERC20, TokenERC20__factory } from "@thirdweb-dev/contracts";
+import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractRoles } from "../core/classes/contract-roles";
 import {
-  ContractEncoder,
-  ContractMetadata,
-  ContractRoles,
-  Erc20,
-  GasCostEstimator,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
 } from "../core";
+import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Erc20 } from "../core/classes/erc-20";
 import { BigNumber, BigNumberish, ethers } from "ethers";
+import { TokenMintInput } from "../schema/tokens/token";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { GasCostEstimator } from "../core/classes";
 
 /**
- * Create a standard crypto token or crypto currency.
+ * Create a standard crypto token or cryptocurrency.
  *
  * @example
  *
