@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - joaquim/github_actions
 
 jobs:
   dispatch:
@@ -16,4 +15,3 @@ jobs:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           repository: thirdweb-dev/docs
           event-type: generate-docs
-
