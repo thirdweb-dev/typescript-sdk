@@ -56,9 +56,7 @@ const modules = json.members[0].members.filter(
 
 const bases = ["Erc20", "Erc721", "Erc1155"];
 const baseClasses = json.members[0].members.filter(
-    (m) =>
-        m.kind === "Class" &&
-        bases.includes(m.name)
+  (m) => m.kind === "Class" && bases.includes(m.name),
 );
 
 function parseExampleTag(docComment) {
@@ -125,9 +123,15 @@ const moduleMap = modules.reduce((acc, m) => {
   const parserContext = tsdocParser.parseString(m.docComment);
   const docComment = parserContext.docComment;
   const examples = parseExampleTag(docComment);
-  const baseClassesRefs = m.excerptTokens.filter((e) =>  e.kind === "Reference").map((e) => e.text)
-  const baseClassCode = baseClasses.find((m) => baseClassesRefs.includes(m.name));
-  const baseClassMembers = baseClassCode ? parseMembers(baseClassCode.members, "Method", baseClassCode.name) : []
+  const baseClassesRefs = m.excerptTokens
+    .filter((e) => e.kind === "Reference")
+    .map((e) => e.text);
+  const baseClassCode = baseClasses.find((m_) =>
+    baseClassesRefs.includes(m_.name),
+  );
+  const baseClassMembers = baseClassCode
+    ? parseMembers(baseClassCode.members, "Method", baseClassCode.name)
+    : [];
   if (Object.keys(examples).length > 0) {
     acc[m.name] = {
       name: m.name,
@@ -136,7 +140,9 @@ const moduleMap = modules.reduce((acc, m) => {
         ? Formatter.renderDocNode(docComment.remarksBlock.content)
         : null,
       examples,
-      methods: parseMembers(m.members, "Method", m.name).concat(baseClassMembers),
+      methods: parseMembers(m.members, "Method", m.name).concat(
+        baseClassMembers,
+      ),
       properties: parseMembers(m.members, "Property", m.name),
       reference: extractReferenceLink(m),
     };
