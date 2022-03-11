@@ -14,7 +14,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\"\n\n// Custom metadata and supplies of your NFTs\nconst metadataWithSupply = [{\n  supply: 50, // The number of this NFT you want to mint\n  metadata: {\n    name: \"Cool NFT #1\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}, {\n  supply: 100,\n  metadata: {\n    name: \"Cool NFT #2\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}];\n\nconst tx = await contract.mintBatchTo(toAddress, metadataWithSupply);\nconst receipt = tx[0].receipt; // same transaction receipt for all minted NFTs\nconst firstTokenId = tx[0].id; // token id of the first minted NFT\nconst firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Edition.mintBatchTo"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Edition.mintBatchTo"
       },
       {
         "name": "mintTo",
@@ -23,7 +23,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\"\n\n// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}\n\nconst metadataWithSupply = {\n  metadata,\n  supply: 1000, // The number of this NFT you want to mint\n}\n\nconst tx = await contract.mintTo(toAddress, metadataWithSupply);\nconst receipt = tx.receipt; // the transaction receipt\nconst tokenId = tx.id; // the id of the NFT minted\nconst nft = await tx.data(); // (optional) fetch details of minted NFT"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Edition.mintTo"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Edition.mintTo"
       },
       {
         "name": "balanceOf",
@@ -32,7 +32,7 @@
         "examples": {
           "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await contract.balanceOf(address);\nconsole.log(balance);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc1155.balanceOf"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.balanceOf"
       },
       {
         "name": "get",
@@ -41,7 +41,7 @@
         "examples": {
           "javascript": "const nft = await contract.get(\"0\");\nconsole.log(nft);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc1155.get"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.get"
       },
       {
         "name": "getAll",
@@ -50,7 +50,7 @@
         "examples": {
           "javascript": "const nfts = await contract.getAll();\nconsole.log(nfts);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc1155.getAll"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.getAll"
       },
       {
         "name": "getOwned",
@@ -59,7 +59,7 @@
         "examples": {
           "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.getOwned(address);\nconsole.log(nfts);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc1155.getOwned"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.getOwned"
       },
       {
         "name": "transfer",
@@ -68,7 +68,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n// How many copies of the NFTs to transfer\nconst amount = 3;\n\nawait contract.transfer(toAddress, tokenId, amount);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc1155.transfer"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.transfer"
       }
     ],
     "properties": [
@@ -79,7 +79,7 @@
         "examples": {
           "javascript": "// royalties on the whole contract\ncontract.royalty.setDefaultRoyaltyInfo({\n  seller_fee_basis_points: 100, // 1%\n  fee_recipient: \"0x...\"\n});\n// override royalty for a particular token\ncontract.royalty.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 500, // 5%\n  fee_recipient: \"0x...\"\n});"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.contractroyalty"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.contractroyalty"
       },
       {
         "name": "signature",
@@ -88,10 +88,10 @@
         "examples": {
           "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.erc1155signatureminting"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.erc1155signatureminting"
       }
     ],
-    "reference": "https://typescript-docs.thirdweb.com/sdk.Edition"
+    "reference": "https://docs.thirdweb.com/typescript/sdk.Edition"
   },
   "EditionDrop": {
     "name": "EditionDrop",
@@ -108,7 +108,7 @@
         "examples": {
           "javascript": "const address = \"{{wallet_address}}\"; // address of the wallet you want to claim the NFTs\nconst tokenId = 0; // the id of the NFT you want to claim\nconst quantity = 1; // how many NFTs you want to claim\n\nconst tx = await contract.claimTo(address, quantity);\nconst receipt = tx.receipt; // the transaction receipt\nconst claimedTokenId = tx.id; // the id of the NFT claimed\nconst claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.EditionDrop.claimTo"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop.claimTo"
       },
       {
         "name": "createBatch",
@@ -117,7 +117,7 @@
         "examples": {
           "javascript": "// Custom metadata of the NFTs to create\nconst metadatas = [{\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}];\n\nconst results = await contract.createBatch(metadatas); // uploads and creates the NFTs on chain\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.EditionDrop.createBatch"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop.createBatch"
       },
       {
         "name": "balanceOf",
@@ -126,7 +126,7 @@
         "examples": {
           "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await contract.balanceOf(address);\nconsole.log(balance);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc1155.balanceOf"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.balanceOf"
       },
       {
         "name": "get",
@@ -135,7 +135,7 @@
         "examples": {
           "javascript": "const nft = await contract.get(\"0\");\nconsole.log(nft);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc1155.get"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.get"
       },
       {
         "name": "getAll",
@@ -144,7 +144,7 @@
         "examples": {
           "javascript": "const nfts = await contract.getAll();\nconsole.log(nfts);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc1155.getAll"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.getAll"
       },
       {
         "name": "getOwned",
@@ -153,7 +153,7 @@
         "examples": {
           "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.getOwned(address);\nconsole.log(nfts);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc1155.getOwned"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.getOwned"
       },
       {
         "name": "transfer",
@@ -162,7 +162,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n// How many copies of the NFTs to transfer\nconst amount = 3;\n\nawait contract.transfer(toAddress, tokenId, amount);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc1155.transfer"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.transfer"
       }
     ],
     "properties": [
@@ -173,7 +173,7 @@
         "examples": {
           "javascript": "const presaleStartTime = new Date();\nconst publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst claimConditions = [\n  {\n    startTime: presaleStartTime, // start the presale now\n    maxQuantity: 2, // limit how many mints for this presale\n    price: 0.01, // presale price\n    snapshot: ['0x...', '0x...'], // limit minting to only certain addresses\n  },\n  {\n    startTime: publicSaleStartTime, // 24h after presale, start public sale\n    price: 0.08, // public sale price\n  }\n]);\n\nconst tokenId = 0; // the id of the NFT to set claim conditions on\nawait contract.claimConditions.set(tokenId, claimConditions);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.droperc1155claimconditions"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.droperc1155claimconditions"
       },
       {
         "name": "royalty",
@@ -182,10 +182,10 @@
         "examples": {
           "javascript": "// royalties on the whole contract\ncontract.royalty.setDefaultRoyaltyInfo({\n  seller_fee_basis_points: 100, // 1%\n  fee_recipient: \"0x...\"\n});\n// override royalty for a particular token\ncontract.royalty.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 500, // 5%\n  fee_recipient: \"0x...\"\n});"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.contractroyalty"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.contractroyalty"
       }
     ],
-    "reference": "https://typescript-docs.thirdweb.com/sdk.EditionDrop"
+    "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop"
   },
   "Marketplace": {
     "name": "Marketplace",
@@ -202,7 +202,7 @@
         "examples": {
           "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n// Quantity of the asset you want to buy\nconst quantityDesired = 1;\n\nawait contract.buyoutListing(listingId, quantityDesired);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Marketplace.buyoutListing"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.buyoutListing"
       },
       {
         "name": "getAllListings",
@@ -211,7 +211,7 @@
         "examples": {
           "javascript": "const listings = await contract.getAllListings();\nconst priceOfFirstListing = listings[0].price;"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Marketplace.getAllListings"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.getAllListings"
       },
       {
         "name": "setBidBufferBps",
@@ -220,7 +220,7 @@
         "examples": {
           "javascript": "// the bid buffer in basis points\nconst bufferBps = 500;\nawait contract.setBidBufferBps(bufferBps);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Marketplace.setBidBufferBps"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.setBidBufferBps"
       },
       {
         "name": "setTimeBufferInSeconds",
@@ -229,7 +229,7 @@
         "examples": {
           "javascript": "// the time buffer in seconds\nconst bufferInSeconds = 60;\nawait contract.setTimeBufferInSeconds(bufferInSeconds);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Marketplace.setTimeBufferInSeconds"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.setTimeBufferInSeconds"
       }
     ],
     "properties": [
@@ -240,7 +240,7 @@
         "examples": {
           "javascript": "// Data of the auction you want to create\nconst auction = {\n  // address of the contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // in how many seconds with the listing open up\n  startTimeInSeconds: 0,\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: NATIVE_TOKEN_ADDRESS,\n  // how much people would have to bid to instantly buy the asset\n  buyoutPricePerToken: \"10\",\n  // the minimum bid that will be accepted for the token\n  reservePricePerToken: \"1.5\",\n}\n\nconst tx = await contract.auction.createListing(auction);\nconst receipt = tx.receipt; // the transaction receipt\nconst listingId = tx.id; // the id of the newly created listing\n\n// And on the buyers side:\n// The price you are willing to bid for a single token of the listing\nconst pricePerToken = 2.6;\nawait contract.auction.makeBid(listingId, pricePerToken);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.marketplaceauction"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.marketplaceauction"
       },
       {
         "name": "direct",
@@ -249,10 +249,10 @@
         "examples": {
           "javascript": "// Data of the listing you want to create\nconst listing = {\n  // address of the NFT contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // in how many seconds will the listing open up\n  startTimeInSeconds: 0,\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: NATIVE_TOKEN_ADDRESS,\n  // how much the asset will be sold for\n  buyoutPricePerToken: \"1.5\",\n}\n\nconst tx = await contract.direct.createListing(listing);\nconst receipt = tx.receipt; // the transaction receipt\nconst listingId = tx.id; // the id of the newly created listing\n\n// And on the buyers side:\n// Quantity of the asset you want to buy\nconst quantityDesired = 1;\nawait contract.direct.buyoutListing(listingId, quantityDesired);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.marketplacedirect"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.marketplacedirect"
       }
     ],
-    "reference": "https://typescript-docs.thirdweb.com/sdk.Marketplace"
+    "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace"
   },
   "NFTCollection": {
     "name": "NFTCollection",
@@ -269,7 +269,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// Custom metadata of the NFTs you want to mint.\nconst metadatas = [{\n  name: \"Cool NFT #1\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT #2\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/other/image.png\"),\n}];\n\nconst tx = await contract.mintBatchTo(toAddress, metadatas);\nconst receipt = tx[0].receipt; // same transaction receipt for all minted NFTs\nconst firstTokenId = tx[0].id; // token id of the first minted NFT\nconst firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.NFTCollection.mintBatchTo"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTCollection.mintBatchTo"
       },
       {
         "name": "mintTo",
@@ -278,7 +278,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n};\n\nconst tx = await contract.mintTo(toAddress, metadata);\nconst receipt = tx.receipt; // the transaction receipt\nconst tokenId = tx.id; // the id of the NFT minted\nconst nft = await tx.data(); // (optional) fetch details of minted NFT"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.NFTCollection.mintTo"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTCollection.mintTo"
       },
       {
         "name": "balanceOf",
@@ -287,7 +287,7 @@
         "examples": {
           "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await contract.balanceOf(address);\nconsole.log(balance);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc721.balanceOf"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.balanceOf"
       },
       {
         "name": "get",
@@ -296,7 +296,7 @@
         "examples": {
           "javascript": "const nft = await contract.get(\"0\");\nconsole.log(nft);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc721.get"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.get"
       },
       {
         "name": "getAll",
@@ -305,7 +305,7 @@
         "examples": {
           "javascript": "const nfts = await contract.getAll();\nconsole.log(nfts);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc721.getAll"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.getAll"
       },
       {
         "name": "getOwned",
@@ -314,7 +314,7 @@
         "examples": {
           "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.getOwned(address);\nconsole.log(nfts);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc721.getOwned"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.getOwned"
       },
       {
         "name": "transfer",
@@ -323,7 +323,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\nawait contract.transfer(toAddress, tokenId);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc721.transfer"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.transfer"
       }
     ],
     "properties": [
@@ -334,7 +334,7 @@
         "examples": {
           "javascript": "// royalties on the whole contract\ncontract.royalty.setDefaultRoyaltyInfo({\n  seller_fee_basis_points: 100, // 1%\n  fee_recipient: \"0x...\"\n});\n// override royalty for a particular token\ncontract.royalty.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 500, // 5%\n  fee_recipient: \"0x...\"\n});"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.contractroyalty"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.contractroyalty"
       },
       {
         "name": "signature",
@@ -343,10 +343,10 @@
         "examples": {
           "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.erc721signatureminting"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.erc721signatureminting"
       }
     ],
-    "reference": "https://typescript-docs.thirdweb.com/sdk.NFTCollection"
+    "reference": "https://docs.thirdweb.com/typescript/sdk.NFTCollection"
   },
   "NFTDrop": {
     "name": "NFTDrop",
@@ -363,7 +363,7 @@
         "examples": {
           "javascript": "const address = \"{{wallet_address}}\"; // address of the wallet you want to claim the NFTs\nconst quantity = 1; // how many unique NFTs you want to claim\n\nconst tx = await contract.claimTo(address, quantity);\nconst receipt = tx.receipt; // the transaction receipt\nconst claimedTokenId = tx.id; // the id of the NFT claimed\nconst claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.NFTDrop.claimTo"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.claimTo"
       },
       {
         "name": "createBatch",
@@ -372,7 +372,7 @@
         "examples": {
           "javascript": "// Custom metadata of the NFTs to create\nconst metadatas = [{\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}];\n\nconst results = await contract.createBatch(metadatas); // uploads and creates the NFTs on chain\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.NFTDrop.createBatch"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.createBatch"
       },
       {
         "name": "getAllClaimed",
@@ -381,7 +381,7 @@
         "examples": {
           "javascript": "const claimedNFTs = await contract.getAllClaimed();\nconst firstOwner = claimedNFTs[0].owner;"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.NFTDrop.getAllClaimed"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.getAllClaimed"
       },
       {
         "name": "getAllUnclaimed",
@@ -390,7 +390,7 @@
         "examples": {
           "javascript": "const unclaimedNFTs = await contract.getAllUnclaimed();\nconst firstUnclaimedNFT = unclaimedNFTs[0].name;"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.NFTDrop.getAllUnclaimed"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.getAllUnclaimed"
       },
       {
         "name": "totalClaimedSupply",
@@ -399,7 +399,7 @@
         "examples": {
           "javascript": "const claimedNFTCount = await contract.totalClaimedSupply();\nconsole.log(`NFTs claimed so far: ${claimedNFTCount}`);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.NFTDrop.totalClaimedSupply"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.totalClaimedSupply"
       },
       {
         "name": "totalUnclaimedSupply",
@@ -408,7 +408,7 @@
         "examples": {
           "javascript": "const unclaimedNFTCount = await contract.totalUnclaimedSupply();\nconsole.log(`NFTs left to claim: ${unclaimedNFTCount}`);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.NFTDrop.totalUnclaimedSupply"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.totalUnclaimedSupply"
       },
       {
         "name": "balanceOf",
@@ -417,7 +417,7 @@
         "examples": {
           "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await contract.balanceOf(address);\nconsole.log(balance);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc721.balanceOf"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.balanceOf"
       },
       {
         "name": "get",
@@ -426,7 +426,7 @@
         "examples": {
           "javascript": "const nft = await contract.get(\"0\");\nconsole.log(nft);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc721.get"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.get"
       },
       {
         "name": "getAll",
@@ -435,7 +435,7 @@
         "examples": {
           "javascript": "const nfts = await contract.getAll();\nconsole.log(nfts);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc721.getAll"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.getAll"
       },
       {
         "name": "getOwned",
@@ -444,7 +444,7 @@
         "examples": {
           "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.getOwned(address);\nconsole.log(nfts);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc721.getOwned"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.getOwned"
       },
       {
         "name": "transfer",
@@ -453,7 +453,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\nawait contract.transfer(toAddress, tokenId);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc721.transfer"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.transfer"
       }
     ],
     "properties": [
@@ -464,7 +464,7 @@
         "examples": {
           "javascript": "const presaleStartTime = new Date();\nconst publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst claimConditions = [\n  {\n    startTime: presaleStartTime, // start the presale now\n    maxQuantity: 2, // limit how many mints for this presale\n    price: 0.01, // presale price\n    snapshot: ['0x...', '0x...'], // limit minting to only certain addresses\n  },\n  {\n    startTime: publicSaleStartTime, // 24h after presale, start public sale\n    price: 0.08, // public sale price\n  }\n]);\nawait dropContract.claimConditions.set(claimConditions);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.droperc721claimconditions"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.droperc721claimconditions"
       },
       {
         "name": "revealer",
@@ -473,7 +473,7 @@
         "examples": {
           "javascript": "// the real NFTs, these will be encrypted until you reveal them\nconst realNFTs = [{\n  name: \"Common NFT #1\",\n  description: \"Common NFT, one of many.\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}, {\n  name: \"Super Rare NFT #2\",\n  description: \"You got a Super Rare NFT!\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}];\n// A placeholder NFT that people will get immediately in their wallet, and will be converted to the real NFT at reveal time\nconst placeholderNFT = {\n  name: \"Hidden NFT\",\n  description: \"Will be revealed next week!\"\n};\n// Create and encrypt the NFTs\nawait contract.revealer.createDelayedRevealBatch(\n  placeholderNFT,\n  realNFTs,\n  \"my secret password\",\n);\n// Whenever you're ready, reveal your NFTs at any time\nconst batchId = 0; // the batch to reveal\nawait contract.revealer.reveal(batchId, \"my secret password\");"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.delayedreveal"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.delayedreveal"
       },
       {
         "name": "royalty",
@@ -482,10 +482,10 @@
         "examples": {
           "javascript": "// royalties on the whole contract\ncontract.royalty.setDefaultRoyaltyInfo({\n  seller_fee_basis_points: 100, // 1%\n  fee_recipient: \"0x...\"\n});\n// override royalty for a particular token\ncontract.royalty.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 500, // 5%\n  fee_recipient: \"0x...\"\n});"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.contractroyalty"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.contractroyalty"
       }
     ],
-    "reference": "https://typescript-docs.thirdweb.com/sdk.NFTDrop"
+    "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop"
   },
   "Pack": {
     "name": "Pack",
@@ -502,7 +502,7 @@
         "examples": {
           "javascript": "// Address of the wallet to check pack balance\nconst address = \"{{wallet_address}}\";\n// The token ID of the pack you want to check the wallets balance of\nconst tokenId = \"0\"\n\nconst balance = await contract.balanceOf(address, tokenId);\nconsole.log(balance);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Pack.balanceOf"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Pack.balanceOf"
       },
       {
         "name": "create",
@@ -511,7 +511,7 @@
         "examples": {
           "javascript": "// Data to create the pack\nconst pack = {\n  // The address of the contract that holds the rewards you want to include\n  assetContract: \"0x...\",\n  // The metadata of the pack\n  metadata: {\n    name: \"Cool Pack\",\n    description: \"This is a cool pack\",\n    // This can be an image url or image file\n    image: readFileSync(\"path/to/image.png\"),\n  },\n  // The NFTs you want to include in the pack\n  assets: [\n    {\n      tokenId: 0, // The token ID of the asset you want to add\n      amount: 1, // The amount of the asset you want to add\n    }, {\n      tokenId: 1,\n      amount: 1,\n    }\n  ],\n};\n\nawait contract.create(pack);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Pack.create"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Pack.create"
       },
       {
         "name": "getAll",
@@ -520,7 +520,7 @@
         "examples": {
           "javascript": "const packs = await contract.getAll();\nconsole.log(packs);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Pack.getAll"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Pack.getAll"
       },
       {
         "name": "getNFTs",
@@ -529,7 +529,7 @@
         "examples": {
           "javascript": "// The pack ID of the pack whos rewards you want to get\nconst packId = 0;\n\nconst nfts = await contract.getNFTs(packId);\nconsole.log(nfts);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Pack.getNFTs"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Pack.getNFTs"
       },
       {
         "name": "open",
@@ -538,7 +538,7 @@
         "examples": {
           "javascript": "// The pack ID of the asset you want to buy\nconst packId = \"0\";\nconst tx = await contract.open(packId);\nconst receipt = tx.receipt; // the transaction receipt\nconst packId = tx.id; // the id of the pack that was opened\nconst rewards = tx.data(); // the contents of the opened pack"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Pack.open"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Pack.open"
       },
       {
         "name": "transfer",
@@ -547,7 +547,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to send the pack to\nconst toAddress = \"0x...\";\n\n// The token ID of the pack you want to send\nconst tokenId = \"0\";\n\n// The number of packs you want to send\nconst amount = 1;\n\nawait contract.transfer(toAddress, tokenId, amount);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Pack.transfer"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Pack.transfer"
       }
     ],
     "properties": [
@@ -558,10 +558,10 @@
         "examples": {
           "javascript": "// royalties on the whole contract\ncontract.royalty.setDefaultRoyaltyInfo({\n  seller_fee_basis_points: 100, // 1%\n  fee_recipient: \"0x...\"\n});\n// override royalty for a particular pack\ncontract.royalty.setTokenRoyaltyInfo(packId, {\n  seller_fee_basis_points: 500, // 5%\n  fee_recipient: \"0x...\"\n});"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.contractroyalty"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.contractroyalty"
       }
     ],
-    "reference": "https://typescript-docs.thirdweb.com/sdk.Pack"
+    "reference": "https://docs.thirdweb.com/typescript/sdk.Pack"
   },
   "Split": {
     "name": "Split",
@@ -578,7 +578,7 @@
         "examples": {
           "javascript": "// The address to check the funds of\nconst address = \"{{wallet_address}}\";\nconst funds = await contract.balanceOf(address);\nconsole.log(funds);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Split.balanceOf"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Split.balanceOf"
       },
       {
         "name": "balanceOfToken",
@@ -587,7 +587,7 @@
         "examples": {
           "javascript": "// The address to check the funds of\nconst address = \"{{wallet_address}}\";\n// The address of the currency to check the contracts funds of\nconst tokenAddress = \"0x...\"\nconst funds = await contract.balanceOfToken(address, tokenAddress);\nconsole.log(funds);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Split.balanceOfToken"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Split.balanceOfToken"
       },
       {
         "name": "distribute",
@@ -596,7 +596,7 @@
         "examples": {
           "javascript": "await contract.distribute();"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Split.distribute"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Split.distribute"
       },
       {
         "name": "distributeToken",
@@ -605,7 +605,7 @@
         "examples": {
           "javascript": "// The address of the currency to distribute funds\nconst tokenAddress = \"0x...\"\nawait contract.distributeToken(tokenAddress);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Split.distributeToken"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Split.distributeToken"
       },
       {
         "name": "getAllRecipients",
@@ -614,7 +614,7 @@
         "examples": {
           "javascript": "const recipients = await contract.getAllRecipients();\nconsole.log(recipients);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Split.getAllRecipients"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Split.getAllRecipients"
       },
       {
         "name": "withdraw",
@@ -623,11 +623,11 @@
         "examples": {
           "javascript": "// the wallet address that wants to withdraw their funds\nconst walletAddress = \"{{wallet_address}}\"\nawait contract.withdraw(walletAddress);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Split.withdraw"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Split.withdraw"
       }
     ],
     "properties": [],
-    "reference": "https://typescript-docs.thirdweb.com/sdk.Split"
+    "reference": "https://docs.thirdweb.com/typescript/sdk.Split"
   },
   "Token": {
     "name": "Token",
@@ -644,7 +644,7 @@
         "examples": {
           "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    toAddress: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 100, // How many tokens to mint to specified address\n  },\n {\n   toAddress: \"0x...\",\n   amount: 100,\n }\n]\n\nawait contract.mintBatchTo(data);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Token.mintBatchTo"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Token.mintBatchTo"
       },
       {
         "name": "mintTo",
@@ -653,7 +653,7 @@
         "examples": {
           "javascript": "const toAddress = \"{{wallet_address}}\"; // Address of the wallet you want to mint the tokens to\nconst amount = \"1.5\"; // The amount of this token you want to mint\n\nawait contract.mintTo(toAddress, amount);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Token.mintTo"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Token.mintTo"
       },
       {
         "name": "allowance",
@@ -662,7 +662,7 @@
         "examples": {
           "javascript": "// Address of the wallet to check token allowance\nconst spenderAddress = \"0x...\";\n\nconst allowance = await contract.allowanceOf(otherAddress);\nconsole.log(allowance);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc20.allowance"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.allowance"
       },
       {
         "name": "allowanceOf",
@@ -671,7 +671,7 @@
         "examples": {
           "javascript": "// Address of the wallet who owns the funds\nconst address = \"{{wallet_address}}\";\n\n// Address of the wallet to check token allowance\nconst spenderAddress = \"0x...\";\n\nconst allowance = await contract.allowanceOf(address, spenderAddress);\nconsole.log(allowance);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc20.allowanceOf"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.allowanceOf"
       },
       {
         "name": "balance",
@@ -680,7 +680,7 @@
         "examples": {
           "javascript": "const balance = await contract.balance();\nconsole.log(balance);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc20.balance"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.balance"
       },
       {
         "name": "balanceOf",
@@ -689,7 +689,7 @@
         "examples": {
           "javascript": "// Address of the wallet to check token balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await contract.balanceOf(address);\nconsole.log(balance);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc20.balanceOf"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.balanceOf"
       },
       {
         "name": "burn",
@@ -698,7 +698,7 @@
         "examples": {
           "javascript": "// The amount of this token you want to burn\nconst amount = 100;\n\nawait contract.burn(amount);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc20.burn"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.burn"
       },
       {
         "name": "burnFrom",
@@ -707,7 +707,7 @@
         "examples": {
           "javascript": "// Address of the wallet sending the tokens\nconst holderAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to burn\nconst amount = 100;\n\nawait contract.burnFrom(holderAddress, amount);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc20.burnFrom"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.burnFrom"
       },
       {
         "name": "get",
@@ -716,7 +716,7 @@
         "examples": {
           "javascript": "const token = await contract.get();\nconsole.log(token);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc20.get"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.get"
       },
       {
         "name": "setAllowance",
@@ -725,7 +725,7 @@
         "examples": {
           "javascript": "// Address of the wallet to allow transfers from\nconst spenderAddress = \"0x...\";\n\n// The number of tokens to give as allowance\nconst amount = 100\n\nawait contract.setAllowance(spenderAddress, amount);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc20.setAllowance"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.setAllowance"
       },
       {
         "name": "transfer",
@@ -734,7 +734,7 @@
         "examples": {
           "javascript": "// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n\n// The amount of tokens you want to send\nconst amount = 0;\n\nawait contract.transfer(toAddress, amount);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc20.transfer"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transfer"
       },
       {
         "name": "transferBatch",
@@ -743,7 +743,7 @@
         "examples": {
           "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    toAddress: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 100, // How many tokens to mint to specified address\n  },\n {\n   toAddress: \"0x...\",\n   amount: 100,\n }\n]\n\nawait contract.transferBatch(data);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc20.transferBatch"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transferBatch"
       },
       {
         "name": "transferFrom",
@@ -752,11 +752,11 @@
         "examples": {
           "javascript": "// Address of the wallet sending the tokens\nconst fromAddress = \"{{wallet_address}}\";\n\n// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n\n// The number of tokens you want to send\nconst amount = 100\n\n// Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nawait contract.transferFrom(fromAddress, toAddress, amount);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Erc20.transferFrom"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transferFrom"
       }
     ],
     "properties": [],
-    "reference": "https://typescript-docs.thirdweb.com/sdk.Token"
+    "reference": "https://docs.thirdweb.com/typescript/sdk.Token"
   },
   "Vote": {
     "name": "Vote",
@@ -773,7 +773,7 @@
         "examples": {
           "javascript": "// The proposal ID of the proposal you want to check\nconst proposalId = \"0\";\nconst canExecute = await contract.canExecute(proposalId);\nconsole.log(canExecute);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Vote.canExecute"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Vote.canExecute"
       },
       {
         "name": "execute",
@@ -782,7 +782,7 @@
         "examples": {
           "javascript": "// The proposal ID ofthe proposal you want to execute\nconst proposalId = \"0\"\nawait contract.execute(proposalId);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Vote.execute"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Vote.execute"
       },
       {
         "name": "getAll",
@@ -791,7 +791,7 @@
         "examples": {
           "javascript": "const proposals = await contract.getAll();\nconsole.log(proposals);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Vote.getAll"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Vote.getAll"
       },
       {
         "name": "hasVoted",
@@ -800,7 +800,7 @@
         "examples": {
           "javascript": "// The proposal ID of the proposal you want to check\nconst proposalId = \"0\";\n// The address of the wallet you want to check to see if they voted\nconst address = \"{{wallet_address}}\";\n\nawait contract.hasVoted(proposalId, address);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Vote.hasVoted"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Vote.hasVoted"
       },
       {
         "name": "propose",
@@ -809,7 +809,7 @@
         "examples": {
           "javascript": "// The description of the proposal you want to pass\nconst description = \"This is a great proposal - vote for it!\"\n// You can (optionally) pass in contract calls that will get executed when the proposal is executed.\nconst executions = [\n  {\n    // The contract you want to make a call to\n    toAddress: \"0x...\",\n    // The amount of the native currency to send in this transaction\n    nativeTokenValue: 0,\n    // Transaction data that will be executed when the proposal is executed\n    // This is an example transfer transaction with a token contract (which you would need to setup in code)\n    transactionData: tokenContract.encoder.encode(\n      \"transfer\", [\n        fromAddress,\n        amount,\n      ]\n    ),\n  }\n]\n\nconst proposal = await contract.propose(description, executions);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Vote.propose"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Vote.propose"
       },
       {
         "name": "vote",
@@ -818,10 +818,10 @@
         "examples": {
           "javascript": "// The proposal ID of the proposal you want to vote on\nconst proposalId = \"0\";\n// The vote type you want to cast, can be VoteType.Against, VoteType.For, or VoteType.Abstain\nconst voteType = VoteType.For;\n// The (optional) reason for the vote\nconst reason = \"I like this proposal!\";\n\nawait contract.vote(proposalId, voteType, reason);"
         },
-        "reference": "https://typescript-docs.thirdweb.com/sdk.Vote.vote"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Vote.vote"
       }
     ],
     "properties": [],
-    "reference": "https://typescript-docs.thirdweb.com/sdk.Vote"
+    "reference": "https://docs.thirdweb.com/typescript/sdk.Vote"
   }
 }

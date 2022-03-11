@@ -82,7 +82,7 @@ function parseExampleTag(docComment) {
   return examples;
 }
 
-const baseDocUrl = "https://typescript-docs.thirdweb.com/sdk.";
+const baseDocUrl = "https://docs.thirdweb.com/typescript/sdk.";
 
 const extractReferenceLink = (m, kind, contractName) => {
   if (kind === "Property") {
