@@ -76,7 +76,7 @@ export const CommonPlatformFeeSchema = z.object({
  * @internal
  */
 export const CommonTrustedForwarderSchema = z.object({
-  trusted_forwarder: z.array(AdressSchema).default([]),
+  trusted_forwarders: z.array(AdressSchema).default([]),
 });
 
 /**

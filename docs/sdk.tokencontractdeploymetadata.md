@@ -24,5 +24,5 @@ export interface TokenContractDeployMetadata
 |  [platform\_fee\_recipient?](./sdk.tokencontractdeploymetadata.platform_fee_recipient.md) | string | <i>(Optional)</i> The address that will receive the proceeds from platform fees |
 |  [primary\_sale\_recipient](./sdk.tokencontractdeploymetadata.primary_sale_recipient.md) | string | The address that will receive the proceeds from primary sales |
 |  [symbol?](./sdk.tokencontractdeploymetadata.symbol.md) | string | <i>(Optional)</i> Symbol for the NFTs |
-|  [trusted\_forwarder?](./sdk.tokencontractdeploymetadata.trusted_forwarder.md) | string\[\] | <i>(Optional)</i> Custom gasless trusted forwarder addresses |
+|  [trusted\_forwarders?](./sdk.tokencontractdeploymetadata.trusted_forwarders.md) | string\[\] | <i>(Optional)</i> Custom gasless trusted forwarder addresses |
 

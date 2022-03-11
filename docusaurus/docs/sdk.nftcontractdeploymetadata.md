@@ -31,4 +31,4 @@ export interface NFTContractDeployMetadata
 |  [primary\_sale\_recipient](./sdk.nftcontractdeploymetadata.primary_sale_recipient.md) | string | The address that will receive the proceeds from primary sales |
 |  [seller\_fee\_basis\_points?](./sdk.nftcontractdeploymetadata.seller_fee_basis_points.md) | number | <i>(Optional)</i> The percentage (in basis points) of royalties for secondary sales |
 |  [symbol?](./sdk.nftcontractdeploymetadata.symbol.md) | string | <i>(Optional)</i> Symbol for the NFTs |
-|  [trusted\_forwarder?](./sdk.nftcontractdeploymetadata.trusted_forwarder.md) | string\[\] | <i>(Optional)</i> Custom gasless trusted forwarder addresses |
+|  [trusted\_forwarders?](./sdk.nftcontractdeploymetadata.trusted_forwarders.md) | string\[\] | <i>(Optional)</i> Custom gasless trusted forwarder addresses |

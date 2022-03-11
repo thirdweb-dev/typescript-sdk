@@ -29,7 +29,7 @@ export interface NFTContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarder?: string[];
+  trusted_forwarders?: string[];
   /**
    * The address that will receive the proceeds from primary sales
    */
@@ -80,7 +80,7 @@ export interface TokenContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarder?: string[];
+  trusted_forwarders?: string[];
   /**
    * The address that will receive the proceeds from primary sales
    */
@@ -119,7 +119,7 @@ export interface MarketplaceContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarder?: string[];
+  trusted_forwarders?: string[];
   /**
    * The address that will receive the proceeds from platform fees
    */
@@ -154,7 +154,7 @@ export interface VoteContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarder?: string[];
+  trusted_forwarders?: string[];
   /**
    * The address of the governance token contract representing votes
    */
@@ -215,7 +215,7 @@ export interface SplitContractDeployMetadata {
   /**
    * Custom gasless trusted forwarder addresses
    */
-  trusted_forwarder?: string[];
+  trusted_forwarders?: string[];
   /**
    * The list of recipients and their share of the split
    */

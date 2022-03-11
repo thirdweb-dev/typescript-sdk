@@ -510,11 +510,11 @@ export const CommonSymbolSchema: z.ZodObject<{
 //
 // @internal (undocumented)
 export const CommonTrustedForwarderSchema: z.ZodObject<{
-    trusted_forwarder: z.ZodDefault<z.ZodArray<z.ZodEffects<z.ZodString, string, string>, "many">>;
+    trusted_forwarders: z.ZodDefault<z.ZodArray<z.ZodEffects<z.ZodString, string, string>, "many">>;
 }, "strip", z.ZodTypeAny, {
-    trusted_forwarder: string[];
+    trusted_forwarders: string[];
 }, {
-    trusted_forwarder?: string[] | undefined;
+    trusted_forwarders?: string[] | undefined;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "CONTRACT_ADDRESSES" should be prefixed with an underscore because the declaration is marked as @internal
@@ -830,7 +830,7 @@ export class Edition extends Erc1155<TokenERC1155> {
         }>, {
         primary_sale_recipient: ZodEffects<ZodString, string, string>;
         }>, {
-        trusted_forwarder: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -841,7 +841,7 @@ export class Edition extends Erc1155<TokenERC1155> {
         primary_sale_recipient: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
-        trusted_forwarder: string[];
+        trusted_forwarders: string[];
         }, {
         description?: string | undefined;
         image?: any;
@@ -850,7 +850,7 @@ export class Edition extends Erc1155<TokenERC1155> {
         fee_recipient?: string | undefined;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
-        trusted_forwarder?: string[] | undefined;
+        trusted_forwarders?: string[] | undefined;
         name: string;
         primary_sale_recipient: string;
         }>;
@@ -952,7 +952,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         }>, {
         primary_sale_recipient: ZodEffects<ZodString, string, string>;
         }>, {
-        trusted_forwarder: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -965,7 +965,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         primary_sale_recipient: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
-        trusted_forwarder: string[];
+        trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
         description?: string | undefined;
@@ -976,7 +976,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         fee_recipient?: string | undefined;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
-        trusted_forwarder?: string[] | undefined;
+        trusted_forwarders?: string[] | undefined;
         name: string;
         primary_sale_recipient: string;
         }>;
@@ -1650,7 +1650,7 @@ export class Marketplace implements UpdateableNetwork {
         platform_fee_basis_points: ZodDefault<ZodNumber>;
         platform_fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
         }>, {
-        trusted_forwarder: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -1658,14 +1658,14 @@ export class Marketplace implements UpdateableNetwork {
         name: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
-        trusted_forwarder: string[];
+        trusted_forwarders: string[];
         }, {
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
-        trusted_forwarder?: string[] | undefined;
+        trusted_forwarders?: string[] | undefined;
         name: string;
         }>;
         output: ZodObject<extendShape<    {
@@ -1736,7 +1736,7 @@ export interface MarketplaceContractDeployMetadata {
     name: string;
     platform_fee_basis_points?: number;
     platform_fee_recipient?: string;
-    trusted_forwarder?: string[];
+    trusted_forwarders?: string[];
 }
 
 // @public
@@ -1888,7 +1888,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
         }>, {
         primary_sale_recipient: ZodEffects<ZodString, string, string>;
         }>, {
-        trusted_forwarder: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -1900,7 +1900,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
         primary_sale_recipient: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
-        trusted_forwarder: string[];
+        trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
         description?: string | undefined;
@@ -1910,7 +1910,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
         fee_recipient?: string | undefined;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
-        trusted_forwarder?: string[] | undefined;
+        trusted_forwarders?: string[] | undefined;
         name: string;
         primary_sale_recipient: string;
         }>;
@@ -1988,7 +1988,7 @@ export interface NFTContractDeployMetadata {
     primary_sale_recipient: string;
     seller_fee_basis_points?: number;
     symbol?: string;
-    trusted_forwarder?: string[];
+    trusted_forwarders?: string[];
 }
 
 // @public
@@ -2038,7 +2038,7 @@ export class NFTDrop extends Erc721<DropERC721> {
         }>, {
         primary_sale_recipient: ZodEffects<ZodString, string, string>;
         }>, {
-        trusted_forwarder: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -2051,7 +2051,7 @@ export class NFTDrop extends Erc721<DropERC721> {
         primary_sale_recipient: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
-        trusted_forwarder: string[];
+        trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
         description?: string | undefined;
@@ -2062,7 +2062,7 @@ export class NFTDrop extends Erc721<DropERC721> {
         fee_recipient?: string | undefined;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
-        trusted_forwarder?: string[] | undefined;
+        trusted_forwarders?: string[] | undefined;
         name: string;
         primary_sale_recipient: string;
         }>;
@@ -2269,7 +2269,7 @@ export class Pack implements UpdateableNetwork {
         platform_fee_basis_points: ZodDefault<ZodNumber>;
         platform_fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
         }>, {
-        trusted_forwarder: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -2280,7 +2280,7 @@ export class Pack implements UpdateableNetwork {
         fee_recipient: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
-        trusted_forwarder: string[];
+        trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
         description?: string | undefined;
@@ -2290,7 +2290,7 @@ export class Pack implements UpdateableNetwork {
         fee_recipient?: string | undefined;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
-        trusted_forwarder?: string[] | undefined;
+        trusted_forwarders?: string[] | undefined;
         name: string;
         }>;
         output: ZodObject<extendShape<extendShape<extendShape<    {
@@ -3421,7 +3421,7 @@ export class Split implements UpdateableNetwork {
         shares: string | number | bigint | BigNumber;
         }>, "many">>;
         }>>, {
-        trusted_forwarder: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -3429,7 +3429,7 @@ export class Split implements UpdateableNetwork {
         name: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
-        trusted_forwarder: string[];
+        trusted_forwarders: string[];
         recipients: {
         address: string;
         shares: string;
@@ -3440,7 +3440,7 @@ export class Split implements UpdateableNetwork {
         external_link?: string | undefined;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
-        trusted_forwarder?: string[] | undefined;
+        trusted_forwarders?: string[] | undefined;
         recipients?: {
         address: string;
         shares: string | number | bigint | BigNumber;
@@ -3536,7 +3536,7 @@ export interface SplitContractDeployMetadata {
     image?: FileBufferOrString;
     name: string;
     recipients: SplitRecipientInput[];
-    trusted_forwarder?: string[];
+    trusted_forwarders?: string[];
 }
 
 // @public
@@ -3630,7 +3630,7 @@ export class Token extends Erc20<TokenERC20> {
         }>, {
         primary_sale_recipient: ZodEffects<ZodString, string, string>;
         }>, {
-        trusted_forwarder: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -3640,7 +3640,7 @@ export class Token extends Erc20<TokenERC20> {
         primary_sale_recipient: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
-        trusted_forwarder: string[];
+        trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
         description?: string | undefined;
@@ -3648,7 +3648,7 @@ export class Token extends Erc20<TokenERC20> {
         external_link?: string | undefined;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
-        trusted_forwarder?: string[] | undefined;
+        trusted_forwarders?: string[] | undefined;
         name: string;
         primary_sale_recipient: string;
         }>;
@@ -3709,7 +3709,7 @@ export interface TokenContractDeployMetadata {
     platform_fee_recipient?: string;
     primary_sale_recipient: string;
     symbol?: string;
-    trusted_forwarder?: string[];
+    trusted_forwarders?: string[];
 }
 
 // Warning: (ae-incompatible-release-tags) The symbol "TokenMintInput" is marked as @public, but its signature references "TokenMintInputSchema" which is marked as @internal
@@ -3833,13 +3833,13 @@ export class Vote implements UpdateableNetwork {
         voting_quorum_fraction: ZodDefault<ZodNumber>;
         proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }>, {
-        trusted_forwarder: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
         name: string;
-        trusted_forwarder: string[];
+        trusted_forwarders: string[];
         proposal_start_time_in_seconds: number;
         proposal_voting_time_in_seconds: number;
         voting_delay_in_blocks: number;
@@ -3851,7 +3851,7 @@ export class Vote implements UpdateableNetwork {
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
-        trusted_forwarder?: string[] | undefined;
+        trusted_forwarders?: string[] | undefined;
         proposal_start_time_in_seconds?: number | undefined;
         proposal_voting_time_in_seconds?: number | undefined;
         voting_delay_in_blocks?: number | undefined;
@@ -3955,7 +3955,7 @@ export interface VoteContractDeployMetadata {
     image?: FileBufferOrString;
     name: string;
     proposal_token_threshold?: BigNumberish;
-    trusted_forwarder?: string[];
+    trusted_forwarders?: string[];
     voting_delay_in_blocks?: number;
     voting_period_in_blocks?: number;
     voting_quorum_fraction?: number;

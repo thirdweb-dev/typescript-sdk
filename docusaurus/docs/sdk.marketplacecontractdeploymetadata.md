@@ -27,4 +27,4 @@ export interface MarketplaceContractDeployMetadata
 |  [name](./sdk.marketplacecontractdeploymetadata.name.md) | string | name of the contract |
 |  [platform\_fee\_basis\_points?](./sdk.marketplacecontractdeploymetadata.platform_fee_basis_points.md) | number | <i>(Optional)</i> The percentage (in basis points) of platform fees |
 |  [platform\_fee\_recipient?](./sdk.marketplacecontractdeploymetadata.platform_fee_recipient.md) | string | <i>(Optional)</i> The address that will receive the proceeds from platform fees |
-|  [trusted\_forwarder?](./sdk.marketplacecontractdeploymetadata.trusted_forwarder.md) | string\[\] | <i>(Optional)</i> Custom gasless trusted forwarder addresses |
+|  [trusted\_forwarders?](./sdk.marketplacecontractdeploymetadata.trusted_forwarders.md) | string\[\] | <i>(Optional)</i> Custom gasless trusted forwarder addresses |
