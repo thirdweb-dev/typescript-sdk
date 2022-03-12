@@ -27,12 +27,11 @@
     "extract-api": "api-extractor run --local",
     "full-build": "yarn build:lib && yarn generate-types && yarn extract-api",
     "generate-md-docs": "yarn api-documenter markdown -i ./temp -o ./docs",
-    "generate-docs": "yarn full-build && yarn generate-md-docs && yarn make:docs",
+    "generate-docs": "yarn full-build && yarn generate-md-docs",
     "generate-snippets": "node ./scripts/generate-snippets.mjs",
     "build": "yarn generate-docs && yarn generate-snippets",
     "test": "echo \"\nUse 'yarn run test:all' to run all tests\nPass a test file pattern from ./test to run\n\n\t$ yarn run test test/pack.test.ts\" && ts-mocha -t 120000 -r esm -p tsconfig.testing.json",
-    "test:all": "ts-mocha -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'",
-    "make:docs": "node scripts/make-docs.mjs"
+    "test:all": "ts-mocha -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.1",
