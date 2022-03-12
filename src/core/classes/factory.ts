@@ -21,6 +21,12 @@ import { ContractWrapper } from "./contract-wrapper";
 import { ProxyDeployedEvent } from "@thirdweb-dev/contracts/dist/TWFactory";
 
 import { ChainlinkVrf } from "../../constants/chainlink";
+import {
+  CONTRACT_ADDRESSES,
+  OZ_DEFENDER_FORWARDER_ADDRESS,
+  SUPPORTED_CHAIN_IDS,
+} from "../../constants";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * @internal
@@ -85,6 +91,11 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     metadata: z.input<TContract["schema"]["deploy"]>,
     contractURI: string,
   ): Promise<any[]> {
+    let trustedForwarders = await this.getDefaultTrustedForwarders();
+    // override default forwarders if custom ones are passed in
+    if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
+      trustedForwarders = metadata.trusted_forwarders;
+    }
     switch (contractType) {
       case NFTDrop.contractType:
       case NFTCollection.contractType:
@@ -94,7 +105,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc721metadata.name,
           erc721metadata.symbol,
           contractURI,
-          [erc721metadata.trusted_forwarder],
+          trustedForwarders,
           erc721metadata.primary_sale_recipient,
           erc721metadata.fee_recipient,
           erc721metadata.seller_fee_basis_points,
@@ -109,7 +120,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc1155metadata.name,
           erc1155metadata.symbol,
           contractURI,
-          [erc1155metadata.trusted_forwarder],
+          trustedForwarders,
           erc1155metadata.primary_sale_recipient,
           erc1155metadata.fee_recipient,
           erc1155metadata.seller_fee_basis_points,
@@ -123,7 +134,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc20metadata.name,
           erc20metadata.symbol,
           contractURI,
-          [erc20metadata.trusted_forwarder],
+          trustedForwarders,
           erc20metadata.primary_sale_recipient,
           erc20metadata.platform_fee_recipient,
           erc20metadata.platform_fee_basis_points,
@@ -133,7 +144,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         return [
           voteMetadata.name,
           contractURI,
-          [voteMetadata.trusted_forwarder],
+          trustedForwarders,
           voteMetadata.voting_token_address,
           voteMetadata.voting_delay_in_blocks,
           voteMetadata.voting_period_in_blocks,
@@ -145,7 +156,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         return [
           await this.getSignerAddress(),
           contractURI,
-          [splitsMetadata.trusted_forwarder],
+          trustedForwarders,
           splitsMetadata.recipients.map((s) => s.address),
           splitsMetadata.recipients.map((s) => s.shares),
         ];
@@ -154,7 +165,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         return [
           await this.getSignerAddress(),
           contractURI,
-          [marketplaceMetadata.trusted_forwarder],
+          trustedForwarders,
           marketplaceMetadata.platform_fee_recipient,
           marketplaceMetadata.platform_fee_basis_points,
         ];
@@ -166,7 +177,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           packsMetadata.name,
           packsMetadata.symbol,
           contractURI,
-          [packsMetadata.trusted_forwarder],
+          trustedForwarders,
           packsMetadata.fee_recipient,
           packsMetadata.seller_fee_basis_points,
           vrf.fees,
@@ -175,5 +186,16 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       default:
         return [];
     }
+  }
+
+  private async getDefaultTrustedForwarders(): Promise<string[]> {
+    const chainId = await this.getChainID();
+    const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
+    const biconomyForwarder = chainEnum
+      ? CONTRACT_ADDRESSES[chainEnum].biconomyForwarder
+      : AddressZero;
+    return biconomyForwarder !== AddressZero
+      ? [OZ_DEFENDER_FORWARDER_ADDRESS, biconomyForwarder]
+      : [OZ_DEFENDER_FORWARDER_ADDRESS];
   }
 }

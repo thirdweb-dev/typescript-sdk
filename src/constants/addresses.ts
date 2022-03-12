@@ -4,7 +4,8 @@ import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 /**
  * @internal
  */
-export const FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
+export const OZ_DEFENDER_FORWARDER_ADDRESS =
+  "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 
 const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
 const TWFactory_address = "0x11c34F062Cb10a20B9F463E12Ff9dA62D76FDf65";

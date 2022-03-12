@@ -21,7 +21,7 @@ export interface VoteContractDeployMetadata
 |  [image?](./sdk.votecontractdeploymetadata.image.md) | FileBufferOrString | <i>(Optional)</i> Optional image for the contract |
 |  [name](./sdk.votecontractdeploymetadata.name.md) | string | name of the contract |
 |  [proposal\_token\_threshold?](./sdk.votecontractdeploymetadata.proposal_token_threshold.md) | BigNumberish | <i>(Optional)</i> The minimum amount in governance token owned to be able to vote |
-|  [trusted\_forwarder?](./sdk.votecontractdeploymetadata.trusted_forwarder.md) | string | <i>(Optional)</i> The gasless forwarder address (Biconomy or OZ Defender) |
+|  [trusted\_forwarders?](./sdk.votecontractdeploymetadata.trusted_forwarders.md) | string\[\] | <i>(Optional)</i> Custom gasless trusted forwarder addresses |
 |  [voting\_delay\_in\_blocks?](./sdk.votecontractdeploymetadata.voting_delay_in_blocks.md) | number | <i>(Optional)</i> The delay in blocks before voting can begin on proposals |
 |  [voting\_period\_in\_blocks?](./sdk.votecontractdeploymetadata.voting_period_in_blocks.md) | number | <i>(Optional)</i> The duration in blocks of the open voting window |
 |  [voting\_quorum\_fraction?](./sdk.votecontractdeploymetadata.voting_quorum_fraction.md) | number | <i>(Optional)</i> The minimum fraction to be met to pass a proposal |

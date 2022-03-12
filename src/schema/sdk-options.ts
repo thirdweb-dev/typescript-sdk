@@ -1,4 +1,4 @@
-import { FORWARDER_ADDRESS } from "../constants/addresses";
+import { OZ_DEFENDER_FORWARDER_ADDRESS } from "../constants/addresses";
 import { z } from "zod";
 
 /**
@@ -26,7 +26,9 @@ export const SDKOptionsSchema = z
         z.object({
           openzeppelin: z.object({
             relayerUrl: z.string().url(),
-            relayerForwarderAddress: z.string().default(FORWARDER_ADDRESS),
+            relayerForwarderAddress: z
+              .string()
+              .default(OZ_DEFENDER_FORWARDER_ADDRESS),
           }),
         }),
         z.object({
