@@ -23,8 +23,8 @@ export const CONTRACT_ADDRESSES: Record<
 > = {
   [ChainId.Mainnet]: {
     biconomyForwarder: "0x84a0856b038eaAd1cC7E297cF34A7e72685A8693",
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
   [ChainId.Rinkeby]: {
     biconomyForwarder: "0xFD4973FeB2031D4409fB57afEE5dF2051b171104",
