@@ -271,7 +271,7 @@ export class IpfsStorage implements IStorage {
         fileName = `${i + fileStartNumber}`;
       }
 
-      const filepath = `${fileName}`;
+      const filepath = `files/${fileName}`;
       if (fileNames.indexOf(fileName) > -1) {
         throw new DuplicateFileNameError(fileName);
       }
@@ -286,9 +286,8 @@ export class IpfsStorage implements IStorage {
     });
     data.append("name", name);
     data.append("meta", JSON.stringify(metadata));
-    data.append("wrapWithDirectory", "true");
 
-    const res = await fetch(`${PINATA_IPFS_URL}`, {
+    const res = await fetch(PINATA_IPFS_URL, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

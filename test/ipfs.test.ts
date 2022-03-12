@@ -156,7 +156,6 @@ describe("IPFS Uploads", async () => {
     ];
     const cid = await storage.uploadBatch(sampleObjects);
 
-    console.log("cid", cid);
     assert(
       (await getFile(`${cid}0`)).headers?.get("content-type")?.toString() ===
         "image/jpeg",
