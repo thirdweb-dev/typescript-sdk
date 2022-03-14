@@ -802,10 +802,11 @@ export class Edition extends Erc1155<TokenERC1155> {
     encoder: ContractEncoder<TokenERC1155>;
     // (undocumented)
     estimator: GasCostEstimator<TokenERC1155>;
-    increaseSupply(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
     mint(metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;
+    mintAdditionalSupply(tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
+    mintAdditionalSupplyTo(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
     mintBatch(metadatas: EditionMetadataInput[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
     mintBatchTo(to: string, metadataWithSupply: EditionMetadataInput[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
     mintTo(to: string, metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;

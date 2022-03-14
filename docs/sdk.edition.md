@@ -50,8 +50,9 @@ const contract = sdk.getEdition("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [increaseSupply(to, tokenId, additionalSupply)](./sdk.edition.increasesupply.md) |  | Increase the supply of an existing NFT |
 |  [mint(metadataWithSupply)](./sdk.edition.mint.md) |  | Mint NFT for the connected wallet |
+|  [mintAdditionalSupply(tokenId, additionalSupply)](./sdk.edition.mintadditionalsupply.md) |  | Increase the supply of an existing NFT and mint it to the connected wallet |
+|  [mintAdditionalSupplyTo(to, tokenId, additionalSupply)](./sdk.edition.mintadditionalsupplyto.md) |  | Increase the supply of an existing NFT and mint it to a given wallet address |
 |  [mintBatch(metadatas)](./sdk.edition.mintbatch.md) |  | Mint Many NFTs for the connected wallet |
 |  [mintBatchTo(to, metadataWithSupply)](./sdk.edition.mintbatchto.md) |  | Mint Many NFTs with limited supplies |
 |  [mintTo(to, metadataWithSupply)](./sdk.edition.mintto.md) |  | Mint an NFT with a limited supply |
