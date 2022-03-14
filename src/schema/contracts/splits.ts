@@ -29,7 +29,7 @@ export const SplitsContractInput = CommonContractSchema.extend({
         if (addressMap[entry.address]) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
-            message: `Duplicate address`,
+            message: `Duplicate address.`,
             path: [index, `address`],
           });
         }
@@ -38,7 +38,7 @@ export const SplitsContractInput = CommonContractSchema.extend({
         if (totalShares > 10_000) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
-            message: `Total shares cannot go over 100%`,
+            message: `Total shares cannot go over 100%.`,
             path: [index, `sharesBps`],
           });
         }
@@ -46,7 +46,7 @@ export const SplitsContractInput = CommonContractSchema.extend({
       if (totalShares !== 10_000) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `Total shares need to add 100%`,
+          message: `Total shares need to add up to 100% (10000 bps). Total shares are currently ${totalShares} bps.`,
           path: [],
         });
       }
