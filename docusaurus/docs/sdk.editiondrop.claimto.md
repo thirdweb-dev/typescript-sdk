@@ -44,7 +44,7 @@ const address = "{{wallet_address}}"; // address of the wallet you want to claim
 const tokenId = 0; // the id of the NFT you want to claim
 const quantity = 1; // how many NFTs you want to claim
 
-const tx = await contract.claimTo(address, quantity);
+const tx = await contract.claimTo(address, tokenId, quantity);
 const receipt = tx.receipt; // the transaction receipt
 const claimedTokenId = tx.id; // the id of the NFT claimed
 const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata

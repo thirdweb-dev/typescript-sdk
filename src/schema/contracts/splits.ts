@@ -14,7 +14,7 @@ const SplitRecipientInputSchema = z.object({
 
 const SplitRecipientOuputSchema = SplitRecipientInputSchema.extend({
   address: AddressSchema,
-  shares: BasisPointsSchema,
+  sharesBps: BasisPointsSchema,
 });
 
 export const SplitsContractInput = CommonContractSchema.extend({
