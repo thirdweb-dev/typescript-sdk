@@ -60,7 +60,7 @@ export const HexColor = z.union([
   z.string().length(0),
 ]);
 
-export const AdressSchema = z.string().refine(
+export const AddressSchema = z.string().refine(
   (arg) => isAddress(arg),
   (out) => {
     return {

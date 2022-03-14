@@ -186,9 +186,9 @@ export interface SplitRecipientInput {
    */
   address: string;
   /**
-   * the shares that address is owed from the total funds
+   * the shares in basis point (5% = 500) that address is owed from the total funds
    */
-  shares: BigNumberish;
+  sharesBps: number;
 }
 
 /**
