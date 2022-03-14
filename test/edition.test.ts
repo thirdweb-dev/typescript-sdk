@@ -47,6 +47,22 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     expect(parseFloat(cost)).gt(0);
   });
 
+  it("mint additional suply", async () => {
+    const tx = await bundleContract.mint({
+      metadata: {
+        name: "Bundle 1",
+        description: "Bundle 1",
+        image: "fake://myownfakeipfs",
+      },
+      supply: 10,
+    });
+    const nft = await bundleContract.get(tx.id);
+    expect(nft.supply.toNumber()).to.eq(10);
+    await bundleContract.mintAdditionalSupply(tx.id, 10);
+    const nft2 = await bundleContract.get(tx.id);
+    expect(nft2.supply.toNumber()).to.eq(20);
+  });
+
   it("should return all owned collection tokens", async () => {
     await bundleContract.mint({
       metadata: {
