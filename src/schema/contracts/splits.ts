@@ -9,7 +9,7 @@ import { AddressSchema, BasisPointsSchema } from "../shared";
 
 const SplitRecipientInputSchema = z.object({
   address: AddressSchema,
-  sharesBps: BasisPointsSchema,
+  sharesBps: BasisPointsSchema.gt(0, "Shares must be greater than 0"),
 });
 
 const SplitRecipientOuputSchema = SplitRecipientInputSchema.extend({
