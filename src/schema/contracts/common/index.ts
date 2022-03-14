@@ -1,5 +1,5 @@
 import {
-  AdressSchema,
+  AddressSchema,
   BasisPointsSchema,
   FileBufferOrStringSchema,
   JsonSchema,
@@ -45,7 +45,7 @@ export const CommonRoyaltySchema = z.object({
    * to this address.
    * @internalremarks used by OpenSea "fee_recipient"
    */
-  fee_recipient: AdressSchema.default(AddressZero),
+  fee_recipient: AddressSchema.default(AddressZero),
 });
 
 /**
@@ -55,7 +55,7 @@ export const CommonPrimarySaleSchema = z.object({
   /**
    * primary sale recipient address
    */
-  primary_sale_recipient: AdressSchema,
+  primary_sale_recipient: AddressSchema,
 });
 
 /**
@@ -69,14 +69,14 @@ export const CommonPlatformFeeSchema = z.object({
   /**
    * platform fee recipient address
    */
-  platform_fee_recipient: AdressSchema.default(AddressZero),
+  platform_fee_recipient: AddressSchema.default(AddressZero),
 });
 
 /**
  * @internal
  */
 export const CommonTrustedForwarderSchema = z.object({
-  trusted_forwarders: z.array(AdressSchema).default([]),
+  trusted_forwarders: z.array(AddressSchema).default([]),
 });
 
 /**

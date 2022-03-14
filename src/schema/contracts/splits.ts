@@ -5,16 +5,16 @@ import {
   CommonTrustedForwarderSchema,
 } from "./common";
 import { z } from "zod";
-import { BigNumberishSchema, BigNumberSchema } from "../shared";
+import { AddressSchema, BasisPointsSchema } from "../shared";
 
 const SplitRecipientInputSchema = z.object({
-  address: z.string(),
-  shares: BigNumberishSchema,
+  address: AddressSchema,
+  sharesBps: BasisPointsSchema,
 });
 
 const SplitRecipientOuputSchema = SplitRecipientInputSchema.extend({
-  address: z.string(),
-  shares: BigNumberSchema,
+  address: AddressSchema,
+  sharesBps: BasisPointsSchema,
 });
 
 export const SplitsContractInput = CommonContractSchema.extend({

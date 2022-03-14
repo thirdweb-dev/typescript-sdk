@@ -158,7 +158,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           contractURI,
           trustedForwarders,
           splitsMetadata.recipients.map((s) => s.address),
-          splitsMetadata.recipients.map((s) => s.shares),
+          splitsMetadata.recipients.map((s) => BigNumber.from(s.sharesBps)),
         ];
       case Marketplace.contractType:
         const marketplaceMetadata = Marketplace.schema.deploy.parse(metadata);

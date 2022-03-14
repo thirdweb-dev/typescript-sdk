@@ -3392,14 +3392,14 @@ export class Split implements UpdateableNetwork {
         external_link: ZodOptional<ZodString>;
         }, {
         recipients: ZodDefault<ZodArray<ZodObject<    {
-        address: ZodString;
-        shares: ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+        address: ZodEffects<ZodString, string, string>;
+        sharesBps: ZodNumber;
         }, "strip", ZodTypeAny, {
         address: string;
-        shares: string;
+        sharesBps: number;
         }, {
         address: string;
-        shares: string | number | bigint | BigNumber;
+        sharesBps: number;
         }>, "many">>;
         }>, {
         platform_fee_basis_points: ZodDefault<ZodNumber>;
@@ -3411,14 +3411,14 @@ export class Split implements UpdateableNetwork {
         external_link: ZodOptional<ZodString>;
         }, {
         recipients: ZodDefault<ZodArray<ZodObject<    {
-        address: ZodString;
-        shares: ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+        address: ZodEffects<ZodString, string, string>;
+        sharesBps: ZodNumber;
         }, "strip", ZodTypeAny, {
         address: string;
-        shares: string;
+        sharesBps: number;
         }, {
         address: string;
-        shares: string | number | bigint | BigNumber;
+        sharesBps: number;
         }>, "many">>;
         }>>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
@@ -3432,7 +3432,7 @@ export class Split implements UpdateableNetwork {
         trusted_forwarders: string[];
         recipients: {
         address: string;
-        shares: string;
+        sharesBps: number;
         }[];
         }, {
         description?: string | undefined;
@@ -3443,7 +3443,7 @@ export class Split implements UpdateableNetwork {
         trusted_forwarders?: string[] | undefined;
         recipients?: {
         address: string;
-        shares: string | number | bigint | BigNumber;
+        sharesBps: number;
         }[] | undefined;
         name: string;
         }>;
@@ -3456,17 +3456,17 @@ export class Split implements UpdateableNetwork {
         image: ZodOptional<ZodString>;
         }>, {
         recipients: ZodArray<ZodObject<extendShape<    {
-        address: ZodString;
-        shares: ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+        address: ZodEffects<ZodString, string, string>;
+        sharesBps: ZodNumber;
         }, {
-        address: ZodString;
-        shares: ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+        address: ZodEffects<ZodString, string, string>;
+        sharesBps: ZodNumber;
         }>, "strip", ZodTypeAny, {
         address: string;
-        shares: BigNumber;
+        sharesBps: number;
         }, {
         address: string;
-        shares: string | number | bigint | BigNumber;
+        sharesBps: number;
         }>, "many">;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
@@ -3476,7 +3476,7 @@ export class Split implements UpdateableNetwork {
         name: string;
         recipients: {
         address: string;
-        shares: BigNumber;
+        sharesBps: number;
         }[];
         }, {
         [x: string]: Json;
@@ -3486,7 +3486,7 @@ export class Split implements UpdateableNetwork {
         name: string;
         recipients: {
         address: string;
-        shares: string | number | bigint | BigNumber;
+        sharesBps: number;
         }[];
         }>;
         input: ZodObject<extendShape<    {
@@ -3496,14 +3496,14 @@ export class Split implements UpdateableNetwork {
         external_link: ZodOptional<ZodString>;
         }, {
         recipients: ZodDefault<ZodArray<ZodObject<    {
-        address: ZodString;
-        shares: ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+        address: ZodEffects<ZodString, string, string>;
+        sharesBps: ZodNumber;
         }, "strip", ZodTypeAny, {
         address: string;
-        shares: string;
+        sharesBps: number;
         }, {
         address: string;
-        shares: string | number | bigint | BigNumber;
+        sharesBps: number;
         }>, "many">>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
@@ -3512,7 +3512,7 @@ export class Split implements UpdateableNetwork {
         name: string;
         recipients: {
         address: string;
-        shares: string;
+        sharesBps: number;
         }[];
         }, {
         description?: string | undefined;
@@ -3520,7 +3520,7 @@ export class Split implements UpdateableNetwork {
         external_link?: string | undefined;
         recipients?: {
         address: string;
-        shares: string | number | bigint | BigNumber;
+        sharesBps: number;
         }[] | undefined;
         name: string;
         }>;
@@ -3548,7 +3548,7 @@ export interface SplitRecipient {
 // @public (undocumented)
 export interface SplitRecipientInput {
     address: string;
-    shares: BigNumberish;
+    sharesBps: number;
 }
 
 // @public (undocumented)

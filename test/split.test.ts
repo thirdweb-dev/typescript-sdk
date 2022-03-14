@@ -23,15 +23,15 @@ describe("Splits Contract", async () => {
       recipients: [
         {
           address: samWallet.address,
-          shares: 1,
+          sharesBps: 3333,
         },
         {
           address: bobWallet.address,
-          shares: 1,
+          sharesBps: 3333,
         },
         {
           address: abbyWallet.address,
-          shares: 1,
+          sharesBps: 3334,
         },
       ],
     });
@@ -52,7 +52,7 @@ describe("Splits Contract", async () => {
     assert.equal(
       (await splitsContract.getRecipientSplitPercentage(samWallet.address))
         .splitPercentage,
-      33.33333,
+      33.33,
       "Each wallet should have 1/3rd of the split",
     );
   });
