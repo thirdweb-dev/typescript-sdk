@@ -18,7 +18,32 @@ const SplitRecipientOuputSchema = SplitRecipientInputSchema.extend({
 });
 
 export const SplitsContractInput = CommonContractSchema.extend({
-  recipients: z.array(SplitRecipientInputSchema).default([]),
+  recipients: z
+    .array(SplitRecipientInputSchema)
+    .default([])
+    .superRefine((val, context) => {
+      const addressMap: Record<string, boolean> = {};
+      let totalShares = 0;
+      for (let index = 0; index < val.length; index++) {
+        const entry = val[index];
+        if (addressMap[entry.address]) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Duplicate address`,
+            path: [index, `address`],
+          });
+        }
+        addressMap[entry.address] = true;
+        totalShares += entry.sharesBps;
+        if (totalShares > 10_000) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Total shares cannot go over 100%`,
+            path: [index, `sharesBps`],
+          });
+        }
+      }
+    }),
 });
 
 export const SplitsContractOutput = CommonContractOutputSchema.extend({
