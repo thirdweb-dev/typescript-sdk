@@ -199,13 +199,30 @@ export class Edition extends Erc1155<TokenERC1155> {
   }
 
   /**
-   * Increase the supply of an existing NFT
+   * Increase the supply of an existing NFT and mint it to the connected wallet
+   *
+   * @param tokenId - the token id of the NFT to increase supply of
+   * @param additionalSupply - the additional amount to mint
+   */
+  public async mintAdditionalSupply(
+    tokenId: BigNumberish,
+    additionalSupply: BigNumberish,
+  ): Promise<TransactionResultWithId<EditionMetadata>> {
+    return this.mintAdditionalSupplyTo(
+      await this.contractWrapper.getSignerAddress(),
+      tokenId,
+      additionalSupply,
+    );
+  }
+
+  /**
+   * Increase the supply of an existing NFT and mint it to a given wallet address
    *
    * @param to - the address to mint to
    * @param tokenId - the token id of the NFT to increase supply of
    * @param additionalSupply - the additional amount to mint
    */
-  public async increaseSupply(
+  public async mintAdditionalSupplyTo(
     to: string,
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
