@@ -24,7 +24,7 @@ Promise&lt;([AuctionListing](./sdk.auctionlisting.md) \| [DirectListing](./sdk.d
 
 ## Remarks
 
-Fetch all the active listings from this marketplace contract.
+Fetch all the listings from this marketplace contract, including sold ones.
 
 ## Example
 

@@ -205,9 +205,18 @@
         "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.buyoutListing"
       },
       {
+        "name": "getActiveListings",
+        "summary": "Get all active listings\n\n",
+        "remarks": "\n\nFetch all the active listings from this marketplace contract.\n\n",
+        "examples": {
+          "javascript": "const listings = await contract.getActiveListings();\nconst priceOfFirstActiveListing = listings[0].price;"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.getActiveListings"
+      },
+      {
         "name": "getAllListings",
         "summary": "Get all the listings\n\n",
-        "remarks": "\n\nFetch all the active listings from this marketplace contract.\n\n",
+        "remarks": "\n\nFetch all the listings from this marketplace contract, including sold ones.\n\n",
         "examples": {
           "javascript": "const listings = await contract.getAllListings();\nconst priceOfFirstListing = listings[0].price;"
         },
