@@ -203,9 +203,34 @@ export class Marketplace implements UpdateableNetwork {
   }
 
   /**
-   * Get all the listings
+   * Get all active listings
    *
    * @remarks Fetch all the active listings from this marketplace contract.
+   * @example
+   * ```javascript
+   * const listings = await contract.getActiveListings();
+   * const priceOfFirstActiveListing = listings[0].price;
+   * ```
+   */
+  public async getActiveListings(): Promise<
+    (AuctionListing | DirectListing)[]
+  > {
+    const rawListings = await this.getAllListingsNoFilter();
+    return rawListings.filter((l) => {
+      return (
+        (l.type === ListingType.Auction &&
+          BigNumber.from(l.endTimeInEpochSeconds).gt(
+            BigNumber.from(Math.floor(Date.now() / 1000)),
+          )) ||
+        (l.type === ListingType.Direct && l.quantity > 0)
+      );
+    });
+  }
+
+  /**
+   * Get all the listings
+   *
+   * @remarks Fetch all the listings from this marketplace contract, including sold ones.
    * @example
    * ```javascript
    * const listings = await contract.getAllListings();

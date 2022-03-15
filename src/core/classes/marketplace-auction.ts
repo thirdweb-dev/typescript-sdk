@@ -384,7 +384,7 @@ export class MarketplaceAuction {
    * ```
    *
    * @param listingId - the auction  listing ud to close
-   * @param closeFor - optionally pass the address the auction creator address or winning bid offeror address to close the auction on their behalf
+   * @param closeFor - optionally pass the auction creator address or winning bid offeror address to close the auction on their behalf
    */
   public async closeListing(
     listingId: BigNumberish,

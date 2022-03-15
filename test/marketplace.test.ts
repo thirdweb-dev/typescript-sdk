@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   AuctionAlreadyStartedError,
@@ -294,6 +294,17 @@ describe("Marketplace Contract", async () => {
         dummyNftContract.getAddress(),
         1,
       );
+    });
+
+    it("should return only active listings", async () => {
+      const before = await marketplaceContract.getActiveListings();
+      expect(before.length).to.eq(2);
+      console.log("before", before);
+      await sdk.updateSignerOrProvider(samWallet);
+      await marketplaceContract.buyoutListing(directListingId, 1);
+      const afterDirectBuyout = await marketplaceContract.getActiveListings();
+      expect(afterDirectBuyout.length).to.eq(1);
+      // TODO add test for buying out auctions too (needs time control)
     });
 
     it("should return an auction listing", async () => {

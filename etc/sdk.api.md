@@ -1626,6 +1626,7 @@ export class Marketplace implements UpdateableNetwork {
     encoder: ContractEncoder<Marketplace_2>;
     // (undocumented)
     estimator: GasCostEstimator<Marketplace_2>;
+    getActiveListings(): Promise<(AuctionListing | DirectListing)[]>;
     // (undocumented)
     getAddress(): string;
     // Warning: (ae-forgotten-export) The symbol "MarketplaceFilter" needs to be exported by the entry point index.d.ts
