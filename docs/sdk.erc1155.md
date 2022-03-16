@@ -36,8 +36,9 @@ export declare class Erc1155<T extends DropERC1155 | TokenERC1155> implements Up
 |  [burn(tokenId, amount)](./sdk.erc1155.burn.md) |  | Burn a single NFT |
 |  [get(tokenId)](./sdk.erc1155.get.md) |  | Get a single NFT Metadata |
 |  [getAddress()](./sdk.erc1155.getaddress.md) |  |  |
-|  [getAll()](./sdk.erc1155.getall.md) |  | Get All NFTs |
+|  [getAll(queryParams)](./sdk.erc1155.getall.md) |  | Get All NFTs |
 |  [getOwned(\_address)](./sdk.erc1155.getowned.md) |  | Get Owned NFTs |
+|  [getTotalCount()](./sdk.erc1155.gettotalcount.md) |  | Get the number of NFTs minted |
 |  [isApproved(address, operator)](./sdk.erc1155.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
 |  [isTransferRestricted()](./sdk.erc1155.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [totalSupply(tokenId)](./sdk.erc1155.totalsupply.md) |  | Returns the total supply of a specific token |

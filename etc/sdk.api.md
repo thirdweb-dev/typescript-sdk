@@ -731,7 +731,7 @@ export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_QUERY_ALL_COUNT" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const DEFAULT_QUERY_ALL_COUNT = 100;
+export const DEFAULT_QUERY_ALL_COUNT: ethers.BigNumber;
 
 // @public
 export class DelayedReveal<T extends DropERC721> {
@@ -1314,10 +1314,11 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155> implements Updateable
     get(tokenId: BigNumberish): Promise<EditionMetadata>;
     // (undocumented)
     getAddress(): string;
-    getAll(): Promise<EditionMetadata[]>;
+    getAll(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
     getOwned(_address?: string): Promise<EditionMetadataOwner[]>;
     // @internal (undocumented)
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
+    getTotalCount(): Promise<BigNumber>;
     isApproved(address: string, operator: string): Promise<boolean>;
     isTransferRestricted(): Promise<boolean>;
     // @internal (undocumented)
@@ -1384,6 +1385,7 @@ export class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNet
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
     // @internal (undocumented)
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
+    getTotalCount(): Promise<BigNumber>;
     isApproved(address: string, operator: string): Promise<boolean>;
     isTransferRestricted(): Promise<boolean>;
     // @internal (undocumented)

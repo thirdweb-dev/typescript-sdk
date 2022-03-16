@@ -1,9 +1,9 @@
-import { BigNumberish } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 
 /**
  * @internal
  */
-export const DEFAULT_QUERY_ALL_COUNT = 100;
+export const DEFAULT_QUERY_ALL_COUNT = ethers.constants.MaxUint256;
 
 /**
  * @public
