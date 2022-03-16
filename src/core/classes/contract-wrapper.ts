@@ -30,6 +30,7 @@ import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { ChainId } from "../../constants";
+import { convertToTWError } from "../../common";
 
 /**
  * @internal
@@ -283,31 +284,11 @@ export class ContractWrapper<
     try {
       return await func(...args, callOverrides);
     } catch (e) {
-      throw await this.readableErrorWithRevertReason(e);
+      const network = await this.getProvider().getNetwork();
+      const signerAddress = await this.getSignerAddress();
+      const contractAddress = await this.readContract.address;
+      throw await convertToTWError(e, network, signerAddress, contractAddress);
     }
-  }
-
-  private async readableErrorWithRevertReason(e: any): Promise<Error> {
-    if (e instanceof Error) {
-      const erasedError = e as any;
-      if (erasedError.reason && erasedError.code) {
-        // this is definitely a ethers.js error, try to extract error message in body
-        const regex =
-          /.*?message\\":\\"([^"]*)\\".*?data\\":\\"([^"]*)\\".*?from\\":\\"([^"]*)\\".*?to\\":\\"([^"]*)\\"/;
-        const matches = e.message.match(regex) || [];
-        if (matches?.length > 3) {
-          const message = matches[1];
-          const data = matches[2];
-          const from = matches[3];
-          const to = matches[4];
-          const network = await this.getProvider().getNetwork();
-          return new Error(
-            `Contract transaction failed: "${message}"\n\nTransaction info:\n- from: "${from}"\n- to: "${to}"\n- chain: "${network.name}" (${network.chainId})\n- data: "${data}"\n`,
-          );
-        }
-      }
-    }
-    return e;
   }
 
   /**

@@ -28,6 +28,7 @@ import { IThirdwebRoyalty } from '@thirdweb-dev/contracts';
 import { Log } from '@ethersproject/providers';
 import { Marketplace as Marketplace_2 } from '@thirdweb-dev/contracts';
 import { Marketplace__factory } from '@thirdweb-dev/contracts';
+import { Network } from '@ethersproject/providers';
 import { Networkish } from '@ethersproject/providers';
 import { Pack as Pack_2 } from '@thirdweb-dev/contracts';
 import { Pack__factory } from '@thirdweb-dev/contracts';
@@ -661,6 +662,11 @@ export const CONTRACTS_MAP: {
 // @public (undocumented)
 export type ContractType = keyof typeof CONTRACTS_MAP;
 
+// Warning: (ae-internal-missing-underscore) The name "convertToTWError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function convertToTWError(error: any, network: Network, signerAddress: string, contractAddress: string): Promise<TransactionError>;
+
 // Warning: (ae-internal-missing-underscore) The name "createSnapshot" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -720,7 +726,7 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_IPFS_GATEWAY" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const DEFAULT_IPFS_GATEWAY = "https://cloudflare-ipfs.com/ipfs/";
+export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_QUERY_ALL_COUNT" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -3751,6 +3757,23 @@ export const TokenMintInputSchema: z.ZodObject<{
     amount: string | number | bigint | BigNumber;
 }>;
 
+// @public (undocumented)
+export class TransactionError extends Error {
+    constructor(reason: string, from: string, to: string, data: string, network: Network, rpcUrl: string, raw: string);
+    // (undocumented)
+    chain: Network;
+    // (undocumented)
+    data: string;
+    // (undocumented)
+    from: string;
+    // (undocumented)
+    reason: string;
+    // (undocumented)
+    rpcUrl: string;
+    // (undocumented)
+    to: string;
+}
+
 // Warning: (ae-forgotten-export) The symbol "If" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "Equals" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "TransactionResultWithMetadata" needs to be exported by the entry point index.d.ts
@@ -3849,7 +3872,7 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
-        voting_token_address: ZodString;
+        voting_token_address: ZodEffects<ZodString, string, string>;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
         proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }>, {
@@ -3893,7 +3916,7 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
-        voting_token_address: ZodString;
+        voting_token_address: ZodEffects<ZodString, string, string>;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
         proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }, {
@@ -3935,7 +3958,7 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
-        voting_token_address: ZodString;
+        voting_token_address: ZodEffects<ZodString, string, string>;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
         proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }>, "strip", ZodTypeAny, {
