@@ -3767,7 +3767,7 @@ export class TransactionError extends Error {
     // (undocumented)
     from: string;
     // (undocumented)
-    revertReason: string;
+    reason: string;
     // (undocumented)
     rpcUrl: string;
     // (undocumented)
@@ -3872,7 +3872,7 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
-        voting_token_address: ZodString;
+        voting_token_address: ZodEffects<ZodString, string, string>;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
         proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }>, {
@@ -3916,7 +3916,7 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
-        voting_token_address: ZodString;
+        voting_token_address: ZodEffects<ZodString, string, string>;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
         proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }, {
@@ -3958,7 +3958,7 @@ export class Vote implements UpdateableNetwork {
         proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
-        voting_token_address: ZodString;
+        voting_token_address: ZodEffects<ZodString, string, string>;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
         proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }>, "strip", ZodTypeAny, {

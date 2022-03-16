@@ -308,7 +308,7 @@ export async function convertToTWError(
   signerAddress: string,
   contractAddress: string,
 ): Promise<TransactionError> {
-  let raw: string = error.toString();
+  let raw: string;
   if (error.data) {
     // metamask errors comes as objects, apply parsing on data object
     // TODO test errors from other wallets

@@ -25,7 +25,7 @@ export declare class TransactionError extends Error
 |  [chain](./sdk.transactionerror.chain.md) |  | Network |  |
 |  [data](./sdk.transactionerror.data.md) |  | string |  |
 |  [from](./sdk.transactionerror.from.md) |  | string |  |
-|  [revertReason](./sdk.transactionerror.revertreason.md) |  | string |  |
+|  [reason](./sdk.transactionerror.reason.md) |  | string |  |
 |  [rpcUrl](./sdk.transactionerror.rpcurl.md) |  | string |  |
 |  [to](./sdk.transactionerror.to.md) |  | string |  |
 

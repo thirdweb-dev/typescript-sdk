@@ -41,6 +41,11 @@ export const BasisPointsSchema = z
   .max(MAX_BPS, "Cannot exeed 100%")
   .min(0, "Cannot be below 0%");
 
+export const PercentSchema = z
+  .number()
+  .max(100, "Cannot exeed 100%")
+  .min(0, "Cannot be below 0%");
+
 export const JsonLiteral = z.union([
   z.string(),
   z.number(),
