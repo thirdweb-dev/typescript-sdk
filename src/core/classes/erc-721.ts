@@ -83,6 +83,8 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
    * @example
    * ```javascript
    * const nfts = await contract.getAll();
