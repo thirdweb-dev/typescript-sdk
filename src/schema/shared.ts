@@ -81,9 +81,18 @@ export const PriceSchema = z
   ])
   .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
 
-export const DateSchema = z
-  .date()
-  .default(new Date())
-  .transform((i) => {
-    return BigNumber.from(Math.floor(i.getTime() / 1000));
-  });
+export const RawDateSchema = z.date().transform((i) => {
+  return BigNumber.from(Math.floor(i.getTime() / 1000));
+});
+
+/**
+ * Default to now
+ */
+export const StartDateSchema = RawDateSchema.default(new Date());
+
+/**
+ * Default to 10 years from now
+ */
+export const EndDateSchema = RawDateSchema.default(
+  new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10),
+);
