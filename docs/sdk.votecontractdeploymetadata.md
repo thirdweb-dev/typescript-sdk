@@ -20,10 +20,10 @@ export interface VoteContractDeployMetadata
 |  [external\_link?](./sdk.votecontractdeploymetadata.external_link.md) | string | <i>(Optional)</i> Optional url for the contract |
 |  [image?](./sdk.votecontractdeploymetadata.image.md) | FileBufferOrString | <i>(Optional)</i> Optional image for the contract |
 |  [name](./sdk.votecontractdeploymetadata.name.md) | string | name of the contract |
-|  [proposal\_token\_threshold?](./sdk.votecontractdeploymetadata.proposal_token_threshold.md) | BigNumberish | <i>(Optional)</i> The minimum amount in governance token owned to be able to vote |
+|  [proposal\_token\_threshold?](./sdk.votecontractdeploymetadata.proposal_token_threshold.md) | BigNumberish | <i>(Optional)</i> The minimum amount in governance token owned to be able to create a proposal |
 |  [trusted\_forwarders?](./sdk.votecontractdeploymetadata.trusted_forwarders.md) | string\[\] | <i>(Optional)</i> Custom gasless trusted forwarder addresses |
-|  [voting\_delay\_in\_blocks?](./sdk.votecontractdeploymetadata.voting_delay_in_blocks.md) | number | <i>(Optional)</i> The delay in blocks before voting can begin on proposals |
-|  [voting\_period\_in\_blocks?](./sdk.votecontractdeploymetadata.voting_period_in_blocks.md) | number | <i>(Optional)</i> The duration in blocks of the open voting window |
+|  [voting\_delay\_in\_blocks?](./sdk.votecontractdeploymetadata.voting_delay_in_blocks.md) | number | <i>(Optional)</i> The delay in blocks before voting can begin on proposals Specified in number of blocks. Assuming block time of around 13.14 seconds, 1 day = 6570 blocks, 1 week = 45992 blocks. |
+|  [voting\_period\_in\_blocks?](./sdk.votecontractdeploymetadata.voting_period_in_blocks.md) | number | <i>(Optional)</i> The duration in blocks of the open voting window Specified in number of blocks. Assuming block time of around 13.14 seconds, 1 day = 6570 blocks, 1 week = 45992 blocks. |
 |  [voting\_quorum\_fraction?](./sdk.votecontractdeploymetadata.voting_quorum_fraction.md) | number | <i>(Optional)</i> The minimum fraction to be met to pass a proposal |
 |  [voting\_token\_address](./sdk.votecontractdeploymetadata.voting_token_address.md) | string | The address of the governance token contract representing votes |
 

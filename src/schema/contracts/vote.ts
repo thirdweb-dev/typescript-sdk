@@ -12,8 +12,6 @@ import {
 import { z } from "zod";
 
 export const VoteSettingsInputSchema = z.object({
-  proposal_start_time_in_seconds: z.number().min(0).default(0),
-  proposal_voting_time_in_seconds: z.number().min(0).default(0),
   voting_delay_in_blocks: z.number().min(0).default(0),
   voting_period_in_blocks: z.number().min(1).default(1),
   voting_token_address: AddressSchema,

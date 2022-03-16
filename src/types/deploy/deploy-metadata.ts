@@ -161,14 +161,16 @@ export interface VoteContractDeployMetadata {
   voting_token_address: string;
   /**
    * The delay in blocks before voting can begin on proposals
+   * Specified in number of blocks. Assuming block time of around 13.14 seconds, 1 day = 6570 blocks, 1 week = 45992 blocks.
    */
   voting_delay_in_blocks?: number;
   /**
    * The duration in blocks of the open voting window
+   * Specified in number of blocks. Assuming block time of around 13.14 seconds, 1 day = 6570 blocks, 1 week = 45992 blocks.
    */
   voting_period_in_blocks?: number;
   /**
-   * The minimum amount in governance token owned to be able to vote
+   * The minimum amount in governance token owned to be able to create a proposal
    */
   proposal_token_threshold?: BigNumberish;
   /**

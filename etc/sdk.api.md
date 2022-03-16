@@ -736,7 +736,7 @@ export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_QUERY_ALL_COUNT" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const DEFAULT_QUERY_ALL_COUNT: ethers.BigNumber;
+export const DEFAULT_QUERY_ALL_COUNT = 100;
 
 // @public
 export class DelayedReveal<T extends DropERC721> {
@@ -3875,8 +3875,6 @@ export class Vote implements UpdateableNetwork {
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
         }, {
-        proposal_start_time_in_seconds: ZodDefault<ZodNumber>;
-        proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
         voting_token_address: ZodEffects<ZodString, string, string>;
@@ -3890,8 +3888,6 @@ export class Vote implements UpdateableNetwork {
         external_link?: string | undefined;
         name: string;
         trusted_forwarders: string[];
-        proposal_start_time_in_seconds: number;
-        proposal_voting_time_in_seconds: number;
         voting_delay_in_blocks: number;
         voting_period_in_blocks: number;
         voting_token_address: string;
@@ -3902,8 +3898,6 @@ export class Vote implements UpdateableNetwork {
         image?: any;
         external_link?: string | undefined;
         trusted_forwarders?: string[] | undefined;
-        proposal_start_time_in_seconds?: number | undefined;
-        proposal_voting_time_in_seconds?: number | undefined;
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
         voting_quorum_fraction?: number | undefined;
@@ -3919,8 +3913,6 @@ export class Vote implements UpdateableNetwork {
         }, {
         image: ZodOptional<ZodString>;
         }>, extendShape<    {
-        proposal_start_time_in_seconds: ZodDefault<ZodNumber>;
-        proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
         voting_token_address: ZodEffects<ZodString, string, string>;
@@ -3934,8 +3926,6 @@ export class Vote implements UpdateableNetwork {
         image?: string | undefined;
         external_link?: string | undefined;
         name: string;
-        proposal_start_time_in_seconds: number;
-        proposal_voting_time_in_seconds: number;
         voting_delay_in_blocks: number;
         voting_period_in_blocks: number;
         voting_token_address: string;
@@ -3946,8 +3936,6 @@ export class Vote implements UpdateableNetwork {
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
-        proposal_start_time_in_seconds?: number | undefined;
-        proposal_voting_time_in_seconds?: number | undefined;
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
         voting_quorum_fraction?: number | undefined;
@@ -3961,8 +3949,6 @@ export class Vote implements UpdateableNetwork {
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
         }, {
-        proposal_start_time_in_seconds: ZodDefault<ZodNumber>;
-        proposal_voting_time_in_seconds: ZodDefault<ZodNumber>;
         voting_delay_in_blocks: ZodDefault<ZodNumber>;
         voting_period_in_blocks: ZodDefault<ZodNumber>;
         voting_token_address: ZodEffects<ZodString, string, string>;
@@ -3973,8 +3959,6 @@ export class Vote implements UpdateableNetwork {
         image?: any;
         external_link?: string | undefined;
         name: string;
-        proposal_start_time_in_seconds: number;
-        proposal_voting_time_in_seconds: number;
         voting_delay_in_blocks: number;
         voting_period_in_blocks: number;
         voting_token_address: string;
@@ -3984,15 +3968,28 @@ export class Vote implements UpdateableNetwork {
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
-        proposal_start_time_in_seconds?: number | undefined;
-        proposal_voting_time_in_seconds?: number | undefined;
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
         voting_quorum_fraction?: number | undefined;
         proposal_token_threshold?: string | number | bigint | BigNumber | undefined;
         name: string;
         voting_token_address: string;
-        }>;
+        }>; /**
+        * Create a decentralized organization for token holders to vote on proposals.
+        *
+        * @example
+        *
+        * ```javascript
+        * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+        *
+        * // You can switch out this provider with any wallet or provider setup you like.
+        * const provider = ethers.Wallet.createRandom();
+        * const sdk = new ThirdwebSDK(provider);
+        * const contract = sdk.getVote("{{contract_address}}");
+        * ```
+        *
+        * @public
+        */
     };
     settings(): Promise<VoteSettings>;
     vote(proposalId: string, voteType: VoteType, reason?: string): Promise<TransactionResult>;

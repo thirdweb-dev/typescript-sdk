@@ -4,7 +4,7 @@
 
 ## VoteContractDeployMetadata.voting\_delay\_in\_blocks property
 
-The delay in blocks before voting can begin on proposals
+The delay in blocks before voting can begin on proposals Specified in number of blocks. Assuming block time of around 13.14 seconds, 1 day = 6570 blocks, 1 week = 45992 blocks.
 
 <b>Signature:</b>
 

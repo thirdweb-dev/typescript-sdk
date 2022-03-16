@@ -4,7 +4,7 @@
 
 ## VoteContractDeployMetadata.voting\_period\_in\_blocks property
 
-The duration in blocks of the open voting window
+The duration in blocks of the open voting window Specified in number of blocks. Assuming block time of around 13.14 seconds, 1 day = 6570 blocks, 1 week = 45992 blocks.
 
 <b>Signature:</b>
 

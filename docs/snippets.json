@@ -46,7 +46,7 @@
       {
         "name": "getAll",
         "summary": "Get All NFTs\n\n",
-        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\n",
+        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
         "examples": {
           "javascript": "const nfts = await contract.getAll();\nconsole.log(nfts);"
         },
@@ -140,7 +140,7 @@
       {
         "name": "getAll",
         "summary": "Get All NFTs\n\n",
-        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\n",
+        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
         "examples": {
           "javascript": "const nfts = await contract.getAll();\nconsole.log(nfts);"
         },
@@ -310,7 +310,7 @@
       {
         "name": "getAll",
         "summary": "Get All NFTs\n\n",
-        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\n",
+        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
         "examples": {
           "javascript": "const nfts = await contract.getAll();\nconsole.log(nfts);"
         },
@@ -440,7 +440,7 @@
       {
         "name": "getAll",
         "summary": "Get All NFTs\n\n",
-        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\n",
+        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
         "examples": {
           "javascript": "const nfts = await contract.getAll();\nconsole.log(nfts);"
         },
