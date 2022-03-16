@@ -9,7 +9,7 @@ Burn Tokens
 <b>Signature:</b>
 
 ```typescript
-burnFrom(holder: string, amount: BigNumberish): Promise<TransactionResult>;
+burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ burnFrom(holder: string, amount: BigNumberish): Promise<TransactionResult>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  holder | string |  |
-|  amount | BigNumberish |  |
+|  amount | [Amount](./sdk.amount.md) |  |
 
 <b>Returns:</b>
 
@@ -35,7 +35,7 @@ Burn tokens held by the specified wallet
 const holderAddress = "{{wallet_address}}";
 
 // The amount of this token you want to burn
-const amount = 100;
+const amount = 1.2;
 
 await contract.burnFrom(holderAddress, amount);
 ```

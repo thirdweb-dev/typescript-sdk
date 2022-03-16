@@ -10,10 +10,11 @@ import {
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc20 } from "../core/classes/erc-20";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { TokenMintInput } from "../schema/tokens/token";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes";
+import { Amount, CurrencyValue } from "../types";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -77,14 +78,16 @@ export class Token extends Erc20<TokenERC20> {
    *
    * @returns the amount of voting power in tokens
    */
-  public async getVoteBalance(): Promise<BigNumber> {
+  public async getVoteBalance(): Promise<CurrencyValue> {
     return await this.getVoteBalanceOf(
       await this.contractWrapper.getSignerAddress(),
     );
   }
 
-  public async getVoteBalanceOf(account: string): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.getVotes(account);
+  public async getVoteBalanceOf(account: string): Promise<CurrencyValue> {
+    return await this.getValue(
+      await this.contractWrapper.readContract.getVotes(account),
+    );
   }
 
   /**
@@ -116,7 +119,7 @@ export class Token extends Erc20<TokenERC20> {
    *
    * @remarks See {@link Token.mintTo}
    */
-  public async mint(amount: BigNumberish): Promise<TransactionResult> {
+  public async mint(amount: Amount): Promise<TransactionResult> {
     return this.mintTo(await this.contractWrapper.getSignerAddress(), amount);
   }
 
@@ -133,10 +136,7 @@ export class Token extends Erc20<TokenERC20> {
    * await contract.mintTo(toAddress, amount);
    * ```
    */
-  public async mintTo(
-    to: string,
-    amount: BigNumberish,
-  ): Promise<TransactionResult> {
+  public async mintTo(to: string, amount: Amount): Promise<TransactionResult> {
     const amountWithDecimals = ethers.utils.parseUnits(
       BigNumber.from(amount).toString(),
       await this.contractWrapper.readContract.decimals(),
@@ -160,11 +160,11 @@ export class Token extends Erc20<TokenERC20> {
    * const data = [
    *   {
    *     toAddress: "{{wallet_address}}", // Address to mint tokens to
-   *     amount: 100, // How many tokens to mint to specified address
+   *     amount: 0.2, // How many tokens to mint to specified address
    *   },
    *  {
    *    toAddress: "0x...",
-   *    amount: 100,
+   *    amount: 1.4,
    *  }
    * ]
    *

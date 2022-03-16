@@ -34,11 +34,11 @@ Mint tokens to many wallets in one transaction.
 const data = [
   {
     toAddress: "{{wallet_address}}", // Address to mint tokens to
-    amount: 100, // How many tokens to mint to specified address
+    amount: 0.2, // How many tokens to mint to specified address
   },
  {
    toAddress: "0x...",
-   amount: 100,
+   amount: 1.4,
  }
 ]
 

@@ -651,7 +651,7 @@
         "summary": "Mint Tokens To Many Wallets\n\n",
         "remarks": "\n\nMint tokens to many wallets in one transaction.\n\n",
         "examples": {
-          "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    toAddress: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 100, // How many tokens to mint to specified address\n  },\n {\n   toAddress: \"0x...\",\n   amount: 100,\n }\n]\n\nawait contract.mintBatchTo(data);"
+          "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    toAddress: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 0.2, // How many tokens to mint to specified address\n  },\n {\n   toAddress: \"0x...\",\n   amount: 1.4,\n }\n]\n\nawait contract.mintBatchTo(data);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Token.mintBatchTo"
       },
@@ -705,7 +705,7 @@
         "summary": "Burn Tokens\n\n",
         "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
         "examples": {
-          "javascript": "// The amount of this token you want to burn\nconst amount = 100;\n\nawait contract.burn(amount);"
+          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burn(amount);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.burn"
       },
@@ -714,7 +714,7 @@
         "summary": "Burn Tokens\n\n",
         "remarks": "\n\nBurn tokens held by the specified wallet\n\n",
         "examples": {
-          "javascript": "// Address of the wallet sending the tokens\nconst holderAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to burn\nconst amount = 100;\n\nawait contract.burnFrom(holderAddress, amount);"
+          "javascript": "// Address of the wallet sending the tokens\nconst holderAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnFrom(holderAddress, amount);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.burnFrom"
       },
@@ -741,7 +741,7 @@
         "summary": "Transfer Tokens\n\n",
         "remarks": "\n\nTransfer tokens from the connected wallet to another wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n\n// The amount of tokens you want to send\nconst amount = 0;\n\nawait contract.transfer(toAddress, amount);"
+          "javascript": "// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n\n// The amount of tokens you want to send\nconst amount = 0.1;\n\nawait contract.transfer(toAddress, amount);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transfer"
       },
@@ -759,7 +759,7 @@
         "summary": "Transfer Tokens From Address\n\n",
         "remarks": "\n\nTransfer tokens from one wallet to another\n\n",
         "examples": {
-          "javascript": "// Address of the wallet sending the tokens\nconst fromAddress = \"{{wallet_address}}\";\n\n// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n\n// The number of tokens you want to send\nconst amount = 100\n\n// Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nawait contract.transferFrom(fromAddress, toAddress, amount);"
+          "javascript": "// Address of the wallet sending the tokens\nconst fromAddress = \"{{wallet_address}}\";\n\n// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n\n// The number of tokens you want to send\nconst amount = 1.2\n\n// Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nawait contract.transferFrom(fromAddress, toAddress, amount);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transferFrom"
       }
