@@ -9,14 +9,14 @@ Mint Tokens for the connected wallet
 <b>Signature:</b>
 
 ```typescript
-mint(amount: BigNumberish): Promise<TransactionResult>;
+mint(amount: Amount): Promise<TransactionResult>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  amount | BigNumberish |  |
+|  amount | [Amount](./sdk.amount.md) |  |
 
 <b>Returns:</b>
 

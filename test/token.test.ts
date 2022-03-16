@@ -34,7 +34,7 @@ describe("Token Contract", async () => {
   it("should mint tokens", async () => {
     await currencyContract.mint("20");
     assert.deepEqual(
-      await currencyContract.totalSupply(),
+      (await currencyContract.totalSupply()).value,
       ethers.utils.parseEther("20"),
       `Wrong supply`,
     );
@@ -47,10 +47,7 @@ describe("Token Contract", async () => {
 
   it("should transfer tokens", async () => {
     await currencyContract.mint(20);
-    await currencyContract.transfer(
-      samWallet.address,
-      ethers.utils.parseEther("10"),
-    );
+    await currencyContract.transfer(samWallet.address, "10");
     assert.deepEqual(
       (await currencyContract.balanceOf(adminWallet.address)).value,
       ethers.utils.parseEther("10"),
@@ -58,6 +55,21 @@ describe("Token Contract", async () => {
     );
     assert.deepEqual(
       (await currencyContract.balanceOf(samWallet.address)).value,
+      ethers.utils.parseEther("10"),
+      `Wrong balance`,
+    );
+  });
+
+  it("should burn tokens", async () => {
+    await currencyContract.mint(20);
+    assert.deepEqual(
+      (await currencyContract.balanceOf(adminWallet.address)).value,
+      ethers.utils.parseEther("20"),
+      `Wrong balance`,
+    );
+    await currencyContract.burn(10);
+    assert.deepEqual(
+      (await currencyContract.balanceOf(adminWallet.address)).value,
       ethers.utils.parseEther("10"),
       `Wrong balance`,
     );

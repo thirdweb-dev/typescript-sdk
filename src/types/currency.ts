@@ -33,3 +33,9 @@ export type CurrencyValue = z.infer<typeof CurrencyValueSchema>;
  * @public
  */
 export type Price = z.input<typeof PriceSchema>;
+
+/**
+ * Represents a currency amount already formatted. ie. "1" for 1 ether.
+ * @public
+ */
+export type Amount = z.input<typeof PriceSchema>;

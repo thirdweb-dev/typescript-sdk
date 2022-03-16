@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { BigNumberishSchema } from "../shared";
+import { AddressSchema, PriceSchema } from "../shared";
 
 /**
  * @internal
  */
 export const TokenMintInputSchema = z.object({
-  toAddress: z.string(),
-  amount: BigNumberishSchema,
+  toAddress: AddressSchema,
+  amount: PriceSchema,
 });
 
 /**
