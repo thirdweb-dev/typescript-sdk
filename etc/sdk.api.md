@@ -1360,6 +1360,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     get(): Promise<Currency>;
     // (undocumented)
     getAddress(): string;
+    // @internal (undocumented)
     protected getValue(value: BigNumberish): Promise<CurrencyValue>;
     isTransferRestricted(): Promise<boolean>;
     // @internal (undocumented)

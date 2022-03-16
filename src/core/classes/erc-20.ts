@@ -380,6 +380,9 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * PRIVATE FUNCTIONS
    *******************************/
 
+  /**
+   * @internal
+   */
   protected async getValue(value: BigNumberish): Promise<CurrencyValue> {
     return await fetchCurrencyValue(
       this.contractWrapper.getProvider(),
