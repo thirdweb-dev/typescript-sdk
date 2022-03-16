@@ -47,6 +47,31 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     expect(parseFloat(cost)).gt(0);
   });
 
+  it("should respect pagination", async () => {
+    const nfts = [];
+    for (let i = 0; i < 100; i++) {
+      nfts.push({
+        metadata: { name: `Test${i}` },
+        supply: 10,
+      });
+    }
+    await bundleContract.mintBatch(nfts);
+    const total = await bundleContract.getTotalCount();
+    expect(total.toNumber()).to.eq(100);
+    const page1 = await bundleContract.getAll({
+      count: 2,
+      start: 0,
+    });
+    expect(page1).to.be.an("array").length(2);
+    const page2 = await bundleContract.getAll({
+      count: 2,
+      start: 20,
+    });
+    expect(page2).to.be.an("array").length(2);
+    expect(page2[0].metadata.name).to.eq("Test20");
+    expect(page2[1].metadata.name).to.eq("Test21");
+  });
+
   it("mint additional suply", async () => {
     const tx = await bundleContract.mint({
       metadata: {
