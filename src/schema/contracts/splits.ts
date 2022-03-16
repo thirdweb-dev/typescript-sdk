@@ -46,7 +46,9 @@ export const SplitsContractInput = CommonContractSchema.extend({
       if (totalShares !== 10_000) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `Total shares need to add up to 100% (10000 bps). Total shares are currently ${totalShares} bps.`,
+          message: `Total shares need to add up to 100%. Total shares are currently ${
+            totalShares / 100
+          }%`,
           path: [],
         });
       }
