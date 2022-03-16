@@ -72,6 +72,11 @@ export class AdminRoleMissingError extends Error {
     constructor(address?: string, contractAddress?: string, message?: string);
 }
 
+// Warning: (ae-forgotten-export) The symbol "PriceSchema" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type Amount = z.input<typeof PriceSchema>;
+
 // Warning: (ae-internal-missing-underscore) The name "AssetNotFoundError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1344,29 +1349,30 @@ export class Erc1155SignatureMinting {
 // @public
 export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
-    allowance(spender: string): Promise<BigNumber>;
-    allowanceOf(owner: string, spender: string): Promise<BigNumber>;
+    allowance(spender: string): Promise<CurrencyValue>;
+    allowanceOf(owner: string, spender: string): Promise<CurrencyValue>;
     balance(): Promise<CurrencyValue>;
     balanceOf(address: string): Promise<CurrencyValue>;
-    burn(amount: BigNumberish): Promise<TransactionResult>;
-    burnFrom(holder: string, amount: BigNumberish): Promise<TransactionResult>;
+    burn(amount: Amount): Promise<TransactionResult>;
+    burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
     get(): Promise<Currency>;
     // (undocumented)
     getAddress(): string;
+    protected getValue(value: BigNumberish): Promise<CurrencyValue>;
     isTransferRestricted(): Promise<boolean>;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
     protected options: SDKOptions;
-    setAllowance(spender: string, amount: BigNumber): Promise<TransactionResult>;
+    setAllowance(spender: string, amount: Amount): Promise<TransactionResult>;
     // (undocumented)
     protected storage: IStorage;
-    totalSupply(): Promise<BigNumber>;
-    transfer(to: string, amount: BigNumberish): Promise<TransactionResult>;
+    totalSupply(): Promise<CurrencyValue>;
+    transfer(to: string, amount: Amount): Promise<TransactionResult>;
     transferBatch(args: TokenMintInput[]): Promise<void>;
-    transferFrom(from: string, to: string, amount: BigNumberish): Promise<TransactionResult>;
+    transferFrom(from: string, to: string, amount: Amount): Promise<TransactionResult>;
 }
 
 // @public
@@ -2489,8 +2495,6 @@ export type PermitRequestMessage = {
 // @internal (undocumented)
 export const PINATA_IPFS_URL = "https://api.pinata.cloud/pinning/pinFileToIPFS";
 
-// Warning: (ae-forgotten-export) The symbol "PriceSchema" needs to be exported by the entry point index.d.ts
-//
 // @public
 export type Price = z.input<typeof PriceSchema>;
 
@@ -3631,14 +3635,14 @@ export class Token extends Erc20<TokenERC20> {
     estimator: GasCostEstimator<TokenERC20>;
     getDelegation(): Promise<string>;
     getDelegationOf(account: string): Promise<string>;
-    getVoteBalance(): Promise<BigNumber>;
+    getVoteBalance(): Promise<CurrencyValue>;
     // (undocumented)
-    getVoteBalanceOf(account: string): Promise<BigNumber>;
+    getVoteBalanceOf(account: string): Promise<CurrencyValue>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC20, typeof Token.schema>;
-    mint(amount: BigNumberish): Promise<TransactionResult>;
+    mint(amount: Amount): Promise<TransactionResult>;
     mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult>;
-    mintTo(to: string, amount: BigNumberish): Promise<TransactionResult>;
+    mintTo(to: string, amount: Amount): Promise<TransactionResult>;
     // (undocumented)
     roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
     // @internal (undocumented)
@@ -3747,14 +3751,14 @@ export type TokenMintInput = z.input<typeof TokenMintInputSchema>;
 //
 // @internal (undocumented)
 export const TokenMintInputSchema: z.ZodObject<{
-    toAddress: z.ZodString;
-    amount: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+    toAddress: z.ZodEffects<z.ZodString, string, string>;
+    amount: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>;
 }, "strip", z.ZodTypeAny, {
     toAddress: string;
     amount: string;
 }, {
     toAddress: string;
-    amount: string | number | bigint | BigNumber;
+    amount: string | number;
 }>;
 
 // @public (undocumented)

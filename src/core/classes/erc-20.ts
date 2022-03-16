@@ -1,11 +1,11 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { TokenERC20 } from "@thirdweb-dev/contracts";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
-import { Currency, CurrencyValue } from "../../types/currency";
+import { Currency, CurrencyValue, Amount } from "../../types/currency";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
@@ -115,8 +115,10 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   /**
    * The total supply for this Token
    */
-  public async totalSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalSupply();
+  public async totalSupply(): Promise<CurrencyValue> {
+    return await this.getValue(
+      await this.contractWrapper.readContract.totalSupply(),
+    );
   }
 
   /**
@@ -135,7 +137,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    *
    * @returns The allowance of one wallet over anothers funds.
    */
-  public async allowance(spender: string): Promise<BigNumber> {
+  public async allowance(spender: string): Promise<CurrencyValue> {
     return await this.allowanceOf(
       await this.contractWrapper.getSignerAddress(),
       spender,
@@ -161,8 +163,13 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    *
    * @returns The allowance of one wallet over anothers funds.
    */
-  public async allowanceOf(owner: string, spender: string): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.allowance(owner, spender);
+  public async allowanceOf(
+    owner: string,
+    spender: string,
+  ): Promise<CurrencyValue> {
+    return await this.getValue(
+      await this.contractWrapper.readContract.allowance(owner, spender),
+    );
   }
 
   /**
@@ -191,19 +198,23 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * const toAddress = "0x...";
    *
    * // The amount of tokens you want to send
-   * const amount = 0;
+   * const amount = 0.1;
    *
    * await contract.transfer(toAddress, amount);
    * ```
    */
   public async transfer(
     to: string,
-    amount: BigNumberish,
+    amount: Amount,
   ): Promise<TransactionResult> {
+    const amountWithDecimals = ethers.utils.parseUnits(
+      BigNumber.from(amount).toString(),
+      await this.contractWrapper.readContract.decimals(),
+    );
     return {
       receipt: await this.contractWrapper.sendTransaction("transfer", [
         to,
-        amount,
+        amountWithDecimals,
       ]),
     };
   }
@@ -222,7 +233,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * const toAddress = "0x...";
    *
    * // The number of tokens you want to send
-   * const amount = 100
+   * const amount = 1.2
    *
    * // Note that the connected wallet must have approval to transfer the tokens of the fromAddress
    * await contract.transferFrom(fromAddress, toAddress, amount);
@@ -231,13 +242,17 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
   public async transferFrom(
     from: string,
     to: string,
-    amount: BigNumberish,
+    amount: Amount,
   ): Promise<TransactionResult> {
+    const amountWithDecimals = ethers.utils.parseUnits(
+      BigNumber.from(amount).toString(),
+      await this.contractWrapper.readContract.decimals(),
+    );
     return {
       receipt: await this.contractWrapper.sendTransaction("transferFrom", [
         from,
         to,
-        amount,
+        amountWithDecimals,
       ]),
     };
   }
@@ -258,12 +273,16 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    */
   public async setAllowance(
     spender: string,
-    amount: BigNumber,
+    amount: Amount,
   ): Promise<TransactionResult> {
+    const amountWithDecimals = ethers.utils.parseUnits(
+      BigNumber.from(amount).toString(),
+      await this.contractWrapper.readContract.decimals(),
+    );
     return {
       receipt: await this.contractWrapper.sendTransaction("approve", [
         spender,
-        amount,
+        amountWithDecimals,
       ]),
     };
   }
@@ -308,14 +327,20 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * @example
    * ```javascript
    * // The amount of this token you want to burn
-   * const amount = 100;
+   * const amount = 1.2;
    *
    * await contract.burn(amount);
    * ```
    */
-  public async burn(amount: BigNumberish): Promise<TransactionResult> {
+  public async burn(amount: Amount): Promise<TransactionResult> {
+    const amountWithDecimals = ethers.utils.parseUnits(
+      BigNumber.from(amount).toString(),
+      await this.contractWrapper.readContract.decimals(),
+    );
     return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [amount]),
+      receipt: await this.contractWrapper.sendTransaction("burn", [
+        amountWithDecimals,
+      ]),
     };
   }
 
@@ -330,19 +355,23 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * const holderAddress = "{{wallet_address}}";
    *
    * // The amount of this token you want to burn
-   * const amount = 100;
+   * const amount = 1.2;
    *
    * await contract.burnFrom(holderAddress, amount);
    * ```
    */
   public async burnFrom(
     holder: string,
-    amount: BigNumberish,
+    amount: Amount,
   ): Promise<TransactionResult> {
+    const amountWithDecimals = ethers.utils.parseUnits(
+      BigNumber.from(amount).toString(),
+      await this.contractWrapper.readContract.decimals(),
+    );
     return {
       receipt: await this.contractWrapper.sendTransaction("burnFrom", [
         holder,
-        amount,
+        amountWithDecimals,
       ]),
     };
   }
@@ -351,7 +380,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * PRIVATE FUNCTIONS
    *******************************/
 
-  private async getValue(value: BigNumberish): Promise<CurrencyValue> {
+  protected async getValue(value: BigNumberish): Promise<CurrencyValue> {
     return await fetchCurrencyValue(
       this.contractWrapper.getProvider(),
       this.getAddress(),

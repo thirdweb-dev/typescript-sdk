@@ -9,7 +9,7 @@ Transfer Tokens
 <b>Signature:</b>
 
 ```typescript
-transfer(to: string, amount: BigNumberish): Promise<TransactionResult>;
+transfer(to: string, amount: Amount): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ transfer(to: string, amount: BigNumberish): Promise<TransactionResult>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  to | string |  |
-|  amount | BigNumberish |  |
+|  amount | [Amount](./sdk.amount.md) |  |
 
 <b>Returns:</b>
 
@@ -35,7 +35,7 @@ Transfer tokens from the connected wallet to another wallet.
 const toAddress = "0x...";
 
 // The amount of tokens you want to send
-const amount = 0;
+const amount = 0.1;
 
 await contract.transfer(toAddress, amount);
 ```

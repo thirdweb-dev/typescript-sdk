@@ -9,7 +9,7 @@ Transfer Tokens From Address
 <b>Signature:</b>
 
 ```typescript
-transferFrom(from: string, to: string, amount: BigNumberish): Promise<TransactionResult>;
+transferFrom(from: string, to: string, amount: Amount): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -18,7 +18,7 @@ transferFrom(from: string, to: string, amount: BigNumberish): Promise<Transactio
 |  --- | --- | --- |
 |  from | string |  |
 |  to | string |  |
-|  amount | BigNumberish |  |
+|  amount | [Amount](./sdk.amount.md) |  |
 
 <b>Returns:</b>
 
@@ -39,7 +39,7 @@ const fromAddress = "{{wallet_address}}";
 const toAddress = "0x...";
 
 // The number of tokens you want to send
-const amount = 100
+const amount = 1.2
 
 // Note that the connected wallet must have approval to transfer the tokens of the fromAddress
 await contract.transferFrom(fromAddress, toAddress, amount);

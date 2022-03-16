@@ -9,7 +9,7 @@ Mint Tokens
 <b>Signature:</b>
 
 ```typescript
-mintTo(to: string, amount: BigNumberish): Promise<TransactionResult>;
+mintTo(to: string, amount: Amount): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ mintTo(to: string, amount: BigNumberish): Promise<TransactionResult>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  to | string |  |
-|  amount | BigNumberish |  |
+|  amount | [Amount](./sdk.amount.md) |  |
 
 <b>Returns:</b>
 
