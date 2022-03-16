@@ -2,8 +2,9 @@ import {
   BasisPointsSchema,
   BigNumberishSchema,
   BigNumberSchema,
-  DateSchema,
+  EndDateSchema,
   PriceSchema,
+  StartDateSchema,
 } from "../../shared";
 import { z } from "zod";
 import { CommonNFTInput } from "../../tokens/common";
@@ -20,8 +21,8 @@ export const SignaturePayloadInput = z.object({
   to: z.string().default(AddressZero),
   price: PriceSchema.default(0),
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
-  mintStartTime: DateSchema,
-  mintEndTime: DateSchema,
+  mintStartTime: StartDateSchema,
+  mintEndTime: EndDateSchema,
   uid: z
     .string()
     .optional()

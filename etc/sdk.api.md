@@ -195,7 +195,7 @@ export type ClaimConditionInput = z.input<typeof PartialClaimConditionInputSchem
 //
 // @internal (undocumented)
 export const ClaimConditionInputArray: z.ZodArray<z.ZodObject<{
-    startTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>;
+    startTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
@@ -245,7 +245,7 @@ export const ClaimConditionInputArray: z.ZodArray<z.ZodObject<{
 //
 // @internal (undocumented)
 export const ClaimConditionInputSchema: z.ZodObject<{
-    startTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>;
+    startTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
@@ -295,7 +295,7 @@ export const ClaimConditionInputSchema: z.ZodObject<{
 //
 // @internal (undocumented)
 export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
-    startTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>;
+    startTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     maxQuantity: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
@@ -2405,7 +2405,7 @@ export interface PackNFTMetadata {
 //
 // @internal (undocumented)
 export const PartialClaimConditionInputSchema: z.ZodObject<{
-    startTime: z.ZodOptional<z.ZodEffects<z.ZodDefault<z.ZodDate>, BigNumber, Date | undefined>>;
+    startTime: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>>;
     currencyAddress: z.ZodOptional<z.ZodDefault<z.ZodString>>;
     price: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>>;
     maxQuantity: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>>;
@@ -2781,8 +2781,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers.BigNumber, Date | undefined>;
-    mintEndTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers.BigNumber, Date | undefined>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     royaltyRecipient: z.ZodDefault<z.ZodString>;
     royaltyBps: z.ZodDefault<z.ZodNumber>;
@@ -2901,8 +2901,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers.BigNumber, Date | undefined>;
-    mintEndTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers.BigNumber, Date | undefined>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     royaltyRecipient: z.ZodDefault<z.ZodString>;
     royaltyBps: z.ZodDefault<z.ZodNumber>;
@@ -3028,8 +3028,8 @@ export const SignaturePayloadInput: z.ZodObject<{
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers.BigNumber, Date | undefined>;
-    mintEndTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers.BigNumber, Date | undefined>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     royaltyRecipient: z.ZodDefault<z.ZodString>;
     royaltyBps: z.ZodDefault<z.ZodNumber>;
@@ -3141,8 +3141,8 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers.BigNumber, Date | undefined>;
-    mintEndTime: z.ZodEffects<z.ZodDefault<z.ZodDate>, ethers.BigNumber, Date | undefined>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     royaltyRecipient: z.ZodDefault<z.ZodString>;
     royaltyBps: z.ZodDefault<z.ZodNumber>;
