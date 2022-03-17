@@ -1,7 +1,12 @@
 import { IStorage } from "../interfaces/IStorage";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
-import { DropERC721, IERC20, IERC20__factory } from "@thirdweb-dev/contracts";
+import {
+  DropERC20,
+  DropERC721,
+  IERC20,
+  IERC20__factory,
+} from "@thirdweb-dev/contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
@@ -17,19 +22,25 @@ import {
 } from "../../common/claim-conditions";
 import { MaxUint256 } from "@ethersproject/constants";
 import { isBrowser } from "../../common/utils";
+import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 
 /**
  * Manages claim conditions for NFT Drop contracts
  * @public
  */
-export class DropErc721ClaimConditions {
+export class DropErc721ClaimConditions<
+  TContract extends DropERC721 | DropERC20,
+> {
   private contractWrapper;
   private metadata;
   private storage: IStorage;
 
   constructor(
-    contractWrapper: ContractWrapper<DropERC721>,
-    metadata: ContractMetadata<DropERC721, typeof DropErc721ContractSchema>,
+    contractWrapper: ContractWrapper<TContract>,
+    metadata: ContractMetadata<
+      TContract,
+      typeof DropErc721ContractSchema | typeof DropErc20ContractSchema
+    >,
     storage: IStorage,
   ) {
     this.storage = storage;

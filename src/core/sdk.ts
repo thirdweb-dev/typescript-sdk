@@ -26,6 +26,7 @@ import { IThirdwebContract__factory } from "@thirdweb-dev/contracts";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { CustomContract } from "../contracts/custom";
 import invariant from "tiny-invariant";
+import { TokenDrop } from "../contracts/token-drop";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -95,6 +96,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public getEdition(address: string): Edition {
     return this.getContract(address, Edition.contractType) as Edition;
+  }
+
+  /**
+   * Get an instance of a Token Drop contract
+   * @param address - the address of the deployed contract
+   * @returns the contract
+   */
+  public getTokenDrop(address: string): TokenDrop {
+    return this.getContract(address, TokenDrop.contractType) as TokenDrop;
   }
 
   /**

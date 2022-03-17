@@ -109,7 +109,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    * await dropContract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropErc721ClaimConditions;
+  public claimConditions: DropErc721ClaimConditions<DropERC721>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.

@@ -27,6 +27,7 @@ import {
   SUPPORTED_CHAIN_IDS,
 } from "../../constants";
 import { AddressZero } from "@ethersproject/constants";
+import { TokenDrop } from "../../contracts/token-drop";
 
 /**
  * @internal
@@ -126,6 +127,19 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc1155metadata.seller_fee_basis_points,
           erc1155metadata.platform_fee_basis_points,
           erc1155metadata.platform_fee_recipient,
+        ];
+      case TokenDrop.contractType:
+        // TODO this should be the same constructor as TokenERC20 but the last 2 params are inverted
+        const droperc20metadata = TokenDrop.schema.deploy.parse(metadata);
+        return [
+          await this.getSignerAddress(),
+          droperc20metadata.name,
+          droperc20metadata.symbol,
+          contractURI,
+          trustedForwarders,
+          droperc20metadata.primary_sale_recipient,
+          droperc20metadata.platform_fee_basis_points,
+          droperc20metadata.platform_fee_recipient,
         ];
       case Token.contractType:
         const erc20metadata = Token.schema.deploy.parse(metadata);
