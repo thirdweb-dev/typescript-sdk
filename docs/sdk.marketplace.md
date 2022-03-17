@@ -58,6 +58,7 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 |  [getBidBufferBps()](./sdk.marketplace.getbidbufferbps.md) |  | Get the buffer in basis points between offers |
 |  [getListing(listingId)](./sdk.marketplace.getlisting.md) |  | Convenience function to get either a direct or auction listing |
 |  [getTimeBufferInSeconds()](./sdk.marketplace.gettimebufferinseconds.md) |  | get the buffer time in seconds between offers |
+|  [getTotalCount()](./sdk.marketplace.gettotalcount.md) |  | Get the total number of Listings |
 |  [isRestrictedToListerRoleOnly()](./sdk.marketplace.isrestrictedtolisterroleonly.md) |  | Get whether listing is restricted only to addresses with the Lister role |
 |  [onNetworkUpdated(network)](./sdk.marketplace.onnetworkupdated.md) |  |  |
 |  [setBidBufferBps(bufferBps)](./sdk.marketplace.setbidbufferbps.md) |  | Set the Auction bid buffer |

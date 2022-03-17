@@ -1644,11 +1644,14 @@ export class Marketplace implements UpdateableNetwork {
     getActiveListings(): Promise<(AuctionListing | DirectListing)[]>;
     // (undocumented)
     getAddress(): string;
+    // @internal (undocumented)
+    getAll: (filter?: MarketplaceFilter | undefined) => Promise<(AuctionListing | DirectListing)[]>;
     // Warning: (ae-forgotten-export) The symbol "MarketplaceFilter" needs to be exported by the entry point index.d.ts
     getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     getBidBufferBps(): Promise<BigNumber>;
     getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
     getTimeBufferInSeconds(): Promise<BigNumber>;
+    getTotalCount(): Promise<BigNumber>;
     isRestrictedToListerRoleOnly(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<Marketplace_2, typeof Marketplace.schema>;

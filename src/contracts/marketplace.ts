@@ -286,6 +286,20 @@ export class Marketplace implements UpdateableNetwork {
   }
 
   /**
+   * @internal
+   */
+  public getAll = this.getAllListings;
+
+  /**
+   * Get the total number of Listings
+   * @returns the total number listings on the marketplace
+   * @public
+   */
+  public async getTotalCount(): Promise<BigNumber> {
+    return await this.contractWrapper.readContract.totalListings();
+  }
+
+  /**
    * Get whether listing is restricted only to addresses with the Lister role
    */
   public async isRestrictedToListerRoleOnly(): Promise<boolean> {
