@@ -269,10 +269,13 @@ export class Marketplace implements UpdateableNetwork {
         }
       }
       if (filter.start !== undefined) {
-        const start = filter.start;
+        const start = BigNumber.from(filter.start).toNumber();
         rawListings = rawListings.filter((_, index) => index >= start);
         if (filter.count !== undefined && rawListings.length > filter.count) {
-          rawListings = rawListings.slice(0, filter.count);
+          rawListings = rawListings.slice(
+            0,
+            BigNumber.from(filter.count).toNumber(),
+          );
         }
       }
     }
@@ -280,6 +283,20 @@ export class Marketplace implements UpdateableNetwork {
       | AuctionListing
       | DirectListing
     )[];
+  }
+
+  /**
+   * @internal
+   */
+  public getAll = this.getAllListings;
+
+  /**
+   * Get the total number of Listings
+   * @returns the total number listings on the marketplace
+   * @public
+   */
+  public async getTotalCount(): Promise<BigNumber> {
+    return await this.contractWrapper.readContract.totalListings();
   }
 
   /**
