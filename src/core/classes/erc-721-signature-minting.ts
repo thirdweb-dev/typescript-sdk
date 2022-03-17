@@ -92,6 +92,11 @@ export class Erc721SignatureMinting {
     };
   }
 
+  /**
+   * Mint any number of dynamically generated NFT at once
+   * @remarks Mint multiple dynamic NFTs in one transaction. Note that this is only possible for free mints (cannot batch mints with a price attached to it for security reasons)
+   * @param signedPayloads - the array of signed payloads to mint
+   */
   public async mintBatch(
     signedPayloads: SignedPayload[],
   ): Promise<TransactionResultWithId[]> {

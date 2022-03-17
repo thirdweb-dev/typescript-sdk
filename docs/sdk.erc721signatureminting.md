@@ -25,6 +25,6 @@ export declare class Erc721SignatureMinting
 |  [generate(mintRequest)](./sdk.erc721signatureminting.generate.md) |  | Generate a signature that can be used to mint a dynamic NFT |
 |  [generateBatch(payloadsToSign)](./sdk.erc721signatureminting.generatebatch.md) |  | Genrate a batch of signatures that can be used to mint many dynamic NFTs. |
 |  [mint(signedPayload)](./sdk.erc721signatureminting.mint.md) |  | Mint a dynamically generated NFT |
-|  [mintBatch(signedPayloads)](./sdk.erc721signatureminting.mintbatch.md) |  |  |
+|  [mintBatch(signedPayloads)](./sdk.erc721signatureminting.mintbatch.md) |  | Mint any number of dynamically generated NFT at once |
 |  [verify(signedPayload)](./sdk.erc721signatureminting.verify.md) |  | Verify that a payload is correctly signed |
 

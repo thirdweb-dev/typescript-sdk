@@ -1344,7 +1344,6 @@ export class Erc1155SignatureMinting {
     generate(mintRequest: PayloadToSign1155): Promise<SignedPayload1155>;
     generateBatch(payloadsToSign: PayloadToSign1155[]): Promise<SignedPayload1155[]>;
     mint(signedPayload: SignedPayload1155): Promise<TransactionResultWithId>;
-    // (undocumented)
     mintBatch(signedPayloads: SignedPayload1155[]): Promise<TransactionResultWithId[]>;
     verify(signedPayload: SignedPayload1155): Promise<boolean>;
 }
@@ -1416,7 +1415,6 @@ export class Erc721SignatureMinting {
     generate(mintRequest: PayloadToSign): Promise<SignedPayload>;
     generateBatch(payloadsToSign: PayloadToSign[]): Promise<SignedPayload[]>;
     mint(signedPayload: SignedPayload): Promise<TransactionResultWithId>;
-    // (undocumented)
     mintBatch(signedPayloads: SignedPayload[]): Promise<TransactionResultWithId[]>;
     verify(signedPayload: SignedPayload): Promise<boolean>;
 }
