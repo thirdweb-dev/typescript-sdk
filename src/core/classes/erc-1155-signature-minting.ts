@@ -16,6 +16,7 @@ import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts/dist/TokenERC1155";
+import { BigNumber } from "ethers";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -89,6 +90,46 @@ export class Erc1155SignatureMinting {
       id,
       receipt,
     };
+  }
+
+  public async mintBatch(
+    signedPayloads: SignedPayload1155[],
+  ): Promise<TransactionResultWithId[]> {
+    const contractPayloads = await Promise.all(
+      signedPayloads.map(async (s) => {
+        const message = await this.mapPayloadToContractStruct(s.payload);
+        const signature = s.signature;
+        const price = s.payload.price;
+        if (BigNumber.from(price).gt(0)) {
+          throw new Error(
+            "Can only batch free mints. For mints with a price, use regular mint()",
+          );
+        }
+        return {
+          message,
+          signature,
+        };
+      }),
+    );
+    const encoded = contractPayloads.map((p) => {
+      return this.contractWrapper.readContract.interface.encodeFunctionData(
+        "mintWithSignature",
+        [p.message, p.signature],
+      );
+    });
+    const receipt = await this.contractWrapper.multiCall(encoded);
+    const events =
+      this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+        "TokensMintedWithSignature",
+        receipt.logs,
+      );
+    if (events.length === 0) {
+      throw new Error("No MintWithSignature event found");
+    }
+    return events.map((log) => ({
+      id: log.args.tokenIdMinted,
+      receipt,
+    }));
   }
 
   /**

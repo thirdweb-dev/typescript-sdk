@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { NFTCollection, Token } from "../src";
 import { sdk, signers } from "./before.test";
@@ -139,6 +139,30 @@ describe("NFT sig minting", async () => {
     beforeEach(async () => {
       v1 = await nftContract.signature.generate(meta);
       v2 = await nftContract.signature.generate(meta);
+    });
+
+    it("should allow batch minting", async () => {
+      const payloads = [];
+      const freeMint = {
+        currencyAddress: NATIVE_TOKEN_ADDRESS,
+        metadata: {
+          name: "OUCH VOUCH",
+        },
+        price: 0,
+        quantity: 1,
+        to: samWallet.address,
+      };
+      for (let i = 0; i < 10; i++) {
+        payloads.push(freeMint);
+      }
+      const batch = await Promise.all(
+        payloads.map(async (p) => await nftContract.signature.generate(p)),
+      );
+      await sdk.updateSignerOrProvider(samWallet);
+      const tx = await nftContract.signature.mintBatch(batch);
+      expect(tx.length).to.eq(10);
+      expect(tx[0].id.toNumber()).to.eq(0);
+      expect(tx[3].id.toNumber()).to.eq(3);
     });
 
     it("should allow a valid voucher to mint", async () => {

@@ -25,5 +25,6 @@ export declare class Erc1155SignatureMinting
 |  [generate(mintRequest)](./sdk.erc1155signatureminting.generate.md) |  | Generate a signature that can be used to mint a dynamic NFT |
 |  [generateBatch(payloadsToSign)](./sdk.erc1155signatureminting.generatebatch.md) |  | Genrate a batch of signatures that can be used to mint many dynamic NFTs. |
 |  [mint(signedPayload)](./sdk.erc1155signatureminting.mint.md) |  | Mint a dynamically generated NFT |
+|  [mintBatch(signedPayloads)](./sdk.erc1155signatureminting.mintbatch.md) |  |  |
 |  [verify(signedPayload)](./sdk.erc1155signatureminting.verify.md) |  | Verify that a payload is correctly signed |
 

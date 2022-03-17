@@ -92,6 +92,46 @@ export class Erc721SignatureMinting {
     };
   }
 
+  public async mintBatch(
+    signedPayloads: SignedPayload[],
+  ): Promise<TransactionResultWithId[]> {
+    const contractPayloads = await Promise.all(
+      signedPayloads.map(async (s) => {
+        const message = await this.mapPayloadToContractStruct(s.payload);
+        const signature = s.signature;
+        const price = s.payload.price;
+        if (BigNumber.from(price).gt(0)) {
+          throw new Error(
+            "Can only batch free mints. For mints with a price, use regular mint()",
+          );
+        }
+        return {
+          message,
+          signature,
+        };
+      }),
+    );
+    const encoded = contractPayloads.map((p) => {
+      return this.contractWrapper.readContract.interface.encodeFunctionData(
+        "mintWithSignature",
+        [p.message, p.signature],
+      );
+    });
+    const receipt = await this.contractWrapper.multiCall(encoded);
+    const events =
+      this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+        "TokensMintedWithSignature",
+        receipt.logs,
+      );
+    if (events.length === 0) {
+      throw new Error("No MintWithSignature event found");
+    }
+    return events.map((log) => ({
+      id: log.args.tokenIdMinted,
+      receipt,
+    }));
+  }
+
   /**
    * Verify that a payload is correctly signed
    * @param signedPayload - the payload to verify
