@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { Edition, Token } from "../src";
 import { sdk, signers } from "./before.test";
@@ -44,8 +44,6 @@ describe("Edition sig minting", async () => {
       price: "1",
       quantity: 1,
       to: samWallet.address,
-      mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
-      mintStartTime: new Date(),
     };
 
     customTokenContract = sdk.getToken(
@@ -142,6 +140,30 @@ describe("Edition sig minting", async () => {
     beforeEach(async () => {
       v1 = await editionContract.signature.generate(meta);
       v2 = await editionContract.signature.generate(meta);
+    });
+
+    it("should allow batch minting", async () => {
+      const payloads = [];
+      const freeMint = {
+        currencyAddress: NATIVE_TOKEN_ADDRESS,
+        metadata: {
+          name: "OUCH VOUCH",
+        },
+        price: 0,
+        quantity: 1,
+        to: samWallet.address,
+      };
+      for (let i = 0; i < 10; i++) {
+        payloads.push(freeMint);
+      }
+      const batch = await Promise.all(
+        payloads.map(async (p) => await editionContract.signature.generate(p)),
+      );
+      await sdk.updateSignerOrProvider(samWallet);
+      const tx = await editionContract.signature.mintBatch(batch);
+      expect(tx.length).to.eq(10);
+      expect(tx[0].id.toNumber()).to.eq(0);
+      expect(tx[3].id.toNumber()).to.eq(3);
     });
 
     it("should allow a valid voucher to mint", async () => {
