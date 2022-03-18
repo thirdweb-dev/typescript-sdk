@@ -2564,12 +2564,10 @@ export class QuantityAboveLimitError extends Error {
     constructor(quantity: string);
 }
 
-// @public (undocumented)
+// @public
 export interface QueryAllParams {
-    // (undocumented)
-    count: BigNumberish;
-    // (undocumented)
-    start: BigNumberish;
+    count?: BigNumberish;
+    start?: BigNumberish;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "REMOTE_CONTRACT_NAME" should be prefixed with an underscore because the declaration is marked as @internal

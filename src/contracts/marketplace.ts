@@ -25,6 +25,7 @@ import { getRoleHash } from "../common/role";
 import { MarketplaceDirect } from "../core/classes/marketplace-direct";
 import { MarketplaceAuction } from "../core/classes/marketplace-auction";
 import { GasCostEstimator } from "../core/classes";
+import { DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -237,11 +238,15 @@ export class Marketplace implements UpdateableNetwork {
    * const priceOfFirstListing = listings[0].price;
    * ```
    *
-   * @param filter - optional filters
+   * @param filter - optional filter parameters
    */
   public async getAllListings(
     filter?: MarketplaceFilter,
   ): Promise<(AuctionListing | DirectListing)[]> {
+    const start = BigNumber.from(filter?.start || 0).toNumber();
+    const count = BigNumber.from(
+      filter?.count || DEFAULT_QUERY_ALL_COUNT,
+    ).toNumber();
     let rawListings = await this.getAllListingsNoFilter();
 
     if (filter) {
@@ -268,16 +273,8 @@ export class Marketplace implements UpdateableNetwork {
           );
         }
       }
-      if (filter.start !== undefined) {
-        const start = BigNumber.from(filter.start).toNumber();
-        rawListings = rawListings.filter((_, index) => index >= start);
-        if (filter.count !== undefined && rawListings.length > filter.count) {
-          rawListings = rawListings.slice(
-            0,
-            BigNumber.from(filter.count).toNumber(),
-          );
-        }
-      }
+      rawListings = rawListings.filter((_, index) => index >= start);
+      rawListings = rawListings.slice(0, count);
     }
     return rawListings.filter((l) => l !== undefined) as (
       | AuctionListing
