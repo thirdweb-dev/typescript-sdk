@@ -79,7 +79,7 @@
 |  [Proposal](./sdk.proposal.md) |  |
 |  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
 |  [ProposalVote](./sdk.proposalvote.md) |  |
-|  [QueryAllParams](./sdk.queryallparams.md) |  |
+|  [QueryAllParams](./sdk.queryallparams.md) | Pagination Parameters |
 |  [SplitContractDeployMetadata](./sdk.splitcontractdeploymetadata.md) | Options for deploying Split contract |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
 |  [SplitRecipientInput](./sdk.splitrecipientinput.md) |  |
