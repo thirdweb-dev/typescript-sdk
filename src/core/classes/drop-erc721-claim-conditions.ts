@@ -15,6 +15,7 @@ import {
   transformResultToClaimCondition,
   updateExsitingClaimConditions,
 } from "../../common/claim-conditions";
+import { MaxUint256 } from "@ethersproject/constants";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -190,24 +191,18 @@ export class DropErc721ClaimConditions {
     }
 
     // check for claim timestamp between claims
-    const [, timestampForNextClaim] =
+    const [lastClaimedTimestamp, timestampForNextClaim] =
       await this.contractWrapper.readContract.getClaimTimestamp(
         activeConditionIndex,
         addressToCheck,
       );
 
     const now = BigNumber.from(Date.now()).div(1000);
-    if (now.lt(timestampForNextClaim)) {
-      // if waitTimeSecondsLimitPerTransaction equals to timestampForNextClaim, that means that this is the first time this address claims this token
-      if (
-        BigNumber.from(claimCondition.waitInSeconds).eq(timestampForNextClaim)
-      ) {
-        const balance = await this.contractWrapper.readContract.balanceOf(
-          addressToCheck,
-        );
-        if (balance.gte(1)) {
-          reasons.push(ClaimEligibility.AlreadyClaimed);
-        }
+
+    if (lastClaimedTimestamp.gt(0) && now.lt(timestampForNextClaim)) {
+      // contract will return MaxUint256 if user has already claimed and cannot claim again
+      if (timestampForNextClaim.eq(MaxUint256)) {
+        reasons.push(ClaimEligibility.AlreadyClaimed);
       } else {
         reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
       }
