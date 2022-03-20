@@ -9,7 +9,7 @@ Mint Many unique NFTs
 <b>Signature:</b>
 
 ```typescript
-mintBatchTo(to: string, metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+mintBatchTo(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ mintBatchTo(to: string, metadatas: NFTMetadataInput[]): Promise<TransactionResul
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  to | string |  |
-|  metadatas | [NFTMetadataInput](./sdk.nftmetadatainput.md)<!-- -->\[\] |  |
+|  metadatas | NFTMetadataOrUri\[\] |  |
 
 <b>Returns:</b>
 

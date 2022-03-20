@@ -2,7 +2,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { NFTCollection } from "../src/contracts";
-import { sdk, signers } from "./before.test";
+import { sdk, signers, storage } from "./before.test";
 
 global.fetch = require("node-fetch");
 
@@ -76,6 +76,26 @@ describe("NFT Contract", async () => {
     await nftContract.mint({
       name: "Test1",
     });
+    const nft = await nftContract.get("0");
+    assert.isNotNull(nft);
+    assert.equal(nft.metadata.name, "Test1");
+  });
+
+  it("should mint with URI", async () => {
+    const uri = await storage.uploadMetadata({
+      name: "Test1",
+    });
+    await nftContract.mint(uri);
+    const nft = await nftContract.get("0");
+    assert.isNotNull(nft);
+    assert.equal(nft.metadata.name, "Test1");
+  });
+
+  it("should mint batch with URI", async () => {
+    const uri = await storage.uploadMetadata({
+      name: "Test1",
+    });
+    await nftContract.mintBatch([uri]);
     const nft = await nftContract.get("0");
     assert.isNotNull(nft);
     assert.equal(nft.metadata.name, "Test1");
