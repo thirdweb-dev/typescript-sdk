@@ -1086,7 +1086,7 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
         properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
             key: z.ZodString;
-            value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
+            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
         }, "strip", z.ZodTypeAny, {
             value?: any;
             key: string;
@@ -1099,7 +1099,7 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         }[], {
             value?: any;
             key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
+        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
             value?: any;
             key: string;
         }[] | Record<string, any> | undefined, {
