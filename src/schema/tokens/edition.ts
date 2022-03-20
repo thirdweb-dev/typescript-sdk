@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { BigNumberishSchema, BigNumberSchema } from "../shared";
-import { CommonNFTInput, CommonNFTOutput } from "./common";
+import { CommonNFTInput, CommonNFTOutput, NFTInputOrUriSchema } from "./common";
 
 /**
  * @internal
@@ -28,6 +28,14 @@ export const EditionMetadataInputSchema = z.object({
 });
 
 /**
+ * @internal
+ */
+export const EditionMetadataInputOrUriSchema = z.object({
+  supply: BigNumberishSchema,
+  metadata: NFTInputOrUriSchema,
+});
+
+/**
  * @public
  */
 export type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
@@ -41,3 +49,10 @@ export type EditionMetadataOwner = z.output<
  * @public
  */
 export type EditionMetadataInput = z.input<typeof EditionMetadataInputSchema>;
+
+/**
+ * @public
+ */
+export type EditionMetadataOrUri = z.input<
+  typeof EditionMetadataInputOrUriSchema
+>;

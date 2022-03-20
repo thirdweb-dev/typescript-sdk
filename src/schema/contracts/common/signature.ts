@@ -7,7 +7,7 @@ import {
   StartDateSchema,
 } from "../../shared";
 import { z } from "zod";
-import { CommonNFTInput } from "../../tokens/common";
+import { NFTInputOrUriSchema } from "../../tokens/common";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import { AddressZero } from "@ethersproject/constants";
 import { ethers } from "ethers";
@@ -17,7 +17,7 @@ import { resolveOrGenerateId } from "../../../common/signature-minting";
  * @internal
  */
 export const SignaturePayloadInput = z.object({
-  metadata: CommonNFTInput,
+  metadata: NFTInputOrUriSchema,
   to: z.string().default(AddressZero),
   price: PriceSchema.default(0),
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),

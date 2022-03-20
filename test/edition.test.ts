@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Edition } from "../src/index";
-import { sdk, signers } from "./before.test";
+import { sdk, signers, storage } from "./before.test";
 
 import { assert, expect } from "chai";
 import { AddressZero } from "@ethersproject/constants";
@@ -86,6 +86,34 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     await bundleContract.mintAdditionalSupply(tx.id, 10);
     const nft2 = await bundleContract.get(tx.id);
     expect(nft2.supply.toNumber()).to.eq(20);
+  });
+
+  it("should mint with URI", async () => {
+    const uri = await storage.uploadMetadata({
+      name: "Test1",
+    });
+    await bundleContract.mint({
+      metadata: uri,
+      supply: 10,
+    });
+    const nft = await bundleContract.get("0");
+    assert.isNotNull(nft);
+    assert.equal(nft.metadata.name, "Test1");
+  });
+
+  it("should mint batch with URI", async () => {
+    const uri = await storage.uploadMetadata({
+      name: "Test1",
+    });
+    await bundleContract.mintBatch([
+      {
+        metadata: uri,
+        supply: 10,
+      },
+    ]);
+    const nft = await bundleContract.get("0");
+    assert.isNotNull(nft);
+    assert.equal(nft.metadata.name, "Test1");
   });
 
   it("should return all owned collection tokens", async () => {

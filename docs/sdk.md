@@ -113,6 +113,7 @@
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
 |  [EditionMetadata](./sdk.editionmetadata.md) |  |
 |  [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
+|  [EditionMetadataOrUri](./sdk.editionmetadataoruri.md) |  |
 |  [EditionMetadataOwner](./sdk.editionmetadataowner.md) |  |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [FilledConditionInput](./sdk.filledconditioninput.md) |  |

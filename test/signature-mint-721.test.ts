@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { NFTCollection, Token } from "../src";
-import { sdk, signers } from "./before.test";
+import { sdk, signers, storage } from "./before.test";
 import {
   PayloadToSign,
   SignedPayload,
@@ -180,7 +180,44 @@ describe("NFT sig minting", async () => {
     it("should mint the right metadata", async () => {
       const tx = await nftContract.signature.mint(v1);
       const nft = await nftContract.get(tx.id);
-      assert.equal(nft.metadata.name, meta.metadata.name);
+      assert.equal(nft.metadata.name, "OUCH VOUCH");
+    });
+
+    it("should mint with URI", async () => {
+      const uri = await storage.uploadMetadata({
+        name: "Test1",
+      });
+      const toSign = {
+        metadata: uri,
+      };
+      const payload = await nftContract.signature.generate(toSign);
+      const tx = await nftContract.signature.mint(payload);
+      const nft = await nftContract.get(tx.id);
+      assert.equal(nft.metadata.name, "Test1");
+    });
+
+    it("should mint batch with URI", async () => {
+      const uri1 = await storage.uploadMetadata({
+        name: "Test1",
+      });
+      const uri2 = await storage.uploadMetadata({
+        name: "Test2",
+      });
+      const toSign1 = {
+        metadata: uri1,
+      };
+      const toSign2 = {
+        metadata: uri2,
+      };
+      const payloads = await nftContract.signature.generateBatch([
+        toSign1,
+        toSign2,
+      ]);
+      const tx = await nftContract.signature.mintBatch(payloads);
+      const nft1 = await nftContract.get(tx[0].id);
+      assert.equal(nft1.metadata.name, "Test1");
+      const nft2 = await nftContract.get(tx[1].id);
+      assert.equal(nft2.metadata.name, "Test2");
     });
 
     it("should mint the right custom token price", async () => {

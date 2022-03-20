@@ -1,5 +1,10 @@
 import { BigNumber, BigNumberish } from "ethers";
-import { CommonNFTOutput, NFTMetadata } from "../schema/tokens/common";
+import {
+  CommonNFTOutput,
+  NFTMetadata,
+  NFTMetadataInput,
+  NFTMetadataOrUri,
+} from "../schema/tokens/common";
 import { IStorage } from "../core";
 import { Provider } from "@ethersproject/providers";
 import {
@@ -35,6 +40,13 @@ export async function fetchTokenMetadata(
 }
 
 // Used for marketplace to fetch NFT metadata from contract address + tokenId
+/**
+ * @internal
+ * @param contractAddress
+ * @param provider
+ * @param tokenId
+ * @param storage
+ */
 export async function fetchTokenMetadataForContract(
   contractAddress: string,
   provider: Provider,
@@ -58,4 +70,51 @@ export async function fetchTokenMetadataForContract(
     throw new NotFoundError();
   }
   return fetchTokenMetadata(tokenId, uri, storage);
+}
+
+/**
+ * @internal
+ * @param metadata
+ * @param storage
+ */
+export async function uploadOrExtractURI(
+  metadata: NFTMetadataOrUri,
+  storage: IStorage,
+): Promise<string> {
+  if (typeof metadata === "string") {
+    return metadata;
+  } else {
+    return await storage.uploadMetadata(metadata);
+  }
+}
+
+/**
+ * @internal
+ * @param metadatas
+ * @param storage
+ */
+export async function uploadOrExtractURIs(
+  metadatas: NFTMetadataOrUri[],
+  storage: IStorage,
+): Promise<string[]> {
+  if (isUriList(metadatas)) {
+    return metadatas;
+  } else if (isMetadataList(metadatas)) {
+    const { metadataUris } = await storage.uploadMetadataBatch(metadatas);
+    return metadataUris;
+  } else {
+    throw new Error(
+      "NFT metadatas must all be of the same type (all URI or all NFTMetadataInput)",
+    );
+  }
+}
+
+function isUriList(metadatas: NFTMetadataOrUri[]): metadatas is string[] {
+  return metadatas.find((m) => typeof m !== "string") === undefined;
+}
+
+function isMetadataList(
+  metadatas: NFTMetadataOrUri[],
+): metadatas is NFTMetadataInput[] {
+  return metadatas.find((m) => typeof m !== "object") === undefined;
 }
