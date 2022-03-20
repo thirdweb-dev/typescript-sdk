@@ -1,5 +1,6 @@
 import { BigNumber, BigNumberish } from "ethers";
 import {
+  CommonNFTInput,
   CommonNFTOutput,
   NFTMetadata,
   NFTMetadataInput,
@@ -84,7 +85,7 @@ export async function uploadOrExtractURI(
   if (typeof metadata === "string") {
     return metadata;
   } else {
-    return await storage.uploadMetadata(metadata);
+    return await storage.uploadMetadata(CommonNFTInput.parse(metadata));
   }
 }
 
@@ -100,7 +101,9 @@ export async function uploadOrExtractURIs(
   if (isUriList(metadatas)) {
     return metadatas;
   } else if (isMetadataList(metadatas)) {
-    const { metadataUris } = await storage.uploadMetadataBatch(metadatas);
+    const { metadataUris } = await storage.uploadMetadataBatch(
+      metadatas.map((m) => CommonNFTInput.parse(m)),
+    );
     return metadataUris;
   } else {
     throw new Error(
