@@ -1,7 +1,11 @@
 import { z } from "zod";
-import { FileBufferOrStringSchema, JsonLiteral } from "../../shared";
+import {
+  FileBufferOrStringSchema,
+  JsonObjectSchema,
+  JsonSchema,
+} from "../../shared";
 
-const ValidPropertyValue = JsonLiteral.or(FileBufferOrStringSchema);
+const ValidPropertyValue = JsonSchema.or(FileBufferOrStringSchema);
 const _optionalProperties = z
   .union([
     z
@@ -62,4 +66,4 @@ export const OptionalPropertiesInput = z
 /**
  * @internal
  */
-export const OptionalPropertiesOutput = z.record(JsonLiteral).optional();
+export const OptionalPropertiesOutput = JsonObjectSchema.optional();

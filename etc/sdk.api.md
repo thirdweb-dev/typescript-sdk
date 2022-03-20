@@ -1086,7 +1086,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
         properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
             key: z.ZodString;
-            value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
+            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
         }, "strip", z.ZodTypeAny, {
             value?: any;
             key: string;
@@ -1099,7 +1099,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         }[], {
             value?: any;
             key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
+        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
             value?: any;
             key: string;
         }[] | Record<string, any> | undefined, {
@@ -1177,14 +1177,14 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         external_url: z.ZodOptional<z.ZodString>;
     }>, {
         animation_url: z.ZodOptional<z.ZodString>;
-        properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
+        properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>>;
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
+        properties?: Record<string, Json> | undefined;
         name: string;
         id: BigNumber;
         uri: string;
@@ -1194,7 +1194,7 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
+        properties?: Record<string, Json> | undefined;
         name: string;
         id: string | number | bigint | BigNumber;
         uri: string;
@@ -1206,7 +1206,7 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
+        properties?: Record<string, Json> | undefined;
         name: string;
         id: BigNumber;
         uri: string;
@@ -1219,7 +1219,7 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
+        properties?: Record<string, Json> | undefined;
         name: string;
         id: string | number | bigint | BigNumber;
         uri: string;
@@ -1249,14 +1249,14 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         external_url: z.ZodOptional<z.ZodString>;
     }>, {
         animation_url: z.ZodOptional<z.ZodString>;
-        properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
+        properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>>;
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
+        properties?: Record<string, Json> | undefined;
         name: string;
         id: BigNumber;
         uri: string;
@@ -1266,7 +1266,7 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
+        properties?: Record<string, Json> | undefined;
         name: string;
         id: string | number | bigint | BigNumber;
         uri: string;
@@ -1281,7 +1281,7 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
+        properties?: Record<string, Json> | undefined;
         name: string;
         id: BigNumber;
         uri: string;
@@ -1296,7 +1296,7 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, string | number | boolean | null> | undefined;
+        properties?: Record<string, Json> | undefined;
         name: string;
         id: string | number | bigint | BigNumber;
         uri: string;
@@ -2204,7 +2204,7 @@ export interface Offer {
 // @internal (undocumented)
 export const OptionalPropertiesInput: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
     key: z.ZodString;
-    value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
+    value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
 }, "strip", z.ZodTypeAny, {
     value?: any;
     key: string;
@@ -2217,7 +2217,7 @@ export const OptionalPropertiesInput: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.
 }[], {
     value?: any;
     key: string;
-}[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
+}[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
     value?: any;
     key: string;
 }[] | Record<string, any> | undefined, {
@@ -2231,7 +2231,7 @@ export const OptionalPropertiesInput: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.
 // Warning: (ae-internal-missing-underscore) The name "OptionalPropertiesOutput" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const OptionalPropertiesOutput: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>>>;
+export const OptionalPropertiesOutput: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>>;
 
 // Warning: (ae-internal-missing-underscore) The name "OZ_DEFENDER_FORWARDER_ADDRESS" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -2743,7 +2743,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
         properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
             key: z.ZodString;
-            value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
+            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
         }, "strip", z.ZodTypeAny, {
             value?: any;
             key: string;
@@ -2756,7 +2756,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         }[], {
             value?: any;
             key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
+        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
             value?: any;
             key: string;
         }[] | Record<string, any> | undefined, {
@@ -2863,7 +2863,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
         properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
             key: z.ZodString;
-            value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
+            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
         }, "strip", z.ZodTypeAny, {
             value?: any;
             key: string;
@@ -2876,7 +2876,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         }[], {
             value?: any;
             key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
+        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
             value?: any;
             key: string;
         }[] | Record<string, any> | undefined, {
@@ -2990,7 +2990,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
         properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
             key: z.ZodString;
-            value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
+            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
         }, "strip", z.ZodTypeAny, {
             value?: any;
             key: string;
@@ -3003,7 +3003,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         }[], {
             value?: any;
             key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
+        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
             value?: any;
             key: string;
         }[] | Record<string, any> | undefined, {
@@ -3103,7 +3103,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
         properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
             key: z.ZodString;
-            value: z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
+            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
         }, "strip", z.ZodTypeAny, {
             value?: any;
             key: string;
@@ -3116,7 +3116,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         }[], {
             value?: any;
             key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodNull]>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
+        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
             value?: any;
             key: string;
         }[] | Record<string, any> | undefined, {

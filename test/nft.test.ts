@@ -119,5 +119,29 @@ describe("NFT Contract", async () => {
     ).to.throw;
   });
 
-  // TODO signature based minting tests
+  it("should mint complex metadata", async () => {
+    const tx = await nftContract.mint({
+      name: "Test2",
+      description: "description",
+      image: "https://img.net",
+      animation_url: "https://img.net",
+      background_color: "#000000",
+      external_url: "https://img.net",
+      properties: {
+        arr: ["1", "2", "3"],
+        obj: {
+          anum: 12,
+          astr: "123",
+        },
+        val: "1234",
+      },
+      arr: ["1", "2", "3"],
+      obj: {
+        anum: 12,
+        astr: "123",
+      },
+      val: "1234",
+    });
+    expect(tx.id.toNumber()).to.eq(0);
+  });
 });
