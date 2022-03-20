@@ -17,6 +17,7 @@ import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
+import { uploadOrExtractURIs } from "../../common/nft";
 
 /**
  * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -207,9 +208,8 @@ export class Erc721SignatureMinting {
       SignaturePayloadInput.parse(m),
     );
 
-    const { metadataUris: uris } = await this.storage.uploadMetadataBatch(
-      parsedRequests.map((r) => r.metadata),
-    );
+    const metadatas = parsedRequests.map((r) => r.metadata);
+    const uris = await uploadOrExtractURIs(metadatas, this.storage);
 
     const chainId = await this.contractWrapper.getChainID();
     const signer = this.contractWrapper.getSigner();

@@ -1,8 +1,4 @@
-import {
-  CommonNFTInput,
-  NFTMetadataInput,
-  NFTMetadataOwner,
-} from "../schema/tokens/common";
+import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema/tokens/common";
 import type {
   IStorage,
   NetworkOrSignerOrProvider,
@@ -22,6 +18,7 @@ import { Erc721SignatureMinting } from "../core/classes/erc-721-signature-mintin
 import { GasCostEstimator } from "../core/classes";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { BigNumber } from "ethers";
+import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -133,7 +130,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * @remarks See {@link NFTCollection.mintTo}
    */
   public async mint(
-    metadata: NFTMetadataInput,
+    metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
     return this.mintTo(await this.contractWrapper.getSignerAddress(), metadata);
   }
@@ -163,11 +160,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
    */
   public async mintTo(
     to: string,
-    metadata: NFTMetadataInput,
+    metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    const uri = await this.storage.uploadMetadata(
-      CommonNFTInput.parse(metadata),
-    );
+    const uri = await uploadOrExtractURI(metadata, this.storage);
     const receipt = await this.contractWrapper.sendTransaction("mintTo", [
       to,
       uri,
@@ -193,7 +188,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * @remarks See {@link NFTCollection.mintBatchTo}
    */
   public async mintBatch(
-    metadatas: NFTMetadataInput[],
+    metadatas: NFTMetadataOrUri[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     return this.mintBatchTo(
       await this.contractWrapper.getSignerAddress(),
@@ -230,11 +225,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
    */
   public async mintBatchTo(
     to: string,
-    metadatas: NFTMetadataInput[],
+    metadatas: NFTMetadataOrUri[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const { metadataUris: uris } = await this.storage.uploadMetadataBatch(
-      metadatas.map((m) => CommonNFTInput.parse(m)),
-    );
+    const uris = await uploadOrExtractURIs(metadatas, this.storage);
     const encoded = uris.map((uri) =>
       this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [
         to,
