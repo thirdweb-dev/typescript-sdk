@@ -425,6 +425,32 @@ describe("Marketplace Contract", async () => {
       );
     });
 
+    it("should allow a buyer to buyout a direct listing after making an offer", async () => {
+      await sdk.updateSignerOrProvider(bobWallet);
+
+      const currentBalance = await dummyNftContract.balanceOf(
+        bobWallet.address,
+      );
+      assert.equal(
+        currentBalance.toString(),
+        "0",
+        "The buyer should start with no tokens",
+      );
+      await marketplaceContract.direct.makeOffer(
+        directListingId,
+        1,
+        customTokenContract.getAddress(),
+        0.05,
+      );
+      await marketplaceContract.buyoutListing(directListingId, 1);
+      const balance = await dummyNftContract.balanceOf(bobWallet.address);
+      assert.equal(
+        balance.toString(),
+        "1",
+        "The buyer should have been awarded token",
+      );
+    });
+
     it("should allow a buyer to buyout a direct listing for someone else", async () => {
       await sdk.updateSignerOrProvider(bobWallet);
 

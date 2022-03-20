@@ -96,7 +96,8 @@ export async function setErc20Allowance(
     const spender = contractToApprove.readContract.address;
     const allowance = await erc20.readContract.allowance(owner, spender);
     if (allowance.lt(value)) {
-      await erc20.sendTransaction("approve", [spender, value.sub(allowance)]);
+      // approve overrides the previous allowance, set it to the minimum required for this tx
+      await erc20.sendTransaction("approve", [spender, value]);
     }
     return overrides;
   }
