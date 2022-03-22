@@ -33,7 +33,10 @@ export class DropErc1155History {
     tokenId: BigNumberish,
   ): Promise<string[]> {
     const a = await this.contractWrapper.readContract.queryFilter(
-      this.contractWrapper.readContract.filters.TokensClaimed(null, tokenId),
+      this.contractWrapper.readContract.filters.TokensClaimed(
+        null,
+        BigNumber.from(tokenId),
+      ),
     );
     return Array.from(new Set(a.map((b) => b.args.claimer)));
   }
