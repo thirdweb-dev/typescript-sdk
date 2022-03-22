@@ -19,10 +19,14 @@ export class TokenERC20History {
    *****************************************/
 
   /**
-   * Lets you get a all token holders and their corresponding balances
-   * @beta - This can be very slow for large numbers of token holders
-   * @param queryParams - Optional query params
+   * Get all holder balances
+   *
+   * @remarks Lets you get all token holders and their corresponding balances
    * @returns - A JSON object of all token holders and their corresponding balances
+   * @example
+   * ```javascript
+   * const allHolderBalances = await contract.history.getAllHolderBalances();
+   * ```
    */
   public async getAllHolderBalances(): Promise<Record<string, BigNumber>> {
     const a = await this.contractWrapper.readContract.queryFilter(

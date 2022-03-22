@@ -18,12 +18,16 @@ export class DropErc1155History {
    *****************************************/
 
   /**
-   * Pulls the list of all addresses that have claimed a particular token
+   * Get all claimer addresses
    *
-   * @beta - This can be very slow for large numbers of token holders
-   *
-   * @param tokenId - The token id to get the claimers of
+   * @remarks Get a list of all the addresses that have claimed a token
+   * @param tokenId - the tokenId of the NFT to get the addresses of*
    * @returns - A unique list of addresses that claimed the token
+   * @example
+   * ```javascript
+   * const tokenId = "0";
+   * const allClaimerAddresses = await contract.history.getAllClaimerAddresses(tokenId);
+   * ```
    */
   public async getAllClaimerAddresses(
     tokenId: BigNumberish,
