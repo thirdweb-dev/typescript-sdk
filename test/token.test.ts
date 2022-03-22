@@ -117,7 +117,7 @@ describe("Token Contract", async () => {
     await currencyContract.transferBatch(batch);
 
     for (const b of batch) {
-      const expectedBalance = BigNumber.from(10);
+      const expectedBalance = ethers.utils.parseEther("10");
       const actualBalance = (await currencyContract.balanceOf(b.toAddress))
         .value;
 
