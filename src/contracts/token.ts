@@ -15,6 +15,7 @@ import { TokenMintInput } from "../schema/tokens/token";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes";
 import { Amount, CurrencyValue } from "../types";
+import { TokenERC20History } from "../core/classes/erc-20-history";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -45,6 +46,7 @@ export class Token extends Erc20<TokenERC20> {
   public roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
   public encoder: ContractEncoder<TokenERC20>;
   public estimator: GasCostEstimator<TokenERC20>;
+  public history: TokenERC20History;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -65,6 +67,7 @@ export class Token extends Erc20<TokenERC20> {
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, Token.contractRoles);
+    this.history = new TokenERC20History(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
   }
