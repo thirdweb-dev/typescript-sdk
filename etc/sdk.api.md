@@ -776,6 +776,12 @@ export class DropErc1155ClaimConditions {
 }
 
 // @public
+export class DropErc1155History {
+    constructor(contractWrapper: ContractWrapper<DropERC1155>);
+    getAllClaimerAddresses(tokenId: BigNumberish): Promise<string[]>;
+}
+
+// @public
 export class DropErc721ClaimConditions {
     constructor(contractWrapper: ContractWrapper<DropERC721>, metadata: ContractMetadata<DropERC721, typeof DropErc721ContractSchema>, storage: IStorage);
     canClaim(quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
@@ -937,6 +943,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     encoder: ContractEncoder<DropERC1155>;
     // (undocumented)
     estimator: GasCostEstimator<DropERC1155>;
+    // (undocumented)
+    history: DropErc1155History;
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
     // (undocumented)
@@ -3740,6 +3748,8 @@ export class Token extends Erc20<TokenERC20> {
     // (undocumented)
     getVoteBalanceOf(account: string): Promise<CurrencyValue>;
     // (undocumented)
+    history: TokenERC20History;
+    // (undocumented)
     metadata: ContractMetadata<TokenERC20, typeof Token.schema>;
     mint(amount: Amount): Promise<TransactionResult>;
     mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult>;
@@ -3841,6 +3851,12 @@ export interface TokenContractDeployMetadata {
     primary_sale_recipient: string;
     symbol?: string;
     trusted_forwarders?: string[];
+}
+
+// @public
+export class TokenERC20History {
+    constructor(contractWrapper: ContractWrapper<TokenERC20>);
+    getAllHolderBalances(): Promise<Record<string, BigNumber>>;
 }
 
 // Warning: (ae-incompatible-release-tags) The symbol "TokenMintInput" is marked as @public, but its signature references "TokenMintInputSchema" which is marked as @internal

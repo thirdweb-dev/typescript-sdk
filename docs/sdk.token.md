@@ -40,6 +40,7 @@ const contract = sdk.getToken("{{contract_address}}");
 |  [contractType](./sdk.token.contracttype.md) | <code>static</code> | "token" |  |
 |  [encoder](./sdk.token.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;TokenERC20&gt; |  |
 |  [estimator](./sdk.token.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TokenERC20&gt; |  |
+|  [history](./sdk.token.history.md) |  | [TokenERC20History](./sdk.tokenerc20history.md) |  |
 |  [metadata](./sdk.token.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC20, typeof Token.schema&gt; |  |
 |  [roles](./sdk.token.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC20, typeof [Token.contractRoles](./sdk.token.contractroles.md)<!-- -->\[number\]&gt; |  |
 
