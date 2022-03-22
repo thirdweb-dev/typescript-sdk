@@ -1,6 +1,6 @@
 import { DropERC1155 } from "@thirdweb-dev/contracts";
 import { ContractWrapper } from "./contract-wrapper";
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 
 /**
  * Manages history for Edition Drop contracts
