@@ -3,7 +3,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { BigNumberish } from "ethers";
 
 /**
- * Manages claim conditions for Edition Drop contracts
+ * Manages history for Edition Drop contracts
  * @public
  */
 export class DropErc1155History {

@@ -4,7 +4,7 @@ import { TokenERC20 } from "@thirdweb-dev/contracts";
 import { AddressZero } from "@ethersproject/constants";
 
 /**
- * Manages claim conditions for Edition Drop contracts
+ * Manages history for Token contracts
  * @public
  */
 export class TokenERC20History {
