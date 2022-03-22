@@ -16,6 +16,7 @@
 |  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalties |
 |  [DelayedReveal](./sdk.delayedreveal.md) | Handles delayed reveal logic |
 |  [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Manages claim conditions for Edition Drop contracts |
+|  [DropErc1155History](./sdk.droperc1155history.md) | Manages history for Edition Drop contracts |
 |  [DropErc721ClaimConditions](./sdk.droperc721claimconditions.md) | Manages claim conditions for NFT Drop contracts |
 |  [Edition](./sdk.edition.md) | Create a collection of NFTs that lets you mint multiple copies of each NFT. |
 |  [EditionDrop](./sdk.editiondrop.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
@@ -35,6 +36,7 @@
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
 |  [Token](./sdk.token.md) | Create a standard crypto token or cryptocurrency. |
+|  [TokenERC20History](./sdk.tokenerc20history.md) | Manages history for Token contracts |
 |  [TransactionError](./sdk.transactionerror.md) |  |
 |  [Vote](./sdk.vote.md) | Create a decentralized organization for token holders to vote on proposals. |
 
