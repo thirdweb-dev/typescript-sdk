@@ -25,6 +25,7 @@ import { IMarketplace } from '@thirdweb-dev/contracts';
 import { IThirdwebContract } from '@thirdweb-dev/contracts';
 import { IThirdwebPrimarySale } from '@thirdweb-dev/contracts';
 import { IThirdwebRoyalty } from '@thirdweb-dev/contracts';
+import { Listener } from '@ethersproject/providers';
 import { Log } from '@ethersproject/providers';
 import { Marketplace as Marketplace_2 } from '@thirdweb-dev/contracts';
 import { Marketplace__factory } from '@thirdweb-dev/contracts';
@@ -1969,8 +1970,6 @@ export interface NewDirectListing {
 // @public
 export class NFTCollection extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
-    // @internal (undocumented)
-    addTransferEventListener(listener: (from: string, to: string, tokenId: BigNumber) => void): void;
     // (undocumented)
     static contractFactory: typeof TokenERC721__factory;
     // (undocumented)
@@ -1981,6 +1980,10 @@ export class NFTCollection extends Erc721<TokenERC721> {
     encoder: ContractEncoder<TokenERC721>;
     // (undocumented)
     estimator: GasCostEstimator<TokenERC721>;
+    // Warning: (ae-forgotten-export) The symbol "ContractEvents" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    events: ContractEvents<TokenERC721>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
@@ -1990,8 +1993,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
     mintTo(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
-    // @internal (undocumented)
-    removeTransferEventListeners(): void;
     // (undocumented)
     roles: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>;
     royalty: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;

@@ -17,8 +17,8 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { Erc721SignatureMinting } from "../core/classes/erc-721-signature-minting";
 import { GasCostEstimator } from "../core/classes";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
-import { BigNumber } from "ethers";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
+import { ContractEvents } from "../core/classes/contract-events";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -52,6 +52,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
   >;
   public encoder: ContractEncoder<TokenERC721>;
   public estimator: GasCostEstimator<TokenERC721>;
+  public events: ContractEvents<TokenERC721>;
   public primarySale: ContractPrimarySale<TokenERC721>;
   /**
    * Configure royalties
@@ -118,6 +119,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
       this.roles,
       this.storage,
     );
+    this.events = new ContractEvents(this.contractWrapper);
   }
 
   /** ******************************
@@ -250,23 +252,5 @@ export class NFTCollection extends Erc721<TokenERC721> {
         data: () => this.get(id),
       };
     });
-  }
-
-  /**
-   * @internal
-   */
-  public addTransferEventListener(
-    listener: (from: string, to: string, tokenId: BigNumber) => void,
-  ) {
-    this.contractWrapper.readContract.on("Transfer", (from, to, tokenId) => {
-      listener(from, to, tokenId);
-    });
-  }
-
-  /**
-   * @internal
-   */
-  public removeTransferEventListeners() {
-    this.contractWrapper.readContract.removeAllListeners("Transfer");
   }
 }
