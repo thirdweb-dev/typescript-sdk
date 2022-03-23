@@ -1,4 +1,4 @@
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Token } from "../src";
 import { sdk, signers } from "./before.test";
@@ -58,6 +58,27 @@ describe("Token Contract", async () => {
       ethers.utils.parseEther("10"),
       `Wrong balance`,
     );
+  });
+
+  it("should list current holders", async () => {
+    await currencyContract.mint(20);
+    await currencyContract.transfer(samWallet.address, "10");
+    await currencyContract.transfer(bobWallet.address, "5");
+    sdk.updateSignerOrProvider(samWallet);
+    await currencyContract.transfer(bobWallet.address, "3");
+
+    const holders = await currencyContract.history.getAllHolderBalances();
+    expect(holders.length).to.eq(3);
+    expect(
+      holders.find((h) => h.holder === adminWallet.address)?.balance
+        .displayValue,
+    ).to.eq("5.0");
+    expect(
+      holders.find((h) => h.holder === samWallet.address)?.balance.displayValue,
+    ).to.eq("7.0");
+    expect(
+      holders.find((h) => h.holder === bobWallet.address)?.balance.displayValue,
+    ).to.eq("8.0");
   });
 
   it("should burn tokens", async () => {

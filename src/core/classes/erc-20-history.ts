@@ -2,6 +2,8 @@ import { ContractWrapper } from "./contract-wrapper";
 import { BigNumber } from "ethers";
 import { TokenERC20 } from "@thirdweb-dev/contracts";
 import { AddressZero } from "@ethersproject/constants";
+import { TokenHolderBalance } from "../../types";
+import { fetchCurrencyValue } from "../../common/currency";
 
 /**
  * Manages history for Token contracts
@@ -14,10 +16,6 @@ export class TokenERC20History {
     this.contractWrapper = contractWrapper;
   }
 
-  /** ***************************************
-   * READ FUNCTIONS
-   *****************************************/
-
   /**
    * Get all holder balances
    *
@@ -28,7 +26,7 @@ export class TokenERC20History {
    * const allHolderBalances = await contract.history.getAllHolderBalances();
    * ```
    */
-  public async getAllHolderBalances(): Promise<Record<string, BigNumber>> {
+  public async getAllHolderBalances(): Promise<TokenHolderBalance[]> {
     const a = await this.contractWrapper.readContract.queryFilter(
       this.contractWrapper.readContract.filters.Transfer(),
     );
@@ -54,6 +52,15 @@ export class TokenERC20History {
         balances[to] = balances[to].add(amount);
       }
     });
-    return balances;
+    return Promise.all(
+      Object.keys(balances).map(async (addr) => ({
+        holder: addr,
+        balance: await fetchCurrencyValue(
+          this.contractWrapper.getProvider(),
+          this.contractWrapper.readContract.address,
+          balances[addr],
+        ),
+      })),
+    );
   }
 }
