@@ -29,6 +29,11 @@ export interface NativeToken extends Currency {
 export type CurrencyValue = z.infer<typeof CurrencyValueSchema>;
 
 /**
+ * A token holder address and its current balance
+ */
+export type TokenHolderBalance = { holder: string; balance: CurrencyValue };
+
+/**
  * Represents a currency price already formatted. ie. "1" for 1 ether.
  * @public
  */
