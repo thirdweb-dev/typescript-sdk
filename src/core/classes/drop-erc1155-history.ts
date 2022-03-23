@@ -13,10 +13,6 @@ export class DropErc1155History {
     this.contractWrapper = contractWrapper;
   }
 
-  /** ***************************************
-   * READ FUNCTIONS
-   *****************************************/
-
   /**
    * Get all claimer addresses
    *

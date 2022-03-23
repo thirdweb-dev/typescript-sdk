@@ -101,6 +101,10 @@ describe("Edition Drop Contract", async () => {
     }
     const bundle = await bdContract.get("0");
     assert(bundle.supply.toNumber() === testWallets.length);
+
+    const claimers = await bdContract.history.getAllClaimerAddresses("0");
+    expect(claimers.length).to.eq(testWallets.length);
+    expect(claimers).to.include(bobWallet.address);
   });
 
   it("allow all addresses in the merkle tree to claim using useSnapshot", async () => {

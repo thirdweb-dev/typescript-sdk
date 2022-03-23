@@ -3857,8 +3857,14 @@ export interface TokenContractDeployMetadata {
 // @public
 export class TokenERC20History {
     constructor(contractWrapper: ContractWrapper<TokenERC20>);
-    getAllHolderBalances(): Promise<Record<string, BigNumber>>;
+    getAllHolderBalances(): Promise<TokenHolderBalance[]>;
 }
+
+// @public
+export type TokenHolderBalance = {
+    holder: string;
+    balance: CurrencyValue;
+};
 
 // Warning: (ae-incompatible-release-tags) The symbol "TokenMintInput" is marked as @public, but its signature references "TokenMintInputSchema" which is marked as @internal
 //

@@ -143,6 +143,7 @@
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |
 |  [SnapshotInput](./sdk.snapshotinput.md) | Input model to pass a snapshot of addresses + amount claimable for a claim condition |
 |  [SUPPORTED\_CHAIN\_ID](./sdk.supported_chain_id.md) |  |
+|  [TokenHolderBalance](./sdk.tokenholderbalance.md) | A token holder address and its current balance |
 |  [TokenMintInput](./sdk.tokenmintinput.md) |  |
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultWithAddress](./sdk.transactionresultwithaddress.md) |  |
