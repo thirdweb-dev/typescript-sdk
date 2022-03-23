@@ -310,12 +310,17 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * ```
    */
   public async transferBatch(args: TokenMintInput[]) {
-    const encoded = args.map((arg) =>
-      this.contractWrapper.readContract.interface.encodeFunctionData(
+    const decimals = await this.contractWrapper.readContract.decimals();
+    const encoded = args.map((arg) => {
+      const amountWithDecimals = ethers.utils.parseUnits(
+        BigNumber.from(arg.amount).toString(),
+        decimals,
+      );
+      return this.contractWrapper.readContract.interface.encodeFunctionData(
         "transfer",
-        [arg.toAddress, arg.amount],
-      ),
-    );
+        [arg.toAddress, amountWithDecimals],
+      );
+    });
     await this.contractWrapper.multiCall(encoded);
   }
 
