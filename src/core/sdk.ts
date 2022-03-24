@@ -24,6 +24,8 @@ import type {
 } from "./types";
 import { IThirdwebContract__factory } from "@thirdweb-dev/contracts";
 import { ContractDeployer } from "./classes/contract-deployer";
+import { CustomContract } from "../contracts/custom";
+import invariant from "tiny-invariant";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -34,7 +36,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @internal
    * the cache of contracts that we have already seen
    */
-  private contractCache = new Map<string, ValidContractInstance>();
+  private contractCache = new Map<
+    string,
+    ValidContractInstance | CustomContract
+  >();
   private storage: IStorage;
   /**
    * New contract deployer
@@ -183,8 +188,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const remoteContractType = ethers.utils
       .toUtf8String(await contract.contractType())
       // eslint-disable-next-line no-control-regex
-      .replace(/\x00/g, "") as keyof typeof REMOTE_CONTRACT_TO_CONTRACT_TYPE;
-    return REMOTE_CONTRACT_TO_CONTRACT_TYPE[remoteContractType];
+      .replace(/\x00/g, "");
+    invariant(
+      remoteContractType in REMOTE_CONTRACT_TO_CONTRACT_TYPE,
+      `${remoteContractType} is not a valid contract type, falling back to custom contract`,
+    );
+    return REMOTE_CONTRACT_TO_CONTRACT_TYPE[
+      remoteContractType as keyof typeof REMOTE_CONTRACT_TO_CONTRACT_TYPE
+    ];
   }
 
   /**
@@ -229,6 +240,32 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
+    }
+  }
+
+  /**
+   * bring ur own contract init?
+   * @internal
+   */
+  public async unstable_getCustomContract(address: string, abi?: any) {
+    if (this.contractCache.has(address)) {
+      return this.contractCache.get(address);
+    }
+
+    try {
+      return this.getContract(address, await this.resolveContractType(address));
+    } catch {
+      // expected to happen if the contract is not a known thirdweb contract
+      // we will create a bare-bones custom contract for now
+      const newCustomContract = new CustomContract(
+        this.getSignerOrProvider(),
+        address,
+        this.storage,
+        this.options,
+        abi,
+      );
+      this.contractCache.set(address, newCustomContract);
+      return newCustomContract;
     }
   }
 }

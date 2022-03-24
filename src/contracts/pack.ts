@@ -131,7 +131,7 @@ export class Pack implements UpdateableNetwork {
    * @param packId - the id of the pack to fetch
    * @returns the pack metadata
    */
-  public async get(packId: string): Promise<PackMetadata> {
+  public async get(packId: BigNumberish): Promise<PackMetadata> {
     const [meta, state, supply] = await Promise.all([
       fetchTokenMetadataForContract(
         this.getAddress(),
@@ -145,7 +145,7 @@ export class Pack implements UpdateableNetwork {
         .catch(() => BigNumber.from("0")),
     ]);
     return {
-      id: packId,
+      id: BigNumber.from(packId).toString(),
       metadata: meta,
       creator: state.creator,
       currentSupply: supply,
