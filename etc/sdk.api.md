@@ -743,7 +743,7 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
 //
 // @internal (undocumented)
 export class CustomContract implements UpdateableNetwork {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, abi?: any, contractWrapper?: ContractWrapper<IThirdwebContract>);
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, abi?: any, contractWrapper?: ContractWrapper<BaseContract>);
     // (undocumented)
     static contractType: "custom";
     // (undocumented)
@@ -802,7 +802,7 @@ export class CustomContract implements UpdateableNetwork {
         external_link?: string | undefined;
         name: string;
         }>;
-    }>;
+    }> | undefined;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)

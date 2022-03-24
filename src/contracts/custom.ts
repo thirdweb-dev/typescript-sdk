@@ -8,6 +8,7 @@ import {
 } from "@thirdweb-dev/contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
+import { BaseContract } from "ethers";
 
 /**
  *
@@ -26,31 +27,24 @@ export class CustomContract implements UpdateableNetwork {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
-    abi: any = undefined,
-    contractWrapper = new ContractWrapper<IThirdwebContract>(
+    abi: any = IThirdwebContract__factory.abi,
+    contractWrapper = new ContractWrapper<BaseContract>(
       network,
       address,
-      abi || IThirdwebContract__factory.abi,
+      abi,
       options,
     ),
   ) {
     this.storage = storage;
     this.contractWrapper = contractWrapper;
-    this.metadata = new ContractMetadata(
-      this.contractWrapper,
-      CustomContract.schema,
-      this.storage,
-    );
-    // this.roles = new ContractRoles(this.contractWrapper, Edition.contractRoles);
-    // this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    // this.primarySale = new ContractPrimarySale(this.contractWrapper);
-    // this.encoder = new ContractEncoder(this.contractWrapper);
-    // this.estimator = new GasCostEstimator(this.contractWrapper);
-    // this.signature = new Erc1155SignatureMinting(
-    //   this.contractWrapper,
-    //   this.roles,
-    //   this.storage,
-    // );
+
+    if (supportsContractMetadata(this.contractWrapper)) {
+      this.metadata = new ContractMetadata(
+        this.contractWrapper,
+        CustomContract.schema,
+        this.storage,
+      );
+    }
   }
   onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
     this.contractWrapper.updateSignerOrProvider(network);
@@ -58,4 +52,13 @@ export class CustomContract implements UpdateableNetwork {
   getAddress(): string {
     return this.contractWrapper.readContract.address;
   }
+}
+
+function supportsContractMetadata(
+  contractWrapper: ContractWrapper<BaseContract>,
+): contractWrapper is ContractWrapper<IThirdwebContract> {
+  return (
+    "contractURI" in contractWrapper.readContract &&
+    "setContractURI" in contractWrapper.readContract.functions
+  );
 }
