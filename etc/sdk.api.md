@@ -25,6 +25,7 @@ import { IMarketplace } from '@thirdweb-dev/contracts';
 import { IThirdwebContract } from '@thirdweb-dev/contracts';
 import { IThirdwebPrimarySale } from '@thirdweb-dev/contracts';
 import { IThirdwebRoyalty } from '@thirdweb-dev/contracts';
+import { Listener } from '@ethersproject/providers';
 import { Log } from '@ethersproject/providers';
 import { Marketplace as Marketplace_2 } from '@thirdweb-dev/contracts';
 import { Marketplace__factory } from '@thirdweb-dev/contracts';
@@ -564,6 +565,15 @@ export class ContractEncoder<TContract extends BaseContract> {
     encode(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): string;
 }
 
+// @public
+export class ContractEvents<TContract extends BaseContract> {
+    constructor(contractWrapper: ContractWrapper<TContract>);
+    addListener(eventName: keyof TContract["filters"], listener: (event: Record<string, any>) => void): void;
+    removeAllListeners(): void;
+    // (undocumented)
+    removeListener(eventName: keyof TContract["filters"], listener: Listener): void;
+}
+
 // Warning: (ae-forgotten-export) The symbol "Instance" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractForContractType" is marked as @public, but its signature references "CONTRACTS_MAP" which is marked as @internal
 //
@@ -820,6 +830,8 @@ export class Edition extends Erc1155<TokenERC1155> {
     // (undocumented)
     estimator: GasCostEstimator<TokenERC1155>;
     // (undocumented)
+    events: ContractEvents<TokenERC1155>;
+    // (undocumented)
     metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
     mint(metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
     mintAdditionalSupply(tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
@@ -943,6 +955,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     encoder: ContractEncoder<DropERC1155>;
     // (undocumented)
     estimator: GasCostEstimator<DropERC1155>;
+    // (undocumented)
+    events: ContractEvents<DropERC1155>;
     // (undocumented)
     history: DropErc1155History;
     // (undocumented)
@@ -1745,6 +1759,8 @@ export class Marketplace implements UpdateableNetwork {
     encoder: ContractEncoder<Marketplace_2>;
     // (undocumented)
     estimator: GasCostEstimator<Marketplace_2>;
+    // (undocumented)
+    events: ContractEvents<Marketplace_2>;
     getActiveListings(): Promise<(AuctionListing | DirectListing)[]>;
     // (undocumented)
     getAddress(): string;
@@ -1969,8 +1985,6 @@ export interface NewDirectListing {
 // @public
 export class NFTCollection extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
-    // @internal (undocumented)
-    addTransferEventListener(listener: (from: string, to: string, tokenId: BigNumber) => void): void;
     // (undocumented)
     static contractFactory: typeof TokenERC721__factory;
     // (undocumented)
@@ -1982,6 +1996,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
     // (undocumented)
     estimator: GasCostEstimator<TokenERC721>;
     // (undocumented)
+    events: ContractEvents<TokenERC721>;
+    // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     mint(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
@@ -1990,8 +2006,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
     mintTo(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
-    // @internal (undocumented)
-    removeTransferEventListeners(): void;
     // (undocumented)
     roles: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>;
     royalty: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
@@ -2133,6 +2147,8 @@ export class NFTDrop extends Erc721<DropERC721> {
     encoder: ContractEncoder<DropERC721>;
     // (undocumented)
     estimator: GasCostEstimator<DropERC721>;
+    // (undocumented)
+    events: ContractEvents<DropERC721>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
     // (undocumented)
@@ -2360,6 +2376,8 @@ export class Pack implements UpdateableNetwork {
     encoder: ContractEncoder<Pack_2>;
     // (undocumented)
     estimator: GasCostEstimator<Pack_2>;
+    // (undocumented)
+    events: ContractEvents<Pack_2>;
     get(packId: string): Promise<PackMetadata>;
     // (undocumented)
     getAddress(): string;
@@ -3497,6 +3515,8 @@ export class Split implements UpdateableNetwork {
     // (undocumented)
     estimator: GasCostEstimator<Split_2>;
     // (undocumented)
+    events: ContractEvents<Split_2>;
+    // (undocumented)
     getAddress(): string;
     getAllRecipients(): Promise<SplitRecipient[]>;
     getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
@@ -3742,6 +3762,8 @@ export class Token extends Erc20<TokenERC20> {
     encoder: ContractEncoder<TokenERC20>;
     // (undocumented)
     estimator: GasCostEstimator<TokenERC20>;
+    // (undocumented)
+    events: ContractEvents<TokenERC20>;
     getDelegation(): Promise<string>;
     getDelegationOf(account: string): Promise<string>;
     getVoteBalance(): Promise<CurrencyValue>;
@@ -3975,6 +3997,8 @@ export class Vote implements UpdateableNetwork {
     encoder: ContractEncoder<VoteERC20>;
     // (undocumented)
     estimator: GasCostEstimator<VoteERC20>;
+    // (undocumented)
+    events: ContractEvents<VoteERC20>;
     execute(proposalId: string): Promise<TransactionResult>;
     get(proposalId: BigNumberish): Promise<Proposal>;
     // (undocumented)
@@ -4094,22 +4118,7 @@ export class Vote implements UpdateableNetwork {
         proposal_token_threshold?: string | number | bigint | BigNumber | undefined;
         name: string;
         voting_token_address: string;
-        }>; /**
-        * Create a decentralized organization for token holders to vote on proposals.
-        *
-        * @example
-        *
-        * ```javascript
-        * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
-        *
-        * // You can switch out this provider with any wallet or provider setup you like.
-        * const provider = ethers.Wallet.createRandom();
-        * const sdk = new ThirdwebSDK(provider);
-        * const contract = sdk.getVote("{{contract_address}}");
-        * ```
-        *
-        * @public
-        */
+        }>;
     };
     settings(): Promise<VoteSettings>;
     vote(proposalId: string, voteType: VoteType, reason?: string): Promise<TransactionResult>;

@@ -28,6 +28,7 @@ import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes";
 import { ProposalCreatedEvent } from "@thirdweb-dev/contracts/dist/VoteERC20";
+import { ContractEvents } from "../core/classes/contract-events";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -59,6 +60,7 @@ export class Vote implements UpdateableNetwork {
   public metadata: ContractMetadata<VoteERC20, typeof Vote.schema>;
   public encoder: ContractEncoder<VoteERC20>;
   public estimator: GasCostEstimator<VoteERC20>;
+  public events: ContractEvents<VoteERC20>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -81,6 +83,7 @@ export class Vote implements UpdateableNetwork {
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
+    this.events = new ContractEvents(this.contractWrapper);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {

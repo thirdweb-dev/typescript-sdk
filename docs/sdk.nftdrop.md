@@ -41,6 +41,7 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [contractType](./sdk.nftdrop.contracttype.md) | <code>static</code> | "nft-drop" |  |
 |  [encoder](./sdk.nftdrop.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;DropERC721&gt; |  |
 |  [estimator](./sdk.nftdrop.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;DropERC721&gt; |  |
+|  [events](./sdk.nftdrop.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;DropERC721&gt; |  |
 |  [metadata](./sdk.nftdrop.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;DropERC721, typeof NFTDrop.schema&gt; |  |
 |  [primarySale](./sdk.nftdrop.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;DropERC721&gt; |  |
 |  [revealer](./sdk.nftdrop.revealer.md) |  | [DelayedReveal](./sdk.delayedreveal.md)<!-- -->&lt;DropERC721&gt; | Delayed reveal |
