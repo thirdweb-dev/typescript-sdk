@@ -2378,7 +2378,7 @@ export class Pack implements UpdateableNetwork {
     estimator: GasCostEstimator<Pack_2>;
     // (undocumented)
     events: ContractEvents<Pack_2>;
-    get(packId: string): Promise<PackMetadata>;
+    get(packId: BigNumberish): Promise<PackMetadata>;
     // (undocumented)
     getAddress(): string;
     getAll(): Promise<PackMetadata[]>;
