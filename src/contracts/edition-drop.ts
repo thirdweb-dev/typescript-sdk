@@ -27,6 +27,7 @@ import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ClaimVerification } from "../types";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155";
 import { DropErc1155History } from "../core/classes/drop-erc1155-history";
+import { ContractEvents } from "../core/classes/contract-events";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -56,6 +57,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public primarySale: ContractPrimarySale<DropERC1155>;
   public encoder: ContractEncoder<DropERC1155>;
   public estimator: GasCostEstimator<DropERC1155>;
+  public events: ContractEvents<DropERC1155>;
   public metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
   public roles: ContractRoles<
     DropERC1155,
@@ -137,6 +139,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     );
     this.history = new DropErc1155History(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
+    this.events = new ContractEvents(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
   }
 
