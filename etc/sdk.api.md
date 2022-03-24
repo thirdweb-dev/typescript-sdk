@@ -738,6 +738,130 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
     displayValue: string;
 }>;
 
+// Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "CustomContract" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export class CustomContract implements UpdateableNetwork {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, abi?: any, contractWrapper?: ContractWrapper<BaseContract>);
+    // (undocumented)
+    static contractType: "custom";
+    // (undocumented)
+    getAddress(): string;
+    // (undocumented)
+    metadata: ContractMetadata<IThirdwebContract, {
+        deploy: ZodObject<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        name: string;
+        }, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        name: string;
+        }>;
+        output: ZodObject<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        image: ZodOptional<ZodString>;
+        }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        name: string;
+        }, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        name: string;
+        }>;
+        input: ZodObject<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        name: string;
+        }, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        name: string;
+        }>;
+    }> | undefined;
+    // (undocumented)
+    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    // (undocumented)
+    static schema: {
+        deploy: ZodObject<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        name: string;
+        }, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        name: string;
+        }>;
+        output: ZodObject<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        image: ZodOptional<ZodString>;
+        }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        name: string;
+        }, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        name: string;
+        }>;
+        input: ZodObject<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        name: string;
+        }, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        name: string;
+        }>;
+    };
+}
+
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_IPFS_GATEWAY" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1422,8 +1546,6 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
     quantityOwned: string | number | bigint | BigNumber;
 }>;
 
-// Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
-//
 // @public
 export class Erc1155<T extends DropERC1155 | TokenERC1155> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
@@ -3744,6 +3866,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getVote(address: string): Vote;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
+    // @internal
+    unstable_getCustomContract(address: string, abi?: any): Promise<CustomContract | ValidContractInstance | undefined>;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 
