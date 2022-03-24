@@ -10,6 +10,7 @@
 |  --- | --- |
 |  [ContractDeployer](./sdk.contractdeployer.md) | Handles deploying new contracts |
 |  [ContractEncoder](./sdk.contractencoder.md) | Encodes and decodes Contract functions |
+|  [ContractEvents](./sdk.contractevents.md) | Listen to Contract events in real time |
 |  [ContractMetadata](./sdk.contractmetadata.md) | Handles metadata for a Contract |
 |  [ContractPrimarySale](./sdk.contractprimarysale.md) | Handles primary sales recipients for a Contract |
 |  [ContractRoles](./sdk.contractroles.md) | Handles Contract roles and permissions |

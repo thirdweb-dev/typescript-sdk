@@ -3,7 +3,7 @@ import { BaseContract } from "ethers";
 import { Listener } from "@ethersproject/providers";
 
 /**
- * Encodes and decodes Contract functions
+ * Listen to Contract events in real time
  * @public
  */
 export class ContractEvents<TContract extends BaseContract> {
@@ -13,6 +13,19 @@ export class ContractEvents<TContract extends BaseContract> {
     this.contractWrapper = contractWrapper;
   }
 
+  /**
+   * Subscribe to contract events
+   * @remarks Add a listener for a particular contract event
+   * @example
+   * ```javascript
+   * contract.events.addListener("TokensMinted", (event) => {
+   *   console.log(event);
+   * });
+   * ```
+   * @public
+   * @param eventName - the event name as defined in the contract
+   * @param listener - the receiver that will be called on every new event
+   */
   public addListener(
     eventName: keyof TContract["filters"],
     listener: (event: Record<string, any>) => void,
@@ -33,6 +46,11 @@ export class ContractEvents<TContract extends BaseContract> {
     });
   }
 
+  /**
+   * @public
+   * @param eventName - the event name as defined in the contract
+   * @param listener - the listener to unregister
+   */
   public removeListener(
     eventName: keyof TContract["filters"],
     listener: Listener,
@@ -44,6 +62,9 @@ export class ContractEvents<TContract extends BaseContract> {
     this.contractWrapper.readContract.off(event.name as string, listener);
   }
 
+  /**
+   * Remove all listeners on this contract
+   */
   public removeAllListeners() {
     this.contractWrapper.readContract.removeAllListeners();
   }

@@ -16,6 +16,7 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes";
 import { Amount, CurrencyValue } from "../types";
 import { TokenERC20History } from "../core/classes/erc-20-history";
+import { ContractEvents } from "../core/classes/contract-events";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -47,6 +48,7 @@ export class Token extends Erc20<TokenERC20> {
   public encoder: ContractEncoder<TokenERC20>;
   public estimator: GasCostEstimator<TokenERC20>;
   public history: TokenERC20History;
+  public events: ContractEvents<TokenERC20>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -70,6 +72,7 @@ export class Token extends Erc20<TokenERC20> {
     this.history = new TokenERC20History(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
+    this.events = new ContractEvents(this.contractWrapper);
   }
 
   /** ******************************

@@ -29,6 +29,7 @@ import { GasCostEstimator } from "../core/classes";
 import { ClaimVerification } from "../types";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155";
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
+import { ContractEvents } from "../core/classes/contract-events";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -59,6 +60,7 @@ export class NFTDrop extends Erc721<DropERC721> {
   public estimator: GasCostEstimator<DropERC721>;
   public metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
   public primarySale: ContractPrimarySale<DropERC721>;
+  public events: ContractEvents<DropERC721>;
   public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
   /**
    * Configure royalties
@@ -162,6 +164,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
+    this.events = new ContractEvents(this.contractWrapper);
     this.revealer = new DelayedReveal<DropERC721>(
       this.contractWrapper,
       this.storage,
