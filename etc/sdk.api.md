@@ -1226,7 +1226,7 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodString>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
@@ -1259,7 +1259,7 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -1268,7 +1268,7 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -1282,7 +1282,7 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -1294,7 +1294,7 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -1315,7 +1315,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodString>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
@@ -1348,7 +1348,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -1357,7 +1357,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -1371,7 +1371,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -1383,7 +1383,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -1409,7 +1409,7 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodString>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
         id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
         uri: z.ZodString;
@@ -1481,7 +1481,7 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodString>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
         id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
         uri: z.ZodString;
@@ -2980,7 +2980,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodString>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
@@ -3013,7 +3013,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -3022,7 +3022,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -3050,7 +3050,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -3080,7 +3080,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -3100,7 +3100,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodString>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
@@ -3133,7 +3133,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -3142,7 +3142,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -3176,7 +3176,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -3203,7 +3203,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -3227,7 +3227,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodString>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
@@ -3260,7 +3260,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -3269,7 +3269,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -3294,7 +3294,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -3321,7 +3321,7 @@ export const SignaturePayloadInput: z.ZodObject<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -3340,7 +3340,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
-        external_url: z.ZodOptional<z.ZodString>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
@@ -3373,7 +3373,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -3382,7 +3382,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
@@ -3413,7 +3413,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: Record<string, any> | undefined;
@@ -3438,7 +3438,7 @@ export const SignaturePayloadOutput: z.ZodObject<z.extendShape<{
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
-        external_url?: string | undefined;
+        external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
         properties?: {
