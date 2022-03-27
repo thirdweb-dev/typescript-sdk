@@ -94,6 +94,7 @@
 
 |  Variable | Description |
 |  --- | --- |
+|  [ALL\_ROLES](./sdk.all_roles.md) |  |
 |  [MintRequest1155](./sdk.mintrequest1155.md) |  |
 |  [MintRequest721](./sdk.mintrequest721.md) |  |
 |  [NATIVE\_TOKEN\_ADDRESS](./sdk.native_token_address.md) |  |
