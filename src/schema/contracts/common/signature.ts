@@ -92,6 +92,16 @@ export type SignedPayload1155 = {
   signature: string;
 };
 
+export const MintRequest20 = [
+  { name: "to", type: "address" },
+  { name: "primarySaleRecipient", type: "address" },
+  { name: "price", type: "uint256" },
+  { name: "currency", type: "address" },
+  { name: "validityStartTimestamp", type: "uint128" },
+  { name: "validityEndTimestamp", type: "uint128" },
+  { name: "uid", type: "bytes32" },
+];
+
 export const MintRequest721 = [
   { name: "to", type: "address" },
   { name: "royaltyRecipient", type: "address" },
