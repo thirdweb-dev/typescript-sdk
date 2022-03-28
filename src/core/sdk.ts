@@ -40,9 +40,19 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     string,
     ValidContractInstance | CustomContract
   >();
+  /**
+   * @internal
+   */
   private storage: IStorage;
+
+  /**
+   * @internal
+   */
+  private contractTypeResolutionMap = new Map<string, Promise<ContractType>>();
+
   /**
    * New contract deployer
+   * @public
    */
   public deployer: ContractDeployer;
 
@@ -181,21 +191,42 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async resolveContractType(
     contractAddress: string,
   ): Promise<ContractType> {
-    const contract = IThirdwebContract__factory.connect(
-      contractAddress,
-      this.getSignerOrProvider(),
+    // if we already have a request in flight for this contract address, return the promise from that request
+    const cached = this.contractTypeResolutionMap.get(contractAddress);
+    if (cached) {
+      return cached;
+    }
+    const resolutionPromise = new Promise<ContractType>(
+      // I know what I'm doing here, I promise eslint
+      // eslint-disable-next-line no-async-promise-executor
+      async (resolve, reject) => {
+        try {
+          const contract = IThirdwebContract__factory.connect(
+            contractAddress,
+            this.getSignerOrProvider(),
+          );
+          const remoteContractType = ethers.utils
+            .toUtf8String(await contract.contractType())
+            // eslint-disable-next-line no-control-regex
+            .replace(/\x00/g, "");
+          invariant(
+            remoteContractType in REMOTE_CONTRACT_TO_CONTRACT_TYPE,
+            `${remoteContractType} is not a valid contract type, falling back to custom contract`,
+          );
+          resolve(
+            REMOTE_CONTRACT_TO_CONTRACT_TYPE[
+              remoteContractType as keyof typeof REMOTE_CONTRACT_TO_CONTRACT_TYPE
+            ],
+          );
+        } catch (e) {
+          // delete the cached request so we will fetch again on re-try
+          this.contractTypeResolutionMap.delete(contractAddress);
+          reject(e);
+        }
+      },
     );
-    const remoteContractType = ethers.utils
-      .toUtf8String(await contract.contractType())
-      // eslint-disable-next-line no-control-regex
-      .replace(/\x00/g, "");
-    invariant(
-      remoteContractType in REMOTE_CONTRACT_TO_CONTRACT_TYPE,
-      `${remoteContractType} is not a valid contract type, falling back to custom contract`,
-    );
-    return REMOTE_CONTRACT_TO_CONTRACT_TYPE[
-      remoteContractType as keyof typeof REMOTE_CONTRACT_TO_CONTRACT_TYPE
-    ];
+    this.contractTypeResolutionMap.set(contractAddress, resolutionPromise);
+    return resolutionPromise;
   }
 
   /**
