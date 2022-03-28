@@ -161,7 +161,7 @@ describe("Token sig minting", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await contract.signature.generate({
         price: 1,
-        quantity: 10,
+        quantity: 0.23,
       });
       await sdk.updateSignerOrProvider(samWallet);
       await contract.signature.mint(payload);

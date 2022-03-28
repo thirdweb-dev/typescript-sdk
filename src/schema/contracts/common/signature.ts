@@ -33,14 +33,13 @@ export const BaseSignaturePayloadInput = z.object({
  * @internal
  */
 export const Signature20PayloadInput = BaseSignaturePayloadInput.extend({
-  quantity: BigNumberishSchema,
+  quantity: PriceSchema,
 });
 
 /**
  * @internal
  */
 export const Signature20PayloadOutput = Signature20PayloadInput.extend({
-  quantity: BigNumberSchema,
   mintStartTime: BigNumberSchema,
   mintEndTime: BigNumberSchema,
 });

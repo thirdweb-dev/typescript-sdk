@@ -9,7 +9,7 @@ import {
 } from "../../schema/contracts/common/signature";
 import { TransactionResult } from "../types";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts";
@@ -220,19 +220,23 @@ export class Erc20SignatureMinting {
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri20,
   ): Promise<ITokenERC20.MintRequestStructOutput> {
-    const normalizedPricePerToken = await normalizePriceValue(
+    const normalizedPrice = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       mintRequest.price,
       mintRequest.currencyAddress,
     );
+    const amountWithDecimals = ethers.utils.parseUnits(
+      mintRequest.quantity,
+      await this.contractWrapper.readContract.decimals(),
+    );
     return {
       to: mintRequest.to,
       primarySaleRecipient: mintRequest.primarySaleRecipient,
-      quantity: mintRequest.quantity,
-      price: normalizedPricePerToken,
+      quantity: amountWithDecimals,
+      price: normalizedPrice,
       currency: mintRequest.currencyAddress,
-      validityEndTimestamp: mintRequest.mintEndTime,
       validityStartTimestamp: mintRequest.mintStartTime,
+      validityEndTimestamp: mintRequest.mintEndTime,
       uid: mintRequest.uid,
     } as ITokenERC20.MintRequestStructOutput;
   }
