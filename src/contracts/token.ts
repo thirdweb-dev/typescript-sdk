@@ -79,7 +79,6 @@ export class Token extends Erc20<TokenERC20> {
     this.signature = new Erc20SignatureMinting(
       this.contractWrapper,
       this.roles,
-      this.storage,
     );
   }
 

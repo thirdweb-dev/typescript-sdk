@@ -1,40 +1,34 @@
 import {
-  FilledSignaturePayload,
+  FilledSignaturePayload20,
   MintRequest20,
-  PayloadToSign,
-  PayloadWithUri,
-  SignaturePayloadInput,
-  SignaturePayloadOutput,
-  SignedPayload,
+  PayloadToSign20,
+  PayloadWithUri20,
+  Signature20PayloadInput,
+  Signature20PayloadOutput,
+  SignedPayload20,
 } from "../../schema/contracts/common/signature";
-import { TransactionResultWithId } from "../types";
+import { TransactionResult } from "../types";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts";
-import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { Token } from "../../contracts";
-import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
-import { uploadOrExtractURIs } from "../../common/nft";
 
 /**
- * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
+ * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
  * @public
  */
 export class Erc20SignatureMinting {
   private contractWrapper: ContractWrapper<TokenERC20>;
-  private storage: IStorage;
   private roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
 
   constructor(
     contractWrapper: ContractWrapper<TokenERC20>,
     roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>,
-    storage: IStorage,
   ) {
     this.contractWrapper = contractWrapper;
-    this.storage = storage;
     this.roles = roles;
   }
 
@@ -53,11 +47,11 @@ export class Erc20SignatureMinting {
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
-   * @param signedPayload - the previously generated payload and signature with {@link Erc721SignatureMinting.generate}
+   * @param signedPayload - the previously generated payload and signature with {@link Erc20SignatureMinting.generate}
    */
   public async mint(
-    signedPayload: SignedPayload,
-  ): Promise<TransactionResultWithId> {
+    signedPayload: SignedPayload20,
+  ): Promise<TransactionResult> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = await this.mapPayloadToContractStruct(mintRequest);
@@ -68,22 +62,12 @@ export class Erc20SignatureMinting {
       mintRequest.currencyAddress,
       overrides,
     );
-    const receipt = await this.contractWrapper.sendTransaction(
-      "mintWithSignature",
-      [message, signature],
-      overrides,
-    );
-    const t = this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
-      "TokensMintedWithSignature",
-      receipt.logs,
-    );
-    if (t.length === 0) {
-      throw new Error("No MintWithSignature event found");
-    }
-    const id = t[0].args.tokenIdMinted;
     return {
-      id,
-      receipt,
+      receipt: await this.contractWrapper.sendTransaction(
+        "mintWithSignature",
+        [message, signature],
+        overrides,
+      ),
     };
   }
 
@@ -93,8 +77,8 @@ export class Erc20SignatureMinting {
    * @param signedPayloads - the array of signed payloads to mint
    */
   public async mintBatch(
-    signedPayloads: SignedPayload[],
-  ): Promise<TransactionResultWithId[]> {
+    signedPayloads: SignedPayload20[],
+  ): Promise<TransactionResult> {
     const contractPayloads = await Promise.all(
       signedPayloads.map(async (s) => {
         const message = await this.mapPayloadToContractStruct(s.payload);
@@ -117,26 +101,16 @@ export class Erc20SignatureMinting {
         [p.message, p.signature],
       );
     });
-    const receipt = await this.contractWrapper.multiCall(encoded);
-    const events =
-      this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
-        "TokensMintedWithSignature",
-        receipt.logs,
-      );
-    if (events.length === 0) {
-      throw new Error("No MintWithSignature event found");
-    }
-    return events.map((log) => ({
-      id: log.args.tokenIdMinted,
-      receipt,
-    }));
+    return {
+      receipt: await this.contractWrapper.multiCall(encoded),
+    };
   }
 
   /**
    * Verify that a payload is correctly signed
    * @param signedPayload - the payload to verify
    */
-  public async verify(signedPayload: SignedPayload): Promise<boolean> {
+  public async verify(signedPayload: SignedPayload20): Promise<boolean> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = await this.mapPayloadToContractStruct(mintRequest);
@@ -178,44 +152,40 @@ export class Erc20SignatureMinting {
    * @param mintRequest - the payload to sign
    * @returns the signed payload and the corresponding signature
    */
-  public async generate(mintRequest: PayloadToSign): Promise<SignedPayload> {
+  public async generate(
+    mintRequest: PayloadToSign20,
+  ): Promise<SignedPayload20> {
     return (await this.generateBatch([mintRequest]))[0];
   }
 
   /**
    * Genrate a batch of signatures that can be used to mint many dynamic NFTs.
    *
-   * @remarks See {@link Erc721SignatureMinting.generate}
+   * @remarks See {@link Erc20SignatureMinting.generate}
    *
    * @param payloadsToSign - the payloads to sign
    * @returns an array of payloads and signatures
    */
   public async generateBatch(
-    payloadsToSign: PayloadToSign[],
-  ): Promise<SignedPayload[]> {
+    payloadsToSign: PayloadToSign20[],
+  ): Promise<SignedPayload20[]> {
     await this.roles.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
 
-    const parsedRequests: FilledSignaturePayload[] = payloadsToSign.map((m) =>
-      SignaturePayloadInput.parse(m),
+    const parsedRequests: FilledSignaturePayload20[] = payloadsToSign.map((m) =>
+      Signature20PayloadInput.parse(m),
     );
-
-    const metadatas = parsedRequests.map((r) => r.metadata);
-    const uris = await uploadOrExtractURIs(metadatas, this.storage);
 
     const chainId = await this.contractWrapper.getChainID();
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
     return await Promise.all(
-      parsedRequests.map(async (m, i) => {
-        const uri = uris[i];
-        const finalPayload = SignaturePayloadOutput.parse({
-          ...m,
-          uri,
-        });
+      parsedRequests.map(async (m) => {
+        const finalPayload = Signature20PayloadOutput.parse(m);
+        console.log(await this.mapPayloadToContractStruct(finalPayload));
         const signature = await this.contractWrapper.signTypedData(
           signer,
           {
@@ -248,7 +218,7 @@ export class Erc20SignatureMinting {
    * @returns - The mapped payload.
    */
   private async mapPayloadToContractStruct(
-    mintRequest: PayloadWithUri,
+    mintRequest: PayloadWithUri20,
   ): Promise<ITokenERC20.MintRequestStructOutput> {
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
@@ -258,6 +228,7 @@ export class Erc20SignatureMinting {
     return {
       to: mintRequest.to,
       primarySaleRecipient: mintRequest.primarySaleRecipient,
+      quantity: mintRequest.quantity,
       price: normalizedPricePerToken,
       currency: mintRequest.currencyAddress,
       validityEndTimestamp: mintRequest.mintEndTime,

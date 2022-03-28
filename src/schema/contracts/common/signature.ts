@@ -16,8 +16,7 @@ import { resolveOrGenerateId } from "../../../common/signature-minting";
 /**
  * @internal
  */
-export const SignaturePayloadInput = z.object({
-  metadata: NFTInputOrUriSchema,
+export const BaseSignaturePayloadInput = z.object({
   to: z.string().default(AddressZero),
   price: PriceSchema.default(0),
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
@@ -27,15 +26,38 @@ export const SignaturePayloadInput = z.object({
     .string()
     .optional()
     .transform((arg) => resolveOrGenerateId(arg)),
-  royaltyRecipient: z.string().default(AddressZero),
-  royaltyBps: BasisPointsSchema.default(0),
   primarySaleRecipient: z.string().default(AddressZero),
 });
 
 /**
  * @internal
  */
-export const SignaturePayloadOutput = SignaturePayloadInput.extend({
+export const Signature20PayloadInput = BaseSignaturePayloadInput.extend({
+  quantity: BigNumberishSchema,
+});
+
+/**
+ * @internal
+ */
+export const Signature20PayloadOutput = Signature20PayloadInput.extend({
+  quantity: BigNumberSchema,
+  mintStartTime: BigNumberSchema,
+  mintEndTime: BigNumberSchema,
+});
+
+/**
+ * @internal
+ */
+export const Signature721PayloadInput = BaseSignaturePayloadInput.extend({
+  metadata: NFTInputOrUriSchema,
+  royaltyRecipient: z.string().default(AddressZero),
+  royaltyBps: BasisPointsSchema.default(0),
+});
+
+/**
+ * @internal
+ */
+export const Signature721PayloadOutput = Signature721PayloadInput.extend({
   uri: z.string(),
   royaltyBps: BigNumberSchema,
   mintStartTime: BigNumberSchema,
@@ -45,7 +67,7 @@ export const SignaturePayloadOutput = SignaturePayloadInput.extend({
 /**
  * @internal
  */
-export const Signature1155PayloadInput = SignaturePayloadInput.extend({
+export const Signature1155PayloadInput = Signature721PayloadInput.extend({
   tokenId: BigNumberishSchema.default(ethers.constants.MaxUint256),
   quantity: BigNumberishSchema,
 });
@@ -53,7 +75,7 @@ export const Signature1155PayloadInput = SignaturePayloadInput.extend({
 /**
  * @internal
  */
-export const Signature1155PayloadOutput = SignaturePayloadOutput.extend({
+export const Signature1155PayloadOutput = Signature721PayloadOutput.extend({
   tokenId: BigNumberSchema,
   quantity: BigNumberSchema,
 });
@@ -61,14 +83,44 @@ export const Signature1155PayloadOutput = SignaturePayloadOutput.extend({
 /**
  * @public
  */
-export type FilledSignaturePayload = z.output<typeof SignaturePayloadInput>;
+export type FilledSignaturePayload20 = z.output<typeof Signature20PayloadInput>;
 /**
  * @public
  */
-export type PayloadWithUri = z.output<typeof SignaturePayloadOutput>;
+export type PayloadWithUri20 = z.output<typeof Signature20PayloadOutput>;
+/**
+ * @public
+ */
+export type PayloadToSign20 = z.input<typeof Signature20PayloadInput>;
+/**
+ * @public
+ */
+export type SignedPayload20 = {
+  payload: PayloadWithUri20;
+  signature: string;
+};
 
-export type PayloadToSign = z.input<typeof SignaturePayloadInput>;
-export type SignedPayload = { payload: PayloadWithUri; signature: string };
+/**
+ * @public
+ */
+export type FilledSignaturePayload721 = z.output<
+  typeof Signature721PayloadInput
+>;
+/**
+ * @public
+ */
+export type PayloadWithUri721 = z.output<typeof Signature721PayloadOutput>;
+/**
+ * @public
+ */
+export type PayloadToSign721 = z.input<typeof Signature721PayloadInput>;
+/**
+ * @public
+ */
+export type SignedPayload721 = {
+  payload: PayloadWithUri721;
+  signature: string;
+};
 
 /**
  * @public
@@ -95,6 +147,7 @@ export type SignedPayload1155 = {
 export const MintRequest20 = [
   { name: "to", type: "address" },
   { name: "primarySaleRecipient", type: "address" },
+  { name: "quantity", type: "uint256" },
   { name: "price", type: "uint256" },
   { name: "currency", type: "address" },
   { name: "validityStartTimestamp", type: "uint128" },
