@@ -583,6 +583,14 @@ export class ContractEvents<TContract extends BaseContract> {
 // @public (undocumented)
 export type ContractForContractType<TContractType extends ContractType> = Instance<typeof CONTRACTS_MAP[TContractType]>;
 
+// Warning: (ae-internal-missing-underscore) The name "ContractInterceptor" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export class ContractInterceptor<TContract extends BaseContract> {
+    constructor(contractWrapper: ContractWrapper<TContract>);
+    overrideNextTransaction(hook: () => CallOverrides_2): void;
+}
+
 // Warning: (ae-incompatible-release-tags) The symbol "ContractMetadata" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
@@ -1301,6 +1309,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     events: ContractEvents<DropERC1155>;
     // (undocumented)
     history: DropErc1155History;
+    // @internal (undocumented)
+    interceptor: ContractInterceptor<DropERC1155>;
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
     // (undocumented)
@@ -2491,6 +2501,8 @@ export class NFTDrop extends Erc721<DropERC721> {
     events: ContractEvents<DropERC721>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
+    // @internal (undocumented)
+    interceptor: ContractInterceptor<DropERC721>;
     // (undocumented)
     metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
     // (undocumented)
