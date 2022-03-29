@@ -96,6 +96,7 @@
 |  --- | --- |
 |  [ALL\_ROLES](./sdk.all_roles.md) |  |
 |  [MintRequest1155](./sdk.mintrequest1155.md) |  |
+|  [MintRequest20](./sdk.mintrequest20.md) |  |
 |  [MintRequest721](./sdk.mintrequest721.md) |  |
 |  [NATIVE\_TOKEN\_ADDRESS](./sdk.native_token_address.md) |  |
 |  [NATIVE\_TOKENS](./sdk.native_tokens.md) |  |
@@ -121,8 +122,9 @@
 |  [EditionMetadataOwner](./sdk.editionmetadataowner.md) |  |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [FilledConditionInput](./sdk.filledconditioninput.md) |  |
-|  [FilledSignaturePayload](./sdk.filledsignaturepayload.md) |  |
 |  [FilledSignaturePayload1155](./sdk.filledsignaturepayload1155.md) |  |
+|  [FilledSignaturePayload20](./sdk.filledsignaturepayload20.md) |  |
+|  [FilledSignaturePayload721](./sdk.filledsignaturepayload721.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
 |  [Json](./sdk.json.md) |  |
 |  [JsonObject](./sdk.jsonobject.md) |  |
@@ -130,16 +132,19 @@
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
-|  [PayloadToSign](./sdk.payloadtosign.md) |  |
 |  [PayloadToSign1155](./sdk.payloadtosign1155.md) |  |
-|  [PayloadWithUri](./sdk.payloadwithuri.md) |  |
+|  [PayloadToSign20](./sdk.payloadtosign20.md) |  |
+|  [PayloadToSign721](./sdk.payloadtosign721.md) |  |
 |  [PayloadWithUri1155](./sdk.payloadwithuri1155.md) |  |
+|  [PayloadWithUri20](./sdk.payloadwithuri20.md) |  |
+|  [PayloadWithUri721](./sdk.payloadwithuri721.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [Price](./sdk.price.md) | Represents a currency price already formatted. ie. "1" for 1 ether. |
 |  [Role](./sdk.role.md) |  |
 |  [SDKOptions](./sdk.sdkoptions.md) | All these configuration options are optional with sane defaults: |
-|  [SignedPayload](./sdk.signedpayload.md) |  |
 |  [SignedPayload1155](./sdk.signedpayload1155.md) |  |
+|  [SignedPayload20](./sdk.signedpayload20.md) |  |
+|  [SignedPayload721](./sdk.signedpayload721.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |

@@ -9,14 +9,14 @@ Mint any number of dynamically generated NFT at once
 <b>Signature:</b>
 
 ```typescript
-mintBatch(signedPayloads: SignedPayload[]): Promise<TransactionResultWithId[]>;
+mintBatch(signedPayloads: SignedPayload721[]): Promise<TransactionResultWithId[]>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  signedPayloads | [SignedPayload](./sdk.signedpayload.md)<!-- -->\[\] | the array of signed payloads to mint |
+|  signedPayloads | [SignedPayload721](./sdk.signedpayload721.md)<!-- -->\[\] | the array of signed payloads to mint |
 
 <b>Returns:</b>
 

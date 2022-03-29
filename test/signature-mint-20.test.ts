@@ -37,7 +37,7 @@ describe("Token sig minting", async () => {
 
     meta = {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
-      quantity: 2,
+      quantity: 50,
       price: "0.2",
       to: samWallet.address,
       primarySaleRecipient: adminWallet.address,

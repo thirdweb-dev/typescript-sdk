@@ -44,6 +44,7 @@ const contract = sdk.getToken("{{contract_address}}");
 |  [history](./sdk.token.history.md) |  | [TokenERC20History](./sdk.tokenerc20history.md) |  |
 |  [metadata](./sdk.token.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC20, typeof Token.schema&gt; |  |
 |  [roles](./sdk.token.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC20, typeof [Token.contractRoles](./sdk.token.contractroles.md)<!-- -->\[number\]&gt; |  |
+|  [signature](./sdk.token.signature.md) |  | Erc20SignatureMinting |  |
 
 ## Methods
 

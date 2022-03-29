@@ -9,18 +9,18 @@ Generate a signature that can be used to mint a dynamic NFT
 <b>Signature:</b>
 
 ```typescript
-generate(mintRequest: PayloadToSign): Promise<SignedPayload>;
+generate(mintRequest: PayloadToSign721): Promise<SignedPayload721>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequest | [PayloadToSign](./sdk.payloadtosign.md) | the payload to sign |
+|  mintRequest | [PayloadToSign721](./sdk.payloadtosign721.md) | the payload to sign |
 
 <b>Returns:</b>
 
-Promise&lt;[SignedPayload](./sdk.signedpayload.md)<!-- -->&gt;
+Promise&lt;[SignedPayload721](./sdk.signedpayload721.md)<!-- -->&gt;
 
 the signed payload and the corresponding signature
 
