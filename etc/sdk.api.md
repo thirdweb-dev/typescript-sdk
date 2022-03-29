@@ -4344,8 +4344,6 @@ export class Token extends Erc20<TokenERC20> {
         }>;
     };
     // Warning: (ae-forgotten-export) The symbol "Erc20SignatureMinting" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     signature: Erc20SignatureMinting;
 }
 

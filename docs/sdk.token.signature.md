@@ -4,8 +4,28 @@
 
 ## Token.signature property
 
+Signature Minting
+
 <b>Signature:</b>
 
 ```typescript
 signature: Erc20SignatureMinting;
 ```
+
+## Remarks
+
+Generate tokens that can be minted only with your own signature, attaching your own set of mint conditions.
+
+## Example
+
+
+```javascript
+// see how to craft a payload to sign in the `contract.signature.generate()` documentation
+const signedPayload = contract.signature.generate(payload);
+
+// now anyone can mint the NFT
+const tx = contract.signature.mint(signedPayload);
+const receipt = tx.receipt; // the mint transaction receipt
+const mintedId = tx.id; // the id of the NFT minted
+```
+

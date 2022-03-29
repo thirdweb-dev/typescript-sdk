@@ -33,9 +33,9 @@ export class Erc20SignatureMinting {
   }
 
   /**
-   * Mint a dynamically generated NFT
+   * Mint tokens from a signature
    *
-   * @remarks Mint a dynamic NFT with a previously generated signature.
+   * @remarks Mint a certain amount of tokens from a previously generated signature.
    *
    * @example
    * ```javascript
@@ -72,8 +72,8 @@ export class Erc20SignatureMinting {
   }
 
   /**
-   * Mint any number of dynamically generated NFT at once
-   * @remarks Mint multiple dynamic NFTs in one transaction. Note that this is only possible for free mints (cannot batch mints with a price attached to it for security reasons)
+   * Mint any number of generated tokens signatures at once
+   * @remarks Mint multiple token signatures in one transaction. Note that this is only possible for free mints (cannot batch mints with a price attached to it for security reasons)
    * @param signedPayloads - the array of signed payloads to mint
    */
   public async mintBatch(
@@ -120,30 +120,22 @@ export class Erc20SignatureMinting {
   }
 
   /**
-   * Generate a signature that can be used to mint a dynamic NFT
+   * Generate a signature that can be used to mint a certain amount of tokens
    *
-   * @remarks Takes in an NFT and some information about how it can be minted, uploads the metadata and signs it with your private key. The generated signature can then be used to mint an NFT using the exact payload and signature generated.
+   * @remarks Takes in a quantity of tokens and some information about how it can be minted, uploads the metadata and signs it with your private key. The generated signature can then be used to mint those tokens using the exact payload and signature generated.
    *
    * @example
    * ```javascript
-   * const nftMetadata = {
-   *   name: "Cool NFT #1",
-   *   description: "This is a cool NFT",
-   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   * };
-   *
    * const startTime = new Date();
    * const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
    * const payload = {
-   *   metadata: nftMetadata, // The NFT to mint
-   *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
-   *   price: 0.5, // the price to pay for minting
+   *   quantity: 4.2, // The quantity of tokens to be minted
+   *   to: {{wallet_address}}, // Who will receive the tokens (or AddressZero for anyone)
+   *   price: 0.5, // the price to pay for minting those tokens
    *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
    *   mintStartTime: now, // can mint anytime from now
    *   mintEndTime: endTime, // to 24h from now,
-   *   royaltyRecipient: "0x...", // custom royalty recipient for this NFT
-   *   royaltyBps: 100, // custom royalty fees for this NFT (in bps)
-   *   primarySaleRecipient: "0x...", // custom sale recipient for this NFT
+   *   primarySaleRecipient: "0x...", // custom sale recipient for this token mint
    * };
    *
    * const signedPayload = contract.signature.generate(payload);
@@ -159,7 +151,7 @@ export class Erc20SignatureMinting {
   }
 
   /**
-   * Genrate a batch of signatures that can be used to mint many dynamic NFTs.
+   * Generate a batch of signatures that can be used to mint many token signatures.
    *
    * @remarks See {@link Erc20SignatureMinting.generate}
    *
@@ -188,7 +180,6 @@ export class Erc20SignatureMinting {
     return await Promise.all(
       parsedRequests.map(async (m) => {
         const finalPayload = Signature20PayloadOutput.parse(m);
-        console.log(await this.mapPayloadToContractStruct(finalPayload));
         const signature = await this.contractWrapper.signTypedData(
           signer,
           {

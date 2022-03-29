@@ -115,7 +115,7 @@ describe("Token sig minting", async () => {
       for (const [_, v] of batch.entries()) {
         await contract.signature.mint(v);
       }
-      const balance = await contract.balanceOf(adminWallet.address);
+      const balance = await contract.balanceOf(samWallet.address);
       expect(balance.displayValue).to.eq("6.0");
     });
   });
