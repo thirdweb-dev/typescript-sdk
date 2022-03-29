@@ -5,7 +5,7 @@ import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
-import { Currency, CurrencyValue, Amount } from "../../types/currency";
+import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
@@ -13,6 +13,7 @@ import {
 import { TokenMintInput } from "../../schema/tokens/token";
 import { getRoleHash } from "../../common/role";
 import { AddressZero } from "@ethersproject/constants";
+import { PriceSchema } from "../../schema";
 
 /**
  * Standard ERC20 functions
@@ -208,7 +209,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     amount: Amount,
   ): Promise<TransactionResult> {
     const amountWithDecimals = ethers.utils.parseUnits(
-      BigNumber.from(amount).toString(),
+      PriceSchema.parse(amount),
       await this.contractWrapper.readContract.decimals(),
     );
     return {
@@ -245,7 +246,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     amount: Amount,
   ): Promise<TransactionResult> {
     const amountWithDecimals = ethers.utils.parseUnits(
-      BigNumber.from(amount).toString(),
+      PriceSchema.parse(amount),
       await this.contractWrapper.readContract.decimals(),
     );
     return {
@@ -276,7 +277,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     amount: Amount,
   ): Promise<TransactionResult> {
     const amountWithDecimals = ethers.utils.parseUnits(
-      BigNumber.from(amount).toString(),
+      PriceSchema.parse(amount),
       await this.contractWrapper.readContract.decimals(),
     );
     return {
@@ -313,7 +314,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     const decimals = await this.contractWrapper.readContract.decimals();
     const encoded = args.map((arg) => {
       const amountWithDecimals = ethers.utils.parseUnits(
-        BigNumber.from(arg.amount).toString(),
+        PriceSchema.parse(arg.amount),
         decimals,
       );
       return this.contractWrapper.readContract.interface.encodeFunctionData(
@@ -339,7 +340,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    */
   public async burn(amount: Amount): Promise<TransactionResult> {
     const amountWithDecimals = ethers.utils.parseUnits(
-      BigNumber.from(amount).toString(),
+      PriceSchema.parse(amount),
       await this.contractWrapper.readContract.decimals(),
     );
     return {
@@ -370,7 +371,7 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     amount: Amount,
   ): Promise<TransactionResult> {
     const amountWithDecimals = ethers.utils.parseUnits(
-      BigNumber.from(amount).toString(),
+      PriceSchema.parse(amount),
       await this.contractWrapper.readContract.decimals(),
     );
     return {
