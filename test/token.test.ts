@@ -2,7 +2,7 @@ import { assert, expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Token } from "../src";
 import { sdk, signers } from "./before.test";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { TokenMintInput } from "../src/schema/tokens/token";
 
 // global.fetch = require("node-fetch");
@@ -46,16 +46,16 @@ describe("Token Contract", async () => {
   });
 
   it("should transfer tokens", async () => {
-    await currencyContract.mint(20);
-    await currencyContract.transfer(samWallet.address, "10");
+    await currencyContract.mint(20.2);
+    await currencyContract.transfer(samWallet.address, 10.1);
     assert.deepEqual(
       (await currencyContract.balanceOf(adminWallet.address)).value,
-      ethers.utils.parseEther("10"),
+      ethers.utils.parseEther("10.1"),
       `Wrong balance`,
     );
     assert.deepEqual(
       (await currencyContract.balanceOf(samWallet.address)).value,
-      ethers.utils.parseEther("10"),
+      ethers.utils.parseEther("10.1"),
       `Wrong balance`,
     );
   });
@@ -100,18 +100,18 @@ describe("Token Contract", async () => {
     const batch: TokenMintInput[] = [
       {
         toAddress: bobWallet.address,
-        amount: 10,
+        amount: 10.5,
       },
       {
         toAddress: samWallet.address,
-        amount: 10,
+        amount: 10.5,
       },
     ];
 
     await currencyContract.mintBatchTo(batch);
 
     for (const b of batch) {
-      const expectedBalance = ethers.utils.parseUnits("10");
+      const expectedBalance = ethers.utils.parseUnits("10.5");
       const actualBalance = (await currencyContract.balanceOf(b.toAddress))
         .value;
 
