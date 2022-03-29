@@ -18,3 +18,4 @@ export * from "./contract-deployer";
 export * from "./gas-cost-estimator";
 export * from "./delayed-reveal";
 export * from "./contract-events";
+export * from "./transaction-interceptor";
