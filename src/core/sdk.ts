@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ContractInterface, ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
   CONTRACTS_MAP,
@@ -244,28 +244,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   /**
-   * bring ur own contract init?
    * @internal
    */
-  public async unstable_getCustomContract(address: string, abi?: any) {
-    if (this.contractCache.has(address)) {
-      return this.contractCache.get(address);
-    }
-
-    try {
-      return this.getContract(address, await this.resolveContractType(address));
-    } catch {
-      // expected to happen if the contract is not a known thirdweb contract
-      // we will create a bare-bones custom contract for now
-      const newCustomContract = new CustomContract(
-        this.getSignerOrProvider(),
-        address,
-        this.storage,
-        this.options,
-        abi,
-      );
-      this.contractCache.set(address, newCustomContract);
-      return newCustomContract;
-    }
+  public async unstable_getCustomContract(
+    address: string,
+    abi: ContractInterface,
+  ) {
+    return new CustomContract(
+      this.getSignerOrProvider(),
+      address,
+      abi,
+      this.storage,
+      this.options,
+    );
   }
 }

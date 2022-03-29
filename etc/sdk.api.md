@@ -73,6 +73,9 @@ export class AdminRoleMissingError extends Error {
     constructor(address?: string, contractAddress?: string, message?: string);
 }
 
+// @public (undocumented)
+export const ALL_ROLES: ("admin" | "transfer" | "minter" | "pauser" | "editor" | "lister" | "asset")[];
+
 // Warning: (ae-forgotten-export) The symbol "PriceSchema" needs to be exported by the entry point index.d.ts
 //
 // @public
@@ -741,122 +744,337 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
 // Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "CustomContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
-// @internal (undocumented)
-export class CustomContract implements UpdateableNetwork {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, abi?: any, contractWrapper?: ContractWrapper<BaseContract>);
+// @internal
+export class CustomContract<TContract extends BaseContract = BaseContract> implements UpdateableNetwork {
+    constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
     // (undocumented)
     static contractType: "custom";
     // (undocumented)
     getAddress(): string;
     // (undocumented)
-    metadata: ContractMetadata<IThirdwebContract, {
-        deploy: ZodObject<    {
+    metadata: ContractMetadata<TContract & IThirdwebContract, {
+        deploy: ZodObject<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
-        }, "strip", ZodTypeAny, {
+        }, {
+        merkle: ZodOptional<ZodDefault<ZodRecord<ZodString, ZodString>>>;
+        seller_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        symbol: ZodOptional<ZodDefault<ZodOptional<ZodString>>>;
+        }>, {
+        primary_sale_recipient: ZodOptional<ZodEffects<ZodString, string, string>>;
+        platform_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        platform_fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        trusted_forwarders: ZodOptional<ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>>;
+        }>, "strip", ZodTypeAny, {
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        primary_sale_recipient?: string | undefined;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
         name: string;
         }, {
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        primary_sale_recipient?: string | undefined;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
         name: string;
         }>;
-        output: ZodObject<extendShape<    {
+        output: ZodObject<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
         }, {
         image: ZodOptional<ZodString>;
+        }>, {
+        merkle: ZodOptional<ZodDefault<ZodRecord<ZodString, ZodString>>>;
+        seller_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        symbol: ZodOptional<ZodDefault<ZodOptional<ZodString>>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
         name: string;
         }, {
         [x: string]: Json;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
         name: string;
         }>;
-        input: ZodObject<    {
+        input: ZodObject<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
-        }, "strip", ZodTypeAny, {
+        }, {
+        merkle: ZodOptional<ZodDefault<ZodRecord<ZodString, ZodString>>>;
+        seller_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        symbol: ZodOptional<ZodDefault<ZodOptional<ZodString>>>;
+        }>, "strip", ZodTypeAny, {
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
         name: string;
         }, {
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
         name: string;
         }>;
     }> | undefined;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
-    static schema: {
-        deploy: ZodObject<    {
+    roles: ContractRoles<TContract & AccessControlEnumerable, "admin" | "transfer" | "minter" | "pauser" | "editor" | "lister" | "asset"> | undefined;
+    // (undocumented)
+    royalties: ContractRoyalty<TContract & IThirdwebContract & IThirdwebRoyalty, {
+        deploy: ZodObject<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
-        }, "strip", ZodTypeAny, {
+        }, {
+        merkle: ZodOptional<ZodDefault<ZodRecord<ZodString, ZodString>>>;
+        seller_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        symbol: ZodOptional<ZodDefault<ZodOptional<ZodString>>>;
+        }>, {
+        primary_sale_recipient: ZodOptional<ZodEffects<ZodString, string, string>>;
+        platform_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        platform_fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        trusted_forwarders: ZodOptional<ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>>;
+        }>, "strip", ZodTypeAny, {
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        primary_sale_recipient?: string | undefined;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
         name: string;
         }, {
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        primary_sale_recipient?: string | undefined;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
         name: string;
         }>;
-        output: ZodObject<extendShape<    {
+        output: ZodObject<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
         }, {
         image: ZodOptional<ZodString>;
+        }>, {
+        merkle: ZodOptional<ZodDefault<ZodRecord<ZodString, ZodString>>>;
+        seller_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        symbol: ZodOptional<ZodDefault<ZodOptional<ZodString>>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
         name: string;
         }, {
         [x: string]: Json;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
         name: string;
         }>;
-        input: ZodObject<    {
+        input: ZodObject<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
-        }, "strip", ZodTypeAny, {
+        }, {
+        merkle: ZodOptional<ZodDefault<ZodRecord<ZodString, ZodString>>>;
+        seller_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        symbol: ZodOptional<ZodDefault<ZodOptional<ZodString>>>;
+        }>, "strip", ZodTypeAny, {
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
         name: string;
         }, {
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
+        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }>;
+    }> | undefined;
+    // (undocumented)
+    sales: ContractPrimarySale<TContract & IThirdwebPrimarySale> | undefined;
+    // (undocumented)
+    static schema: {
+        deploy: ZodObject<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        merkle: ZodOptional<ZodDefault<ZodRecord<ZodString, ZodString>>>;
+        seller_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        symbol: ZodOptional<ZodDefault<ZodOptional<ZodString>>>;
+        }>, {
+        primary_sale_recipient: ZodOptional<ZodEffects<ZodString, string, string>>;
+        platform_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        platform_fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        trusted_forwarders: ZodOptional<ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>>;
+        }>, "strip", ZodTypeAny, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: any;
+        merkle?: Record<string, string> | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        primary_sale_recipient?: string | undefined;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
+        name: string;
+        }, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: any;
+        merkle?: Record<string, string> | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        primary_sale_recipient?: string | undefined;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
+        name: string;
+        }>;
+        output: ZodObject<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        image: ZodOptional<ZodString>;
+        }>, {
+        merkle: ZodOptional<ZodDefault<ZodRecord<ZodString, ZodString>>>;
+        seller_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        symbol: ZodOptional<ZodDefault<ZodOptional<ZodString>>>;
+        }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }>;
+        input: ZodObject<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        merkle: ZodOptional<ZodDefault<ZodRecord<ZodString, ZodString>>>;
+        seller_fee_basis_points: ZodOptional<ZodDefault<ZodNumber>>;
+        fee_recipient: ZodOptional<ZodDefault<ZodEffects<ZodString, string, string>>>;
+        symbol: ZodOptional<ZodDefault<ZodOptional<ZodString>>>;
+        }>, "strip", ZodTypeAny, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: any;
+        merkle?: Record<string, string> | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: any;
+        merkle?: Record<string, string> | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
         name: string;
         }>;
     };
@@ -3866,8 +4084,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getVote(address: string): Vote;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
-    // @internal
-    unstable_getCustomContract(address: string, abi?: any): Promise<CustomContract | ValidContractInstance | undefined>;
+    // @internal (undocumented)
+    unstable_getCustomContract(address: string, abi: ContractInterface): Promise<CustomContract<ethers.BaseContract>>;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 
