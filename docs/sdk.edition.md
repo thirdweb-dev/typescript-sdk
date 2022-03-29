@@ -42,6 +42,7 @@ const contract = sdk.getEdition("{{contract_address}}");
 |  [estimator](./sdk.edition.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TokenERC1155&gt; |  |
 |  [events](./sdk.edition.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;TokenERC1155&gt; |  |
 |  [metadata](./sdk.edition.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC1155, typeof Edition.schema&gt; |  |
+|  [platformFee](./sdk.edition.platformfee.md) |  | ContractPlatformFee&lt;TokenERC1155&gt; |  |
 |  [primarySale](./sdk.edition.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;TokenERC1155&gt; |  |
 |  [roles](./sdk.edition.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC1155, typeof [Edition.contractRoles](./sdk.edition.contractroles.md)<!-- -->\[number\]&gt; |  |
 |  [royalty](./sdk.edition.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;TokenERC1155, typeof Edition.schema&gt; | Configure royalties |

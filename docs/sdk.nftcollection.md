@@ -42,6 +42,7 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 |  [estimator](./sdk.nftcollection.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TokenERC721&gt; |  |
 |  [events](./sdk.nftcollection.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;TokenERC721&gt; |  |
 |  [metadata](./sdk.nftcollection.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC721, typeof NFTCollection.schema&gt; |  |
+|  [platformFee](./sdk.nftcollection.platformfee.md) |  | ContractPlatformFee&lt;TokenERC721&gt; |  |
 |  [primarySale](./sdk.nftcollection.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;TokenERC721&gt; |  |
 |  [roles](./sdk.nftcollection.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC721, typeof [NFTCollection.contractRoles](./sdk.nftcollection.contractroles.md)<!-- -->\[number\]&gt; |  |
 |  [royalty](./sdk.nftcollection.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;TokenERC721, typeof NFTCollection.schema&gt; | Configure royalties |

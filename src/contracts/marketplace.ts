@@ -27,6 +27,7 @@ import { MarketplaceAuction } from "../core/classes/marketplace-auction";
 import { GasCostEstimator } from "../core/classes";
 import { DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
 import { ContractEvents } from "../core/classes/contract-events";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -59,6 +60,7 @@ export class Marketplace implements UpdateableNetwork {
   public encoder: ContractEncoder<MarketplaceContract>;
   public events: ContractEvents<MarketplaceContract>;
   public estimator: GasCostEstimator<MarketplaceContract>;
+  public platformFee: ContractPlatformFee<MarketplaceContract>;
   public metadata: ContractMetadata<
     MarketplaceContract,
     typeof Marketplace.schema
@@ -166,6 +168,7 @@ export class Marketplace implements UpdateableNetwork {
     this.direct = new MarketplaceDirect(this.contractWrapper, this.storage);
     this.auction = new MarketplaceAuction(this.contractWrapper, this.storage);
     this.events = new ContractEvents(this.contractWrapper);
+    this.platformFee = new ContractPlatformFee(this.contractWrapper);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {

@@ -756,10 +756,10 @@
     "@swc/core-win32-ia32-msvc" "1.2.160"
     "@swc/core-win32-x64-msvc" "1.2.160"
 
-"@thirdweb-dev/contracts@2.1.2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.1.2.tgz#9804c5f1b89ae68b46b24f6572ec3a4dd416f61d"
-  integrity sha512-W1TLhMrnPUJQFuSy9Ukshei8i2dD46NsZ5Yj7yp1StNZGzjz6pd5q/g01OonBmJRbGCkEkpUi9s/opVoewTpJg==
+"@thirdweb-dev/contracts@2.1.6-0":
+  version "2.1.6-0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.1.6-0.tgz#6684613a301ed30f7039bd8213c1a587ee50d408"
+  integrity sha512-IOcQc5hV2RpRH4KVKUysD4Ht4KPNiHBNrQ6wpzGw3yN8c+vSx+6SIWozc6HHdVpV9Ejsg5pcFqyEUqGphT10zA==
 
 "@types/abstract-leveldown@*":
   version "7.2.0"
@@ -4474,7 +4474,7 @@ type-fest@^0.7.1:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.7.1.tgz#8dda65feaf03ed78f0a3f9678f1869147f7c5c48"
   integrity sha512-Ne2YiiGN8bmrmJJEuTWTLJR32nh/JdL1+PSicowtNb0WFpn59GK8/lfD61bVtzguz7b3PBt74nxpv/Pw5po5Rg==
 
-typescript@^4.4.3, typescript@^4.6.2, typescript@~4.5.2:
+typescript@^4.6.2, typescript@~4.5.2:
   version "4.6.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.6.3.tgz#eefeafa6afdd31d725584c67a0eaba80f6fc6c6c"
   integrity sha512-yNIatDa5iaofVozS/uQJEl3JRWLKKGJKh6Yaiv0GLGSuhpFJe7P3SbHZ8/yjAHRQwKRoA6YZqlfjXWmVzoVSMw==

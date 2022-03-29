@@ -19,6 +19,7 @@ import { GasCostEstimator } from "../core/classes";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
 import { ContractEvents } from "../core/classes/contract-events";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -54,6 +55,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
   public estimator: GasCostEstimator<TokenERC721>;
   public events: ContractEvents<TokenERC721>;
   public primarySale: ContractPrimarySale<TokenERC721>;
+  public platformFee: ContractPlatformFee<TokenERC721>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token
@@ -120,6 +122,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
       this.storage,
     );
     this.events = new ContractEvents(this.contractWrapper);
+    this.platformFee = new ContractPlatformFee(this.contractWrapper);
   }
 
   /** ******************************
