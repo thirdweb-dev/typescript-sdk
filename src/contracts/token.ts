@@ -10,13 +10,14 @@ import {
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc20 } from "../core/classes/erc-20";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { TokenMintInput } from "../schema/tokens/token";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes";
 import { Amount, CurrencyValue } from "../types";
 import { TokenERC20History } from "../core/classes/erc-20-history";
 import { ContractEvents } from "../core/classes/contract-events";
+import { PriceSchema } from "../schema";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -144,7 +145,7 @@ export class Token extends Erc20<TokenERC20> {
    */
   public async mintTo(to: string, amount: Amount): Promise<TransactionResult> {
     const amountWithDecimals = ethers.utils.parseUnits(
-      BigNumber.from(amount).toString(),
+      PriceSchema.parse(amount),
       await this.contractWrapper.readContract.decimals(),
     );
     return {
@@ -181,7 +182,7 @@ export class Token extends Erc20<TokenERC20> {
     const encoded = [];
     for (const arg of args) {
       const amountWithDecimals = ethers.utils.parseUnits(
-        BigNumber.from(arg.amount).toString(),
+        PriceSchema.parse(arg.amount),
         await this.contractWrapper.readContract.decimals(),
       );
       encoded.push(

@@ -31,6 +31,7 @@ import { signTypedDataInternal } from "../../common/sign";
 import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { ChainId } from "../../constants";
 import { convertToTWError } from "../../common";
+import { isBrowser } from "../../common/utils";
 
 /**
  * @internal
@@ -107,6 +108,12 @@ export class ContractWrapper<
    * @internal
    */
   public async getCallOverrides(): Promise<CallOverrides> {
+    if (isBrowser()) {
+      // When running in the browser, let the wallet suggest gas estimates
+      // this means that the gas speed preferences set in the SDK options are ignored in a browser context
+      // but it also allows users to select their own gas speed prefs per tx from their wallet directly
+      return {};
+    }
     const feeData = await this.getProvider().getFeeData();
     const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
     if (supports1559) {

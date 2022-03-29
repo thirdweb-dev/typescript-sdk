@@ -2,6 +2,7 @@ import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { z } from "zod";
 import { Json } from "../core/types";
+import { isBrowser } from "../common/utils";
 
 if (!globalThis.File) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -9,8 +10,6 @@ if (!globalThis.File) {
 }
 
 export const MAX_BPS = 10_000;
-
-const isBrowser = () => typeof window !== "undefined";
 
 const fileOrBufferUnion = isBrowser()
   ? ([z.instanceof(File), z.string()] as [

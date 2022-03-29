@@ -16,6 +16,7 @@ import {
   updateExsitingClaimConditions,
 } from "../../common/claim-conditions";
 import { MaxUint256 } from "@ethersproject/constants";
+import { isBrowser } from "../../common/utils";
 
 /**
  * Manages claim conditions for Edition Drop contracts
@@ -220,8 +221,9 @@ export class DropErc1155ClaimConditions {
       }
     }
 
-    // check for wallet balance
-    if (claimCondition.price.gt(0)) {
+    // if not within a browser conetext, check for wallet balance.
+    // In browser context, let the wallet do that job
+    if (claimCondition.price.gt(0) && !isBrowser()) {
       const totalPrice = claimCondition.price.mul(quantity);
       const provider = this.contractWrapper.getProvider();
       if (isNativeToken(claimCondition.currencyAddress)) {
