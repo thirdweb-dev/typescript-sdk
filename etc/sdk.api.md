@@ -1301,6 +1301,10 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     events: ContractEvents<DropERC1155>;
     // (undocumented)
     history: DropErc1155History;
+    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @public, but its signature references "TransactionInterceptor" which is marked as @internal
+    //
+    // (undocumented)
+    interceptor: TransactionInterceptor<DropERC1155>;
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
     // (undocumented)
@@ -2491,6 +2495,10 @@ export class NFTDrop extends Erc721<DropERC721> {
     events: ContractEvents<DropERC721>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
+    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @public, but its signature references "TransactionInterceptor" which is marked as @internal
+    //
+    // (undocumented)
+    interceptor: TransactionInterceptor<DropERC721>;
     // (undocumented)
     metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
     // (undocumented)
@@ -4263,6 +4271,14 @@ export class TransactionError extends Error {
     rpcUrl: string;
     // (undocumented)
     to: string;
+}
+
+// Warning: (ae-internal-missing-underscore) The name "TransactionInterceptor" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export class TransactionInterceptor<TContract extends BaseContract> {
+    constructor(contractWrapper: ContractWrapper<TContract>);
+    overrideNextTransaction(hook: () => CallOverrides_2): void;
 }
 
 // Warning: (ae-forgotten-export) The symbol "If" needs to be exported by the entry point index.d.ts

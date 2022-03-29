@@ -43,6 +43,7 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 |  [estimator](./sdk.editiondrop.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;DropERC1155&gt; |  |
 |  [events](./sdk.editiondrop.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;DropERC1155&gt; |  |
 |  [history](./sdk.editiondrop.history.md) |  | [DropErc1155History](./sdk.droperc1155history.md) |  |
+|  [interceptor](./sdk.editiondrop.interceptor.md) |  | TransactionInterceptor&lt;DropERC1155&gt; |  |
 |  [metadata](./sdk.editiondrop.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;DropERC1155, typeof EditionDrop.schema&gt; |  |
 |  [primarySale](./sdk.editiondrop.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;DropERC1155&gt; |  |
 |  [roles](./sdk.editiondrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;DropERC1155, typeof [EditionDrop.contractRoles](./sdk.editiondrop.contractroles.md)<!-- -->\[number\]&gt; |  |
