@@ -293,6 +293,22 @@ describe("Edition Drop Contract", async () => {
     assert.isFalse(canClaimW2, "w2 should not be able to claim");
   });
 
+  it("should allow custom overrides", async () => {
+    bdContract.interceptor.overrideNextTransaction(() => ({
+      nonce: 123,
+    }));
+    try {
+      await bdContract.createBatch([
+        {
+          name: "test",
+          description: "test",
+        },
+      ]);
+    } catch (e) {
+      expectError(e, "Expected nonce to be");
+    }
+  });
+
   it("canClaim: 1 address", async () => {
     await bdContract.claimConditions.set("0", [
       {

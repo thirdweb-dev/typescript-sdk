@@ -18,6 +18,7 @@ import { Amount, CurrencyValue } from "../types";
 import { TokenERC20History } from "../core/classes/erc-20-history";
 import { ContractEvents } from "../core/classes/contract-events";
 import { PriceSchema } from "../schema";
+import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -50,6 +51,21 @@ export class Token extends Erc20<TokenERC20> {
   public estimator: GasCostEstimator<TokenERC20>;
   public history: TokenERC20History;
   public events: ContractEvents<TokenERC20>;
+  /**
+   * Signature Minting
+   * @remarks Generate tokens that can be minted only with your own signature, attaching your own set of mint conditions.
+   * @example
+   * ```javascript
+   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
+   * const signedPayload = contract.signature.generate(payload);
+   *
+   * // now anyone can mint the NFT
+   * const tx = contract.signature.mint(signedPayload);
+   * const receipt = tx.receipt; // the mint transaction receipt
+   * const mintedId = tx.id; // the id of the NFT minted
+   * ```
+   */
+  public signature: Erc20SignatureMinting;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -74,6 +90,10 @@ export class Token extends Erc20<TokenERC20> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
+    this.signature = new Erc20SignatureMinting(
+      this.contractWrapper,
+      this.roles,
+    );
   }
 
   /** ******************************

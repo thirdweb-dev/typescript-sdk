@@ -1,11 +1,11 @@
 import {
-  FilledSignaturePayload,
+  FilledSignaturePayload721,
   MintRequest721,
-  PayloadToSign,
-  PayloadWithUri,
-  SignaturePayloadInput,
-  SignaturePayloadOutput,
-  SignedPayload,
+  PayloadToSign721,
+  PayloadWithUri721,
+  Signature721PayloadInput,
+  Signature721PayloadOutput,
+  SignedPayload721,
 } from "../../schema/contracts/common/signature";
 import { TransactionResultWithId } from "../types";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
@@ -62,7 +62,7 @@ export class Erc721SignatureMinting {
    * @param signedPayload - the previously generated payload and signature with {@link Erc721SignatureMinting.generate}
    */
   public async mint(
-    signedPayload: SignedPayload,
+    signedPayload: SignedPayload721,
   ): Promise<TransactionResultWithId> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
@@ -99,7 +99,7 @@ export class Erc721SignatureMinting {
    * @param signedPayloads - the array of signed payloads to mint
    */
   public async mintBatch(
-    signedPayloads: SignedPayload[],
+    signedPayloads: SignedPayload721[],
   ): Promise<TransactionResultWithId[]> {
     const contractPayloads = await Promise.all(
       signedPayloads.map(async (s) => {
@@ -142,7 +142,7 @@ export class Erc721SignatureMinting {
    * Verify that a payload is correctly signed
    * @param signedPayload - the payload to verify
    */
-  public async verify(signedPayload: SignedPayload): Promise<boolean> {
+  public async verify(signedPayload: SignedPayload721): Promise<boolean> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = await this.mapPayloadToContractStruct(mintRequest);
@@ -184,7 +184,9 @@ export class Erc721SignatureMinting {
    * @param mintRequest - the payload to sign
    * @returns the signed payload and the corresponding signature
    */
-  public async generate(mintRequest: PayloadToSign): Promise<SignedPayload> {
+  public async generate(
+    mintRequest: PayloadToSign721,
+  ): Promise<SignedPayload721> {
     return (await this.generateBatch([mintRequest]))[0];
   }
 
@@ -197,15 +199,15 @@ export class Erc721SignatureMinting {
    * @returns an array of payloads and signatures
    */
   public async generateBatch(
-    payloadsToSign: PayloadToSign[],
-  ): Promise<SignedPayload[]> {
+    payloadsToSign: PayloadToSign721[],
+  ): Promise<SignedPayload721[]> {
     await this.roles.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
 
-    const parsedRequests: FilledSignaturePayload[] = payloadsToSign.map((m) =>
-      SignaturePayloadInput.parse(m),
+    const parsedRequests: FilledSignaturePayload721[] = payloadsToSign.map(
+      (m) => Signature721PayloadInput.parse(m),
     );
 
     const metadatas = parsedRequests.map((r) => r.metadata);
@@ -218,7 +220,7 @@ export class Erc721SignatureMinting {
     return await Promise.all(
       parsedRequests.map(async (m, i) => {
         const uri = uris[i];
-        const finalPayload = SignaturePayloadOutput.parse({
+        const finalPayload = Signature721PayloadOutput.parse({
           ...m,
           uri,
         });
@@ -254,7 +256,7 @@ export class Erc721SignatureMinting {
    * @returns - The mapped payload.
    */
   private async mapPayloadToContractStruct(
-    mintRequest: PayloadWithUri,
+    mintRequest: PayloadWithUri721,
   ): Promise<ITokenERC721.MintRequestStructOutput> {
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
