@@ -182,6 +182,9 @@ export class Erc20SignatureMinting {
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
+    // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155.
+    const name = await this.contractWrapper.readContract.name();
+
     return await Promise.all(
       parsedRequests.map(async (m) => {
         const finalPayload = Signature20PayloadOutput.parse(m);
@@ -189,7 +192,7 @@ export class Erc20SignatureMinting {
         const signature = await this.contractWrapper.signTypedData(
           signer,
           {
-            name: "TokenERC20",
+            name,
             version: "1",
             chainId,
             verifyingContract: this.contractWrapper.readContract.address,
