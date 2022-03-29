@@ -1874,6 +1874,16 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
 }
 
 // @public
+export class Erc20SignatureMinting {
+    constructor(contractWrapper: ContractWrapper<TokenERC20>, roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>);
+    generate(mintRequest: PayloadToSign20): Promise<SignedPayload20>;
+    generateBatch(payloadsToSign: PayloadToSign20[]): Promise<SignedPayload20[]>;
+    mint(signedPayload: SignedPayload20): Promise<TransactionResult>;
+    mintBatch(signedPayloads: SignedPayload20[]): Promise<TransactionResult>;
+    verify(signedPayload: SignedPayload20): Promise<boolean>;
+}
+
+// @public
 export class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
@@ -4343,7 +4353,6 @@ export class Token extends Erc20<TokenERC20> {
         name: string;
         }>;
     };
-    // Warning: (ae-forgotten-export) The symbol "Erc20SignatureMinting" needs to be exported by the entry point index.d.ts
     signature: Erc20SignatureMinting;
 }
 

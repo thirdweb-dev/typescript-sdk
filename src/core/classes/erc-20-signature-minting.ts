@@ -122,7 +122,7 @@ export class Erc20SignatureMinting {
   /**
    * Generate a signature that can be used to mint a certain amount of tokens
    *
-   * @remarks Takes in a quantity of tokens and some information about how it can be minted, uploads the metadata and signs it with your private key. The generated signature can then be used to mint those tokens using the exact payload and signature generated.
+   * @remarks Takes in a quantity of tokens, some conditions for how it can be minted and signs it with your private key. The generated signature can then be used to mint those tokens using the exact payload and signature generated.
    *
    * @example
    * ```javascript
