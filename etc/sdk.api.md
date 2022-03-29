@@ -583,6 +583,14 @@ export class ContractEvents<TContract extends BaseContract> {
 // @public (undocumented)
 export type ContractForContractType<TContractType extends ContractType> = Instance<typeof CONTRACTS_MAP[TContractType]>;
 
+// Warning: (ae-internal-missing-underscore) The name "ContractInterceptor" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export class ContractInterceptor<TContract extends BaseContract> {
+    constructor(contractWrapper: ContractWrapper<TContract>);
+    overrideNextTransaction(hook: () => CallOverrides_2): void;
+}
+
 // Warning: (ae-incompatible-release-tags) The symbol "ContractMetadata" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
@@ -1301,10 +1309,10 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     events: ContractEvents<DropERC1155>;
     // (undocumented)
     history: DropErc1155History;
-    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @public, but its signature references "TransactionInterceptor" which is marked as @internal
+    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @public, but its signature references "ContractInterceptor" which is marked as @internal
     //
     // (undocumented)
-    interceptor: TransactionInterceptor<DropERC1155>;
+    interceptor: ContractInterceptor<DropERC1155>;
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
     // (undocumented)
@@ -2495,10 +2503,10 @@ export class NFTDrop extends Erc721<DropERC721> {
     events: ContractEvents<DropERC721>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
-    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @public, but its signature references "TransactionInterceptor" which is marked as @internal
+    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @public, but its signature references "ContractInterceptor" which is marked as @internal
     //
     // (undocumented)
-    interceptor: TransactionInterceptor<DropERC721>;
+    interceptor: ContractInterceptor<DropERC721>;
     // (undocumented)
     metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
     // (undocumented)
@@ -4271,14 +4279,6 @@ export class TransactionError extends Error {
     rpcUrl: string;
     // (undocumented)
     to: string;
-}
-
-// Warning: (ae-internal-missing-underscore) The name "TransactionInterceptor" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
-export class TransactionInterceptor<TContract extends BaseContract> {
-    constructor(contractWrapper: ContractWrapper<TContract>);
-    overrideNextTransaction(hook: () => CallOverrides_2): void;
 }
 
 // Warning: (ae-forgotten-export) The symbol "If" needs to be exported by the entry point index.d.ts

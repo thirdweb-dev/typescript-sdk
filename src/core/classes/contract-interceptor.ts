@@ -3,10 +3,10 @@ import { BaseContract } from "ethers";
 import { CallOverrides } from "@ethersproject/contracts";
 
 /**
- * Allows overriding transaction behavior
+ * Allows overriding transaction behavior for this contract
  * @internal
  */
-export class TransactionInterceptor<TContract extends BaseContract> {
+export class ContractInterceptor<TContract extends BaseContract> {
   private contractWrapper;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {

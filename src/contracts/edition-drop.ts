@@ -28,7 +28,7 @@ import { ClaimVerification } from "../types";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155";
 import { DropErc1155History } from "../core/classes/drop-erc1155-history";
 import { ContractEvents } from "../core/classes/contract-events";
-import { TransactionInterceptor } from "../core/classes/transaction-interceptor";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -108,7 +108,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    */
   public claimConditions: DropErc1155ClaimConditions;
   public history: DropErc1155History;
-  public interceptor: TransactionInterceptor<DropERC1155>;
+  public interceptor: ContractInterceptor<DropERC1155>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -143,7 +143,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
-    this.interceptor = new TransactionInterceptor(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
   /** ******************************

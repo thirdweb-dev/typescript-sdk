@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-interceptor: TransactionInterceptor<DropERC721>;
+interceptor: ContractInterceptor<DropERC721>;
 ```
