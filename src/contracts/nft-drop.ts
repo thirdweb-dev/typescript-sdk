@@ -62,8 +62,11 @@ export class NFTDrop extends Erc721<DropERC721> {
   public metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
   public primarySale: ContractPrimarySale<DropERC721>;
   public events: ContractEvents<DropERC721>;
-  public interceptor: ContractInterceptor<DropERC721>;
   public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
+  /**
+   * @internal
+   */
+  public interceptor: ContractInterceptor<DropERC721>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token

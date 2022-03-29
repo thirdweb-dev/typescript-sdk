@@ -108,6 +108,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    */
   public claimConditions: DropErc1155ClaimConditions;
   public history: DropErc1155History;
+  /**
+   * @internal
+   */
   public interceptor: ContractInterceptor<DropERC1155>;
 
   constructor(

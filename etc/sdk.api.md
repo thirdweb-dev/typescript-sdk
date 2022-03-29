@@ -1309,9 +1309,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     events: ContractEvents<DropERC1155>;
     // (undocumented)
     history: DropErc1155History;
-    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @public, but its signature references "ContractInterceptor" which is marked as @internal
-    //
-    // (undocumented)
+    // @internal (undocumented)
     interceptor: ContractInterceptor<DropERC1155>;
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
@@ -2503,9 +2501,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     events: ContractEvents<DropERC721>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
-    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @public, but its signature references "ContractInterceptor" which is marked as @internal
-    //
-    // (undocumented)
+    // @internal (undocumented)
     interceptor: ContractInterceptor<DropERC721>;
     // (undocumented)
     metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
