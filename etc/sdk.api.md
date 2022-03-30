@@ -23,6 +23,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import { extendShape } from 'zod';
 import { IMarketplace } from '@thirdweb-dev/contracts';
 import { IThirdwebContract } from '@thirdweb-dev/contracts';
+import { IThirdwebPlatformFee } from '@thirdweb-dev/contracts';
 import { IThirdwebPrimarySale } from '@thirdweb-dev/contracts';
 import { IThirdwebRoyalty } from '@thirdweb-dev/contracts';
 import { Listener } from '@ethersproject/providers';
@@ -1218,6 +1219,10 @@ export class Edition extends Erc1155<TokenERC1155> {
     mintBatch(metadatas: EditionMetadataOrUri[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
     mintBatchTo(to: string, metadataWithSupply: EditionMetadataOrUri[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
     mintTo(to: string, metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
+    // Warning: (ae-forgotten-export) The symbol "ContractPlatformFee" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    platformFee: ContractPlatformFee<TokenERC1155>;
     // (undocumented)
     primarySale: ContractPrimarySale<TokenERC1155>;
     // (undocumented)
@@ -1342,6 +1347,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     interceptor: ContractInterceptor<DropERC1155>;
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
+    // (undocumented)
+    platformFee: ContractPlatformFee<DropERC1155>;
     // (undocumented)
     primarySale: ContractPrimarySale<DropERC1155>;
     // (undocumented)
@@ -2172,6 +2179,8 @@ export class Marketplace implements UpdateableNetwork {
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
+    platformFee: ContractPlatformFee<Marketplace_2>;
+    // (undocumented)
     roles: ContractRoles<Marketplace_2, typeof Marketplace.contractRoles[number]>;
     // @internal (undocumented)
     static schema: {
@@ -2405,6 +2414,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
     mintBatchTo(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintTo(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
+    platformFee: ContractPlatformFee<TokenERC721>;
+    // (undocumented)
     primarySale: ContractPrimarySale<TokenERC721>;
     // (undocumented)
     roles: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>;
@@ -2555,6 +2566,8 @@ export class NFTDrop extends Erc721<DropERC721> {
     interceptor: ContractInterceptor<DropERC721>;
     // (undocumented)
     metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
+    // (undocumented)
+    platformFee: ContractPlatformFee<DropERC721>;
     // (undocumented)
     primarySale: ContractPrimarySale<DropERC721>;
     revealer: DelayedReveal<DropERC721>;
@@ -4269,6 +4282,8 @@ export class Token extends Erc20<TokenERC20> {
     mint(amount: Amount): Promise<TransactionResult>;
     mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult>;
     mintTo(to: string, amount: Amount): Promise<TransactionResult>;
+    // (undocumented)
+    platformFee: ContractPlatformFee<TokenERC20>;
     // (undocumented)
     roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
     // @internal (undocumented)

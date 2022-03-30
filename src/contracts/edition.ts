@@ -23,6 +23,7 @@ import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-mint
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
 import { ContractEvents } from "../core/classes/contract-events";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -55,6 +56,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     typeof Edition.contractRoles[number]
   >;
   public primarySale: ContractPrimarySale<TokenERC1155>;
+  public platformFee: ContractPlatformFee<TokenERC1155>;
   public encoder: ContractEncoder<TokenERC1155>;
   public estimator: GasCostEstimator<TokenERC1155>;
   public events: ContractEvents<TokenERC1155>;
@@ -116,6 +118,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
+    this.platformFee = new ContractPlatformFee(this.contractWrapper);
     this.signature = new Erc1155SignatureMinting(
       this.contractWrapper,
       this.roles,

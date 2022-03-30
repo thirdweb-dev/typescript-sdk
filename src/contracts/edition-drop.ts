@@ -28,6 +28,7 @@ import { ClaimVerification } from "../types";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155";
 import { DropErc1155History } from "../core/classes/drop-erc1155-history";
 import { ContractEvents } from "../core/classes/contract-events";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 
 /**
@@ -56,6 +57,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   static schema = DropErc1155ContractSchema;
 
   public primarySale: ContractPrimarySale<DropERC1155>;
+  public platformFee: ContractPlatformFee<DropERC1155>;
   public encoder: ContractEncoder<DropERC1155>;
   public estimator: GasCostEstimator<DropERC1155>;
   public events: ContractEvents<DropERC1155>;
@@ -146,6 +148,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
+    this.platformFee = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 

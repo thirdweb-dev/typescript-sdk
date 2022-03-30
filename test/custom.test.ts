@@ -106,6 +106,25 @@ describe("Custom Contracts", async () => {
     expect(recipient2).to.eq(bobWallet.address);
   });
 
+  it("should detect feature: primary sales", async () => {
+    const c = await sdk.unstable_getCustomContract(
+      dropContractAddress,
+      DropERC721__factory.abi,
+    );
+    invariant(c, "Contract undefined");
+    invariant(c.platformFees, "Platform fees undefined");
+    const fees = await c.platformFees.get();
+    expect(fees.platform_fee_recipient).to.eq(adminWallet.address);
+    expect(fees.platform_fee_basis_points).to.eq(10);
+    await c.platformFees.set({
+      platform_fee_recipient: samWallet.address,
+      platform_fee_basis_points: 500,
+    });
+    const fees2 = await c.platformFees.get();
+    expect(fees2.platform_fee_recipient).to.eq(samWallet.address);
+    expect(fees2.platform_fee_basis_points).to.eq(500);
+  });
+
   it("should not detect feature if missing from ABI", async () => {
     const c = await sdk.unstable_getCustomContract("", VoteERC20__factory.abi);
     invariant(c, "Contract undefined");

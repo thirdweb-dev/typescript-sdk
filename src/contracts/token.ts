@@ -18,6 +18,7 @@ import { Amount, CurrencyValue } from "../types";
 import { TokenERC20History } from "../core/classes/erc-20-history";
 import { ContractEvents } from "../core/classes/contract-events";
 import { PriceSchema } from "../schema";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting";
 
 /**
@@ -51,6 +52,7 @@ export class Token extends Erc20<TokenERC20> {
   public estimator: GasCostEstimator<TokenERC20>;
   public history: TokenERC20History;
   public events: ContractEvents<TokenERC20>;
+  public platformFee: ContractPlatformFee<TokenERC20>;
   /**
    * Signature Minting
    * @remarks Generate tokens that can be minted only with your own signature, attaching your own set of mint conditions.
@@ -90,6 +92,7 @@ export class Token extends Erc20<TokenERC20> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
+    this.platformFee = new ContractPlatformFee(this.contractWrapper);
     this.signature = new Erc20SignatureMinting(
       this.contractWrapper,
       this.roles,
