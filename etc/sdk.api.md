@@ -898,6 +898,10 @@ export class CustomContract<TContract extends BaseContract = BaseContract> imple
     }> | undefined;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    // Warning: (ae-forgotten-export) The symbol "ContractPlatformFee" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    platformFees: ContractPlatformFee<TContract & IThirdwebPlatformFee> | undefined;
     // (undocumented)
     roles: ContractRoles<TContract & AccessControlEnumerable, "admin" | "transfer" | "minter" | "pauser" | "editor" | "lister" | "asset"> | undefined;
     // (undocumented)
@@ -1219,8 +1223,6 @@ export class Edition extends Erc1155<TokenERC1155> {
     mintBatch(metadatas: EditionMetadataOrUri[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
     mintBatchTo(to: string, metadataWithSupply: EditionMetadataOrUri[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
     mintTo(to: string, metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
-    // Warning: (ae-forgotten-export) The symbol "ContractPlatformFee" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     platformFee: ContractPlatformFee<TokenERC1155>;
     // (undocumented)
