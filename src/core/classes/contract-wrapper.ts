@@ -39,6 +39,7 @@ import { isBrowser } from "../../common/utils";
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
+  private customOverrides: () => CallOverrides = () => ({});
   private writeContract;
   public readContract;
 
@@ -242,6 +243,13 @@ export class ContractWrapper<
   /**
    * @internal
    */
+  public withTransactionOverride(hook: () => CallOverrides) {
+    this.customOverrides = hook;
+  }
+
+  /**
+   * @internal
+   */
   public async sendTransaction(
     fn: keyof TContract["functions"],
     args: any[],
@@ -250,6 +258,13 @@ export class ContractWrapper<
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
+    // if a custom override is set, merge our override with the custom one
+    callOverrides = {
+      ...callOverrides,
+      ...this.customOverrides(),
+    };
+    // clear up the override (single use)
+    this.customOverrides = () => ({});
     if (
       this.options?.gasless &&
       ("openzeppelin" in this.options.gasless ||

@@ -31,6 +31,7 @@ import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155"
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -64,6 +65,10 @@ export class NFTDrop extends Erc721<DropERC721> {
   public platformFee: ContractPlatformFee<DropERC721>;
   public events: ContractEvents<DropERC721>;
   public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
+  /**
+   * @internal
+   */
+  public interceptor: ContractInterceptor<DropERC721>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token
@@ -172,6 +177,7 @@ export class NFTDrop extends Erc721<DropERC721> {
       this.contractWrapper,
       this.storage,
     );
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
   /** ******************************

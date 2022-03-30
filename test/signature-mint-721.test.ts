@@ -4,8 +4,8 @@ import { BigNumber, ethers } from "ethers";
 import { NFTCollection, Token } from "../src";
 import { sdk, signers, storage } from "./before.test";
 import {
-  PayloadToSign,
-  SignedPayload,
+  PayloadToSign721,
+  SignedPayload721,
 } from "../src/schema/contracts/common/signature";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
@@ -18,7 +18,7 @@ describe("NFT sig minting", async () => {
 
   let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
-  let meta: PayloadToSign;
+  let meta: PayloadToSign721;
 
   before(() => {
     [adminWallet, samWallet] = signers;
@@ -70,8 +70,8 @@ describe("NFT sig minting", async () => {
   describe("Generating Signatures", () => {
     // let voucher: SignaturePayload;
     // let signature: string, badSignature: string;
-    let goodPayload: SignedPayload;
-    let badPayload: SignedPayload;
+    let goodPayload: SignedPayload721;
+    let badPayload: SignedPayload721;
 
     beforeEach(async () => {
       goodPayload = await nftContract.signature.generate(meta);
@@ -134,7 +134,7 @@ describe("NFT sig minting", async () => {
   });
 
   describe("Claiming", async () => {
-    let v1: SignedPayload, v2: SignedPayload;
+    let v1: SignedPayload721, v2: SignedPayload721;
 
     beforeEach(async () => {
       v1 = await nftContract.signature.generate(meta);

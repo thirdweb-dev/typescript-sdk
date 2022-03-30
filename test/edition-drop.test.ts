@@ -307,6 +307,22 @@ describe("Edition Drop Contract", async () => {
     expect(fees2.platform_fee_basis_points).to.eq(500);
   });
 
+  it("should allow custom overrides", async () => {
+    bdContract.interceptor.overrideNextTransaction(() => ({
+      nonce: 123,
+    }));
+    try {
+      await bdContract.createBatch([
+        {
+          name: "test",
+          description: "test",
+        },
+      ]);
+    } catch (e) {
+      expectError(e, "Expected nonce to be");
+    }
+  });
+
   it("canClaim: 1 address", async () => {
     await bdContract.claimConditions.set("0", [
       {
