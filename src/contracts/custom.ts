@@ -13,6 +13,8 @@ import {
   AccessControlEnumerable__factory,
   IThirdwebContract,
   IThirdwebContract__factory,
+  IThirdwebPlatformFee,
+  IThirdwebPlatformFee__factory,
   IThirdwebPrimarySale,
   IThirdwebPrimarySale__factory,
   IThirdwebRoyalty,
@@ -23,6 +25,7 @@ import { UpdateableNetwork } from "../core/interfaces/contract";
 import { BaseContract, ContractInterface } from "ethers";
 import { ALL_ROLES } from "../common";
 import { implementsInterface } from "../common/feature-detection";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 
 /**
  * Custom contract wrapper with feature detection
@@ -41,6 +44,7 @@ export class CustomContract<TContract extends BaseContract = BaseContract>
   public royalties;
   public roles;
   public sales;
+  public platformFees;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -62,6 +66,7 @@ export class CustomContract<TContract extends BaseContract = BaseContract>
     this.royalties = this.detectRoyalties();
     this.roles = this.detectRoles();
     this.sales = this.detectPrimarySales();
+    this.platformFees = this.detectPlatformFees();
 
     // TODO detect token standards - requires contract interface cleanups
   }
@@ -133,6 +138,18 @@ export class CustomContract<TContract extends BaseContract = BaseContract>
       )
     ) {
       return new ContractPrimarySale(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectPlatformFees() {
+    if (
+      implementsInterface<IThirdwebPlatformFee>(
+        this.contractWrapper,
+        IThirdwebPlatformFee__factory.createInterface(),
+      )
+    ) {
+      return new ContractPlatformFee(this.contractWrapper);
     }
     return undefined;
   }
