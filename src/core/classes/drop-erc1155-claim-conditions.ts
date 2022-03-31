@@ -351,7 +351,7 @@ export class DropErc1155ClaimConditions {
     claimConditionInput: ClaimConditionInput,
   ): Promise<TransactionResult> {
     const existingConditions = await this.getAll(tokenId);
-    const newConditionInputs = updateExistingClaimConditions(
+    const newConditionInputs = await updateExistingClaimConditions(
       index,
       claimConditionInput,
       existingConditions,
