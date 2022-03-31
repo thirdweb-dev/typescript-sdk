@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { BigNumberishSchema } from "../../shared";
 
 /**
  * @internal
@@ -12,7 +13,7 @@ export const MerkleSchema = z.object({
  */
 export const SnapshotAddress = z.object({
   address: z.string(),
-  maxClaimable: z.number().default(0),
+  maxClaimable: BigNumberishSchema.default(0),
 });
 
 /**

@@ -211,8 +211,8 @@ describe("Token Drop Contract", async () => {
     await dropContract.claimConditions.set([
       {
         snapshot: [
-          { address: w1.address, maxClaimable: 2 },
-          { address: w2.address, maxClaimable: 1 },
+          { address: w1.address, maxClaimable: ethers.utils.parseUnits("2") }, // TODO normalize this
+          { address: w2.address, maxClaimable: ethers.utils.parseUnits("1") },
         ],
       },
     ]);
@@ -321,7 +321,7 @@ describe("Token Drop Contract", async () => {
     it("should check if its been long enough since the last claim", async () => {
       await dropContract.claimConditions.set([
         {
-          maxQuantity: 10,
+          maxQuantity: ethers.utils.parseUnits("10"), // TODO should be able to normalize this
           waitInSeconds: 24 * 60 * 60,
         },
       ]);
