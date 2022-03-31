@@ -324,7 +324,7 @@ describe("NFT Drop Contract", async () => {
       address,
       maxClaimable: 0,
     }));
-    const snapshot = await createSnapshot(input, storage);
+    const snapshot = await createSnapshot(input, 0, storage);
     for (const leaf of members) {
       const expectedProof = tree.getHexProof(
         ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
@@ -399,7 +399,10 @@ describe("NFT Drop Contract", async () => {
 
       expect(reasons).to.include(ClaimEligibility.NoActiveClaimPhase);
       assert.lengthOf(reasons, 1);
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(
+        1,
+        w1.address,
+      );
       assert.isFalse(canClaim);
     });
 
@@ -412,7 +415,10 @@ describe("NFT Drop Contract", async () => {
           w1.address,
         );
       expect(reasons).to.include(ClaimEligibility.NotEnoughSupply);
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(
+        2,
+        w1.address,
+      );
       assert.isFalse(canClaim);
     });
 
@@ -430,7 +436,10 @@ describe("NFT Drop Contract", async () => {
           w1.address,
         );
       expect(reasons).to.include(ClaimEligibility.AddressNotAllowed);
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(
+        1,
+        w1.address,
+      );
       assert.isFalse(canClaim);
     });
 
@@ -453,7 +462,7 @@ describe("NFT Drop Contract", async () => {
       expect(reasons).to.include(
         ClaimEligibility.WaitBeforeNextClaimTransaction,
       );
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(1);
       assert.isFalse(canClaim);
     });
 
@@ -474,7 +483,7 @@ describe("NFT Drop Contract", async () => {
         );
 
       expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(1);
       assert.isFalse(canClaim);
     });
 
@@ -504,7 +513,7 @@ describe("NFT Drop Contract", async () => {
         );
 
       expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(1);
       assert.isFalse(canClaim);
     });
 
