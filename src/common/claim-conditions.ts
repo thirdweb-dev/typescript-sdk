@@ -146,6 +146,7 @@ export function updateExsitingClaimConditions(
   index: number,
   claimConditionInput: ClaimConditionInput,
   existingConditions: ClaimCondition[],
+  tokenDecimals: number,
 ): ClaimConditionInput[] {
   if (index >= existingConditions.length) {
     throw Error(
@@ -153,9 +154,18 @@ export function updateExsitingClaimConditions(
     );
   }
   // merge input with existing claim condition
+  // TODO figure out how to have inputs and outputs symmetrical to avoid this gymnastic
   const newConditionParsed = ClaimConditionInputSchema.parse({
     ...existingConditions[index],
     price: existingConditions[index].price.toString(),
+    maxQuantity: ethers.utils.formatUnits(
+      existingConditions[index].maxQuantity,
+      tokenDecimals,
+    ),
+    quantityLimitPerTransaction: ethers.utils.formatUnits(
+      existingConditions[index].quantityLimitPerTransaction,
+      tokenDecimals,
+    ),
     ...claimConditionInput,
   });
   // convert to output claim condition
@@ -172,6 +182,14 @@ export function updateExsitingClaimConditions(
     return {
       ...newConditionAtIndex,
       price: newConditionAtIndex.price.toString(), // manually transform back to input price type
+      maxQuantity: ethers.utils.formatUnits(
+        newConditionAtIndex.maxQuantity,
+        tokenDecimals,
+      ),
+      quantityLimitPerTransaction: ethers.utils.formatUnits(
+        newConditionAtIndex.quantityLimitPerTransaction,
+        tokenDecimals,
+      ),
     };
   });
 }
@@ -279,16 +297,16 @@ async function convertToContractModel(
     c.currencyAddress === AddressZero
       ? NATIVE_TOKEN_ADDRESS
       : c.currencyAddress;
-  let maxClaimableSupply = BigNumber.from(c.maxQuantity);
-  if (c.maxQuantity !== ethers.constants.MaxUint256.toString()) {
+  let maxClaimableSupply;
+  let quantityLimitPerTransaction;
+  if (c.maxQuantity === "unlimited") {
+    maxClaimableSupply = ethers.constants.MaxUint256.toString();
+  } else {
     maxClaimableSupply = ethers.utils.parseUnits(c.maxQuantity, tokenDecimals);
   }
-  let quantityLimitPerTransaction = BigNumber.from(
-    c.quantityLimitPerTransaction,
-  );
-  if (
-    c.quantityLimitPerTransaction !== ethers.constants.MaxUint256.toString()
-  ) {
+  if (c.quantityLimitPerTransaction === "unlimited") {
+    quantityLimitPerTransaction = ethers.constants.MaxUint256.toString();
+  } else {
     quantityLimitPerTransaction = ethers.utils.parseUnits(
       c.quantityLimitPerTransaction,
       tokenDecimals,

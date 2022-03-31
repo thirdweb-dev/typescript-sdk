@@ -179,6 +179,7 @@ export class DropErc1155ClaimConditions {
       const proofs = await getClaimerProofs(
         addressToCheck,
         merkleLower,
+        0,
         metadata.merkle,
         this.storage,
       );
@@ -291,6 +292,7 @@ export class DropErc1155ClaimConditions {
     const { snapshotInfos, sortedConditions } =
       await processClaimConditionInputs(
         claimConditionInputs,
+        0,
         this.contractWrapper.getProvider(),
         this.storage,
       );
@@ -353,6 +355,7 @@ export class DropErc1155ClaimConditions {
       index,
       claimConditionInput,
       existingConditions,
+      0,
     );
     return await this.set(tokenId, newConditionInputs);
   }

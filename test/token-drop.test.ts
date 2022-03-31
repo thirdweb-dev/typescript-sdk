@@ -283,7 +283,10 @@ describe("Token Drop Contract", async () => {
 
       expect(reasons).to.include(ClaimEligibility.NoActiveClaimPhase);
       assert.lengthOf(reasons, 1);
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(
+        1,
+        w1.address,
+      );
       assert.isFalse(canClaim);
     });
 
@@ -292,11 +295,14 @@ describe("Token Drop Contract", async () => {
 
       const reasons =
         await dropContract.claimConditions.getClaimIneligibilityReasons(
-          "2",
+          "1.8",
           w1.address,
         );
       expect(reasons).to.include(ClaimEligibility.NotEnoughSupply);
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(
+        1.8,
+        w1.address,
+      );
       assert.isFalse(canClaim);
     });
 
@@ -314,7 +320,10 @@ describe("Token Drop Contract", async () => {
           w1.address,
         );
       expect(reasons).to.include(ClaimEligibility.AddressNotAllowed);
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(
+        1,
+        w1.address,
+      );
       assert.isFalse(canClaim);
     });
 
@@ -337,7 +346,10 @@ describe("Token Drop Contract", async () => {
       expect(reasons).to.include(
         ClaimEligibility.WaitBeforeNextClaimTransaction,
       );
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(
+        1,
+        bobWallet.address,
+      );
       assert.isFalse(canClaim);
     });
 
@@ -358,7 +370,10 @@ describe("Token Drop Contract", async () => {
         );
 
       expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(
+        1,
+        bobWallet.address,
+      );
       assert.isFalse(canClaim);
     });
 
@@ -388,7 +403,10 @@ describe("Token Drop Contract", async () => {
         );
 
       expect(reasons).to.include(ClaimEligibility.NotEnoughTokens);
-      const canClaim = await dropContract.claimConditions.canClaim(w1.address);
+      const canClaim = await dropContract.claimConditions.canClaim(
+        1,
+        bobWallet.address,
+      );
       assert.isFalse(canClaim);
     });
 
@@ -537,13 +555,15 @@ describe("Token Drop Contract", async () => {
 
   it("set claim condition and update claim condition", async () => {
     await dropContract.claimConditions.set([
-      { startTime: new Date(Date.now() / 2), maxQuantity: 1 },
+      { startTime: new Date(Date.now() / 2), maxQuantity: 1.2 },
       { startTime: new Date(), waitInSeconds: 60 },
     ]);
-    expect((await dropContract.claimConditions.getAll()).length).to.be.equal(2);
-
+    const oldConditions = await dropContract.claimConditions.getAll();
+    expect(oldConditions.length).to.be.equal(2);
+    console.log(oldConditions[0]);
     await dropContract.claimConditions.update(0, { waitInSeconds: 10 });
     let updatedConditions = await dropContract.claimConditions.getAll();
+    console.log(updatedConditions[0]);
     expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
       ethers.utils.parseUnits("1", 18),
     );

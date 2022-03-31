@@ -5,10 +5,13 @@ import {
   DropERC20,
   DropERC20__factory,
   DropERC721,
+  IERC20,
+  IERC20__factory,
 } from "@thirdweb-dev/contracts";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
+import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
-import { ClaimCondition, ClaimConditionInput } from "../../types";
+import { Amount, ClaimCondition, ClaimConditionInput } from "../../types";
 import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../../enums";
 import { TransactionResult } from "../types";
@@ -19,8 +22,10 @@ import {
   updateExsitingClaimConditions,
 } from "../../common/claim-conditions";
 import { MaxUint256 } from "@ethersproject/constants";
+import { isBrowser } from "../../common/utils";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { implementsInterface } from "../../common/feature-detection";
+import { PriceSchema } from "../../schema";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -110,7 +115,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
    * ```
    */
   public async canClaim(
-    quantity: BigNumberish,
+    quantity: Amount,
     addressToCheck?: string,
   ): Promise<boolean> {
     if (addressToCheck === undefined) {
@@ -133,12 +138,17 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
    *
    */
   public async getClaimIneligibilityReasons(
-    quantity: BigNumberish,
+    quantity: Amount,
     addressToCheck?: string,
   ): Promise<ClaimEligibility[]> {
     const reasons: ClaimEligibility[] = [];
     let activeConditionIndex: BigNumber;
     let claimCondition: ClaimCondition;
+
+    const quantityWithDecimals = ethers.utils.parseUnits(
+      PriceSchema.parse(quantity),
+      await this.getTokenDecimals(),
+    );
 
     if (addressToCheck === undefined) {
       throw new Error("addressToCheck is required");
@@ -162,7 +172,9 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
       return reasons;
     }
 
-    if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
+    if (
+      BigNumber.from(claimCondition.availableSupply).lt(quantityWithDecimals)
+    ) {
       reasons.push(ClaimEligibility.NotEnoughSupply);
     }
 
@@ -214,6 +226,30 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
         reasons.push(ClaimEligibility.AlreadyClaimed);
       } else {
         reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+      }
+    }
+
+    // if not within a browser conetext, check for wallet balance.
+    // In browser context, let the wallet do that job
+    if (claimCondition.price.gt(0) && !isBrowser()) {
+      const totalPrice = claimCondition.price.mul(BigNumber.from(quantity));
+      const provider = this.contractWrapper.getProvider();
+      if (isNativeToken(claimCondition.currencyAddress)) {
+        const balance = await provider.getBalance(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.NotEnoughTokens);
+        }
+      } else {
+        const erc20 = new ContractWrapper<IERC20>(
+          provider,
+          claimCondition.currencyAddress,
+          IERC20__factory.abi,
+          {},
+        );
+        const balance = await erc20.readContract.balanceOf(addressToCheck);
+        if (balance.lt(totalPrice)) {
+          reasons.push(ClaimEligibility.NotEnoughTokens);
+        }
       }
     }
 
@@ -317,6 +353,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
       index,
       claimConditionInput,
       existingConditions,
+      await this.getTokenDecimals(),
     );
     return await this.set(newConditionInputs);
   }

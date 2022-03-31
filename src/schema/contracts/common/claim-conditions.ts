@@ -19,10 +19,12 @@ export const ClaimConditionInputSchema = z.object({
   startTime: StartDateSchema,
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   price: PriceSchema.default(0),
-  maxQuantity: BigNumberishSchema.default(ethers.constants.MaxUint256),
-  quantityLimitPerTransaction: BigNumberishSchema.default(
-    ethers.constants.MaxUint256,
-  ),
+  maxQuantity: z
+    .union([PriceSchema, z.literal("unlimited")])
+    .default("unlimited"),
+  quantityLimitPerTransaction: z
+    .union([PriceSchema, z.literal("unlimited")])
+    .default("unlimited"),
   waitInSeconds: BigNumberishSchema.default(0),
   merkleRootHash: BytesLikeSchema.default(hexZeroPad([0], 32)),
   snapshot: z.optional(SnapshotInputSchema),
