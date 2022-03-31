@@ -166,7 +166,6 @@ export class NFTDrop extends Erc721<DropERC721> {
     this.primarySale = new ContractPrimarySale(this.contractWrapper);
     this.claimConditions = new DropClaimConditions(
       this.contractWrapper,
-      1,
       this.metadata,
       this.storage,
     );

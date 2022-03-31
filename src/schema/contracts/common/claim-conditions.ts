@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import {
   BigNumberishSchema,
   BigNumberSchema,
