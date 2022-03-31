@@ -3,7 +3,7 @@ export * from "./contract-metadata";
 export * from "./contract-roles";
 export * from "./contract-royalty";
 export * from "./contract-sales";
-export * from "./drop-erc721-claim-conditions";
+export * from "./drop-claim-conditions";
 export * from "./drop-erc1155-claim-conditions";
 export * from "./drop-erc1155-history";
 export * from "./erc-20";

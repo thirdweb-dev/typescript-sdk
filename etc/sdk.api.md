@@ -16,6 +16,8 @@ import { CallOverrides as CallOverrides_2 } from '@ethersproject/contracts';
 import { ContractInterface } from 'ethers';
 import { DropERC1155 } from '@thirdweb-dev/contracts';
 import { DropERC1155__factory } from '@thirdweb-dev/contracts';
+import { DropERC20 } from '@thirdweb-dev/contracts';
+import { DropERC20__factory } from '@thirdweb-dev/contracts';
 import { DropERC721 } from '@thirdweb-dev/contracts';
 import { DropERC721__factory } from '@thirdweb-dev/contracts';
 import { ethers } from 'ethers';
@@ -243,21 +245,21 @@ export const ClaimConditionInputArray: z.ZodArray<z.ZodObject<{
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
     snapshot: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }[], string[]>, z.ZodArray<z.ZodObject<{
-        address: z.ZodString;
-        maxClaimable: z.ZodDefault<z.ZodNumber>;
+        address: z.ZodEffects<z.ZodString, string, string>;
+        maxClaimable: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     }, "strip", z.ZodTypeAny, {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }, {
-        maxClaimable?: number | undefined;
+        maxClaimable?: string | number | bigint | BigNumber | undefined;
         address: string;
     }>, "many">]>>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }[] | undefined;
     startTime: BigNumber;
     currencyAddress: string;
@@ -268,7 +270,7 @@ export const ClaimConditionInputArray: z.ZodArray<z.ZodObject<{
     merkleRootHash: string | number[];
 }, {
     snapshot?: string[] | {
-        maxClaimable?: number | undefined;
+        maxClaimable?: string | number | bigint | BigNumber | undefined;
         address: string;
     }[] | undefined;
     startTime?: Date | undefined;
@@ -293,21 +295,21 @@ export const ClaimConditionInputSchema: z.ZodObject<{
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
     snapshot: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }[], string[]>, z.ZodArray<z.ZodObject<{
-        address: z.ZodString;
-        maxClaimable: z.ZodDefault<z.ZodNumber>;
+        address: z.ZodEffects<z.ZodString, string, string>;
+        maxClaimable: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     }, "strip", z.ZodTypeAny, {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }, {
-        maxClaimable?: number | undefined;
+        maxClaimable?: string | number | bigint | BigNumber | undefined;
         address: string;
     }>, "many">]>>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }[] | undefined;
     startTime: BigNumber;
     currencyAddress: string;
@@ -318,7 +320,7 @@ export const ClaimConditionInputSchema: z.ZodObject<{
     merkleRootHash: string | number[];
 }, {
     snapshot?: string[] | {
-        maxClaimable?: number | undefined;
+        maxClaimable?: string | number | bigint | BigNumber | undefined;
         address: string;
     }[] | undefined;
     startTime?: Date | undefined;
@@ -343,15 +345,15 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
     snapshot: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }[], string[]>, z.ZodArray<z.ZodObject<{
-        address: z.ZodString;
-        maxClaimable: z.ZodDefault<z.ZodNumber>;
+        address: z.ZodEffects<z.ZodString, string, string>;
+        maxClaimable: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     }, "strip", z.ZodTypeAny, {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }, {
-        maxClaimable?: number | undefined;
+        maxClaimable?: string | number | bigint | BigNumber | undefined;
         address: string;
     }>, "many">]>>;
 }, {
@@ -384,7 +386,7 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
 }>, "strip", z.ZodTypeAny, {
     snapshot?: {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }[] | undefined;
     startTime: Date;
     currencyAddress: string;
@@ -403,7 +405,7 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     };
 }, {
     snapshot?: string[] | {
-        maxClaimable?: number | undefined;
+        maxClaimable?: string | number | bigint | BigNumber | undefined;
         address: string;
     }[] | undefined;
     currencyAddress?: string | undefined;
@@ -717,6 +719,7 @@ export const CONTRACTS_MAP: {
     readonly "nft-collection": typeof NFTCollection;
     readonly "edition-drop": typeof EditionDrop;
     readonly edition: typeof Edition;
+    readonly "token-drop": typeof TokenDrop;
     readonly token: typeof Token;
     readonly vote: typeof Vote;
     readonly split: typeof Split;
@@ -1185,8 +1188,9 @@ export class DropErc1155History {
 }
 
 // @public
-export class DropErc721ClaimConditions {
-    constructor(contractWrapper: ContractWrapper<DropERC721>, metadata: ContractMetadata<DropERC721, typeof DropErc721ContractSchema>, storage: IStorage);
+export class DropErc721ClaimConditions<TContract extends DropERC721 | DropERC20> {
+    // Warning: (ae-forgotten-export) The symbol "DropErc20ContractSchema" needs to be exported by the entry point index.d.ts
+    constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, typeof DropErc721ContractSchema | typeof DropErc20ContractSchema>, storage: IStorage);
     canClaim(quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
     getActive(): Promise<ClaimCondition>;
     getAll(): Promise<ClaimCondition[]>;
@@ -1862,7 +1866,7 @@ export class Erc1155SignatureMinting {
 }
 
 // @public
-export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
+export class Erc20<T extends TokenERC20 | DropERC20> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     allowance(spender: string): Promise<CurrencyValue>;
     allowanceOf(owner: string, spender: string): Promise<CurrencyValue>;
@@ -1878,6 +1882,8 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     // @internal (undocumented)
     protected getValue(value: BigNumberish): Promise<CurrencyValue>;
     isTransferRestricted(): Promise<boolean>;
+    // (undocumented)
+    protected normalizeAmount(amount: Amount): Promise<BigNumber>;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -2556,7 +2562,7 @@ export interface NFTContractDeployMetadata {
 export class NFTDrop extends Erc721<DropERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
     claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    claimConditions: DropErc721ClaimConditions;
+    claimConditions: DropErc721ClaimConditions<DropERC721>;
     claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     static contractFactory: typeof DropERC721__factory;
@@ -2975,21 +2981,21 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
     merkleRootHash: z.ZodOptional<z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>>;
     snapshot: z.ZodOptional<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }[], string[]>, z.ZodArray<z.ZodObject<{
-        address: z.ZodString;
-        maxClaimable: z.ZodDefault<z.ZodNumber>;
+        address: z.ZodEffects<z.ZodString, string, string>;
+        maxClaimable: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     }, "strip", z.ZodTypeAny, {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }, {
-        maxClaimable?: number | undefined;
+        maxClaimable?: string | number | bigint | BigNumber | undefined;
         address: string;
     }>, "many">]>>>;
 }, "strip", z.ZodTypeAny, {
     snapshot?: {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
     }[] | undefined;
     startTime?: BigNumber | undefined;
     currencyAddress?: string | undefined;
@@ -3000,7 +3006,7 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
     merkleRootHash?: string | number[] | undefined;
 }, {
     snapshot?: string[] | {
-        maxClaimable?: number | undefined;
+        maxClaimable?: string | number | bigint | BigNumber | undefined;
         address: string;
     }[] | undefined;
     startTime?: Date | undefined;
@@ -3135,6 +3141,7 @@ export const REMOTE_CONTRACT_NAME: {
     readonly "nft-collection": "TokenERC721";
     readonly "edition-drop": "DropERC1155";
     readonly edition: "TokenERC1155";
+    readonly "token-drop": "DropERC20";
     readonly token: "TokenERC20";
     readonly vote: "VoteERC20";
     readonly split: "Split";
@@ -3150,6 +3157,7 @@ export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly TokenERC721: "nft-collection";
     readonly DropERC1155: "edition-drop";
     readonly TokenERC1155: "edition";
+    readonly DropERC20: "token-drop";
     readonly TokenERC20: "token";
     readonly VoteERC20: "vote";
     readonly Split: "split";
@@ -3865,18 +3873,32 @@ export type SignerOrProvider = Signer | Provider;
 // @public (undocumented)
 export type Snapshot = z.output<typeof SnapshotSchema>;
 
-// Warning: (ae-internal-missing-underscore) The name "SnapshotAddress" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-internal-missing-underscore) The name "SnapshotAddressInput" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const SnapshotAddress: z.ZodObject<{
-    address: z.ZodString;
-    maxClaimable: z.ZodDefault<z.ZodNumber>;
+export const SnapshotAddressInput: z.ZodObject<{
+    address: z.ZodEffects<z.ZodString, string, string>;
+    maxClaimable: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
 }, "strip", z.ZodTypeAny, {
     address: string;
-    maxClaimable: number;
+    maxClaimable: string;
 }, {
-    maxClaimable?: number | undefined;
+    maxClaimable?: string | number | bigint | BigNumber | undefined;
     address: string;
+}>;
+
+// @public (undocumented)
+export const SnapshotAddressOuput: z.ZodObject<z.extendShape<{
+    address: z.ZodEffects<z.ZodString, string, string>;
+    maxClaimable: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
+}, {
+    maxClaimable: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+}>, "strip", z.ZodTypeAny, {
+    address: string;
+    maxClaimable: BigNumber;
+}, {
+    address: string;
+    maxClaimable: string | number | bigint | BigNumber;
 }>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "SnapshotInfo" is marked as @public, but its signature references "SnapshotInfoSchema" which is marked as @internal
@@ -3893,16 +3915,16 @@ export const SnapshotInfoSchema: z.ZodObject<{
     snapshot: z.ZodObject<{
         merkleRoot: z.ZodString;
         claims: z.ZodArray<z.ZodObject<z.extendShape<{
-            address: z.ZodString;
-            maxClaimable: z.ZodDefault<z.ZodNumber>;
+            address: z.ZodEffects<z.ZodString, string, string>;
+            maxClaimable: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }, {
             proof: z.ZodArray<z.ZodString, "many">;
         }>, "strip", z.ZodTypeAny, {
             address: string;
-            maxClaimable: number;
+            maxClaimable: string;
             proof: string[];
         }, {
-            maxClaimable?: number | undefined;
+            maxClaimable?: string | number | bigint | BigNumber | undefined;
             address: string;
             proof: string[];
         }>, "many">;
@@ -3910,13 +3932,13 @@ export const SnapshotInfoSchema: z.ZodObject<{
         merkleRoot: string;
         claims: {
             address: string;
-            maxClaimable: number;
+            maxClaimable: string;
             proof: string[];
         }[];
     }, {
         merkleRoot: string;
         claims: {
-            maxClaimable?: number | undefined;
+            maxClaimable?: string | number | bigint | BigNumber | undefined;
             address: string;
             proof: string[];
         }[];
@@ -3928,7 +3950,7 @@ export const SnapshotInfoSchema: z.ZodObject<{
         merkleRoot: string;
         claims: {
             address: string;
-            maxClaimable: number;
+            maxClaimable: string;
             proof: string[];
         }[];
     };
@@ -3938,7 +3960,7 @@ export const SnapshotInfoSchema: z.ZodObject<{
     snapshot: {
         merkleRoot: string;
         claims: {
-            maxClaimable?: number | undefined;
+            maxClaimable?: string | number | bigint | BigNumber | undefined;
             address: string;
             proof: string[];
         }[];
@@ -3955,15 +3977,15 @@ export type SnapshotInput = z.output<typeof SnapshotInputSchema>;
 // @internal (undocumented)
 export const SnapshotInputSchema: z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
     address: string;
-    maxClaimable: number;
+    maxClaimable: string;
 }[], string[]>, z.ZodArray<z.ZodObject<{
-    address: z.ZodString;
-    maxClaimable: z.ZodDefault<z.ZodNumber>;
+    address: z.ZodEffects<z.ZodString, string, string>;
+    maxClaimable: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
 }, "strip", z.ZodTypeAny, {
     address: string;
-    maxClaimable: number;
+    maxClaimable: string;
 }, {
-    maxClaimable?: number | undefined;
+    maxClaimable?: string | number | bigint | BigNumber | undefined;
     address: string;
 }>, "many">]>;
 
@@ -3973,16 +3995,16 @@ export const SnapshotInputSchema: z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodStrin
 export const SnapshotSchema: z.ZodObject<{
     merkleRoot: z.ZodString;
     claims: z.ZodArray<z.ZodObject<z.extendShape<{
-        address: z.ZodString;
-        maxClaimable: z.ZodDefault<z.ZodNumber>;
+        address: z.ZodEffects<z.ZodString, string, string>;
+        maxClaimable: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
     }, {
         proof: z.ZodArray<z.ZodString, "many">;
     }>, "strip", z.ZodTypeAny, {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
         proof: string[];
     }, {
-        maxClaimable?: number | undefined;
+        maxClaimable?: string | number | bigint | BigNumber | undefined;
         address: string;
         proof: string[];
     }>, "many">;
@@ -3990,13 +4012,13 @@ export const SnapshotSchema: z.ZodObject<{
     merkleRoot: string;
     claims: {
         address: string;
-        maxClaimable: number;
+        maxClaimable: string;
         proof: string[];
     }[];
 }, {
     merkleRoot: string;
     claims: {
-        maxClaimable?: number | undefined;
+        maxClaimable?: string | number | bigint | BigNumber | undefined;
         address: string;
         proof: string[];
     }[];
@@ -4239,7 +4261,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "split" | "edition-drop" | "edition" | "token" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
+        contractType: "split" | "edition-drop" | "edition" | "token" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection" | "token-drop";
         metadata: () => Promise<{
             [x: string]: Json;
             description?: string | undefined;
@@ -4256,6 +4278,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getPack(address: string): Pack;
     getSplit(address: string): Split;
     getToken(address: string): Token;
+    getTokenDrop(address: string): TokenDrop;
     getVote(address: string): Vote;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
@@ -4690,6 +4713,10 @@ export enum VoteType {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/contracts/maps.d.ts:19:5 - (ae-forgotten-export) The symbol "TokenDrop" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

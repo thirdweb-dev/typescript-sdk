@@ -21,6 +21,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  */
 export async function createSnapshot(
   snapshotInput: SnapshotInput,
+  tokenDecimals: number,
   storage: IStorage,
 ): Promise<SnapshotInfo> {
   const input = SnapshotInputSchema.parse(snapshotInput);
@@ -30,7 +31,12 @@ export async function createSnapshot(
     throw new DuplicateLeafsError();
   }
 
-  const hashedLeafs = input.map((i) => hashLeafNode(i.address, i.maxClaimable));
+  const hashedLeafs = input.map((i) =>
+    hashLeafNode(
+      i.address,
+      ethers.utils.parseUnits(i.maxClaimable, tokenDecimals),
+    ),
+  );
   const tree = new MerkleTree(hashedLeafs, keccak256, {
     sort: true,
   });

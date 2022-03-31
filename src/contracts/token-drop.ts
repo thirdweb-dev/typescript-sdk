@@ -2,7 +2,7 @@ import { DropERC20, DropERC20__factory } from "@thirdweb-dev/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {
-  DropErc721ClaimConditions,
+  DropClaimConditions,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -17,7 +17,6 @@ import { Amount, ClaimVerification, CurrencyValue } from "../types";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { prepareClaim } from "../common/claim-conditions";
-import { normalizePriceValue } from "../common/currency";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -51,7 +50,7 @@ export class TokenDrop extends Erc20<DropERC20> {
   >;
   public encoder: ContractEncoder<DropERC20>;
   public estimator: GasCostEstimator<DropERC20>;
-  public claimConditions: DropErc721ClaimConditions<DropERC20>;
+  public claimConditions: DropClaimConditions<DropERC20>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -77,7 +76,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
-    this.claimConditions = new DropErc721ClaimConditions<DropERC20>(
+    this.claimConditions = new DropClaimConditions<DropERC20>(
       this.contractWrapper,
       this.metadata,
       this.storage,

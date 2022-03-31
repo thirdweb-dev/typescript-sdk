@@ -211,8 +211,8 @@ describe("Token Drop Contract", async () => {
     await dropContract.claimConditions.set([
       {
         snapshot: [
-          { address: w1.address, maxClaimable: ethers.utils.parseUnits("2") }, // TODO normalize this
-          { address: w2.address, maxClaimable: ethers.utils.parseUnits("1") },
+          { address: w1.address, maxClaimable: "2.1" },
+          { address: w2.address, maxClaimable: 1 },
         ],
       },
     ]);
@@ -251,7 +251,7 @@ describe("Token Drop Contract", async () => {
       address,
       maxClaimable: 0,
     }));
-    const snapshot = await createSnapshot(input, storage);
+    const snapshot = await createSnapshot(input, 18, storage);
     for (const leaf of members) {
       const expectedProof = tree.getHexProof(
         ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
@@ -321,7 +321,7 @@ describe("Token Drop Contract", async () => {
     it("should check if its been long enough since the last claim", async () => {
       await dropContract.claimConditions.set([
         {
-          maxQuantity: ethers.utils.parseUnits("10"), // TODO should be able to normalize this
+          maxQuantity: "10.8",
           waitInSeconds: 24 * 60 * 60,
         },
       ]);
@@ -545,7 +545,7 @@ describe("Token Drop Contract", async () => {
     await dropContract.claimConditions.update(0, { waitInSeconds: 10 });
     let updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
-      BigNumber.from(1),
+      ethers.utils.parseUnits("1", 18),
     );
     expect(updatedConditions[0].waitInSeconds).to.be.deep.equal(
       BigNumber.from(10),

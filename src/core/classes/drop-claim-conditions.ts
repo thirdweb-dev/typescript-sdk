@@ -3,12 +3,10 @@ import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
 import {
   DropERC20,
+  DropERC20__factory,
   DropERC721,
-  IERC20,
-  IERC20__factory,
 } from "@thirdweb-dev/contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import { ClaimCondition, ClaimConditionInput } from "../../types";
 import deepEqual from "deep-equal";
@@ -21,16 +19,14 @@ import {
   updateExsitingClaimConditions,
 } from "../../common/claim-conditions";
 import { MaxUint256 } from "@ethersproject/constants";
-import { isBrowser } from "../../common/utils";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
+import { implementsInterface } from "../../common/feature-detection";
 
 /**
  * Manages claim conditions for NFT Drop contracts
  * @public
  */
-export class DropErc721ClaimConditions<
-  TContract extends DropERC721 | DropERC20,
-> {
+export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
   private contractWrapper;
   private metadata;
   private storage: IStorage;
@@ -180,6 +176,7 @@ export class DropErc721ClaimConditions<
       const proofs = await getClaimerProofs(
         addressToCheck,
         merkleLower,
+        await this.getTokenDecimals(),
         metadata.merkle,
         this.storage,
       );
@@ -217,30 +214,6 @@ export class DropErc721ClaimConditions<
         reasons.push(ClaimEligibility.AlreadyClaimed);
       } else {
         reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
-      }
-    }
-
-    // if not within a browser conetext, check for wallet balance.
-    // In browser context, let the wallet do that job
-    if (claimCondition.price.gt(0) && !isBrowser()) {
-      const totalPrice = claimCondition.price.mul(quantity);
-      const provider = this.contractWrapper.getProvider();
-      if (isNativeToken(claimCondition.currencyAddress)) {
-        const balance = await provider.getBalance(addressToCheck);
-        if (balance.lt(totalPrice)) {
-          reasons.push(ClaimEligibility.NotEnoughTokens);
-        }
-      } else {
-        const erc20 = new ContractWrapper<IERC20>(
-          provider,
-          claimCondition.currencyAddress,
-          IERC20__factory.abi,
-          {},
-        );
-        const balance = await erc20.readContract.balanceOf(addressToCheck);
-        if (balance.lt(totalPrice)) {
-          reasons.push(ClaimEligibility.NotEnoughTokens);
-        }
       }
     }
 
@@ -287,6 +260,7 @@ export class DropErc721ClaimConditions<
     const { snapshotInfos, sortedConditions } =
       await processClaimConditionInputs(
         claimConditionInputs,
+        await this.getTokenDecimals(),
         this.contractWrapper.getProvider(),
         this.storage,
       );
@@ -345,5 +319,22 @@ export class DropErc721ClaimConditions<
       existingConditions,
     );
     return await this.set(newConditionInputs);
+  }
+
+  /** ***************************************
+   * PRIVATE FUNCTIONS
+   *****************************************/
+
+  private async getTokenDecimals(): Promise<number> {
+    if (
+      implementsInterface<DropERC20>(
+        this.contractWrapper,
+        DropERC20__factory.createInterface(),
+      )
+    ) {
+      return this.contractWrapper.readContract.decimals();
+    } else {
+      return Promise.resolve(0);
+    }
   }
 }

@@ -103,6 +103,7 @@
 |  [NATIVE\_TOKEN\_ADDRESS](./sdk.native_token_address.md) |  |
 |  [NATIVE\_TOKENS](./sdk.native_tokens.md) |  |
 |  [SDKOptionsSchema](./sdk.sdkoptionsschema.md) |  |
+|  [SnapshotAddressOuput](./sdk.snapshotaddressouput.md) |  |
 |  [SUPPORTED\_CHAIN\_IDS](./sdk.supported_chain_ids.md) |  |
 
 ## Type Aliases
