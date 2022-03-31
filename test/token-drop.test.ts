@@ -291,7 +291,7 @@ describe("Token Drop Contract", async () => {
     });
 
     it("should check for the total supply", async () => {
-      await dropContract.claimConditions.set([{ maxQuantity: 1 }]);
+      await dropContract.claimConditions.set([{ maxQuantity: 1.2 }]);
 
       const reasons =
         await dropContract.claimConditions.getClaimIneligibilityReasons(
@@ -560,12 +560,11 @@ describe("Token Drop Contract", async () => {
     ]);
     const oldConditions = await dropContract.claimConditions.getAll();
     expect(oldConditions.length).to.be.equal(2);
-    console.log(oldConditions[0]);
     await dropContract.claimConditions.update(0, { waitInSeconds: 10 });
     let updatedConditions = await dropContract.claimConditions.getAll();
     console.log(updatedConditions[0]);
     expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
-      ethers.utils.parseUnits("1", 18),
+      ethers.utils.parseUnits("1.2", 18),
     );
     expect(updatedConditions[0].waitInSeconds).to.be.deep.equal(
       BigNumber.from(10),
@@ -580,10 +579,10 @@ describe("Token Drop Contract", async () => {
     });
     updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
-      BigNumber.from(1),
+      ethers.utils.parseUnits("1.2", 18),
     );
     expect(updatedConditions[1].maxQuantity).to.be.deep.equal(
-      BigNumber.from(10),
+      ethers.utils.parseUnits("10", 18),
     );
     expect(updatedConditions[1].waitInSeconds).to.be.deep.equal(
       BigNumber.from(10),
@@ -603,10 +602,10 @@ describe("Token Drop Contract", async () => {
     // max quantities should be inverted now
     const updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
-      BigNumber.from(2),
+      ethers.utils.parseUnits("2", 18),
     );
     expect(updatedConditions[1].maxQuantity).to.be.deep.equal(
-      BigNumber.from(1),
+      ethers.utils.parseUnits("1", 18),
     );
   });
 

@@ -142,12 +142,12 @@ export async function fetchSnapshot(
  * @param claimConditionInput
  * @param existingConditions
  */
-export function updateExsitingClaimConditions(
+export async function updateExistingClaimConditions(
   index: number,
   claimConditionInput: ClaimConditionInput,
   existingConditions: ClaimCondition[],
   tokenDecimals: number,
-): ClaimConditionInput[] {
+): Promise<ClaimConditionInput[]> {
   if (index >= existingConditions.length) {
     throw Error(
       `Index out of bounds - got index: ${index} with ${existingConditions.length} conditions`,
@@ -155,22 +155,45 @@ export function updateExsitingClaimConditions(
   }
   // merge input with existing claim condition
   // TODO figure out how to have inputs and outputs symmetrical to avoid this gymnastic
+  const revertToFormattedAmount = (bigNumberValue: BigNumber) => {
+    if (
+      bigNumberValue.toHexString() === ethers.constants.MaxUint256.toHexString()
+    ) {
+      return "unlimited";
+    }
+    const formatted = ethers.utils
+      .formatUnits(bigNumberValue, tokenDecimals)
+      .replace(".0", "");
+    return formatted;
+  };
+
+  const convertBackToBigNumber = (formattedValue: string) => {
+    if (formattedValue === "unlimited") {
+      return ethers.constants.MaxUint256;
+    } else {
+      return ethers.utils.parseUnits(formattedValue, tokenDecimals);
+    }
+  };
+
+  // merge existing (output format) with incoming (input format)
   const newConditionParsed = ClaimConditionInputSchema.parse({
     ...existingConditions[index],
     price: existingConditions[index].price.toString(),
-    maxQuantity: ethers.utils.formatUnits(
-      existingConditions[index].maxQuantity,
-      tokenDecimals,
-    ),
-    quantityLimitPerTransaction: ethers.utils.formatUnits(
+    maxQuantity: revertToFormattedAmount(existingConditions[index].maxQuantity),
+    quantityLimitPerTransaction: revertToFormattedAmount(
       existingConditions[index].quantityLimitPerTransaction,
-      tokenDecimals,
     ),
     ...claimConditionInput,
   });
+
   // convert to output claim condition
-  const mergedConditionOutput =
-    ClaimConditionOutputSchema.parse(newConditionParsed);
+  const mergedConditionOutput = ClaimConditionOutputSchema.parse({
+    ...newConditionParsed,
+    maxQuantity: convertBackToBigNumber(newConditionParsed.maxQuantity),
+    quantityLimitPerTransaction: convertBackToBigNumber(
+      newConditionParsed.quantityLimitPerTransaction,
+    ),
+  });
 
   return existingConditions.map((existingOutput, i) => {
     let newConditionAtIndex;
@@ -182,13 +205,9 @@ export function updateExsitingClaimConditions(
     return {
       ...newConditionAtIndex,
       price: newConditionAtIndex.price.toString(), // manually transform back to input price type
-      maxQuantity: ethers.utils.formatUnits(
-        newConditionAtIndex.maxQuantity,
-        tokenDecimals,
-      ),
-      quantityLimitPerTransaction: ethers.utils.formatUnits(
+      maxQuantity: revertToFormattedAmount(newConditionAtIndex.maxQuantity),
+      quantityLimitPerTransaction: revertToFormattedAmount(
         newConditionAtIndex.quantityLimitPerTransaction,
-        tokenDecimals,
       ),
     };
   });

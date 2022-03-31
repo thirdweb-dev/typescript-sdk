@@ -13,7 +13,7 @@ import {
   getClaimerProofs,
   processClaimConditionInputs,
   transformResultToClaimCondition,
-  updateExsitingClaimConditions,
+  updateExistingClaimConditions,
 } from "../../common/claim-conditions";
 import { MaxUint256 } from "@ethersproject/constants";
 import { isBrowser } from "../../common/utils";
@@ -351,7 +351,7 @@ export class DropErc1155ClaimConditions {
     claimConditionInput: ClaimConditionInput,
   ): Promise<TransactionResult> {
     const existingConditions = await this.getAll(tokenId);
-    const newConditionInputs = updateExsitingClaimConditions(
+    const newConditionInputs = updateExistingClaimConditions(
       index,
       claimConditionInput,
       existingConditions,
