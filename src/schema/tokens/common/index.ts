@@ -44,6 +44,11 @@ export const CommonNFTInput = CommonTokenInput.extend({
 /**
  * @internal
  */
+export const NFTInputOrUriSchema = z.union([CommonNFTInput, z.string()]);
+
+/**
+ * @internal
+ */
 export const CommonNFTOutput = CommonTokenOutput.extend({
   animation_url: z.string().optional(),
   properties: OptionalPropertiesOutput,
@@ -53,6 +58,10 @@ export const CommonNFTOutput = CommonTokenOutput.extend({
  * @public
  */
 export type NFTMetadataInput = z.input<typeof CommonNFTInput>;
+/**
+ * @public
+ */
+export type NFTMetadataOrUri = z.input<typeof NFTInputOrUriSchema>;
 /**
  * @public
  */

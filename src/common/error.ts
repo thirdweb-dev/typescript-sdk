@@ -1,4 +1,6 @@
 import { BigNumberish } from "ethers";
+import { Network } from "@ethersproject/providers";
+
 /**
  * Error that may get thrown if IPFS returns nothing for a given uri.
  * @internal
@@ -154,6 +156,7 @@ export class FunctionDeprecatedError extends Error {
     super(`FUNCTION DEPRECATED. ${message ? `Use ${message} instead` : ""}`);
   }
 }
+
 /**
  * Thrown when trying to retrieve a listing from a marketplace that doesn't exist
  * @internal
@@ -237,4 +240,117 @@ export class AuctionHasNotEndedError extends Error {
       }`,
     );
   }
+}
+
+/**
+ * @public
+ */
+export class TransactionError extends Error {
+  public reason: string;
+  public from: string;
+  public to: string;
+  public data: string;
+  public chain: Network;
+  public rpcUrl: string;
+
+  constructor(
+    reason: string,
+    from: string,
+    to: string,
+    data: string,
+    network: Network,
+    rpcUrl: string,
+    raw: string,
+  ) {
+    let builtErrorMsg = "Contract transaction failed\n\n";
+    builtErrorMsg += `Message: ${reason}`;
+    builtErrorMsg += "\n\n| Transaction info |\n";
+    builtErrorMsg += withSpaces("from", from);
+    builtErrorMsg += withSpaces("to", to);
+    builtErrorMsg += withSpaces("data", data);
+    builtErrorMsg += withSpaces(
+      `chain`,
+      `${network.name} (${network.chainId})`,
+    );
+    try {
+      const url = new URL(rpcUrl);
+      builtErrorMsg += withSpaces(`RPC`, url.hostname);
+    } catch (e2) {
+      // ignore if can't parse URL
+    }
+    builtErrorMsg += "\n\n";
+    builtErrorMsg +=
+      "Need help with this error? Join our community: https://discord.gg/thirdweb";
+    builtErrorMsg += "\n\n\n\n";
+    builtErrorMsg += "| Raw error |";
+    builtErrorMsg += "\n\n";
+    builtErrorMsg += raw;
+    super(builtErrorMsg);
+    this.reason = reason;
+    this.from = from;
+    this.to = to;
+    this.data = data;
+    this.chain = network;
+    this.rpcUrl = rpcUrl;
+  }
+}
+
+/**
+ * @internal
+ * @param error
+ * @param network
+ * @param signerAddress
+ * @param contractAddress
+ */
+export async function convertToTWError(
+  error: any,
+  network: Network,
+  signerAddress: string,
+  contractAddress: string,
+): Promise<TransactionError> {
+  let raw: string;
+  if (error.data) {
+    // metamask errors comes as objects, apply parsing on data object
+    // TODO test errors from other wallets
+    raw = JSON.stringify(error.data);
+  } else if (error instanceof Error) {
+    // regular ethers.js error
+    raw = error.message;
+  } else {
+    // not sure what this is, just throw it back
+    return error;
+  }
+  const reason = parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+  const data = parseMessageParts(/.*?"data[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+  const rpcUrl = parseMessageParts(/.*?"url[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+  let from = parseMessageParts(/.*?"from[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+  let to = parseMessageParts(/.*?"to[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+  if (to === "") {
+    // fallback to contractAddress
+    to = contractAddress;
+  }
+  if (from === "") {
+    // fallback to signerAddress
+    from = signerAddress;
+  }
+  return new TransactionError(reason, from, to, data, network, rpcUrl, raw);
+}
+
+function withSpaces(label: string, content: string) {
+  if (content === "") {
+    return content;
+  }
+  const spaces = Array(10 - label.length)
+    .fill(" ")
+    .join("");
+  return `\n${label}:${spaces}${content}`;
+}
+
+function parseMessageParts(regex: RegExp, raw: string): string {
+  const msgMatches = raw.match(regex) || [];
+  let extracted = "";
+  if (msgMatches?.length > 0) {
+    extracted += msgMatches[1];
+  }
+  return extracted;
 }

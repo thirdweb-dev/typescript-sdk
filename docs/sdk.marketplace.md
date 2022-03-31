@@ -35,14 +35,16 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [auction](./sdk.marketplace.auction.md) |  | [MarketplaceAuction](./sdk.marketplaceauction.md) | Handle direct listings, see [MarketplaceAuction](./sdk.marketplaceauction.md) |
+|  [auction](./sdk.marketplace.auction.md) |  | [MarketplaceAuction](./sdk.marketplaceauction.md) | Auctions |
 |  [contractFactory](./sdk.marketplace.contractfactory.md) | <code>static</code> | typeof Marketplace\_\_factory |  |
 |  [contractRoles](./sdk.marketplace.contractroles.md) | <code>static</code> | readonly \["admin", "lister", "asset"\] |  |
 |  [contractType](./sdk.marketplace.contracttype.md) | <code>static</code> | "marketplace" |  |
-|  [direct](./sdk.marketplace.direct.md) |  | [MarketplaceDirect](./sdk.marketplacedirect.md) | Handle direct listings, see [MarketplaceDirect](./sdk.marketplacedirect.md) |
+|  [direct](./sdk.marketplace.direct.md) |  | [MarketplaceDirect](./sdk.marketplacedirect.md) | Direct listings |
 |  [encoder](./sdk.marketplace.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;MarketplaceContract&gt; |  |
 |  [estimator](./sdk.marketplace.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;MarketplaceContract&gt; |  |
+|  [events](./sdk.marketplace.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;MarketplaceContract&gt; |  |
 |  [metadata](./sdk.marketplace.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;MarketplaceContract, typeof Marketplace.schema&gt; |  |
+|  [platformFee](./sdk.marketplace.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;MarketplaceContract&gt; |  |
 |  [roles](./sdk.marketplace.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;MarketplaceContract, typeof [Marketplace.contractRoles](./sdk.marketplace.contractroles.md)<!-- -->\[number\]&gt; |  |
 
 ## Methods
@@ -51,14 +53,16 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 |  --- | --- | --- |
 |  [allowListingFromAnyAsset()](./sdk.marketplace.allowlistingfromanyasset.md) |  | Allow listings from any NFT contract |
 |  [allowListingFromSpecificAssetOnly(contractAddress)](./sdk.marketplace.allowlistingfromspecificassetonly.md) |  | Restrict listing NFTs only from the specified NFT contract address. It is possible to allow listing from multiple contract addresses. |
-|  [buyoutListing(listingId, quantityDesired, receiver)](./sdk.marketplace.buyoutlisting.md) |  | Convenience function to buy a Direct or Auction listing. |
+|  [buyoutListing(listingId, quantityDesired, receiver)](./sdk.marketplace.buyoutlisting.md) |  | Purchase NFTs |
+|  [getActiveListings()](./sdk.marketplace.getactivelistings.md) |  | Get all active listings |
 |  [getAddress()](./sdk.marketplace.getaddress.md) |  |  |
 |  [getAllListings(filter)](./sdk.marketplace.getalllistings.md) |  | Get all the listings |
 |  [getBidBufferBps()](./sdk.marketplace.getbidbufferbps.md) |  | Get the buffer in basis points between offers |
 |  [getListing(listingId)](./sdk.marketplace.getlisting.md) |  | Convenience function to get either a direct or auction listing |
 |  [getTimeBufferInSeconds()](./sdk.marketplace.gettimebufferinseconds.md) |  | get the buffer time in seconds between offers |
+|  [getTotalCount()](./sdk.marketplace.gettotalcount.md) |  | Get the total number of Listings |
 |  [isRestrictedToListerRoleOnly()](./sdk.marketplace.isrestrictedtolisterroleonly.md) |  | Get whether listing is restricted only to addresses with the Lister role |
 |  [onNetworkUpdated(network)](./sdk.marketplace.onnetworkupdated.md) |  |  |
-|  [setBidBufferBps(bufferBps)](./sdk.marketplace.setbidbufferbps.md) |  | Set the Bid buffer: this is a percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items. |
-|  [setTimeBufferInSeconds(bufferInSeconds)](./sdk.marketplace.settimebufferinseconds.md) |  | Set the Time buffer: this is measured in seconds (e.g. 15 minutes or 900 seconds). If a winning bid is made within the buffer of the auction closing (e.g. 15 minutes within the auction closing), the auction's closing time is increased by the buffer to prevent buyers from making last minute winning bids, and to give time to other buyers to make a higher bid if they wish to. |
+|  [setBidBufferBps(bufferBps)](./sdk.marketplace.setbidbufferbps.md) |  | Set the Auction bid buffer |
+|  [setTimeBufferInSeconds(bufferInSeconds)](./sdk.marketplace.settimebufferinseconds.md) |  | Set the Auction Time buffer: |
 

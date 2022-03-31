@@ -30,6 +30,8 @@ import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { ChainId } from "../../constants";
+import { convertToTWError } from "../../common";
+import { isBrowser } from "../../common/utils";
 
 /**
  * @internal
@@ -37,6 +39,7 @@ import { ChainId } from "../../constants";
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
+  private customOverrides: () => CallOverrides = () => ({});
   private writeContract;
   public readContract;
 
@@ -106,6 +109,12 @@ export class ContractWrapper<
    * @internal
    */
   public async getCallOverrides(): Promise<CallOverrides> {
+    if (isBrowser()) {
+      // When running in the browser, let the wallet suggest gas estimates
+      // this means that the gas speed preferences set in the SDK options are ignored in a browser context
+      // but it also allows users to select their own gas speed prefs per tx from their wallet directly
+      return {};
+    }
     const feeData = await this.getProvider().getFeeData();
     const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
     if (supports1559) {
@@ -234,6 +243,13 @@ export class ContractWrapper<
   /**
    * @internal
    */
+  public withTransactionOverride(hook: () => CallOverrides) {
+    this.customOverrides = hook;
+  }
+
+  /**
+   * @internal
+   */
   public async sendTransaction(
     fn: keyof TContract["functions"],
     args: any[],
@@ -242,7 +258,13 @@ export class ContractWrapper<
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
-
+    // if a custom override is set, merge our override with the custom one
+    callOverrides = {
+      ...callOverrides,
+      ...this.customOverrides(),
+    };
+    // clear up the override (single use)
+    this.customOverrides = () => ({});
     if (
       this.options?.gasless &&
       ("openzeppelin" in this.options.gasless ||
@@ -284,31 +306,11 @@ export class ContractWrapper<
     try {
       return await func(...args, callOverrides);
     } catch (e) {
-      throw await this.readableErrorWithRevertReason(e);
+      const network = await this.getProvider().getNetwork();
+      const signerAddress = await this.getSignerAddress();
+      const contractAddress = await this.readContract.address;
+      throw await convertToTWError(e, network, signerAddress, contractAddress);
     }
-  }
-
-  private async readableErrorWithRevertReason(e: any): Promise<Error> {
-    if (e instanceof Error) {
-      const erasedError = e as any;
-      if (erasedError.reason && erasedError.code) {
-        // this is definitely a ethers.js error, try to extract error message in body
-        const regex =
-          /.*?message\\":\\"([^"]*)\\".*?data\\":\\"([^"]*)\\".*?from\\":\\"([^"]*)\\".*?to\\":\\"([^"]*)\\"/;
-        const matches = e.message.match(regex) || [];
-        if (matches?.length > 3) {
-          const message = matches[1];
-          const data = matches[2];
-          const from = matches[3];
-          const to = matches[4];
-          const network = await this.getProvider().getNetwork();
-          return new Error(
-            `Contract transaction failed: "${message}"\n\nTransaction info:\n- from: "${from}"\n- to: "${to}"\n- chain: "${network.name}" (${network.chainId})\n- data: "${data}"\n`,
-          );
-        }
-      }
-    }
-    return e;
   }
 
   /**
@@ -523,7 +525,9 @@ export class ContractWrapper<
       }
       return resp.txHash;
     }
-    throw new Error("relay transaction failed");
+    throw new Error(
+      `relay transaction failed with status: ${response.status} (${response.statusText})`,
+    );
   }
 
   private async defenderSendFunction(
@@ -640,6 +644,8 @@ export class ContractWrapper<
       const result = JSON.parse(resp.result);
       return result.txHash;
     }
-    throw new Error("relay transaction failed");
+    throw new Error(
+      `relay transaction failed with status: ${response.status} (${response.statusText})`,
+    );
   }
 }

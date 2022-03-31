@@ -9,14 +9,14 @@ Verify that a payload is correctly signed
 <b>Signature:</b>
 
 ```typescript
-verify(signedPayload: SignedPayload): Promise<boolean>;
+verify(signedPayload: SignedPayload721): Promise<boolean>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  signedPayload | [SignedPayload](./sdk.signedpayload.md) | the payload to verify |
+|  signedPayload | [SignedPayload721](./sdk.signedpayload721.md) | the payload to verify |
 
 <b>Returns:</b>
 

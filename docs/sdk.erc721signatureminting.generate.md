@@ -9,18 +9,18 @@ Generate a signature that can be used to mint a dynamic NFT
 <b>Signature:</b>
 
 ```typescript
-generate(mintRequest: PayloadToSign): Promise<SignedPayload>;
+generate(mintRequest: PayloadToSign721): Promise<SignedPayload721>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequest | [PayloadToSign](./sdk.payloadtosign.md) | the payload to sign |
+|  mintRequest | [PayloadToSign721](./sdk.payloadtosign721.md) | the payload to sign |
 
 <b>Returns:</b>
 
-Promise&lt;[SignedPayload](./sdk.signedpayload.md)<!-- -->&gt;
+Promise&lt;[SignedPayload721](./sdk.signedpayload721.md)<!-- -->&gt;
 
 the signed payload and the corresponding signature
 
@@ -39,14 +39,17 @@ const nftMetadata = {
 };
 
 const startTime = new Date();
-const endTime = new Date(Date.now() + 24_HOURS);
+const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
 const payload = {
   metadata: nftMetadata, // The NFT to mint
   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
   price: 0.5, // the price to pay for minting
   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
   mintStartTime: now, // can mint anytime from now
-  mintEndTime: endTime, // to 24h from now
+  mintEndTime: endTime, // to 24h from now,
+  royaltyRecipient: "0x...", // custom royalty recipient for this NFT
+  royaltyBps: 100, // custom royalty fees for this NFT (in bps)
+  primarySaleRecipient: "0x...", // custom sale recipient for this NFT
 };
 
 const signedPayload = contract.signature.generate(payload);

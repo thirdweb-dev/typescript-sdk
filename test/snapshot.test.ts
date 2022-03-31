@@ -23,7 +23,10 @@ describe("Snapshots", async () => {
     "0x14fb3a9B317612ddc6d6Cc3c907CD9F2Aa091eE7",
   ];
 
-  const maxClaim = [0, 0, 0, 0];
+  const input = leafs.map((address) => ({
+    address,
+    maxClaimable: 0,
+  }));
 
   let storage: IStorage;
 
@@ -32,13 +35,7 @@ describe("Snapshots", async () => {
   });
 
   beforeEach(async () => {
-    const result = await createSnapshot(
-      {
-        addresses: leafs,
-        maxClaimablePerAddress: maxClaim,
-      },
-      storage,
-    );
+    const result = await createSnapshot(input, storage);
     snapshot = result.snapshot;
     uri = result.snapshotUri;
     merkleRoot = result.merkleRoot;
@@ -52,10 +49,10 @@ describe("Snapshots", async () => {
   });
 
   it("should warn about duplicate leafs", async () => {
-    const duplicateLeafs = {
-      addresses: [...leafs, ...leafs],
-      maxClaimablePerAddress: maxClaim,
-    };
+    const duplicateLeafs = input.concat({
+      address: "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+      maxClaimable: 0,
+    });
 
     try {
       await createSnapshot(duplicateLeafs, storage);

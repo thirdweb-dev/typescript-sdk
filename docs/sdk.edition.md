@@ -40,7 +40,9 @@ const contract = sdk.getEdition("{{contract_address}}");
 |  [contractType](./sdk.edition.contracttype.md) | <code>static</code> | "edition" |  |
 |  [encoder](./sdk.edition.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;TokenERC1155&gt; |  |
 |  [estimator](./sdk.edition.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TokenERC1155&gt; |  |
+|  [events](./sdk.edition.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;TokenERC1155&gt; |  |
 |  [metadata](./sdk.edition.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC1155, typeof Edition.schema&gt; |  |
+|  [platformFee](./sdk.edition.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;TokenERC1155&gt; |  |
 |  [primarySale](./sdk.edition.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;TokenERC1155&gt; |  |
 |  [roles](./sdk.edition.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC1155, typeof [Edition.contractRoles](./sdk.edition.contractroles.md)<!-- -->\[number\]&gt; |  |
 |  [royalty](./sdk.edition.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;TokenERC1155, typeof Edition.schema&gt; | Configure royalties |
@@ -50,8 +52,9 @@ const contract = sdk.getEdition("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [increaseSupply(to, tokenId, additionalSupply)](./sdk.edition.increasesupply.md) |  | Increase the supply of an existing NFT |
 |  [mint(metadataWithSupply)](./sdk.edition.mint.md) |  | Mint NFT for the connected wallet |
+|  [mintAdditionalSupply(tokenId, additionalSupply)](./sdk.edition.mintadditionalsupply.md) |  | Increase the supply of an existing NFT and mint it to the connected wallet |
+|  [mintAdditionalSupplyTo(to, tokenId, additionalSupply)](./sdk.edition.mintadditionalsupplyto.md) |  | Increase the supply of an existing NFT and mint it to a given wallet address |
 |  [mintBatch(metadatas)](./sdk.edition.mintbatch.md) |  | Mint Many NFTs for the connected wallet |
 |  [mintBatchTo(to, metadataWithSupply)](./sdk.edition.mintbatchto.md) |  | Mint Many NFTs with limited supplies |
 |  [mintTo(to, metadataWithSupply)](./sdk.edition.mintto.md) |  | Mint an NFT with a limited supply |

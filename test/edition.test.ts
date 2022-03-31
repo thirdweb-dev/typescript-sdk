@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Edition } from "../src/index";
-import { sdk, signers } from "./before.test";
+import { sdk, signers, storage } from "./before.test";
 
 import { assert, expect } from "chai";
 import { AddressZero } from "@ethersproject/constants";
@@ -45,6 +45,75 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
       1,
     ]);
     expect(parseFloat(cost)).gt(0);
+  });
+
+  it("should respect pagination", async () => {
+    const nfts = [];
+    for (let i = 0; i < 100; i++) {
+      nfts.push({
+        metadata: { name: `Test${i}` },
+        supply: 10,
+      });
+    }
+    await bundleContract.mintBatch(nfts);
+    const total = await bundleContract.getTotalCount();
+    expect(total.toNumber()).to.eq(100);
+    const page1 = await bundleContract.getAll({
+      count: 2,
+      start: 0,
+    });
+    expect(page1).to.be.an("array").length(2);
+    const page2 = await bundleContract.getAll({
+      count: 2,
+      start: 20,
+    });
+    expect(page2).to.be.an("array").length(2);
+    expect(page2[0].metadata.name).to.eq("Test20");
+    expect(page2[1].metadata.name).to.eq("Test21");
+  });
+
+  it("mint additional suply", async () => {
+    const tx = await bundleContract.mint({
+      metadata: {
+        name: "Bundle 1",
+        description: "Bundle 1",
+        image: "fake://myownfakeipfs",
+      },
+      supply: 10,
+    });
+    const nft = await bundleContract.get(tx.id);
+    expect(nft.supply.toNumber()).to.eq(10);
+    await bundleContract.mintAdditionalSupply(tx.id, 10);
+    const nft2 = await bundleContract.get(tx.id);
+    expect(nft2.supply.toNumber()).to.eq(20);
+  });
+
+  it("should mint with URI", async () => {
+    const uri = await storage.uploadMetadata({
+      name: "Test1",
+    });
+    await bundleContract.mint({
+      metadata: uri,
+      supply: 10,
+    });
+    const nft = await bundleContract.get("0");
+    assert.isNotNull(nft);
+    assert.equal(nft.metadata.name, "Test1");
+  });
+
+  it("should mint batch with URI", async () => {
+    const uri = await storage.uploadMetadata({
+      name: "Test1",
+    });
+    await bundleContract.mintBatch([
+      {
+        metadata: uri,
+        supply: 10,
+      },
+    ]);
+    const nft = await bundleContract.get("0");
+    assert.isNotNull(nft);
+    assert.equal(nft.metadata.name, "Test1");
   });
 
   it("should return all owned collection tokens", async () => {

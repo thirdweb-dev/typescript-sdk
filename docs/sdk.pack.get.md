@@ -9,14 +9,14 @@ Get a pack by id
 <b>Signature:</b>
 
 ```typescript
-get(packId: string): Promise<PackMetadata>;
+get(packId: BigNumberish): Promise<PackMetadata>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  packId | string | the id of the pack to fetch |
+|  packId | BigNumberish | the id of the pack to fetch |
 
 <b>Returns:</b>
 

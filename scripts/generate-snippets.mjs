@@ -54,6 +54,11 @@ const modules = json.members[0].members.filter(
       .findIndex((property) => property.name === "contractType") > -1,
 );
 
+const bases = ["Erc20", "Erc721", "Erc1155"];
+const baseClasses = json.members[0].members.filter(
+  (m) => m.kind === "Class" && bases.includes(m.name),
+);
+
 function parseExampleTag(docComment) {
   const exampleBlocks = docComment._customBlocks.filter(
     (b) => b._blockTag._tagName === "@example",
@@ -77,7 +82,7 @@ function parseExampleTag(docComment) {
   return examples;
 }
 
-const baseDocUrl = "https://typescript-docs.thirdweb.com/sdk.";
+const baseDocUrl = "https://docs.thirdweb.com/typescript/sdk.";
 
 const extractReferenceLink = (m, kind, contractName) => {
   if (kind === "Property") {
@@ -118,7 +123,15 @@ const moduleMap = modules.reduce((acc, m) => {
   const parserContext = tsdocParser.parseString(m.docComment);
   const docComment = parserContext.docComment;
   const examples = parseExampleTag(docComment);
-
+  const baseClassesRefs = m.excerptTokens
+    .filter((e) => e.kind === "Reference")
+    .map((e) => e.text);
+  const baseClassCode = baseClasses.find((m_) =>
+    baseClassesRefs.includes(m_.name),
+  );
+  const baseClassMembers = baseClassCode
+    ? parseMembers(baseClassCode.members, "Method", baseClassCode.name)
+    : [];
   if (Object.keys(examples).length > 0) {
     acc[m.name] = {
       name: m.name,
@@ -127,7 +140,9 @@ const moduleMap = modules.reduce((acc, m) => {
         ? Formatter.renderDocNode(docComment.remarksBlock.content)
         : null,
       examples,
-      methods: parseMembers(m.members, "Method", m.name),
+      methods: parseMembers(m.members, "Method", m.name).concat(
+        baseClassMembers,
+      ),
       properties: parseMembers(m.members, "Property", m.name),
       reference: extractReferenceLink(m),
     };

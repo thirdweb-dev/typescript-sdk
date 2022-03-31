@@ -1,8 +1,4 @@
-import {
-  CommonNFTInput,
-  NFTMetadataInput,
-  NFTMetadataOwner,
-} from "../schema/tokens/common";
+import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema/tokens/common";
 import type {
   IStorage,
   NetworkOrSignerOrProvider,
@@ -21,7 +17,9 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { Erc721SignatureMinting } from "../core/classes/erc-721-signature-minting";
 import { GasCostEstimator } from "../core/classes";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
-import { BigNumber } from "ethers";
+import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -55,7 +53,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
   >;
   public encoder: ContractEncoder<TokenERC721>;
   public estimator: GasCostEstimator<TokenERC721>;
+  public events: ContractEvents<TokenERC721>;
   public primarySale: ContractPrimarySale<TokenERC721>;
+  public platformFee: ContractPlatformFee<TokenERC721>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token
@@ -121,6 +121,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
       this.roles,
       this.storage,
     );
+    this.events = new ContractEvents(this.contractWrapper);
+    this.platformFee = new ContractPlatformFee(this.contractWrapper);
   }
 
   /** ******************************
@@ -133,7 +135,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * @remarks See {@link NFTCollection.mintTo}
    */
   public async mint(
-    metadata: NFTMetadataInput,
+    metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
     return this.mintTo(await this.contractWrapper.getSignerAddress(), metadata);
   }
@@ -163,11 +165,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
    */
   public async mintTo(
     to: string,
-    metadata: NFTMetadataInput,
+    metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    const uri = await this.storage.uploadMetadata(
-      CommonNFTInput.parse(metadata),
-    );
+    const uri = await uploadOrExtractURI(metadata, this.storage);
     const receipt = await this.contractWrapper.sendTransaction("mintTo", [
       to,
       uri,
@@ -193,7 +193,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * @remarks See {@link NFTCollection.mintBatchTo}
    */
   public async mintBatch(
-    metadatas: NFTMetadataInput[],
+    metadatas: NFTMetadataOrUri[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     return this.mintBatchTo(
       await this.contractWrapper.getSignerAddress(),
@@ -230,11 +230,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
    */
   public async mintBatchTo(
     to: string,
-    metadatas: NFTMetadataInput[],
+    metadatas: NFTMetadataOrUri[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const { metadataUris: uris } = await this.storage.uploadMetadataBatch(
-      metadatas.map((m) => CommonNFTInput.parse(m)),
-    );
+    const uris = await uploadOrExtractURIs(metadatas, this.storage);
     const encoded = uris.map((uri) =>
       this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [
         to,
@@ -257,23 +255,5 @@ export class NFTCollection extends Erc721<TokenERC721> {
         data: () => this.get(id),
       };
     });
-  }
-
-  /**
-   * @internal
-   */
-  public addTransferEventListener(
-    listener: (from: string, to: string, tokenId: BigNumber) => void,
-  ) {
-    this.contractWrapper.readContract.on("Transfer", (from, to, tokenId) => {
-      listener(from, to, tokenId);
-    });
-  }
-
-  /**
-   * @internal
-   */
-  public removeTransferEventListeners() {
-    this.contractWrapper.readContract.removeAllListeners("Transfer");
   }
 }

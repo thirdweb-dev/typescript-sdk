@@ -2,7 +2,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { NFTCollection } from "../src/contracts";
-import { sdk, signers } from "./before.test";
+import { sdk, signers, storage } from "./before.test";
 
 global.fetch = require("node-fetch");
 
@@ -48,10 +48,54 @@ describe("NFT Contract", async () => {
     expect(nfts).to.be.an("array").length(2);
   });
 
+  it("should respect pagination", async () => {
+    const nfts = [];
+    for (let i = 0; i < 100; i++) {
+      nfts.push({
+        name: `Test${i}`,
+      });
+    }
+    await nftContract.mintBatch(nfts);
+    const total = await nftContract.getTotalCount();
+    expect(total.toNumber()).to.eq(100);
+    const page1 = await nftContract.getAll({
+      count: 2,
+      start: 0,
+    });
+    expect(page1).to.be.an("array").length(2);
+    const page2 = await nftContract.getAll({
+      count: 2,
+      start: 20,
+    });
+    expect(page2).to.be.an("array").length(2);
+    expect(page2[0].metadata.name).to.eq("Test20");
+    expect(page2[1].metadata.name).to.eq("Test21");
+  });
+
   it("should fetch a single nft", async () => {
     await nftContract.mint({
       name: "Test1",
     });
+    const nft = await nftContract.get("0");
+    assert.isNotNull(nft);
+    assert.equal(nft.metadata.name, "Test1");
+  });
+
+  it("should mint with URI", async () => {
+    const uri = await storage.uploadMetadata({
+      name: "Test1",
+    });
+    await nftContract.mint(uri);
+    const nft = await nftContract.get("0");
+    assert.isNotNull(nft);
+    assert.equal(nft.metadata.name, "Test1");
+  });
+
+  it("should mint batch with URI", async () => {
+    const uri = await storage.uploadMetadata({
+      name: "Test1",
+    });
+    await nftContract.mintBatch([uri]);
     const nft = await nftContract.get("0");
     assert.isNotNull(nft);
     assert.equal(nft.metadata.name, "Test1");
@@ -95,5 +139,29 @@ describe("NFT Contract", async () => {
     ).to.throw;
   });
 
-  // TODO signature based minting tests
+  it("should mint complex metadata", async () => {
+    const tx = await nftContract.mint({
+      name: "Test2",
+      description: "description",
+      image: "https://img.net",
+      animation_url: "https://img.net",
+      background_color: "#000000",
+      external_url: "https://img.net",
+      properties: {
+        arr: ["1", "2", "3"],
+        obj: {
+          anum: 12,
+          astr: "123",
+        },
+        val: "1234",
+      },
+      arr: ["1", "2", "3"],
+      obj: {
+        anum: 12,
+        astr: "123",
+      },
+      val: "1234",
+    });
+    expect(tx.id.toNumber()).to.eq(0);
+  });
 });

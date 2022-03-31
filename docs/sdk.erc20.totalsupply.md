@@ -9,9 +9,9 @@ The total supply for this Token
 <b>Signature:</b>
 
 ```typescript
-totalSupply(): Promise<BigNumber>;
+totalSupply(): Promise<CurrencyValue>;
 ```
 <b>Returns:</b>
 
-Promise&lt;BigNumber&gt;
+Promise&lt;[CurrencyValue](./sdk.currencyvalue.md)<!-- -->&gt;
 

@@ -16,7 +16,7 @@ getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectList
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  filter | MarketplaceFilter | optional filters |
+|  filter | MarketplaceFilter | optional filter parameters |
 
 <b>Returns:</b>
 
@@ -24,7 +24,10 @@ Promise&lt;([AuctionListing](./sdk.auctionlisting.md) \| [DirectListing](./sdk.d
 
 ## Remarks
 
-Fetch all the active listings from this marketplace contract.
+Fetch all the listings from this marketplace contract, including sold ones.
+
+## Example
+
 
 ```javascript
 const listings = await contract.getAllListings();

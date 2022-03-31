@@ -4,7 +4,7 @@
 
 ## Token class
 
-Create a standard crypto token or crypto currency.
+Create a standard crypto token or cryptocurrency.
 
 <b>Signature:</b>
 
@@ -40,8 +40,12 @@ const contract = sdk.getToken("{{contract_address}}");
 |  [contractType](./sdk.token.contracttype.md) | <code>static</code> | "token" |  |
 |  [encoder](./sdk.token.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;TokenERC20&gt; |  |
 |  [estimator](./sdk.token.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TokenERC20&gt; |  |
+|  [events](./sdk.token.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;TokenERC20&gt; |  |
+|  [history](./sdk.token.history.md) |  | [TokenERC20History](./sdk.tokenerc20history.md) |  |
 |  [metadata](./sdk.token.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC20, typeof Token.schema&gt; |  |
+|  [platformFee](./sdk.token.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;TokenERC20&gt; |  |
 |  [roles](./sdk.token.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC20, typeof [Token.contractRoles](./sdk.token.contractroles.md)<!-- -->\[number\]&gt; |  |
+|  [signature](./sdk.token.signature.md) |  | [Erc20SignatureMinting](./sdk.erc20signatureminting.md) | Signature Minting |
 
 ## Methods
 

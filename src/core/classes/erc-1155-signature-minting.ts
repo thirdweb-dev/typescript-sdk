@@ -8,8 +8,7 @@ import {
   SignedPayload1155,
 } from "../../schema/contracts/common/signature";
 import { TransactionResultWithId } from "../types";
-import { setErc20Allowance } from "../../common/currency";
-import { BigNumber } from "ethers";
+import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { ITokenERC1155, TokenERC1155 } from "@thirdweb-dev/contracts";
@@ -17,6 +16,8 @@ import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts/dist/TokenERC1155";
+import { BigNumber } from "ethers";
+import { uploadOrExtractURIs } from "../../common/nft";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -65,11 +66,11 @@ export class Erc1155SignatureMinting {
   ): Promise<TransactionResultWithId> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
-    const message = this.mapPayloadToContractStruct(mintRequest);
+    const message = await this.mapPayloadToContractStruct(mintRequest);
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
-      BigNumber.from(message.pricePerToken),
+      message.pricePerToken.mul(message.quantity),
       mintRequest.currencyAddress,
       overrides,
     );
@@ -93,13 +94,58 @@ export class Erc1155SignatureMinting {
   }
 
   /**
+   * Mint any number of dynamically generated NFT at once
+   * @remarks Mint multiple dynamic NFTs in one transaction. Note that this is only possible for free mints (cannot batch mints with a price attached to it for security reasons)
+   * @param signedPayloads - the array of signed payloads to mint
+   */
+  public async mintBatch(
+    signedPayloads: SignedPayload1155[],
+  ): Promise<TransactionResultWithId[]> {
+    const contractPayloads = await Promise.all(
+      signedPayloads.map(async (s) => {
+        const message = await this.mapPayloadToContractStruct(s.payload);
+        const signature = s.signature;
+        const price = s.payload.price;
+        if (BigNumber.from(price).gt(0)) {
+          throw new Error(
+            "Can only batch free mints. For mints with a price, use regular mint()",
+          );
+        }
+        return {
+          message,
+          signature,
+        };
+      }),
+    );
+    const encoded = contractPayloads.map((p) => {
+      return this.contractWrapper.readContract.interface.encodeFunctionData(
+        "mintWithSignature",
+        [p.message, p.signature],
+      );
+    });
+    const receipt = await this.contractWrapper.multiCall(encoded);
+    const events =
+      this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+        "TokensMintedWithSignature",
+        receipt.logs,
+      );
+    if (events.length === 0) {
+      throw new Error("No MintWithSignature event found");
+    }
+    return events.map((log) => ({
+      id: log.args.tokenIdMinted,
+      receipt,
+    }));
+  }
+
+  /**
    * Verify that a payload is correctly signed
    * @param signedPayload - the payload to verify
    */
   public async verify(signedPayload: SignedPayload1155): Promise<boolean> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
-    const message = this.mapPayloadToContractStruct(mintRequest);
+    const message = await this.mapPayloadToContractStruct(mintRequest);
     const verification: [boolean, string] =
       await this.contractWrapper.readContract.verify(message, signature);
     return verification[0];
@@ -119,7 +165,7 @@ export class Erc1155SignatureMinting {
    * };
    *
    * const startTime = new Date();
-   * const endTime = new Date(Date.now() + 24_HOURS);
+   * const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
    * const payload = {
    *   metadata: nftMetadata, // The NFT to mint
    *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
@@ -128,6 +174,9 @@ export class Erc1155SignatureMinting {
    *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
    *   mintStartTime: now, // can mint anytime from now
    *   mintEndTime: endTime, // to 24h from now
+   *   royaltyRecipient: "0x...", // custom royalty recipient for this NFT
+   *   royaltyBps: 100, // custom royalty fees for this NFT (in bps)
+   *   primarySaleRecipient: "0x...", // custom sale recipient for this NFT
    * };
    *
    * const signedPayload = contract.signature.generate(payload);
@@ -162,9 +211,8 @@ export class Erc1155SignatureMinting {
       (m) => Signature1155PayloadInput.parse(m),
     );
 
-    const { metadataUris: uris } = await this.storage.uploadMetadataBatch(
-      parsedRequests.map((r) => r.metadata),
-    );
+    const metadatas = parsedRequests.map((r) => r.metadata);
+    const uris = await uploadOrExtractURIs(metadatas, this.storage);
 
     const chainId = await this.contractWrapper.getChainID();
     const signer = this.contractWrapper.getSigner();
@@ -186,7 +234,7 @@ export class Erc1155SignatureMinting {
             verifyingContract: this.contractWrapper.readContract.address,
           },
           { MintRequest: MintRequest1155 }, // TYPEHASH
-          this.mapPayloadToContractStruct(finalPayload),
+          await this.mapPayloadToContractStruct(finalPayload),
         );
         return {
           payload: finalPayload,
@@ -208,15 +256,20 @@ export class Erc1155SignatureMinting {
    * @param mintRequest - The payload to map.
    * @returns - The mapped payload.
    */
-  private mapPayloadToContractStruct(
+  private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri1155,
-  ): ITokenERC1155.MintRequestStructOutput {
+  ): Promise<ITokenERC1155.MintRequestStructOutput> {
+    const normalizedPricePerToken = await normalizePriceValue(
+      this.contractWrapper.getProvider(),
+      mintRequest.price,
+      mintRequest.currencyAddress,
+    );
     return {
       to: mintRequest.to,
       tokenId: mintRequest.tokenId,
       uri: mintRequest.uri,
       quantity: mintRequest.quantity,
-      pricePerToken: mintRequest.price,
+      pricePerToken: normalizedPricePerToken,
       currency: mintRequest.currencyAddress,
       validityStartTimestamp: mintRequest.mintStartTime,
       validityEndTimestamp: mintRequest.mintEndTime,

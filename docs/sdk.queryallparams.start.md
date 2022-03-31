@@ -4,8 +4,10 @@
 
 ## QueryAllParams.start property
 
+the index to start from (default: 0)
+
 <b>Signature:</b>
 
 ```typescript
-start: BigNumberish;
+start?: BigNumberish;
 ```

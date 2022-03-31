@@ -1,33 +1,22 @@
 import { IStorage } from "../interfaces/IStorage";
-import { SnapshotSchema } from "../../schema/contracts/common/snapshots";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
 import { DropERC1155, IERC20, IERC20__factory } from "@thirdweb-dev/contracts";
-import { AddressZero } from "@ethersproject/constants";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import {
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-} from "../../common/currency";
+import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
-import {
-  ClaimCondition,
-  ClaimConditionInput,
-  FilledConditionInput,
-  SnapshotInfo,
-} from "../../types";
+import { ClaimCondition, ClaimConditionInput } from "../../types";
 import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../../enums";
-import { createSnapshot, hashLeafNode } from "../../common";
-import {
-  ClaimConditionInputArray,
-  ClaimConditionOutputSchema,
-} from "../../schema/contracts/common/claim-conditions";
 import { TransactionResult } from "../index";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
-import { updateExsitingClaimConditions } from "../../common/claim-conditions";
-import { IDropClaimCondition } from "@thirdweb-dev/contracts/dist/IDropERC1155";
+import {
+  getClaimerProofs,
+  processClaimConditionInputs,
+  transformResultToClaimCondition,
+  updateExsitingClaimConditions,
+} from "../../common/claim-conditions";
+import { MaxUint256 } from "@ethersproject/constants";
+import { isBrowser } from "../../common/utils";
 
 /**
  * Manages claim conditions for Edition Drop contracts
@@ -66,7 +55,13 @@ export class DropErc1155ClaimConditions {
       tokenId,
       id,
     );
-    return await this.transformResultToClaimCondition(mc);
+    const metadata = await this.metadata.get();
+    return await transformResultToClaimCondition(
+      mc,
+      this.contractWrapper.getProvider(),
+      metadata.merkle,
+      this.storage,
+    );
   }
 
   /**
@@ -88,8 +83,16 @@ export class DropErc1155ClaimConditions {
         ),
       );
     }
+    const metadata = await this.metadata.get();
     return Promise.all(
-      conditions.map((c) => this.transformResultToClaimCondition(c)),
+      conditions.map((c) =>
+        transformResultToClaimCondition(
+          c,
+          this.contractWrapper.getProvider(),
+          metadata.merkle,
+          this.storage,
+        ),
+      ),
     );
   }
 
@@ -158,8 +161,8 @@ export class DropErc1155ClaimConditions {
         reasons.push(ClaimEligibility.NoActiveClaimPhase);
         return reasons;
       }
-      console.error("Failed to get active claim condition", err);
-      throw new Error("Failed to get active claim condition");
+      reasons.push(ClaimEligibility.Unknown);
+      return reasons;
     }
 
     if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
@@ -172,19 +175,35 @@ export class DropErc1155ClaimConditions {
     );
     if (merkleRootArray.length > 0) {
       const merkleLower = claimCondition.merkleRootHash.toString();
-      const proofs = await this.getClaimerProofs(merkleLower, addressToCheck);
-      if (proofs.length === 0) {
-        // TODO get ClaimerProofs should return the max quantity per wallet too
-        const hashedAddress = hashLeafNode(addressToCheck, 0).toLowerCase();
-        if (hashedAddress !== merkleLower) {
+      const metadata = await this.metadata.get();
+      const proofs = await getClaimerProofs(
+        addressToCheck,
+        merkleLower,
+        metadata.merkle,
+        this.storage,
+      );
+      try {
+        const [validMerkleProof] =
+          await this.contractWrapper.readContract.verifyClaimMerkleProof(
+            activeConditionIndex,
+            addressToCheck,
+            tokenId,
+            quantity,
+            proofs.proof,
+            proofs.maxClaimable,
+          );
+        if (!validMerkleProof) {
           reasons.push(ClaimEligibility.AddressNotAllowed);
+          return reasons;
         }
+      } catch (e) {
+        reasons.push(ClaimEligibility.AddressNotAllowed);
+        return reasons;
       }
-      // TODO: compute proofs to root, need browser compatibility
     }
 
     // check for claim timestamp between claims
-    const [, timestampForNextClaim] =
+    const [lastClaimedTimestamp, timestampForNextClaim] =
       await this.contractWrapper.readContract.getClaimTimestamp(
         tokenId,
         activeConditionIndex,
@@ -192,25 +211,19 @@ export class DropErc1155ClaimConditions {
       );
 
     const now = BigNumber.from(Date.now()).div(1000);
-    if (now.lt(timestampForNextClaim)) {
-      // if waitTimeSecondsLimitPerTransaction equals to timestampForNextClaim, that means that this is the first time this address claims this token
-      if (
-        BigNumber.from(claimCondition.waitInSeconds).eq(timestampForNextClaim)
-      ) {
-        const balance = await this.contractWrapper.readContract.balanceOf(
-          addressToCheck,
-          tokenId,
-        );
-        if (balance.gte(1)) {
-          reasons.push(ClaimEligibility.AlreadyClaimed);
-        }
+
+    if (lastClaimedTimestamp.gt(0) && now.lt(timestampForNextClaim)) {
+      // contract will return MaxUint256 if user has already claimed and cannot claim again
+      if (timestampForNextClaim.eq(MaxUint256)) {
+        reasons.push(ClaimEligibility.AlreadyClaimed);
       } else {
         reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
       }
     }
 
-    // check for wallet balance
-    if (claimCondition.price.gt(0)) {
+    // if not within a browser conetext, check for wallet balance.
+    // In browser context, let the wallet do that job
+    if (claimCondition.price.gt(0) && !isBrowser()) {
       const totalPrice = claimCondition.price.mul(quantity);
       const provider = this.contractWrapper.getProvider();
       if (isNativeToken(claimCondition.currencyAddress)) {
@@ -247,7 +260,7 @@ export class DropErc1155ClaimConditions {
    * @example
    * ```javascript
    * const presaleStartTime = new Date();
-   * const publicSaleStartTime = new Date(Date.now() + 24_HOURS);
+   * const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
@@ -275,39 +288,12 @@ export class DropErc1155ClaimConditions {
     resetClaimEligibilityForAll = false,
   ): Promise<TransactionResult> {
     // process inputs
-    const snapshotInfos: SnapshotInfo[] = [];
-    const inputsWithSnapshots = await Promise.all(
-      claimConditionInputs.map(async (conditionInput) => {
-        // check snapshots and upload if provided
-        if (conditionInput.snapshot) {
-          const snapshotInfo = await createSnapshot(
-            conditionInput.snapshot,
-            this.storage,
-          );
-          snapshotInfos.push(snapshotInfo);
-          conditionInput.merkleRootHash = snapshotInfo.merkleRoot;
-        }
-        // fill condition with defaults values if not provided
-        return conditionInput;
-      }),
-    );
-
-    const parsedInputs = ClaimConditionInputArray.parse(inputsWithSnapshots);
-
-    // Convert processed inputs to the format the contract expects, and sort by timestamp
-    const sortedConditions: IDropClaimCondition.ClaimConditionStruct[] = (
-      await Promise.all(parsedInputs.map((c) => this.convertToContractModel(c)))
-    ).sort((a, b) => {
-      const left = BigNumber.from(a.startTimestamp);
-      const right = BigNumber.from(b.startTimestamp);
-      if (left.eq(right)) {
-        return 0;
-      } else if (left.gt(right)) {
-        return 1;
-      } else {
-        return -1;
-      }
-    });
+    const { snapshotInfos, sortedConditions } =
+      await processClaimConditionInputs(
+        claimConditionInputs,
+        this.contractWrapper.getProvider(),
+        this.storage,
+      );
 
     const merkleInfo: { [key: string]: string } = {};
     snapshotInfos.forEach((s) => {
@@ -369,84 +355,5 @@ export class DropErc1155ClaimConditions {
       existingConditions,
     );
     return await this.set(tokenId, newConditionInputs);
-  }
-
-  /** ***************************************
-   * PRIVATE FUNCTIONS
-   *****************************************/
-
-  private async transformResultToClaimCondition(
-    pm: IDropClaimCondition.ClaimConditionStructOutput,
-  ): Promise<ClaimCondition> {
-    const cv = await fetchCurrencyValue(
-      this.contractWrapper.getProvider(),
-      pm.currency,
-      pm.pricePerToken,
-    );
-    return ClaimConditionOutputSchema.parse({
-      startTime: pm.startTimestamp,
-      maxQuantity: pm.maxClaimableSupply.toString(),
-      currentMintSupply: pm.supplyClaimed.toString(),
-      availableSupply: BigNumber.from(pm.maxClaimableSupply)
-        .sub(pm.supplyClaimed)
-        .toString(),
-      quantityLimitPerTransaction: pm.quantityLimitPerTransaction.toString(),
-      waitInSeconds: pm.waitTimeInSecondsBetweenClaims.toString(),
-      price: BigNumber.from(pm.pricePerToken),
-      currency: pm.currency,
-      currencyAddress: pm.currency,
-      currencyMetadata: cv,
-      merkleRootHash: pm.merkleRoot,
-    });
-  }
-
-  private async convertToContractModel(
-    c: FilledConditionInput,
-  ): Promise<IDropClaimCondition.ClaimConditionStruct> {
-    const currency =
-      c.currencyAddress === AddressZero
-        ? NATIVE_TOKEN_ADDRESS
-        : c.currencyAddress;
-    return {
-      startTimestamp: BigNumber.from(c.startTime),
-      maxClaimableSupply: c.maxQuantity,
-      supplyClaimed: 0,
-      quantityLimitPerTransaction: c.quantityLimitPerTransaction,
-      waitTimeInSecondsBetweenClaims: c.waitInSeconds,
-      pricePerToken: await normalizePriceValue(
-        this.contractWrapper.getProvider(),
-        c.price,
-        currency,
-      ),
-      currency,
-      merkleRoot: c.merkleRootHash,
-    };
-  }
-
-  /**
-   * Fetches the proof for the current signer for a particular wallet.
-   *
-   * @param merkleRoot - The merkle root of the condition to check.
-   * @returns - The proof for the current signer for the specified condition.
-   */
-  private async getClaimerProofs(
-    merkleRoot: string,
-    addressToClaim?: string,
-  ): Promise<string[]> {
-    if (!addressToClaim) {
-      addressToClaim = await this.contractWrapper.getSignerAddress();
-    }
-    const metadata = await this.metadata.get();
-    const snapshotUri = metadata.merkle[merkleRoot];
-    const snapshot = await this.storage.get(snapshotUri);
-    const snapshotData = SnapshotSchema.parse(snapshot);
-    const item = snapshotData.claims.find(
-      (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
-    );
-
-    if (item === undefined) {
-      return [];
-    }
-    return item.proof;
   }
 }

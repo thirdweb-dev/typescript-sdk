@@ -4,7 +4,7 @@
 
 ## MarketplaceDirect.buyoutListing() method
 
-Buy Listing
+Buy a Listing
 
 <b>Signature:</b>
 

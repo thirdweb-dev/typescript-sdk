@@ -39,6 +39,7 @@ const contract = sdk.getSplit("{{contract_address}}");
 |  [contractType](./sdk.split.contracttype.md) | <code>static</code> | "split" |  |
 |  [encoder](./sdk.split.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;SplitContract&gt; |  |
 |  [estimator](./sdk.split.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;SplitContract&gt; |  |
+|  [events](./sdk.split.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;SplitContract&gt; |  |
 |  [metadata](./sdk.split.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;SplitContract, typeof Split.schema&gt; |  |
 
 ## Methods
@@ -55,6 +56,6 @@ const contract = sdk.getSplit("{{contract_address}}");
 |  [getAllRecipients()](./sdk.split.getallrecipients.md) |  | Get Recipients of this splits contract |
 |  [getRecipientSplitPercentage(address)](./sdk.split.getrecipientsplitpercentage.md) |  | Get the % of funds owed to a given address |
 |  [onNetworkUpdated(network)](./sdk.split.onnetworkupdated.md) |  |  |
-|  [withdraw(walletAddress)](./sdk.split.withdraw.md) |  | Triggers a transfer to account of the amount of native currency they are owed. |
+|  [withdraw(walletAddress)](./sdk.split.withdraw.md) |  | Withdraw Funds |
 |  [withdrawToken(walletAddress, tokenAddress)](./sdk.split.withdrawtoken.md) |  | Triggers a transfer to account of the amount of a given currency they are owed. |
 

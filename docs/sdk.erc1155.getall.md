@@ -9,8 +9,15 @@ Get All NFTs
 <b>Signature:</b>
 
 ```typescript
-getAll(): Promise<EditionMetadata[]>;
+getAll(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  queryParams | [QueryAllParams](./sdk.queryallparams.md) | optional filtering to only fetch a subset of results. |
+
 <b>Returns:</b>
 
 Promise&lt;[EditionMetadata](./sdk.editionmetadata.md)<!-- -->\[\]&gt;
@@ -20,6 +27,8 @@ The NFT metadata for all NFTs queried.
 ## Remarks
 
 Get all the data associated with every NFT in this contract.
+
+By default, returns the first 100 NFTs, use queryParams to fetch more.
 
 ## Example
 

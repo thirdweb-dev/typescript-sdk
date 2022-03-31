@@ -50,9 +50,13 @@ export function replaceHashWithGatewayUrl(
     const val = object[keys[key]];
     object[keys[key]] = resolveGatewayUrl(val, scheme, gatewayUrl);
     if (Array.isArray(val)) {
-      for (const el of val) {
-        replaceHashWithGatewayUrl(el, scheme, gatewayUrl);
-      }
+      object[keys[key]] = val.map((el) => {
+        if (typeof el === "object") {
+          return replaceHashWithGatewayUrl(el, scheme, gatewayUrl);
+        } else {
+          return resolveGatewayUrl(el, scheme, gatewayUrl);
+        }
+      });
     }
     if (typeof val === "object") {
       replaceHashWithGatewayUrl(val, scheme, gatewayUrl);

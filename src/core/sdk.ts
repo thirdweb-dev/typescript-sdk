@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ContractInterface, ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
   CONTRACTS_MAP,
@@ -24,6 +24,8 @@ import type {
 } from "./types";
 import { IThirdwebContract__factory } from "@thirdweb-dev/contracts";
 import { ContractDeployer } from "./classes/contract-deployer";
+import { CustomContract } from "../contracts/custom";
+import invariant from "tiny-invariant";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -34,7 +36,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @internal
    * the cache of contracts that we have already seen
    */
-  private contractCache = new Map<string, ValidContractInstance>();
+  private contractCache = new Map<
+    string,
+    ValidContractInstance | CustomContract
+  >();
   private storage: IStorage;
   /**
    * New contract deployer
@@ -183,8 +188,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const remoteContractType = ethers.utils
       .toUtf8String(await contract.contractType())
       // eslint-disable-next-line no-control-regex
-      .replace(/\x00/g, "") as keyof typeof REMOTE_CONTRACT_TO_CONTRACT_TYPE;
-    return REMOTE_CONTRACT_TO_CONTRACT_TYPE[remoteContractType];
+      .replace(/\x00/g, "");
+    invariant(
+      remoteContractType in REMOTE_CONTRACT_TO_CONTRACT_TYPE,
+      `${remoteContractType} is not a valid contract type, falling back to custom contract`,
+    );
+    return REMOTE_CONTRACT_TO_CONTRACT_TYPE[
+      remoteContractType as keyof typeof REMOTE_CONTRACT_TO_CONTRACT_TYPE
+    ];
   }
 
   /**
@@ -230,5 +241,21 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }
+  }
+
+  /**
+   * @internal
+   */
+  public async unstable_getCustomContract(
+    address: string,
+    abi: ContractInterface,
+  ) {
+    return new CustomContract(
+      this.getSignerOrProvider(),
+      address,
+      abi,
+      this.storage,
+      this.options,
+    );
   }
 }

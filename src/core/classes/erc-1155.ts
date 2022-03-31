@@ -15,6 +15,7 @@ import { fetchTokenMetadata } from "../../common/nft";
 import { AddressZero } from "@ethersproject/constants";
 import { getRoleHash } from "../../common/role";
 import { NotFoundError } from "../../common";
+import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 
 /**
  * Standard ERC1155 functions
@@ -89,20 +90,41 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
    * @example
    * ```javascript
    * const nfts = await contract.getAll();
    * console.log(nfts);
    * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
    */
-  public async getAll(): Promise<EditionMetadata[]> {
-    const maxId = (
-      await this.contractWrapper.readContract.nextTokenIdToMint()
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<EditionMetadata[]> {
+    const start = BigNumber.from(queryParams?.start || 0).toNumber();
+    const count = BigNumber.from(
+      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
-    return await Promise.all(
-      Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
+    const maxId = Math.min(
+      (await this.getTotalCount()).toNumber(),
+      start + count,
     );
+    return await Promise.all(
+      [...Array(maxId - start).keys()].map((i) =>
+        this.get((start + i).toString()),
+      ),
+    );
+  }
+
+  /**
+   * Get the number of NFTs minted
+   * @returns the total number of NFTs minted in this contract
+   * @public
+   */
+  public async getTotalCount(): Promise<BigNumber> {
+    return await this.contractWrapper.readContract.nextTokenIdToMint();
   }
 
   /**
@@ -229,8 +251,10 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    *
    * // The token ID of the NFT you want to send
    * const tokenId = "0";
+   * // How many copies of the NFTs to transfer
+   * const amount = 3;
    *
-   * await contract.transfer(toAddress, tokenId);
+   * await contract.transfer(toAddress, tokenId, amount);
    * ```
    */
   public async transfer(

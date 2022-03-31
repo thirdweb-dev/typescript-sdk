@@ -36,14 +36,14 @@ const listing = {
   assetContractAddress: "0x...",
   // token ID of the asset you want to list
   tokenId: "0",
-  // in how many seconds with the listing open up
+  // in how many seconds will the listing open up
   startTimeInSeconds: 0,
   // how long the listing will be open for
   listingDurationInSeconds: 86400,
   // how many of the asset you want to list
   quantity: 1,
   // address of the currency contract that will be used to pay for the listing
-  currencyContractAddress: "0x0000000000000000000000000000000000000000",
+  currencyContractAddress: NATIVE_TOKEN_ADDRESS,
   // how much the asset will be sold for
   buyoutPricePerToken: "1.5",
 }

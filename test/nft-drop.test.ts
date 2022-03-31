@@ -8,6 +8,7 @@ import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { NFTDrop, Token } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
+import invariant from "tiny-invariant";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
@@ -47,14 +48,12 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set([
       {
         startTime: new Date(Date.now() / 2),
-        snapshot: {
-          addresses: [bobWallet.address, samWallet.address, abbyWallet.address],
-        },
+        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
         price: 1,
       },
       {
         startTime: new Date(),
-        snapshot: { addresses: [bobWallet.address] },
+        snapshot: [bobWallet.address],
       },
     ]);
     console.log("Claim condition set");
@@ -77,18 +76,33 @@ describe("NFT Drop Contract", async () => {
     expect(roots).length(2);
   });
 
+  it("should return snapshot data on claim conditions", async () => {
+    await dropContract.createBatch([
+      { name: "test", description: "test" },
+      { name: "test", description: "test" },
+    ]);
+
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [samWallet.address],
+      },
+    ]);
+    const conditions = await dropContract.claimConditions.getAll();
+    assert.lengthOf(conditions, 1);
+    invariant(conditions[0].snapshot);
+    expect(conditions[0].snapshot[0].address).to.eq(samWallet.address);
+  });
+
   it("should remove merkles from the metadata when claim conditions are removed", async () => {
     await dropContract.claimConditions.set([
       {
         startTime: new Date(),
         waitInSeconds: 10,
-        snapshot: {
-          addresses: [bobWallet.address, samWallet.address, abbyWallet.address],
-        },
+        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
       },
       {
         startTime: new Date(Date.now() + 60 * 60 * 1000),
-        snapshot: { addresses: [bobWallet.address] },
+        snapshot: [bobWallet.address],
       },
     ]);
 
@@ -136,9 +150,7 @@ describe("NFT Drop Contract", async () => {
     console.log("Setting claim condition");
     await dropContract.claimConditions.set([
       {
-        snapshot: {
-          addresses: members,
-        },
+        snapshot: members,
       },
     ]);
     console.log("Claim condition set");
@@ -174,9 +186,7 @@ describe("NFT Drop Contract", async () => {
 
     await dropContract.claimConditions.set([
       {
-        snapshot: {
-          addresses: members,
-        },
+        snapshot: members,
       },
     ]);
 
@@ -230,13 +240,7 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set(
       [
         {
-          snapshot: {
-            addresses: [
-              bobWallet.address,
-              samWallet.address,
-              abbyWallet.address,
-            ],
-          },
+          snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
         },
       ],
       false,
@@ -280,10 +284,10 @@ describe("NFT Drop Contract", async () => {
     ]);
     await dropContract.claimConditions.set([
       {
-        snapshot: {
-          addresses: [w1.address, w2.address],
-          maxClaimablePerAddress: [2, 1],
-        },
+        snapshot: [
+          { address: w1.address, maxClaimable: 2 },
+          { address: w2.address, maxClaimable: 1 },
+        ],
       },
     ]);
     await sdk.updateSignerOrProvider(w1);
@@ -316,7 +320,10 @@ describe("NFT Drop Contract", async () => {
       sortLeaves: true,
       sortPairs: true,
     });
-    const input = { addresses: members };
+    const input = members.map((address) => ({
+      address,
+      maxClaimable: 0,
+    }));
     const snapshot = await createSnapshot(input, storage);
     for (const leaf of members) {
       const expectedProof = tree.getHexProof(
@@ -413,7 +420,7 @@ describe("NFT Drop Contract", async () => {
       await dropContract.claimConditions.set([
         {
           maxQuantity: 1,
-          snapshot: { addresses: [w2.address, adminWallet.address] },
+          snapshot: [w2.address, adminWallet.address],
         },
       ]);
 
@@ -507,7 +514,7 @@ describe("NFT Drop Contract", async () => {
           maxQuantity: 10,
           price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
-          snapshot: { addresses: [w1.address, w2.address, w3.address] },
+          snapshot: [w1.address, w2.address, w3.address],
         },
       ]);
 
@@ -525,6 +532,55 @@ describe("NFT Drop Contract", async () => {
       assert.isTrue(canClaim);
     });
   });
+
+  it("should verify claim correctly after resetting claim conditions", async () => {
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [w1.address],
+      },
+    ]);
+
+    const reasons =
+      await dropContract.claimConditions.getClaimIneligibilityReasons(
+        "1",
+        w2.address,
+      );
+    expect(reasons).to.contain(ClaimEligibility.AddressNotAllowed);
+
+    await dropContract.claimConditions.set([{}]);
+    const reasons2 =
+      await dropContract.claimConditions.getClaimIneligibilityReasons(
+        "1",
+        w2.address,
+      );
+    expect(reasons2.length).to.eq(0);
+  });
+
+  it("should verify claim correctly after updating claim conditions", async () => {
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [w1.address],
+      },
+    ]);
+
+    const reasons =
+      await dropContract.claimConditions.getClaimIneligibilityReasons(
+        "1",
+        w2.address,
+      );
+    expect(reasons).to.contain(ClaimEligibility.AddressNotAllowed);
+
+    await dropContract.claimConditions.update(0, {
+      snapshot: [w1.address, w2.address],
+    });
+    const reasons2 =
+      await dropContract.claimConditions.getClaimIneligibilityReasons(
+        "1",
+        w2.address,
+      );
+    expect(reasons2.length).to.eq(0);
+  });
+
   it("should allow you to update claim conditions", async () => {
     await dropContract.claimConditions.set([{}]);
 
@@ -563,9 +619,7 @@ describe("NFT Drop Contract", async () => {
     }
     await dropContract.createBatch(metadata);
 
-    await dropContract.claimConditions.set([
-      { snapshot: { addresses: [w1.address] } },
-    ]);
+    await dropContract.claimConditions.set([{ snapshot: [w1.address] }]);
 
     assert.isTrue(
       await dropContract.claimConditions.canClaim(1, w1.address),
@@ -593,7 +647,7 @@ describe("NFT Drop Contract", async () => {
     ];
     await dropContract.claimConditions.set([
       {
-        snapshot: { addresses: members },
+        snapshot: members,
       },
     ]);
 

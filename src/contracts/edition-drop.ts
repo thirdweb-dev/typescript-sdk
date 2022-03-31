@@ -26,6 +26,10 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ClaimVerification } from "../types";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155";
+import { DropErc1155History } from "../core/classes/drop-erc1155-history";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -53,8 +57,10 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   static schema = DropErc1155ContractSchema;
 
   public primarySale: ContractPrimarySale<DropERC1155>;
+  public platformFee: ContractPlatformFee<DropERC1155>;
   public encoder: ContractEncoder<DropERC1155>;
   public estimator: GasCostEstimator<DropERC1155>;
+  public events: ContractEvents<DropERC1155>;
   public metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
   public roles: ContractRoles<
     DropERC1155,
@@ -84,7 +90,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * @example
    * ```javascript
    * const presaleStartTime = new Date();
-   * const publicSaleStartTime = new Date(Date.now() + 24_HOURS);
+   * const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
@@ -103,6 +109,11 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * ```
    */
   public claimConditions: DropErc1155ClaimConditions;
+  public history: DropErc1155History;
+  /**
+   * @internal
+   */
+  public interceptor: ContractInterceptor<DropERC1155>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -133,8 +144,12 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       this.metadata,
       this.storage,
     );
+    this.history = new DropErc1155History(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
+    this.events = new ContractEvents(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
+    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
   /** ******************************
@@ -213,7 +228,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * const tokenId = 0; // the id of the NFT you want to claim
    * const quantity = 1; // how many NFTs you want to claim
    *
-   * const tx = await contract.claimTo(address, quantity);
+   * const tx = await contract.claimTo(address, tokenId, quantity);
    * const receipt = tx.receipt; // the transaction receipt
    * const claimedTokenId = tx.id; // the id of the NFT claimed
    * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata

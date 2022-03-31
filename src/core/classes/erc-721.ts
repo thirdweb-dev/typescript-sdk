@@ -83,6 +83,8 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
    * @example
    * ```javascript
    * const nfts = await contract.getAll();
@@ -99,14 +101,23 @@ export class Erc721<T extends DropERC721 | TokenERC721>
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
     const maxId = Math.min(
-      (await this.contractWrapper.readContract.nextTokenIdToMint()).toNumber(),
+      (await this.getTotalCount()).toNumber(),
       start + count,
     );
     return await Promise.all(
-      Array.from(Array(maxId - start).keys()).map((i) =>
+      [...Array(maxId - start).keys()].map((i) =>
         this.get((start + i).toString()),
       ),
     );
+  }
+
+  /**
+   * Get the number of NFTs minted
+   * @returns the total number of NFTs minted in this contract
+   * @public
+   */
+  public async getTotalCount(): Promise<BigNumber> {
+    return await this.contractWrapper.readContract.nextTokenIdToMint();
   }
 
   /**

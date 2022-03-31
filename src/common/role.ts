@@ -20,6 +20,11 @@ const roleMap = {
 export type Role = keyof typeof roleMap;
 
 /**
+ * @public
+ */
+export const ALL_ROLES = Object.keys(roleMap) as Role[];
+
+/**
  * @internal
  */
 export function getRoleHash(role: Role): BytesLike {

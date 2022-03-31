@@ -4,10 +4,11 @@ import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 /**
  * @internal
  */
-export const FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
+export const OZ_DEFENDER_FORWARDER_ADDRESS =
+  "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 
-const TWRegistry_testnet = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
-const TWFactory_testnet = "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0";
+const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
+const TWFactory_address = "0x11c34F062Cb10a20B9F463E12Ff9dA62D76FDf65";
 
 /**
  * @internal
@@ -22,48 +23,48 @@ export const CONTRACT_ADDRESSES: Record<
 > = {
   [ChainId.Mainnet]: {
     biconomyForwarder: "0x84a0856b038eaAd1cC7E297cF34A7e72685A8693",
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
   [ChainId.Rinkeby]: {
     biconomyForwarder: "0xFD4973FeB2031D4409fB57afEE5dF2051b171104",
-    twFactory: TWFactory_testnet,
-    twRegistry: TWRegistry_testnet,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
   [ChainId.Goerli]: {
     biconomyForwarder: AddressZero,
-    twFactory: TWFactory_testnet,
-    twRegistry: TWRegistry_testnet,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
   [ChainId.Polygon]: {
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
-    twFactory: TWFactory_testnet,
-    twRegistry: TWRegistry_testnet,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
   [ChainId.Mumbai]: {
     biconomyForwarder: "0x9399BB24DBB5C4b782C70c2969F58716Ebbd6a3b",
-    twFactory: TWFactory_testnet,
-    twRegistry: TWRegistry_testnet,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
   [ChainId.Avalanche]: {
     biconomyForwarder: "0x64CD353384109423a966dCd3Aa30D884C9b2E057",
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
   [ChainId.AvalancheFujiTestnet]: {
     biconomyForwarder: "0x6271Ca63D30507f2Dcbf99B52787032506D75BBF",
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
   [ChainId.Fantom]: {
     biconomyForwarder: AddressZero,
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
   [ChainId.FantomTestnet]: {
     biconomyForwarder: AddressZero,
-    twFactory: AddressZero,
-    twRegistry: AddressZero,
+    twFactory: TWFactory_address,
+    twRegistry: TWRegistry_address,
   },
 };
 

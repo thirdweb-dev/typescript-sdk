@@ -4,8 +4,10 @@
 
 ## QueryAllParams.count property
 
+how many items to return (default: 100)
+
 <b>Signature:</b>
 
 ```typescript
-count: BigNumberish;
+count?: BigNumberish;
 ```

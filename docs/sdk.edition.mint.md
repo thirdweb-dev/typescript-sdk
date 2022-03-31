@@ -9,14 +9,14 @@ Mint NFT for the connected wallet
 <b>Signature:</b>
 
 ```typescript
-mint(metadataWithSupply: EditionMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;
+mint(metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadataWithSupply | [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
+|  metadataWithSupply | [EditionMetadataOrUri](./sdk.editionmetadataoruri.md) |  |
 
 <b>Returns:</b>
 

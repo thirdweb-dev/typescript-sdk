@@ -1,8 +1,8 @@
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Token } from "../src";
 import { sdk, signers } from "./before.test";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { TokenMintInput } from "../src/schema/tokens/token";
 
 // global.fetch = require("node-fetch");
@@ -34,7 +34,7 @@ describe("Token Contract", async () => {
   it("should mint tokens", async () => {
     await currencyContract.mint("20");
     assert.deepEqual(
-      await currencyContract.totalSupply(),
+      (await currencyContract.totalSupply()).value,
       ethers.utils.parseEther("20"),
       `Wrong supply`,
     );
@@ -46,18 +46,51 @@ describe("Token Contract", async () => {
   });
 
   it("should transfer tokens", async () => {
-    await currencyContract.mint(20);
-    await currencyContract.transfer(
-      samWallet.address,
-      ethers.utils.parseEther("10"),
-    );
+    await currencyContract.mint(20.2);
+    await currencyContract.transfer(samWallet.address, 10.1);
     assert.deepEqual(
       (await currencyContract.balanceOf(adminWallet.address)).value,
-      ethers.utils.parseEther("10"),
+      ethers.utils.parseEther("10.1"),
       `Wrong balance`,
     );
     assert.deepEqual(
       (await currencyContract.balanceOf(samWallet.address)).value,
+      ethers.utils.parseEther("10.1"),
+      `Wrong balance`,
+    );
+  });
+
+  it("should list current holders", async () => {
+    await currencyContract.mint(20);
+    await currencyContract.transfer(samWallet.address, "10");
+    await currencyContract.transfer(bobWallet.address, "5");
+    sdk.updateSignerOrProvider(samWallet);
+    await currencyContract.transfer(bobWallet.address, "3");
+
+    const holders = await currencyContract.history.getAllHolderBalances();
+    expect(holders.length).to.eq(3);
+    expect(
+      holders.find((h) => h.holder === adminWallet.address)?.balance
+        .displayValue,
+    ).to.eq("5.0");
+    expect(
+      holders.find((h) => h.holder === samWallet.address)?.balance.displayValue,
+    ).to.eq("7.0");
+    expect(
+      holders.find((h) => h.holder === bobWallet.address)?.balance.displayValue,
+    ).to.eq("8.0");
+  });
+
+  it("should burn tokens", async () => {
+    await currencyContract.mint(20);
+    assert.deepEqual(
+      (await currencyContract.balanceOf(adminWallet.address)).value,
+      ethers.utils.parseEther("20"),
+      `Wrong balance`,
+    );
+    await currencyContract.burn(10);
+    assert.deepEqual(
+      (await currencyContract.balanceOf(adminWallet.address)).value,
       ethers.utils.parseEther("10"),
       `Wrong balance`,
     );
@@ -67,18 +100,18 @@ describe("Token Contract", async () => {
     const batch: TokenMintInput[] = [
       {
         toAddress: bobWallet.address,
-        amount: 10,
+        amount: 10.5,
       },
       {
         toAddress: samWallet.address,
-        amount: 10,
+        amount: 10.5,
       },
     ];
 
     await currencyContract.mintBatchTo(batch);
 
     for (const b of batch) {
-      const expectedBalance = ethers.utils.parseUnits("10");
+      const expectedBalance = ethers.utils.parseUnits("10.5");
       const actualBalance = (await currencyContract.balanceOf(b.toAddress))
         .value;
 
@@ -105,7 +138,7 @@ describe("Token Contract", async () => {
     await currencyContract.transferBatch(batch);
 
     for (const b of batch) {
-      const expectedBalance = BigNumber.from(10);
+      const expectedBalance = ethers.utils.parseEther("10");
       const actualBalance = (await currencyContract.balanceOf(b.toAddress))
         .value;
 

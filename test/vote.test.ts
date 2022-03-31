@@ -39,8 +39,6 @@ describe("Vote Contract", async () => {
       {
         name: "DAO #1",
         voting_token_address: currencyContract.getAddress(),
-        proposal_start_time_in_seconds: voteStartWaitTimeInSeconds,
-        proposal_voting_time_in_seconds: voteWaitTimeInSeconds,
         voting_quorum_fraction: 1,
         proposal_token_threshold: ethers.utils.parseUnits("1", 18),
       },
@@ -48,10 +46,7 @@ describe("Vote Contract", async () => {
     voteContract = sdk.getVote(voteContractAddress);
 
     // step 1: mint 1000 governance tokens to my wallet
-    await currencyContract.mintTo(
-      samWallet.address,
-      ethers.utils.parseUnits("100", 18),
-    );
+    await currencyContract.mintTo(samWallet.address, "100");
 
     // step 35: later grant role to the vote contract, so the contract can mint more tokens
     // should be separate function since you need gov token to deploy vote contract

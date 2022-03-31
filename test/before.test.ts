@@ -1,5 +1,4 @@
 import {
-  CurrencyTransferLib__factory,
   TWFactory,
   TWFactory__factory,
   TWFee__factory,
@@ -17,7 +16,6 @@ import {
   Marketplace,
   Pack,
   ThirdwebSDK,
-  Token,
   Vote,
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";

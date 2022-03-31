@@ -2,6 +2,7 @@ import { BigNumber } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { z } from "zod";
 import { Json } from "../core/types";
+import { isBrowser } from "../common/utils";
 
 if (!globalThis.File) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -9,8 +10,6 @@ if (!globalThis.File) {
 }
 
 export const MAX_BPS = 10_000;
-
-const isBrowser = () => typeof window !== "undefined";
 
 const fileOrBufferUnion = isBrowser()
   ? ([z.instanceof(File), z.string()] as [
@@ -23,6 +22,7 @@ const fileOrBufferUnion = isBrowser()
     ]);
 
 export const FileBufferOrStringSchema = z.union(fileOrBufferUnion);
+export type FileBufferOrString = z.output<typeof FileBufferOrStringSchema>;
 
 export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
 
@@ -38,6 +38,11 @@ export const BigNumberishSchema = BigNumberSchema.transform((arg) =>
 export const BasisPointsSchema = z
   .number()
   .max(MAX_BPS, "Cannot exeed 100%")
+  .min(0, "Cannot be below 0%");
+
+export const PercentSchema = z
+  .number()
+  .max(100, "Cannot exeed 100%")
   .min(0, "Cannot be below 0%");
 
 export const JsonLiteral = z.union([
@@ -59,7 +64,7 @@ export const HexColor = z.union([
   z.string().length(0),
 ]);
 
-export const AdressSchema = z.string().refine(
+export const AddressSchema = z.string().refine(
   (arg) => isAddress(arg),
   (out) => {
     return {
@@ -75,9 +80,18 @@ export const PriceSchema = z
   ])
   .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
 
-export const DateSchema = z
-  .date()
-  .default(new Date())
-  .transform((i) => {
-    return BigNumber.from(Math.floor(i.getTime() / 1000));
-  });
+export const RawDateSchema = z.date().transform((i) => {
+  return BigNumber.from(Math.floor(i.getTime() / 1000));
+});
+
+/**
+ * Default to now
+ */
+export const StartDateSchema = RawDateSchema.default(new Date());
+
+/**
+ * Default to 10 years from now
+ */
+export const EndDateSchema = RawDateSchema.default(
+  new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10),
+);

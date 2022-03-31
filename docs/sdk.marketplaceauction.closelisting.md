@@ -17,7 +17,7 @@ closeListing(listingId: BigNumberish, closeFor?: string): Promise<TransactionRes
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  listingId | BigNumberish | the auction listing ud to close |
-|  closeFor | string | optionally pass the address the auction creator address or winning bid offeror address to close the auction on their behalf |
+|  closeFor | string | optionally pass the auction creator address or winning bid offeror address to close the auction on their behalf |
 
 <b>Returns:</b>
 

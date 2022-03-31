@@ -14,14 +14,16 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
 import {
   EditionMetadata,
-  EditionMetadataInput,
+  EditionMetadataOrUri,
 } from "../schema/tokens/edition";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import { CommonNFTInput } from "../schema/tokens/common";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -54,8 +56,10 @@ export class Edition extends Erc1155<TokenERC1155> {
     typeof Edition.contractRoles[number]
   >;
   public primarySale: ContractPrimarySale<TokenERC1155>;
+  public platformFee: ContractPlatformFee<TokenERC1155>;
   public encoder: ContractEncoder<TokenERC1155>;
   public estimator: GasCostEstimator<TokenERC1155>;
+  public events: ContractEvents<TokenERC1155>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token
@@ -113,6 +117,8 @@ export class Edition extends Erc1155<TokenERC1155> {
     this.primarySale = new ContractPrimarySale(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
+    this.events = new ContractEvents(this.contractWrapper);
+    this.platformFee = new ContractPlatformFee(this.contractWrapper);
     this.signature = new Erc1155SignatureMinting(
       this.contractWrapper,
       this.roles,
@@ -134,7 +140,7 @@ export class Edition extends Erc1155<TokenERC1155> {
    * @remarks See {@link Edition.mintTo}
    */
   public async mint(
-    metadataWithSupply: EditionMetadataInput,
+    metadataWithSupply: EditionMetadataOrUri,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
     return this.mintTo(
       await this.contractWrapper.getSignerAddress(),
@@ -172,10 +178,11 @@ export class Edition extends Erc1155<TokenERC1155> {
    */
   public async mintTo(
     to: string,
-    metadataWithSupply: EditionMetadataInput,
+    metadataWithSupply: EditionMetadataOrUri,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    const uri = await this.storage.uploadMetadata(
-      CommonNFTInput.parse(metadataWithSupply.metadata),
+    const uri = await uploadOrExtractURI(
+      metadataWithSupply.metadata,
+      this.storage,
     );
     const receipt = await this.contractWrapper.sendTransaction("mintTo", [
       to,
@@ -199,13 +206,30 @@ export class Edition extends Erc1155<TokenERC1155> {
   }
 
   /**
-   * Increase the supply of an existing NFT
+   * Increase the supply of an existing NFT and mint it to the connected wallet
+   *
+   * @param tokenId - the token id of the NFT to increase supply of
+   * @param additionalSupply - the additional amount to mint
+   */
+  public async mintAdditionalSupply(
+    tokenId: BigNumberish,
+    additionalSupply: BigNumberish,
+  ): Promise<TransactionResultWithId<EditionMetadata>> {
+    return this.mintAdditionalSupplyTo(
+      await this.contractWrapper.getSignerAddress(),
+      tokenId,
+      additionalSupply,
+    );
+  }
+
+  /**
+   * Increase the supply of an existing NFT and mint it to a given wallet address
    *
    * @param to - the address to mint to
    * @param tokenId - the token id of the NFT to increase supply of
    * @param additionalSupply - the additional amount to mint
    */
-  public async increaseSupply(
+  public async mintAdditionalSupplyTo(
     to: string,
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
@@ -230,7 +254,7 @@ export class Edition extends Erc1155<TokenERC1155> {
    * @remarks See {@link Edition.mintBatchTo}
    */
   public async mintBatch(
-    metadatas: EditionMetadataInput[],
+    metadatas: EditionMetadataOrUri[],
   ): Promise<TransactionResultWithId<EditionMetadata>[]> {
     return this.mintBatchTo(
       await this.contractWrapper.getSignerAddress(),
@@ -273,13 +297,11 @@ export class Edition extends Erc1155<TokenERC1155> {
    */
   public async mintBatchTo(
     to: string,
-    metadataWithSupply: EditionMetadataInput[],
+    metadataWithSupply: EditionMetadataOrUri[],
   ): Promise<TransactionResultWithId<EditionMetadata>[]> {
     const metadatas = metadataWithSupply.map((a) => a.metadata);
     const supplies = metadataWithSupply.map((a) => a.supply);
-    const { metadataUris: uris } = await this.storage.uploadMetadataBatch(
-      metadatas.map((m) => CommonNFTInput.parse(m)),
-    );
+    const uris = await uploadOrExtractURIs(metadatas, this.storage);
     const encoded = uris.map((uri, index) =>
       this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [
         to,

@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   AuctionAlreadyStartedError,
@@ -171,6 +171,23 @@ describe("Marketplace Contract", async () => {
       assert.isDefined(listingId);
     });
 
+    // TODO deploy WETH on hardhat
+    it.skip("should list acuction with native token", async () => {
+      const tx = await marketplaceContract.auction.createListing({
+        assetContractAddress: dummyNftContract.getAddress(),
+        buyoutPricePerToken: 1,
+        currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+        startTimeInSeconds: 0,
+        listingDurationInSeconds: 60 * 60 * 24,
+        tokenId: 0,
+        quantity: 1,
+        reservePricePerToken: 0.0001,
+      });
+      const id = tx.id;
+      sdk.updateSignerOrProvider(samWallet);
+      await marketplaceContract.auction.makeBid(id, 0.1);
+    });
+
     it("should list direct listings with 1155s", async () => {
       const listingId = await createDirectListing(
         dummyBundleContract.getAddress(),
@@ -210,7 +227,7 @@ describe("Marketplace Contract", async () => {
       try {
         await createDirectListing(dummyNftContract.getAddress(), 0, 10);
       } catch (e) {
-        expectError(e, "listing unapproved asset");
+        expectError(e, "unapproved asset.");
       }
     });
   });
@@ -279,6 +296,17 @@ describe("Marketplace Contract", async () => {
       );
     });
 
+    it("should return only active listings", async () => {
+      const before = await marketplaceContract.getActiveListings();
+      expect(before.length).to.eq(2);
+      console.log("before", before);
+      await sdk.updateSignerOrProvider(samWallet);
+      await marketplaceContract.buyoutListing(directListingId, 1);
+      const afterDirectBuyout = await marketplaceContract.getActiveListings();
+      expect(afterDirectBuyout.length).to.eq(1);
+      // TODO add test for buying out auctions too (needs time control)
+    });
+
     it("should return an auction listing", async () => {
       const listing = (await marketplaceContract.getListing(
         auctionListingId,
@@ -332,6 +360,7 @@ describe("Marketplace Contract", async () => {
       directListingId = await createDirectListing(
         dummyNftContract.getAddress(),
         0,
+        10,
       );
       auctionListingId = await createAuctionListing(
         dummyNftContract.getAddress(),
@@ -353,9 +382,9 @@ describe("Marketplace Contract", async () => {
 
       await marketplaceContract.direct.makeOffer(
         directListingId,
-        1,
+        10,
         tokenAddress,
-        8,
+        0.034,
       );
 
       console.log("Offer made");
@@ -386,6 +415,32 @@ describe("Marketplace Contract", async () => {
         currentBalance.toString(),
         "0",
         "The buyer should start with no tokens",
+      );
+      await marketplaceContract.buyoutListing(directListingId, 1);
+      const balance = await dummyNftContract.balanceOf(bobWallet.address);
+      assert.equal(
+        balance.toString(),
+        "1",
+        "The buyer should have been awarded token",
+      );
+    });
+
+    it("should allow a buyer to buyout a direct listing after making an offer", async () => {
+      await sdk.updateSignerOrProvider(bobWallet);
+
+      const currentBalance = await dummyNftContract.balanceOf(
+        bobWallet.address,
+      );
+      assert.equal(
+        currentBalance.toString(),
+        "0",
+        "The buyer should start with no tokens",
+      );
+      await marketplaceContract.direct.makeOffer(
+        directListingId,
+        1,
+        customTokenContract.getAddress(),
+        0.05,
       );
       await marketplaceContract.buyoutListing(directListingId, 1);
       const balance = await dummyNftContract.balanceOf(bobWallet.address);
@@ -462,6 +517,22 @@ describe("Marketplace Contract", async () => {
         adminWallet.address,
       );
       assert.isUndefined(offer);
+    });
+
+    it("should allow bids by the same person", async () => {
+      await sdk.updateSignerOrProvider(bobWallet);
+      await marketplaceContract.auction.makeBid(auctionListingId, 0.06);
+      await marketplaceContract.auction.makeBid(auctionListingId, 0.08);
+
+      const winningBid = (await marketplaceContract.auction.getWinningBid(
+        auctionListingId,
+      )) as Offer;
+
+      assert.equal(winningBid.buyerAddress, bobWallet.address);
+      assert.equal(
+        winningBid.pricePerToken.toString(),
+        ethers.utils.parseUnits("0.08").toString(),
+      );
     });
 
     it("should allow bids to be made on auction listings", async () => {

@@ -37,6 +37,7 @@ import { fetchCurrencyValue } from "../common/currency";
 import { ChainlinkVrf } from "../constants/chainlink";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { GasCostEstimator } from "../core/classes";
+import { ContractEvents } from "../core/classes/contract-events";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -69,6 +70,7 @@ export class Pack implements UpdateableNetwork {
   public metadata: ContractMetadata<PackContract, typeof Pack.schema>;
   public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
   public encoder: ContractEncoder<PackContract>;
+  public events: ContractEvents<PackContract>;
   public estimator: GasCostEstimator<PackContract>;
   /**
    * Configure royalties
@@ -112,6 +114,7 @@ export class Pack implements UpdateableNetwork {
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
+    this.events = new ContractEvents(this.contractWrapper);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {
@@ -131,7 +134,7 @@ export class Pack implements UpdateableNetwork {
    * @param packId - the id of the pack to fetch
    * @returns the pack metadata
    */
-  public async get(packId: string): Promise<PackMetadata> {
+  public async get(packId: BigNumberish): Promise<PackMetadata> {
     const [meta, state, supply] = await Promise.all([
       fetchTokenMetadataForContract(
         this.getAddress(),
@@ -145,7 +148,7 @@ export class Pack implements UpdateableNetwork {
         .catch(() => BigNumber.from("0")),
     ]);
     return {
-      id: packId,
+      id: BigNumber.from(packId).toString(),
       metadata: meta,
       creator: state.creator,
       currentSupply: supply,
@@ -223,7 +226,7 @@ export class Pack implements UpdateableNetwork {
    * @example
    * ```javascript
    * // Address of the wallet to check pack balance
-   * const address = "{{wallet_address}}"";
+   * const address = "{{wallet_address}}";
    * // The token ID of the pack you want to check the wallets balance of
    * const tokenId = "0"
    *

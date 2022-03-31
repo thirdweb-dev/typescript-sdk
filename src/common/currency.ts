@@ -4,7 +4,6 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   IERC20,
   IERC20__factory,
-  TokenERC20,
   TokenERC20__factory,
 } from "@thirdweb-dev/contracts";
 import {
@@ -86,10 +85,10 @@ export async function setErc20Allowance(
   } else {
     const signer = contractToApprove.getSigner();
     const provider = contractToApprove.getProvider();
-    const erc20 = new ContractWrapper<TokenERC20>(
+    const erc20 = new ContractWrapper<IERC20>(
       signer || provider,
       currencyAddress,
-      TokenERC20__factory.abi,
+      IERC20__factory.abi,
       {},
     );
 
@@ -97,10 +96,8 @@ export async function setErc20Allowance(
     const spender = contractToApprove.readContract.address;
     const allowance = await erc20.readContract.allowance(owner, spender);
     if (allowance.lt(value)) {
-      await erc20.sendTransaction("increaseAllowance", [
-        spender,
-        value.sub(allowance),
-      ]);
+      // approve overrides the previous allowance, set it to the minimum required for this tx
+      await erc20.sendTransaction("approve", [spender, value]);
     }
     return overrides;
   }
