@@ -30,7 +30,7 @@ export class ContractPlatformFee<TContract extends IThirdwebPlatformFee> {
 
   /**
    * Set the platform fee recipient and basis points
-   * @param platformFeeInfo
+   * @param platformFeeInfo - the platform fee information
    */
   public async set(
     platformFeeInfo: z.input<typeof CommonPlatformFeeSchema>,

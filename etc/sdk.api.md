@@ -653,6 +653,17 @@ export class ContractMetadata<TContract extends IThirdwebContract, TSchema exten
 }
 
 // @public
+export class ContractPlatformFee<TContract extends IThirdwebPlatformFee> {
+    constructor(contractWrapper: ContractWrapper<TContract>);
+    get(): Promise<{
+        platform_fee_basis_points: number;
+        platform_fee_recipient: string;
+    }>;
+    // Warning: (ae-incompatible-release-tags) The symbol "set" is marked as @public, but its signature references "CommonPlatformFeeSchema" which is marked as @internal
+    set(platformFeeInfo: z.input<typeof CommonPlatformFeeSchema>): Promise<TransactionResult>;
+}
+
+// @public
 export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     getRecipient(): Promise<string>;
@@ -898,8 +909,6 @@ export class CustomContract<TContract extends BaseContract = BaseContract> imple
     }> | undefined;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
-    // Warning: (ae-forgotten-export) The symbol "ContractPlatformFee" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     platformFees: ContractPlatformFee<TContract & IThirdwebPlatformFee> | undefined;
     // (undocumented)
