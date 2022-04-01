@@ -34,7 +34,7 @@ import { prepareClaim } from "../common/claim-conditions";
  * const contract = sdk.getTokenDrop("{{contract_address}}");
  * ```
  *
- * @public
+ * @internal
  */
 export class TokenDrop extends Erc20<DropERC20> {
   static contractType = "token-drop" as const;
