@@ -24,6 +24,7 @@ export declare class IpfsStorage implements IStorage
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [get(hash)](./sdk.ipfsstorage.get.md) |  | Fetches data from storage. This method expects to fetch JSON formatted data |
+|  [getRaw(hash)](./sdk.ipfsstorage.getraw.md) |  | Fetches data from storage. This method does not make any assumptions on the retrieved data format |
 |  [getUploadToken(contractAddress)](./sdk.ipfsstorage.getuploadtoken.md) |  | Fetches a one-time-use upload token that can used to upload a file to storage. |
 |  [upload(data, contractAddress, signerAddress)](./sdk.ipfsstorage.upload.md) |  | Uploads a file to the storage. |
 |  [uploadBatch(files, fileStartNumber, contractAddress, signerAddress)](./sdk.ipfsstorage.uploadbatch.md) |  | Uploads a folder to storage. |

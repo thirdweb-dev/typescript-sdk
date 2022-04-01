@@ -2121,6 +2121,7 @@ export interface IPackCreateArgs {
 export class IpfsStorage implements IStorage {
     constructor(gatewayUrl?: string);
     get(hash: string): Promise<Record<string, any>>;
+    getRaw(hash: string): Promise<string>;
     getUploadToken(contractAddress: string): Promise<string>;
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
@@ -2134,6 +2135,7 @@ export class IpfsStorage implements IStorage {
 // @public (undocumented)
 export interface IStorage {
     get(hash: string): Promise<Record<string, any>>;
+    getRaw(hash: string): Promise<string>;
     getUploadToken(contractAddress: string): Promise<string>;
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
     uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;

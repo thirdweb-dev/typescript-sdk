@@ -25,13 +25,6 @@ import {
   VoteContractDeployMetadata,
 } from "../../types/deploy/deploy-metadata";
 import { TokenDrop } from "../../contracts/token-drop";
-import { BytesLike, ContractInterface, ethers } from "ethers";
-import invariant from "tiny-invariant";
-import { extractConstructorParams } from "../../common/feature-detection";
-import {
-  AbiSchema,
-  CustomContractMetadataSchema,
-} from "../../schema/contracts/custom";
 
 /**
  * Handles deploying new contracts
@@ -234,58 +227,5 @@ export class ContractDeployer extends RPCConnectionHandler {
     this._registry?.then((registry) => {
       registry.updateSignerOrProvider(this.getSignerOrProvider());
     });
-  }
-
-  /** **********************
-   * Custom contracts
-   ************************/
-
-  /**
-   * @internal
-   * @param metadataUri
-   */
-  public async unstable_extractConstructorParams(metadataUri: string) {
-    return extractConstructorParams(metadataUri, this.storage);
-  }
-
-  /**
-   * @internal
-   * @param metadataUri
-   * @param constructorParams
-   */
-  public async unstable_deployCustomContract(
-    metadataUri: string,
-    constructorParams: Array<any>,
-  ): Promise<string> {
-    const metadata = CustomContractMetadataSchema.parse(
-      await this.storage.get(metadataUri),
-    );
-    const abi = AbiSchema.parse(await this.storage.get(metadata.abiUri));
-    const byteCode = await this.storage.getRaw(metadata.bytecodeUri);
-    return this.unstable_deployCustomContractWithAbi(
-      abi,
-      byteCode,
-      constructorParams,
-    );
-  }
-
-  /**
-   * @internal
-   * @param abi
-   * @param bytecode
-   * @param constructorParams
-   */
-  public async unstable_deployCustomContractWithAbi(
-    abi: ContractInterface,
-    bytecode: BytesLike | { object: string },
-    constructorParams: Array<any>,
-  ): Promise<string> {
-    const signer = this.getSigner();
-    invariant(signer, "Signer is required to deploy contracts");
-    const deployer = await new ethers.ContractFactory(abi, bytecode)
-      .connect(signer)
-      .deploy(...constructorParams);
-    const deployedContract = await deployer.deployed();
-    return deployedContract.address;
   }
 }

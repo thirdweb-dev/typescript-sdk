@@ -1,13 +1,11 @@
 import { BaseContract } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Interface } from "@ethersproject/abi";
-import { IStorage, JsonObject } from "../core";
+import { IStorage } from "../core";
 import {
-  AbiInputSchema,
   AbiSchema,
   CustomContractMetadataSchema,
 } from "../schema/contracts/custom";
-import { z } from "zod";
 
 /**
  * Type guards a contract to a known type if it matches the corresponding interface
