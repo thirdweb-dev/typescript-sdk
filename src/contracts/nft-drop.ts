@@ -106,7 +106,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    *     price: 0.08, // public sale price
    *   }
    * ]);
-   * await dropContract.claimConditions.set(claimConditions);
+   * await contract.claimConditions.set(claimConditions);
    * ```
    */
   public claimConditions: DropClaimConditions<DropERC721>;

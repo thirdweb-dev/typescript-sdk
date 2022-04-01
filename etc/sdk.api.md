@@ -583,6 +583,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     deployPack(metadata: NFTContractDeployMetadata): Promise<string>;
     deploySplit(metadata: SplitContractDeployMetadata): Promise<string>;
     deployToken(metadata: TokenContractDeployMetadata): Promise<string>;
+    deployTokenDrop(metadata: TokenContractDeployMetadata): Promise<string>;
     deployVote(metadata: VoteContractDeployMetadata): Promise<string>;
     // Warning: (ae-forgotten-export) The symbol "ContractRegistry" needs to be exported by the entry point index.d.ts
     //
@@ -4247,7 +4248,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "split" | "edition-drop" | "edition" | "token" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection" | "token-drop";
+        contractType: "split" | "edition-drop" | "edition" | "token" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
         metadata: () => Promise<{
             [x: string]: Json;
             description?: string | undefined;
@@ -4402,6 +4403,154 @@ export interface TokenContractDeployMetadata {
     primary_sale_recipient: string;
     symbol?: string;
     trusted_forwarders?: string[];
+}
+
+// @public
+export class TokenDrop extends Erc20<DropERC20> {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
+    claim(amount: Amount, proofs?: BytesLike[]): Promise<TransactionResult>;
+    claimConditions: DropClaimConditions<DropERC20>;
+    claimTo(destinationAddress: string, amount: Amount, proofs?: BytesLike[]): Promise<TransactionResult>;
+    // (undocumented)
+    static contractFactory: typeof DropERC20__factory;
+    // (undocumented)
+    static contractRoles: readonly ["admin", "transfer"];
+    // (undocumented)
+    static contractType: "token-drop";
+    // @alpha
+    delegateTo(delegateeAddress: string): Promise<TransactionResult>;
+    // (undocumented)
+    encoder: ContractEncoder<DropERC20>;
+    // (undocumented)
+    estimator: GasCostEstimator<DropERC20>;
+    getDelegation(): Promise<string>;
+    getDelegationOf(account: string): Promise<string>;
+    getVoteBalance(): Promise<CurrencyValue>;
+    // (undocumented)
+    getVoteBalanceOf(account: string): Promise<CurrencyValue>;
+    // (undocumented)
+    metadata: ContractMetadata<DropERC20, typeof TokenDrop.schema>;
+    // (undocumented)
+    platformFee: ContractPlatformFee<DropERC20>;
+    // (undocumented)
+    roles: ContractRoles<DropERC20, typeof TokenDrop.contractRoles[number]>;
+    // (undocumented)
+    sales: ContractPrimarySale<DropERC20>;
+    // @internal (undocumented)
+    static schema: {
+        deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, {
+        platform_fee_basis_points: ZodDefault<ZodNumber>;
+        platform_fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        primary_sale_recipient: ZodEffects<ZodString, string, string>;
+        }>, {
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        }>, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        primary_sale_recipient: string;
+        platform_fee_basis_points: number;
+        platform_fee_recipient: string;
+        trusted_forwarders: string[];
+        }, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: any;
+        merkle?: Record<string, string> | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
+        name: string;
+        primary_sale_recipient: string;
+        }>;
+        output: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        image: ZodOptional<ZodString>;
+        }>, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        }, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }>;
+        input: ZodObject<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        }, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: any;
+        merkle?: Record<string, string> | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }>;
+    };
 }
 
 // @public
@@ -4699,10 +4848,6 @@ export enum VoteType {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
-
-// Warnings were encountered during analysis:
-//
-// dist/contracts/maps.d.ts:19:5 - (ae-forgotten-export) The symbol "TokenDrop" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
