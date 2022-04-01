@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { TokenERC20 } from "@thirdweb-dev/contracts";
+import { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
@@ -19,7 +19,9 @@ import { PriceSchema } from "../../schema";
  * Standard ERC20 functions
  * @public
  */
-export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
+export class Erc20<T extends TokenERC20 | DropERC20>
+  implements UpdateableNetwork
+{
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
@@ -208,14 +210,10 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     to: string,
     amount: Amount,
   ): Promise<TransactionResult> {
-    const amountWithDecimals = ethers.utils.parseUnits(
-      PriceSchema.parse(amount),
-      await this.contractWrapper.readContract.decimals(),
-    );
     return {
       receipt: await this.contractWrapper.sendTransaction("transfer", [
         to,
-        amountWithDecimals,
+        await this.normalizeAmount(amount),
       ]),
     };
   }
@@ -245,15 +243,11 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     to: string,
     amount: Amount,
   ): Promise<TransactionResult> {
-    const amountWithDecimals = ethers.utils.parseUnits(
-      PriceSchema.parse(amount),
-      await this.contractWrapper.readContract.decimals(),
-    );
     return {
       receipt: await this.contractWrapper.sendTransaction("transferFrom", [
         from,
         to,
-        amountWithDecimals,
+        await this.normalizeAmount(amount),
       ]),
     };
   }
@@ -276,14 +270,10 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     spender: string,
     amount: Amount,
   ): Promise<TransactionResult> {
-    const amountWithDecimals = ethers.utils.parseUnits(
-      PriceSchema.parse(amount),
-      await this.contractWrapper.readContract.decimals(),
-    );
     return {
       receipt: await this.contractWrapper.sendTransaction("approve", [
         spender,
-        amountWithDecimals,
+        await this.normalizeAmount(amount),
       ]),
     };
   }
@@ -311,17 +301,15 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * ```
    */
   public async transferBatch(args: TokenMintInput[]) {
-    const decimals = await this.contractWrapper.readContract.decimals();
-    const encoded = args.map((arg) => {
-      const amountWithDecimals = ethers.utils.parseUnits(
-        PriceSchema.parse(arg.amount),
-        decimals,
-      );
-      return this.contractWrapper.readContract.interface.encodeFunctionData(
-        "transfer",
-        [arg.toAddress, amountWithDecimals],
-      );
-    });
+    const encoded = await Promise.all(
+      args.map(async (arg) => {
+        const amountWithDecimals = await this.normalizeAmount(arg.amount);
+        return this.contractWrapper.readContract.interface.encodeFunctionData(
+          "transfer",
+          [arg.toAddress, amountWithDecimals],
+        );
+      }),
+    );
     await this.contractWrapper.multiCall(encoded);
   }
 
@@ -339,13 +327,9 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
    * ```
    */
   public async burn(amount: Amount): Promise<TransactionResult> {
-    const amountWithDecimals = ethers.utils.parseUnits(
-      PriceSchema.parse(amount),
-      await this.contractWrapper.readContract.decimals(),
-    );
     return {
       receipt: await this.contractWrapper.sendTransaction("burn", [
-        amountWithDecimals,
+        await this.normalizeAmount(amount),
       ]),
     };
   }
@@ -370,14 +354,10 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
     holder: string,
     amount: Amount,
   ): Promise<TransactionResult> {
-    const amountWithDecimals = ethers.utils.parseUnits(
-      PriceSchema.parse(amount),
-      await this.contractWrapper.readContract.decimals(),
-    );
     return {
       receipt: await this.contractWrapper.sendTransaction("burnFrom", [
         holder,
-        amountWithDecimals,
+        await this.normalizeAmount(amount),
       ]),
     };
   }
@@ -395,5 +375,10 @@ export class Erc20<T extends TokenERC20> implements UpdateableNetwork {
       this.getAddress(),
       BigNumber.from(value),
     );
+  }
+
+  protected async normalizeAmount(amount: Amount): Promise<BigNumber> {
+    const decimals = await this.contractWrapper.readContract.decimals();
+    return ethers.utils.parseUnits(PriceSchema.parse(amount), decimals);
   }
 }

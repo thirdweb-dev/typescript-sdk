@@ -38,6 +38,7 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 |  [getPack(address)](./sdk.thirdwebsdk.getpack.md) |  | Get an instance of a Pack contract |
 |  [getSplit(address)](./sdk.thirdwebsdk.getsplit.md) |  | Get an instance of a Splits contract |
 |  [getToken(address)](./sdk.thirdwebsdk.gettoken.md) |  | Get an instance of a Token contract |
+|  [getTokenDrop(address)](./sdk.thirdwebsdk.gettokendrop.md) |  | Get an instance of a Token Drop contract |
 |  [getVote(address)](./sdk.thirdwebsdk.getvote.md) |  | Get an instance of a Vote contract |
 |  [resolveContractType(contractAddress)](./sdk.thirdwebsdk.resolvecontracttype.md) |  |  |
 |  [updateSignerOrProvider(network)](./sdk.thirdwebsdk.updatesignerorprovider.md) |  | Update the active signer or provider for all contracts |

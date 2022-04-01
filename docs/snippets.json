@@ -473,7 +473,7 @@
         "examples": {
           "javascript": "const presaleStartTime = new Date();\nconst publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst claimConditions = [\n  {\n    startTime: presaleStartTime, // start the presale now\n    maxQuantity: 2, // limit how many mints for this presale\n    price: 0.01, // presale price\n    snapshot: ['0x...', '0x...'], // limit minting to only certain addresses\n  },\n  {\n    startTime: publicSaleStartTime, // 24h after presale, start public sale\n    price: 0.08, // public sale price\n  }\n]);\nawait dropContract.claimConditions.set(claimConditions);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.droperc721claimconditions"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.dropclaimconditions"
       },
       {
         "name": "revealer",

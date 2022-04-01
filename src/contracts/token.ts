@@ -10,14 +10,12 @@ import {
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc20 } from "../core/classes/erc-20";
-import { ethers } from "ethers";
 import { TokenMintInput } from "../schema/tokens/token";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes";
 import { Amount, CurrencyValue } from "../types";
 import { TokenERC20History } from "../core/classes/erc-20-history";
 import { ContractEvents } from "../core/classes/contract-events";
-import { PriceSchema } from "../schema";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting";
 
@@ -167,14 +165,10 @@ export class Token extends Erc20<TokenERC20> {
    * ```
    */
   public async mintTo(to: string, amount: Amount): Promise<TransactionResult> {
-    const amountWithDecimals = ethers.utils.parseUnits(
-      PriceSchema.parse(amount),
-      await this.contractWrapper.readContract.decimals(),
-    );
     return {
       receipt: await this.contractWrapper.sendTransaction("mintTo", [
         to,
-        amountWithDecimals,
+        await this.normalizeAmount(amount),
       ]),
     };
   }
@@ -204,14 +198,10 @@ export class Token extends Erc20<TokenERC20> {
   public async mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult> {
     const encoded = [];
     for (const arg of args) {
-      const amountWithDecimals = ethers.utils.parseUnits(
-        PriceSchema.parse(arg.amount),
-        await this.contractWrapper.readContract.decimals(),
-      );
       encoded.push(
         this.contractWrapper.readContract.interface.encodeFunctionData(
           "mintTo",
-          [arg.toAddress, amountWithDecimals],
+          [arg.toAddress, await this.normalizeAmount(arg.amount)],
         ),
       );
     }

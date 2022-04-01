@@ -31,7 +31,7 @@ export type Snapshot = z.output<typeof SnapshotSchema>;
  * Input model to pass a snapshot of addresses + amount claimable for a claim condition
  * @public
  */
-export type SnapshotInput = z.output<typeof SnapshotInputSchema>;
+export type SnapshotInput = z.input<typeof SnapshotInputSchema>;
 
 /**
  * Input model to create a claim condition with optional snapshot of wallets

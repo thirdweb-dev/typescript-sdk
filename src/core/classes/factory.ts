@@ -27,6 +27,7 @@ import {
   SUPPORTED_CHAIN_IDS,
 } from "../../constants";
 import { AddressZero } from "@ethersproject/constants";
+import { TokenDrop } from "../../contracts/token-drop";
 
 /**
  * @internal
@@ -127,6 +128,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc1155metadata.platform_fee_basis_points,
           erc1155metadata.platform_fee_recipient,
         ];
+      case TokenDrop.contractType:
       case Token.contractType:
         const erc20metadata = Token.schema.deploy.parse(metadata);
         return [

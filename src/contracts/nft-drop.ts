@@ -19,7 +19,7 @@ import {
   NFTMetadataOwner,
 } from "../schema/tokens/common";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
-import { DropErc721ClaimConditions } from "../core/classes/drop-erc721-claim-conditions";
+import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
 import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
@@ -109,7 +109,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    * await dropContract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropErc721ClaimConditions;
+  public claimConditions: DropClaimConditions<DropERC721>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
@@ -164,7 +164,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     this.roles = new ContractRoles(this.contractWrapper, NFTDrop.contractRoles);
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.primarySale = new ContractPrimarySale(this.contractWrapper);
-    this.claimConditions = new DropErc721ClaimConditions(
+    this.claimConditions = new DropClaimConditions(
       this.contractWrapper,
       this.metadata,
       this.storage,

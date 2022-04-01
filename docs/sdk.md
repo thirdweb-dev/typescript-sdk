@@ -17,9 +17,9 @@
 |  [ContractRoles](./sdk.contractroles.md) | Handles Contract roles and permissions |
 |  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalties |
 |  [DelayedReveal](./sdk.delayedreveal.md) | Handles delayed reveal logic |
+|  [DropClaimConditions](./sdk.dropclaimconditions.md) | Manages claim conditions for NFT Drop contracts |
 |  [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Manages claim conditions for Edition Drop contracts |
 |  [DropErc1155History](./sdk.droperc1155history.md) | Manages history for Edition Drop contracts |
-|  [DropErc721ClaimConditions](./sdk.droperc721claimconditions.md) | Manages claim conditions for NFT Drop contracts |
 |  [Edition](./sdk.edition.md) | Create a collection of NFTs that lets you mint multiple copies of each NFT. |
 |  [EditionDrop](./sdk.editiondrop.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [Erc1155](./sdk.erc1155.md) | Standard ERC1155 functions |

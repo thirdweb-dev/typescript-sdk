@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import {
@@ -29,6 +29,8 @@ import { createSnapshot } from "./snapshots";
 import { IDropClaimCondition } from "@thirdweb-dev/contracts/dist/IDropERC1155";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
 import { Provider } from "@ethersproject/providers";
+import { implementsInterface } from "./feature-detection";
+import { DropERC20, DropERC20__factory } from "@thirdweb-dev/contracts";
 
 /**
  * Returns proofs and the overrides required for the transaction.
@@ -44,7 +46,16 @@ export async function prepareClaim(
   proofs: BytesLike[] = [hexZeroPad([0], 32)],
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
-  let maxClaimable = 0;
+  let tokenDecimals = 0;
+  if (
+    implementsInterface<DropERC20>(
+      contractWrapper,
+      DropERC20__factory.createInterface(),
+    )
+  ) {
+    tokenDecimals = await contractWrapper.readContract.decimals();
+  }
+  let maxClaimable = BigNumber.from(0);
 
   try {
     if (
@@ -64,7 +75,7 @@ export async function prepareClaim(
         throw new Error("No claim found for this address");
       }
       proofs = item.proof;
-      maxClaimable = item.maxClaimable;
+      maxClaimable = ethers.utils.parseUnits(item.maxClaimable, tokenDecimals);
     }
   } catch (e) {
     // have to handle the valid error case that we *do* want to throw on
@@ -96,7 +107,7 @@ export async function prepareClaim(
   return {
     overrides,
     proofs,
-    maxQuantityPerTransaction: BigNumber.from(maxClaimable),
+    maxQuantityPerTransaction: maxClaimable,
     price,
     currencyAddress,
   };
@@ -131,25 +142,58 @@ export async function fetchSnapshot(
  * @param claimConditionInput
  * @param existingConditions
  */
-export function updateExsitingClaimConditions(
+export async function updateExistingClaimConditions(
   index: number,
   claimConditionInput: ClaimConditionInput,
   existingConditions: ClaimCondition[],
-): ClaimConditionInput[] {
+  tokenDecimals: number,
+): Promise<ClaimConditionInput[]> {
   if (index >= existingConditions.length) {
     throw Error(
       `Index out of bounds - got index: ${index} with ${existingConditions.length} conditions`,
     );
   }
   // merge input with existing claim condition
+  // TODO figure out how to have inputs and outputs symmetrical to avoid this gymnastic
+  const revertToFormattedAmount = (bigNumberValue: BigNumber) => {
+    if (
+      bigNumberValue.toHexString() === ethers.constants.MaxUint256.toHexString()
+    ) {
+      return "unlimited";
+    }
+    const formatted = ethers.utils
+      .formatUnits(bigNumberValue, tokenDecimals)
+      .replace(".0", "");
+    return formatted;
+  };
+
+  const convertBackToBigNumber = (formattedValue: string) => {
+    if (formattedValue === "unlimited") {
+      return ethers.constants.MaxUint256;
+    } else {
+      return ethers.utils.parseUnits(formattedValue, tokenDecimals);
+    }
+  };
+
+  // merge existing (output format) with incoming (input format)
   const newConditionParsed = ClaimConditionInputSchema.parse({
     ...existingConditions[index],
     price: existingConditions[index].price.toString(),
+    maxQuantity: revertToFormattedAmount(existingConditions[index].maxQuantity),
+    quantityLimitPerTransaction: revertToFormattedAmount(
+      existingConditions[index].quantityLimitPerTransaction,
+    ),
     ...claimConditionInput,
   });
+
   // convert to output claim condition
-  const mergedConditionOutput =
-    ClaimConditionOutputSchema.parse(newConditionParsed);
+  const mergedConditionOutput = ClaimConditionOutputSchema.parse({
+    ...newConditionParsed,
+    maxQuantity: convertBackToBigNumber(newConditionParsed.maxQuantity),
+    quantityLimitPerTransaction: convertBackToBigNumber(
+      newConditionParsed.quantityLimitPerTransaction,
+    ),
+  });
 
   return existingConditions.map((existingOutput, i) => {
     let newConditionAtIndex;
@@ -161,6 +205,10 @@ export function updateExsitingClaimConditions(
     return {
       ...newConditionAtIndex,
       price: newConditionAtIndex.price.toString(), // manually transform back to input price type
+      maxQuantity: revertToFormattedAmount(newConditionAtIndex.maxQuantity),
+      quantityLimitPerTransaction: revertToFormattedAmount(
+        newConditionAtIndex.quantityLimitPerTransaction,
+      ),
     };
   });
 }
@@ -174,14 +222,15 @@ export function updateExsitingClaimConditions(
 export async function getClaimerProofs(
   addressToClaim: string,
   merkleRoot: string,
+  tokenDecimals: number,
   merkleMetadata: Record<string, string>,
   storage: IStorage,
-): Promise<{ maxClaimable: number; proof: string[] }> {
+): Promise<{ maxClaimable: BigNumber; proof: string[] }> {
   const claims = await fetchSnapshot(merkleRoot, merkleMetadata, storage);
   if (claims === undefined) {
     return {
       proof: [],
-      maxClaimable: 0,
+      maxClaimable: BigNumber.from(0),
     };
   }
   const item = claims.find(
@@ -191,12 +240,12 @@ export async function getClaimerProofs(
   if (item === undefined) {
     return {
       proof: [],
-      maxClaimable: 0,
+      maxClaimable: BigNumber.from(0),
     };
   }
   return {
     proof: item.proof,
-    maxClaimable: item.maxClaimable,
+    maxClaimable: ethers.utils.parseUnits(item.maxClaimable, tokenDecimals),
   };
 }
 
@@ -207,6 +256,7 @@ export async function getClaimerProofs(
  */
 export async function processClaimConditionInputs(
   claimConditionInputs: ClaimConditionInput[],
+  tokenDecimals: number,
   provider: Provider,
   storage: IStorage,
 ) {
@@ -217,6 +267,7 @@ export async function processClaimConditionInputs(
       if (conditionInput.snapshot) {
         const snapshotInfo = await createSnapshot(
           SnapshotInputSchema.parse(conditionInput.snapshot),
+          tokenDecimals,
           storage,
         );
         snapshotInfos.push(snapshotInfo);
@@ -232,7 +283,9 @@ export async function processClaimConditionInputs(
   // Convert processed inputs to the format the contract expects, and sort by timestamp
   const sortedConditions: IDropClaimCondition.ClaimConditionStruct[] = (
     await Promise.all(
-      parsedInputs.map((c) => convertToContractModel(c, provider)),
+      parsedInputs.map((c) =>
+        convertToContractModel(c, tokenDecimals, provider),
+      ),
     )
   ).sort((a, b) => {
     const left = BigNumber.from(a.startTimestamp);
@@ -256,17 +309,33 @@ export async function processClaimConditionInputs(
  */
 async function convertToContractModel(
   c: FilledConditionInput,
+  tokenDecimals: number,
   provider: Provider,
 ): Promise<IDropClaimCondition.ClaimConditionStruct> {
   const currency =
     c.currencyAddress === AddressZero
       ? NATIVE_TOKEN_ADDRESS
       : c.currencyAddress;
+  let maxClaimableSupply;
+  let quantityLimitPerTransaction;
+  if (c.maxQuantity === "unlimited") {
+    maxClaimableSupply = ethers.constants.MaxUint256.toString();
+  } else {
+    maxClaimableSupply = ethers.utils.parseUnits(c.maxQuantity, tokenDecimals);
+  }
+  if (c.quantityLimitPerTransaction === "unlimited") {
+    quantityLimitPerTransaction = ethers.constants.MaxUint256.toString();
+  } else {
+    quantityLimitPerTransaction = ethers.utils.parseUnits(
+      c.quantityLimitPerTransaction,
+      tokenDecimals,
+    );
+  }
   return {
     startTimestamp: c.startTime,
-    maxClaimableSupply: c.maxQuantity,
+    maxClaimableSupply,
     supplyClaimed: 0,
-    quantityLimitPerTransaction: c.quantityLimitPerTransaction,
+    quantityLimitPerTransaction,
     waitTimeInSecondsBetweenClaims: c.waitInSeconds,
     pricePerToken: await normalizePriceValue(provider, c.price, currency),
     currency,

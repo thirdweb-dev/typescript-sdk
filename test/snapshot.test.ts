@@ -35,7 +35,7 @@ describe("Snapshots", async () => {
   });
 
   beforeEach(async () => {
-    const result = await createSnapshot(input, storage);
+    const result = await createSnapshot(input, 0, storage);
     snapshot = result.snapshot;
     uri = result.snapshotUri;
     merkleRoot = result.merkleRoot;
@@ -55,7 +55,7 @@ describe("Snapshots", async () => {
     });
 
     try {
-      await createSnapshot(duplicateLeafs, storage);
+      await createSnapshot(duplicateLeafs, 0, storage);
     } catch (error) {
       expect(error).to.have.property("message", "DUPLICATE_LEAFS", "");
       return;

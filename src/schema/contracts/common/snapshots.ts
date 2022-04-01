@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AddressSchema, PriceSchema } from "../../shared";
 
 /**
  * @internal
@@ -10,9 +11,9 @@ export const MerkleSchema = z.object({
 /**
  * @internal
  */
-export const SnapshotAddress = z.object({
-  address: z.string(),
-  maxClaimable: z.number().default(0),
+export const SnapshotAddressInput = z.object({
+  address: AddressSchema,
+  maxClaimable: PriceSchema.default(0),
 });
 
 /**
@@ -21,12 +22,12 @@ export const SnapshotAddress = z.object({
 export const SnapshotInputSchema = z.union([
   z.array(z.string()).transform((strings) =>
     strings.map((address) =>
-      SnapshotAddress.parse({
+      SnapshotAddressInput.parse({
         address,
       }),
     ),
   ),
-  z.array(SnapshotAddress),
+  z.array(SnapshotAddressInput),
 ]);
 
 /**
@@ -38,7 +39,7 @@ export const SnapshotSchema = z.object({
    */
   merkleRoot: z.string(),
   claims: z.array(
-    SnapshotAddress.extend({
+    SnapshotAddressInput.extend({
       proof: z.array(z.string()),
     }),
   ),
