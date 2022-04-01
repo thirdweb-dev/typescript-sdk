@@ -19,6 +19,6 @@ constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStora
 |  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  address | string |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
-|  options | [SDKOptions](./sdk.sdkoptions.md) |  |
-|  contractWrapper | ContractWrapper&lt;MarketplaceContract&gt; |  |
+|  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> |
+|  contractWrapper | ContractWrapper&lt;MarketplaceContract&gt; | <i>(Optional)</i> |
 

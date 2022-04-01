@@ -18,7 +18,7 @@ buyoutListing(listingId: BigNumberish, quantityDesired: BigNumberish, receiver?:
 |  --- | --- | --- |
 |  listingId | BigNumberish | The listing id to buy |
 |  quantityDesired | BigNumberish | the quantity to buy |
-|  receiver | string | optional receiver of the bought listing if different from the connected wallet |
+|  receiver | string | <i>(Optional)</i> optional receiver of the bought listing if different from the connected wallet |
 
 <b>Returns:</b>
 

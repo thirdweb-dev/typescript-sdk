@@ -4,7 +4,7 @@
 
 ## ThirdwebSDK.deployer property
 
-New contract deployer
+the contract deployer
 
 <b>Signature:</b>
 

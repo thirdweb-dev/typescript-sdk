@@ -18,7 +18,7 @@ getClaimIneligibilityReasons(tokenId: BigNumberish, quantity: BigNumberish, addr
 |  --- | --- | --- |
 |  tokenId | BigNumberish | the token id to check |
 |  quantity | BigNumberish | The desired quantity that would be claimed. |
-|  addressToCheck | string | The wallet address, defaults to the connected wallet. |
+|  addressToCheck | string | <i>(Optional)</i> The wallet address, defaults to the connected wallet. |
 
 <b>Returns:</b>
 

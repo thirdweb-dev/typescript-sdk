@@ -17,7 +17,7 @@ canClaim(quantity: Amount, addressToCheck?: string): Promise<boolean>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  quantity | [Amount](./sdk.amount.md) |  |
-|  addressToCheck | string |  |
+|  addressToCheck | string | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

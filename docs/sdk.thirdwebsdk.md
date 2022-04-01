@@ -23,7 +23,7 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [deployer](./sdk.thirdwebsdk.deployer.md) |  | [ContractDeployer](./sdk.contractdeployer.md) | New contract deployer |
+|  [deployer](./sdk.thirdwebsdk.deployer.md) |  | [ContractDeployer](./sdk.contractdeployer.md) | the contract deployer |
 
 ## Methods
 

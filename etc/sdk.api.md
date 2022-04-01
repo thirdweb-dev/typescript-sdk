@@ -4272,6 +4272,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     resolveContractType(contractAddress: string): Promise<ContractType>;
     // @internal (undocumented)
     unstable_getCustomContract(address: string, abi: ContractInterface): Promise<CustomContract<ethers.BaseContract>>;
+    // @internal (undocumented)
+    unstable_resolveContract(address: string, abi?: ContractInterface): Promise<EditionDrop | NFTCollection | Edition | Token | TokenDrop | Vote | Split | Marketplace | Pack | NFTDrop | CustomContract<ethers.BaseContract>>;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 

@@ -17,8 +17,8 @@ buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish, receiver?
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  listingId | BigNumberish | the listing ID of the listing you want to buy |
-|  quantityDesired | BigNumberish | the quantity that you want to buy (for ERC1155 tokens) |
-|  receiver | string | optional receiver of the bought listing if different from the connected wallet (for direct listings only) |
+|  quantityDesired | BigNumberish | <i>(Optional)</i> the quantity that you want to buy (for ERC1155 tokens) |
+|  receiver | string | <i>(Optional)</i> optional receiver of the bought listing if different from the connected wallet (for direct listings only) |
 
 <b>Returns:</b>
 

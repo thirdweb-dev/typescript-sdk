@@ -17,8 +17,8 @@ upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: st
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  data | string \| [FileOrBuffer](./sdk.fileorbuffer.md) | The data to be uploaded. Can be a file/buffer (which will be loaded), or a string. |
-|  contractAddress | string | Optional. The contract address the data belongs to. |
-|  signerAddress | string | Optional. The address of the signer. |
+|  contractAddress | string | <i>(Optional)</i> Optional. The contract address the data belongs to. |
+|  signerAddress | string | <i>(Optional)</i> Optional. The address of the signer. |
 
 <b>Returns:</b>
 

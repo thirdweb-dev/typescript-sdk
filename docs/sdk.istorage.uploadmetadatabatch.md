@@ -17,9 +17,9 @@ uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractA
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  metadatas | [JsonObject](./sdk.jsonobject.md)<!-- -->\[\] |  |
-|  fileStartNumber | number | Optional. The first file file name begins with. |
-|  contractAddress | string | Optional. The contract address the data belongs to. |
-|  signerAddress | string | Optional. The address of the signer. |
+|  fileStartNumber | number | <i>(Optional)</i> Optional. The first file file name begins with. |
+|  contractAddress | string | <i>(Optional)</i> Optional. The contract address the data belongs to. |
+|  signerAddress | string | <i>(Optional)</i> Optional. The address of the signer. |
 
 <b>Returns:</b>
 

@@ -41,9 +41,19 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     string,
     ValidContractInstance | CustomContract
   >();
+  /**
+   * @internal
+   * the cache of contract type resolutions that we have already seen
+   */
+  private contractTypesCache = new Map<string, Promise<ContractType>>();
+
+  /**
+   * @internal
+   */
   private storage: IStorage;
   /**
-   * New contract deployer
+   * the contract deployer
+   * @public
    */
   public deployer: ContractDeployer;
 
@@ -191,21 +201,45 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async resolveContractType(
     contractAddress: string,
   ): Promise<ContractType> {
-    const contract = IThirdwebContract__factory.connect(
-      contractAddress,
-      this.getSignerOrProvider(),
+    // if we have a promise in the cache just return it
+    // this means we will only ever query the contract type once per contract address
+    // we store the promise because it will resolve for *all* calls to this method once it resolves (or rejects)
+    if (this.contractTypesCache.has(contractAddress)) {
+      return this.contractTypesCache.get(
+        contractAddress,
+      ) as Promise<ContractType>;
+    }
+    const resolverPromise = new Promise<ContractType>(
+      // eslint-disable-next-line no-async-promise-executor
+      async (resolve, reject) => {
+        try {
+          const contract = IThirdwebContract__factory.connect(
+            contractAddress,
+            this.getSignerOrProvider(),
+          );
+          const remoteContractType = ethers.utils
+            .toUtf8String(await contract.contractType())
+            // eslint-disable-next-line no-control-regex
+            .replace(/\x00/g, "");
+          invariant(
+            remoteContractType in REMOTE_CONTRACT_TO_CONTRACT_TYPE,
+            `${remoteContractType} is not a valid contract type, falling back to custom contract`,
+          );
+          resolve(
+            REMOTE_CONTRACT_TO_CONTRACT_TYPE[
+              remoteContractType as keyof typeof REMOTE_CONTRACT_TO_CONTRACT_TYPE
+            ],
+          );
+        } catch (err) {
+          // first delete the contract from the cache so we may re-try it again later
+          this.contractTypesCache.delete(contractAddress);
+          // then reject
+          reject(err);
+        }
+      },
     );
-    const remoteContractType = ethers.utils
-      .toUtf8String(await contract.contractType())
-      // eslint-disable-next-line no-control-regex
-      .replace(/\x00/g, "");
-    invariant(
-      remoteContractType in REMOTE_CONTRACT_TO_CONTRACT_TYPE,
-      `${remoteContractType} is not a valid contract type, falling back to custom contract`,
-    );
-    return REMOTE_CONTRACT_TO_CONTRACT_TYPE[
-      remoteContractType as keyof typeof REMOTE_CONTRACT_TO_CONTRACT_TYPE
-    ];
+    this.contractTypesCache.set(contractAddress, resolverPromise);
+    return resolverPromise;
   }
 
   /**
@@ -266,6 +300,37 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       abi,
       this.storage,
       this.options,
+    );
+  }
+
+  /**
+   * Attempts to resolve the contract type for the given contract address, and then instantiates the contract.
+   * Falls back to a custom contract if the contract type cannot be determined.
+   * @internal
+   */
+  public async unstable_resolveContract(
+    address: string,
+    abi?: ContractInterface,
+  ) {
+    // if an ABI is passed in, we will use that
+    if (abi) {
+      return this.unstable_getCustomContract(address, abi);
+    }
+    // if we can resolve a contractType then this is a thirdweb contract, we know how to handle those
+    const contractType = await this.resolveContractType(address);
+    if (contractType) {
+      return this.getContract(address, contractType);
+    }
+
+    // warn and return a custom contract with a basic ABI (this will very well fail when trying to call methods)
+    // TODO ultimately we might want to *download* the abi from somewhere in this case
+    console.warn(
+      "No valid contract type / abi found, instantiating basic thirdweb contract abi",
+      address,
+    );
+    return this.unstable_getCustomContract(
+      address,
+      IThirdwebContract__factory.abi,
     );
   }
 }

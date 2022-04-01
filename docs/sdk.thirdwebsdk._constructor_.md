@@ -17,6 +17,6 @@ constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions, storage?: 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
-|  options | [SDKOptions](./sdk.sdkoptions.md) |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
+|  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> |
+|  storage | [IStorage](./sdk.istorage.md) | <i>(Optional)</i> |
 
