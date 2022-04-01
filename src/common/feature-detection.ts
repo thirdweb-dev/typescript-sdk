@@ -55,6 +55,11 @@ export async function extractConstructorParams(
   return [];
 }
 
+/**
+ * @internal
+ * @param metadataUri
+ * @param storage
+ */
 export async function fetchContractMetadata(
   metadataUri: string,
   storage: IStorage,
