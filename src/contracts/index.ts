@@ -2,6 +2,7 @@ export * from "./nft-collection";
 export * from "./edition-drop";
 export * from "./edition";
 export * from "./token";
+export * from "./token-drop";
 export * from "./vote";
 export * from "./split";
 export * from "./marketplace";

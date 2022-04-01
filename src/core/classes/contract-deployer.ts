@@ -24,6 +24,7 @@ import {
   TokenContractDeployMetadata,
   VoteContractDeployMetadata,
 } from "../../types/deploy/deploy-metadata";
+import { TokenDrop } from "../../contracts/token-drop";
 
 /**
  * Handles deploying new contracts
@@ -105,6 +106,17 @@ export class ContractDeployer extends RPCConnectionHandler {
     metadata: TokenContractDeployMetadata,
   ): Promise<string> {
     return await this.deployContract(Token.contractType, metadata);
+  }
+
+  /**
+   * Deploys a new Token Drop contract
+   * @param metadata - the contract metadata
+   * @returns the address of the deployed contract
+   */
+  public async deployTokenDrop(
+    metadata: TokenContractDeployMetadata,
+  ): Promise<string> {
+    return await this.deployContract(TokenDrop.contractType, metadata);
   }
 
   /**
