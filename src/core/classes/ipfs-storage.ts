@@ -107,6 +107,14 @@ export class IpfsStorage implements IStorage {
   }
 
   /**
+   * {@inheritDoc IStorage.getRaw}
+   */
+  public async getRaw(hash: string): Promise<string> {
+    const res = await this._get(hash);
+    return await res.text();
+  }
+
+  /**
    * {@inheritDoc IStorage.uploadMetadata}
    */
   public async uploadMetadata(

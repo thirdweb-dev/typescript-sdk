@@ -1,6 +1,13 @@
 import { BaseContract } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Interface } from "@ethersproject/abi";
+import { IStorage, JsonObject } from "../core";
+import {
+  AbiInputSchema,
+  AbiSchema,
+  CustomContractMetadataSchema,
+} from "../schema/contracts/custom";
+import { z } from "zod";
 
 /**
  * Type guards a contract to a known type if it matches the corresponding interface
@@ -29,4 +36,39 @@ function matchesInterface(contract: BaseContract, interfaceToMatch: Interface) {
     Object.keys(contractFn).filter((k) => k in interfaceFn).length ===
     Object.keys(interfaceFn).length
   );
+}
+
+/**
+ * @internal
+ */
+export async function extractConstructorParams(
+  metadataUri: string,
+  storage: IStorage,
+) {
+  const metadata = CustomContractMetadataSchema.parse(
+    await storage.get(metadataUri),
+  );
+  const abi = AbiSchema.parse(await storage.get(metadata.abiUri));
+  for (const input of abi) {
+    if (input.type === "constructor") {
+      return input.inputs;
+    }
+  }
+  return [];
+}
+
+export async function fetchContractMetadata(
+  metadataUri: string,
+  storage: IStorage,
+) {
+  const metadata = CustomContractMetadataSchema.parse(
+    await storage.get(metadataUri),
+  );
+  const abi = AbiSchema.parse(await storage.get(metadata.abiUri));
+  const bytecode = await storage.getRaw(metadata.bytecodeUri);
+  return {
+    name: metadata.name,
+    abi,
+    bytecode,
+  };
 }

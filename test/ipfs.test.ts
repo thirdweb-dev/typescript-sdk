@@ -9,6 +9,15 @@ import {
   IpfsStorage,
   NFTMetadataInput,
 } from "../src";
+import {
+  extractConstructorParams,
+  fetchContractMetadata,
+} from "../src/common/feature-detection";
+import exp = require("constants");
+import {
+  AbiSchema,
+  CustomContractMetadataSchema,
+} from "../src/schema/contracts/custom";
 
 global.fetch = require("node-fetch");
 
@@ -27,6 +36,28 @@ describe("IPFS Uploads", async () => {
       });
     return response;
   }
+
+  describe("Custom contract metadata", async () => {
+    it("Should extract constructor params", async () => {
+      const params = await extractConstructorParams(
+        "ipfs://QmbLjvQqCVhjsvGxh9u2pv89sg8g7psTscZJ9spNyHn9GH/0",
+        storage,
+      );
+      console.log(params);
+      expect(params[0].type === "bytes32");
+      expect(params[0].name === "uri");
+      expect(params[1].type === "uint256");
+      expect(params[1].name === "someId");
+    });
+
+    it("Should parse abi and bytecode", async () => {
+      const metadata = await fetchContractMetadata(
+        "ipfs://QmbLjvQqCVhjsvGxh9u2pv89sg8g7psTscZJ9spNyHn9GH/0",
+        storage,
+      );
+      console.log(metadata.bytecode);
+    });
+  });
 
   it("should upload a file through any property, even when it is in an object nested inside another object", async () => {
     try {

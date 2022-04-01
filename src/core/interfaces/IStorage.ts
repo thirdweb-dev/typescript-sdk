@@ -32,6 +32,14 @@ export interface IStorage {
   get(hash: string): Promise<Record<string, any>>;
 
   /**
+   * Fetches data from storage. This method does not make any assumptions on the retrieved data format
+   *
+   * @param hash - The Hash of the file to fetch
+   * @returns - The data, if found.
+   */
+  getRaw(hash: string): Promise<string>;
+
+  /**
    * Uploads a file to the storage.
    *
    * @param data - The data to be uploaded. Can be a file/buffer (which will be loaded), or a string.

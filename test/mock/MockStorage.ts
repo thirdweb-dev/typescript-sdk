@@ -64,12 +64,12 @@ export class MockStorage implements IStorage {
     return Promise.resolve("mock-token");
   }
 
-  get(hash: string): Promise<Record<string, any>> {
+  private _get(hash: string): string {
     hash = hash.replace("mock://", "").replace("fake://", "");
     const split = hash.split("/");
     if (split.length === 1) {
       if (hash in this.objects) {
-        return Promise.resolve(this.objects[hash]);
+        return this.objects[hash];
       } else {
         throw new NotFoundError(hash);
       }
@@ -81,7 +81,15 @@ export class MockStorage implements IStorage {
     if (!(index in this.folders[cid])) {
       throw new NotFoundError(`${cid}/${index}`);
     }
-    return Promise.resolve(JSON.parse(this.folders[cid][index.toString()]));
+    return this.folders[cid][index.toString()];
+  }
+
+  get(hash: string): Promise<Record<string, any>> {
+    return Promise.resolve(JSON.parse(this._get(hash)));
+  }
+
+  getRaw(hash: string): Promise<string> {
+    return Promise.resolve(this._get(hash));
   }
 
   public async uploadMetadata(
