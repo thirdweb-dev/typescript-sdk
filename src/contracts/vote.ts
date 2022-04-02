@@ -5,6 +5,7 @@ import {
 } from "@thirdweb-dev/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import {
+  ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -61,6 +62,10 @@ export class Vote implements UpdateableNetwork {
   public encoder: ContractEncoder<VoteERC20>;
   public estimator: GasCostEstimator<VoteERC20>;
   public events: ContractEvents<VoteERC20>;
+  /**
+   * @internal
+   */
+  public interceptor: ContractInterceptor<VoteERC20>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -84,6 +89,7 @@ export class Vote implements UpdateableNetwork {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {

@@ -3,6 +3,7 @@ import { TokenERC20, TokenERC20__factory } from "@thirdweb-dev/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {
+  ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -66,6 +67,10 @@ export class Token extends Erc20<TokenERC20> {
    * ```
    */
   public signature: Erc20SignatureMinting;
+  /**
+   * @internal
+   */
+  public interceptor: ContractInterceptor<TokenERC20>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -91,6 +96,7 @@ export class Token extends Erc20<TokenERC20> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.signature = new Erc20SignatureMinting(
       this.contractWrapper,
       this.roles,

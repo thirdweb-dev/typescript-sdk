@@ -6,6 +6,7 @@ import {
 } from "@thirdweb-dev/contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
+  ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -52,6 +53,10 @@ export class Split implements UpdateableNetwork {
   public encoder: ContractEncoder<SplitContract>;
   public estimator: GasCostEstimator<SplitContract>;
   public events: ContractEvents<SplitContract>;
+  /**
+   * @internal
+   */
+  public interceptor: ContractInterceptor<SplitContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -75,6 +80,7 @@ export class Split implements UpdateableNetwork {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {

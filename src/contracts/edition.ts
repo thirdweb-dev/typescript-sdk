@@ -5,6 +5,7 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import {
+  ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
@@ -93,6 +94,10 @@ export class Edition extends Erc1155<TokenERC1155> {
    * ```
    */
   public signature: Erc1155SignatureMinting;
+  /**
+   * @internal
+   */
+  public interceptor: ContractInterceptor<TokenERC1155>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -119,6 +124,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.signature = new Erc1155SignatureMinting(
       this.contractWrapper,
       this.roles,
