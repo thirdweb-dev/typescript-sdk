@@ -4,6 +4,7 @@ import type {
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
 } from "../core";
+import { ContractInterceptor } from "../core";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenERC721, TokenERC721__factory } from "@thirdweb-dev/contracts";
@@ -20,7 +21,6 @@ import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractInterceptor } from "../core";
 
 /**
  * Create a collection of one-of-one NFTs.
