@@ -4,7 +4,6 @@ import type {
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
 } from "../core";
-import { ContractInterceptor } from "../core";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenERC721, TokenERC721__factory } from "@thirdweb-dev/contracts";
@@ -16,7 +15,7 @@ import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { Erc721SignatureMinting } from "../core/classes/erc-721-signature-minting";
-import { GasCostEstimator } from "../core/classes";
+import { GasCostEstimator, ContractInterceptor } from "../core/classes";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
 import { ContractEvents } from "../core/classes/contract-events";
