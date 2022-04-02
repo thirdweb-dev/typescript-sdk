@@ -16,5 +16,5 @@ constructor(gatewayUrl?: string);
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  gatewayUrl | string |  |
+|  gatewayUrl | string | <i>(Optional)</i> |
 

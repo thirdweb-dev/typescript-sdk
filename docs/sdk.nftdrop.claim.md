@@ -17,7 +17,7 @@ claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWi
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  quantity | BigNumberish |  |
-|  proofs | BytesLike\[\] |  |
+|  proofs | BytesLike\[\] | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

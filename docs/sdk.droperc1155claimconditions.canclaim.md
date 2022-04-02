@@ -18,7 +18,7 @@ canClaim(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string)
 |  --- | --- | --- |
 |  tokenId | BigNumberish |  |
 |  quantity | BigNumberish |  |
-|  addressToCheck | string |  |
+|  addressToCheck | string | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

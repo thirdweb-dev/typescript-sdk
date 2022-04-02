@@ -17,7 +17,7 @@ transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): 
 |  from | string |  |
 |  to | string |  |
 |  args | [IPackBatchArgs](./sdk.ipackbatchargs.md) |  |
-|  data | BytesLike |  |
+|  data | BytesLike | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
