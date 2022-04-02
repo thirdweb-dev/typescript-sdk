@@ -1229,6 +1229,8 @@ export class Edition extends Erc1155<TokenERC1155> {
     estimator: GasCostEstimator<TokenERC1155>;
     // (undocumented)
     events: ContractEvents<TokenERC1155>;
+    // @internal (undocumented)
+    interceptor: ContractInterceptor<TokenERC1155>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
     mint(metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
@@ -2191,6 +2193,8 @@ export class Marketplace implements UpdateableNetwork {
     getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
     getTimeBufferInSeconds(): Promise<BigNumber>;
     getTotalCount(): Promise<BigNumber>;
+    // @internal (undocumented)
+    interceptor: ContractInterceptor<Marketplace_2>;
     isRestrictedToListerRoleOnly(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<Marketplace_2, typeof Marketplace.schema>;
@@ -2424,6 +2428,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
     estimator: GasCostEstimator<TokenERC721>;
     // (undocumented)
     events: ContractEvents<TokenERC721>;
+    // @internal (undocumented)
+    interceptor: ContractInterceptor<TokenERC721>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
@@ -2819,6 +2825,8 @@ export class Pack implements UpdateableNetwork {
     getLinkBalance(): Promise<CurrencyValue>;
     getNFTs(packId: string): Promise<PackNFTMetadata[]>;
     getOwned(_address?: string): Promise<PackMetadataWithBalance[]>;
+    // @internal (undocumented)
+    interceptor: ContractInterceptor<Pack_2>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
@@ -4044,6 +4052,8 @@ export class Split implements UpdateableNetwork {
     getAddress(): string;
     getAllRecipients(): Promise<SplitRecipient[]>;
     getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
+    // @internal (undocumented)
+    interceptor: ContractInterceptor<Split_2>;
     // (undocumented)
     metadata: ContractMetadata<Split_2, typeof Split.schema>;
     // (undocumented)
@@ -4299,6 +4309,8 @@ export class Token extends Erc20<TokenERC20> {
     getVoteBalanceOf(account: string): Promise<CurrencyValue>;
     // (undocumented)
     history: TokenERC20History;
+    // @internal (undocumented)
+    interceptor: ContractInterceptor<TokenERC20>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC20, typeof Token.schema>;
     mint(amount: Amount): Promise<TransactionResult>;
@@ -4431,6 +4443,8 @@ export class TokenDrop extends Erc20<DropERC20> {
     getVoteBalance(): Promise<CurrencyValue>;
     // (undocumented)
     getVoteBalanceOf(account: string): Promise<CurrencyValue>;
+    // (undocumented)
+    interceptor: ContractInterceptor<DropERC20>;
     // (undocumented)
     metadata: ContractMetadata<DropERC20, typeof TokenDrop.schema>;
     // (undocumented)
@@ -4687,6 +4701,8 @@ export class Vote implements UpdateableNetwork {
     getAll(): Promise<Proposal[]>;
     getProposalVotes(proposalId: BigNumber): Promise<ProposalVote[]>;
     hasVoted(proposalId: string, account?: string): Promise<boolean>;
+    // @internal (undocumented)
+    interceptor: ContractInterceptor<VoteERC20>;
     // (undocumented)
     metadata: ContractMetadata<VoteERC20, typeof Vote.schema>;
     // (undocumented)
