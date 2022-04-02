@@ -19,7 +19,7 @@ claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberis
 |  destinationAddress | string | Address you want to send the token to |
 |  tokenId | BigNumberish | Id of the token you want to claim |
 |  quantity | BigNumberish | Quantity of the tokens you want to claim |
-|  proofs | BytesLike\[\] | Array of proofs |
+|  proofs | BytesLike\[\] | <i>(Optional)</i> Array of proofs |
 
 <b>Returns:</b>
 

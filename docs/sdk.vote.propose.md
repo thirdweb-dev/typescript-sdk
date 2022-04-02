@@ -17,7 +17,7 @@ propose(description: string, executions?: ProposalExecutable[]): Promise<Transac
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  description | string | The description of the proposal. |
-|  executions | [ProposalExecutable](./sdk.proposalexecutable.md)<!-- -->\[\] | A set of executable transactions that will be run if the proposal is passed and executed. |
+|  executions | [ProposalExecutable](./sdk.proposalexecutable.md)<!-- -->\[\] | <i>(Optional)</i> A set of executable transactions that will be run if the proposal is passed and executed. |
 
 <b>Returns:</b>
 

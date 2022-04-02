@@ -16,7 +16,7 @@ getOwned(_address?: string): Promise<PackMetadataWithBalance[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_address | string | The address to check for token ownership |
+|  \_address | string | <i>(Optional)</i> The address to check for token ownership |
 
 <b>Returns:</b>
 
