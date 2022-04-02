@@ -6,6 +6,7 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import {
+  ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -69,6 +70,10 @@ export class Marketplace implements UpdateableNetwork {
     MarketplaceContract,
     typeof Marketplace.contractRoles[number]
   >;
+  /**
+   * @internal
+   */
+  public interceptor: ContractInterceptor<MarketplaceContract>;
   /**
    * Direct listings
    * @remarks Create and manage direct listings in your marketplace.
@@ -169,6 +174,7 @@ export class Marketplace implements UpdateableNetwork {
     this.auction = new MarketplaceAuction(this.contractWrapper, this.storage);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {

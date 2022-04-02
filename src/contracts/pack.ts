@@ -1,6 +1,7 @@
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
+  ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -90,6 +91,10 @@ export class Pack implements UpdateableNetwork {
    * ```
    */
   public royalty: ContractRoyalty<PackContract, typeof Pack.schema>;
+  /**
+   * @internal
+   */
+  public interceptor: ContractInterceptor<PackContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -115,6 +120,7 @@ export class Pack implements UpdateableNetwork {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {

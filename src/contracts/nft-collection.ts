@@ -20,6 +20,7 @@ import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractInterceptor } from "../core";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -89,6 +90,10 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * ```
    */
   public signature: Erc721SignatureMinting;
+  /**
+   * @internal
+   */
+  public interceptor: ContractInterceptor<TokenERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -123,6 +128,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     );
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
   /** ******************************

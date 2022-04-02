@@ -2,6 +2,7 @@ import { DropERC20, DropERC20__factory } from "@thirdweb-dev/contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {
+  ContractInterceptor,
   ContractPlatformFee,
   ContractPrimarySale,
   DropClaimConditions,
@@ -77,6 +78,10 @@ export class TokenDrop extends Erc20<DropERC20> {
    * ```
    */
   public claimConditions: DropClaimConditions<DropERC20>;
+  /**
+   * @internal
+   */
+  public interceptor: ContractInterceptor<DropERC20>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -104,6 +109,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.claimConditions = new DropClaimConditions<DropERC20>(
       this.contractWrapper,
       this.metadata,
