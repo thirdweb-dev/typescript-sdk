@@ -26,6 +26,7 @@ import { isBrowser } from "../../common/utils";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { implementsInterface } from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
+import { includesErrorMessage } from "../../common";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -151,7 +152,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     );
 
     if (addressToCheck === undefined) {
-      throw new Error("addressToCheck is required");
+      addressToCheck = await this.contractWrapper.getSignerAddress();
     }
 
     try {
@@ -160,11 +161,11 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
         this.getActive(),
       ]);
     } catch (err: any) {
-      if ((err.message as string).includes("no public mint condition.")) {
+      if (includesErrorMessage(err, "no public mint condition.")) {
         reasons.push(ClaimEligibility.NoClaimConditionSet);
         return reasons;
       }
-      if ((err.message as string).includes("no active mint condition.")) {
+      if (includesErrorMessage(err, "no active mint condition.")) {
         reasons.push(ClaimEligibility.NoActiveClaimPhase);
         return reasons;
       }

@@ -17,6 +17,7 @@ import {
 } from "../../common/claim-conditions";
 import { MaxUint256 } from "@ethersproject/constants";
 import { isBrowser } from "../../common/utils";
+import { includesErrorMessage } from "../../common";
 
 /**
  * Manages claim conditions for Edition Drop contracts
@@ -148,7 +149,7 @@ export class DropErc1155ClaimConditions {
     let claimCondition: ClaimCondition;
 
     if (addressToCheck === undefined) {
-      throw new Error("addressToCheck is required");
+      addressToCheck = await this.contractWrapper.getSignerAddress();
     }
 
     try {
@@ -157,7 +158,11 @@ export class DropErc1155ClaimConditions {
         this.getActive(tokenId),
       ]);
     } catch (err: any) {
-      if ((err.message as string).includes("no active mint condition.")) {
+      if (includesErrorMessage(err, "no public mint condition.")) {
+        reasons.push(ClaimEligibility.NoClaimConditionSet);
+        return reasons;
+      }
+      if (includesErrorMessage(err, "no active mint condition.")) {
         reasons.push(ClaimEligibility.NoActiveClaimPhase);
         return reasons;
       }
