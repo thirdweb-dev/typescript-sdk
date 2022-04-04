@@ -1,4 +1,7 @@
 import {
+  ByocRegistry,
+  ByocRegistry__factory,
+  MockContract__factory,
   TWFactory,
   TWFactory__factory,
   TWFee__factory,
@@ -11,10 +14,14 @@ import { ethers as hardhatEthers } from "hardhat";
 import {
   CONTRACTS_MAP,
   ContractType,
+  EditionDrop,
   getNativeTokenByChainId,
+  IpfsStorage,
   IStorage,
   Marketplace,
+  NFTDrop,
   Pack,
+  REMOTE_CONTRACT_NAME,
   ThirdwebSDK,
   Vote,
 } from "../src";
@@ -102,10 +109,46 @@ before(async () => {
 
   console.log("TWFee address: ", thirdwebFeeDeployer.address);
 
+  const customFactoryDeployer = (await new ethers.ContractFactory(
+    ByocRegistry__factory.abi,
+    ByocRegistry__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(registry.address)) as ByocRegistry;
+  await customFactoryDeployer.deployed();
+  console.log("ByocRegistry address: ", customFactoryDeployer.address);
+
+  await registryContract.grantRole(
+    await registryContract.OPERATOR_ROLE(),
+    customFactoryDeployer.address,
+  );
+
   async function deployContract(
     contractFactory: ethers.ContractFactory,
     contractType: ContractType,
   ): Promise<ethers.Contract> {
+    // handle version bumps
+    switch (contractType) {
+      case NFTDrop.contractType:
+      case EditionDrop.contractType:
+      case Marketplace.contractType:
+        const mock = await new ethers.ContractFactory(
+          MockContract__factory.abi,
+          MockContract__factory.bytecode,
+        )
+          .connect(signer)
+          .deploy(
+            ethers.utils.formatBytes32String(
+              REMOTE_CONTRACT_NAME[contractType],
+            ),
+            1,
+          );
+        const tx = await thirdwebFactoryDeployer.addImplementation(
+          mock.address,
+        );
+        await tx.wait();
+    }
+
     switch (contractType) {
       case Vote.contractType:
         return await contractFactory.deploy();
@@ -158,6 +201,7 @@ before(async () => {
 
   process.env.registryAddress = thirdwebRegistryAddress;
   process.env.factoryAddress = thirdwebFactoryDeployer.address;
+  process.env.byocRegistryAddress = customFactoryDeployer.address;
 
   storage = new MockStorage();
   sdk = new ThirdwebSDK(

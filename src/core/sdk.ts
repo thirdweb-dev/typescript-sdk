@@ -27,6 +27,7 @@ import { ContractDeployer } from "./classes/contract-deployer";
 import { CustomContract } from "../contracts/custom";
 import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
+import { ContractPublisher } from "./classes/contract-publisher";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -46,6 +47,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * New contract deployer
    */
   public deployer: ContractDeployer;
+  /**
+   * @internal
+   */
+  public publisher: ContractPublisher;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -57,6 +62,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // this.registry = new ContractRegistry(network, options);
     this.storage = storage;
     this.deployer = new ContractDeployer(network, options, storage);
+    this.publisher = new ContractPublisher(network, options, storage);
   }
 
   /**

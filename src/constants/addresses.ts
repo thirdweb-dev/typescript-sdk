@@ -9,6 +9,7 @@ export const OZ_DEFENDER_FORWARDER_ADDRESS =
 
 const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
 const TWFactory_address = "0x11c34F062Cb10a20B9F463E12Ff9dA62D76FDf65";
+const BYOCFactory_address = ""; // TODO
 
 /**
  * @internal
@@ -87,4 +88,15 @@ export function getContractAddressByChainId(
   }
   // real output here
   return CONTRACT_ADDRESSES[chainId][contractName];
+}
+
+/**
+ * @internal
+ */
+export function getBYOCRegistryAddress() {
+  if (process.env.byocRegistryAddress) {
+    return process.env.byocRegistryAddress as string;
+  } else {
+    return BYOCFactory_address;
+  }
 }

@@ -6,6 +6,7 @@ import {
   AbiSchema,
   CustomContractMetadataSchema,
 } from "../schema/contracts/custom";
+import { z } from "zod";
 
 /**
  * Type guards a contract to a known type if it matches the corresponding interface
@@ -46,7 +47,14 @@ export async function extractConstructorParams(
   const metadata = CustomContractMetadataSchema.parse(
     await storage.get(metadataUri),
   );
-  const abi = AbiSchema.parse(await storage.get(metadata.abiUri));
+  const abiRaw = await storage.get(metadata.abiUri);
+  const abi = AbiSchema.parse(abiRaw);
+  return extractConstructorParamsFromAbi(abi);
+}
+
+export function extractConstructorParamsFromAbi(
+  abi: z.input<typeof AbiSchema>,
+) {
   for (const input of abi) {
     if (input.type === "constructor") {
       return input.inputs;

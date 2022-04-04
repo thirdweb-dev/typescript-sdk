@@ -1,21 +1,36 @@
-import { NetworkOrSignerOrProvider } from "../types";
+import { NetworkOrSignerOrProvider, TransactionResultWithId } from "../types";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { BytesLike, ContractInterface, ethers } from "ethers";
+import { BigNumber, BytesLike, ContractInterface, ethers } from "ethers";
 import invariant from "tiny-invariant";
 import {
   extractConstructorParams,
+  extractConstructorParamsFromAbi,
   fetchContractMetadata,
 } from "../../common/feature-detection";
+import {
+  ContractParam,
+  PublishedContract,
+  PublishedContractSchema,
+} from "../../schema/contracts/custom";
+import { solidityKeccak256 } from "ethers/lib/utils";
+import { ContractWrapper } from "./contract-wrapper";
+import { ByocRegistry, ByocRegistry__factory } from "@thirdweb-dev/contracts";
+import { AddressZero } from "@ethersproject/constants";
+import {
+  ContractDeployedEvent,
+  ContractPublishedEvent,
+} from "@thirdweb-dev/contracts/dist/ByocRegistry";
+import { getBYOCRegistryAddress } from "../../constants";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)
  * @internal
  */
 export class ContractPublisher extends RPCConnectionHandler {
-  // TODO private _registry: Promise<ContractRegistry> | undefined;
   private storage: IStorage;
+  private registry: ContractWrapper<ByocRegistry>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -24,13 +39,21 @@ export class ContractPublisher extends RPCConnectionHandler {
   ) {
     super(network, options);
     this.storage = storage;
+    this.registry = new ContractWrapper<ByocRegistry>(
+      network,
+      getBYOCRegistryAddress(),
+      ByocRegistry__factory.abi,
+      options,
+    );
   }
 
   /**
    * @internal
    * @param metadataUri
    */
-  public async extractConstructorParams(metadataUri: string) {
+  public async extractConstructorParams(
+    metadataUri: string,
+  ): Promise<ContractParam[]> {
     return extractConstructorParams(metadataUri, this.storage);
   }
 
@@ -42,26 +65,99 @@ export class ContractPublisher extends RPCConnectionHandler {
     return fetchContractMetadata(metadataUri, this.storage);
   }
 
-  // TODO publish contract
+  public async getAll(publisherAddress: string): Promise<PublishedContract[]> {
+    const data = await this.registry.readContract.getPublishedContracts(
+      publisherAddress,
+    );
+    return data.map((d) =>
+      PublishedContractSchema.parse({
+        id: d.contractId,
+        metadataUri: d.publishMetadataUri,
+      }),
+    );
+  }
+
+  public async get(
+    publisherAddress: string,
+    metadataUri: string,
+  ): Promise<PublishedContract> {
+    // TODO should be a single call to contract?
+    const all = await this.getAll(publisherAddress);
+    const contract = all.find((p) => p.metadataUri === metadataUri);
+    if (contract === undefined) {
+      throw Error(
+        `No contract found with uri: ${metadataUri} for publisher: ${publisherAddress}`,
+      );
+    }
+    return contract;
+  }
+
+  public async publish(
+    metadataUri: string,
+  ): Promise<TransactionResultWithId<PublishedContract>> {
+    const signer = this.getSigner();
+    invariant(signer, "A signer is required");
+    const publisher = await signer.getAddress();
+    const metadata = await this.fetchFullContractMetadata(metadataUri);
+    const bytecodeHash = solidityKeccak256(["bytes"], [metadata.bytecode]);
+    const receipt = await this.registry.sendTransaction("publishContract", [
+      publisher,
+      metadataUri,
+      bytecodeHash,
+      AddressZero,
+    ]);
+    const events = this.registry.parseLogs<ContractPublishedEvent>(
+      "ContractPublished",
+      receipt.logs,
+    );
+    if (events.length < 1) {
+      throw new Error("No ContractDeployed event found");
+    }
+    const id = events[0].args.contractId;
+    return { id, receipt, data: () => this.get(publisher, metadataUri) };
+  }
+
   // TODO unpublish contract
-  // TODO getAllPublishedContract
 
   /**
    * @internal
-   * @param metadataUri
-   * @param constructorParams
+   * @param contract
+   * @param constructorParamValues
    */
   public async deployCustomContract(
-    metadataUri: string,
-    constructorParams: Array<any>,
+    contract: PublishedContract,
+    constructorParamValues: any[],
   ): Promise<string> {
-    const metadata = await this.fetchFullContractMetadata(metadataUri);
-    // TODO deploy via registry, we won't be deploying directly through SDK
-    return this.deployCustomContractWithAbi(
+    const signer = this.getSigner();
+    invariant(signer, "A signer is required");
+    const metadata = await this.fetchFullContractMetadata(contract.metadataUri);
+    const publisher = await signer.getAddress();
+    const bytecode = metadata.bytecode;
+    const salt = ethers.utils.formatBytes32String("");
+    const value = BigNumber.from(0);
+    const constructorParamTypes = extractConstructorParamsFromAbi(
       metadata.abi,
-      metadata.bytecode,
-      constructorParams,
+    ).map((p) => p.type);
+    const constructorParamsEncoded = ethers.utils.solidityPack(
+      constructorParamTypes,
+      constructorParamValues,
     );
+    const receipt = await this.registry.sendTransaction("deployInstance", [
+      publisher,
+      contract.id,
+      bytecode,
+      constructorParamsEncoded,
+      salt,
+      value,
+    ]);
+    const events = this.registry.parseLogs<ContractDeployedEvent>(
+      "ContractDeployed",
+      receipt.logs,
+    );
+    if (events.length < 1) {
+      throw new Error("No ContractDeployed event found");
+    }
+    return events[0].args.deployedContract;
   }
 
   /**

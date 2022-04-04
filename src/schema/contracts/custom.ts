@@ -9,6 +9,7 @@ import {
   MerkleSchema,
 } from "./common";
 import { z } from "zod";
+import { BigNumberSchema } from "../shared";
 
 export const CustomContractInput = CommonContractSchema.merge(
   CommonRoyaltySchema.merge(MerkleSchema).merge(CommonSymbolSchema).partial(),
@@ -47,3 +48,11 @@ export const AbiObjectSchema = z.object({
 });
 
 export const AbiSchema = z.array(AbiObjectSchema);
+
+export const PublishedContractSchema = z.object({
+  id: BigNumberSchema,
+  metadataUri: z.string(),
+});
+
+export type ContractParam = z.input<typeof AbiInputSchema>;
+export type PublishedContract = z.input<typeof PublishedContractSchema>;
