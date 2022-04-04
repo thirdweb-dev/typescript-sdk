@@ -2070,6 +2070,11 @@ export interface IGenericSchemaType {
     output: z.AnyZodObject;
 }
 
+// Warning: (ae-internal-missing-underscore) The name "includesErrorMessage" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function includesErrorMessage(err: any, message: string): boolean;
+
 // Warning: (ae-internal-missing-underscore) The name "InterfaceId_IERC1155" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)

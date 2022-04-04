@@ -354,3 +354,16 @@ function parseMessageParts(regex: RegExp, raw: string): string {
   }
   return extracted;
 }
+
+/**
+ * @internal
+ * @param err
+ * @param message
+ */
+export function includesErrorMessage(err: any, message: string): boolean {
+  return (
+    (err && err.toString().includes(message)) ||
+    (err.message && err.message.toString().includes(message)) ||
+    (err.error && err.error.toString().includes(message))
+  );
+}
