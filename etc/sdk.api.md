@@ -2187,12 +2187,11 @@ export class Marketplace implements UpdateableNetwork {
     estimator: GasCostEstimator<Marketplace_2>;
     // (undocumented)
     events: ContractEvents<Marketplace_2>;
-    getActiveListings(): Promise<(AuctionListing | DirectListing)[]>;
+    getActiveListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     // (undocumented)
     getAddress(): string;
     // @internal (undocumented)
     getAll: (filter?: MarketplaceFilter | undefined) => Promise<(AuctionListing | DirectListing)[]>;
-    // Warning: (ae-forgotten-export) The symbol "MarketplaceFilter" needs to be exported by the entry point index.d.ts
     getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     getBidBufferBps(): Promise<BigNumber>;
     getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
@@ -2327,6 +2326,16 @@ export class MarketplaceDirect {
     // @internal
     mapListing(listing: IMarketplace.ListingStruct): Promise<DirectListing>;
     updateListing(listing: DirectListing): Promise<TransactionResult>;
+}
+
+// @public (undocumented)
+export interface MarketplaceFilter extends QueryAllParams {
+    // (undocumented)
+    seller?: string;
+    // (undocumented)
+    tokenContract?: string;
+    // (undocumented)
+    tokenId?: number;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "MerkleSchema" should be prefixed with an underscore because the declaration is marked as @internal

@@ -207,7 +207,7 @@
       {
         "name": "getActiveListings",
         "summary": "Get all active listings\n\n",
-        "remarks": "\n\nFetch all the active listings from this marketplace contract.\n\n",
+        "remarks": "\n\nFetch all the active listings from this marketplace contract. An active listing means it can be bought or bid on.\n\n",
         "examples": {
           "javascript": "const listings = await contract.getActiveListings();\nconst priceOfFirstActiveListing = listings[0].price;"
         },

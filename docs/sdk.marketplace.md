@@ -54,7 +54,7 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 |  [allowListingFromAnyAsset()](./sdk.marketplace.allowlistingfromanyasset.md) |  | Allow listings from any NFT contract |
 |  [allowListingFromSpecificAssetOnly(contractAddress)](./sdk.marketplace.allowlistingfromspecificassetonly.md) |  | Restrict listing NFTs only from the specified NFT contract address. It is possible to allow listing from multiple contract addresses. |
 |  [buyoutListing(listingId, quantityDesired, receiver)](./sdk.marketplace.buyoutlisting.md) |  | Purchase NFTs |
-|  [getActiveListings()](./sdk.marketplace.getactivelistings.md) |  | Get all active listings |
+|  [getActiveListings(filter)](./sdk.marketplace.getactivelistings.md) |  | Get all active listings |
 |  [getAddress()](./sdk.marketplace.getaddress.md) |  |  |
 |  [getAllListings(filter)](./sdk.marketplace.getalllistings.md) |  | Get all the listings |
 |  [getBidBufferBps()](./sdk.marketplace.getbidbufferbps.md) |  | Get the buffer in basis points between offers |
