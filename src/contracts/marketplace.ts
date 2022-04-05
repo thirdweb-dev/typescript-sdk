@@ -218,23 +218,25 @@ export class Marketplace implements UpdateableNetwork {
   /**
    * Get all active listings
    *
-   * @remarks Fetch all the active listings from this marketplace contract.
+   * @remarks Fetch all the active listings from this marketplace contract. An active listing means it can be bought or bid on.
    * @example
    * ```javascript
    * const listings = await contract.getActiveListings();
    * const priceOfFirstActiveListing = listings[0].price;
    * ```
+   * @param filter - optional filter parameters
    */
-  public async getActiveListings(): Promise<
-    (AuctionListing | DirectListing)[]
-  > {
+  public async getActiveListings(
+    filter?: MarketplaceFilter,
+  ): Promise<(AuctionListing | DirectListing)[]> {
     const rawListings = await this.getAllListingsNoFilter();
-    return rawListings.filter((l) => {
+    const filtered = this.applyFilter(rawListings, filter);
+    const now = BigNumber.from(Math.floor(Date.now() / 1000));
+    return filtered.filter((l) => {
       return (
         (l.type === ListingType.Auction &&
-          BigNumber.from(l.endTimeInEpochSeconds).gt(
-            BigNumber.from(Math.floor(Date.now() / 1000)),
-          )) ||
+          BigNumber.from(l.endTimeInEpochSeconds).gt(now) &&
+          BigNumber.from(l.startTimeInEpochSeconds).lte(now)) ||
         (l.type === ListingType.Direct && l.quantity > 0)
       );
     });
@@ -255,43 +257,8 @@ export class Marketplace implements UpdateableNetwork {
   public async getAllListings(
     filter?: MarketplaceFilter,
   ): Promise<(AuctionListing | DirectListing)[]> {
-    const start = BigNumber.from(filter?.start || 0).toNumber();
-    const count = BigNumber.from(
-      filter?.count || DEFAULT_QUERY_ALL_COUNT,
-    ).toNumber();
-    let rawListings = await this.getAllListingsNoFilter();
-
-    if (filter) {
-      if (filter.seller) {
-        rawListings = rawListings.filter(
-          (seller) =>
-            seller.sellerAddress.toString().toLowerCase() ===
-            filter?.seller?.toString().toLowerCase(),
-        );
-      }
-      if (filter.tokenContract) {
-        if (!filter.tokenId) {
-          rawListings = rawListings.filter(
-            (tokenContract) =>
-              tokenContract.assetContractAddress.toString().toLowerCase() ===
-              filter?.tokenContract?.toString().toLowerCase(),
-          );
-        } else {
-          rawListings = rawListings.filter(
-            (tokenContract) =>
-              tokenContract.assetContractAddress.toString().toLowerCase() ===
-                filter?.tokenContract?.toString().toLowerCase() &&
-              tokenContract.tokenId.toString() === filter?.tokenId?.toString(),
-          );
-        }
-      }
-      rawListings = rawListings.filter((_, index) => index >= start);
-      rawListings = rawListings.slice(0, count);
-    }
-    return rawListings.filter((l) => l !== undefined) as (
-      | AuctionListing
-      | DirectListing
-    )[];
+    const rawListings = await this.getAllListingsNoFilter();
+    return this.applyFilter(rawListings, filter);
   }
 
   /**
@@ -506,6 +473,43 @@ export class Marketplace implements UpdateableNetwork {
       | AuctionListing
       | DirectListing
     )[];
+  }
+
+  private applyFilter(
+    listings: (AuctionListing | DirectListing)[],
+    filter?: MarketplaceFilter,
+  ) {
+    let rawListings = [...listings];
+    const start = BigNumber.from(filter?.start || 0).toNumber();
+    const count = BigNumber.from(
+      filter?.count || DEFAULT_QUERY_ALL_COUNT,
+    ).toNumber();
+    if (filter) {
+      if (filter.seller) {
+        rawListings = rawListings.filter(
+          (seller) =>
+            seller.sellerAddress.toString().toLowerCase() ===
+            filter?.seller?.toString().toLowerCase(),
+        );
+      }
+      if (filter.tokenContract) {
+        rawListings = rawListings.filter(
+          (tokenContract) =>
+            tokenContract.assetContractAddress.toString().toLowerCase() ===
+            filter?.tokenContract?.toString().toLowerCase(),
+        );
+      }
+
+      if (filter.tokenId) {
+        rawListings = rawListings.filter(
+          (tokenContract) =>
+            tokenContract.tokenId === filter?.tokenId?.toString(),
+        );
+      }
+      rawListings = rawListings.filter((_, index) => index >= start);
+      rawListings = rawListings.slice(0, count);
+    }
+    return rawListings;
   }
 
   // TODO: Complete method implementation with subgraph

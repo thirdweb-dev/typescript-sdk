@@ -298,12 +298,12 @@ describe("Marketplace Contract", async () => {
 
     it("should return only active listings", async () => {
       const before = await marketplaceContract.getActiveListings();
-      expect(before.length).to.eq(2);
+      expect(before.length).to.eq(1);
       console.log("before", before);
       await sdk.updateSignerOrProvider(samWallet);
       await marketplaceContract.buyoutListing(directListingId, 1);
       const afterDirectBuyout = await marketplaceContract.getActiveListings();
-      expect(afterDirectBuyout.length).to.eq(1);
+      expect(afterDirectBuyout.length).to.eq(0);
       // TODO add test for buying out auctions too (needs time control)
     });
 

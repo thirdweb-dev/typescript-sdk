@@ -16,7 +16,7 @@ getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectList
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  filter | MarketplaceFilter | <i>(Optional)</i> optional filter parameters |
+|  filter | [MarketplaceFilter](./sdk.marketplacefilter.md) | <i>(Optional)</i> optional filter parameters |
 
 <b>Returns:</b>
 
