@@ -30,7 +30,7 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this contract owned by the wallet).\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await contract.balanceOf(address);\nconsole.log(balance);"
+          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n// Id of the NFT to check\nconst tokenId = 0;\n\nconst balance = await contract.balanceOf(address, tokenId);\nconsole.log(balance);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.balanceOf"
       },
@@ -124,7 +124,7 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this contract owned by the wallet).\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await contract.balanceOf(address);\nconsole.log(balance);"
+          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n// Id of the NFT to check\nconst tokenId = 0;\n\nconst balance = await contract.balanceOf(address, tokenId);\nconsole.log(balance);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.balanceOf"
       },

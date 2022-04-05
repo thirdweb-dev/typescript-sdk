@@ -190,8 +190,10 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    * ```javascript
    * // Address of the wallet to check NFT balance
    * const address = "{{wallet_address}}";
+   * // Id of the NFT to check
+   * const tokenId = 0;
    *
-   * const balance = await contract.balanceOf(address);
+   * const balance = await contract.balanceOf(address, tokenId);
    * console.log(balance);
    * ```
    */
