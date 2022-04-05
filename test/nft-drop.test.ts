@@ -691,7 +691,7 @@ describe("NFT Drop Contract", async () => {
 
   it("set claim condition and update claim condition", async () => {
     await dropContract.claimConditions.set([
-      { startTime: new Date(Date.now() / 2), maxQuantity: 1 },
+      { startTime: new Date(Date.now() / 2), maxQuantity: 1, price: 0.15 },
       { startTime: new Date(), waitInSeconds: 60 },
     ]);
     expect((await dropContract.claimConditions.getAll()).length).to.be.equal(2);
@@ -700,6 +700,9 @@ describe("NFT Drop Contract", async () => {
     let updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
       BigNumber.from(1),
+    );
+    expect(updatedConditions[0].price).to.be.deep.equal(
+      ethers.utils.parseUnits("0.15"),
     );
     expect(updatedConditions[0].waitInSeconds).to.be.deep.equal(
       BigNumber.from(10),

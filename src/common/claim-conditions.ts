@@ -175,10 +175,14 @@ export async function updateExistingClaimConditions(
     }
   };
 
+  const priceDecimals = existingConditions[index].currencyMetadata.decimals;
+  const priceInWei = existingConditions[index].price;
+  const priceInTokens = ethers.utils.formatUnits(priceInWei, priceDecimals);
+
   // merge existing (output format) with incoming (input format)
   const newConditionParsed = ClaimConditionInputSchema.parse({
     ...existingConditions[index],
-    price: existingConditions[index].price.toString(),
+    price: priceInTokens,
     maxQuantity: revertToFormattedAmount(existingConditions[index].maxQuantity),
     quantityLimitPerTransaction: revertToFormattedAmount(
       existingConditions[index].quantityLimitPerTransaction,
@@ -189,6 +193,7 @@ export async function updateExistingClaimConditions(
   // convert to output claim condition
   const mergedConditionOutput = ClaimConditionOutputSchema.parse({
     ...newConditionParsed,
+    price: priceInWei,
     maxQuantity: convertBackToBigNumber(newConditionParsed.maxQuantity),
     quantityLimitPerTransaction: convertBackToBigNumber(
       newConditionParsed.quantityLimitPerTransaction,
@@ -202,9 +207,13 @@ export async function updateExistingClaimConditions(
     } else {
       newConditionAtIndex = existingOutput;
     }
+    const formattedPrice = ethers.utils.formatUnits(
+      newConditionAtIndex.price,
+      priceDecimals,
+    );
     return {
       ...newConditionAtIndex,
-      price: newConditionAtIndex.price.toString(), // manually transform back to input price type
+      price: formattedPrice, // manually transform back to input price type
       maxQuantity: revertToFormattedAmount(newConditionAtIndex.maxQuantity),
       quantityLimitPerTransaction: revertToFormattedAmount(
         newConditionAtIndex.quantityLimitPerTransaction,
