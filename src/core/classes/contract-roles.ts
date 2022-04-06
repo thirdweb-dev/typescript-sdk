@@ -109,47 +109,49 @@ export class ContractRoles<
     console.log("DEBUG - currentRoles", currentRoles);
     const encoded: string[] = [];
     // add / remove admin role at the end so we don't revoke admin then grant
-    roles
-      .sort((role) => (role === "admin" ? 1 : -1))
-      .forEach(async (role) => {
-        const addresses: string[] = rolesWithAddresses[role] || [];
-        const currentAddresses = currentRoles[role] || [];
-        const toAdd = addresses.filter(
-          (address) => !currentAddresses.includes(address),
-        );
-        console.log("DEBUG - toAdd", toAdd);
-        const toRemove = currentAddresses.filter(
-          (address) => !addresses.includes(address),
-        );
-        console.log("DEBUG - toRemove", toRemove);
-        if (toAdd.length) {
-          toAdd.forEach((address) => {
-            console.log("DEBUG - adding", address);
-            encoded.push(
-              this.contractWrapper.readContract.interface.encodeFunctionData(
-                "grantRole",
-                [getRoleHash(role), address],
-              ),
-            );
-          });
+    const sortedRoles = roles.sort((role) => (role === "admin" ? 1 : -1));
+    for (let i = 0; i < sortedRoles.length; i++) {
+      const role = sortedRoles[i];
+      const addresses: string[] = rolesWithAddresses[role] || [];
+      const currentAddresses = currentRoles[role] || [];
+      const toAdd = addresses.filter(
+        (address) => !currentAddresses.includes(address),
+      );
+      console.log("DEBUG - toAdd", toAdd);
+      const toRemove = currentAddresses.filter(
+        (address) => !addresses.includes(address),
+      );
+      console.log("DEBUG - toRemove", toRemove);
+      if (toAdd.length) {
+        toAdd.forEach((address) => {
+          console.log("DEBUG - adding", address);
+          encoded.push(
+            this.contractWrapper.readContract.interface.encodeFunctionData(
+              "grantRole",
+              [getRoleHash(role), address],
+            ),
+          );
+        });
+      }
+      if (toRemove.length) {
+        for (let j = 0; j < toRemove.length; j++) {
+          const address = toRemove[j];
+          console.log("DEBUG - removing", address);
+          const revokeFunctionName = (await this.getRevokeRoleFunctionName(
+            address,
+          )) as any;
+          console.log("DEBUG - revokeFunctionName", revokeFunctionName);
+          encoded.push(
+            this.contractWrapper.readContract.interface.encodeFunctionData(
+              revokeFunctionName,
+              [getRoleHash(role), address],
+            ),
+          );
+          console.log("DEBUG - added encoded data", encoded);
         }
-        if (toRemove.length) {
-          toRemove.forEach(async (address) => {
-            console.log("DEBUG - removing", address);
-            const revokeFunctionName = (await this.getRevokeRoleFunctionName(
-              address,
-            )) as any;
-            console.log("DEBUG - revokeFunctionName", revokeFunctionName);
-            encoded.push(
-              this.contractWrapper.readContract.interface.encodeFunctionData(
-                revokeFunctionName,
-                [getRoleHash(role), address],
-              ),
-            );
-            console.log("DEBUG - added encoded data", encoded);
-          });
-        }
-      });
+      }
+    }
+
     console.log("DEBUG - encoded data length for multicall", encoded.length);
     console.log("DEBUG - encoded data for multicall", encoded);
     return {
