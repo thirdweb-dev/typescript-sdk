@@ -108,41 +108,42 @@ export class ContractRoles<
     const currentRoles = await this.getAll();
     const encoded: string[] = [];
     // add / remove admin role at the end so we don't revoke admin then grant
-    roles
-      .sort((role) => (role === "admin" ? 1 : -1))
-      .forEach(async (role) => {
-        const addresses: string[] = rolesWithAddresses[role] || [];
-        const currentAddresses = currentRoles[role] || [];
-        const toAdd = addresses.filter(
-          (address) => !currentAddresses.includes(address),
-        );
-        const toRemove = currentAddresses.filter(
-          (address) => !addresses.includes(address),
-        );
-        if (toAdd.length) {
-          toAdd.forEach((address) => {
-            encoded.push(
-              this.contractWrapper.readContract.interface.encodeFunctionData(
-                "grantRole",
-                [getRoleHash(role), address],
-              ),
-            );
-          });
+    const sortedRoles = roles.sort((role) => (role === "admin" ? 1 : -1));
+    for (let i = 0; i < sortedRoles.length; i++) {
+      const role = sortedRoles[i];
+      const addresses: string[] = rolesWithAddresses[role] || [];
+      const currentAddresses = currentRoles[role] || [];
+      const toAdd = addresses.filter(
+        (address) => !currentAddresses.includes(address),
+      );
+      const toRemove = currentAddresses.filter(
+        (address) => !addresses.includes(address),
+      );
+      if (toAdd.length) {
+        toAdd.forEach((address) => {
+          encoded.push(
+            this.contractWrapper.readContract.interface.encodeFunctionData(
+              "grantRole",
+              [getRoleHash(role), address],
+            ),
+          );
+        });
+      }
+      if (toRemove.length) {
+        for (let j = 0; j < toRemove.length; j++) {
+          const address = toRemove[j];
+          const revokeFunctionName = (await this.getRevokeRoleFunctionName(
+            address,
+          )) as any;
+          encoded.push(
+            this.contractWrapper.readContract.interface.encodeFunctionData(
+              revokeFunctionName,
+              [getRoleHash(role), address],
+            ),
+          );
         }
-        if (toRemove.length) {
-          toRemove.forEach(async (address) => {
-            const revokeFunctionName = (await this.getRevokeRoleFunctionName(
-              address,
-            )) as any;
-            encoded.push(
-              this.contractWrapper.readContract.interface.encodeFunctionData(
-                revokeFunctionName,
-                [getRoleHash(role), address],
-              ),
-            );
-          });
-        }
-      });
+      }
+    }
     return {
       receipt: await this.contractWrapper.multiCall(encoded),
     };
