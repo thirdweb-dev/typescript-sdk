@@ -106,6 +106,7 @@ export class ContractRoles<
       "this contract does not support the given role",
     );
     const currentRoles = await this.getAll();
+    console.log("DEBUG - currentRoles", currentRoles);
     const encoded: string[] = [];
     // add / remove admin role at the end so we don't revoke admin then grant
     roles
@@ -116,11 +117,14 @@ export class ContractRoles<
         const toAdd = addresses.filter(
           (address) => !currentAddresses.includes(address),
         );
+        console.log("DEBUG - toAdd", toAdd);
         const toRemove = currentAddresses.filter(
           (address) => !addresses.includes(address),
         );
+        console.log("DEBUG - toRemove", toRemove);
         if (toAdd.length) {
           toAdd.forEach((address) => {
+            console.log("DEBUG - adding", address);
             encoded.push(
               this.contractWrapper.readContract.interface.encodeFunctionData(
                 "grantRole",
@@ -131,6 +135,7 @@ export class ContractRoles<
         }
         if (toRemove.length) {
           toRemove.forEach(async (address) => {
+            console.log("DEBUG - removing", address);
             const revokeFunctionName = (await this.getRevokeRoleFunctionName(
               address,
             )) as any;
