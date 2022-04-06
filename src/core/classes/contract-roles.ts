@@ -106,7 +106,6 @@ export class ContractRoles<
       "this contract does not support the given role",
     );
     const currentRoles = await this.getAll();
-    console.log("DEBUG - currentRoles", currentRoles);
     const encoded: string[] = [];
     // add / remove admin role at the end so we don't revoke admin then grant
     const sortedRoles = roles.sort((role) => (role === "admin" ? 1 : -1));
@@ -117,14 +116,11 @@ export class ContractRoles<
       const toAdd = addresses.filter(
         (address) => !currentAddresses.includes(address),
       );
-      console.log("DEBUG - toAdd", toAdd);
       const toRemove = currentAddresses.filter(
         (address) => !addresses.includes(address),
       );
-      console.log("DEBUG - toRemove", toRemove);
       if (toAdd.length) {
         toAdd.forEach((address) => {
-          console.log("DEBUG - adding", address);
           encoded.push(
             this.contractWrapper.readContract.interface.encodeFunctionData(
               "grantRole",
@@ -136,24 +132,18 @@ export class ContractRoles<
       if (toRemove.length) {
         for (let j = 0; j < toRemove.length; j++) {
           const address = toRemove[j];
-          console.log("DEBUG - removing", address);
           const revokeFunctionName = (await this.getRevokeRoleFunctionName(
             address,
           )) as any;
-          console.log("DEBUG - revokeFunctionName", revokeFunctionName);
           encoded.push(
             this.contractWrapper.readContract.interface.encodeFunctionData(
               revokeFunctionName,
               [getRoleHash(role), address],
             ),
           );
-          console.log("DEBUG - added encoded data", encoded);
         }
       }
     }
-
-    console.log("DEBUG - encoded data length for multicall", encoded.length);
-    console.log("DEBUG - encoded data for multicall", encoded);
     return {
       receipt: await this.contractWrapper.multiCall(encoded),
     };
