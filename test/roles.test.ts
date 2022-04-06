@@ -3,6 +3,7 @@ import { Edition } from "../src/index";
 import { sdk, signers } from "./before.test";
 
 import { assert } from "chai";
+import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("node-fetch");
 
@@ -110,6 +111,50 @@ describe("Roles Contract", async () => {
         newRoles.transfer.includes(
           "0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E",
         ),
+    );
+  });
+
+  it("Make collection non-transferable", async () => {
+    const oldRoles = await bundleContract.roles.getAll();
+    await bundleContract.roles.setAll({
+      admin: [...oldRoles.admin],
+      minter: [...oldRoles.minter],
+      transfer: [],
+    });
+    const newRoles = await bundleContract.roles.getAll();
+    assert.isTrue(newRoles.admin.length === oldRoles.admin.length);
+    assert.isTrue(newRoles.minter.length === oldRoles.minter.length);
+    assert.isTrue(newRoles.transfer.length === 0);
+  });
+
+  it("Make collection transferable", async () => {
+    const oldRoles = await bundleContract.roles.getAll();
+    await bundleContract.roles.setAll({
+      admin: [...oldRoles.admin],
+      minter: [...oldRoles.minter],
+      transfer: [AddressZero],
+    });
+    const newRoles = await bundleContract.roles.getAll();
+    assert.isTrue(newRoles.admin.length === oldRoles.admin.length);
+    assert.isTrue(newRoles.minter.length === oldRoles.minter.length);
+    assert.isTrue(newRoles.transfer.includes(AddressZero));
+  });
+
+  it("Make collection non-transferable with some wallets being able to transfer", async () => {
+    const oldRoles = await bundleContract.roles.getAll();
+    await bundleContract.roles.setAll({
+      admin: [...oldRoles.admin],
+      minter: [...oldRoles.minter],
+      transfer: [bobWallet.address, samWallet.address],
+    });
+    const newRoles = await bundleContract.roles.getAll();
+    assert.isTrue(newRoles.admin.length === oldRoles.admin.length);
+    assert.isTrue(newRoles.minter.length === oldRoles.minter.length);
+    assert.isTrue(
+      newRoles.transfer.includes(bobWallet.address) &&
+        newRoles.transfer.includes(samWallet.address) &&
+        newRoles.transfer.length === 2 &&
+        !newRoles.transfer.includes(AddressZero),
     );
   });
 });
