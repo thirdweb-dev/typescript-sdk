@@ -139,15 +139,19 @@ export class ContractRoles<
             const revokeFunctionName = (await this.getRevokeRoleFunctionName(
               address,
             )) as any;
+            console.log("DEBUG - revokeFunctionName", revokeFunctionName);
             encoded.push(
               this.contractWrapper.readContract.interface.encodeFunctionData(
                 revokeFunctionName,
                 [getRoleHash(role), address],
               ),
             );
+            console.log("DEBUG - added encoded data", encoded);
           });
         }
       });
+    console.log("DEBUG - encoded data length for multicall", encoded.length);
+    console.log("DEBUG - encoded data for multicall", encoded);
     return {
       receipt: await this.contractWrapper.multiCall(encoded),
     };
