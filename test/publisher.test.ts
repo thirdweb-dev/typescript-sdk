@@ -1,34 +1,61 @@
-import { ethers, Wallet } from "ethers";
-import { sdk } from "./before.test";
-import { EventType } from "../src/constants/events";
+import { BigNumber, ethers } from "ethers";
+import { sdk, storage } from "./before.test";
+import { readFileSync } from "fs";
+import exp = require("constants");
 import { expect } from "chai";
-import { NFTDrop, ThirdwebSDK } from "../src";
-import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("node-fetch");
 
 describe("Publishing", async () => {
-  // TODO pre-upload a bunch of ABIs to mock storage
+  let simpleContractUri: string;
+  let contructorParamsContractUri: string;
 
-  it("should fetch published contracts", async () => {
-    const addr = (await sdk.getSigner()?.getAddress()) || "";
-    const all = await sdk.publisher.getAll(addr);
-    console.log(all);
+  const uploadContractMetadata = async (filename) => {
+    const greeterJson = JSON.parse(readFileSync(filename, "utf-8"));
+    const abi = greeterJson.abi;
+    const bytecode = greeterJson.bytecode;
+    const abiUri = await storage.uploadMetadata(abi);
+    const bytecodeUri = await storage.upload(bytecode);
+    const contractData = {
+      name: greeterJson.contractName,
+      abiUri,
+      bytecodeUri,
+    };
+    return await storage.uploadMetadata(contractData);
+  };
+
+  before("Upload abis", async () => {
+    simpleContractUri = await uploadContractMetadata("test/abis/greeter.json");
+    contructorParamsContractUri = await uploadContractMetadata(
+      "test/abis/constructor_params.json",
+    );
   });
 
-  it("should publish contracts", async () => {
-    const metadataUri =
-      "ipfs://QmZHuLgpMh73k4SdnF7bjZM4q3pzX6kV5zGvPdqjtLeciF/0";
-    const tx = await sdk.publisher.publish(metadataUri);
-    console.log("publish id", tx.id);
+  it("should publish simple greeter contract", async () => {
+    const tx = await sdk.publisher.publish(simpleContractUri);
     const published = await tx.data();
-    console.log("published struct", published);
     const deployedAddr = await sdk.publisher.deployCustomContract(
       published,
       [],
     );
     console.log("deployed", deployedAddr);
+    expect(deployedAddr.length).to.be.gt(0);
+    const addr = (await sdk.getSigner()?.getAddress()) || "";
+    const all = await sdk.publisher.getAll(addr);
+    expect(all.length).to.be.eq(1);
   });
 
-  // TODO test contract with constructor params
+  it("should publish constructor params contract", async () => {
+    const tx = await sdk.publisher.publish(contructorParamsContractUri);
+    const published = await tx.data();
+    const deployedAddr = await sdk.publisher.deployCustomContract(published, [
+      ethers.utils.formatBytes32String("someUri"),
+      BigNumber.from(12345),
+    ]);
+    console.log("deployed", deployedAddr);
+    expect(deployedAddr.length).to.be.gt(0);
+    const addr = (await sdk.getSigner()?.getAddress()) || "";
+    const all = await sdk.publisher.getAll(addr);
+    expect(all.length).to.be.eq(2);
+  });
 });

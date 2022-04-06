@@ -13,11 +13,6 @@ import {
   extractConstructorParams,
   fetchContractMetadata,
 } from "../src/common/feature-detection";
-import exp = require("constants");
-import {
-  AbiSchema,
-  CustomContractMetadataSchema,
-} from "../src/schema/contracts/custom";
 
 global.fetch = require("node-fetch");
 

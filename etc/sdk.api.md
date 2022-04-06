@@ -2040,6 +2040,11 @@ export interface GaslessTransaction {
     to: string;
 }
 
+// Warning: (ae-internal-missing-underscore) The name "getBYOCRegistryAddress" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getBYOCRegistryAddress(): string;
+
 // Warning: (ae-internal-missing-underscore) The name "getContractAddressByChainId" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -4294,6 +4299,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-incompatible-release-tags) The symbol "getTokenDrop" is marked as @public, but its signature references "TokenDrop" which is marked as @internal
     getTokenDrop(address: string): TokenDrop;
     getVote(address: string): Vote;
+    // Warning: (ae-forgotten-export) The symbol "ContractPublisher" needs to be exported by the entry point index.d.ts
+    //
+    // @internal (undocumented)
+    publisher: ContractPublisher;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
     // @internal (undocumented)

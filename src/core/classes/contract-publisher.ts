@@ -66,7 +66,7 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   public async getAll(publisherAddress: string): Promise<PublishedContract[]> {
-    const data = await this.registry.readContract.getPublishedContracts(
+    const data = await this.registry.readContract.getAllPublishedContracts(
       publisherAddress,
     );
     return data.map((d) =>
@@ -82,14 +82,26 @@ export class ContractPublisher extends RPCConnectionHandler {
     metadataUri: string,
   ): Promise<PublishedContract> {
     // TODO should be a single call to contract?
-    const all = await this.getAll(publisherAddress);
-    const contract = all.find((p) => p.metadataUri === metadataUri);
-    if (contract === undefined) {
-      throw Error(
-        `No contract found with uri: ${metadataUri} for publisher: ${publisherAddress}`,
+    // const all = await this.getAll(publisherAddress);
+    // const contract = all.find((p) => p.metadataUri === metadataUri);
+    // if (contract === undefined) {
+    //   throw Error(
+    //     `No contract found with uri: ${metadataUri} for publisher: ${publisherAddress}`,
+    //   );
+    // }
+    const id = await this.registry.readContract.contractId(
+      publisherAddress,
+      metadataUri,
+    );
+    const contractStruct =
+      await this.registry.readContract.getPublishedContract(
+        publisherAddress,
+        id,
       );
-    }
-    return contract;
+    return PublishedContractSchema.parse({
+      id: contractStruct.contractId,
+      metadataUri: contractStruct.publishMetadataUri,
+    });
   }
 
   public async publish(
