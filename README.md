@@ -89,7 +89,7 @@ await nftCollection.mint({
 });
 ```
 
-In this example we use [dotenv]("https://www.npmjs.com/package/dotenv") to store the PRIVATE_KEY in an `.env` file, like the following:
+In this example we use [dotenv](https://www.npmjs.com/package/dotenv) to store the PRIVATE_KEY in an `.env` file, like the following:
 
 ```
 PRIVATE_KEY=your-private-key-here
@@ -101,9 +101,9 @@ You could also store your private key in a shell environment variable, or load i
 
 ### Frontend usage
 
-For frontend applications, head over to our [React Github repo]("https://github.com/thirdweb-dev/react") which shows you how to connect to a user's wallet like Metamask, and automatically instantiate the thirdweb SDK for you.
+For frontend applications, head over to our [React Github repo](https://github.com/thirdweb-dev/react) which shows you how to connect to a user's wallet like Metamask, and automatically instantiate the thirdweb SDK for you.
 
-Easiest way to get started on the frontend is using one of our templates in the [thirdweb examples repo]("https://github.com/thirdweb-example").
+Easiest way to get started on the frontend is using one of our templates in the [thirdweb examples repo](https://github.com/thirdweb-example).
 
 ### API Reference & code examples
 
