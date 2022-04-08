@@ -26,9 +26,15 @@ export type FileBufferOrString = z.output<typeof FileBufferOrStringSchema>;
 
 export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
 
-// TODO z.instance(BigNumber) might not be compatible with the caller's version of ethers BigNumber
 export const BigNumberSchema = z
-  .union([z.string(), z.number(), z.bigint(), z.instanceof(BigNumber)])
+  .union([
+    z.string(),
+    z.number(),
+    z.bigint(),
+    z.custom((data) => {
+      return BigNumber.isBigNumber(data);
+    }),
+  ])
   .transform((arg) => BigNumber.from(arg));
 
 export const BigNumberishSchema = BigNumberSchema.transform((arg) =>
