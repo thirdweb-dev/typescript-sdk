@@ -114,7 +114,7 @@ before(async () => {
     ByocRegistry__factory.bytecode,
   )
     .connect(signer)
-    .deploy(registry.address)) as ByocRegistry;
+    .deploy(registry.address, [])) as ByocRegistry;
   await customFactoryDeployer.deployed();
   console.log("ByocRegistry address: ", customFactoryDeployer.address);
 

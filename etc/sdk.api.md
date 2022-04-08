@@ -28,6 +28,9 @@ import { IThirdwebContract } from '@thirdweb-dev/contracts';
 import { IThirdwebPlatformFee } from '@thirdweb-dev/contracts';
 import { IThirdwebPrimarySale } from '@thirdweb-dev/contracts';
 import { IThirdwebRoyalty } from '@thirdweb-dev/contracts';
+import { ITokenERC20 } from '@thirdweb-dev/contracts';
+import { ITokenERC721 } from '@thirdweb-dev/contracts/dist/ITokenERC721';
+import { ITokenERC721 as ITokenERC721_2 } from '@thirdweb-dev/contracts';
 import { Listener } from '@ethersproject/providers';
 import { Log } from '@ethersproject/providers';
 import { Marketplace as Marketplace_2 } from '@thirdweb-dev/contracts';
@@ -912,6 +915,8 @@ export class CustomContract<TContract extends BaseContract = BaseContract> imple
         }>;
     }> | undefined;
     // (undocumented)
+    nft: Erc721<ITokenERC721_2> | undefined;
+    // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
     platformFees: ContractPlatformFee<TContract & IThirdwebPlatformFee> | undefined;
@@ -1133,6 +1138,8 @@ export class CustomContract<TContract extends BaseContract = BaseContract> imple
         name: string;
         }>;
     };
+    // (undocumented)
+    token: Erc20<ITokenERC20> | undefined;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_IPFS_GATEWAY" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1869,7 +1876,7 @@ export class Erc1155SignatureMinting {
 }
 
 // @public
-export class Erc20<T extends TokenERC20 | DropERC20> implements UpdateableNetwork {
+export class Erc20<T extends TokenERC20 | DropERC20 | ITokenERC20> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     allowance(spender: string): Promise<CurrencyValue>;
     allowanceOf(owner: string, spender: string): Promise<CurrencyValue>;
@@ -1884,7 +1891,6 @@ export class Erc20<T extends TokenERC20 | DropERC20> implements UpdateableNetwor
     getAddress(): string;
     // @internal (undocumented)
     protected getValue(value: BigNumberish): Promise<CurrencyValue>;
-    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     protected normalizeAmount(amount: Amount): Promise<BigNumber>;
     // @internal (undocumented)
@@ -1911,7 +1917,7 @@ export class Erc20SignatureMinting {
 }
 
 // @public
-export class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNetwork {
+export class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
     balanceOf(address: string): Promise<BigNumber>;
@@ -1927,7 +1933,6 @@ export class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNet
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     getTotalCount(): Promise<BigNumber>;
     isApproved(address: string, operator: string): Promise<boolean>;
-    isTransferRestricted(): Promise<boolean>;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -2451,6 +2456,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     events: ContractEvents<TokenERC721>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<TokenERC721>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
@@ -2609,6 +2615,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<DropERC721>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
     // (undocumented)
@@ -4336,6 +4343,7 @@ export class Token extends Erc20<TokenERC20> {
     history: TokenERC20History;
     // @internal (undocumented)
     interceptor: ContractInterceptor<TokenERC20>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC20, typeof Token.schema>;
     mint(amount: Amount): Promise<TransactionResult>;
@@ -4470,6 +4478,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     getVoteBalanceOf(account: string): Promise<CurrencyValue>;
     // (undocumented)
     interceptor: ContractInterceptor<DropERC20>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<DropERC20, typeof TokenDrop.schema>;
     // (undocumented)

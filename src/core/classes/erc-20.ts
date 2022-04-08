@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts";
+import { DropERC20, ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
@@ -11,15 +11,13 @@ import {
   fetchCurrencyValue,
 } from "../../common/currency";
 import { TokenMintInput } from "../../schema/tokens/token";
-import { getRoleHash } from "../../common/role";
-import { AddressZero } from "@ethersproject/constants";
 import { PriceSchema } from "../../schema";
 
 /**
  * Standard ERC20 functions
  * @public
  */
-export class Erc20<T extends TokenERC20 | DropERC20>
+export class Erc20<T extends TokenERC20 | DropERC20 | ITokenERC20>
   implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
@@ -173,17 +171,6 @@ export class Erc20<T extends TokenERC20 | DropERC20>
     return await this.getValue(
       await this.contractWrapper.readContract.allowance(owner, spender),
     );
-  }
-
-  /**
-   * Get whether users can transfer tokens from this contract
-   */
-  public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
-      getRoleHash("transfer"),
-      AddressZero,
-    );
-    return !anyoneCanTransfer;
   }
 
   /** ******************************

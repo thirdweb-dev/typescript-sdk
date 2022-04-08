@@ -20,6 +20,8 @@ import { Amount, ClaimVerification, CurrencyValue } from "../types";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { prepareClaim } from "../common/claim-conditions";
+import { getRoleHash } from "../common";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -156,6 +158,17 @@ export class TokenDrop extends Erc20<DropERC20> {
    */
   public async getDelegationOf(account: string): Promise<string> {
     return await this.contractWrapper.readContract.delegates(account);
+  }
+
+  /**
+   * Get whether users can transfer tokens from this contract
+   */
+  public async isTransferRestricted(): Promise<boolean> {
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      AddressZero,
+    );
+    return !anyoneCanTransfer;
   }
 
   /** ******************************

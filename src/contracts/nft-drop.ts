@@ -32,6 +32,8 @@ import { TokensClaimedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { getRoleHash } from "../common";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -284,6 +286,17 @@ export class NFTDrop extends Erc721<DropERC721> {
     return (await this.contractWrapper.readContract.nextTokenIdToMint()).sub(
       await this.totalClaimedSupply(),
     );
+  }
+
+  /**
+   * Get whether users can transfer NFTs from this contract
+   */
+  public async isTransferRestricted(): Promise<boolean> {
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      AddressZero,
+    );
+    return !anyoneCanTransfer;
   }
 
   /** ******************************

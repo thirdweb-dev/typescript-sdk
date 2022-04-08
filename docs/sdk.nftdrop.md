@@ -58,6 +58,7 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [createBatch(metadatas)](./sdk.nftdrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
 |  [getAllClaimed(queryParams)](./sdk.nftdrop.getallclaimed.md) |  | Get All Claimed NFTs |
 |  [getAllUnclaimed(queryParams)](./sdk.nftdrop.getallunclaimed.md) |  | Get All Unclaimed NFTs |
+|  [isTransferRestricted()](./sdk.nftdrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [totalClaimedSupply()](./sdk.nftdrop.totalclaimedsupply.md) |  | Get the claimed supply |
 |  [totalUnclaimedSupply()](./sdk.nftdrop.totalunclaimedsupply.md) |  | Get the unclaimed supply |
 

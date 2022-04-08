@@ -1,5 +1,4 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721, TokenERC721 } from "@thirdweb-dev/contracts";
 import { BigNumber, BigNumberish } from "ethers";
 import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
 import { AddressZero } from "@ethersproject/constants";
@@ -12,14 +11,15 @@ import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { fetchTokenMetadata } from "../../common/nft";
-import { getRoleHash } from "../../common/role";
 import { NotFoundError } from "../../common";
+import { ITokenERC721 } from "@thirdweb-dev/contracts/dist/ITokenERC721";
+import { DropERC721, TokenERC721 } from "@thirdweb-dev/contracts";
 
 /**
  * Standard ERC721 functions
  * @public
  */
-export class Erc721<T extends DropERC721 | TokenERC721>
+export class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721>
   implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
@@ -117,7 +117,7 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToMint();
+    return this.totalSupply();
   }
 
   /**
@@ -167,7 +167,7 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    * @returns the total supply
    */
   public async totalSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToMint();
+    return await this.contractWrapper.readContract.totalSupply();
   }
 
   /**
@@ -193,17 +193,6 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    */
   public async balance(): Promise<BigNumber> {
     return await this.balanceOf(await this.contractWrapper.getSignerAddress());
-  }
-
-  /**
-   * Get whether users can transfer NFTs from this contract
-   */
-  public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
-      getRoleHash("transfer"),
-      AddressZero,
-    );
-    return !anyoneCanTransfer;
   }
 
   /**

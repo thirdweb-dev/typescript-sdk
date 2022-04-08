@@ -1,9 +1,9 @@
 import { sdk, signers } from "./before.test";
 import { expect } from "chai";
-import { NFTDrop } from "../src";
 import invariant from "tiny-invariant";
 import {
-  DropERC721__factory,
+  TokenERC20__factory,
+  TokenERC721__factory,
   VoteERC20__factory,
 } from "@thirdweb-dev/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -11,7 +11,8 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 global.fetch = require("node-fetch");
 
 describe("Custom Contracts", async () => {
-  let dropContractAddress: string;
+  let nftContractAddress: string;
+  let tokenContractAddress: string;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -22,26 +23,36 @@ describe("Custom Contracts", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    dropContractAddress = await sdk.deployer.deployContract(
-      NFTDrop.contractType,
-      {
-        name: `Drop`,
-        description: "Test contract from tests",
-        image:
-          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-        primary_sale_recipient: samWallet.address,
-        seller_fee_basis_points: 500,
-        fee_recipient: bobWallet.address,
-        platform_fee_basis_points: 10,
-        platform_fee_recipient: adminWallet.address,
-      },
-    );
+    nftContractAddress = await sdk.deployer.deployNFTCollection({
+      name: `Drop`,
+      description: "Test contract from tests",
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      primary_sale_recipient: samWallet.address,
+      seller_fee_basis_points: 500,
+      fee_recipient: bobWallet.address,
+      platform_fee_basis_points: 10,
+      platform_fee_recipient: adminWallet.address,
+    });
+    tokenContractAddress = await sdk.deployer.deployToken({
+      name: `Token`,
+      description: "Test contract from tests",
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      primary_sale_recipient: samWallet.address,
+      platform_fee_basis_points: 10,
+      platform_fee_recipient: adminWallet.address,
+    });
+    await sdk.getToken(tokenContractAddress).mint(100);
+    await sdk.getNFTCollection(nftContractAddress).mint({
+      name: "Custom NFT",
+    });
   });
 
   it("should detect feature: metadata", async () => {
     const c = await sdk.unstable_getCustomContract(
-      dropContractAddress,
-      DropERC721__factory.abi,
+      nftContractAddress,
+      TokenERC721__factory.abi,
     );
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Metadata undefined");
@@ -56,8 +67,8 @@ describe("Custom Contracts", async () => {
 
   it("should detect feature: roles", async () => {
     const c = await sdk.unstable_getCustomContract(
-      dropContractAddress,
-      DropERC721__factory.abi,
+      nftContractAddress,
+      TokenERC721__factory.abi,
     );
     invariant(c, "Contract undefined");
     invariant(c.roles, "Roles undefined");
@@ -75,8 +86,8 @@ describe("Custom Contracts", async () => {
 
   it("should detect feature: royalties", async () => {
     const c = await sdk.unstable_getCustomContract(
-      dropContractAddress,
-      DropERC721__factory.abi,
+      nftContractAddress,
+      TokenERC721__factory.abi,
     );
     invariant(c, "Contract undefined");
     invariant(c.royalties, "Royalties undefined");
@@ -94,8 +105,8 @@ describe("Custom Contracts", async () => {
 
   it("should detect feature: primary sales", async () => {
     const c = await sdk.unstable_getCustomContract(
-      dropContractAddress,
-      DropERC721__factory.abi,
+      nftContractAddress,
+      TokenERC721__factory.abi,
     );
     invariant(c, "Contract undefined");
     invariant(c.sales, "Primary sales undefined");
@@ -108,8 +119,8 @@ describe("Custom Contracts", async () => {
 
   it("should detect feature: primary sales", async () => {
     const c = await sdk.unstable_getCustomContract(
-      dropContractAddress,
-      DropERC721__factory.abi,
+      nftContractAddress,
+      TokenERC721__factory.abi,
     );
     invariant(c, "Contract undefined");
     invariant(c.platformFees, "Platform fees undefined");
@@ -130,5 +141,37 @@ describe("Custom Contracts", async () => {
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Metadata undefined");
     expect(c.roles).to.eq(undefined);
+  });
+
+  it("should detect feature: erc20", async () => {
+    const c = await sdk.unstable_getCustomContract(
+      tokenContractAddress,
+      TokenERC20__factory.abi,
+    );
+    invariant(c, "Contract undefined");
+    invariant(c.token, "ERC20 undefined");
+    const token = await c.token.get();
+    expect(token.name).to.eq("Token");
+    expect(token.decimals).to.eq(18);
+    const balance = await c.token.balance();
+    expect(balance.displayValue).to.eq("100.0");
+    await c.token.transfer(samWallet.address, 25);
+    expect((await c.token.balance()).displayValue).to.eq("75.0");
+    expect((await c.token.balanceOf(samWallet.address)).displayValue).to.eq(
+      "25.0",
+    );
+  });
+
+  it("should detect feature: erc721", async () => {
+    const c = await sdk.unstable_getCustomContract(
+      nftContractAddress,
+      TokenERC721__factory.abi,
+    );
+    invariant(c, "Contract undefined");
+    invariant(c.nft, "ERC721 undefined");
+    const nfts = await c.nft.getAll();
+    console.log((await c.nft.getTotalCount()).toNumber());
+    expect(nfts.length).to.eq(1);
+    expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 });

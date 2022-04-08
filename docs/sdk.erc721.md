@@ -9,7 +9,7 @@ Standard ERC721 functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNetwork 
+export declare class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721> implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
 
@@ -40,7 +40,6 @@ export declare class Erc721<T extends DropERC721 | TokenERC721> implements Updat
 |  [getOwned(\_address)](./sdk.erc721.getowned.md) |  | Get Owned NFTs |
 |  [getTotalCount()](./sdk.erc721.gettotalcount.md) |  | Get the number of NFTs minted |
 |  [isApproved(address, operator)](./sdk.erc721.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
-|  [isTransferRestricted()](./sdk.erc721.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [ownerOf(tokenId)](./sdk.erc721.ownerof.md) |  | Get the current owner of a given NFT within this Contract |
 |  [totalSupply()](./sdk.erc721.totalsupply.md) |  | Get the total supply for this Contract. |
 |  [transfer(to, tokenId)](./sdk.erc721.transfer.md) |  | Transfer a single NFT |

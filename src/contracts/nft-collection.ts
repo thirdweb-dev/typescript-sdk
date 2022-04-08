@@ -20,6 +20,8 @@ import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { getRoleHash } from "../common";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -128,6 +130,21 @@ export class NFTCollection extends Erc721<TokenERC721> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFee = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+  }
+
+  /** ******************************
+   * READ FUNCTIONS
+   *******************************/
+
+  /**
+   * Get whether users can transfer NFTs from this contract
+   */
+  public async isTransferRestricted(): Promise<boolean> {
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      AddressZero,
+    );
+    return !anyoneCanTransfer;
   }
 
   /** ******************************

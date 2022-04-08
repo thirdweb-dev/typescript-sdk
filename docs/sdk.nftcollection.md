@@ -52,6 +52,7 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [isTransferRestricted()](./sdk.nftcollection.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [mint(metadata)](./sdk.nftcollection.mint.md) |  | Mint an NFT to the connected wallet |
 |  [mintBatch(metadatas)](./sdk.nftcollection.mintbatch.md) |  | Mint Many NFTs to the connected wallet |
 |  [mintBatchTo(to, metadatas)](./sdk.nftcollection.mintbatchto.md) |  | Mint Many unique NFTs |

@@ -3,6 +3,8 @@ import {
   ContractPrimarySale,
   ContractRoles,
   ContractRoyalty,
+  Erc20,
+  Erc721,
   IStorage,
   NetworkOrSignerOrProvider,
 } from "../core";
@@ -19,6 +21,10 @@ import {
   IThirdwebPrimarySale__factory,
   IThirdwebRoyalty,
   IThirdwebRoyalty__factory,
+  ITokenERC20,
+  ITokenERC20__factory,
+  ITokenERC721,
+  ITokenERC721__factory,
 } from "@thirdweb-dev/contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
@@ -39,12 +45,15 @@ export class CustomContract<TContract extends BaseContract = BaseContract>
 
   private contractWrapper;
   private storage;
+  private options;
 
   public metadata;
   public royalties;
   public roles;
   public sales;
   public platformFees;
+  public token: Erc20<ITokenERC20> | undefined;
+  public nft: Erc721<ITokenERC721> | undefined;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -59,6 +68,7 @@ export class CustomContract<TContract extends BaseContract = BaseContract>
       options,
     ),
   ) {
+    this.options = options;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
 
@@ -68,7 +78,13 @@ export class CustomContract<TContract extends BaseContract = BaseContract>
     this.sales = this.detectPrimarySales();
     this.platformFees = this.detectPlatformFees();
 
-    // TODO detect token standards - requires contract interface cleanups
+    this.token = this.detectErc20();
+    this.nft = this.detectErc721();
+    // TODO detect 1155
+    // this.erc20 = this.detectErc1155();
+
+    // TODO detect sigmint
+    // this.sigmint = this.detectSigmint();
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
@@ -150,6 +166,32 @@ export class CustomContract<TContract extends BaseContract = BaseContract>
       )
     ) {
       return new ContractPlatformFee(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc20() {
+    // TODO this should work for drop contracts too
+    if (
+      implementsInterface<ITokenERC20>(
+        this.contractWrapper,
+        ITokenERC20__factory.createInterface(),
+      )
+    ) {
+      return new Erc20(this.contractWrapper, this.storage, this.options);
+    }
+    return undefined;
+  }
+
+  private detectErc721() {
+    // TODO this should work for drop contracts too
+    if (
+      implementsInterface<ITokenERC721>(
+        this.contractWrapper,
+        ITokenERC721__factory.createInterface(),
+      )
+    ) {
+      return new Erc721(this.contractWrapper, this.storage, this.options);
     }
     return undefined;
   }

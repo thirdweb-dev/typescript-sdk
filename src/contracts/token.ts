@@ -19,6 +19,8 @@ import { TokenERC20History } from "../core/classes/erc-20-history";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting";
+import { getRoleHash } from "../common";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -142,6 +144,17 @@ export class Token extends Erc20<TokenERC20> {
    */
   public async getDelegationOf(account: string): Promise<string> {
     return await this.contractWrapper.readContract.delegates(account);
+  }
+
+  /**
+   * Get whether users can transfer tokens from this contract
+   */
+  public async isTransferRestricted(): Promise<boolean> {
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      AddressZero,
+    );
+    return !anyoneCanTransfer;
   }
 
   /** ******************************
