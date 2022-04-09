@@ -244,7 +244,7 @@ export const ClaimConditionInputArray: z.ZodArray<z.ZodObject<{
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     maxQuantity: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
     quantityLimitPerTransaction: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
-    waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
+    waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>, string, any>>;
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
     snapshot: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
         address: string;
@@ -281,7 +281,7 @@ export const ClaimConditionInputArray: z.ZodArray<z.ZodObject<{
     price?: string | number | undefined;
     maxQuantity?: string | number | undefined;
     quantityLimitPerTransaction?: string | number | undefined;
-    waitInSeconds?: string | number | bigint | BigNumber | undefined;
+    waitInSeconds?: any;
     merkleRootHash?: string | number[] | undefined;
 }>, "many">;
 
@@ -294,7 +294,7 @@ export const ClaimConditionInputSchema: z.ZodObject<{
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     maxQuantity: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
     quantityLimitPerTransaction: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
-    waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
+    waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>, string, any>>;
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
     snapshot: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
         address: string;
@@ -331,7 +331,7 @@ export const ClaimConditionInputSchema: z.ZodObject<{
     price?: string | number | undefined;
     maxQuantity?: string | number | undefined;
     quantityLimitPerTransaction?: string | number | undefined;
-    waitInSeconds?: string | number | bigint | BigNumber | undefined;
+    waitInSeconds?: any;
     merkleRootHash?: string | number[] | undefined;
 }>;
 
@@ -344,7 +344,7 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     maxQuantity: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
     quantityLimitPerTransaction: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
-    waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
+    waitInSeconds: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>, string, any>>;
     merkleRootHash: z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>;
     snapshot: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
         address: string;
@@ -366,7 +366,7 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         symbol: z.ZodString;
         decimals: z.ZodNumber;
     }, {
-        value: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+        value: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>;
         displayValue: z.ZodString;
     }>, "strip", z.ZodTypeAny, {
         symbol: string;
@@ -375,17 +375,17 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         decimals: number;
         displayValue: string;
     }, {
+        value?: any;
         symbol: string;
-        value: string | number | bigint | BigNumber;
         name: string;
         decimals: number;
         displayValue: string;
     }>>;
-    price: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
-    maxQuantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
-    quantityLimitPerTransaction: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
-    waitInSeconds: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
-    startTime: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, Date, string | number | bigint | BigNumber>;
+    price: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>;
+    maxQuantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>;
+    quantityLimitPerTransaction: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>;
+    waitInSeconds: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>;
+    startTime: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>, Date, any>;
 }>, "strip", z.ZodTypeAny, {
     snapshot?: {
         address: string;
@@ -411,21 +411,21 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         maxClaimable?: string | number | undefined;
         address: string;
     }[] | undefined;
+    startTime?: any;
     currencyAddress?: string | undefined;
+    price?: any;
+    maxQuantity?: any;
+    quantityLimitPerTransaction?: any;
+    waitInSeconds?: any;
     merkleRootHash?: string | number[] | undefined;
     availableSupply?: string | undefined;
     currencyMetadata?: {
+        value?: any;
         symbol: string;
-        value: string | number | bigint | BigNumber;
         name: string;
         decimals: number;
         displayValue: string;
     } | undefined;
-    startTime: string | number | bigint | BigNumber;
-    price: string | number | bigint | BigNumber;
-    maxQuantity: string | number | bigint | BigNumber;
-    quantityLimitPerTransaction: string | number | bigint | BigNumber;
-    waitInSeconds: string | number | bigint | BigNumber;
 }>;
 
 // @public (undocumented)
@@ -781,7 +781,7 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
     symbol: z.ZodString;
     decimals: z.ZodNumber;
 }, {
-    value: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    value: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>;
     displayValue: z.ZodString;
 }>, "strip", z.ZodTypeAny, {
     symbol: string;
@@ -790,8 +790,8 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
     decimals: number;
     displayValue: string;
 }, {
+    value?: any;
     symbol: string;
-    value: string | number | bigint | BigNumber;
     name: string;
     decimals: number;
     displayValue: string;
@@ -1510,7 +1510,7 @@ export type EditionMetadataInput = z.input<typeof EditionMetadataInputSchema>;
 //
 // @internal (undocumented)
 export const EditionMetadataInputOrUriSchema: z.ZodObject<{
-    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>, string, any>;
     metadata: z.ZodUnion<[z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
@@ -1579,6 +1579,7 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
     };
     supply: string;
 }, {
+    supply?: any;
     metadata: string | {
         [x: string]: Json;
         description?: string | undefined;
@@ -1592,14 +1593,13 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         }[] | Record<string, any> | undefined;
         name: string;
     };
-    supply: string | number | bigint | BigNumber;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "EditionMetadataInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export const EditionMetadataInputSchema: z.ZodObject<{
-    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+    supply: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>, string, any>;
     metadata: z.ZodObject<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
@@ -1668,6 +1668,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
     };
     supply: string;
 }, {
+    supply?: any;
     metadata: {
         [x: string]: Json;
         description?: string | undefined;
@@ -1681,7 +1682,6 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         }[] | Record<string, any> | undefined;
         name: string;
     };
-    supply: string | number | bigint | BigNumber;
 }>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "EditionMetadataOrUri" is marked as @public, but its signature references "EditionMetadataInputOrUriSchema" which is marked as @internal
@@ -1693,14 +1693,14 @@ export type EditionMetadataOrUri = z.input<typeof EditionMetadataInputOrUriSchem
 //
 // @internal (undocumented)
 export const EditionMetadataOutputSchema: z.ZodObject<{
-    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>;
     metadata: z.ZodObject<z.extendShape<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
-        id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+        id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>;
         uri: z.ZodString;
         image: z.ZodOptional<z.ZodString>;
         external_url: z.ZodOptional<z.ZodString>;
@@ -1722,10 +1722,10 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         description?: string | undefined;
         image?: string | undefined;
         external_url?: string | undefined;
+        id?: any;
         animation_url?: string | undefined;
         properties?: Record<string, Json> | undefined;
         name: string;
-        id: string | number | bigint | BigNumber;
         uri: string;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -1742,18 +1742,18 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
     };
     supply: BigNumber;
 }, {
+    supply?: any;
     metadata: {
         [x: string]: Json;
         description?: string | undefined;
         image?: string | undefined;
         external_url?: string | undefined;
+        id?: any;
         animation_url?: string | undefined;
         properties?: Record<string, Json> | undefined;
         name: string;
-        id: string | number | bigint | BigNumber;
         uri: string;
     };
-    supply: string | number | bigint | BigNumber;
 }>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "EditionMetadataOwner" is marked as @public, but its signature references "EditionMetadataWithOwnerOutputSchema" which is marked as @internal
@@ -1765,14 +1765,14 @@ export type EditionMetadataOwner = z.output<typeof EditionMetadataWithOwnerOutpu
 //
 // @internal (undocumented)
 export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
-    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    supply: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>;
     metadata: z.ZodObject<z.extendShape<z.extendShape<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     }, {
-        id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+        id: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>;
         uri: z.ZodString;
         image: z.ZodOptional<z.ZodString>;
         external_url: z.ZodOptional<z.ZodString>;
@@ -1794,15 +1794,15 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         description?: string | undefined;
         image?: string | undefined;
         external_url?: string | undefined;
+        id?: any;
         animation_url?: string | undefined;
         properties?: Record<string, Json> | undefined;
         name: string;
-        id: string | number | bigint | BigNumber;
         uri: string;
     }>;
 }, {
     owner: z.ZodString;
-    quantityOwned: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    quantityOwned: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>;
 }>, "strip", z.ZodTypeAny, {
     metadata: {
         [x: string]: Json;
@@ -1819,20 +1819,20 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
     supply: BigNumber;
     quantityOwned: BigNumber;
 }, {
+    supply?: any;
+    quantityOwned?: any;
     metadata: {
         [x: string]: Json;
         description?: string | undefined;
         image?: string | undefined;
         external_url?: string | undefined;
+        id?: any;
         animation_url?: string | undefined;
         properties?: Record<string, Json> | undefined;
         name: string;
-        id: string | number | bigint | BigNumber;
         uri: string;
     };
     owner: string;
-    supply: string | number | bigint | BigNumber;
-    quantityOwned: string | number | bigint | BigNumber;
 }>;
 
 // @public
@@ -3014,7 +3014,7 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
     price: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>>;
     maxQuantity: z.ZodOptional<z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>>;
     quantityLimitPerTransaction: z.ZodOptional<z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>>;
-    waitInSeconds: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>>;
+    waitInSeconds: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, BigNumber, any>, string, any>>>;
     merkleRootHash: z.ZodOptional<z.ZodDefault<z.ZodUnion<[z.ZodArray<z.ZodNumber, "many">, z.ZodString]>>>;
     snapshot: z.ZodOptional<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodString, "many">, {
         address: string;
@@ -3051,7 +3051,7 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
     price?: string | number | undefined;
     maxQuantity?: string | number | undefined;
     quantityLimitPerTransaction?: string | number | undefined;
-    waitInSeconds?: string | number | bigint | BigNumber | undefined;
+    waitInSeconds?: any;
     merkleRootHash?: string | number[] | undefined;
 }>;
 
@@ -3401,8 +3401,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
     royaltyRecipient: z.ZodDefault<z.ZodString>;
     royaltyBps: z.ZodDefault<z.ZodNumber>;
 }>, {
-    tokenId: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>>;
-    quantity: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
+    tokenId: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>, string, any>>;
+    quantity: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>, string, any>;
 }>, "strip", z.ZodTypeAny, {
     currencyAddress: string;
     price: string;
@@ -3433,10 +3433,10 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
     mintEndTime?: Date | undefined;
     uid?: string | undefined;
     primarySaleRecipient?: string | undefined;
+    quantity?: any;
     royaltyRecipient?: string | undefined;
     royaltyBps?: number | undefined;
-    tokenId?: string | number | bigint | ethers.BigNumber | undefined;
-    quantity: string | number | bigint | ethers.BigNumber;
+    tokenId?: any;
     metadata: string | {
         [x: string]: Json;
         description?: string | undefined;
@@ -3523,12 +3523,12 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     royaltyBps: z.ZodDefault<z.ZodNumber>;
 }>, {
     uri: z.ZodString;
-    royaltyBps: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
+    royaltyBps: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>;
+    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>;
+    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>;
 }>, {
-    tokenId: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    quantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
+    tokenId: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>;
+    quantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>;
 }>, "strip", z.ZodTypeAny, {
     uri: string;
     currencyAddress: string;
@@ -3556,13 +3556,15 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     currencyAddress?: string | undefined;
     price?: string | number | undefined;
     to?: string | undefined;
+    mintStartTime?: any;
+    mintEndTime?: any;
     uid?: string | undefined;
     primarySaleRecipient?: string | undefined;
+    quantity?: any;
     royaltyRecipient?: string | undefined;
+    royaltyBps?: any;
+    tokenId?: any;
     uri: string;
-    mintStartTime: string | number | bigint | ethers.BigNumber;
-    mintEndTime: string | number | bigint | ethers.BigNumber;
-    quantity: string | number | bigint | ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         description?: string | undefined;
@@ -3576,8 +3578,6 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         }[] | Record<string, any> | undefined;
         name: string;
     };
-    royaltyBps: string | number | bigint | ethers.BigNumber;
-    tokenId: string | number | bigint | ethers.BigNumber;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature20PayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3627,8 +3627,8 @@ export const Signature20PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<{
 }, {
     quantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>;
 }>, {
-    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
+    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>;
+    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>;
 }>, "strip", z.ZodTypeAny, {
     currencyAddress: string;
     price: string;
@@ -3642,10 +3642,10 @@ export const Signature20PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<{
     currencyAddress?: string | undefined;
     price?: string | number | undefined;
     to?: string | undefined;
+    mintStartTime?: any;
+    mintEndTime?: any;
     uid?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    mintStartTime: string | number | bigint | ethers.BigNumber;
-    mintEndTime: string | number | bigint | ethers.BigNumber;
     quantity: string | number;
 }>;
 
@@ -3834,9 +3834,9 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     royaltyBps: z.ZodDefault<z.ZodNumber>;
 }>, {
     uri: z.ZodString;
-    royaltyBps: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
+    royaltyBps: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>;
+    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>;
+    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>;
 }>, "strip", z.ZodTypeAny, {
     uri: string;
     currencyAddress: string;
@@ -3862,12 +3862,13 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     currencyAddress?: string | undefined;
     price?: string | number | undefined;
     to?: string | undefined;
+    mintStartTime?: any;
+    mintEndTime?: any;
     uid?: string | undefined;
     primarySaleRecipient?: string | undefined;
     royaltyRecipient?: string | undefined;
+    royaltyBps?: any;
     uri: string;
-    mintStartTime: string | number | bigint | ethers.BigNumber;
-    mintEndTime: string | number | bigint | ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         description?: string | undefined;
@@ -3881,7 +3882,6 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         }[] | Record<string, any> | undefined;
         name: string;
     };
-    royaltyBps: string | number | bigint | ethers.BigNumber;
 }>;
 
 // @public (undocumented)
@@ -4754,7 +4754,7 @@ export class Vote implements UpdateableNetwork {
         voting_period_in_blocks: ZodDefault<ZodNumber>;
         voting_token_address: ZodEffects<ZodString, string, string>;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
-        proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
+        proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<any, ZodTypeDef, any>]>, BigNumber, any>, string, any>>;
         }>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
@@ -4776,7 +4776,7 @@ export class Vote implements UpdateableNetwork {
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
         voting_quorum_fraction?: number | undefined;
-        proposal_token_threshold?: string | number | bigint | BigNumber | undefined;
+        proposal_token_threshold?: any;
         name: string;
         voting_token_address: string;
         }>;
@@ -4792,9 +4792,9 @@ export class Vote implements UpdateableNetwork {
         voting_period_in_blocks: ZodDefault<ZodNumber>;
         voting_token_address: ZodEffects<ZodString, string, string>;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
-        proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
+        proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<any, ZodTypeDef, any>]>, BigNumber, any>, string, any>>;
         }, {
-        proposal_token_threshold: ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+        proposal_token_threshold: ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<any, ZodTypeDef, any>]>, BigNumber, any>;
         }>>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
@@ -4814,9 +4814,9 @@ export class Vote implements UpdateableNetwork {
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
         voting_quorum_fraction?: number | undefined;
+        proposal_token_threshold?: any;
         name: string;
         voting_token_address: string;
-        proposal_token_threshold: string | number | bigint | BigNumber;
         }>;
         input: ZodObject<extendShape<    {
         name: ZodString;
@@ -4828,7 +4828,7 @@ export class Vote implements UpdateableNetwork {
         voting_period_in_blocks: ZodDefault<ZodNumber>;
         voting_token_address: ZodEffects<ZodString, string, string>;
         voting_quorum_fraction: ZodDefault<ZodNumber>;
-        proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
+        proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<any, ZodTypeDef, any>]>, BigNumber, any>, string, any>>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -4846,7 +4846,7 @@ export class Vote implements UpdateableNetwork {
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
         voting_quorum_fraction?: number | undefined;
-        proposal_token_threshold?: string | number | bigint | BigNumber | undefined;
+        proposal_token_threshold?: any;
         name: string;
         voting_token_address: string;
         }>;
