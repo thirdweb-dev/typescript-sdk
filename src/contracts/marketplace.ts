@@ -503,7 +503,7 @@ export class Marketplace implements UpdateableNetwork {
       if (filter.tokenId) {
         rawListings = rawListings.filter(
           (tokenContract) =>
-            tokenContract.tokenId === filter?.tokenId?.toString(),
+            tokenContract.tokenId.toString() === filter?.tokenId?.toString(),
         );
       }
       rawListings = rawListings.filter((_, index) => index >= start);
