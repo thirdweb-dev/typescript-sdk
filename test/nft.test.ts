@@ -155,12 +155,92 @@ describe("NFT Contract", async () => {
         },
         val: "1234",
       },
+      attributes: {
+        arr: ["1", "2", "3"],
+        obj: {
+          anum: 12,
+          astr: "123",
+        },
+        val: "1234",
+      },
       arr: ["1", "2", "3"],
       obj: {
         anum: 12,
         astr: "123",
       },
       val: "1234",
+    });
+    expect(tx.id.toNumber()).to.eq(0);
+  });
+
+  it("should mint complex metadata 2", async () => {
+    const tx = await nftContract.mint({
+      name: "Test2",
+      description: "description",
+      image: "https://img.net",
+      animation_url: "https://img.net",
+      background_color: "#000000",
+      external_url: "https://img.net",
+      properties: [
+        { key: "color", value: "silver" },
+        { key: "size", value: "small" },
+        { key: "tier", value: 3 },
+      ],
+      attributes: [
+        { key: "color", value: "silver" },
+        { key: "size", value: "small" },
+        { key: "tier", value: 3 },
+      ],
+    });
+    expect(tx.id.toNumber()).to.eq(0);
+  });
+
+  it("should mint complex metadata 3", async () => {
+    const tx = await nftContract.mint({
+      name: "Test2",
+      description: "description",
+      image: "https://img.net",
+      animation_url: "https://img.net",
+      background_color: "#000000",
+      external_url: "https://img.net",
+      properties: {
+        name: "Purple Cookie",
+        description: "A delicious cookie",
+        attributes: [
+          { trait_type: "color", value: "purple" },
+          { trait_type: "size", value: "small" },
+          { trait_type: "tier", value: 1 },
+          {
+            display_type: "boost_percentage",
+            trait_type: "Stamina Increase",
+            value: 90,
+          },
+          {
+            display_type: "number",
+            trait_type: "Generation",
+            value: 1,
+          },
+        ],
+      },
+      attributes: {
+        name: "Purple Cookie",
+        description: "A delicious cookie",
+        attributes: [
+          { trait_type: "color", value: "purple" },
+          { trait_type: "size", value: "small" },
+          { trait_type: "tier", value: 1 },
+          {
+            display_type: "boost_percentage",
+            trait_type: "Stamina Increase",
+            value: 90,
+          },
+          {
+            display_type: "number",
+            trait_type: "Generation",
+            value: 1,
+          },
+        ],
+      },
     });
     expect(tx.id.toNumber()).to.eq(0);
   });
