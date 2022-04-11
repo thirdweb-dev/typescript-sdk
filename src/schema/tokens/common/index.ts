@@ -5,10 +5,7 @@ import {
   HexColor,
   JsonSchema,
 } from "../../shared";
-import {
-  OptionalPropertiesInput,
-  OptionalPropertiesOutput,
-} from "./properties";
+import { OptionalPropertiesInput } from "./properties";
 
 /**
  * @internal
@@ -39,6 +36,7 @@ export const CommonNFTInput = CommonTokenInput.extend({
   animation_url: FileBufferOrStringSchema.optional(),
   background_color: HexColor.optional(),
   properties: OptionalPropertiesInput,
+  attributes: OptionalPropertiesInput,
 });
 
 /**
@@ -51,7 +49,6 @@ export const NFTInputOrUriSchema = z.union([CommonNFTInput, z.string()]);
  */
 export const CommonNFTOutput = CommonTokenOutput.extend({
   animation_url: z.string().optional(),
-  properties: OptionalPropertiesOutput,
 });
 
 /**

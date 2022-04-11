@@ -1512,31 +1512,8 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
-        properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
-            key: z.ZodString;
-            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
-        }, "strip", z.ZodTypeAny, {
-            value?: any;
-            key: string;
-        }, {
-            value?: any;
-            key: string;
-        }>, "many">, {
-            value?: any;
-            key: string;
-        }[], {
-            value?: any;
-            key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>, Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
@@ -1544,7 +1521,8 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }, {
         [x: string]: Json;
@@ -1553,10 +1531,8 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }>, z.ZodString]>;
 }, "strip", z.ZodTypeAny, {
@@ -1567,7 +1543,8 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
     supply: string;
@@ -1580,10 +1557,8 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
 }>;
@@ -1601,31 +1576,8 @@ export const EditionMetadataInputSchema: z.ZodObject<{
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
-        properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
-            key: z.ZodString;
-            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
-        }, "strip", z.ZodTypeAny, {
-            value?: any;
-            key: string;
-        }, {
-            value?: any;
-            key: string;
-        }>, "many">, {
-            value?: any;
-            key: string;
-        }[], {
-            value?: any;
-            key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>, Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
@@ -1633,7 +1585,8 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }, {
         [x: string]: Json;
@@ -1642,10 +1595,8 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -1656,7 +1607,8 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
     supply: string;
@@ -1669,10 +1621,8 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
 }>;
@@ -1699,14 +1649,12 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         external_url: z.ZodOptional<z.ZodString>;
     }>, {
         animation_url: z.ZodOptional<z.ZodString>;
-        properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>>;
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, Json> | undefined;
         name: string;
         id: BigNumber;
         uri: string;
@@ -1717,7 +1665,6 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         external_url?: string | undefined;
         id?: any;
         animation_url?: string | undefined;
-        properties?: Record<string, Json> | undefined;
         name: string;
         uri: string;
     }>;
@@ -1728,7 +1675,6 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, Json> | undefined;
         name: string;
         id: BigNumber;
         uri: string;
@@ -1743,7 +1689,6 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
         external_url?: string | undefined;
         id?: any;
         animation_url?: string | undefined;
-        properties?: Record<string, Json> | undefined;
         name: string;
         uri: string;
     };
@@ -1771,14 +1716,12 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         external_url: z.ZodOptional<z.ZodString>;
     }>, {
         animation_url: z.ZodOptional<z.ZodString>;
-        properties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>>;
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, Json> | undefined;
         name: string;
         id: BigNumber;
         uri: string;
@@ -1789,7 +1732,6 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         external_url?: string | undefined;
         id?: any;
         animation_url?: string | undefined;
-        properties?: Record<string, Json> | undefined;
         name: string;
         uri: string;
     }>;
@@ -1803,7 +1745,6 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         image?: string | undefined;
         external_url?: string | undefined;
         animation_url?: string | undefined;
-        properties?: Record<string, Json> | undefined;
         name: string;
         id: BigNumber;
         uri: string;
@@ -1821,7 +1762,6 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         external_url?: string | undefined;
         id?: any;
         animation_url?: string | undefined;
-        properties?: Record<string, Json> | undefined;
         name: string;
         uri: string;
     };
@@ -2774,36 +2714,7 @@ export interface Offer {
 // Warning: (ae-internal-missing-underscore) The name "OptionalPropertiesInput" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const OptionalPropertiesInput: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
-    key: z.ZodString;
-    value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
-}, "strip", z.ZodTypeAny, {
-    value?: any;
-    key: string;
-}, {
-    value?: any;
-    key: string;
-}>, "many">, {
-    value?: any;
-    key: string;
-}[], {
-    value?: any;
-    key: string;
-}[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
-    value?: any;
-    key: string;
-}[] | Record<string, any> | undefined, {
-    value?: any;
-    key: string;
-}[] | Record<string, any> | undefined>, Record<string, any> | undefined, {
-    value?: any;
-    key: string;
-}[] | Record<string, any> | undefined>;
-
-// Warning: (ae-internal-missing-underscore) The name "OptionalPropertiesOutput" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export const OptionalPropertiesOutput: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>>;
+export const OptionalPropertiesInput: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
 
 // Warning: (ae-internal-missing-underscore) The name "OZ_DEFENDER_FORWARDER_ADDRESS" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -3337,31 +3248,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
-        properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
-            key: z.ZodString;
-            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
-        }, "strip", z.ZodTypeAny, {
-            value?: any;
-            key: string;
-        }, {
-            value?: any;
-            key: string;
-        }>, "many">, {
-            value?: any;
-            key: string;
-        }[], {
-            value?: any;
-            key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>, Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
@@ -3369,7 +3257,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }, {
         [x: string]: Json;
@@ -3378,10 +3267,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }>, z.ZodString]>;
     royaltyRecipient: z.ZodDefault<z.ZodString>;
@@ -3405,7 +3292,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
     royaltyRecipient: string;
@@ -3430,10 +3318,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
 }>;
@@ -3458,31 +3344,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
-        properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
-            key: z.ZodString;
-            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
-        }, "strip", z.ZodTypeAny, {
-            value?: any;
-            key: string;
-        }, {
-            value?: any;
-            key: string;
-        }>, "many">, {
-            value?: any;
-            key: string;
-        }[], {
-            value?: any;
-            key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>, Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
@@ -3490,7 +3353,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }, {
         [x: string]: Json;
@@ -3499,10 +3363,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }>, z.ZodString]>;
     royaltyRecipient: z.ZodDefault<z.ZodString>;
@@ -3532,7 +3394,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
     royaltyRecipient: string;
@@ -3558,10 +3421,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
 }>;
@@ -3655,31 +3516,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
-        properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
-            key: z.ZodString;
-            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
-        }, "strip", z.ZodTypeAny, {
-            value?: any;
-            key: string;
-        }, {
-            value?: any;
-            key: string;
-        }>, "many">, {
-            value?: any;
-            key: string;
-        }[], {
-            value?: any;
-            key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>, Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
@@ -3687,7 +3525,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }, {
         [x: string]: Json;
@@ -3696,10 +3535,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }>, z.ZodString]>;
     royaltyRecipient: z.ZodDefault<z.ZodString>;
@@ -3719,7 +3556,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
     royaltyRecipient: string;
@@ -3741,10 +3579,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
 }>;
@@ -3769,31 +3605,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     }, {
         animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
-        properties: z.ZodEffects<z.ZodEffects<z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodObject<{
-            key: z.ZodString;
-            value: z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>;
-        }, "strip", z.ZodTypeAny, {
-            value?: any;
-            key: string;
-        }, {
-            value?: any;
-            key: string;
-        }>, "many">, {
-            value?: any;
-            key: string;
-        }[], {
-            value?: any;
-            key: string;
-        }[]>, z.ZodRecord<z.ZodString, z.ZodUnion<[z.ZodType<Json, z.ZodTypeDef, Json>, z.ZodUnion<[z.ZodTypeAny, z.ZodString]>]>>]>>, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>, Record<string, any> | undefined, {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
@@ -3801,7 +3614,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }, {
         [x: string]: Json;
@@ -3810,10 +3624,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }>, z.ZodString]>;
     royaltyRecipient: z.ZodDefault<z.ZodString>;
@@ -3839,7 +3651,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
     royaltyRecipient: string;
@@ -3862,10 +3675,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         external_url?: any;
         animation_url?: any;
         background_color?: string | undefined;
-        properties?: {
-            value?: any;
-            key: string;
-        }[] | Record<string, any> | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     };
 }>;
