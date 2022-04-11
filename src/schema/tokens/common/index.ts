@@ -5,10 +5,7 @@ import {
   HexColor,
   JsonSchema,
 } from "../../shared";
-import {
-  OptionalPropertiesInput,
-  OptionalPropertiesOutput,
-} from "./properties";
+import { OptionalPropertiesInput } from "./properties";
 
 /**
  * @internal
