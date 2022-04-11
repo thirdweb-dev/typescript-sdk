@@ -195,6 +195,15 @@ describe("NFT Contract", async () => {
     expect(tx.id.toNumber()).to.eq(0);
   });
 
+  it("should mint simple metadata 2", async () => {
+    const tx = await nftContract.mint({
+      name: "Test2",
+      description: "description",
+      image: "https://img.net",
+    });
+    expect(tx.id.toNumber()).to.eq(0);
+  });
+
   it("should mint complex metadata 3", async () => {
     const tx = await nftContract.mint({
       name: "Test2",
