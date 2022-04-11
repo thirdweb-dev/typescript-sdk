@@ -39,6 +39,7 @@ import { isBrowser } from "../../common/utils";
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
+  private isValidContract = false;
   private customOverrides: () => CallOverrides = () => ({});
   private writeContract;
   public readContract;
@@ -255,6 +256,17 @@ export class ContractWrapper<
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<TransactionReceipt> {
+    // one time verification that this is a valid contract (to avoid sending funds to wrong addresses)
+    if (!this.isValidContract) {
+      const code = await this.getProvider().getCode(this.readContract.address);
+      this.isValidContract = code !== "0x";
+      if (!this.isValidContract) {
+        throw new Error(
+          "The address you're trying to send a transaction to is not a smart contract. Make sure you are on the correct network and the contract address is correct",
+        );
+      }
+    }
+
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }

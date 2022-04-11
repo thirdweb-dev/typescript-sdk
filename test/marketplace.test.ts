@@ -261,22 +261,36 @@ describe("Marketplace Contract", async () => {
       const listings = await marketplaceContract.getAllListings({
         seller: adminWallet.address,
       });
-      assert.equal(listings.length, 4, "seller filter doesn't work");
+      assert.equal(listings.length, 4, "filter doesn't work");
     });
 
     it("should filter asset contract properly", async () => {
       const listings = await marketplaceContract.getAllListings({
         tokenContract: dummyBundleContract.getAddress(),
       });
-      assert.equal(listings.length, 4, "seller filter doesn't work");
+      assert.equal(listings.length, 4, "filter doesn't work");
+    });
+
+    it("should filter asset contract with token contract address properly", async () => {
+      const listings = await marketplaceContract.getAllListings({
+        tokenContract: dummyNftContract.getAddress(),
+      });
+      assert.equal(listings.length, 2, "filter doesn't work");
     });
 
     it("should filter asset contract with token id properly", async () => {
       const listings = await marketplaceContract.getAllListings({
-        tokenContract: dummyNftContract.getAddress(),
-        tokenId: 0,
+        tokenId: 1,
       });
-      assert.equal(listings.length, 2, "seller filter doesn't work");
+      assert.equal(listings.length, 2, "filter doesn't work");
+    });
+
+    it("should filter asset contract with token contract and id properly", async () => {
+      const listings = await marketplaceContract.getAllListings({
+        tokenContract: dummyNftContract.getAddress(),
+        tokenId: 1,
+      });
+      assert.equal(listings.length, 1, "filter doesn't work");
     });
   });
 
