@@ -63,7 +63,7 @@ export function extractConstructorParamsFromAbi(
 ) {
   for (const input of abi) {
     if (input.type === "constructor") {
-      return input.inputs;
+      return input.inputs ?? [];
     }
   }
   return [];

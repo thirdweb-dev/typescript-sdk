@@ -44,7 +44,7 @@ export const AbiInputSchema = z.object({
 
 export const AbiObjectSchema = z.object({
   type: z.string(),
-  inputs: z.array(AbiInputSchema),
+  inputs: z.array(AbiInputSchema).optional(),
 });
 
 export const AbiSchema = z.array(AbiObjectSchema);
