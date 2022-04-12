@@ -1,6 +1,8 @@
-import { sdk, storage } from "./before.test";
+import { sdk, signers, storage } from "./before.test";
 import { readFileSync } from "fs";
 import { expect } from "chai";
+import { ethers } from "ethers";
+import { fetchContractMetadata, ThirdwebSDK } from "../src";
 
 global.fetch = require("node-fetch");
 
@@ -61,7 +63,8 @@ describe("Publishing", async () => {
   it("real ipfs test", async () => {
     const [signer] = signers;
     const realSDK = new ThirdwebSDK(signer);
-    const ipfsUri = "ipfs://QmTnJPnz83Pv8CZqTGTCvu44kSY6WcXL5G32cVCso971FH/0";
+    // const ipfsUri = "ipfs://QmTnJPnz83Pv8CZqTGTCvu44kSY6WcXL5G32cVCso971FH/0"; // TODO ethrone fails to dedploy
+    const ipfsUri = "ipfs://QmUCKKnXJw7tzhWq8BgJTULx9fyTzp9MpRn3e3UZjyvFvZ/0";
     const tx = await realSDK.publisher.publish(ipfsUri);
     console.log("deployed", await tx.data());
     const published = await realSDK.publisher.get(
@@ -72,6 +75,12 @@ describe("Publishing", async () => {
       published,
       [3600, 3, ethers.utils.parseUnits("0.01")],
     );
+    // const metadata = await realSDK.publisher.fetchFullContractMetadata(ipfsUri);
+    // const deployedAddr = await realSDK.publisher.deployCustomContractWithAbi(
+    //   metadata.abi,
+    //   metadata.bytecode,
+    //   [3600, 3, ethers.utils.parseUnits("0.01")],
+    // );
     console.log("deployed", deployedAddr);
   });
    **/

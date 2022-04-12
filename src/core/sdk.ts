@@ -267,6 +267,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     address: string,
     abi: ContractInterface,
   ) {
+    // TODO fetch the publishContractUri to get the ABI here
     return new CustomContract(
       this.getSignerOrProvider(),
       address,
