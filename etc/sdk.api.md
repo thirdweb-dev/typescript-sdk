@@ -24,6 +24,7 @@ import { ethers } from 'ethers';
 import { EventEmitter2 } from 'eventemitter2';
 import { extendShape } from 'zod';
 import { IMarketplace } from '@thirdweb-dev/contracts';
+import { Interface } from '@ethersproject/abi';
 import { IThirdwebContract } from '@thirdweb-dev/contracts';
 import { IThirdwebPlatformFee } from '@thirdweb-dev/contracts';
 import { IThirdwebPrimarySale } from '@thirdweb-dev/contracts';
@@ -1902,6 +1903,38 @@ export enum EventType {
     Transaction = "transaction"
 }
 
+// Warning: (ae-internal-missing-underscore) The name "extractConstructorParams" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function extractConstructorParams(metadataUri: string, storage: IStorage): Promise<{
+    type: string;
+    name: string;
+}[]>;
+
+// Warning: (ae-forgotten-export) The symbol "AbiSchema" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "extractConstructorParamsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>): {
+    type: string;
+    name: string;
+}[];
+
+// Warning: (ae-internal-missing-underscore) The name "fetchContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function fetchContractMetadata(metadataUri: string, storage: IStorage): Promise<{
+    name: string;
+    abi: {
+        type: string;
+        inputs: {
+            type: string;
+            name: string;
+        }[];
+    }[];
+    bytecode: string;
+}>;
+
 // Warning: (ae-internal-missing-underscore) The name "FetchError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -2019,6 +2052,11 @@ export interface IGenericSchemaType {
     // (undocumented)
     output: z.AnyZodObject;
 }
+
+// Warning: (ae-internal-missing-underscore) The name "implementsInterface" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export function implementsInterface<C extends BaseContract>(contractWrapper: ContractWrapper<BaseContract>, interfaceToMatch: Interface): contractWrapper is ContractWrapper<C>;
 
 // Warning: (ae-internal-missing-underscore) The name "includesErrorMessage" should be prefixed with an underscore because the declaration is marked as @internal
 //

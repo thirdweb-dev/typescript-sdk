@@ -254,6 +254,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   private updateContractSignerOrProvider() {
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
+    this.publisher.updateSignerOrProvider(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }

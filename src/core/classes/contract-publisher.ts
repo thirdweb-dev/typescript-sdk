@@ -47,6 +47,13 @@ export class ContractPublisher extends RPCConnectionHandler {
     );
   }
 
+  public override updateSignerOrProvider(
+    network: NetworkOrSignerOrProvider,
+  ): void {
+    super.updateSignerOrProvider(network);
+    this.registry.updateSignerOrProvider(network);
+  }
+
   /**
    * @internal
    * @param metadataUri

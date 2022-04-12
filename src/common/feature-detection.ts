@@ -52,6 +52,12 @@ export async function extractConstructorParams(
   return extractConstructorParamsFromAbi(abi);
 }
 
+/**
+ *
+ * @param abi
+ * @returns
+ * @internal
+ */
 export function extractConstructorParamsFromAbi(
   abi: z.input<typeof AbiSchema>,
 ) {
