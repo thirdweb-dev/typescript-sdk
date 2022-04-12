@@ -1926,11 +1926,11 @@ export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>):
 export function fetchContractMetadata(metadataUri: string, storage: IStorage): Promise<{
     name: string;
     abi: {
-        type: string;
-        inputs: {
+        inputs?: {
             type: string;
             name: string;
-        }[];
+        }[] | undefined;
+        type: string;
     }[];
     bytecode: string;
 }>;

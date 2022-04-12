@@ -1,9 +1,6 @@
-import { BigNumber, ethers } from "ethers";
-import { sdk, signers, storage } from "./before.test";
+import { sdk, storage } from "./before.test";
 import { readFileSync } from "fs";
-import exp = require("constants");
 import { expect } from "chai";
-import { ThirdwebSDK } from "../src";
 
 global.fetch = require("node-fetch");
 
@@ -50,8 +47,8 @@ describe("Publishing", async () => {
     const tx = await sdk.publisher.publish(contructorParamsContractUri);
     const published = await tx.data();
     const deployedAddr = await sdk.publisher.deployCustomContract(published, [
-      ethers.utils.formatBytes32String("someUri"),
-      BigNumber.from(12345),
+      "someUri",
+      12345,
     ]);
     console.log("deployed", deployedAddr);
     expect(deployedAddr.length).to.be.gt(0);

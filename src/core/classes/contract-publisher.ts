@@ -88,14 +88,6 @@ export class ContractPublisher extends RPCConnectionHandler {
     publisherAddress: string,
     metadataUri: string,
   ): Promise<PublishedContract> {
-    // TODO should be a single call to contract?
-    // const all = await this.getAll(publisherAddress);
-    // const contract = all.find((p) => p.metadataUri === metadataUri);
-    // if (contract === undefined) {
-    //   throw Error(
-    //     `No contract found with uri: ${metadataUri} for publisher: ${publisherAddress}`,
-    //   );
-    // }
     const id = await this.registry.readContract.contractId(
       publisherAddress,
       metadataUri,
@@ -157,9 +149,13 @@ export class ContractPublisher extends RPCConnectionHandler {
     const constructorParamTypes = extractConstructorParamsFromAbi(
       metadata.abi,
     ).map((p) => p.type);
-    const constructorParamsEncoded = ethers.utils.solidityPack(
+    const paramValues = this.convertParamValues(
       constructorParamTypes,
       constructorParamValues,
+    );
+    const constructorParamsEncoded = ethers.utils.solidityPack(
+      constructorParamTypes,
+      paramValues,
     );
     const receipt = await this.registry.sendTransaction("deployInstance", [
       publisher,
@@ -177,6 +173,28 @@ export class ContractPublisher extends RPCConnectionHandler {
       throw new Error("No ContractDeployed event found");
     }
     return events[0].args.deployedContract;
+  }
+
+  private convertParamValues(
+    constructorParamTypes: string[],
+    constructorParamValues: any[],
+  ) {
+    return constructorParamTypes.map((p, index) => {
+      if (p === "bytes32") {
+        return ethers.utils.formatBytes32String(
+          constructorParamValues[index].toString(),
+        );
+      }
+      if (p.startsWith("bytes")) {
+        return ethers.utils.toUtf8Bytes(
+          constructorParamValues[index].toString(),
+        );
+      }
+      if (p.startsWith("uint") || p.startsWith("int")) {
+        return BigNumber.from(constructorParamValues[index].toString());
+      }
+      return constructorParamValues;
+    });
   }
 
   /**
