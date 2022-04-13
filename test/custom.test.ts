@@ -38,30 +38,30 @@ describe("Custom Contracts", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    // nftContractAddress = await sdk.deployer.deployNFTCollection({
-    //   name: `Drop`,
-    //   description: "Test contract from tests",
-    //   image:
-    //     "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-    //   primary_sale_recipient: samWallet.address,
-    //   seller_fee_basis_points: 500,
-    //   fee_recipient: bobWallet.address,
-    //   platform_fee_basis_points: 10,
-    //   platform_fee_recipient: adminWallet.address,
-    // });
-    // tokenContractAddress = await sdk.deployer.deployToken({
-    //   name: `Token`,
-    //   description: "Test contract from tests",
-    //   image:
-    //     "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-    //   primary_sale_recipient: samWallet.address,
-    //   platform_fee_basis_points: 10,
-    //   platform_fee_recipient: adminWallet.address,
-    // });
-    // await sdk.getToken(tokenContractAddress).mint(100);
-    // await sdk.getNFTCollection(nftContractAddress).mint({
-    //   name: "Custom NFT",
-    // });
+    nftContractAddress = await sdk.deployer.deployNFTCollection({
+      name: `Drop`,
+      description: "Test contract from tests",
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      primary_sale_recipient: samWallet.address,
+      seller_fee_basis_points: 500,
+      fee_recipient: bobWallet.address,
+      platform_fee_basis_points: 10,
+      platform_fee_recipient: adminWallet.address,
+    });
+    tokenContractAddress = await sdk.deployer.deployToken({
+      name: `Token`,
+      description: "Test contract from tests",
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      primary_sale_recipient: samWallet.address,
+      platform_fee_basis_points: 10,
+      platform_fee_recipient: adminWallet.address,
+    });
+    await sdk.getToken(tokenContractAddress).mint(100);
+    await sdk.getNFTCollection(nftContractAddress).mint({
+      name: "Custom NFT",
+    });
   });
 
   it("should detect feature: metadata", async () => {
@@ -70,8 +70,6 @@ describe("Custom Contracts", async () => {
     const meta = await c.metadata.get();
     expect(meta.name).to.eq("CustomContract");
   });
-
-  // TODO update these tests
 
   it("should detect feature: roles", async () => {
     const c = await sdk.unstable_getCustomContract(

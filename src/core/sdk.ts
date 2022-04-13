@@ -268,18 +268,30 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * @internal
    */
-  public async unstable_getCustomContract(address: string) {
-    const contract = new Contract(
-      address,
-      ThirdwebContract__factory.abi,
-      this.getSignerOrProvider(),
-    ) as ThirdwebContract;
-    const metadataUri = await contract.getPublishMetadataUri();
-    const metadata = await fetchContractMetadata(metadataUri, this.storage);
+  public async unstable_getCustomContract(
+    address: string,
+    abi?: ContractInterface,
+  ) {
+    let contractABI = abi;
+    // if no abi passed, fetch it from the ThirdwebContract
+    if (!contractABI) {
+      try {
+        const contract = new Contract(
+          address,
+          ThirdwebContract__factory.abi,
+          this.getSignerOrProvider(),
+        ) as ThirdwebContract;
+        const metadataUri = await contract.getPublishMetadataUri();
+        const metadata = await fetchContractMetadata(metadataUri, this.storage);
+        contractABI = metadata.abi;
+      } catch (e) {
+        throw new Error(`Error fetching ABI for this contract\n\n${e}`);
+      }
+    }
     return new CustomContract(
       this.getSignerOrProvider(),
       address,
-      metadata.abi,
+      contractABI,
       this.storage,
       this.options,
     );
