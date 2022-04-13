@@ -1248,7 +1248,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     royalty: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
     // @internal (undocumented)
     static schema: {
-        deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
+        deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
@@ -1256,6 +1256,8 @@ export class Edition extends Erc1155<TokenERC1155> {
         }, {
         seller_fee_basis_points: ZodDefault<ZodNumber>;
         fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, {
         platform_fee_basis_points: ZodDefault<ZodNumber>;
         platform_fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
@@ -1267,6 +1269,7 @@ export class Edition extends Erc1155<TokenERC1155> {
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
         name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
@@ -1275,6 +1278,7 @@ export class Edition extends Erc1155<TokenERC1155> {
         platform_fee_recipient: string;
         trusted_forwarders: string[];
         }, {
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
@@ -1286,7 +1290,7 @@ export class Edition extends Erc1155<TokenERC1155> {
         name: string;
         primary_sale_recipient: string;
         }>;
-        output: ZodObject<extendShape<extendShape<    {
+        output: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
@@ -1296,16 +1300,20 @@ export class Edition extends Erc1155<TokenERC1155> {
         }>, {
         seller_fee_basis_points: ZodDefault<ZodNumber>;
         fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
+        symbol: string;
         name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
         }, {
         [x: string]: Json;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
@@ -1313,7 +1321,7 @@ export class Edition extends Erc1155<TokenERC1155> {
         fee_recipient?: string | undefined;
         name: string;
         }>;
-        input: ZodObject<extendShape<    {
+        input: ZodObject<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
@@ -1321,14 +1329,18 @@ export class Edition extends Erc1155<TokenERC1155> {
         }, {
         seller_fee_basis_points: ZodDefault<ZodNumber>;
         fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
         name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
         }, {
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
