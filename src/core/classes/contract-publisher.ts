@@ -16,13 +16,20 @@ import {
 } from "../../schema/contracts/custom";
 import { solidityKeccak256 } from "ethers/lib/utils";
 import { ContractWrapper } from "./contract-wrapper";
-import { ByocRegistry, ByocRegistry__factory } from "@thirdweb-dev/contracts";
+import {
+  ByocFactory,
+  ByocFactory__factory,
+  ByocRegistry,
+  ByocRegistry__factory,
+} from "@thirdweb-dev/contracts";
 import { AddressZero } from "@ethersproject/constants";
+import { ContractPublishedEvent } from "@thirdweb-dev/contracts/dist/ByocRegistry";
+import { getBYOCFactoryAddress, getBYOCRegistryAddress } from "../../constants";
 import {
   ContractDeployedEvent,
-  ContractPublishedEvent,
-} from "@thirdweb-dev/contracts/dist/ByocRegistry";
-import { getBYOCRegistryAddress } from "../../constants";
+  ThirdwebContract,
+} from "@thirdweb-dev/contracts/dist/ByocFactory";
+import { CustomContractMetadata } from "../../schema";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)
@@ -31,6 +38,7 @@ import { getBYOCRegistryAddress } from "../../constants";
 export class ContractPublisher extends RPCConnectionHandler {
   private storage: IStorage;
   private registry: ContractWrapper<ByocRegistry>;
+  private factory: ContractWrapper<ByocFactory>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -45,6 +53,12 @@ export class ContractPublisher extends RPCConnectionHandler {
       ByocRegistry__factory.abi,
       options,
     );
+    this.factory = new ContractWrapper<ByocFactory>(
+      network,
+      getBYOCFactoryAddress(),
+      ByocFactory__factory.abi,
+      options,
+    );
   }
 
   public override updateSignerOrProvider(
@@ -52,6 +66,7 @@ export class ContractPublisher extends RPCConnectionHandler {
   ): void {
     super.updateSignerOrProvider(network);
     this.registry.updateSignerOrProvider(network);
+    this.factory.updateSignerOrProvider(network);
   }
 
   /**
@@ -116,6 +131,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       metadataUri,
       bytecodeHash,
       AddressZero,
+      ethers.utils.formatBytes32String(metadata.name), // TODO this shouldn't be bytes32
     ]);
     const events = this.registry.parseLogs<ContractPublishedEvent>(
       "ContractPublished",
@@ -134,10 +150,12 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param contract
    * @param constructorParamValues
+   * @param contractMetadata
    */
   public async deployCustomContract(
     contract: PublishedContract,
     constructorParamValues: any[],
+    contractMetadata?: CustomContractMetadata,
   ): Promise<string> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
@@ -157,15 +175,22 @@ export class ContractPublisher extends RPCConnectionHandler {
       constructorParamTypes,
       paramValues,
     );
-    const receipt = await this.registry.sendTransaction("deployInstance", [
+    let contractURI = "";
+    if (contractMetadata) {
+      contractURI = await this.storage.uploadMetadata(contractMetadata);
+    }
+    const receipt = await this.factory.sendTransaction("deployInstance", [
       publisher,
-      contract.id,
       bytecode,
       constructorParamsEncoded,
       salt,
       value,
+      {
+        publishMetadataUri: contract.metadataUri,
+        contractURI,
+      } as ThirdwebContract.ThirdwebInfoStruct,
     ]);
-    const events = this.registry.parseLogs<ContractDeployedEvent>(
+    const events = this.factory.parseLogs<ContractDeployedEvent>(
       "ContractDeployed",
       receipt.logs,
     );
@@ -179,6 +204,10 @@ export class ContractPublisher extends RPCConnectionHandler {
     constructorParamTypes: string[],
     constructorParamValues: any[],
   ) {
+    // check that both arrays are same length
+    if (constructorParamTypes.length !== constructorParamValues.length) {
+      throw Error("Passed the wrong number of constructor arguments");
+    }
     return constructorParamTypes.map((p, index) => {
       if (p === "bytes32") {
         return ethers.utils.formatBytes32String(

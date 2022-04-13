@@ -9,7 +9,7 @@ import {
   MerkleSchema,
 } from "./common";
 import { z } from "zod";
-import { BigNumberSchema } from "../shared";
+import { BigNumberSchema, JsonSchema } from "../shared";
 
 export const CustomContractInput = CommonContractSchema.merge(
   CommonRoyaltySchema.merge(MerkleSchema).merge(CommonSymbolSchema).partial(),
@@ -37,15 +37,19 @@ export const CustomContractMetadataSchema = z.object({
   bytecodeUri: z.string(),
 });
 
-export const AbiInputSchema = z.object({
-  type: z.string(),
-  name: z.string(),
-});
+export const AbiInputSchema = z
+  .object({
+    type: z.string(),
+    name: z.string(),
+  })
+  .catchall(z.lazy(() => JsonSchema));
 
-export const AbiObjectSchema = z.object({
-  type: z.string(),
-  inputs: z.array(AbiInputSchema).optional(),
-});
+export const AbiObjectSchema = z
+  .object({
+    type: z.string(),
+    inputs: z.array(AbiInputSchema).optional(),
+  })
+  .catchall(z.lazy(() => JsonSchema));
 
 export const AbiSchema = z.array(AbiObjectSchema);
 

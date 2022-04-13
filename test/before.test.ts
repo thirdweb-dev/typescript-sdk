@@ -1,4 +1,6 @@
 import {
+  ByocFactory,
+  ByocFactory__factory,
   ByocRegistry,
   ByocRegistry__factory,
   MockContract__factory,
@@ -110,13 +112,21 @@ before(async () => {
   console.log("TWFee address: ", thirdwebFeeDeployer.address);
 
   const customFactoryDeployer = (await new ethers.ContractFactory(
+    ByocFactory__factory.abi,
+    ByocFactory__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(registry.address, [])) as ByocFactory;
+  await customFactoryDeployer.deployed();
+
+  const customRegistryDeployer = (await new ethers.ContractFactory(
     ByocRegistry__factory.abi,
     ByocRegistry__factory.bytecode,
   )
     .connect(signer)
-    .deploy(registry.address, [])) as ByocRegistry;
-  await customFactoryDeployer.deployed();
-  console.log("ByocRegistry address: ", customFactoryDeployer.address);
+    .deploy([])) as ByocRegistry;
+  await customRegistryDeployer.deployed();
+  console.log("ByocRegistry address: ", customRegistryDeployer.address);
 
   await registryContract.grantRole(
     await registryContract.OPERATOR_ROLE(),
@@ -201,7 +211,8 @@ before(async () => {
 
   process.env.registryAddress = thirdwebRegistryAddress;
   process.env.factoryAddress = thirdwebFactoryDeployer.address;
-  process.env.byocRegistryAddress = customFactoryDeployer.address;
+  process.env.byocRegistryAddress = customRegistryDeployer.address;
+  process.env.byocFactoryAddress = customFactoryDeployer.address;
 
   storage = new MockStorage();
   sdk = new ThirdwebSDK(

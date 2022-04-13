@@ -17,6 +17,12 @@ export const CommonContractSchema = z.object({
   external_link: z.string().url().optional(),
 });
 
+export const CustomContractSchema = CommonContractSchema.catchall(
+  z.lazy(() => JsonSchema),
+);
+
+export type CustomContractMetadata = z.input<typeof CustomContractSchema>;
+
 /**
  * @internal
  */

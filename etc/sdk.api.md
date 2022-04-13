@@ -46,6 +46,8 @@ import { Signer } from '@ethersproject/abstract-signer';
 import { Signer as Signer_2 } from 'ethers';
 import { Split as Split_2 } from '@thirdweb-dev/contracts';
 import { Split__factory } from '@thirdweb-dev/contracts';
+import { ThirdwebContract } from '@thirdweb-dev/contracts';
+import { ThirdwebContract as ThirdwebContract_2 } from '@thirdweb-dev/contracts/dist/ThirdwebContract';
 import { TokenERC1155 } from '@thirdweb-dev/contracts';
 import { TokenERC1155__factory } from '@thirdweb-dev/contracts';
 import { TokenERC20 } from '@thirdweb-dev/contracts';
@@ -802,7 +804,7 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
 // Warning: (ae-internal-missing-underscore) The name "CustomContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
-export class CustomContract<TContract extends BaseContract = BaseContract> implements UpdateableNetwork {
+export class CustomContract<TContract extends ThirdwebContract = ThirdwebContract> implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
     // (undocumented)
     static contractType: "custom";
@@ -1142,6 +1144,29 @@ export class CustomContract<TContract extends BaseContract = BaseContract> imple
     // (undocumented)
     token: Erc20<ITokenERC20> | undefined;
 }
+
+// @public (undocumented)
+export type CustomContractMetadata = z.input<typeof CustomContractSchema>;
+
+// @public (undocumented)
+export const CustomContractSchema: z.ZodObject<{
+    name: z.ZodString;
+    description: z.ZodOptional<z.ZodString>;
+    image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+    external_link: z.ZodOptional<z.ZodString>;
+}, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+    [x: string]: Json;
+    description?: string | undefined;
+    image?: any;
+    external_link?: string | undefined;
+    name: string;
+}, {
+    [x: string]: Json;
+    description?: string | undefined;
+    image?: any;
+    external_link?: string | undefined;
+    name: string;
+}>;
 
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_IPFS_GATEWAY" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -1907,6 +1932,7 @@ export enum EventType {
 //
 // @internal (undocumented)
 export function extractConstructorParams(metadataUri: string, storage: IStorage): Promise<{
+    [x: string]: Json;
     type: string;
     name: string;
 }[]>;
@@ -1916,6 +1942,7 @@ export function extractConstructorParams(metadataUri: string, storage: IStorage)
 //
 // @internal (undocumented)
 export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>): {
+    [x: string]: Json;
     type: string;
     name: string;
 }[];
@@ -1926,7 +1953,9 @@ export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>):
 export function fetchContractMetadata(metadataUri: string, storage: IStorage): Promise<{
     name: string;
     abi: {
+        [x: string]: Json;
         inputs?: {
+            [x: string]: Json;
             type: string;
             name: string;
         }[] | undefined;
@@ -2017,6 +2046,11 @@ export interface GaslessTransaction {
     // (undocumented)
     to: string;
 }
+
+// Warning: (ae-internal-missing-underscore) The name "getBYOCFactoryAddress" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getBYOCFactoryAddress(): string;
 
 // Warning: (ae-internal-missing-underscore) The name "getBYOCRegistryAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -4162,7 +4196,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
     // @internal (undocumented)
-    unstable_getCustomContract(address: string, abi: ContractInterface): Promise<CustomContract<ethers.BaseContract>>;
+    unstable_getCustomContract(address: string, abi: ContractInterface): Promise<CustomContract<ThirdwebContract_2>>;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 

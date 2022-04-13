@@ -25,10 +25,11 @@ import {
   ITokenERC20__factory,
   ITokenERC721,
   ITokenERC721__factory,
+  ThirdwebContract,
 } from "@thirdweb-dev/contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { BaseContract, ContractInterface } from "ethers";
+import { ContractInterface } from "ethers";
 import { ALL_ROLES } from "../common";
 import { implementsInterface } from "../common/feature-detection";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
@@ -37,8 +38,9 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
  * Custom contract wrapper with feature detection
  * @internal
  */
-export class CustomContract<TContract extends BaseContract = BaseContract>
-  implements UpdateableNetwork
+export class CustomContract<
+  TContract extends ThirdwebContract = ThirdwebContract,
+> implements UpdateableNetwork
 {
   static contractType = "custom" as const;
   static schema = CustomContractSchema;
