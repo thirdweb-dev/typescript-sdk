@@ -7,62 +7,71 @@ import {
   VoteERC20__factory,
 } from "@thirdweb-dev/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { uploadContractMetadata } from "./publisher.test";
 
 global.fetch = require("node-fetch");
 
 describe("Custom Contracts", async () => {
+  let customContractAddress: string;
   let nftContractAddress: string;
   let tokenContractAddress: string;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
 
-  before(() => {
+  before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
+    const simpleContractUri = await uploadContractMetadata(
+      "test/abis/greeter.json",
+    );
+    const tx = await sdk.publisher.publish(simpleContractUri);
+    customContractAddress = await sdk.publisher.deployCustomContract(
+      adminWallet.address,
+      tx.id,
+      [],
+      {
+        name: "CustomContract",
+      },
+    );
+    console.log("published and deployed", customContractAddress);
   });
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    nftContractAddress = await sdk.deployer.deployNFTCollection({
-      name: `Drop`,
-      description: "Test contract from tests",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      primary_sale_recipient: samWallet.address,
-      seller_fee_basis_points: 500,
-      fee_recipient: bobWallet.address,
-      platform_fee_basis_points: 10,
-      platform_fee_recipient: adminWallet.address,
-    });
-    tokenContractAddress = await sdk.deployer.deployToken({
-      name: `Token`,
-      description: "Test contract from tests",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      primary_sale_recipient: samWallet.address,
-      platform_fee_basis_points: 10,
-      platform_fee_recipient: adminWallet.address,
-    });
-    await sdk.getToken(tokenContractAddress).mint(100);
-    await sdk.getNFTCollection(nftContractAddress).mint({
-      name: "Custom NFT",
-    });
+    // nftContractAddress = await sdk.deployer.deployNFTCollection({
+    //   name: `Drop`,
+    //   description: "Test contract from tests",
+    //   image:
+    //     "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+    //   primary_sale_recipient: samWallet.address,
+    //   seller_fee_basis_points: 500,
+    //   fee_recipient: bobWallet.address,
+    //   platform_fee_basis_points: 10,
+    //   platform_fee_recipient: adminWallet.address,
+    // });
+    // tokenContractAddress = await sdk.deployer.deployToken({
+    //   name: `Token`,
+    //   description: "Test contract from tests",
+    //   image:
+    //     "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+    //   primary_sale_recipient: samWallet.address,
+    //   platform_fee_basis_points: 10,
+    //   platform_fee_recipient: adminWallet.address,
+    // });
+    // await sdk.getToken(tokenContractAddress).mint(100);
+    // await sdk.getNFTCollection(nftContractAddress).mint({
+    //   name: "Custom NFT",
+    // });
   });
 
   it("should detect feature: metadata", async () => {
-    const c = await sdk.unstable_getCustomContract(
-      nftContractAddress,
-      TokenERC721__factory.abi,
-    );
+    const c = await sdk.unstable_getCustomContract(customContractAddress);
     invariant(c, "Contract undefined");
     const meta = await c.metadata.get();
-    expect(meta.name).to.eq("Drop");
-    await c.metadata.set({
-      name: "Drop2",
-    });
-    const meta2 = await c.metadata.get();
-    expect(meta2.name).to.eq("Drop2");
+    expect(meta.name).to.eq("CustomContract");
   });
+
+  // TODO update these tests
 
   it("should detect feature: roles", async () => {
     const c = await sdk.unstable_getCustomContract(

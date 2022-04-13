@@ -5,23 +5,23 @@ import { ThirdwebSDK } from "../src";
 
 global.fetch = require("node-fetch");
 
+export const uploadContractMetadata = async (filename) => {
+  const greeterJson = JSON.parse(readFileSync(filename, "utf-8"));
+  const abi = greeterJson.abi;
+  const bytecode = greeterJson.bytecode;
+  const abiUri = await storage.uploadMetadata(abi);
+  const bytecodeUri = await storage.upload(bytecode);
+  const contractData = {
+    name: greeterJson.contractName,
+    abiUri,
+    bytecodeUri,
+  };
+  return await storage.uploadMetadata(contractData);
+};
+
 describe("Publishing", async () => {
   let simpleContractUri: string;
   let contructorParamsContractUri: string;
-
-  const uploadContractMetadata = async (filename) => {
-    const greeterJson = JSON.parse(readFileSync(filename, "utf-8"));
-    const abi = greeterJson.abi;
-    const bytecode = greeterJson.bytecode;
-    const abiUri = await storage.uploadMetadata(abi);
-    const bytecodeUri = await storage.upload(bytecode);
-    const contractData = {
-      name: greeterJson.contractName,
-      abiUri,
-      bytecodeUri,
-    };
-    return await storage.uploadMetadata(contractData);
-  };
 
   before("Upload abis", async () => {
     simpleContractUri = await uploadContractMetadata("test/abis/greeter.json");
@@ -37,6 +37,9 @@ describe("Publishing", async () => {
       publisherAddress,
       tx.id,
       [],
+      {
+        name: "CustomContract",
+      },
     );
     console.log("deployed", deployedAddr);
     expect(deployedAddr.length).to.be.gt(0);

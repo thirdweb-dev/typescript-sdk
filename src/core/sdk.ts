@@ -1,4 +1,4 @@
-import { ContractInterface, ethers } from "ethers";
+import { Contract, ContractInterface, ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
   CONTRACTS_MAP,
@@ -22,12 +22,17 @@ import type {
   NetworkOrSignerOrProvider,
   ValidContractInstance,
 } from "./types";
-import { IThirdwebContract__factory } from "@thirdweb-dev/contracts";
+import {
+  IThirdwebContract__factory,
+  ThirdwebContract,
+  ThirdwebContract__factory,
+} from "@thirdweb-dev/contracts";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { CustomContract } from "../contracts/custom";
 import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
+import { fetchContractMetadata } from "../common";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -263,15 +268,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * @internal
    */
-  public async unstable_getCustomContract(
-    address: string,
-    abi: ContractInterface,
-  ) {
-    // TODO fetch the publishContractUri to get the ABI here
+  public async unstable_getCustomContract(address: string) {
+    const contract = new Contract(
+      address,
+      ThirdwebContract__factory.abi,
+      this.getSignerOrProvider(),
+    ) as ThirdwebContract;
+    const metadataUri = await contract.getPublishMetadataUri();
+    const metadata = await fetchContractMetadata(metadataUri, this.storage);
     return new CustomContract(
       this.getSignerOrProvider(),
       address,
-      abi,
+      metadata.abi,
       this.storage,
       this.options,
     );
