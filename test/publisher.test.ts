@@ -46,6 +46,10 @@ describe("Publishing", async () => {
     const addr = (await sdk.getSigner()?.getAddress()) || "";
     const all = await sdk.publisher.getAll(addr);
     expect(all.length).to.be.eq(1);
+    // fetch metadata back
+    const c = await sdk.unstable_getCustomContract(deployedAddr);
+    const meta = await c.metadata.get();
+    expect(meta.name).to.eq("CustomContract");
   });
 
   it("should publish constructor params contract", async () => {

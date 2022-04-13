@@ -4184,7 +4184,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
     // @internal (undocumented)
-    unstable_getCustomContract(address: string): Promise<CustomContract<ThirdwebContract>>;
+    unstable_getCustomContract(address: string, abi?: ContractInterface): Promise<CustomContract<ThirdwebContract>>;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 

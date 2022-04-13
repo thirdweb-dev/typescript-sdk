@@ -33,7 +33,6 @@ describe("Custom Contracts", async () => {
         name: "CustomContract",
       },
     );
-    console.log("published and deployed", customContractAddress);
   });
 
   beforeEach(async () => {
