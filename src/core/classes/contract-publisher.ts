@@ -101,7 +101,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     return data.map((d) =>
       PublishedContractSchema.parse({
         id: d.contractId,
-        groupId: d.groupId,
+        groupId: ethers.utils.parseBytes32String(d.groupId),
         metadataUri: d.publishMetadataUri,
       }),
     );
@@ -122,7 +122,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     return contractStructs.map((latest) =>
       PublishedContractSchema.parse({
         id: latest.contractId,
-        groupId: latest.groupId,
+        groupId: ethers.utils.parseBytes32String(latest.groupId),
         metadataUri: latest.publishMetadataUri, // TODO download everything
       }),
     );
