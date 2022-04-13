@@ -195,7 +195,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     const metadata = await this.fetchFullContractMetadata(contractMetadataUri);
     const publisher = await signer.getAddress();
     const bytecode = metadata.bytecode;
-    const salt = ethers.utils.formatBytes32String(""); // TODO expose as optional
+    const salt = ethers.utils.formatBytes32String(Math.random().toString()); // TODO expose as optional
     const value = BigNumber.from(0);
     const constructorParamTypes = extractConstructorParamsFromAbi(
       metadata.abi,
@@ -204,7 +204,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       constructorParamTypes,
       constructorParamValues,
     );
-    const constructorParamsEncoded = ethers.utils.solidityPack(
+    const constructorParamsEncoded = ethers.utils.defaultAbiCoder.encode(
       constructorParamTypes,
       paramValues,
     );
@@ -255,7 +255,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       if (p.startsWith("uint") || p.startsWith("int")) {
         return BigNumber.from(constructorParamValues[index].toString());
       }
-      return constructorParamValues;
+      return constructorParamValues[index];
     });
   }
 

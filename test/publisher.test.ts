@@ -2,6 +2,7 @@ import { sdk, signers, storage } from "./before.test";
 import { readFileSync } from "fs";
 import { expect } from "chai";
 import { ThirdwebSDK } from "../src";
+import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("node-fetch");
 
@@ -67,17 +68,34 @@ describe("Publishing", async () => {
     expect(all.length).to.be.eq(2);
   });
 
-  it.skip("real ipfs test", async () => {
+  it("Ethrone real ipfs test", async () => {
     const [signer] = signers;
     const realSDK = new ThirdwebSDK(signer);
-    const publisherAddress = await realSDK.getSigner().getAddress();
-    const ipfsUri = "ipfs://QmRj6ZgxoQuD8JwdvYi6rnt6eJ5P23BZjZDkGYyaLHEGPN/0";
+    const publisherAddress =
+      (await realSDK.getSigner()?.getAddress()) || AddressZero;
+    const ipfsUri = "ipfs://QmQNppFfEg3sxHh6vnYnv7KCBCFWNPFQF6evPWQeV2qHwZ/0";
     const tx = await realSDK.publisher.publish(ipfsUri);
     console.log("deployed", await tx.data());
     const deployedAddr = await realSDK.publisher.deployCustomContract(
       publisherAddress,
       tx.id,
-      ["someUri", 12345],
+      [60000, 3, 100000],
+    );
+    console.log("deployed", deployedAddr);
+  });
+
+  it("ERC721A real ipfs test", async () => {
+    const [signer] = signers;
+    const realSDK = new ThirdwebSDK(signer);
+    const publisherAddress =
+      (await realSDK.getSigner()?.getAddress()) || AddressZero;
+    const ipfsUri = "ipfs://QmRzD8TEYrd4Ux7ZNTBKWbuAERn6rvfUzo1nnW3GMtFL8h/0";
+    const tx = await realSDK.publisher.publish(ipfsUri);
+    console.log("deployed", await tx.data());
+    const deployedAddr = await realSDK.publisher.deployCustomContract(
+      publisherAddress,
+      tx.id,
+      ["foo", "bar"],
     );
     console.log("deployed", deployedAddr);
   });
