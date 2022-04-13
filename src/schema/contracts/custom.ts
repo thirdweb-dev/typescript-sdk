@@ -65,5 +65,5 @@ export const PublishedContractSchema = z.object({
   metadataUri: z.string(),
 });
 
-export type ContractParam = z.input<typeof AbiInputSchema>;
-export type PublishedContract = z.input<typeof PublishedContractSchema>;
+export type ContractParam = z.infer<typeof AbiInputSchema>;
+export type PublishedContract = z.infer<typeof PublishedContractSchema>;

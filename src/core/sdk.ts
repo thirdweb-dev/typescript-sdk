@@ -1,4 +1,4 @@
-import { Contract, ContractInterface, ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
   CONTRACTS_MAP,

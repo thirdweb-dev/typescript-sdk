@@ -98,7 +98,6 @@
 |  Variable | Description |
 |  --- | --- |
 |  [ALL\_ROLES](./sdk.all_roles.md) |  |
-|  [CustomContractSchema](./sdk.customcontractschema.md) |  |
 |  [MintRequest1155](./sdk.mintrequest1155.md) |  |
 |  [MintRequest20](./sdk.mintrequest20.md) |  |
 |  [MintRequest721](./sdk.mintrequest721.md) |  |
@@ -120,7 +119,6 @@
 |  [ContractType](./sdk.contracttype.md) |  |
 |  [Currency](./sdk.currency.md) |  |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
-|  [CustomContractMetadata](./sdk.customcontractmetadata.md) |  |
 |  [EditionMetadata](./sdk.editionmetadata.md) |  |
 |  [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
 |  [EditionMetadataOrUri](./sdk.editionmetadataoruri.md) |  |
