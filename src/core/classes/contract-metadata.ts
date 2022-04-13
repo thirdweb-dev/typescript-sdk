@@ -1,4 +1,4 @@
-import { IThirdwebContract } from "@thirdweb-dev/contracts";
+import { IThirdwebContract, ThirdwebContract } from "@thirdweb-dev/contracts";
 import { z } from "zod";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResult } from "../types";
@@ -18,7 +18,7 @@ export interface IGenericSchemaType {
  * @public
  */
 export class ContractMetadata<
-  TContract extends IThirdwebContract,
+  TContract extends IThirdwebContract | ThirdwebContract,
   TSchema extends IGenericSchemaType,
 > {
   private contractWrapper;
@@ -64,13 +64,15 @@ export class ContractMetadata<
   public async set(metadata: z.input<TSchema["input"]>) {
     const uri = await this._parseAndUploadMetadata(metadata);
 
-    const receipt = await this.contractWrapper.sendTransaction(
-      "setContractURI",
-      [uri],
-    );
-    return { receipt, data: this.get } as TransactionResult<
-      z.output<TSchema["output"]>
-    >;
+    const wrapper = this.contractWrapper;
+    if (this.canUpdateContractUri(wrapper)) {
+      const receipt = await wrapper.sendTransaction("setContractURI", [uri]);
+      return { receipt, data: this.get } as TransactionResult<
+        z.output<TSchema["output"]>
+      >;
+    } else {
+      throw new Error("Contract does not support updating contractURI");
+    }
   }
 
   public async update(metadata: Partial<z.input<TSchema["input"]>>) {
@@ -89,5 +91,11 @@ export class ContractMetadata<
   public async _parseAndUploadMetadata(metadata: z.input<TSchema["input"]>) {
     const parsedMetadata = this.parseInputMetadata(metadata);
     return this.storage.uploadMetadata(parsedMetadata);
+  }
+
+  private canUpdateContractUri(
+    contractWrapper: ContractWrapper<any>,
+  ): contractWrapper is ContractWrapper<IThirdwebContract> {
+    return "setContractURI" in contractWrapper.readContract.functions;
   }
 }

@@ -14,7 +14,6 @@ import {
   AccessControlEnumerable,
   AccessControlEnumerable__factory,
   IThirdwebContract,
-  IThirdwebContract__factory,
   IThirdwebPlatformFee,
   IThirdwebPlatformFee__factory,
   IThirdwebPrimarySale,
@@ -74,7 +73,11 @@ export class CustomContract<
     this.storage = storage;
     this.contractWrapper = contractWrapper;
 
-    this.metadata = this.detectMetadata();
+    this.metadata = new ContractMetadata(
+      this.contractWrapper,
+      CustomContract.schema,
+      this.storage,
+    );
     this.royalties = this.detectRoyalties();
     this.roles = this.detectRoles();
     this.sales = this.detectPrimarySales();
@@ -96,27 +99,6 @@ export class CustomContract<
   getAddress(): string {
     return this.contractWrapper.readContract.address;
   }
-
-  /** ****************************
-   * FEATURE DETECTION
-   ******************************/
-
-  private detectMetadata() {
-    if (
-      implementsInterface<IThirdwebContract>(
-        this.contractWrapper,
-        IThirdwebContract__factory.createInterface(),
-      )
-    ) {
-      return new ContractMetadata(
-        this.contractWrapper,
-        CustomContract.schema,
-        this.storage,
-      );
-    }
-    return undefined;
-  }
-
   private detectRoyalties() {
     if (
       implementsInterface<IThirdwebContract & IThirdwebRoyalty>(

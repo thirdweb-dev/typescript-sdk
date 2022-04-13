@@ -17,6 +17,7 @@ import {
 } from "../../common/feature-detection";
 import {
   ContractParam,
+  CustomContractMetadata,
   PublishedContract,
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
@@ -35,7 +36,6 @@ import {
   ContractDeployedEvent,
   ThirdwebContract,
 } from "@thirdweb-dev/contracts/dist/ByocFactory";
-import { CustomContractMetadata } from "../../schema";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)

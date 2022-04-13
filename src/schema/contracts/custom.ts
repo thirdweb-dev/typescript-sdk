@@ -11,7 +11,13 @@ import {
 import { z } from "zod";
 import { BigNumberSchema, JsonSchema } from "../shared";
 
-export const CustomContractInput = CommonContractSchema.merge(
+export const BYOCContractMetadataSchema = CommonContractSchema.catchall(
+  z.lazy(() => JsonSchema),
+);
+
+export type CustomContractMetadata = z.input<typeof BYOCContractMetadataSchema>;
+
+export const CustomContractInput = BYOCContractMetadataSchema.merge(
   CommonRoyaltySchema.merge(MerkleSchema).merge(CommonSymbolSchema).partial(),
 );
 

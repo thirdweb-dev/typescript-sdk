@@ -55,7 +55,6 @@ describe("Custom Contracts", async () => {
       TokenERC721__factory.abi,
     );
     invariant(c, "Contract undefined");
-    invariant(c.metadata, "Metadata undefined");
     const meta = await c.metadata.get();
     expect(meta.name).to.eq("Drop");
     await c.metadata.set({
