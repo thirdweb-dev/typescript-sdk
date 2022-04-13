@@ -11,7 +11,7 @@ Create a collection of one-of-one NFTs.
 ```typescript
 export declare class NFTCollection extends Erc721<TokenERC721> 
 ```
-<b>Extends:</b> [Erc721](./sdk.erc721.md)<!-- -->&lt;TokenERC721
+<b>Extends:</b> [Erc721](./sdk.erc721.md)<!-- -->&lt;TokenERC721&gt;
 
 ## Example
 

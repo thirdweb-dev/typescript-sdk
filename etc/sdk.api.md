@@ -3286,6 +3286,37 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
     royaltyRecipient: z.ZodDefault<z.ZodString>;
     royaltyBps: z.ZodDefault<z.ZodNumber>;
 }>, {
+    metadata: z.ZodDefault<z.ZodUnion<[z.ZodObject<z.extendShape<{
+        name: z.ZodString;
+        description: z.ZodOptional<z.ZodString>;
+        image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+    }, {
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+        name: string;
+    }, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+        name: string;
+    }>, z.ZodString]>>;
     tokenId: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>, string, any>>;
     quantity: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<any, z.ZodTypeDef, any>]>, ethers.BigNumber, any>, string, any>;
 }>, "strip", z.ZodTypeAny, {
@@ -3320,10 +3351,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
     uid?: string | undefined;
     primarySaleRecipient?: string | undefined;
     quantity?: any;
-    royaltyRecipient?: string | undefined;
-    royaltyBps?: number | undefined;
-    tokenId?: any;
-    metadata: string | {
+    metadata?: string | {
         [x: string]: Json;
         description?: string | undefined;
         image?: any;
@@ -3333,7 +3361,10 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
-    };
+    } | undefined;
+    royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
+    tokenId?: any;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature1155PayloadOutput" should be prefixed with an underscore because the declaration is marked as @internal

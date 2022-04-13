@@ -224,6 +224,37 @@ describe("Edition sig minting", async () => {
       assert.equal(nft.metadata.name, meta.metadata.name);
     });
 
+    it("should mint additional supply", async () => {
+      const tx = await editionContract.signature.mint(v1);
+      const additional = await editionContract.signature.generate({
+        tokenId: tx.id,
+        quantity: 100,
+      });
+      await editionContract.signature.mint(additional);
+      const nft = await editionContract.get(tx.id);
+      expect(nft.supply.toNumber()).to.eq(101);
+    });
+
+    it("should mint additional supply of one tokenId", async () => {
+      const oldBalance = await editionContract.balanceOf(
+        samWallet.address,
+        "0",
+      );
+      await editionContract.mint({ metadata: { name: "test" }, supply: 0 });
+      const payload = await editionContract.signature.generate({
+        tokenId: "0",
+        quantity: "1",
+        metadata: "",
+      });
+      sdk.updateSignerOrProvider(samWallet);
+      await editionContract.signature.mint(payload);
+      const newBalance = await editionContract.balanceOf(
+        samWallet.address,
+        "0",
+      );
+      assert(newBalance.gt(oldBalance), "balance doesn't match");
+    });
+
     it("should mint the right custom token price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await editionContract.signature.generate({
