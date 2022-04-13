@@ -39,7 +39,7 @@ const payload = {
   to: {{wallet_address}}, // Who will receive the tokens (or AddressZero for anyone)
   price: 0.5, // the price to pay for minting those tokens
   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
-  mintStartTime: now, // can mint anytime from now
+  mintStartTime: startTime, // can mint anytime from now
   mintEndTime: endTime, // to 24h from now,
   primarySaleRecipient: "0x...", // custom sale recipient for this token mint
 };

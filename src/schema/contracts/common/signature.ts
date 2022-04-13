@@ -67,6 +67,7 @@ export const Signature721PayloadOutput = Signature721PayloadInput.extend({
  * @internal
  */
 export const Signature1155PayloadInput = Signature721PayloadInput.extend({
+  metadata: NFTInputOrUriSchema.default(""),
   tokenId: BigNumberishSchema.default(ethers.constants.MaxUint256),
   quantity: BigNumberishSchema,
 });

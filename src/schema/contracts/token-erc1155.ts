@@ -4,14 +4,17 @@ import {
   CommonPlatformFeeSchema,
   CommonPrimarySaleSchema,
   CommonRoyaltySchema,
+  CommonSymbolSchema,
   CommonTrustedForwarderSchema,
 } from "./common";
 
 export const TokenErc1155ContractInput =
-  CommonContractSchema.merge(CommonRoyaltySchema);
+  CommonContractSchema.merge(CommonRoyaltySchema).merge(CommonSymbolSchema);
 
 export const TokenErc1155ContractOutput =
-  CommonContractOutputSchema.merge(CommonRoyaltySchema);
+  CommonContractOutputSchema.merge(CommonRoyaltySchema).merge(
+    CommonSymbolSchema,
+  );
 
 export const TokenErc1155ContractDeploy = TokenErc1155ContractInput.merge(
   CommonPlatformFeeSchema,

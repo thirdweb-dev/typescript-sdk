@@ -171,7 +171,7 @@ export class Erc721SignatureMinting {
    *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
    *   price: 0.5, // the price to pay for minting
    *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
-   *   mintStartTime: now, // can mint anytime from now
+   *   mintStartTime: startTime, // can mint anytime from now
    *   mintEndTime: endTime, // to 24h from now,
    *   royaltyRecipient: "0x...", // custom royalty recipient for this NFT
    *   royaltyBps: 100, // custom royalty fees for this NFT (in bps)
