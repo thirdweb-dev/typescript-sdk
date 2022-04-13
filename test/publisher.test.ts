@@ -31,10 +31,11 @@ describe("Publishing", async () => {
   });
 
   it("should publish simple greeter contract", async () => {
+    const publisherAddress = await sdk.getSigner().getAddress();
     const tx = await sdk.publisher.publish(simpleContractUri);
-    const published = await tx.data();
     const deployedAddr = await sdk.publisher.deployCustomContract(
-      published,
+      publisherAddress,
+      tx.id,
       [],
     );
     console.log("deployed", deployedAddr);
@@ -45,12 +46,13 @@ describe("Publishing", async () => {
   });
 
   it("should publish constructor params contract", async () => {
+    const publisherAddress = await sdk.getSigner().getAddress();
     const tx = await sdk.publisher.publish(contructorParamsContractUri);
-    const published = await tx.data();
-    const deployedAddr = await sdk.publisher.deployCustomContract(published, [
-      "someUri",
-      12345,
-    ]);
+    const deployedAddr = await sdk.publisher.deployCustomContract(
+      publisherAddress,
+      tx.id,
+      ["someUri", 12345],
+    );
     console.log("deployed", deployedAddr);
     expect(deployedAddr.length).to.be.gt(0);
     const addr = (await sdk.getSigner()?.getAddress()) || "";
@@ -61,15 +63,13 @@ describe("Publishing", async () => {
   it.skip("real ipfs test", async () => {
     const [signer] = signers;
     const realSDK = new ThirdwebSDK(signer);
+    const publisherAddress = await realSDK.getSigner().getAddress();
     const ipfsUri = "ipfs://QmRj6ZgxoQuD8JwdvYi6rnt6eJ5P23BZjZDkGYyaLHEGPN/0";
     const tx = await realSDK.publisher.publish(ipfsUri);
     console.log("deployed", await tx.data());
-    const published = await realSDK.publisher.get(
-      await realSDK.getSigner().getAddress(),
-      ipfsUri,
-    );
     const deployedAddr = await realSDK.publisher.deployCustomContract(
-      published,
+      publisherAddress,
+      tx.id,
       ["someUri", 12345],
     );
     console.log("deployed", deployedAddr);

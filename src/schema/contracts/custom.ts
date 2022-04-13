@@ -55,6 +55,7 @@ export const AbiSchema = z.array(AbiObjectSchema);
 
 export const PublishedContractSchema = z.object({
   id: BigNumberSchema,
+  groupId: z.string(),
   metadataUri: z.string(),
 });
 
