@@ -9,7 +9,7 @@ export const OZ_DEFENDER_FORWARDER_ADDRESS =
 
 const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
 const TWFactory_address = "0x11c34F062Cb10a20B9F463E12Ff9dA62D76FDf65";
-const BYOCRegistry_address = "0xa9CBE73a575038103c3Baaaf7Db51374a60a5209"; // TODO finalize, this is mumbai only rn
+const BYOCRegistry_address = "0x1AD609e107f631A60BcD0fCa31d45B67766DeE91"; // TODO finalize, this is mumbai only rn
 const BYOCFactory_address = "0x3c3D901Acb5f7746dCf06B26fCe881d21970d2B6";
 
 /**
