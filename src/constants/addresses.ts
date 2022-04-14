@@ -7,10 +7,10 @@ import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 export const OZ_DEFENDER_FORWARDER_ADDRESS =
   "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 
-// FIXME STOPSHIP - finalize these addresses before merging to main
-// const TWRegistry_address_default = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
-const TWRegistry_address = "0x3F17972CB27506eb4a6a3D59659e0B57a43fd16C"; // byoc TWregistru
+const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
 const TWFactory_address = "0x11c34F062Cb10a20B9F463E12Ff9dA62D76FDf65";
+// FIXME STOPSHIP - finalize these addresses before merging to main
+const BYOC_TWRegistry_address = "0x3F17972CB27506eb4a6a3D59659e0B57a43fd16C"; // byoc TWregistry
 const BYOCRegistry_address = "0x61Bb02795b4fF5248169A54D9f149C4557B0B7de"; // TODO finalize, this is mumbai only
 const BYOCFactory_address = "0x3c3D901Acb5f7746dCf06B26fCe881d21970d2B6";
 
@@ -91,6 +91,17 @@ export function getContractAddressByChainId(
   }
   // real output here
   return CONTRACT_ADDRESSES[chainId][contractName];
+}
+
+/**
+ * @internal
+ */
+export function getBYOCTWRegistryAddress() {
+  if (process.env.byocTWRegistryAddress) {
+    return process.env.byocTWRegistryAddress as string;
+  } else {
+    return BYOC_TWRegistry_address;
+  }
 }
 
 /**

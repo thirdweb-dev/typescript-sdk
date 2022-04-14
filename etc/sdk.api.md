@@ -2061,6 +2061,11 @@ export function getBYOCFactoryAddress(): string;
 // @internal (undocumented)
 export function getBYOCRegistryAddress(): string;
 
+// Warning: (ae-internal-missing-underscore) The name "getBYOCTWRegistryAddress" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getBYOCTWRegistryAddress(): string;
+
 // Warning: (ae-internal-missing-underscore) The name "getContractAddressByChainId" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
