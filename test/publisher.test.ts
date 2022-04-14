@@ -3,6 +3,8 @@ import { readFileSync } from "fs";
 import { expect } from "chai";
 import { ThirdwebSDK } from "../src";
 import { AddressZero } from "@ethersproject/constants";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { isBooleanObject } from "util/types";
 
 global.fetch = require("node-fetch");
 
@@ -23,20 +25,28 @@ export const uploadContractMetadata = async (filename) => {
 describe("Publishing", async () => {
   let simpleContractUri: string;
   let contructorParamsContractUri: string;
+  let adminWallet: SignerWithAddress;
+  let samWallet: SignerWithAddress;
+  let bobWallet: SignerWithAddress;
 
   before("Upload abis", async () => {
+    [adminWallet, samWallet, bobWallet] = signers;
     simpleContractUri = await uploadContractMetadata("test/abis/greeter.json");
     contructorParamsContractUri = await uploadContractMetadata(
       "test/abis/constructor_params.json",
     );
   });
 
+  beforeEach(async () => {
+    sdk.updateSignerOrProvider(adminWallet);
+  });
+
   it("should publish simple greeter contract", async () => {
-    const publisherAddress = await sdk.getSigner().getAddress();
     const tx = await sdk.publisher.publish(simpleContractUri);
+    const contract = await tx.data();
     const deployedAddr = await sdk.publisher.deployCustomContract(
-      publisherAddress,
-      tx.id,
+      adminWallet.address,
+      contract.id,
       [],
       {
         name: "CustomContract",
@@ -44,8 +54,7 @@ describe("Publishing", async () => {
     );
     console.log("deployed", deployedAddr);
     expect(deployedAddr.length).to.be.gt(0);
-    const addr = (await sdk.getSigner()?.getAddress()) || "";
-    const all = await sdk.publisher.getAll(addr);
+    const all = await sdk.publisher.getAll(adminWallet.address);
     expect(all.length).to.be.eq(1);
     // fetch metadata back
     const c = await sdk.unstable_getCustomContract(deployedAddr);
@@ -53,48 +62,58 @@ describe("Publishing", async () => {
     expect(meta.name).to.eq("CustomContract");
   });
 
+  it("should publish multiple versions", async () => {
+    sdk.updateSignerOrProvider(samWallet);
+    let id = "";
+    for (let i = 0; i < 5; i++) {
+      const tx = await sdk.publisher.publish(simpleContractUri);
+      id = (await tx.data()).id;
+    }
+    const all = await sdk.publisher.getAll(samWallet.address);
+    const versions = await sdk.publisher.getAllVersions(samWallet.address, id);
+    expect(all.length).to.be.eq(1);
+    expect(versions.length).to.be.eq(5);
+    expect(all[all.length - 1] === versions[versions.length - 1]);
+  });
+
   it("should publish constructor params contract", async () => {
-    const publisherAddress = await sdk.getSigner().getAddress();
+    sdk.updateSignerOrProvider(bobWallet);
     const tx = await sdk.publisher.publish(contructorParamsContractUri);
+    const contract = await tx.data();
     const deployedAddr = await sdk.publisher.deployCustomContract(
-      publisherAddress,
-      tx.id,
+      bobWallet.address,
+      contract.id,
       ["someUri", 12345],
     );
     console.log("deployed", deployedAddr);
     expect(deployedAddr.length).to.be.gt(0);
-    const addr = (await sdk.getSigner()?.getAddress()) || "";
-    const all = await sdk.publisher.getAll(addr);
-    expect(all.length).to.be.eq(2);
+    const all = await sdk.publisher.getAll(bobWallet.address);
+    expect(all.length).to.be.eq(1);
   });
 
   it("Ethrone real ipfs test", async () => {
-    const [signer] = signers;
-    const realSDK = new ThirdwebSDK(signer);
-    const publisherAddress =
-      (await realSDK.getSigner()?.getAddress()) || AddressZero;
+    const realSDK = new ThirdwebSDK(adminWallet);
     const ipfsUri = "ipfs://QmQNppFfEg3sxHh6vnYnv7KCBCFWNPFQF6evPWQeV2qHwZ/0";
     const tx = await realSDK.publisher.publish(ipfsUri);
-    console.log("deployed", await tx.data());
+    const contract = await tx.data();
+    console.log("deployed", contract);
     const deployedAddr = await realSDK.publisher.deployCustomContract(
-      publisherAddress,
-      tx.id,
+      adminWallet.address,
+      contract.id,
       [60000, 3, 100000],
     );
     console.log("deployed", deployedAddr);
   });
 
   it("ERC721A real ipfs test", async () => {
-    const [signer] = signers;
-    const realSDK = new ThirdwebSDK(signer);
-    const publisherAddress =
-      (await realSDK.getSigner()?.getAddress()) || AddressZero;
+    const realSDK = new ThirdwebSDK(adminWallet);
     const ipfsUri = "ipfs://QmRzD8TEYrd4Ux7ZNTBKWbuAERn6rvfUzo1nnW3GMtFL8h/0";
     const tx = await realSDK.publisher.publish(ipfsUri);
-    console.log("deployed", await tx.data());
+    const contract = await tx.data();
+    console.log("deployed", await contract);
     const deployedAddr = await realSDK.publisher.deployCustomContract(
-      publisherAddress,
-      tx.id,
+      adminWallet.address,
+      contract.id,
       ["foo", "bar"],
     );
     console.log("deployed", deployedAddr);

@@ -1,14 +1,8 @@
-import { NetworkOrSignerOrProvider, TransactionResultWithId } from "../types";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import {
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  ContractInterface,
-  ethers,
-} from "ethers";
+import { BigNumber, BytesLike, ContractInterface, ethers } from "ethers";
 import invariant from "tiny-invariant";
 import {
   extractConstructorParams,
@@ -28,6 +22,7 @@ import {
   ByocFactory__factory,
   ByocRegistry,
   ByocRegistry__factory,
+  IByocRegistry,
 } from "@thirdweb-dev/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { ContractPublishedEvent } from "@thirdweb-dev/contracts/dist/ByocRegistry";
@@ -93,67 +88,63 @@ export class ContractPublisher extends RPCConnectionHandler {
     return fetchContractMetadata(metadataUri, this.storage);
   }
 
+  /**
+   * @interface
+   * @param publisherAddress
+   */
   public async getAll(publisherAddress: string): Promise<PublishedContract[]> {
     const data = await this.registry.readContract.getAllPublishedContracts(
       publisherAddress,
     );
-    // TODO this should only return the latest one from each group
-    return data.map((d) =>
-      PublishedContractSchema.parse({
-        id: d.contractId,
-        groupId: ethers.utils.parseBytes32String(d.groupId),
-        metadataUri: d.publishMetadataUri,
-      }),
-    );
+    return data.map((d) => this.toPublishedContract(d));
   }
 
+  /**
+   * @internal
+   * @param publisherAddress
+   * @param contractId
+   */
   public async getAllVersions(
     publisherAddress: string,
-    groupId: string,
+    contractId: string,
   ): Promise<PublishedContract[]> {
     const contractStructs =
-      await this.registry.readContract.getPublishedContractGroup(
+      await this.registry.readContract.getPublishedContractVersions(
         publisherAddress,
-        ethers.utils.formatBytes32String(groupId), // TODO shouldn't be bytes32
+        contractId,
       );
     if (contractStructs.length === 0) {
       throw Error("Not found");
     }
-    return contractStructs.map((latest) =>
-      PublishedContractSchema.parse({
-        id: latest.contractId,
-        groupId: ethers.utils.parseBytes32String(latest.groupId),
-        metadataUri: latest.publishMetadataUri, // TODO download everything
-      }),
-    );
+    return contractStructs.map((d) => this.toPublishedContract(d));
   }
 
   public async getLatest(
     publisherAddress: string,
-    groupId: string,
+    contractId: string,
   ): Promise<PublishedContract> {
-    const contractStructs = await this.getAllVersions(
+    const model = await this.registry.readContract.getPublishedContract(
       publisherAddress,
-      groupId,
+      contractId,
     );
-    return contractStructs[contractStructs.length - 1];
+    return this.toPublishedContract(model);
   }
 
   public async publish(
     metadataUri: string,
-  ): Promise<TransactionResultWithId<PublishedContract>> {
+  ): Promise<TransactionResult<PublishedContract>> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
     const publisher = await signer.getAddress();
     const metadata = await this.fetchFullContractMetadata(metadataUri);
     const bytecodeHash = solidityKeccak256(["bytes"], [metadata.bytecode]);
-    const groupId = ethers.utils.formatBytes32String(metadata.name); // TODO this shouldn't be bytes32
+    const contractId = metadata.name;
     const receipt = await this.registry.sendTransaction("publishContract", [
       publisher,
       metadataUri,
       bytecodeHash,
       AddressZero,
-      groupId,
+      contractId,
     ]);
     const events = this.registry.parseLogs<ContractPublishedEvent>(
       "ContractPublished",
@@ -162,11 +153,10 @@ export class ContractPublisher extends RPCConnectionHandler {
     if (events.length < 1) {
       throw new Error("No ContractDeployed event found");
     }
-    const id = events[0].args.contractId;
+    const contract = events[0].args.publishedContract;
     return {
-      id,
       receipt,
-      data: () => this.getLatest(publisher, metadata.name),
+      data: async () => this.toPublishedContract(contract),
     };
   }
 
@@ -181,12 +171,13 @@ export class ContractPublisher extends RPCConnectionHandler {
    */
   public async deployCustomContract(
     publisherAddress: string,
-    contractId: BigNumberish,
+    contractId: string,
     constructorParamValues: any[],
     contractMetadata?: CustomContractMetadata,
   ): Promise<string> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
+    // TODO this gets the latest version, should we allow deploying a certain version?
     const contract = await this.registry.readContract.getPublishedContract(
       publisherAddress,
       contractId,
@@ -277,5 +268,15 @@ export class ContractPublisher extends RPCConnectionHandler {
       .deploy(...constructorParams);
     const deployedContract = await deployer.deployed();
     return deployedContract.address;
+  }
+
+  private toPublishedContract(
+    contractModel: IByocRegistry.CustomContractInstanceStruct,
+  ) {
+    return PublishedContractSchema.parse({
+      id: contractModel.contractId,
+      timestamp: contractModel.publishTimestamp,
+      metadataUri: contractModel.publishMetadataUri, // TODO download
+    });
   }
 }

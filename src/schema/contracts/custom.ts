@@ -9,7 +9,7 @@ import {
   MerkleSchema,
 } from "./common";
 import { z } from "zod";
-import { BigNumberSchema, JsonSchema } from "../shared";
+import { BigNumberishSchema, JsonSchema } from "../shared";
 
 export const BYOCContractMetadataSchema = CommonContractSchema.catchall(
   z.lazy(() => JsonSchema),
@@ -60,8 +60,8 @@ export const AbiObjectSchema = z
 export const AbiSchema = z.array(AbiObjectSchema);
 
 export const PublishedContractSchema = z.object({
-  id: BigNumberSchema,
-  groupId: z.string(),
+  id: z.string(),
+  timestamp: BigNumberishSchema,
   metadataUri: z.string(),
 });
 
