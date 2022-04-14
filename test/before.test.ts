@@ -183,6 +183,9 @@ before(async () => {
   }
 
   for (const contractType in CONTRACTS_MAP) {
+    if (contractType === "custom") {
+      continue;
+    }
     const contract = CONTRACTS_MAP[contractType as ContractType];
     const factory = contract.contractFactory;
 

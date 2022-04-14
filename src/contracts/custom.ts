@@ -25,6 +25,7 @@ import {
   ITokenERC721,
   ITokenERC721__factory,
   ThirdwebContract,
+  ThirdwebContract__factory,
 } from "@thirdweb-dev/contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
@@ -43,6 +44,7 @@ export class CustomContract<
 {
   static contractType = "custom" as const;
   static schema = CustomContractSchema;
+  static contractFactory = ThirdwebContract__factory;
 
   private contractWrapper;
   private storage;

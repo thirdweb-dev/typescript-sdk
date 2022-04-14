@@ -96,7 +96,9 @@ export class ContractPublisher extends RPCConnectionHandler {
     const data = await this.registry.readContract.getAllPublishedContracts(
       publisherAddress,
     );
-    return data.map((d) => this.toPublishedContract(d));
+    return data
+      .filter((d) => d.publishTimestamp) // TODO (byoc) remove this before going to prod
+      .map((d) => this.toPublishedContract(d));
   }
 
   /**

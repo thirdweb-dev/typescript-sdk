@@ -1,9 +1,9 @@
 import { Contract, ContractInterface, ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
-  CONTRACTS_MAP,
   Edition,
   EditionDrop,
+  KNOWN_CONTRACTS_MAP,
   Marketplace,
   NFTCollection,
   NFTDrop,
@@ -33,6 +33,7 @@ import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { fetchContractMetadata } from "../common";
+import { ContractMetadata } from "./classes";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -181,12 +182,16 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         address,
       ) as ContractForContractType<TContractType>;
     }
-    const newContract = new CONTRACTS_MAP[
-      // we have to do this as here because typescript is not smart enough to figure out
-      // that the type is a key of the map (checked by the if statement above)
-      contractType as keyof typeof CONTRACTS_MAP
+
+    if (contractType === "custom") {
+      throw new Error(
+        "To get an instance of a custom contract, use getCustomContract(address)",
+      );
+    }
+
+    const newContract = new KNOWN_CONTRACTS_MAP[
+      contractType as keyof typeof KNOWN_CONTRACTS_MAP
     ](this.getSignerOrProvider(), address, this.storage, this.options);
-    // if we have a contract type && the contract type is part of the map
 
     this.contractCache.set(address, newContract);
 
@@ -229,23 +234,46 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     ).getContractAddresses(walletAddress);
 
     const addressesWithContractTypes = await Promise.all(
-      addresses.map(async (adrr) => ({
-        address: adrr,
-        contractType: await this.resolveContractType(adrr).catch((err) => {
-          console.error(
-            `failed to get contract type for address: ${adrr}`,
-            err,
+      addresses.map(async (address) => {
+        let contractType: ContractType = "custom";
+        try {
+          contractType = await this.resolveContractType(address);
+        } catch (e) {
+          console.log(
+            `Couldn't get contract type for address: ${address} - fallback to custom contract`,
           );
-          return "" as ContractType;
-        }),
-      })),
+        }
+        let metadata: ContractMetadata<any, any> | undefined;
+        if (contractType === "custom") {
+          try {
+            metadata = (await this.unstable_getCustomContract(address))
+              .metadata;
+          } catch (e) {
+            console.log(
+              `Couldn't get contract metadata for custom contract: ${address}`,
+            );
+          }
+        } else {
+          metadata = this.getContract(address, contractType).metadata;
+        }
+        return {
+          address,
+          contractType,
+          metadata,
+        };
+      }),
     );
 
-    return addressesWithContractTypes.map(({ address, contractType }) => ({
-      address,
-      contractType,
-      metadata: () => this.getContract(address, contractType).metadata.get(),
-    }));
+    return addressesWithContractTypes
+      .filter((e) => e.metadata)
+      .map(({ address, contractType, metadata }) => {
+        invariant(metadata, "All ThirdwebContracts require metadata");
+        return {
+          address,
+          contractType,
+          metadata: () => metadata.get(),
+        };
+      });
   }
 
   /**

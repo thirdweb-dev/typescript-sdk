@@ -47,6 +47,7 @@ import { Signer as Signer_2 } from 'ethers';
 import { Split as Split_2 } from '@thirdweb-dev/contracts';
 import { Split__factory } from '@thirdweb-dev/contracts';
 import { ThirdwebContract } from '@thirdweb-dev/contracts';
+import { ThirdwebContract__factory } from '@thirdweb-dev/contracts';
 import { TokenERC1155 } from '@thirdweb-dev/contracts';
 import { TokenERC1155__factory } from '@thirdweb-dev/contracts';
 import { TokenERC20 } from '@thirdweb-dev/contracts';
@@ -721,6 +722,7 @@ export class ContractRoyalty<TContract extends IThirdwebRoyalty & IThirdwebContr
 //
 // @internal (undocumented)
 export const CONTRACTS_MAP: {
+    readonly custom: typeof CustomContract;
     readonly "nft-drop": typeof NFTDrop;
     readonly "nft-collection": typeof NFTCollection;
     readonly "edition-drop": typeof EditionDrop;
@@ -805,6 +807,8 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
 // @internal
 export class CustomContract<TContract extends ThirdwebContract = ThirdwebContract> implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
+    // (undocumented)
+    static contractFactory: typeof ThirdwebContract__factory;
     // (undocumented)
     static contractType: "custom";
     // (undocumented)
@@ -2176,6 +2180,22 @@ export type JsonObject = {
     [key: string]: Json;
 };
 
+// Warning: (ae-internal-missing-underscore) The name "KNOWN_CONTRACTS_MAP" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const KNOWN_CONTRACTS_MAP: {
+    readonly "nft-drop": typeof NFTDrop;
+    readonly "nft-collection": typeof NFTCollection;
+    readonly "edition-drop": typeof EditionDrop;
+    readonly edition: typeof Edition;
+    readonly "token-drop": typeof TokenDrop;
+    readonly token: typeof Token;
+    readonly vote: typeof Vote;
+    readonly split: typeof Split;
+    readonly marketplace: typeof Marketplace;
+    readonly pack: typeof Pack;
+};
+
 // Warning: (ae-internal-missing-underscore) The name "ListingNotFoundError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -3167,6 +3187,7 @@ export const REMOTE_CONTRACT_NAME: {
     readonly split: "Split";
     readonly marketplace: "Marketplace";
     readonly pack: "Pack";
+    readonly custom: "Custom";
 };
 
 // Warning: (ae-internal-missing-underscore) The name "REMOTE_CONTRACT_TO_CONTRACT_TYPE" should be prefixed with an underscore because the declaration is marked as @internal
@@ -4200,14 +4221,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "split" | "edition-drop" | "edition" | "token" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
-        metadata: () => Promise<{
-            [x: string]: Json;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_link?: string | undefined;
-            name: string;
-        }>;
+        contractType: "custom" | "split" | "edition-drop" | "edition" | "token" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
+        metadata: () => Promise<any>;
     }[]>;
     getEdition(address: string): Edition;
     getEditionDrop(address: string): EditionDrop;
