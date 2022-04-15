@@ -28,9 +28,17 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
   }
 
   public async getContractAddresses(walletAddress: string) {
+    let byocContracts: string[] = [];
+    try {
+      byocContracts = await this.byocRegistry.readContract.getAll(
+        walletAddress,
+      );
+    } catch (e) {
+      // ignore
+    }
     // TODO @fixme the filter here is necessary because for some reason getAll returns a 0x0 address for the first entry
     return (await this.readContract.getAll(walletAddress))
-      .concat(await this.byocRegistry.readContract.getAll(walletAddress))
+      .concat(byocContracts)
       .filter((adr) => isAddress(adr) && adr.toLowerCase() !== AddressZero);
   }
 }
