@@ -6,8 +6,7 @@ import {
   TransactionReceipt,
 } from "@ethersproject/providers";
 import { BigNumber, BytesLike } from "ethers";
-import type { CONTRACTS_MAP } from "../contracts/maps";
-import { KNOWN_CONTRACTS_MAP } from "../contracts/maps";
+import type { CONTRACTS_MAP, KNOWN_CONTRACTS_MAP } from "../contracts/maps";
 
 // --- utility types extracted from from ts-toolbelt --- //
 
