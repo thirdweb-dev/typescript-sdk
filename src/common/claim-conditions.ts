@@ -273,7 +273,7 @@ export async function processClaimConditionInputs(
   const inputsWithSnapshots = await Promise.all(
     claimConditionInputs.map(async (conditionInput) => {
       // check snapshots and upload if provided
-      if (conditionInput.snapshot) {
+      if (conditionInput.snapshot && conditionInput.snapshot.length > 0) {
         const snapshotInfo = await createSnapshot(
           SnapshotInputSchema.parse(conditionInput.snapshot),
           tokenDecimals,
@@ -281,6 +281,9 @@ export async function processClaimConditionInputs(
         );
         snapshotInfos.push(snapshotInfo);
         conditionInput.merkleRootHash = snapshotInfo.merkleRoot;
+      } else {
+        // if no snapshot is passed or empty, reset the merkle root
+        conditionInput.merkleRootHash = hexZeroPad([0], 32);
       }
       // fill condition with defaults values if not provided
       return conditionInput;
