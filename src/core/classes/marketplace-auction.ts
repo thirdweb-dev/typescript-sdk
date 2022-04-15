@@ -329,6 +329,7 @@ export class MarketplaceAuction {
           listing.quantity,
           listing.currencyContractAddress,
           normalizedPrice,
+          ethers.constants.MaxUint256,
         ],
         overrides,
       ),
