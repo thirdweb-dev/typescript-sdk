@@ -50,6 +50,8 @@ export class CustomContract<
   private storage;
   private options;
 
+  public readonly read: any;
+  public readonly write: any;
   public metadata;
   public royalties;
   public roles;
@@ -74,6 +76,8 @@ export class CustomContract<
     this.options = options;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
+    this.read = contractWrapper.readContract;
+    this.write = contractWrapper.raw;
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,

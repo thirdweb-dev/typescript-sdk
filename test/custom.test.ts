@@ -8,6 +8,7 @@ import {
 } from "@thirdweb-dev/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
+import { ethers } from "ethers";
 
 global.fetch = require("node-fetch");
 
@@ -25,9 +26,10 @@ describe("Custom Contracts", async () => {
       "test/abis/greeter.json",
     );
     const tx = await sdk.publisher.publish(simpleContractUri);
+    const contract = await tx.data();
     customContractAddress = await sdk.publisher.deployCustomContract(
       adminWallet.address,
-      tx.id,
+      contract.id,
       [],
       {
         name: "CustomContract",
@@ -61,6 +63,16 @@ describe("Custom Contracts", async () => {
     await sdk.getNFTCollection(nftContractAddress).mint({
       name: "Custom NFT",
     });
+  });
+
+  it("should call raw ABI functions", async () => {
+    const c = await sdk.unstable_getCustomContract(customContractAddress);
+    invariant(c, "Contract undefined");
+    expect(await c.read.decimals()).to.eq(18);
+    await c.write.mint(ethers.utils.parseUnits("10"));
+    expect((await c.read.totalSupply()).toString()).to.eq(
+      ethers.utils.parseUnits("10").toString(),
+    );
   });
 
   it("should detect feature: metadata", async () => {
