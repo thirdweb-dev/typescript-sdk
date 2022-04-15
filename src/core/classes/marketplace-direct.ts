@@ -6,7 +6,7 @@ import {
   IMarketplace,
   Marketplace,
 } from "@thirdweb-dev/contracts";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   DirectListing,
   NewDirectListing,
@@ -202,6 +202,7 @@ export class MarketplaceDirect {
     quantityDesired: BigNumberish,
     currencyContractAddress: string,
     pricePerToken: Price,
+    expirationDate?: Date,
   ): Promise<TransactionResult> {
     if (isNativeToken(currencyContractAddress)) {
       throw new Error(
@@ -232,10 +233,23 @@ export class MarketplaceDirect {
       overrides,
     );
 
+    let expirationTimestamp = ethers.constants.MaxUint256;
+    if (expirationDate) {
+      expirationTimestamp = BigNumber.from(
+        Math.floor(expirationDate.getTime() / 1000),
+      );
+    }
+
     return {
       receipt: await this.contractWrapper.sendTransaction(
         "offer",
-        [listingId, quantityDesired, currencyContractAddress, normalizedPrice],
+        [
+          listingId,
+          quantityDesired,
+          currencyContractAddress,
+          normalizedPrice,
+          expirationTimestamp,
+        ],
         overrides,
       ),
     };
