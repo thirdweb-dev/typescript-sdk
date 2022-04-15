@@ -11,7 +11,7 @@ Create a collection of NFTs that lets you mint multiple copies of each NFT.
 ```typescript
 export declare class Edition extends Erc1155<TokenERC1155> 
 ```
-<b>Extends:</b> [Erc1155](./sdk.erc1155.md)<!-- -->&lt;TokenERC1155&gt;
+<b>Extends:</b> [Erc1155](./sdk.erc1155.md)<!-- -->&lt;TokenERC1155
 
 ## Example
 
