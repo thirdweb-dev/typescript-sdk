@@ -29,6 +29,6 @@ export declare class MarketplaceDirect
 |  [getActiveOffer(listingId, address)](./sdk.marketplacedirect.getactiveoffer.md) |  | Get the active offer on a listing |
 |  [getAddress()](./sdk.marketplacedirect.getaddress.md) |  |  |
 |  [getListing(listingId)](./sdk.marketplacedirect.getlisting.md) |  | Get a direct listing by id |
-|  [makeOffer(listingId, quantityDesired, currencyContractAddress, pricePerToken)](./sdk.marketplacedirect.makeoffer.md) |  | Make an offer for a Direct Listing |
+|  [makeOffer(listingId, quantityDesired, currencyContractAddress, pricePerToken, expirationDate)](./sdk.marketplacedirect.makeoffer.md) |  | Make an offer for a Direct Listing |
 |  [updateListing(listing)](./sdk.marketplacedirect.updatelisting.md) |  | Update a Direct listing with new metadata.<!-- -->Note: cannot update a listing with a new quantity of 0. Use <code>cancelDirectListing</code> to remove a listing instead. |
 

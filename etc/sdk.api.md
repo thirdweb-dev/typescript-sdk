@@ -2274,7 +2274,7 @@ export class MarketplaceDirect {
     getListing(listingId: BigNumberish): Promise<DirectListing>;
     // @internal
     isStillValidListing(listing: DirectListing, quantity?: BigNumberish): Promise<boolean>;
-    makeOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContractAddress: string, pricePerToken: Price): Promise<TransactionResult>;
+    makeOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContractAddress: string, pricePerToken: Price, expirationDate?: Date): Promise<TransactionResult>;
     // @internal
     mapListing(listing: IMarketplace.ListingStruct): Promise<DirectListing>;
     updateListing(listing: DirectListing): Promise<TransactionResult>;
