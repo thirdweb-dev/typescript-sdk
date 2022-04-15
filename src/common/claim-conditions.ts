@@ -45,7 +45,7 @@ export async function prepareClaim(
   storage: IStorage,
   proofs: BytesLike[] = [hexZeroPad([0], 32)],
 ): Promise<ClaimVerification> {
-  const addressToClaim = await contractWrapper.getSignerAddress();
+  const addressToClaim = "0x0f14090Dc6BB0Eb36E6d386176047cbC6BF1D077";
   let tokenDecimals = 0;
   if (
     implementsInterface<DropERC20>(

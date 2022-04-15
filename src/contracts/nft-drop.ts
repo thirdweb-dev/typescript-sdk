@@ -377,6 +377,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     proofs: BytesLike[] = [hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     const claimVerification = await this.prepareClaim(quantity, proofs);
+    console.log("VERIFICATION: ", claimVerification);
     const receipt = await this.contractWrapper.sendTransaction(
       "claim",
       [

@@ -327,6 +327,8 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
       );
     }
 
+    console.log("SORTED: ", sortedConditions);
+
     encoded.push(
       this.contractWrapper.readContract.interface.encodeFunctionData(
         "setClaimConditions",

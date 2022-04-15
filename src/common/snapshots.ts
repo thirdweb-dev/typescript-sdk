@@ -26,6 +26,9 @@ export async function createSnapshot(
 ): Promise<SnapshotInfo> {
   const input = SnapshotInputSchema.parse(snapshotInput);
   const addresses = input.map((i) => i.address);
+
+  console.log("ADDRESSES: ", addresses);
+
   const hasDuplicates = new Set(addresses).size < addresses.length;
   if (hasDuplicates) {
     throw new DuplicateLeafsError();
@@ -37,6 +40,7 @@ export async function createSnapshot(
       ethers.utils.parseUnits(i.maxClaimable, tokenDecimals),
     ),
   );
+
   const tree = new MerkleTree(hashedLeafs, keccak256, {
     sort: true,
   });
@@ -52,6 +56,9 @@ export async function createSnapshot(
       };
     }),
   });
+
+  console.log("ROOT: ", tree.getHexRoot());
+  console.log("SNAPSHOT: ", snapshot);
 
   const uri = await storage.uploadMetadata(snapshot);
   return {
