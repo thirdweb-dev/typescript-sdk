@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type ValidContractClass = ValueOf<typeof CONTRACTS_MAP>;
+export declare type ValidContractClass = ValueOf<typeof KNOWN_CONTRACTS_MAP>;
 ```
 <b>References:</b> [ValueOf](./sdk.valueof.md)
 

@@ -4635,10 +4635,10 @@ export interface UploadMetadataBatchResult {
     metadataUris: string[];
 }
 
-// Warning: (ae-incompatible-release-tags) The symbol "ValidContractClass" is marked as @public, but its signature references "CONTRACTS_MAP" which is marked as @internal
+// Warning: (ae-incompatible-release-tags) The symbol "ValidContractClass" is marked as @public, but its signature references "KNOWN_CONTRACTS_MAP" which is marked as @internal
 //
 // @public (undocumented)
-export type ValidContractClass = ValueOf<typeof CONTRACTS_MAP>;
+export type ValidContractClass = ValueOf<typeof KNOWN_CONTRACTS_MAP>;
 
 // @public (undocumented)
 export type ValidContractInstance = Instance<ValidContractClass>;
