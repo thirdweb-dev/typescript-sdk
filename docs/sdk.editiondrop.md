@@ -11,7 +11,7 @@ Setup a collection of NFTs with a customizable number of each NFT that are minte
 ```typescript
 export declare class EditionDrop extends Erc1155<DropERC1155> 
 ```
-<b>Extends:</b> [Erc1155](./sdk.erc1155.md)<!-- -->&lt;DropERC1155&gt;
+<b>Extends:</b> [Erc1155](./sdk.erc1155.md)<!-- -->&lt;DropERC1155
 
 ## Example
 
