@@ -48,6 +48,19 @@ describe("NFT Contract", async () => {
     expect(nfts).to.be.an("array").length(2);
   });
 
+  it("should return owned token ids", async () => {
+    await nftContract.mint({
+      name: "Test1",
+    });
+    await nftContract.mint({
+      name: "Test2",
+    });
+    const ids = await nftContract.getOwnedTokenIds();
+    const nfts = await nftContract.getOwned();
+    expect(ids).to.be.an("array").length(2);
+    expect(nfts).to.be.an("array").length(2);
+  });
+
   it("should respect pagination", async () => {
     const nfts = [];
     for (let i = 0; i < 100; i++) {

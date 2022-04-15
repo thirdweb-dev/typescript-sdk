@@ -38,6 +38,7 @@ export declare class Erc721<T extends DropERC721 | TokenERC721> implements Updat
 |  [getAddress()](./sdk.erc721.getaddress.md) |  |  |
 |  [getAll(queryParams)](./sdk.erc721.getall.md) |  | Get All NFTs |
 |  [getOwned(\_address)](./sdk.erc721.getowned.md) |  | Get Owned NFTs |
+|  [getOwnedTokenIds(\_address)](./sdk.erc721.getownedtokenids.md) |  | Get all token ids of NFTs owned by a specific wallet. |
 |  [getTotalCount()](./sdk.erc721.gettotalcount.md) |  | Get the number of NFTs minted |
 |  [isApproved(address, operator)](./sdk.erc721.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
 |  [isTransferRestricted()](./sdk.erc721.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |

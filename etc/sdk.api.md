@@ -1875,6 +1875,7 @@ export class Erc721<T extends DropERC721 | TokenERC721> implements UpdateableNet
     getAddress(): string;
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
+    getOwnedTokenIds(_address?: string): Promise<BigNumber[]>;
     // @internal (undocumented)
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     getTotalCount(): Promise<BigNumber>;

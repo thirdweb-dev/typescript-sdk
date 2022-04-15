@@ -136,18 +136,26 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    * @returns The NFT metadata for all NFTs in the contract.
    */
   public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
+    const tokenIds = await this.getOwnedTokenIds(_address);
+    return await Promise.all(
+      tokenIds.map((tokenId) => this.get(tokenId.toString())),
+    );
+  }
+
+  /**
+   * Get all token ids of NFTs owned by a specific wallet.
+   * @param _address - the wallet address to query, defaults to the connected wallet
+   */
+  public async getOwnedTokenIds(_address?: string): Promise<BigNumber[]> {
     const address = _address
       ? _address
       : await this.contractWrapper.getSignerAddress();
     const balance = await this.contractWrapper.readContract.balanceOf(address);
     const indices = Array.from(Array(balance.toNumber()).keys());
-    const tokenIds = await Promise.all(
+    return await Promise.all(
       indices.map((i) =>
         this.contractWrapper.readContract.tokenOfOwnerByIndex(address, i),
       ),
-    );
-    return await Promise.all(
-      tokenIds.map((tokenId) => this.get(tokenId.toString())),
     );
   }
 
