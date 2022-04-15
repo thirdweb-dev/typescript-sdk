@@ -43,7 +43,10 @@ export class ContractWrapper<
   private customOverrides: () => CallOverrides = () => ({});
   private writeContract;
   public readContract;
-  public readonly raw: any; // for custom contracts
+  /**
+   * @internal
+   */
+  public _raw; // exposed for custom contracts
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -62,7 +65,7 @@ export class ContractWrapper<
     this.readContract = this.writeContract.connect(
       this.getProvider(),
     ) as TContract;
-    this.raw = this.writeContract;
+    this._raw = this.writeContract;
   }
 
   public override updateSignerOrProvider(

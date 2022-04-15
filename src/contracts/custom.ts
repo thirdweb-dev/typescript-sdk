@@ -77,7 +77,7 @@ export class CustomContract<
     this.storage = storage;
     this.contractWrapper = contractWrapper;
     this.read = contractWrapper.readContract;
-    this.write = contractWrapper.raw;
+    this.write = contractWrapper._raw;
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,
