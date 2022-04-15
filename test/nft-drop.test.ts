@@ -689,6 +689,48 @@ describe("NFT Drop Contract", async () => {
     expect((await dropContract.claimConditions.getAll()).length).to.be.equal(0);
   });
 
+  it("set claim condition with snapshot and remove it afterwards", async () => {
+    await dropContract.claimConditions.set([{ snapshot: [samWallet.address] }]);
+    expect(
+      await dropContract.claimConditions.canClaim(1, samWallet.address),
+    ).to.eq(true);
+    expect(
+      await dropContract.claimConditions.canClaim(1, bobWallet.address),
+    ).to.eq(false);
+    const cc = await dropContract.claimConditions.getActive();
+    await dropContract.claimConditions.set([
+      {
+        merkleRootHash: cc.merkleRootHash,
+        snapshot: undefined,
+      },
+    ]);
+    expect(
+      await dropContract.claimConditions.canClaim(1, samWallet.address),
+    ).to.eq(true);
+    expect(
+      await dropContract.claimConditions.canClaim(1, bobWallet.address),
+    ).to.eq(true);
+  });
+
+  it("update claim condition to remove snapshot", async () => {
+    await dropContract.claimConditions.set([{ snapshot: [samWallet.address] }]);
+    expect(
+      await dropContract.claimConditions.canClaim(1, samWallet.address),
+    ).to.eq(true);
+    expect(
+      await dropContract.claimConditions.canClaim(1, bobWallet.address),
+    ).to.eq(false);
+    await dropContract.claimConditions.update(0, {
+      snapshot: [],
+    });
+    expect(
+      await dropContract.claimConditions.canClaim(1, samWallet.address),
+    ).to.eq(true);
+    expect(
+      await dropContract.claimConditions.canClaim(1, bobWallet.address),
+    ).to.eq(true);
+  });
+
   it("set claim condition and update claim condition", async () => {
     await dropContract.claimConditions.set([
       { startTime: new Date(Date.now() / 2), maxQuantity: 1, price: 0.15 },
