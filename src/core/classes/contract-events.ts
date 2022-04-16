@@ -1,6 +1,8 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { BaseContract } from "ethers";
 import { Listener } from "@ethersproject/providers";
+import { EventType } from "../../constants";
+import { ListenerFn } from "eventemitter2";
 
 /**
  * Listen to Contract events in real time
@@ -11,6 +13,31 @@ export class ContractEvents<TContract extends BaseContract> {
 
   constructor(contractWrapper: ContractWrapper<TContract>) {
     this.contractWrapper = contractWrapper;
+  }
+
+  /**
+   * Subscribe to transactions in this contract.
+   * @remarks Will emit an "event" object containing the transaction status ('submitted' and 'completed') and hash
+   * @example
+   * ```javascript
+   * contract.events.addTransactionListener((event) => {
+   *   console.log(event);
+   * }
+   * ```
+   * @param listener - the receiver that will be called on every transaction
+   * @public
+   */
+  public addTransactionListener(listener: ListenerFn) {
+    this.contractWrapper.addListener(EventType.Transaction, listener);
+  }
+
+  /**
+   * Remove a transaction listener
+   * @param listener - the receiver to remove
+   * @public
+   */
+  public removeTransactionListener(listener: ListenerFn) {
+    this.contractWrapper.off(EventType.Transaction, listener);
   }
 
   /**
@@ -26,7 +53,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param eventName - the event name as defined in the contract
    * @param listener - the receiver that will be called on every new event
    */
-  public addListener(
+  public addEventListener(
     eventName: keyof TContract["filters"],
     listener: (event: Record<string, any>) => void,
   ) {
@@ -51,7 +78,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param eventName - the event name as defined in the contract
    * @param listener - the listener to unregister
    */
-  public removeListener(
+  public removeEventListener(
     eventName: keyof TContract["filters"],
     listener: Listener,
   ) {
