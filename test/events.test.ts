@@ -28,13 +28,12 @@ describe("Events", async () => {
 
   it("should emit Transaction events", async () => {
     let txStatus = "";
-    sdk.on(EventType.Transaction, (event) => {
+    dropContract.events.addTransactionListener((event) => {
       console.log(event);
-      // TODO: need to use chai-events
       if (!txStatus) {
-        expect(event.status).to.be("submitted");
+        expect(event.status).to.eq("submitted");
       } else if (txStatus === "submitted") {
-        expect(event.status).to.be("completed");
+        expect(event.status).to.eq("completed");
       }
       txStatus = event.status;
     });

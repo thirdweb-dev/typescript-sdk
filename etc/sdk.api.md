@@ -29,6 +29,7 @@ import { IThirdwebPlatformFee } from '@thirdweb-dev/contracts';
 import { IThirdwebPrimarySale } from '@thirdweb-dev/contracts';
 import { IThirdwebRoyalty } from '@thirdweb-dev/contracts';
 import { Listener } from '@ethersproject/providers';
+import { ListenerFn } from 'eventemitter2';
 import { Log } from '@ethersproject/providers';
 import { Marketplace as Marketplace_2 } from '@thirdweb-dev/contracts';
 import { Marketplace__factory } from '@thirdweb-dev/contracts';
@@ -604,10 +605,12 @@ export class ContractEncoder<TContract extends BaseContract> {
 // @public
 export class ContractEvents<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
-    addListener(eventName: keyof TContract["filters"], listener: (event: Record<string, any>) => void): void;
+    addEventListener(eventName: keyof TContract["filters"], listener: (event: Record<string, any>) => void): void;
+    addTransactionListener(listener: ListenerFn): void;
     removeAllListeners(): void;
     // (undocumented)
-    removeListener(eventName: keyof TContract["filters"], listener: Listener): void;
+    removeEventListener(eventName: keyof TContract["filters"], listener: Listener): void;
+    removeTransactionListener(listener: ListenerFn): void;
 }
 
 // Warning: (ae-forgotten-export) The symbol "Instance" needs to be exported by the entry point index.d.ts
