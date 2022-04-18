@@ -1,10 +1,13 @@
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import {
+  ContractEvents,
+  ContractInterceptor,
   ContractPrimarySale,
   ContractRoles,
   ContractRoyalty,
   Erc20,
   Erc721,
+  GasCostEstimator,
   IStorage,
   NetworkOrSignerOrProvider,
 } from "../core";
@@ -50,8 +53,16 @@ export class CustomContract<
   private storage;
   private options;
 
+  // raw contract
   public readonly read: any;
   public readonly write: any;
+
+  // utilities
+  public events: ContractEvents<TContract>;
+  public interceptor: ContractInterceptor<TContract>;
+  public estimator: GasCostEstimator<TContract>;
+
+  // features
   public metadata;
   public royalties;
   public roles;
@@ -78,6 +89,10 @@ export class CustomContract<
     this.contractWrapper = contractWrapper;
     this.read = contractWrapper.readContract;
     this.write = contractWrapper._raw;
+
+    this.events = new ContractEvents(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,

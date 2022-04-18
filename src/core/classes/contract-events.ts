@@ -54,7 +54,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the receiver that will be called on every new event
    */
   public addEventListener(
-    eventName: keyof TContract["filters"],
+    eventName: keyof TContract["filters"] | string,
     listener: (event: Record<string, any>) => void,
   ) {
     // validates event, throws error if not found
@@ -79,7 +79,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the listener to unregister
    */
   public removeEventListener(
-    eventName: keyof TContract["filters"],
+    eventName: keyof TContract["filters"] | string,
     listener: Listener,
   ) {
     // validates event, throws error if not found
