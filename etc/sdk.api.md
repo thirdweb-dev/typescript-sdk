@@ -24,6 +24,7 @@ import { ethers } from 'ethers';
 import { EventEmitter2 } from 'eventemitter2';
 import { extendShape } from 'zod';
 import { IMarketplace } from '@thirdweb-dev/contracts';
+import { IMintableERC721 } from '@thirdweb-dev/contracts';
 import { Interface } from '@ethersproject/abi';
 import { IThirdwebContract } from '@thirdweb-dev/contracts';
 import { IThirdwebPlatformFee } from '@thirdweb-dev/contracts';
@@ -957,6 +958,10 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         name: string;
         }>;
     }>;
+    // Warning: (ae-forgotten-export) The symbol "Erc721Mintable" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    minter: Erc721Mintable<TContract & IMintableERC721> | undefined;
     // (undocumented)
     nft: Erc721<ITokenERC721_2> | undefined;
     // (undocumented)
@@ -2555,6 +2560,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     mint(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
+    // @internal (undocumented)
+    mintable: Erc721Mintable<TokenERC721>;
     mintBatch(metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintBatchTo(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintTo(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;

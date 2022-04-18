@@ -12,9 +12,10 @@ import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts";
+import { ISignatureMint, TokenERC20 } from "@thirdweb-dev/contracts";
 import { ContractRoles } from "./contract-roles";
 import { Token } from "../../contracts";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
@@ -58,7 +59,7 @@ export class Erc20SignatureMinting {
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
-      BigNumber.from(message.price),
+      BigNumber.from(message.pricePerToken),
       mintRequest.currencyAddress,
       overrides,
     );
@@ -213,7 +214,7 @@ export class Erc20SignatureMinting {
    */
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri20,
-  ): Promise<ITokenERC20.MintRequestStructOutput> {
+  ): Promise<ISignatureMint.MintRequestStructOutput> {
     const normalizedPrice = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       mintRequest.price,
@@ -225,13 +226,17 @@ export class Erc20SignatureMinting {
     );
     return {
       to: mintRequest.to,
+      royaltyRecipient: AddressZero,
+      royaltyBps: BigNumber.from(0),
       primarySaleRecipient: mintRequest.primarySaleRecipient,
       quantity: amountWithDecimals,
-      price: normalizedPrice,
+      pricePerToken: normalizedPrice,
       currency: mintRequest.currencyAddress,
       validityStartTimestamp: mintRequest.mintStartTime,
       validityEndTimestamp: mintRequest.mintEndTime,
       uid: mintRequest.uid,
-    } as ITokenERC20.MintRequestStructOutput;
+      tokenId: BigNumber.from(0),
+      uri: "",
+    } as ISignatureMint.MintRequestStructOutput;
   }
 }
