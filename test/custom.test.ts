@@ -75,6 +75,13 @@ describe("Custom Contracts", async () => {
     );
   });
 
+  it("should fetch published metadata", async () => {
+    const c = await sdk.unstable_getCustomContract(customContractAddress);
+    invariant(c, "Contract undefined");
+    const meta = await c.publishedMetadata.get();
+    expect(meta.name).to.eq("Greeter");
+  });
+
   it("should detect feature: metadata", async () => {
     const c = await sdk.unstable_getCustomContract(customContractAddress);
     invariant(c, "Contract undefined");

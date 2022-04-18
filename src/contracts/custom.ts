@@ -36,6 +36,7 @@ import { ContractInterface } from "ethers";
 import { ALL_ROLES } from "../common";
 import { implementsInterface } from "../common/feature-detection";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 
 /**
  * Custom contract wrapper with feature detection
@@ -61,6 +62,7 @@ export class CustomContract<
   public events: ContractEvents<TContract>;
   public interceptor: ContractInterceptor<TContract>;
   public estimator: GasCostEstimator<TContract>;
+  public publishedMetadata: ContractPublishedMetadata<TContract>;
 
   // features
   public metadata;
@@ -93,6 +95,10 @@ export class CustomContract<
     this.events = new ContractEvents(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
+    this.publishedMetadata = new ContractPublishedMetadata(
+      this.contractWrapper,
+      this.storage,
+    );
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,
@@ -120,6 +126,11 @@ export class CustomContract<
   getAddress(): string {
     return this.contractWrapper.readContract.address;
   }
+
+  /** ********************
+   * FEATURE DETECTION
+   * ********************/
+
   private detectRoyalties() {
     if (
       implementsInterface<IThirdwebContract & IThirdwebRoyalty>(
