@@ -145,19 +145,35 @@ export class ContractPublisher extends RPCConnectionHandler {
   public async publish(
     metadataUri: string,
   ): Promise<TransactionResult<PublishedContract>> {
+    return (await this.publishBatch([metadataUri]))[0];
+  }
+
+  public async publishBatch(
+    metadataUris: string[],
+  ): Promise<TransactionResult<PublishedContract>[]> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
     const publisher = await signer.getAddress();
-    const metadata = await this.fetchFullContractMetadata(metadataUri);
-    const bytecodeHash = solidityKeccak256(["bytes"], [metadata.bytecode]);
-    const contractId = metadata.name;
-    const receipt = await this.registry.sendTransaction("publishContract", [
-      publisher,
-      metadataUri,
-      bytecodeHash,
-      AddressZero,
-      contractId,
-    ]);
+
+    const fullMetadatas = await Promise.all(
+      metadataUris.map(async (uri) => ({
+        uri,
+        fullMetadata: await this.fetchFullContractMetadata(uri),
+      })),
+    );
+
+    const encoded = fullMetadatas.map((meta) => {
+      const bytecodeHash = solidityKeccak256(
+        ["bytes"],
+        [meta.fullMetadata.bytecode],
+      );
+      const contractId = meta.fullMetadata.name;
+      return this.registry.readContract.interface.encodeFunctionData(
+        "publishContract",
+        [publisher, meta.uri, bytecodeHash, AddressZero, contractId],
+      );
+    });
+    const receipt = await this.registry.multiCall(encoded);
     const events = this.registry.parseLogs<ContractPublishedEvent>(
       "ContractPublished",
       receipt.logs,
@@ -165,11 +181,13 @@ export class ContractPublisher extends RPCConnectionHandler {
     if (events.length < 1) {
       throw new Error("No ContractDeployed event found");
     }
-    const contract = events[0].args.publishedContract;
-    return {
-      receipt,
-      data: async () => this.toPublishedContract(contract),
-    };
+    return events.map((e) => {
+      const contract = e.args.publishedContract;
+      return {
+        receipt,
+        data: async () => this.toPublishedContract(contract),
+      };
+    });
   }
 
   // TODO unpublish contract

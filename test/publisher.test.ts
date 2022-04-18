@@ -44,7 +44,6 @@ describe("Publishing", async () => {
 
   it("should extract functions", async () => {
     const functions = await sdk.publisher.extractFunctions(simpleContractUri);
-    console.log(functions);
     expect(functions.length).gt(0);
   });
 
@@ -96,6 +95,16 @@ describe("Publishing", async () => {
     expect(deployedAddr.length).to.be.gt(0);
     const all = await sdk.publisher.getAll(bobWallet.address);
     expect(all.length).to.be.eq(1);
+  });
+
+  it("should publish batch contracts", async () => {
+    const tx = await sdk.publisher.publishBatch([
+      simpleContractUri,
+      contructorParamsContractUri,
+    ]);
+    expect(tx.length).to.eq(2);
+    expect((await tx[0].data()).id).to.eq("Greeter");
+    expect((await tx[1].data()).id).to.eq("ConstructorParams");
   });
 
   it("Ethrone real ipfs test", async () => {
