@@ -611,11 +611,11 @@ export class ContractEncoder<TContract extends BaseContract> {
 // @public
 export class ContractEvents<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
-    addEventListener(eventName: keyof TContract["filters"], listener: (event: Record<string, any>) => void): void;
+    addEventListener(eventName: keyof TContract["filters"] | string, listener: (event: Record<string, any>) => void): void;
     addTransactionListener(listener: ListenerFn): void;
     removeAllListeners(): void;
     // (undocumented)
-    removeEventListener(eventName: keyof TContract["filters"], listener: Listener): void;
+    removeEventListener(eventName: keyof TContract["filters"] | string, listener: Listener): void;
     removeTransactionListener(listener: ListenerFn): void;
 }
 
@@ -815,7 +815,13 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     // (undocumented)
     static contractType: "custom";
     // (undocumented)
+    estimator: GasCostEstimator<TContract>;
+    // (undocumented)
+    events: ContractEvents<TContract>;
+    // (undocumented)
     getAddress(): string;
+    // (undocumented)
+    interceptor: ContractInterceptor<TContract>;
     // (undocumented)
     metadata: ContractMetadata<TContract, {
         deploy: ZodObject<extendShape<extendShape<    {
@@ -1959,6 +1965,17 @@ export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>):
     name: string;
 }[];
 
+// Warning: (ae-forgotten-export) The symbol "AbiFunction" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "extractFunctions" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function extractFunctions(metadataUri: string, storage: IStorage): Promise<AbiFunction[]>;
+
+// Warning: (ae-internal-missing-underscore) The name "extractFunctionsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>): AbiFunction[];
+
 // Warning: (ae-internal-missing-underscore) The name "fetchContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1966,12 +1983,18 @@ export function fetchContractMetadata(metadataUri: string, storage: IStorage): P
     name: string;
     abi: {
         [x: string]: Json;
-        inputs?: {
+        type: string;
+        name: string;
+        inputs: {
             [x: string]: Json;
             type: string;
             name: string;
-        }[] | undefined;
-        type: string;
+        }[];
+        outputs: {
+            [x: string]: Json;
+            type: string;
+            name: string;
+        }[];
     }[];
     bytecode: string;
 }>;
@@ -2036,7 +2059,7 @@ export class FunctionDeprecatedError extends Error {
 export class GasCostEstimator<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     currentGasPriceInGwei(): Promise<string>;
-    gasCostOf(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): Promise<string>;
+    gasCostOf(fn: keyof TContract["functions"] | string, args: Parameters<TContract["functions"][typeof fn]> | any[]): Promise<string>;
 }
 
 // @public

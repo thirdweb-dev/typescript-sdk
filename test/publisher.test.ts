@@ -1,10 +1,11 @@
 import { sdk, signers, storage } from "./before.test";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import { ThirdwebSDK } from "../src";
+import { extractFunctions, extractFunctionsFromAbi, ThirdwebSDK } from "../src";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { isBooleanObject } from "util/types";
+import exp = require("constants");
 
 global.fetch = require("node-fetch");
 
@@ -39,6 +40,12 @@ describe("Publishing", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
+  });
+
+  it("should extract functions", async () => {
+    const functions = await sdk.publisher.extractFunctions(simpleContractUri);
+    console.log(functions);
+    expect(functions.length).gt(0);
   });
 
   it("should publish simple greeter contract", async () => {

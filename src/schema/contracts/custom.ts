@@ -43,7 +43,7 @@ export const CustomContractMetadataSchema = z.object({
   bytecodeUri: z.string(),
 });
 
-export const AbiInputSchema = z
+export const AbiTypeSchema = z
   .object({
     type: z.string(),
     name: z.string(),
@@ -53,7 +53,9 @@ export const AbiInputSchema = z
 export const AbiObjectSchema = z
   .object({
     type: z.string(),
-    inputs: z.array(AbiInputSchema).optional(),
+    name: z.string().default(""),
+    inputs: z.array(AbiTypeSchema).default([]),
+    outputs: z.array(AbiTypeSchema).default([]),
   })
   .catchall(z.lazy(() => JsonSchema));
 
@@ -65,5 +67,11 @@ export const PublishedContractSchema = z.object({
   metadataUri: z.string(),
 });
 
-export type ContractParam = z.infer<typeof AbiInputSchema>;
+export type ContractParam = z.infer<typeof AbiTypeSchema>;
 export type PublishedContract = z.infer<typeof PublishedContractSchema>;
+export type AbiFunction = {
+  name: string;
+  inputs: z.infer<typeof AbiTypeSchema>[];
+  outputs: z.infer<typeof AbiTypeSchema>[];
+  signature: string;
+};

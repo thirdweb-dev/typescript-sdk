@@ -7,9 +7,11 @@ import invariant from "tiny-invariant";
 import {
   extractConstructorParams,
   extractConstructorParamsFromAbi,
+  extractFunctions,
   fetchContractMetadata,
 } from "../../common/feature-detection";
 import {
+  AbiFunction,
   ContractParam,
   CustomContractMetadata,
   PublishedContract,
@@ -78,6 +80,14 @@ export class ContractPublisher extends RPCConnectionHandler {
     metadataUri: string,
   ): Promise<ContractParam[]> {
     return extractConstructorParams(metadataUri, this.storage);
+  }
+
+  /**
+   * @internal
+   * @param metadataUri
+   */
+  public async extractFunctions(metadataUri: string): Promise<AbiFunction[]> {
+    return extractFunctions(metadataUri, this.storage);
   }
 
   /**

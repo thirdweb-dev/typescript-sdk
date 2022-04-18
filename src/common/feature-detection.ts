@@ -3,6 +3,7 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Interface } from "@ethersproject/abi";
 import { IStorage } from "../core";
 import {
+  AbiFunction,
   AbiSchema,
   CustomContractMetadataSchema,
 } from "../schema/contracts/custom";
@@ -53,6 +54,23 @@ export async function extractConstructorParams(
 }
 
 /**
+ * @internal
+ * @param metadataUri
+ * @param storage
+ */
+export async function extractFunctions(
+  metadataUri: string,
+  storage: IStorage,
+): Promise<AbiFunction[]> {
+  const metadata = CustomContractMetadataSchema.parse(
+    await storage.get(metadataUri),
+  );
+  const abiRaw = await storage.get(metadata.abiUri);
+  const abi = AbiSchema.parse(abiRaw);
+  return extractFunctionsFromAbi(abi);
+}
+
+/**
  *
  * @param abi
  * @returns
@@ -67,6 +85,47 @@ export function extractConstructorParamsFromAbi(
     }
   }
   return [];
+}
+
+/**
+ * @internal
+ * @param abi
+ */
+export function extractFunctionsFromAbi(
+  abi: z.input<typeof AbiSchema>,
+): AbiFunction[] {
+  const functions = abi.filter((el) => el.type === "function");
+  const parsed = [];
+  for (const f of functions) {
+    const args =
+      f.inputs?.map((i) => `${i.name}: ${toJSType(i.type)}`)?.join(", ") || "";
+    const out = f.outputs?.map((o) => toJSType(o.type, true))?.join(", ");
+    const promise = out ? `: Promise<${out}>` : "";
+    const signature = `${f.name}(${args})${promise}`;
+    parsed.push({
+      inputs: f.inputs ?? [],
+      outputs: f.outputs ?? [],
+      name: f.name ?? "unknown",
+      signature,
+    });
+  }
+  return parsed;
+}
+
+function toJSType(contractType: string, isReturnType = false): string {
+  if (contractType.startsWith("bytes")) {
+    return "BytesLike";
+  }
+  if (contractType.startsWith("uint") || contractType.startsWith("int")) {
+    return isReturnType ? "BigNumber" : "BigNumberish";
+  }
+  if (contractType === "bool") {
+    return "boolean";
+  }
+  if (contractType === "address") {
+    return "string";
+  }
+  return contractType;
 }
 
 /**
