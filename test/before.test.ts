@@ -9,6 +9,7 @@ import {
   TWFee__factory,
   TWRegistry,
   TWRegistry__factory,
+  MockContract__factory,
 } from "@thirdweb-dev/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "ethers";

@@ -18,6 +18,7 @@ import {
   signers,
 } from "./before.test";
 import { isWinningBid } from "../src/common/marketplace";
+import { ethers as hardhatEthers } from "hardhat";
 
 global.fetch = require("node-fetch");
 
@@ -129,12 +130,13 @@ describe("Marketplace Contract", async () => {
     tokenId: BigNumberish,
     quantity: BigNumberish = 1,
   ): Promise<BigNumber> => {
+    const block = await hardhatEthers.provider.getBlock("latest");
     return (
       await marketplaceContract.direct.createListing({
         assetContractAddress: contractAddress,
         buyoutPricePerToken: 0.1,
         currencyContractAddress: tokenAddress,
-        startTimeInSeconds: Math.floor(Date.now() / 1000),
+        startTimeInSeconds: block.timestamp,
         listingDurationInSeconds: 60 * 60 * 24,
         tokenId,
         quantity,
@@ -227,7 +229,7 @@ describe("Marketplace Contract", async () => {
       try {
         await createDirectListing(dummyNftContract.getAddress(), 0, 10);
       } catch (e) {
-        expectError(e, "unapproved asset.");
+        expectError(e, "!ASSET");
       }
     });
   });
@@ -399,6 +401,7 @@ describe("Marketplace Contract", async () => {
         10,
         tokenAddress,
         0.034,
+        new Date(Date.now() + 60 * 60 * 24 * 10 * 1000),
       );
 
       console.log("Offer made");
@@ -928,6 +931,8 @@ describe("Marketplace Contract", async () => {
       );
 
       directListing.buyoutPrice = ethers.utils.parseUnits("20");
+      const block = await hardhatEthers.provider.getBlock("latest");
+      directListing.startTimeInSeconds = block.timestamp;
 
       await marketplaceContract.direct.updateListing(directListing);
 

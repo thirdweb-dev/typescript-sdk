@@ -33,6 +33,7 @@ import { ITokenERC20 } from '@thirdweb-dev/contracts';
 import { ITokenERC721 } from '@thirdweb-dev/contracts/dist/ITokenERC721';
 import { ITokenERC721 as ITokenERC721_2 } from '@thirdweb-dev/contracts';
 import { Listener } from '@ethersproject/providers';
+import { ListenerFn } from 'eventemitter2';
 import { Log } from '@ethersproject/providers';
 import { Marketplace as Marketplace_2 } from '@thirdweb-dev/contracts';
 import { Marketplace__factory } from '@thirdweb-dev/contracts';
@@ -610,10 +611,12 @@ export class ContractEncoder<TContract extends BaseContract> {
 // @public
 export class ContractEvents<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
-    addListener(eventName: keyof TContract["filters"], listener: (event: Record<string, any>) => void): void;
+    addEventListener(eventName: keyof TContract["filters"], listener: (event: Record<string, any>) => void): void;
+    addTransactionListener(listener: ListenerFn): void;
     removeAllListeners(): void;
     // (undocumented)
-    removeListener(eventName: keyof TContract["filters"], listener: Listener): void;
+    removeEventListener(eventName: keyof TContract["filters"], listener: Listener): void;
+    removeTransactionListener(listener: ListenerFn): void;
 }
 
 // Warning: (ae-forgotten-export) The symbol "Instance" needs to be exported by the entry point index.d.ts
@@ -1903,6 +1906,7 @@ export class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721> implement
     getAddress(): string;
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
+    getOwnedTokenIds(_address?: string): Promise<BigNumber[]>;
     // @internal (undocumented)
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     getTotalCount(): Promise<BigNumber>;
@@ -2375,7 +2379,7 @@ export class MarketplaceDirect {
     getListing(listingId: BigNumberish): Promise<DirectListing>;
     // @internal
     isStillValidListing(listing: DirectListing, quantity?: BigNumberish): Promise<boolean>;
-    makeOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContractAddress: string, pricePerToken: Price): Promise<TransactionResult>;
+    makeOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContractAddress: string, pricePerToken: Price, expirationDate?: Date): Promise<TransactionResult>;
     // @internal
     mapListing(listing: IMarketplace.ListingStruct): Promise<DirectListing>;
     updateListing(listing: DirectListing): Promise<TransactionResult>;

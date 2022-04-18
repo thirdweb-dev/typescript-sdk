@@ -606,6 +606,7 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set([{}]);
     await dropContract.claim(1);
     assert((await dropContract.getOwned()).length === 1);
+    assert((await dropContract.getOwnedTokenIds()).length === 1);
   });
 
   it("should be able to use claimTo function as expected", async () => {
@@ -617,6 +618,9 @@ describe("NFT Drop Contract", async () => {
     ]);
     await dropContract.claimTo(samWallet.address, 1);
     assert((await dropContract.getOwned(samWallet.address)).length === 1);
+    assert(
+      (await dropContract.getOwnedTokenIds(samWallet.address)).length === 1,
+    );
   });
 
   it("canClaim: 1 address", async () => {
