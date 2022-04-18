@@ -197,5 +197,9 @@ describe("Custom Contracts", async () => {
     console.log((await c.nft.getTotalCount()).toNumber());
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
+    invariant(c.minter, "ERC721 minter undefined");
+    c.minter.mint({
+      name: "Some NFT",
+    });
   });
 });

@@ -16,6 +16,7 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   AccessControlEnumerable,
   AccessControlEnumerable__factory,
+  IMintableERC721,
   IThirdwebContract,
   IThirdwebPlatformFee,
   IThirdwebPlatformFee__factory,
@@ -37,6 +38,7 @@ import { ALL_ROLES } from "../common";
 import { implementsInterface } from "../common/feature-detection";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
+import { Erc721Mintable } from "../core/classes/erc-721-mintable";
 
 /**
  * Custom contract wrapper with feature detection
@@ -72,6 +74,7 @@ export class CustomContract<
   public platformFees;
   public token: Erc20<ITokenERC20> | undefined;
   public nft: Erc721<ITokenERC721> | undefined;
+  public minter;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -105,6 +108,8 @@ export class CustomContract<
       CustomContract.schema,
       this.storage,
     );
+
+    // feature detection
     this.royalties = this.detectRoyalties();
     this.roles = this.detectRoles();
     this.sales = this.detectPrimarySales();
@@ -112,6 +117,7 @@ export class CustomContract<
 
     this.token = this.detectErc20();
     this.nft = this.detectErc721();
+    this.minter = this.detectErc721Mintable();
     // TODO detect 1155
     // this.erc20 = this.detectErc1155();
 
@@ -208,6 +214,18 @@ export class CustomContract<
       )
     ) {
       return new Erc721(this.contractWrapper, this.storage, this.options);
+    }
+    return undefined;
+  }
+
+  private detectErc721Mintable() {
+    if (
+      implementsInterface<IMintableERC721>(
+        this.contractWrapper,
+        ITokenERC721__factory.createInterface(),
+      )
+    ) {
+      return new Erc721Mintable(this.contractWrapper, this.storage);
     }
     return undefined;
   }

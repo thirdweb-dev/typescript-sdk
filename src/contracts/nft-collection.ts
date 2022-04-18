@@ -15,13 +15,12 @@ import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { Erc721SignatureMinting } from "../core/classes/erc-721-signature-minting";
-import { GasCostEstimator, ContractInterceptor } from "../core/classes";
-import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
-import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
+import { ContractInterceptor, GasCostEstimator } from "../core/classes";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
+import { Erc721Mintable } from "../core/classes/erc-721-mintable";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -47,6 +46,11 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * @internal
    */
   static schema = TokenErc721ContractSchema;
+
+  /**
+   * @internal
+   */
+  public mintable: Erc721Mintable<TokenERC721>;
 
   public metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
   public roles: ContractRoles<
@@ -109,6 +113,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     ),
   ) {
     super(contractWrapper, storage, options);
+    this.mintable = new Erc721Mintable(this.contractWrapper, this.storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       NFTCollection.schema,
@@ -189,23 +194,11 @@ export class NFTCollection extends Erc721<TokenERC721> {
     to: string,
     metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    const uri = await uploadOrExtractURI(metadata, this.storage);
-    const receipt = await this.contractWrapper.sendTransaction("mintTo", [
-      to,
-      uri,
-    ]);
-    const event = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
-      receipt?.logs,
-    );
-    if (event.length === 0) {
-      throw new Error("TokenMinted event not found");
-    }
-    const id = event[0].args.tokenIdMinted;
+    const tx = await this.mintable.mintTo(to, metadata);
     return {
-      id,
-      receipt,
-      data: () => this.get(id.toString()),
+      id: tx.id,
+      receipt: tx.receipt,
+      data: () => this.get(tx.id.toString()),
     };
   }
 
@@ -254,27 +247,12 @@ export class NFTCollection extends Erc721<TokenERC721> {
     to: string,
     metadatas: NFTMetadataOrUri[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const uris = await uploadOrExtractURIs(metadatas, this.storage);
-    const encoded = uris.map((uri) =>
-      this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [
-        to,
-        uri,
-      ]),
-    );
-    const receipt = await this.contractWrapper.multiCall(encoded);
-    const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
-      receipt.logs,
-    );
-    if (events.length === 0 || events.length < metadatas.length) {
-      throw new Error("TokenMinted event not found, minting failed");
-    }
-    return events.map((e) => {
-      const id = e.args.tokenIdMinted;
+    const tx = await this.mintable.mintBatchTo(to, metadatas);
+    return tx.map((t) => {
       return {
-        id,
-        receipt,
-        data: () => this.get(id),
+        id: t.id,
+        receipt: t.receipt,
+        data: () => this.get(t.id),
       };
     });
   }
