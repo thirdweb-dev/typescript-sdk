@@ -683,6 +683,30 @@ export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
 }
 
 // @public
+export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
+    constructor(contractWrapper: ContractWrapper<TContract>, storage: IStorage);
+    get(): Promise<{
+        name: string;
+        abi: {
+            [x: string]: Json;
+            type: string;
+            name: string;
+            inputs: {
+                [x: string]: Json;
+                type: string;
+                name: string;
+            }[];
+            outputs: {
+                [x: string]: Json;
+                type: string;
+                name: string;
+            }[];
+        }[];
+        bytecode: string;
+    }>;
+}
+
+// @public
 export class ContractRoles<TContract extends AccessControlEnumerable, TRole extends Role> {
     constructor(contractWrapper: ContractWrapper<TContract>, roles: readonly TRole[]);
     get(role: TRole): Promise<string[]>;
@@ -939,6 +963,8 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
     platformFees: ContractPlatformFee<TContract & IThirdwebPlatformFee> | undefined;
+    // (undocumented)
+    publishedMetadata: ContractPublishedMetadata<TContract>;
     // (undocumented)
     readonly read: any;
     // (undocumented)

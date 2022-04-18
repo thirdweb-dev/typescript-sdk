@@ -21,3 +21,4 @@ export * from "./delayed-reveal";
 export * from "./contract-events";
 export * from "./contract-interceptor";
 export * from "./contract-platform-fee";
+export * from "./contract-published-metadata";
