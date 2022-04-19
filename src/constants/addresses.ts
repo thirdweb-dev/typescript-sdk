@@ -8,7 +8,7 @@ export const OZ_DEFENDER_FORWARDER_ADDRESS =
   "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 
 const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
-const TWFactory_address = "0x11c34F062Cb10a20B9F463E12Ff9dA62D76FDf65";
+const TWFactory_address = "0x5DBC7B840baa9daBcBe9D2492E45D7244B54A2A0";
 
 /**
  * @internal
@@ -58,7 +58,7 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.Fantom]: {
     biconomyForwarder: AddressZero,
-    twFactory: TWFactory_address,
+    twFactory: "0x97EA0Fcc552D5A8Fb5e9101316AAd0D62Ea0876B",
     twRegistry: TWRegistry_address,
   },
   [ChainId.FantomTestnet]: {
