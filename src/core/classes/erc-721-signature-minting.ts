@@ -12,7 +12,7 @@ import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ITokenERC721, TokenERC721 } from "@thirdweb-dev/contracts";
+import { ISignatureMint, TokenERC721 } from "@thirdweb-dev/contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
@@ -70,7 +70,7 @@ export class Erc721SignatureMinting {
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
-      BigNumber.from(message.price),
+      BigNumber.from(message.pricePerToken),
       mintRequest.currencyAddress,
       overrides,
     );
@@ -257,7 +257,7 @@ export class Erc721SignatureMinting {
    */
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri721,
-  ): Promise<ITokenERC721.MintRequestStructOutput> {
+  ): Promise<ISignatureMint.MintRequestStructOutput> {
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       mintRequest.price,
@@ -265,7 +265,7 @@ export class Erc721SignatureMinting {
     );
     return {
       to: mintRequest.to,
-      price: normalizedPricePerToken,
+      pricePerToken: normalizedPricePerToken,
       uri: mintRequest.uri,
       currency: mintRequest.currencyAddress,
       validityEndTimestamp: mintRequest.mintEndTime,
@@ -274,6 +274,6 @@ export class Erc721SignatureMinting {
       royaltyRecipient: mintRequest.royaltyRecipient,
       royaltyBps: mintRequest.royaltyBps,
       primarySaleRecipient: mintRequest.primarySaleRecipient,
-    } as ITokenERC721.MintRequestStructOutput;
+    } as ISignatureMint.MintRequestStructOutput;
   }
 }
