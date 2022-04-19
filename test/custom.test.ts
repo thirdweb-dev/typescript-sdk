@@ -82,6 +82,13 @@ describe("Custom Contracts", async () => {
     expect(meta.name).to.eq("Greeter");
   });
 
+  it("should extract functions", async () => {
+    const c = await sdk.unstable_getCustomContract(customContractAddress);
+    invariant(c, "Contract undefined");
+    const functions = await c.publishedMetadata.extractFunctions();
+    expect(functions.length).gt(0);
+  });
+
   it("should detect feature: metadata", async () => {
     const c = await sdk.unstable_getCustomContract(customContractAddress);
     invariant(c, "Contract undefined");

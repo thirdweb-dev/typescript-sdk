@@ -6,6 +6,7 @@ import {
   AbiFunction,
   AbiSchema,
   CustomContractMetadataSchema,
+  PublishedMetadata,
 } from "../schema/contracts/custom";
 import { z } from "zod";
 
@@ -136,7 +137,7 @@ function toJSType(contractType: string, isReturnType = false): string {
 export async function fetchContractMetadata(
   metadataUri: string,
   storage: IStorage,
-) {
+): Promise<PublishedMetadata> {
   const metadata = CustomContractMetadataSchema.parse(
     await storage.get(metadataUri),
   );

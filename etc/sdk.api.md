@@ -683,28 +683,19 @@ export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
     setRecipient(recipient: string): Promise<TransactionResult>;
 }
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "ContractPublishedMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
     constructor(contractWrapper: ContractWrapper<TContract>, storage: IStorage);
-    get(): Promise<{
-        name: string;
-        abi: {
-            [x: string]: Json;
-            type: string;
-            name: string;
-            inputs: {
-                [x: string]: Json;
-                type: string;
-                name: string;
-            }[];
-            outputs: {
-                [x: string]: Json;
-                type: string;
-                name: string;
-            }[];
-        }[];
-        bytecode: string;
-    }>;
+    // Warning: (ae-forgotten-export) The symbol "AbiFunction" needs to be exported by the entry point index.d.ts
+    //
+    // @public (undocumented)
+    extractFunctions(): Promise<AbiFunction[]>;
+    // Warning: (ae-forgotten-export) The symbol "PublishedMetadata" needs to be exported by the entry point index.d.ts
+    //
+    // @public
+    get(): Promise<PublishedMetadata>;
 }
 
 // @public
@@ -1996,7 +1987,6 @@ export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>):
     name: string;
 }[];
 
-// Warning: (ae-forgotten-export) The symbol "AbiFunction" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "extractFunctions" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -2010,25 +2000,7 @@ export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>): AbiFunc
 // Warning: (ae-internal-missing-underscore) The name "fetchContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function fetchContractMetadata(metadataUri: string, storage: IStorage): Promise<{
-    name: string;
-    abi: {
-        [x: string]: Json;
-        type: string;
-        name: string;
-        inputs: {
-            [x: string]: Json;
-            type: string;
-            name: string;
-        }[];
-        outputs: {
-            [x: string]: Json;
-            type: string;
-            name: string;
-        }[];
-    }[];
-    bytecode: string;
-}>;
+export function fetchContractMetadata(metadataUri: string, storage: IStorage): Promise<PublishedMetadata>;
 
 // Warning: (ae-internal-missing-underscore) The name "FetchError" should be prefixed with an underscore because the declaration is marked as @internal
 //

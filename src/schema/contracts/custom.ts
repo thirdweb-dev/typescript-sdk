@@ -75,3 +75,8 @@ export type AbiFunction = {
   outputs: z.infer<typeof AbiTypeSchema>[];
   signature: string;
 };
+export type PublishedMetadata = {
+  name: string;
+  abi: z.infer<typeof AbiSchema>;
+  bytecode: string;
+};

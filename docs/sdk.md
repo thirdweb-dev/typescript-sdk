@@ -14,7 +14,6 @@
 |  [ContractMetadata](./sdk.contractmetadata.md) | Handles metadata for a Contract |
 |  [ContractPlatformFee](./sdk.contractplatformfee.md) | Handles primary sales recipients for a Contract |
 |  [ContractPrimarySale](./sdk.contractprimarysale.md) | Handles primary sales recipients for a Contract |
-|  [ContractPublishedMetadata](./sdk.contractpublishedmetadata.md) | Handles primary sales recipients for a Contract |
 |  [ContractRoles](./sdk.contractroles.md) | Handles Contract roles and permissions |
 |  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalties |
 |  [DelayedReveal](./sdk.delayedreveal.md) | Handles delayed reveal logic |
