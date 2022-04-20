@@ -281,7 +281,7 @@ describe("Token Drop Contract", async () => {
           bobWallet.address,
         );
 
-      expect(reasons).to.include(ClaimEligibility.NoActiveClaimPhase);
+      expect(reasons).to.include(ClaimEligibility.NoClaimConditionSet);
       assert.lengthOf(reasons, 1);
       const canClaim = await dropContract.claimConditions.canClaim(
         1,

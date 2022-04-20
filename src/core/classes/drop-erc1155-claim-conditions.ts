@@ -158,12 +158,11 @@ export class DropErc1155ClaimConditions {
         this.getActive(tokenId),
       ]);
     } catch (err: any) {
-      if (includesErrorMessage(err, "no public mint condition.")) {
+      if (
+        includesErrorMessage(err, "!CONDITION") ||
+        includesErrorMessage(err, "no active mint condition")
+      ) {
         reasons.push(ClaimEligibility.NoClaimConditionSet);
-        return reasons;
-      }
-      if (includesErrorMessage(err, "no active mint condition.")) {
-        reasons.push(ClaimEligibility.NoActiveClaimPhase);
         return reasons;
       }
       reasons.push(ClaimEligibility.Unknown);

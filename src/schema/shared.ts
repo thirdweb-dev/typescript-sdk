@@ -93,7 +93,7 @@ export const RawDateSchema = z.date().transform((i) => {
 /**
  * Default to now
  */
-export const StartDateSchema = RawDateSchema.default(new Date());
+export const StartDateSchema = RawDateSchema.default(new Date(0));
 
 /**
  * Default to 10 years from now
