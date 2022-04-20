@@ -3,6 +3,7 @@ import type {
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
+  TransactionResult,
 } from "../core";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -22,7 +23,6 @@ import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
 import { Erc721Mintable } from "../core/classes/erc-721-mintable";
 import { BigNumberish } from "ethers";
-import { TransactionResult } from "../core";
 
 /**
  * Create a collection of one-of-one NFTs.
