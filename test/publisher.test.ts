@@ -63,7 +63,7 @@ describe("Publishing", async () => {
     const all = await sdk.publisher.getAll(adminWallet.address);
     expect(all.length).to.be.eq(1);
     // fetch metadata back
-    const c = await sdk.unstable_getCustomContract(deployedAddr);
+    const c = await sdk.getCustomContract(deployedAddr);
     const meta = await c.metadata.get();
     expect(meta.name).to.eq("CustomContract");
   });

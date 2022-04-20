@@ -246,8 +246,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         let metadata: ContractMetadata<any, any> | undefined;
         if (contractType === "custom") {
           try {
-            metadata = (await this.unstable_getCustomContract(address))
-              .metadata;
+            metadata = (await this.getCustomContract(address)).metadata;
           } catch (e) {
             console.log(
               `Couldn't get contract metadata for custom contract: ${address}`,
@@ -296,10 +295,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * @internal
    */
-  public async unstable_getCustomContract(
-    address: string,
-    abi?: ContractInterface,
-  ) {
+  public async getCustomContract(address: string, abi?: ContractInterface) {
     let contractABI = abi;
     // if no abi passed, fetch it from the ThirdwebContract
     if (!contractABI) {

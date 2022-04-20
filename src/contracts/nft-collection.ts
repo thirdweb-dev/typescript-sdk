@@ -2,8 +2,8 @@ import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema/tokens/common";
 import type {
   IStorage,
   NetworkOrSignerOrProvider,
-  TransactionResultWithId,
   TransactionResult,
+  TransactionResultWithId,
 } from "../core";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -52,7 +52,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
   /**
    * @internal
    */
-  public mintable: Erc721Mintable<TokenERC721>;
+  public minter: Erc721Mintable<TokenERC721>;
 
   public metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
   public roles: ContractRoles<
@@ -115,7 +115,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     ),
   ) {
     super(contractWrapper, storage, options);
-    this.mintable = new Erc721Mintable(this.contractWrapper, this.storage);
+    this.minter = new Erc721Mintable(this.contractWrapper, this.storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       NFTCollection.schema,
@@ -196,7 +196,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     to: string,
     metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    const tx = await this.mintable.mintTo(to, metadata);
+    const tx = await this.minter.mintTo(to, metadata);
     return {
       id: tx.id,
       receipt: tx.receipt,
@@ -249,7 +249,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     to: string,
     metadatas: NFTMetadataOrUri[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const tx = await this.mintable.mintBatchTo(to, metadatas);
+    const tx = await this.minter.mintBatchTo(to, metadatas);
     return tx.map((t) => {
       return {
         id: t.id,

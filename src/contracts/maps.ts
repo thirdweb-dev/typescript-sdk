@@ -9,6 +9,8 @@ import { Pack } from "./pack";
 import { NFTDrop } from "./nft-drop";
 import { TokenDrop } from "./token-drop";
 import { CustomContract } from "./custom";
+import { z } from "zod";
+import { AbiSchema } from "../schema/contracts/custom";
 
 /**
  * @internal
