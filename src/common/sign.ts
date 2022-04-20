@@ -42,6 +42,8 @@ export async function signTypedDataInternal(
     throw new Error("missing provider");
   }
 
+  console.log("JOEE", types);
+  console.log("JOEE", message);
   const payload = ethers.utils._TypedDataEncoder.getPayload(
     domain,
     types,
