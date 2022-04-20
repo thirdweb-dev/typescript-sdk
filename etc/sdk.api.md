@@ -1926,7 +1926,6 @@ export class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721> implement
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
     balanceOf(address: string): Promise<BigNumber>;
-    burn(tokenId: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
     get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
@@ -2513,6 +2512,7 @@ export interface NewDirectListing {
 // @public
 export class NFTCollection extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
+    burn(tokenId: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     static contractFactory: typeof TokenERC721__factory;
     // (undocumented)
@@ -2668,6 +2668,7 @@ export interface NFTContractDeployMetadata {
 // @public
 export class NFTDrop extends Erc721<DropERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
+    burn(tokenId: BigNumberish): Promise<TransactionResult>;
     claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     claimConditions: DropClaimConditions<DropERC721>;
     claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;

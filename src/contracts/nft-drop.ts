@@ -8,6 +8,7 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core/interfaces/IStorage";
 import {
   NetworkOrSignerOrProvider,
+  TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
 import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
@@ -435,6 +436,16 @@ export class NFTDrop extends Erc721<DropERC721> {
       quantity,
       proofs,
     );
+  }
+
+  /**
+   * Burn a single NFT
+   * @param tokenId - the token Id to burn
+   */
+  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
+    };
   }
 
   /** ******************************

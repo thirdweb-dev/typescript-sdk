@@ -249,16 +249,6 @@ export class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721>
   }
 
   /**
-   * Burn a single NFT
-   * @param tokenId - the token Id to burn
-   */
-  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
-    };
-  }
-
-  /**
    * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
    * @param operator - the operator's address
    * @param approved - whether to approve or remove

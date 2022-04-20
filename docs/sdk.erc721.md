@@ -33,7 +33,6 @@ export declare class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721> i
 |  --- | --- | --- |
 |  [balance()](./sdk.erc721.balance.md) |  | Get NFT Balance for the currently connected wallet |
 |  [balanceOf(address)](./sdk.erc721.balanceof.md) |  | Get NFT Balance |
-|  [burn(tokenId)](./sdk.erc721.burn.md) |  | Burn a single NFT |
 |  [get(tokenId)](./sdk.erc721.get.md) |  | Get a single NFT Metadata |
 |  [getAddress()](./sdk.erc721.getaddress.md) |  |  |
 |  [getAll(queryParams)](./sdk.erc721.getall.md) |  | Get All NFTs |

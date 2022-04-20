@@ -21,6 +21,8 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
 import { Erc721Mintable } from "../core/classes/erc-721-mintable";
+import { BigNumberish } from "ethers";
+import { TransactionResult } from "../core";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -255,5 +257,15 @@ export class NFTCollection extends Erc721<TokenERC721> {
         data: () => this.get(t.id),
       };
     });
+  }
+
+  /**
+   * Burn a single NFT
+   * @param tokenId - the token Id to burn
+   */
+  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
+    };
   }
 }
