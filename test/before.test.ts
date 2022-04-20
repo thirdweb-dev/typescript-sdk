@@ -117,7 +117,7 @@ before(async () => {
     ByocFactory__factory.bytecode,
   )
     .connect(signer)
-    .deploy(registry.address, [])) as ByocFactory;
+    .deploy(registry.address, trustedForwarderAddress)) as ByocFactory;
   await customFactoryDeployer.deployed();
 
   const customRegistryDeployer = (await new ethers.ContractFactory(
@@ -125,7 +125,7 @@ before(async () => {
     ByocRegistry__factory.bytecode,
   )
     .connect(signer)
-    .deploy([])) as ByocRegistry;
+    .deploy(trustedForwarderAddress)) as ByocRegistry;
   await customRegistryDeployer.deployed();
   console.log("ByocRegistry address: ", customRegistryDeployer.address);
 

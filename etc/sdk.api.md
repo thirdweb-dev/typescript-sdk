@@ -2532,10 +2532,10 @@ export class NFTCollection extends Erc721<TokenERC721> {
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     mint(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
-    // @internal (undocumented)
-    mintable: Erc721Mintable<TokenERC721>;
     mintBatch(metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintBatchTo(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // @internal (undocumented)
+    minter: Erc721Mintable<TokenERC721>;
     mintTo(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     platformFee: ContractPlatformFee<TokenERC721>;
@@ -4266,6 +4266,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         contractType: "custom" | "split" | "edition-drop" | "edition" | "token" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
+    // @internal (undocumented)
+    getCustomContract(address: string, abi?: ContractInterface): Promise<CustomContract<ThirdwebContract>>;
     getEdition(address: string): Edition;
     getEditionDrop(address: string): EditionDrop;
     getMarketplace(address: string): Marketplace;
@@ -4283,8 +4285,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     publisher: ContractPublisher;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
-    // @internal (undocumented)
-    unstable_getCustomContract(address: string, abi?: ContractInterface): Promise<CustomContract<ThirdwebContract>>;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 
