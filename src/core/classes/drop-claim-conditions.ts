@@ -161,7 +161,10 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
         this.getActive(),
       ]);
     } catch (err: any) {
-      if (includesErrorMessage(err, "!CONDITION")) {
+      if (
+        includesErrorMessage(err, "!CONDITION") ||
+        includesErrorMessage(err, "no active mint condition")
+      ) {
         reasons.push(ClaimEligibility.NoClaimConditionSet);
         return reasons;
       }
