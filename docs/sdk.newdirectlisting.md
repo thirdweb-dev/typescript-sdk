@@ -21,7 +21,7 @@ export interface NewDirectListing
 |  [currencyContractAddress](./sdk.newdirectlisting.currencycontractaddress.md) | string | The address of the currency to accept for the listing. |
 |  [listingDurationInSeconds](./sdk.newdirectlisting.listingdurationinseconds.md) | BigNumberish | The duration of the listing in seconds. |
 |  [quantity](./sdk.newdirectlisting.quantity.md) | BigNumberish | The quantity of tokens to include in the listing.<!-- -->For ERC721s, this value should always be 1 (and will be forced internally regardless of what is passed here). |
-|  [startTimeInSeconds](./sdk.newdirectlisting.starttimeinseconds.md) | BigNumberish | The start time of the listing. |
+|  [startTimestamp](./sdk.newdirectlisting.starttimestamp.md) | Date | The start time of the listing. |
 |  [tokenId](./sdk.newdirectlisting.tokenid.md) | BigNumberish | The ID of the token to list. |
 |  [type?](./sdk.newdirectlisting.type.md) | "NewDirectListing" | <i>(Optional)</i> |
 

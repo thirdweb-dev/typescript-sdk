@@ -22,7 +22,7 @@ export interface NewAuctionListing
 |  [listingDurationInSeconds](./sdk.newauctionlisting.listingdurationinseconds.md) | BigNumberish | The duration of the listing in seconds. |
 |  [quantity](./sdk.newauctionlisting.quantity.md) | BigNumberish | The quantity of tokens to include in the listing.<!-- -->For ERC721s, this value should always be 1 (and will be forced internally regardless of what is passed here). |
 |  [reservePricePerToken](./sdk.newauctionlisting.reservepricepertoken.md) | [Price](./sdk.price.md) | The reserve price is the minimum price that a bid must be in order to be accepted, per token.<!-- -->So if the <code>quantity = 10</code> and the <code>reserve price = 1</code>, then the minimum bid is 10 coins (of the configured currency). |
-|  [startTimeInSeconds](./sdk.newauctionlisting.starttimeinseconds.md) | BigNumberish | The start time of the listing. |
+|  [startTimestamp](./sdk.newauctionlisting.starttimestamp.md) | Date | The start time of the listing. |
 |  [tokenId](./sdk.newauctionlisting.tokenid.md) | BigNumberish | The ID of the token to list. |
 |  [type?](./sdk.newauctionlisting.type.md) | "NewAuctionListing" | <i>(Optional)</i> |
 
