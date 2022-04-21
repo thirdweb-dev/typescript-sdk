@@ -219,7 +219,9 @@ export class MarketplaceAuction {
           quantityToList: listing.quantity,
           reservePricePerToken: normalizedReservePrice,
           secondsUntilEndTime: listing.listingDurationInSeconds,
-          startTime: listing.startTimeInSeconds,
+          startTime: BigNumber.from(
+            Math.floor(listing.startTimestamp.getTime() / 1000),
+          ),
         } as IMarketplace.ListingParametersStruct,
       ],
     );
