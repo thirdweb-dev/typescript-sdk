@@ -1,6 +1,6 @@
 import {
   FilledSignaturePayload20,
-  MintRequest20,
+  MintRequest1155,
   PayloadToSign20,
   PayloadWithUri20,
   Signature20PayloadInput,
@@ -21,6 +21,7 @@ import { AddressZero } from "@ethersproject/constants";
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
  * @public
  */
+// TODO consolidate into a single class
 export class Erc20SignatureMinting {
   private contractWrapper: ContractWrapper<TokenERC20>;
   private roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
@@ -175,21 +176,18 @@ export class Erc20SignatureMinting {
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
-    // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155.
-    const name = await this.contractWrapper.readContract.name();
-
     return await Promise.all(
       parsedRequests.map(async (m) => {
         const finalPayload = Signature20PayloadOutput.parse(m);
         const signature = await this.contractWrapper.signTypedData(
           signer,
           {
-            name,
+            name: "TokenERC20",
             version: "1",
             chainId,
             verifyingContract: this.contractWrapper.readContract.address,
           },
-          { MintRequest: MintRequest20 },
+          { MintRequest: MintRequest1155 },
           await this.mapPayloadToContractStruct(finalPayload),
         );
         return {
@@ -226,17 +224,17 @@ export class Erc20SignatureMinting {
     );
     return {
       to: mintRequest.to,
+      pricePerToken: normalizedPrice,
+      uri: "",
+      currency: mintRequest.currencyAddress,
+      validityEndTimestamp: mintRequest.mintEndTime,
+      validityStartTimestamp: mintRequest.mintStartTime,
+      uid: mintRequest.uid,
       royaltyRecipient: AddressZero,
       royaltyBps: BigNumber.from(0),
       primarySaleRecipient: mintRequest.primarySaleRecipient,
       quantity: amountWithDecimals,
-      pricePerToken: normalizedPrice,
-      currency: mintRequest.currencyAddress,
-      validityStartTimestamp: mintRequest.mintStartTime,
-      validityEndTimestamp: mintRequest.mintEndTime,
-      uid: mintRequest.uid,
       tokenId: BigNumber.from(0),
-      uri: "",
     } as ISignatureMint.MintRequestStructOutput;
   }
 }

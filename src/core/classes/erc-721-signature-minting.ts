@@ -23,6 +23,7 @@ import { uploadOrExtractURIs } from "../../common/nft";
  * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
  * @public
  */
+// TODO consolidate into a single class
 export class Erc721SignatureMinting {
   private contractWrapper: ContractWrapper<TokenERC721>;
   private storage: IStorage;

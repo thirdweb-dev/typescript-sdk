@@ -309,7 +309,7 @@ describe("Edition Drop Contract", async () => {
 
   it("should allow custom overrides", async () => {
     bdContract.interceptor.overrideNextTransaction(() => ({
-      nonce: 123,
+      nonce: 5000,
     }));
     try {
       await bdContract.createBatch([
