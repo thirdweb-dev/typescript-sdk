@@ -146,6 +146,9 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   public revealer: DelayedReveal<DropERC721>;
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _query = this.query!;
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
@@ -186,6 +189,27 @@ export class NFTDrop extends Erc721<DropERC721> {
   /** ******************************
    * READ FUNCTIONS
    *******************************/
+
+  /**
+   * {@inheritDoc Erc721Enumerable.getAll}
+   */
+  getAll = this._query.getAll.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.getOwned}
+   */
+  getOwned = this._query.getOwned.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.getOwnedTokenIds}
+   */
+  getOwnedTokenIds = this._query.getOwnedTokenIds.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.getTotalCount}
+   */
+  getTotalCount = this._query.getTotalCount.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.totalSupply}
+   */
+  totalSupply = this._query.totalSupply.bind(this._query);
 
   /**
    * Get All Claimed NFTs

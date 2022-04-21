@@ -200,13 +200,16 @@ describe("Custom Contracts", async () => {
     );
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
-    const nfts = await c.nft.getAll();
-    console.log((await c.nft.getTotalCount()).toNumber());
+    invariant(c.nft.query, "ERC721 query undefined");
+    const nfts = await c.nft.query.getAll();
+    console.log((await c.nft.query.getTotalCount()).toNumber());
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
-    invariant(c.minter, "ERC721 minter undefined");
-    c.minter.mint({
+    invariant(c.nft.minter, "ERC721 minter undefined");
+    await c.nft.minter.mint({
       name: "Some NFT",
     });
+    const nfts2 = await c.nft.query.getAll();
+    expect(nfts2.length).to.eq(2);
   });
 });

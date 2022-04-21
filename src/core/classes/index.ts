@@ -12,6 +12,8 @@ export * from "./erc-721";
 export * from "./erc-1155";
 export * from "./erc-20-signature-minting";
 export * from "./erc-721-signature-minting";
+export * from "./erc-721-enumerable";
+export * from "./erc-721-mintable";
 export * from "./erc-1155-signature-minting";
 export * from "./marketplace-direct";
 export * from "./marketplace-auction";

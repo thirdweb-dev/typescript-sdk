@@ -49,11 +49,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
    */
   static schema = TokenErc721ContractSchema;
 
-  /**
-   * @internal
-   */
-  public minter: Erc721Mintable<TokenERC721>;
-
   public metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
   public roles: ContractRoles<
     TokenERC721,
@@ -102,6 +97,11 @@ export class NFTCollection extends Erc721<TokenERC721> {
    */
   public interceptor: ContractInterceptor<TokenERC721>;
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _minter = this.minter!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _query = this.query!;
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
@@ -142,6 +142,27 @@ export class NFTCollection extends Erc721<TokenERC721> {
   /** ******************************
    * READ FUNCTIONS
    *******************************/
+
+  /**
+   * {@inheritDoc Erc721Enumerable.getAll}
+   */
+  getAll = this._query.getAll.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.getOwned}
+   */
+  getOwned = this._query.getOwned.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.getOwnedTokenIds}
+   */
+  getOwnedTokenIds = this._query.getOwnedTokenIds.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.getTotalCount}
+   */
+  getTotalCount = this._query.getTotalCount.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.totalSupply}
+   */
+  totalSupply = this._query.totalSupply.bind(this._query);
 
   /**
    * Get whether users can transfer NFTs from this contract
@@ -196,7 +217,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     to: string,
     metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    const tx = await this.minter.mintTo(to, metadata);
+    const tx = await this._minter.mintTo(to, metadata);
     return {
       id: tx.id,
       receipt: tx.receipt,
@@ -249,7 +270,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     to: string,
     metadatas: NFTMetadataOrUri[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const tx = await this.minter.mintBatchTo(to, metadatas);
+    const tx = await this._minter.mintBatchTo(to, metadatas);
     return tx.map((t) => {
       return {
         id: t.id,

@@ -950,10 +950,6 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         name: string;
         }>;
     }>;
-    // Warning: (ae-forgotten-export) The symbol "Erc721Mintable" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    minter: Erc721Mintable<IMintableERC721> | undefined;
     // (undocumented)
     nft: Erc721<ERC721 & ERC721Metadata> | undefined;
     // (undocumented)
@@ -1935,13 +1931,13 @@ export class Erc721<T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadat
     // @internal (undocumented)
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
+    // (undocumented)
+    minter: Erc721Mintable<IMintableERC721> | undefined;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
     protected options: SDKOptions;
     ownerOf(tokenId: BigNumberish): Promise<string>;
-    // Warning: (ae-forgotten-export) The symbol "Erc721Enumerable" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     query: Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721> | undefined;
     // @internal
@@ -1949,6 +1945,26 @@ export class Erc721<T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadat
     // (undocumented)
     protected storage: IStorage;
     transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;
+}
+
+// @public (undocumented)
+export class Erc721Enumerable<TContract extends ERC721Enumerable & ERC721Metadata & ERC721> {
+    constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<TContract>);
+    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
+    getOwnedTokenIds(_address?: string): Promise<BigNumber[]>;
+    getTotalCount(): Promise<BigNumber>;
+    totalSupply(): Promise<BigNumber>;
+}
+
+// @public (undocumented)
+export class Erc721Mintable<TContract extends IMintableERC721> {
+    constructor(contractWrapper: ContractWrapper<TContract>, storage: IStorage);
+    // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
+    mint(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId>;
+    mintBatch(metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId[]>;
+    mintBatchTo(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId[]>;
+    mintTo(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId>;
 }
 
 // @public
@@ -2525,17 +2541,18 @@ export class NFTCollection extends Erc721<TokenERC721> {
     estimator: GasCostEstimator<TokenERC721>;
     // (undocumented)
     events: ContractEvents<TokenERC721>;
+    getAll: (queryParams?: QueryAllParams | undefined) => Promise<NFTMetadataOwner[]>;
+    getOwned: (_address?: string | undefined) => Promise<NFTMetadataOwner[]>;
+    getOwnedTokenIds: (_address?: string | undefined) => Promise<BigNumber[]>;
+    getTotalCount: () => Promise<BigNumber>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<TokenERC721>;
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
-    // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     mint(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     mintBatch(metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintBatchTo(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    // @internal (undocumented)
-    minter: Erc721Mintable<TokenERC721>;
     mintTo(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     platformFee: ContractPlatformFee<TokenERC721>;
@@ -2648,6 +2665,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
         }>;
     };
     signature: Erc721SignatureMinting;
+    totalSupply: () => Promise<BigNumber>;
 }
 
 // @public
@@ -2685,8 +2703,12 @@ export class NFTDrop extends Erc721<DropERC721> {
     estimator: GasCostEstimator<DropERC721>;
     // (undocumented)
     events: ContractEvents<DropERC721>;
+    getAll: (queryParams?: QueryAllParams | undefined) => Promise<NFTMetadataOwner[]>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
+    getOwned: (_address?: string | undefined) => Promise<NFTMetadataOwner[]>;
+    getOwnedTokenIds: (_address?: string | undefined) => Promise<BigNumber[]>;
+    getTotalCount: () => Promise<BigNumber>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<DropERC721>;
     isTransferRestricted(): Promise<boolean>;
@@ -2816,6 +2838,7 @@ export class NFTDrop extends Erc721<DropERC721> {
         }>;
     };
     totalClaimedSupply(): Promise<BigNumber>;
+    totalSupply: () => Promise<BigNumber>;
     totalUnclaimedSupply(): Promise<BigNumber>;
 }
 

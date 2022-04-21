@@ -14,9 +14,12 @@ import {
   ERC721Enumerable,
   ERC721Enumerable__factory,
   ERC721Metadata,
+  IMintableERC721,
+  IMintableERC721__factory,
   TokenERC721,
 } from "@thirdweb-dev/contracts";
 import { Erc721Enumerable } from "./erc-721-enumerable";
+import { Erc721Mintable } from "./erc-721-mintable";
 
 /**
  * Standard ERC721 functions
@@ -33,6 +36,7 @@ export class Erc721<
   public query:
     | Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721>
     | undefined;
+  public minter: Erc721Mintable<IMintableERC721> | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -51,6 +55,7 @@ export class Erc721<
       this.options = SDKOptionsSchema.parse({});
     }
     this.query = this.detectErc721Enumerable();
+    this.minter = this.detectErc721Mintable();
   }
 
   /**
@@ -212,7 +217,19 @@ export class Erc721<
         ERC721Enumerable__factory.createInterface(),
       )
     ) {
-      return new Erc721Enumerable(this, this.contractWrapper, this.storage);
+      return new Erc721Enumerable(this, this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc721Mintable() {
+    if (
+      implementsInterface<IMintableERC721>(
+        this.contractWrapper,
+        IMintableERC721__factory.createInterface(),
+      )
+    ) {
+      return new Erc721Mintable(this.contractWrapper, this.storage);
     }
     return undefined;
   }

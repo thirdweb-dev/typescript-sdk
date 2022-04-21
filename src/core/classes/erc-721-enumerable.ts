@@ -4,29 +4,23 @@ import {
   ERC721Enumerable,
   ERC721Metadata,
 } from "@thirdweb-dev/contracts";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
-import { NFTMetadata, NFTMetadataOwner } from "../../schema";
-import { NotFoundError } from "../../common";
-import { fetchTokenMetadata } from "../../common/nft";
-import { IStorage } from "../interfaces";
+import { NFTMetadataOwner } from "../../schema";
 import { Erc721 } from "./erc-721";
 
 export class Erc721Enumerable<
   TContract extends ERC721Enumerable & ERC721Metadata & ERC721,
 > {
   private contractWrapper: ContractWrapper<TContract>;
-  private storage: IStorage;
   private erc721: Erc721<ERC721Metadata & ERC721>;
 
   constructor(
     erc721: Erc721<ERC721Metadata & ERC721>,
     contractWrapper: ContractWrapper<TContract>,
-    storage: IStorage,
   ) {
     this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
-    this.storage = storage;
   }
 
   /**
@@ -78,7 +72,7 @@ export class Erc721Enumerable<
    * @returns The NFT metadata for all NFTs in the contract.
    */
   public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
-    const tokenIds = await this.getTokenIds(_address);
+    const tokenIds = await this.getOwnedTokenIds(_address);
     return await Promise.all(
       tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
     );
@@ -106,7 +100,7 @@ export class Erc721Enumerable<
    * Get all token ids of NFTs owned by a specific wallet.
    * @param _address - the wallet address to query, defaults to the connected wallet
    */
-  public async getTokenIds(_address?: string): Promise<BigNumber[]> {
+  public async getOwnedTokenIds(_address?: string): Promise<BigNumber[]> {
     const address = _address
       ? _address
       : await this.contractWrapper.getSignerAddress();
@@ -117,18 +111,5 @@ export class Erc721Enumerable<
         this.contractWrapper.readContract.tokenOfOwnerByIndex(address, i),
       ),
     );
-  }
-
-  /**
-   * @internal
-   */
-  protected async getTokenMetadata(
-    tokenId: BigNumberish,
-  ): Promise<NFTMetadata> {
-    const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
-    if (!tokenUri) {
-      throw new NotFoundError();
-    }
-    return fetchTokenMetadata(tokenId, tokenUri, this.storage);
   }
 }
