@@ -238,19 +238,26 @@ export class NFTDrop extends Erc721<DropERC721> {
     const count = BigNumber.from(
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
+    const firstTokenId = BigNumber.from(
+      Math.max(
+        (
+          await this.contractWrapper.readContract.nextTokenIdToClaim()
+        ).toNumber(),
+        start,
+      ),
+    );
     const maxId = BigNumber.from(
       Math.min(
         (
           await this.contractWrapper.readContract.nextTokenIdToMint()
         ).toNumber(),
-        start + count,
+        firstTokenId.toNumber() + count,
       ),
     );
-    const unmintedId =
-      await this.contractWrapper.readContract.nextTokenIdToClaim();
+
     return await Promise.all(
-      Array.from(Array(maxId.sub(unmintedId).toNumber()).keys()).map((i) =>
-        this.getTokenMetadata(unmintedId.add(i).toString()),
+      Array.from(Array(maxId.sub(firstTokenId).toNumber()).keys()).map((i) =>
+        this.getTokenMetadata(firstTokenId.add(i).toString()),
       ),
     );
   }

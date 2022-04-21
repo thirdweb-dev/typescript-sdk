@@ -1,11 +1,17 @@
 import { sdk, signers, storage } from "./before.test";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import { extractFunctions, extractFunctionsFromAbi, ThirdwebSDK } from "../src";
+import {
+  extractFunctions,
+  extractFunctionsFromAbi,
+  IpfsStorage,
+  ThirdwebSDK,
+} from "../src";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { isBooleanObject } from "util/types";
 import exp = require("constants");
+import invariant from "tiny-invariant";
 
 global.fetch = require("node-fetch");
 
@@ -133,5 +139,33 @@ describe("Publishing", async () => {
       ["foo", "bar"],
     );
     console.log("deployed", deployedAddr);
+  });
+
+  it("JoaquimAzuky real ipfs test", async () => {
+    const realSDK = new ThirdwebSDK(
+      adminWallet,
+      {},
+      new IpfsStorage("https://ipfs.thirdweb.com/ipfs/"),
+    );
+    const ipfsUri = "ipfs://QmTFkbkNEGcBpKgzwgpKjrnUhYGHY96qk5ouVSFhTQYKc5/0";
+    const tx = await realSDK.publisher.publish(ipfsUri);
+    const contract = await tx.data();
+    console.log("deployed", await contract);
+    const deployedAddr = await realSDK.publisher.deployCustomContract(
+      adminWallet.address,
+      contract.id,
+      ["foo", "bar"],
+    );
+    console.log("deployed", deployedAddr);
+    const c = await realSDK.getCustomContract(deployedAddr);
+    invariant(c.minter, "no minter detected");
+    const tx2 = await c.minter.mint({
+      name: "cool nft",
+    });
+    console.log("minted", tx2.id);
+    invariant(c.nft, "no nft detected");
+    const nft = await c.nft.get(tx2.id);
+    console.log(nft);
+    expect(nft.metadata.name).to.eq("cool nft");
   });
 });

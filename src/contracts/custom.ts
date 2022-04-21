@@ -17,6 +17,7 @@ import {
   AccessControlEnumerable,
   AccessControlEnumerable__factory,
   IMintableERC721,
+  IMintableERC721__factory,
   IThirdwebContract,
   IThirdwebPlatformFee,
   IThirdwebPlatformFee__factory,
@@ -74,7 +75,7 @@ export class CustomContract<
   public platformFees;
   public token: Erc20<ITokenERC20> | undefined;
   public nft: Erc721<ITokenERC721> | undefined;
-  public minter;
+  public minter: Erc721Mintable<TContract & IMintableERC721> | undefined;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -222,7 +223,7 @@ export class CustomContract<
     if (
       implementsInterface<IMintableERC721>(
         this.contractWrapper,
-        ITokenERC721__factory.createInterface(),
+        IMintableERC721__factory.createInterface(),
       )
     ) {
       return new Erc721Mintable(this.contractWrapper, this.storage);

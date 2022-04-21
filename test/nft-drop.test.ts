@@ -220,19 +220,23 @@ describe("NFT Drop Contract", async () => {
 
   it("should correctly upload metadata for each nft", async () => {
     const metadatas = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
       metadatas.push({
         name: `test ${i}`,
       });
     }
     await dropContract.createBatch(metadatas);
-    const nfts = await dropContract.getAll();
-    expect(nfts.length).to.eq(10);
-    let i = 0;
-    nfts.forEach((nft) => {
-      expect(nft.metadata.name).to.be.equal(`test ${i}`);
-      i++;
+    await dropContract.claimConditions.set([{}]);
+    await dropContract.claim(1);
+    const claimed = await dropContract.getAllClaimed();
+    const unclaimed = await dropContract.getAllUnclaimed({
+      start: 0,
+      count: 30,
     });
+    expect(claimed.length).to.eq(1);
+    expect(unclaimed.length).to.eq(30);
+    expect(unclaimed[0].name).to.eq("test 1");
+    expect(unclaimed[unclaimed.length - 1].name).to.eq("test 30");
   });
 
   it("should not allow claiming to someone not in the merkle tree", async () => {
