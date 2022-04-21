@@ -20,6 +20,9 @@ import { DropERC20 } from '@thirdweb-dev/contracts';
 import { DropERC20__factory } from '@thirdweb-dev/contracts';
 import { DropERC721 } from '@thirdweb-dev/contracts';
 import { DropERC721__factory } from '@thirdweb-dev/contracts';
+import { ERC721 } from '@thirdweb-dev/contracts';
+import { ERC721Enumerable } from '@thirdweb-dev/contracts';
+import { ERC721Metadata } from '@thirdweb-dev/contracts';
 import { ethers } from 'ethers';
 import { EventEmitter2 } from 'eventemitter2';
 import { extendShape } from 'zod';
@@ -31,8 +34,6 @@ import { IThirdwebPlatformFee } from '@thirdweb-dev/contracts';
 import { IThirdwebPrimarySale } from '@thirdweb-dev/contracts';
 import { IThirdwebRoyalty } from '@thirdweb-dev/contracts';
 import { ITokenERC20 } from '@thirdweb-dev/contracts';
-import { ITokenERC721 } from '@thirdweb-dev/contracts/dist/ITokenERC721';
-import { ITokenERC721 as ITokenERC721_2 } from '@thirdweb-dev/contracts';
 import { Listener } from '@ethersproject/providers';
 import { ListenerFn } from 'eventemitter2';
 import { Log } from '@ethersproject/providers';
@@ -952,9 +953,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     // Warning: (ae-forgotten-export) The symbol "Erc721Mintable" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    minter: Erc721Mintable<TContract & IMintableERC721> | undefined;
+    minter: Erc721Mintable<IMintableERC721> | undefined;
     // (undocumented)
-    nft: Erc721<ITokenERC721_2> | undefined;
+    nft: Erc721<ERC721 & ERC721Metadata> | undefined;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -1821,8 +1822,8 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         id: BigNumber;
         uri: string;
     };
-    owner: string;
     supply: BigNumber;
+    owner: string;
     quantityOwned: BigNumber;
 }, {
     metadata: {
@@ -1835,8 +1836,8 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         id: string | number | bigint | BigNumber;
         uri: string;
     };
-    owner: string;
     supply: string | number | bigint | BigNumber;
+    owner: string;
     quantityOwned: string | number | bigint | BigNumber;
 }>;
 
@@ -1922,7 +1923,7 @@ export class Erc20SignatureMinting {
 }
 
 // @public
-export class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721> implements UpdateableNetwork {
+export class Erc721<T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadata)> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
     balanceOf(address: string): Promise<BigNumber>;
@@ -1931,23 +1932,22 @@ export class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721> implement
     get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
     // (undocumented)
     getAddress(): string;
-    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
-    getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
-    getOwnedTokenIds(_address?: string): Promise<BigNumber[]>;
     // @internal (undocumented)
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
-    getTotalCount(): Promise<BigNumber>;
     isApproved(address: string, operator: string): Promise<boolean>;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
     protected options: SDKOptions;
     ownerOf(tokenId: BigNumberish): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "Erc721Enumerable" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    query: Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721> | undefined;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
     // (undocumented)
     protected storage: IStorage;
-    totalSupply(): Promise<BigNumber>;
     transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;
 }
 

@@ -141,7 +141,38 @@ describe("Publishing", async () => {
     console.log("deployed", deployedAddr);
   });
 
-  it("JoaquimAzuky real ipfs test", async () => {
+  it("JoaquimAzuky enumerable", async () => {
+    const realSDK = new ThirdwebSDK(
+      adminWallet,
+      {},
+      new IpfsStorage("https://ipfs.thirdweb.com/ipfs/"),
+    );
+    const ipfsUri = "ipfs://QmchmFMDhn1prDnt4ywhiyzurKbpXhad4w3c2EKu21Fai7/0";
+    const tx = await realSDK.publisher.publish(ipfsUri);
+    const contract = await tx.data();
+    console.log("deployed", await contract);
+    const deployedAddr = await realSDK.publisher.deployCustomContract(
+      adminWallet.address,
+      contract.id,
+      ["foo", "bar"],
+    );
+    console.log("deployed", deployedAddr);
+    const c = await realSDK.getCustomContract(deployedAddr);
+    invariant(c.minter, "no minter detected");
+    const tx2 = await c.minter.mint({
+      name: "cool nft",
+    });
+    console.log("minted", tx2.id);
+    invariant(c.nft, "no nft detected");
+    const nft = await c.nft.get(tx2.id);
+    console.log(nft);
+    expect(nft.metadata.name).to.eq("cool nft");
+    invariant(c.nft.query, "no nft detected");
+    const all = await c.nft.query.getAll();
+    expect(all.length).to.eq(1);
+  });
+
+  it("JoaquimAzuky not enumerable", async () => {
     const realSDK = new ThirdwebSDK(
       adminWallet,
       {},

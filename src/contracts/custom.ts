@@ -16,6 +16,9 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   AccessControlEnumerable,
   AccessControlEnumerable__factory,
+  ERC721,
+  ERC721Metadata,
+  ERC721Metadata__factory,
   IMintableERC721,
   IMintableERC721__factory,
   IThirdwebContract,
@@ -27,8 +30,6 @@ import {
   IThirdwebRoyalty__factory,
   ITokenERC20,
   ITokenERC20__factory,
-  ITokenERC721,
-  ITokenERC721__factory,
   ThirdwebContract,
   ThirdwebContract__factory,
 } from "@thirdweb-dev/contracts";
@@ -74,8 +75,8 @@ export class CustomContract<
   public sales;
   public platformFees;
   public token: Erc20<ITokenERC20> | undefined;
-  public nft: Erc721<ITokenERC721> | undefined;
-  public minter: Erc721Mintable<TContract & IMintableERC721> | undefined;
+  public nft: Erc721<ERC721 & ERC721Metadata> | undefined;
+  public minter: Erc721Mintable<IMintableERC721> | undefined;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -209,9 +210,9 @@ export class CustomContract<
   private detectErc721() {
     // TODO this should work for drop contracts too
     if (
-      implementsInterface<ITokenERC721>(
+      implementsInterface<ERC721 & ERC721Metadata>(
         this.contractWrapper,
-        ITokenERC721__factory.createInterface(),
+        ERC721Metadata__factory.createInterface(), // TODO should probably be more generic here to support multi interfaces
       )
     ) {
       return new Erc721(this.contractWrapper, this.storage, this.options);

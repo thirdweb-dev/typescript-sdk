@@ -9,7 +9,7 @@ Standard ERC721 functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721> implements UpdateableNetwork 
+export declare class Erc721<T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadata)> implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
 
@@ -25,6 +25,7 @@ export declare class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721> i
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc721.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
 |  [options](./sdk.erc721.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
+|  [query](./sdk.erc721.query.md) |  | Erc721Enumerable&lt;ERC721Metadata &amp; ERC721Enumerable &amp; ERC721&gt; \| undefined |  |
 |  [storage](./sdk.erc721.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
 ## Methods
@@ -35,12 +36,7 @@ export declare class Erc721<T extends DropERC721 | TokenERC721 | ITokenERC721> i
 |  [balanceOf(address)](./sdk.erc721.balanceof.md) |  | Get NFT Balance |
 |  [get(tokenId)](./sdk.erc721.get.md) |  | Get a single NFT Metadata |
 |  [getAddress()](./sdk.erc721.getaddress.md) |  |  |
-|  [getAll(queryParams)](./sdk.erc721.getall.md) |  | Get All NFTs |
-|  [getOwned(\_address)](./sdk.erc721.getowned.md) |  | Get Owned NFTs |
-|  [getOwnedTokenIds(\_address)](./sdk.erc721.getownedtokenids.md) |  | Get all token ids of NFTs owned by a specific wallet. |
-|  [getTotalCount()](./sdk.erc721.gettotalcount.md) |  | Get the number of NFTs minted |
 |  [isApproved(address, operator)](./sdk.erc721.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
 |  [ownerOf(tokenId)](./sdk.erc721.ownerof.md) |  | Get the current owner of a given NFT within this Contract |
-|  [totalSupply()](./sdk.erc721.totalsupply.md) |  | Get the total supply for this Contract. |
 |  [transfer(to, tokenId)](./sdk.erc721.transfer.md) |  | Transfer a single NFT |
 
