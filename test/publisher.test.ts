@@ -168,7 +168,7 @@ describe("Publishing", async () => {
     console.log(nft);
     expect(nft.metadata.name).to.eq("cool nft");
     invariant(c.nft.query, "no nft detected");
-    const all = await c.nft.query.getAll();
+    const all = await c.nft.query.all();
     expect(all.length).to.eq(1);
   });
 

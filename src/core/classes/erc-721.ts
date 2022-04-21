@@ -36,7 +36,7 @@ export class Erc721<
   public query:
     | Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721>
     | undefined;
-  public minter: Erc721Mintable<IMintableERC721> | undefined;
+  public mint: Erc721Mintable<IMintableERC721> | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -55,7 +55,7 @@ export class Erc721<
       this.options = SDKOptionsSchema.parse({});
     }
     this.query = this.detectErc721Enumerable();
-    this.minter = this.detectErc721Mintable();
+    this.mint = this.detectErc721Mintable();
   }
 
   /**
@@ -222,14 +222,14 @@ export class Erc721<
     return undefined;
   }
 
-  private detectErc721Mintable() {
+  private detectErc721Mintable(): Erc721Mintable<IMintableERC721> | undefined {
     if (
       implementsInterface<IMintableERC721>(
         this.contractWrapper,
         IMintableERC721__factory.createInterface(),
       )
     ) {
-      return new Erc721Mintable(this.contractWrapper, this.storage);
+      return new Erc721Mintable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }

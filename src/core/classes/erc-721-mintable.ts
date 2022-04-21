@@ -1,16 +1,27 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { IMintableERC721 } from "@thirdweb-dev/contracts";
-import { NFTMetadataOrUri } from "../../schema";
+import {
+  ERC721,
+  ERC721Metadata,
+  IMintableERC721,
+} from "@thirdweb-dev/contracts";
+import { NFTMetadataOrUri, NFTMetadataOwner } from "../../schema";
 import { TransactionResultWithId } from "../types";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../../common/nft";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { IStorage } from "../interfaces";
+import { Erc721 } from "./erc-721";
 
 export class Erc721Mintable<TContract extends IMintableERC721> {
   private contractWrapper: ContractWrapper<TContract>;
   private storage: IStorage;
+  private erc721: Erc721<ERC721Metadata & ERC721>;
 
-  constructor(contractWrapper: ContractWrapper<TContract>, storage: IStorage) {
+  constructor(
+    erc721: Erc721<ERC721Metadata & ERC721>,
+    contractWrapper: ContractWrapper<TContract>,
+    storage: IStorage,
+  ) {
+    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
   }
@@ -20,10 +31,13 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
    *
    * @remarks See {@link NFTCollection.mintTo}
    */
-  public async mint(
+  public async toSelf(
     metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId> {
-    return this.mintTo(await this.contractWrapper.getSignerAddress(), metadata);
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
+    return this.toAddress(
+      await this.contractWrapper.getSignerAddress(),
+      metadata,
+    );
   }
 
   /**
@@ -49,10 +63,10 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  public async mintTo(
+  public async toAddress(
     to: string,
     metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId> {
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
     const uri = await uploadOrExtractURI(metadata, this.storage);
     const receipt = await this.contractWrapper.sendTransaction("mintTo", [
       to,
@@ -69,6 +83,7 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
     return {
       id,
       receipt,
+      data: () => this.erc721.get(id),
     };
   }
 
@@ -77,10 +92,10 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
    *
    * @remarks See {@link NFTCollection.mintBatchTo}
    */
-  public async mintBatch(
+  public async batchToSelf(
     metadatas: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId[]> {
-    return this.mintBatchTo(
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+    return this.batchToAddress(
       await this.contractWrapper.getSignerAddress(),
       metadatas,
     );
@@ -113,10 +128,10 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  public async mintBatchTo(
+  public async batchToAddress(
     to: string,
     metadatas: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId[]> {
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     const uris = await uploadOrExtractURIs(metadatas, this.storage);
     const encoded = uris.map((uri) =>
       this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [
@@ -137,6 +152,7 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
       return {
         id,
         receipt,
+        data: () => this.erc721.get(id),
       };
     });
   }

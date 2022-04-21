@@ -193,19 +193,15 @@ export class NFTDrop extends Erc721<DropERC721> {
   /**
    * {@inheritDoc Erc721Enumerable.getAll}
    */
-  getAll = this._query.getAll.bind(this._query);
+  getAll = this._query.all.bind(this._query);
   /**
    * {@inheritDoc Erc721Enumerable.getOwned}
    */
-  getOwned = this._query.getOwned.bind(this._query);
+  getOwned = this._query.owned.bind(this._query);
   /**
    * {@inheritDoc Erc721Enumerable.getOwnedTokenIds}
    */
-  getOwnedTokenIds = this._query.getOwnedTokenIds.bind(this._query);
-  /**
-   * {@inheritDoc Erc721Enumerable.getTotalCount}
-   */
-  getTotalCount = this._query.getTotalCount.bind(this._query);
+  getOwnedTokenIds = this._query.ownedTokenIds.bind(this._query);
   /**
    * {@inheritDoc Erc721Enumerable.totalSupply}
    */
