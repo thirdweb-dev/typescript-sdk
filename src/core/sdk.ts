@@ -1,4 +1,4 @@
-import { Contract, ContractInterface, ethers } from "ethers";
+import { ContractInterface, ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
   Edition,
@@ -22,17 +22,12 @@ import type {
   NetworkOrSignerOrProvider,
   ValidContractInstance,
 } from "./types";
-import {
-  IThirdwebContract__factory,
-  ThirdwebContract,
-  ThirdwebContract__factory,
-} from "@thirdweb-dev/contracts";
+import { IThirdwebContract__factory } from "@thirdweb-dev/contracts";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { CustomContract } from "../contracts/custom";
 import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
-import { fetchContractMetadata } from "../common";
 import { ContractMetadata } from "./classes";
 
 /**
@@ -295,27 +290,25 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * @internal
    */
-  public async getCustomContract(address: string, abi?: ContractInterface) {
-    let contractABI = abi;
-    // if no abi passed, fetch it from the ThirdwebContract
-    if (!contractABI) {
-      try {
-        const contract = new Contract(
-          address,
-          ThirdwebContract__factory.abi,
-          this.getSignerOrProvider(),
-        ) as ThirdwebContract;
-        const metadataUri = await contract.getPublishMetadataUri();
-        const metadata = await fetchContractMetadata(metadataUri, this.storage);
-        contractABI = metadata.abi;
-      } catch (e) {
-        throw new Error(`Error fetching ABI for this contract\n\n${e}`);
-      }
+  public async getCustomContract(address: string) {
+    try {
+      const metadata = await this.publisher.fetchContractMetadataFromAddress(
+        address,
+      );
+      return this.getCustomContractFromAbi(address, metadata.abi);
+    } catch (e) {
+      throw new Error(`Error fetching ABI for this contract\n\n${e}`);
     }
+  }
+
+  /**
+   * @internal
+   */
+  public getCustomContractFromAbi(address: string, abi: ContractInterface) {
     return new CustomContract(
       this.getSignerOrProvider(),
       address,
-      contractABI,
+      abi,
       this.storage,
       this.options,
     );

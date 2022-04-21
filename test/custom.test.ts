@@ -60,7 +60,7 @@ describe("Custom Contracts", async () => {
       platform_fee_recipient: adminWallet.address,
     });
     await sdk.getToken(tokenContractAddress).mint(100);
-    await sdk.getNFTCollection(nftContractAddress).mint({
+    await sdk.getNFTCollection(nftContractAddress).mintToSelf({
       name: "Custom NFT",
     });
   });
@@ -97,7 +97,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: roles", async () => {
-    const c = await sdk.getCustomContract(
+    const c = await sdk.getCustomContractFromAbi(
       nftContractAddress,
       TokenERC721__factory.abi,
     );
@@ -116,7 +116,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: royalties", async () => {
-    const c = await sdk.getCustomContract(
+    const c = await sdk.getCustomContractFromAbi(
       nftContractAddress,
       TokenERC721__factory.abi,
     );
@@ -135,7 +135,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: primary sales", async () => {
-    const c = await sdk.getCustomContract(
+    const c = await sdk.getCustomContractFromAbi(
       nftContractAddress,
       TokenERC721__factory.abi,
     );
@@ -149,7 +149,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: primary sales", async () => {
-    const c = await sdk.getCustomContract(
+    const c = await sdk.getCustomContractFromAbi(
       nftContractAddress,
       TokenERC721__factory.abi,
     );
@@ -168,14 +168,14 @@ describe("Custom Contracts", async () => {
   });
 
   it("should not detect feature if missing from ABI", async () => {
-    const c = await sdk.getCustomContract("", VoteERC20__factory.abi);
+    const c = await sdk.getCustomContractFromAbi("", VoteERC20__factory.abi);
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Metadata undefined");
     expect(c.roles).to.eq(undefined);
   });
 
   it("should detect feature: erc20", async () => {
-    const c = await sdk.getCustomContract(
+    const c = await sdk.getCustomContractFromAbi(
       tokenContractAddress,
       TokenERC20__factory.abi,
     );
@@ -194,7 +194,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: erc721", async () => {
-    const c = await sdk.getCustomContract(
+    const c = await sdk.getCustomContractFromAbi(
       nftContractAddress,
       TokenERC721__factory.abi,
     );

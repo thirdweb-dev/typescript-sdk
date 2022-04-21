@@ -50,6 +50,7 @@ import { Signer as Signer_2 } from 'ethers';
 import { Split as Split_2 } from '@thirdweb-dev/contracts';
 import { Split__factory } from '@thirdweb-dev/contracts';
 import { ThirdwebContract } from '@thirdweb-dev/contracts';
+import { ThirdwebContract as ThirdwebContract_2 } from '@thirdweb-dev/contracts/dist/ThirdwebContract';
 import { ThirdwebContract__factory } from '@thirdweb-dev/contracts';
 import { TokenERC1155 } from '@thirdweb-dev/contracts';
 import { TokenERC1155__factory } from '@thirdweb-dev/contracts';
@@ -4345,7 +4346,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         metadata: () => Promise<any>;
     }[]>;
     // @internal (undocumented)
-    getCustomContract(address: string, abi?: ContractInterface): Promise<CustomContract<ThirdwebContract>>;
+    getCustomContract(address: string): Promise<CustomContract<ThirdwebContract_2>>;
+    // @internal (undocumented)
+    getCustomContractFromAbi(address: string, abi: ContractInterface): CustomContract<ThirdwebContract_2>;
     getEdition(address: string): Edition;
     getEditionDrop(address: string): EditionDrop;
     getMarketplace(address: string): Marketplace;

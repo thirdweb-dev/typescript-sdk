@@ -1,16 +1,8 @@
 import { sdk, signers, storage } from "./before.test";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import {
-  extractFunctions,
-  extractFunctionsFromAbi,
-  IpfsStorage,
-  ThirdwebSDK,
-} from "../src";
-import { AddressZero } from "@ethersproject/constants";
+import { IpfsStorage, ThirdwebSDK } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { isBooleanObject } from "util/types";
-import exp = require("constants");
 import invariant from "tiny-invariant";
 
 global.fetch = require("node-fetch");
@@ -141,7 +133,7 @@ describe("Publishing", async () => {
     console.log("deployed", deployedAddr);
   });
 
-  it("JoaquimAzuky enumerable", async () => {
+  it("JoaquimAzuky3 enumerable", async () => {
     const realSDK = new ThirdwebSDK(
       adminWallet,
       {},
@@ -158,8 +150,9 @@ describe("Publishing", async () => {
     );
     console.log("deployed", deployedAddr);
     const c = await realSDK.getCustomContract(deployedAddr);
-    invariant(c.minter, "no minter detected");
-    const tx2 = await c.minter.mint({
+    invariant(c.nft, "no nft detected");
+    invariant(c.nft.mint, "no minter detected");
+    const tx2 = await c.nft.mint.toSelf({
       name: "cool nft",
     });
     console.log("minted", tx2.id);
@@ -172,7 +165,7 @@ describe("Publishing", async () => {
     expect(all.length).to.eq(1);
   });
 
-  it("JoaquimAzuky not enumerable", async () => {
+  it("JoaquimAzuky2 not enumerable", async () => {
     const realSDK = new ThirdwebSDK(
       adminWallet,
       {},
@@ -189,8 +182,9 @@ describe("Publishing", async () => {
     );
     console.log("deployed", deployedAddr);
     const c = await realSDK.getCustomContract(deployedAddr);
-    invariant(c.minter, "no minter detected");
-    const tx2 = await c.minter.mint({
+    invariant(c.nft, "no nft detected");
+    invariant(c.nft.mint, "no minter detected");
+    const tx2 = await c.nft.mint.toSelf({
       name: "cool nft",
     });
     console.log("minted", tx2.id);

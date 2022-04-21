@@ -2,7 +2,13 @@ import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { BigNumber, BytesLike, ContractInterface, ethers } from "ethers";
+import {
+  BigNumber,
+  BytesLike,
+  Contract,
+  ContractInterface,
+  ethers,
+} from "ethers";
 import invariant from "tiny-invariant";
 import {
   extractConstructorParams,
@@ -25,6 +31,8 @@ import {
   ByocRegistry,
   ByocRegistry__factory,
   IByocRegistry,
+  ThirdwebContract as TWContract,
+  ThirdwebContract__factory,
 } from "@thirdweb-dev/contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { ContractPublishedEvent } from "@thirdweb-dev/contracts/dist/ByocRegistry";
@@ -96,6 +104,20 @@ export class ContractPublisher extends RPCConnectionHandler {
    */
   public async fetchFullContractMetadata(metadataUri: string) {
     return fetchContractMetadata(metadataUri, this.storage);
+  }
+
+  /**
+   * @internal
+   * @param address
+   */
+  public async fetchContractMetadataFromAddress(address: string) {
+    const contract = new Contract(
+      address,
+      ThirdwebContract__factory.abi,
+      this.getSignerOrProvider(),
+    ) as TWContract;
+    const metadataUri = await contract.getPublishMetadataUri();
+    return await this.fetchFullContractMetadata(metadataUri);
   }
 
   /**
