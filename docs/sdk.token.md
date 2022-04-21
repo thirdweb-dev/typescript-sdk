@@ -11,7 +11,7 @@ Create a standard crypto token or cryptocurrency.
 ```typescript
 export declare class Token extends Erc20<TokenERC20> 
 ```
-<b>Extends:</b> [Erc20](./sdk.erc20.md)<!-- -->&lt;TokenERC20
+<b>Extends:</b> [Erc20](./sdk.erc20.md)<!-- -->&lt;TokenERC20&gt;
 
 ## Example
 

@@ -16,7 +16,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { getRoleHash } from "../../common/role";
 import { NotFoundError } from "../../common";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
-
+import { AirdropInput } from "../../types/airdrop/airdrop";
 /**
  * Standard ERC1155 functions
  * @public
@@ -311,6 +311,44 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
         operator,
         approved,
       ]),
+    };
+  }
+
+  /** ******************************
+   * WRITE FUNCTIONS
+   *******************************/
+
+  /**
+   * Airdrop multiple NFT
+   *
+   * @remarks Airdrop one or multiple NFTs to the provided wallet addresses.
+   *
+   * @example
+   * ```javascript
+   * // todo
+   * ```
+   */
+  public async airdrop(
+    tokenId: BigNumberish,
+    addresses: AirdropInput[],
+    data: BytesLike = [0],
+  ): Promise<TransactionResult> {
+    const from = await this.contractWrapper.getSignerAddress();
+
+    const encoded = [];
+    for (let i = 0; i < addresses.length; i++) {
+      const to = addresses[i].address;
+      const amount = addresses[i]?.quantity || 1;
+      encoded.push(
+        this.contractWrapper.readContract.interface.encodeFunctionData(
+          "safeTransferFrom",
+          [from, to, tokenId, amount, data],
+        ),
+      );
+    }
+
+    return {
+      receipt: await this.contractWrapper.multiCall(encoded),
     };
   }
 

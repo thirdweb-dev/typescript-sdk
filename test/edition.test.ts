@@ -146,6 +146,34 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     expect(bobsNftsAfterTransfer[0].quantityOwned.toNumber()).to.be.equal(20);
   });
 
+  it("should airdrop 5 edition tokens to different wallets", async () => {
+    await bundleContract.mint({
+      metadata: {
+        name: "Bundle 1",
+        description: "Bundle 1",
+        image: "fake://myownfakeipfs",
+      },
+      supply: 8,
+    });
+    const addresses = [
+      {
+        address: samWallet.address,
+        quantity: 5,
+      },
+      {
+        address: bobWallet.address,
+        quantity: 3,
+      },
+    ];
+
+    await bundleContract.airdrop(0, addresses);
+
+    const samOwned = await bundleContract.getOwned(samWallet.address);
+    const bobOwned = await bundleContract.getOwned(bobWallet.address);
+    expect(samOwned[0].quantityOwned.toNumber()).to.be.equal(5);
+    expect(bobOwned[0].quantityOwned.toNumber()).to.be.equal(3);
+  });
+
   // TODO: This test should move to the royalty suite
   it("updates the bps in both the metadata and on-chain", async () => {
     const currentBps = (await bundleContract.royalty.getDefaultRoyaltyInfo())
