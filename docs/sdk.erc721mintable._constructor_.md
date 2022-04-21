@@ -9,13 +9,14 @@ Constructs a new instance of the `Erc721Mintable` class
 <b>Signature:</b>
 
 ```typescript
-constructor(contractWrapper: ContractWrapper<TContract>, storage: IStorage);
+constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<TContract>, storage: IStorage);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
+|  erc721 | [Erc721](./sdk.erc721.md)<!-- -->&lt;ERC721Metadata &amp; ERC721&gt; |  |
 |  contractWrapper | ContractWrapper&lt;TContract&gt; |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
 

@@ -4,17 +4,9 @@
 
 ## NFTCollection.getAll property
 
-Get All NFTs
 
 <b>Signature:</b>
 
 ```typescript
-getAll: (queryParams?: import("..").QueryAllParams | undefined) => Promise<NFTMetadataOwner[]>;
+getAll: (queryParams?: import("..").QueryAllParams | undefined) => Promise<import("..").NFTMetadataOwner[]>;
 ```
-
-## Remarks
-
-Get all the data associated with every NFT in this contract.
-
-By default, returns the first 100 NFTs, use queryParams to fetch more.
-

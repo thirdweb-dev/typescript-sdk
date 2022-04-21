@@ -24,7 +24,7 @@ export declare class Erc721<T extends DropERC721 | TokenERC721 | (ERC721 & ERC72
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc721.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
-|  [minter](./sdk.erc721.minter.md) |  | [Erc721Mintable](./sdk.erc721mintable.md)<!-- -->&lt;IMintableERC721&gt; \| undefined |  |
+|  [mint](./sdk.erc721.mint.md) |  | [Erc721Mintable](./sdk.erc721mintable.md)<!-- -->&lt;IMintableERC721&gt; \| undefined |  |
 |  [options](./sdk.erc721.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [query](./sdk.erc721.query.md) |  | [Erc721Enumerable](./sdk.erc721enumerable.md)<!-- -->&lt;ERC721Metadata &amp; ERC721Enumerable &amp; ERC721&gt; \| undefined |  |
 |  [storage](./sdk.erc721.storage.md) |  | [IStorage](./sdk.istorage.md) |  |

@@ -4,7 +4,7 @@
 
 ## Erc721Enumerable.totalSupply() method
 
-Get the total supply for this Contract.
+Get the number of NFTs minted
 
 <b>Signature:</b>
 
@@ -15,5 +15,5 @@ totalSupply(): Promise<BigNumber>;
 
 Promise&lt;BigNumber&gt;
 
-the total supply
+the total number of NFTs minted in this contract
 

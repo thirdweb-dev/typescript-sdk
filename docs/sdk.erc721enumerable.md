@@ -20,9 +20,8 @@ export declare class Erc721Enumerable<TContract extends ERC721Enumerable & ERC72
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [getAll(queryParams)](./sdk.erc721enumerable.getall.md) |  | Get All NFTs |
-|  [getOwned(\_address)](./sdk.erc721enumerable.getowned.md) |  | Get Owned NFTs |
-|  [getOwnedTokenIds(\_address)](./sdk.erc721enumerable.getownedtokenids.md) |  | Get all token ids of NFTs owned by a specific wallet. |
-|  [getTotalCount()](./sdk.erc721enumerable.gettotalcount.md) |  | Get the number of NFTs minted |
-|  [totalSupply()](./sdk.erc721enumerable.totalsupply.md) |  | Get the total supply for this Contract. |
+|  [all(queryParams)](./sdk.erc721enumerable.all.md) |  | Get All NFTs |
+|  [owned(\_address)](./sdk.erc721enumerable.owned.md) |  | Get Owned NFTs |
+|  [ownedTokenIds(\_address)](./sdk.erc721enumerable.ownedtokenids.md) |  | Get all token ids of NFTs owned by a specific wallet. |
+|  [totalSupply()](./sdk.erc721enumerable.totalsupply.md) |  | Get the number of NFTs minted |
 

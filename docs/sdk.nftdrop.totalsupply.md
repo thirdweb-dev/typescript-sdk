@@ -4,7 +4,7 @@
 
 ## NFTDrop.totalSupply property
 
-Get the total supply for this Contract.
+Get the number of NFTs minted
 
 <b>Signature:</b>
 

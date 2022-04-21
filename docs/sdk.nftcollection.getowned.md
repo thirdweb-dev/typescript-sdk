@@ -4,15 +4,9 @@
 
 ## NFTCollection.getOwned property
 
-Get Owned NFTs
 
 <b>Signature:</b>
 
 ```typescript
-getOwned: (_address?: string | undefined) => Promise<NFTMetadataOwner[]>;
+getOwned: (_address?: string | undefined) => Promise<import("..").NFTMetadataOwner[]>;
 ```
-
-## Remarks
-
-Get all the data associated with the NFTs owned by a specific wallet.
-

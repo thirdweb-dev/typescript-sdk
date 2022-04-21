@@ -859,9 +859,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -873,9 +873,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -900,9 +900,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -910,9 +910,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -931,9 +931,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -941,9 +941,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -982,9 +982,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -996,9 +996,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1023,9 +1023,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1033,9 +1033,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1054,9 +1054,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1064,9 +1064,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1095,9 +1095,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1109,9 +1109,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1136,9 +1136,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1146,9 +1146,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1167,9 +1167,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1177,9 +1177,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1477,9 +1477,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1516,9 +1516,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1547,9 +1547,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         fee_recipient: string;
         }, {
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -1932,7 +1932,7 @@ export class Erc721<T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadat
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
-    minter: Erc721Mintable<IMintableERC721> | undefined;
+    mint: Erc721Mintable<IMintableERC721> | undefined;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -1950,21 +1950,20 @@ export class Erc721<T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadat
 // @public (undocumented)
 export class Erc721Enumerable<TContract extends ERC721Enumerable & ERC721Metadata & ERC721> {
     constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<TContract>);
-    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
-    getOwned(_address?: string): Promise<NFTMetadataOwner[]>;
-    getOwnedTokenIds(_address?: string): Promise<BigNumber[]>;
-    getTotalCount(): Promise<BigNumber>;
+    all(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    owned(_address?: string): Promise<NFTMetadataOwner[]>;
+    ownedTokenIds(_address?: string): Promise<BigNumber[]>;
     totalSupply(): Promise<BigNumber>;
 }
 
 // @public (undocumented)
 export class Erc721Mintable<TContract extends IMintableERC721> {
-    constructor(contractWrapper: ContractWrapper<TContract>, storage: IStorage);
+    constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<TContract>, storage: IStorage);
+    batchToAddress(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    batchToSelf(metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    toAddress(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
-    mint(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId>;
-    mintBatch(metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId[]>;
-    mintBatchTo(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId[]>;
-    mintTo(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId>;
+    toSelf(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 }
 
 // @public
@@ -2541,19 +2540,67 @@ export class NFTCollection extends Erc721<TokenERC721> {
     estimator: GasCostEstimator<TokenERC721>;
     // (undocumented)
     events: ContractEvents<TokenERC721>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "getAll"
+    //
+    // (undocumented)
     getAll: (queryParams?: QueryAllParams | undefined) => Promise<NFTMetadataOwner[]>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "getOwned"
+    //
+    // (undocumented)
     getOwned: (_address?: string | undefined) => Promise<NFTMetadataOwner[]>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "getOwnedTokenIds"
+    //
+    // (undocumented)
     getOwnedTokenIds: (_address?: string | undefined) => Promise<BigNumber[]>;
-    getTotalCount: () => Promise<BigNumber>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<TokenERC721>;
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
-    mint(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
-    mintBatch(metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    mintBatchTo(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    mintTo(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
+    mintBatch: (metadatas: (string | {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+        name: string;
+    })[]) => Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    mintBatchTo: (to: string, metadatas: (string | {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+        name: string;
+    })[]) => Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    mintTo: (to: string, metadata: string | {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+        name: string;
+    }) => Promise<TransactionResultWithId<NFTMetadataOwner>>;
+    mintToSelf: (metadata: string | {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+        name: string;
+    }) => Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     platformFee: ContractPlatformFee<TokenERC721>;
     // (undocumented)
@@ -2703,12 +2750,20 @@ export class NFTDrop extends Erc721<DropERC721> {
     estimator: GasCostEstimator<DropERC721>;
     // (undocumented)
     events: ContractEvents<DropERC721>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "getAll"
+    //
+    // (undocumented)
     getAll: (queryParams?: QueryAllParams | undefined) => Promise<NFTMetadataOwner[]>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "getOwned"
+    //
+    // (undocumented)
     getOwned: (_address?: string | undefined) => Promise<NFTMetadataOwner[]>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "getOwnedTokenIds"
+    //
+    // (undocumented)
     getOwnedTokenIds: (_address?: string | undefined) => Promise<BigNumber[]>;
-    getTotalCount: () => Promise<BigNumber>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<DropERC721>;
     isTransferRestricted(): Promise<boolean>;
@@ -2758,9 +2813,9 @@ export class NFTDrop extends Erc721<DropERC721> {
         trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -2797,9 +2852,9 @@ export class NFTDrop extends Erc721<DropERC721> {
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -2828,9 +2883,9 @@ export class NFTDrop extends Erc721<DropERC721> {
         fee_recipient: string;
         }, {
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -3581,9 +3636,9 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     tokenId: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
     quantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
 }>, "strip", z.ZodTypeAny, {
-    uri: string;
     currencyAddress: string;
     price: string;
+    uri: string;
     to: string;
     mintStartTime: ethers.BigNumber;
     mintEndTime: ethers.BigNumber;
@@ -3839,9 +3894,9 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
     mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
 }>, "strip", z.ZodTypeAny, {
-    uri: string;
     currencyAddress: string;
     price: string;
+    uri: string;
     to: string;
     mintStartTime: ethers.BigNumber;
     mintEndTime: ethers.BigNumber;
@@ -4517,9 +4572,9 @@ export class TokenDrop extends Erc20<DropERC20> {
         trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -4556,9 +4611,9 @@ export class TokenDrop extends Erc20<DropERC20> {
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
@@ -4587,9 +4642,9 @@ export class TokenDrop extends Erc20<DropERC20> {
         fee_recipient: string;
         }, {
         symbol?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         description?: string | undefined;
         image?: any;
-        merkle?: Record<string, string> | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;

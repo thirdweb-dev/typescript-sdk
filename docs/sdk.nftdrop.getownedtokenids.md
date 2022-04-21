@@ -4,7 +4,6 @@
 
 ## NFTDrop.getOwnedTokenIds property
 
-Get all token ids of NFTs owned by a specific wallet.
 
 <b>Signature:</b>
 
