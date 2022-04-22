@@ -59,10 +59,6 @@ describe("Custom Contracts", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: adminWallet.address,
     });
-    await sdk.getToken(tokenContractAddress).mint(100);
-    await sdk.getNFTCollection(nftContractAddress).mintToSelf({
-      name: "Custom NFT",
-    });
   });
 
   it("should call raw ABI functions", async () => {
@@ -184,6 +180,10 @@ describe("Custom Contracts", async () => {
     const token = await c.token.get();
     expect(token.name).to.eq("Token");
     expect(token.decimals).to.eq(18);
+    await c.functions.mintTo(
+      adminWallet.address,
+      ethers.utils.parseEther("100"),
+    );
     const balance = await c.token.balance();
     expect(balance.displayValue).to.eq("100.0");
     await c.token.transfer(samWallet.address, 25);
@@ -201,15 +201,13 @@ describe("Custom Contracts", async () => {
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
     invariant(c.nft.query, "ERC721 query undefined");
+    invariant(c.nft.mint, "ERC721 minter undefined");
+    await c.nft.mint.toSelf({
+      name: "Custom NFT",
+    });
     const nfts = await c.nft.query.all();
     console.log((await c.nft.query.totalSupply()).toNumber());
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
-    invariant(c.nft.mint, "ERC721 minter undefined");
-    await c.nft.mint.toSelf({
-      name: "Some NFT",
-    });
-    const nfts2 = await c.nft.query.all();
-    expect(nfts2.length).to.eq(2);
   });
 });
