@@ -2366,7 +2366,7 @@ export interface NewAuctionListing {
     listingDurationInSeconds: BigNumberish;
     quantity: BigNumberish;
     reservePricePerToken: Price;
-    startTimeInSeconds: BigNumberish;
+    startTimestamp: Date;
     tokenId: BigNumberish;
     // (undocumented)
     type?: "NewAuctionListing";
@@ -2379,7 +2379,7 @@ export interface NewDirectListing {
     currencyContractAddress: string;
     listingDurationInSeconds: BigNumberish;
     quantity: BigNumberish;
-    startTimeInSeconds: BigNumberish;
+    startTimestamp: Date;
     tokenId: BigNumberish;
     // (undocumented)
     type?: "NewDirectListing";

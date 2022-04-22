@@ -20,7 +20,7 @@ export interface NewDirectListing {
   /**
    * The start time of the listing.
    */
-  startTimeInSeconds: BigNumberish;
+  startTimestamp: Date;
 
   /**
    * The duration of the listing in seconds.

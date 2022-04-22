@@ -136,7 +136,7 @@ describe("Marketplace Contract", async () => {
         assetContractAddress: contractAddress,
         buyoutPricePerToken: 0.1,
         currencyContractAddress: tokenAddress,
-        startTimeInSeconds: block.timestamp,
+        startTimestamp: new Date(block.timestamp * 1000),
         listingDurationInSeconds: 60 * 60 * 24,
         tokenId,
         quantity,
@@ -148,14 +148,14 @@ describe("Marketplace Contract", async () => {
     contractAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish = 1,
-    startTime: number = Math.floor(Date.now() / 1000),
+    startTime: Date = new Date(),
   ): Promise<BigNumber> => {
     return (
       await marketplaceContract.auction.createListing({
         assetContractAddress: contractAddress,
         buyoutPricePerToken: 0.1,
         currencyContractAddress: tokenAddress,
-        startTimeInSeconds: startTime,
+        startTimestamp: startTime,
         listingDurationInSeconds: 60 * 60 * 24,
         tokenId,
         quantity,
@@ -179,7 +179,7 @@ describe("Marketplace Contract", async () => {
         assetContractAddress: dummyNftContract.getAddress(),
         buyoutPricePerToken: 1,
         currencyContractAddress: NATIVE_TOKEN_ADDRESS,
-        startTimeInSeconds: 0,
+        startTimestamp: new Date(),
         listingDurationInSeconds: 60 * 60 * 24,
         tokenId: 0,
         quantity: 1,
@@ -718,7 +718,7 @@ describe("Marketplace Contract", async () => {
           buyoutPricePerToken: 0.8,
           currencyContractAddress: tokenAddress,
           // to start tomorrow so we can update it
-          startTimeInSeconds: Math.floor(Date.now() / 1000),
+          startTimestamp: new Date(),
           listingDurationInSeconds: 60 * 60 * 24,
           tokenId: "1",
           quantity: 2,
@@ -759,7 +759,7 @@ describe("Marketplace Contract", async () => {
           buyoutPricePerToken: 0.1,
           currencyContractAddress: tokenAddress,
           // to start tomorrow so we can update it
-          startTimeInSeconds: Math.floor(Date.now() / 1000 + 60 * 60 * 24),
+          startTimestamp: new Date(),
           listingDurationInSeconds: 60 * 60 * 24,
           tokenId: "0",
           quantity: 1,
@@ -816,7 +816,7 @@ describe("Marketplace Contract", async () => {
     // Skipping until decision is made on this:
     // https://github.com/nftlabs/nftlabs-sdk-ts/issues/119#issuecomment-1003199128
     it.skip("should allow the seller to cancel an auction that has started as long as there are no active bids", async () => {
-      const startTime = Math.floor(Date.now() / 1000) - 10000;
+      const startTime = new Date();
       const listingId = await createAuctionListing(
         dummyNftContract.getAddress(),
         2,
@@ -846,7 +846,7 @@ describe("Marketplace Contract", async () => {
           assetContractAddress: dummyNftContract.getAddress(),
           buyoutPricePerToken: 10,
           currencyContractAddress: tokenAddress,
-          startTimeInSeconds: now,
+          startTimestamp: new Date(),
           listingDurationInSeconds: 60 * 60,
           tokenId: "2",
           quantity: "1",
@@ -954,7 +954,7 @@ describe("Marketplace Contract", async () => {
           buyoutPricePerToken: 10,
           currencyContractAddress: tokenAddress,
           // to start tomorrow so we can update it
-          startTimeInSeconds: Math.floor(Date.now() / 1000 + 60 * 60 * 100000),
+          startTimestamp: new Date(Date.now() + 24 * 60 * 60 * 100000),
           listingDurationInSeconds: 60 * 60 * 24,
           tokenId: "0",
           quantity: 1,
