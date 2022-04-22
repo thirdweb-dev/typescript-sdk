@@ -18,6 +18,7 @@
   ],
   "sideEffects": false,
   "scripts": {
+    "clean": "rm -rf dist/",
     "dev": "tsdx watch",
     "build:lib": "tsup --env.NODE_ENV production --minify --format esm,cjs",
     "format": "prettier src/ --write",
@@ -25,15 +26,16 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "generate-types": "tsc",
-    "typechain": "rm -rf ./libs && typechain --target ethers-v5 --out-dir lib './node_modules/@thirdweb-dev/contracts/abi/*.json'",
+    "typechain": "rm -rf ./lib && typechain --target ethers-v5 --out-dir lib './node_modules/@thirdweb-dev/contracts/abi/*.json'",
     "extract-api": "api-extractor run --local",
     "full-build": "yarn typechain && yarn build:lib && yarn generate-types && yarn extract-api",
     "generate-md-docs": "yarn api-documenter markdown -i ./temp -o ./docs",
     "generate-docs": "yarn full-build && yarn generate-md-docs",
     "generate-snippets": "node ./scripts/generate-snippets.mjs",
-    "build": "yarn generate-docs && yarn generate-snippets",
+    "build": "yarn clean && yarn generate-docs && yarn generate-snippets",
     "test": "echo \"\nUse 'yarn run test:all' to run all tests\nPass a test file pattern from ./test to run\n\n\t$ yarn run test test/pack.test.ts\" && ts-mocha -t 120000 -r esm -p tsconfig.testing.json",
-    "test:all": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'"
+    "test:all": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'",
+    "postinstall": "yarn typechain"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.1",

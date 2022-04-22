@@ -611,6 +611,24 @@
     },
     "methods": [
       {
+        "name": "burn",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
+        "examples": {
+          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burn(amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Token.burn"
+      },
+      {
+        "name": "burnFrom",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the specified wallet\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet sending the tokens\nconst holderAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnFrom(holderAddress, amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Token.burnFrom"
+      },
+      {
         "name": "mintBatchTo",
         "summary": "Mint Tokens To Many Wallets\n\n",
         "remarks": "\n\nMint tokens to many wallets in one transaction.\n\n",
@@ -663,24 +681,6 @@
           "javascript": "// Address of the wallet to check token balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await contract.balanceOf(address);\nconsole.log(balance);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.balanceOf"
-      },
-      {
-        "name": "burn",
-        "summary": "Burn Tokens\n\n",
-        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
-        "examples": {
-          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burn(amount);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.burn"
-      },
-      {
-        "name": "burnFrom",
-        "summary": "Burn Tokens\n\n",
-        "remarks": "\n\nBurn tokens held by the specified wallet\n\n",
-        "examples": {
-          "javascript": "// Address of the wallet sending the tokens\nconst holderAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnFrom(holderAddress, amount);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.burnFrom"
       },
       {
         "name": "get",

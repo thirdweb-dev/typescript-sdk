@@ -35,8 +35,6 @@ export declare class Erc20<T extends TokenERC20 | DropERC20 | ITokenERC20> imple
 |  [allowanceOf(owner, spender)](./sdk.erc20.allowanceof.md) |  | Get Token Allowance |
 |  [balance()](./sdk.erc20.balance.md) |  | Get Token Balance for the currently connected wallet |
 |  [balanceOf(address)](./sdk.erc20.balanceof.md) |  | Get Token Balance |
-|  [burn(amount)](./sdk.erc20.burn.md) |  | Burn Tokens |
-|  [burnFrom(holder, amount)](./sdk.erc20.burnfrom.md) |  | Burn Tokens |
 |  [get()](./sdk.erc20.get.md) |  | Get the token Metadata (name, symbol, etc...) |
 |  [getAddress()](./sdk.erc20.getaddress.md) |  |  |
 |  [normalizeAmount(amount)](./sdk.erc20.normalizeamount.md) |  |  |

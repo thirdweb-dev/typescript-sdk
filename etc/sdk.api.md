@@ -6,63 +6,39 @@
 
 /// <reference types="node" />
 
-import { AccessControlEnumerable } from '@thirdweb-dev/contracts';
 import { BaseContract } from 'ethers';
 import { BigNumber } from 'ethers';
 import { BigNumberish } from 'ethers';
 import { BytesLike } from 'ethers';
 import { CallOverrides } from 'ethers';
 import { CallOverrides as CallOverrides_2 } from '@ethersproject/contracts';
+import { ContractFactory } from 'ethers';
 import { ContractInterface } from 'ethers';
-import { DropERC1155 } from '@thirdweb-dev/contracts';
-import { DropERC1155__factory } from '@thirdweb-dev/contracts';
-import { DropERC20 } from '@thirdweb-dev/contracts';
-import { DropERC20__factory } from '@thirdweb-dev/contracts';
-import { DropERC721 } from '@thirdweb-dev/contracts';
-import { DropERC721__factory } from '@thirdweb-dev/contracts';
-import { ERC721 } from '@thirdweb-dev/contracts';
-import { ERC721Enumerable } from '@thirdweb-dev/contracts';
-import { ERC721Metadata } from '@thirdweb-dev/contracts';
+import type { ContractTransaction } from 'ethers';
 import { ethers } from 'ethers';
+import type { Event as Event_2 } from 'ethers';
 import { EventEmitter2 } from 'eventemitter2';
+import type { EventFilter } from 'ethers';
+import type { EventFragment } from '@ethersproject/abi';
 import { extendShape } from 'zod';
-import { IMarketplace } from '@thirdweb-dev/contracts';
-import { IMintableERC721 } from '@thirdweb-dev/contracts';
+import type { FunctionFragment } from '@ethersproject/abi';
 import { Interface } from '@ethersproject/abi';
-import { IThirdwebContract } from '@thirdweb-dev/contracts';
-import { IThirdwebPlatformFee } from '@thirdweb-dev/contracts';
-import { IThirdwebPrimarySale } from '@thirdweb-dev/contracts';
-import { IThirdwebRoyalty } from '@thirdweb-dev/contracts';
-import { ITokenERC20 } from '@thirdweb-dev/contracts';
 import { Listener } from '@ethersproject/providers';
 import { ListenerFn } from 'eventemitter2';
 import { Log } from '@ethersproject/providers';
-import { Marketplace as Marketplace_2 } from '@thirdweb-dev/contracts';
-import { Marketplace__factory } from '@thirdweb-dev/contracts';
 import { Network } from '@ethersproject/providers';
 import { Networkish } from '@ethersproject/providers';
-import { Pack as Pack_2 } from '@thirdweb-dev/contracts';
-import { Pack__factory } from '@thirdweb-dev/contracts';
+import { Overrides } from 'ethers';
+import type { PayableOverrides } from 'ethers';
+import type { PopulatedTransaction } from 'ethers';
 import { Provider } from '@ethersproject/providers';
 import { Result } from '@ethersproject/abi';
-import { Signer } from '@ethersproject/abstract-signer';
-import { Signer as Signer_2 } from 'ethers';
-import { Split as Split_2 } from '@thirdweb-dev/contracts';
-import { Split__factory } from '@thirdweb-dev/contracts';
-import { ThirdwebContract } from '@thirdweb-dev/contracts';
-import { ThirdwebContract as ThirdwebContract_2 } from '@thirdweb-dev/contracts/dist/ThirdwebContract';
-import { ThirdwebContract__factory } from '@thirdweb-dev/contracts';
-import { TokenERC1155 } from '@thirdweb-dev/contracts';
-import { TokenERC1155__factory } from '@thirdweb-dev/contracts';
-import { TokenERC20 } from '@thirdweb-dev/contracts';
-import { TokenERC20__factory } from '@thirdweb-dev/contracts';
-import { TokenERC721 } from '@thirdweb-dev/contracts';
-import { TokenERC721__factory } from '@thirdweb-dev/contracts';
+import { Signer } from 'ethers';
+import { Signer as Signer_2 } from '@ethersproject/abstract-signer';
 import { TransactionReceipt } from '@ethersproject/providers';
 import { TransactionReceipt as TransactionReceipt_2 } from '@ethersproject/abstract-provider';
-import { TWRegistry } from '@thirdweb-dev/contracts';
-import { VoteERC20 } from '@thirdweb-dev/contracts';
-import { VoteERC20__factory } from '@thirdweb-dev/contracts';
+import type { TransactionRequest } from '@ethersproject/providers';
+import type { utils } from 'ethers';
 import { z } from 'zod';
 import { ZodArray } from 'zod';
 import { ZodBigInt } from 'zod';
@@ -92,7 +68,7 @@ export class AdminRoleMissingError extends Error {
 export type AirdropInput = z.input<typeof AirdropInputSchema>;
 
 // @public (undocumented)
-export const ALL_ROLES: ("admin" | "transfer" | "minter" | "pauser" | "editor" | "lister" | "asset")[];
+export const ALL_ROLES: ("transfer" | "lister" | "admin" | "minter" | "pauser" | "editor" | "asset")[];
 
 // Warning: (ae-forgotten-export) The symbol "PriceSchema" needs to be exported by the entry point index.d.ts
 //
@@ -641,6 +617,8 @@ export class ContractInterceptor<TContract extends BaseContract> {
     overrideNextTransaction(hook: () => CallOverrides_2): void;
 }
 
+// Warning: (ae-forgotten-export) The symbol "IThirdwebContract" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractMetadata" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
@@ -672,6 +650,8 @@ export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebCont
     }>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "IThirdwebPlatformFee" needs to be exported by the entry point index.d.ts
+//
 // @public
 export class ContractPlatformFee<TContract extends IThirdwebPlatformFee> {
     constructor(contractWrapper: ContractWrapper<TContract>);
@@ -683,6 +663,8 @@ export class ContractPlatformFee<TContract extends IThirdwebPlatformFee> {
     set(platformFeeInfo: z.input<typeof CommonPlatformFeeSchema>): Promise<TransactionResult>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "IThirdwebPrimarySale" needs to be exported by the entry point index.d.ts
+//
 // @public
 export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
     constructor(contractWrapper: ContractWrapper<TContract>);
@@ -705,6 +687,8 @@ export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
     get(): Promise<PublishedMetadata>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "AccessControlEnumerable" needs to be exported by the entry point index.d.ts
+//
 // @public
 export class ContractRoles<TContract extends AccessControlEnumerable, TRole extends Role> {
     constructor(contractWrapper: ContractWrapper<TContract>, roles: readonly TRole[]);
@@ -719,6 +703,7 @@ export class ContractRoles<TContract extends AccessControlEnumerable, TRole exte
     verify(roles: TRole[], address: string): Promise<void>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "IThirdwebRoyalty" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractRoyalty" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
@@ -833,6 +818,8 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
 // @internal
 export class CustomContract<TContract extends ThirdwebContract = ThirdwebContract> implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
+    // Warning: (ae-forgotten-export) The symbol "ThirdwebContract__factory" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     static contractFactory: typeof ThirdwebContract__factory;
     // (undocumented)
@@ -958,6 +945,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         name: string;
         }>;
     }>;
+    // Warning: (ae-forgotten-export) The symbol "ERC721" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "ERC721Metadata" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     nft: Erc721<ERC721 & ERC721Metadata> | undefined;
     // (undocumented)
@@ -967,7 +957,7 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     // (undocumented)
     publishedMetadata: ContractPublishedMetadata<TContract>;
     // (undocumented)
-    roles: ContractRoles<TContract & AccessControlEnumerable, "admin" | "transfer" | "minter" | "pauser" | "editor" | "lister" | "asset"> | undefined;
+    roles: ContractRoles<TContract & AccessControlEnumerable, "transfer" | "lister" | "admin" | "minter" | "pauser" | "editor" | "asset"> | undefined;
     // (undocumented)
     royalties: ContractRoyalty<TContract & IThirdwebContract & IThirdwebRoyalty, {
         deploy: ZodObject<extendShape<extendShape<    {
@@ -1192,6 +1182,8 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         name: string;
         }>;
     };
+    // Warning: (ae-forgotten-export) The symbol "ITokenERC20" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     token: Erc20<ITokenERC20> | undefined;
 }
@@ -1206,6 +1198,8 @@ export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 // @internal (undocumented)
 export const DEFAULT_QUERY_ALL_COUNT = 100;
 
+// Warning: (ae-forgotten-export) The symbol "DropERC721" needs to be exported by the entry point index.d.ts
+//
 // @public
 export class DelayedReveal<T extends DropERC721> {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage);
@@ -1231,6 +1225,8 @@ export interface DirectListing {
     type: ListingType.Direct;
 }
 
+// Warning: (ae-forgotten-export) The symbol "DropERC20" needs to be exported by the entry point index.d.ts
+//
 // @public
 export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     // Warning: (ae-forgotten-export) The symbol "DropErc721ContractSchema" needs to be exported by the entry point index.d.ts
@@ -1246,6 +1242,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
 
 // @public
 export class DropErc1155ClaimConditions {
+    // Warning: (ae-forgotten-export) The symbol "DropERC1155" needs to be exported by the entry point index.d.ts
     constructor(contractWrapper: ContractWrapper<DropERC1155>, metadata: ContractMetadata<DropERC1155, typeof DropErc721ContractSchema>, storage: IStorage);
     canClaim(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
     getActive(tokenId: BigNumberish): Promise<ClaimCondition>;
@@ -1275,9 +1272,13 @@ export class DuplicateLeafsError extends Error {
     constructor(message?: string);
 }
 
+// Warning: (ae-forgotten-export) The symbol "TokenERC1155" needs to be exported by the entry point index.d.ts
+//
 // @public
 export class Edition extends Erc1155<TokenERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
+    // Warning: (ae-forgotten-export) The symbol "TokenERC1155__factory" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     static contractFactory: typeof TokenERC1155__factory;
     // (undocumented)
@@ -1419,6 +1420,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
     claimConditions: DropErc1155ClaimConditions;
     claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "DropERC1155__factory" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     static contractFactory: typeof DropERC1155__factory;
     // (undocumented)
@@ -1822,8 +1825,8 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         id: BigNumber;
         uri: string;
     };
-    supply: BigNumber;
     owner: string;
+    supply: BigNumber;
     quantityOwned: BigNumber;
 }, {
     metadata: {
@@ -1836,8 +1839,8 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
         id: string | number | bigint | BigNumber;
         uri: string;
     };
-    supply: string | number | bigint | BigNumber;
     owner: string;
+    supply: string | number | bigint | BigNumber;
     quantityOwned: string | number | bigint | BigNumber;
 }>;
 
@@ -1882,6 +1885,8 @@ export class Erc1155SignatureMinting {
     verify(signedPayload: SignedPayload1155): Promise<boolean>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "TokenERC20" needs to be exported by the entry point index.d.ts
+//
 // @public
 export class Erc20<T extends TokenERC20 | DropERC20 | ITokenERC20> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
@@ -1889,8 +1894,6 @@ export class Erc20<T extends TokenERC20 | DropERC20 | ITokenERC20> implements Up
     allowanceOf(owner: string, spender: string): Promise<CurrencyValue>;
     balance(): Promise<CurrencyValue>;
     balanceOf(address: string): Promise<CurrencyValue>;
-    burn(amount: Amount): Promise<TransactionResult>;
-    burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
     get(): Promise<Currency>;
@@ -1923,6 +1926,8 @@ export class Erc20SignatureMinting {
     verify(signedPayload: SignedPayload20): Promise<boolean>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "TokenERC721" needs to be exported by the entry point index.d.ts
+//
 // @public
 export class Erc721<T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadata)> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
@@ -1936,6 +1941,8 @@ export class Erc721<T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadat
     // @internal (undocumented)
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
+    // Warning: (ae-forgotten-export) The symbol "IMintableERC721" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     mint: Erc721Mintable<IMintableERC721> | undefined;
     // @internal (undocumented)
@@ -1943,6 +1950,8 @@ export class Erc721<T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadat
     // (undocumented)
     protected options: SDKOptions;
     ownerOf(tokenId: BigNumberish): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "ERC721Enumerable" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     query: Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721> | undefined;
     // @internal
@@ -2276,6 +2285,8 @@ export class Marketplace implements UpdateableNetwork {
     allowListingFromSpecificAssetOnly(contractAddress: string): Promise<void>;
     auction: MarketplaceAuction;
     buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish, receiver?: string): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "Marketplace__factory" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     static contractFactory: typeof Marketplace__factory;
     // (undocumented)
@@ -2283,6 +2294,8 @@ export class Marketplace implements UpdateableNetwork {
     // (undocumented)
     static contractType: "marketplace";
     direct: MarketplaceDirect;
+    // Warning: (ae-forgotten-export) The symbol "Marketplace" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     encoder: ContractEncoder<Marketplace_2>;
     // (undocumented)
@@ -2393,8 +2406,10 @@ export class MarketplaceAuction {
     getWinner(listingId: BigNumberish): Promise<string>;
     getWinningBid(listingId: BigNumberish): Promise<Offer | undefined>;
     makeBid(listingId: BigNumberish, pricePerToken: Price): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "IMarketplace" needs to be exported by the entry point index.d.ts
+    //
     // @internal
-    mapListing(listing: IMarketplace.ListingStruct): Promise<AuctionListing>;
+    mapListing(listing: IMarketplace_2.ListingStruct): Promise<AuctionListing>;
     updateListing(listing: AuctionListing): Promise<TransactionResult>;
 }
 
@@ -2426,7 +2441,7 @@ export class MarketplaceDirect {
     isStillValidListing(listing: DirectListing, quantity?: BigNumberish): Promise<boolean>;
     makeOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContractAddress: string, pricePerToken: Price, expirationDate?: Date): Promise<TransactionResult>;
     // @internal
-    mapListing(listing: IMarketplace.ListingStruct): Promise<DirectListing>;
+    mapListing(listing: IMarketplace_2.ListingStruct): Promise<DirectListing>;
     updateListing(listing: DirectListing): Promise<TransactionResult>;
 }
 
@@ -2500,7 +2515,7 @@ export interface NativeToken extends Currency {
 }
 
 // @public (undocumented)
-export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
+export type NetworkOrSignerOrProvider = Networkish | Signer_2 | Provider;
 
 // @public
 export interface NewAuctionListing {
@@ -2533,6 +2548,8 @@ export interface NewDirectListing {
 export class NFTCollection extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "TokenERC721__factory" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     static contractFactory: typeof TokenERC721__factory;
     // (undocumented)
@@ -2742,6 +2759,8 @@ export class NFTDrop extends Erc721<DropERC721> {
     claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     claimConditions: DropClaimConditions<DropERC721>;
     claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // Warning: (ae-forgotten-export) The symbol "DropERC721__factory" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     static contractFactory: typeof DropERC721__factory;
     // (undocumented)
@@ -2802,7 +2821,22 @@ export class NFTDrop extends Erc721<DropERC721> {
         }>, {
         primary_sale_recipient: ZodEffects<ZodString, string, string>;
         }>, {
-        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>; /**
+        * Setup a collection of one-of-one NFTs that are minted as users claim them.
+        *
+        * @example
+        *
+        * ```javascript
+        * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+        *
+        * // You can switch out this provider with any wallet or provider setup you like.
+        * const provider = ethers.Wallet.createRandom();
+        * const sdk = new ThirdwebSDK(provider);
+        * const contract = sdk.getNFTDrop("{{contract_address}}");
+        * ```
+        *
+        * @public
+        */
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -2958,6 +2992,8 @@ export class Pack implements UpdateableNetwork {
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber>;
     balanceOf(address: string, tokenId: string): Promise<BigNumber>;
+    // Warning: (ae-forgotten-export) The symbol "Pack__factory" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     static contractFactory: typeof Pack__factory;
     // (undocumented)
@@ -2985,6 +3021,8 @@ export class Pack implements UpdateableNetwork {
     interceptor: ContractInterceptor<Pack_2>;
     // (undocumented)
     isApproved(address: string, operator: string): Promise<boolean>;
+    // Warning: (ae-forgotten-export) The symbol "Pack" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     metadata: ContractMetadata<Pack_2, typeof Pack.schema>;
     // (undocumented)
@@ -3963,7 +4001,7 @@ export type SignedPayload721 = {
 };
 
 // @public (undocumented)
-export type SignerOrProvider = Signer | Provider;
+export type SignerOrProvider = Signer_2 | Provider;
 
 // Warning: (ae-incompatible-release-tags) The symbol "Snapshot" is marked as @public, but its signature references "SnapshotSchema" which is marked as @internal
 //
@@ -4124,6 +4162,8 @@ export class Split implements UpdateableNetwork {
             displayValue: string;
         };
     }>;
+    // Warning: (ae-forgotten-export) The symbol "Split__factory" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     static contractFactory: typeof Split__factory;
     // (undocumented)
@@ -4142,6 +4182,8 @@ export class Split implements UpdateableNetwork {
     getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<Split_2>;
+    // Warning: (ae-forgotten-export) The symbol "Split" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     metadata: ContractMetadata<Split_2, typeof Split.schema>;
     // (undocumented)
@@ -4346,13 +4388,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "custom" | "split" | "edition-drop" | "edition" | "token" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "nft-collection";
+        contractType: "custom" | "token" | "pack" | "split" | "edition-drop" | "edition" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
     // @internal (undocumented)
-    getCustomContract(address: string): Promise<CustomContract<ThirdwebContract_2>>;
+    getCustomContract(address: string): Promise<CustomContract<ThirdwebContract>>;
     // @internal (undocumented)
-    getCustomContractFromAbi(address: string, abi: ContractInterface): CustomContract<ThirdwebContract_2>;
+    getCustomContractFromAbi(address: string, abi: ContractInterface): CustomContract<ThirdwebContract>;
     getEdition(address: string): Edition;
     getEditionDrop(address: string): EditionDrop;
     getMarketplace(address: string): Marketplace;
@@ -4376,6 +4418,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 // @public
 export class Token extends Erc20<TokenERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
+    burn(amount: Amount): Promise<TransactionResult>;
+    burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "TokenERC20__factory" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     static contractFactory: typeof TokenERC20__factory;
     // (undocumented)
@@ -4512,9 +4558,13 @@ export interface TokenContractDeployMetadata {
 // @internal
 export class TokenDrop extends Erc20<DropERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
+    burn(amount: Amount): Promise<TransactionResult>;
+    burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
     claim(amount: Amount, proofs?: BytesLike[]): Promise<TransactionResult>;
     claimConditions: DropClaimConditions<DropERC20>;
     claimTo(destinationAddress: string, amount: Amount, proofs?: BytesLike[]): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "DropERC20__factory" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     static contractFactory: typeof DropERC20__factory;
     // (undocumented)
@@ -4684,11 +4734,11 @@ export const TokenMintInputSchema: z.ZodObject<{
     toAddress: z.ZodEffects<z.ZodString, string, string>;
     amount: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>;
 }, "strip", z.ZodTypeAny, {
-    toAddress: string;
     amount: string;
-}, {
     toAddress: string;
+}, {
     amount: string | number;
+    toAddress: string;
 }>;
 
 // @public (undocumented)
@@ -4774,6 +4824,8 @@ export class Vote implements UpdateableNetwork {
     balance(): Promise<CurrencyValue>;
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     canExecute(proposalId: string): Promise<boolean>;
+    // Warning: (ae-forgotten-export) The symbol "VoteERC20__factory" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     static contractFactory: typeof VoteERC20__factory;
     // (undocumented)
@@ -4793,6 +4845,8 @@ export class Vote implements UpdateableNetwork {
     hasVoted(proposalId: string, account?: string): Promise<boolean>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<VoteERC20>;
+    // Warning: (ae-forgotten-export) The symbol "VoteERC20" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     metadata: ContractMetadata<VoteERC20, typeof Vote.schema>;
     // (undocumented)
