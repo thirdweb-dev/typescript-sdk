@@ -332,7 +332,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
     tokenId: BigNumberish,
     addresses: AirdropInput[],
     data: BytesLike = [0],
-  ): Promise<TransactionResult | undefined> {
+  ): Promise<TransactionResult> {
     const from = await this.contractWrapper.getSignerAddress();
 
     const balanceOf = await this.balanceOf(from, tokenId);
@@ -342,13 +342,13 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
     }, 0);
 
     if (balanceOf.toNumber() < totalToAirdrop) {
-      console.error(
+      throw new Error(
         `The caller owns ${balanceOf.toNumber()} NFTs, but wants to airdrop ${totalToAirdrop} NFTs.`,
       );
-      return;
     }
 
     const encoded = [];
+
     for (let i = 0; i < addresses.length; i++) {
       const to = addresses[i].address;
       const amount = addresses[i]?.quantity || 1;
