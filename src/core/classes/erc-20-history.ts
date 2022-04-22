@@ -1,6 +1,6 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { BigNumber } from "ethers";
-import { TokenERC20 } from "@thirdweb-dev/contracts";
+import { TokenERC20 } from "contracts";
 import { AddressZero } from "@ethersproject/constants";
 import { TokenHolderBalance } from "../../types";
 import { fetchCurrencyValue } from "../../common/currency";

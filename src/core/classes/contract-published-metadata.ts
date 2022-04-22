@@ -1,4 +1,4 @@
-import { ThirdwebContract } from "@thirdweb-dev/contracts";
+import { ThirdwebContract } from "contracts";
 import { ContractWrapper } from "./contract-wrapper";
 import { extractFunctionsFromAbi, fetchContractMetadata } from "../../common";
 import { IStorage } from "../interfaces";

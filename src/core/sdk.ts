@@ -22,7 +22,7 @@ import type {
   NetworkOrSignerOrProvider,
   ValidContractInstance,
 } from "./types";
-import { IThirdwebContract__factory } from "@thirdweb-dev/contracts";
+import { IThirdwebContract__factory } from "contracts";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { CustomContract } from "../contracts/custom";
 import invariant from "tiny-invariant";

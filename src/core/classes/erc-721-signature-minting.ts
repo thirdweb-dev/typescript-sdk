@@ -12,12 +12,12 @@ import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ISignatureMint, TokenERC721 } from "@thirdweb-dev/contracts";
+import { ISignatureMint, TokenERC721 } from "contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
-import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { uploadOrExtractURIs } from "../../common/nft";
+import { TokensMintedWithSignatureEvent } from "contracts/SignatureMint";
 
 /**
  * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely

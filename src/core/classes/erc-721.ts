@@ -17,7 +17,7 @@ import {
   IMintableERC721,
   IMintableERC721__factory,
   TokenERC721,
-} from "@thirdweb-dev/contracts";
+} from "contracts";
 import { Erc721Enumerable } from "./erc-721-enumerable";
 import { Erc721Mintable } from "./erc-721-mintable";
 

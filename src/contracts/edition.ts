@@ -1,5 +1,5 @@
 import { Erc1155 } from "../core/classes/erc-1155";
-import { TokenERC1155, TokenERC1155__factory } from "@thirdweb-dev/contracts";
+import { TokenERC1155, TokenERC1155__factory } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
@@ -17,7 +17,6 @@ import {
   EditionMetadata,
   EditionMetadataOrUri,
 } from "../schema/tokens/edition";
-import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
@@ -25,6 +24,7 @@ import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { TokensMintedEvent } from "contracts/TokenERC1155";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.

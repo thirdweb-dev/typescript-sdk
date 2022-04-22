@@ -1,9 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import {
-  ERC721,
-  ERC721Enumerable,
-  ERC721Metadata,
-} from "@thirdweb-dev/contracts";
+import { ERC721, ERC721Enumerable, ERC721Metadata } from "contracts";
 import { BigNumber } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { NFTMetadataOwner } from "../../schema";

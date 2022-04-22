@@ -1,5 +1,5 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import { DropERC721, DropERC721__factory } from "@thirdweb-dev/contracts";
+import { DropERC721, DropERC721__factory } from "contracts";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
@@ -28,13 +28,15 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { DelayedReveal } from "../core/classes/delayed-reveal";
 import { GasCostEstimator } from "../core/classes";
 import { ClaimVerification } from "../types";
-import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155";
-import { TokensClaimedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
+import {
+  TokensLazyMintedEvent,
+  TokensClaimedEvent,
+} from "contracts/DropERC721";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.

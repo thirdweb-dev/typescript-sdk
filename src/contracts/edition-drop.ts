@@ -1,5 +1,5 @@
 import { Erc1155 } from "../core/classes/erc-1155";
-import { DropERC1155, DropERC1155__factory } from "@thirdweb-dev/contracts";
+import { DropERC1155, DropERC1155__factory } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
@@ -25,11 +25,11 @@ import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ClaimVerification } from "../types";
-import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155";
 import { DropErc1155History } from "../core/classes/drop-erc1155-history";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { TokensLazyMintedEvent } from "contracts/DropERC1155";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.

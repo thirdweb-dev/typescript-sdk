@@ -5,7 +5,7 @@ import {
   TokenERC20__factory,
   TokenERC721__factory,
   VoteERC20__factory,
-} from "@thirdweb-dev/contracts";
+} from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
 import { ethers } from "ethers";

@@ -7,7 +7,7 @@ import {
   DropERC721,
   IERC20,
   IERC20__factory,
-} from "@thirdweb-dev/contracts";
+} from "contracts";
 import { BigNumber, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";

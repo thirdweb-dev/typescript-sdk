@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721 } from "@thirdweb-dev/contracts";
+import { DropERC721 } from "contracts";
 import {
   CommonNFTInput,
   NFTMetadata,
@@ -9,7 +9,7 @@ import {
 import { IStorage, TransactionResult, TransactionResultWithId } from "../index";
 import { fetchTokenMetadata } from "../../common/nft";
 import { BatchToReveal } from "../../types/delayed-reveal";
-import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
+import { TokensLazyMintedEvent } from "contracts/DropERC721";
 
 /**
  * Handles delayed reveal logic

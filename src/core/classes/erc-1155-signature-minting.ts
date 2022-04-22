@@ -11,13 +11,14 @@ import { TransactionResultWithId } from "../types";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ITokenERC1155, TokenERC1155 } from "@thirdweb-dev/contracts";
+import { TokenERC1155 } from "contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
-import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts/dist/TokenERC1155";
 import { BigNumber } from "ethers";
 import { uploadOrExtractURIs } from "../../common/nft";
+import { TokensMintedWithSignatureEvent } from "contracts/SignatureMint";
+import { ISignatureMint } from "contracts/TokenERC1155";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -258,7 +259,7 @@ export class Erc1155SignatureMinting {
    */
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri1155,
-  ): Promise<ITokenERC1155.MintRequestStructOutput> {
+  ): Promise<ISignatureMint.MintRequestStructOutput> {
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       mintRequest.price,
@@ -277,6 +278,6 @@ export class Erc1155SignatureMinting {
       royaltyRecipient: mintRequest.royaltyRecipient,
       royaltyBps: mintRequest.royaltyBps,
       primarySaleRecipient: mintRequest.primarySaleRecipient,
-    } as ITokenERC1155.MintRequestStructOutput;
+    } as ISignatureMint.MintRequestStructOutput;
   }
 }
