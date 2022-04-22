@@ -196,7 +196,6 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
 
     try {
       await bundleContract.airdrop(0, addresses);
-      assert.fail("should have thrown");
     } catch (e) {
       expectError(e, "The caller owns");
     }
