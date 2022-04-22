@@ -350,18 +350,12 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
       );
     }
 
-    const encoded = [];
-
-    for (let i = 0; i < input.length; i++) {
-      const to = input[i].address;
-      const amount = input[i]?.quantity || 1;
-      encoded.push(
-        this.contractWrapper.readContract.interface.encodeFunctionData(
-          "safeTransferFrom",
-          [from, to, tokenId, amount, data],
-        ),
+    const encoded = input.map(({ address: to, quantity }) => {
+      return this.contractWrapper.readContract.interface.encodeFunctionData(
+        "safeTransferFrom",
+        [from, to, tokenId, quantity, data],
       );
-    }
+    });
 
     return {
       receipt: await this.contractWrapper.multiCall(encoded),
