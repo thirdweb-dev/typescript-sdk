@@ -756,10 +756,10 @@
     "@swc/core-win32-ia32-msvc" "1.2.165"
     "@swc/core-win32-x64-msvc" "1.2.165"
 
-"@thirdweb-dev/contracts@2.3.0-8":
-  version "2.3.0-8"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.0-8.tgz#14e92538f1c68fbd99d39112f4e1a68118fbd12d"
-  integrity sha512-w3RIOg8yf1QPHD57GkdKi4kqYIJyyM24GqWkSAPBwDHd8p1UCdaecYZUY1F8V3gDxyqhBZNESYsN+PHGgXiIqA==
+"@thirdweb-dev/contracts@2.3.0-9":
+  version "2.3.0-9"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.0-9.tgz#42dea7cf00f2f92d15b623391ac15ce7e7005ae9"
+  integrity sha512-fgXm6KT6ydF5yysbA/3u/MLNfoGVYA4J47zzOqqX5JvjK1KvzZawf4y5T1OY7qxgT7cmvXTD5BomIw5Bcv5xYw==
 
 "@typechain/ethers-v5@^10.0.0":
   version "10.0.0"
