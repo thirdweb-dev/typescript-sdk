@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Edition } from "../src/index";
-import { sdk, signers, storage } from "./before.test";
+import { expectError, sdk, signers, storage } from "./before.test";
 
 import { assert, expect } from "chai";
 import { AddressZero } from "@ethersproject/constants";
@@ -174,7 +174,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     expect(bobOwned[0].quantityOwned.toNumber()).to.be.equal(3);
   });
 
-  it("should fail airdrop because not enough NFTs holded", async () => {
+  it("should fail airdrop because not enough NFTs owned", async () => {
     await bundleContract.mint({
       metadata: {
         name: "Bundle 1",
@@ -194,7 +194,12 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
       },
     ];
 
-    expect(await bundleContract.airdrop(0, addresses)).to.throw();
+    try {
+      await bundleContract.airdrop(0, addresses);
+      assert.fail("should have thrown");
+    } catch (e) {
+      expectError(e, "The caller owns");
+    }
   });
 
   // TODO: This test should move to the royalty suite
