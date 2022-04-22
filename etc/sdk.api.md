@@ -837,6 +837,8 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     // (undocumented)
     events: ContractEvents<TContract>;
     // (undocumented)
+    readonly functions: any;
+    // (undocumented)
     getAddress(): string;
     // (undocumented)
     interceptor: ContractInterceptor<TContract>;
@@ -959,8 +961,6 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     platformFees: ContractPlatformFee<TContract & IThirdwebPlatformFee> | undefined;
     // (undocumented)
     publishedMetadata: ContractPublishedMetadata<TContract>;
-    // (undocumented)
-    readonly read: any;
     // (undocumented)
     roles: ContractRoles<TContract & AccessControlEnumerable, "admin" | "transfer" | "minter" | "pauser" | "editor" | "lister" | "asset"> | undefined;
     // (undocumented)
@@ -1189,8 +1189,6 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     };
     // (undocumented)
     token: Erc20<ITokenERC20> | undefined;
-    // (undocumented)
-    readonly write: any;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_IPFS_GATEWAY" should be prefixed with an underscore because the declaration is marked as @internal

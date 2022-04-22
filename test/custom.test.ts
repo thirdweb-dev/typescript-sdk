@@ -68,9 +68,9 @@ describe("Custom Contracts", async () => {
   it("should call raw ABI functions", async () => {
     const c = await sdk.getCustomContract(customContractAddress);
     invariant(c, "Contract undefined");
-    expect(await c.read.decimals()).to.eq(18);
-    await c.write.mint(ethers.utils.parseUnits("10"));
-    expect((await c.read.totalSupply()).toString()).to.eq(
+    expect(await c.functions.decimals()).to.eq(18);
+    await c.functions.mint(ethers.utils.parseUnits("10"));
+    expect((await c.functions.totalSupply()).toString()).to.eq(
       ethers.utils.parseUnits("10").toString(),
     );
   });
