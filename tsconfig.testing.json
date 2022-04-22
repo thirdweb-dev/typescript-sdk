@@ -12,8 +12,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "contracts/*": ["./libs/*"],
-      "contracts": ["./libs"]
+      "contracts/*": ["./lib/*"],
+      "contracts": ["./lib"]
     },
     "baseUrl": "."
   },
