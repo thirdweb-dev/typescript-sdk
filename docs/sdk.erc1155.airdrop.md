@@ -4,12 +4,12 @@
 
 ## Erc1155.airdrop() method
 
-Airdrop multiple NFT
+Airdrop multiple NFTs
 
 <b>Signature:</b>
 
 ```typescript
-airdrop(tokenId: BigNumberish, addresses: AirdropInput[], data?: BytesLike): Promise<TransactionResult>;
+airdrop(tokenId: BigNumberish, addresses: AirdropInput, data?: BytesLike): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ airdrop(tokenId: BigNumberish, addresses: AirdropInput[], data?: BytesLike): Pro
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  tokenId | BigNumberish |  |
-|  addresses | AirdropInput\[\] |  |
+|  addresses | AirdropInput |  |
 |  data | BytesLike | <i>(Optional)</i> |
 
 <b>Returns:</b>
@@ -32,6 +32,25 @@ Airdrop one or multiple NFTs to the provided wallet addresses.
 
 
 ```javascript
-// todo
+// Array of objects of addresses and quantities to airdrop NFTs to
+const addresses = [
+ {
+   address: "0x...",
+   quantity: 2,
+ },
+ {
+  address: "0x...",
+   quantity: 3,
+ },
+];
+const tokenId = "0";
+await contract.airdrop(addresses, tokenId);
+
+// You can also pass an array of addresses, it will airdrop 1 NFT per address
+const addresses = [
+ "0x...", "0x...", "0x...",
+]
+const tokenId = "0";
+await contract.airdrop(addresses, tokenId);
 ```
 

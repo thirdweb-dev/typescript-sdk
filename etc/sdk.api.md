@@ -1787,7 +1787,7 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
 export class Erc1155<T extends DropERC1155 | TokenERC1155> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     // Warning: (ae-forgotten-export) The symbol "AirdropInput" needs to be exported by the entry point index.d.ts
-    airdrop(tokenId: BigNumberish, addresses: AirdropInput[], data?: BytesLike): Promise<TransactionResult>;
+    airdrop(tokenId: BigNumberish, addresses: AirdropInput, data?: BytesLike): Promise<TransactionResult>;
     balance(tokenId: BigNumberish): Promise<BigNumber>;
     balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;

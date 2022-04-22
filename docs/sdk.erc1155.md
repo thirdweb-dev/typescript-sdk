@@ -31,7 +31,7 @@ export declare class Erc1155<T extends DropERC1155 | TokenERC1155> implements Up
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [airdrop(tokenId, addresses, data)](./sdk.erc1155.airdrop.md) |  | Airdrop multiple NFT |
+|  [airdrop(tokenId, addresses, data)](./sdk.erc1155.airdrop.md) |  | Airdrop multiple NFTs |
 |  [balance(tokenId)](./sdk.erc1155.balance.md) |  | Get NFT Balance for the currently connected wallet |
 |  [balanceOf(address, tokenId)](./sdk.erc1155.balanceof.md) |  | Get NFT Balance |
 |  [burn(tokenId, amount)](./sdk.erc1155.burn.md) |  | Burn a single NFT |

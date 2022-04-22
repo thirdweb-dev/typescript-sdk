@@ -326,7 +326,26 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    *
    * @example
    * ```javascript
-   * // todo
+   * // Array of objects of addresses and quantities to airdrop NFTs to
+   * const addresses = [
+   *  {
+   *    address: "0x...",
+   *    quantity: 2,
+   *  },
+   *  {
+   *   address: "0x...",
+   *    quantity: 3,
+   *  },
+   * ];
+   * const tokenId = "0";
+   * await contract.airdrop(addresses, tokenId);
+   *
+   * // You can also pass an array of addresses, it will airdrop 1 NFT per address
+   * const addresses = [
+   *  "0x...", "0x...", "0x...",
+   * ]
+   * const tokenId = "0";
+   * await contract.airdrop(addresses, tokenId);
    * ```
    */
   public async airdrop(
