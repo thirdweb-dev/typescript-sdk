@@ -12,7 +12,7 @@ export const AirdropAddressInput = z.object({
 /**
  * @internal
  */
-/* export const AirdropInputSchema = z.union([
+export const AirdropInputSchema = z.union([
   z.array(z.string()).transform((strings) =>
     strings.map((address) =>
       AirdropAddressInput.parse({
@@ -21,4 +21,4 @@ export const AirdropAddressInput = z.object({
     ),
   ),
   z.array(AirdropAddressInput),
-]); */
+]);
