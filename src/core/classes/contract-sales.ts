@@ -1,4 +1,4 @@
-import { IThirdwebPrimarySale } from "@thirdweb-dev/contracts";
+import { IThirdwebPrimarySale } from "contracts";
 import { ContractWrapper } from "./contract-wrapper";
 import { TransactionResult } from "../types";
 

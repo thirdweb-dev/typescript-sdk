@@ -12,7 +12,7 @@ import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ISignatureMint, TokenERC20 } from "@thirdweb-dev/contracts";
+import { ISignatureMint, TokenERC20 } from "contracts";
 import { ContractRoles } from "./contract-roles";
 import { Token } from "../../contracts";
 import { AddressZero } from "@ethersproject/constants";

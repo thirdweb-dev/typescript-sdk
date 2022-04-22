@@ -5,7 +5,7 @@ import type {
 } from "../core";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { TokenERC721, TokenERC721__factory } from "@thirdweb-dev/contracts";
+import { TokenERC721, TokenERC721__factory } from "contracts";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";

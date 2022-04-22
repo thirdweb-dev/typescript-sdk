@@ -3,28 +3,22 @@ import {
   ByocFactory__factory,
   ByocRegistry,
   ByocRegistry__factory,
-  MockContract__factory,
   TWFactory,
   TWFactory__factory,
   TWFee__factory,
   TWRegistry,
   TWRegistry__factory,
-  MockContract__factory,
-} from "@thirdweb-dev/contracts";
+} from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 import {
   CONTRACTS_MAP,
   ContractType,
-  EditionDrop,
   getNativeTokenByChainId,
-  IpfsStorage,
   IStorage,
   Marketplace,
-  NFTDrop,
   Pack,
-  REMOTE_CONTRACT_NAME,
   ThirdwebSDK,
   Vote,
 } from "../src";
@@ -139,26 +133,26 @@ before(async () => {
     contractType: ContractType,
   ): Promise<ethers.Contract> {
     // handle version bumps
-    switch (contractType) {
-      case NFTDrop.contractType:
-      case EditionDrop.contractType:
-      case Marketplace.contractType:
-        const mock = await new ethers.ContractFactory(
-          MockContract__factory.abi,
-          MockContract__factory.bytecode,
-        )
-          .connect(signer)
-          .deploy(
-            ethers.utils.formatBytes32String(
-              REMOTE_CONTRACT_NAME[contractType],
-            ),
-            1,
-          );
-        const tx = await thirdwebFactoryDeployer.addImplementation(
-          mock.address,
-        );
-        await tx.wait();
-    }
+    // switch (contractType) {
+    //   case NFTDrop.contractType:
+    //   case EditionDrop.contractType:
+    //   case Marketplace.contractType:
+    //     const mock = await new ethers.ContractFactory(
+    //       MockContract__factory.abi,
+    //       MockContract__factory.bytecode,
+    //     )
+    //       .connect(signer)
+    //       .deploy(
+    //         ethers.utils.formatBytes32String(
+    //           REMOTE_CONTRACT_NAME[contractType],
+    //         ),
+    //         1,
+    //       );
+    //     const tx = await thirdwebFactoryDeployer.addImplementation(
+    //       mock.address,
+    //     );
+    //     await tx.wait();
+    // }
 
     switch (contractType) {
       case Vote.contractType:

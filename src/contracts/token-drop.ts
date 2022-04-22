@@ -1,4 +1,4 @@
-import { DropERC20, DropERC20__factory } from "@thirdweb-dev/contracts";
+import { DropERC20, DropERC20__factory } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {
@@ -246,6 +246,55 @@ export class TokenDrop extends Erc20<DropERC20> {
     return {
       receipt: await this.contractWrapper.sendTransaction("delegate", [
         delegateeAddress,
+      ]),
+    };
+  }
+
+  /**
+   * Burn Tokens
+   *
+   * @remarks Burn tokens held by the connected wallet
+   *
+   * @example
+   * ```javascript
+   * // The amount of this token you want to burn
+   * const amount = 1.2;
+   *
+   * await contract.burn(amount);
+   * ```
+   */
+  public async burn(amount: Amount): Promise<TransactionResult> {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("burn", [
+        await this.normalizeAmount(amount),
+      ]),
+    };
+  }
+
+  /**
+   * Burn Tokens
+   *
+   * @remarks Burn tokens held by the specified wallet
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet sending the tokens
+   * const holderAddress = "{{wallet_address}}";
+   *
+   * // The amount of this token you want to burn
+   * const amount = 1.2;
+   *
+   * await contract.burnFrom(holderAddress, amount);
+   * ```
+   */
+  public async burnFrom(
+    holder: string,
+    amount: Amount,
+  ): Promise<TransactionResult> {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("burnFrom", [
+        holder,
+        await this.normalizeAmount(amount),
       ]),
     };
   }

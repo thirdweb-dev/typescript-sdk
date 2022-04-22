@@ -1,4 +1,4 @@
-import { TWRegistry, TWRegistry__factory } from "@thirdweb-dev/contracts";
+import { TWRegistry, TWRegistry__factory } from "contracts";
 import { SDKOptions } from "../../schema/sdk-options";
 
 import { NetworkOrSignerOrProvider } from "../types";

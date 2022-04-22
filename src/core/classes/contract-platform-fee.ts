@@ -1,4 +1,4 @@
-import { IThirdwebPlatformFee } from "@thirdweb-dev/contracts";
+import { IThirdwebPlatformFee } from "contracts";
 import { ContractWrapper } from "./contract-wrapper";
 import { TransactionResult } from "../types";
 import { CommonPlatformFeeSchema } from "../../schema";

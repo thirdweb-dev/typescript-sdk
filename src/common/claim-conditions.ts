@@ -26,11 +26,11 @@ import {
   ClaimConditionOutputSchema,
 } from "../schema/contracts/common/claim-conditions";
 import { createSnapshot } from "./snapshots";
-import { IDropClaimCondition } from "@thirdweb-dev/contracts/dist/IDropERC1155";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
 import { Provider } from "@ethersproject/providers";
 import { implementsInterface } from "./feature-detection";
-import { DropERC20, DropERC20__factory } from "@thirdweb-dev/contracts";
+import { DropERC20, DropERC20__factory } from "contracts";
+import { IDropClaimCondition } from "contracts/DropERC20";
 
 /**
  * Returns proofs and the overrides required for the transaction.

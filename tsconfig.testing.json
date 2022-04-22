@@ -10,7 +10,12 @@
     "inlineSourceMap": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "contracts/*": ["./libs/*"],
+      "contracts": ["./libs"]
+    },
+    "baseUrl": "."
   },
-  "include": ["test/**/*.ts"]
+  "include": ["test/**/*.ts"],
 }

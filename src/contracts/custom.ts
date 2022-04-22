@@ -30,7 +30,7 @@ import {
   ITokenERC20__factory,
   ThirdwebContract,
   ThirdwebContract__factory,
-} from "@thirdweb-dev/contracts";
+} from "contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractInterface } from "ethers";
@@ -57,7 +57,7 @@ export class CustomContract<
 
   // raw contract
   public readonly read: any;
-  public readonly write: any;
+  public readonly functions: any;
 
   // utilities
   public events: ContractEvents<TContract>;
@@ -91,7 +91,7 @@ export class CustomContract<
     this.storage = storage;
     this.contractWrapper = contractWrapper;
     this.read = contractWrapper.readContract;
-    this.write = contractWrapper._raw;
+    this.functions = contractWrapper._raw;
 
     this.events = new ContractEvents(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);

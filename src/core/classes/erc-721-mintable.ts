@@ -1,15 +1,11 @@
 import { ContractWrapper } from "./contract-wrapper";
-import {
-  ERC721,
-  ERC721Metadata,
-  IMintableERC721,
-} from "@thirdweb-dev/contracts";
+import { ERC721, ERC721Metadata, IMintableERC721 } from "contracts";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../../schema";
 import { TransactionResultWithId } from "../types";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../../common/nft";
-import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
 import { IStorage } from "../interfaces";
 import { Erc721 } from "./erc-721";
+import { TokensMintedEvent } from "contracts/IMintableERC721";
 
 export class Erc721Mintable<TContract extends IMintableERC721> {
   private contractWrapper: ContractWrapper<TContract>;
@@ -72,6 +68,7 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
       to,
       uri,
     ]);
+    // TODO switch to Transfer event!
     const event = this.contractWrapper.parseLogs<TokensMintedEvent>(
       "TokensMinted",
       receipt?.logs,

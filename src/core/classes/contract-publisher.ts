@@ -31,16 +31,14 @@ import {
   ByocRegistry,
   ByocRegistry__factory,
   IByocRegistry,
+  ThirdwebContract,
   ThirdwebContract as TWContract,
   ThirdwebContract__factory,
-} from "@thirdweb-dev/contracts";
+} from "contracts";
 import { AddressZero } from "@ethersproject/constants";
-import { ContractPublishedEvent } from "@thirdweb-dev/contracts/dist/ByocRegistry";
 import { getBYOCFactoryAddress, getBYOCRegistryAddress } from "../../constants";
-import {
-  ContractDeployedEvent,
-  ThirdwebContract,
-} from "@thirdweb-dev/contracts/dist/ByocFactory";
+import { ContractPublishedEvent } from "contracts/ByocRegistry";
+import { ContractDeployedEvent } from "contracts/ByocFactory";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)

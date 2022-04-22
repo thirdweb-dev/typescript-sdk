@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC20, ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts";
+import { DropERC20, ITokenERC20, TokenERC20 } from "contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
@@ -298,55 +298,6 @@ export class Erc20<T extends TokenERC20 | DropERC20 | ITokenERC20>
       }),
     );
     await this.contractWrapper.multiCall(encoded);
-  }
-
-  /**
-   * Burn Tokens
-   *
-   * @remarks Burn tokens held by the connected wallet
-   *
-   * @example
-   * ```javascript
-   * // The amount of this token you want to burn
-   * const amount = 1.2;
-   *
-   * await contract.burn(amount);
-   * ```
-   */
-  public async burn(amount: Amount): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [
-        await this.normalizeAmount(amount),
-      ]),
-    };
-  }
-
-  /**
-   * Burn Tokens
-   *
-   * @remarks Burn tokens held by the specified wallet
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet sending the tokens
-   * const holderAddress = "{{wallet_address}}";
-   *
-   * // The amount of this token you want to burn
-   * const amount = 1.2;
-   *
-   * await contract.burnFrom(holderAddress, amount);
-   * ```
-   */
-  public async burnFrom(
-    holder: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burnFrom", [
-        holder,
-        await this.normalizeAmount(amount),
-      ]),
-    };
   }
 
   /** ******************************

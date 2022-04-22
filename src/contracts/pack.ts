@@ -15,14 +15,10 @@ import {
   IERC20__factory,
   Pack as PackContract,
   Pack__factory,
-} from "@thirdweb-dev/contracts";
+} from "contracts";
 import { PacksContractSchema } from "../schema/contracts/packs";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { NFTMetadata } from "../schema/tokens/common";
-import {
-  PackAddedEvent,
-  PackOpenRequestedEvent,
-} from "@thirdweb-dev/contracts/dist/Pack";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { fetchTokenMetadataForContract } from "../common/nft";
 import {
@@ -39,6 +35,7 @@ import { ChainlinkVrf } from "../constants/chainlink";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { GasCostEstimator } from "../core/classes";
 import { ContractEvents } from "../core/classes/contract-events";
+import { PackAddedEvent, PackOpenRequestedEvent } from "contracts/Pack";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
