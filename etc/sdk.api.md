@@ -86,6 +86,11 @@ export class AdminRoleMissingError extends Error {
     constructor(address?: string, contractAddress?: string, message?: string);
 }
 
+// Warning: (ae-forgotten-export) The symbol "AirdropInputSchema" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type AirdropInput = z.input<typeof AirdropInputSchema>;
+
 // @public (undocumented)
 export const ALL_ROLES: ("admin" | "transfer" | "minter" | "pauser" | "editor" | "lister" | "asset")[];
 
@@ -1839,6 +1844,7 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
 // @public
 export class Erc1155<T extends DropERC1155 | TokenERC1155> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
+    airdrop(tokenId: BigNumberish, addresses: AirdropInput, data?: BytesLike): Promise<TransactionResult>;
     balance(tokenId: BigNumberish): Promise<BigNumber>;
     balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
@@ -2504,7 +2510,7 @@ export interface NewAuctionListing {
     listingDurationInSeconds: BigNumberish;
     quantity: BigNumberish;
     reservePricePerToken: Price;
-    startTimeInSeconds: BigNumberish;
+    startTimestamp: Date;
     tokenId: BigNumberish;
     // (undocumented)
     type?: "NewAuctionListing";
@@ -2517,7 +2523,7 @@ export interface NewDirectListing {
     currencyContractAddress: string;
     listingDurationInSeconds: BigNumberish;
     quantity: BigNumberish;
-    startTimeInSeconds: BigNumberish;
+    startTimestamp: Date;
     tokenId: BigNumberish;
     // (undocumented)
     type?: "NewDirectListing";

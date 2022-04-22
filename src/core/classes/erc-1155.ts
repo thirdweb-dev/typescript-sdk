@@ -16,7 +16,8 @@ import { AddressZero } from "@ethersproject/constants";
 import { getRoleHash } from "../../common/role";
 import { NotFoundError } from "../../common";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
-
+import { AirdropInput } from "../../types/airdrop/airdrop";
+import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 /**
  * Standard ERC1155 functions
  * @public
@@ -311,6 +312,72 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
         operator,
         approved,
       ]),
+    };
+  }
+
+  /** ******************************
+   * WRITE FUNCTIONS
+   *******************************/
+
+  /**
+   * Airdrop multiple NFTs
+   *
+   * @remarks Airdrop one or multiple NFTs to the provided wallet addresses.
+   *
+   * @example
+   * ```javascript
+   * // Array of objects of addresses and quantities to airdrop NFTs to
+   * const addresses = [
+   *  {
+   *    address: "0x...",
+   *    quantity: 2,
+   *  },
+   *  {
+   *   address: "0x...",
+   *    quantity: 3,
+   *  },
+   * ];
+   * const tokenId = "0";
+   * await contract.airdrop(addresses, tokenId);
+   *
+   * // You can also pass an array of addresses, it will airdrop 1 NFT per address
+   * const addresses = [
+   *  "0x...", "0x...", "0x...",
+   * ]
+   * const tokenId = "0";
+   * await contract.airdrop(addresses, tokenId);
+   * ```
+   */
+  public async airdrop(
+    tokenId: BigNumberish,
+    addresses: AirdropInput,
+    data: BytesLike = [0],
+  ): Promise<TransactionResult> {
+    const from = await this.contractWrapper.getSignerAddress();
+
+    const balanceOf = await this.balanceOf(from, tokenId);
+
+    const input = AirdropInputSchema.parse(addresses);
+
+    const totalToAirdrop = input.reduce((prev, curr) => {
+      return prev + Number(curr?.quantity || 1);
+    }, 0);
+
+    if (balanceOf.toNumber() < totalToAirdrop) {
+      throw new Error(
+        `The caller owns ${balanceOf.toNumber()} NFTs, but wants to airdrop ${totalToAirdrop} NFTs.`,
+      );
+    }
+
+    const encoded = input.map(({ address: to, quantity }) => {
+      return this.contractWrapper.readContract.interface.encodeFunctionData(
+        "safeTransferFrom",
+        [from, to, tokenId, quantity, data],
+      );
+    });
+
+    return {
+      receipt: await this.contractWrapper.multiCall(encoded),
     };
   }
 

@@ -178,7 +178,9 @@ export class MarketplaceDirect {
           quantityToList: listing.quantity,
           reservePricePerToken: normalizedPricePerToken,
           secondsUntilEndTime: listing.listingDurationInSeconds,
-          startTime: listing.startTimeInSeconds,
+          startTime: BigNumber.from(
+            Math.floor(listing.startTimestamp.getTime() / 1000),
+          ),
         } as IMarketplace.ListingParametersStruct,
       ],
     );

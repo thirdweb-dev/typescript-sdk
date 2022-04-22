@@ -160,7 +160,7 @@ export function validateNewListingParam(
     "Listing duration is required",
   );
   invariant(
-    param.startTimeInSeconds !== undefined && param.startTimeInSeconds !== null,
+    param.startTimestamp !== undefined && param.startTimestamp !== null,
     "Start time is required",
   );
   invariant(
