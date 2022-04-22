@@ -132,28 +132,6 @@ before(async () => {
     contractFactory: ethers.ContractFactory,
     contractType: ContractType,
   ): Promise<ethers.Contract> {
-    // handle version bumps
-    // switch (contractType) {
-    //   case NFTDrop.contractType:
-    //   case EditionDrop.contractType:
-    //   case Marketplace.contractType:
-    //     const mock = await new ethers.ContractFactory(
-    //       MockContract__factory.abi,
-    //       MockContract__factory.bytecode,
-    //     )
-    //       .connect(signer)
-    //       .deploy(
-    //         ethers.utils.formatBytes32String(
-    //           REMOTE_CONTRACT_NAME[contractType],
-    //         ),
-    //         1,
-    //       );
-    //     const tx = await thirdwebFactoryDeployer.addImplementation(
-    //       mock.address,
-    //     );
-    //     await tx.wait();
-    // }
-
     switch (contractType) {
       case Vote.contractType:
         return await contractFactory.deploy();
