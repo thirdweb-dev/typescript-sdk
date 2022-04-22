@@ -319,7 +319,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
    *******************************/
 
   /**
-   * Airdrop multiple NFT
+   * Airdrop multiple NFTs
    *
    * @remarks Airdrop one or multiple NFTs to the provided wallet addresses.
    *
@@ -332,8 +332,21 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
     tokenId: BigNumberish,
     addresses: AirdropInput[],
     data: BytesLike = [0],
-  ): Promise<TransactionResult> {
+  ): Promise<TransactionResult | undefined> {
     const from = await this.contractWrapper.getSignerAddress();
+
+    const balanceOf = await this.balanceOf(from, tokenId);
+
+    const totalToAirdrop = addresses.reduce((prev, curr) => {
+      return prev + Number(curr.quantity);
+    }, 0);
+
+    if (balanceOf.toNumber() < totalToAirdrop) {
+      console.error(
+        `The caller owns ${balanceOf.toNumber()} NFTs, but wants to airdrop ${totalToAirdrop} NFTs.`,
+      );
+      return;
+    }
 
     const encoded = [];
     for (let i = 0; i < addresses.length; i++) {

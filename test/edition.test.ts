@@ -146,7 +146,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     expect(bobsNftsAfterTransfer[0].quantityOwned.toNumber()).to.be.equal(20);
   });
 
-  it("should airdrop 5 edition tokens to different wallets", async () => {
+  it("should airdrop edition tokens to different wallets", async () => {
     await bundleContract.mint({
       metadata: {
         name: "Bundle 1",
@@ -172,6 +172,29 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     const bobOwned = await bundleContract.getOwned(bobWallet.address);
     expect(samOwned[0].quantityOwned.toNumber()).to.be.equal(5);
     expect(bobOwned[0].quantityOwned.toNumber()).to.be.equal(3);
+  });
+
+  it("should fail airdrop because not enough NFTs holded", async () => {
+    await bundleContract.mint({
+      metadata: {
+        name: "Bundle 1",
+        description: "Bundle 1",
+        image: "fake://myownfakeipfs",
+      },
+      supply: 8,
+    });
+    const addresses = [
+      {
+        address: samWallet.address,
+        quantity: 5,
+      },
+      {
+        address: bobWallet.address,
+        quantity: 12,
+      },
+    ];
+
+    expect(await bundleContract.airdrop(0, addresses)).to.throw();
   });
 
   // TODO: This test should move to the royalty suite
