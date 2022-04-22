@@ -34,8 +34,7 @@
     "generate-snippets": "node ./scripts/generate-snippets.mjs",
     "build": "yarn clean && yarn generate-docs && yarn generate-snippets",
     "test": "echo \"\nUse 'yarn run test:all' to run all tests\nPass a test file pattern from ./test to run\n\n\t$ yarn run test test/pack.test.ts\" && ts-mocha -t 120000 -r esm -p tsconfig.testing.json",
-    "test:all": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'",
-    "postinstall": "yarn typechain"
+    "test:all": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.1",
