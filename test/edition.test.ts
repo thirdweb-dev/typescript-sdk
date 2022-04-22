@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Edition } from "../src/index";
-import { sdk, signers, storage } from "./before.test";
+import { expectError, sdk, signers, storage } from "./before.test";
 
 import { assert, expect } from "chai";
 import { AddressZero } from "@ethersproject/constants";
@@ -144,6 +144,61 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
       bobWallet.address,
     );
     expect(bobsNftsAfterTransfer[0].quantityOwned.toNumber()).to.be.equal(20);
+  });
+
+  it("should airdrop edition tokens to different wallets", async () => {
+    await bundleContract.mint({
+      metadata: {
+        name: "Bundle 1",
+        description: "Bundle 1",
+        image: "fake://myownfakeipfs",
+      },
+      supply: 8,
+    });
+    const addresses = [
+      {
+        address: samWallet.address,
+        quantity: 5,
+      },
+      {
+        address: bobWallet.address,
+        quantity: 3,
+      },
+    ];
+
+    await bundleContract.airdrop(0, addresses);
+
+    const samOwned = await bundleContract.getOwned(samWallet.address);
+    const bobOwned = await bundleContract.getOwned(bobWallet.address);
+    expect(samOwned[0].quantityOwned.toNumber()).to.be.equal(5);
+    expect(bobOwned[0].quantityOwned.toNumber()).to.be.equal(3);
+  });
+
+  it("should fail airdrop because not enough NFTs owned", async () => {
+    await bundleContract.mint({
+      metadata: {
+        name: "Bundle 1",
+        description: "Bundle 1",
+        image: "fake://myownfakeipfs",
+      },
+      supply: 8,
+    });
+    const addresses = [
+      {
+        address: samWallet.address,
+        quantity: 5,
+      },
+      {
+        address: bobWallet.address,
+        quantity: 12,
+      },
+    ];
+
+    try {
+      await bundleContract.airdrop(0, addresses);
+    } catch (e) {
+      expectError(e, "The caller owns");
+    }
   });
 
   // TODO: This test should move to the royalty suite
