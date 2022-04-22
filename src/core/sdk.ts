@@ -291,6 +291,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @internal
    */
   public async getCustomContract(address: string) {
+    if (this.contractCache.has(address)) {
+      return this.contractCache.get(address) as CustomContract;
+    }
     try {
       const metadata = await this.publisher.fetchContractMetadataFromAddress(
         address,
@@ -305,12 +308,17 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @internal
    */
   public getCustomContractFromAbi(address: string, abi: ContractInterface) {
-    return new CustomContract(
+    if (this.contractCache.has(address)) {
+      return this.contractCache.get(address) as CustomContract;
+    }
+    const contract = new CustomContract(
       this.getSignerOrProvider(),
       address,
       abi,
       this.storage,
       this.options,
     );
+    this.contractCache.set(address, contract);
+    return contract;
   }
 }

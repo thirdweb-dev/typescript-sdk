@@ -56,8 +56,7 @@ export class CustomContract<
   private options;
 
   // raw contract
-  public readonly read: any;
-  public readonly write: any;
+  public readonly functions: any;
 
   // utilities
   public events: ContractEvents<TContract>;
@@ -90,8 +89,7 @@ export class CustomContract<
     this.options = options;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
-    this.read = contractWrapper.readContract;
-    this.write = contractWrapper._raw;
+    this.functions = contractWrapper.writeContract;
 
     this.events = new ContractEvents(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);

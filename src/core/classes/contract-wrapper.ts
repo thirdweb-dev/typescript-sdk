@@ -41,12 +41,11 @@ export class ContractWrapper<
 > extends RPCConnectionHandler {
   private isValidContract = false;
   private customOverrides: () => CallOverrides = () => ({});
-  private writeContract;
-  public readContract;
   /**
    * @internal
    */
-  public _raw; // exposed for custom contracts
+  public writeContract;
+  public readContract;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -65,7 +64,6 @@ export class ContractWrapper<
     this.readContract = this.writeContract.connect(
       this.getProvider(),
     ) as TContract;
-    this._raw = this.writeContract;
   }
 
   public override updateSignerOrProvider(
