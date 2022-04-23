@@ -25,6 +25,18 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 // You can switch out this provider with any wallet or provider setup you like.
 const sdk = new ThirdwebSDK(provider);
 const contract = sdk.getCustomContract("{{contract_address}}");
+
+// call any function in your contract
+await contract.functions.myCustomFunction(params);
+
+// if your contract follows the ERC721 standard, contract.nft will be present
+const allNFTs = await constract.nft.query.all()
+
+// if your contract extends IMintableERC721, contract.nft.mint will be present
+const tx = await contract.nft.mint.toSelf({
+    name: "Cool NFT",
+    image: readFileSync("some_image.png"),
+  });
 ```
 
 ## Constructors

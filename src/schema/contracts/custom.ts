@@ -11,38 +11,59 @@ import {
 import { z } from "zod";
 import { BigNumberishSchema, JsonSchema } from "../shared";
 
+/**
+ * @internal
+ */
 export const BYOCContractMetadataSchema = CommonContractSchema.catchall(
   z.lazy(() => JsonSchema),
 );
 
 export type CustomContractMetadata = z.input<typeof BYOCContractMetadataSchema>;
 
+/**
+ * @internal
+ */
 export const CustomContractInput = BYOCContractMetadataSchema.merge(
   CommonRoyaltySchema.merge(MerkleSchema).merge(CommonSymbolSchema).partial(),
 );
 
+/**
+ * @internal
+ */
 export const CustomContractOutput = CommonContractOutputSchema.merge(
   CommonRoyaltySchema.merge(MerkleSchema).merge(CommonSymbolSchema).partial(),
 );
 
+/**
+ * @internal
+ */
 export const CustomContractDeploy = CustomContractInput.merge(
   CommonPlatformFeeSchema.merge(CommonPrimarySaleSchema)
     .merge(CommonTrustedForwarderSchema)
     .partial(),
 );
 
+/**
+ * @internal
+ */
 export const CustomContractSchema = {
   deploy: CustomContractDeploy,
   output: CustomContractOutput,
   input: CustomContractInput,
 };
 
+/**
+ * @internal
+ */
 export const CustomContractMetadataSchema = z.object({
   name: z.string(),
   abiUri: z.string(),
   bytecodeUri: z.string(),
 });
 
+/**
+ * @internal
+ */
 export const AbiTypeSchema = z
   .object({
     type: z.string(),
@@ -50,6 +71,9 @@ export const AbiTypeSchema = z
   })
   .catchall(z.lazy(() => JsonSchema));
 
+/**
+ * @internal
+ */
 export const AbiObjectSchema = z
   .object({
     type: z.string(),
@@ -59,8 +83,14 @@ export const AbiObjectSchema = z
   })
   .catchall(z.lazy(() => JsonSchema));
 
+/**
+ * @internal
+ */
 export const AbiSchema = z.array(AbiObjectSchema);
 
+/**
+ * @internal
+ */
 export const PublishedContractSchema = z.object({
   id: z.string(),
   timestamp: BigNumberishSchema,

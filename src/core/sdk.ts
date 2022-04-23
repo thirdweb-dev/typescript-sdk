@@ -310,6 +310,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * Get an instance of a Custom contract from a json ABI
    * @param address - the address of the deployed contract
+   * @param abi - the JSON abi
    * @returns the contract
    * @beta
    */

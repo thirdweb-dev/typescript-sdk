@@ -4,7 +4,7 @@
     "summary": "Custom contract dynamic class with feature detection\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getCustomContract(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getCustomContract(\"{{contract_address}}\");\n\n// call any function in your contract\nawait contract.functions.myCustomFunction(params);\n\n// if your contract follows the ERC721 standard, contract.nft will be present\nconst allNFTs = await constract.nft.query.all()\n\n// if your contract extends IMintableERC721, contract.nft.mint will be present\nconst tx = await contract.nft.mint.toSelf({\n    name: \"Cool NFT\",\n    image: readFileSync(\"some_image.png\"),\n  });"
     },
     "methods": [],
     "properties": [],
