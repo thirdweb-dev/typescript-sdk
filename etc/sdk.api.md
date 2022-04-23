@@ -827,7 +827,6 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     estimator: GasCostEstimator<TContract>;
     // (undocumented)
     events: ContractEvents<TContract>;
-    // (undocumented)
     readonly functions: any;
     // (undocumented)
     getAddress(): string;
@@ -1072,7 +1071,7 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     }> | undefined;
     // (undocumented)
     sales: ContractPrimarySale<TContract & IThirdwebPrimarySale> | undefined;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<    {
         name: ZodString;
