@@ -71,6 +71,9 @@ export class CustomContract<
 > implements UpdateableNetwork
 {
   static contractType = "custom" as const;
+  /**
+   * @internal
+   */
   static schema = CustomContractSchema;
   static contractFactory = ThirdwebContract__factory;
 
@@ -79,6 +82,10 @@ export class CustomContract<
   private options;
 
   // raw contract
+  /**
+   * Call any function in this contract using the function signature
+   * ex: contract.functions.mint(address, quantity)
+   */
   public readonly functions: any;
 
   // utilities
