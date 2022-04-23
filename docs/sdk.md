@@ -16,6 +16,7 @@
 |  [ContractPrimarySale](./sdk.contractprimarysale.md) | Handles primary sales recipients for a Contract |
 |  [ContractRoles](./sdk.contractroles.md) | Handles Contract roles and permissions |
 |  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalties |
+|  [CustomContract](./sdk.customcontract.md) | <b><i>(BETA)</i></b> Custom contract dynamic class with feature detection |
 |  [DelayedReveal](./sdk.delayedreveal.md) | Handles delayed reveal logic |
 |  [DropClaimConditions](./sdk.dropclaimconditions.md) | Manages claim conditions for NFT Drop contracts |
 |  [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Manages claim conditions for Edition Drop contracts |

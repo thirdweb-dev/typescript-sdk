@@ -28,7 +28,7 @@ export class Erc721Enumerable<
    *
    * @example
    * ```javascript
-   * const nfts = await contract.getAll();
+   * const nfts = await contract.query.all();
    * console.log(nfts);
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
@@ -59,7 +59,7 @@ export class Erc721Enumerable<
    * ```javascript
    * // Address of the wallet to get the NFTs of
    * const address = "{{wallet_address}}";
-   * const nfts = await contract.getOwned(address);
+   * const nfts = await contract.query.owned(address);
    * console.log(nfts);
    * ```
    *

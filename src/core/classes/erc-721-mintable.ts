@@ -44,7 +44,7 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
    * @example
    * ```javascript
    * // Address of the wallet you want to mint the NFT to
-   * const toAddress = "{{wallet_address}}";
+   * const walletAddress = "{{wallet_address}}";
    *
    * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
    * const metadata = {
@@ -53,7 +53,7 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
    *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
    * };
    *
-   * const tx = await contract.mintTo(toAddress, metadata);
+   * const tx = await contract.mint.toAddress(walletAddress, metadata);
    * const receipt = tx.receipt; // the transaction receipt
    * const tokenId = tx.id; // the id of the NFT minted
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
@@ -106,7 +106,7 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
    * @example
    * ```javascript
    * // Address of the wallet you want to mint the NFT to
-   * const toAddress = "{{wallet_address}}";
+   * const walletAddress = "{{wallet_address}}";
    *
    * // Custom metadata of the NFTs you want to mint.
    * const metadatas = [{
@@ -119,7 +119,7 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
    *   image: fs.readFileSync("path/to/other/image.png"),
    * }];
    *
-   * const tx = await contract.mintBatchTo(toAddress, metadatas);
+   * const tx = await contract.mint.batchToAddress(walletAddress, metadatas);
    * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
    * const firstTokenId = tx[0].id; // token id of the first minted NFT
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT

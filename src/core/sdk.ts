@@ -288,7 +288,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   /**
-   * @internal
+   * Get an instance of a Custom ThirdwebContract
+   * @param address - the address of the deployed contract
+   * @returns the contract
+   * @beta
    */
   public async getCustomContract(address: string) {
     if (this.contractCache.has(address)) {
@@ -305,7 +308,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   /**
-   * @internal
+   * Get an instance of a Custom contract from a json ABI
+   * @param address - the address of the deployed contract
+   * @returns the contract
+   * @beta
    */
   public getCustomContractFromAbi(address: string, abi: ContractInterface) {
     if (this.contractCache.has(address)) {

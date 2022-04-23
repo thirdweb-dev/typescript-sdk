@@ -40,8 +40,19 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 
 /**
- * Custom contract wrapper with feature detection
- * @internal
+ * Custom contract dynamic class with feature detection
+ *
+ * @example
+ *
+ * ```javascript
+ * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+ *
+ * // You can switch out this provider with any wallet or provider setup you like.
+ * const sdk = new ThirdwebSDK(provider);
+ * const contract = sdk.getCustomContract("{{contract_address}}");
+ * ```
+ *
+ * @beta
  */
 export class CustomContract<
   TContract extends ThirdwebContract = ThirdwebContract,
@@ -70,7 +81,13 @@ export class CustomContract<
   public roles;
   public sales;
   public platformFees;
+  /**
+   * Auto-detects ERC20 standard functions.
+   */
   public token: Erc20<ITokenERC20> | undefined;
+  /**
+   * Auto-detects ERC721 standard functions.
+   */
   public nft: Erc721<ERC721 & ERC721Metadata> | undefined;
 
   constructor(

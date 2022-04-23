@@ -813,9 +813,8 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
 }>;
 
 // Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
-// Warning: (ae-internal-missing-underscore) The name "CustomContract" should be prefixed with an underscore because the declaration is marked as @internal
 //
-// @internal
+// @beta
 export class CustomContract<TContract extends ThirdwebContract = ThirdwebContract> implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
     // Warning: (ae-forgotten-export) The symbol "ThirdwebContract__factory" needs to be exported by the entry point index.d.ts
@@ -832,6 +831,8 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     readonly functions: any;
     // (undocumented)
     getAddress(): string;
+    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @beta, but its signature references "ContractInterceptor" which is marked as @internal
+    //
     // (undocumented)
     interceptor: ContractInterceptor<TContract>;
     // (undocumented)
@@ -947,13 +948,13 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     }>;
     // Warning: (ae-forgotten-export) The symbol "ERC721" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "ERC721Metadata" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     nft: Erc721<ERC721 & ERC721Metadata> | undefined;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
     platformFees: ContractPlatformFee<TContract & IThirdwebPlatformFee> | undefined;
+    // Warning: (ae-incompatible-release-tags) The symbol "publishedMetadata" is marked as @beta, but its signature references "ContractPublishedMetadata" which is marked as @internal
+    //
     // (undocumented)
     publishedMetadata: ContractPublishedMetadata<TContract>;
     // (undocumented)
@@ -1183,8 +1184,6 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         }>;
     };
     // Warning: (ae-forgotten-export) The symbol "ITokenERC20" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     token: Erc20<ITokenERC20> | undefined;
 }
 
@@ -4391,9 +4390,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         contractType: "custom" | "token" | "pack" | "split" | "edition-drop" | "edition" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
-    // @internal (undocumented)
+    // @beta
     getCustomContract(address: string): Promise<CustomContract<ThirdwebContract>>;
-    // @internal (undocumented)
+    // @beta
     getCustomContractFromAbi(address: string, abi: ContractInterface): CustomContract<ThirdwebContract>;
     getEdition(address: string): Edition;
     getEditionDrop(address: string): EditionDrop;

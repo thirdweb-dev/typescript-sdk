@@ -1,4 +1,15 @@
 {
+  "CustomContract": {
+    "name": "CustomContract",
+    "summary": "Custom contract dynamic class with feature detection\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getCustomContract(\"{{contract_address}}\");"
+    },
+    "methods": [],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.CustomContract"
+  },
   "Edition": {
     "name": "Edition",
     "summary": "Create a collection of NFTs that lets you mint multiple copies of each NFT.\n\n",
