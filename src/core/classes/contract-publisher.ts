@@ -219,20 +219,37 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @param constructorParamValues
    * @param contractMetadata
    */
-  public async deployCustomContract(
+  public async deployPublishedContract(
     publisherAddress: string,
     contractId: string,
     constructorParamValues: any[],
     contractMetadata?: CustomContractMetadata,
   ): Promise<string> {
-    const signer = this.getSigner();
-    invariant(signer, "A signer is required");
     // TODO this gets the latest version, should we allow deploying a certain version?
     const contract = await this.registry.readContract.getPublishedContract(
       publisherAddress,
       contractId,
     );
-    const contractMetadataUri = contract.publishMetadataUri;
+    return this.deployCustomContract(
+      contract.publishMetadataUri,
+      constructorParamValues,
+      contractMetadata,
+    );
+  }
+
+  /**
+   * @internal
+   * @param contractMetadataUri
+   * @param constructorParamValues
+   * @param contractMetadata
+   */
+  public async deployCustomContract(
+    contractMetadataUri: string,
+    constructorParamValues: any[],
+    contractMetadata?: CustomContractMetadata,
+  ) {
+    const signer = this.getSigner();
+    invariant(signer, "A signer is required");
     const metadata = await this.fetchFullContractMetadata(contractMetadataUri);
     const publisher = await signer.getAddress();
     const bytecode = metadata.bytecode;

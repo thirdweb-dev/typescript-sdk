@@ -48,7 +48,7 @@ describe("Publishing", async () => {
   it("should publish simple greeter contract", async () => {
     const tx = await sdk.publisher.publish(simpleContractUri);
     const contract = await tx.data();
-    const deployedAddr = await sdk.publisher.deployCustomContract(
+    const deployedAddr = await sdk.publisher.deployPublishedContract(
       adminWallet.address,
       contract.id,
       [],
@@ -84,7 +84,7 @@ describe("Publishing", async () => {
     sdk.updateSignerOrProvider(bobWallet);
     const tx = await sdk.publisher.publish(contructorParamsContractUri);
     const contract = await tx.data();
-    const deployedAddr = await sdk.publisher.deployCustomContract(
+    const deployedAddr = await sdk.publisher.deployPublishedContract(
       bobWallet.address,
       contract.id,
       ["someUri", 12345],
@@ -111,7 +111,7 @@ describe("Publishing", async () => {
     const tx = await realSDK.publisher.publish(ipfsUri);
     const contract = await tx.data();
     console.log("deployed", contract);
-    const deployedAddr = await realSDK.publisher.deployCustomContract(
+    const deployedAddr = await realSDK.publisher.deployPublishedContract(
       adminWallet.address,
       contract.id,
       [60000, 3, 100000],
@@ -125,7 +125,7 @@ describe("Publishing", async () => {
     const tx = await realSDK.publisher.publish(ipfsUri);
     const contract = await tx.data();
     console.log("deployed", await contract);
-    const deployedAddr = await realSDK.publisher.deployCustomContract(
+    const deployedAddr = await realSDK.publisher.deployPublishedContract(
       adminWallet.address,
       contract.id,
       ["foo", "bar"],
@@ -143,7 +143,7 @@ describe("Publishing", async () => {
     const tx = await realSDK.publisher.publish(ipfsUri);
     const contract = await tx.data();
     console.log("deployed", await contract);
-    const deployedAddr = await realSDK.publisher.deployCustomContract(
+    const deployedAddr = await realSDK.publisher.deployPublishedContract(
       adminWallet.address,
       contract.id,
       ["foo", "bar"],
@@ -175,7 +175,7 @@ describe("Publishing", async () => {
     const tx = await realSDK.publisher.publish(ipfsUri);
     const contract = await tx.data();
     console.log("deployed", await contract);
-    const deployedAddr = await realSDK.publisher.deployCustomContract(
+    const deployedAddr = await realSDK.publisher.deployPublishedContract(
       adminWallet.address,
       contract.id,
       ["foo", "bar"],

@@ -27,7 +27,7 @@ describe("Custom Contracts", async () => {
     );
     const tx = await sdk.publisher.publish(simpleContractUri);
     const contract = await tx.data();
-    customContractAddress = await sdk.publisher.deployCustomContract(
+    customContractAddress = await sdk.publisher.deployPublishedContract(
       adminWallet.address,
       contract.id,
       [],
