@@ -55,7 +55,7 @@ import { ContractPublishedMetadata } from "../core/classes/contract-published-me
  * await contract.functions.myCustomFunction(params);
  *
  * // if your contract follows the ERC721 standard, contract.nft will be present
- * const allNFTs = await constract.nft.query.all()
+ * const allNFTs = await contract.nft.query.all()
  *
  * // if your contract extends IMintableERC721, contract.nft.mint will be present
  * const tx = await contract.nft.mint.toSelf({
