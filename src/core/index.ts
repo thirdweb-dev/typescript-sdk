@@ -141,6 +141,9 @@ export class ThirdwebSDK implements IThirdwebSdk {
     providerOrNetwork: ValidProviderInput,
     opts?: Partial<ISDKOptions>,
   ) {
+    console.error(
+      "You're using a deprecated and unsupported version of the Thirdweb SDK (v1).\n\nPlease upgrade to v2 using the new package: `npm i @thirdweb-dev/sdk`.\n\nFor more info, visit: https://github.com/thirdweb-dev/typescript-sdk",
+    );
     this.providerOrSigner = this.setProviderOrSigner(providerOrNetwork);
     this.options = {
       ...this.defaultOptions,
