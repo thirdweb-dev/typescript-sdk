@@ -130,13 +130,12 @@ describe("Marketplace Contract", async () => {
     tokenId: BigNumberish,
     quantity: BigNumberish = 1,
   ): Promise<BigNumber> => {
-    const block = await hardhatEthers.provider.getBlock("latest");
     return (
       await marketplaceContract.direct.createListing({
         assetContractAddress: contractAddress,
         buyoutPricePerToken: 0.1,
         currencyContractAddress: tokenAddress,
-        startTimestamp: new Date(block.timestamp * 1000),
+        startTimestamp: new Date(0), // start date can be in the past
         listingDurationInSeconds: 60 * 60 * 24,
         tokenId,
         quantity,
@@ -839,7 +838,6 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should distribute the tokens when a listing closes", async () => {
-      const now = Math.floor(Date.now() / 1000);
       await sdk.updateSignerOrProvider(adminWallet);
       const listingId = (
         await marketplaceContract.auction.createListing({

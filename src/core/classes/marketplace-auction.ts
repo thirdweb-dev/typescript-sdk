@@ -207,6 +207,13 @@ export class MarketplaceAuction {
       listing.currencyContractAddress,
     );
 
+    let listingStartTime = Math.floor(listing.startTimestamp.getTime() / 1000);
+    const block = await this.contractWrapper.getProvider().getBlock("latest");
+    const blockTime = block.timestamp;
+    if (listingStartTime < blockTime) {
+      listingStartTime = blockTime;
+    }
+
     const receipt = await this.contractWrapper.sendTransaction(
       "createListing",
       [
@@ -219,9 +226,7 @@ export class MarketplaceAuction {
           quantityToList: listing.quantity,
           reservePricePerToken: normalizedReservePrice,
           secondsUntilEndTime: listing.listingDurationInSeconds,
-          startTime: BigNumber.from(
-            Math.floor(listing.startTimestamp.getTime() / 1000),
-          ),
+          startTime: BigNumber.from(listingStartTime),
         } as IMarketplace.ListingParametersStruct,
       ],
     );
