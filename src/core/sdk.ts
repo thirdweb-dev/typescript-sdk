@@ -234,9 +234,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         try {
           contractType = await this.resolveContractType(address);
         } catch (e) {
-          console.log(
-            `Couldn't get contract type for address: ${address} - fallback to custom contract`,
-          );
+          // this going to happen frequently and be OK, we'll just catch it and ignore it
         }
         let metadata: ContractMetadata<any, any> | undefined;
         if (contractType === "custom") {
