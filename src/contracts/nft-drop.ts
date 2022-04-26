@@ -37,6 +37,33 @@ import { ContractInterceptor } from "../core/classes/contract-interceptor";
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
  *
  * @example
+ * If you want to use the SDK on the frontend with React, you should wrap your app with a ThirdwebProvider:
+ *
+ * ```jsx title="App.jsx"
+ * import { ThirdwebProvider } from "@thirdweb-dev/react";
+ *
+ * const App = () => {
+ *   return (
+ *     <ThirdwebProvider>
+ *       <YourApp />
+ *     </ThirdwebProvider>
+ *   );
+ * };
+ * ```
+ *
+ * And then you can setup this contract as follows.
+ *
+ * ```javascript
+ * import { useNFTDrop } from '@thirdweb/react-hooks'
+ *
+ * const App = () => {
+ *   const contract = useNFTDrop("<YOUR-CONTRACT-ADDRESS>")
+ *
+ *   // Now you can use the contract in the rest of the component
+ *
+ *   ...
+ * }
+ * ```
  *
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";

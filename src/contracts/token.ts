@@ -24,6 +24,33 @@ import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting"
  * Create a standard crypto token or cryptocurrency.
  *
  * @example
+ * If you want to use the SDK on the frontend with React, you should wrap your app with a ThirdwebProvider:
+ *
+ * ```jsx title="App.jsx"
+ * import { ThirdwebProvider } from "@thirdweb-dev/react";
+ *
+ * const App = () => {
+ *   return (
+ *     <ThirdwebProvider>
+ *       <YourApp />
+ *     </ThirdwebProvider>
+ *   );
+ * };
+ * ```
+ *
+ * And then you can setup this contract as follows.
+ *
+ * ```javascript
+ * import { useToken } from '@thirdweb/react-hooks'
+ *
+ * const App = () => {
+ *   const contract = useToken("<YOUR-CONTRACT-ADDRESS>")
+ *
+ *   // Now you can use the contract in the rest of the component
+ *
+ *   ...
+ * }
+ * ```
  *
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";

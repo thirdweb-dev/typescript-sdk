@@ -30,6 +30,33 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
  *
  * @example
+ * If you want to use the SDK on the frontend with React, you should wrap your app with a ThirdwebProvider:
+ *
+ * ```jsx title="App.jsx"
+ * import { ThirdwebProvider } from "@thirdweb-dev/react";
+ *
+ * const App = () => {
+ *   return (
+ *     <ThirdwebProvider>
+ *       <YourApp />
+ *     </ThirdwebProvider>
+ *   );
+ * };
+ * ```
+ *
+ * And then you can setup this contract as follows.
+ *
+ * ```javascript
+ * import { useEdition } from '@thirdweb/react-hooks'
+ *
+ * const App = () => {
+ *   const contract = useEdition("<YOUR-CONTRACT-ADDRESS>")
+ *
+ *   // Now you can use the contract in the rest of the component
+ *
+ *   ...
+ * }
+ * ```
  *
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
