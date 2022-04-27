@@ -218,6 +218,9 @@ export function isWinningBid(
   bidBuffer = BigNumber.from(bidBuffer);
   winningPrice = BigNumber.from(winningPrice);
   newBidPrice = BigNumber.from(newBidPrice);
+  if (winningPrice.eq(BigNumber.from(0))) {
+    return false;
+  }
   const buffer = newBidPrice.sub(winningPrice).mul(MAX_BPS).div(winningPrice);
   return buffer.gte(bidBuffer);
 }
