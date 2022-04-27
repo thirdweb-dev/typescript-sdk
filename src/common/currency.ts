@@ -1,11 +1,7 @@
 import { AddressZero } from "@ethersproject/constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import {
-  IERC20,
-  IERC20__factory,
-  TokenERC20__factory,
-} from "@thirdweb-dev/contracts";
+import { IERC20, IERC20__factory, TokenERC20__factory } from "contracts";
 import {
   getNativeTokenByChainId,
   NATIVE_TOKEN_ADDRESS,

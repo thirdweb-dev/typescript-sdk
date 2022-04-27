@@ -1,5 +1,5 @@
 import { Erc1155 } from "../core/classes/erc-1155";
-import { TokenERC1155, TokenERC1155__factory } from "@thirdweb-dev/contracts";
+import { TokenERC1155, TokenERC1155__factory } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
@@ -8,6 +8,7 @@ import {
   ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
+  TransactionResult,
   TransactionResultWithId,
 } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
@@ -17,7 +18,6 @@ import {
   EditionMetadata,
   EditionMetadataOrUri,
 } from "../schema/tokens/edition";
-import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
@@ -25,6 +25,9 @@ import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { TokensMintedEvent } from "contracts/TokenERC1155";
+import { getRoleHash } from "../common";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -135,6 +138,17 @@ export class Edition extends Erc1155<TokenERC1155> {
   /** ******************************
    * READ FUNCTIONS
    *******************************/
+
+  /**
+   * Get whether users can transfer NFTs from this contract
+   */
+  public async isTransferRestricted(): Promise<boolean> {
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      AddressZero,
+    );
+    return !anyoneCanTransfer;
+  }
 
   /** ******************************
    * WRITE FUNCTIONS
@@ -332,5 +346,24 @@ export class Edition extends Erc1155<TokenERC1155> {
         data: () => this.get(id),
       };
     });
+  }
+
+  /**
+   * Burn a single NFT
+   * @param tokenId - the token Id to burn
+   * @param amount - amount to burn
+   */
+  public async burn(
+    tokenId: BigNumberish,
+    amount: BigNumberish,
+  ): Promise<TransactionResult> {
+    const account = await this.contractWrapper.getSignerAddress();
+    return {
+      receipt: await this.contractWrapper.sendTransaction("burn", [
+        account,
+        tokenId,
+        amount,
+      ]),
+    };
   }
 }

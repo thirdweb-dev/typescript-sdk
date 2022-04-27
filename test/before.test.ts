@@ -1,25 +1,24 @@
 import {
+  ByocFactory,
+  ByocFactory__factory,
+  ByocRegistry,
+  ByocRegistry__factory,
   TWFactory,
   TWFactory__factory,
   TWFee__factory,
   TWRegistry,
   TWRegistry__factory,
-  Mock__factory,
-  MockContract__factory,
-} from "@thirdweb-dev/contracts";
+} from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 import {
   CONTRACTS_MAP,
   ContractType,
-  EditionDrop,
   getNativeTokenByChainId,
   IStorage,
   Marketplace,
-  NFTDrop,
   Pack,
-  REMOTE_CONTRACT_NAME,
   ThirdwebSDK,
   Vote,
 } from "../src";
@@ -107,30 +106,32 @@ before(async () => {
 
   console.log("TWFee address: ", thirdwebFeeDeployer.address);
 
+  const customFactoryDeployer = (await new ethers.ContractFactory(
+    ByocFactory__factory.abi,
+    ByocFactory__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(registry.address, trustedForwarderAddress)) as ByocFactory;
+  await customFactoryDeployer.deployed();
+
+  const customRegistryDeployer = (await new ethers.ContractFactory(
+    ByocRegistry__factory.abi,
+    ByocRegistry__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(trustedForwarderAddress)) as ByocRegistry;
+  await customRegistryDeployer.deployed();
+  console.log("ByocRegistry address: ", customRegistryDeployer.address);
+
+  await registryContract.grantRole(
+    await registryContract.OPERATOR_ROLE(),
+    customFactoryDeployer.address,
+  );
+
   async function deployContract(
     contractFactory: ethers.ContractFactory,
     contractType: ContractType,
   ): Promise<ethers.Contract> {
-    // handle version bumps
-    switch (contractType) {
-      case Marketplace.contractType:
-        const mock = await new ethers.ContractFactory(
-          MockContract__factory.abi,
-          MockContract__factory.bytecode,
-        )
-          .connect(signer)
-          .deploy(
-            ethers.utils.formatBytes32String(
-              REMOTE_CONTRACT_NAME[contractType],
-            ),
-            1,
-          );
-        const tx = await thirdwebFactoryDeployer.addImplementation(
-          mock.address,
-        );
-        await tx.wait();
-    }
-
     switch (contractType) {
       case Vote.contractType:
         return await contractFactory.deploy();
@@ -155,6 +156,9 @@ before(async () => {
   }
 
   for (const contractType in CONTRACTS_MAP) {
+    if (contractType === "custom") {
+      continue;
+    }
     const contract = CONTRACTS_MAP[contractType as ContractType];
     const factory = contract.contractFactory;
 
@@ -183,6 +187,8 @@ before(async () => {
 
   process.env.registryAddress = thirdwebRegistryAddress;
   process.env.factoryAddress = thirdwebFactoryDeployer.address;
+  process.env.byocRegistryAddress = customRegistryDeployer.address;
+  process.env.byocFactoryAddress = customFactoryDeployer.address;
 
   storage = new MockStorage();
   sdk = new ThirdwebSDK(

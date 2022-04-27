@@ -1,5 +1,5 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import { DropERC721, DropERC721__factory } from "@thirdweb-dev/contracts";
+import { DropERC721, DropERC721__factory } from "contracts";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
@@ -8,6 +8,7 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core/interfaces/IStorage";
 import {
   NetworkOrSignerOrProvider,
+  TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
 import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
@@ -27,11 +28,15 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { DelayedReveal } from "../core/classes/delayed-reveal";
 import { GasCostEstimator } from "../core/classes";
 import { ClaimVerification } from "../types";
-import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts/dist/DropERC1155";
-import { TokensClaimedEvent } from "@thirdweb-dev/contracts/dist/DropERC721";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { getRoleHash } from "../common";
+import { AddressZero } from "@ethersproject/constants";
+import {
+  TokensLazyMintedEvent,
+  TokensClaimedEvent,
+} from "contracts/DropERC721";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -143,6 +148,9 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   public revealer: DelayedReveal<DropERC721>;
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _query = this.query!;
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
@@ -183,6 +191,23 @@ export class NFTDrop extends Erc721<DropERC721> {
   /** ******************************
    * READ FUNCTIONS
    *******************************/
+
+  /**
+   * {@inheritDoc Erc721Enumerable.getAll}
+   */
+  getAll = this._query.all.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.getOwned}
+   */
+  getOwned = this._query.owned.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.getOwnedTokenIds}
+   */
+  getOwnedTokenIds = this._query.ownedTokenIds.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.totalSupply}
+   */
+  totalSupply = this._query.totalSupply.bind(this._query);
 
   /**
    * Get All Claimed NFTs
@@ -235,19 +260,26 @@ export class NFTDrop extends Erc721<DropERC721> {
     const count = BigNumber.from(
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
+    const firstTokenId = BigNumber.from(
+      Math.max(
+        (
+          await this.contractWrapper.readContract.nextTokenIdToClaim()
+        ).toNumber(),
+        start,
+      ),
+    );
     const maxId = BigNumber.from(
       Math.min(
         (
           await this.contractWrapper.readContract.nextTokenIdToMint()
         ).toNumber(),
-        start + count,
+        firstTokenId.toNumber() + count,
       ),
     );
-    const unmintedId =
-      await this.contractWrapper.readContract.nextTokenIdToClaim();
+
     return await Promise.all(
-      Array.from(Array(maxId.sub(unmintedId).toNumber()).keys()).map((i) =>
-        this.getTokenMetadata(unmintedId.add(i).toString()),
+      Array.from(Array(maxId.sub(firstTokenId).toNumber()).keys()).map((i) =>
+        this.getTokenMetadata(firstTokenId.add(i).toString()),
       ),
     );
   }
@@ -284,6 +316,17 @@ export class NFTDrop extends Erc721<DropERC721> {
     return (await this.contractWrapper.readContract.nextTokenIdToMint()).sub(
       await this.totalClaimedSupply(),
     );
+  }
+
+  /**
+   * Get whether users can transfer NFTs from this contract
+   */
+  public async isTransferRestricted(): Promise<boolean> {
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      AddressZero,
+    );
+    return !anyoneCanTransfer;
   }
 
   /** ******************************
@@ -422,6 +465,16 @@ export class NFTDrop extends Erc721<DropERC721> {
       quantity,
       proofs,
     );
+  }
+
+  /**
+   * Burn a single NFT
+   * @param tokenId - the token Id to burn
+   */
+  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
+    };
   }
 
   /** ******************************

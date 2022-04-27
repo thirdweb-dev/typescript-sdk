@@ -1,9 +1,9 @@
 import { ContractInterface, ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
-  CONTRACTS_MAP,
   Edition,
   EditionDrop,
+  KNOWN_CONTRACTS_MAP,
   Marketplace,
   NFTCollection,
   NFTDrop,
@@ -22,11 +22,13 @@ import type {
   NetworkOrSignerOrProvider,
   ValidContractInstance,
 } from "./types";
-import { IThirdwebContract__factory } from "@thirdweb-dev/contracts";
+import { IThirdwebContract__factory } from "contracts";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { CustomContract } from "../contracts/custom";
 import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
+import { ContractPublisher } from "./classes/contract-publisher";
+import { ContractMetadata } from "./classes";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -46,6 +48,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * New contract deployer
    */
   public deployer: ContractDeployer;
+  /**
+   * @internal
+   */
+  public publisher: ContractPublisher;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -57,6 +63,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // this.registry = new ContractRegistry(network, options);
     this.storage = storage;
     this.deployer = new ContractDeployer(network, options, storage);
+    this.publisher = new ContractPublisher(network, options, storage);
   }
 
   /**
@@ -170,12 +177,16 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         address,
       ) as ContractForContractType<TContractType>;
     }
-    const newContract = new CONTRACTS_MAP[
-      // we have to do this as here because typescript is not smart enough to figure out
-      // that the type is a key of the map (checked by the if statement above)
-      contractType as keyof typeof CONTRACTS_MAP
+
+    if (contractType === "custom") {
+      throw new Error(
+        "To get an instance of a custom contract, use getCustomContract(address)",
+      );
+    }
+
+    const newContract = new KNOWN_CONTRACTS_MAP[
+      contractType as keyof typeof KNOWN_CONTRACTS_MAP
     ](this.getSignerOrProvider(), address, this.storage, this.options);
-    // if we have a contract type && the contract type is part of the map
 
     this.contractCache.set(address, newContract);
 
@@ -218,23 +229,43 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     ).getContractAddresses(walletAddress);
 
     const addressesWithContractTypes = await Promise.all(
-      addresses.map(async (adrr) => ({
-        address: adrr,
-        contractType: await this.resolveContractType(adrr).catch((err) => {
-          console.error(
-            `failed to get contract type for address: ${adrr}`,
-            err,
-          );
-          return "" as ContractType;
-        }),
-      })),
+      addresses.map(async (address) => {
+        let contractType: ContractType = "custom";
+        try {
+          contractType = await this.resolveContractType(address);
+        } catch (e) {
+          // this going to happen frequently and be OK, we'll just catch it and ignore it
+        }
+        let metadata: ContractMetadata<any, any> | undefined;
+        if (contractType === "custom") {
+          try {
+            metadata = (await this.getCustomContract(address)).metadata;
+          } catch (e) {
+            console.log(
+              `Couldn't get contract metadata for custom contract: ${address}`,
+            );
+          }
+        } else {
+          metadata = this.getContract(address, contractType).metadata;
+        }
+        return {
+          address,
+          contractType,
+          metadata,
+        };
+      }),
     );
 
-    return addressesWithContractTypes.map(({ address, contractType }) => ({
-      address,
-      contractType,
-      metadata: () => this.getContract(address, contractType).metadata.get(),
-    }));
+    return addressesWithContractTypes
+      .filter((e) => e.metadata)
+      .map(({ address, contractType, metadata }) => {
+        invariant(metadata, "All ThirdwebContracts require metadata");
+        return {
+          address,
+          contractType,
+          metadata: () => metadata.get(),
+        };
+      });
   }
 
   /**
@@ -248,24 +279,51 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   private updateContractSignerOrProvider() {
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
+    this.publisher.updateSignerOrProvider(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }
   }
 
   /**
-   * @internal
+   * Get an instance of a Custom ThirdwebContract
+   * @param address - the address of the deployed contract
+   * @returns the contract
+   * @beta
    */
-  public async unstable_getCustomContract(
-    address: string,
-    abi: ContractInterface,
-  ) {
-    return new CustomContract(
+  public async getCustomContract(address: string) {
+    if (this.contractCache.has(address)) {
+      return this.contractCache.get(address) as CustomContract;
+    }
+    try {
+      const metadata = await this.publisher.fetchContractMetadataFromAddress(
+        address,
+      );
+      return this.getCustomContractFromAbi(address, metadata.abi);
+    } catch (e) {
+      throw new Error(`Error fetching ABI for this contract\n\n${e}`);
+    }
+  }
+
+  /**
+   * Get an instance of a Custom contract from a json ABI
+   * @param address - the address of the deployed contract
+   * @param abi - the JSON abi
+   * @returns the contract
+   * @beta
+   */
+  public getCustomContractFromAbi(address: string, abi: ContractInterface) {
+    if (this.contractCache.has(address)) {
+      return this.contractCache.get(address) as CustomContract;
+    }
+    const contract = new CustomContract(
       this.getSignerOrProvider(),
       address,
       abi,
       this.storage,
       this.options,
     );
+    this.contractCache.set(address, contract);
+    return contract;
   }
 }

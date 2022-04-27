@@ -30,6 +30,8 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [getContractList(walletAddress)](./sdk.thirdwebsdk.getcontractlist.md) |  | Return all the contracts deployed by the specified address |
+|  [getCustomContract(address)](./sdk.thirdwebsdk.getcustomcontract.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom ThirdwebContract |
+|  [getCustomContractFromAbi(address, abi)](./sdk.thirdwebsdk.getcustomcontractfromabi.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom contract from a json ABI |
 |  [getEdition(address)](./sdk.thirdwebsdk.getedition.md) |  | Get an instance of an Edition contract |
 |  [getEditionDrop(address)](./sdk.thirdwebsdk.geteditiondrop.md) |  | Get an instance of a Edition Drop contract |
 |  [getMarketplace(address)](./sdk.thirdwebsdk.getmarketplace.md) |  | Get an instance of a Marketplace contract |

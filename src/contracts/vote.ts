@@ -1,8 +1,4 @@
-import {
-  IERC20__factory,
-  VoteERC20,
-  VoteERC20__factory,
-} from "@thirdweb-dev/contracts";
+import { IERC20__factory, VoteERC20, VoteERC20__factory } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import {
   ContractInterceptor,
@@ -28,8 +24,8 @@ import { CurrencyValue } from "../types/currency";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes";
-import { ProposalCreatedEvent } from "@thirdweb-dev/contracts/dist/VoteERC20";
 import { ContractEvents } from "../core/classes/contract-events";
+import { ProposalCreatedEvent } from "contracts/VoteERC20";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.

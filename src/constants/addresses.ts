@@ -9,6 +9,10 @@ export const OZ_DEFENDER_FORWARDER_ADDRESS =
 
 const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
 const TWFactory_address = "0x5DBC7B840baa9daBcBe9D2492E45D7244B54A2A0";
+// FIXME STOPSHIP - finalize these addresses before merging to main
+const BYOC_TWRegistry_address = "0x3F17972CB27506eb4a6a3D59659e0B57a43fd16C"; // byoc TWregistry
+const BYOCRegistry_address = "0x61Bb02795b4fF5248169A54D9f149C4557B0B7de"; // TODO finalize, this is mumbai only
+const BYOCFactory_address = "0x3c3D901Acb5f7746dCf06B26fCe881d21970d2B6";
 
 /**
  * @internal
@@ -87,4 +91,37 @@ export function getContractAddressByChainId(
   }
   // real output here
   return CONTRACT_ADDRESSES[chainId][contractName];
+}
+
+/**
+ * @internal
+ */
+export function getBYOCTWRegistryAddress() {
+  if (process.env.byocTWRegistryAddress) {
+    return process.env.byocTWRegistryAddress as string;
+  } else {
+    return BYOC_TWRegistry_address;
+  }
+}
+
+/**
+ * @internal
+ */
+export function getBYOCRegistryAddress() {
+  if (process.env.byocRegistryAddress) {
+    return process.env.byocRegistryAddress as string;
+  } else {
+    return BYOCRegistry_address;
+  }
+}
+
+/**
+ * @internal
+ */
+export function getBYOCFactoryAddress() {
+  if (process.env.byocFactoryAddress) {
+    return process.env.byocFactoryAddress as string;
+  } else {
+    return BYOCFactory_address;
+  }
 }

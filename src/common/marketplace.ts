@@ -1,12 +1,5 @@
 import { BigNumber, BigNumberish } from "ethers";
 import {
-  ERC165__factory,
-  IERC1155,
-  IERC1155__factory,
-  IERC721,
-  IERC721__factory,
-} from "@thirdweb-dev/contracts";
-import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
@@ -21,6 +14,13 @@ import {
 import invariant from "tiny-invariant";
 import { fetchCurrencyValue } from "./currency";
 import { MAX_BPS } from "../schema/shared";
+import {
+  ERC165__factory,
+  IERC1155,
+  IERC1155__factory,
+  IERC721,
+  IERC721__factory,
+} from "contracts";
 
 /**
  * This method checks if the given token is approved for the marketplace contract.

@@ -31,7 +31,7 @@ export const BigNumberSchema = z
     z.string(),
     z.number(),
     z.bigint(),
-    z.custom((data) => {
+    z.custom<BigNumber>((data) => {
       return BigNumber.isBigNumber(data);
     }),
   ])

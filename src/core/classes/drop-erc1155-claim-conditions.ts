@@ -1,7 +1,7 @@
 import { IStorage } from "../interfaces/IStorage";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
-import { DropERC1155, IERC20, IERC20__factory } from "@thirdweb-dev/contracts";
+import { DropERC1155, IERC20, IERC20__factory } from "contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";

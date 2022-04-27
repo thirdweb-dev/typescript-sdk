@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC1155, TokenERC1155 } from "@thirdweb-dev/contracts";
+import { DropERC1155, ERC1155, ERC1155Metadata, TokenERC1155 } from "contracts";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
@@ -12,18 +12,22 @@ import {
   EditionMetadataOwner,
 } from "../../schema/tokens/edition";
 import { fetchTokenMetadata } from "../../common/nft";
-import { AddressZero } from "@ethersproject/constants";
-import { getRoleHash } from "../../common/role";
 import { NotFoundError } from "../../common";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
+import { ERC1155Enumerable } from "contracts/ERC1155Enumerable";
+
 /**
  * Standard ERC1155 functions
  * @public
  */
-export class Erc1155<T extends DropERC1155 | TokenERC1155>
-  implements UpdateableNetwork
+export class Erc1155<
+  T extends
+    | DropERC1155
+    | TokenERC1155
+    | (ERC1155 & ERC1155Metadata & ERC1155Enumerable),
+> implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
@@ -216,17 +220,6 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
   }
 
   /**
-   * Get whether users can transfer NFTs from this contract
-   */
-  public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
-      getRoleHash("transfer"),
-      AddressZero,
-    );
-    return !anyoneCanTransfer;
-  }
-
-  /**
    * Get whether this wallet has approved transfers from the given operator
    * @param address - the wallet address
    * @param operator - the operator address
@@ -274,24 +267,6 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155>
         tokenId,
         amount,
         data,
-      ]),
-    };
-  }
-
-  /**
-   * Burn a single NFT
-   * @param tokenId - the token Id to burn
-   */
-  public async burn(
-    tokenId: BigNumberish,
-    amount: BigNumberish,
-  ): Promise<TransactionResult> {
-    const account = await this.contractWrapper.getSignerAddress();
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [
-        account,
-        tokenId,
-        amount,
       ]),
     };
   }

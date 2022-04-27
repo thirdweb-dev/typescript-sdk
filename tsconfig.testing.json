@@ -11,7 +11,11 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "paths": {
+      "contracts/*": ["./lib/*"],
+      "contracts": ["./lib"]
+    },
     "baseUrl": "."
   },
-  "include": ["test/**/*.ts"]
+  "include": ["test/**/*.ts"],
 }

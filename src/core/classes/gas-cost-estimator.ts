@@ -17,8 +17,8 @@ export class GasCostEstimator<TContract extends BaseContract> {
    * @returns the estimated price in native currency (ETH, MATIC, etc) of calling this function
    */
   public async gasCostOf(
-    fn: keyof TContract["functions"],
-    args: Parameters<TContract["functions"][typeof fn]>,
+    fn: keyof TContract["functions"] | string,
+    args: Parameters<TContract["functions"][typeof fn]> | any[],
   ): Promise<string> {
     const price = await this.contractWrapper.getPreferredGasPrice();
     const gasUnits = await this.contractWrapper.estimateGas(fn, args);

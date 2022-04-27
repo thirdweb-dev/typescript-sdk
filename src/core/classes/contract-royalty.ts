@@ -1,4 +1,4 @@
-import { IThirdwebContract, IThirdwebRoyalty } from "@thirdweb-dev/contracts";
+import { IThirdwebContract, IThirdwebRoyalty } from "contracts";
 import { CommonRoyaltySchema } from "../../schema/contracts/common";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";

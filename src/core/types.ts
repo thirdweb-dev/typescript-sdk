@@ -6,7 +6,7 @@ import {
   TransactionReceipt,
 } from "@ethersproject/providers";
 import { BigNumber, BytesLike } from "ethers";
-import type { CONTRACTS_MAP } from "../contracts/maps";
+import type { CONTRACTS_MAP, KNOWN_CONTRACTS_MAP } from "../contracts/maps";
 
 // --- utility types extracted from from ts-toolbelt --- //
 
@@ -32,7 +32,7 @@ type Equals<A1, A2> = (<A>() => A extends A2 ? 1 : 0) extends <
 
 export type ContractType = keyof typeof CONTRACTS_MAP;
 
-export type ValidContractClass = ValueOf<typeof CONTRACTS_MAP>;
+export type ValidContractClass = ValueOf<typeof KNOWN_CONTRACTS_MAP>;
 
 export type ValidContractInstance = Instance<ValidContractClass>;
 

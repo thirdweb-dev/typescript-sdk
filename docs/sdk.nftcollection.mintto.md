@@ -2,48 +2,27 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [NFTCollection](./sdk.nftcollection.md) &gt; [mintTo](./sdk.nftcollection.mintto.md)
 
-## NFTCollection.mintTo() method
+## NFTCollection.mintTo property
 
 Mint a unique NFT
 
 <b>Signature:</b>
 
 ```typescript
-mintTo(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
+mintTo: (to: string, metadata: string | {
+        [x: string]: import("../core").Json;
+        description?: string | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, import("../core").Json> | Record<string, import("../core").Json>[] | undefined;
+        attributes?: Record<string, import("../core").Json> | Record<string, import("../core").Json>[] | undefined;
+        name: string;
+    }) => Promise<import("../core").TransactionResultWithId<import("../schema").NFTMetadataOwner>>;
 ```
-
-## Parameters
-
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  to | string |  |
-|  metadata | NFTMetadataOrUri |  |
-
-<b>Returns:</b>
-
-Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;&gt;
 
 ## Remarks
 
 Mint a unique NFT to a specified wallet.
-
-## Example
-
-
-```javascript
-// Address of the wallet you want to mint the NFT to
-const toAddress = "{{wallet_address}}";
-
-// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
-const metadata = {
-  name: "Cool NFT",
-  description: "This is a cool NFT",
-  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-};
-
-const tx = await contract.mintTo(toAddress, metadata);
-const receipt = tx.receipt; // the transaction receipt
-const tokenId = tx.id; // the id of the NFT minted
-const nft = await tx.data(); // (optional) fetch details of minted NFT
-```
 

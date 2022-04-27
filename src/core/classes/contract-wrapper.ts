@@ -24,7 +24,7 @@ import {
   ForwardRequest,
   getAndIncrementNonce,
 } from "../../common/forwarder";
-import { Forwarder__factory } from "@thirdweb-dev/contracts";
+import { Forwarder__factory } from "contracts";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
@@ -41,7 +41,10 @@ export class ContractWrapper<
 > extends RPCConnectionHandler {
   private isValidContract = false;
   private customOverrides: () => CallOverrides = () => ({});
-  private writeContract;
+  /**
+   * @internal
+   */
+  public writeContract;
   public readContract;
 
   constructor(

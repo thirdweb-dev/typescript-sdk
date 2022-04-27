@@ -1,12 +1,8 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
-import { NFTCollection, PayloadToSign20, SignedPayload20, Token } from "../src";
-import { sdk, signers, storage } from "./before.test";
-import {
-  PayloadToSign721,
-  SignedPayload721,
-} from "../src/schema/contracts/common/signature";
+import { PayloadToSign20, SignedPayload20, Token } from "../src";
+import { sdk, signers } from "./before.test";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
 global.fetch = require("node-fetch");

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "2.0.41",
+  "version": "2.1.0-25",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   "license": "Apache-2.0",
   "source": "src/index.ts",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/src/index.d.ts",
   "module": "dist/index.mjs",
   "browser": "dist/index.js",
   "files": [
@@ -18,6 +18,7 @@
   ],
   "sideEffects": false,
   "scripts": {
+    "clean": "rm -rf dist/",
     "dev": "tsdx watch",
     "build:lib": "tsup --env.NODE_ENV production --minify --format esm,cjs",
     "format": "prettier src/ --write",
@@ -25,14 +26,15 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "generate-types": "tsc",
+    "typechain": "rm -rf ./lib && typechain --target ethers-v5 --out-dir lib './node_modules/@thirdweb-dev/contracts/abi/*.json'",
     "extract-api": "api-extractor run --local",
-    "full-build": "yarn build:lib && yarn generate-types && yarn extract-api",
+    "full-build": "yarn typechain && yarn build:lib && yarn generate-types && yarn extract-api",
     "generate-md-docs": "yarn api-documenter markdown -i ./temp -o ./docs",
     "generate-docs": "yarn full-build && yarn generate-md-docs",
     "generate-snippets": "node ./scripts/generate-snippets.mjs",
-    "build": "yarn generate-docs && yarn generate-snippets",
+    "build": "yarn clean && yarn generate-docs && yarn generate-snippets",
     "test": "echo \"\nUse 'yarn run test:all' to run all tests\nPass a test file pattern from ./test to run\n\n\t$ yarn run test test/pack.test.ts\" && ts-mocha -t 120000 -r esm -p tsconfig.testing.json",
-    "test:all": "ts-mocha -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'"
+    "test:all": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.1",
@@ -41,6 +43,7 @@
     "@microsoft/tsdoc": "^0.14.1",
     "@nomiclabs/hardhat-ethers": "^2.0.3",
     "@swc/core": "^1.2.133",
+    "@typechain/ethers-v5": "^10.0.0",
     "@types/chai": "^4.2.22",
     "@types/deep-equal": "^1.0.1",
     "@types/deep-equal-in-any-order": "^1.0.1",
@@ -71,6 +74,7 @@
     "ts-enum-util": "^4.0.2",
     "ts-mocha": "^9.0.0",
     "tsup": "^5.11.11",
+    "typechain": "^8.0.0",
     "typescript": "^4.6.2"
   },
   "peerDependencies": {
@@ -83,7 +87,7 @@
     "@ethersproject/contracts": "^5.6.0",
     "@ethersproject/providers": "^5.6.1",
     "@ethersproject/units": "^5.6.0",
-    "@thirdweb-dev/contracts": "2.2.1-8",
+    "@thirdweb-dev/contracts": "2.3.0",
     "@web-std/file": "^3.0.0",
     "cross-fetch": "^3.1.5",
     "deep-equal": "^2.0.5",
@@ -99,7 +103,8 @@
   },
   "resolutions": {
     "nanoid": "^3.1.31",
-    "typescript": "^4.6.2"
+    "typescript": "^4.6.2",
+    "@microsoft/tsdoc": "^0.14.1"
   },
   "bugs": {
     "url": "https://github.com/thirdweb-dev/typescript-sdk/issues"

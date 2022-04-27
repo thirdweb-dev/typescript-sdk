@@ -5,7 +5,7 @@ import {
   IERC721__factory,
   IMarketplace,
   Marketplace,
-} from "@thirdweb-dev/contracts";
+} from "contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   DirectListing,
@@ -37,7 +37,7 @@ import {
 import { IStorage } from "../interfaces";
 import invariant from "tiny-invariant";
 import { isAddress } from "ethers/lib/utils";
-import { ListingAddedEvent } from "@thirdweb-dev/contracts/dist/Marketplace";
+import { ListingAddedEvent } from "contracts/Marketplace";
 
 /**
  * Handles direct listings

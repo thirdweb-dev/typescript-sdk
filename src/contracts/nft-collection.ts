@@ -1,12 +1,11 @@
-import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema/tokens/common";
 import type {
   IStorage,
   NetworkOrSignerOrProvider,
-  TransactionResultWithId,
+  TransactionResult,
 } from "../core";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { TokenERC721, TokenERC721__factory } from "@thirdweb-dev/contracts";
+import { TokenERC721, TokenERC721__factory } from "contracts";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
@@ -15,11 +14,13 @@ import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { Erc721SignatureMinting } from "../core/classes/erc-721-signature-minting";
-import { GasCostEstimator, ContractInterceptor } from "../core/classes";
-import { TokensMintedEvent } from "@thirdweb-dev/contracts/dist/TokenERC721";
-import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
+import { ContractInterceptor, GasCostEstimator } from "../core/classes";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { getRoleHash } from "../common";
+import { AddressZero } from "@ethersproject/constants";
+import { BigNumberish } from "ethers";
+import { NFTMetadataInput } from "../schema";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -94,6 +95,11 @@ export class NFTCollection extends Erc721<TokenERC721> {
    */
   public interceptor: ContractInterceptor<TokenERC721>;
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _mint = this.mint!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _query = this.query!;
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
@@ -131,134 +137,68 @@ export class NFTCollection extends Erc721<TokenERC721> {
   }
 
   /** ******************************
+   * READ FUNCTIONS
+   *******************************/
+
+  /**
+   * {@inheritDoc Erc721Enumerable.getAll}
+   */
+  getAll = this._query.all.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.getOwned}
+   */
+  getOwned = this._query.owned.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.getOwnedTokenIds}
+   */
+  getOwnedTokenIds = this._query.ownedTokenIds.bind(this._query);
+  /**
+   * {@inheritDoc Erc721Enumerable.totalSupply}
+   */
+  totalSupply = this._query.totalSupply.bind(this._query);
+
+  /**
+   * Get whether users can transfer NFTs from this contract
+   */
+  public async isTransferRestricted(): Promise<boolean> {
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      AddressZero,
+    );
+    return !anyoneCanTransfer;
+  }
+
+  /** ******************************
    * WRITE FUNCTIONS
    *******************************/
 
   /**
-   * Mint an NFT to the connected wallet
-   *
-   * @remarks See {@link NFTCollection.mintTo}
+   * {@inheritDoc Erc721Mintable.to}
    */
-  public async mint(
-    metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    return this.mintTo(await this.contractWrapper.getSignerAddress(), metadata);
+  public async mintToSelf(metadata: NFTMetadataInput) {
+    const signerAddress = await this.contractWrapper.getSignerAddress();
+    return this._mint.to(signerAddress, metadata);
   }
+  /**
+   * {@inheritDoc Erc721Mintable.to}
+   */
+  mintTo = this._mint.to.bind(this._mint);
+  /**
+   * {@inheritDoc Erc721Mintable.batchToSelf}
+   */
+  mintBatch = this._mint.batchToSelf.bind(this._mint);
+  /**
+   * {@inheritDoc Erc721Mintable.batchToAddress}
+   */
+  mintBatchTo = this._mint.batchToAddress.bind(this._mint);
 
   /**
-   * Mint a unique NFT
-   *
-   * @remarks Mint a unique NFT to a specified wallet.
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet you want to mint the NFT to
-   * const toAddress = "{{wallet_address}}";
-   *
-   * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
-   * const metadata = {
-   *   name: "Cool NFT",
-   *   description: "This is a cool NFT",
-   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   * };
-   *
-   * const tx = await contract.mintTo(toAddress, metadata);
-   * const receipt = tx.receipt; // the transaction receipt
-   * const tokenId = tx.id; // the id of the NFT minted
-   * const nft = await tx.data(); // (optional) fetch details of minted NFT
-   * ```
+   * Burn a single NFT
+   * @param tokenId - the token Id to burn
    */
-  public async mintTo(
-    to: string,
-    metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    const uri = await uploadOrExtractURI(metadata, this.storage);
-    const receipt = await this.contractWrapper.sendTransaction("mintTo", [
-      to,
-      uri,
-    ]);
-    const event = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
-      receipt?.logs,
-    );
-    if (event.length === 0) {
-      throw new Error("TokenMinted event not found");
-    }
-    const id = event[0].args.tokenIdMinted;
+  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return {
-      id,
-      receipt,
-      data: () => this.get(id.toString()),
+      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
     };
-  }
-
-  /**
-   * Mint Many NFTs to the connected wallet
-   *
-   * @remarks See {@link NFTCollection.mintBatchTo}
-   */
-  public async mintBatch(
-    metadatas: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    return this.mintBatchTo(
-      await this.contractWrapper.getSignerAddress(),
-      metadatas,
-    );
-  }
-
-  /**
-   * Mint Many unique NFTs
-   *
-   * @remarks Mint many unique NFTs at once to a specified wallet.
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet you want to mint the NFT to
-   * const toAddress = "{{wallet_address}}";
-   *
-   * // Custom metadata of the NFTs you want to mint.
-   * const metadatas = [{
-   *   name: "Cool NFT #1",
-   *   description: "This is a cool NFT",
-   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   * }, {
-   *   name: "Cool NFT #2",
-   *   description: "This is a cool NFT",
-   *   image: fs.readFileSync("path/to/other/image.png"),
-   * }];
-   *
-   * const tx = await contract.mintBatchTo(toAddress, metadatas);
-   * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
-   * const firstTokenId = tx[0].id; // token id of the first minted NFT
-   * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
-   * ```
-   */
-  public async mintBatchTo(
-    to: string,
-    metadatas: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const uris = await uploadOrExtractURIs(metadatas, this.storage);
-    const encoded = uris.map((uri) =>
-      this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [
-        to,
-        uri,
-      ]),
-    );
-    const receipt = await this.contractWrapper.multiCall(encoded);
-    const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
-      receipt.logs,
-    );
-    if (events.length === 0 || events.length < metadatas.length) {
-      throw new Error("TokenMinted event not found, minting failed");
-    }
-    return events.map((e) => {
-      const id = e.args.tokenIdMinted;
-      return {
-        id,
-        receipt,
-        data: () => this.get(id),
-      };
-    });
   }
 }

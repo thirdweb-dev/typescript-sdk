@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts";
+import { DropERC20, ERC20, ERC20Metadata, TokenERC20 } from "contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
@@ -11,15 +11,13 @@ import {
   fetchCurrencyValue,
 } from "../../common/currency";
 import { TokenMintInput } from "../../schema/tokens/token";
-import { getRoleHash } from "../../common/role";
-import { AddressZero } from "@ethersproject/constants";
 import { PriceSchema } from "../../schema";
 
 /**
  * Standard ERC20 functions
  * @public
  */
-export class Erc20<T extends TokenERC20 | DropERC20>
+export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
   implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
@@ -175,17 +173,6 @@ export class Erc20<T extends TokenERC20 | DropERC20>
     );
   }
 
-  /**
-   * Get whether users can transfer tokens from this contract
-   */
-  public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
-      getRoleHash("transfer"),
-      AddressZero,
-    );
-    return !anyoneCanTransfer;
-  }
-
   /** ******************************
    * WRITE FUNCTIONS
    *******************************/
@@ -311,55 +298,6 @@ export class Erc20<T extends TokenERC20 | DropERC20>
       }),
     );
     await this.contractWrapper.multiCall(encoded);
-  }
-
-  /**
-   * Burn Tokens
-   *
-   * @remarks Burn tokens held by the connected wallet
-   *
-   * @example
-   * ```javascript
-   * // The amount of this token you want to burn
-   * const amount = 1.2;
-   *
-   * await contract.burn(amount);
-   * ```
-   */
-  public async burn(amount: Amount): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [
-        await this.normalizeAmount(amount),
-      ]),
-    };
-  }
-
-  /**
-   * Burn Tokens
-   *
-   * @remarks Burn tokens held by the specified wallet
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet sending the tokens
-   * const holderAddress = "{{wallet_address}}";
-   *
-   * // The amount of this token you want to burn
-   * const amount = 1.2;
-   *
-   * await contract.burnFrom(holderAddress, amount);
-   * ```
-   */
-  public async burnFrom(
-    holder: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burnFrom", [
-        holder,
-        await this.normalizeAmount(amount),
-      ]),
-    };
   }
 
   /** ******************************

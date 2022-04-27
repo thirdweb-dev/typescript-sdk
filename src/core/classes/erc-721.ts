@@ -1,30 +1,42 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721, TokenERC721 } from "@thirdweb-dev/contracts";
 import { BigNumber, BigNumberish } from "ethers";
 import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
 import { AddressZero } from "@ethersproject/constants";
-import {
-  DEFAULT_QUERY_ALL_COUNT,
-  QueryAllParams,
-} from "../../types/QueryParams";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { fetchTokenMetadata } from "../../common/nft";
-import { getRoleHash } from "../../common/role";
-import { NotFoundError } from "../../common";
+import { implementsInterface, NotFoundError } from "../../common";
+import {
+  DropERC721,
+  ERC721,
+  ERC721Enumerable,
+  ERC721Enumerable__factory,
+  ERC721Metadata,
+  IMintableERC721,
+  IMintableERC721__factory,
+  TokenERC721,
+} from "contracts";
+import { Erc721Enumerable } from "./erc-721-enumerable";
+import { Erc721Mintable } from "./erc-721-mintable";
 
 /**
  * Standard ERC721 functions
  * @public
  */
-export class Erc721<T extends DropERC721 | TokenERC721>
-  implements UpdateableNetwork
+export class Erc721<
+  T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadata),
+> implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
+
+  public query:
+    | Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721>
+    | undefined;
+  public mint: Erc721Mintable<IMintableERC721> | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -42,6 +54,8 @@ export class Erc721<T extends DropERC721 | TokenERC721>
       );
       this.options = SDKOptionsSchema.parse({});
     }
+    this.query = this.detectErc721Enumerable();
+    this.mint = this.detectErc721Mintable();
   }
 
   /**
@@ -79,87 +93,6 @@ export class Erc721<T extends DropERC721 | TokenERC721>
   }
 
   /**
-   * Get All NFTs
-   *
-   * @remarks Get all the data associated with every NFT in this contract.
-   *
-   * By default, returns the first 100 NFTs, use queryParams to fetch more.
-   *
-   * @example
-   * ```javascript
-   * const nfts = await contract.getAll();
-   * console.log(nfts);
-   * ```
-   * @param queryParams - optional filtering to only fetch a subset of results.
-   * @returns The NFT metadata for all NFTs queried.
-   */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<NFTMetadataOwner[]> {
-    const start = BigNumber.from(queryParams?.start || 0).toNumber();
-    const count = BigNumber.from(
-      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
-    ).toNumber();
-    const maxId = Math.min(
-      (await this.getTotalCount()).toNumber(),
-      start + count,
-    );
-    return await Promise.all(
-      [...Array(maxId - start).keys()].map((i) =>
-        this.get((start + i).toString()),
-      ),
-    );
-  }
-
-  /**
-   * Get the number of NFTs minted
-   * @returns the total number of NFTs minted in this contract
-   * @public
-   */
-  public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToMint();
-  }
-
-  /**
-   * Get Owned NFTs
-   *
-   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet to get the NFTs of
-   * const address = "{{wallet_address}}";
-   * const nfts = await contract.getOwned(address);
-   * console.log(nfts);
-   * ```
-   *
-   * @returns The NFT metadata for all NFTs in the contract.
-   */
-  public async getOwned(_address?: string): Promise<NFTMetadataOwner[]> {
-    const tokenIds = await this.getOwnedTokenIds(_address);
-    return await Promise.all(
-      tokenIds.map((tokenId) => this.get(tokenId.toString())),
-    );
-  }
-
-  /**
-   * Get all token ids of NFTs owned by a specific wallet.
-   * @param _address - the wallet address to query, defaults to the connected wallet
-   */
-  public async getOwnedTokenIds(_address?: string): Promise<BigNumber[]> {
-    const address = _address
-      ? _address
-      : await this.contractWrapper.getSignerAddress();
-    const balance = await this.contractWrapper.readContract.balanceOf(address);
-    const indices = Array.from(Array(balance.toNumber()).keys());
-    return await Promise.all(
-      indices.map((i) =>
-        this.contractWrapper.readContract.tokenOfOwnerByIndex(address, i),
-      ),
-    );
-  }
-
-  /**
    * Get the current owner of a given NFT within this Contract
    *
    * @param tokenId - the tokenId of the NFT
@@ -167,15 +100,6 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
     return await this.contractWrapper.readContract.ownerOf(tokenId);
-  }
-
-  /**
-   * Get the total supply for this Contract.
-   *
-   * @returns the total supply
-   */
-  public async totalSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToMint();
   }
 
   /**
@@ -201,17 +125,6 @@ export class Erc721<T extends DropERC721 | TokenERC721>
    */
   public async balance(): Promise<BigNumber> {
     return await this.balanceOf(await this.contractWrapper.getSignerAddress());
-  }
-
-  /**
-   * Get whether users can transfer NFTs from this contract
-   */
-  public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
-      getRoleHash("transfer"),
-      AddressZero,
-    );
-    return !anyoneCanTransfer;
   }
 
   /**
@@ -260,16 +173,6 @@ export class Erc721<T extends DropERC721 | TokenERC721>
   }
 
   /**
-   * Burn a single NFT
-   * @param tokenId - the token Id to burn
-   */
-  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
-    };
-  }
-
-  /**
    * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
    * @param operator - the operator's address
    * @param approved - whether to approve or remove
@@ -303,5 +206,31 @@ export class Erc721<T extends DropERC721 | TokenERC721>
       throw new NotFoundError();
     }
     return fetchTokenMetadata(tokenId, tokenUri, this.storage);
+  }
+
+  private detectErc721Enumerable():
+    | Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721>
+    | undefined {
+    if (
+      implementsInterface<ERC721Metadata & ERC721Enumerable & ERC721>(
+        this.contractWrapper,
+        ERC721Enumerable__factory.createInterface(),
+      )
+    ) {
+      return new Erc721Enumerable(this, this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc721Mintable(): Erc721Mintable<IMintableERC721> | undefined {
+    if (
+      implementsInterface<IMintableERC721>(
+        this.contractWrapper,
+        IMintableERC721__factory.createInterface(),
+      )
+    ) {
+      return new Erc721Mintable(this, this.contractWrapper, this.storage);
+    }
+    return undefined;
   }
 }

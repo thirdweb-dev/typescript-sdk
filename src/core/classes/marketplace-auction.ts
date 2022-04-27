@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { IMarketplace, Marketplace } from "@thirdweb-dev/contracts";
+import { IMarketplace, Marketplace } from "contracts";
 import { IStorage } from "../interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
@@ -31,7 +31,7 @@ import {
 } from "../../common/marketplace";
 import { Price } from "../../types/currency";
 import invariant from "tiny-invariant";
-import { ListingAddedEvent } from "@thirdweb-dev/contracts/dist/Marketplace";
+import { ListingAddedEvent } from "contracts/Marketplace";
 
 /**
  * Handles auction listings

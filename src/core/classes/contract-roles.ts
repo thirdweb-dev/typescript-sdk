@@ -1,9 +1,9 @@
 import { TransactionResult } from "../types";
 import { getRoleHash, Role } from "../../common/role";
-import { AccessControlEnumerable } from "@thirdweb-dev/contracts";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { MissingRoleError } from "../../common/error";
+import { AccessControlEnumerable } from "contracts";
 
 /**
  * Handles Contract roles and permissions

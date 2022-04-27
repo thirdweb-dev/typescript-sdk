@@ -16,6 +16,7 @@ export interface IStorage
 |  Method | Description |
 |  --- | --- |
 |  [get(hash)](./sdk.istorage.get.md) | Fetches data from storage. This method expects to fetch JSON formatted data |
+|  [getRaw(hash)](./sdk.istorage.getraw.md) | Fetches data from storage. This method does not make any assumptions on the retrieved data format |
 |  [getUploadToken(contractAddress)](./sdk.istorage.getuploadtoken.md) | Fetches a one-time-use upload token that can used to upload a file to storage. |
 |  [upload(data, contractAddress, signerAddress)](./sdk.istorage.upload.md) | Uploads a file to the storage. |
 |  [uploadBatch(files, fileStartNumber, contractAddress, signerAddress)](./sdk.istorage.uploadbatch.md) | Uploads a folder to storage. |

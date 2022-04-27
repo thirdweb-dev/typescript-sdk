@@ -1,4 +1,4 @@
-import { DropERC20, DropERC20__factory } from "@thirdweb-dev/contracts";
+import { DropERC20, DropERC20__factory } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {
@@ -20,6 +20,8 @@ import { Amount, ClaimVerification, CurrencyValue } from "../types";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { prepareClaim } from "../common/claim-conditions";
+import { getRoleHash } from "../common";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -158,6 +160,17 @@ export class TokenDrop extends Erc20<DropERC20> {
     return await this.contractWrapper.readContract.delegates(account);
   }
 
+  /**
+   * Get whether users can transfer tokens from this contract
+   */
+  public async isTransferRestricted(): Promise<boolean> {
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      AddressZero,
+    );
+    return !anyoneCanTransfer;
+  }
+
   /** ******************************
    * WRITE FUNCTIONS
    *******************************/
@@ -233,6 +246,55 @@ export class TokenDrop extends Erc20<DropERC20> {
     return {
       receipt: await this.contractWrapper.sendTransaction("delegate", [
         delegateeAddress,
+      ]),
+    };
+  }
+
+  /**
+   * Burn Tokens
+   *
+   * @remarks Burn tokens held by the connected wallet
+   *
+   * @example
+   * ```javascript
+   * // The amount of this token you want to burn
+   * const amount = 1.2;
+   *
+   * await contract.burn(amount);
+   * ```
+   */
+  public async burn(amount: Amount): Promise<TransactionResult> {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("burn", [
+        await this.normalizeAmount(amount),
+      ]),
+    };
+  }
+
+  /**
+   * Burn Tokens
+   *
+   * @remarks Burn tokens held by the specified wallet
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet sending the tokens
+   * const holderAddress = "{{wallet_address}}";
+   *
+   * // The amount of this token you want to burn
+   * const amount = 1.2;
+   *
+   * await contract.burnFrom(holderAddress, amount);
+   * ```
+   */
+  public async burnFrom(
+    holder: string,
+    amount: Amount,
+  ): Promise<TransactionResult> {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("burnFrom", [
+        holder,
+        await this.normalizeAmount(amount),
       ]),
     };
   }
