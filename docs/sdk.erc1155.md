@@ -9,7 +9,7 @@ Standard ERC1155 functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc1155<T extends DropERC1155 | TokenERC1155> implements UpdateableNetwork 
+export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | (ERC1155 & ERC1155Metadata & ERC1155Enumerable)> implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
 
@@ -34,14 +34,12 @@ export declare class Erc1155<T extends DropERC1155 | TokenERC1155> implements Up
 |  [airdrop(tokenId, addresses, data)](./sdk.erc1155.airdrop.md) |  | Airdrop multiple NFTs |
 |  [balance(tokenId)](./sdk.erc1155.balance.md) |  | Get NFT Balance for the currently connected wallet |
 |  [balanceOf(address, tokenId)](./sdk.erc1155.balanceof.md) |  | Get NFT Balance |
-|  [burn(tokenId, amount)](./sdk.erc1155.burn.md) |  | Burn a single NFT |
 |  [get(tokenId)](./sdk.erc1155.get.md) |  | Get a single NFT Metadata |
 |  [getAddress()](./sdk.erc1155.getaddress.md) |  |  |
 |  [getAll(queryParams)](./sdk.erc1155.getall.md) |  | Get All NFTs |
 |  [getOwned(\_address)](./sdk.erc1155.getowned.md) |  | Get Owned NFTs |
 |  [getTotalCount()](./sdk.erc1155.gettotalcount.md) |  | Get the number of NFTs minted |
 |  [isApproved(address, operator)](./sdk.erc1155.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
-|  [isTransferRestricted()](./sdk.erc1155.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [totalSupply(tokenId)](./sdk.erc1155.totalsupply.md) |  | Returns the total supply of a specific token |
 |  [transfer(to, tokenId, amount, data)](./sdk.erc1155.transfer.md) |  | Transfer a single NFT |
 

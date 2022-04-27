@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC20, ITokenERC20, TokenERC20 } from "contracts";
+import { DropERC20, ERC20, ERC20Metadata, TokenERC20 } from "contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
@@ -17,7 +17,7 @@ import { PriceSchema } from "../../schema";
  * Standard ERC20 functions
  * @public
  */
-export class Erc20<T extends TokenERC20 | DropERC20 | ITokenERC20>
+export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
   implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;

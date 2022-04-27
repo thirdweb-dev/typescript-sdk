@@ -16,6 +16,8 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   AccessControlEnumerable,
   AccessControlEnumerable__factory,
+  ERC20Metadata,
+  ERC20Metadata__factory,
   ERC721,
   ERC721Metadata,
   ERC721Metadata__factory,
@@ -26,8 +28,6 @@ import {
   IThirdwebPrimarySale__factory,
   IThirdwebRoyalty,
   IThirdwebRoyalty__factory,
-  ITokenERC20,
-  ITokenERC20__factory,
   ThirdwebContract,
   ThirdwebContract__factory,
 } from "contracts";
@@ -38,6 +38,7 @@ import { ALL_ROLES } from "../common";
 import { implementsInterface } from "../common/feature-detection";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
+import { ERC20 } from "contracts/ERC20";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -103,7 +104,7 @@ export class CustomContract<
   /**
    * Auto-detects ERC20 standard functions.
    */
-  public token: Erc20<ITokenERC20> | undefined;
+  public token: Erc20<ERC20 & ERC20Metadata> | undefined;
   /**
    * Auto-detects ERC721 standard functions.
    */
@@ -226,9 +227,9 @@ export class CustomContract<
   private detectErc20() {
     // TODO this should work for drop contracts too
     if (
-      implementsInterface<ITokenERC20>(
+      implementsInterface<ERC20 & ERC20Metadata>(
         this.contractWrapper,
-        ITokenERC20__factory.createInterface(),
+        ERC20Metadata__factory.createInterface(),
       )
     ) {
       return new Erc20(this.contractWrapper, this.storage, this.options);

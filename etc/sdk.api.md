@@ -68,7 +68,7 @@ export class AdminRoleMissingError extends Error {
 export type AirdropInput = z.input<typeof AirdropInputSchema>;
 
 // @public (undocumented)
-export const ALL_ROLES: ("transfer" | "lister" | "admin" | "minter" | "pauser" | "editor" | "asset")[];
+export const ALL_ROLES: ("transfer" | "lister" | "minter" | "admin" | "pauser" | "editor" | "asset")[];
 
 // Warning: (ae-forgotten-export) The symbol "PriceSchema" needs to be exported by the entry point index.d.ts
 //
@@ -958,7 +958,7 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
     // (undocumented)
     publishedMetadata: ContractPublishedMetadata<TContract>;
     // (undocumented)
-    roles: ContractRoles<TContract & AccessControlEnumerable, "transfer" | "lister" | "admin" | "minter" | "pauser" | "editor" | "asset"> | undefined;
+    roles: ContractRoles<TContract & AccessControlEnumerable, "transfer" | "lister" | "minter" | "admin" | "pauser" | "editor" | "asset"> | undefined;
     // (undocumented)
     royalties: ContractRoyalty<TContract & IThirdwebContract & IThirdwebRoyalty, {
         deploy: ZodObject<extendShape<extendShape<    {
@@ -1183,8 +1183,9 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
         name: string;
         }>;
     };
-    // Warning: (ae-forgotten-export) The symbol "ITokenERC20" needs to be exported by the entry point index.d.ts
-    token: Erc20<ITokenERC20> | undefined;
+    // Warning: (ae-forgotten-export) The symbol "ERC20" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "ERC20Metadata" needs to be exported by the entry point index.d.ts
+    token: Erc20<ERC20 & ERC20Metadata> | undefined;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_IPFS_GATEWAY" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1276,6 +1277,7 @@ export class DuplicateLeafsError extends Error {
 // @public
 export class Edition extends Erc1155<TokenERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
+    burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     // Warning: (ae-forgotten-export) The symbol "TokenERC1155__factory" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -1292,6 +1294,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     events: ContractEvents<TokenERC1155>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<TokenERC1155>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
     mint(metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
@@ -1416,6 +1419,7 @@ export class Edition extends Erc1155<TokenERC1155> {
 // @public
 export class EditionDrop extends Erc1155<DropERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
+    burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
     claimConditions: DropErc1155ClaimConditions;
     claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
@@ -1438,6 +1442,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     history: DropErc1155History;
     // @internal (undocumented)
     interceptor: ContractInterceptor<DropERC1155>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
     // (undocumented)
@@ -1843,13 +1848,16 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
     quantityOwned: string | number | bigint | BigNumber;
 }>;
 
+// Warning: (ae-forgotten-export) The symbol "ERC1155" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ERC1155Metadata" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ERC1155Enumerable" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class Erc1155<T extends DropERC1155 | TokenERC1155> implements UpdateableNetwork {
+export class Erc1155<T extends DropERC1155 | TokenERC1155 | (ERC1155 & ERC1155Metadata & ERC1155Enumerable)> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     airdrop(tokenId: BigNumberish, addresses: AirdropInput, data?: BytesLike): Promise<TransactionResult>;
     balance(tokenId: BigNumberish): Promise<BigNumber>;
     balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
-    burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
     get(tokenId: BigNumberish): Promise<EditionMetadata>;
@@ -1861,7 +1869,6 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155> implements Updateable
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     getTotalCount(): Promise<BigNumber>;
     isApproved(address: string, operator: string): Promise<boolean>;
-    isTransferRestricted(): Promise<boolean>;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -1887,7 +1894,7 @@ export class Erc1155SignatureMinting {
 // Warning: (ae-forgotten-export) The symbol "TokenERC20" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc20<T extends TokenERC20 | DropERC20 | ITokenERC20> implements UpdateableNetwork {
+export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)> implements UpdateableNetwork {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     allowance(spender: string): Promise<CurrencyValue>;
     allowanceOf(owner: string, spender: string): Promise<CurrencyValue>;

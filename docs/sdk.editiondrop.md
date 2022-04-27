@@ -53,7 +53,9 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [burn(tokenId, amount)](./sdk.editiondrop.burn.md) |  | Burn a single NFT |
 |  [claim(tokenId, quantity, proofs)](./sdk.editiondrop.claim.md) |  | Claim a token to the connected wallet |
 |  [claimTo(destinationAddress, tokenId, quantity, proofs)](./sdk.editiondrop.claimto.md) |  | Claim NFTs to a specific Wallet |
 |  [createBatch(metadatas)](./sdk.editiondrop.createbatch.md) |  | Create a batch of NFTs to be claimed in the future |
+|  [isTransferRestricted()](./sdk.editiondrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 
