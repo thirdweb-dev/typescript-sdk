@@ -190,7 +190,7 @@ export class MarketplaceDirect {
       ],
       {
         // Higher gas limit for create listing
-        gasLimit: 350000,
+        gasLimit: 500000,
       },
     );
 
