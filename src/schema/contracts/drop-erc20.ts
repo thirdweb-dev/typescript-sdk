@@ -3,16 +3,23 @@ import {
   CommonContractSchema,
   CommonPlatformFeeSchema,
   CommonPrimarySaleSchema,
+  CommonRoyaltySchema,
   CommonSymbolSchema,
   CommonTrustedForwarderSchema,
 } from "./common";
 import { MerkleSchema } from "./common/snapshots";
 
-export const DropErc20ContractInput =
-  CommonContractSchema.merge(MerkleSchema).merge(CommonSymbolSchema);
+export const DropErc20ContractInput = CommonContractSchema.merge(
+  CommonRoyaltySchema,
+)
+  .merge(MerkleSchema)
+  .merge(CommonSymbolSchema);
 
-export const DropErc20ContractOutput =
-  CommonContractOutputSchema.merge(MerkleSchema).merge(CommonSymbolSchema);
+export const DropErc20ContractOutput = CommonContractOutputSchema.merge(
+  CommonRoyaltySchema,
+)
+  .merge(MerkleSchema)
+  .merge(CommonSymbolSchema);
 
 export const DropErc20ContractDeploy = DropErc20ContractInput.merge(
   CommonPlatformFeeSchema,
