@@ -15,16 +15,19 @@ import { SnapshotInputSchema } from "./snapshots";
 /**
  * @internal
  */
+export const QuantitySchema = z
+  .union([PriceSchema, z.literal("unlimited")])
+  .default("unlimited");
+
+/**
+ * @internal
+ */
 export const ClaimConditionInputSchema = z.object({
   startTime: StartDateSchema,
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   price: PriceSchema.default(0),
-  maxQuantity: z
-    .union([PriceSchema, z.literal("unlimited")])
-    .default("unlimited"),
-  quantityLimitPerTransaction: z
-    .union([PriceSchema, z.literal("unlimited")])
-    .default("unlimited"),
+  maxQuantity: QuantitySchema,
+  quantityLimitPerTransaction: QuantitySchema,
   waitInSeconds: BigNumberishSchema.default(0),
   merkleRootHash: BytesLikeSchema.default(hexZeroPad([0], 32)),
   snapshot: z.optional(SnapshotInputSchema),
@@ -45,7 +48,8 @@ export const PartialClaimConditionInputSchema =
  * @internal
  */
 export const ClaimConditionOutputSchema = ClaimConditionInputSchema.extend({
-  availableSupply: z.string().default(""),
+  availableSupply: QuantitySchema,
+  currentMintSupply: QuantitySchema,
   currencyMetadata: CurrencyValueSchema.default({
     value: BigNumber.from("0"),
     displayValue: "0",
@@ -54,8 +58,6 @@ export const ClaimConditionOutputSchema = ClaimConditionInputSchema.extend({
     name: "",
   }),
   price: BigNumberSchema,
-  maxQuantity: BigNumberSchema,
-  quantityLimitPerTransaction: BigNumberSchema,
   waitInSeconds: BigNumberSchema,
   startTime: BigNumberSchema.transform((n) => new Date(n.toNumber() * 1000)),
 });
