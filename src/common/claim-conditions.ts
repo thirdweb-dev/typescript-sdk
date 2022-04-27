@@ -146,7 +146,6 @@ export async function updateExistingClaimConditions(
   index: number,
   claimConditionInput: ClaimConditionInput,
   existingConditions: ClaimCondition[],
-  tokenDecimals: number,
 ): Promise<ClaimConditionInput[]> {
   if (index >= existingConditions.length) {
     throw Error(
@@ -154,27 +153,6 @@ export async function updateExistingClaimConditions(
     );
   }
   // merge input with existing claim condition
-  // TODO figure out how to have inputs and outputs symmetrical to avoid this gymnastic
-  const revertToFormattedAmount = (bigNumberValue: BigNumber) => {
-    if (
-      bigNumberValue.toHexString() === ethers.constants.MaxUint256.toHexString()
-    ) {
-      return "unlimited";
-    }
-    const formatted = ethers.utils
-      .formatUnits(bigNumberValue, tokenDecimals)
-      .replace(".0", "");
-    return formatted;
-  };
-
-  const convertBackToBigNumber = (formattedValue: string) => {
-    if (formattedValue === "unlimited") {
-      return ethers.constants.MaxUint256;
-    } else {
-      return ethers.utils.parseUnits(formattedValue, tokenDecimals);
-    }
-  };
-
   const priceDecimals = existingConditions[index].currencyMetadata.decimals;
   const priceInWei = existingConditions[index].price;
   const priceInTokens = ethers.utils.formatUnits(priceInWei, priceDecimals);
@@ -183,10 +161,6 @@ export async function updateExistingClaimConditions(
   const newConditionParsed = ClaimConditionInputSchema.parse({
     ...existingConditions[index],
     price: priceInTokens,
-    maxQuantity: revertToFormattedAmount(existingConditions[index].maxQuantity),
-    quantityLimitPerTransaction: revertToFormattedAmount(
-      existingConditions[index].quantityLimitPerTransaction,
-    ),
     ...claimConditionInput,
   });
 
@@ -194,10 +168,6 @@ export async function updateExistingClaimConditions(
   const mergedConditionOutput = ClaimConditionOutputSchema.parse({
     ...newConditionParsed,
     price: priceInWei,
-    maxQuantity: convertBackToBigNumber(newConditionParsed.maxQuantity),
-    quantityLimitPerTransaction: convertBackToBigNumber(
-      newConditionParsed.quantityLimitPerTransaction,
-    ),
   });
 
   return existingConditions.map((existingOutput, i) => {
@@ -214,10 +184,6 @@ export async function updateExistingClaimConditions(
     return {
       ...newConditionAtIndex,
       price: formattedPrice, // manually transform back to input price type
-      maxQuantity: revertToFormattedAmount(newConditionAtIndex.maxQuantity),
-      quantityLimitPerTransaction: revertToFormattedAmount(
-        newConditionAtIndex.quantityLimitPerTransaction,
-      ),
     };
   });
 }
@@ -316,6 +282,7 @@ export async function processClaimConditionInputs(
 /**
  * Converts a local SDK model to contract model
  * @param c
+ * @param tokenDecimals
  * @param provider
  * @internal
  */
@@ -358,6 +325,7 @@ async function convertToContractModel(
 /**
  * Transforms a contract model to local model
  * @param pm
+ * @param tokenDecimals
  * @param provider
  * @param merkleMetadata
  * @param storage
@@ -365,20 +333,35 @@ async function convertToContractModel(
  */
 export async function transformResultToClaimCondition(
   pm: IDropClaimCondition.ClaimConditionStructOutput,
+  tokenDecimals: number,
   provider: Provider,
   merkleMetadata: Record<string, string>,
   storage: IStorage,
 ): Promise<ClaimCondition> {
   const cv = await fetchCurrencyValue(provider, pm.currency, pm.pricePerToken);
   const claims = await fetchSnapshot(pm.merkleRoot, merkleMetadata, storage);
+  const maxClaimableSupply = convertToReadableQuantity(
+    pm.maxClaimableSupply,
+    tokenDecimals,
+  );
+  const quantityLimitPerTransaction = convertToReadableQuantity(
+    pm.quantityLimitPerTransaction,
+    tokenDecimals,
+  );
+  const availableSupply = convertToReadableQuantity(
+    BigNumber.from(pm.maxClaimableSupply).sub(pm.supplyClaimed),
+    tokenDecimals,
+  );
+  const currentMintSupply = convertToReadableQuantity(
+    pm.supplyClaimed,
+    tokenDecimals,
+  );
   return ClaimConditionOutputSchema.parse({
     startTime: pm.startTimestamp,
-    maxQuantity: pm.maxClaimableSupply.toString(),
-    currentMintSupply: pm.supplyClaimed.toString(),
-    availableSupply: BigNumber.from(pm.maxClaimableSupply)
-      .sub(pm.supplyClaimed)
-      .toString(),
-    quantityLimitPerTransaction: pm.quantityLimitPerTransaction.toString(),
+    maxQuantity: maxClaimableSupply,
+    currentMintSupply,
+    availableSupply,
+    quantityLimitPerTransaction,
     waitInSeconds: pm.waitTimeInSecondsBetweenClaims.toString(),
     price: BigNumber.from(pm.pricePerToken),
     currency: pm.currency,
@@ -387,4 +370,12 @@ export async function transformResultToClaimCondition(
     merkleRootHash: pm.merkleRoot,
     snapshot: claims,
   });
+}
+
+function convertToReadableQuantity(bn: BigNumber, tokenDecimals: number) {
+  if (bn.toString() === ethers.constants.MaxUint256.toString()) {
+    return "unlimited";
+  } else {
+    return ethers.utils.formatUnits(bn, tokenDecimals);
+  }
 }

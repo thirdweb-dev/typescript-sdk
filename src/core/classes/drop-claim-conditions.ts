@@ -68,6 +68,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     const metadata = await this.metadata.get();
     return await transformResultToClaimCondition(
       mc,
+      await this.getTokenDecimals(),
       this.contractWrapper.getProvider(),
       metadata.merkle,
       this.storage,
@@ -91,10 +92,12 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
       );
     }
     const metadata = await this.metadata.get();
+    const decimals = await this.getTokenDecimals();
     return Promise.all(
       conditions.map((c) =>
         transformResultToClaimCondition(
           c,
+          decimals,
           this.contractWrapper.getProvider(),
           metadata.merkle,
           this.storage,
@@ -146,9 +149,10 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     let activeConditionIndex: BigNumber;
     let claimCondition: ClaimCondition;
 
+    const decimals = await this.getTokenDecimals();
     const quantityWithDecimals = ethers.utils.parseUnits(
       PriceSchema.parse(quantity),
-      await this.getTokenDecimals(),
+      decimals,
     );
 
     if (addressToCheck === undefined) {
@@ -172,10 +176,15 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
       return reasons;
     }
 
-    if (
-      BigNumber.from(claimCondition.availableSupply).lt(quantityWithDecimals)
-    ) {
-      reasons.push(ClaimEligibility.NotEnoughSupply);
+    if (claimCondition.availableSupply !== "unlimited") {
+      const supplyWithDecimals = ethers.utils.parseUnits(
+        claimCondition.availableSupply,
+        decimals,
+      );
+
+      if (supplyWithDecimals.lt(quantityWithDecimals)) {
+        reasons.push(ClaimEligibility.NotEnoughSupply);
+      }
     }
 
     // check for merkle root inclusion
@@ -353,7 +362,6 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
       index,
       claimConditionInput,
       existingConditions,
-      await this.getTokenDecimals(),
     );
     return await this.set(newConditionInputs);
   }

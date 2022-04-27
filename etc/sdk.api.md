@@ -348,7 +348,8 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         address: string;
     }>, "many">]>>;
 }, {
-    availableSupply: z.ZodDefault<z.ZodString>;
+    availableSupply: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
+    currentMintSupply: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
     currencyMetadata: z.ZodDefault<z.ZodObject<z.extendShape<{
         name: z.ZodString;
         symbol: z.ZodString;
@@ -370,8 +371,6 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         displayValue: string;
     }>>;
     price: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
-    maxQuantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
-    quantityLimitPerTransaction: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
     waitInSeconds: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
     startTime: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, Date, string | number | bigint | BigNumber>;
 }>, "strip", z.ZodTypeAny, {
@@ -382,11 +381,12 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     startTime: Date;
     currencyAddress: string;
     price: BigNumber;
-    maxQuantity: BigNumber;
-    quantityLimitPerTransaction: BigNumber;
+    maxQuantity: string;
+    quantityLimitPerTransaction: string;
     waitInSeconds: BigNumber;
     merkleRootHash: string | number[];
     availableSupply: string;
+    currentMintSupply: string;
     currencyMetadata: {
         symbol: string;
         value: BigNumber;
@@ -400,8 +400,11 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         address: string;
     }[] | undefined;
     currencyAddress?: string | undefined;
+    maxQuantity?: string | number | undefined;
+    quantityLimitPerTransaction?: string | number | undefined;
     merkleRootHash?: string | number[] | undefined;
-    availableSupply?: string | undefined;
+    availableSupply?: string | number | undefined;
+    currentMintSupply?: string | number | undefined;
     currencyMetadata?: {
         symbol: string;
         value: string | number | bigint | BigNumber;
@@ -411,8 +414,6 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     } | undefined;
     startTime: string | number | bigint | BigNumber;
     price: string | number | bigint | BigNumber;
-    maxQuantity: string | number | bigint | BigNumber;
-    quantityLimitPerTransaction: string | number | bigint | BigNumber;
     waitInSeconds: string | number | bigint | BigNumber;
 }>;
 
@@ -3327,6 +3328,11 @@ export interface ProposalVote {
 export class QuantityAboveLimitError extends Error {
     constructor(quantity: string);
 }
+
+// Warning: (ae-internal-missing-underscore) The name "QuantitySchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const QuantitySchema: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
 
 // @public
 export interface QueryAllParams {

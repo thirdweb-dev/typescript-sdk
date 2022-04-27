@@ -59,6 +59,7 @@ export class DropErc1155ClaimConditions {
     const metadata = await this.metadata.get();
     return await transformResultToClaimCondition(
       mc,
+      0,
       this.contractWrapper.getProvider(),
       metadata.merkle,
       this.storage,
@@ -89,6 +90,7 @@ export class DropErc1155ClaimConditions {
       conditions.map((c) =>
         transformResultToClaimCondition(
           c,
+          0,
           this.contractWrapper.getProvider(),
           metadata.merkle,
           this.storage,
@@ -169,8 +171,10 @@ export class DropErc1155ClaimConditions {
       return reasons;
     }
 
-    if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
-      reasons.push(ClaimEligibility.NotEnoughSupply);
+    if (claimCondition.availableSupply !== "unlimited") {
+      if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
+        reasons.push(ClaimEligibility.NotEnoughSupply);
+      }
     }
 
     // check for merkle root inclusion
@@ -359,7 +363,6 @@ export class DropErc1155ClaimConditions {
       index,
       claimConditionInput,
       existingConditions,
-      0,
     );
     return await this.set(tokenId, newConditionInputs);
   }

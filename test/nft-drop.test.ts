@@ -748,9 +748,7 @@ describe("NFT Drop Contract", async () => {
 
     await dropContract.claimConditions.update(0, { waitInSeconds: 10 });
     let updatedConditions = await dropContract.claimConditions.getAll();
-    expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
-      BigNumber.from(1),
-    );
+    expect(updatedConditions[0].maxQuantity).to.be.deep.equal("1");
     expect(updatedConditions[0].price).to.be.deep.equal(
       ethers.utils.parseUnits("0.15"),
     );
@@ -766,12 +764,8 @@ describe("NFT Drop Contract", async () => {
       waitInSeconds: 10,
     });
     updatedConditions = await dropContract.claimConditions.getAll();
-    expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
-      BigNumber.from(1),
-    );
-    expect(updatedConditions[1].maxQuantity).to.be.deep.equal(
-      BigNumber.from(10),
-    );
+    expect(updatedConditions[0].maxQuantity).to.be.deep.equal("1");
+    expect(updatedConditions[1].maxQuantity).to.be.deep.equal("10");
     expect(updatedConditions[1].waitInSeconds).to.be.deep.equal(
       BigNumber.from(10),
     );
@@ -789,12 +783,8 @@ describe("NFT Drop Contract", async () => {
     });
     // max quantities should be inverted now
     const updatedConditions = await dropContract.claimConditions.getAll();
-    expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
-      BigNumber.from(2),
-    );
-    expect(updatedConditions[1].maxQuantity).to.be.deep.equal(
-      BigNumber.from(1),
-    );
+    expect(updatedConditions[0].maxQuantity).to.be.deep.equal("2");
+    expect(updatedConditions[1].maxQuantity).to.be.deep.equal("1");
   });
 
   it("set claim condition in the future should not be claimable now", async () => {

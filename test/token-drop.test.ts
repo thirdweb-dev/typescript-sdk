@@ -327,6 +327,17 @@ describe("Token Drop Contract", async () => {
       assert.isFalse(canClaim);
     });
 
+    it("should transform qunatities back to readable values", async () => {
+      await dropContract.claimConditions.set([
+        {
+          maxQuantity: "10.8",
+          quantityLimitPerTransaction: "1.2",
+        },
+      ]);
+      const active = await dropContract.claimConditions.getActive();
+      console.log(active);
+    });
+
     it("should check if its been long enough since the last claim", async () => {
       await dropContract.claimConditions.set([
         {
@@ -563,9 +574,7 @@ describe("Token Drop Contract", async () => {
     await dropContract.claimConditions.update(0, { waitInSeconds: 10 });
     let updatedConditions = await dropContract.claimConditions.getAll();
     console.log(updatedConditions[0]);
-    expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
-      ethers.utils.parseUnits("1.2", 18),
-    );
+    expect(updatedConditions[0].maxQuantity).to.be.deep.equal("1.2");
     expect(updatedConditions[0].waitInSeconds).to.be.deep.equal(
       BigNumber.from(10),
     );
@@ -578,12 +587,8 @@ describe("Token Drop Contract", async () => {
       waitInSeconds: 10,
     });
     updatedConditions = await dropContract.claimConditions.getAll();
-    expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
-      ethers.utils.parseUnits("1.2", 18),
-    );
-    expect(updatedConditions[1].maxQuantity).to.be.deep.equal(
-      ethers.utils.parseUnits("10", 18),
-    );
+    expect(updatedConditions[0].maxQuantity).to.be.deep.equal("1.2");
+    expect(updatedConditions[1].maxQuantity).to.be.deep.equal("10.0");
     expect(updatedConditions[1].waitInSeconds).to.be.deep.equal(
       BigNumber.from(10),
     );
@@ -601,12 +606,8 @@ describe("Token Drop Contract", async () => {
     });
     // max quantities should be inverted now
     const updatedConditions = await dropContract.claimConditions.getAll();
-    expect(updatedConditions[0].maxQuantity).to.be.deep.equal(
-      ethers.utils.parseUnits("2", 18),
-    );
-    expect(updatedConditions[1].maxQuantity).to.be.deep.equal(
-      ethers.utils.parseUnits("1", 18),
-    );
+    expect(updatedConditions[0].maxQuantity).to.be.deep.equal("2.0");
+    expect(updatedConditions[1].maxQuantity).to.be.deep.equal("1.0");
   });
 
   it("set claim condition in the future should not be claimable now", async () => {
