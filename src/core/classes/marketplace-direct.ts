@@ -188,6 +188,10 @@ export class MarketplaceDirect {
           startTime: BigNumber.from(listingStartTime),
         } as IMarketplace.ListingParametersStruct,
       ],
+      {
+        // Higher gas limit for create listing
+        gasLimit: 350000,
+      },
     );
 
     const event = this.contractWrapper.parseLogs<ListingAddedEvent>(
