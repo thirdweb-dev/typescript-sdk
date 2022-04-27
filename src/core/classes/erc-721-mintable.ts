@@ -23,20 +23,6 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
   }
 
   /**
-   * Mint an NFT to the connected wallet
-   *
-   * @remarks See {@link NFTCollection.mintTo}
-   */
-  public async toSelf(
-    metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    return this.toAddress(
-      await this.contractWrapper.getSignerAddress(),
-      metadata,
-    );
-  }
-
-  /**
    * Mint a unique NFT
    *
    * @remarks Mint a unique NFT to a specified wallet.
@@ -53,13 +39,13 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
    *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
    * };
    *
-   * const tx = await contract.mint.toAddress(walletAddress, metadata);
+   * const tx = await contract.mint.to(walletAddress, metadata);
    * const receipt = tx.receipt; // the transaction receipt
    * const tokenId = tx.id; // the id of the NFT minted
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  public async toAddress(
+  public async to(
     to: string,
     metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
@@ -125,6 +111,7 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
+  // TODO extract into its own subclass
   public async batchToAddress(
     to: string,
     metadatas: NFTMetadataOrUri[],

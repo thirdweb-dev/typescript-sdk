@@ -22,6 +22,5 @@ export declare class Erc721Mintable<TContract extends IMintableERC721>
 |  --- | --- | --- |
 |  [batchToAddress(to, metadatas)](./sdk.erc721mintable.batchtoaddress.md) |  | Mint Many unique NFTs |
 |  [batchToSelf(metadatas)](./sdk.erc721mintable.batchtoself.md) |  | Mint Many NFTs to the connected wallet |
-|  [toAddress(to, metadata)](./sdk.erc721mintable.toaddress.md) |  | Mint a unique NFT |
-|  [toSelf(metadata)](./sdk.erc721mintable.toself.md) |  | Mint an NFT to the connected wallet |
+|  [to(to, metadata)](./sdk.erc721mintable.to.md) |  | Mint a unique NFT |
 

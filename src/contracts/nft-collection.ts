@@ -20,6 +20,7 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumberish } from "ethers";
+import { NFTMetadataInput } from "../schema";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -172,13 +173,16 @@ export class NFTCollection extends Erc721<TokenERC721> {
    *******************************/
 
   /**
-   * {@inheritDoc Erc721Mintable.toSelf}
+   * {@inheritDoc Erc721Mintable.to}
    */
-  mintToSelf = this._mint.toSelf.bind(this._mint);
+  public async mintToSelf(metadata: NFTMetadataInput) {
+    const signerAddress = await this.contractWrapper.getSignerAddress();
+    return this._mint.to(signerAddress, metadata);
+  }
   /**
-   * {@inheritDoc Erc721Mintable.toAddress}
+   * {@inheritDoc Erc721Mintable.to}
    */
-  mintTo = this._mint.toAddress.bind(this._mint);
+  mintTo = this._mint.to.bind(this._mint);
   /**
    * {@inheritDoc Erc721Mintable.batchToSelf}
    */

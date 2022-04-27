@@ -8,5 +8,5 @@
 <b>Signature:</b>
 
 ```typescript
-getOwned: (_address?: string | undefined) => Promise<import("..").NFTMetadataOwner[]>;
+getOwned: (_address?: string | undefined) => Promise<import("../schema").NFTMetadataOwner[]>;
 ```

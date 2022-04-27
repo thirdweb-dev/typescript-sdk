@@ -1981,9 +1981,8 @@ export class Erc721Mintable<TContract extends IMintableERC721> {
     constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<TContract>, storage: IStorage);
     batchToAddress(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     batchToSelf(metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    toAddress(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
-    toSelf(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
+    to(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 }
 
 // @public
@@ -2618,17 +2617,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
         name: string;
     }) => Promise<TransactionResultWithId<NFTMetadataOwner>>;
-    mintToSelf: (metadata: string | {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-        name: string;
-    }) => Promise<TransactionResultWithId<NFTMetadataOwner>>;
+    mintToSelf(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     platformFee: ContractPlatformFee<TokenERC721>;
     // (undocumented)

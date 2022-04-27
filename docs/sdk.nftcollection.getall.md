@@ -8,5 +8,5 @@
 <b>Signature:</b>
 
 ```typescript
-getAll: (queryParams?: import("..").QueryAllParams | undefined) => Promise<import("..").NFTMetadataOwner[]>;
+getAll: (queryParams?: import("..").QueryAllParams | undefined) => Promise<import("../schema").NFTMetadataOwner[]>;
 ```

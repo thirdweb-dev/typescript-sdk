@@ -19,7 +19,7 @@ mintBatchTo: (to: string, metadatas: (string | {
         properties?: Record<string, import("../core").Json> | Record<string, import("../core").Json>[] | undefined;
         attributes?: Record<string, import("../core").Json> | Record<string, import("../core").Json>[] | undefined;
         name: string;
-    })[]) => Promise<import("../core").TransactionResultWithId<import("..").NFTMetadataOwner>[]>;
+    })[]) => Promise<import("../core").TransactionResultWithId<import("../schema").NFTMetadataOwner>[]>;
 ```
 
 ## Remarks

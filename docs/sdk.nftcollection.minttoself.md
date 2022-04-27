@@ -2,27 +2,27 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [NFTCollection](./sdk.nftcollection.md) &gt; [mintToSelf](./sdk.nftcollection.minttoself.md)
 
-## NFTCollection.mintToSelf property
+## NFTCollection.mintToSelf() method
 
-Mint an NFT to the connected wallet
+Mint a unique NFT
 
 <b>Signature:</b>
 
 ```typescript
-mintToSelf: (metadata: string | {
-        [x: string]: import("../core").Json;
-        description?: string | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, import("../core").Json> | Record<string, import("../core").Json>[] | undefined;
-        attributes?: Record<string, import("../core").Json> | Record<string, import("../core").Json>[] | undefined;
-        name: string;
-    }) => Promise<import("../core").TransactionResultWithId<import("..").NFTMetadataOwner>>;
+mintToSelf(metadata: NFTMetadataInput): Promise<import("../core").TransactionResultWithId<import("../schema").NFTMetadataOwner>>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  metadata | [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
+
+<b>Returns:</b>
+
+Promise&lt;import("../core").[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;import("../schema").[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;&gt;
 
 ## Remarks
 
-See [NFTCollection.mintTo](./sdk.nftcollection.mintto.md)
+Mint a unique NFT to a specified wallet.
 
