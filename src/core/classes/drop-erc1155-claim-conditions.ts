@@ -171,8 +171,10 @@ export class DropErc1155ClaimConditions {
       return reasons;
     }
 
-    if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
-      reasons.push(ClaimEligibility.NotEnoughSupply);
+    if (claimCondition.availableSupply !== "unlimited") {
+      if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
+        reasons.push(ClaimEligibility.NotEnoughSupply);
+      }
     }
 
     // check for merkle root inclusion
