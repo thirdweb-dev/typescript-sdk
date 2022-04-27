@@ -295,7 +295,9 @@ export class MarketplaceAuction {
       pricePerToken,
       listing.currencyContractAddress,
     );
-
+    if (normalizedPrice.eq(BigNumber.from(0))) {
+      throw new Error("Cannot make a bid with 0 value");
+    }
     const bidBuffer = await this.contractWrapper.readContract.bidBufferBps();
     const winningBid = await this.getWinningBid(listingId);
     if (winningBid) {
