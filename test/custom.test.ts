@@ -202,7 +202,7 @@ describe("Custom Contracts", async () => {
     invariant(c.nft, "ERC721 undefined");
     invariant(c.nft.query, "ERC721 query undefined");
     invariant(c.nft.mint, "ERC721 minter undefined");
-    await c.nft.mint.toSelf({
+    await c.nft.mint.to(adminWallet.address, {
       name: "Custom NFT",
     });
     const nfts = await c.nft.query.all();

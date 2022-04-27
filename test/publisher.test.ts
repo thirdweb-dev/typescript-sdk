@@ -152,7 +152,7 @@ describe("Publishing", async () => {
     const c = await realSDK.getCustomContract(deployedAddr);
     invariant(c.nft, "no nft detected");
     invariant(c.nft.mint, "no minter detected");
-    const tx2 = await c.nft.mint.toSelf({
+    const tx2 = await c.nft.mint.to(adminWallet.address, {
       name: "cool nft",
     });
     console.log("minted", tx2.id);
@@ -184,7 +184,7 @@ describe("Publishing", async () => {
     const c = await realSDK.getCustomContract(deployedAddr);
     invariant(c.nft, "no nft detected");
     invariant(c.nft.mint, "no minter detected");
-    const tx2 = await c.nft.mint.toSelf({
+    const tx2 = await c.nft.mint.to(adminWallet.address, {
       name: "cool nft",
     });
     console.log("minted", tx2.id);
