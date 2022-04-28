@@ -1191,7 +1191,7 @@ export class CustomContract<TContract extends ThirdwebContract = ThirdwebContrac
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_IPFS_GATEWAY" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
+export const DEFAULT_IPFS_GATEWAY = "https://ipfs.filebase.io/ipfs/";
 
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_QUERY_ALL_COUNT" should be prefixed with an underscore because the declaration is marked as @internal
 //

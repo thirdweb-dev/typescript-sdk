@@ -1,7 +1,11 @@
 /**
  * @internal
  */
-export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
+export const DEFAULT_IPFS_GATEWAY = "https://ipfs.filebase.io/ipfs/";
+/**
+ * @internal
+ */
+export const TW_FILEBASE_SERVER_URL = "http://localhost:3002";
 /**
  * @internal
  */

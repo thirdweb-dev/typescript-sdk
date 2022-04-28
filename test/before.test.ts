@@ -33,7 +33,7 @@ const defaultProvider = hardhatEthers.provider;
 
 let registryAddress: string;
 let sdk: ThirdwebSDK;
-const ipfsGatewayUrl = "https://gateway.ipfscdn.io/ipfs/";
+const ipfsGatewayUrl = "https://ipfs.filebase.io/ipfs/";
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: IStorage;

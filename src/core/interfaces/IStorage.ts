@@ -16,14 +16,6 @@ export interface UploadMetadataBatchResult {
  */
 export interface IStorage {
   /**
-   * Fetches a one-time-use upload token that can used to upload
-   * a file to storage.
-   *
-   * @returns - The one time use token that can be passed to the Pinata API.
-   */
-  getUploadToken(contractAddress: string): Promise<string>;
-
-  /**
    * Fetches data from storage. This method expects to fetch JSON formatted data
    *
    * @param hash - The Hash of the file to fetch
