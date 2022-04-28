@@ -43,7 +43,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     string,
     ValidContractInstance | CustomContract
   >();
-  private storage: IStorage;
+  public storage: IStorage;
   /**
    * New contract deployer
    */
