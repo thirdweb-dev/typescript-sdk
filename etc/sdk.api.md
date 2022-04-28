@@ -1947,10 +1947,8 @@ export class Erc721<T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadat
     // @internal (undocumented)
     protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
-    // Warning: (ae-forgotten-export) The symbol "IMintableERC721" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    mint: Erc721Mintable<IMintableERC721> | undefined;
+    mint: Erc721Mintable | undefined;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -1977,10 +1975,13 @@ export class Erc721Enumerable<TContract extends ERC721Enumerable & ERC721Metadat
 }
 
 // @public (undocumented)
-export class Erc721Mintable<TContract extends IMintableERC721> {
-    constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<TContract>, storage: IStorage);
-    batchToAddress(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    batchToSelf(metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+export class Erc721Mintable {
+    // Warning: (ae-forgotten-export) The symbol "IMintableERC721" needs to be exported by the entry point index.d.ts
+    constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<IMintableERC721>, storage: IStorage);
+    // Warning: (ae-forgotten-export) The symbol "Erc721BatchMintable" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    batch: Erc721BatchMintable | undefined;
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     to(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 }
@@ -2567,10 +2568,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     estimator: GasCostEstimator<TokenERC721>;
     // (undocumented)
     events: ContractEvents<TokenERC721>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "getAll"
-    //
-    // (undocumented)
-    getAll: (queryParams?: QueryAllParams | undefined) => Promise<NFTMetadataOwner[]>;
+    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "getOwned"
     //
     // (undocumented)
@@ -2584,40 +2582,16 @@ export class NFTCollection extends Erc721<TokenERC721> {
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
-    mintBatch: (metadatas: (string | {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-        name: string;
-    })[]) => Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    mintBatchTo: (to: string, metadatas: (string | {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-        name: string;
-    })[]) => Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    mintTo: (to: string, metadata: string | {
-        [x: string]: Json;
-        description?: string | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-        name: string;
-    }) => Promise<TransactionResultWithId<NFTMetadataOwner>>;
-    mintToSelf(metadata: NFTMetadataInput): Promise<TransactionResultWithId<NFTMetadataOwner>>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721BatchMintable"
+    //
+    // (undocumented)
+    mintBatch(metadata: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721BatchMintable"
+    //
+    // (undocumented)
+    mintBatchTo(walletAddress: string, metadata: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    mintTo(walletAddress: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
+    mintToSelf(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
     platformFee: ContractPlatformFee<TokenERC721>;
     // (undocumented)
@@ -4412,6 +4386,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     publisher: ContractPublisher;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
+    // (undocumented)
+    storage: IStorage;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
 }
 

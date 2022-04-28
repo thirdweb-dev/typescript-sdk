@@ -2,6 +2,7 @@ import type {
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
+  TransactionResultWithId,
 } from "../core";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -20,7 +21,8 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
 import { BigNumberish } from "ethers";
-import { NFTMetadataInput } from "../schema";
+import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
+import { QueryAllParams } from "../types";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -98,6 +100,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private _mint = this.mint!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _batchMint = this.mint!.batch!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private _query = this.query!;
 
   constructor(
@@ -141,9 +145,13 @@ export class NFTCollection extends Erc721<TokenERC721> {
    *******************************/
 
   /**
-   * {@inheritDoc Erc721Enumerable.getAll}
+   * {@inheritDoc Erc721Enumerable.all}
    */
-  getAll = this._query.all.bind(this._query);
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTMetadataOwner[]> {
+    return this._query.all(queryParams);
+  }
   /**
    * {@inheritDoc Erc721Enumerable.getOwned}
    */
@@ -175,22 +183,40 @@ export class NFTCollection extends Erc721<TokenERC721> {
   /**
    * {@inheritDoc Erc721Mintable.to}
    */
-  public async mintToSelf(metadata: NFTMetadataInput) {
+  public async mintToSelf(
+    metadata: NFTMetadataOrUri,
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
     const signerAddress = await this.contractWrapper.getSignerAddress();
     return this._mint.to(signerAddress, metadata);
   }
+
   /**
    * {@inheritDoc Erc721Mintable.to}
    */
-  mintTo = this._mint.to.bind(this._mint);
+  public async mintTo(
+    walletAddress: string,
+    metadata: NFTMetadataOrUri,
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
+    return this._mint.to(walletAddress, metadata);
+  }
   /**
-   * {@inheritDoc Erc721Mintable.batchToSelf}
+   * {@inheritDoc Erc721BatchMintable.to}
    */
-  mintBatch = this._mint.batchToSelf.bind(this._mint);
+  public async mintBatch(
+    metadata: NFTMetadataOrUri[],
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+    const signerAddress = await this.contractWrapper.getSignerAddress();
+    return this._batchMint.to(signerAddress, metadata);
+  }
   /**
-   * {@inheritDoc Erc721Mintable.batchToAddress}
+   * {@inheritDoc Erc721BatchMintable.to}
    */
-  mintBatchTo = this._mint.batchToAddress.bind(this._mint);
+  public async mintBatchTo(
+    walletAddress: string,
+    metadata: NFTMetadataOrUri[],
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+    return this._batchMint.to(walletAddress, metadata);
+  }
 
   /**
    * Burn a single NFT
