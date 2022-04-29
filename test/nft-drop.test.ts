@@ -237,8 +237,8 @@ describe("NFT Drop Contract", async () => {
     });
     expect(claimed.length).to.eq(1);
     expect(unclaimed.length).to.eq(30);
-    expect(unclaimed[0].metadata.name).to.eq("test 1");
-    expect(unclaimed[unclaimed.length - 1].metadata.name).to.eq("test 30");
+    expect(unclaimed[0].name).to.eq("test 1");
+    expect(unclaimed[unclaimed.length - 1].name).to.eq("test 30");
   });
 
   it("should not allow claiming to someone not in the merkle tree", async () => {
