@@ -2,11 +2,22 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [NFTCollection](./sdk.nftcollection.md) &gt; [getOwned](./sdk.nftcollection.getowned.md)
 
-## NFTCollection.getOwned property
+## NFTCollection.getOwned() method
 
 
 <b>Signature:</b>
 
 ```typescript
-getOwned: (_address?: string | undefined) => Promise<NFTMetadataOwner[]>;
+getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  walletAddress | string | <i>(Optional)</i> |
+
+<b>Returns:</b>
+
+Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt;
+

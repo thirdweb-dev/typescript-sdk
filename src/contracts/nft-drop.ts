@@ -150,6 +150,8 @@ export class NFTDrop extends Erc721<DropERC721> {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private _query = this.query!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _owned = this.query!.owned!;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -193,21 +195,33 @@ export class NFTDrop extends Erc721<DropERC721> {
    *******************************/
 
   /**
-   * {@inheritDoc Erc721Enumerable.getAll}
+   * {@inheritDoc Erc721Enumerable.all}
    */
-  getAll = this._query.all.bind(this._query);
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTMetadataOwner[]> {
+    return this._query.all(queryParams);
+  }
   /**
-   * {@inheritDoc Erc721Enumerable.getOwned}
+   * {@inheritDoc Erc721Owned.all}
    */
-  getOwned = this._query.owned.bind(this._query);
+  public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
+    return this._owned.all(walletAddress);
+  }
+
   /**
-   * {@inheritDoc Erc721Enumerable.getOwnedTokenIds}
+   * {@inheritDoc Erc721Owned.tokendIds}
    */
-  getOwnedTokenIds = this._query.ownedTokenIds.bind(this._query);
+  public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
+    return this._owned.tokenIds(walletAddress);
+  }
+
   /**
    * {@inheritDoc Erc721Enumerable.totalSupply}
    */
-  totalSupply = this._query.totalSupply.bind(this._query);
+  public async totalSupply() {
+    return this._query.totalSupply();
+  }
 
   /**
    * Get All Claimed NFTs

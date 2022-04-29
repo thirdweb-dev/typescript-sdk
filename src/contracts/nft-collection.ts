@@ -20,7 +20,7 @@ import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
 import { QueryAllParams } from "../types";
 
@@ -103,6 +103,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
   private _batchMint = this.mint!.batch!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private _query = this.query!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _owned = this.query!.owned!;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -153,17 +155,25 @@ export class NFTCollection extends Erc721<TokenERC721> {
     return this._query.all(queryParams);
   }
   /**
-   * {@inheritDoc Erc721Enumerable.getOwned}
+   * {@inheritDoc Erc721Owned.all}
    */
-  getOwned = this._query.owned.bind(this._query);
+  public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
+    return this._owned.all(walletAddress);
+  }
+
   /**
-   * {@inheritDoc Erc721Enumerable.getOwnedTokenIds}
+   * {@inheritDoc Erc721Owned.tokendIds}
    */
-  getOwnedTokenIds = this._query.ownedTokenIds.bind(this._query);
+  public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
+    return this._owned.tokenIds(walletAddress);
+  }
+
   /**
    * {@inheritDoc Erc721Enumerable.totalSupply}
    */
-  totalSupply = this._query.totalSupply.bind(this._query);
+  public async totalSupply() {
+    return this._query.totalSupply();
+  }
 
   /**
    * Get whether users can transfer NFTs from this contract

@@ -17,6 +17,7 @@ import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
 import {
   EditionMetadata,
   EditionMetadataOrUri,
+  EditionMetadataOwner,
 } from "../schema/tokens/edition";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -28,6 +29,7 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { TokensMintedEvent } from "contracts/TokenERC1155";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
+import { QueryAllParams } from "../types";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -49,6 +51,9 @@ export class Edition extends Erc1155<TokenERC1155> {
   static contractType = "edition" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractFactory = TokenERC1155__factory;
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _query = this.query!;
   /**
    * @internal
    */
@@ -138,6 +143,31 @@ export class Edition extends Erc1155<TokenERC1155> {
   /** ******************************
    * READ FUNCTIONS
    *******************************/
+
+  /**
+   * {@inheritDoc Erc1155Enumerable.all}
+   */
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<EditionMetadata[]> {
+    return this._query.all(queryParams);
+  }
+
+  /**
+   * {@inheritDoc Erc1155Enumerable.owned}
+   */
+  public async getOwned(
+    walletAddress?: string,
+  ): Promise<EditionMetadataOwner[]> {
+    return this._query.owned(walletAddress);
+  }
+
+  /**
+   * {@inheritDoc Erc1155Enumerable.getTotalCount}
+   */
+  public async getTotalCount(): Promise<BigNumber> {
+    return this._query.getTotalCount();
+  }
 
   /**
    * Get whether users can transfer NFTs from this contract

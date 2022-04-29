@@ -16,7 +16,7 @@ import {
 
 global.fetch = require("node-fetch");
 
-describe("IPFS Uploads", async () => {
+describe.skip("IPFS Uploads", async () => {
   const storage: IpfsStorage = new IpfsStorage(ipfsGatewayUrl);
 
   async function getFile(upload: string): Promise<Response> {

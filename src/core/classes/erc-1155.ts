@@ -1,5 +1,10 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC1155, ERC1155, ERC1155Metadata, TokenERC1155 } from "contracts";
+import {
+  DropERC1155,
+  ERC1155Enumerable,
+  ERC1155Enumerable__factory,
+  TokenERC1155,
+} from "contracts";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
@@ -9,29 +14,26 @@ import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import {
   EditionMetadata,
   EditionMetadataOutputSchema,
-  EditionMetadataOwner,
 } from "../../schema/tokens/edition";
 import { fetchTokenMetadata } from "../../common/nft";
-import { NotFoundError } from "../../common";
-import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
+import { implementsInterface, NotFoundError } from "../../common";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
-import { ERC1155Enumerable } from "contracts/ERC1155Enumerable";
+import { BaseERC1155 } from "../../types/eips";
+import { Erc1155Enumerable } from "./erc-1155-enumerable";
 
 /**
  * Standard ERC1155 functions
  * @public
  */
-export class Erc1155<
-  T extends
-    | DropERC1155
-    | TokenERC1155
-    | (ERC1155 & ERC1155Metadata & ERC1155Enumerable),
-> implements UpdateableNetwork
+export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
+  implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
+
+  public query: Erc1155Enumerable | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -49,6 +51,7 @@ export class Erc1155<
       );
       this.options = SDKOptionsSchema.parse({});
     }
+    this.query = this.detectErc1155Enumerable();
   }
 
   /**
@@ -88,93 +91,6 @@ export class Erc1155<
       supply,
       metadata,
     });
-  }
-
-  /**
-   * Get All NFTs
-   *
-   * @remarks Get all the data associated with every NFT in this contract.
-   *
-   * By default, returns the first 100 NFTs, use queryParams to fetch more.
-   *
-   * @example
-   * ```javascript
-   * const nfts = await contract.getAll();
-   * console.log(nfts);
-   * ```
-   * @param queryParams - optional filtering to only fetch a subset of results.
-   * @returns The NFT metadata for all NFTs queried.
-   */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<EditionMetadata[]> {
-    const start = BigNumber.from(queryParams?.start || 0).toNumber();
-    const count = BigNumber.from(
-      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
-    ).toNumber();
-    const maxId = Math.min(
-      (await this.getTotalCount()).toNumber(),
-      start + count,
-    );
-    return await Promise.all(
-      [...Array(maxId - start).keys()].map((i) =>
-        this.get((start + i).toString()),
-      ),
-    );
-  }
-
-  /**
-   * Get the number of NFTs minted
-   * @returns the total number of NFTs minted in this contract
-   * @public
-   */
-  public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToMint();
-  }
-
-  /**
-   * Get Owned NFTs
-   *
-   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet to get the NFTs of
-   * const address = "{{wallet_address}}";
-   * const nfts = await contract.getOwned(address);
-   * console.log(nfts);
-   * ```
-   *
-   * @returns The NFT metadata for all NFTs in the contract.
-   */
-  public async getOwned(_address?: string): Promise<EditionMetadataOwner[]> {
-    const address = _address
-      ? _address
-      : await this.contractWrapper.getSignerAddress();
-    const maxId = await this.contractWrapper.readContract.nextTokenIdToMint();
-    const balances = await this.contractWrapper.readContract.balanceOfBatch(
-      Array(maxId.toNumber()).fill(address),
-      Array.from(Array(maxId.toNumber()).keys()),
-    );
-
-    const ownedBalances = balances
-      .map((b, i) => {
-        return {
-          tokenId: i,
-          balance: b,
-        };
-      })
-      .filter((b) => b.balance.gt(0));
-    return await Promise.all(
-      ownedBalances.map(async (b) => {
-        const editionMetadata = await this.get(b.tokenId.toString());
-        return {
-          ...editionMetadata,
-          owner: address,
-          quantityOwned: b.balance,
-        };
-      }),
-    );
   }
 
   /**
@@ -372,5 +288,17 @@ export class Erc1155<
       throw new NotFoundError();
     }
     return fetchTokenMetadata(tokenId, tokenUri, this.storage);
+  }
+
+  private detectErc1155Enumerable(): Erc1155Enumerable | undefined {
+    if (
+      implementsInterface<BaseERC1155 & ERC1155Enumerable>(
+        this.contractWrapper,
+        ERC1155Enumerable__factory.createInterface(),
+      )
+    ) {
+      return new Erc1155Enumerable(this, this.contractWrapper);
+    }
+    return undefined;
   }
 }

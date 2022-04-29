@@ -10,32 +10,28 @@ import { fetchTokenMetadata } from "../../common/nft";
 import { implementsInterface, NotFoundError } from "../../common";
 import {
   DropERC721,
-  ERC721,
-  ERC721Enumerable,
-  ERC721Enumerable__factory,
-  ERC721Metadata,
+  ERC721Supply,
+  ERC721Supply__factory,
   IMintableERC721,
   IMintableERC721__factory,
   TokenERC721,
 } from "contracts";
 import { Erc721Enumerable } from "./erc-721-enumerable";
 import { Erc721Mintable } from "./erc-721-mintable";
+import { BaseERC721 } from "../../types/eips";
 
 /**
  * Standard ERC721 functions
  * @public
  */
-export class Erc721<
-  T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadata),
-> implements UpdateableNetwork
+export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
+  implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
 
-  public query:
-    | Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721>
-    | undefined;
+  public query: Erc721Enumerable | undefined;
   public mint: Erc721Mintable | undefined;
 
   constructor(
@@ -208,13 +204,11 @@ export class Erc721<
     return fetchTokenMetadata(tokenId, tokenUri, this.storage);
   }
 
-  private detectErc721Enumerable():
-    | Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721>
-    | undefined {
+  private detectErc721Enumerable(): Erc721Enumerable | undefined {
     if (
-      implementsInterface<ERC721Metadata & ERC721Enumerable & ERC721>(
+      implementsInterface<BaseERC721 & ERC721Supply>(
         this.contractWrapper,
-        ERC721Enumerable__factory.createInterface(),
+        ERC721Supply__factory.createInterface(),
       )
     ) {
       return new Erc721Enumerable(this, this.contractWrapper);

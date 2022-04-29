@@ -2,39 +2,10 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [Erc721Enumerable](./sdk.erc721enumerable.md) &gt; [owned](./sdk.erc721enumerable.owned.md)
 
-## Erc721Enumerable.owned() method
-
-Get Owned NFTs
+## Erc721Enumerable.owned property
 
 <b>Signature:</b>
 
 ```typescript
-owned(_address?: string): Promise<NFTMetadataOwner[]>;
+owned: Erc721Owned | undefined;
 ```
-
-## Parameters
-
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  \_address | string | <i>(Optional)</i> |
-
-<b>Returns:</b>
-
-Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt;
-
-The NFT metadata for all NFTs in the contract.
-
-## Remarks
-
-Get all the data associated with the NFTs owned by a specific wallet.
-
-## Example
-
-
-```javascript
-// Address of the wallet to get the NFTs of
-const address = "{{wallet_address}}";
-const nfts = await contract.query.owned(address);
-console.log(nfts);
-```
-

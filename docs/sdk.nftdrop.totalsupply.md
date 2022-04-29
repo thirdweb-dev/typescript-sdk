@@ -2,12 +2,18 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [NFTDrop](./sdk.nftdrop.md) &gt; [totalSupply](./sdk.nftdrop.totalsupply.md)
 
-## NFTDrop.totalSupply property
+## NFTDrop.totalSupply() method
 
 Get the number of NFTs minted
 
 <b>Signature:</b>
 
 ```typescript
-totalSupply: () => Promise<BigNumber>;
+totalSupply(): Promise<BigNumber>;
 ```
+<b>Returns:</b>
+
+Promise&lt;BigNumber&gt;
+
+the total number of NFTs minted in this contract
+
