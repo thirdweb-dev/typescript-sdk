@@ -4,7 +4,7 @@
 
 ## NFTDrop.getAll() method
 
-Get All NFTs
+Get All Minted NFTs
 
 <b>Signature:</b>
 

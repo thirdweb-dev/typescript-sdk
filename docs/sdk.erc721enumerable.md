@@ -26,6 +26,6 @@ export declare class Erc721Enumerable
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [all(queryParams)](./sdk.erc721enumerable.all.md) |  | Get All NFTs |
+|  [all(queryParams)](./sdk.erc721enumerable.all.md) |  | Get All Minted NFTs |
 |  [totalSupply()](./sdk.erc721enumerable.totalsupply.md) |  | Get the number of NFTs minted |
 

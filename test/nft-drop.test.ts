@@ -227,9 +227,11 @@ describe("NFT Drop Contract", async () => {
     }
     await dropContract.createBatch(metadatas);
     const all = await dropContract.getAll();
-    expect(all.length).to.eq(100);
+    expect(all.length).to.eq(0);
     await dropContract.claimConditions.set([{}]);
     await dropContract.claim(1);
+    const allAfterMint = await dropContract.getAll();
+    expect(allAfterMint.length).to.eq(1);
     const claimed = await dropContract.getAllClaimed();
     const unclaimed = await dropContract.getAllUnclaimed({
       start: 0,

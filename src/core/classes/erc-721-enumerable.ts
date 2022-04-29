@@ -28,7 +28,7 @@ export class Erc721Enumerable {
   }
 
   /**
-   * Get All NFTs
+   * Get All Minted NFTs
    *
    * @remarks Get all the data associated with every NFT in this contract.
    *
