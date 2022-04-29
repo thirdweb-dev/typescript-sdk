@@ -200,7 +200,12 @@ export class NFTDrop extends Erc721<DropERC721> {
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
-    return this._query.all(queryParams);
+    return (await this.getAllClaimed(queryParams)).concat(
+      (await this.getAllUnclaimed(queryParams)).map((u) => ({
+        metadata: u,
+        owner: AddressZero,
+      })),
+    );
   }
   /**
    * {@inheritDoc Erc721Owned.all}

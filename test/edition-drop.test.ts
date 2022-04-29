@@ -65,6 +65,15 @@ describe("Edition Drop Contract", async () => {
     assert.lengthOf(conditions, 1);
   });
 
+  it("should get all", async () => {
+    await bdContract.createBatch([
+      { name: "test", description: "test" },
+      { name: "test", description: "test" },
+    ]);
+    const all = await bdContract.getAll();
+    expect(all.length).to.eq(2);
+  });
+
   it("allow all addresses in the merkle tree to claim", async () => {
     console.log("Claim condition set");
     console.log("Minting 100");
