@@ -42,16 +42,12 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [encoder](./sdk.nftdrop.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;DropERC721&gt; |  |
 |  [estimator](./sdk.nftdrop.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;DropERC721&gt; |  |
 |  [events](./sdk.nftdrop.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;DropERC721&gt; |  |
-|  [getAll](./sdk.nftdrop.getall.md) |  | (queryParams?: [QueryAllParams](./sdk.queryallparams.md) \| undefined) =&gt; Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt; |  |
-|  [getOwned](./sdk.nftdrop.getowned.md) |  | (\_address?: string \| undefined) =&gt; Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt; |  |
-|  [getOwnedTokenIds](./sdk.nftdrop.getownedtokenids.md) |  | (\_address?: string \| undefined) =&gt; Promise&lt;BigNumber\[\]&gt; |  |
 |  [metadata](./sdk.nftdrop.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;DropERC721, typeof NFTDrop.schema&gt; |  |
 |  [platformFee](./sdk.nftdrop.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;DropERC721&gt; |  |
 |  [primarySale](./sdk.nftdrop.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;DropERC721&gt; |  |
 |  [revealer](./sdk.nftdrop.revealer.md) |  | [DelayedReveal](./sdk.delayedreveal.md)<!-- -->&lt;DropERC721&gt; | Delayed reveal |
 |  [roles](./sdk.nftdrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;DropERC721, typeof [NFTDrop.contractRoles](./sdk.nftdrop.contractroles.md)<!-- -->\[number\]&gt; |  |
 |  [royalty](./sdk.nftdrop.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;DropERC721, typeof NFTDrop.schema&gt; | Configure royalties |
-|  [totalSupply](./sdk.nftdrop.totalsupply.md) |  | () =&gt; Promise&lt;BigNumber&gt; | Get the number of NFTs minted |
 
 ## Methods
 
@@ -61,9 +57,13 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [claim(quantity, proofs)](./sdk.nftdrop.claim.md) |  | Claim NFTs to the connected wallet. |
 |  [claimTo(destinationAddress, quantity, proofs)](./sdk.nftdrop.claimto.md) |  | Claim unique NFTs to a specific Wallet |
 |  [createBatch(metadatas)](./sdk.nftdrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
+|  [getAll(queryParams)](./sdk.nftdrop.getall.md) |  | Get All NFTs |
 |  [getAllClaimed(queryParams)](./sdk.nftdrop.getallclaimed.md) |  | Get All Claimed NFTs |
 |  [getAllUnclaimed(queryParams)](./sdk.nftdrop.getallunclaimed.md) |  | Get All Unclaimed NFTs |
+|  [getOwned(walletAddress)](./sdk.nftdrop.getowned.md) |  | Get Owned NFTs |
+|  [getOwnedTokenIds(walletAddress)](./sdk.nftdrop.getownedtokenids.md) |  |  |
 |  [isTransferRestricted()](./sdk.nftdrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [totalClaimedSupply()](./sdk.nftdrop.totalclaimedsupply.md) |  | Get the claimed supply |
+|  [totalSupply()](./sdk.nftdrop.totalsupply.md) |  | Get the number of NFTs minted |
 |  [totalUnclaimedSupply()](./sdk.nftdrop.totalunclaimedsupply.md) |  | Get the unclaimed supply |
 

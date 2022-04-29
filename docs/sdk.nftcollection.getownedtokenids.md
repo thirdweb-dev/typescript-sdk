@@ -2,11 +2,22 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [NFTCollection](./sdk.nftcollection.md) &gt; [getOwnedTokenIds](./sdk.nftcollection.getownedtokenids.md)
 
-## NFTCollection.getOwnedTokenIds property
+## NFTCollection.getOwnedTokenIds() method
 
 
 <b>Signature:</b>
 
 ```typescript
-getOwnedTokenIds: (_address?: string | undefined) => Promise<import("ethers").BigNumber[]>;
+getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  walletAddress | string | <i>(Optional)</i> |
+
+<b>Returns:</b>
+
+Promise&lt;BigNumber\[\]&gt;
+

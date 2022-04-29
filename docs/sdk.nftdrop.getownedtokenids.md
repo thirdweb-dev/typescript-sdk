@@ -2,11 +2,22 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [NFTDrop](./sdk.nftdrop.md) &gt; [getOwnedTokenIds](./sdk.nftdrop.getownedtokenids.md)
 
-## NFTDrop.getOwnedTokenIds property
+## NFTDrop.getOwnedTokenIds() method
 
 
 <b>Signature:</b>
 
 ```typescript
-getOwnedTokenIds: (_address?: string | undefined) => Promise<BigNumber[]>;
+getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  walletAddress | string | <i>(Optional)</i> |
+
+<b>Returns:</b>
+
+Promise&lt;BigNumber\[\]&gt;
+

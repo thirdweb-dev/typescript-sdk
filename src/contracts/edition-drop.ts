@@ -17,14 +17,14 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../schema/tokens/common";
-import { BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { hexZeroPad } from "ethers/lib/utils";
 import { prepareClaim } from "../common/claim-conditions";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ClaimVerification } from "../types";
+import { ClaimVerification, QueryAllParams } from "../types";
 import { DropErc1155History } from "../core/classes/drop-erc1155-history";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
@@ -32,6 +32,7 @@ import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { TokensLazyMintedEvent } from "contracts/DropERC1155";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
+import { EditionMetadata, EditionMetadataOwner } from "../schema";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -57,6 +58,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * @internal
    */
   static schema = DropErc1155ContractSchema;
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _query = this.query!;
 
   public primarySale: ContractPrimarySale<DropERC1155>;
   public platformFee: ContractPlatformFee<DropERC1155>;
@@ -159,6 +163,31 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    *******************************/
 
   // TODO getAllClaimerAddresses() - should be done via an indexer
+
+  /**
+   * {@inheritDoc Erc1155Enumerable.all}
+   */
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<EditionMetadata[]> {
+    return this._query.all(queryParams);
+  }
+
+  /**
+   * {@inheritDoc Erc1155Enumerable.owned}
+   */
+  public async getOwned(
+    walletAddress?: string,
+  ): Promise<EditionMetadataOwner[]> {
+    return this._query.owned(walletAddress);
+  }
+
+  /**
+   * {@inheritDoc Erc1155Enumerable.getTotalCount}
+   */
+  public async getTotalCount(): Promise<BigNumber> {
+    return this._query.getTotalCount();
+  }
 
   /**
    * Get whether users can transfer NFTs from this contract

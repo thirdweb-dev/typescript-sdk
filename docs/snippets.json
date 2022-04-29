@@ -64,24 +64,6 @@
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.get"
       },
       {
-        "name": "getAll",
-        "summary": "Get All NFTs\n\n",
-        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
-        "examples": {
-          "javascript": "const nfts = await contract.getAll();\nconsole.log(nfts);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.getAll"
-      },
-      {
-        "name": "getOwned",
-        "summary": "Get Owned NFTs\n\n",
-        "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
-        "examples": {
-          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.getOwned(address);\nconsole.log(nfts);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.getOwned"
-      },
-      {
         "name": "transfer",
         "summary": "Transfer a single NFT\n\n",
         "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
@@ -165,24 +147,6 @@
           "javascript": "const nft = await contract.get(\"0\");\nconsole.log(nft);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.get"
-      },
-      {
-        "name": "getAll",
-        "summary": "Get All NFTs\n\n",
-        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
-        "examples": {
-          "javascript": "const nfts = await contract.getAll();\nconsole.log(nfts);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.getAll"
-      },
-      {
-        "name": "getOwned",
-        "summary": "Get Owned NFTs\n\n",
-        "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
-        "examples": {
-          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.getOwned(address);\nconsole.log(nfts);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc1155.getOwned"
       },
       {
         "name": "transfer",

@@ -5,6 +5,7 @@ import {
   ContractPrimarySale,
   ContractRoles,
   ContractRoyalty,
+  Erc1155,
   Erc20,
   Erc721,
   GasCostEstimator,
@@ -16,10 +17,8 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   AccessControlEnumerable,
   AccessControlEnumerable__factory,
-  ERC20Metadata,
+  ERC1155Metadata__factory,
   ERC20Metadata__factory,
-  ERC721,
-  ERC721Metadata,
   ERC721Metadata__factory,
   IThirdwebContract,
   IThirdwebPlatformFee,
@@ -38,7 +37,7 @@ import { ALL_ROLES } from "../common";
 import { implementsInterface } from "../common/feature-detection";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
-import { ERC20 } from "contracts/ERC20";
+import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -104,11 +103,15 @@ export class CustomContract<
   /**
    * Auto-detects ERC20 standard functions.
    */
-  public token: Erc20<ERC20 & ERC20Metadata> | undefined;
+  public token: Erc20<BaseERC20> | undefined;
   /**
    * Auto-detects ERC721 standard functions.
    */
-  public nft: Erc721<ERC721 & ERC721Metadata> | undefined;
+  public nft: Erc721<BaseERC721> | undefined;
+  /**
+   * Auto-detects ERC1155 standard functions.
+   */
+  public edition: Erc1155<BaseERC1155> | undefined;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -150,8 +153,7 @@ export class CustomContract<
 
     this.token = this.detectErc20();
     this.nft = this.detectErc721();
-    // TODO detect 1155
-    // this.erc20 = this.detectErc1155();
+    this.edition = this.detectErc1155();
 
     // TODO detect sigmint
     // this.sigmint = this.detectSigmint();
@@ -225,9 +227,8 @@ export class CustomContract<
   }
 
   private detectErc20() {
-    // TODO this should work for drop contracts too
     if (
-      implementsInterface<ERC20 & ERC20Metadata>(
+      implementsInterface<BaseERC20>(
         this.contractWrapper,
         ERC20Metadata__factory.createInterface(),
       )
@@ -238,14 +239,25 @@ export class CustomContract<
   }
 
   private detectErc721() {
-    // TODO this should work for drop contracts too
     if (
-      implementsInterface<ERC721 & ERC721Metadata>(
+      implementsInterface<BaseERC721>(
         this.contractWrapper,
         ERC721Metadata__factory.createInterface(), // TODO should probably be more generic here to support multi interfaces
       )
     ) {
       return new Erc721(this.contractWrapper, this.storage, this.options);
+    }
+    return undefined;
+  }
+
+  private detectErc1155() {
+    if (
+      implementsInterface<BaseERC1155>(
+        this.contractWrapper,
+        ERC1155Metadata__factory.createInterface(), // TODO should probably be more generic here to support multi interfaces
+      )
+    ) {
+      return new Erc1155(this.contractWrapper, this.storage, this.options);
     }
     return undefined;
   }
