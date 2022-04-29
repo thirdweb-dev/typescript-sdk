@@ -2761,7 +2761,6 @@ export class NFTDrop extends Erc721<DropERC721> {
     estimator: GasCostEstimator<DropERC721>;
     // (undocumented)
     events: ContractEvents<DropERC721>;
-    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
     getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;

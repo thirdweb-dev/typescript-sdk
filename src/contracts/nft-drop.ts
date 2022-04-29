@@ -195,19 +195,6 @@ export class NFTDrop extends Erc721<DropERC721> {
    *******************************/
 
   /**
-   * {@inheritDoc Erc721Enumerable.all}
-   */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<NFTMetadataOwner[]> {
-    return (await this.getAllClaimed(queryParams)).concat(
-      (await this.getAllUnclaimed(queryParams)).map((u) => ({
-        metadata: u,
-        owner: AddressZero,
-      })),
-    );
-  }
-  /**
    * {@inheritDoc Erc721Owned.all}
    */
   public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {

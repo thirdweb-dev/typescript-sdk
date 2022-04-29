@@ -7,7 +7,7 @@ module.exports = {
   ],
   rules: {
     // tsdoc
-    "tsdoc/syntax": "warn",
+    "tsdoc/syntax": "off",
     // typescript
     "@typescript-eslint/ban-ts-comment": [
       "error",
@@ -34,7 +34,7 @@ module.exports = {
     // import
     "import/first": "error",
     "import/newline-after-import": "error",
-    "import/no-cycle": "warn",
+    "import/no-cycle": "off",
     "import/no-default-export": "off",
     "import/no-useless-path-segments": "error",
     // eslint

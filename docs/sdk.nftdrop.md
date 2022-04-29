@@ -57,7 +57,6 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [claim(quantity, proofs)](./sdk.nftdrop.claim.md) |  | Claim NFTs to the connected wallet. |
 |  [claimTo(destinationAddress, quantity, proofs)](./sdk.nftdrop.claimto.md) |  | Claim unique NFTs to a specific Wallet |
 |  [createBatch(metadatas)](./sdk.nftdrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
-|  [getAll(queryParams)](./sdk.nftdrop.getall.md) |  | Get All NFTs |
 |  [getAllClaimed(queryParams)](./sdk.nftdrop.getallclaimed.md) |  | Get All Claimed NFTs |
 |  [getAllUnclaimed(queryParams)](./sdk.nftdrop.getallunclaimed.md) |  | Get All Unclaimed NFTs |
 |  [getOwned(walletAddress)](./sdk.nftdrop.getowned.md) |  | Get Owned NFTs |
