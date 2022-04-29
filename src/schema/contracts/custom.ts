@@ -69,7 +69,7 @@ export const AbiTypeSchema = z
     type: z.string(),
     name: z.string(),
   })
-  .catchall(z.lazy(() => JsonSchema));
+  .catchall(z.any());
 
 /**
  * @internal
@@ -81,7 +81,7 @@ export const AbiObjectSchema = z
     inputs: z.array(AbiTypeSchema).default([]),
     outputs: z.array(AbiTypeSchema).default([]),
   })
-  .catchall(z.lazy(() => JsonSchema));
+  .catchall(z.any());
 
 /**
  * @internal

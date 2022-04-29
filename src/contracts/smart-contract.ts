@@ -30,10 +30,10 @@ import {
   ThirdwebContract,
   ThirdwebContract__factory,
 } from "contracts";
-import { CustomContractSchema } from "../schema/contracts/custom";
+import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { ContractInterface } from "ethers";
-import { ALL_ROLES } from "../common";
+import { BaseContract, ContractInterface } from "ethers";
+import { ALL_ROLES, Feature, isFeatureEnabled } from "../common";
 import { implementsInterface } from "../common/feature-detection";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
@@ -236,6 +236,13 @@ export class SmartContract<
       return new Erc20(this.contractWrapper, this.storage, this.options);
     }
     return undefined;
+  }
+
+  private detectFeature<T extends BaseContract>(
+    contractWrapper: ContractWrapper<BaseContract>,
+    feature: string,
+  ): contractWrapper is ContractWrapper<T> {
+    return isFeatureEnabled(AbiSchema.parse(contractWrapper.abi), feature);
   }
 
   private detectErc721() {

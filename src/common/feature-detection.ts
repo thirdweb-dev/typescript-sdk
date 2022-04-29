@@ -1,7 +1,7 @@
 import { BaseContract } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Interface } from "@ethersproject/abi";
-import { IStorage } from "../core";
+import { Erc721, IStorage } from "../core";
 import {
   AbiFunction,
   AbiSchema,
@@ -9,6 +9,12 @@ import {
   PublishedMetadata,
 } from "../schema/contracts/custom";
 import { z } from "zod";
+import {
+  ERC721__factory,
+  ERC721Enumerable__factory,
+  ERC721Metadata__factory,
+  ERC721Supply__factory,
+} from "contracts";
 
 /**
  * Type guards a contract to a known type if it matches the corresponding interface
@@ -16,6 +22,13 @@ import { z } from "zod";
  * @param contractWrapper
  * @param interfaceToMatch
  */
+export function implementsInterface<C extends BaseContract>(
+  contractWrapper: ContractWrapper<BaseContract>,
+  interfaceToMatch: Interface,
+): contractWrapper is ContractWrapper<C> {
+  return matchesInterface(contractWrapper.readContract, interfaceToMatch);
+}
+
 export function implementsInterface<C extends BaseContract>(
   contractWrapper: ContractWrapper<BaseContract>,
   interfaceToMatch: Interface,
@@ -36,6 +49,24 @@ function matchesInterface(contract: BaseContract, interfaceToMatch: Interface) {
   return (
     Object.keys(contractFn).filter((k) => k in interfaceFn).length ===
     Object.keys(interfaceFn).length
+  );
+}
+
+/**
+ * @internal
+ * @param abi
+ * @param interfaceToMatch
+ */
+function matchesAbiInterface(
+  abi: z.input<typeof AbiSchema>,
+  interfaceAbi: z.input<typeof AbiSchema>,
+): boolean {
+  // returns true if all the functions in `interfaceToMatch` are found in `contract`
+  const contractFn = extractFunctionsFromAbi(abi).map((f) => f.name);
+  const interfaceFn = extractFunctionsFromAbi(interfaceAbi).map((f) => f.name);
+  return (
+    contractFn.filter((k) => interfaceFn.includes(k)).length ===
+    interfaceFn.length
   );
 }
 
@@ -148,4 +179,96 @@ export async function fetchContractMetadata(
     abi,
     bytecode,
   };
+}
+
+export type Feature = {
+  name: string;
+  docLinks: {
+    sdk: string;
+    contracts: string;
+  };
+  abi: z.input<typeof AbiSchema>;
+  features: Record<string, Feature>;
+  enabled: boolean;
+};
+
+const FEATURE_NFT_ENUMERABLE: Feature = {
+  name: "ERC721Enumerable",
+  docLinks: {
+    sdk: "sdk.erc721ownable",
+    contracts: "ERC721Enumerable",
+  },
+  abi: ERC721Enumerable__factory.abi,
+  enabled: false,
+  features: {},
+};
+
+const FEATURE_NFT_SUPPLY: Feature = {
+  name: "ERC721Supply",
+  docLinks: {
+    sdk: "sdk.erc721enumerable",
+    contracts: "ERC721Enumerable",
+  },
+  abi: ERC721Enumerable__factory.abi,
+  enabled: false,
+  features: {
+    [FEATURE_NFT_ENUMERABLE.name]: FEATURE_NFT_ENUMERABLE,
+  },
+};
+
+const FEATURE_NFT: Feature = {
+  name: "ERC721",
+  docLinks: {
+    sdk: "sdk.erc721",
+    contracts: "ERC721",
+  },
+  abi: ERC721__factory.abi,
+  enabled: false,
+  features: {
+    [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
+  },
+};
+
+const FEATURES: Record<string, Feature> = {
+  [FEATURE_NFT.name]: FEATURE_NFT,
+};
+
+export function detectFeatures(
+  abi: z.input<typeof AbiSchema>,
+  features: Record<string, Feature> = FEATURES,
+): Record<string, Feature> {
+  for (const featureKey in features) {
+    const feature = features[featureKey];
+    feature.enabled = matchesAbiInterface(abi, feature.abi);
+    detectFeatures(abi, feature.features);
+  }
+  return features;
+}
+
+export function isFeatureEnabled(
+  abi: z.input<typeof AbiSchema>,
+  featureName: string,
+): boolean {
+  const features = detectFeatures(abi);
+  return _featureEnabled(features, featureName);
+}
+
+function _featureEnabled(
+  features: Record<string, Feature>,
+  featureName: string,
+): boolean {
+  const keys = Object.keys(features);
+  if (!keys.includes(featureName)) {
+    let found = false;
+    for (const key of keys) {
+      const f = features[key];
+      found = _featureEnabled(f.features, featureName);
+      if (found) {
+        break;
+      }
+    }
+    return found;
+  }
+  const feature = features[featureName];
+  return feature.enabled;
 }
