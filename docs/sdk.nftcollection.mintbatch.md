@@ -2,27 +2,22 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [NFTCollection](./sdk.nftcollection.md) &gt; [mintBatch](./sdk.nftcollection.mintbatch.md)
 
-## NFTCollection.mintBatch property
+## NFTCollection.mintBatch() method
 
-Mint Many NFTs to the connected wallet
 
 <b>Signature:</b>
 
 ```typescript
-mintBatch: (metadatas: (string | {
-        [x: string]: import("../core").Json;
-        description?: string | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, import("../core").Json> | Record<string, import("../core").Json>[] | undefined;
-        attributes?: Record<string, import("../core").Json> | Record<string, import("../core").Json>[] | undefined;
-        name: string;
-    })[]) => Promise<import("../core").TransactionResultWithId<import("../schema").NFTMetadataOwner>[]>;
+mintBatch(metadata: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 ```
 
-## Remarks
+## Parameters
 
-See [NFTCollection.mintBatchTo](./sdk.nftcollection.mintbatchto.md)
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  metadata | NFTMetadataOrUri\[\] |  |
+
+<b>Returns:</b>
+
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;\[\]&gt;
 

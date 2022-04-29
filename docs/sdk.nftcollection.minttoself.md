@@ -9,18 +9,18 @@ Mint a unique NFT
 <b>Signature:</b>
 
 ```typescript
-mintToSelf(metadata: NFTMetadataInput): Promise<import("../core").TransactionResultWithId<import("../schema").NFTMetadataOwner>>;
+mintToSelf(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
+|  metadata | NFTMetadataOrUri |  |
 
 <b>Returns:</b>
 
-Promise&lt;import("../core").[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;import("../schema").[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;&gt;
 
 ## Remarks
 

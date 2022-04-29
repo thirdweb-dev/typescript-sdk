@@ -36,7 +36,7 @@ export class Erc721<
   public query:
     | Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721>
     | undefined;
-  public mint: Erc721Mintable<IMintableERC721> | undefined;
+  public mint: Erc721Mintable | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -222,7 +222,7 @@ export class Erc721<
     return undefined;
   }
 
-  private detectErc721Mintable(): Erc721Mintable<IMintableERC721> | undefined {
+  private detectErc721Mintable(): Erc721Mintable | undefined {
     if (
       implementsInterface<IMintableERC721>(
         this.contractWrapper,
