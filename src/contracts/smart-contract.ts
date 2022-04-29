@@ -19,7 +19,6 @@ import {
   AccessControlEnumerable__factory,
   ERC1155Metadata__factory,
   ERC20Metadata__factory,
-  ERC721Metadata__factory,
   IThirdwebContract,
   IThirdwebPlatformFee,
   IThirdwebPlatformFee__factory,
@@ -30,10 +29,10 @@ import {
   ThirdwebContract,
   ThirdwebContract__factory,
 } from "contracts";
-import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
+import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { BaseContract, ContractInterface } from "ethers";
-import { ALL_ROLES, Feature, isFeatureEnabled } from "../common";
+import { ContractInterface } from "ethers";
+import { ALL_ROLES, detectContractFeature } from "../common";
 import { implementsInterface } from "../common/feature-detection";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
@@ -238,20 +237,8 @@ export class SmartContract<
     return undefined;
   }
 
-  private detectFeature<T extends BaseContract>(
-    contractWrapper: ContractWrapper<BaseContract>,
-    feature: string,
-  ): contractWrapper is ContractWrapper<T> {
-    return isFeatureEnabled(AbiSchema.parse(contractWrapper.abi), feature);
-  }
-
   private detectErc721() {
-    if (
-      implementsInterface<BaseERC721>(
-        this.contractWrapper,
-        ERC721Metadata__factory.createInterface(), // TODO should probably be more generic here to support multi interfaces
-      )
-    ) {
+    if (detectContractFeature<BaseERC721>(this.contractWrapper, "ERC721")) {
       return new Erc721(this.contractWrapper, this.storage, this.options);
     }
     return undefined;

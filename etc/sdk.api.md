@@ -835,6 +835,19 @@ export class DelayedReveal<T extends DropERC721> {
     reveal(batchId: BigNumberish, password: string): Promise<TransactionResult>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "FeatureName" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "detectContractFeature" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function detectContractFeature<T extends BaseContract>(contractWrapper: ContractWrapper<BaseContract>, featureName: FeatureName): contractWrapper is ContractWrapper<T>;
+
+// Warning: (ae-forgotten-export) The symbol "AbiSchema" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "Feature" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "detectFeatures" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function detectFeatures(abi: z.input<typeof AbiSchema>, features?: Record<string, Feature>): Record<string, Feature>;
+
 // @public
 export interface DirectListing {
     asset: NFTMetadata;
@@ -1658,17 +1671,16 @@ export enum EventType {
 //
 // @internal (undocumented)
 export function extractConstructorParams(metadataUri: string, storage: IStorage): Promise<{
-    [x: string]: Json;
+    [x: string]: any;
     type: string;
     name: string;
 }[]>;
 
-// Warning: (ae-forgotten-export) The symbol "AbiSchema" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "extractConstructorParamsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>): {
-    [x: string]: Json;
+    [x: string]: any;
     type: string;
     name: string;
 }[];
@@ -1872,6 +1884,11 @@ export class IpfsStorage implements IStorage {
         metadataUris: string[];
     }>;
 }
+
+// Warning: (ae-internal-missing-underscore) The name "isFeatureEnabled" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: FeatureName): boolean;
 
 // @public (undocumented)
 export interface IStorage {

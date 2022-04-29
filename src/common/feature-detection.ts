@@ -1,7 +1,7 @@
 import { BaseContract } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Interface } from "@ethersproject/abi";
-import { Erc721, IStorage } from "../core";
+import { IStorage } from "../core";
 import {
   AbiFunction,
   AbiSchema,
@@ -10,11 +10,10 @@ import {
 } from "../schema/contracts/custom";
 import { z } from "zod";
 import {
-  ERC721__factory,
-  ERC721Enumerable__factory,
-  ERC721Metadata__factory,
-  ERC721Supply__factory,
-} from "contracts";
+  Feature,
+  FeatureName,
+  SUPPORTED_FEATURES,
+} from "../constants/contract-features";
 
 /**
  * Type guards a contract to a known type if it matches the corresponding interface
@@ -22,13 +21,6 @@ import {
  * @param contractWrapper
  * @param interfaceToMatch
  */
-export function implementsInterface<C extends BaseContract>(
-  contractWrapper: ContractWrapper<BaseContract>,
-  interfaceToMatch: Interface,
-): contractWrapper is ContractWrapper<C> {
-  return matchesInterface(contractWrapper.readContract, interfaceToMatch);
-}
-
 export function implementsInterface<C extends BaseContract>(
   contractWrapper: ContractWrapper<BaseContract>,
   interfaceToMatch: Interface,
@@ -55,7 +47,7 @@ function matchesInterface(contract: BaseContract, interfaceToMatch: Interface) {
 /**
  * @internal
  * @param abi
- * @param interfaceToMatch
+ * @param interfaceAbi
  */
 function matchesAbiInterface(
   abi: z.input<typeof AbiSchema>,
@@ -181,61 +173,15 @@ export async function fetchContractMetadata(
   };
 }
 
-export type Feature = {
-  name: string;
-  docLinks: {
-    sdk: string;
-    contracts: string;
-  };
-  abi: z.input<typeof AbiSchema>;
-  features: Record<string, Feature>;
-  enabled: boolean;
-};
-
-const FEATURE_NFT_ENUMERABLE: Feature = {
-  name: "ERC721Enumerable",
-  docLinks: {
-    sdk: "sdk.erc721ownable",
-    contracts: "ERC721Enumerable",
-  },
-  abi: ERC721Enumerable__factory.abi,
-  enabled: false,
-  features: {},
-};
-
-const FEATURE_NFT_SUPPLY: Feature = {
-  name: "ERC721Supply",
-  docLinks: {
-    sdk: "sdk.erc721enumerable",
-    contracts: "ERC721Enumerable",
-  },
-  abi: ERC721Enumerable__factory.abi,
-  enabled: false,
-  features: {
-    [FEATURE_NFT_ENUMERABLE.name]: FEATURE_NFT_ENUMERABLE,
-  },
-};
-
-const FEATURE_NFT: Feature = {
-  name: "ERC721",
-  docLinks: {
-    sdk: "sdk.erc721",
-    contracts: "ERC721",
-  },
-  abi: ERC721__factory.abi,
-  enabled: false,
-  features: {
-    [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
-  },
-};
-
-const FEATURES: Record<string, Feature> = {
-  [FEATURE_NFT.name]: FEATURE_NFT,
-};
-
+/**
+ * @internal
+ * @param abi
+ * @param features
+ * @returns the nested struct of features and whether they're detected in the abi
+ */
 export function detectFeatures(
   abi: z.input<typeof AbiSchema>,
-  features: Record<string, Feature> = FEATURES,
+  features: Record<string, Feature> = SUPPORTED_FEATURES,
 ): Record<string, Feature> {
   for (const featureKey in features) {
     const feature = features[featureKey];
@@ -245,17 +191,40 @@ export function detectFeatures(
   return features;
 }
 
+/**
+ * @internal
+ * @param abi
+ * @param featureName
+ */
 export function isFeatureEnabled(
   abi: z.input<typeof AbiSchema>,
-  featureName: string,
+  featureName: FeatureName,
 ): boolean {
   const features = detectFeatures(abi);
   return _featureEnabled(features, featureName);
 }
 
+/**
+ * @internal
+ * @param contractWrapper
+ * @param featureName
+ * @returns whether the passed contract wrapper has a given feature
+ */
+export function detectContractFeature<T extends BaseContract>(
+  contractWrapper: ContractWrapper<BaseContract>,
+  featureName: FeatureName,
+): contractWrapper is ContractWrapper<T> {
+  return isFeatureEnabled(AbiSchema.parse(contractWrapper.abi), featureName);
+}
+
+/**
+ * @internal
+ * @param features
+ * @param featureName
+ */
 function _featureEnabled(
   features: Record<string, Feature>,
-  featureName: string,
+  featureName: FeatureName,
 ): boolean {
   const keys = Object.keys(features);
   if (!keys.includes(featureName)) {

@@ -1,11 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import {
-  ERC721,
-  ERC721Metadata,
-  IMintableERC721,
-  Multicall,
-  Multicall__factory,
-} from "contracts";
+import { ERC721, ERC721Metadata, IMintableERC721, Multicall } from "contracts";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../../schema";
 import { TransactionResultWithId } from "../types";
 import { uploadOrExtractURI } from "../../common/nft";
@@ -13,7 +7,7 @@ import { IStorage } from "../interfaces";
 import { Erc721 } from "./erc-721";
 import { TokensMintedEvent } from "contracts/IMintableERC721";
 import { Erc721BatchMintable } from "./erc-721-batch-mintable";
-import { implementsInterface } from "../../common";
+import { detectContractFeature } from "../../common";
 
 export class Erc721Mintable {
   private contractWrapper: ContractWrapper<IMintableERC721>;
@@ -83,9 +77,9 @@ export class Erc721Mintable {
 
   private detectErc721BatchMintable(): Erc721BatchMintable | undefined {
     if (
-      implementsInterface<IMintableERC721 & Multicall>(
+      detectContractFeature<IMintableERC721 & Multicall>(
         this.contractWrapper,
-        Multicall__factory.createInterface(),
+        "ERC721BatchMintable",
       )
     ) {
       return new Erc721BatchMintable(
