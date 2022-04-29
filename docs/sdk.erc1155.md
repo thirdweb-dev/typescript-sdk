@@ -25,7 +25,7 @@ export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc1155.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
 |  [options](./sdk.erc1155.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
-|  [query](./sdk.erc1155.query.md) |  | Erc1155Enumerable \| undefined |  |
+|  [query](./sdk.erc1155.query.md) |  | [Erc1155Enumerable](./sdk.erc1155enumerable.md) \| undefined |  |
 |  [storage](./sdk.erc1155.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
 ## Methods

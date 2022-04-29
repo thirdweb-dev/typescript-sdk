@@ -20,7 +20,7 @@ export declare class Erc721Enumerable
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [owned](./sdk.erc721enumerable.owned.md) |  | Erc721Owned \| undefined |  |
+|  [owned](./sdk.erc721enumerable.owned.md) |  | [Erc721Owned](./sdk.erc721owned.md) \| undefined |  |
 
 ## Methods
 

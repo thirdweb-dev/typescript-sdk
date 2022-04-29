@@ -4,6 +4,7 @@
 
 ## Edition.getOwned() method
 
+Get Owned NFTs
 
 <b>Signature:</b>
 
@@ -20,4 +21,10 @@ getOwned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
 <b>Returns:</b>
 
 Promise&lt;[EditionMetadataOwner](./sdk.editionmetadataowner.md)<!-- -->\[\]&gt;
+
+The NFT metadata for all NFTs in the contract.
+
+## Remarks
+
+Get all the data associated with the NFTs owned by a specific wallet.
 
