@@ -9,7 +9,7 @@ import {
 } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
-import { TokenERC721__factory } from "../lib";
+import { DropERC721__factory, TokenERC721__factory } from "../lib";
 
 global.fetch = require("node-fetch");
 
@@ -53,11 +53,26 @@ describe("Publishing", async () => {
   });
 
   it("should extract features", async () => {
-    const features = detectFeatures(TokenERC721__factory.abi);
-    console.log(features);
     expect(
       isFeatureEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
     ).to.eq(true);
+    expect(isFeatureEnabled(TokenERC721__factory.abi, "ERC721Mintable")).to.eq(
+      true,
+    );
+    expect(
+      isFeatureEnabled(TokenERC721__factory.abi, "ERC721BatchMintable"),
+    ).to.eq(true);
+
+    // Drop
+    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Enumerable")).to.eq(
+      true,
+    );
+    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
+      true,
+    );
+    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
+      false,
+    );
   });
 
   it("should publish simple greeter contract", async () => {

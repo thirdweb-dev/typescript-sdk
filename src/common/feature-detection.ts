@@ -185,13 +185,17 @@ export async function fetchContractMetadata(
 export function detectFeatures(
   abi: z.input<typeof AbiSchema>,
   features: Record<string, Feature> = SUPPORTED_FEATURES,
-  results: Record<string, FeatureWithEnabled> = {},
 ): Record<string, FeatureWithEnabled> {
+  const results: Record<string, FeatureWithEnabled> = {};
   for (const featureKey in features) {
     const feature = features[featureKey];
     const enabled = matchesAbiInterface(abi, feature.abi);
-    results[featureKey] = { ...feature, enabled };
-    detectFeatures(abi, feature.features, results);
+    const childResults = detectFeatures(abi, feature.features);
+    results[featureKey] = {
+      ...feature,
+      features: childResults,
+      enabled,
+    } as FeatureWithEnabled;
   }
   return results;
 }

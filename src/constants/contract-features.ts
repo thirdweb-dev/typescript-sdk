@@ -71,7 +71,10 @@ export type Feature =
   | typeof FEATURE_NFT_BATCH_MINTABLE;
 
 export type FeatureName = Feature["name"];
-export type FeatureWithEnabled = Feature & { enabled: boolean };
+export type FeatureWithEnabled = Feature & {
+  features: Record<string, FeatureWithEnabled>;
+  enabled: boolean;
+};
 
 export const SUPPORTED_FEATURES: Record<string, Feature> = {
   [FEATURE_NFT.name]: FEATURE_NFT,
