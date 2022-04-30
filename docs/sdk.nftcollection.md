@@ -57,8 +57,8 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 |  [getOwned(walletAddress)](./sdk.nftcollection.getowned.md) |  | Get Owned NFTs |
 |  [getOwnedTokenIds(walletAddress)](./sdk.nftcollection.getownedtokenids.md) |  |  |
 |  [isTransferRestricted()](./sdk.nftcollection.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
-|  [mintBatch(metadata)](./sdk.nftcollection.mintbatch.md) |  |  |
-|  [mintBatchTo(walletAddress, metadata)](./sdk.nftcollection.mintbatchto.md) |  |  |
+|  [mintBatch(metadata)](./sdk.nftcollection.mintbatch.md) |  | Mint Many unique NFTs |
+|  [mintBatchTo(walletAddress, metadata)](./sdk.nftcollection.mintbatchto.md) |  | Mint Many unique NFTs |
 |  [mintTo(walletAddress, metadata)](./sdk.nftcollection.mintto.md) |  | Mint a unique NFT |
 |  [mintToSelf(metadata)](./sdk.nftcollection.minttoself.md) |  | Mint a unique NFT |
 |  [totalSupply()](./sdk.nftcollection.totalsupply.md) |  | Get the number of NFTs minted |

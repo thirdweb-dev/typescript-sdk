@@ -1621,6 +1621,17 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements 
 }
 
 // @public (undocumented)
+export class Erc721BatchMintable {
+    // Warning: (ae-forgotten-export) The symbol "ERC721Metadata" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "ERC721" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "IMintableERC721" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Multicall" needs to be exported by the entry point index.d.ts
+    constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<IMintableERC721 & Multicall>, storage: IStorage);
+    // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
+    to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+}
+
+// @public (undocumented)
 export class Erc721Enumerable {
     // Warning: (ae-forgotten-export) The symbol "ERC721Supply" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & ERC721Supply>);
@@ -1632,15 +1643,9 @@ export class Erc721Enumerable {
 
 // @public (undocumented)
 export class Erc721Mintable {
-    // Warning: (ae-forgotten-export) The symbol "ERC721Metadata" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "ERC721" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "IMintableERC721" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<IMintableERC721>, storage: IStorage);
-    // Warning: (ae-forgotten-export) The symbol "Erc721BatchMintable" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     batch: Erc721BatchMintable | undefined;
-    // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     to(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 }
 
@@ -2239,13 +2244,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721BatchMintable"
-    //
-    // (undocumented)
     mintBatch(metadata: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721BatchMintable"
-    //
-    // (undocumented)
     mintBatchTo(walletAddress: string, metadata: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintTo(walletAddress: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     mintToSelf(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;

@@ -179,7 +179,6 @@ export async function fetchContractMetadata(
  * @internal
  * @param abi
  * @param features
- * @param results
  * @returns the nested struct of all features and whether they're detected in the abi
  */
 export function detectFeatures(

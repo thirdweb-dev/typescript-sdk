@@ -9,7 +9,7 @@ import {
 const FEATURE_NFT_BATCH_MINTABLE = {
   name: "ERC721BatchMintable",
   docLinks: {
-    sdk: "",
+    sdk: "sdk.erc721batchmintable",
     contracts: "Multicall",
   },
   abi: Multicall__factory.abi,
