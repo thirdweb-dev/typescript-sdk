@@ -12,6 +12,7 @@ import { z } from "zod";
 import {
   Feature,
   FeatureName,
+  FeatureWithEnabled,
   SUPPORTED_FEATURES,
 } from "../constants/contract-features";
 
@@ -174,24 +175,29 @@ export async function fetchContractMetadata(
 }
 
 /**
+ * Processes ALL supported features and sets whether the passed in abi supports each individual feature
  * @internal
  * @param abi
  * @param features
- * @returns the nested struct of features and whether they're detected in the abi
+ * @param results
+ * @returns the nested struct of all features and whether they're detected in the abi
  */
 export function detectFeatures(
   abi: z.input<typeof AbiSchema>,
   features: Record<string, Feature> = SUPPORTED_FEATURES,
-): Record<string, Feature> {
+  results: Record<string, FeatureWithEnabled> = {},
+): Record<string, FeatureWithEnabled> {
   for (const featureKey in features) {
     const feature = features[featureKey];
-    feature.enabled = matchesAbiInterface(abi, feature.abi);
-    detectFeatures(abi, feature.features);
+    const enabled = matchesAbiInterface(abi, feature.abi);
+    results[featureKey] = { ...feature, enabled };
+    detectFeatures(abi, feature.features, results);
   }
-  return features;
+  return results;
 }
 
 /**
+ * Checks whether the given ABI supports a given feature
  * @internal
  * @param abi
  * @param featureName
@@ -205,10 +211,10 @@ export function isFeatureEnabled(
 }
 
 /**
+ * Type guard for contractWrappers depending on passed feature name
  * @internal
  * @param contractWrapper
  * @param featureName
- * @returns whether the passed contract wrapper has a given feature
  */
 export function detectContractFeature<T extends BaseContract>(
   contractWrapper: ContractWrapper<BaseContract>,
@@ -218,12 +224,13 @@ export function detectContractFeature<T extends BaseContract>(
 }
 
 /**
+ * Searches the feature map for featureName and returns whether its enabled
  * @internal
  * @param features
  * @param featureName
  */
 function _featureEnabled(
-  features: Record<string, Feature>,
+  features: Record<string, FeatureWithEnabled>,
   featureName: FeatureName,
 ): boolean {
   const keys = Object.keys(features);
@@ -231,7 +238,10 @@ function _featureEnabled(
     let found = false;
     for (const key of keys) {
       const f = features[key];
-      found = _featureEnabled(f.features, featureName);
+      found = _featureEnabled(
+        f.features as Record<string, FeatureWithEnabled>,
+        featureName,
+      );
       if (found) {
         break;
       }

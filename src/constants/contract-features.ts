@@ -1,5 +1,3 @@
-import { z } from "zod";
-import { AbiSchema } from "../schema/contracts/custom";
 import {
   ERC721__factory,
   ERC721Enumerable__factory,
@@ -8,85 +6,72 @@ import {
   Multicall__factory,
 } from "contracts";
 
-export type Feature = {
-  name: string;
-  docLinks: {
-    sdk: string;
-    contracts: string;
-  };
-  abi: z.input<typeof AbiSchema>;
-  features: Record<string, Feature>;
-  enabled: boolean;
-};
-
-export type FeatureName =
-  | "ERC721"
-  | "ERC721Supply"
-  | "ERC721Enumerable"
-  | "ERC721Mintable"
-  | "ERC721BatchMintable";
-
-const FEATURE_NFT_BATCH_MINTABLE: Feature = {
-  name: "ERC721BatchMintable" as const,
+const FEATURE_NFT_BATCH_MINTABLE = {
+  name: "ERC721BatchMintable",
   docLinks: {
     sdk: "",
     contracts: "Multicall",
   },
   abi: Multicall__factory.abi,
-  enabled: false,
   features: {},
-};
+} as const;
 
-const FEATURE_NFT_MINTABLE: Feature = {
+const FEATURE_NFT_MINTABLE = {
   name: "ERC721Mintable",
   docLinks: {
     sdk: "sdk.erc721mintable",
     contracts: "IMintableERC721",
   },
   abi: IMintableERC721__factory.abi,
-  enabled: false,
   features: {
     [FEATURE_NFT_BATCH_MINTABLE.name]: FEATURE_NFT_BATCH_MINTABLE,
   },
-};
+} as const;
 
-const FEATURE_NFT_ENUMERABLE: Feature = {
+const FEATURE_NFT_ENUMERABLE = {
   name: "ERC721Enumerable",
   docLinks: {
     sdk: "sdk.erc721ownable",
     contracts: "ERC721Enumerable",
   },
   abi: ERC721Enumerable__factory.abi,
-  enabled: false,
   features: {},
-};
+} as const;
 
-const FEATURE_NFT_SUPPLY: Feature = {
+const FEATURE_NFT_SUPPLY = {
   name: "ERC721Supply",
   docLinks: {
     sdk: "sdk.erc721enumerable",
     contracts: "ERC721Enumerable",
   },
   abi: ERC721Supply__factory.abi,
-  enabled: false,
   features: {
     [FEATURE_NFT_ENUMERABLE.name]: FEATURE_NFT_ENUMERABLE,
   },
-};
+} as const;
 
-const FEATURE_NFT: Feature = {
+const FEATURE_NFT = {
   name: "ERC721",
   docLinks: {
     sdk: "sdk.erc721",
     contracts: "ERC721",
   },
   abi: ERC721__factory.abi,
-  enabled: false,
   features: {
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
   },
-};
+} as const;
+
+export type Feature =
+  | typeof FEATURE_NFT
+  | typeof FEATURE_NFT_SUPPLY
+  | typeof FEATURE_NFT_ENUMERABLE
+  | typeof FEATURE_NFT_MINTABLE
+  | typeof FEATURE_NFT_BATCH_MINTABLE;
+
+export type FeatureName = Feature["name"];
+export type FeatureWithEnabled = Feature & { enabled: boolean };
 
 export const SUPPORTED_FEATURES: Record<string, Feature> = {
   [FEATURE_NFT.name]: FEATURE_NFT,
