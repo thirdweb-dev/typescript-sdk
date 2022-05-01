@@ -113,7 +113,8 @@ export class ContractPublisher extends RPCConnectionHandler {
     const contract = new Contract(
       address,
       ThirdwebContract__factory.abi,
-      this.getSignerOrProvider(),
+      // this is a *READ ONLY* operation. it *always* has to happen on the readOnly network (provider is fine here for the moment as a substitute)
+      this.getProvider(),
     ) as TWContract;
     const metadataUri = await contract.getPublishMetadataUri();
     return await this.fetchFullContractMetadata(metadataUri);

@@ -27,7 +27,7 @@ import { ContractDeployer } from "./classes/contract-deployer";
 import { SmartContract } from "../contracts/smart-contract";
 import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
-import { ContractPublisher } from "./classes/contract-publisher";
+import type { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
 import { getContractAddressByChainId } from "../constants";
 
@@ -64,8 +64,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage: IStorage = new IpfsStorage(),
   ) {
     super(network, options);
-    // this.factory = new ContractFactory(network, storage, options);
-    // this.registry = new ContractRegistry(network, options);
     this.storage = storage;
     this.deployer = new ContractDeployer(network, options, storage);
   }
@@ -354,16 +352,25 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     if (this._publisher) {
       return this._publisher;
     }
+
     // otherwise get the factory address for the active chain and get a new one
-    const chainId = (await this.getProvider().getNetwork()).chainId;
-    const factoryAddress = getContractAddressByChainId(chainId, "byocFactory");
-    return (this._publisher = Promise.resolve(
-      new ContractPublisher(
-        factoryAddress,
-        this.getSignerOrProvider(),
-        this.options,
-        this.storage,
-      ),
-    ));
+
+    // have to do it like this otherwise we run it over and over and over
+    // "this._publisher" has to be assigned to the promise upfront.
+    return (this._publisher = this.getProvider()
+      .getNetwork()
+      .then(async ({ chainId }) => {
+        const factoryAddress = getContractAddressByChainId(
+          chainId,
+          "byocFactory",
+        );
+        const module = await import("./classes/contract-publisher");
+        return new module.ContractPublisher(
+          factoryAddress,
+          this.getSignerOrProvider(),
+          this.options,
+          this.storage,
+        );
+      }));
   }
 }

@@ -13,8 +13,7 @@
   "module": "dist/index.mjs",
   "browser": "dist/index.js",
   "files": [
-    "src/",
-    "dist/"
+    "dist/**/*"
   ],
   "sideEffects": false,
   "scripts": {
@@ -115,7 +114,6 @@
     "entry": [
       "src/index.ts"
     ],
-    "splitting": false,
     "sourcemap": true,
     "clean": true
   }
