@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-query: Erc721Enumerable | undefined;
+query: Erc721Supply | undefined;
 ```

@@ -1612,7 +1612,7 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements 
     protected options: SDKOptions;
     ownerOf(tokenId: BigNumberish): Promise<string>;
     // (undocumented)
-    query: Erc721Enumerable | undefined;
+    query: Erc721Supply | undefined;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
     // (undocumented)
@@ -1633,12 +1633,10 @@ export class Erc721BatchMintable {
 
 // @public (undocumented)
 export class Erc721Enumerable {
-    // Warning: (ae-forgotten-export) The symbol "ERC721Supply" needs to be exported by the entry point index.d.ts
-    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & ERC721Supply>);
-    all(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
-    // (undocumented)
-    owned: Erc721Owned | undefined;
-    totalSupply(): Promise<BigNumber>;
+    // Warning: (ae-forgotten-export) The symbol "ERC721Enumerable" needs to be exported by the entry point index.d.ts
+    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & ERC721Enumerable>);
+    all(walletAddress?: string): Promise<NFTMetadataOwner[]>;
+    tokenIds(walletAddress?: string): Promise<BigNumber[]>;
 }
 
 // @public (undocumented)
@@ -1649,14 +1647,6 @@ export class Erc721Mintable {
     to(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 }
 
-// @public (undocumented)
-export class Erc721Owned {
-    // Warning: (ae-forgotten-export) The symbol "ERC721Enumerable" needs to be exported by the entry point index.d.ts
-    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & ERC721Enumerable>);
-    all(walletAddress?: string): Promise<NFTMetadataOwner[]>;
-    tokenIds(walletAddress?: string): Promise<BigNumber[]>;
-}
-
 // @public
 export class Erc721SignatureMinting {
     constructor(contractWrapper: ContractWrapper<TokenERC721>, roles: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>, storage: IStorage);
@@ -1665,6 +1655,16 @@ export class Erc721SignatureMinting {
     mint(signedPayload: SignedPayload721): Promise<TransactionResultWithId>;
     mintBatch(signedPayloads: SignedPayload721[]): Promise<TransactionResultWithId[]>;
     verify(signedPayload: SignedPayload721): Promise<boolean>;
+}
+
+// @public (undocumented)
+export class Erc721Supply {
+    // Warning: (ae-forgotten-export) The symbol "ERC721Supply" needs to be exported by the entry point index.d.ts
+    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & ERC721Supply>);
+    all(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    // (undocumented)
+    owned: Erc721Enumerable | undefined;
+    totalSupply(): Promise<BigNumber>;
 }
 
 // @public (undocumented)
@@ -2234,8 +2234,11 @@ export class NFTCollection extends Erc721<TokenERC721> {
     // (undocumented)
     events: ContractEvents<TokenERC721>;
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
+    //
+    // (undocumented)
     getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "tokendIds"
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
     //
     // (undocumented)
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
@@ -2359,6 +2362,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
         }>;
     };
     signature: Erc721SignatureMinting;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "totalSupply"
+    //
+    // (undocumented)
     totalSupply(): Promise<BigNumber>;
 }
 
@@ -2402,8 +2408,11 @@ export class NFTDrop extends Erc721<DropERC721> {
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
+    //
+    // (undocumented)
     getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "tokendIds"
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
     //
     // (undocumented)
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
@@ -2551,6 +2560,9 @@ export class NFTDrop extends Erc721<DropERC721> {
         }>;
     };
     totalClaimedSupply(): Promise<BigNumber>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "totalSupply"
+    //
+    // (undocumented)
     totalSupply(): Promise<BigNumber>;
     totalUnclaimedSupply(): Promise<BigNumber>;
 }

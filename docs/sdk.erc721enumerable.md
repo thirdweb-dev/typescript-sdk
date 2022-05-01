@@ -16,16 +16,10 @@ export declare class Erc721Enumerable
 |  --- | --- | --- |
 |  [(constructor)(erc721, contractWrapper)](./sdk.erc721enumerable._constructor_.md) |  | Constructs a new instance of the <code>Erc721Enumerable</code> class |
 
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [owned](./sdk.erc721enumerable.owned.md) |  | [Erc721Owned](./sdk.erc721owned.md) \| undefined |  |
-
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [all(queryParams)](./sdk.erc721enumerable.all.md) |  | Get All Minted NFTs |
-|  [totalSupply()](./sdk.erc721enumerable.totalsupply.md) |  | Get the number of NFTs minted |
+|  [all(walletAddress)](./sdk.erc721enumerable.all.md) |  | Get Owned NFTs |
+|  [tokenIds(walletAddress)](./sdk.erc721enumerable.tokenids.md) |  | Get all token ids of NFTs owned by a specific wallet. |
 

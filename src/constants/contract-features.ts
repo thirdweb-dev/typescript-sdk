@@ -8,6 +8,7 @@ import {
 
 const FEATURE_NFT_BATCH_MINTABLE = {
   name: "ERC721BatchMintable",
+  namespace: "nft.mint.batch",
   docLinks: {
     sdk: "sdk.erc721batchmintable",
     contracts: "Multicall",
@@ -18,6 +19,7 @@ const FEATURE_NFT_BATCH_MINTABLE = {
 
 const FEATURE_NFT_MINTABLE = {
   name: "ERC721Mintable",
+  namespace: "nft.mint",
   docLinks: {
     sdk: "sdk.erc721mintable",
     contracts: "IMintableERC721",
@@ -30,8 +32,9 @@ const FEATURE_NFT_MINTABLE = {
 
 const FEATURE_NFT_ENUMERABLE = {
   name: "ERC721Enumerable",
+  namespace: "nft.query.owned",
   docLinks: {
-    sdk: "sdk.erc721ownable",
+    sdk: "sdk.erc721enumerable",
     contracts: "ERC721Enumerable",
   },
   abi: ERC721Enumerable__factory.abi,
@@ -40,9 +43,10 @@ const FEATURE_NFT_ENUMERABLE = {
 
 const FEATURE_NFT_SUPPLY = {
   name: "ERC721Supply",
+  namespace: "nft.query",
   docLinks: {
-    sdk: "sdk.erc721enumerable",
-    contracts: "ERC721Enumerable",
+    sdk: "sdk.erc721supply",
+    contracts: "ERC721Supply",
   },
   abi: ERC721Supply__factory.abi,
   features: {
@@ -52,6 +56,7 @@ const FEATURE_NFT_SUPPLY = {
 
 const FEATURE_NFT = {
   name: "ERC721",
+  namespace: "nft",
   docLinks: {
     sdk: "sdk.erc721",
     contracts: "ERC721",

@@ -14,7 +14,7 @@ import {
   IMintableERC721,
   TokenERC721,
 } from "contracts";
-import { Erc721Enumerable } from "./erc-721-enumerable";
+import { Erc721Supply } from "./erc-721-supply";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { BaseERC721 } from "../../types/eips";
 
@@ -29,7 +29,7 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
   protected storage: IStorage;
   protected options: SDKOptions;
 
-  public query: Erc721Enumerable | undefined;
+  public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
 
   constructor(
@@ -202,14 +202,14 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
     return fetchTokenMetadata(tokenId, tokenUri, this.storage);
   }
 
-  private detectErc721Enumerable(): Erc721Enumerable | undefined {
+  private detectErc721Enumerable(): Erc721Supply | undefined {
     if (
       detectContractFeature<BaseERC721 & ERC721Supply>(
         this.contractWrapper,
         "ERC721Supply",
       )
     ) {
-      return new Erc721Enumerable(this, this.contractWrapper);
+      return new Erc721Supply(this, this.contractWrapper);
     }
     return undefined;
   }
