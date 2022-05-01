@@ -190,8 +190,17 @@ export class ContractDeployer extends RPCConnectionHandler {
     // otherwise get the registry address for the active chain and get a new one
     const chainId = (await this.getProvider().getNetwork()).chainId;
     const registryAddress = getContractAddressByChainId(chainId, "twRegistry");
+    const byocRegistryAddress = getContractAddressByChainId(
+      chainId,
+      "twBYOCRegistry",
+    );
     return (this._registry = Promise.resolve(
-      new ContractRegistry(registryAddress, this.getProvider(), this.options),
+      new ContractRegistry(
+        registryAddress,
+        byocRegistryAddress,
+        this.getProvider(),
+        this.options,
+      ),
     ));
   }
 

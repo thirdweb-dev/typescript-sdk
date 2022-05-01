@@ -36,7 +36,7 @@ import {
   ThirdwebContract__factory,
 } from "contracts";
 import { AddressZero } from "@ethersproject/constants";
-import { getBYOCFactoryAddress, getBYOCRegistryAddress } from "../../constants";
+import { getBYOCRegistryAddress } from "../../constants";
 import { ContractPublishedEvent } from "contracts/ByocRegistry";
 import { ContractDeployedEvent } from "contracts/ByocFactory";
 
@@ -50,6 +50,7 @@ export class ContractPublisher extends RPCConnectionHandler {
   private factory: ContractWrapper<ByocFactory>;
 
   constructor(
+    byocFactoryAddress: string,
     network: NetworkOrSignerOrProvider,
     options: SDKOptions,
     storage: IStorage,
@@ -64,7 +65,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     );
     this.factory = new ContractWrapper<ByocFactory>(
       network,
-      getBYOCFactoryAddress(),
+      byocFactoryAddress,
       ByocFactory__factory.abi,
       options,
     );

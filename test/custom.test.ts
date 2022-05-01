@@ -25,9 +25,10 @@ describe("Custom Contracts", async () => {
     const simpleContractUri = await uploadContractMetadata(
       "test/abis/greeter.json",
     );
-    const tx = await sdk.publisher.publish(simpleContractUri);
+    const publisher = await sdk.getPublisher();
+    const tx = await publisher.publish(simpleContractUri);
     const contract = await tx.data();
-    customContractAddress = await sdk.publisher.deployPublishedContract(
+    customContractAddress = await publisher.deployPublishedContract(
       adminWallet.address,
       contract.id,
       [],

@@ -29,6 +29,8 @@ import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
+import { ContractRegistry } from "./classes/registry";
+import { getContractAddressByChainId } from "../constants";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -43,15 +45,19 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     string,
     ValidContractInstance | CustomContract
   >();
+  /**
+   * @internal
+   * should never be accessed directly, use {@link ThirdwebSDK.getPublisher} instead
+   */
+  private _publisher: Promise<ContractPublisher> | undefined;
+  /**
+   * Upload and download files
+   */
   public storage: IStorage;
   /**
    * New contract deployer
    */
   public deployer: ContractDeployer;
-  /**
-   * @internal
-   */
-  public publisher: ContractPublisher;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -63,7 +69,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // this.registry = new ContractRegistry(network, options);
     this.storage = storage;
     this.deployer = new ContractDeployer(network, options, storage);
-    this.publisher = new ContractPublisher(network, options, storage);
   }
 
   /**
@@ -279,7 +284,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   private updateContractSignerOrProvider() {
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
-    this.publisher.updateSignerOrProvider(this.getSignerOrProvider());
+    this._publisher?.then((publisher) => {
+      publisher.updateSignerOrProvider(this.getSignerOrProvider());
+    });
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }
@@ -296,7 +303,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       return this.contractCache.get(address) as CustomContract;
     }
     try {
-      const metadata = await this.publisher.fetchContractMetadataFromAddress(
+      const publisher = await this.getPublisher();
+      const metadata = await publisher.fetchContractMetadataFromAddress(
         address,
       );
       return this.getCustomContractFromAbi(address, metadata.abi);
@@ -325,5 +333,26 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     );
     this.contractCache.set(address, contract);
     return contract;
+  }
+
+  /**
+   * @internal
+   */
+  public async getPublisher(): Promise<ContractPublisher> {
+    // if we already have a registry just return it back
+    if (this._publisher) {
+      return this._publisher;
+    }
+    // otherwise get the factory address for the active chain and get a new one
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+    const factoryAddress = getContractAddressByChainId(chainId, "byocFactory");
+    return (this._publisher = Promise.resolve(
+      new ContractPublisher(
+        factoryAddress,
+        this.getSignerOrProvider(),
+        this.options,
+        this.storage,
+      ),
+    ));
   }
 }
