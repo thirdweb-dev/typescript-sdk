@@ -9,4 +9,4 @@ export * from "./marketplace";
 export * from "./pack";
 export * from "./nft-drop";
 export * from "./maps";
-export * from "./custom";
+export * from "./smart-contract";

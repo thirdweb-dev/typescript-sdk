@@ -5,7 +5,6 @@ import { NetworkOrSignerOrProvider } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { isAddress } from "ethers/lib/utils";
 import { AddressZero } from "@ethersproject/constants";
-import { getBYOCTWRegistryAddress } from "../../constants";
 
 /**
  * @internal
@@ -15,13 +14,14 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
 
   constructor(
     registryAddress: string,
+    byocRegistryAddress: string,
     network: NetworkOrSignerOrProvider,
     options?: SDKOptions,
   ) {
     super(network, registryAddress, TWRegistry__factory.abi, options);
     this.byocRegistry = new ContractWrapper<TWRegistry>(
       network,
-      getBYOCTWRegistryAddress(),
+      byocRegistryAddress,
       TWRegistry__factory.abi,
       options,
     );

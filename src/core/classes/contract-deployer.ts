@@ -60,7 +60,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployNFTCollection(
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployContract(NFTCollection.contractType, metadata);
+    return await this.deployBuiltInContract(
+      NFTCollection.contractType,
+      metadata,
+    );
   }
 
   /**
@@ -71,7 +74,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployNFTDrop(
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployContract(NFTDrop.contractType, metadata);
+    return await this.deployBuiltInContract(NFTDrop.contractType, metadata);
   }
 
   /**
@@ -82,7 +85,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployEdition(
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployContract(Edition.contractType, metadata);
+    return await this.deployBuiltInContract(Edition.contractType, metadata);
   }
 
   /**
@@ -94,7 +97,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
     const parsed = EditionDrop.schema.deploy.parse(metadata);
-    return await this.deployContract(EditionDrop.contractType, parsed);
+    return await this.deployBuiltInContract(EditionDrop.contractType, parsed);
   }
 
   /**
@@ -105,7 +108,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployToken(
     metadata: TokenContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployContract(Token.contractType, metadata);
+    return await this.deployBuiltInContract(Token.contractType, metadata);
   }
 
   /**
@@ -116,7 +119,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployTokenDrop(
     metadata: TokenContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployContract(TokenDrop.contractType, metadata);
+    return await this.deployBuiltInContract(TokenDrop.contractType, metadata);
   }
 
   /**
@@ -127,7 +130,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployMarketplace(
     metadata: MarketplaceContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployContract(Marketplace.contractType, metadata);
+    return await this.deployBuiltInContract(Marketplace.contractType, metadata);
   }
 
   /**
@@ -138,7 +141,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployPack(
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployContract(Pack.contractType, metadata);
+    return await this.deployBuiltInContract(Pack.contractType, metadata);
   }
 
   /**
@@ -149,7 +152,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deploySplit(
     metadata: SplitContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployContract(Split.contractType, metadata);
+    return await this.deployBuiltInContract(Split.contractType, metadata);
   }
 
   /**
@@ -160,7 +163,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployVote(
     metadata: VoteContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployContract(Vote.contractType, metadata);
+    return await this.deployBuiltInContract(Vote.contractType, metadata);
   }
 
   /**
@@ -171,7 +174,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param contractMetadata - the metadata to deploy the contract with
    * @returns a promise of the address of the newly deployed contract
    */
-  public async deployContract<TContract extends ValidContractClass>(
+  public async deployBuiltInContract<TContract extends ValidContractClass>(
     contractType: TContract["contractType"],
     contractMetadata: z.input<TContract["schema"]["deploy"]>,
   ): Promise<string> {
@@ -190,8 +193,17 @@ export class ContractDeployer extends RPCConnectionHandler {
     // otherwise get the registry address for the active chain and get a new one
     const chainId = (await this.getProvider().getNetwork()).chainId;
     const registryAddress = getContractAddressByChainId(chainId, "twRegistry");
+    const byocRegistryAddress = getContractAddressByChainId(
+      chainId,
+      "twBYOCRegistry",
+    );
     return (this._registry = Promise.resolve(
-      new ContractRegistry(registryAddress, this.getProvider(), this.options),
+      new ContractRegistry(
+        registryAddress,
+        byocRegistryAddress,
+        this.getProvider(),
+        this.options,
+      ),
     ));
   }
 

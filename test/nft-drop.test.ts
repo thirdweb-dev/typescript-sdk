@@ -496,7 +496,7 @@ describe("NFT Drop Contract", async () => {
     });
 
     it("should check if an address has enough erc20 currency", async () => {
-      const currencyAddress = await sdk.deployer.deployContract(
+      const currencyAddress = await sdk.deployer.deployBuiltInContract(
         Token.contractType,
         {
           name: "test",

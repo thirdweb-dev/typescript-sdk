@@ -19,7 +19,7 @@ describe("NFT Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployer.deployContract(
+    const address = await sdk.deployer.deployBuiltInContract(
       NFTCollection.contractType,
       {
         name: "NFT Contract",

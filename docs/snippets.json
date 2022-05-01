@@ -1,15 +1,4 @@
 {
-  "CustomContract": {
-    "name": "CustomContract",
-    "summary": "Custom contract dynamic class with feature detection\n\n",
-    "remarks": null,
-    "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getCustomContract(\"{{contract_address}}\");\n\n// call any function in your contract\nawait contract.functions.myCustomFunction(params);\n\n// if your contract follows the ERC721 standard, contract.nft will be present\nconst allNFTs = await contract.nft.query.all()\n\n// if your contract extends IMintableERC721, contract.nft.mint will be present\nconst tx = await contract.nft.mint.toSelf({\n    name: \"Cool NFT\",\n    image: readFileSync(\"some_image.png\"),\n  });"
-    },
-    "methods": [],
-    "properties": [],
-    "reference": "https://docs.thirdweb.com/typescript/sdk.CustomContract"
-  },
   "Edition": {
     "name": "Edition",
     "summary": "Create a collection of NFTs that lets you mint multiple copies of each NFT.\n\n",
@@ -510,6 +499,17 @@
       }
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.Pack"
+  },
+  "SmartContract": {
+    "name": "SmartContract",
+    "summary": "Custom contract dynamic class with feature detection\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getContract(\"{{contract_address}}\");\n\n// call any function in your contract\nawait contract.functions.myCustomFunction(params);\n\n// if your contract follows the ERC721 standard, contract.nft will be present\nconst allNFTs = await contract.nft.query.all()\n\n// if your contract extends IMintableERC721, contract.nft.mint will be present\nconst tx = await contract.nft.mint.to(\"0x...\", {\n    name: \"Cool NFT\",\n    image: readFileSync(\"some_image.png\"),\n  });"
+    },
+    "methods": [],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.SmartContract"
   },
   "Split": {
     "name": "Split",

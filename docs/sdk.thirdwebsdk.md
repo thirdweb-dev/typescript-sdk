@@ -24,15 +24,15 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [deployer](./sdk.thirdwebsdk.deployer.md) |  | [ContractDeployer](./sdk.contractdeployer.md) | New contract deployer |
-|  [storage](./sdk.thirdwebsdk.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
+|  [storage](./sdk.thirdwebsdk.storage.md) |  | [IStorage](./sdk.istorage.md) | Upload and download files |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [getContract(address)](./sdk.thirdwebsdk.getcontract.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom ThirdwebContract |
+|  [getContractFromAbi(address, abi)](./sdk.thirdwebsdk.getcontractfromabi.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom contract from a json ABI |
 |  [getContractList(walletAddress)](./sdk.thirdwebsdk.getcontractlist.md) |  | Return all the contracts deployed by the specified address |
-|  [getCustomContract(address)](./sdk.thirdwebsdk.getcustomcontract.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom ThirdwebContract |
-|  [getCustomContractFromAbi(address, abi)](./sdk.thirdwebsdk.getcustomcontractfromabi.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom contract from a json ABI |
 |  [getEdition(address)](./sdk.thirdwebsdk.getedition.md) |  | Get an instance of an Edition contract |
 |  [getEditionDrop(address)](./sdk.thirdwebsdk.geteditiondrop.md) |  | Get an instance of a Edition Drop contract |
 |  [getMarketplace(address)](./sdk.thirdwebsdk.getmarketplace.md) |  | Get an instance of a Marketplace contract |
