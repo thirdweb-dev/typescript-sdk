@@ -130,8 +130,8 @@ export class MarketplaceDirect {
    *   assetContractAddress: "0x...",
    *   // token ID of the asset you want to list
    *   tokenId: "0",
-   *   // in how many seconds will the listing open up
-   *   startTimeInSeconds: 0,
+   *   // when should the listing open up for offers
+   *   startTimestamp: new Date(),
    *   // how long the listing will be open for
    *   listingDurationInSeconds: 86400,
    *   // how many of the asset you want to list
