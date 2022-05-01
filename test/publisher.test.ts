@@ -63,7 +63,7 @@ describe("Publishing", async () => {
     const all = await publisher.getAll(adminWallet.address);
     expect(all.length).to.be.eq(1);
     // fetch metadata back
-    const c = await sdk.getCustomContract(deployedAddr);
+    const c = await sdk.getContract(deployedAddr);
     const meta = await c.metadata.get();
     expect(meta.name).to.eq("CustomContract");
   });
@@ -157,7 +157,7 @@ describe("Publishing", async () => {
       ["foo", "bar"],
     );
     console.log("deployed", deployedAddr);
-    const c = await realSDK.getCustomContract(deployedAddr);
+    const c = await realSDK.getContract(deployedAddr);
     invariant(c.nft, "no nft detected");
     invariant(c.nft.mint, "no minter detected");
     const tx2 = await c.nft.mint.to(adminWallet.address, {
@@ -190,7 +190,7 @@ describe("Publishing", async () => {
       ["foo", "bar"],
     );
     console.log("deployed", deployedAddr);
-    const c = await realSDK.getCustomContract(deployedAddr);
+    const c = await realSDK.getContract(deployedAddr);
     invariant(c.nft, "no nft detected");
     invariant(c.nft.mint, "no minter detected");
     const tx2 = await c.nft.mint.to(adminWallet.address, {

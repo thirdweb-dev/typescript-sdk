@@ -4,6 +4,8 @@
 
 ## ThirdwebSDK.storage property
 
+Upload and download files
+
 <b>Signature:</b>
 
 ```typescript

@@ -532,7 +532,7 @@ describe("Edition Drop Contract", async () => {
 
     it("should check if an address has enough erc20 currency", async () => {
       const currency = sdk.getToken(
-        await sdk.deployer.deployContract(Token.contractType, {
+        await sdk.deployer.deployBuiltInContract(Token.contractType, {
           name: "test",
           symbol: "test",
           primary_sale_recipient: adminWallet.address,

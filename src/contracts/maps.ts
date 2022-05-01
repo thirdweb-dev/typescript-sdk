@@ -8,7 +8,7 @@ import { Marketplace } from "./marketplace";
 import { Pack } from "./pack";
 import { NFTDrop } from "./nft-drop";
 import { TokenDrop } from "./token-drop";
-import { CustomContract } from "./custom";
+import { SmartContract } from "./smart-contract";
 
 /**
  * @internal
@@ -31,7 +31,7 @@ export const KNOWN_CONTRACTS_MAP = {
  */
 export const CONTRACTS_MAP = {
   ...KNOWN_CONTRACTS_MAP,
-  [CustomContract.contractType]: CustomContract,
+  [SmartContract.contractType]: SmartContract,
 } as const;
 
 /**
@@ -48,7 +48,7 @@ export const REMOTE_CONTRACT_NAME = {
   [Split.contractType]: "Split",
   [Marketplace.contractType]: "Marketplace",
   [Pack.contractType]: "Pack",
-  [CustomContract.contractType]: "Custom",
+  [SmartContract.contractType]: "Custom",
 } as const;
 
 /**

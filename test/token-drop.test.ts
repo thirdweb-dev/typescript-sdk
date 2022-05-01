@@ -30,15 +30,18 @@ describe("Token Drop Contract", async () => {
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployer.deployContract(TokenDrop.contractType, {
-      name: `Testing drop from SDK`,
-      description: "Test contract from tests",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      primary_sale_recipient: adminWallet.address,
-      platform_fee_basis_points: 10,
-      platform_fee_recipient: AddressZero,
-    });
+    const address = await sdk.deployer.deployBuiltInContract(
+      TokenDrop.contractType,
+      {
+        name: `Testing drop from SDK`,
+        description: "Test contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: adminWallet.address,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: AddressZero,
+      },
+    );
     dropContract = sdk.getTokenDrop(address);
   });
 
@@ -389,7 +392,7 @@ describe("Token Drop Contract", async () => {
     });
 
     it("should check if an address has enough erc20 currency", async () => {
-      const currencyAddress = await sdk.deployer.deployContract(
+      const currencyAddress = await sdk.deployer.deployBuiltInContract(
         Token.contractType,
         {
           name: "test",

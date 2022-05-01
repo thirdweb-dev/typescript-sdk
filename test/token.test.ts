@@ -20,14 +20,17 @@ describe("Token Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployer.deployContract(Token.contractType, {
-      name: `Testing token from SDK`,
-      symbol: `TEST`,
-      description: "Test contract from tests",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      primary_sale_recipient: adminWallet.address,
-    });
+    const address = await sdk.deployer.deployBuiltInContract(
+      Token.contractType,
+      {
+        name: `Testing token from SDK`,
+        symbol: `TEST`,
+        description: "Test contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: adminWallet.address,
+      },
+    );
     currencyContract = sdk.getToken(address);
   });
 

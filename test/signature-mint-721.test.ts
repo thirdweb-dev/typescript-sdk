@@ -28,7 +28,7 @@ describe("NFT sig minting", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     nftContract = sdk.getNFTCollection(
-      await sdk.deployer.deployContract(NFTCollection.contractType, {
+      await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
         primary_sale_recipient: adminWallet.address,
@@ -48,7 +48,7 @@ describe("NFT sig minting", async () => {
     };
 
     customTokenContract = sdk.getToken(
-      await sdk.deployer.deployContract(Token.contractType, {
+      await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
         primary_sale_recipient: adminWallet.address,

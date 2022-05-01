@@ -28,7 +28,7 @@ describe("Edition sig minting", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     editionContract = sdk.getEdition(
-      await sdk.deployer.deployContract(Edition.contractType, {
+      await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
         primary_sale_recipient: adminWallet.address,
@@ -47,7 +47,7 @@ describe("Edition sig minting", async () => {
     };
 
     customTokenContract = sdk.getToken(
-      await sdk.deployer.deployContract(Token.contractType, {
+      await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
         primary_sale_recipient: adminWallet.address,

@@ -24,12 +24,11 @@ import type {
 } from "./types";
 import { IThirdwebContract__factory } from "contracts";
 import { ContractDeployer } from "./classes/contract-deployer";
-import { CustomContract } from "../contracts/custom";
+import { SmartContract } from "../contracts/smart-contract";
 import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
-import { ContractRegistry } from "./classes/registry";
 import { getContractAddressByChainId } from "../constants";
 
 /**
@@ -43,7 +42,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   private contractCache = new Map<
     string,
-    ValidContractInstance | CustomContract
+    ValidContractInstance | SmartContract
   >();
   /**
    * @internal
@@ -77,7 +76,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public getNFTDrop(contractAddress: string): NFTDrop {
-    return this.getContract(contractAddress, NFTDrop.contractType) as NFTDrop;
+    return this.getBuiltInContract(
+      contractAddress,
+      NFTDrop.contractType,
+    ) as NFTDrop;
   }
 
   /**
@@ -86,7 +88,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public getNFTCollection(address: string): NFTCollection {
-    return this.getContract(
+    return this.getBuiltInContract(
       address,
       NFTCollection.contractType,
     ) as NFTCollection;
@@ -98,7 +100,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public getEditionDrop(address: string): EditionDrop {
-    return this.getContract(address, EditionDrop.contractType) as EditionDrop;
+    return this.getBuiltInContract(
+      address,
+      EditionDrop.contractType,
+    ) as EditionDrop;
   }
 
   /**
@@ -107,7 +112,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public getEdition(address: string): Edition {
-    return this.getContract(address, Edition.contractType) as Edition;
+    return this.getBuiltInContract(address, Edition.contractType) as Edition;
   }
 
   /**
@@ -116,7 +121,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public getTokenDrop(address: string): TokenDrop {
-    return this.getContract(address, TokenDrop.contractType) as TokenDrop;
+    return this.getBuiltInContract(
+      address,
+      TokenDrop.contractType,
+    ) as TokenDrop;
   }
 
   /**
@@ -125,7 +133,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public getToken(address: string): Token {
-    return this.getContract(address, Token.contractType) as Token;
+    return this.getBuiltInContract(address, Token.contractType) as Token;
   }
 
   /**
@@ -134,7 +142,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public getVote(address: string): Vote {
-    return this.getContract(address, Vote.contractType) as Vote;
+    return this.getBuiltInContract(address, Vote.contractType) as Vote;
   }
 
   /**
@@ -143,7 +151,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public getSplit(address: string): Split {
-    return this.getContract(address, Split.contractType) as Split;
+    return this.getBuiltInContract(address, Split.contractType) as Split;
   }
 
   /**
@@ -152,7 +160,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public getMarketplace(address: string): Marketplace {
-    return this.getContract(address, Marketplace.contractType) as Marketplace;
+    return this.getBuiltInContract(
+      address,
+      Marketplace.contractType,
+    ) as Marketplace;
   }
 
   /**
@@ -161,7 +172,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public getPack(address: string): Pack {
-    return this.getContract(address, Pack.contractType) as Pack;
+    return this.getBuiltInContract(address, Pack.contractType) as Pack;
   }
 
   /**
@@ -171,7 +182,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param contractType - optional, the type of contract to instantiate
    * @returns a promise that resolves with the contract instance
    */
-  public getContract<TContractType extends ContractType = ContractType>(
+  public getBuiltInContract<TContractType extends ContractType = ContractType>(
     address: string,
     contractType: TContractType,
   ): ContractForContractType<TContractType> {
@@ -185,7 +196,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     if (contractType === "custom") {
       throw new Error(
-        "To get an instance of a custom contract, use getCustomContract(address)",
+        "To get an instance of a custom contract, use getContract(address)",
       );
     }
 
@@ -244,14 +255,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         let metadata: ContractMetadata<any, any> | undefined;
         if (contractType === "custom") {
           try {
-            metadata = (await this.getCustomContract(address)).metadata;
+            metadata = (await this.getContract(address)).metadata;
           } catch (e) {
             console.log(
               `Couldn't get contract metadata for custom contract: ${address}`,
             );
           }
         } else {
-          metadata = this.getContract(address, contractType).metadata;
+          metadata = this.getBuiltInContract(address, contractType).metadata;
         }
         return {
           address,
@@ -298,16 +309,16 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    * @beta
    */
-  public async getCustomContract(address: string) {
+  public async getContract(address: string) {
     if (this.contractCache.has(address)) {
-      return this.contractCache.get(address) as CustomContract;
+      return this.contractCache.get(address) as SmartContract;
     }
     try {
       const publisher = await this.getPublisher();
       const metadata = await publisher.fetchContractMetadataFromAddress(
         address,
       );
-      return this.getCustomContractFromAbi(address, metadata.abi);
+      return this.getContractFromAbi(address, metadata.abi);
     } catch (e) {
       throw new Error(`Error fetching ABI for this contract\n\n${e}`);
     }
@@ -320,11 +331,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    * @beta
    */
-  public getCustomContractFromAbi(address: string, abi: ContractInterface) {
+  public getContractFromAbi(address: string, abi: ContractInterface) {
     if (this.contractCache.has(address)) {
-      return this.contractCache.get(address) as CustomContract;
+      return this.contractCache.get(address) as SmartContract;
     }
-    const contract = new CustomContract(
+    const contract = new SmartContract(
       this.getSignerOrProvider(),
       address,
       abi,

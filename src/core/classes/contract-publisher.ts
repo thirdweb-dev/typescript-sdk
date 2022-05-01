@@ -231,7 +231,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       publisherAddress,
       contractId,
     );
-    return this.deployCustomContract(
+    return this.deployContract(
       contract.publishMetadataUri,
       constructorParamValues,
       contractMetadata,
@@ -244,7 +244,7 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @param constructorParamValues
    * @param contractMetadata
    */
-  public async deployCustomContract(
+  public async deployContract(
     contractMetadataUri: string,
     constructorParamValues: any[],
     contractMetadata?: CustomContractMetadata,
@@ -324,7 +324,7 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @param bytecode
    * @param constructorParams
    */
-  public async deployCustomContractWithAbi(
+  public async deployContractWithAbi(
     abi: ContractInterface,
     bytecode: BytesLike | { object: string },
     constructorParams: Array<any>,

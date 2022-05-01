@@ -49,7 +49,7 @@ import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
  *
  * // You can switch out this provider with any wallet or provider setup you like.
  * const sdk = new ThirdwebSDK(provider);
- * const contract = sdk.getCustomContract("{{contract_address}}");
+ * const contract = sdk.getContract("{{contract_address}}");
  *
  * // call any function in your contract
  * await contract.functions.myCustomFunction(params);
@@ -58,7 +58,7 @@ import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
  * const allNFTs = await contract.nft.query.all()
  *
  * // if your contract extends IMintableERC721, contract.nft.mint will be present
- * const tx = await contract.nft.mint.toSelf({
+ * const tx = await contract.nft.mint.to("0x...", {
  *     name: "Cool NFT",
  *     image: readFileSync("some_image.png"),
  *   });
@@ -66,7 +66,7 @@ import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
  *
  * @beta
  */
-export class CustomContract<
+export class SmartContract<
   TContract extends ThirdwebContract = ThirdwebContract,
 > implements UpdateableNetwork
 {
@@ -141,7 +141,7 @@ export class CustomContract<
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      CustomContract.schema,
+      SmartContract.schema,
       this.storage,
     );
 
@@ -182,7 +182,7 @@ export class CustomContract<
       // This also makes it not order dependent in the feature detection process
       const metadata = new ContractMetadata(
         this.contractWrapper,
-        CustomContract.schema,
+        SmartContract.schema,
         this.storage,
       );
       return new ContractRoyalty(this.contractWrapper, metadata);

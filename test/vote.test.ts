@@ -25,7 +25,7 @@ describe("Vote Contract", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    const tokenContractAddress = await sdk.deployer.deployContract(
+    const tokenContractAddress = await sdk.deployer.deployBuiltInContract(
       Token.contractType,
       {
         name: "DAOToken #1",
@@ -34,7 +34,7 @@ describe("Vote Contract", async () => {
       },
     );
     currencyContract = sdk.getToken(tokenContractAddress);
-    const voteContractAddress = await sdk.deployer.deployContract(
+    const voteContractAddress = await sdk.deployer.deployBuiltInContract(
       Vote.contractType,
       {
         name: "DAO #1",
