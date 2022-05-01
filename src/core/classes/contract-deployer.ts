@@ -1,8 +1,8 @@
 import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
 import { z } from "zod";
-import { ContractRegistry } from "./registry";
+import type { ContractRegistry } from "./registry";
 import { getContractAddressByChainId } from "../../constants/addresses";
-import { ContractFactory } from "./factory";
+import type { ContractFactory } from "./factory";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
@@ -190,21 +190,30 @@ export class ContractDeployer extends RPCConnectionHandler {
     if (this._registry) {
       return this._registry;
     }
+
     // otherwise get the registry address for the active chain and get a new one
-    const chainId = (await this.getProvider().getNetwork()).chainId;
-    const registryAddress = getContractAddressByChainId(chainId, "twRegistry");
-    const byocRegistryAddress = getContractAddressByChainId(
-      chainId,
-      "twBYOCRegistry",
-    );
-    return (this._registry = Promise.resolve(
-      new ContractRegistry(
-        registryAddress,
-        byocRegistryAddress,
-        this.getProvider(),
-        this.options,
-      ),
-    ));
+
+    // have to do it like this otherwise we run it over and over and over
+    // "this._registry" has to be assigned to the promise upfront.
+    return (this._registry = this.getProvider()
+      .getNetwork()
+      .then(async ({ chainId }) => {
+        const registryAddress = getContractAddressByChainId(
+          chainId,
+          "twRegistry",
+        );
+        const byocRegistryAddress = getContractAddressByChainId(
+          chainId,
+          "twBYOCRegistry",
+        );
+        const module = await import("./registry");
+        return new module.ContractRegistry(
+          registryAddress,
+          byocRegistryAddress,
+          this.getProvider(),
+          this.options,
+        );
+      }));
   }
 
   private async getFactory(): Promise<ContractFactory> {
@@ -212,17 +221,26 @@ export class ContractDeployer extends RPCConnectionHandler {
     if (this._factory) {
       return this._factory;
     }
+
     // otherwise get the factory address for the active chain and get a new one
-    const chainId = (await this.getProvider().getNetwork()).chainId;
-    const factoryAddress = getContractAddressByChainId(chainId, "twFactory");
-    return (this._factory = Promise.resolve(
-      new ContractFactory(
-        factoryAddress,
-        this.getSignerOrProvider(),
-        this.storage,
-        this.options,
-      ),
-    ));
+
+    // have to do it like this otherwise we run it over and over and over
+    // "this._factory" has to be assigned to the promise upfront.
+    return (this._factory = this.getProvider()
+      .getNetwork()
+      .then(async ({ chainId }) => {
+        const factoryAddress = getContractAddressByChainId(
+          chainId,
+          "twFactory",
+        );
+        const module = await import("./factory");
+        return new module.ContractFactory(
+          factoryAddress,
+          this.getSignerOrProvider(),
+          this.storage,
+          this.options,
+        );
+      }));
   }
 
   public override updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
