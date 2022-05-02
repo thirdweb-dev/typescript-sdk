@@ -1,4 +1,4 @@
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {
@@ -9,6 +9,8 @@ import {
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
 import { ethers } from "ethers";
+
+require("./before-setup");
 
 global.fetch = require("node-fetch");
 

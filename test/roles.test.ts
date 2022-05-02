@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Edition } from "../src/index";
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 
 import { assert } from "chai";
 import { AddressZero } from "@ethersproject/constants";

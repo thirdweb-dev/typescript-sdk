@@ -1,5 +1,5 @@
 import { ethers, Wallet } from "ethers";
-import { sdk } from "./before.test";
+import { sdk } from "./before-setup";
 import { EventType } from "../src/constants/events";
 import { expect } from "chai";
 import { NFTDrop, ThirdwebSDK } from "../src";

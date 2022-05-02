@@ -1,4 +1,4 @@
-import { sdk, signers, storage } from "./before.test";
+import { sdk, signers, storage } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
 import {

@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";
 import { BigNumber } from "ethers";
 import { EditionDrop, Token } from "../src/index";
-import { expectError, sdk, signers } from "./before.test";
+import { expectError, sdk, signers } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { ClaimEligibility } from "../src/enums";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";

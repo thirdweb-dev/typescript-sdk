@@ -3,7 +3,6 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import {
-  ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -22,10 +21,13 @@ import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
 import { getRoleHash } from "../common/role";
 import { MarketplaceDirect } from "../core/classes/marketplace-direct";
 import { MarketplaceAuction } from "../core/classes/marketplace-auction";
-import { GasCostEstimator } from "../core/classes";
 import { DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import {
+  GasCostEstimator,
+  ContractInterceptor,
+  ContractEvents,
+  ContractPlatformFee,
+} from "../core/classes";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.

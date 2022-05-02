@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { Edition, Token } from "../src";
-import { sdk, signers, storage } from "./before.test";
+import { sdk, signers, storage } from "./before-setup";
 import {
   PayloadToSign1155,
   SignedPayload1155,

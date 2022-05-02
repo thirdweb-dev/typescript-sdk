@@ -1,7 +1,7 @@
 import { assert, expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Token } from "../src";
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 import { ethers } from "ethers";
 import { TokenMintInput } from "../src/schema/tokens/token";
 

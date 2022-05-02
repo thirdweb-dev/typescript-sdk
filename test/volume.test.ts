@@ -4,7 +4,7 @@ import {
   NATIVE_TOKEN_ADDRESS,
   ThirdwebSDK,
 } from "../src/index";
-import { appContract, registryAddress, signers } from "./before.test";
+import { appContract, registryAddress, signers } from "./before-setup";
 import { ethers } from "hardhat";
 import { assert } from "chai";
 

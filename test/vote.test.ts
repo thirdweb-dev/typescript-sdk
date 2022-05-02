@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 import { Token, Vote } from "../src";
 
 global.fetch = require("node-fetch");

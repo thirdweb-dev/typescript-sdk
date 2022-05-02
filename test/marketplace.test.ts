@@ -16,7 +16,7 @@ import {
   jsonProvider,
   sdk,
   signers,
-} from "./before.test";
+} from "./before-setup";
 import { isWinningBid } from "../src/common/marketplace";
 import { ethers as hardhatEthers } from "hardhat";
 

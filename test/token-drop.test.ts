@@ -3,7 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
-import { expectError, sdk, signers, storage } from "./before.test";
+import { expectError, sdk, signers, storage } from "./before-setup";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { Token } from "../src";
