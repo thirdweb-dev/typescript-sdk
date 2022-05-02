@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC20, ERC20, ERC20Metadata, TokenERC20 } from "contracts";
+import { DropERC20, IMintableERC20, TokenERC20 } from "contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
@@ -13,6 +13,8 @@ import {
 import { TokenMintInput } from "../../schema/tokens/token";
 import { PriceSchema } from "../../schema";
 import { BaseERC20 } from "../../types/eips";
+import { detectContractFeature } from "../../common";
+import { Erc20Mintable } from "./erc-20-mintable";
 
 /**
  * Standard ERC20 functions
@@ -24,6 +26,11 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20>
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
+
+  /**
+   * Mint tokens
+   */
+  public mint: Erc20Mintable | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -41,6 +48,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20>
       );
       this.options = SDKOptionsSchema.parse({});
     }
+    this.mint = this.detectErc20Mintable();
   }
 
   /**
@@ -316,8 +324,20 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20>
     );
   }
 
-  protected async normalizeAmount(amount: Amount): Promise<BigNumber> {
+  /**
+   * returns the wei amount from a token amount
+   * @internal
+   * @param amount
+   */
+  public async normalizeAmount(amount: Amount): Promise<BigNumber> {
     const decimals = await this.contractWrapper.readContract.decimals();
     return ethers.utils.parseUnits(PriceSchema.parse(amount), decimals);
+  }
+
+  private detectErc20Mintable(): Erc20Mintable | undefined {
+    if (detectContractFeature<IMintableERC20>(this.contractWrapper, "ERC20")) {
+      return new Erc20Mintable(this, this.contractWrapper);
+    }
+    return undefined;
   }
 }

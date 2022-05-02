@@ -183,10 +183,8 @@ describe("Custom Contracts", async () => {
     const token = await c.token.get();
     expect(token.name).to.eq("Token");
     expect(token.decimals).to.eq(18);
-    await c.functions.mintTo(
-      adminWallet.address,
-      ethers.utils.parseEther("100"),
-    );
+    invariant(c.token.mint, "ERC20Mintable undefined");
+    await c.token.mint.to(adminWallet.address, 100);
     const balance = await c.token.balance();
     expect(balance.displayValue).to.eq("100.0");
     await c.token.transfer(samWallet.address, 25);

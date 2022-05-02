@@ -8,9 +8,10 @@ import {
 } from "../constants/currency";
 import { Provider } from "@ethersproject/providers";
 import { formatUnits } from "ethers/lib/utils";
-import { Currency, CurrencyValue, Price } from "../types/currency";
+import { Amount, Currency, CurrencyValue, Price } from "../types/currency";
 import { PriceSchema } from "../schema/shared";
 import ERC20Abi from "../../abis/ERC20.json";
+import { BaseERC20 } from "../types/eips";
 
 export function isNativeToken(tokenAddress: string): boolean {
   return (
@@ -124,4 +125,12 @@ export async function approveErc20Allowance(
       allowance.add(totalPrice),
     ]);
   }
+}
+
+export async function normalizeAmount(
+  contractWrapper: ContractWrapper<BaseERC20>,
+  amount: Amount,
+): Promise<BigNumber> {
+  const decimals = await contractWrapper.readContract.decimals();
+  return ethers.utils.parseUnits(PriceSchema.parse(amount), decimals);
 }

@@ -1,4 +1,30 @@
 import ERC20Abi from "../../abis/ERC20.json";
+import IMintableERC20Abi from "../../abis/IMintableERC20.json";
+import MulticallAbi from "../../abis/Multicall.json";
+
+export const FEATURE_TOKEN_BATCH_MINTABLE = {
+  name: "ERC20BatchMintable",
+  namespace: "token.mint.batch",
+  docLinks: {
+    sdk: "sdk.erc20batchmintable",
+    contracts: "Multicall",
+  },
+  abi: MulticallAbi,
+  features: {},
+} as const;
+
+export const FEATURE_TOKEN_MINTABLE = {
+  name: "ERC20Mintable",
+  namespace: "token.mint",
+  docLinks: {
+    sdk: "sdk.erc20mintable",
+    contracts: "IMintableERC20",
+  },
+  abi: IMintableERC20Abi,
+  features: {
+    [FEATURE_TOKEN_BATCH_MINTABLE.name]: FEATURE_TOKEN_BATCH_MINTABLE,
+  },
+} as const;
 
 export const FEATURE_TOKEN = {
   name: "ERC20",
@@ -8,5 +34,7 @@ export const FEATURE_TOKEN = {
     contracts: "ERC20",
   },
   abi: ERC20Abi,
-  features: {},
+  features: {
+    [FEATURE_TOKEN_MINTABLE.name]: FEATURE_TOKEN_MINTABLE,
+  },
 } as const;
