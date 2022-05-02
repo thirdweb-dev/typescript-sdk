@@ -1,5 +1,5 @@
 import { Erc1155 } from "../core/classes/erc-1155";
-import { TokenERC1155, TokenERC1155__factory } from "contracts";
+import { TokenERC1155 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
@@ -50,7 +50,7 @@ import { QueryAllParams } from "../types";
 export class Edition extends Erc1155<TokenERC1155> {
   static contractType = "edition" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractFactory = TokenERC1155__factory;
+  static contractAbi = require("../../abis/TokenERC1155.json");
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private _query = this.query!;
@@ -115,7 +115,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     contractWrapper = new ContractWrapper<TokenERC1155>(
       network,
       address,
-      Edition.contractFactory.abi,
+      Edition.contractAbi,
       options,
     ),
   ) {

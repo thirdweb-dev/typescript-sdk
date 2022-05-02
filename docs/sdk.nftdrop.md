@@ -36,7 +36,7 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [claimConditions](./sdk.nftdrop.claimconditions.md) |  | [DropClaimConditions](./sdk.dropclaimconditions.md)<!-- -->&lt;DropERC721&gt; | Configure claim conditions |
-|  [contractFactory](./sdk.nftdrop.contractfactory.md) | <code>static</code> | typeof DropERC721\_\_factory |  |
+|  [contractAbi](./sdk.nftdrop.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.nftdrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.nftdrop.contracttype.md) | <code>static</code> | "nft-drop" |  |
 |  [encoder](./sdk.nftdrop.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;DropERC721&gt; |  |

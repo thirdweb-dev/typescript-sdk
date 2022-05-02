@@ -1,4 +1,4 @@
-import { IERC20__factory, VoteERC20, VoteERC20__factory } from "contracts";
+import { ERC20__factory, VoteERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import {
   ContractInterceptor,
@@ -45,7 +45,7 @@ import { ProposalCreatedEvent } from "contracts/VoteERC20";
  */
 export class Vote implements UpdateableNetwork {
   static contractType = "vote" as const;
-  static contractFactory = VoteERC20__factory;
+  static contractAbi = require("../../abis/VoteERC20.json");
   /**
    * @internal
    */
@@ -71,7 +71,7 @@ export class Vote implements UpdateableNetwork {
     contractWrapper = new ContractWrapper<VoteERC20>(
       network,
       address,
-      Vote.contractFactory.abi,
+      Vote.contractAbi,
       options,
     ),
   ) {
@@ -268,7 +268,7 @@ export class Vote implements UpdateableNetwork {
    * @returns - The balance of the project in the native token of the chain
    */
   public async balanceOfToken(tokenAddress: string): Promise<CurrencyValue> {
-    const erc20 = IERC20__factory.connect(
+    const erc20 = ERC20__factory.connect(
       tokenAddress,
       this.contractWrapper.getProvider(),
     );

@@ -3,8 +3,9 @@ import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
 import {
   DropERC20,
-  DropERC20__factory,
   DropERC721,
+  ERC20Metadata,
+  ERC20Metadata__factory,
   IERC20,
   IERC20__factory,
 } from "contracts";
@@ -372,9 +373,9 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
 
   private async getTokenDecimals(): Promise<number> {
     if (
-      implementsInterface<DropERC20>(
+      implementsInterface<ERC20Metadata>(
         this.contractWrapper,
-        DropERC20__factory.createInterface(),
+        ERC20Metadata__factory.createInterface(),
       )
     ) {
       return this.contractWrapper.readContract.decimals();

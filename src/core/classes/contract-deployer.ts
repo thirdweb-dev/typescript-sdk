@@ -1,8 +1,8 @@
 import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
 import { z } from "zod";
-import type { ContractRegistry } from "./registry";
+import { ContractRegistry } from "./registry";
 import { getContractAddressByChainId } from "../../constants/addresses";
-import type { ContractFactory } from "./factory";
+import { ContractFactory } from "./factory";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
@@ -206,8 +206,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
           "twBYOCRegistry",
         );
-        const module = await import("./registry");
-        return new module.ContractRegistry(
+        return new ContractRegistry(
           registryAddress,
           byocRegistryAddress,
           this.getProvider(),
@@ -233,8 +232,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
           "twFactory",
         );
-        const module = await import("./factory");
-        return new module.ContractFactory(
+        return new ContractFactory(
           factoryAddress,
           this.getSignerOrProvider(),
           this.storage,

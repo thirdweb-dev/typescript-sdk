@@ -1,5 +1,5 @@
 import { Erc1155 } from "../core/classes/erc-1155";
-import { DropERC1155, DropERC1155__factory } from "contracts";
+import { DropERC1155 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
@@ -53,7 +53,7 @@ import { EditionMetadata, EditionMetadataOwner } from "../schema";
 export class EditionDrop extends Erc1155<DropERC1155> {
   static contractType = "edition-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractFactory = DropERC1155__factory;
+  static contractAbi = require("../../abis/DropERC1155.json");
   /**
    * @internal
    */
@@ -129,7 +129,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     contractWrapper = new ContractWrapper<DropERC1155>(
       network,
       address,
-      EditionDrop.contractFactory.abi,
+      EditionDrop.contractAbi,
       options,
     ),
   ) {
@@ -368,6 +368,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       quantity,
       await this.claimConditions.getActive(tokenId),
       (await this.metadata.get()).merkle,
+      0,
       this.contractWrapper,
       this.storage,
       proofs,

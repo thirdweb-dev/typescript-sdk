@@ -36,7 +36,7 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [claimConditions](./sdk.editiondrop.claimconditions.md) |  | [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Configure claim conditions for each NFT |
-|  [contractFactory](./sdk.editiondrop.contractfactory.md) | <code>static</code> | typeof DropERC1155\_\_factory |  |
+|  [contractAbi](./sdk.editiondrop.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.editiondrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.editiondrop.contracttype.md) | <code>static</code> | "edition-drop" |  |
 |  [encoder](./sdk.editiondrop.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;DropERC1155&gt; |  |

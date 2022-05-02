@@ -1,7 +1,4 @@
-import {
-  Marketplace as MarketplaceContract,
-  Marketplace__factory,
-} from "contracts";
+import { Marketplace as MarketplaceContract } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractEncoder } from "../core/classes/contract-encoder";
@@ -49,7 +46,7 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 export class Marketplace implements UpdateableNetwork {
   static contractType = "marketplace" as const;
   static contractRoles = ["admin", "lister", "asset"] as const;
-  static contractFactory = Marketplace__factory;
+  static contractAbi = require("../../abis/Marketplace.json");
   /**
    * @internal
    */
@@ -153,7 +150,7 @@ export class Marketplace implements UpdateableNetwork {
     contractWrapper = new ContractWrapper<MarketplaceContract>(
       network,
       address,
-      Marketplace.contractFactory.abi,
+      Marketplace.contractAbi,
       options,
     ),
   ) {

@@ -6,7 +6,7 @@ import type {
 } from "../core";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { TokenERC721, TokenERC721__factory } from "contracts";
+import { TokenERC721 } from "contracts";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
@@ -43,7 +43,7 @@ import { QueryAllParams } from "../types";
 export class NFTCollection extends Erc721<TokenERC721> {
   static contractType = "nft-collection" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractFactory = TokenERC721__factory;
+  static contractAbi = require("../../abis/TokenERC721.json");
   /**
    * @internal
    */
@@ -114,7 +114,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     contractWrapper = new ContractWrapper<TokenERC721>(
       network,
       address,
-      NFTCollection.contractFactory.abi,
+      NFTCollection.contractAbi,
       options,
     ),
   ) {

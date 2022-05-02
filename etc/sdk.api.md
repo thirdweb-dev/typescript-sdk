@@ -12,7 +12,6 @@ import { BigNumberish } from 'ethers';
 import { BytesLike } from 'ethers';
 import { CallOverrides } from 'ethers';
 import { CallOverrides as CallOverrides_2 } from '@ethersproject/contracts';
-import { ContractFactory } from 'ethers';
 import { ContractInterface } from 'ethers';
 import type { ContractTransaction } from 'ethers';
 import { ethers } from 'ethers';
@@ -28,7 +27,7 @@ import { ListenerFn } from 'eventemitter2';
 import { Log } from '@ethersproject/providers';
 import { Network } from '@ethersproject/providers';
 import { Networkish } from '@ethersproject/providers';
-import { Overrides } from 'ethers';
+import type { Overrides } from 'ethers';
 import type { PayableOverrides } from 'ethers';
 import type { PopulatedTransaction } from 'ethers';
 import { Provider } from '@ethersproject/providers';
@@ -37,7 +36,6 @@ import { Signer } from 'ethers';
 import { Signer as Signer_2 } from '@ethersproject/abstract-signer';
 import { TransactionReceipt } from '@ethersproject/providers';
 import { TransactionReceipt as TransactionReceipt_2 } from '@ethersproject/abstract-provider';
-import type { TransactionRequest } from '@ethersproject/providers';
 import type { utils } from 'ethers';
 import { z } from 'zod';
 import { ZodArray } from 'zod';
@@ -919,10 +917,8 @@ export class DuplicateLeafsError extends Error {
 export class Edition extends Erc1155<TokenERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "TokenERC1155__factory" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static contractFactory: typeof TokenERC1155__factory;
+    static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
@@ -1067,10 +1063,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
     claimConditions: DropErc1155ClaimConditions;
     claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "DropERC1155__factory" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static contractFactory: typeof DropERC1155__factory;
+    static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
@@ -1956,10 +1950,8 @@ export class Marketplace implements UpdateableNetwork {
     allowListingFromSpecificAssetOnly(contractAddress: string): Promise<void>;
     auction: MarketplaceAuction;
     buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish, receiver?: string): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "Marketplace__factory" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static contractFactory: typeof Marketplace__factory;
+    static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "lister", "asset"];
     // (undocumented)
@@ -2219,10 +2211,8 @@ export interface NewDirectListing {
 export class NFTCollection extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "TokenERC721__factory" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static contractFactory: typeof TokenERC721__factory;
+    static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
@@ -2269,7 +2259,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
         seller_fee_basis_points: ZodDefault<ZodNumber>;
         fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
         }>, {
-        symbol: ZodDefault<ZodOptional<ZodString>>;
+        symbol: ZodDefault<ZodOptional<ZodString>>; /**
+        * @internal
+        */
         }>, {
         platform_fee_basis_points: ZodDefault<ZodNumber>;
         platform_fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
@@ -2313,7 +2305,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
         seller_fee_basis_points: ZodDefault<ZodNumber>;
         fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
         }>, {
-        symbol: ZodDefault<ZodOptional<ZodString>>;
+        symbol: ZodDefault<ZodOptional<ZodString>>; /**
+        * @internal
+        */
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         description?: string | undefined;
@@ -2342,7 +2336,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
         seller_fee_basis_points: ZodDefault<ZodNumber>;
         fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
         }>, {
-        symbol: ZodDefault<ZodOptional<ZodString>>;
+        symbol: ZodDefault<ZodOptional<ZodString>>; /**
+        * @internal
+        */
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -2390,10 +2386,8 @@ export class NFTDrop extends Erc721<DropERC721> {
     claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     claimConditions: DropClaimConditions<DropERC721>;
     claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    // Warning: (ae-forgotten-export) The symbol "DropERC721__factory" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static contractFactory: typeof DropERC721__factory;
+    static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
@@ -2449,22 +2443,7 @@ export class NFTDrop extends Erc721<DropERC721> {
         }>, {
         primary_sale_recipient: ZodEffects<ZodString, string, string>;
         }>, {
-        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>; /**
-        * Setup a collection of one-of-one NFTs that are minted as users claim them.
-        *
-        * @example
-        *
-        * ```javascript
-        * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
-        *
-        * // You can switch out this provider with any wallet or provider setup you like.
-        * const provider = ethers.Wallet.createRandom();
-        * const sdk = new ThirdwebSDK(provider);
-        * const contract = sdk.getNFTDrop("{{contract_address}}");
-        * ```
-        *
-        * @public
-        */
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
         description?: string | undefined;
         image?: any;
@@ -2623,10 +2602,8 @@ export class Pack implements UpdateableNetwork {
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber>;
     balanceOf(address: string, tokenId: string): Promise<BigNumber>;
-    // Warning: (ae-forgotten-export) The symbol "Pack__factory" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static contractFactory: typeof Pack__factory;
+    static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
@@ -3642,10 +3619,6 @@ export type SignerOrProvider = Signer_2 | Provider;
 // @beta
 export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract> implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
-    // Warning: (ae-forgotten-export) The symbol "ThirdwebContract__factory" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    static contractFactory: typeof ThirdwebContract__factory;
     // (undocumented)
     static contractType: "custom";
     edition: Erc1155<BaseERC1155> | undefined;
@@ -4169,10 +4142,8 @@ export class Split implements UpdateableNetwork {
             displayValue: string;
         };
     }>;
-    // Warning: (ae-forgotten-export) The symbol "Split__factory" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static contractFactory: typeof Split__factory;
+    static contractAbi: any;
     // (undocumented)
     static contractType: "split";
     distribute(): Promise<TransactionResult>;
@@ -4428,10 +4399,8 @@ export class Token extends Erc20<TokenERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
     burn(amount: Amount): Promise<TransactionResult>;
     burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "TokenERC20__factory" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static contractFactory: typeof TokenERC20__factory;
+    static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
@@ -4571,10 +4540,8 @@ export class TokenDrop extends Erc20<DropERC20> {
     claim(amount: Amount, proofs?: BytesLike[]): Promise<TransactionResult>;
     claimConditions: DropClaimConditions<DropERC20>;
     claimTo(destinationAddress: string, amount: Amount, proofs?: BytesLike[]): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "DropERC20__factory" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static contractFactory: typeof DropERC20__factory;
+    static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "transfer"];
     // (undocumented)
@@ -4832,10 +4799,8 @@ export class Vote implements UpdateableNetwork {
     balance(): Promise<CurrencyValue>;
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     canExecute(proposalId: string): Promise<boolean>;
-    // Warning: (ae-forgotten-export) The symbol "VoteERC20__factory" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static contractFactory: typeof VoteERC20__factory;
+    static contractAbi: any;
     // (undocumented)
     static contractType: "vote";
     // (undocumented)

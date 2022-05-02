@@ -1,5 +1,5 @@
 import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
-import { TokenERC20, TokenERC20__factory } from "contracts";
+import { TokenERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {
@@ -41,7 +41,7 @@ import { AddressZero } from "@ethersproject/constants";
 export class Token extends Erc20<TokenERC20> {
   static contractType = "token" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractFactory = TokenERC20__factory;
+  static contractAbi = require("../../abis/TokenERC20.json");
   /**
    * @internal
    */
@@ -82,11 +82,12 @@ export class Token extends Erc20<TokenERC20> {
     contractWrapper = new ContractWrapper<TokenERC20>(
       network,
       address,
-      Token.contractFactory.abi,
+      Token.contractAbi,
       options,
     ),
   ) {
     super(contractWrapper, storage, options);
+    console.log(Token.contractAbi);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Token.schema,

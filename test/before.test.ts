@@ -3,11 +3,21 @@ import {
   ByocFactory__factory,
   ByocRegistry,
   ByocRegistry__factory,
+  DropERC1155__factory,
+  DropERC20__factory,
+  DropERC721__factory,
+  Marketplace__factory,
+  Pack__factory,
+  Split__factory,
+  TokenERC1155__factory,
+  TokenERC20__factory,
+  TokenERC721__factory,
   TWFactory,
   TWFactory__factory,
   TWFee__factory,
   TWRegistry,
   TWRegistry__factory,
+  VoteERC20__factory,
 } from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "ethers";
@@ -21,6 +31,13 @@ import {
   Pack,
   ThirdwebSDK,
   Vote,
+  Token,
+  NFTCollection,
+  NFTDrop,
+  Edition,
+  EditionDrop,
+  Split,
+  TokenDrop,
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
 import { ChainId } from "../src/constants/chains";
@@ -159,8 +176,41 @@ before(async () => {
     if (contractType === "custom") {
       continue;
     }
-    const contract = CONTRACTS_MAP[contractType as ContractType];
-    const factory = contract.contractFactory;
+    let factory;
+    switch (contractType) {
+      case Token.contractType:
+        factory = TokenERC20__factory;
+        break;
+      case TokenDrop.contractType:
+        factory = DropERC20__factory;
+        break;
+      case NFTCollection.contractType:
+        factory = TokenERC721__factory;
+        break;
+      case NFTDrop.contractType:
+        factory = DropERC721__factory;
+        break;
+      case Edition.contractType:
+        factory = TokenERC1155__factory;
+        break;
+      case EditionDrop.contractType:
+        factory = DropERC1155__factory;
+        break;
+      case Split.contractType:
+        factory = Split__factory;
+        break;
+      case Vote.contractType:
+        factory = VoteERC20__factory;
+        break;
+      case Marketplace.contractType:
+        factory = Marketplace__factory;
+        break;
+      case Pack.contractType:
+        factory = Pack__factory;
+        break;
+      default:
+        throw new Error(`No factory for contract: ${contractType}`);
+    }
 
     const contractFactory = new ethers.ContractFactory(
       factory.abi,

@@ -1,8 +1,8 @@
 import { ContractWrapper } from "./contract-wrapper";
 import {
+  ERC1155__factory,
   ERC165__factory,
-  IERC1155__factory,
-  IERC721__factory,
+  ERC721__factory,
   IMarketplace,
   Marketplace,
 } from "contracts";
@@ -477,7 +477,7 @@ export class MarketplaceDirect {
     const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
     const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
     if (isERC721) {
-      const asset = IERC721__factory.connect(
+      const asset = ERC721__factory.connect(
         listing.assetContractAddress,
         provider,
       );
@@ -486,7 +486,7 @@ export class MarketplaceDirect {
         listing.sellerAddress.toLowerCase()
       );
     } else if (isERC1155) {
-      const asset = IERC1155__factory.connect(
+      const asset = ERC1155__factory.connect(
         listing.assetContractAddress,
         provider,
       );

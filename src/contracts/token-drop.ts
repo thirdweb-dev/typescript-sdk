@@ -1,4 +1,4 @@
-import { DropERC20, DropERC20__factory } from "contracts";
+import { DropERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {
@@ -42,7 +42,7 @@ import { AddressZero } from "@ethersproject/constants";
 export class TokenDrop extends Erc20<DropERC20> {
   static contractType = "token-drop" as const;
   static contractRoles = ["admin", "transfer"] as const;
-  static contractFactory = DropERC20__factory;
+  static contractAbi = require("../../abis/DropERC20.json");
   /**
    * @internal
    */
@@ -93,7 +93,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     contractWrapper = new ContractWrapper<DropERC20>(
       network,
       address,
-      TokenDrop.contractFactory.abi,
+      TokenDrop.contractAbi,
       options,
     ),
   ) {
@@ -316,6 +316,7 @@ export class TokenDrop extends Erc20<DropERC20> {
       quantity,
       await this.claimConditions.getActive(),
       (await this.metadata.get()).merkle,
+      await this.contractWrapper.readContract.decimals(),
       this.contractWrapper,
       this.storage,
       proofs,

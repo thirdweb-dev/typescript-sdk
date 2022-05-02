@@ -27,7 +27,7 @@ import { ContractDeployer } from "./classes/contract-deployer";
 import { SmartContract } from "../contracts/smart-contract";
 import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
-import type { ContractPublisher } from "./classes/contract-publisher";
+import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
 import { getContractAddressByChainId } from "../constants";
 
@@ -364,8 +364,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           chainId,
           "byocFactory",
         );
-        const module = await import("./classes/contract-publisher");
-        return new module.ContractPublisher(
+        return new ContractPublisher(
           factoryAddress,
           this.getSignerOrProvider(),
           this.options,

@@ -28,8 +28,6 @@ import {
 import { createSnapshot } from "./snapshots";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
 import { Provider } from "@ethersproject/providers";
-import { implementsInterface } from "./feature-detection";
-import { DropERC20, DropERC20__factory } from "contracts";
 import { IDropClaimCondition } from "contracts/DropERC20";
 
 /**
@@ -41,20 +39,12 @@ export async function prepareClaim(
   quantity: BigNumberish,
   activeClaimCondition: ClaimCondition,
   merkleMetadata: Record<string, string>,
+  tokenDecimals: number,
   contractWrapper: ContractWrapper<any>,
   storage: IStorage,
   proofs: BytesLike[] = [hexZeroPad([0], 32)],
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
-  let tokenDecimals = 0;
-  if (
-    implementsInterface<DropERC20>(
-      contractWrapper,
-      DropERC20__factory.createInterface(),
-    )
-  ) {
-    tokenDecimals = await contractWrapper.readContract.decimals();
-  }
   let maxClaimable = BigNumber.from(0);
 
   try {
