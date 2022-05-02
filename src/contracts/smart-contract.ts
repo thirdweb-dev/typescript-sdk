@@ -17,8 +17,6 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   AccessControlEnumerable,
   AccessControlEnumerable__factory,
-  ERC1155Metadata__factory,
-  ERC20Metadata__factory,
   IThirdwebContract,
   IThirdwebPlatformFee,
   IThirdwebPlatformFee__factory,
@@ -224,12 +222,7 @@ export class SmartContract<
   }
 
   private detectErc20() {
-    if (
-      implementsInterface<BaseERC20>(
-        this.contractWrapper,
-        ERC20Metadata__factory.createInterface(),
-      )
-    ) {
+    if (detectContractFeature<BaseERC20>(this.contractWrapper, "ERC20")) {
       return new Erc20(this.contractWrapper, this.storage, this.options);
     }
     return undefined;
@@ -243,12 +236,7 @@ export class SmartContract<
   }
 
   private detectErc1155() {
-    if (
-      implementsInterface<BaseERC1155>(
-        this.contractWrapper,
-        ERC1155Metadata__factory.createInterface(), // TODO should probably be more generic here to support multi interfaces
-      )
-    ) {
+    if (detectContractFeature<BaseERC1155>(this.contractWrapper, "ERC1155")) {
       return new Erc1155(this.contractWrapper, this.storage, this.options);
     }
     return undefined;

@@ -73,7 +73,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
   });
 
   it("mint additional suply", async () => {
-    const tx = await bundleContract.mint({
+    const tx = await bundleContract.mintToSelf({
       metadata: {
         name: "Bundle 1",
         description: "Bundle 1",
@@ -92,7 +92,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     const uri = await storage.uploadMetadata({
       name: "Test1",
     });
-    await bundleContract.mint({
+    await bundleContract.mintToSelf({
       metadata: uri,
       supply: 10,
     });
@@ -117,7 +117,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
   });
 
   it("should return all owned collection tokens", async () => {
-    await bundleContract.mint({
+    await bundleContract.mintToSelf({
       metadata: {
         name: "Bundle 1",
         description: "Bundle 1",
@@ -147,7 +147,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
   });
 
   it("should airdrop edition tokens to different wallets", async () => {
-    await bundleContract.mint({
+    await bundleContract.mintToSelf({
       metadata: {
         name: "Bundle 1",
         description: "Bundle 1",
@@ -175,7 +175,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
   });
 
   it("should fail airdrop because not enough NFTs owned", async () => {
-    await bundleContract.mint({
+    await bundleContract.mintToSelf({
       metadata: {
         name: "Bundle 1",
         description: "Bundle 1",

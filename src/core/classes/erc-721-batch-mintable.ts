@@ -1,19 +1,20 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { ERC721, ERC721Metadata, IMintableERC721, Multicall } from "contracts";
+import { IMintableERC721, Multicall } from "contracts";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../../schema";
 import { TransactionResultWithId } from "../types";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { IStorage } from "../interfaces";
 import { Erc721 } from "./erc-721";
 import { TokensMintedEvent } from "contracts/IMintableERC721";
+import { BaseERC721 } from "../../types/eips";
 
 export class Erc721BatchMintable {
   private contractWrapper: ContractWrapper<IMintableERC721 & Multicall>;
   private storage: IStorage;
-  private erc721: Erc721<ERC721Metadata & ERC721>;
+  private erc721: Erc721<BaseERC721>;
 
   constructor(
-    erc721: Erc721<ERC721Metadata & ERC721>,
+    erc721: Erc721<BaseERC721>,
     contractWrapper: ContractWrapper<IMintableERC721 & Multicall>,
     storage: IStorage,
   ) {

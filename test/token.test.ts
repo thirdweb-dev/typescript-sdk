@@ -35,7 +35,7 @@ describe("Token Contract", async () => {
   });
 
   it("should mint tokens", async () => {
-    await currencyContract.mint("20");
+    await currencyContract.mintToSelf("20");
     assert.deepEqual(
       (await currencyContract.totalSupply()).value,
       ethers.utils.parseEther("20"),
@@ -49,7 +49,7 @@ describe("Token Contract", async () => {
   });
 
   it("should transfer tokens", async () => {
-    await currencyContract.mint(20.2);
+    await currencyContract.mintToSelf(20.2);
     await currencyContract.transfer(samWallet.address, 10.1);
     assert.deepEqual(
       (await currencyContract.balanceOf(adminWallet.address)).value,
@@ -64,7 +64,7 @@ describe("Token Contract", async () => {
   });
 
   it("should list current holders", async () => {
-    await currencyContract.mint(20);
+    await currencyContract.mintToSelf(20);
     await currencyContract.transfer(samWallet.address, "10");
     await currencyContract.transfer(bobWallet.address, "5");
     sdk.updateSignerOrProvider(samWallet);
@@ -85,7 +85,7 @@ describe("Token Contract", async () => {
   });
 
   it("should burn tokens", async () => {
-    await currencyContract.mint(20);
+    await currencyContract.mintToSelf(20);
     assert.deepEqual(
       (await currencyContract.balanceOf(adminWallet.address)).value,
       ethers.utils.parseEther("20"),
@@ -137,7 +137,7 @@ describe("Token Contract", async () => {
         amount: 10,
       },
     ];
-    await currencyContract.mint(20);
+    await currencyContract.mintToSelf(20);
     await currencyContract.transferBatch(batch);
 
     for (const b of batch) {

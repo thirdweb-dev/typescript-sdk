@@ -57,10 +57,10 @@ const contract = sdk.getEdition("{{contract_address}}");
 |  [getOwned(walletAddress)](./sdk.edition.getowned.md) |  | Get Owned NFTs |
 |  [getTotalCount()](./sdk.edition.gettotalcount.md) |  | Get the number of NFTs minted |
 |  [isTransferRestricted()](./sdk.edition.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
-|  [mint(metadataWithSupply)](./sdk.edition.mint.md) |  | Mint NFT for the connected wallet |
 |  [mintAdditionalSupply(tokenId, additionalSupply)](./sdk.edition.mintadditionalsupply.md) |  | Increase the supply of an existing NFT and mint it to the connected wallet |
 |  [mintAdditionalSupplyTo(to, tokenId, additionalSupply)](./sdk.edition.mintadditionalsupplyto.md) |  | Increase the supply of an existing NFT and mint it to a given wallet address |
 |  [mintBatch(metadatas)](./sdk.edition.mintbatch.md) |  | Mint Many NFTs for the connected wallet |
 |  [mintBatchTo(to, metadataWithSupply)](./sdk.edition.mintbatchto.md) |  | Mint Many NFTs with limited supplies |
 |  [mintTo(to, metadataWithSupply)](./sdk.edition.mintto.md) |  | Mint an NFT with a limited supply |
+|  [mintToSelf(metadataWithSupply)](./sdk.edition.minttoself.md) |  | Mint NFT for the connected wallet |
 

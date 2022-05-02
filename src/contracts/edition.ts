@@ -19,16 +19,14 @@ import {
   EditionMetadataOwner,
 } from "../schema/tokens/edition";
 import {
-  ContractInterceptor,
   ContractEncoder,
   ContractEvents,
+  ContractInterceptor,
   ContractPlatformFee,
 } from "../core/classes";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
-import { TokensMintedEvent } from "contracts/TokenERC1155";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
 import { QueryAllParams } from "../types";
@@ -56,6 +54,10 @@ export class Edition extends Erc1155<TokenERC1155> {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private _query = this.query!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _mint = this.mint!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _batchMint = this.mint!.batch!;
   /**
    * @internal
    */
@@ -191,10 +193,10 @@ export class Edition extends Erc1155<TokenERC1155> {
    *
    * @remarks See {@link Edition.mintTo}
    */
-  public async mint(
+  public async mintToSelf(
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    return this.mintTo(
+    return this._mint.to(
       await this.contractWrapper.getSignerAddress(),
       metadataWithSupply,
     );
@@ -232,29 +234,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     to: string,
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    const uri = await uploadOrExtractURI(
-      metadataWithSupply.metadata,
-      this.storage,
-    );
-    const receipt = await this.contractWrapper.sendTransaction("mintTo", [
-      to,
-      ethers.constants.MaxUint256,
-      uri,
-      metadataWithSupply.supply,
-    ]);
-    const event = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
-      receipt?.logs,
-    );
-    if (event.length === 0) {
-      throw new Error("TokenMinted event not found");
-    }
-    const id = event[0].args.tokenIdMinted;
-    return {
-      id,
-      receipt,
-      data: () => this.get(id.toString()),
-    };
+    return this._mint.to(to, metadataWithSupply);
   }
 
   /**
@@ -267,7 +247,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    return this.mintAdditionalSupplyTo(
+    return this._mint.additionalSupplyTo(
       await this.contractWrapper.getSignerAddress(),
       tokenId,
       additionalSupply,
@@ -286,18 +266,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    const metadata = await this.getTokenMetadata(tokenId);
-    const receipt = await this.contractWrapper.sendTransaction("mintTo", [
-      to,
-      tokenId,
-      metadata.uri,
-      additionalSupply,
-    ]);
-    return {
-      id: BigNumber.from(tokenId),
-      receipt,
-      data: () => this.get(tokenId),
-    };
+    return this._mint.additionalSupplyTo(to, tokenId, additionalSupply);
   }
 
   /**
@@ -308,7 +277,7 @@ export class Edition extends Erc1155<TokenERC1155> {
   public async mintBatch(
     metadatas: EditionMetadataOrUri[],
   ): Promise<TransactionResultWithId<EditionMetadata>[]> {
-    return this.mintBatchTo(
+    return this._batchMint.to(
       await this.contractWrapper.getSignerAddress(),
       metadatas,
     );
@@ -351,33 +320,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     to: string,
     metadataWithSupply: EditionMetadataOrUri[],
   ): Promise<TransactionResultWithId<EditionMetadata>[]> {
-    const metadatas = metadataWithSupply.map((a) => a.metadata);
-    const supplies = metadataWithSupply.map((a) => a.supply);
-    const uris = await uploadOrExtractURIs(metadatas, this.storage);
-    const encoded = uris.map((uri, index) =>
-      this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [
-        to,
-        ethers.constants.MaxUint256,
-        uri,
-        supplies[index],
-      ]),
-    );
-    const receipt = await this.contractWrapper.multiCall(encoded);
-    const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
-      receipt.logs,
-    );
-    if (events.length === 0 || events.length < metadatas.length) {
-      throw new Error("TokenMinted event not found, minting failed");
-    }
-    return events.map((e) => {
-      const id = e.args.tokenIdMinted;
-      return {
-        id,
-        receipt,
-        data: () => this.get(id),
-      };
-    });
+    return this._batchMint.to(to, metadataWithSupply);
   }
 
   /**

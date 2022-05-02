@@ -29,7 +29,7 @@ describe("Royalties", async () => {
       }),
     );
 
-    await bundleContract.mint({
+    await bundleContract.mintToSelf({
       metadata: {
         name: "Cool NFT",
       },

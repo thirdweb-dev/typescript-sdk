@@ -125,8 +125,9 @@ describe("Edition sig minting", async () => {
       ];
       const batch = await editionContract.signature.generateBatch(input);
 
-      for (const [i, v] of batch.entries()) {
-        const tx = await editionContract.signature.mint(v);
+      for (let i = 0; i < batch.length; i++) {
+        const entry = batch[i];
+        const tx = await editionContract.signature.mint(entry);
         const mintedId = (await editionContract.get(tx.id)).metadata.id;
         const nft = await editionContract.get(mintedId);
         assert.equal(input[i].metadata.name, nft.metadata.name);
@@ -240,7 +241,10 @@ describe("Edition sig minting", async () => {
         samWallet.address,
         "0",
       );
-      await editionContract.mint({ metadata: { name: "test" }, supply: 0 });
+      await editionContract.mintToSelf({
+        metadata: { name: "test" },
+        supply: 0,
+      });
       const payload = await editionContract.signature.generate({
         tokenId: "0",
         quantity: "1",

@@ -9,7 +9,7 @@ Standard ERC20 functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)> implements UpdateableNetwork 
+export declare class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements UpdateableNetwork 
 ```
 <b>Implements:</b> UpdateableNetwork
 
@@ -24,6 +24,7 @@ export declare class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Meta
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc20.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
+|  [mint](./sdk.erc20.mint.md) |  | Erc20Mintable \| undefined | Mint tokens |
 |  [options](./sdk.erc20.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [storage](./sdk.erc20.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
@@ -37,7 +38,6 @@ export declare class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Meta
 |  [balanceOf(address)](./sdk.erc20.balanceof.md) |  | Get Token Balance |
 |  [get()](./sdk.erc20.get.md) |  | Get the token Metadata (name, symbol, etc...) |
 |  [getAddress()](./sdk.erc20.getaddress.md) |  |  |
-|  [normalizeAmount(amount)](./sdk.erc20.normalizeamount.md) |  |  |
 |  [setAllowance(spender, amount)](./sdk.erc20.setallowance.md) |  | Allows the specified <code>spender</code> wallet to transfer the given <code>amount</code> of tokens to another wallet |
 |  [totalSupply()](./sdk.erc20.totalsupply.md) |  | The total supply for this Token |
 |  [transfer(to, amount)](./sdk.erc20.transfer.md) |  | Transfer Tokens |

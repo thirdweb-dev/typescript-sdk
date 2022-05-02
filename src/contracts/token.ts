@@ -49,6 +49,11 @@ export class Token extends Erc20<TokenERC20> {
    */
   static schema = TokenErc20ContractSchema;
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _mint = this.mint!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private _batchMint = this.mint!.batch!;
+
   public metadata: ContractMetadata<TokenERC20, typeof Token.schema>;
   public roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
   public encoder: ContractEncoder<TokenERC20>;
@@ -168,8 +173,8 @@ export class Token extends Erc20<TokenERC20> {
    *
    * @remarks See {@link Token.mintTo}
    */
-  public async mint(amount: Amount): Promise<TransactionResult> {
-    return this.mintTo(await this.contractWrapper.getSignerAddress(), amount);
+  public async mintToSelf(amount: Amount): Promise<TransactionResult> {
+    return this._mint.to(await this.contractWrapper.getSignerAddress(), amount);
   }
 
   /**
@@ -186,12 +191,7 @@ export class Token extends Erc20<TokenERC20> {
    * ```
    */
   public async mintTo(to: string, amount: Amount): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("mintTo", [
-        to,
-        await this.normalizeAmount(amount),
-      ]),
-    };
+    return this._mint.to(to, amount);
   }
 
   /**
@@ -217,16 +217,7 @@ export class Token extends Erc20<TokenERC20> {
    * ```
    */
   public async mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult> {
-    const encoded = [];
-    for (const arg of args) {
-      encoded.push(
-        this.contractWrapper.readContract.interface.encodeFunctionData(
-          "mintTo",
-          [arg.toAddress, await this.normalizeAmount(arg.amount)],
-        ),
-      );
-    }
-    return { receipt: await this.contractWrapper.multiCall(encoded) };
+    return this._batchMint.to(args);
   }
 
   /**
