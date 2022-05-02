@@ -68,6 +68,9 @@ const FEATURE_NFT = {
   },
 } as const;
 
+/**
+ * @internal
+ */
 export type Feature =
   | typeof FEATURE_NFT
   | typeof FEATURE_NFT_SUPPLY
@@ -75,12 +78,21 @@ export type Feature =
   | typeof FEATURE_NFT_MINTABLE
   | typeof FEATURE_NFT_BATCH_MINTABLE;
 
+/**
+ * @internal
+ */
 export type FeatureName = Feature["name"];
+/**
+ * @internal
+ */
 export type FeatureWithEnabled = Feature & {
   features: Record<string, FeatureWithEnabled>;
   enabled: boolean;
 };
 
+/**
+ * @internal
+ */
 export const SUPPORTED_FEATURES: Record<string, Feature> = {
   [FEATURE_NFT.name]: FEATURE_NFT,
 };
