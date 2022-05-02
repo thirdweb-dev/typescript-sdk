@@ -12,12 +12,13 @@ import {
 } from "../../common/currency";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { PriceSchema } from "../../schema";
+import { BaseERC20 } from "../../types/eips";
 
 /**
  * Standard ERC20 functions
  * @public
  */
-export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
+export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20>
   implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
