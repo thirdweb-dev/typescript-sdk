@@ -2,7 +2,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import {
   DropERC1155,
   ERC1155Enumerable,
-  ERC1155Enumerable__factory,
+  IMintableERC1155,
   TokenERC1155,
 } from "contracts";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
@@ -16,11 +16,12 @@ import {
   EditionMetadataOutputSchema,
 } from "../../schema/tokens/edition";
 import { fetchTokenMetadata } from "../../common/nft";
-import { implementsInterface, NotFoundError } from "../../common";
+import { detectContractFeature, NotFoundError } from "../../common";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { BaseERC1155 } from "../../types/eips";
 import { Erc1155Enumerable } from "./erc-1155-enumerable";
+import { Erc1155Mintable } from "./erc-1155-mintable";
 
 /**
  * Standard ERC1155 functions
@@ -34,6 +35,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
   protected options: SDKOptions;
 
   public query: Erc1155Enumerable | undefined;
+  public mint: Erc1155Mintable | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -52,6 +54,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
       this.options = SDKOptionsSchema.parse({});
     }
     this.query = this.detectErc1155Enumerable();
+    this.mint = this.detectErc1155Mintable();
   }
 
   /**
@@ -280,9 +283,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
    * @internal
    * @param tokenId - the token Id to fetch
    */
-  protected async getTokenMetadata(
-    tokenId: BigNumberish,
-  ): Promise<NFTMetadata> {
+  public async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.uri(tokenId);
     if (!tokenUri) {
       throw new NotFoundError();
@@ -292,12 +293,24 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
 
   private detectErc1155Enumerable(): Erc1155Enumerable | undefined {
     if (
-      implementsInterface<BaseERC1155 & ERC1155Enumerable>(
+      detectContractFeature<BaseERC1155 & ERC1155Enumerable>(
         this.contractWrapper,
-        ERC1155Enumerable__factory.createInterface(),
+        "ERC1155Enumerable",
       )
     ) {
       return new Erc1155Enumerable(this, this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc1155Mintable(): Erc1155Mintable | undefined {
+    if (
+      detectContractFeature<IMintableERC1155>(
+        this.contractWrapper,
+        "ERC1155Mintable",
+      )
+    ) {
+      return new Erc1155Mintable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }

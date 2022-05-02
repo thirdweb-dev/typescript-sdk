@@ -1,15 +1,11 @@
 import { ContractWrapper } from "./contract-wrapper";
-import {
-  ERC721Enumerable,
-  ERC721Enumerable__factory,
-  ERC721Supply,
-} from "contracts";
+import { ERC721Enumerable, ERC721Supply } from "contracts";
 import { BigNumber } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { NFTMetadataOwner } from "../../schema";
 import { Erc721 } from "./erc-721";
 import { BaseERC721 } from "../../types/eips";
-import { implementsInterface } from "../../common";
+import { detectContractFeature } from "../../common";
 import { Erc721Enumerable } from "./erc-721-enumerable";
 
 export class Erc721Supply {
@@ -69,9 +65,9 @@ export class Erc721Supply {
 
   private detectErc721Owned(): Erc721Enumerable | undefined {
     if (
-      implementsInterface<BaseERC721 & ERC721Enumerable>(
+      detectContractFeature<BaseERC721 & ERC721Enumerable>(
         this.contractWrapper,
-        ERC721Enumerable__factory.createInterface(),
+        "ERC721Enumerable",
       )
     ) {
       return new Erc721Enumerable(this.erc721, this.contractWrapper);

@@ -1,6 +1,3 @@
-/**
- * @internal
- */
 import {
   FEATURE_NFT,
   FEATURE_NFT_BATCH_MINTABLE,
@@ -15,9 +12,14 @@ import {
 } from "./erc20-features";
 import {
   FEATURE_EDITION,
+  FEATURE_EDITION_BATCH_MINTABLE,
   FEATURE_EDITION_ENUMERABLE,
+  FEATURE_EDITION_MINTABLE,
 } from "./erc1155-features";
 
+/**
+ * @internal
+ */
 export type Feature =
   | typeof FEATURE_TOKEN
   | typeof FEATURE_TOKEN_MINTABLE
@@ -28,7 +30,9 @@ export type Feature =
   | typeof FEATURE_NFT_MINTABLE
   | typeof FEATURE_NFT_BATCH_MINTABLE
   | typeof FEATURE_EDITION
-  | typeof FEATURE_EDITION_ENUMERABLE;
+  | typeof FEATURE_EDITION_ENUMERABLE
+  | typeof FEATURE_EDITION_MINTABLE
+  | typeof FEATURE_EDITION_BATCH_MINTABLE;
 
 /**
  * @internal

@@ -2,6 +2,7 @@ import { sdk, signers } from "./before-setup";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {
+  TokenERC1155__factory,
   TokenERC20__factory,
   TokenERC721__factory,
   VoteERC20__factory,
@@ -18,6 +19,7 @@ describe("Custom Contracts", async () => {
   let customContractAddress: string;
   let nftContractAddress: string;
   let tokenContractAddress: string;
+  let editionContractAddress: string;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -44,6 +46,17 @@ describe("Custom Contracts", async () => {
     sdk.updateSignerOrProvider(adminWallet);
     nftContractAddress = await sdk.deployer.deployNFTCollection({
       name: `Drop`,
+      description: "Test contract from tests",
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      primary_sale_recipient: samWallet.address,
+      seller_fee_basis_points: 500,
+      fee_recipient: bobWallet.address,
+      platform_fee_basis_points: 10,
+      platform_fee_recipient: adminWallet.address,
+    });
+    editionContractAddress = await sdk.deployer.deployEdition({
+      name: `Edition`,
       description: "Test contract from tests",
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
@@ -207,6 +220,26 @@ describe("Custom Contracts", async () => {
       name: "Custom NFT",
     });
     const nfts = await c.nft.query.all();
+    expect(nfts.length).to.eq(1);
+    expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
+
+  it("should detect feature: erc1155", async () => {
+    const c = await sdk.getContractFromAbi(
+      editionContractAddress,
+      TokenERC1155__factory.abi,
+    );
+    invariant(c, "Contract undefined");
+    invariant(c.edition, "ERC1155 undefined");
+    invariant(c.edition.query, "ERC1155 query undefined");
+    invariant(c.edition.mint, "ERC1155 minter undefined");
+    await c.edition.mint.to(adminWallet.address, {
+      metadata: {
+        name: "Custom NFT",
+      },
+      supply: 100,
+    });
+    const nfts = await c.edition.query.all();
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
