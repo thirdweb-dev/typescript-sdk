@@ -29,7 +29,6 @@ describe("Events", async () => {
   it("should emit Transaction events", async () => {
     let txStatus = "";
     dropContract.events.addTransactionListener((event) => {
-      console.log(event);
       if (!txStatus) {
         expect(event.status).to.eq("submitted");
       } else if (txStatus === "submitted") {
@@ -40,6 +39,7 @@ describe("Events", async () => {
     await dropContract.setApprovalForAll(ethers.constants.AddressZero, true);
   });
 
+  // TODO
   it.skip("should emit Signature events", async () => {
     const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
     const provider = ethers.getDefaultProvider(RPC_URL);

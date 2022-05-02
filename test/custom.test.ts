@@ -209,7 +209,6 @@ describe("Custom Contracts", async () => {
       name: "Custom NFT",
     });
     const nfts = await c.nft.query.all();
-    console.log((await c.nft.query.totalSupply()).toNumber());
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });

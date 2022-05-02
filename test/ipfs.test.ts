@@ -38,7 +38,6 @@ describe.skip("IPFS Uploads", async () => {
         "ipfs://QmbLjvQqCVhjsvGxh9u2pv89sg8g7psTscZJ9spNyHn9GH/0",
         storage,
       );
-      console.log(params);
       expect(params[0].type === "bytes32");
       expect(params[0].name === "uri");
       expect(params[1].type === "uint256");
@@ -50,7 +49,6 @@ describe.skip("IPFS Uploads", async () => {
         "ipfs://QmbLjvQqCVhjsvGxh9u2pv89sg8g7psTscZJ9spNyHn9GH/0",
         storage,
       );
-      console.log(metadata.bytecode);
     });
   });
 
@@ -140,7 +138,6 @@ describe.skip("IPFS Uploads", async () => {
       readFileSync("test/test.mp4"),
     ];
     const cid = await storage.uploadBatch(sampleObjects);
-    console.log(cid);
   });
 
   it("should upload files with filenames correctly", async () => {
@@ -156,7 +153,6 @@ describe.skip("IPFS Uploads", async () => {
       },
     ];
     const cid = await storage.uploadBatch(sampleObjects);
-    console.log("filenames", cid);
     assert(
       (await getFile(`${cid}test.jpeg`)).headers
         ?.get("content-type")
@@ -257,7 +253,6 @@ describe.skip("IPFS Uploads", async () => {
     for (let i = 0; i < metadatas.length; i++) {
       const expected = sampleObjects[i];
       const downloaded = metadatas[i];
-      console.log(downloaded);
       expect(downloaded.name).to.be.eq(expected.name);
       expect(downloaded.image.endsWith(`${i}`)).to.eq(true);
     }
@@ -275,7 +270,6 @@ describe.skip("IPFS Uploads", async () => {
     const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
       sampleObjects,
     );
-    console.log(baseUri, metadataUris);
     assert(metadataUris.length === sampleObjects.length);
     assert(
       metadataUris[0] === sampleObjects[0],

@@ -46,7 +46,6 @@ describe("Token Drop Contract", async () => {
   });
 
   it("should allow a snapshot to be set", async () => {
-    console.log("Setting claim condition");
     await dropContract.claimConditions.set([
       {
         startTime: new Date(Date.now() / 2),
@@ -58,11 +57,9 @@ describe("Token Drop Contract", async () => {
         snapshot: [bobWallet.address],
       },
     ]);
-    console.log("Claim condition set");
 
     const metadata = await dropContract.metadata.get();
     const merkles = metadata.merkle;
-    console.log(merkles);
 
     expect(merkles).have.property(
       "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
@@ -272,7 +269,6 @@ describe("Token Drop Contract", async () => {
         tree.getHexRoot(),
       );
       expect(verified).to.eq(true);
-      console.log("Leaf verified =", leaf, verified);
     }
   });
 
@@ -338,7 +334,6 @@ describe("Token Drop Contract", async () => {
         },
       ]);
       const active = await dropContract.claimConditions.getActive();
-      console.log(active);
     });
 
     it("should check if its been long enough since the last claim", async () => {
@@ -576,7 +571,6 @@ describe("Token Drop Contract", async () => {
     expect(oldConditions.length).to.be.equal(2);
     await dropContract.claimConditions.update(0, { waitInSeconds: 10 });
     let updatedConditions = await dropContract.claimConditions.getAll();
-    console.log(updatedConditions[0]);
     expect(updatedConditions[0].maxQuantity).to.be.deep.equal("1.2");
     expect(updatedConditions[0].waitInSeconds).to.be.deep.equal(
       BigNumber.from(10),

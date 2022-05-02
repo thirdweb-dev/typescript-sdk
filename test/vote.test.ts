@@ -101,7 +101,6 @@ describe("Vote Contract", async () => {
   });
   it("should be able to execute proposal even when `executions` is not passed", async () => {
     await sdk.updateSignerOrProvider(samWallet);
-    console.log(samWallet.address);
     await currencyContract.delegateTo(samWallet.address);
     const proposalId = (await voteContract.propose("Mint Tokens")).id;
     await voteContract.vote(proposalId.toString(), 1);
@@ -120,15 +119,11 @@ describe("Vote Contract", async () => {
     for (let i = 0; i <= 10; i++) {
       const current = await provider.getBlock(latest.number - i);
       const previous = await provider.getBlock(latest.number - i - 1);
-      console.log(current.timestamp, previous.timestamp);
-      console.log(current.timestamp - previous.timestamp);
-
       const diff = current.timestamp - previous.timestamp;
       blockTimes.push(diff);
     }
 
     const sum = blockTimes.reduce((result, a) => result + a, 0);
-    console.log(sum / blockTimes.length);
   });
 
   it("should permit a proposal to be passed if it receives the right votes", async () => {

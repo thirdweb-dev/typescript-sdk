@@ -290,7 +290,6 @@ describe("Edition sig minting", async () => {
       await sdk.updateSignerOrProvider(samWallet);
       await editionContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
-      console.log(ethers.utils.formatEther(newBalance.sub(oldBalance)));
       assert(
         oldBalance.sub(newBalance).gte(BigNumber.from(1)),
         "balance doesn't match",
