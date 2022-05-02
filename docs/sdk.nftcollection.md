@@ -35,7 +35,7 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [contractFactory](./sdk.nftcollection.contractfactory.md) | <code>static</code> | typeof TokenERC721\_\_factory |  |
+|  [contractAbi](./sdk.nftcollection.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.nftcollection.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.nftcollection.contracttype.md) | <code>static</code> | "nft-collection" |  |
 |  [encoder](./sdk.nftcollection.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;TokenERC721&gt; |  |

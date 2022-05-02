@@ -11,10 +11,9 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";
 import {
-  IERC1155__factory,
-  IERC20__factory,
+  ERC1155__factory,
+  ERC20__factory,
   Pack as PackContract,
-  Pack__factory,
 } from "contracts";
 import { PacksContractSchema } from "../schema/contracts/packs";
 import { ContractRoles } from "../core/classes/contract-roles";
@@ -56,7 +55,7 @@ import { PackAddedEvent, PackOpenRequestedEvent } from "contracts/Pack";
 export class Pack implements UpdateableNetwork {
   static contractType = "pack" as const;
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
-  static contractFactory = Pack__factory;
+  static contractAbi = require("../../abis/Pack.json");
   /**
    * @internal
    */
@@ -101,7 +100,7 @@ export class Pack implements UpdateableNetwork {
     contractWrapper = new ContractWrapper<PackContract>(
       network,
       address,
-      Pack.contractFactory.abi,
+      Pack.contractAbi,
       options,
     ),
   ) {
@@ -258,7 +257,7 @@ export class Pack implements UpdateableNetwork {
   public async getLinkBalance(): Promise<CurrencyValue> {
     const chainId = await this.contractWrapper.getChainID();
     const chainlink = ChainlinkVrf[chainId];
-    const erc20 = IERC20__factory.connect(
+    const erc20 = ERC20__factory.connect(
       chainlink.linkTokenAddress,
       this.contractWrapper.getProvider(),
     );
@@ -414,7 +413,7 @@ export class Pack implements UpdateableNetwork {
   public async create(
     args: IPackCreateArgs,
   ): Promise<TransactionResultWithId<PackMetadata>> {
-    const asset = IERC1155__factory.connect(
+    const asset = ERC1155__factory.connect(
       args.assetContract,
       this.contractWrapper.getSigner() || this.contractWrapper.getProvider(),
     );
@@ -534,7 +533,7 @@ export class Pack implements UpdateableNetwork {
   public async depositLink(amount: BigNumberish): Promise<TransactionResult> {
     const chainId = await this.contractWrapper.getChainID();
     const chainlink = ChainlinkVrf[chainId];
-    const erc20 = IERC20__factory.connect(
+    const erc20 = ERC20__factory.connect(
       chainlink.linkTokenAddress,
       this.contractWrapper.getProvider(),
     );

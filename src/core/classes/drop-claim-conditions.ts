@@ -3,10 +3,10 @@ import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
 import {
   DropERC20,
-  DropERC20__factory,
   DropERC721,
-  IERC20,
-  IERC20__factory,
+  ERC20,
+  ERC20Metadata,
+  ERC20Metadata__factory,
 } from "contracts";
 import { BigNumber, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
@@ -27,6 +27,7 @@ import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { implementsInterface } from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
+import ERC20Abi from "../../../abis/ERC20.json";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -249,10 +250,10 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
           reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       } else {
-        const erc20 = new ContractWrapper<IERC20>(
+        const erc20 = new ContractWrapper<ERC20>(
           provider,
           claimCondition.currencyAddress,
-          IERC20__factory.abi,
+          ERC20Abi,
           {},
         );
         const balance = await erc20.readContract.balanceOf(addressToCheck);
@@ -372,9 +373,9 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
 
   private async getTokenDecimals(): Promise<number> {
     if (
-      implementsInterface<DropERC20>(
+      implementsInterface<ERC20Metadata>(
         this.contractWrapper,
-        DropERC20__factory.createInterface(),
+        ERC20Metadata__factory.createInterface(),
       )
     ) {
       return this.contractWrapper.readContract.decimals();

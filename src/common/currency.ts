@@ -1,7 +1,7 @@
 import { AddressZero } from "@ethersproject/constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { IERC20, IERC20__factory, TokenERC20__factory } from "contracts";
+import { ERC20, ERC20Metadata__factory } from "contracts";
 import {
   getNativeTokenByChainId,
   NATIVE_TOKEN_ADDRESS,
@@ -10,6 +10,7 @@ import { Provider } from "@ethersproject/providers";
 import { formatUnits } from "ethers/lib/utils";
 import { Currency, CurrencyValue, Price } from "../types/currency";
 import { PriceSchema } from "../schema/shared";
+import ERC20Abi from "../../abis/ERC20.json";
 
 export function isNativeToken(tokenAddress: string): boolean {
   return (
@@ -43,7 +44,7 @@ export async function fetchCurrencyMetadata(
       decimals: nativeToken.decimals,
     };
   } else {
-    const erc20 = TokenERC20__factory.connect(asset, provider);
+    const erc20 = ERC20Metadata__factory.connect(asset, provider);
     const [name, symbol, decimals] = await Promise.all([
       erc20.name(),
       erc20.symbol(),
@@ -81,10 +82,10 @@ export async function setErc20Allowance(
   } else {
     const signer = contractToApprove.getSigner();
     const provider = contractToApprove.getProvider();
-    const erc20 = new ContractWrapper<IERC20>(
+    const erc20 = new ContractWrapper<ERC20>(
       signer || provider,
       currencyAddress,
-      IERC20__factory.abi,
+      ERC20Abi,
       {},
     );
 
@@ -107,10 +108,10 @@ export async function approveErc20Allowance(
 ) {
   const signer = contractToApprove.getSigner();
   const provider = contractToApprove.getProvider();
-  const erc20 = new ContractWrapper<IERC20>(
+  const erc20 = new ContractWrapper<ERC20>(
     signer || provider,
     currencyAddress,
-    IERC20__factory.abi,
+    ERC20Abi,
     {},
   );
   const owner = await contractToApprove.getSignerAddress();

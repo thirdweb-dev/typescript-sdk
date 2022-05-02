@@ -49,7 +49,6 @@ const tx = await contract.nft.mint.to("0x...", {
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [contractFactory](./sdk.smartcontract.contractfactory.md) | <code>static</code> | typeof ThirdwebContract\_\_factory | <b><i>(BETA)</i></b> |
 |  [contractType](./sdk.smartcontract.contracttype.md) | <code>static</code> | "custom" | <b><i>(BETA)</i></b> |
 |  [edition](./sdk.smartcontract.edition.md) |  | [Erc1155](./sdk.erc1155.md)<!-- -->&lt;BaseERC1155&gt; \| undefined | <b><i>(BETA)</i></b> Auto-detects ERC1155 standard functions. |
 |  [estimator](./sdk.smartcontract.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TContract&gt; | <b><i>(BETA)</i></b> |

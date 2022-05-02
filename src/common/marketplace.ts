@@ -15,11 +15,11 @@ import invariant from "tiny-invariant";
 import { fetchCurrencyValue } from "./currency";
 import { MAX_BPS } from "../schema/shared";
 import {
+  ERC1155,
+  ERC1155__factory,
   ERC165__factory,
-  IERC1155,
-  IERC1155__factory,
-  IERC721,
-  IERC721__factory,
+  ERC721,
+  ERC721__factory,
 } from "contracts";
 
 /**
@@ -47,7 +47,7 @@ export async function isTokenApprovedForMarketplace(
     const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
     const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
     if (isERC721) {
-      const asset = IERC721__factory.connect(assetContract, provider);
+      const asset = ERC721__factory.connect(assetContract, provider);
 
       const approved = await asset.isApprovedForAll(from, marketplaceAddress);
       if (approved) {
@@ -58,7 +58,7 @@ export async function isTokenApprovedForMarketplace(
         marketplaceAddress.toLowerCase()
       );
     } else if (isERC1155) {
-      const asset = IERC1155__factory.connect(assetContract, provider);
+      const asset = ERC1155__factory.connect(assetContract, provider);
       return await asset.isApprovedForAll(from, marketplaceAddress);
     } else {
       console.error("Contract does not implement ERC 1155 or ERC 721.");
@@ -91,10 +91,10 @@ export async function handleTokenApproval(
   const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
   // check for token approval
   if (isERC721) {
-    const asset = new ContractWrapper<IERC721>(
+    const asset = new ContractWrapper<ERC721>(
       signerOrProvider,
       assetContract,
-      IERC721__factory.abi,
+      ERC721__factory.abi,
       {},
     );
     const approved = await asset.readContract.isApprovedForAll(
@@ -114,10 +114,10 @@ export async function handleTokenApproval(
       }
     }
   } else if (isERC1155) {
-    const asset = new ContractWrapper<IERC1155>(
+    const asset = new ContractWrapper<ERC1155>(
       signerOrProvider,
       assetContract,
-      IERC1155__factory.abi,
+      ERC1155__factory.abi,
       {},
     );
 

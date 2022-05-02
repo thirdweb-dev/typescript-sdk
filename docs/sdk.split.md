@@ -35,7 +35,7 @@ const contract = sdk.getSplit("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [contractFactory](./sdk.split.contractfactory.md) | <code>static</code> | typeof Split\_\_factory |  |
+|  [contractAbi](./sdk.split.contractabi.md) | <code>static</code> | any |  |
 |  [contractType](./sdk.split.contracttype.md) | <code>static</code> | "split" |  |
 |  [encoder](./sdk.split.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;SplitContract&gt; |  |
 |  [estimator](./sdk.split.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;SplitContract&gt; |  |

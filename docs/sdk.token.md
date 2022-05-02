@@ -35,7 +35,7 @@ const contract = sdk.getToken("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [contractFactory](./sdk.token.contractfactory.md) | <code>static</code> | typeof TokenERC20\_\_factory |  |
+|  [contractAbi](./sdk.token.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.token.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.token.contracttype.md) | <code>static</code> | "token" |  |
 |  [encoder](./sdk.token.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;TokenERC20&gt; |  |

@@ -35,7 +35,7 @@ const contract = sdk.getEdition("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [contractFactory](./sdk.edition.contractfactory.md) | <code>static</code> | typeof TokenERC1155\_\_factory |  |
+|  [contractAbi](./sdk.edition.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.edition.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.edition.contracttype.md) | <code>static</code> | "edition" |  |
 |  [encoder](./sdk.edition.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;TokenERC1155&gt; |  |

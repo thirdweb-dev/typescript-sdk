@@ -27,7 +27,6 @@ import {
   IThirdwebRoyalty,
   IThirdwebRoyalty__factory,
   ThirdwebContract,
-  ThirdwebContract__factory,
 } from "contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
@@ -74,7 +73,6 @@ export class SmartContract<
    * @internal
    */
   static schema = CustomContractSchema;
-  static contractFactory = ThirdwebContract__factory;
 
   private contractWrapper;
   private storage;

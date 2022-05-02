@@ -1,5 +1,5 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import { DropERC721, DropERC721__factory } from "contracts";
+import { DropERC721 } from "contracts";
 import { hexZeroPad } from "@ethersproject/bytes";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
@@ -34,8 +34,8 @@ import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
 import {
-  TokensLazyMintedEvent,
   TokensClaimedEvent,
+  TokensLazyMintedEvent,
 } from "contracts/DropERC721";
 
 /**
@@ -57,7 +57,7 @@ import {
 export class NFTDrop extends Erc721<DropERC721> {
   static contractType = "nft-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractFactory = DropERC721__factory;
+  static contractAbi = require("../../abis/DropERC721.json");
   /**
    * @internal
    */
@@ -161,7 +161,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     contractWrapper = new ContractWrapper<DropERC721>(
       network,
       address,
-      NFTDrop.contractFactory.abi,
+      NFTDrop.contractAbi,
       options,
     ),
   ) {
@@ -508,6 +508,7 @@ export class NFTDrop extends Erc721<DropERC721> {
       quantity,
       await this.claimConditions.getActive(),
       (await this.metadata.get()).merkle,
+      0,
       this.contractWrapper,
       this.storage,
       proofs,

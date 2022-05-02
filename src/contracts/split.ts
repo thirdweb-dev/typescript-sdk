@@ -1,9 +1,5 @@
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import {
-  IERC20__factory,
-  Split as SplitContract,
-  Split__factory,
-} from "contracts";
+import { ERC20__factory, Split as SplitContract } from "contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   ContractInterceptor,
@@ -40,7 +36,7 @@ import { ContractEvents } from "../core/classes/contract-events";
  */
 export class Split implements UpdateableNetwork {
   static contractType = "split" as const;
-  static contractFactory = Split__factory;
+  static contractAbi = require("../../abis/Split.json");
   /**
    * @internal
    */
@@ -66,7 +62,7 @@ export class Split implements UpdateableNetwork {
     contractWrapper = new ContractWrapper<SplitContract>(
       network,
       address,
-      Split.contractFactory.abi,
+      Split.contractAbi,
       options,
     ),
   ) {
@@ -217,7 +213,7 @@ export class Split implements UpdateableNetwork {
     walletAddress: string,
     tokenAddress: string,
   ): Promise<CurrencyValue> {
-    const erc20 = IERC20__factory.connect(
+    const erc20 = ERC20__factory.connect(
       tokenAddress,
       this.contractWrapper.getProvider(),
     );

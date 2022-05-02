@@ -9,9 +9,9 @@ import {
 import { IStorage } from "../core";
 import { Provider } from "@ethersproject/providers";
 import {
+  ERC1155Metadata__factory,
   ERC165__factory,
-  TokenERC1155__factory,
-  TokenERC721__factory,
+  ERC721Metadata__factory,
 } from "contracts";
 import { NotFoundError } from "./error";
 import {
@@ -59,10 +59,10 @@ export async function fetchTokenMetadataForContract(
   const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
   const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
   if (isERC721) {
-    const erc721 = TokenERC721__factory.connect(contractAddress, provider);
+    const erc721 = ERC721Metadata__factory.connect(contractAddress, provider);
     uri = await erc721.tokenURI(tokenId);
   } else if (isERC1155) {
-    const erc1155 = TokenERC1155__factory.connect(contractAddress, provider);
+    const erc1155 = ERC1155Metadata__factory.connect(contractAddress, provider);
     uri = await erc1155.uri(tokenId);
   } else {
     throw Error("Contract must implement ERC 1155 or ERC 721.");
