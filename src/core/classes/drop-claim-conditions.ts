@@ -4,10 +4,9 @@ import { ContractMetadata } from "./contract-metadata";
 import {
   DropERC20,
   DropERC721,
+  ERC20,
   ERC20Metadata,
   ERC20Metadata__factory,
-  IERC20,
-  IERC20__factory,
 } from "contracts";
 import { BigNumber, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
@@ -28,6 +27,7 @@ import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { implementsInterface } from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
+import * as ERC20Abi from "../../../abis/ERC20.json";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -250,10 +250,10 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
           reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       } else {
-        const erc20 = new ContractWrapper<IERC20>(
+        const erc20 = new ContractWrapper<ERC20>(
           provider,
           claimCondition.currencyAddress,
-          IERC20__factory.abi,
+          ERC20Abi,
           {},
         );
         const balance = await erc20.readContract.balanceOf(addressToCheck);

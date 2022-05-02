@@ -87,7 +87,6 @@ export class Token extends Erc20<TokenERC20> {
     ),
   ) {
     super(contractWrapper, storage, options);
-    console.log(Token.contractAbi);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Token.schema,
