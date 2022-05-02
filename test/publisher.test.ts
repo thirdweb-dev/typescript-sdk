@@ -151,7 +151,7 @@ describe("Publishing", async () => {
     );
     const ethrone = await realSDK.getContract(deployedAddr);
     const maxAttempts = await ethrone.functions.maxAttempts();
-    expect(maxAttempts.toNumber()).to.eq(3);
+    expect(maxAttempts).to.eq(3);
   });
 
   it("ERC721A real ipfs test", async () => {
