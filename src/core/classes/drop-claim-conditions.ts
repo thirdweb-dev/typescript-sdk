@@ -27,7 +27,7 @@ import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { implementsInterface } from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
-import * as ERC20Abi from "../../../abis/ERC20.json";
+import ERC20Abi from "../../../abis/ERC20.json";
 
 /**
  * Manages claim conditions for NFT Drop contracts

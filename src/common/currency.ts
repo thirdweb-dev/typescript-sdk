@@ -10,7 +10,7 @@ import { Provider } from "@ethersproject/providers";
 import { formatUnits } from "ethers/lib/utils";
 import { Currency, CurrencyValue, Price } from "../types/currency";
 import { PriceSchema } from "../schema/shared";
-import * as ERC20Abi from "../../abis/ERC20.json";
+import ERC20Abi from "../../abis/ERC20.json";
 
 export function isNativeToken(tokenAddress: string): boolean {
   return (
