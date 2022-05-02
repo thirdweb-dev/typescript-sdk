@@ -19,7 +19,6 @@ import {
   AccessControlEnumerable__factory,
   ERC1155Metadata__factory,
   ERC20Metadata__factory,
-  ERC721Metadata__factory,
   IThirdwebContract,
   IThirdwebPlatformFee,
   IThirdwebPlatformFee__factory,
@@ -33,7 +32,7 @@ import {
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractInterface } from "ethers";
-import { ALL_ROLES } from "../common";
+import { ALL_ROLES, detectContractFeature } from "../common";
 import { implementsInterface } from "../common/feature-detection";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
@@ -239,12 +238,7 @@ export class SmartContract<
   }
 
   private detectErc721() {
-    if (
-      implementsInterface<BaseERC721>(
-        this.contractWrapper,
-        ERC721Metadata__factory.createInterface(), // TODO should probably be more generic here to support multi interfaces
-      )
-    ) {
+    if (detectContractFeature<BaseERC721>(this.contractWrapper, "ERC721")) {
       return new Erc721(this.contractWrapper, this.storage, this.options);
     }
     return undefined;

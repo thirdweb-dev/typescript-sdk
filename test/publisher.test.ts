@@ -1,9 +1,15 @@
 import { sdk, signers, storage } from "./before.test";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import { IpfsStorage, ThirdwebSDK } from "../src";
+import {
+  detectFeatures,
+  IpfsStorage,
+  isFeatureEnabled,
+  ThirdwebSDK,
+} from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
+import { DropERC721__factory, TokenERC721__factory } from "../lib";
 
 global.fetch = require("node-fetch");
 
@@ -44,6 +50,29 @@ describe("Publishing", async () => {
     const publisher = await sdk.getPublisher();
     const functions = await publisher.extractFunctions(simpleContractUri);
     expect(functions.length).gt(0);
+  });
+
+  it("should extract features", async () => {
+    expect(
+      isFeatureEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
+    ).to.eq(true);
+    expect(isFeatureEnabled(TokenERC721__factory.abi, "ERC721Mintable")).to.eq(
+      true,
+    );
+    expect(
+      isFeatureEnabled(TokenERC721__factory.abi, "ERC721BatchMintable"),
+    ).to.eq(true);
+
+    // Drop
+    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Enumerable")).to.eq(
+      true,
+    );
+    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
+      true,
+    );
+    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
+      false,
+    );
   });
 
   it("should publish simple greeter contract", async () => {

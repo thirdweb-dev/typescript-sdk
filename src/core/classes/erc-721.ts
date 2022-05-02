@@ -7,16 +7,14 @@ import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { fetchTokenMetadata } from "../../common/nft";
-import { implementsInterface, NotFoundError } from "../../common";
+import { detectContractFeature, NotFoundError } from "../../common";
 import {
   DropERC721,
   ERC721Supply,
-  ERC721Supply__factory,
   IMintableERC721,
-  IMintableERC721__factory,
   TokenERC721,
 } from "contracts";
-import { Erc721Enumerable } from "./erc-721-enumerable";
+import { Erc721Supply } from "./erc-721-supply";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { BaseERC721 } from "../../types/eips";
 
@@ -31,7 +29,7 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
   protected storage: IStorage;
   protected options: SDKOptions;
 
-  public query: Erc721Enumerable | undefined;
+  public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
 
   constructor(
@@ -204,23 +202,23 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
     return fetchTokenMetadata(tokenId, tokenUri, this.storage);
   }
 
-  private detectErc721Enumerable(): Erc721Enumerable | undefined {
+  private detectErc721Enumerable(): Erc721Supply | undefined {
     if (
-      implementsInterface<BaseERC721 & ERC721Supply>(
+      detectContractFeature<BaseERC721 & ERC721Supply>(
         this.contractWrapper,
-        ERC721Supply__factory.createInterface(),
+        "ERC721Supply",
       )
     ) {
-      return new Erc721Enumerable(this, this.contractWrapper);
+      return new Erc721Supply(this, this.contractWrapper);
     }
     return undefined;
   }
 
   private detectErc721Mintable(): Erc721Mintable | undefined {
     if (
-      implementsInterface<IMintableERC721>(
+      detectContractFeature<IMintableERC721>(
         this.contractWrapper,
-        IMintableERC721__factory.createInterface(),
+        "ERC721Mintable",
       )
     ) {
       return new Erc721Mintable(this, this.contractWrapper, this.storage);

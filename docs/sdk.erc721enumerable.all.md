@@ -4,37 +4,37 @@
 
 ## Erc721Enumerable.all() method
 
-Get All Minted NFTs
+Get Owned NFTs
 
 <b>Signature:</b>
 
 ```typescript
-all(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+all(walletAddress?: string): Promise<NFTMetadataOwner[]>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  queryParams | [QueryAllParams](./sdk.queryallparams.md) | <i>(Optional)</i> optional filtering to only fetch a subset of results. |
+|  walletAddress | string | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
 Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt;
 
-The NFT metadata for all NFTs queried.
+The NFT metadata for all NFTs in the contract.
 
 ## Remarks
 
-Get all the data associated with every NFT in this contract.
-
-By default, returns the first 100 NFTs, use queryParams to fetch more.
+Get all the data associated with the NFTs owned by a specific wallet.
 
 ## Example
 
 
 ```javascript
-const nfts = await contract.query.all();
+// Address of the wallet to get the NFTs of
+const address = "{{wallet_address}}";
+const nfts = await contract.query.owned.all(address);
 console.log(nfts);
 ```
 

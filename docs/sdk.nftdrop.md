@@ -57,13 +57,13 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [claim(quantity, proofs)](./sdk.nftdrop.claim.md) |  | Claim NFTs to the connected wallet. |
 |  [claimTo(destinationAddress, quantity, proofs)](./sdk.nftdrop.claimto.md) |  | Claim unique NFTs to a specific Wallet |
 |  [createBatch(metadatas)](./sdk.nftdrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
-|  [getAll(queryParams)](./sdk.nftdrop.getall.md) |  | Get All Minted NFTs |
+|  [getAll(queryParams)](./sdk.nftdrop.getall.md) |  | Get Owned NFTs |
 |  [getAllClaimed(queryParams)](./sdk.nftdrop.getallclaimed.md) |  | Get All Claimed NFTs |
 |  [getAllUnclaimed(queryParams)](./sdk.nftdrop.getallunclaimed.md) |  | Get All Unclaimed NFTs |
-|  [getOwned(walletAddress)](./sdk.nftdrop.getowned.md) |  | Get Owned NFTs |
+|  [getOwned(walletAddress)](./sdk.nftdrop.getowned.md) |  |  |
 |  [getOwnedTokenIds(walletAddress)](./sdk.nftdrop.getownedtokenids.md) |  |  |
 |  [isTransferRestricted()](./sdk.nftdrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [totalClaimedSupply()](./sdk.nftdrop.totalclaimedsupply.md) |  | Get the claimed supply |
-|  [totalSupply()](./sdk.nftdrop.totalsupply.md) |  | Get the number of NFTs minted |
+|  [totalSupply()](./sdk.nftdrop.totalsupply.md) |  |  |
 |  [totalUnclaimedSupply()](./sdk.nftdrop.totalunclaimedsupply.md) |  | Get the unclaimed supply |
 

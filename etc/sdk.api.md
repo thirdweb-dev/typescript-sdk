@@ -835,6 +835,20 @@ export class DelayedReveal<T extends DropERC721> {
     reveal(batchId: BigNumberish, password: string): Promise<TransactionResult>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "FeatureName" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "detectContractFeature" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export function detectContractFeature<T extends BaseContract>(contractWrapper: ContractWrapper<BaseContract>, featureName: FeatureName): contractWrapper is ContractWrapper<T>;
+
+// Warning: (ae-forgotten-export) The symbol "AbiSchema" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "Feature" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "FeatureWithEnabled" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "detectFeatures" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export function detectFeatures(abi: z.input<typeof AbiSchema>, features?: Record<string, Feature>): Record<string, FeatureWithEnabled>;
+
 // @public
 export interface DirectListing {
     asset: NFTMetadata;
@@ -1598,7 +1612,7 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements 
     protected options: SDKOptions;
     ownerOf(tokenId: BigNumberish): Promise<string>;
     // (undocumented)
-    query: Erc721Enumerable | undefined;
+    query: Erc721Supply | undefined;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
     // (undocumented)
@@ -1607,35 +1621,30 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements 
 }
 
 // @public (undocumented)
-export class Erc721Enumerable {
-    // Warning: (ae-forgotten-export) The symbol "ERC721Supply" needs to be exported by the entry point index.d.ts
-    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & ERC721Supply>);
-    all(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
-    // (undocumented)
-    owned: Erc721Owned | undefined;
-    totalSupply(): Promise<BigNumber>;
-}
-
-// @public (undocumented)
-export class Erc721Mintable {
+export class Erc721BatchMintable {
     // Warning: (ae-forgotten-export) The symbol "ERC721Metadata" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "ERC721" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "IMintableERC721" needs to be exported by the entry point index.d.ts
-    constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<IMintableERC721>, storage: IStorage);
-    // Warning: (ae-forgotten-export) The symbol "Erc721BatchMintable" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    batch: Erc721BatchMintable | undefined;
+    // Warning: (ae-forgotten-export) The symbol "Multicall" needs to be exported by the entry point index.d.ts
+    constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<IMintableERC721 & Multicall>, storage: IStorage);
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
-    to(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
+    to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 }
 
 // @public (undocumented)
-export class Erc721Owned {
+export class Erc721Enumerable {
     // Warning: (ae-forgotten-export) The symbol "ERC721Enumerable" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & ERC721Enumerable>);
     all(walletAddress?: string): Promise<NFTMetadataOwner[]>;
     tokenIds(walletAddress?: string): Promise<BigNumber[]>;
+}
+
+// @public (undocumented)
+export class Erc721Mintable {
+    constructor(erc721: Erc721<ERC721Metadata & ERC721>, contractWrapper: ContractWrapper<IMintableERC721>, storage: IStorage);
+    // (undocumented)
+    batch: Erc721BatchMintable | undefined;
+    to(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 }
 
 // @public
@@ -1649,6 +1658,16 @@ export class Erc721SignatureMinting {
 }
 
 // @public (undocumented)
+export class Erc721Supply {
+    // Warning: (ae-forgotten-export) The symbol "ERC721Supply" needs to be exported by the entry point index.d.ts
+    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & ERC721Supply>);
+    all(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    // (undocumented)
+    owned: Erc721Enumerable | undefined;
+    totalSupply(): Promise<BigNumber>;
+}
+
+// @public (undocumented)
 export enum EventType {
     Signature = "signature",
     Transaction = "transaction"
@@ -1658,17 +1677,16 @@ export enum EventType {
 //
 // @internal (undocumented)
 export function extractConstructorParams(metadataUri: string, storage: IStorage): Promise<{
-    [x: string]: Json;
+    [x: string]: any;
     type: string;
     name: string;
 }[]>;
 
-// Warning: (ae-forgotten-export) The symbol "AbiSchema" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "extractConstructorParamsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>): {
-    [x: string]: Json;
+    [x: string]: any;
     type: string;
     name: string;
 }[];
@@ -1872,6 +1890,11 @@ export class IpfsStorage implements IStorage {
         metadataUris: string[];
     }>;
 }
+
+// Warning: (ae-internal-missing-underscore) The name "isFeatureEnabled" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: FeatureName): boolean;
 
 // @public (undocumented)
 export interface IStorage {
@@ -2211,8 +2234,11 @@ export class NFTCollection extends Erc721<TokenERC721> {
     // (undocumented)
     events: ContractEvents<TokenERC721>;
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
+    //
+    // (undocumented)
     getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "tokendIds"
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
     //
     // (undocumented)
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
@@ -2221,13 +2247,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721BatchMintable"
-    //
-    // (undocumented)
     mintBatch(metadata: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721BatchMintable"
-    //
-    // (undocumented)
     mintBatchTo(walletAddress: string, metadata: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     mintTo(walletAddress: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     mintToSelf(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
@@ -2342,6 +2362,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
         }>;
     };
     signature: Erc721SignatureMinting;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "totalSupply"
+    //
+    // (undocumented)
     totalSupply(): Promise<BigNumber>;
 }
 
@@ -2385,8 +2408,11 @@ export class NFTDrop extends Erc721<DropERC721> {
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
+    //
+    // (undocumented)
     getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "tokendIds"
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
     //
     // (undocumented)
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
@@ -2534,6 +2560,9 @@ export class NFTDrop extends Erc721<DropERC721> {
         }>;
     };
     totalClaimedSupply(): Promise<BigNumber>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "totalSupply"
+    //
+    // (undocumented)
     totalSupply(): Promise<BigNumber>;
     totalUnclaimedSupply(): Promise<BigNumber>;
 }

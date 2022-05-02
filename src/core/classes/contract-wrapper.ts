@@ -46,6 +46,7 @@ export class ContractWrapper<
    */
   public writeContract;
   public readContract;
+  public abi;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -54,6 +55,7 @@ export class ContractWrapper<
     options: SDKOptions,
   ) {
     super(network, options);
+    this.abi = contractAbi;
     // set up the contract
     this.writeContract = new Contract(
       contractAddress,

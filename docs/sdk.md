@@ -28,10 +28,11 @@
 |  [Erc20](./sdk.erc20.md) | Standard ERC20 functions |
 |  [Erc20SignatureMinting](./sdk.erc20signatureminting.md) | Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 functions |
+|  [Erc721BatchMintable](./sdk.erc721batchmintable.md) |  |
 |  [Erc721Enumerable](./sdk.erc721enumerable.md) |  |
 |  [Erc721Mintable](./sdk.erc721mintable.md) |  |
-|  [Erc721Owned](./sdk.erc721owned.md) |  |
 |  [Erc721SignatureMinting](./sdk.erc721signatureminting.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
+|  [Erc721Supply](./sdk.erc721supply.md) |  |
 |  [GasCostEstimator](./sdk.gascostestimator.md) | Estimates the gas cost of Contract calls |
 |  [IpfsStorage](./sdk.ipfsstorage.md) | IPFS Storage implementation, accepts custom IPFS gateways |
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |

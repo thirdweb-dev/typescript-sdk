@@ -4,6 +4,7 @@
 
 ## NFTCollection.mintBatchTo() method
 
+Mint Many unique NFTs
 
 <b>Signature:</b>
 
@@ -21,4 +22,8 @@ mintBatchTo(walletAddress: string, metadata: NFTMetadataOrUri[]): Promise<Transa
 <b>Returns:</b>
 
 Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;\[\]&gt;
+
+## Remarks
+
+Mint many unique NFTs at once to a specified wallet.
 

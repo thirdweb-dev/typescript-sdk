@@ -26,7 +26,7 @@ export declare class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> imp
 |  [contractWrapper](./sdk.erc721.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
 |  [mint](./sdk.erc721.mint.md) |  | [Erc721Mintable](./sdk.erc721mintable.md) \| undefined |  |
 |  [options](./sdk.erc721.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
-|  [query](./sdk.erc721.query.md) |  | [Erc721Enumerable](./sdk.erc721enumerable.md) \| undefined |  |
+|  [query](./sdk.erc721.query.md) |  | [Erc721Supply](./sdk.erc721supply.md) \| undefined |  |
 |  [storage](./sdk.erc721.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
 ## Methods

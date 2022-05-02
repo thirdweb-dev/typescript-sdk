@@ -1,81 +1,58 @@
 import { ContractWrapper } from "./contract-wrapper";
-import {
-  ERC721Enumerable,
-  ERC721Enumerable__factory,
-  ERC721Supply,
-} from "contracts";
+import { ERC721Enumerable } from "contracts";
 import { BigNumber } from "ethers";
-import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { NFTMetadataOwner } from "../../schema";
 import { Erc721 } from "./erc-721";
 import { BaseERC721 } from "../../types/eips";
-import { implementsInterface } from "../../common";
-import { Erc721Owned } from "./erc-721-owned";
 
 export class Erc721Enumerable {
-  private contractWrapper: ContractWrapper<BaseERC721 & ERC721Supply>;
+  private contractWrapper: ContractWrapper<BaseERC721 & ERC721Enumerable>;
   private erc721: Erc721<BaseERC721>;
-
-  public owned: Erc721Owned | undefined;
 
   constructor(
     erc721: Erc721<BaseERC721>,
-    contractWrapper: ContractWrapper<BaseERC721 & ERC721Supply>,
+    contractWrapper: ContractWrapper<BaseERC721 & ERC721Enumerable>,
   ) {
     this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
-    this.owned = this.detectErc721Owned();
   }
 
   /**
-   * Get All Minted NFTs
+   * Get Owned NFTs
    *
-   * @remarks Get all the data associated with every NFT in this contract.
-   *
-   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
    *
    * @example
    * ```javascript
-   * const nfts = await contract.query.all();
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await contract.query.owned.all(address);
    * console.log(nfts);
    * ```
-   * @param queryParams - optional filtering to only fetch a subset of results.
-   * @returns The NFT metadata for all NFTs queried.
+   *
+   * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async all(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]> {
-    const start = BigNumber.from(queryParams?.start || 0).toNumber();
-    const count = BigNumber.from(
-      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
-    ).toNumber();
-    const maxId = Math.min(
-      (await this.totalSupply()).toNumber(),
-      start + count,
-    );
+  public async all(walletAddress?: string): Promise<NFTMetadataOwner[]> {
+    const tokenIds = await this.tokenIds(walletAddress);
     return await Promise.all(
-      [...Array(maxId - start).keys()].map((i) =>
-        this.erc721.get((start + i).toString()),
-      ),
+      tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
     );
   }
 
   /**
-   * Get the number of NFTs minted
-   * @returns the total number of NFTs minted in this contract
-   * @public
+   * Get all token ids of NFTs owned by a specific wallet.
+   * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
-  public async totalSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalSupply();
-  }
-
-  private detectErc721Owned(): Erc721Owned | undefined {
-    if (
-      implementsInterface<BaseERC721 & ERC721Enumerable>(
-        this.contractWrapper,
-        ERC721Enumerable__factory.createInterface(),
-      )
-    ) {
-      return new Erc721Owned(this.erc721, this.contractWrapper);
-    }
-    return undefined;
+  public async tokenIds(walletAddress?: string): Promise<BigNumber[]> {
+    const address = walletAddress
+      ? walletAddress
+      : await this.contractWrapper.getSignerAddress();
+    const balance = await this.contractWrapper.readContract.balanceOf(address);
+    const indices = Array.from(Array(balance.toNumber()).keys());
+    return await Promise.all(
+      indices.map((i) =>
+        this.contractWrapper.readContract.tokenOfOwnerByIndex(address, i),
+      ),
+    );
   }
 }

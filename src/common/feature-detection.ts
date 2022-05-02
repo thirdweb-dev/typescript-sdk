@@ -9,6 +9,12 @@ import {
   PublishedMetadata,
 } from "../schema/contracts/custom";
 import { z } from "zod";
+import {
+  Feature,
+  FeatureName,
+  FeatureWithEnabled,
+  SUPPORTED_FEATURES,
+} from "../constants/contract-features";
 
 /**
  * Type guards a contract to a known type if it matches the corresponding interface
@@ -36,6 +42,24 @@ function matchesInterface(contract: BaseContract, interfaceToMatch: Interface) {
   return (
     Object.keys(contractFn).filter((k) => k in interfaceFn).length ===
     Object.keys(interfaceFn).length
+  );
+}
+
+/**
+ * @internal
+ * @param abi
+ * @param interfaceAbi
+ */
+function matchesAbiInterface(
+  abi: z.input<typeof AbiSchema>,
+  interfaceAbi: z.input<typeof AbiSchema>,
+): boolean {
+  // returns true if all the functions in `interfaceToMatch` are found in `contract`
+  const contractFn = extractFunctionsFromAbi(abi).map((f) => f.name);
+  const interfaceFn = extractFunctionsFromAbi(interfaceAbi).map((f) => f.name);
+  return (
+    contractFn.filter((k) => interfaceFn.includes(k)).length ===
+    interfaceFn.length
   );
 }
 
@@ -148,4 +172,85 @@ export async function fetchContractMetadata(
     abi,
     bytecode,
   };
+}
+
+/**
+ * Processes ALL supported features and sets whether the passed in abi supports each individual feature
+ * @internal
+ * @param abi
+ * @param features
+ * @returns the nested struct of all features and whether they're detected in the abi
+ */
+export function detectFeatures(
+  abi: z.input<typeof AbiSchema>,
+  features: Record<string, Feature> = SUPPORTED_FEATURES,
+): Record<string, FeatureWithEnabled> {
+  const results: Record<string, FeatureWithEnabled> = {};
+  for (const featureKey in features) {
+    const feature = features[featureKey];
+    const enabled = matchesAbiInterface(abi, feature.abi);
+    const childResults = detectFeatures(abi, feature.features);
+    results[featureKey] = {
+      ...feature,
+      features: childResults,
+      enabled,
+    } as FeatureWithEnabled;
+  }
+  return results;
+}
+
+/**
+ * Checks whether the given ABI supports a given feature
+ * @internal
+ * @param abi
+ * @param featureName
+ */
+export function isFeatureEnabled(
+  abi: z.input<typeof AbiSchema>,
+  featureName: FeatureName,
+): boolean {
+  const features = detectFeatures(abi);
+  return _featureEnabled(features, featureName);
+}
+
+/**
+ * Type guard for contractWrappers depending on passed feature name
+ * @internal
+ * @param contractWrapper
+ * @param featureName
+ */
+export function detectContractFeature<T extends BaseContract>(
+  contractWrapper: ContractWrapper<BaseContract>,
+  featureName: FeatureName,
+): contractWrapper is ContractWrapper<T> {
+  return isFeatureEnabled(AbiSchema.parse(contractWrapper.abi), featureName);
+}
+
+/**
+ * Searches the feature map for featureName and returns whether its enabled
+ * @internal
+ * @param features
+ * @param featureName
+ */
+function _featureEnabled(
+  features: Record<string, FeatureWithEnabled>,
+  featureName: FeatureName,
+): boolean {
+  const keys = Object.keys(features);
+  if (!keys.includes(featureName)) {
+    let found = false;
+    for (const key of keys) {
+      const f = features[key];
+      found = _featureEnabled(
+        f.features as Record<string, FeatureWithEnabled>,
+        featureName,
+      );
+      if (found) {
+        break;
+      }
+    }
+    return found;
+  }
+  const feature = features[featureName];
+  return feature.enabled;
 }
