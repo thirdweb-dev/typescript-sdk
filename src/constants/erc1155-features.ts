@@ -5,7 +5,7 @@ import IMintableERC1155Abi from "../../abis/IMintableERC1155.json";
 
 export const FEATURE_EDITION_BATCH_MINTABLE = {
   name: "ERC1155BatchMintable",
-  namespace: "token.mint.batch",
+  namespace: "edition.mint.batch",
   docLinks: {
     sdk: "sdk.erc1155batchmintable",
     contracts: "Multicall",
@@ -16,7 +16,7 @@ export const FEATURE_EDITION_BATCH_MINTABLE = {
 
 export const FEATURE_EDITION_MINTABLE = {
   name: "ERC1155Mintable",
-  namespace: "token.mint",
+  namespace: "edition.mint",
   docLinks: {
     sdk: "sdk.erc1155mintable",
     contracts: "IMintableERC1155",

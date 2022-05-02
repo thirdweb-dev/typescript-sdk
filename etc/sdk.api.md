@@ -937,12 +937,12 @@ export class Edition extends Erc1155<TokenERC1155> {
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
-    mint(metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
     mintAdditionalSupply(tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
     mintAdditionalSupplyTo(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
     mintBatch(metadatas: EditionMetadataOrUri[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
     mintBatchTo(to: string, metadataWithSupply: EditionMetadataOrUri[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
     mintTo(to: string, metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
+    mintToSelf(metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
     // (undocumented)
     platformFee: ContractPlatformFee<TokenERC1155>;
     // (undocumented)
@@ -1504,8 +1504,12 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> impleme
     // (undocumented)
     getAddress(): string;
     // @internal (undocumented)
-    protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
+    getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
+    // Warning: (ae-forgotten-export) The symbol "Erc1155Mintable" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    mint: Erc1155Mintable | undefined;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
