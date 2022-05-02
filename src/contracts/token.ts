@@ -3,21 +3,23 @@ import { TokenERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {
-  ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
 } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Erc20 } from "../core/classes/erc-20";
 import { TokenMintInput } from "../schema/tokens/token";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { GasCostEstimator } from "../core/classes";
+import {
+  GasCostEstimator,
+  ContractInterceptor,
+  ContractEncoder,
+  ContractEvents,
+  ContractPlatformFee,
+  Erc20,
+} from "../core/classes";
 import { Amount, CurrencyValue } from "../types";
 import { TokenERC20History } from "../core/classes/erc-20-history";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";

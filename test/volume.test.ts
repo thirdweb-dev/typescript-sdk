@@ -4,7 +4,7 @@ import {
   NATIVE_TOKEN_ADDRESS,
   ThirdwebSDK,
 } from "../src/index";
-import { appContract, registryAddress, signers } from "./before.test";
+import { appContract, registryAddress, signers } from "./before-setup";
 import { ethers } from "hardhat";
 import { assert } from "chai";
 
@@ -22,9 +22,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     console.time("wallet");
     for (let i = 0; i < 15000; i++) {
       testSigners.push(new ethers.Wallet.createRandom());
-      console.log(`${testSigners[i].address} was created`);
     }
-    console.log("===WALLETS CREATED===");
     console.timeEnd("wallet");
     const token = await appContract.deployCurrencyContract({
       name: "Test Token",

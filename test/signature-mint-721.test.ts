@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { NFTCollection, Token } from "../src";
-import { sdk, signers, storage } from "./before.test";
+import { sdk, signers, storage } from "./before-setup";
 import {
   PayloadToSign721,
   SignedPayload721,
@@ -253,7 +253,6 @@ describe("NFT sig minting", async () => {
       await sdk.updateSignerOrProvider(samWallet);
       await nftContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
-      console.log(ethers.utils.formatEther(newBalance.sub(oldBalance)));
       assert(
         oldBalance.sub(newBalance).gte(BigNumber.from(1)),
         "balance doesn't match",

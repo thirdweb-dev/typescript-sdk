@@ -5,7 +5,6 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import {
-  ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -19,13 +18,16 @@ import {
   EditionMetadataOrUri,
   EditionMetadataOwner,
 } from "../schema/tokens/edition";
-import { ContractEncoder } from "../core/classes/contract-encoder";
+import {
+  ContractInterceptor,
+  ContractEncoder,
+  ContractEvents,
+  ContractPlatformFee,
+} from "../core/classes";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { TokensMintedEvent } from "contracts/TokenERC1155";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";

@@ -1,21 +1,23 @@
 import { DropERC20 } from "contracts";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractRoles } from "../core/classes/contract-roles";
 import {
-  ContractInterceptor,
-  ContractPlatformFee,
-  ContractPrimarySale,
-  DropClaimConditions,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
 } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Erc20 } from "../core/classes/erc-20";
 import { BigNumberish, BytesLike } from "ethers";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { GasCostEstimator } from "../core/classes";
+import {
+  GasCostEstimator,
+  ContractEncoder,
+  ContractInterceptor,
+  ContractPlatformFee,
+  ContractPrimarySale,
+  ContractMetadata,
+  ContractRoles,
+  DropClaimConditions,
+  Erc20,
+} from "../core/classes";
 import { Amount, ClaimVerification, CurrencyValue } from "../types";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { hexZeroPad } from "@ethersproject/bytes";

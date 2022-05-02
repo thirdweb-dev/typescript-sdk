@@ -3,7 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
-import { expectError, sdk, signers, storage } from "./before.test";
+import { expectError, sdk, signers, storage } from "./before-setup";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { NFTDrop, Token } from "../src";
@@ -44,7 +44,6 @@ describe("NFT Drop Contract", async () => {
   });
 
   it("should allow a snapshot to be set", async () => {
-    console.log("Setting claim condition");
     await dropContract.claimConditions.set([
       {
         startTime: new Date(Date.now() / 2),
@@ -56,11 +55,8 @@ describe("NFT Drop Contract", async () => {
         snapshot: [bobWallet.address],
       },
     ]);
-    console.log("Claim condition set");
-
     const metadata = await dropContract.metadata.get();
     const merkles = metadata.merkle;
-    console.log(merkles);
 
     expect(merkles).have.property(
       "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
@@ -145,38 +141,27 @@ describe("NFT Drop Contract", async () => {
         ? w.address.toUpperCase().replace("0X", "0x")
         : w.address,
     );
-    console.log("members", members);
 
-    console.log("Setting claim condition");
     await dropContract.claimConditions.set([
       {
         snapshot: members,
       },
     ]);
-    console.log("Claim condition set");
-
-    console.log("Minting 100");
     const metadata = [];
     for (let i = 0; i < 10; i++) {
       metadata.push({
         name: `test ${i}`,
       });
     }
-    console.log("calling lazy mint batch");
     await dropContract.createBatch(metadata);
-
-    console.log("Minted");
-    console.log("Claiming");
 
     /**
      * Claiming 1 tokens with proofs: 0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9,0xb1a5bda84b83f7f014abcf0cf69cab5a4de1c3ececa8123a5e4aaacb01f63f83
      */
 
     for (const member of testWallets) {
-      console.log(member.address);
       await sdk.updateSignerOrProvider(member);
       await dropContract.claim(1);
-      console.log(`Address ${member.address} claimed successfully!`);
     }
   });
 
@@ -196,7 +181,6 @@ describe("NFT Drop Contract", async () => {
         name: `test ${i}`,
       });
     }
-    console.log("calling lazy mint batch");
     await dropContract.createBatch(metadata);
 
     /**
@@ -206,7 +190,6 @@ describe("NFT Drop Contract", async () => {
     for (const member of testWallets) {
       await sdk.updateSignerOrProvider(member);
       await dropContract.claim(1);
-      console.log(`Address ${member.address} claimed successfully!`);
     }
 
     try {
@@ -244,7 +227,6 @@ describe("NFT Drop Contract", async () => {
   });
 
   it("should not allow claiming to someone not in the merkle tree", async () => {
-    console.log("Setting claim condition");
     await dropContract.claimConditions.set(
       [
         {
@@ -253,15 +235,11 @@ describe("NFT Drop Contract", async () => {
       ],
       false,
     );
-    console.log("Claim condition set");
-    console.log("Minting");
     await dropContract.createBatch([
       { name: "name", description: "description" },
     ]);
-    console.log("Minted");
 
     await sdk.updateSignerOrProvider(w1);
-    console.log("Claiming");
     try {
       await dropContract.claim(1);
     } catch (err: any) {
@@ -350,7 +328,6 @@ describe("NFT Drop Contract", async () => {
         tree.getHexRoot(),
       );
       expect(verified).to.eq(true);
-      console.log("Leaf verified =", leaf, verified);
     }
   });
 

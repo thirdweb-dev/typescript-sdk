@@ -2,7 +2,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { NFTCollection } from "../src/contracts";
-import { sdk, signers, storage } from "./before.test";
+import { sdk, signers, storage } from "./before-setup";
 
 global.fetch = require("node-fetch");
 

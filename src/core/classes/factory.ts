@@ -67,14 +67,11 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     );
 
     const contractName = REMOTE_CONTRACT_NAME[contractType];
-    console.log(`Remote contractName : ${contractName}`);
     const encodedType = ethers.utils.formatBytes32String(contractName);
-    console.log(`Deploying ${contractType} proxy`);
     const receipt = await this.sendTransaction("deployProxy", [
       encodedType,
       encodedFunc,
     ]);
-    console.log(`${contractType} proxy deployed successfully`);
     const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",
       receipt.logs,

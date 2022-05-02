@@ -16,7 +16,7 @@ import {
   jsonProvider,
   sdk,
   signers,
-} from "./before.test";
+} from "./before-setup";
 import { isWinningBid } from "../src/common/marketplace";
 import { ethers as hardhatEthers } from "hardhat";
 
@@ -314,7 +314,6 @@ describe("Marketplace Contract", async () => {
     it("should return only active listings", async () => {
       const before = await marketplaceContract.getActiveListings();
       expect(before.length).to.eq(1);
-      console.log("before", before);
       await sdk.updateSignerOrProvider(samWallet);
       await marketplaceContract.buyoutListing(directListingId, 1);
       const afterDirectBuyout = await marketplaceContract.getActiveListings();
@@ -403,15 +402,11 @@ describe("Marketplace Contract", async () => {
         new Date(Date.now() + 60 * 60 * 24 * 10 * 1000),
       );
 
-      console.log("Offer made");
-
       await sdk.updateSignerOrProvider(adminWallet);
       await marketplaceContract.direct.acceptOffer(
         directListingId,
         bobWallet.address,
       );
-
-      console.log("Offer accepted");
 
       const balance = await dummyNftContract.balanceOf(bobWallet.address);
       assert.equal(

@@ -12,7 +12,6 @@ describe("Gasless Forwarder", async () => {
     const BUNDLE_DROP_ADDRESS = "0xEBed8e37a32660dbCeeeC19cCBb952b7d214f008";
     const provider = ethers.getDefaultProvider(RPC_URL);
     const wallet = Wallet.createRandom().connect(provider);
-    console.log("Testing with wallet: ", wallet.address);
     const sdk = new ThirdwebSDK(wallet, {
       gasless: {
         biconomy: {
@@ -29,7 +28,6 @@ describe("Gasless Forwarder", async () => {
     const BUNDLE_DROP_ADDRESS = "0x41c1f16fAd38381727b327b26F282C7798ee0655";
     const provider = ethers.getDefaultProvider(RPC_URL);
     const wallet = Wallet.createRandom().connect(provider);
-    console.log("Testing with wallet: ", wallet.address);
     const sdk = new ThirdwebSDK(wallet, {
       gasless: {
         openzeppelin: {

@@ -1,4 +1,4 @@
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {
@@ -9,6 +9,8 @@ import {
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
 import { ethers } from "ethers";
+
+require("./before-setup");
 
 global.fetch = require("node-fetch");
 
@@ -207,7 +209,6 @@ describe("Custom Contracts", async () => {
       name: "Custom NFT",
     });
     const nfts = await c.nft.query.all();
-    console.log((await c.nft.query.totalSupply()).toNumber());
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });

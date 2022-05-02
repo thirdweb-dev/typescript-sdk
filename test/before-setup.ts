@@ -25,19 +25,19 @@ import { ethers as hardhatEthers } from "hardhat";
 import {
   CONTRACTS_MAP,
   ContractType,
+  Edition,
+  EditionDrop,
   getNativeTokenByChainId,
   IStorage,
   Marketplace,
-  Pack,
-  ThirdwebSDK,
-  Vote,
-  Token,
   NFTCollection,
   NFTDrop,
-  Edition,
-  EditionDrop,
+  Pack,
   Split,
+  ThirdwebSDK,
+  Token,
   TokenDrop,
+  Vote,
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
 import { ChainId } from "../src/constants/chains";
@@ -54,8 +54,6 @@ const ipfsGatewayUrl = "https://gateway.ipfscdn.io/ipfs/";
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: IStorage;
-
-let wrappedNativeTokenAddress: string;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -86,7 +84,6 @@ before(async () => {
     .connect(signer)
     .deploy(trustedForwarderAddress)) as TWRegistry;
   const registryContract = await registry.deployed();
-  console.log("TWRegistry address: ", registry.address);
 
   const thirdwebFactoryDeployer = (await new ethers.ContractFactory(
     TWFactory__factory.abi,
@@ -96,32 +93,22 @@ before(async () => {
     .deploy(trustedForwarderAddress, registry.address)) as TWFactory;
 
   const deployTxFactory = thirdwebFactoryDeployer.deployTransaction;
-  console.log(
-    "Deploying TWFactory and TWRegistry at tx: ",
-    deployTxFactory.hash,
-  );
   await deployTxFactory.wait();
   const thirdwebRegistryAddress = await thirdwebFactoryDeployer.registry();
   registryAddress = thirdwebFactoryDeployer.address;
-  console.log("TWFactory address: ", thirdwebFactoryDeployer.address);
-  console.log("TWRegistry address: ", thirdwebRegistryAddress);
 
   await registryContract.grantRole(
     await registryContract.OPERATOR_ROLE(),
     thirdwebFactoryDeployer.address,
   );
 
-  console.log("Creating the deployer deployment");
   const thirdwebFeeDeployer = await new ethers.ContractFactory(
     TWFee__factory.abi,
     TWFee__factory.bytecode,
   )
     .connect(signer)
     .deploy(trustedForwarderAddress, thirdwebFactoryDeployer.address);
-  console.log("Deploying the deployer");
   await thirdwebFactoryDeployer.deployed();
-
-  console.log("TWFee address: ", thirdwebFeeDeployer.address);
 
   const customFactoryDeployer = (await new ethers.ContractFactory(
     ByocFactory__factory.abi,
@@ -138,7 +125,6 @@ before(async () => {
     .connect(signer)
     .deploy(trustedForwarderAddress)) as ByocRegistry;
   await customRegistryDeployer.deployed();
-  console.log("ByocRegistry address: ", customRegistryDeployer.address);
 
   await registryContract.grantRole(
     await registryContract.OPERATOR_ROLE(),
@@ -223,13 +209,7 @@ before(async () => {
     );
 
     await deployedContract.deployed();
-
-    console.log(`Deployed contract ${contractType}`);
     const tx = await thirdwebFactoryDeployer.addImplementation(
-      deployedContract.address,
-    );
-    console.log(
-      `Setting deployed ${contractType} as an approved implementation at address: `,
       deployedContract.address,
     );
     await tx.wait();
@@ -256,7 +236,6 @@ export {
   ipfsGatewayUrl,
   sdk,
   signers,
-  wrappedNativeTokenAddress,
   jsonProvider,
   defaultProvider,
   registryAddress,

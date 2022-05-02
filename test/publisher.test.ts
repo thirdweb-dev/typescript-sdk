@@ -1,4 +1,4 @@
-import { sdk, signers, storage } from "./before.test";
+import { sdk, signers, storage } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
 import {
@@ -10,6 +10,7 @@ import {
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../lib";
+import exp = require("constants");
 
 global.fetch = require("node-fetch");
 
@@ -87,7 +88,6 @@ describe("Publishing", async () => {
         name: "CustomContract",
       },
     );
-    console.log("deployed", deployedAddr);
     expect(deployedAddr.length).to.be.gt(0);
     const all = await publisher.getAll(adminWallet.address);
     expect(all.length).to.be.eq(1);
@@ -122,7 +122,6 @@ describe("Publishing", async () => {
       contract.id,
       ["someUri", 12345],
     );
-    console.log("deployed", deployedAddr);
     expect(deployedAddr.length).to.be.gt(0);
     const all = await publisher.getAll(bobWallet.address);
     expect(all.length).to.be.eq(1);
@@ -145,13 +144,14 @@ describe("Publishing", async () => {
     const ipfsUri = "ipfs://QmQNppFfEg3sxHh6vnYnv7KCBCFWNPFQF6evPWQeV2qHwZ/0";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
-    console.log("deployed", contract);
     const deployedAddr = await pub.deployPublishedContract(
       adminWallet.address,
       contract.id,
       [60000, 3, 100000],
     );
-    console.log("deployed", deployedAddr);
+    const ethrone = await realSDK.getContract(deployedAddr);
+    const maxAttempts = await ethrone.functions.maxAttempts();
+    expect(maxAttempts).to.eq(3);
   });
 
   it("ERC721A real ipfs test", async () => {
@@ -160,13 +160,14 @@ describe("Publishing", async () => {
     const ipfsUri = "ipfs://QmRzD8TEYrd4Ux7ZNTBKWbuAERn6rvfUzo1nnW3GMtFL8h/0";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
-    console.log("deployed", await contract);
     const deployedAddr = await pub.deployPublishedContract(
       adminWallet.address,
       contract.id,
       ["foo", "bar"],
     );
-    console.log("deployed", deployedAddr);
+    const c = await realSDK.getContract(deployedAddr);
+    const maxAttempts = await c.functions.symbol();
+    expect(maxAttempts).to.eq("bar");
   });
 
   it("JoaquimAzuky3 enumerable", async () => {
@@ -179,23 +180,19 @@ describe("Publishing", async () => {
     const ipfsUri = "ipfs://QmchmFMDhn1prDnt4ywhiyzurKbpXhad4w3c2EKu21Fai7/0";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
-    console.log("deployed", await contract);
     const deployedAddr = await pub.deployPublishedContract(
       adminWallet.address,
       contract.id,
       ["foo", "bar"],
     );
-    console.log("deployed", deployedAddr);
     const c = await realSDK.getContract(deployedAddr);
     invariant(c.nft, "no nft detected");
     invariant(c.nft.mint, "no minter detected");
     const tx2 = await c.nft.mint.to(adminWallet.address, {
       name: "cool nft",
     });
-    console.log("minted", tx2.id);
     invariant(c.nft, "no nft detected");
     const nft = await c.nft.get(tx2.id);
-    console.log(nft);
     expect(nft.metadata.name).to.eq("cool nft");
     invariant(c.nft.query, "no nft detected");
     const all = await c.nft.query.all();
@@ -212,23 +209,19 @@ describe("Publishing", async () => {
     const ipfsUri = "ipfs://QmTFkbkNEGcBpKgzwgpKjrnUhYGHY96qk5ouVSFhTQYKc5/0";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
-    console.log("deployed", await contract);
     const deployedAddr = await pub.deployPublishedContract(
       adminWallet.address,
       contract.id,
       ["foo", "bar"],
     );
-    console.log("deployed", deployedAddr);
     const c = await realSDK.getContract(deployedAddr);
     invariant(c.nft, "no nft detected");
     invariant(c.nft.mint, "no minter detected");
     const tx2 = await c.nft.mint.to(adminWallet.address, {
       name: "cool nft",
     });
-    console.log("minted", tx2.id);
     invariant(c.nft, "no nft detected");
     const nft = await c.nft.get(tx2.id);
-    console.log(nft);
     expect(nft.metadata.name).to.eq("cool nft");
   });
 });

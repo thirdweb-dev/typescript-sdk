@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 import { Split, Token } from "../src";
 
 global.fetch = require("node-fetch");
