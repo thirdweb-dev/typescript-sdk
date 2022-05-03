@@ -88,12 +88,17 @@ const sdk = new ThirdwebSDK(
     )
 );
 
+// deploy contracts
+const deployedAddress = sdk.deployer.deployNFTCollection({
+    name: "My NFT Collection",
+})
+
 // access your deployed contracts
-const nftCollection = sdk.getNFTCollection("0x...");
+const nftCollection = sdk.getNFTCollection(deployedAddress);
 
 // Execute transactions on your contracts from the connected wallet
 const walletAddress = "0x...";
-await nftCollection.mint.to(walletAddress, {
+await nftCollection.mintTo(walletAddress, {
     name: "Cool NFT",
     description: "Minted NFT from code!",
     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file

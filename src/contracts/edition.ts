@@ -5,6 +5,7 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import {
+  Erc1155Enumerable,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -30,6 +31,8 @@ import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
 import { QueryAllParams } from "../types";
+import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
+import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -52,12 +55,9 @@ export class Edition extends Erc1155<TokenERC1155> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = require("../../abis/TokenERC1155.json");
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _query = this.query!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _mint = this.mint!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _batchMint = this.mint!.batch!;
+  private _query = this.query as Erc1155Enumerable;
+  private _mint = this.mint as Erc1155Mintable;
+  private _batchMint = this._mint.batch as Erc1155BatchMintable;
   /**
    * @internal
    */

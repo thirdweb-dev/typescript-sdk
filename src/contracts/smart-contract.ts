@@ -19,11 +19,8 @@ import {
   AccessControlEnumerable__factory,
   IThirdwebContract,
   IThirdwebPlatformFee,
-  IThirdwebPlatformFee__factory,
   IThirdwebPrimarySale,
-  IThirdwebPrimarySale__factory,
   IThirdwebRoyalty,
-  IThirdwebRoyalty__factory,
   ThirdwebContract,
 } from "contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
@@ -90,11 +87,13 @@ export class SmartContract<
   public publishedMetadata: ContractPublishedMetadata<TContract>;
 
   // features
-  public metadata;
-  public royalties;
-  public roles;
-  public sales;
-  public platformFees;
+  public metadata: ContractMetadata<ThirdwebContract, any> | undefined;
+  public royalties:
+    | ContractRoyalty<IThirdwebRoyalty & IThirdwebContract, any>
+    | undefined; // TODO (byoc) change to ThirdwebContract
+  public roles: ContractRoles<AccessControlEnumerable, any> | undefined; // TODO (byoc) change to IPermission
+  public sales: ContractPrimarySale<IThirdwebPrimarySale> | undefined;
+  public platformFees: ContractPlatformFee<IThirdwebPlatformFee> | undefined;
   /**
    * Auto-detects ERC20 standard functions.
    */
@@ -167,10 +166,11 @@ export class SmartContract<
    * ********************/
 
   private detectRoyalties() {
+    // TODO (byoc) change to ThirdwebContract
     if (
-      implementsInterface<IThirdwebContract & IThirdwebRoyalty>(
+      detectContractFeature<IThirdwebRoyalty & IThirdwebContract>(
         this.contractWrapper,
-        IThirdwebRoyalty__factory.createInterface(),
+        "Royalty",
       )
     ) {
       // ContractMetadata is stateless, it's fine to create a new one here
@@ -186,6 +186,7 @@ export class SmartContract<
   }
 
   private detectRoles() {
+    // TODO IThirdwebPermissions
     if (
       implementsInterface<AccessControlEnumerable>(
         this.contractWrapper,
@@ -199,9 +200,9 @@ export class SmartContract<
 
   private detectPrimarySales() {
     if (
-      implementsInterface<IThirdwebPrimarySale>(
+      detectContractFeature<IThirdwebPrimarySale>(
         this.contractWrapper,
-        IThirdwebPrimarySale__factory.createInterface(),
+        "PrimarySale",
       )
     ) {
       return new ContractPrimarySale(this.contractWrapper);
@@ -211,9 +212,9 @@ export class SmartContract<
 
   private detectPlatformFees() {
     if (
-      implementsInterface<IThirdwebPlatformFee>(
+      detectContractFeature<IThirdwebPlatformFee>(
         this.contractWrapper,
-        IThirdwebPlatformFee__factory.createInterface(),
+        "PlatformFee",
       )
     ) {
       return new ContractPlatformFee(this.contractWrapper);
