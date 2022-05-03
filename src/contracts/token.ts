@@ -23,6 +23,8 @@ import { TokenERC20History } from "../core/classes/erc-20-history";
 import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting";
 import { getRoleHash } from "../common";
 import { AddressZero } from "@ethersproject/constants";
+import { Erc20Mintable } from "../core/classes/erc-20-mintable";
+import { Erc20BatchMintable } from "../core/classes/erc-20-batch-mintable";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -49,10 +51,8 @@ export class Token extends Erc20<TokenERC20> {
    */
   static schema = TokenErc20ContractSchema;
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _mint = this.mint!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _batchMint = this.mint!.batch!;
+  private _mint = this.mint as Erc20Mintable;
+  private _batchMint = this._mint.batch as Erc20BatchMintable;
 
   public metadata: ContractMetadata<TokenERC20, typeof Token.schema>;
   public roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;

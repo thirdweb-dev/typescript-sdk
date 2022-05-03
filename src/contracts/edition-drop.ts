@@ -5,6 +5,7 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import {
+  Erc1155Enumerable,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -59,8 +60,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    */
   static schema = DropErc1155ContractSchema;
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _query = this.query!;
+  private _query = this.query as Erc1155Enumerable;
 
   public primarySale: ContractPrimarySale<DropERC1155>;
   public platformFee: ContractPlatformFee<DropERC1155>;

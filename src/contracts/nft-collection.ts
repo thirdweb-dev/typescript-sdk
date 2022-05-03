@@ -4,6 +4,12 @@ import type {
   TransactionResult,
   TransactionResultWithId,
 } from "../core";
+import {
+  Erc721BatchMintable,
+  Erc721Enumerable,
+  Erc721Mintable,
+  Erc721Supply,
+} from "../core";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenERC721 } from "contracts";
@@ -97,14 +103,10 @@ export class NFTCollection extends Erc721<TokenERC721> {
    */
   public interceptor: ContractInterceptor<TokenERC721>;
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _mint = this.mint!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _batchMint = this.mint!.batch!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _query = this.query!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _owned = this.query!.owned!;
+  private _mint = this.mint as Erc721Mintable;
+  private _batchMint = this._mint.batch as Erc721BatchMintable;
+  private _query = this.query as Erc721Supply;
+  private _owned = this._query.owned as Erc721Enumerable;
 
   constructor(
     network: NetworkOrSignerOrProvider,

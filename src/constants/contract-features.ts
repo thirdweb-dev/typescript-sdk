@@ -16,6 +16,11 @@ import {
   FEATURE_EDITION_ENUMERABLE,
   FEATURE_EDITION_MINTABLE,
 } from "./erc1155-features";
+import {
+  FEATURE_PLATFORM_FEE,
+  FEATURE_PRIMARY_SALE,
+  FEATURE_ROYALTY,
+} from "./thirdweb-features";
 
 /**
  * @internal
@@ -32,7 +37,10 @@ export type Feature =
   | typeof FEATURE_EDITION
   | typeof FEATURE_EDITION_ENUMERABLE
   | typeof FEATURE_EDITION_MINTABLE
-  | typeof FEATURE_EDITION_BATCH_MINTABLE;
+  | typeof FEATURE_EDITION_BATCH_MINTABLE
+  | typeof FEATURE_ROYALTY
+  | typeof FEATURE_PLATFORM_FEE
+  | typeof FEATURE_PRIMARY_SALE;
 
 /**
  * @internal
@@ -53,4 +61,7 @@ export const SUPPORTED_FEATURES: Record<string, Feature> = {
   [FEATURE_TOKEN.name]: FEATURE_TOKEN,
   [FEATURE_NFT.name]: FEATURE_NFT,
   [FEATURE_EDITION.name]: FEATURE_EDITION,
+  [FEATURE_ROYALTY.name]: FEATURE_ROYALTY,
+  [FEATURE_PLATFORM_FEE.name]: FEATURE_PLATFORM_FEE,
+  [FEATURE_PRIMARY_SALE.name]: FEATURE_PRIMARY_SALE,
 };

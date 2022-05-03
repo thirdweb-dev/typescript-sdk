@@ -26,7 +26,11 @@ import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { DelayedReveal } from "../core/classes/delayed-reveal";
-import { GasCostEstimator } from "../core/classes";
+import {
+  Erc721Enumerable,
+  Erc721Supply,
+  GasCostEstimator,
+} from "../core/classes";
 import { ClaimVerification } from "../types";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
@@ -148,10 +152,8 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   public revealer: DelayedReveal<DropERC721>;
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _query = this.query!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _owned = this.query!.owned!;
+  private _query = this.query as Erc721Supply;
+  private _owned = this._query.owned as Erc721Enumerable;
 
   constructor(
     network: NetworkOrSignerOrProvider,

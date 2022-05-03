@@ -10,6 +10,7 @@ import { BigNumberish } from "ethers";
  * Handles Contract royalties
  * @public
  */
+// TODO (byoc) change to ThirdwebContract
 export class ContractRoyalty<
   TContract extends IThirdwebRoyalty & IThirdwebContract,
   TSchema extends IGenericSchemaType,
