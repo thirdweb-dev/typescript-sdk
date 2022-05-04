@@ -15,14 +15,17 @@ import { PriceSchema } from "../../schema";
 import { BaseERC20 } from "../../types/eips";
 import { detectContractFeature } from "../../common";
 import { Erc20Mintable } from "./erc-20-mintable";
+import { FEATURE_TOKEN } from "../../constants/erc20-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
  * Standard ERC20 functions
  * @public
  */
 export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20>
-  implements UpdateableNetwork
+  implements UpdateableNetwork, DetectableFeature
 {
+  featureName = FEATURE_TOKEN.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;

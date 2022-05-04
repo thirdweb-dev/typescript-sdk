@@ -4,8 +4,11 @@ import { BigNumber } from "ethers";
 import { NFTMetadataOwner } from "../../schema";
 import { Erc721 } from "./erc-721";
 import { BaseERC721 } from "../../types/eips";
+import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
-export class Erc721Enumerable {
+export class Erc721Enumerable implements DetectableFeature {
+  featureName = FEATURE_NFT_ENUMERABLE.name;
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>;
   private erc721: Erc721<BaseERC721>;
 

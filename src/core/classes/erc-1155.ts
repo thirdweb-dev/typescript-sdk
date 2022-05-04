@@ -22,14 +22,17 @@ import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { BaseERC1155 } from "../../types/eips";
 import { Erc1155Enumerable } from "./erc-1155-enumerable";
 import { Erc1155Mintable } from "./erc-1155-mintable";
+import { FEATURE_EDITION } from "../../constants/erc1155-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
  * Standard ERC1155 functions
  * @public
  */
 export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
-  implements UpdateableNetwork
+  implements UpdateableNetwork, DetectableFeature
 {
+  featureName = FEATURE_EDITION.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;

@@ -6,8 +6,11 @@ import { BaseERC20 } from "../../types/eips";
 import { Erc20 } from "./erc-20";
 import { Amount } from "../../types";
 import { Erc20BatchMintable } from "./erc-20-batch-mintable";
+import { FEATURE_TOKEN_MINTABLE } from "../../constants/erc20-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
-export class Erc20Mintable {
+export class Erc20Mintable implements DetectableFeature {
+  featureName = FEATURE_TOKEN_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC20>;
   private erc20: Erc20<BaseERC20>;
 

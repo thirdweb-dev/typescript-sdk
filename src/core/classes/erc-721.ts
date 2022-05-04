@@ -17,14 +17,17 @@ import {
 import { Erc721Supply } from "./erc-721-supply";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { BaseERC721 } from "../../types/eips";
+import { FEATURE_NFT } from "../../constants/erc721-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
  * Standard ERC721 functions
  * @public
  */
 export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
-  implements UpdateableNetwork
+  implements UpdateableNetwork, DetectableFeature
 {
+  featureName = FEATURE_NFT.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;

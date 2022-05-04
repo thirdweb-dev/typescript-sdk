@@ -10,8 +10,11 @@ import { uploadOrExtractURI } from "../../common/nft";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { TokensMintedEvent } from "contracts/TokenERC1155";
 import { IStorage } from "../interfaces";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
 
-export class Erc1155Mintable {
+export class Erc1155Mintable implements DetectableFeature {
+  featureName = FEATURE_EDITION_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC1155>;
   private erc1155: Erc1155<BaseERC1155>;
   private storage: IStorage;

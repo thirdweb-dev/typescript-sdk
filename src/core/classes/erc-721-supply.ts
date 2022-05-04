@@ -7,8 +7,11 @@ import { Erc721 } from "./erc-721";
 import { BaseERC721 } from "../../types/eips";
 import { detectContractFeature } from "../../common";
 import { Erc721Enumerable } from "./erc-721-enumerable";
+import { FEATURE_NFT_SUPPLY } from "../../constants/erc721-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
-export class Erc721Supply {
+export class Erc721Supply implements DetectableFeature {
+  featureName = FEATURE_NFT_SUPPLY.name;
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>;
   private erc721: Erc721<BaseERC721>;
 

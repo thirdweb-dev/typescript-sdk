@@ -5,8 +5,11 @@ import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { EditionMetadata, EditionMetadataOwner } from "../../schema";
 import { Erc1155 } from "./erc-1155";
 import { BaseERC1155 } from "../../types/eips";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { FEATURE_EDITION_ENUMERABLE } from "../../constants/erc1155-features";
 
-export class Erc1155Enumerable {
+export class Erc1155Enumerable implements DetectableFeature {
+  featureName = FEATURE_EDITION_ENUMERABLE.name;
   private contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>;
   private erc1155: Erc1155<BaseERC1155>;
 
