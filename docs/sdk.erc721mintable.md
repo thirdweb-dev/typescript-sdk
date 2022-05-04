@@ -7,8 +7,9 @@
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc721Mintable 
+export declare class Erc721Mintable implements DetectableFeature 
 ```
+<b>Implements:</b> DetectableFeature
 
 ## Constructors
 
@@ -21,6 +22,7 @@ export declare class Erc721Mintable
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [batch](./sdk.erc721mintable.batch.md) |  | [Erc721BatchMintable](./sdk.erc721batchmintable.md) \| undefined |  |
+|  [featureName](./sdk.erc721mintable.featurename.md) |  | "ERC721Mintable" |  |
 
 ## Methods
 

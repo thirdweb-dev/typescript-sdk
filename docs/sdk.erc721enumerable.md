@@ -7,14 +7,21 @@
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc721Enumerable 
+export declare class Erc721Enumerable implements DetectableFeature 
 ```
+<b>Implements:</b> DetectableFeature
 
 ## Constructors
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
 |  [(constructor)(erc721, contractWrapper)](./sdk.erc721enumerable._constructor_.md) |  | Constructs a new instance of the <code>Erc721Enumerable</code> class |
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [featureName](./sdk.erc721enumerable.featurename.md) |  | "ERC721Enumerable" |  |
 
 ## Methods
 

@@ -9,9 +9,9 @@ Standard ERC1155 functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> implements UpdateableNetwork 
+export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> implements UpdateableNetwork, DetectableFeature 
 ```
-<b>Implements:</b> UpdateableNetwork
+<b>Implements:</b> UpdateableNetwork, DetectableFeature
 
 ## Constructors
 
@@ -24,6 +24,7 @@ export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc1155.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
+|  [featureName](./sdk.erc1155.featurename.md) |  | "ERC1155" |  |
 |  [mint](./sdk.erc1155.mint.md) |  | Erc1155Mintable \| undefined |  |
 |  [options](./sdk.erc1155.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [query](./sdk.erc1155.query.md) |  | [Erc1155Enumerable](./sdk.erc1155enumerable.md) \| undefined |  |

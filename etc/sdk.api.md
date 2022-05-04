@@ -1491,15 +1491,18 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
 
 // Warning: (ae-forgotten-export) The symbol "BaseERC1155" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> implements UpdateableNetwork {
+export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> implements UpdateableNetwork, DetectableFeature {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     airdrop(tokenId: BigNumberish, addresses: AirdropInput, data?: BytesLike): Promise<TransactionResult>;
     balance(tokenId: BigNumberish): Promise<BigNumber>;
     balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
+    // (undocumented)
+    featureName: "ERC1155";
     get(tokenId: BigNumberish): Promise<EditionMetadata>;
     // (undocumented)
     getAddress(): string;
@@ -1525,10 +1528,12 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> impleme
 }
 
 // @public (undocumented)
-export class Erc1155Enumerable {
+export class Erc1155Enumerable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IERC1155Enumerable" needs to be exported by the entry point index.d.ts
     constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>);
     all(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
+    // (undocumented)
+    featureName: "ERC1155Enumerable";
     getTotalCount(): Promise<BigNumber>;
     owned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
 }
@@ -1547,7 +1552,7 @@ export class Erc1155SignatureMinting {
 // Warning: (ae-forgotten-export) The symbol "BaseERC20" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements UpdateableNetwork {
+export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements UpdateableNetwork, DetectableFeature {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     allowance(spender: string): Promise<CurrencyValue>;
     allowanceOf(owner: string, spender: string): Promise<CurrencyValue>;
@@ -1555,6 +1560,8 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements Upda
     balanceOf(address: string): Promise<CurrencyValue>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
+    // (undocumented)
+    featureName: "ERC20";
     get(): Promise<Currency>;
     // (undocumented)
     getAddress(): string;
@@ -1591,12 +1598,14 @@ export class Erc20SignatureMinting {
 // Warning: (ae-forgotten-export) The symbol "BaseERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements UpdateableNetwork {
+export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements UpdateableNetwork, DetectableFeature {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
     balanceOf(address: string): Promise<BigNumber>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
+    // (undocumented)
+    featureName: "ERC721";
     get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
     // (undocumented)
     getAddress(): string;
@@ -1620,27 +1629,33 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements 
 }
 
 // @public (undocumented)
-export class Erc721BatchMintable {
+export class Erc721BatchMintable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IMintableERC721" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "IMulticall" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>, storage: IStorage);
+    // (undocumented)
+    featureName: "ERC721BatchMintable";
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 }
 
 // @public (undocumented)
-export class Erc721Enumerable {
+export class Erc721Enumerable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IERC721Enumerable" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>);
     all(walletAddress?: string): Promise<NFTMetadataOwner[]>;
+    // (undocumented)
+    featureName: "ERC721Enumerable";
     tokenIds(walletAddress?: string): Promise<BigNumber[]>;
 }
 
 // @public (undocumented)
-export class Erc721Mintable {
+export class Erc721Mintable implements DetectableFeature {
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<IMintableERC721>, storage: IStorage);
     // (undocumented)
     batch: Erc721BatchMintable | undefined;
+    // (undocumented)
+    featureName: "ERC721Mintable";
     to(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 }
 
@@ -1655,10 +1670,12 @@ export class Erc721SignatureMinting {
 }
 
 // @public (undocumented)
-export class Erc721Supply {
+export class Erc721Supply implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IERC721Supply" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>);
     all(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    // (undocumented)
+    featureName: "ERC721Supply";
     // (undocumented)
     owned: Erc721Enumerable | undefined;
     totalSupply(): Promise<BigNumber>;

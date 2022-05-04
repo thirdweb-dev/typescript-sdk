@@ -9,9 +9,9 @@ Standard ERC20 functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements UpdateableNetwork 
+export declare class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements UpdateableNetwork, DetectableFeature 
 ```
-<b>Implements:</b> UpdateableNetwork
+<b>Implements:</b> UpdateableNetwork, DetectableFeature
 
 ## Constructors
 
@@ -24,6 +24,7 @@ export declare class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> impleme
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc20.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
+|  [featureName](./sdk.erc20.featurename.md) |  | "ERC20" |  |
 |  [mint](./sdk.erc20.mint.md) |  | Erc20Mintable \| undefined | Mint tokens |
 |  [options](./sdk.erc20.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [storage](./sdk.erc20.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
