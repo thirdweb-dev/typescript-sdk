@@ -36,14 +36,14 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
-    byocFactory: "0x4ca9932786541D142bAe8a39483050D1D7AD664a",
+    byocFactory: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
   },
   [ChainId.Goerli]: {
     biconomyForwarder: AddressZero,
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0xB1Bd9d7942A250BA2Dce27DD601F2ED4211A60C4",
-    byocFactory: "0x8040724E178D69Ee29C3ED1bE2BcaEb5Ac5B4Cbc",
+    byocFactory: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
   },
   [ChainId.Polygon]: {
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
@@ -71,7 +71,7 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
-    byocFactory: "0x4ca9932786541D142bAe8a39483050D1D7AD664a",
+    byocFactory: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
   },
   [ChainId.Fantom]: {
     biconomyForwarder: AddressZero,
@@ -85,7 +85,7 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
-    byocFactory: "0x4ca9932786541D142bAe8a39483050D1D7AD664a",
+    byocFactory: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
   },
 };
 
