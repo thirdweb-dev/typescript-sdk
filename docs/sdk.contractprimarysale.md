@@ -9,8 +9,9 @@ Handles primary sales recipients for a Contract
 <b>Signature:</b>
 
 ```typescript
-export declare class ContractPrimarySale<TContract extends IPrimarySale> 
+export declare class ContractPrimarySale<TContract extends IPrimarySale> implements DetectableFeature 
 ```
+<b>Implements:</b> DetectableFeature
 
 ## Constructors
 

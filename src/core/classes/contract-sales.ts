@@ -2,12 +2,15 @@ import { IPrimarySale } from "contracts";
 import { ContractWrapper } from "./contract-wrapper";
 import { TransactionResult } from "../types";
 import { FEATURE_PRIMARY_SALE } from "../../constants/thirdweb-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
  * Handles primary sales recipients for a Contract
  * @public
  */
-export class ContractPrimarySale<TContract extends IPrimarySale> {
+export class ContractPrimarySale<TContract extends IPrimarySale>
+  implements DetectableFeature
+{
   featureName = FEATURE_PRIMARY_SALE.name;
   private contractWrapper;
 

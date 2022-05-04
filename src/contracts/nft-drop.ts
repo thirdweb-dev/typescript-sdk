@@ -197,7 +197,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    *******************************/
 
   /**
-   * {@inheritDoc Erc721Enumerable.all}
+   * {@inheritDoc Erc721Supply.all}
    */
   public async getAll(
     queryParams?: QueryAllParams,
@@ -205,21 +205,21 @@ export class NFTDrop extends Erc721<DropERC721> {
     return this._query.all(queryParams);
   }
   /**
-   * {@inheritDoc Erc721Owned.all}
+   * {@inheritDoc Erc721Enumerable.all}
    */
   public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
     return this._owned.all(walletAddress);
   }
 
   /**
-   * {@inheritDoc Erc721Owned.tokendIds}
+   * {@inheritDoc Erc721Enumerable.tokendIds}
    */
   public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
     return this._owned.tokenIds(walletAddress);
   }
 
   /**
-   * {@inheritDoc Erc721Enumerable.totalSupply}
+   * {@inheritDoc Erc721Supply.totalSupply}
    */
   public async totalSupply() {
     return this._query.totalSupply();

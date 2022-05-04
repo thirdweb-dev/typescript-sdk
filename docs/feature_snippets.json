@@ -1,12 +1,21 @@
 {
   "PlatformFee": {
     "name": "ContractPlatformFee",
-    "summary": "Handles primary sales recipients for a Contract\n\n\n",
+    "summary": "Handles platform fees for a Contract\n\n\n",
     "remarks": null,
     "examples": {},
     "methods": [],
     "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.ContractPlatformFee"
+  },
+  "PrimarySale": {
+    "name": "ContractPrimarySale",
+    "summary": "Handles primary sales recipients for a Contract\n\n\n",
+    "remarks": null,
+    "examples": {},
+    "methods": [],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.ContractPrimarySale"
   },
   "Permissions": {
     "name": "ContractRoles",

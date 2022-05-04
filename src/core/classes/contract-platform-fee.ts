@@ -7,7 +7,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_PLATFORM_FEE } from "../../constants/thirdweb-features";
 
 /**
- * Handles primary sales recipients for a Contract
+ * Handles platform fees for a Contract
  * @public
  */
 export class ContractPlatformFee<TContract extends IPlatformFee>

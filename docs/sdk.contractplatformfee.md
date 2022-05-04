@@ -4,7 +4,7 @@
 
 ## ContractPlatformFee class
 
-Handles primary sales recipients for a Contract
+Handles platform fees for a Contract
 
 <b>Signature:</b>
 
