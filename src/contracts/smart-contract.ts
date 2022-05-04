@@ -186,9 +186,9 @@ export class SmartContract<
 
   private detectRoles() {
     if (
-      implementsInterface<IPermissionsEnumerable>(
+      detectContractFeature<IPermissionsEnumerable>(
         this.contractWrapper,
-        IPermissionsEnumerable__factory.createInterface(),
+        "Permissions",
       )
     ) {
       return new ContractRoles(this.contractWrapper, ALL_ROLES);
