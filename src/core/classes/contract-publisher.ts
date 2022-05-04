@@ -254,7 +254,9 @@ export class ContractPublisher extends RPCConnectionHandler {
     invariant(signer, "A signer is required");
     const metadata = await this.fetchFullContractMetadata(contractMetadataUri);
     const publisher = await signer.getAddress();
-    const bytecode = metadata.bytecode;
+    const bytecode = ethers.utils.isHexString(metadata.bytecode)
+      ? metadata.bytecode
+      : `0x${metadata.bytecode}`;
     const salt = ethers.utils.formatBytes32String(Math.random().toString()); // TODO expose as optional
     const value = BigNumber.from(0);
     const constructorParamTypes = extractConstructorParamsFromAbi(

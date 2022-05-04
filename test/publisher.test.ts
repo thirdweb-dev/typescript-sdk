@@ -198,4 +198,19 @@ describe("Publishing", async () => {
     const all = await c.nft.query.all();
     expect(all.length).to.eq(1);
   });
+
+  it("Solc raw bytecode", async () => {
+    const realSDK = new ThirdwebSDK(
+      adminWallet,
+      {},
+      new IpfsStorage("https://ipfs.thirdweb.com/ipfs/"),
+    );
+    const pub = await realSDK.getPublisher();
+    const ipfsUri = "ipfs://QmVtCnHePncGSaMqUALd6bHMBhb9Xw3k5FES2fWRoeiHAt/0";
+    const deployedAddr = await pub.deployContract(ipfsUri, []);
+    const c = await realSDK.getContract(deployedAddr);
+    await c.functions.increment();
+    const n = await c.functions.number();
+    expect(n.toNumber()).to.eq(2);
+  });
 });
