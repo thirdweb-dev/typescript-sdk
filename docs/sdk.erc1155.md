@@ -4,7 +4,7 @@
 
 ## Erc1155 class
 
-Standard ERC1155 functions
+Standard ERC1155 NFT functions
 
 <b>Signature:</b>
 
@@ -12,6 +12,21 @@ Standard ERC1155 functions
 export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> implements UpdateableNetwork, DetectableFeature 
 ```
 <b>Implements:</b> UpdateableNetwork, DetectableFeature
+
+## Remarks
+
+Basic functionality for a ERC1155 contract that handles IPFS storage for you.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("0x...");
+const walletAddress = "0x...";
+const tokenId = 0;
+const nft = await contract.edition.get(tokenId);
+await contract.edition.transfer(walletAddress, tokenId, 2);
+```
 
 ## Constructors
 

@@ -19,7 +19,14 @@ import { FEATURE_TOKEN } from "../../constants/erc20-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
- * Standard ERC20 functions
+ * Standard ERC20 Token functions
+ * @remarks Basic functionality for a ERC20 contract that handles all unit transformation for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("0x...");
+ * const walletAddress = "0x...";
+ * await contract.token.transfer(walletAddress, 0.8);
+ * ```
  * @public
  */
 export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20>

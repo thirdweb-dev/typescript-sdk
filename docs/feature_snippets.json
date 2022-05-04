@@ -56,9 +56,11 @@
   },
   "ERC1155": {
     "name": "Erc1155",
-    "summary": "Standard ERC1155 functions\n\n\n",
-    "remarks": null,
-    "examples": {},
+    "summary": "Standard ERC1155 NFT functions\n\n",
+    "remarks": "\n\nBasic functionality for a ERC1155 contract that handles IPFS storage for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst walletAddress = \"0x...\";\nconst tokenId = 0;\nconst nft = await contract.edition.get(tokenId);\nawait contract.edition.transfer(walletAddress, tokenId, 2);"
+    },
     "methods": [
       {
         "name": "airdrop",
@@ -130,9 +132,11 @@
   },
   "ERC20": {
     "name": "Erc20",
-    "summary": "Standard ERC20 functions\n\n\n",
-    "remarks": null,
-    "examples": {},
+    "summary": "Standard ERC20 Token functions\n\n",
+    "remarks": "\n\nBasic functionality for a ERC20 contract that handles all unit transformation for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst walletAddress = \"0x...\";\nawait contract.token.transfer(walletAddress, 0.8);"
+    },
     "methods": [
       {
         "name": "allowance",
@@ -221,9 +225,11 @@
   },
   "ERC721": {
     "name": "Erc721",
-    "summary": "Standard ERC721 functions\n\n\n",
-    "remarks": null,
-    "examples": {},
+    "summary": "Standard ERC721 NFT functions\n\n",
+    "remarks": "\n\nBasic functionality for a ERC721 contract that handles IPFS storage for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst walletAddress = \"0x...\";\nconst tokenId = 0;\nconst nft = await contract.nft.get(tokenId);\nawait contract.nft.transfer(walletAddress, tokenId);"
+    },
     "methods": [
       {
         "name": "balanceOf",

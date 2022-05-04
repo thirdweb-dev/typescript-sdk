@@ -22,12 +22,12 @@
 |  [DropErc1155History](./sdk.droperc1155history.md) | Manages history for Edition Drop contracts |
 |  [Edition](./sdk.edition.md) | Create a collection of NFTs that lets you mint multiple copies of each NFT. |
 |  [EditionDrop](./sdk.editiondrop.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
-|  [Erc1155](./sdk.erc1155.md) | Standard ERC1155 functions |
+|  [Erc1155](./sdk.erc1155.md) | Standard ERC1155 NFT functions |
 |  [Erc1155Enumerable](./sdk.erc1155enumerable.md) |  |
 |  [Erc1155SignatureMinting](./sdk.erc1155signatureminting.md) | Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely |
-|  [Erc20](./sdk.erc20.md) | Standard ERC20 functions |
+|  [Erc20](./sdk.erc20.md) | Standard ERC20 Token functions |
 |  [Erc20SignatureMinting](./sdk.erc20signatureminting.md) | Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely |
-|  [Erc721](./sdk.erc721.md) | Standard ERC721 functions |
+|  [Erc721](./sdk.erc721.md) | Standard ERC721 NFT functions |
 |  [Erc721BatchMintable](./sdk.erc721batchmintable.md) |  |
 |  [Erc721Enumerable](./sdk.erc721enumerable.md) |  |
 |  [Erc721Mintable](./sdk.erc721mintable.md) |  |

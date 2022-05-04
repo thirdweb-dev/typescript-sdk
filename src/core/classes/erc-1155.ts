@@ -26,7 +26,16 @@ import { FEATURE_EDITION } from "../../constants/erc1155-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
- * Standard ERC1155 functions
+ * Standard ERC1155 NFT functions
+ * @remarks Basic functionality for a ERC1155 contract that handles IPFS storage for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("0x...");
+ * const walletAddress = "0x...";
+ * const tokenId = 0;
+ * const nft = await contract.edition.get(tokenId);
+ * await contract.edition.transfer(walletAddress, tokenId, 2);
+ * ```
  * @public
  */
 export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>

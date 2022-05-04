@@ -4,7 +4,7 @@
 
 ## Erc721 class
 
-Standard ERC721 functions
+Standard ERC721 NFT functions
 
 <b>Signature:</b>
 
@@ -12,6 +12,21 @@ Standard ERC721 functions
 export declare class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements UpdateableNetwork, DetectableFeature 
 ```
 <b>Implements:</b> UpdateableNetwork, DetectableFeature
+
+## Remarks
+
+Basic functionality for a ERC721 contract that handles IPFS storage for you.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("0x...");
+const walletAddress = "0x...";
+const tokenId = 0;
+const nft = await contract.nft.get(tokenId);
+await contract.nft.transfer(walletAddress, tokenId);
+```
 
 ## Constructors
 

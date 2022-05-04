@@ -21,7 +21,16 @@ import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
- * Standard ERC721 functions
+ * Standard ERC721 NFT functions
+ * @remarks Basic functionality for a ERC721 contract that handles IPFS storage for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("0x...");
+ * const walletAddress = "0x...";
+ * const tokenId = 0;
+ * const nft = await contract.nft.get(tokenId);
+ * await contract.nft.transfer(walletAddress, tokenId);
+ * ```
  * @public
  */
 export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>

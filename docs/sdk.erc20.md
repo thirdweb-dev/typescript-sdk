@@ -4,7 +4,7 @@
 
 ## Erc20 class
 
-Standard ERC20 functions
+Standard ERC20 Token functions
 
 <b>Signature:</b>
 
@@ -12,6 +12,19 @@ Standard ERC20 functions
 export declare class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements UpdateableNetwork, DetectableFeature 
 ```
 <b>Implements:</b> UpdateableNetwork, DetectableFeature
+
+## Remarks
+
+Basic functionality for a ERC20 contract that handles all unit transformation for you.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("0x...");
+const walletAddress = "0x...";
+await contract.token.transfer(walletAddress, 0.8);
+```
 
 ## Constructors
 
