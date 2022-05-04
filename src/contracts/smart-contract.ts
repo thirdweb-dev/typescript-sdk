@@ -16,7 +16,6 @@ import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   IPermissionsEnumerable,
-  IPermissionsEnumerable__factory,
   IPlatformFee,
   IPrimarySale,
   IRoyalty,
@@ -26,7 +25,6 @@ import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractInterface } from "ethers";
 import { ALL_ROLES, detectContractFeature } from "../common";
-import { implementsInterface } from "../common/feature-detection";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
