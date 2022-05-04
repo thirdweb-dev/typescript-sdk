@@ -9,14 +9,21 @@ Handles primary sales recipients for a Contract
 <b>Signature:</b>
 
 ```typescript
-export declare class ContractPlatformFee<TContract extends IPlatformFee> 
+export declare class ContractPlatformFee<TContract extends IPlatformFee> implements DetectableFeature 
 ```
+<b>Implements:</b> DetectableFeature
 
 ## Constructors
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
 |  [(constructor)(contractWrapper)](./sdk.contractplatformfee._constructor_.md) |  | Constructs a new instance of the <code>ContractPlatformFee</code> class |
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [featureName](./sdk.contractplatformfee.featurename.md) |  | "PlatformFee" |  |
 
 ## Methods
 

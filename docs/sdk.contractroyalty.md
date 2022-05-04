@@ -9,14 +9,21 @@ Handles Contract royalties
 <b>Signature:</b>
 
 ```typescript
-export declare class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract), TSchema extends IGenericSchemaType> 
+export declare class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract), TSchema extends IGenericSchemaType> implements DetectableFeature 
 ```
+<b>Implements:</b> DetectableFeature
 
 ## Constructors
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
 |  [(constructor)(contractWrapper, metadata)](./sdk.contractroyalty._constructor_.md) |  | Constructs a new instance of the <code>ContractRoyalty</code> class |
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [featureName](./sdk.contractroyalty.featurename.md) |  | "Royalty" |  |
 
 ## Methods
 

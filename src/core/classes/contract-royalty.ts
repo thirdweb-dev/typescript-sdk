@@ -5,6 +5,8 @@ import { ContractWrapper } from "./contract-wrapper";
 import { z } from "zod";
 import { TransactionResult } from "../types";
 import { BigNumberish } from "ethers";
+import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
  * Handles Contract royalties
@@ -13,7 +15,9 @@ import { BigNumberish } from "ethers";
 export class ContractRoyalty<
   TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract),
   TSchema extends IGenericSchemaType,
-> {
+> implements DetectableFeature
+{
+  featureName = FEATURE_ROYALTY.name;
   private contractWrapper;
   private metadata;
 

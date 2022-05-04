@@ -18,6 +18,12 @@ export declare class ContractPrimarySale<TContract extends IPrimarySale>
 |  --- | --- | --- |
 |  [(constructor)(contractWrapper)](./sdk.contractprimarysale._constructor_.md) |  | Constructs a new instance of the <code>ContractPrimarySale</code> class |
 
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [featureName](./sdk.contractprimarysale.featurename.md) |  | "PrimarySale" |  |
+
 ## Methods
 
 |  Method | Modifiers | Description |

@@ -3,12 +3,17 @@ import { ContractWrapper } from "./contract-wrapper";
 import { TransactionResult } from "../types";
 import { CommonPlatformFeeSchema } from "../../schema";
 import { z } from "zod";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { FEATURE_PLATFORM_FEE } from "../../constants/thirdweb-features";
 
 /**
  * Handles primary sales recipients for a Contract
  * @public
  */
-export class ContractPlatformFee<TContract extends IPlatformFee> {
+export class ContractPlatformFee<TContract extends IPlatformFee>
+  implements DetectableFeature
+{
+  featureName = FEATURE_PLATFORM_FEE.name;
   private contractWrapper;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {

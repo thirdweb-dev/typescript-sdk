@@ -652,10 +652,13 @@ export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebCont
 }
 
 // Warning: (ae-forgotten-export) The symbol "IPlatformFee" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class ContractPlatformFee<TContract extends IPlatformFee> {
+export class ContractPlatformFee<TContract extends IPlatformFee> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>);
+    // (undocumented)
+    featureName: "PlatformFee";
     get(): Promise<{
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
@@ -669,6 +672,8 @@ export class ContractPlatformFee<TContract extends IPlatformFee> {
 // @public
 export class ContractPrimarySale<TContract extends IPrimarySale> {
     constructor(contractWrapper: ContractWrapper<TContract>);
+    // (undocumented)
+    featureName: "PrimarySale";
     getRecipient(): Promise<string>;
     setRecipient(recipient: string): Promise<TransactionResult>;
 }
@@ -708,8 +713,10 @@ export class ContractRoles<TContract extends IPermissionsEnumerable, TRole exten
 // Warning: (ae-incompatible-release-tags) The symbol "ContractRoyalty" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
-export class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract), TSchema extends IGenericSchemaType> {
+export class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract), TSchema extends IGenericSchemaType> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, TSchema>);
+    // (undocumented)
+    featureName: "Royalty";
     getDefaultRoyaltyInfo(): Promise<{
         seller_fee_basis_points: number;
         fee_recipient: string;
@@ -1491,7 +1498,6 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
 
 // Warning: (ae-forgotten-export) The symbol "BaseERC1155" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 //
 // @public
 export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> implements UpdateableNetwork, DetectableFeature {
@@ -4175,7 +4181,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ThirdwebContract>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "custom" | "token" | "pack" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "nft-collection";
+        contractType: "custom" | "token" | "pack" | "edition" | "split" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
     getEdition(address: string): Edition;

@@ -1,4 +1,22 @@
 {
+  "PlatformFee": {
+    "name": "ContractPlatformFee",
+    "summary": "Handles primary sales recipients for a Contract\n\n\n",
+    "remarks": null,
+    "examples": {},
+    "methods": [],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.ContractPlatformFee"
+  },
+  "Royalty": {
+    "name": "ContractRoyalty",
+    "summary": "Handles Contract royalties\n\n\n",
+    "remarks": null,
+    "examples": {},
+    "methods": [],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.ContractRoyalty"
+  },
   "ERC1155": {
     "name": "Erc1155",
     "summary": "Standard ERC1155 functions\n\n\n",
