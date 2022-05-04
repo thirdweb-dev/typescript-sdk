@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { ERC721Enumerable, ERC721Supply } from "contracts";
+import { IERC721Enumerable, IERC721Supply } from "contracts";
 import { BigNumber } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { NFTMetadataOwner } from "../../schema";
@@ -9,14 +9,14 @@ import { detectContractFeature } from "../../common";
 import { Erc721Enumerable } from "./erc-721-enumerable";
 
 export class Erc721Supply {
-  private contractWrapper: ContractWrapper<BaseERC721 & ERC721Supply>;
+  private contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>;
   private erc721: Erc721<BaseERC721>;
 
   public owned: Erc721Enumerable | undefined;
 
   constructor(
     erc721: Erc721<BaseERC721>,
-    contractWrapper: ContractWrapper<BaseERC721 & ERC721Supply>,
+    contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>,
   ) {
     this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
@@ -65,7 +65,7 @@ export class Erc721Supply {
 
   private detectErc721Owned(): Erc721Enumerable | undefined {
     if (
-      detectContractFeature<BaseERC721 & ERC721Enumerable>(
+      detectContractFeature<BaseERC721 & IERC721Enumerable>(
         this.contractWrapper,
         "ERC721Enumerable",
       )

@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { IMintableERC721, Multicall } from "contracts";
+import { IMintableERC721, IMulticall } from "contracts";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../../schema";
 import { TransactionResultWithId } from "../types";
 import { uploadOrExtractURI } from "../../common/nft";
@@ -78,7 +78,7 @@ export class Erc721Mintable {
 
   private detectErc721BatchMintable(): Erc721BatchMintable | undefined {
     if (
-      detectContractFeature<IMintableERC721 & Multicall>(
+      detectContractFeature<IMintableERC721 & IMulticall>(
         this.contractWrapper,
         "ERC721BatchMintable",
       )

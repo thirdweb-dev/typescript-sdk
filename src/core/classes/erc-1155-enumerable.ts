@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { ERC1155Enumerable } from "contracts";
+import { IERC1155Enumerable } from "contracts";
 import { BigNumber } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { EditionMetadata, EditionMetadataOwner } from "../../schema";
@@ -7,12 +7,12 @@ import { Erc1155 } from "./erc-1155";
 import { BaseERC1155 } from "../../types/eips";
 
 export class Erc1155Enumerable {
-  private contractWrapper: ContractWrapper<BaseERC1155 & ERC1155Enumerable>;
+  private contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>;
   private erc1155: Erc1155<BaseERC1155>;
 
   constructor(
     erc1155: Erc1155<BaseERC1155>,
-    contractWrapper: ContractWrapper<BaseERC1155 & ERC1155Enumerable>,
+    contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>,
   ) {
     this.erc1155 = erc1155;
     this.contractWrapper = contractWrapper;

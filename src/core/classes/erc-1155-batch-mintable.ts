@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { IMintableERC1155, Multicall } from "contracts";
+import { IMintableERC1155, IMulticall } from "contracts";
 import { TransactionResultWithId } from "../types";
 import { BaseERC1155 } from "../../types/eips";
 import { Erc1155 } from "./erc-1155";
@@ -10,13 +10,13 @@ import { TokensMintedEvent } from "contracts/TokenERC1155";
 import { IStorage } from "../interfaces";
 
 export class Erc1155BatchMintable {
-  private contractWrapper: ContractWrapper<IMintableERC1155 & Multicall>;
+  private contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>;
   private erc1155: Erc1155<BaseERC1155>;
   private storage: IStorage;
 
   constructor(
     erc1155: Erc1155<BaseERC1155>,
-    contractWrapper: ContractWrapper<IMintableERC1155 & Multicall>,
+    contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>,
     storage: IStorage,
   ) {
     this.erc1155 = erc1155;

@@ -1,12 +1,12 @@
 import { ContractWrapper } from "./contract-wrapper";
 import {
-  ERC1155__factory,
-  ERC165__factory,
-  ERC721__factory,
+  IERC1155,
+  IERC165,
+  IERC721,
   IMarketplace,
   Marketplace,
 } from "contracts";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
 import {
   DirectListing,
   NewDirectListing,
@@ -38,6 +38,9 @@ import { IStorage } from "../interfaces";
 import invariant from "tiny-invariant";
 import { isAddress } from "ethers/lib/utils";
 import { ListingAddedEvent } from "contracts/Marketplace";
+import ERC1155Abi from "../../../abis/IERC1155.json";
+import ERC721Abi from "../../../abis/IERC721.json";
+import ERC165Abi from "../../../abis/IERC165.json";
 
 /**
  * Handles direct listings
@@ -470,26 +473,29 @@ export class MarketplaceDirect {
     }
 
     const provider = this.contractWrapper.getProvider();
-    const erc165 = ERC165__factory.connect(
+    const erc165 = new Contract(
       listing.assetContractAddress,
+      ERC165Abi,
       provider,
-    );
+    ) as IERC165;
     const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
     const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
     if (isERC721) {
-      const asset = ERC721__factory.connect(
+      const asset = new Contract(
         listing.assetContractAddress,
+        ERC721Abi,
         provider,
-      );
+      ) as IERC721;
       return (
         (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
         listing.sellerAddress.toLowerCase()
       );
     } else if (isERC1155) {
-      const asset = ERC1155__factory.connect(
+      const asset = new Contract(
         listing.assetContractAddress,
+        ERC1155Abi,
         provider,
-      );
+      ) as IERC1155;
       const balance = await asset.balanceOf(
         listing.sellerAddress,
         listing.tokenId,

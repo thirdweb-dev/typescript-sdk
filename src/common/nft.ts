@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, Contract } from "ethers";
 import {
   CommonNFTInput,
   CommonNFTOutput,
@@ -8,16 +8,15 @@ import {
 } from "../schema/tokens/common";
 import { IStorage } from "../core";
 import { Provider } from "@ethersproject/providers";
-import {
-  ERC1155Metadata__factory,
-  ERC165__factory,
-  ERC721Metadata__factory,
-} from "contracts";
+import { IERC1155Metadata, IERC165, IERC721Metadata } from "contracts";
 import { NotFoundError } from "./error";
 import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
+import ERC721MetadataAbi from "../../abis/IERC721Metadata.json";
+import ERC1155MetadataAbi from "../../abis/IERC1155Metadata.json";
+import ERC165MetadataAbi from "../../abis/IERC165.json";
 
 /**
  * fetches the token metadata
@@ -55,14 +54,26 @@ export async function fetchTokenMetadataForContract(
   storage: IStorage,
 ) {
   let uri: string | undefined;
-  const erc165 = ERC165__factory.connect(contractAddress, provider);
+  const erc165 = new Contract(
+    contractAddress,
+    ERC165MetadataAbi,
+    provider,
+  ) as IERC165;
   const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
   const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
   if (isERC721) {
-    const erc721 = ERC721Metadata__factory.connect(contractAddress, provider);
+    const erc721 = new Contract(
+      contractAddress,
+      ERC721MetadataAbi,
+      provider,
+    ) as IERC721Metadata;
     uri = await erc721.tokenURI(tokenId);
   } else if (isERC1155) {
-    const erc1155 = ERC1155Metadata__factory.connect(contractAddress, provider);
+    const erc1155 = new Contract(
+      contractAddress,
+      ERC1155MetadataAbi,
+      provider,
+    ) as IERC1155Metadata;
     uri = await erc1155.uri(tokenId);
   } else {
     throw Error("Contract must implement ERC 1155 or ERC 721.");

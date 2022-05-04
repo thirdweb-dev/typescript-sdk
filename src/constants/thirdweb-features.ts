@@ -1,6 +1,6 @@
-import IThirdwebPrimarySaleAbi from "../../abis/IThirdwebPrimarySale.json";
-import IThirdwebPlatformFeeAbi from "../../abis/IThirdwebPlatformFee.json";
-import IThirdwebRoyaltyAbi from "../../abis/IThirdwebRoyalty.json";
+import IThirdwebPrimarySaleAbi from "../../abis/IPrimarySale.json";
+import IThirdwebPlatformFeeAbi from "../../abis/IPlatformFee.json";
+import IThirdwebRoyaltyAbi from "../../abis/IRoyalty.json";
 
 export const FEATURE_ROYALTY = {
   name: "Royalty",

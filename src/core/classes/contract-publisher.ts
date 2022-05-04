@@ -281,6 +281,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       {
         publishMetadataUri: contractMetadataUri,
         contractURI,
+        owner: publisher,
       } as ThirdwebContract.ThirdwebInfoStruct,
     ]);
     const events = this.factory.parseLogs<ContractDeployedEvent>(

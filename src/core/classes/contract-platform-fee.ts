@@ -1,4 +1,4 @@
-import { IThirdwebPlatformFee } from "contracts";
+import { IPlatformFee } from "contracts";
 import { ContractWrapper } from "./contract-wrapper";
 import { TransactionResult } from "../types";
 import { CommonPlatformFeeSchema } from "../../schema";
@@ -8,7 +8,7 @@ import { z } from "zod";
  * Handles primary sales recipients for a Contract
  * @public
  */
-export class ContractPlatformFee<TContract extends IThirdwebPlatformFee> {
+export class ContractPlatformFee<TContract extends IPlatformFee> {
   private contractWrapper;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {

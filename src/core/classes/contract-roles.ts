@@ -3,14 +3,14 @@ import { getRoleHash, Role } from "../../common/role";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { MissingRoleError } from "../../common/error";
-import { AccessControlEnumerable } from "contracts";
+import { IPermissionsEnumerable } from "contracts";
 
 /**
  * Handles Contract roles and permissions
  * @public
  */
 export class ContractRoles<
-  TContract extends AccessControlEnumerable,
+  TContract extends IPermissionsEnumerable,
   TRole extends Role,
 > {
   private contractWrapper;

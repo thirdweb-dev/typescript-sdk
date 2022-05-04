@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-roles: ContractRoles<AccessControlEnumerable, any> | undefined;
+roles: ContractRoles<IPermissionsEnumerable, any> | undefined;
 ```

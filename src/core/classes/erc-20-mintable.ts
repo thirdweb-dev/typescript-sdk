@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { IMintableERC20, Multicall } from "contracts";
+import { IMintableERC20, IMulticall } from "contracts";
 import { TransactionResult } from "../types";
 import { detectContractFeature } from "../../common";
 import { BaseERC20 } from "../../types/eips";
@@ -49,7 +49,7 @@ export class Erc20Mintable {
 
   private detectErc20BatchMintable() {
     if (
-      detectContractFeature<IMintableERC20 & Multicall>(
+      detectContractFeature<IMintableERC20 & IMulticall>(
         this.contractWrapper,
         "ERC20BatchMintable",
       )

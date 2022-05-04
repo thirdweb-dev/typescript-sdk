@@ -9,7 +9,7 @@ Handles primary sales recipients for a Contract
 <b>Signature:</b>
 
 ```typescript
-export declare class ContractPrimarySale<TContract extends IThirdwebPrimarySale> 
+export declare class ContractPrimarySale<TContract extends IPrimarySale> 
 ```
 
 ## Constructors

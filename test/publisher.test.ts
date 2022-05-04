@@ -1,16 +1,10 @@
 import { sdk, signers, storage } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import {
-  detectFeatures,
-  IpfsStorage,
-  isFeatureEnabled,
-  ThirdwebSDK,
-} from "../src";
+import { IpfsStorage, isFeatureEnabled, ThirdwebSDK } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../lib";
-import exp = require("constants");
 
 global.fetch = require("node-fetch");
 
@@ -141,7 +135,7 @@ describe("Publishing", async () => {
   it("Ethrone real ipfs test", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmQNppFfEg3sxHh6vnYnv7KCBCFWNPFQF6evPWQeV2qHwZ/0";
+    const ipfsUri = "ipfs://QmQeHhdLVcTPQBAqqqnJUEcsmeqkjERx3GmmuHN5gZtVSn/0";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(
@@ -154,36 +148,42 @@ describe("Publishing", async () => {
     expect(maxAttempts).to.eq(3);
   });
 
-  it("ERC721A real ipfs test", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
-    const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmRzD8TEYrd4Ux7ZNTBKWbuAERn6rvfUzo1nnW3GMtFL8h/0";
-    const tx = await pub.publish(ipfsUri);
-    const contract = await tx.data();
-    const deployedAddr = await pub.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
-      ["foo", "bar"],
-    );
-    const c = await realSDK.getContract(deployedAddr);
-    const maxAttempts = await c.functions.symbol();
-    expect(maxAttempts).to.eq("bar");
-  });
-
-  it("JoaquimAzuky3 enumerable", async () => {
+  it("SimpleAzuki enumerable", async () => {
     const realSDK = new ThirdwebSDK(
       adminWallet,
       {},
       new IpfsStorage("https://ipfs.thirdweb.com/ipfs/"),
     );
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmchmFMDhn1prDnt4ywhiyzurKbpXhad4w3c2EKu21Fai7/0";
+    const ipfsUri = "ipfs://QmeiwNZ3AJkDdSwMoodCeYJxbbLWUp7iDoUhntuiYm7C7F/0";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(
       adminWallet.address,
       contract.id,
-      ["foo", "bar"],
+      [],
+    );
+    const c = await realSDK.getContract(deployedAddr);
+    invariant(c.nft, "no nft detected");
+    invariant(c.nft.query, "no nft query detected");
+    const all = await c.nft.query.all();
+    expect(all.length).to.eq(0);
+  });
+
+  it("AzukiWithMinting mintable", async () => {
+    const realSDK = new ThirdwebSDK(
+      adminWallet,
+      {},
+      new IpfsStorage("https://ipfs.thirdweb.com/ipfs/"),
+    );
+    const pub = await realSDK.getPublisher();
+    const ipfsUri = "ipfs://QmeiwNZ3AJkDdSwMoodCeYJxbbLWUp7iDoUhntuiYm7C7F/1";
+    const tx = await pub.publish(ipfsUri);
+    const contract = await tx.data();
+    const deployedAddr = await pub.deployPublishedContract(
+      adminWallet.address,
+      contract.id,
+      [10, "bar"],
     );
     const c = await realSDK.getContract(deployedAddr);
     invariant(c.nft, "no nft detected");
@@ -194,34 +194,8 @@ describe("Publishing", async () => {
     invariant(c.nft, "no nft detected");
     const nft = await c.nft.get(tx2.id);
     expect(nft.metadata.name).to.eq("cool nft");
-    invariant(c.nft.query, "no nft detected");
+    invariant(c.nft.query, "no nft query detected");
     const all = await c.nft.query.all();
     expect(all.length).to.eq(1);
-  });
-
-  it("JoaquimAzuky2 not enumerable", async () => {
-    const realSDK = new ThirdwebSDK(
-      adminWallet,
-      {},
-      new IpfsStorage("https://ipfs.thirdweb.com/ipfs/"),
-    );
-    const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmTFkbkNEGcBpKgzwgpKjrnUhYGHY96qk5ouVSFhTQYKc5/0";
-    const tx = await pub.publish(ipfsUri);
-    const contract = await tx.data();
-    const deployedAddr = await pub.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
-      ["foo", "bar"],
-    );
-    const c = await realSDK.getContract(deployedAddr);
-    invariant(c.nft, "no nft detected");
-    invariant(c.nft.mint, "no minter detected");
-    const tx2 = await c.nft.mint.to(adminWallet.address, {
-      name: "cool nft",
-    });
-    invariant(c.nft, "no nft detected");
-    const nft = await c.nft.get(tx2.id);
-    expect(nft.metadata.name).to.eq("cool nft");
   });
 });

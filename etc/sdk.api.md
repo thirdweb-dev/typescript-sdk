@@ -651,10 +651,10 @@ export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebCont
     }>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "IThirdwebPlatformFee" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "IPlatformFee" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class ContractPlatformFee<TContract extends IThirdwebPlatformFee> {
+export class ContractPlatformFee<TContract extends IPlatformFee> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     get(): Promise<{
         platform_fee_basis_points: number;
@@ -664,10 +664,10 @@ export class ContractPlatformFee<TContract extends IThirdwebPlatformFee> {
     set(platformFeeInfo: z.input<typeof CommonPlatformFeeSchema>): Promise<TransactionResult>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "IThirdwebPrimarySale" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "IPrimarySale" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
+export class ContractPrimarySale<TContract extends IPrimarySale> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     getRecipient(): Promise<string>;
     setRecipient(recipient: string): Promise<TransactionResult>;
@@ -688,10 +688,10 @@ export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
     get(): Promise<PublishedMetadata>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "AccessControlEnumerable" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "IPermissionsEnumerable" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class ContractRoles<TContract extends AccessControlEnumerable, TRole extends Role> {
+export class ContractRoles<TContract extends IPermissionsEnumerable, TRole extends Role> {
     constructor(contractWrapper: ContractWrapper<TContract>, roles: readonly TRole[]);
     get(role: TRole): Promise<string[]>;
     getAll(): Promise<Record<TRole, string[]>>;
@@ -704,11 +704,11 @@ export class ContractRoles<TContract extends AccessControlEnumerable, TRole exte
     verify(roles: TRole[], address: string): Promise<void>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "IThirdwebRoyalty" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "IRoyalty" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractRoyalty" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
-export class ContractRoyalty<TContract extends IThirdwebRoyalty & IThirdwebContract, TSchema extends IGenericSchemaType> {
+export class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract), TSchema extends IGenericSchemaType> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, TSchema>);
     getDefaultRoyaltyInfo(): Promise<{
         seller_fee_basis_points: number;
@@ -1526,8 +1526,8 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> impleme
 
 // @public (undocumented)
 export class Erc1155Enumerable {
-    // Warning: (ae-forgotten-export) The symbol "ERC1155Enumerable" needs to be exported by the entry point index.d.ts
-    constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<BaseERC1155 & ERC1155Enumerable>);
+    // Warning: (ae-forgotten-export) The symbol "IERC1155Enumerable" needs to be exported by the entry point index.d.ts
+    constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>);
     all(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
     getTotalCount(): Promise<BigNumber>;
     owned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
@@ -1622,16 +1622,16 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements 
 // @public (undocumented)
 export class Erc721BatchMintable {
     // Warning: (ae-forgotten-export) The symbol "IMintableERC721" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "Multicall" needs to be exported by the entry point index.d.ts
-    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<IMintableERC721 & Multicall>, storage: IStorage);
+    // Warning: (ae-forgotten-export) The symbol "IMulticall" needs to be exported by the entry point index.d.ts
+    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>, storage: IStorage);
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 }
 
 // @public (undocumented)
 export class Erc721Enumerable {
-    // Warning: (ae-forgotten-export) The symbol "ERC721Enumerable" needs to be exported by the entry point index.d.ts
-    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & ERC721Enumerable>);
+    // Warning: (ae-forgotten-export) The symbol "IERC721Enumerable" needs to be exported by the entry point index.d.ts
+    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>);
     all(walletAddress?: string): Promise<NFTMetadataOwner[]>;
     tokenIds(walletAddress?: string): Promise<BigNumber[]>;
 }
@@ -1656,8 +1656,8 @@ export class Erc721SignatureMinting {
 
 // @public (undocumented)
 export class Erc721Supply {
-    // Warning: (ae-forgotten-export) The symbol "ERC721Supply" needs to be exported by the entry point index.d.ts
-    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & ERC721Supply>);
+    // Warning: (ae-forgotten-export) The symbol "IERC721Supply" needs to be exported by the entry point index.d.ts
+    constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>);
     all(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     // (undocumented)
     owned: Erc721Enumerable | undefined;
@@ -3646,17 +3646,17 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
-    platformFees: ContractPlatformFee<IThirdwebPlatformFee> | undefined;
+    platformFees: ContractPlatformFee<IPlatformFee> | undefined;
     // Warning: (ae-incompatible-release-tags) The symbol "publishedMetadata" is marked as @beta, but its signature references "ContractPublishedMetadata" which is marked as @internal
     //
     // (undocumented)
     publishedMetadata: ContractPublishedMetadata<TContract>;
     // (undocumented)
-    roles: ContractRoles<AccessControlEnumerable, any> | undefined;
+    roles: ContractRoles<IPermissionsEnumerable, any> | undefined;
     // (undocumented)
-    royalties: ContractRoyalty<IThirdwebRoyalty & IThirdwebContract, any> | undefined;
+    royalties: ContractRoyalty<IRoyalty & ThirdwebContract, any> | undefined;
     // (undocumented)
-    sales: ContractPrimarySale<IThirdwebPrimarySale> | undefined;
+    sales: ContractPrimarySale<IPrimarySale> | undefined;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<    {

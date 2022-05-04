@@ -1,7 +1,7 @@
 import { ContractWrapper } from "./contract-wrapper";
 import {
   DropERC1155,
-  ERC1155Enumerable,
+  IERC1155Enumerable,
   IMintableERC1155,
   TokenERC1155,
 } from "contracts";
@@ -293,7 +293,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
 
   private detectErc1155Enumerable(): Erc1155Enumerable | undefined {
     if (
-      detectContractFeature<BaseERC1155 & ERC1155Enumerable>(
+      detectContractFeature<BaseERC1155 & IERC1155Enumerable>(
         this.contractWrapper,
         "ERC1155Enumerable",
       )

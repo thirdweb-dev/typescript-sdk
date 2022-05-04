@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { IMintableERC1155, Multicall } from "contracts";
+import { IMintableERC1155, IMulticall } from "contracts";
 import { detectContractFeature } from "../../common";
 import { BaseERC1155 } from "../../types/eips";
 import { Erc1155 } from "./erc-1155";
@@ -117,7 +117,7 @@ export class Erc1155Mintable {
 
   private detectErc1155BatchMintable() {
     if (
-      detectContractFeature<IMintableERC1155 & Multicall>(
+      detectContractFeature<IMintableERC1155 & IMulticall>(
         this.contractWrapper,
         "ERC1155BatchMintable",
       )

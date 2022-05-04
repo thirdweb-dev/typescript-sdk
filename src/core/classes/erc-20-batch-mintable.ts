@@ -1,17 +1,17 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { IMintableERC20, Multicall } from "contracts";
+import { IMintableERC20, IMulticall } from "contracts";
 import { Erc20 } from "./erc-20";
 import { BaseERC20 } from "../../types/eips";
 import { TokenMintInput } from "../../schema";
 import { TransactionResult } from "../types";
 
 export class Erc20BatchMintable {
-  private contractWrapper: ContractWrapper<IMintableERC20 & Multicall>;
+  private contractWrapper: ContractWrapper<IMintableERC20 & IMulticall>;
   private erc20: Erc20<BaseERC20>;
 
   constructor(
     erc20: Erc20<BaseERC20>,
-    contractWrapper: ContractWrapper<IMintableERC20 & Multicall>,
+    contractWrapper: ContractWrapper<IMintableERC20 & IMulticall>,
   ) {
     this.erc20 = erc20;
     this.contractWrapper = contractWrapper;
