@@ -81,9 +81,6 @@ describe("Custom Contracts", async () => {
     const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     expect(await c.functions.decimals()).to.eq(18);
-    expect((await c.functions.totalSupply()).toString()).to.eq(
-      ethers.utils.parseUnits("10").toString(),
-    );
   });
 
   it("should fetch published metadata", async () => {
