@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-sales: ContractPrimarySale<IThirdwebPrimarySale> | undefined;
+sales: ContractPrimarySale<IPrimarySale> | undefined;
 ```

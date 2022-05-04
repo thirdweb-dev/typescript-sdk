@@ -57,7 +57,7 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3F17972CB27506eb4a6a3D59659e0B57a43fd16C",
-    byocFactory: "0x3c3D901Acb5f7746dCf06B26fCe881d21970d2B6",
+    byocFactory: "0x4ca9932786541D142bAe8a39483050D1D7AD664a",
   },
   [ChainId.Avalanche]: {
     biconomyForwarder: "0x64CD353384109423a966dCd3Aa30D884C9b2E057",

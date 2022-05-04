@@ -1,13 +1,7 @@
 import { IStorage } from "../interfaces/IStorage";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
-import {
-  DropERC20,
-  DropERC721,
-  ERC20,
-  ERC20Metadata,
-  ERC20Metadata__factory,
-} from "contracts";
+import { DropERC20, DropERC721, IERC20, IERC20Metadata } from "contracts";
 import { BigNumber, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
@@ -24,10 +18,10 @@ import {
 import { MaxUint256 } from "@ethersproject/constants";
 import { isBrowser } from "../../common/utils";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
-import { implementsInterface } from "../../common/feature-detection";
+import { detectContractFeature } from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
-import ERC20Abi from "../../../abis/ERC20.json";
+import ERC20Abi from "../../../abis/IERC20.json";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -250,7 +244,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
           reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       } else {
-        const erc20 = new ContractWrapper<ERC20>(
+        const erc20 = new ContractWrapper<IERC20>(
           provider,
           claimCondition.currencyAddress,
           ERC20Abi,
@@ -372,12 +366,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
    *****************************************/
 
   private async getTokenDecimals(): Promise<number> {
-    if (
-      implementsInterface<ERC20Metadata>(
-        this.contractWrapper,
-        ERC20Metadata__factory.createInterface(),
-      )
-    ) {
+    if (detectContractFeature<IERC20Metadata>(this.contractWrapper, "ERC20")) {
       return this.contractWrapper.readContract.decimals();
     } else {
       return Promise.resolve(0);

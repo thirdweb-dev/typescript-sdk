@@ -1,4 +1,4 @@
-import { IThirdwebContract, IThirdwebRoyalty } from "contracts";
+import { IRoyalty, IThirdwebContract, ThirdwebContract } from "contracts";
 import { CommonRoyaltySchema } from "../../schema/contracts/common";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
@@ -10,9 +10,8 @@ import { BigNumberish } from "ethers";
  * Handles Contract royalties
  * @public
  */
-// TODO (byoc) change to ThirdwebContract
 export class ContractRoyalty<
-  TContract extends IThirdwebRoyalty & IThirdwebContract,
+  TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract),
   TSchema extends IGenericSchemaType,
 > {
   private contractWrapper;

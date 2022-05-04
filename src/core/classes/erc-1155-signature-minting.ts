@@ -17,7 +17,7 @@ import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
 import { BigNumber } from "ethers";
 import { uploadOrExtractURIs } from "../../common/nft";
-import { TokensMintedWithSignatureEvent } from "contracts/SignatureMint";
+import { TokensMintedWithSignatureEvent } from "contracts/ITokenERC1155";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely

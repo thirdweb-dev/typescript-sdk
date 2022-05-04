@@ -15,12 +15,11 @@ import {
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
-  AccessControlEnumerable,
-  AccessControlEnumerable__factory,
-  IThirdwebContract,
-  IThirdwebPlatformFee,
-  IThirdwebPrimarySale,
-  IThirdwebRoyalty,
+  IPermissionsEnumerable,
+  IPermissionsEnumerable__factory,
+  IPlatformFee,
+  IPrimarySale,
+  IRoyalty,
   ThirdwebContract,
 } from "contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
@@ -89,11 +88,11 @@ export class SmartContract<
   // features
   public metadata: ContractMetadata<ThirdwebContract, any> | undefined;
   public royalties:
-    | ContractRoyalty<IThirdwebRoyalty & IThirdwebContract, any>
-    | undefined; // TODO (byoc) change to ThirdwebContract
-  public roles: ContractRoles<AccessControlEnumerable, any> | undefined; // TODO (byoc) change to IPermission
-  public sales: ContractPrimarySale<IThirdwebPrimarySale> | undefined;
-  public platformFees: ContractPlatformFee<IThirdwebPlatformFee> | undefined;
+    | ContractRoyalty<IRoyalty & ThirdwebContract, any>
+    | undefined;
+  public roles: ContractRoles<IPermissionsEnumerable, any> | undefined;
+  public sales: ContractPrimarySale<IPrimarySale> | undefined;
+  public platformFees: ContractPlatformFee<IPlatformFee> | undefined;
   /**
    * Auto-detects ERC20 standard functions.
    */
@@ -168,7 +167,7 @@ export class SmartContract<
   private detectRoyalties() {
     // TODO (byoc) change to ThirdwebContract
     if (
-      detectContractFeature<IThirdwebRoyalty & IThirdwebContract>(
+      detectContractFeature<IRoyalty & ThirdwebContract>(
         this.contractWrapper,
         "Royalty",
       )
@@ -186,11 +185,10 @@ export class SmartContract<
   }
 
   private detectRoles() {
-    // TODO IThirdwebPermissions
     if (
-      implementsInterface<AccessControlEnumerable>(
+      implementsInterface<IPermissionsEnumerable>(
         this.contractWrapper,
-        AccessControlEnumerable__factory.createInterface(),
+        IPermissionsEnumerable__factory.createInterface(),
       )
     ) {
       return new ContractRoles(this.contractWrapper, ALL_ROLES);
@@ -200,10 +198,7 @@ export class SmartContract<
 
   private detectPrimarySales() {
     if (
-      detectContractFeature<IThirdwebPrimarySale>(
-        this.contractWrapper,
-        "PrimarySale",
-      )
+      detectContractFeature<IPrimarySale>(this.contractWrapper, "PrimarySale")
     ) {
       return new ContractPrimarySale(this.contractWrapper);
     }
@@ -212,10 +207,7 @@ export class SmartContract<
 
   private detectPlatformFees() {
     if (
-      detectContractFeature<IThirdwebPlatformFee>(
-        this.contractWrapper,
-        "PlatformFee",
-      )
+      detectContractFeature<IPlatformFee>(this.contractWrapper, "PlatformFee")
     ) {
       return new ContractPlatformFee(this.contractWrapper);
     }

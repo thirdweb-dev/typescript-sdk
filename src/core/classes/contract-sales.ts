@@ -1,4 +1,4 @@
-import { IThirdwebPrimarySale } from "contracts";
+import { IPrimarySale } from "contracts";
 import { ContractWrapper } from "./contract-wrapper";
 import { TransactionResult } from "../types";
 
@@ -6,7 +6,7 @@ import { TransactionResult } from "../types";
  * Handles primary sales recipients for a Contract
  * @public
  */
-export class ContractPrimarySale<TContract extends IThirdwebPrimarySale> {
+export class ContractPrimarySale<TContract extends IPrimarySale> {
   private contractWrapper;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {

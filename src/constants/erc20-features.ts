@@ -1,13 +1,13 @@
-import ERC20Abi from "../../abis/ERC20.json";
+import ERC20Abi from "../../abis/IERC20.json";
 import IMintableERC20Abi from "../../abis/IMintableERC20.json";
-import MulticallAbi from "../../abis/Multicall.json";
+import MulticallAbi from "../../abis/IMulticall.json";
 
 export const FEATURE_TOKEN_BATCH_MINTABLE = {
   name: "ERC20BatchMintable",
   namespace: "token.mint.batch",
   docLinks: {
     sdk: "sdk.erc20batchmintable",
-    contracts: "Multicall",
+    contracts: "IMulticall",
   },
   abi: MulticallAbi,
   features: {},

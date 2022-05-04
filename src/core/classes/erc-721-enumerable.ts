@@ -1,17 +1,17 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { ERC721Enumerable } from "contracts";
+import { IERC721Enumerable } from "contracts";
 import { BigNumber } from "ethers";
 import { NFTMetadataOwner } from "../../schema";
 import { Erc721 } from "./erc-721";
 import { BaseERC721 } from "../../types/eips";
 
 export class Erc721Enumerable {
-  private contractWrapper: ContractWrapper<BaseERC721 & ERC721Enumerable>;
+  private contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>;
   private erc721: Erc721<BaseERC721>;
 
   constructor(
     erc721: Erc721<BaseERC721>,
-    contractWrapper: ContractWrapper<BaseERC721 & ERC721Enumerable>,
+    contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>,
   ) {
     this.erc721 = erc721;
     this.contractWrapper = contractWrapper;

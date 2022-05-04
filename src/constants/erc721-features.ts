@@ -1,15 +1,15 @@
-import Erc721Abi from "../../abis/ERC721.json";
-import Erc721EnumerableAbi from "../../abis/ERC721Enumerable.json";
-import Erc721SupplyAbi from "../../abis/ERC721Supply.json";
+import Erc721Abi from "../../abis/IERC721.json";
+import Erc721EnumerableAbi from "../../abis/IERC721Enumerable.json";
+import Erc721SupplyAbi from "../../abis/IERC721Supply.json";
 import IMintableERC721Abi from "../../abis/IMintableERC721.json";
-import MulticallAbi from "../../abis/Multicall.json";
+import MulticallAbi from "../../abis/IMulticall.json";
 
 export const FEATURE_NFT_BATCH_MINTABLE = {
   name: "ERC721BatchMintable",
   namespace: "nft.mint.batch",
   docLinks: {
     sdk: "sdk.erc721batchmintable",
-    contracts: "Multicall",
+    contracts: "IMulticall",
   },
   abi: MulticallAbi,
   features: {},

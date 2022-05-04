@@ -9,7 +9,7 @@ import {
   Erc721Enumerable,
   Erc721Mintable,
   Erc721Supply,
-} from "../core";
+} from "../core/classes";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenERC721 } from "contracts";

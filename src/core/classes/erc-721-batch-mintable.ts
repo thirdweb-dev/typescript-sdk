@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { IMintableERC721, Multicall } from "contracts";
+import { IMintableERC721, IMulticall } from "contracts";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../../schema";
 import { TransactionResultWithId } from "../types";
 import { uploadOrExtractURIs } from "../../common/nft";
@@ -9,13 +9,13 @@ import { TokensMintedEvent } from "contracts/IMintableERC721";
 import { BaseERC721 } from "../../types/eips";
 
 export class Erc721BatchMintable {
-  private contractWrapper: ContractWrapper<IMintableERC721 & Multicall>;
+  private contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>;
   private storage: IStorage;
   private erc721: Erc721<BaseERC721>;
 
   constructor(
     erc721: Erc721<BaseERC721>,
-    contractWrapper: ContractWrapper<IMintableERC721 & Multicall>,
+    contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>,
     storage: IStorage,
   ) {
     this.erc721 = erc721;

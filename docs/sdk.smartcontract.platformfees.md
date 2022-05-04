@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-platformFees: ContractPlatformFee<IThirdwebPlatformFee> | undefined;
+platformFees: ContractPlatformFee<IPlatformFee> | undefined;
 ```

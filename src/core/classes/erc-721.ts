@@ -10,7 +10,7 @@ import { fetchTokenMetadata } from "../../common/nft";
 import { detectContractFeature, NotFoundError } from "../../common";
 import {
   DropERC721,
-  ERC721Supply,
+  IERC721Supply,
   IMintableERC721,
   TokenERC721,
 } from "contracts";
@@ -204,7 +204,7 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
 
   private detectErc721Enumerable(): Erc721Supply | undefined {
     if (
-      detectContractFeature<BaseERC721 & ERC721Supply>(
+      detectContractFeature<BaseERC721 & IERC721Supply>(
         this.contractWrapper,
         "ERC721Supply",
       )

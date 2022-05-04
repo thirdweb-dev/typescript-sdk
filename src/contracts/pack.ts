@@ -10,15 +10,11 @@ import {
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";
-import {
-  ERC1155__factory,
-  ERC20__factory,
-  Pack as PackContract,
-} from "contracts";
+import { IERC1155, IERC20, Pack as PackContract } from "contracts";
 import { PacksContractSchema } from "../schema/contracts/packs";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { NFTMetadata } from "../schema/tokens/common";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, Contract, ethers } from "ethers";
 import { fetchTokenMetadataForContract } from "../common/nft";
 import {
   IPackBatchArgs,
@@ -35,6 +31,8 @@ import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { GasCostEstimator } from "../core/classes";
 import { ContractEvents } from "../core/classes/contract-events";
 import { PackAddedEvent, PackOpenRequestedEvent } from "contracts/Pack";
+import ERC1155Abi from "../../abis/IERC1155.json";
+import ERC20Abi from "../../abis/IERC20.json";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -257,10 +255,11 @@ export class Pack implements UpdateableNetwork {
   public async getLinkBalance(): Promise<CurrencyValue> {
     const chainId = await this.contractWrapper.getChainID();
     const chainlink = ChainlinkVrf[chainId];
-    const erc20 = ERC20__factory.connect(
+    const erc20 = new Contract(
       chainlink.linkTokenAddress,
+      ERC20Abi,
       this.contractWrapper.getProvider(),
-    );
+    ) as IERC20;
     return await fetchCurrencyValue(
       this.contractWrapper.getProvider(),
       chainlink.linkTokenAddress,
@@ -413,10 +412,11 @@ export class Pack implements UpdateableNetwork {
   public async create(
     args: IPackCreateArgs,
   ): Promise<TransactionResultWithId<PackMetadata>> {
-    const asset = ERC1155__factory.connect(
+    const asset = new Contract(
       args.assetContract,
+      ERC1155Abi,
       this.contractWrapper.getSigner() || this.contractWrapper.getProvider(),
-    );
+    ) as IERC1155;
 
     const from = await this.contractWrapper.getSignerAddress();
     const ids = args.assets.map((a) => a.tokenId);
@@ -533,10 +533,11 @@ export class Pack implements UpdateableNetwork {
   public async depositLink(amount: BigNumberish): Promise<TransactionResult> {
     const chainId = await this.contractWrapper.getChainID();
     const chainlink = ChainlinkVrf[chainId];
-    const erc20 = ERC20__factory.connect(
+    const erc20 = new Contract(
       chainlink.linkTokenAddress,
+      ERC20Abi,
       this.contractWrapper.getProvider(),
-    );
+    ) as IERC20;
     // TODO: make it gasless
     const tx = await erc20.transfer(
       this.getAddress(),
