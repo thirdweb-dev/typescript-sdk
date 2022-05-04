@@ -696,8 +696,10 @@ export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
 // Warning: (ae-forgotten-export) The symbol "IPermissionsEnumerable" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class ContractRoles<TContract extends IPermissionsEnumerable, TRole extends Role> {
+export class ContractRoles<TContract extends IPermissionsEnumerable, TRole extends Role> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>, roles: readonly TRole[]);
+    // (undocumented)
+    featureName: "Permissions";
     get(role: TRole): Promise<string[]>;
     getAll(): Promise<Record<TRole, string[]>>;
     grant(role: TRole, address: string): Promise<TransactionResult>;

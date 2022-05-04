@@ -8,6 +8,34 @@
     "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.ContractPlatformFee"
   },
+  "Permissions": {
+    "name": "ContractRoles",
+    "summary": "Handles Contract roles and permissions\n\n\n",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "get",
+        "summary": "Call this to get a list of addresses that are members of a specific role.\n\n",
+        "remarks": "\n\nSee {@link ContractRoles.getAll} to get get a list of addresses for all supported roles on the contract.\n\n",
+        "examples": {
+          "javascript": "const minterAddresses: string[] = await contract.getRoleMemberList(\"minter\");"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractRoles.get"
+      },
+      {
+        "name": "setAll",
+        "summary": "Call this to OVERWRITE the list of addresses that are members of specific roles.\n\nEvery role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use {@link ContractRoles.grant} and {@link ContractRoles.revoke} respectively instead.\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const minterAddresses: string[] = await contract.getRoleMemberList(\"minter\");\nawait contract.setAll({\n minter: []\n});\nconsole.log(await contract.getRoleMemberList(\"minter\")); // No matter what members had the role before, the new list will be set to []"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractRoles.setAll"
+      }
+    ],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.ContractRoles"
+  },
   "Royalty": {
     "name": "ContractRoyalty",
     "summary": "Handles Contract royalties\n\n\n",

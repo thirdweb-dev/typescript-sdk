@@ -4,6 +4,8 @@ import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { MissingRoleError } from "../../common/error";
 import { IPermissionsEnumerable } from "contracts";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
 
 /**
  * Handles Contract roles and permissions
@@ -12,7 +14,9 @@ import { IPermissionsEnumerable } from "contracts";
 export class ContractRoles<
   TContract extends IPermissionsEnumerable,
   TRole extends Role,
-> {
+> implements DetectableFeature
+{
+  featureName = FEATURE_PERMISSIONS.name;
   private contractWrapper;
   private readonly roles;
 

@@ -9,14 +9,21 @@ Handles Contract roles and permissions
 <b>Signature:</b>
 
 ```typescript
-export declare class ContractRoles<TContract extends IPermissionsEnumerable, TRole extends Role> 
+export declare class ContractRoles<TContract extends IPermissionsEnumerable, TRole extends Role> implements DetectableFeature 
 ```
+<b>Implements:</b> DetectableFeature
 
 ## Constructors
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
 |  [(constructor)(contractWrapper, roles)](./sdk.contractroles._constructor_.md) |  | Constructs a new instance of the <code>ContractRoles</code> class |
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [featureName](./sdk.contractroles.featurename.md) |  | "Permissions" |  |
 
 ## Methods
 
