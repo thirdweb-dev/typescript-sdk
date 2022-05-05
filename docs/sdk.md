@@ -51,6 +51,7 @@
 |  [Token](./sdk.token.md) | Create a standard crypto token or cryptocurrency. |
 |  [TokenERC20History](./sdk.tokenerc20history.md) | Manages history for Token contracts |
 |  [TransactionError](./sdk.transactionerror.md) |  |
+|  [UserWallet](./sdk.userwallet.md) | Connect and Interact with a user wallet |
 |  [Vote](./sdk.vote.md) | Create a decentralized organization for token holders to vote on proposals. |
 
 ## Enumerations

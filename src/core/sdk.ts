@@ -30,6 +30,7 @@ import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
 import { getContractAddressByChainId } from "../constants";
+import { UserWallet } from "./wallet/UserWallet";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -57,6 +58,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * New contract deployer
    */
   public deployer: ContractDeployer;
+  /**
+   * Interact with the connected wallet
+   */
+  public wallet: UserWallet;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -66,6 +71,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     super(network, options);
     this.storage = storage;
     this.deployer = new ContractDeployer(network, options, storage);
+    this.wallet = new UserWallet(network, options);
   }
 
   /**
@@ -292,6 +298,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   private updateContractSignerOrProvider() {
+    this.wallet.onNetworkUpdated(this.getSignerOrProvider());
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     this._publisher?.then((publisher) => {
       publisher.updateSignerOrProvider(this.getSignerOrProvider());
