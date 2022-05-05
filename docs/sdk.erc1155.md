@@ -9,7 +9,7 @@ Standard ERC1155 NFT functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> implements UpdateableNetwork, DetectableFeature 
+export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseERC1155> implements UpdateableNetwork, DetectableFeature 
 ```
 <b>Implements:</b> UpdateableNetwork, DetectableFeature
 

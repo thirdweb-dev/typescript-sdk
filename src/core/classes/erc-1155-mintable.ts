@@ -1,7 +1,6 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { IMintableERC1155, IMulticall } from "contracts";
 import { detectContractFeature } from "../../common";
-import { BaseERC1155 } from "../../types/eips";
 import { Erc1155 } from "./erc-1155";
 import { Erc1155BatchMintable } from "./erc-1155-batch-mintable";
 import { EditionMetadata, EditionMetadataOrUri } from "../../schema";
@@ -26,7 +25,7 @@ import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
 export class Erc1155Mintable implements DetectableFeature {
   featureName = FEATURE_EDITION_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC1155>;
-  private erc1155: Erc1155<BaseERC1155>;
+  private erc1155: Erc1155;
   private storage: IStorage;
 
   /**
@@ -35,7 +34,7 @@ export class Erc1155Mintable implements DetectableFeature {
   public batch: Erc1155BatchMintable | undefined;
 
   constructor(
-    erc1155: Erc1155<BaseERC1155>,
+    erc1155: Erc1155,
     contractWrapper: ContractWrapper<IMintableERC1155>,
     storage: IStorage,
   ) {

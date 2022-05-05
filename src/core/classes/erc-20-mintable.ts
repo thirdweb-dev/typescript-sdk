@@ -2,7 +2,6 @@ import { ContractWrapper } from "./contract-wrapper";
 import { IMintableERC20, IMulticall } from "contracts";
 import { TransactionResult } from "../types";
 import { detectContractFeature } from "../../common";
-import { BaseERC20 } from "../../types/eips";
 import { Erc20 } from "./erc-20";
 import { Amount } from "../../types";
 import { Erc20BatchMintable } from "./erc-20-batch-mintable";
@@ -22,17 +21,14 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 export class Erc20Mintable implements DetectableFeature {
   featureName = FEATURE_TOKEN_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC20>;
-  private erc20: Erc20<BaseERC20>;
+  private erc20: Erc20;
 
   /**
    * Batch mint Tokens to many addresses
    */
   public batch: Erc20BatchMintable | undefined;
 
-  constructor(
-    erc20: Erc20<BaseERC20>,
-    contractWrapper: ContractWrapper<IMintableERC20>,
-  ) {
+  constructor(erc20: Erc20, contractWrapper: ContractWrapper<IMintableERC20>) {
     this.erc20 = erc20;
     this.contractWrapper = contractWrapper;
     this.batch = this.detectErc20BatchMintable();

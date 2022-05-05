@@ -30,8 +30,9 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * ```
  * @public
  */
-export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
-  implements UpdateableNetwork, DetectableFeature
+export class Erc721<
+  T extends DropERC721 | TokenERC721 | BaseERC721 = BaseERC721,
+> implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_NFT.name;
   protected contractWrapper: ContractWrapper<T>;

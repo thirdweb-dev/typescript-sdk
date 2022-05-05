@@ -9,14 +9,14 @@ Constructs a new instance of the `Erc1155Mintable` class
 <b>Signature:</b>
 
 ```typescript
-constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<IMintableERC1155>, storage: IStorage);
+constructor(erc1155: Erc1155, contractWrapper: ContractWrapper<IMintableERC1155>, storage: IStorage);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  erc1155 | [Erc1155](./sdk.erc1155.md)<!-- -->&lt;BaseERC1155&gt; |  |
+|  erc1155 | [Erc1155](./sdk.erc1155.md) |  |
 |  contractWrapper | ContractWrapper&lt;IMintableERC1155&gt; |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
 
