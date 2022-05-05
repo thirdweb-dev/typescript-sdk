@@ -1,3 +1,4 @@
+export * from "./ipfs-storage";
 export * from "./contract-encoder";
 export * from "./contract-metadata";
 export * from "./contract-roles";
