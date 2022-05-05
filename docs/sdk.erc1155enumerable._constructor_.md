@@ -9,13 +9,13 @@ Constructs a new instance of the `Erc1155Enumerable` class
 <b>Signature:</b>
 
 ```typescript
-constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>);
+constructor(erc1155: Erc1155, contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  erc1155 | [Erc1155](./sdk.erc1155.md)<!-- -->&lt;BaseERC1155&gt; |  |
+|  erc1155 | [Erc1155](./sdk.erc1155.md) |  |
 |  contractWrapper | ContractWrapper&lt;BaseERC1155 &amp; IERC1155Enumerable&gt; |  |
 

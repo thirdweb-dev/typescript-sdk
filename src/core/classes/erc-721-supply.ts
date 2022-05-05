@@ -23,12 +23,12 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 export class Erc721Supply implements DetectableFeature {
   featureName = FEATURE_NFT_SUPPLY.name;
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>;
-  private erc721: Erc721<BaseERC721>;
+  private erc721: Erc721;
 
   public owned: Erc721Enumerable | undefined;
 
   constructor(
-    erc721: Erc721<BaseERC721>,
+    erc721: Erc721,
     contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>,
   ) {
     this.erc721 = erc721;

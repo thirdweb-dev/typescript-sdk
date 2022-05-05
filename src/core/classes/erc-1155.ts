@@ -35,8 +35,9 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * ```
  * @public
  */
-export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
-  implements UpdateableNetwork, DetectableFeature
+export class Erc1155<
+  T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseERC1155,
+> implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_EDITION.name;
   protected contractWrapper: ContractWrapper<T>;

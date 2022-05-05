@@ -21,10 +21,10 @@ import { FEATURE_EDITION_ENUMERABLE } from "../../constants/erc1155-features";
 export class Erc1155Enumerable implements DetectableFeature {
   featureName = FEATURE_EDITION_ENUMERABLE.name;
   private contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>;
-  private erc1155: Erc1155<BaseERC1155>;
+  private erc1155: Erc1155;
 
   constructor(
-    erc1155: Erc1155<BaseERC1155>,
+    erc1155: Erc1155,
     contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>,
   ) {
     this.erc1155 = erc1155;

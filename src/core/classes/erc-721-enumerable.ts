@@ -21,10 +21,10 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 export class Erc721Enumerable implements DetectableFeature {
   featureName = FEATURE_NFT_ENUMERABLE.name;
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>;
-  private erc721: Erc721<BaseERC721>;
+  private erc721: Erc721;
 
   constructor(
-    erc721: Erc721<BaseERC721>,
+    erc721: Erc721,
     contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>,
   ) {
     this.erc721 = erc721;

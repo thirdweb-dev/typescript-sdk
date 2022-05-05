@@ -1,7 +1,6 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { IMintableERC1155, IMulticall } from "contracts";
 import { TransactionResultWithId } from "../types";
-import { BaseERC1155 } from "../../types/eips";
 import { Erc1155 } from "./erc-1155";
 import { EditionMetadata, EditionMetadataOrUri } from "../../schema";
 import { uploadOrExtractURIs } from "../../common/nft";
@@ -24,11 +23,11 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 export class Erc1155BatchMintable implements DetectableFeature {
   featureName = FEATURE_EDITION_BATCH_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>;
-  private erc1155: Erc1155<BaseERC1155>;
+  private erc1155: Erc1155;
   private storage: IStorage;
 
   constructor(
-    erc1155: Erc1155<BaseERC1155>,
+    erc1155: Erc1155,
     contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>,
     storage: IStorage,
   ) {
