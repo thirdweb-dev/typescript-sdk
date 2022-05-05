@@ -5,7 +5,14 @@ import { FEATURE_PRIMARY_SALE } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
- * Handles primary sales recipients for a Contract
+ * Handle primary sales recipients
+ * @remarks Configure primary sale recipients for an entire contract.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("0x...");
+ * const salesRecipient = await contract.sales.getRecipient();
+ * await contract.roles.setRecipient(recipientWalletAddress);
+ * ```
  * @public
  */
 export class ContractPrimarySale<TContract extends IPrimarySale>

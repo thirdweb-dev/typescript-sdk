@@ -8,7 +8,14 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
 
 /**
- * Handles Contract roles and permissions
+ * Handle contract permissions
+ * @remarks Configure roles and permissions for a contract, to restrict certain actions.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("0x...");
+ * const rolesAndMembers = await contract.roles.getAll();
+ * await contract.roles.grantRole("admin", "0x...");
+ * ```
  * @public
  */
 export class ContractRoles<

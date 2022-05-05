@@ -4,7 +4,7 @@
 
 ## ContractRoyalty class
 
-Handles Contract royalties
+Handle contract royalties
 
 <b>Signature:</b>
 
@@ -12,6 +12,22 @@ Handles Contract royalties
 export declare class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract), TSchema extends IGenericSchemaType> implements DetectableFeature 
 ```
 <b>Implements:</b> DetectableFeature
+
+## Remarks
+
+Configure royalties for an entire contract or a particular token.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("0x...");
+const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();
+await contract.roles.setTokenRoyaltyInfo(tokenId, {
+  seller_fee_basis_points: 100, // 1% royalty fee
+  fee_recipient: "0x...", // the fee recipient
+});
+```
 
 ## Constructors
 

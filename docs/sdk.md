@@ -12,10 +12,10 @@
 |  [ContractEncoder](./sdk.contractencoder.md) | Encodes and decodes Contract functions |
 |  [ContractEvents](./sdk.contractevents.md) | Listen to Contract events in real time |
 |  [ContractMetadata](./sdk.contractmetadata.md) | Handles metadata for a Contract |
-|  [ContractPlatformFee](./sdk.contractplatformfee.md) | Handles platform fees for a Contract |
-|  [ContractPrimarySale](./sdk.contractprimarysale.md) | Handles primary sales recipients for a Contract |
-|  [ContractRoles](./sdk.contractroles.md) | Handles Contract roles and permissions |
-|  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalties |
+|  [ContractPlatformFee](./sdk.contractplatformfee.md) | Handle platform fees and recipients |
+|  [ContractPrimarySale](./sdk.contractprimarysale.md) | Handle primary sales recipients |
+|  [ContractRoles](./sdk.contractroles.md) | Handle contract permissions |
+|  [ContractRoyalty](./sdk.contractroyalty.md) | Handle contract royalties |
 |  [DelayedReveal](./sdk.delayedreveal.md) | Handles delayed reveal logic |
 |  [DropClaimConditions](./sdk.dropclaimconditions.md) | Manages claim conditions for NFT Drop contracts |
 |  [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Manages claim conditions for Edition Drop contracts |

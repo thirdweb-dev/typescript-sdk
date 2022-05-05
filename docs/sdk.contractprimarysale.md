@@ -4,7 +4,7 @@
 
 ## ContractPrimarySale class
 
-Handles primary sales recipients for a Contract
+Handle primary sales recipients
 
 <b>Signature:</b>
 
@@ -12,6 +12,19 @@ Handles primary sales recipients for a Contract
 export declare class ContractPrimarySale<TContract extends IPrimarySale> implements DetectableFeature 
 ```
 <b>Implements:</b> DetectableFeature
+
+## Remarks
+
+Configure primary sale recipients for an entire contract.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("0x...");
+const salesRecipient = await contract.sales.getRecipient();
+await contract.roles.setRecipient(recipientWalletAddress);
+```
 
 ## Constructors
 

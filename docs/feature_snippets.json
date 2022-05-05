@@ -1,27 +1,33 @@
 {
   "PlatformFee": {
     "name": "ContractPlatformFee",
-    "summary": "Handles platform fees for a Contract\n\n\n",
-    "remarks": null,
-    "examples": {},
+    "summary": "Handle platform fees and recipients\n\n",
+    "remarks": "\n\nConfigure platform fees for a contract, which can be applied on certain paid transactions\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst feeInfo = await contract.platformFee.get();\nawait contract.platformFee.set({\n  platform_fee_basis_points: 100, // 1% fee\n  platform_fee_recipient: \"0x...\" // the fee recipient\n})"
+    },
     "methods": [],
     "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.ContractPlatformFee"
   },
   "PrimarySale": {
     "name": "ContractPrimarySale",
-    "summary": "Handles primary sales recipients for a Contract\n\n\n",
-    "remarks": null,
-    "examples": {},
+    "summary": "Handle primary sales recipients\n\n",
+    "remarks": "\n\nConfigure primary sale recipients for an entire contract.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst salesRecipient = await contract.sales.getRecipient();\nawait contract.roles.setRecipient(recipientWalletAddress);"
+    },
     "methods": [],
     "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.ContractPrimarySale"
   },
   "Permissions": {
     "name": "ContractRoles",
-    "summary": "Handles Contract roles and permissions\n\n\n",
-    "remarks": null,
-    "examples": {},
+    "summary": "Handle contract permissions\n\n",
+    "remarks": "\n\nConfigure roles and permissions for a contract, to restrict certain actions.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst rolesAndMembers = await contract.roles.getAll();\nawait contract.roles.grantRole(\"admin\", \"0x...\");"
+    },
     "methods": [
       {
         "name": "get",
@@ -51,9 +57,11 @@
   },
   "Royalty": {
     "name": "ContractRoyalty",
-    "summary": "Handles Contract royalties\n\n\n",
-    "remarks": null,
-    "examples": {},
+    "summary": "Handle contract royalties\n\n",
+    "remarks": "\n\nConfigure royalties for an entire contract or a particular token.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();\nawait contract.roles.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 100, // 1% royalty fee\n  fee_recipient: \"0x...\", // the fee recipient\n});"
+    },
     "methods": [],
     "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.ContractRoyalty"
