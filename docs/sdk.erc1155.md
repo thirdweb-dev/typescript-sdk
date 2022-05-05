@@ -22,10 +22,7 @@ Basic functionality for a ERC1155 contract that handles IPFS storage for you.
 
 ```javascript
 const contract = sdk.getContract("0x...");
-const walletAddress = "0x...";
-const tokenId = 0;
-const nft = await contract.edition.get(tokenId);
-await contract.edition.transfer(walletAddress, tokenId, 2);
+await contract.edition.transfer(walletAddress, tokenId, quantity);
 ```
 
 ## Constructors

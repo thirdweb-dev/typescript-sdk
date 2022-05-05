@@ -53,7 +53,7 @@ const contract = sdk.getEdition("{{contract_address}}");
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [burn(tokenId, amount)](./sdk.edition.burn.md) |  | Burn a single NFT |
-|  [getAll(queryParams)](./sdk.edition.getall.md) |  | Get All NFTs |
+|  [getAll(queryParams)](./sdk.edition.getall.md) |  | Get All Minted NFTs |
 |  [getOwned(walletAddress)](./sdk.edition.getowned.md) |  | Get Owned NFTs |
 |  [getTotalCount()](./sdk.edition.gettotalcount.md) |  | Get the number of NFTs minted |
 |  [isTransferRestricted()](./sdk.edition.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |

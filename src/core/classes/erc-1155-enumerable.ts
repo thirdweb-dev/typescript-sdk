@@ -40,8 +40,7 @@ export class Erc1155Enumerable implements DetectableFeature {
    *
    * @example
    * ```javascript
-   * const nfts = await contract.getAll();
-   * console.log(nfts);
+   * const nfts = await contract.edition.query.all();
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
@@ -80,8 +79,7 @@ export class Erc1155Enumerable implements DetectableFeature {
    * ```javascript
    * // Address of the wallet to get the NFTs of
    * const address = "{{wallet_address}}";
-   * const nfts = await contract.getOwned(address);
-   * console.log(nfts);
+   * const nfts = await contract.edition.query.owned(address);
    * ```
    *
    * @returns The NFT metadata for all NFTs in the contract.

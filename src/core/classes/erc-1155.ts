@@ -31,10 +31,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @example
  * ```javascript
  * const contract = sdk.getContract("0x...");
- * const walletAddress = "0x...";
- * const tokenId = 0;
- * const nft = await contract.edition.get(tokenId);
- * await contract.edition.transfer(walletAddress, tokenId, 2);
+ * await contract.edition.transfer(walletAddress, tokenId, quantity);
  * ```
  * @public
  */
@@ -90,7 +87,6 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
    * @example
    * ```javascript
    * const nft = await contract.get("0");
-   * console.log(nft);
    * ```
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
@@ -125,12 +121,9 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
    * @example
    * ```javascript
    * // Address of the wallet to check NFT balance
-   * const address = "{{wallet_address}}";
-   * // Id of the NFT to check
-   * const tokenId = 0;
-   *
-   * const balance = await contract.balanceOf(address, tokenId);
-   * console.log(balance);
+   * const walletAddress = "{{wallet_address}}";
+   * const tokenId = 0; // Id of the NFT to check
+   * const balance = await contract.balanceOf(walletAddress, tokenId);
    * ```
    */
   public async balanceOf(
@@ -175,12 +168,8 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
    * ```javascript
    * // Address of the wallet you want to send the NFT to
    * const toAddress = "{{wallet_address}}";
-   *
-   * // The token ID of the NFT you want to send
-   * const tokenId = "0";
-   * // How many copies of the NFTs to transfer
-   * const amount = 3;
-   *
+   * const tokenId = "0"; // The token ID of the NFT you want to send
+   * const amount = 3; // How many copies of the NFTs to transfer
    * await contract.transfer(toAddress, tokenId, amount);
    * ```
    */

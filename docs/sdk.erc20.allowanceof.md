@@ -34,12 +34,9 @@ Get the allowance of one wallet over another wallet's funds - the allowance of a
 
 ```javascript
 // Address of the wallet who owns the funds
-const address = "{{wallet_address}}";
-
+const owner = "{{wallet_address}}";
 // Address of the wallet to check token allowance
-const spenderAddress = "0x...";
-
-const allowance = await contract.allowanceOf(address, spenderAddress);
-console.log(allowance);
+const spender = "0x...";
+const allowance = await contract.allowanceOf(owner, spender);
 ```
 

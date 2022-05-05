@@ -34,7 +34,6 @@ By default, returns the first 100 NFTs, use queryParams to fetch more.
 
 
 ```javascript
-const nfts = await contract.getAll();
-console.log(nfts);
+const nfts = await contract.edition.query.all();
 ```
 

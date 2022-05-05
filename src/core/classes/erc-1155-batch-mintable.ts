@@ -11,6 +11,16 @@ import { IStorage } from "../interfaces";
 import { FEATURE_EDITION_BATCH_MINTABLE } from "../../constants/erc1155-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 
+/**
+ * Mint Many ERC1155 NFTs at once
+ * @remarks NFT batch minting functionality that handles IPFS storage for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("0x...");
+ * await contract.edition.mint.batch.to(walletAddress, [nftMetadataWithSupply1, nftMetadataWithSupply2, ...]);
+ * ```
+ * @public
+ */
 export class Erc1155BatchMintable implements DetectableFeature {
   featureName = FEATURE_EDITION_BATCH_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>;
@@ -54,7 +64,7 @@ export class Erc1155BatchMintable implements DetectableFeature {
    *   },
    * }];
    *
-   * const tx = await contract.mintBatchTo(toAddress, metadataWithSupply);
+   * const tx = await contract.edition.mint.batch.to(toAddress, metadataWithSupply);
    * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
    * const firstTokenId = tx[0].id; // token id of the first minted NFT
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT

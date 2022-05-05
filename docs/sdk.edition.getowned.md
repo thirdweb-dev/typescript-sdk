@@ -28,3 +28,12 @@ The NFT metadata for all NFTs in the contract.
 
 Get all the data associated with the NFTs owned by a specific wallet.
 
+## Example
+
+
+```javascript
+// Address of the wallet to get the NFTs of
+const address = "{{wallet_address}}";
+const nfts = await contract.getOwned(address);
+```
+

@@ -46,7 +46,6 @@ export class Erc721Supply implements DetectableFeature {
    * @example
    * ```javascript
    * const nfts = await contract.query.all();
-   * console.log(nfts);
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.

@@ -13,6 +13,16 @@ import { IStorage } from "../interfaces";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
 
+/**
+ * Mint ERC1155 NFTs
+ * @remarks NFT minting functionality that handles IPFS storage for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("0x...");
+ * await contract.edition.mint.to(walletAddress, nftMetadata);
+ * ```
+ * @public
+ */
 export class Erc1155Mintable implements DetectableFeature {
   featureName = FEATURE_EDITION_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC1155>;

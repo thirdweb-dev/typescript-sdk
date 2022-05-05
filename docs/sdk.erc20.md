@@ -22,8 +22,7 @@ Basic functionality for a ERC20 contract that handles all unit transformation fo
 
 ```javascript
 const contract = sdk.getContract("0x...");
-const walletAddress = "0x...";
-await contract.token.transfer(walletAddress, 0.8);
+await contract.token.transfer(walletAddress, amount);
 ```
 
 ## Constructors

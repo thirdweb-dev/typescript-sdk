@@ -35,12 +35,8 @@ Transfer an NFT from the connected wallet to another wallet.
 ```javascript
 // Address of the wallet you want to send the NFT to
 const toAddress = "{{wallet_address}}";
-
-// The token ID of the NFT you want to send
-const tokenId = "0";
-// How many copies of the NFTs to transfer
-const amount = 3;
-
+const tokenId = "0"; // The token ID of the NFT you want to send
+const amount = 3; // How many copies of the NFTs to transfer
 await contract.transfer(toAddress, tokenId, amount);
 ```
 

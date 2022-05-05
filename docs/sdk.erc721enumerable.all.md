@@ -35,6 +35,5 @@ Get all the data associated with the NFTs owned by a specific wallet.
 // Address of the wallet to get the NFTs of
 const address = "{{wallet_address}}";
 const nfts = await contract.query.owned.all(address);
-console.log(nfts);
 ```
 

@@ -26,9 +26,6 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @example
  * ```javascript
  * const contract = sdk.getContract("0x...");
- * const walletAddress = "{{wallet_address}}";
- * const tokenId = 0;
- * const nft = await contract.nft.get(tokenId);
  * await contract.nft.transfer(walletAddress, tokenId);
  * ```
  * @public
@@ -84,8 +81,8 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
    *
    * @example
    * ```javascript
+   * const tokenId = 0;
    * const nft = await contract.get(tokenId);
-   * console.log(nft);
    * ```
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
@@ -115,6 +112,7 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
    *
    * @example
    * ```javascript
+   * const walletAddress = "{{wallet_address}}";
    * const balance = await contract.balanceOf(walletAddress);
    * console.log(balance);
    * ```
@@ -153,6 +151,8 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
    *
    * @example
    * ```javascript
+   * const walletAddress = "{{wallet_address}}";
+   * const tokenId = 0;
    * await contract.transfer(walletAddress, tokenId);
    * ```
    */

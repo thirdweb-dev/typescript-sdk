@@ -63,7 +63,7 @@
     "summary": "Standard ERC1155 NFT functions\n\n",
     "remarks": "\n\nBasic functionality for a ERC1155 contract that handles IPFS storage for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst walletAddress = \"0x...\";\nconst tokenId = 0;\nconst nft = await contract.edition.get(tokenId);\nawait contract.edition.transfer(walletAddress, tokenId, 2);"
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nawait contract.edition.transfer(walletAddress, tokenId, quantity);"
     },
     "methods": [
       {
@@ -82,7 +82,7 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this contract owned by the wallet).\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n// Id of the NFT to check\nconst tokenId = 0;\n\nconst balance = await contract.balanceOf(address, tokenId);\nconsole.log(balance);"
+          "javascript": "// Address of the wallet to check NFT balance\nconst walletAddress = \"{{wallet_address}}\";\nconst tokenId = 0; // Id of the NFT to check\nconst balance = await contract.balanceOf(walletAddress, tokenId);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155.balanceOf"
@@ -93,7 +93,7 @@
         "summary": "Get a single NFT Metadata\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const nft = await contract.get(\"0\");\nconsole.log(nft);"
+          "javascript": "const nft = await contract.get(\"0\");"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155.get"
@@ -104,7 +104,7 @@
         "summary": "Transfer a single NFT\n\n",
         "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n// How many copies of the NFTs to transfer\nconst amount = 3;\n\nawait contract.transfer(toAddress, tokenId, amount);"
+          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\nconst tokenId = \"0\"; // The token ID of the NFT you want to send\nconst amount = 3; // How many copies of the NFTs to transfer\nawait contract.transfer(toAddress, tokenId, amount);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155.transfer"
@@ -127,7 +127,7 @@
         "summary": "Get All NFTs\n\n",
         "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
         "examples": {
-          "javascript": "const nfts = await contract.getAll();\nconsole.log(nfts);"
+          "javascript": "const nfts = await contract.edition.query.all();"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Enumerable.all"
@@ -138,7 +138,7 @@
         "summary": "Get Owned NFTs\n\n",
         "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.getOwned(address);\nconsole.log(nfts);"
+          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.edition.query.owned(address);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Enumerable.owned"
@@ -153,7 +153,7 @@
     "summary": "Standard ERC20 Token functions\n\n",
     "remarks": "\n\nBasic functionality for a ERC20 contract that handles all unit transformation for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst walletAddress = \"0x...\";\nawait contract.token.transfer(walletAddress, 0.8);"
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nawait contract.token.transfer(walletAddress, amount);"
     },
     "methods": [
       {
@@ -161,7 +161,7 @@
         "summary": "Get Token Allowance\n\n",
         "remarks": "\n\nGet the allowance of a 'spender' wallet over the connected wallet's funds - the allowance of a different address for a token is the amount of tokens that the `spender` wallet is allowed to spend on behalf of the connected wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check token allowance\nconst spenderAddress = \"0x...\";\n\nconst allowance = await contract.allowanceOf(otherAddress);\nconsole.log(allowance);"
+          "javascript": "// Address of the wallet to check token allowance\nconst spenderAddress = \"0x...\";\nconst allowance = await contract.allowanceOf(otherAddress);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.allowance"
@@ -172,7 +172,7 @@
         "summary": "Get Token Allowance\n\n",
         "remarks": "\n\nGet the allowance of one wallet over another wallet's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the specified wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet who owns the funds\nconst address = \"{{wallet_address}}\";\n\n// Address of the wallet to check token allowance\nconst spenderAddress = \"0x...\";\n\nconst allowance = await contract.allowanceOf(address, spenderAddress);\nconsole.log(allowance);"
+          "javascript": "// Address of the wallet who owns the funds\nconst owner = \"{{wallet_address}}\";\n// Address of the wallet to check token allowance\nconst spender = \"0x...\";\nconst allowance = await contract.allowanceOf(owner, spender);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.allowanceOf"
@@ -194,7 +194,7 @@
         "summary": "Get Token Balance\n\n",
         "remarks": "\n\nGet a wallets token balance.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check token balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await contract.balanceOf(address);\nconsole.log(balance);"
+          "javascript": "// Address of the wallet to check token balance\nconst walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.balanceOf(walletAddress);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.balanceOf"
@@ -205,7 +205,7 @@
         "summary": "Get the token Metadata (name, symbol, etc...)\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const token = await contract.get();\nconsole.log(token);"
+          "javascript": "const token = await contract.get();"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.get"
@@ -216,7 +216,7 @@
         "summary": "Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "// Address of the wallet to allow transfers from\nconst spenderAddress = \"0x...\";\n\n// The number of tokens to give as allowance\nconst amount = 100\n\nawait contract.setAllowance(spenderAddress, amount);"
+          "javascript": "// Address of the wallet to allow transfers from\nconst spenderAddress = \"0x...\";\n// The number of tokens to give as allowance\nconst amount = 100\nawait contract.setAllowance(spenderAddress, amount);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.setAllowance"
@@ -227,7 +227,7 @@
         "summary": "Transfer Tokens\n\n",
         "remarks": "\n\nTransfer tokens from the connected wallet to another wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n\n// The amount of tokens you want to send\nconst amount = 0.1;\n\nawait contract.transfer(toAddress, amount);"
+          "javascript": "// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n// The amount of tokens you want to send\nconst amount = 0.1;\nawait contract.transfer(toAddress, amount);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.transfer"
@@ -249,7 +249,7 @@
         "summary": "Transfer Tokens From Address\n\n",
         "remarks": "\n\nTransfer tokens from one wallet to another\n\n",
         "examples": {
-          "javascript": "// Address of the wallet sending the tokens\nconst fromAddress = \"{{wallet_address}}\";\n\n// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n\n// The number of tokens you want to send\nconst amount = 1.2\n\n// Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nawait contract.transferFrom(fromAddress, toAddress, amount);"
+          "javascript": "// Address of the wallet sending the tokens\nconst fromAddress = \"{{wallet_address}}\";\n// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n// The number of tokens you want to send\nconst amount = 1.2\n// Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nawait contract.transferFrom(fromAddress, toAddress, amount);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.transferFrom"
@@ -264,7 +264,7 @@
     "summary": "Standard ERC721 NFT functions\n\n",
     "remarks": "\n\nBasic functionality for a ERC721 contract that handles IPFS storage for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst walletAddress = \"{{wallet_address}}\";\nconst tokenId = 0;\nconst nft = await contract.nft.get(tokenId);\nawait contract.nft.transfer(walletAddress, tokenId);"
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nawait contract.nft.transfer(walletAddress, tokenId);"
     },
     "methods": [
       {
@@ -272,7 +272,7 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this contract owned by the wallet).\n\n",
         "examples": {
-          "javascript": "const balance = await contract.balanceOf(walletAddress);\nconsole.log(balance);"
+          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.balanceOf(walletAddress);\nconsole.log(balance);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721.balanceOf"
@@ -283,7 +283,7 @@
         "summary": "Get a single NFT Metadata\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const nft = await contract.get(tokenId);\nconsole.log(nft);"
+          "javascript": "const tokenId = 0;\nconst nft = await contract.get(tokenId);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721.get"
@@ -294,7 +294,7 @@
         "summary": "Transfer a single NFT\n\n",
         "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
         "examples": {
-          "javascript": "await contract.transfer(walletAddress, tokenId);"
+          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst tokenId = 0;\nawait contract.transfer(walletAddress, tokenId);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721.transfer"
@@ -340,7 +340,7 @@
         "summary": "Get Owned NFTs\n\n",
         "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.query.owned.all(address);\nconsole.log(nfts);"
+          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.query.owned.all(address);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Enumerable.all"
@@ -386,7 +386,7 @@
         "summary": "Get All Minted NFTs\n\n",
         "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
         "examples": {
-          "javascript": "const nfts = await contract.query.all();\nconsole.log(nfts);"
+          "javascript": "const nfts = await contract.query.all();"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Supply.all"
