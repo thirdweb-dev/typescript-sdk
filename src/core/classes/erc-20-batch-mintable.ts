@@ -12,7 +12,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks Token batch minting functionality that handles unit parsing for you.
  * @example
  * ```javascript
- * const contract = sdk.getContract({{contract_address}});
+ * const contract = sdk.getContract("{{contract_address}}");
  * await contract.token.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);
  * ```
  * @public

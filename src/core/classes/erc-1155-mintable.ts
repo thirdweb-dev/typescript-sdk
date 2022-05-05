@@ -18,7 +18,7 @@ import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
  * @remarks NFT minting functionality that handles IPFS storage for you.
  * @example
  * ```javascript
- * const contract = sdk.getContract({{contract_address}});
+ * const contract = sdk.getContract("{{contract_address}}");
  * await contract.edition.mint.to(walletAddress, nftMetadata);
  * ```
  * @public

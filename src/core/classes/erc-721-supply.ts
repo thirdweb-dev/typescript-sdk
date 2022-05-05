@@ -15,7 +15,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks Easily list all the NFTs in a ERC721 contract.
  * @example
  * ```javascript
- * const contract = sdk.getContract({{contract_address}});
+ * const contract = sdk.getContract("{{contract_address}}");
  * const nfts = await contract.nft.query.all();
  * ```
  * @public
