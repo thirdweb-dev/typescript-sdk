@@ -10,7 +10,7 @@ export const FEATURE_EDITION_BATCH_MINTABLE = {
     sdk: "sdk.erc1155batchmintable",
     contracts: "IMulticall",
   },
-  abi: MulticallAbi,
+  abis: [Erc1155Abi, IMintableERC1155Abi, MulticallAbi],
   features: {},
 } as const;
 
@@ -21,7 +21,7 @@ export const FEATURE_EDITION_MINTABLE = {
     sdk: "sdk.erc1155mintable",
     contracts: "IMintableERC1155",
   },
-  abi: IMintableERC1155Abi,
+  abis: [Erc1155Abi, IMintableERC1155Abi],
   features: {
     [FEATURE_EDITION_BATCH_MINTABLE.name]: FEATURE_EDITION_BATCH_MINTABLE,
   },
@@ -34,7 +34,7 @@ export const FEATURE_EDITION_ENUMERABLE = {
     sdk: "sdk.erc1155",
     contracts: "ERC1155",
   },
-  abi: Erc1155EnumerableAbi,
+  abis: [Erc1155Abi, Erc1155EnumerableAbi],
   features: {},
 } as const;
 
@@ -45,7 +45,7 @@ export const FEATURE_EDITION = {
     sdk: "sdk.erc1155enumerable",
     contracts: "ERC1155Enumerable",
   },
-  abi: Erc1155Abi,
+  abis: [Erc1155Abi],
   features: {
     [FEATURE_EDITION_ENUMERABLE.name]: FEATURE_EDITION_ENUMERABLE,
     [FEATURE_EDITION_MINTABLE.name]: FEATURE_EDITION_MINTABLE,
