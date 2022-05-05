@@ -7,6 +7,16 @@ import { TransactionResult } from "../types";
 import { FEATURE_TOKEN_BATCH_MINTABLE } from "../../constants/erc20-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 
+/**
+ * Mint Many ERC20 Tokens at once
+ * @remarks Token batch minting functionality that handles unit parsing for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract({{contract_address}});
+ * await contract.token.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);
+ * ```
+ * @public
+ */
 export class Erc20BatchMintable implements DetectableFeature {
   featureName = FEATURE_TOKEN_BATCH_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC20 & IMulticall>;

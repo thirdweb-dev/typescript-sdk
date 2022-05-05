@@ -21,7 +21,7 @@ Easily list all the NFTs in a ERC1155 contract.
 
 
 ```javascript
-const contract = sdk.getContract("0x...");
+const contract = sdk.getContract({{contract_address}});
 const nfts = await contract.edition.query.all();
 ```
 

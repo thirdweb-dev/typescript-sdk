@@ -13,7 +13,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks Configure royalties for an entire contract or a particular token.
  * @example
  * ```javascript
- * const contract = sdk.getContract("0x...");
+ * const contract = sdk.getContract({{contract_address}});
  * const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();
  * await contract.roles.setTokenRoyaltyInfo(tokenId, {
  *   seller_fee_basis_points: 100, // 1% royalty fee

@@ -23,7 +23,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks Basic functionality for a ERC20 contract that handles all unit transformation for you.
  * @example
  * ```javascript
- * const contract = sdk.getContract("0x...");
+ * const contract = sdk.getContract({{contract_address}});
  * await contract.token.transfer(walletAddress, amount);
  * ```
  * @public

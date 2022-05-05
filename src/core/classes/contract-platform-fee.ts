@@ -11,7 +11,7 @@ import { FEATURE_PLATFORM_FEE } from "../../constants/thirdweb-features";
  * @remarks Configure platform fees for a contract, which can be applied on certain paid transactions
  * @example
  * ```javascript
- * const contract = sdk.getContract("0x...");
+ * const contract = sdk.getContract({{contract_address}});
  * const feeInfo = await contract.platformFee.get();
  * await contract.platformFee.set({
  *   platform_fee_basis_points: 100, // 1% fee

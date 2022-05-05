@@ -21,7 +21,7 @@ NFT batch minting functionality that handles IPFS storage for you.
 
 
 ```javascript
-const contract = sdk.getContract("0x...");
+const contract = sdk.getContract({{contract_address}});
 await contract.nft.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);
 ```
 

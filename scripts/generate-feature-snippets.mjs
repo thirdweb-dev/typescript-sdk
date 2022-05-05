@@ -132,7 +132,9 @@ const moduleMap = classes.reduce((acc, m) => {
     examples,
     methods: parseMembers(m.members, "Method", m.name),
     properties: parseMembers(m.members, "Property", m.name),
-    reference: extractReferenceLink(m),
+    reference: {
+      javascript: extractReferenceLink(m),
+    },
   };
   // }
 

@@ -21,7 +21,7 @@ Configure primary sale recipients for an entire contract.
 
 
 ```javascript
-const contract = sdk.getContract("0x...");
+const contract = sdk.getContract({{contract_address}});
 const salesRecipient = await contract.sales.getRecipient();
 await contract.roles.setRecipient(recipientWalletAddress);
 ```
