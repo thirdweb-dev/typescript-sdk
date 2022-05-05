@@ -652,10 +652,13 @@ export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebCont
 }
 
 // Warning: (ae-forgotten-export) The symbol "IPlatformFee" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class ContractPlatformFee<TContract extends IPlatformFee> {
+export class ContractPlatformFee<TContract extends IPlatformFee> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>);
+    // (undocumented)
+    featureName: "PlatformFee";
     get(): Promise<{
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
@@ -667,8 +670,10 @@ export class ContractPlatformFee<TContract extends IPlatformFee> {
 // Warning: (ae-forgotten-export) The symbol "IPrimarySale" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class ContractPrimarySale<TContract extends IPrimarySale> {
+export class ContractPrimarySale<TContract extends IPrimarySale> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>);
+    // (undocumented)
+    featureName: "PrimarySale";
     getRecipient(): Promise<string>;
     setRecipient(recipient: string): Promise<TransactionResult>;
 }
@@ -691,8 +696,10 @@ export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
 // Warning: (ae-forgotten-export) The symbol "IPermissionsEnumerable" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class ContractRoles<TContract extends IPermissionsEnumerable, TRole extends Role> {
+export class ContractRoles<TContract extends IPermissionsEnumerable, TRole extends Role> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>, roles: readonly TRole[]);
+    // (undocumented)
+    featureName: "Permissions";
     get(role: TRole): Promise<string[]>;
     getAll(): Promise<Record<TRole, string[]>>;
     grant(role: TRole, address: string): Promise<TransactionResult>;
@@ -708,8 +715,10 @@ export class ContractRoles<TContract extends IPermissionsEnumerable, TRole exten
 // Warning: (ae-incompatible-release-tags) The symbol "ContractRoyalty" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
-export class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract), TSchema extends IGenericSchemaType> {
+export class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract), TSchema extends IGenericSchemaType> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, TSchema>);
+    // (undocumented)
+    featureName: "Royalty";
     getDefaultRoyaltyInfo(): Promise<{
         seller_fee_basis_points: number;
         fee_recipient: string;
@@ -1493,21 +1502,21 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
 // Warning: (ae-forgotten-export) The symbol "UpdateableNetwork" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> implements UpdateableNetwork {
+export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> implements UpdateableNetwork, DetectableFeature {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     airdrop(tokenId: BigNumberish, addresses: AirdropInput, data?: BytesLike): Promise<TransactionResult>;
     balance(tokenId: BigNumberish): Promise<BigNumber>;
     balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
+    // (undocumented)
+    featureName: "ERC1155";
     get(tokenId: BigNumberish): Promise<EditionMetadata>;
     // (undocumented)
     getAddress(): string;
     // @internal (undocumented)
     getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
-    // Warning: (ae-forgotten-export) The symbol "Erc1155Mintable" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     mint: Erc1155Mintable | undefined;
     // @internal (undocumented)
@@ -1524,13 +1533,35 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> impleme
     transfer(to: string, tokenId: BigNumberish, amount: BigNumberish, data?: BytesLike): Promise<TransactionResult>;
 }
 
-// @public (undocumented)
-export class Erc1155Enumerable {
+// @public
+export class Erc1155BatchMintable implements DetectableFeature {
+    // Warning: (ae-forgotten-export) The symbol "IMintableERC1155" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "IMulticall" needs to be exported by the entry point index.d.ts
+    constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>, storage: IStorage);
+    // (undocumented)
+    featureName: "ERC1155BatchMintable";
+    to(to: string, metadataWithSupply: EditionMetadataOrUri[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
+}
+
+// @public
+export class Erc1155Enumerable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IERC1155Enumerable" needs to be exported by the entry point index.d.ts
     constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>);
     all(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
+    // (undocumented)
+    featureName: "ERC1155Enumerable";
     getTotalCount(): Promise<BigNumber>;
     owned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
+}
+
+// @public
+export class Erc1155Mintable implements DetectableFeature {
+    constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<IMintableERC1155>, storage: IStorage);
+    additionalSupplyTo(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
+    batch: Erc1155BatchMintable | undefined;
+    // (undocumented)
+    featureName: "ERC1155Mintable";
+    to(to: string, metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
 }
 
 // @public
@@ -1547,7 +1578,7 @@ export class Erc1155SignatureMinting {
 // Warning: (ae-forgotten-export) The symbol "BaseERC20" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements UpdateableNetwork {
+export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements UpdateableNetwork, DetectableFeature {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     allowance(spender: string): Promise<CurrencyValue>;
     allowanceOf(owner: string, spender: string): Promise<CurrencyValue>;
@@ -1555,12 +1586,13 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements Upda
     balanceOf(address: string): Promise<CurrencyValue>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
+    // (undocumented)
+    featureName: "ERC20";
     get(): Promise<Currency>;
     // (undocumented)
     getAddress(): string;
     // @internal (undocumented)
     protected getValue(value: BigNumberish): Promise<CurrencyValue>;
-    // Warning: (ae-forgotten-export) The symbol "Erc20Mintable" needs to be exported by the entry point index.d.ts
     mint: Erc20Mintable | undefined;
     // @internal
     normalizeAmount(amount: Amount): Promise<BigNumber>;
@@ -1578,6 +1610,24 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements Upda
 }
 
 // @public
+export class Erc20BatchMintable implements DetectableFeature {
+    // Warning: (ae-forgotten-export) The symbol "IMintableERC20" needs to be exported by the entry point index.d.ts
+    constructor(erc20: Erc20<BaseERC20>, contractWrapper: ContractWrapper<IMintableERC20 & IMulticall>);
+    // (undocumented)
+    featureName: "ERC20BatchMintable";
+    to(args: TokenMintInput[]): Promise<TransactionResult>;
+}
+
+// @public
+export class Erc20Mintable implements DetectableFeature {
+    constructor(erc20: Erc20<BaseERC20>, contractWrapper: ContractWrapper<IMintableERC20>);
+    batch: Erc20BatchMintable | undefined;
+    // (undocumented)
+    featureName: "ERC20Mintable";
+    to(to: string, amount: Amount): Promise<TransactionResult>;
+}
+
+// @public
 export class Erc20SignatureMinting {
     constructor(contractWrapper: ContractWrapper<TokenERC20>, roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>);
     generate(mintRequest: PayloadToSign20): Promise<SignedPayload20>;
@@ -1591,12 +1641,14 @@ export class Erc20SignatureMinting {
 // Warning: (ae-forgotten-export) The symbol "BaseERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements UpdateableNetwork {
+export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements UpdateableNetwork, DetectableFeature {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
     balanceOf(address: string): Promise<BigNumber>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
+    // (undocumented)
+    featureName: "ERC721";
     get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
     // (undocumented)
     getAddress(): string;
@@ -1619,28 +1671,33 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements 
     transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;
 }
 
-// @public (undocumented)
-export class Erc721BatchMintable {
+// @public
+export class Erc721BatchMintable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IMintableERC721" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "IMulticall" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>, storage: IStorage);
+    // (undocumented)
+    featureName: "ERC721BatchMintable";
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 }
 
-// @public (undocumented)
-export class Erc721Enumerable {
+// @public
+export class Erc721Enumerable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IERC721Enumerable" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>);
     all(walletAddress?: string): Promise<NFTMetadataOwner[]>;
+    // (undocumented)
+    featureName: "ERC721Enumerable";
     tokenIds(walletAddress?: string): Promise<BigNumber[]>;
 }
 
-// @public (undocumented)
-export class Erc721Mintable {
+// @public
+export class Erc721Mintable implements DetectableFeature {
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<IMintableERC721>, storage: IStorage);
     // (undocumented)
     batch: Erc721BatchMintable | undefined;
+    // (undocumented)
+    featureName: "ERC721Mintable";
     to(to: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 }
 
@@ -1654,11 +1711,13 @@ export class Erc721SignatureMinting {
     verify(signedPayload: SignedPayload721): Promise<boolean>;
 }
 
-// @public (undocumented)
-export class Erc721Supply {
+// @public
+export class Erc721Supply implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IERC721Supply" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>);
     all(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    // (undocumented)
+    featureName: "ERC721Supply";
     // (undocumented)
     owned: Erc721Enumerable | undefined;
     totalSupply(): Promise<BigNumber>;
@@ -2227,11 +2286,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
     // (undocumented)
     events: ContractEvents<TokenERC721>;
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
-    //
-    // (undocumented)
     getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "tokendIds"
     //
     // (undocumented)
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
@@ -2355,9 +2411,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
         }>;
     };
     signature: Erc721SignatureMinting;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "totalSupply"
-    //
-    // (undocumented)
     totalSupply(): Promise<BigNumber>;
 }
 
@@ -2399,11 +2452,8 @@ export class NFTDrop extends Erc721<DropERC721> {
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
-    //
-    // (undocumented)
     getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: The package "@thirdweb-dev/sdk" does not have an export "Erc721Owned"
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "tokendIds"
     //
     // (undocumented)
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
@@ -2536,9 +2586,6 @@ export class NFTDrop extends Erc721<DropERC721> {
         }>;
     };
     totalClaimedSupply(): Promise<BigNumber>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "totalSupply"
-    //
-    // (undocumented)
     totalSupply(): Promise<BigNumber>;
     totalUnclaimedSupply(): Promise<BigNumber>;
 }
@@ -4158,7 +4205,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ThirdwebContract>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "custom" | "token" | "pack" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "nft-collection";
+        contractType: "custom" | "token" | "pack" | "edition" | "split" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
     getEdition(address: string): Edition;

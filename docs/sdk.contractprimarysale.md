@@ -4,12 +4,26 @@
 
 ## ContractPrimarySale class
 
-Handles primary sales recipients for a Contract
+Handle primary sales recipients
 
 <b>Signature:</b>
 
 ```typescript
-export declare class ContractPrimarySale<TContract extends IPrimarySale> 
+export declare class ContractPrimarySale<TContract extends IPrimarySale> implements DetectableFeature 
+```
+<b>Implements:</b> DetectableFeature
+
+## Remarks
+
+Configure primary sale recipients for an entire contract.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("{{contract_address}}");
+const salesRecipient = await contract.sales.getRecipient();
+await contract.roles.setRecipient(recipientWalletAddress);
 ```
 
 ## Constructors
@@ -17,6 +31,12 @@ export declare class ContractPrimarySale<TContract extends IPrimarySale>
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
 |  [(constructor)(contractWrapper)](./sdk.contractprimarysale._constructor_.md) |  | Constructs a new instance of the <code>ContractPrimarySale</code> class |
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [featureName](./sdk.contractprimarysale.featurename.md) |  | "PrimarySale" |  |
 
 ## Methods
 

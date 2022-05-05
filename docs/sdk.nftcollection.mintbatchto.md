@@ -27,3 +27,27 @@ Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&l
 
 Mint many unique NFTs at once to a specified wallet.
 
+## Example
+
+
+```javascript
+// Address of the wallet you want to mint the NFT to
+const walletAddress = "{{wallet_address}}";
+
+// Custom metadata of the NFTs you want to mint.
+const metadatas = [{
+  name: "Cool NFT #1",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+}, {
+  name: "Cool NFT #2",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/other/image.png"),
+}];
+
+const tx = await contract.mintBatchTo(walletAddress, metadatas);
+const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
+const firstTokenId = tx[0].id; // token id of the first minted NFT
+const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
+```
+

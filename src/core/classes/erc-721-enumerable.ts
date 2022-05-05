@@ -4,8 +4,22 @@ import { BigNumber } from "ethers";
 import { NFTMetadataOwner } from "../../schema";
 import { Erc721 } from "./erc-721";
 import { BaseERC721 } from "../../types/eips";
+import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
-export class Erc721Enumerable {
+/**
+ * List owned ERC721 NFTs
+ * @remarks Easily list all the NFTs from a ERC721 contract, owned by a certain wallet.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("{{contract_address}}");
+ * const walletAddress = "0x...";
+ * const ownedNFTs = await contract.nft.query.owned.all(walletAddress);
+ * ```
+ * @public
+ */
+export class Erc721Enumerable implements DetectableFeature {
+  featureName = FEATURE_NFT_ENUMERABLE.name;
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>;
   private erc721: Erc721<BaseERC721>;
 
@@ -27,9 +41,8 @@ export class Erc721Enumerable {
    * // Address of the wallet to get the NFTs of
    * const address = "{{wallet_address}}";
    * const nfts = await contract.query.owned.all(address);
-   * console.log(nfts);
    * ```
-   *
+   * @param walletAddress - the wallet address to query, defaults to the connected wallet
    * @returns The NFT metadata for all NFTs in the contract.
    */
   public async all(walletAddress?: string): Promise<NFTMetadataOwner[]> {

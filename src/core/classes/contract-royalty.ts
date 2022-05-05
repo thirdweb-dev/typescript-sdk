@@ -5,15 +5,29 @@ import { ContractWrapper } from "./contract-wrapper";
 import { z } from "zod";
 import { TransactionResult } from "../types";
 import { BigNumberish } from "ethers";
+import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
- * Handles Contract royalties
+ * Handle contract royalties
+ * @remarks Configure royalties for an entire contract or a particular token.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("{{contract_address}}");
+ * const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();
+ * await contract.roles.setTokenRoyaltyInfo(tokenId, {
+ *   seller_fee_basis_points: 100, // 1% royalty fee
+ *   fee_recipient: "0x...", // the fee recipient
+ * });
+ * ```
  * @public
  */
 export class ContractRoyalty<
   TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract),
   TSchema extends IGenericSchemaType,
-> {
+> implements DetectableFeature
+{
+  featureName = FEATURE_ROYALTY.name;
   private contractWrapper;
   private metadata;
 

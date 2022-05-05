@@ -7,8 +7,21 @@ import { IStorage } from "../interfaces";
 import { Erc721 } from "./erc-721";
 import { TokensMintedEvent } from "contracts/IMintableERC721";
 import { BaseERC721 } from "../../types/eips";
+import { FEATURE_NFT_BATCH_MINTABLE } from "../../constants/erc721-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
-export class Erc721BatchMintable {
+/**
+ * Mint Many ERC721 NFTs at once
+ * @remarks NFT batch minting functionality that handles IPFS storage for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("{{contract_address}}");
+ * await contract.nft.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);
+ * ```
+ * @public
+ */
+export class Erc721BatchMintable implements DetectableFeature {
+  featureName = FEATURE_NFT_BATCH_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>;
   private storage: IStorage;
   private erc721: Erc721<BaseERC721>;

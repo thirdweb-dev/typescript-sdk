@@ -6,8 +6,21 @@ import { BaseERC20 } from "../../types/eips";
 import { Erc20 } from "./erc-20";
 import { Amount } from "../../types";
 import { Erc20BatchMintable } from "./erc-20-batch-mintable";
+import { FEATURE_TOKEN_MINTABLE } from "../../constants/erc20-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
-export class Erc20Mintable {
+/**
+ * Mint ERC20 Tokens
+ * @remarks Token minting functionality that handles unit parsing for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("{{contract_address}}");
+ * await contract.nft.mint.to(walletAddress, nftMetadata);
+ * ```
+ * @public
+ */
+export class Erc20Mintable implements DetectableFeature {
+  featureName = FEATURE_TOKEN_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC20>;
   private erc20: Erc20<BaseERC20>;
 
@@ -34,7 +47,6 @@ export class Erc20Mintable {
    * ```javascript
    * const toAddress = "{{wallet_address}}"; // Address of the wallet you want to mint the tokens to
    * const amount = "1.5"; // The amount of this token you want to mint
-   *
    * await contract.mintTo(toAddress, amount);
    * ```
    */

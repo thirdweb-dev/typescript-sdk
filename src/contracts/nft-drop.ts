@@ -197,29 +197,54 @@ export class NFTDrop extends Erc721<DropERC721> {
    *******************************/
 
   /**
-   * {@inheritDoc Erc721Enumerable.all}
+   * Get All Minted NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this contract.
+   *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await contract.getAll();
+   * console.log(nfts);
+   * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The NFT metadata for all NFTs queried.
    */
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
     return this._query.all(queryParams);
   }
+
   /**
-   * {@inheritDoc Erc721Owned.all}
+   * Get Owned NFTs
+   *
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await contract.getOwned(address);
+   * console.log(nfts);
+   * ```
+   * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @returns The NFT metadata for all NFTs in the contract.
    */
   public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
     return this._owned.all(walletAddress);
   }
 
   /**
-   * {@inheritDoc Erc721Owned.tokendIds}
+   * {@inheritDoc Erc721Enumerable.tokendIds}
    */
   public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
     return this._owned.tokenIds(walletAddress);
   }
 
   /**
-   * {@inheritDoc Erc721Enumerable.totalSupply}
+   * {@inheritDoc Erc721Supply.totalSupply}
    */
   public async totalSupply() {
     return this._query.totalSupply();

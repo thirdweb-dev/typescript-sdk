@@ -4,10 +4,25 @@
 
 ## Erc1155Enumerable class
 
+List ERC1155 NFTs
+
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc1155Enumerable 
+export declare class Erc1155Enumerable implements DetectableFeature 
+```
+<b>Implements:</b> DetectableFeature
+
+## Remarks
+
+Easily list all the NFTs in a ERC1155 contract.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("{{contract_address}}");
+const nfts = await contract.edition.query.all();
 ```
 
 ## Constructors
@@ -15,6 +30,12 @@ export declare class Erc1155Enumerable
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
 |  [(constructor)(erc1155, contractWrapper)](./sdk.erc1155enumerable._constructor_.md) |  | Constructs a new instance of the <code>Erc1155Enumerable</code> class |
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [featureName](./sdk.erc1155enumerable.featurename.md) |  | "ERC1155Enumerable" |  |
 
 ## Methods
 

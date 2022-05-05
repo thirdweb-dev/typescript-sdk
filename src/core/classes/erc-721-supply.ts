@@ -7,8 +7,21 @@ import { Erc721 } from "./erc-721";
 import { BaseERC721 } from "../../types/eips";
 import { detectContractFeature } from "../../common";
 import { Erc721Enumerable } from "./erc-721-enumerable";
+import { FEATURE_NFT_SUPPLY } from "../../constants/erc721-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
-export class Erc721Supply {
+/**
+ * List ERC721 NFTs
+ * @remarks Easily list all the NFTs in a ERC721 contract.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("{{contract_address}}");
+ * const nfts = await contract.nft.query.all();
+ * ```
+ * @public
+ */
+export class Erc721Supply implements DetectableFeature {
+  featureName = FEATURE_NFT_SUPPLY.name;
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>;
   private erc721: Erc721<BaseERC721>;
 
@@ -33,7 +46,6 @@ export class Erc721Supply {
    * @example
    * ```javascript
    * const nfts = await contract.query.all();
-   * console.log(nfts);
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.

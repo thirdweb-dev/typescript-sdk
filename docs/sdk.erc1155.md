@@ -4,14 +4,26 @@
 
 ## Erc1155 class
 
-Standard ERC1155 functions
+Standard ERC1155 NFT functions
 
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> implements UpdateableNetwork 
+export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> implements UpdateableNetwork, DetectableFeature 
 ```
-<b>Implements:</b> UpdateableNetwork
+<b>Implements:</b> UpdateableNetwork, DetectableFeature
+
+## Remarks
+
+Basic functionality for a ERC1155 contract that handles IPFS storage for you.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("{{contract_address}}");
+await contract.edition.transfer(walletAddress, tokenId, quantity);
+```
 
 ## Constructors
 
@@ -24,7 +36,8 @@ export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155>
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc1155.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
-|  [mint](./sdk.erc1155.mint.md) |  | Erc1155Mintable \| undefined |  |
+|  [featureName](./sdk.erc1155.featurename.md) |  | "ERC1155" |  |
+|  [mint](./sdk.erc1155.mint.md) |  | [Erc1155Mintable](./sdk.erc1155mintable.md) \| undefined |  |
 |  [options](./sdk.erc1155.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [query](./sdk.erc1155.query.md) |  | [Erc1155Enumerable](./sdk.erc1155enumerable.md) \| undefined |  |
 |  [storage](./sdk.erc1155.storage.md) |  | [IStorage](./sdk.istorage.md) |  |

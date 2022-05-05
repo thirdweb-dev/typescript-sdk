@@ -28,7 +28,7 @@ The NFT metadata
 
 
 ```javascript
-const nft = await contract.get("0");
-console.log(nft);
+const tokenId = 0;
+const nft = await contract.get(tokenId);
 ```
 

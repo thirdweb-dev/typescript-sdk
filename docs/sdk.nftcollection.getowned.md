@@ -4,6 +4,7 @@
 
 ## NFTCollection.getOwned() method
 
+Get Owned NFTs
 
 <b>Signature:</b>
 
@@ -15,9 +16,25 @@ getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  walletAddress | string | <i>(Optional)</i> |
+|  walletAddress | string | <i>(Optional)</i> the wallet address to query, defaults to the connected wallet |
 
 <b>Returns:</b>
 
 Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt;
+
+The NFT metadata for all NFTs in the contract.
+
+## Remarks
+
+Get all the data associated with the NFTs owned by a specific wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet to get the NFTs of
+const address = "{{wallet_address}}";
+const nfts = await contract.getOwned(address);
+console.log(nfts);
+```
 

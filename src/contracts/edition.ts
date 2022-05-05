@@ -149,7 +149,18 @@ export class Edition extends Erc1155<TokenERC1155> {
    *******************************/
 
   /**
-   * {@inheritDoc Erc1155Enumerable.all}
+   * Get All Minted NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this contract.
+   *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await contract.getAll();
+   * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The NFT metadata for all NFTs queried.
    */
   public async getAll(
     queryParams?: QueryAllParams,
@@ -158,7 +169,18 @@ export class Edition extends Erc1155<TokenERC1155> {
   }
 
   /**
-   * {@inheritDoc Erc1155Enumerable.owned}
+   * Get Owned NFTs
+   *
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await contract.getOwned(address);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the contract.
    */
   public async getOwned(
     walletAddress?: string,

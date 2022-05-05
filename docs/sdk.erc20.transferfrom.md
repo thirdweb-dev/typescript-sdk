@@ -34,13 +34,10 @@ Transfer tokens from one wallet to another
 ```javascript
 // Address of the wallet sending the tokens
 const fromAddress = "{{wallet_address}}";
-
 // Address of the wallet you want to send the tokens to
 const toAddress = "0x...";
-
 // The number of tokens you want to send
 const amount = 1.2
-
 // Note that the connected wallet must have approval to transfer the tokens of the fromAddress
 await contract.transferFrom(fromAddress, toAddress, amount);
 ```

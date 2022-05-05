@@ -150,29 +150,54 @@ export class NFTCollection extends Erc721<TokenERC721> {
    *******************************/
 
   /**
-   * {@inheritDoc Erc721Enumerable.all}
+   * Get All Minted NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this contract.
+   *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await contract.getAll();
+   * console.log(nfts);
+   * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The NFT metadata for all NFTs queried.
    */
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
     return this._query.all(queryParams);
   }
+
   /**
-   * {@inheritDoc Erc721Owned.all}
+   * Get Owned NFTs
+   *
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await contract.getOwned(address);
+   * console.log(nfts);
+   * ```
+   * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @returns The NFT metadata for all NFTs in the contract.
    */
   public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
     return this._owned.all(walletAddress);
   }
 
   /**
-   * {@inheritDoc Erc721Owned.tokendIds}
+   * {@inheritDoc Erc721Enumerable.tokendIds}
    */
   public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
     return this._owned.tokenIds(walletAddress);
   }
 
   /**
-   * {@inheritDoc Erc721Enumerable.totalSupply}
+   * {@inheritDoc Erc721Supply.totalSupply}
    */
   public async totalSupply() {
     return this._query.totalSupply();
@@ -194,7 +219,24 @@ export class NFTCollection extends Erc721<TokenERC721> {
    *******************************/
 
   /**
-   * {@inheritDoc Erc721Mintable.to}
+   * Mint a unique NFT
+   *
+   * @remarks Mint a unique NFT to a specified wallet.
+   *
+   * @example
+   * ```javascript*
+   * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
+   * const metadata = {
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * };
+   *
+   * const tx = await contract.mintToSelf(metadata);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const tokenId = tx.id; // the id of the NFT minted
+   * const nft = await tx.data(); // (optional) fetch details of minted NFT
+   * ```
    */
   public async mintToSelf(
     metadata: NFTMetadataOrUri,
@@ -204,7 +246,27 @@ export class NFTCollection extends Erc721<TokenERC721> {
   }
 
   /**
-   * {@inheritDoc Erc721Mintable.to}
+   * Mint a unique NFT
+   *
+   * @remarks Mint a unique NFT to a specified wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to mint the NFT to
+   * const walletAddress = "{{wallet_address}}";
+   *
+   * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
+   * const metadata = {
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * };
+   *
+   * const tx = await contract.mintTo(walletAddress, metadata);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const tokenId = tx.id; // the id of the NFT minted
+   * const nft = await tx.data(); // (optional) fetch details of minted NFT
+   * ```
    */
   public async mintTo(
     walletAddress: string,
@@ -213,7 +275,28 @@ export class NFTCollection extends Erc721<TokenERC721> {
     return this._mint.to(walletAddress, metadata);
   }
   /**
-   * {@inheritDoc Erc721BatchMintable.to}
+   * Mint Many unique NFTs
+   *
+   * @remarks Mint many unique NFTs at once to the connected wallet
+   *
+   * @example
+   * ```javascript*
+   * // Custom metadata of the NFTs you want to mint.
+   * const metadatas = [{
+   *   name: "Cool NFT #1",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }, {
+   *   name: "Cool NFT #2",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/other/image.png"),
+   * }];
+   *
+   * const tx = await contract.mintBatch(metadatas);
+   * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
+   * const firstTokenId = tx[0].id; // token id of the first minted NFT
+   * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
+   * ```
    */
   public async mintBatch(
     metadata: NFTMetadataOrUri[],
@@ -222,7 +305,31 @@ export class NFTCollection extends Erc721<TokenERC721> {
     return this._batchMint.to(signerAddress, metadata);
   }
   /**
-   * {@inheritDoc Erc721BatchMintable.to}
+   * Mint Many unique NFTs
+   *
+   * @remarks Mint many unique NFTs at once to a specified wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to mint the NFT to
+   * const walletAddress = "{{wallet_address}}";
+   *
+   * // Custom metadata of the NFTs you want to mint.
+   * const metadatas = [{
+   *   name: "Cool NFT #1",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }, {
+   *   name: "Cool NFT #2",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/other/image.png"),
+   * }];
+   *
+   * const tx = await contract.mintBatchTo(walletAddress, metadatas);
+   * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
+   * const firstTokenId = tx[0].id; // token id of the first minted NFT
+   * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
+   * ```
    */
   public async mintBatchTo(
     walletAddress: string,

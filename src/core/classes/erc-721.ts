@@ -17,14 +17,23 @@ import {
 import { Erc721Supply } from "./erc-721-supply";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { BaseERC721 } from "../../types/eips";
+import { FEATURE_NFT } from "../../constants/erc721-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
- * Standard ERC721 functions
+ * Standard ERC721 NFT functions
+ * @remarks Basic functionality for a ERC721 contract that handles IPFS storage for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("{{contract_address}}");
+ * await contract.nft.transfer(walletAddress, tokenId);
+ * ```
  * @public
  */
 export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
-  implements UpdateableNetwork
+  implements UpdateableNetwork, DetectableFeature
 {
+  featureName = FEATURE_NFT.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
@@ -72,8 +81,8 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
    *
    * @example
    * ```javascript
-   * const nft = await contract.get("0");
-   * console.log(nft);
+   * const tokenId = 0;
+   * const nft = await contract.get(tokenId);
    * ```
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
@@ -103,10 +112,8 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
    *
    * @example
    * ```javascript
-   * // Address of the wallet to check NFT balance
-   * const address = "{{wallet_address}}";
-   *
-   * const balance = await contract.balanceOf(address);
+   * const walletAddress = "{{wallet_address}}";
+   * const balance = await contract.balanceOf(walletAddress);
    * console.log(balance);
    * ```
    */
@@ -144,13 +151,9 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721>
    *
    * @example
    * ```javascript
-   * // Address of the wallet you want to send the NFT to
-   * const toAddress = "{{wallet_address}}";
-   *
-   * // The token ID of the NFT you want to send
-   * const tokenId = "0";
-   *
-   * await contract.transfer(toAddress, tokenId);
+   * const walletAddress = "{{wallet_address}}";
+   * const tokenId = 0;
+   * await contract.transfer(walletAddress, tokenId);
    * ```
    */
   public async transfer(

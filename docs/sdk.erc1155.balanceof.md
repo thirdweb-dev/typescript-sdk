@@ -32,11 +32,8 @@ Get a wallets NFT balance (number of NFTs in this contract owned by the wallet).
 
 ```javascript
 // Address of the wallet to check NFT balance
-const address = "{{wallet_address}}";
-// Id of the NFT to check
-const tokenId = 0;
-
-const balance = await contract.balanceOf(address, tokenId);
-console.log(balance);
+const walletAddress = "{{wallet_address}}";
+const tokenId = 0; // Id of the NFT to check
+const balance = await contract.balanceOf(walletAddress, tokenId);
 ```
 
