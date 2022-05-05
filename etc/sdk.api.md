@@ -1535,7 +1535,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> impleme
     transfer(to: string, tokenId: BigNumberish, amount: BigNumberish, data?: BytesLike): Promise<TransactionResult>;
 }
 
-// @public (undocumented)
+// @public
 export class Erc1155Enumerable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IERC1155Enumerable" needs to be exported by the entry point index.d.ts
     constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>);
@@ -1636,7 +1636,7 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements 
     transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;
 }
 
-// @public (undocumented)
+// @public
 export class Erc721BatchMintable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IMintableERC721" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "IMulticall" needs to be exported by the entry point index.d.ts
@@ -1647,7 +1647,7 @@ export class Erc721BatchMintable implements DetectableFeature {
     to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 }
 
-// @public (undocumented)
+// @public
 export class Erc721Enumerable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IERC721Enumerable" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>);
@@ -1657,7 +1657,7 @@ export class Erc721Enumerable implements DetectableFeature {
     tokenIds(walletAddress?: string): Promise<BigNumber[]>;
 }
 
-// @public (undocumented)
+// @public
 export class Erc721Mintable implements DetectableFeature {
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<IMintableERC721>, storage: IStorage);
     // (undocumented)
@@ -1677,7 +1677,7 @@ export class Erc721SignatureMinting {
     verify(signedPayload: SignedPayload721): Promise<boolean>;
 }
 
-// @public (undocumented)
+// @public
 export class Erc721Supply implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IERC721Supply" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>);

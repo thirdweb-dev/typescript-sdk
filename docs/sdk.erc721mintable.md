@@ -4,12 +4,26 @@
 
 ## Erc721Mintable class
 
+Mint ERC721 NFTs
+
 <b>Signature:</b>
 
 ```typescript
 export declare class Erc721Mintable implements DetectableFeature 
 ```
 <b>Implements:</b> DetectableFeature
+
+## Remarks
+
+NFT minting functionality that handles IPFS storage for you.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("0x...");
+await contract.nft.mint.to(walletAddress, nftMetadata);
+```
 
 ## Constructors
 

@@ -4,12 +4,26 @@
 
 ## Erc721Supply class
 
+List ERC721 NFTs
+
 <b>Signature:</b>
 
 ```typescript
 export declare class Erc721Supply implements DetectableFeature 
 ```
 <b>Implements:</b> DetectableFeature
+
+## Remarks
+
+Easily list all the NFTs in a ERC721 contract.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("0x...");
+const nfts = await contract.nft.query.all();
+```
 
 ## Constructors
 

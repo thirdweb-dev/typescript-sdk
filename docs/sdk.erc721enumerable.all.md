@@ -16,7 +16,7 @@ all(walletAddress?: string): Promise<NFTMetadataOwner[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  walletAddress | string | <i>(Optional)</i> |
+|  walletAddress | string | <i>(Optional)</i> the wallet address to query, defaults to the connected wallet |
 
 <b>Returns:</b>
 

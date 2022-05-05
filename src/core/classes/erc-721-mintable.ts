@@ -12,6 +12,16 @@ import { BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT_MINTABLE } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 
+/**
+ * Mint ERC721 NFTs
+ * @remarks NFT minting functionality that handles IPFS storage for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("0x...");
+ * await contract.nft.mint.to(walletAddress, nftMetadata);
+ * ```
+ * @public
+ */
 export class Erc721Mintable implements DetectableFeature {
   featureName = FEATURE_NFT_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC721>;
@@ -48,7 +58,7 @@ export class Erc721Mintable implements DetectableFeature {
    *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
    * };
    *
-   * const tx = await contract.mintTo(walletAddress, metadata);
+   * const tx = await contract.mint.to(walletAddress, metadata);
    * const receipt = tx.receipt; // the transaction receipt
    * const tokenId = tx.id; // the id of the NFT minted
    * const nft = await tx.data(); // (optional) fetch details of minted NFT

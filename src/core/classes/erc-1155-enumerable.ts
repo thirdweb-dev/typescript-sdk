@@ -8,6 +8,16 @@ import { BaseERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_EDITION_ENUMERABLE } from "../../constants/erc1155-features";
 
+/**
+ * List ERC1155 NFTs
+ * @remarks Easily list all the NFTs in a ERC1155 contract.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("0x...");
+ * const nfts = await contract.edition.query.all();
+ * ```
+ * @public
+ */
 export class Erc1155Enumerable implements DetectableFeature {
   featureName = FEATURE_EDITION_ENUMERABLE.name;
   private contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>;

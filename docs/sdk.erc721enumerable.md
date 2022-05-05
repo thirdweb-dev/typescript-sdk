@@ -4,12 +4,27 @@
 
 ## Erc721Enumerable class
 
+List owned ERC721 NFTs
+
 <b>Signature:</b>
 
 ```typescript
 export declare class Erc721Enumerable implements DetectableFeature 
 ```
 <b>Implements:</b> DetectableFeature
+
+## Remarks
+
+Easily list all the NFTs from a ERC721 contract, owned by a certain wallet.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("0x...");
+const walletAddress = "0x...";
+const ownedNFTs = await contract.nft.query.owned.all(walletAddress);
+```
 
 ## Constructors
 

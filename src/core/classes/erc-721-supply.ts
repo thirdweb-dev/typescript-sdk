@@ -10,6 +10,16 @@ import { Erc721Enumerable } from "./erc-721-enumerable";
 import { FEATURE_NFT_SUPPLY } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 
+/**
+ * List ERC721 NFTs
+ * @remarks Easily list all the NFTs in a ERC721 contract.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("0x...");
+ * const nfts = await contract.nft.query.all();
+ * ```
+ * @public
+ */
 export class Erc721Supply implements DetectableFeature {
   featureName = FEATURE_NFT_SUPPLY.name;
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>;

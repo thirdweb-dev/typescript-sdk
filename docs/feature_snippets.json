@@ -104,9 +104,11 @@
   },
   "ERC1155Enumerable": {
     "name": "Erc1155Enumerable",
-    "summary": "",
-    "remarks": null,
-    "examples": {},
+    "summary": "List ERC1155 NFTs\n\n",
+    "remarks": "\n\nEasily list all the NFTs in a ERC1155 contract.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst nfts = await contract.edition.query.all();"
+    },
     "methods": [
       {
         "name": "all",
@@ -264,9 +266,11 @@
   },
   "ERC721BatchMintable": {
     "name": "Erc721BatchMintable",
-    "summary": "",
-    "remarks": null,
-    "examples": {},
+    "summary": "Mint Many ERC721 NFTs at once\n\n",
+    "remarks": "\n\nNFT batch minting functionality that handles IPFS storage for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nawait contract.nft.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);"
+    },
     "methods": [
       {
         "name": "to",
@@ -283,9 +287,11 @@
   },
   "ERC721Enumerable": {
     "name": "Erc721Enumerable",
-    "summary": "",
-    "remarks": null,
-    "examples": {},
+    "summary": "List owned ERC721 NFTs\n\n",
+    "remarks": "\n\nEasily list all the NFTs from a ERC721 contract, owned by a certain wallet.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst walletAddress = \"0x...\";\nconst ownedNFTs = await contract.nft.query.owned.all(walletAddress);"
+    },
     "methods": [
       {
         "name": "all",
@@ -302,16 +308,18 @@
   },
   "ERC721Mintable": {
     "name": "Erc721Mintable",
-    "summary": "",
-    "remarks": null,
-    "examples": {},
+    "summary": "Mint ERC721 NFTs\n\n",
+    "remarks": "\n\nNFT minting functionality that handles IPFS storage for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nawait contract.nft.mint.to(walletAddress, nftMetadata);"
+    },
     "methods": [
       {
         "name": "to",
         "summary": "Mint a unique NFT\n\n",
         "remarks": "\n\nMint a unique NFT to a specified wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet you want to mint the NFT to\nconst walletAddress = \"{{wallet_address}}\";\n\n// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n};\n\nconst tx = await contract.mintTo(walletAddress, metadata);\nconst receipt = tx.receipt; // the transaction receipt\nconst tokenId = tx.id; // the id of the NFT minted\nconst nft = await tx.data(); // (optional) fetch details of minted NFT"
+          "javascript": "// Address of the wallet you want to mint the NFT to\nconst walletAddress = \"{{wallet_address}}\";\n\n// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n};\n\nconst tx = await contract.mint.to(walletAddress, metadata);\nconst receipt = tx.receipt; // the transaction receipt\nconst tokenId = tx.id; // the id of the NFT minted\nconst nft = await tx.data(); // (optional) fetch details of minted NFT"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721Mintable.to"
       }
@@ -321,9 +329,11 @@
   },
   "ERC721Supply": {
     "name": "Erc721Supply",
-    "summary": "",
-    "remarks": null,
-    "examples": {},
+    "summary": "List ERC721 NFTs\n\n",
+    "remarks": "\n\nEasily list all the NFTs in a ERC721 contract.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"0x...\");\nconst nfts = await contract.nft.query.all();"
+    },
     "methods": [
       {
         "name": "all",

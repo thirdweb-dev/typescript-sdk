@@ -4,12 +4,26 @@
 
 ## Erc721BatchMintable class
 
+Mint Many ERC721 NFTs at once
+
 <b>Signature:</b>
 
 ```typescript
 export declare class Erc721BatchMintable implements DetectableFeature 
 ```
 <b>Implements:</b> DetectableFeature
+
+## Remarks
+
+NFT batch minting functionality that handles IPFS storage for you.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("0x...");
+await contract.nft.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);
+```
 
 ## Constructors
 
