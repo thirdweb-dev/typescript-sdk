@@ -11,7 +11,7 @@ export const FEATURE_NFT_BATCH_MINTABLE = {
     sdk: "sdk.erc721batchmintable",
     contracts: "IMulticall",
   },
-  abi: MulticallAbi,
+  abis: [Erc721Abi, IMintableERC721Abi, MulticallAbi],
   features: {},
 } as const;
 
@@ -22,7 +22,7 @@ export const FEATURE_NFT_MINTABLE = {
     sdk: "sdk.erc721mintable",
     contracts: "IMintableERC721",
   },
-  abi: IMintableERC721Abi,
+  abis: [Erc721Abi, IMintableERC721Abi],
   features: {
     [FEATURE_NFT_BATCH_MINTABLE.name]: FEATURE_NFT_BATCH_MINTABLE,
   },
@@ -35,7 +35,7 @@ export const FEATURE_NFT_ENUMERABLE = {
     sdk: "sdk.erc721enumerable",
     contracts: "ERC721Enumerable",
   },
-  abi: Erc721EnumerableAbi,
+  abis: [Erc721Abi, Erc721EnumerableAbi],
   features: {},
 } as const;
 
@@ -46,7 +46,7 @@ export const FEATURE_NFT_SUPPLY = {
     sdk: "sdk.erc721supply",
     contracts: "ERC721Supply",
   },
-  abi: Erc721SupplyAbi,
+  abis: [Erc721Abi, Erc721SupplyAbi],
   features: {
     [FEATURE_NFT_ENUMERABLE.name]: FEATURE_NFT_ENUMERABLE,
   },
@@ -59,7 +59,7 @@ export const FEATURE_NFT = {
     sdk: "sdk.erc721",
     contracts: "ERC721",
   },
-  abi: Erc721Abi,
+  abis: [Erc721Abi],
   features: {
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,

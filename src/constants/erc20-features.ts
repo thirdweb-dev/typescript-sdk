@@ -9,7 +9,7 @@ export const FEATURE_TOKEN_BATCH_MINTABLE = {
     sdk: "sdk.erc20batchmintable",
     contracts: "IMulticall",
   },
-  abi: MulticallAbi,
+  abis: [ERC20Abi, IMintableERC20Abi, MulticallAbi],
   features: {},
 } as const;
 
@@ -20,7 +20,7 @@ export const FEATURE_TOKEN_MINTABLE = {
     sdk: "sdk.erc20mintable",
     contracts: "IMintableERC20",
   },
-  abi: IMintableERC20Abi,
+  abis: [ERC20Abi, IMintableERC20Abi],
   features: {
     [FEATURE_TOKEN_BATCH_MINTABLE.name]: FEATURE_TOKEN_BATCH_MINTABLE,
   },
@@ -33,7 +33,7 @@ export const FEATURE_TOKEN = {
     sdk: "sdk.erc20",
     contracts: "ERC20",
   },
-  abi: ERC20Abi,
+  abis: [ERC20Abi],
   features: {
     [FEATURE_TOKEN_MINTABLE.name]: FEATURE_TOKEN_MINTABLE,
   },

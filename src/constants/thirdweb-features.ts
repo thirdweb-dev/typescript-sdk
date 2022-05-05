@@ -10,7 +10,7 @@ export const FEATURE_ROYALTY = {
     sdk: "sdk.contractroyalty",
     contracts: "IThirdwebPrimarySale",
   },
-  abi: IThirdwebRoyaltyAbi,
+  abis: [IThirdwebRoyaltyAbi],
   features: {},
 } as const;
 
@@ -21,7 +21,7 @@ export const FEATURE_PRIMARY_SALE = {
     sdk: "sdk.contractprimarysale",
     contracts: "IThirdwebPrimarySale",
   },
-  abi: IThirdwebPrimarySaleAbi,
+  abis: [IThirdwebPrimarySaleAbi],
   features: {},
 } as const;
 
@@ -32,7 +32,7 @@ export const FEATURE_PLATFORM_FEE = {
     sdk: "sdk.platformfee",
     contracts: "IThirdwebPlatformFee",
   },
-  abi: IThirdwebPlatformFeeAbi,
+  abis: [IThirdwebPlatformFeeAbi],
   features: {},
 } as const;
 
@@ -43,6 +43,6 @@ export const FEATURE_PERMISSIONS = {
     sdk: "sdk.contractroles",
     contracts: "IPermissionsEnumerable",
   },
-  abi: IPermissionsEnumerableAbi,
+  abis: [IPermissionsEnumerableAbi],
   features: {},
 } as const;

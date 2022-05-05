@@ -48,15 +48,17 @@ function matchesInterface(contract: BaseContract, interfaceToMatch: Interface) {
 /**
  * @internal
  * @param abi
- * @param interfaceAbi
+ * @param interfaceAbis
  */
 function matchesAbiInterface(
   abi: z.input<typeof AbiSchema>,
-  interfaceAbi: z.input<typeof AbiSchema>,
+  interfaceAbis: readonly z.input<typeof AbiSchema>[],
 ): boolean {
   // returns true if all the functions in `interfaceToMatch` are found in `contract`
   const contractFn = extractFunctionsFromAbi(abi).map((f) => f.name);
-  const interfaceFn = extractFunctionsFromAbi(interfaceAbi).map((f) => f.name);
+  const interfaceFn = interfaceAbis
+    .flatMap((i) => extractFunctionsFromAbi(i))
+    .map((f) => f.name);
   return (
     contractFn.filter((k) => interfaceFn.includes(k)).length ===
     interfaceFn.length
@@ -188,7 +190,7 @@ export function detectFeatures(
   const results: Record<string, FeatureWithEnabled> = {};
   for (const featureKey in features) {
     const feature = features[featureKey];
-    const enabled = matchesAbiInterface(abi, feature.abi);
+    const enabled = matchesAbiInterface(abi, feature.abis);
     const childResults = detectFeatures(abi, feature.features);
     results[featureKey] = {
       ...feature,
