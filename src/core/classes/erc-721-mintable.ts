@@ -8,7 +8,6 @@ import { Erc721 } from "./erc-721";
 import { TokensMintedEvent } from "contracts/IMintableERC721";
 import { Erc721BatchMintable } from "./erc-721-batch-mintable";
 import { detectContractFeature } from "../../common";
-import { BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT_MINTABLE } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 
@@ -26,12 +25,12 @@ export class Erc721Mintable implements DetectableFeature {
   featureName = FEATURE_NFT_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC721>;
   private storage: IStorage;
-  private erc721: Erc721<BaseERC721>;
+  private erc721: Erc721;
 
   public batch: Erc721BatchMintable | undefined;
 
   constructor(
-    erc721: Erc721<BaseERC721>,
+    erc721: Erc721,
     contractWrapper: ContractWrapper<IMintableERC721>,
     storage: IStorage,
   ) {

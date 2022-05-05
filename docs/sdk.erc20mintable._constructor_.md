@@ -9,13 +9,13 @@ Constructs a new instance of the `Erc20Mintable` class
 <b>Signature:</b>
 
 ```typescript
-constructor(erc20: Erc20<BaseERC20>, contractWrapper: ContractWrapper<IMintableERC20>);
+constructor(erc20: Erc20, contractWrapper: ContractWrapper<IMintableERC20>);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  erc20 | [Erc20](./sdk.erc20.md)<!-- -->&lt;BaseERC20&gt; |  |
+|  erc20 | [Erc20](./sdk.erc20.md) |  |
 |  contractWrapper | ContractWrapper&lt;IMintableERC20&gt; |  |
 
