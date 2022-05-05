@@ -120,7 +120,7 @@ const moduleMap = classes.reduce((acc, m) => {
   // if (Object.keys(examples).length > 0) {
   const featureName = m.members
     .filter((m) => m.kind === "Property" && m.name === "featureName")
-    .map((m) => m.excerptTokens[1].text.replaceAll('"', ""))[0];
+    .map((m) => m.excerptTokens[1].text.replace('"', "").replace('"', ""))[0];
   acc[featureName] = {
     name: m.name,
     summary: Formatter.renderDocNode(docComment.summarySection),
