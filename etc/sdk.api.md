@@ -1517,8 +1517,6 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> impleme
     // @internal (undocumented)
     getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
-    // Warning: (ae-forgotten-export) The symbol "Erc1155Mintable" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     mint: Erc1155Mintable | undefined;
     // @internal (undocumented)
@@ -1536,6 +1534,16 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155> impleme
 }
 
 // @public
+export class Erc1155BatchMintable implements DetectableFeature {
+    // Warning: (ae-forgotten-export) The symbol "IMintableERC1155" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "IMulticall" needs to be exported by the entry point index.d.ts
+    constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>, storage: IStorage);
+    // (undocumented)
+    featureName: "ERC1155BatchMintable";
+    to(to: string, metadataWithSupply: EditionMetadataOrUri[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
+}
+
+// @public
 export class Erc1155Enumerable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IERC1155Enumerable" needs to be exported by the entry point index.d.ts
     constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>);
@@ -1544,6 +1552,16 @@ export class Erc1155Enumerable implements DetectableFeature {
     featureName: "ERC1155Enumerable";
     getTotalCount(): Promise<BigNumber>;
     owned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
+}
+
+// @public
+export class Erc1155Mintable implements DetectableFeature {
+    constructor(erc1155: Erc1155<BaseERC1155>, contractWrapper: ContractWrapper<IMintableERC1155>, storage: IStorage);
+    additionalSupplyTo(to: string, tokenId: BigNumberish, additionalSupply: BigNumberish): Promise<TransactionResultWithId<EditionMetadata>>;
+    batch: Erc1155BatchMintable | undefined;
+    // (undocumented)
+    featureName: "ERC1155Mintable";
+    to(to: string, metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
 }
 
 // @public
@@ -1575,7 +1593,6 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements Upda
     getAddress(): string;
     // @internal (undocumented)
     protected getValue(value: BigNumberish): Promise<CurrencyValue>;
-    // Warning: (ae-forgotten-export) The symbol "Erc20Mintable" needs to be exported by the entry point index.d.ts
     mint: Erc20Mintable | undefined;
     // @internal
     normalizeAmount(amount: Amount): Promise<BigNumber>;
@@ -1590,6 +1607,24 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20> implements Upda
     transfer(to: string, amount: Amount): Promise<TransactionResult>;
     transferBatch(args: TokenMintInput[]): Promise<void>;
     transferFrom(from: string, to: string, amount: Amount): Promise<TransactionResult>;
+}
+
+// @public
+export class Erc20BatchMintable implements DetectableFeature {
+    // Warning: (ae-forgotten-export) The symbol "IMintableERC20" needs to be exported by the entry point index.d.ts
+    constructor(erc20: Erc20<BaseERC20>, contractWrapper: ContractWrapper<IMintableERC20 & IMulticall>);
+    // (undocumented)
+    featureName: "ERC20BatchMintable";
+    to(args: TokenMintInput[]): Promise<TransactionResult>;
+}
+
+// @public
+export class Erc20Mintable implements DetectableFeature {
+    constructor(erc20: Erc20<BaseERC20>, contractWrapper: ContractWrapper<IMintableERC20>);
+    batch: Erc20BatchMintable | undefined;
+    // (undocumented)
+    featureName: "ERC20Mintable";
+    to(to: string, amount: Amount): Promise<TransactionResult>;
 }
 
 // @public
@@ -1639,7 +1674,6 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721> implements 
 // @public
 export class Erc721BatchMintable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IMintableERC721" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "IMulticall" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721<BaseERC721>, contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>, storage: IStorage);
     // (undocumented)
     featureName: "ERC721BatchMintable";
