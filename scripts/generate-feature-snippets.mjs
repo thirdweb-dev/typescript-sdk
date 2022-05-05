@@ -105,7 +105,9 @@ const parseMembers = (members, kind, contractName) => {
             ? Formatter.renderDocNode(docComment.remarksBlock.content)
             : null,
           examples,
-          reference: extractReferenceLink(m, kind, contractName),
+          reference: {
+            javascript: extractReferenceLink(m, kind, contractName),
+          },
         };
       }
       return null;

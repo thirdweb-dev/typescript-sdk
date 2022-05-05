@@ -22,7 +22,7 @@ Basic functionality for a ERC721 contract that handles IPFS storage for you.
 
 ```javascript
 const contract = sdk.getContract("0x...");
-const walletAddress = "0x...";
+const walletAddress = "{{wallet_address}}";
 const tokenId = 0;
 const nft = await contract.nft.get(tokenId);
 await contract.nft.transfer(walletAddress, tokenId);

@@ -294,7 +294,7 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this contract owned by the wallet).\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await contract.balanceOf(address);\nconsole.log(balance);"
+          "javascript": "const balance = await contract.balanceOf(walletAddress);\nconsole.log(balance);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.balanceOf"
       },
@@ -303,7 +303,7 @@
         "summary": "Get a single NFT Metadata\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const nft = await contract.get(\"0\");\nconsole.log(nft);"
+          "javascript": "const nft = await contract.get(tokenId);\nconsole.log(nft);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.get"
       },
@@ -312,7 +312,7 @@
         "summary": "Transfer a single NFT\n\n",
         "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\nawait contract.transfer(toAddress, tokenId);"
+          "javascript": "await contract.transfer(walletAddress, tokenId);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.transfer"
       }
@@ -424,7 +424,7 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this contract owned by the wallet).\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check NFT balance\nconst address = \"{{wallet_address}}\";\n\nconst balance = await contract.balanceOf(address);\nconsole.log(balance);"
+          "javascript": "const balance = await contract.balanceOf(walletAddress);\nconsole.log(balance);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.balanceOf"
       },
@@ -433,7 +433,7 @@
         "summary": "Get a single NFT Metadata\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const nft = await contract.get(\"0\");\nconsole.log(nft);"
+          "javascript": "const nft = await contract.get(tokenId);\nconsole.log(nft);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.get"
       },
@@ -442,7 +442,7 @@
         "summary": "Transfer a single NFT\n\n",
         "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\n\n// The token ID of the NFT you want to send\nconst tokenId = \"0\";\n\nawait contract.transfer(toAddress, tokenId);"
+          "javascript": "await contract.transfer(walletAddress, tokenId);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.transfer"
       }
