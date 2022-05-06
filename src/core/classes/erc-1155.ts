@@ -234,14 +234,14 @@ export class Erc1155<
    *  },
    * ];
    * const tokenId = "0";
-   * await contract.airdrop(addresses, tokenId);
+   * await contract.airdrop(tokenId, addresses);
    *
    * // You can also pass an array of addresses, it will airdrop 1 NFT per address
    * const addresses = [
    *  "0x...", "0x...", "0x...",
    * ]
    * const tokenId = "0";
-   * await contract.airdrop(addresses, tokenId);
+   * await contract.airdrop(tokenId, addresses);
    * ```
    */
   public async airdrop(
