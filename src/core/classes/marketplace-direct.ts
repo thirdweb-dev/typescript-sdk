@@ -6,13 +6,19 @@ import {
   IMarketplace,
   Marketplace,
 } from "contracts";
-import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
+import {
+  BigNumber,
+  BigNumberish,
+  Contract,
+  ethers,
+  constants,
+  utils,
+} from "ethers";
 import {
   DirectListing,
   NewDirectListing,
   Offer,
 } from "../../types/marketplace";
-import { AddressZero } from "@ethersproject/constants";
 import { ListingNotFoundError, WrongListingTypeError } from "../../common";
 import { ListingType } from "../../enums";
 import { TransactionResult, TransactionResultWithId } from "../types";
@@ -36,7 +42,6 @@ import {
 } from "../../common/marketplace";
 import { IStorage } from "../interfaces";
 import invariant from "tiny-invariant";
-import { isAddress } from "ethers/lib/utils";
 import { ListingAddedEvent } from "contracts/Marketplace";
 import ERC1155Abi from "../../../abis/IERC1155.json";
 import ERC721Abi from "../../../abis/IERC721.json";
@@ -75,7 +80,7 @@ export class MarketplaceDirect {
   public async getListing(listingId: BigNumberish): Promise<DirectListing> {
     const listing = await this.contractWrapper.readContract.listings(listingId);
 
-    if (listing.assetContract === AddressZero) {
+    if (listing.assetContract === constants.AddressZero) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
     }
 
@@ -101,12 +106,12 @@ export class MarketplaceDirect {
     address: string,
   ): Promise<Offer | undefined> {
     await this.validateListing(BigNumber.from(listingId));
-    invariant(isAddress(address), "Address must be a valid address");
+    invariant(utils.isAddress(address), "Address must be a valid address");
     const offers = await this.contractWrapper.readContract.offers(
       listingId,
       address,
     );
-    if (offers.offeror === AddressZero) {
+    if (offers.offeror === constants.AddressZero) {
       return undefined;
     }
     return await mapOffer(

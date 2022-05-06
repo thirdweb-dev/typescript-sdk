@@ -1,4 +1,4 @@
-import { AddressZero } from "@ethersproject/constants";
+import { constants } from "ethers";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 
 /**
@@ -28,8 +28,8 @@ export const CONTRACT_ADDRESSES: Record<
     biconomyForwarder: "0x84a0856b038eaAd1cC7E297cF34A7e72685A8693",
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
-    twBYOCRegistry: AddressZero,
-    byocFactory: AddressZero,
+    twBYOCRegistry: constants.AddressZero,
+    byocFactory: constants.AddressZero,
   },
   [ChainId.Rinkeby]: {
     biconomyForwarder: "0xFD4973FeB2031D4409fB57afEE5dF2051b171104",
@@ -39,7 +39,7 @@ export const CONTRACT_ADDRESSES: Record<
     byocFactory: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
   },
   [ChainId.Goerli]: {
-    biconomyForwarder: AddressZero,
+    biconomyForwarder: constants.AddressZero,
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0xB1Bd9d7942A250BA2Dce27DD601F2ED4211A60C4",
@@ -49,8 +49,8 @@ export const CONTRACT_ADDRESSES: Record<
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
-    twBYOCRegistry: AddressZero,
-    byocFactory: AddressZero,
+    twBYOCRegistry: constants.AddressZero,
+    byocFactory: constants.AddressZero,
   },
   [ChainId.Mumbai]: {
     biconomyForwarder: "0x9399BB24DBB5C4b782C70c2969F58716Ebbd6a3b",
@@ -63,8 +63,8 @@ export const CONTRACT_ADDRESSES: Record<
     biconomyForwarder: "0x64CD353384109423a966dCd3Aa30D884C9b2E057",
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
-    twBYOCRegistry: AddressZero,
-    byocFactory: AddressZero,
+    twBYOCRegistry: constants.AddressZero,
+    byocFactory: constants.AddressZero,
   },
   [ChainId.AvalancheFujiTestnet]: {
     biconomyForwarder: "0x6271Ca63D30507f2Dcbf99B52787032506D75BBF",
@@ -74,14 +74,14 @@ export const CONTRACT_ADDRESSES: Record<
     byocFactory: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
   },
   [ChainId.Fantom]: {
-    biconomyForwarder: AddressZero,
+    biconomyForwarder: constants.AddressZero,
     twFactory: "0x97EA0Fcc552D5A8Fb5e9101316AAd0D62Ea0876B",
     twRegistry: TWRegistry_address,
-    twBYOCRegistry: AddressZero,
-    byocFactory: AddressZero,
+    twBYOCRegistry: constants.AddressZero,
+    byocFactory: constants.AddressZero,
   },
   [ChainId.FantomTestnet]: {
-    biconomyForwarder: AddressZero,
+    biconomyForwarder: constants.AddressZero,
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
@@ -107,7 +107,7 @@ export function getContractAddressByChainId(
     } else if (contractName === "byocFactory") {
       return process.env.byocFactoryAddress as string;
     } else {
-      return AddressZero;
+      return constants.AddressZero;
     }
   }
   // real output here

@@ -12,8 +12,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../constants";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { ContractWrapper } from "../classes/contract-wrapper";
 import { IERC20 } from "contracts";
-import { BigNumber } from "ethers";
-import { TransactionRequest } from "@ethersproject/providers";
+import { BigNumber, providers } from "ethers";
 
 /**
  * Connect and Interact with a user wallet
@@ -146,7 +145,7 @@ export class UserWallet {
    * @param transactionRequest
    */
   async sendRawTransaction(
-    transactionRequest: TransactionRequest,
+    transactionRequest: providers.TransactionRequest,
   ): Promise<TransactionResult> {
     const signer = this.connectedWallet();
     const tx = await signer.sendTransaction(transactionRequest);

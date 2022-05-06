@@ -13,10 +13,9 @@ import { UpdateableNetwork } from "../core/interfaces/contract";
 import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
 import { AuctionListing, DirectListing } from "../types/marketplace";
 import { ListingType } from "../enums";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, constants } from "ethers";
 import invariant from "tiny-invariant";
 import { ListingNotFoundError } from "../common";
-import { AddressZero } from "@ethersproject/constants";
 import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
 import { getRoleHash } from "../common/role";
 import { MarketplaceDirect } from "../core/classes/marketplace-direct";
@@ -198,7 +197,7 @@ export class Marketplace implements UpdateableNetwork {
     listingId: BigNumberish,
   ): Promise<AuctionListing | DirectListing> {
     const listing = await this.contractWrapper.readContract.listings(listingId);
-    if (listing.assetContract === AddressZero) {
+    if (listing.assetContract === constants.AddressZero) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
     }
     switch (listing.listingType) {
@@ -280,7 +279,7 @@ export class Marketplace implements UpdateableNetwork {
   public async isRestrictedToListerRoleOnly(): Promise<boolean> {
     const anyoneCanList = await this.contractWrapper.readContract.hasRole(
       getRoleHash("lister"),
-      AddressZero,
+      constants.AddressZero,
     );
     return !anyoneCanList;
   }
@@ -406,9 +405,12 @@ export class Marketplace implements UpdateableNetwork {
   public async allowListingFromSpecificAssetOnly(contractAddress: string) {
     const encoded = [];
     const members = await this.roles.get("asset");
-    if (members.includes(AddressZero)) {
+    if (members.includes(constants.AddressZero)) {
       encoded.push(
-        this.encoder.encode("revokeRole", [getRoleHash("asset"), AddressZero]),
+        this.encoder.encode("revokeRole", [
+          getRoleHash("asset"),
+          constants.AddressZero,
+        ]),
       );
     }
     encoded.push(
@@ -430,7 +432,10 @@ export class Marketplace implements UpdateableNetwork {
       );
     }
     encoded.push(
-      this.encoder.encode("grantRole", [getRoleHash("asset"), AddressZero]),
+      this.encoder.encode("grantRole", [
+        getRoleHash("asset"),
+        constants.AddressZero,
+      ]),
     );
     await this.contractWrapper.multiCall(encoded);
   }

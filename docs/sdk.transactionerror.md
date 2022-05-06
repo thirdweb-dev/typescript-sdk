@@ -22,7 +22,7 @@ export declare class TransactionError extends Error
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [chain](./sdk.transactionerror.chain.md) |  | Network |  |
+|  [chain](./sdk.transactionerror.chain.md) |  | providers.Network |  |
 |  [data](./sdk.transactionerror.data.md) |  | string |  |
 |  [from](./sdk.transactionerror.from.md) |  | string |  |
 |  [reason](./sdk.transactionerror.reason.md) |  | string |  |

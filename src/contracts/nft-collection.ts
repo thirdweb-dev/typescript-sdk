@@ -25,8 +25,7 @@ import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { getRoleHash } from "../common";
-import { AddressZero } from "@ethersproject/constants";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, constants } from "ethers";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
 import { QueryAllParams } from "../types";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
@@ -209,7 +208,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
   public async isTransferRestricted(): Promise<boolean> {
     const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
       getRoleHash("transfer"),
-      AddressZero,
+      constants.AddressZero,
     );
     return !anyoneCanTransfer;
   }

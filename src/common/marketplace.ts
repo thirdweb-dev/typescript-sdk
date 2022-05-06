@@ -1,9 +1,8 @@
-import { BigNumber, BigNumberish, Contract } from "ethers";
+import { BigNumber, BigNumberish, Contract, providers } from "ethers";
 import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
-import { Provider } from "@ethersproject/providers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { SignerOrProvider } from "../core";
 import {
@@ -33,7 +32,7 @@ import ERC165Abi from "../../abis/IERC165.json";
  * @returns - True if the marketplace is approved on the token, false otherwise.
  */
 export async function isTokenApprovedForMarketplace(
-  provider: Provider,
+  provider: providers.Provider,
   marketplaceAddress: string,
   assetContract: string,
   tokenId: BigNumberish,
@@ -196,7 +195,7 @@ export function validateNewListingParam(
  * @returns - An `Offer` object
  */
 export async function mapOffer(
-  provider: Provider,
+  provider: providers.Provider,
   listingId: BigNumber,
   offer: any,
 ): Promise<Offer> {

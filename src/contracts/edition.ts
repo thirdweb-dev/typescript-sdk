@@ -25,11 +25,10 @@ import {
   ContractInterceptor,
   ContractPlatformFee,
 } from "../core/classes";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, constants } from "ethers";
 import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { getRoleHash } from "../common";
-import { AddressZero } from "@ethersproject/constants";
 import { QueryAllParams } from "../types";
 import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
 import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
@@ -201,7 +200,7 @@ export class Edition extends Erc1155<TokenERC1155> {
   public async isTransferRestricted(): Promise<boolean> {
     const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
       getRoleHash("transfer"),
-      AddressZero,
+      constants.AddressZero,
     );
     return !anyoneCanTransfer;
   }

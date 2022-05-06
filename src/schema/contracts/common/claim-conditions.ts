@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BigNumber } from "ethers";
+import { BigNumber, utils } from "ethers";
 import {
   BigNumberishSchema,
   BigNumberSchema,
@@ -7,7 +7,7 @@ import {
   PriceSchema,
   StartDateSchema,
 } from "../../shared";
-import { hexZeroPad } from "ethers/lib/utils";
+
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import { CurrencyValueSchema } from "./currency";
 import { SnapshotInputSchema } from "./snapshots";
@@ -29,7 +29,7 @@ export const ClaimConditionInputSchema = z.object({
   maxQuantity: QuantitySchema,
   quantityLimitPerTransaction: QuantitySchema,
   waitInSeconds: BigNumberishSchema.default(0),
-  merkleRootHash: BytesLikeSchema.default(hexZeroPad([0], 32)),
+  merkleRootHash: BytesLikeSchema.default(utils.hexZeroPad([0], 32)),
   snapshot: z.optional(SnapshotInputSchema),
 });
 

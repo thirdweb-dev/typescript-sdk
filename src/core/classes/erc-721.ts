@@ -1,7 +1,6 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, constants } from "ethers";
 import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
-import { AddressZero } from "@ethersproject/constants";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
@@ -90,7 +89,7 @@ export class Erc721<
    */
   public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
     const [owner, metadata] = await Promise.all([
-      this.ownerOf(tokenId).catch(() => AddressZero),
+      this.ownerOf(tokenId).catch(() => constants.AddressZero),
       this.getTokenMetadata(tokenId),
     ]);
     return { owner, metadata };

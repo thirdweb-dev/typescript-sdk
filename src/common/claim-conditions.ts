@@ -1,6 +1,12 @@
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
-import { hexZeroPad } from "@ethersproject/bytes";
-import { AddressZero } from "@ethersproject/constants";
+import {
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  ethers,
+  constants,
+  providers,
+  utils,
+} from "ethers";
 import {
   SnapshotInputSchema,
   SnapshotSchema,
@@ -27,7 +33,6 @@ import {
 } from "../schema/contracts/common/claim-conditions";
 import { createSnapshot } from "./snapshots";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
-import { Provider } from "@ethersproject/providers";
 import { IDropClaimCondition } from "contracts/DropERC20";
 
 /**
@@ -42,14 +47,16 @@ export async function prepareClaim(
   tokenDecimals: number,
   contractWrapper: ContractWrapper<any>,
   storage: IStorage,
-  proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
   let maxClaimable = BigNumber.from(0);
 
   try {
     if (
-      !activeClaimCondition.merkleRootHash.toString().startsWith(AddressZero)
+      !activeClaimCondition.merkleRootHash
+        .toString()
+        .startsWith(constants.AddressZero)
     ) {
       const claims = await fetchSnapshot(
         activeClaimCondition.merkleRootHash.toString(),
@@ -222,7 +229,7 @@ export async function getClaimerProofs(
 export async function processClaimConditionInputs(
   claimConditionInputs: ClaimConditionInput[],
   tokenDecimals: number,
-  provider: Provider,
+  provider: providers.Provider,
   storage: IStorage,
 ) {
   const snapshotInfos: SnapshotInfo[] = [];
@@ -239,7 +246,7 @@ export async function processClaimConditionInputs(
         conditionInput.merkleRootHash = snapshotInfo.merkleRoot;
       } else {
         // if no snapshot is passed or empty, reset the merkle root
-        conditionInput.merkleRootHash = hexZeroPad([0], 32);
+        conditionInput.merkleRootHash = utils.hexZeroPad([0], 32);
       }
       // fill condition with defaults values if not provided
       return conditionInput;
@@ -279,10 +286,10 @@ export async function processClaimConditionInputs(
 async function convertToContractModel(
   c: FilledConditionInput,
   tokenDecimals: number,
-  provider: Provider,
+  provider: providers.Provider,
 ): Promise<IDropClaimCondition.ClaimConditionStruct> {
   const currency =
-    c.currencyAddress === AddressZero
+    c.currencyAddress === constants.AddressZero
       ? NATIVE_TOKEN_ADDRESS
       : c.currencyAddress;
   let maxClaimableSupply;
@@ -324,7 +331,7 @@ async function convertToContractModel(
 export async function transformResultToClaimCondition(
   pm: IDropClaimCondition.ClaimConditionStructOutput,
   tokenDecimals: number,
-  provider: Provider,
+  provider: providers.Provider,
   merkleMetadata: Record<string, string>,
   storage: IStorage,
 ): Promise<ClaimCondition> {

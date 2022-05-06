@@ -8,6 +8,8 @@ import {
   Contract,
   ContractInterface,
   ethers,
+  constants,
+  utils,
 } from "ethers";
 import invariant from "tiny-invariant";
 import {
@@ -23,7 +25,6 @@ import {
   PublishedContract,
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
-import { solidityKeccak256 } from "ethers/lib/utils";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   ByocFactory,
@@ -35,7 +36,6 @@ import {
   ThirdwebContract as TWContract,
   ThirdwebContract__factory,
 } from "contracts";
-import { AddressZero } from "@ethersproject/constants";
 import { getBYOCRegistryAddress } from "../../constants";
 import { ContractPublishedEvent } from "contracts/ByocRegistry";
 import { ContractDeployedEvent } from "contracts/ByocFactory";
@@ -185,14 +185,14 @@ export class ContractPublisher extends RPCConnectionHandler {
     );
 
     const encoded = fullMetadatas.map((meta) => {
-      const bytecodeHash = solidityKeccak256(
+      const bytecodeHash = utils.solidityKeccak256(
         ["bytes"],
         [meta.fullMetadata.bytecode],
       );
       const contractId = meta.fullMetadata.name;
       return this.registry.readContract.interface.encodeFunctionData(
         "publishContract",
-        [publisher, meta.uri, bytecodeHash, AddressZero, contractId],
+        [publisher, meta.uri, bytecodeHash, constants.AddressZero, contractId],
       );
     });
     const receipt = await this.registry.multiCall(encoded);

@@ -1,6 +1,5 @@
-import { BaseContract } from "ethers";
+import { BaseContract, utils } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Interface } from "@ethersproject/abi";
 import { IStorage } from "../core";
 import {
   AbiFunction,
@@ -24,7 +23,7 @@ import {
  */
 export function implementsInterface<C extends BaseContract>(
   contractWrapper: ContractWrapper<BaseContract>,
-  interfaceToMatch: Interface,
+  interfaceToMatch: utils.Interface,
 ): contractWrapper is ContractWrapper<C> {
   return matchesInterface(contractWrapper.readContract, interfaceToMatch);
 }
@@ -35,7 +34,10 @@ export function implementsInterface<C extends BaseContract>(
  * @param contract
  * @param interfaceToMatch
  */
-function matchesInterface(contract: BaseContract, interfaceToMatch: Interface) {
+function matchesInterface(
+  contract: BaseContract,
+  interfaceToMatch: utils.Interface,
+) {
   // returns true if all the functions in `interfaceToMatch` are found in `contract`
   const contractFn = contract.interface.functions;
   const interfaceFn = interfaceToMatch.functions;

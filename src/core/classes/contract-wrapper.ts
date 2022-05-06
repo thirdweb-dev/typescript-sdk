@@ -7,6 +7,7 @@ import {
   ContractInterface,
   ContractTransaction,
   ethers,
+  providers,
 } from "ethers";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -17,7 +18,6 @@ import {
   PermitRequestMessage,
 } from "../types";
 import { EventType } from "../../constants/events";
-import { Log, TransactionReceipt } from "@ethersproject/providers";
 import invariant from "tiny-invariant";
 import {
   BiconomyForwarderAbi,
@@ -232,7 +232,9 @@ export class ContractWrapper<
   /**
    * @internal
    */
-  public async multiCall(encoded: string[]): Promise<TransactionReceipt> {
+  public async multiCall(
+    encoded: string[],
+  ): Promise<providers.TransactionReceipt> {
     return this.sendTransaction("multicall", [encoded]);
   }
 
@@ -260,7 +262,7 @@ export class ContractWrapper<
     fn: keyof TContract["functions"],
     args: any[],
     callOverrides?: CallOverrides,
-  ): Promise<TransactionReceipt> {
+  ): Promise<providers.TransactionReceipt> {
     // one time verification that this is a valid contract (to avoid sending funds to wrong addresses)
     if (!this.isValidContract) {
       const code = await this.getProvider().getCode(this.readContract.address);
@@ -416,7 +418,7 @@ export class ContractWrapper<
     return sig;
   }
 
-  public parseLogs<T = any>(eventName: string, logs?: Log[]): T[] {
+  public parseLogs<T = any>(eventName: string, logs?: providers.Log[]): T[] {
     if (!logs || logs.length === 0) {
       return [];
     }

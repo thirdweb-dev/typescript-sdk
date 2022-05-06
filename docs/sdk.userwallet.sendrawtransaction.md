@@ -9,14 +9,14 @@ Send a raw transaction to the blockchain from the connected wallet
 <b>Signature:</b>
 
 ```typescript
-sendRawTransaction(transactionRequest: TransactionRequest): Promise<TransactionResult>;
+sendRawTransaction(transactionRequest: providers.TransactionRequest): Promise<TransactionResult>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  transactionRequest | TransactionRequest |  |
+|  transactionRequest | providers.TransactionRequest |  |
 
 <b>Returns:</b>
 

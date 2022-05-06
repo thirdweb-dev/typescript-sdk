@@ -1,6 +1,6 @@
-import { TypedDataField } from "@ethersproject/abstract-signer";
-import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
-import { ethers, Signer } from "ethers";
+// couldn't find this in barbones ethers export, but "type" should mean it does not increase bundle size either way
+import type { TypedDataField } from "@ethersproject/abstract-signer";
+import { ethers, Signer, providers } from "ethers";
 
 /**
  * @internal
@@ -37,7 +37,7 @@ export async function signTypedDataInternal(
   types: Record<string, Array<TypedDataField>>,
   message: Record<string, any>,
 ) {
-  const provider = signer?.provider as JsonRpcProvider;
+  const provider = signer?.provider as providers.JsonRpcProvider;
   if (!provider) {
     throw new Error("missing provider");
   }
@@ -58,7 +58,7 @@ export async function signTypedDataInternal(
     ]);
   } else {
     try {
-      signature = await (signer as JsonRpcSigner)._signTypedData(
+      signature = await (signer as providers.JsonRpcSigner)._signTypedData(
         domain,
         types,
         message,
