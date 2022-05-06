@@ -5,6 +5,7 @@ import {
   ethers,
   constants,
   providers,
+  utils,
 } from "ethers";
 import {
   SnapshotInputSchema,
@@ -33,7 +34,6 @@ import {
 import { createSnapshot } from "./snapshots";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
 import { IDropClaimCondition } from "contracts/DropERC20";
-import { hexZeroPad } from "ethers/lib/utils";
 
 /**
  * Returns proofs and the overrides required for the transaction.
@@ -47,7 +47,7 @@ export async function prepareClaim(
   tokenDecimals: number,
   contractWrapper: ContractWrapper<any>,
   storage: IStorage,
-  proofs: BytesLike[] = [hexZeroPad([0], 32)],
+  proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
   let maxClaimable = BigNumber.from(0);
@@ -246,7 +246,7 @@ export async function processClaimConditionInputs(
         conditionInput.merkleRootHash = snapshotInfo.merkleRoot;
       } else {
         // if no snapshot is passed or empty, reset the merkle root
-        conditionInput.merkleRootHash = hexZeroPad([0], 32);
+        conditionInput.merkleRootHash = utils.hexZeroPad([0], 32);
       }
       // fill condition with defaults values if not provided
       return conditionInput;

@@ -1,4 +1,4 @@
-import { BaseContract } from "ethers";
+import { BaseContract, utils } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core";
 import {
@@ -14,7 +14,6 @@ import {
   FeatureWithEnabled,
   SUPPORTED_FEATURES,
 } from "../constants/contract-features";
-import { Interface } from "ethers/lib/utils";
 
 /**
  * Type guards a contract to a known type if it matches the corresponding interface
@@ -24,7 +23,7 @@ import { Interface } from "ethers/lib/utils";
  */
 export function implementsInterface<C extends BaseContract>(
   contractWrapper: ContractWrapper<BaseContract>,
-  interfaceToMatch: Interface,
+  interfaceToMatch: utils.Interface,
 ): contractWrapper is ContractWrapper<C> {
   return matchesInterface(contractWrapper.readContract, interfaceToMatch);
 }
@@ -35,7 +34,10 @@ export function implementsInterface<C extends BaseContract>(
  * @param contract
  * @param interfaceToMatch
  */
-function matchesInterface(contract: BaseContract, interfaceToMatch: Interface) {
+function matchesInterface(
+  contract: BaseContract,
+  interfaceToMatch: utils.Interface,
+) {
   // returns true if all the functions in `interfaceToMatch` are found in `contract`
   const contractFn = contract.interface.functions;
   const interfaceFn = interfaceToMatch.functions;

@@ -18,8 +18,7 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../schema/tokens/common";
-import { BigNumber, BigNumberish, BytesLike, constants } from "ethers";
-import { hexZeroPad } from "ethers/lib/utils";
+import { BigNumber, BigNumberish, BytesLike, constants, utils } from "ethers";
 import { prepareClaim } from "../common/claim-conditions";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
@@ -287,7 +286,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     const claimVerification = await this.prepareClaim(
       tokenId,
@@ -325,7 +324,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public async claim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     const address = await this.contractWrapper.getSignerAddress();
     return this.claimTo(address, tokenId, quantity, proofs);
@@ -362,7 +361,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   private async prepareClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,

@@ -20,7 +20,6 @@ import type { EventFilter } from 'ethers';
 import type { EventFragment } from '@ethersproject/abi';
 import { extendShape } from 'zod';
 import type { FunctionFragment } from '@ethersproject/abi';
-import { Interface } from 'ethers/lib/utils';
 import type { Listener } from '@ethersproject/providers';
 import { ListenerFn } from 'eventemitter2';
 import type { Overrides } from 'ethers';
@@ -29,10 +28,9 @@ import type { PopulatedTransaction } from 'ethers';
 import type { Provider } from '@ethersproject/providers';
 import { providers } from 'ethers';
 import type { Result } from '@ethersproject/abi';
-import { Result as Result_2 } from 'ethers/lib/utils';
 import { Signer } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
-import type { utils } from 'ethers';
+import { utils } from 'ethers';
 import { z } from 'zod';
 import { ZodArray } from 'zod';
 import { ZodBigInt } from 'zod';
@@ -585,7 +583,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 export class ContractEncoder<TContract extends BaseContract> {
     // Warning: (ae-forgotten-export) The symbol "ContractWrapper" needs to be exported by the entry point index.d.ts
     constructor(contractWrapper: ContractWrapper<TContract>);
-    decode(fn: keyof TContract["functions"], encodedArgs: string): Result_2;
+    decode(fn: keyof TContract["functions"], encodedArgs: string): utils.Result;
     encode(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): string;
 }
 
@@ -1899,7 +1897,7 @@ export interface IGenericSchemaType {
 // Warning: (ae-internal-missing-underscore) The name "implementsInterface" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
-export function implementsInterface<C extends BaseContract>(contractWrapper: ContractWrapper<BaseContract>, interfaceToMatch: Interface): contractWrapper is ContractWrapper<C>;
+export function implementsInterface<C extends BaseContract>(contractWrapper: ContractWrapper<BaseContract>, interfaceToMatch: utils.Interface): contractWrapper is ContractWrapper<C>;
 
 // Warning: (ae-internal-missing-underscore) The name "includesErrorMessage" should be prefixed with an underscore because the declaration is marked as @internal
 //

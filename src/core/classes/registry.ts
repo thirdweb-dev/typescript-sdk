@@ -1,10 +1,8 @@
 import { TWRegistry, TWRegistry__factory } from "contracts";
 import { SDKOptions } from "../../schema/sdk-options";
-
 import { NetworkOrSignerOrProvider } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { isAddress } from "ethers/lib/utils";
-import { constants } from "ethers";
+import { constants, utils } from "ethers";
 
 /**
  * @internal
@@ -40,7 +38,8 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     return (await this.readContract.getAll(walletAddress))
       .concat(byocContracts)
       .filter(
-        (adr) => isAddress(adr) && adr.toLowerCase() !== constants.AddressZero,
+        (adr) =>
+          utils.isAddress(adr) && adr.toLowerCase() !== constants.AddressZero,
       );
   }
 }

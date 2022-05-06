@@ -9,6 +9,7 @@ import {
   ContractInterface,
   ethers,
   constants,
+  utils,
 } from "ethers";
 import invariant from "tiny-invariant";
 import {
@@ -24,7 +25,6 @@ import {
   PublishedContract,
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
-import { solidityKeccak256 } from "ethers/lib/utils";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   ByocFactory,
@@ -185,7 +185,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     );
 
     const encoded = fullMetadatas.map((meta) => {
-      const bytecodeHash = solidityKeccak256(
+      const bytecodeHash = utils.solidityKeccak256(
         ["bytes"],
         [meta.fullMetadata.bytecode],
       );
