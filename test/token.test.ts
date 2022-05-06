@@ -1,7 +1,7 @@
 import { assert, expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Token } from "../src";
-import { sdk, signers } from "./before-setup";
+import { expectError, sdk, signers } from "./before-setup";
 import { ethers } from "ethers";
 import { TokenMintInput } from "../src/schema/tokens/token";
 
@@ -150,6 +150,47 @@ describe("Token Contract", async () => {
         expectedBalance,
         `Wallet balance should increase by ${b.amount}`,
       );
+    }
+  });
+
+  it("should airdrop edition tokens to different wallets", async () => {
+    await currencyContract.mintToSelf(5000);
+    const addresses = [
+      {
+        address: samWallet.address,
+        quantity: 500,
+      },
+      {
+        address: bobWallet.address,
+        quantity: 340,
+      },
+    ];
+
+    await currencyContract.airdrop(addresses);
+
+    const samOwned = await currencyContract.balanceOf(samWallet.address);
+    const bobOwned = await currencyContract.balanceOf(bobWallet.address);
+    expect(samOwned.displayValue).to.be.equal("500.0");
+    expect(bobOwned.displayValue).to.be.equal("340.0");
+  });
+
+  it("should fail airdrop because not enough NFTs owned", async () => {
+    await currencyContract.mintToSelf(340);
+    const addresses = [
+      {
+        address: samWallet.address,
+        quantity: 300,
+      },
+      {
+        address: bobWallet.address,
+        quantity: 200,
+      },
+    ];
+
+    try {
+      await currencyContract.airdrop(addresses);
+    } catch (e) {
+      expectError(e, "The caller owns");
     }
   });
 });

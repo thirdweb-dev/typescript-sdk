@@ -1,6 +1,6 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { DropERC20, IMintableERC20, TokenERC20 } from "contracts";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
@@ -17,6 +17,8 @@ import { detectContractFeature } from "../../common";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { FEATURE_TOKEN } from "../../constants/erc20-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { AirdropInput } from "../../types/airdrop/airdrop";
+import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 
 /**
  * Standard ERC20 Token functions
@@ -28,7 +30,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * ```
  * @public
  */
-export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
+export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20>
   implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_TOKEN.name;
@@ -301,6 +303,60 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
       }),
     );
     await this.contractWrapper.multiCall(encoded);
+  }
+
+  /**
+   * Airdrop tokens
+   *
+   * @remarks Airdrop tokens to the provided wallet addresses.
+   *
+   * @example
+   * ```javascript
+   * // Array of objects of addresses and quantities to airdrop tokens to
+   * const addresses = [
+   *  {
+   *    address: "0x...",
+   *    quantity: 200,
+   *  },
+   *  {
+   *   address: "0x...",
+   *    quantity: 3000,
+   *  },
+   * ];
+   * const tokenId = "0";
+   * await contract.airdrop(addresses);
+   * ```
+   */
+  public async airdrop(
+    addresses: AirdropInput,
+    data: BytesLike = [0],
+  ): Promise<TransactionResult> {
+    const from = await this.contractWrapper.getSignerAddress();
+
+    const balanceOf = await this.balanceOf(from);
+
+    const input = AirdropInputSchema.parse(addresses);
+
+    const totalToAirdrop = input.reduce((prev, curr) => {
+      return prev + Number(curr?.quantity || 1);
+    }, 0);
+
+    if (balanceOf.value.toNumber() < totalToAirdrop) {
+      throw new Error(
+        `The caller owns ${balanceOf.value.toNumber()} tokens, but wants to airdrop ${totalToAirdrop} tokens.`,
+      );
+    }
+
+    const encoded = input.map(({ address: to, quantity }) => {
+      return this.contractWrapper.readContract.interface.encodeFunctionData(
+        "safeTransferFrom",
+        [from, to, quantity, data],
+      );
+    });
+
+    return {
+      receipt: await this.contractWrapper.multiCall(encoded),
+    };
   }
 
   /** ******************************
