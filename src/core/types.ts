@@ -1,11 +1,4 @@
-import { Signer } from "@ethersproject/abstract-signer";
-import { CallOverrides } from "@ethersproject/contracts";
-import {
-  Networkish,
-  Provider,
-  TransactionReceipt,
-} from "@ethersproject/providers";
-import { BigNumber, BytesLike } from "ethers";
+import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
 import type { CONTRACTS_MAP, KNOWN_CONTRACTS_MAP } from "../contracts/maps";
 
 // --- utility types extracted from from ts-toolbelt --- //
@@ -39,10 +32,13 @@ export type ValidContractInstance = Instance<ValidContractClass>;
 export type ContractForContractType<TContractType extends ContractType> =
   Instance<typeof CONTRACTS_MAP[TContractType]>;
 
-export type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
+export type NetworkOrSignerOrProvider =
+  | providers.Networkish
+  | Signer
+  | providers.Provider;
 export type ValueOf<T> = T[keyof T];
 
-export type SignerOrProvider = Signer | Provider;
+export type SignerOrProvider = Signer | providers.Provider;
 
 export type BufferOrStringWithName = {
   data: Buffer | string;
@@ -57,7 +53,7 @@ export type JsonObject = { [key: string]: Json };
 export type FileOrBuffer = File | Buffer | BufferOrStringWithName;
 
 type TransactionResultWithMetadata<T = unknown> = {
-  receipt: TransactionReceipt;
+  receipt: providers.TransactionReceipt;
   data: () => Promise<T>;
 };
 

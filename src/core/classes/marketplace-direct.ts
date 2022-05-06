@@ -6,13 +6,12 @@ import {
   IMarketplace,
   Marketplace,
 } from "contracts";
-import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
+import { BigNumber, BigNumberish, Contract, ethers, constants } from "ethers";
 import {
   DirectListing,
   NewDirectListing,
   Offer,
 } from "../../types/marketplace";
-import { AddressZero } from "@ethersproject/constants";
 import { ListingNotFoundError, WrongListingTypeError } from "../../common";
 import { ListingType } from "../../enums";
 import { TransactionResult, TransactionResultWithId } from "../types";
@@ -75,7 +74,7 @@ export class MarketplaceDirect {
   public async getListing(listingId: BigNumberish): Promise<DirectListing> {
     const listing = await this.contractWrapper.readContract.listings(listingId);
 
-    if (listing.assetContract === AddressZero) {
+    if (listing.assetContract === constants.AddressZero) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
     }
 
@@ -106,7 +105,7 @@ export class MarketplaceDirect {
       listingId,
       address,
     );
-    if (offers.offeror === AddressZero) {
+    if (offers.offeror === constants.AddressZero) {
       return undefined;
     }
     return await mapOffer(

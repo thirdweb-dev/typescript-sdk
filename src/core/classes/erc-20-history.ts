@@ -1,7 +1,6 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BigNumber } from "ethers";
+import { BigNumber, constants } from "ethers";
 import { TokenERC20 } from "contracts";
-import { AddressZero } from "@ethersproject/constants";
 import { TokenHolderBalance } from "../../types";
 import { fetchCurrencyValue } from "../../common/currency";
 
@@ -39,13 +38,13 @@ export class TokenERC20History {
       const to = item.to;
       const amount = item.value;
 
-      if (!(from === AddressZero)) {
+      if (!(from === constants.AddressZero)) {
         if (!(from in balances)) {
           balances[from] = BigNumber.from(0);
         }
         balances[from] = balances[from].sub(amount);
       }
-      if (!(to === AddressZero)) {
+      if (!(to === constants.AddressZero)) {
         if (!(to in balances)) {
           balances[to] = BigNumber.from(0);
         }

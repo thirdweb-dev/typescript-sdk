@@ -4,7 +4,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { isAddress } from "ethers/lib/utils";
-import { AddressZero } from "@ethersproject/constants";
+import { constants } from "ethers";
 
 /**
  * @internal
@@ -39,6 +39,8 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     // TODO @fixme the filter here is necessary because for some reason getAll returns a 0x0 address for the first entry
     return (await this.readContract.getAll(walletAddress))
       .concat(byocContracts)
-      .filter((adr) => isAddress(adr) && adr.toLowerCase() !== AddressZero);
+      .filter(
+        (adr) => isAddress(adr) && adr.toLowerCase() !== constants.AddressZero,
+      );
   }
 }

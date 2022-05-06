@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-chain: Network;
+chain: providers.Network;
 ```

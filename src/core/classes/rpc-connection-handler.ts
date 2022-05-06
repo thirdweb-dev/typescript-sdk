@@ -1,9 +1,4 @@
-import {
-  JsonRpcBatchProvider,
-  Provider,
-  WebSocketProvider,
-} from "@ethersproject/providers";
-import { ethers, Signer } from "ethers";
+import { ethers, Signer, providers } from "ethers";
 import { EventEmitter2 } from "eventemitter2";
 import {
   SDKOptions,
@@ -16,7 +11,7 @@ import { NetworkOrSignerOrProvider } from "../types";
  * @internal
  */
 export class RPCConnectionHandler extends EventEmitter2 {
-  private provider: Provider;
+  private provider: providers.Provider;
   private signer: Signer | undefined;
   protected readonly options: SDKOptionsOutput;
 
@@ -66,7 +61,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
    * Explicitly get the active signer.
    * @returns the active provider
    */
-  public getProvider(): Provider {
+  public getProvider(): providers.Provider {
     return this.provider;
   }
 
@@ -74,7 +69,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
    *
    * @returns the current signer if there is one, otherwise the active provider
    */
-  public getSignerOrProvider(): Signer | Provider {
+  public getSignerOrProvider(): Signer | providers.Provider {
     return this.getSigner() || this.getProvider();
   }
 
@@ -85,9 +80,9 @@ export class RPCConnectionHandler extends EventEmitter2 {
   private getSignerAndProvider(
     network: NetworkOrSignerOrProvider,
     options: SDKOptions,
-  ): [Signer | undefined, Provider] {
+  ): [Signer | undefined, providers.Provider] {
     let signer: Signer | undefined;
-    let provider: Provider | undefined;
+    let provider: providers.Provider | undefined;
 
     if (Signer.isSigner(network)) {
       signer = network;
@@ -104,7 +99,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
     }
 
     if (!provider) {
-      if (Provider.isProvider(network)) {
+      if (providers.Provider.isProvider(network)) {
         provider = network;
       } else if (!Signer.isSigner(network)) {
         if (typeof network === "string") {
@@ -137,9 +132,9 @@ export class RPCConnectionHandler extends EventEmitter2 {
       if (match) {
         switch (match[1]) {
           case "http":
-            return new JsonRpcBatchProvider(network, chainId);
+            return new providers.JsonRpcBatchProvider(network, chainId);
           case "ws":
-            return new WebSocketProvider(network, chainId);
+            return new providers.WebSocketProvider(network, chainId);
           default:
             return ethers.getDefaultProvider(network);
         }

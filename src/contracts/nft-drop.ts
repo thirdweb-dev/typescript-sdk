@@ -1,7 +1,13 @@
 import { ContractRoles } from "../core/classes/contract-roles";
 import { DropERC721 } from "contracts";
-import { hexZeroPad } from "@ethersproject/bytes";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import {
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  ethers,
+  utils,
+  constants,
+} from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -36,7 +42,6 @@ import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { getRoleHash } from "../common";
-import { AddressZero } from "@ethersproject/constants";
 import {
   TokensClaimedEvent,
   TokensLazyMintedEvent,
@@ -365,7 +370,7 @@ export class NFTDrop extends Erc721<DropERC721> {
   public async isTransferRestricted(): Promise<boolean> {
     const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
       getRoleHash("transfer"),
-      AddressZero,
+      constants.AddressZero,
     );
     return !anyoneCanTransfer;
   }
@@ -458,7 +463,7 @@ export class NFTDrop extends Erc721<DropERC721> {
   public async claimTo(
     destinationAddress: string,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     const claimVerification = await this.prepareClaim(quantity, proofs);
     const receipt = await this.contractWrapper.sendTransaction(
@@ -499,7 +504,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   public async claim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
@@ -529,7 +534,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   private async prepareClaim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,

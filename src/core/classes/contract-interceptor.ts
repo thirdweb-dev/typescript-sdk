@@ -1,6 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BaseContract } from "ethers";
-import { CallOverrides } from "@ethersproject/contracts";
+import { BaseContract, CallOverrides } from "ethers";
 
 /**
  * Allows overriding transaction behavior for this contract

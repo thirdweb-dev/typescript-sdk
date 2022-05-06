@@ -1,6 +1,6 @@
 import { IThirdwebContract__factory } from "contracts";
-import { Provider } from "@ethersproject/providers";
-import { Signer } from "ethers";
+
+import { Signer, providers } from "ethers";
 import { ContractType } from "../types";
 
 /**
@@ -14,7 +14,7 @@ export async function getContractTypeForAddress<
   TContractType extends ContractType,
 >(
   contractAddress: string,
-  signerOrProvider: Signer | Provider,
+  signerOrProvider: Signer | providers.Provider,
 ): Promise<TContractType> {
   const contract = IThirdwebContract__factory.connect(
     contractAddress,

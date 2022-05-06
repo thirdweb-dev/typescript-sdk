@@ -1,6 +1,11 @@
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
-import { hexZeroPad } from "@ethersproject/bytes";
-import { AddressZero } from "@ethersproject/constants";
+import {
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  ethers,
+  constants,
+  providers,
+} from "ethers";
 import {
   SnapshotInputSchema,
   SnapshotSchema,
@@ -27,8 +32,8 @@ import {
 } from "../schema/contracts/common/claim-conditions";
 import { createSnapshot } from "./snapshots";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
-import { Provider } from "@ethersproject/providers";
 import { IDropClaimCondition } from "contracts/DropERC20";
+import { hexZeroPad } from "ethers/lib/utils";
 
 /**
  * Returns proofs and the overrides required for the transaction.
@@ -49,7 +54,9 @@ export async function prepareClaim(
 
   try {
     if (
-      !activeClaimCondition.merkleRootHash.toString().startsWith(AddressZero)
+      !activeClaimCondition.merkleRootHash
+        .toString()
+        .startsWith(constants.AddressZero)
     ) {
       const claims = await fetchSnapshot(
         activeClaimCondition.merkleRootHash.toString(),
@@ -222,7 +229,7 @@ export async function getClaimerProofs(
 export async function processClaimConditionInputs(
   claimConditionInputs: ClaimConditionInput[],
   tokenDecimals: number,
-  provider: Provider,
+  provider: providers.Provider,
   storage: IStorage,
 ) {
   const snapshotInfos: SnapshotInfo[] = [];
@@ -279,10 +286,10 @@ export async function processClaimConditionInputs(
 async function convertToContractModel(
   c: FilledConditionInput,
   tokenDecimals: number,
-  provider: Provider,
+  provider: providers.Provider,
 ): Promise<IDropClaimCondition.ClaimConditionStruct> {
   const currency =
-    c.currencyAddress === AddressZero
+    c.currencyAddress === constants.AddressZero
       ? NATIVE_TOKEN_ADDRESS
       : c.currencyAddress;
   let maxClaimableSupply;
@@ -324,7 +331,7 @@ async function convertToContractModel(
 export async function transformResultToClaimCondition(
   pm: IDropClaimCondition.ClaimConditionStructOutput,
   tokenDecimals: number,
-  provider: Provider,
+  provider: providers.Provider,
   merkleMetadata: Record<string, string>,
   storage: IStorage,
 ): Promise<ClaimCondition> {

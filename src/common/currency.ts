@@ -1,11 +1,17 @@
-import { AddressZero } from "@ethersproject/constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
+import {
+  BigNumber,
+  BigNumberish,
+  Contract,
+  ethers,
+  constants,
+  providers,
+} from "ethers";
 import {
   getNativeTokenByChainId,
   NATIVE_TOKEN_ADDRESS,
 } from "../constants/currency";
-import { Provider } from "@ethersproject/providers";
+
 import { formatUnits } from "ethers/lib/utils";
 import { Amount, Currency, CurrencyValue, Price } from "../types/currency";
 import { PriceSchema } from "../schema/shared";
@@ -17,12 +23,12 @@ import { IERC20, IERC20Metadata } from "contracts";
 export function isNativeToken(tokenAddress: string): boolean {
   return (
     tokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS ||
-    tokenAddress.toLowerCase() === AddressZero
+    tokenAddress.toLowerCase() === constants.AddressZero
   );
 }
 
 export async function normalizePriceValue(
-  provider: Provider,
+  provider: providers.Provider,
   inputPrice: Price,
   currencyAddress: string,
 ) {
@@ -34,7 +40,7 @@ export async function normalizePriceValue(
 }
 
 export async function fetchCurrencyMetadata(
-  provider: Provider,
+  provider: providers.Provider,
   asset: string,
 ): Promise<Currency> {
   if (isNativeToken(asset)) {
@@ -65,7 +71,7 @@ export async function fetchCurrencyMetadata(
 }
 
 export async function fetchCurrencyValue(
-  providerOrSigner: Provider,
+  providerOrSigner: providers.Provider,
   asset: string,
   price: BigNumberish,
 ): Promise<CurrencyValue> {

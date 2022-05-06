@@ -1,6 +1,5 @@
 import { BaseContract } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Interface } from "@ethersproject/abi";
 import { IStorage } from "../core";
 import {
   AbiFunction,
@@ -15,6 +14,7 @@ import {
   FeatureWithEnabled,
   SUPPORTED_FEATURES,
 } from "../constants/contract-features";
+import { Interface } from "ethers/lib/utils";
 
 /**
  * Type guards a contract to a known type if it matches the corresponding interface

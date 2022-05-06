@@ -1,5 +1,5 @@
 import { TWFactory, TWFactory__factory } from "contracts";
-import { BigNumber, Contract, ethers } from "ethers";
+import { BigNumber, Contract, ethers, constants } from "ethers";
 import { z } from "zod";
 import {
   CONTRACTS_MAP,
@@ -25,7 +25,6 @@ import {
   OZ_DEFENDER_FORWARDER_ADDRESS,
   SUPPORTED_CHAIN_IDS,
 } from "../../constants";
-import { AddressZero } from "@ethersproject/constants";
 import { TokenDrop } from "../../contracts/token-drop";
 import { ProxyDeployedEvent } from "contracts/TWFactory";
 
@@ -191,8 +190,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
     const biconomyForwarder = chainEnum
       ? CONTRACT_ADDRESSES[chainEnum].biconomyForwarder
-      : AddressZero;
-    return biconomyForwarder !== AddressZero
+      : constants.AddressZero;
+    return biconomyForwarder !== constants.AddressZero
       ? [OZ_DEFENDER_FORWARDER_ADDRESS, biconomyForwarder]
       : [OZ_DEFENDER_FORWARDER_ADDRESS];
   }

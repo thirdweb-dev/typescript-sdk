@@ -9,15 +9,14 @@ import {
 import { z } from "zod";
 import { NFTInputOrUriSchema } from "../../tokens/common";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
-import { AddressZero } from "@ethersproject/constants";
-import { ethers } from "ethers";
+import { ethers, constants } from "ethers";
 import { resolveOrGenerateId } from "../../../common/signature-minting";
 
 /**
  * @internal
  */
 export const BaseSignaturePayloadInput = z.object({
-  to: z.string().default(AddressZero),
+  to: z.string().default(constants.AddressZero),
   price: PriceSchema.default(0),
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   mintStartTime: StartDateSchema,
@@ -26,7 +25,7 @@ export const BaseSignaturePayloadInput = z.object({
     .string()
     .optional()
     .transform((arg) => resolveOrGenerateId(arg)),
-  primarySaleRecipient: z.string().default(AddressZero),
+  primarySaleRecipient: z.string().default(constants.AddressZero),
 });
 
 /**
@@ -49,7 +48,7 @@ export const Signature20PayloadOutput = Signature20PayloadInput.extend({
  */
 export const Signature721PayloadInput = BaseSignaturePayloadInput.extend({
   metadata: NFTInputOrUriSchema,
-  royaltyRecipient: z.string().default(AddressZero),
+  royaltyRecipient: z.string().default(constants.AddressZero),
   royaltyBps: BasisPointsSchema.default(0),
 });
 

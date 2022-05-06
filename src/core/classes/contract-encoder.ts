@@ -1,6 +1,6 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { BaseContract } from "ethers";
-import { Result } from "@ethersproject/abi";
+import { Result } from "ethers/lib/utils";
 
 /**
  * Encodes and decodes Contract functions

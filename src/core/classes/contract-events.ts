@@ -1,6 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BaseContract } from "ethers";
-import { Listener } from "@ethersproject/providers";
+import { BaseContract, providers } from "ethers";
 import { EventType } from "../../constants";
 import { ListenerFn } from "eventemitter2";
 
@@ -80,7 +79,7 @@ export class ContractEvents<TContract extends BaseContract> {
    */
   public removeEventListener(
     eventName: keyof TContract["filters"] | string,
-    listener: Listener,
+    listener: providers.Listener,
   ) {
     // validates event, throws error if not found
     const event = this.contractWrapper.readContract.interface.getEvent(

@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish, Contract } from "ethers";
+import { BigNumber, BigNumberish, Contract, providers } from "ethers";
 import {
   CommonNFTInput,
   CommonNFTOutput,
@@ -7,7 +7,6 @@ import {
   NFTMetadataOrUri,
 } from "../schema/tokens/common";
 import { IStorage } from "../core";
-import { Provider } from "@ethersproject/providers";
 import { IERC1155Metadata, IERC165, IERC721Metadata } from "contracts";
 import { NotFoundError } from "./error";
 import {
@@ -49,7 +48,7 @@ export async function fetchTokenMetadata(
  */
 export async function fetchTokenMetadataForContract(
   contractAddress: string,
-  provider: Provider,
+  provider: providers.Provider,
   tokenId: BigNumberish,
   storage: IStorage,
 ) {
