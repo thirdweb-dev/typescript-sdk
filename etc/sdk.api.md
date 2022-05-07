@@ -2989,6 +2989,11 @@ export interface ProposalVote {
     type: VoteType;
 }
 
+// Warning: (ae-internal-missing-underscore) The name "PUBLIC_GATEWAYS" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const PUBLIC_GATEWAYS: string[];
+
 // Warning: (ae-internal-missing-underscore) The name "QuantityAboveLimitError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
