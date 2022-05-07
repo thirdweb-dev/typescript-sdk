@@ -1,7 +1,7 @@
 import { sdk, signers, storage } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import { IpfsStorage, isFeatureEnabled, ThirdwebSDK } from "../src";
+import { isFeatureEnabled, ThirdwebSDK } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../lib";
@@ -149,11 +149,7 @@ describe("Publishing", async () => {
   });
 
   it("SimpleAzuki enumerable", async () => {
-    const realSDK = new ThirdwebSDK(
-      adminWallet,
-      {},
-      new IpfsStorage("https://ipfs.thirdweb.com/ipfs/"),
-    );
+    const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmeiwNZ3AJkDdSwMoodCeYJxbbLWUp7iDoUhntuiYm7C7F/0";
     const tx = await pub.publish(ipfsUri);
@@ -171,11 +167,7 @@ describe("Publishing", async () => {
   });
 
   it("AzukiWithMinting mintable", async () => {
-    const realSDK = new ThirdwebSDK(
-      adminWallet,
-      {},
-      new IpfsStorage("https://ipfs.thirdweb.com/ipfs/"),
-    );
+    const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmeiwNZ3AJkDdSwMoodCeYJxbbLWUp7iDoUhntuiYm7C7F/1";
     const tx = await pub.publish(ipfsUri);
@@ -200,11 +192,7 @@ describe("Publishing", async () => {
   });
 
   it("Solc raw bytecode", async () => {
-    const realSDK = new ThirdwebSDK(
-      adminWallet,
-      {},
-      new IpfsStorage("https://ipfs.thirdweb.com/ipfs/"),
-    );
+    const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmVtCnHePncGSaMqUALd6bHMBhb9Xw3k5FES2fWRoeiHAt/0";
     const deployedAddr = await pub.deployContract(ipfsUri, []);
