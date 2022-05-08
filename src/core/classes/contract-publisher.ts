@@ -318,6 +318,12 @@ export class ContractPublisher extends RPCConnectionHandler {
       if (p.startsWith("uint") || p.startsWith("int")) {
         return BigNumber.from(constructorParamValues[index].toString());
       }
+      if (
+        p.endsWith("[]") &&
+        typeof constructorParamValues[index] === "string"
+      ) {
+        return JSON.parse(constructorParamValues[index]);
+      }
       return constructorParamValues[index];
     });
   }

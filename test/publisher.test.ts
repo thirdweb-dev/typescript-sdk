@@ -201,4 +201,16 @@ describe("Publishing", async () => {
     const n = await c.functions.number();
     expect(n.toNumber()).to.eq(2);
   });
+
+  it("array contractor param passed as string", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = await realSDK.getPublisher();
+    const ipfsUri = "ipfs://Qmdo7CBVn8TgRbPxtFMCPqZVH8ptv7Wb2Xmcy6kSLboUYA/2";
+    const deployedAddr = await pub.deployContract(ipfsUri, [
+      `["adminWallet.address", "samWallet.address"]`,
+    ]);
+    const c = await realSDK.getContract(deployedAddr);
+    const r = await c.functions.candidateCount();
+    expect(r.toNumber()).to.eq(2);
+  });
 });
