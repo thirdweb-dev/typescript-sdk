@@ -1,37 +1,41 @@
-import { AddressZero } from "@ethersproject/constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import { IERC20, IERC20__factory, TokenERC20__factory } from "contracts";
+import {
+  BigNumber,
+  BigNumberish,
+  Contract,
+  constants,
+  providers,
+  utils,
+} from "ethers";
 import {
   getNativeTokenByChainId,
   NATIVE_TOKEN_ADDRESS,
 } from "../constants/currency";
-import { Provider } from "@ethersproject/providers";
-import { formatUnits } from "ethers/lib/utils";
-import { Currency, CurrencyValue, Price } from "../types/currency";
+import { Amount, Currency, CurrencyValue, Price } from "../types/currency";
 import { PriceSchema } from "../schema/shared";
+import ERC20Abi from "../../abis/IERC20.json";
+import ERC20MetadataAbi from "../../abis/IERC20Metadata.json";
+import { BaseERC20 } from "../types/eips";
+import { IERC20, IERC20Metadata } from "contracts";
 
 export function isNativeToken(tokenAddress: string): boolean {
   return (
     tokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS ||
-    tokenAddress.toLowerCase() === AddressZero
+    tokenAddress.toLowerCase() === constants.AddressZero
   );
 }
 
 export async function normalizePriceValue(
-  provider: Provider,
+  provider: providers.Provider,
   inputPrice: Price,
   currencyAddress: string,
 ) {
   const metadata = await fetchCurrencyMetadata(provider, currencyAddress);
-  return ethers.utils.parseUnits(
-    PriceSchema.parse(inputPrice),
-    metadata.decimals,
-  );
+  return utils.parseUnits(PriceSchema.parse(inputPrice), metadata.decimals);
 }
 
 export async function fetchCurrencyMetadata(
-  provider: Provider,
+  provider: providers.Provider,
   asset: string,
 ): Promise<Currency> {
   if (isNativeToken(asset)) {
@@ -43,7 +47,11 @@ export async function fetchCurrencyMetadata(
       decimals: nativeToken.decimals,
     };
   } else {
-    const erc20 = TokenERC20__factory.connect(asset, provider);
+    const erc20 = new Contract(
+      asset,
+      ERC20MetadataAbi,
+      provider,
+    ) as IERC20Metadata;
     const [name, symbol, decimals] = await Promise.all([
       erc20.name(),
       erc20.symbol(),
@@ -58,7 +66,7 @@ export async function fetchCurrencyMetadata(
 }
 
 export async function fetchCurrencyValue(
-  providerOrSigner: Provider,
+  providerOrSigner: providers.Provider,
   asset: string,
   price: BigNumberish,
 ): Promise<CurrencyValue> {
@@ -66,7 +74,7 @@ export async function fetchCurrencyValue(
   return {
     ...metadata,
     value: BigNumber.from(price),
-    displayValue: formatUnits(price, metadata.decimals),
+    displayValue: utils.formatUnits(price, metadata.decimals),
   };
 }
 
@@ -84,7 +92,7 @@ export async function setErc20Allowance(
     const erc20 = new ContractWrapper<IERC20>(
       signer || provider,
       currencyAddress,
-      IERC20__factory.abi,
+      ERC20Abi,
       {},
     );
 
@@ -110,7 +118,7 @@ export async function approveErc20Allowance(
   const erc20 = new ContractWrapper<IERC20>(
     signer || provider,
     currencyAddress,
-    IERC20__factory.abi,
+    ERC20Abi,
     {},
   );
   const owner = await contractToApprove.getSignerAddress();
@@ -123,4 +131,12 @@ export async function approveErc20Allowance(
       allowance.add(totalPrice),
     ]);
   }
+}
+
+export async function normalizeAmount(
+  contractWrapper: ContractWrapper<BaseERC20>,
+  amount: Amount,
+): Promise<BigNumber> {
+  const decimals = await contractWrapper.readContract.decimals();
+  return utils.parseUnits(PriceSchema.parse(amount), decimals);
 }

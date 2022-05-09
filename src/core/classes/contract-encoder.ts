@@ -1,6 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BaseContract } from "ethers";
-import { Result } from "@ethersproject/abi";
+import { BaseContract, utils } from "ethers";
 
 /**
  * Encodes and decodes Contract functions
@@ -32,7 +31,10 @@ export class ContractEncoder<TContract extends BaseContract> {
    * @param fn - the function to decode
    * @param encodedArgs - the encoded arguments
    */
-  public decode(fn: keyof TContract["functions"], encodedArgs: string): Result {
+  public decode(
+    fn: keyof TContract["functions"],
+    encodedArgs: string,
+  ): utils.Result {
     return this.contractWrapper.readContract.interface.decodeFunctionData(
       fn as string,
       encodedArgs,

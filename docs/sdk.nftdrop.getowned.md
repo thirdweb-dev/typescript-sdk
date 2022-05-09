@@ -2,11 +2,39 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [NFTDrop](./sdk.nftdrop.md) &gt; [getOwned](./sdk.nftdrop.getowned.md)
 
-## NFTDrop.getOwned property
+## NFTDrop.getOwned() method
 
+Get Owned NFTs
 
 <b>Signature:</b>
 
 ```typescript
-getOwned: (_address?: string | undefined) => Promise<NFTMetadataOwner[]>;
+getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  walletAddress | string | <i>(Optional)</i> the wallet address to query, defaults to the connected wallet |
+
+<b>Returns:</b>
+
+Promise&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt;
+
+The NFT metadata for all NFTs in the contract.
+
+## Remarks
+
+Get all the data associated with the NFTs owned by a specific wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet to get the NFTs of
+const address = "{{wallet_address}}";
+const nfts = await contract.getOwned(address);
+console.log(nfts);
+```
+

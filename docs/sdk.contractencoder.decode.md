@@ -9,7 +9,7 @@ Decode encoded call data for a given function
 <b>Signature:</b>
 
 ```typescript
-decode(fn: keyof TContract["functions"], encodedArgs: string): Result;
+decode(fn: keyof TContract["functions"], encodedArgs: string): utils.Result;
 ```
 
 ## Parameters
@@ -21,5 +21,5 @@ decode(fn: keyof TContract["functions"], encodedArgs: string): Result;
 
 <b>Returns:</b>
 
-Result
+utils.Result
 

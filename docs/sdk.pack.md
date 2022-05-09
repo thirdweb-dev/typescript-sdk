@@ -35,7 +35,7 @@ const contract = sdk.getPack("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [contractFactory](./sdk.pack.contractfactory.md) | <code>static</code> | typeof Pack\_\_factory |  |
+|  [contractAbi](./sdk.pack.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.pack.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "pauser", "transfer"\] |  |
 |  [contractType](./sdk.pack.contracttype.md) | <code>static</code> | "pack" |  |
 |  [encoder](./sdk.pack.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;PackContract&gt; |  |

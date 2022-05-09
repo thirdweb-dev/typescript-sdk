@@ -4,12 +4,29 @@
 
 ## ContractRoyalty class
 
-Handles Contract royalties
+Handle contract royalties
 
 <b>Signature:</b>
 
 ```typescript
-export declare class ContractRoyalty<TContract extends IThirdwebRoyalty & IThirdwebContract, TSchema extends IGenericSchemaType> 
+export declare class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract), TSchema extends IGenericSchemaType> implements DetectableFeature 
+```
+<b>Implements:</b> DetectableFeature
+
+## Remarks
+
+Configure royalties for an entire contract or a particular token.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("{{contract_address}}");
+const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();
+await contract.roles.setTokenRoyaltyInfo(tokenId, {
+  seller_fee_basis_points: 100, // 1% royalty fee
+  fee_recipient: "0x...", // the fee recipient
+});
 ```
 
 ## Constructors
@@ -17,6 +34,12 @@ export declare class ContractRoyalty<TContract extends IThirdwebRoyalty & IThird
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
 |  [(constructor)(contractWrapper, metadata)](./sdk.contractroyalty._constructor_.md) |  | Constructs a new instance of the <code>ContractRoyalty</code> class |
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [featureName](./sdk.contractroyalty.featurename.md) |  | "Royalty" |  |
 
 ## Methods
 

@@ -1,18 +1,24 @@
 import { ContractWrapper } from "./contract-wrapper";
 import {
-  ERC165__factory,
-  IERC1155__factory,
-  IERC721__factory,
+  IERC1155,
+  IERC165,
+  IERC721,
   IMarketplace,
   Marketplace,
 } from "contracts";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import {
+  BigNumber,
+  BigNumberish,
+  Contract,
+  ethers,
+  constants,
+  utils,
+} from "ethers";
 import {
   DirectListing,
   NewDirectListing,
   Offer,
 } from "../../types/marketplace";
-import { AddressZero } from "@ethersproject/constants";
 import { ListingNotFoundError, WrongListingTypeError } from "../../common";
 import { ListingType } from "../../enums";
 import { TransactionResult, TransactionResultWithId } from "../types";
@@ -36,8 +42,10 @@ import {
 } from "../../common/marketplace";
 import { IStorage } from "../interfaces";
 import invariant from "tiny-invariant";
-import { isAddress } from "ethers/lib/utils";
 import { ListingAddedEvent } from "contracts/Marketplace";
+import ERC1155Abi from "../../../abis/IERC1155.json";
+import ERC721Abi from "../../../abis/IERC721.json";
+import ERC165Abi from "../../../abis/IERC165.json";
 
 /**
  * Handles direct listings
@@ -72,7 +80,7 @@ export class MarketplaceDirect {
   public async getListing(listingId: BigNumberish): Promise<DirectListing> {
     const listing = await this.contractWrapper.readContract.listings(listingId);
 
-    if (listing.assetContract === AddressZero) {
+    if (listing.assetContract === constants.AddressZero) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
     }
 
@@ -98,12 +106,12 @@ export class MarketplaceDirect {
     address: string,
   ): Promise<Offer | undefined> {
     await this.validateListing(BigNumber.from(listingId));
-    invariant(isAddress(address), "Address must be a valid address");
+    invariant(utils.isAddress(address), "Address must be a valid address");
     const offers = await this.contractWrapper.readContract.offers(
       listingId,
       address,
     );
-    if (offers.offeror === AddressZero) {
+    if (offers.offeror === constants.AddressZero) {
       return undefined;
     }
     return await mapOffer(
@@ -130,8 +138,8 @@ export class MarketplaceDirect {
    *   assetContractAddress: "0x...",
    *   // token ID of the asset you want to list
    *   tokenId: "0",
-   *   // in how many seconds will the listing open up
-   *   startTimeInSeconds: 0,
+   *   // when should the listing open up for offers
+   *   startTimestamp: new Date(),
    *   // how long the listing will be open for
    *   listingDurationInSeconds: 86400,
    *   // how many of the asset you want to list
@@ -470,26 +478,29 @@ export class MarketplaceDirect {
     }
 
     const provider = this.contractWrapper.getProvider();
-    const erc165 = ERC165__factory.connect(
+    const erc165 = new Contract(
       listing.assetContractAddress,
+      ERC165Abi,
       provider,
-    );
+    ) as IERC165;
     const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
     const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
     if (isERC721) {
-      const asset = IERC721__factory.connect(
+      const asset = new Contract(
         listing.assetContractAddress,
+        ERC721Abi,
         provider,
-      );
+      ) as IERC721;
       return (
         (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
         listing.sellerAddress.toLowerCase()
       );
     } else if (isERC1155) {
-      const asset = IERC1155__factory.connect(
+      const asset = new Contract(
         listing.assetContractAddress,
+        ERC1155Abi,
         provider,
-      );
+      ) as IERC1155;
       const balance = await asset.balanceOf(
         listing.sellerAddress,
         listing.tokenId,

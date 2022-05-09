@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC20, ERC20, ERC20Metadata, TokenERC20 } from "contracts";
+import { DropERC20, IMintableERC20, TokenERC20 } from "contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
@@ -12,17 +12,34 @@ import {
 } from "../../common/currency";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { PriceSchema } from "../../schema";
+import { BaseERC20 } from "../../types/eips";
+import { detectContractFeature } from "../../common";
+import { Erc20Mintable } from "./erc-20-mintable";
+import { FEATURE_TOKEN } from "../../constants/erc20-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
- * Standard ERC20 functions
+ * Standard ERC20 Token functions
+ * @remarks Basic functionality for a ERC20 contract that handles all unit transformation for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("{{contract_address}}");
+ * await contract.token.transfer(walletAddress, amount);
+ * ```
  * @public
  */
-export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
-  implements UpdateableNetwork
+export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
+  implements UpdateableNetwork, DetectableFeature
 {
+  featureName = FEATURE_TOKEN.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
+
+  /**
+   * Mint tokens
+   */
+  public mint: Erc20Mintable | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -40,6 +57,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
       );
       this.options = SDKOptionsSchema.parse({});
     }
+    this.mint = this.detectErc20Mintable();
   }
 
   /**
@@ -63,7 +81,6 @@ export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
    * @example
    * ```javascript
    * const token = await contract.get();
-   * console.log(token);
    * ```
    * @returns The token metadata
    */
@@ -99,10 +116,8 @@ export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
    * @example
    * ```javascript
    * // Address of the wallet to check token balance
-   * const address = "{{wallet_address}}";
-   *
-   * const balance = await contract.balanceOf(address);
-   * console.log(balance);
+   * const walletAddress = "{{wallet_address}}";
+   * const balance = await contract.balanceOf(walletAddress);
    * ```
    *
    * @returns The balance of a specific wallet.
@@ -131,9 +146,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
    * ```javascript
    * // Address of the wallet to check token allowance
    * const spenderAddress = "0x...";
-   *
    * const allowance = await contract.allowanceOf(otherAddress);
-   * console.log(allowance);
    * ```
    *
    * @returns The allowance of one wallet over anothers funds.
@@ -153,13 +166,10 @@ export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
    * @example
    * ```javascript
    * // Address of the wallet who owns the funds
-   * const address = "{{wallet_address}}";
-   *
+   * const owner = "{{wallet_address}}";
    * // Address of the wallet to check token allowance
-   * const spenderAddress = "0x...";
-   *
-   * const allowance = await contract.allowanceOf(address, spenderAddress);
-   * console.log(allowance);
+   * const spender = "0x...";
+   * const allowance = await contract.allowanceOf(owner, spender);
    * ```
    *
    * @returns The allowance of one wallet over anothers funds.
@@ -186,10 +196,8 @@ export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
    * ```javascript
    * // Address of the wallet you want to send the tokens to
    * const toAddress = "0x...";
-   *
    * // The amount of tokens you want to send
    * const amount = 0.1;
-   *
    * await contract.transfer(toAddress, amount);
    * ```
    */
@@ -214,13 +222,10 @@ export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
    * ```javascript
    * // Address of the wallet sending the tokens
    * const fromAddress = "{{wallet_address}}";
-   *
    * // Address of the wallet you want to send the tokens to
    * const toAddress = "0x...";
-   *
    * // The number of tokens you want to send
    * const amount = 1.2
-   *
    * // Note that the connected wallet must have approval to transfer the tokens of the fromAddress
    * await contract.transferFrom(fromAddress, toAddress, amount);
    * ```
@@ -246,10 +251,8 @@ export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
    * ```javascript
    * // Address of the wallet to allow transfers from
    * const spenderAddress = "0x...";
-   *
    * // The number of tokens to give as allowance
    * const amount = 100
-   *
    * await contract.setAllowance(spenderAddress, amount);
    * ```
    */
@@ -315,8 +318,20 @@ export class Erc20<T extends TokenERC20 | DropERC20 | (ERC20 & ERC20Metadata)>
     );
   }
 
-  protected async normalizeAmount(amount: Amount): Promise<BigNumber> {
+  /**
+   * returns the wei amount from a token amount
+   * @internal
+   * @param amount
+   */
+  public async normalizeAmount(amount: Amount): Promise<BigNumber> {
     const decimals = await this.contractWrapper.readContract.decimals();
     return ethers.utils.parseUnits(PriceSchema.parse(amount), decimals);
+  }
+
+  private detectErc20Mintable(): Erc20Mintable | undefined {
+    if (detectContractFeature<IMintableERC20>(this.contractWrapper, "ERC20")) {
+      return new Erc20Mintable(this, this.contractWrapper);
+    }
+    return undefined;
   }
 }

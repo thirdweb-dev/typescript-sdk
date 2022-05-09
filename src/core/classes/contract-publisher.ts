@@ -8,6 +8,8 @@ import {
   Contract,
   ContractInterface,
   ethers,
+  constants,
+  utils,
 } from "ethers";
 import invariant from "tiny-invariant";
 import {
@@ -23,7 +25,6 @@ import {
   PublishedContract,
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
-import { solidityKeccak256 } from "ethers/lib/utils";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   ByocFactory,
@@ -35,8 +36,7 @@ import {
   ThirdwebContract as TWContract,
   ThirdwebContract__factory,
 } from "contracts";
-import { AddressZero } from "@ethersproject/constants";
-import { getBYOCFactoryAddress, getBYOCRegistryAddress } from "../../constants";
+import { getBYOCRegistryAddress } from "../../constants";
 import { ContractPublishedEvent } from "contracts/ByocRegistry";
 import { ContractDeployedEvent } from "contracts/ByocFactory";
 
@@ -50,6 +50,7 @@ export class ContractPublisher extends RPCConnectionHandler {
   private factory: ContractWrapper<ByocFactory>;
 
   constructor(
+    byocFactoryAddress: string,
     network: NetworkOrSignerOrProvider,
     options: SDKOptions,
     storage: IStorage,
@@ -64,7 +65,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     );
     this.factory = new ContractWrapper<ByocFactory>(
       network,
-      getBYOCFactoryAddress(),
+      byocFactoryAddress,
       ByocFactory__factory.abi,
       options,
     );
@@ -112,7 +113,8 @@ export class ContractPublisher extends RPCConnectionHandler {
     const contract = new Contract(
       address,
       ThirdwebContract__factory.abi,
-      this.getSignerOrProvider(),
+      // this is a *READ ONLY* operation. it *always* has to happen on the readOnly network (provider is fine here for the moment as a substitute)
+      this.getProvider(),
     ) as TWContract;
     const metadataUri = await contract.getPublishMetadataUri();
     return await this.fetchFullContractMetadata(metadataUri);
@@ -183,14 +185,14 @@ export class ContractPublisher extends RPCConnectionHandler {
     );
 
     const encoded = fullMetadatas.map((meta) => {
-      const bytecodeHash = solidityKeccak256(
+      const bytecodeHash = utils.solidityKeccak256(
         ["bytes"],
         [meta.fullMetadata.bytecode],
       );
       const contractId = meta.fullMetadata.name;
       return this.registry.readContract.interface.encodeFunctionData(
         "publishContract",
-        [publisher, meta.uri, bytecodeHash, AddressZero, contractId],
+        [publisher, meta.uri, bytecodeHash, constants.AddressZero, contractId],
       );
     });
     const receipt = await this.registry.multiCall(encoded);
@@ -230,7 +232,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       publisherAddress,
       contractId,
     );
-    return this.deployCustomContract(
+    return this.deployContract(
       contract.publishMetadataUri,
       constructorParamValues,
       contractMetadata,
@@ -243,7 +245,7 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @param constructorParamValues
    * @param contractMetadata
    */
-  public async deployCustomContract(
+  public async deployContract(
     contractMetadataUri: string,
     constructorParamValues: any[],
     contractMetadata?: CustomContractMetadata,
@@ -252,7 +254,9 @@ export class ContractPublisher extends RPCConnectionHandler {
     invariant(signer, "A signer is required");
     const metadata = await this.fetchFullContractMetadata(contractMetadataUri);
     const publisher = await signer.getAddress();
-    const bytecode = metadata.bytecode;
+    const bytecode = ethers.utils.isHexString(metadata.bytecode)
+      ? metadata.bytecode
+      : `0x${metadata.bytecode}`;
     const salt = ethers.utils.formatBytes32String(Math.random().toString()); // TODO expose as optional
     const value = BigNumber.from(0);
     const constructorParamTypes = extractConstructorParamsFromAbi(
@@ -279,6 +283,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       {
         publishMetadataUri: contractMetadataUri,
         contractURI,
+        owner: publisher,
       } as ThirdwebContract.ThirdwebInfoStruct,
     ]);
     const events = this.factory.parseLogs<ContractDeployedEvent>(
@@ -313,6 +318,12 @@ export class ContractPublisher extends RPCConnectionHandler {
       if (p.startsWith("uint") || p.startsWith("int")) {
         return BigNumber.from(constructorParamValues[index].toString());
       }
+      if (
+        p.endsWith("[]") &&
+        typeof constructorParamValues[index] === "string"
+      ) {
+        return JSON.parse(constructorParamValues[index]);
+      }
       return constructorParamValues[index];
     });
   }
@@ -323,7 +334,7 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @param bytecode
    * @param constructorParams
    */
-  public async deployCustomContractWithAbi(
+  public async deployContractWithAbi(
     abi: ContractInterface,
     bytecode: BytesLike | { object: string },
     constructorParams: Array<any>,

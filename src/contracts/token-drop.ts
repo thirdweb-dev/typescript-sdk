@@ -1,27 +1,28 @@
-import { DropERC20, DropERC20__factory } from "contracts";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractRoles } from "../core/classes/contract-roles";
+import { DropERC20 } from "contracts";
 import {
-  ContractInterceptor,
-  ContractPlatformFee,
-  ContractPrimarySale,
-  DropClaimConditions,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
 } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Erc20 } from "../core/classes/erc-20";
-import { BigNumberish, BytesLike } from "ethers";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { GasCostEstimator } from "../core/classes";
+import { BigNumberish, BytesLike, constants, utils } from "ethers";
+import {
+  GasCostEstimator,
+  ContractEncoder,
+  ContractInterceptor,
+  ContractPlatformFee,
+  ContractPrimarySale,
+  ContractMetadata,
+  ContractRoles,
+  DropClaimConditions,
+  Erc20,
+} from "../core/classes";
 import { Amount, ClaimVerification, CurrencyValue } from "../types";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
-import { hexZeroPad } from "@ethersproject/bytes";
+
 import { prepareClaim } from "../common/claim-conditions";
 import { getRoleHash } from "../common";
-import { AddressZero } from "@ethersproject/constants";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -42,7 +43,7 @@ import { AddressZero } from "@ethersproject/constants";
 export class TokenDrop extends Erc20<DropERC20> {
   static contractType = "token-drop" as const;
   static contractRoles = ["admin", "transfer"] as const;
-  static contractFactory = DropERC20__factory;
+  static contractAbi = require("../../abis/DropERC20.json");
   /**
    * @internal
    */
@@ -93,7 +94,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     contractWrapper = new ContractWrapper<DropERC20>(
       network,
       address,
-      TokenDrop.contractFactory.abi,
+      TokenDrop.contractAbi,
       options,
     ),
   ) {
@@ -166,7 +167,7 @@ export class TokenDrop extends Erc20<DropERC20> {
   public async isTransferRestricted(): Promise<boolean> {
     const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
       getRoleHash("transfer"),
-      AddressZero,
+      constants.AddressZero,
     );
     return !anyoneCanTransfer;
   }
@@ -183,7 +184,7 @@ export class TokenDrop extends Erc20<DropERC20> {
    */
   public async claim(
     amount: Amount,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
@@ -215,7 +216,7 @@ export class TokenDrop extends Erc20<DropERC20> {
   public async claimTo(
     destinationAddress: string,
     amount: Amount,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     const quantity = await this.normalizeAmount(amount);
     const claimVerification = await this.prepareClaim(quantity, proofs);
@@ -310,12 +311,13 @@ export class TokenDrop extends Erc20<DropERC20> {
    */
   private async prepareClaim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.claimConditions.getActive(),
       (await this.metadata.get()).merkle,
+      await this.contractWrapper.readContract.decimals(),
       this.contractWrapper,
       this.storage,
       proofs,

@@ -1,5 +1,5 @@
 import { ethers, Wallet } from "ethers";
-import { sdk } from "./before.test";
+import { sdk } from "./before-setup";
 import { EventType } from "../src/constants/events";
 import { expect } from "chai";
 import { NFTDrop, ThirdwebSDK } from "../src";
@@ -12,7 +12,7 @@ describe("Events", async () => {
 
   beforeEach(async () => {
     dropContract = sdk.getNFTDrop(
-      await sdk.deployer.deployContract(NFTDrop.contractType, {
+      await sdk.deployer.deployBuiltInContract(NFTDrop.contractType, {
         name: `Testing drop from SDK`,
         description: "Test contract from tests",
         image:
@@ -29,7 +29,6 @@ describe("Events", async () => {
   it("should emit Transaction events", async () => {
     let txStatus = "";
     dropContract.events.addTransactionListener((event) => {
-      console.log(event);
       if (!txStatus) {
         expect(event.status).to.eq("submitted");
       } else if (txStatus === "submitted") {
@@ -40,6 +39,7 @@ describe("Events", async () => {
     await dropContract.setApprovalForAll(ethers.constants.AddressZero, true);
   });
 
+  // TODO
   it.skip("should emit Signature events", async () => {
     const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
     const provider = ethers.getDefaultProvider(RPC_URL);

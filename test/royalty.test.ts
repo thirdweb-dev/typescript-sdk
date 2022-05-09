@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Edition } from "../src/index";
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 
 import { assert, expect } from "chai";
 
@@ -21,7 +21,7 @@ describe("Royalties", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     bundleContract = sdk.getEdition(
-      await sdk.deployer.deployContract(Edition.contractType, {
+      await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "NFT Contract",
         primary_sale_recipient: adminWallet.address,
         fee_recipient: adminWallet.address,
@@ -29,7 +29,7 @@ describe("Royalties", async () => {
       }),
     );
 
-    await bundleContract.mint({
+    await bundleContract.mintToSelf({
       metadata: {
         name: "Cool NFT",
       },

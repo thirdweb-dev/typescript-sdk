@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type NetworkOrSignerOrProvider = Networkish | Signer | Provider;
+export declare type NetworkOrSignerOrProvider = providers.Networkish | Signer | providers.Provider;
 ```

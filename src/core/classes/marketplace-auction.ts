@@ -1,7 +1,7 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { IMarketplace, Marketplace } from "contracts";
 import { IStorage } from "../interfaces";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, ethers, constants } from "ethers";
 import {
   AuctionListing,
   NewAuctionListing,
@@ -21,7 +21,6 @@ import {
   setErc20Allowance,
 } from "../../common/currency";
 import { fetchTokenMetadataForContract } from "../../common/nft";
-import { AddressZero } from "@ethersproject/constants";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import {
   handleTokenApproval,
@@ -104,7 +103,7 @@ export class MarketplaceAuction {
     const offers = await this.contractWrapper.readContract.winningBid(
       listingId,
     );
-    if (offers.offeror === AddressZero) {
+    if (offers.offeror === constants.AddressZero) {
       return undefined;
     }
     return await mapOffer(
@@ -163,8 +162,8 @@ export class MarketplaceAuction {
    *   assetContractAddress: "0x...",
    *   // token ID of the asset you want to list
    *   tokenId: "0",
-   *   // in how many seconds with the listing open up
-   *   startTimeInSeconds: 0,
+   *  // when should the listing open up for offers
+   *   startTimestamp: new Date(),
    *   // how long the listing will be open for
    *   listingDurationInSeconds: 86400,
    *   // how many of the asset you want to list
@@ -373,7 +372,7 @@ export class MarketplaceAuction {
     const offers = await this.contractWrapper.readContract.winningBid(
       listingId,
     );
-    if (now.gt(startTime) && offers.offeror !== AddressZero) {
+    if (now.gt(startTime) && offers.offeror !== constants.AddressZero) {
       throw new AuctionAlreadyStartedError(listingId.toString());
     }
 

@@ -2,27 +2,52 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [NFTCollection](./sdk.nftcollection.md) &gt; [mintBatchTo](./sdk.nftcollection.mintbatchto.md)
 
-## NFTCollection.mintBatchTo property
+## NFTCollection.mintBatchTo() method
 
 Mint Many unique NFTs
 
 <b>Signature:</b>
 
 ```typescript
-mintBatchTo: (to: string, metadatas: (string | {
-        [x: string]: import("../core").Json;
-        description?: string | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, import("../core").Json> | Record<string, import("../core").Json>[] | undefined;
-        attributes?: Record<string, import("../core").Json> | Record<string, import("../core").Json>[] | undefined;
-        name: string;
-    })[]) => Promise<import("../core").TransactionResultWithId<import("../schema").NFTMetadataOwner>[]>;
+mintBatchTo(walletAddress: string, metadata: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  walletAddress | string |  |
+|  metadata | NFTMetadataOrUri\[\] |  |
+
+<b>Returns:</b>
+
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;\[\]&gt;
 
 ## Remarks
 
 Mint many unique NFTs at once to a specified wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet you want to mint the NFT to
+const walletAddress = "{{wallet_address}}";
+
+// Custom metadata of the NFTs you want to mint.
+const metadatas = [{
+  name: "Cool NFT #1",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+}, {
+  name: "Cool NFT #2",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/other/image.png"),
+}];
+
+const tx = await contract.mintBatchTo(walletAddress, metadatas);
+const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
+const firstTokenId = tx[0].id; // token id of the first minted NFT
+const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
+```
 

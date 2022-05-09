@@ -1,10 +1,11 @@
 import { Erc1155 } from "../core/classes/erc-1155";
-import { DropERC1155, DropERC1155__factory } from "contracts";
+import { DropERC1155 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import {
+  Erc1155Enumerable,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -17,21 +18,21 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../schema/tokens/common";
-import { BigNumberish, BytesLike } from "ethers";
-import { hexZeroPad } from "ethers/lib/utils";
+import { BigNumber, BigNumberish, BytesLike, constants, utils } from "ethers";
 import { prepareClaim } from "../common/claim-conditions";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ClaimVerification } from "../types";
+import { ClaimVerification, QueryAllParams } from "../types";
 import { DropErc1155History } from "../core/classes/drop-erc1155-history";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { TokensLazyMintedEvent } from "contracts/DropERC1155";
 import { getRoleHash } from "../common";
-import { AddressZero } from "@ethersproject/constants";
+
+import { EditionMetadata, EditionMetadataOwner } from "../schema";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -52,11 +53,13 @@ import { AddressZero } from "@ethersproject/constants";
 export class EditionDrop extends Erc1155<DropERC1155> {
   static contractType = "edition-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractFactory = DropERC1155__factory;
+  static contractAbi = require("../../abis/DropERC1155.json");
   /**
    * @internal
    */
   static schema = DropErc1155ContractSchema;
+
+  private _query = this.query as Erc1155Enumerable;
 
   public primarySale: ContractPrimarySale<DropERC1155>;
   public platformFee: ContractPlatformFee<DropERC1155>;
@@ -125,7 +128,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     contractWrapper = new ContractWrapper<DropERC1155>(
       network,
       address,
-      EditionDrop.contractFactory.abi,
+      EditionDrop.contractAbi,
       options,
     ),
   ) {
@@ -161,12 +164,37 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   // TODO getAllClaimerAddresses() - should be done via an indexer
 
   /**
+   * {@inheritDoc Erc1155Enumerable.all}
+   */
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<EditionMetadata[]> {
+    return this._query.all(queryParams);
+  }
+
+  /**
+   * {@inheritDoc Erc1155Enumerable.owned}
+   */
+  public async getOwned(
+    walletAddress?: string,
+  ): Promise<EditionMetadataOwner[]> {
+    return this._query.owned(walletAddress);
+  }
+
+  /**
+   * {@inheritDoc Erc1155Enumerable.getTotalCount}
+   */
+  public async getTotalCount(): Promise<BigNumber> {
+    return this._query.getTotalCount();
+  }
+
+  /**
    * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
     const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
       getRoleHash("transfer"),
-      AddressZero,
+      constants.AddressZero,
     );
     return !anyoneCanTransfer;
   }
@@ -258,7 +286,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     const claimVerification = await this.prepareClaim(
       tokenId,
@@ -296,7 +324,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public async claim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     const address = await this.contractWrapper.getSignerAddress();
     return this.claimTo(address, tokenId, quantity, proofs);
@@ -333,12 +361,13 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   private async prepareClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.claimConditions.getActive(tokenId),
       (await this.metadata.get()).merkle,
+      0,
       this.contractWrapper,
       this.storage,
       proofs,

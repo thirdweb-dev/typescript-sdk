@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-removeEventListener(eventName: keyof TContract["filters"] | string, listener: Listener): void;
+removeEventListener(eventName: keyof TContract["filters"] | string, listener: providers.Listener): void;
 ```
 
 ## Parameters
@@ -15,7 +15,7 @@ removeEventListener(eventName: keyof TContract["filters"] | string, listener: Li
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  eventName | keyof TContract\["filters"\] \| string | the event name as defined in the contract |
-|  listener | Listener | the listener to unregister |
+|  listener | providers.Listener | the listener to unregister |
 
 <b>Returns:</b>
 

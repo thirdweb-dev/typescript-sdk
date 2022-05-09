@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";
 import { BigNumber } from "ethers";
 import { EditionDrop, Token } from "../src/index";
-import { expectError, sdk, signers } from "./before.test";
+import { expectError, sdk, signers } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { ClaimEligibility } from "../src/enums";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
@@ -51,7 +51,6 @@ describe("Edition Drop Contract", async () => {
       1000,
       "mock://12398172398172389/0",
     ]);
-    console.log("gas cost", cost);
     expect(parseFloat(cost)).gt(0);
   });
 
@@ -65,9 +64,16 @@ describe("Edition Drop Contract", async () => {
     assert.lengthOf(conditions, 1);
   });
 
+  it("should get all", async () => {
+    await bdContract.createBatch([
+      { name: "test", description: "test" },
+      { name: "test", description: "test" },
+    ]);
+    const all = await bdContract.getAll();
+    expect(all.length).to.eq(2);
+  });
+
   it("allow all addresses in the merkle tree to claim", async () => {
-    console.log("Claim condition set");
-    console.log("Minting 100");
     await bdContract.createBatch([
       {
         name: "test",
@@ -86,7 +92,6 @@ describe("Edition Drop Contract", async () => {
     ];
     const members = testWallets.map((w) => w.address);
 
-    console.log("Setting claim condition");
     await bdContract.claimConditions.set("0", [
       {
         maxQuantity: 1000,
@@ -97,7 +102,6 @@ describe("Edition Drop Contract", async () => {
     for (const member of testWallets) {
       await sdk.updateSignerOrProvider(member);
       await bdContract.claim("0", 1);
-      console.log(`Address ${member.address} claimed successfully!`);
     }
     const bundle = await bdContract.get("0");
     assert(bundle.supply.toNumber() === testWallets.length);
@@ -108,8 +112,6 @@ describe("Edition Drop Contract", async () => {
   });
 
   it("allow all addresses in the merkle tree to claim using useSnapshot", async () => {
-    console.log("Claim condition set");
-    console.log("Minting 100");
     await bdContract.createBatch([
       {
         name: "test",
@@ -126,7 +128,6 @@ describe("Edition Drop Contract", async () => {
       w3,
     ];
     const members = testWallets.map((w) => w.address);
-    console.log("Setting claim condition");
     await bdContract.claimConditions.set("0", [
       {
         maxQuantity: 1000,
@@ -139,12 +140,10 @@ describe("Edition Drop Contract", async () => {
       try {
         sdk.updateSignerOrProvider(member);
         await bdContract.claim("0", 1);
-        console.log(`Address ${member.address} claimed successfully!`);
       } catch (e) {
         if (member !== w4) {
           throw e;
         }
-        console.log(`Address ${member.address} failed to claim, as expected!`);
       }
     }
     const bundle = await bdContract.get("0");
@@ -278,13 +277,6 @@ describe("Edition Drop Contract", async () => {
     ]);
 
     await sdk.updateSignerOrProvider(w1);
-    console.log(
-      await bdContract.claimConditions.getClaimIneligibilityReasons(
-        "0",
-        1,
-        w1.address,
-      ),
-    );
     const canClaimW1 = await bdContract.claimConditions.canClaim("0", 1);
     assert.isTrue(canClaimW1, "w1 should be able to claim");
 
@@ -523,7 +515,7 @@ describe("Edition Drop Contract", async () => {
 
     it("should check if an address has enough erc20 currency", async () => {
       const currency = sdk.getToken(
-        await sdk.deployer.deployContract(Token.contractType, {
+        await sdk.deployer.deployBuiltInContract(Token.contractType, {
           name: "test",
           symbol: "test",
           primary_sale_recipient: adminWallet.address,

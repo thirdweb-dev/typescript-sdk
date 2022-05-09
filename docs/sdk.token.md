@@ -35,7 +35,7 @@ const contract = sdk.getToken("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [contractFactory](./sdk.token.contractfactory.md) | <code>static</code> | typeof TokenERC20\_\_factory |  |
+|  [contractAbi](./sdk.token.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.token.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.token.contracttype.md) | <code>static</code> | "token" |  |
 |  [encoder](./sdk.token.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;TokenERC20&gt; |  |
@@ -58,7 +58,7 @@ const contract = sdk.getToken("{{contract_address}}");
 |  [getVoteBalance()](./sdk.token.getvotebalance.md) |  | Get your wallet voting power for the current checkpoints |
 |  [getVoteBalanceOf(account)](./sdk.token.getvotebalanceof.md) |  |  |
 |  [isTransferRestricted()](./sdk.token.istransferrestricted.md) |  | Get whether users can transfer tokens from this contract |
-|  [mint(amount)](./sdk.token.mint.md) |  | Mint Tokens for the connected wallet |
 |  [mintBatchTo(args)](./sdk.token.mintbatchto.md) |  | Mint Tokens To Many Wallets |
 |  [mintTo(to, amount)](./sdk.token.mintto.md) |  | Mint Tokens |
+|  [mintToSelf(amount)](./sdk.token.minttoself.md) |  | Mint Tokens for the connected wallet |
 

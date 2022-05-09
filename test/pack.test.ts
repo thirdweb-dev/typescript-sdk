@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 
 import { assert } from "chai";
 import { BigNumber } from "ethers";
@@ -24,14 +24,14 @@ describe("Pack Contract", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
     packContract = sdk.getPack(
-      await sdk.deployer.deployContract(Pack.contractType, {
+      await sdk.deployer.deployBuiltInContract(Pack.contractType, {
         name: "Pack Contract",
         seller_fee_basis_points: 1000,
       }),
     );
 
     bundleContract = sdk.getEdition(
-      await sdk.deployer.deployContract(Edition.contractType, {
+      await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "NFT Contract",
         seller_fee_basis_points: 1000,
         primary_sale_recipient: adminWallet.address,

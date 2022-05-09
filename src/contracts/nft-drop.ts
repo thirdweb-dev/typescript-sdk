@@ -1,7 +1,13 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import { DropERC721, DropERC721__factory } from "contracts";
-import { hexZeroPad } from "@ethersproject/bytes";
-import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
+import { DropERC721 } from "contracts";
+import {
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  ethers,
+  utils,
+  constants,
+} from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -26,16 +32,19 @@ import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { DelayedReveal } from "../core/classes/delayed-reveal";
-import { GasCostEstimator } from "../core/classes";
+import {
+  Erc721Enumerable,
+  Erc721Supply,
+  GasCostEstimator,
+} from "../core/classes";
 import { ClaimVerification } from "../types";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { getRoleHash } from "../common";
-import { AddressZero } from "@ethersproject/constants";
 import {
-  TokensLazyMintedEvent,
   TokensClaimedEvent,
+  TokensLazyMintedEvent,
 } from "contracts/DropERC721";
 
 /**
@@ -57,7 +66,7 @@ import {
 export class NFTDrop extends Erc721<DropERC721> {
   static contractType = "nft-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractFactory = DropERC721__factory;
+  static contractAbi = require("../../abis/DropERC721.json");
   /**
    * @internal
    */
@@ -148,8 +157,8 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   public revealer: DelayedReveal<DropERC721>;
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private _query = this.query!;
+  private _query = this.query as Erc721Supply;
+  private _owned = this._query.owned as Erc721Enumerable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -159,7 +168,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     contractWrapper = new ContractWrapper<DropERC721>(
       network,
       address,
-      NFTDrop.contractFactory.abi,
+      NFTDrop.contractAbi,
       options,
     ),
   ) {
@@ -193,21 +202,58 @@ export class NFTDrop extends Erc721<DropERC721> {
    *******************************/
 
   /**
-   * {@inheritDoc Erc721Enumerable.getAll}
+   * Get All Minted NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this contract.
+   *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await contract.getAll();
+   * console.log(nfts);
+   * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The NFT metadata for all NFTs queried.
    */
-  getAll = this._query.all.bind(this._query);
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTMetadataOwner[]> {
+    return this._query.all(queryParams);
+  }
+
   /**
-   * {@inheritDoc Erc721Enumerable.getOwned}
+   * Get Owned NFTs
+   *
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await contract.getOwned(address);
+   * console.log(nfts);
+   * ```
+   * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @returns The NFT metadata for all NFTs in the contract.
    */
-  getOwned = this._query.owned.bind(this._query);
+  public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
+    return this._owned.all(walletAddress);
+  }
+
   /**
-   * {@inheritDoc Erc721Enumerable.getOwnedTokenIds}
+   * {@inheritDoc Erc721Enumerable.tokendIds}
    */
-  getOwnedTokenIds = this._query.ownedTokenIds.bind(this._query);
+  public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
+    return this._owned.tokenIds(walletAddress);
+  }
+
   /**
-   * {@inheritDoc Erc721Enumerable.totalSupply}
+   * {@inheritDoc Erc721Supply.totalSupply}
    */
-  totalSupply = this._query.totalSupply.bind(this._query);
+  public async totalSupply() {
+    return this._query.totalSupply();
+  }
 
   /**
    * Get All Claimed NFTs
@@ -324,7 +370,7 @@ export class NFTDrop extends Erc721<DropERC721> {
   public async isTransferRestricted(): Promise<boolean> {
     const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
       getRoleHash("transfer"),
-      AddressZero,
+      constants.AddressZero,
     );
     return !anyoneCanTransfer;
   }
@@ -417,7 +463,7 @@ export class NFTDrop extends Erc721<DropERC721> {
   public async claimTo(
     destinationAddress: string,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     const claimVerification = await this.prepareClaim(quantity, proofs);
     const receipt = await this.contractWrapper.sendTransaction(
@@ -458,7 +504,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   public async claim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
@@ -488,12 +534,13 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   private async prepareClaim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [hexZeroPad([0], 32)],
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.claimConditions.getActive(),
       (await this.metadata.get()).merkle,
+      0,
       this.contractWrapper,
       this.storage,
       proofs,

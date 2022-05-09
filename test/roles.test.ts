@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Edition } from "../src/index";
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 
 import { assert } from "chai";
 import { AddressZero } from "@ethersproject/constants";
@@ -22,7 +22,7 @@ describe("Roles Contract", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     bundleContract = sdk.getEdition(
-      await sdk.deployer.deployContract(Edition.contractType, {
+      await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "NFT Contract",
         primary_sale_recipient: adminWallet.address,
         seller_fee_basis_points: 1000,

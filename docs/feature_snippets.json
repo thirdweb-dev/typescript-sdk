@@ -1,0 +1,531 @@
+{
+  "PlatformFee": {
+    "name": "ContractPlatformFee",
+    "summary": "Handle platform fees and recipients\n\n",
+    "remarks": "\n\nConfigure platform fees for a contract, which can be applied on certain paid transactions\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst feeInfo = await contract.platformFee.get();\nawait contract.platformFee.set({\n  platform_fee_basis_points: 100, // 1% fee\n  platform_fee_recipient: \"0x...\" // the fee recipient\n})"
+    },
+    "methods": [],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.ContractPlatformFee"
+    }
+  },
+  "PrimarySale": {
+    "name": "ContractPrimarySale",
+    "summary": "Handle primary sales recipients\n\n",
+    "remarks": "\n\nConfigure primary sale recipients for an entire contract.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst salesRecipient = await contract.sales.getRecipient();\nawait contract.roles.setRecipient(recipientWalletAddress);"
+    },
+    "methods": [],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.ContractPrimarySale"
+    }
+  },
+  "Permissions": {
+    "name": "ContractRoles",
+    "summary": "Handle contract permissions\n\n",
+    "remarks": "\n\nConfigure roles and permissions for a contract, to restrict certain actions.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst rolesAndMembers = await contract.roles.getAll();\nawait contract.roles.grantRole(\"admin\", \"0x...\");"
+    },
+    "methods": [
+      {
+        "name": "get",
+        "summary": "Call this to get a list of addresses that are members of a specific role.\n\n",
+        "remarks": "\n\nSee {@link ContractRoles.getAll} to get get a list of addresses for all supported roles on the contract.\n\n",
+        "examples": {
+          "javascript": "const minterAddresses: string[] = await contract.getRoleMemberList(\"minter\");"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.ContractRoles.get"
+        }
+      },
+      {
+        "name": "setAll",
+        "summary": "Call this to OVERWRITE the list of addresses that are members of specific roles.\n\nEvery role in the list will be overwritten with the new list of addresses provided with them. If you want to add or remove addresses for a single address use {@link ContractRoles.grant} and {@link ContractRoles.revoke} respectively instead.\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const minterAddresses: string[] = await contract.getRoleMemberList(\"minter\");\nawait contract.setAll({\n minter: []\n});\nconsole.log(await contract.getRoleMemberList(\"minter\")); // No matter what members had the role before, the new list will be set to []"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.ContractRoles.setAll"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.ContractRoles"
+    }
+  },
+  "Royalty": {
+    "name": "ContractRoyalty",
+    "summary": "Handle contract royalties\n\n",
+    "remarks": "\n\nConfigure royalties for an entire contract or a particular token.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();\nawait contract.roles.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 100, // 1% royalty fee\n  fee_recipient: \"0x...\", // the fee recipient\n});"
+    },
+    "methods": [],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.ContractRoyalty"
+    }
+  },
+  "ERC1155": {
+    "name": "Erc1155",
+    "summary": "Standard ERC1155 NFT functions\n\n",
+    "remarks": "\n\nBasic functionality for a ERC1155 contract that handles IPFS storage for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.edition.transfer(walletAddress, tokenId, quantity);"
+    },
+    "methods": [
+      {
+        "name": "airdrop",
+        "summary": "Airdrop multiple NFTs\n\n",
+        "remarks": "\n\nAirdrop one or multiple NFTs to the provided wallet addresses.\n\n",
+        "examples": {
+          "javascript": "// Array of objects of addresses and quantities to airdrop NFTs to\nconst addresses = [\n {\n   address: \"0x...\",\n   quantity: 2,\n },\n {\n  address: \"0x...\",\n   quantity: 3,\n },\n];\nconst tokenId = \"0\";\nawait contract.airdrop(addresses, tokenId);\n\n// You can also pass an array of addresses, it will airdrop 1 NFT per address\nconst addresses = [\n \"0x...\", \"0x...\", \"0x...\",\n]\nconst tokenId = \"0\";\nawait contract.airdrop(addresses, tokenId);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155.airdrop"
+        }
+      },
+      {
+        "name": "balanceOf",
+        "summary": "Get NFT Balance\n\n",
+        "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this contract owned by the wallet).\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to check NFT balance\nconst walletAddress = \"{{wallet_address}}\";\nconst tokenId = 0; // Id of the NFT to check\nconst balance = await contract.balanceOf(walletAddress, tokenId);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155.balanceOf"
+        }
+      },
+      {
+        "name": "get",
+        "summary": "Get a single NFT Metadata\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const nft = await contract.get(\"0\");"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155.get"
+        }
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer a single NFT\n\n",
+        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to send the NFT to\nconst toAddress = \"{{wallet_address}}\";\nconst tokenId = \"0\"; // The token ID of the NFT you want to send\nconst amount = 3; // How many copies of the NFTs to transfer\nawait contract.transfer(toAddress, tokenId, amount);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155.transfer"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155"
+    }
+  },
+  "ERC1155BatchMintable": {
+    "name": "Erc1155BatchMintable",
+    "summary": "Mint Many ERC1155 NFTs at once\n\n",
+    "remarks": "\n\nNFT batch minting functionality that handles IPFS storage for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.edition.mint.batch.to(walletAddress, [nftMetadataWithSupply1, nftMetadataWithSupply2, ...]);"
+    },
+    "methods": [
+      {
+        "name": "to",
+        "summary": "Mint Many NFTs with limited supplies\n\n",
+        "remarks": "\n\nMint many different NFTs with limited supplies to a specified wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\"\n\n// Custom metadata and supplies of your NFTs\nconst metadataWithSupply = [{\n  supply: 50, // The number of this NFT you want to mint\n  metadata: {\n    name: \"Cool NFT #1\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}, {\n  supply: 100,\n  metadata: {\n    name: \"Cool NFT #2\",\n    description: \"This is a cool NFT\",\n    image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n  },\n}];\n\nconst tx = await contract.edition.mint.batch.to(toAddress, metadataWithSupply);\nconst receipt = tx[0].receipt; // same transaction receipt for all minted NFTs\nconst firstTokenId = tx[0].id; // token id of the first minted NFT\nconst firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155BatchMintable.to"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155BatchMintable"
+    }
+  },
+  "ERC1155Enumerable": {
+    "name": "Erc1155Enumerable",
+    "summary": "List ERC1155 NFTs\n\n",
+    "remarks": "\n\nEasily list all the NFTs in a ERC1155 contract.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst nfts = await contract.edition.query.all();"
+    },
+    "methods": [
+      {
+        "name": "all",
+        "summary": "Get All NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
+        "examples": {
+          "javascript": "const nfts = await contract.edition.query.all();"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Enumerable.all"
+        }
+      },
+      {
+        "name": "owned",
+        "summary": "Get Owned NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.edition.query.owned(address);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Enumerable.owned"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Enumerable"
+    }
+  },
+  "ERC1155Mintable": {
+    "name": "Erc1155Mintable",
+    "summary": "Mint ERC1155 NFTs\n\n",
+    "remarks": "\n\nNFT minting functionality that handles IPFS storage for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.edition.mint.to(walletAddress, nftMetadata);"
+    },
+    "methods": [
+      {
+        "name": "to",
+        "summary": "Mint an NFT with a limited supply\n\n",
+        "remarks": "\n\nMint an NFT with a limited supply to a specified wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to mint the NFT to\nconst toAddress = \"{{wallet_address}}\"\n\n// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}\n\nconst metadataWithSupply = {\n  metadata,\n  supply: 1000, // The number of this NFT you want to mint\n}\n\nconst tx = await contract.mintTo(toAddress, metadataWithSupply);\nconst receipt = tx.receipt; // the transaction receipt\nconst tokenId = tx.id; // the id of the NFT minted\nconst nft = await tx.data(); // (optional) fetch details of minted NFT"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Mintable.to"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Mintable"
+    }
+  },
+  "ERC20": {
+    "name": "Erc20",
+    "summary": "Standard ERC20 Token functions\n\n",
+    "remarks": "\n\nBasic functionality for a ERC20 contract that handles all unit transformation for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.token.transfer(walletAddress, amount);"
+    },
+    "methods": [
+      {
+        "name": "allowance",
+        "summary": "Get Token Allowance\n\n",
+        "remarks": "\n\nGet the allowance of a 'spender' wallet over the connected wallet's funds - the allowance of a different address for a token is the amount of tokens that the `spender` wallet is allowed to spend on behalf of the connected wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to check token allowance\nconst spenderAddress = \"0x...\";\nconst allowance = await contract.allowanceOf(otherAddress);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.allowance"
+        }
+      },
+      {
+        "name": "allowanceOf",
+        "summary": "Get Token Allowance\n\n",
+        "remarks": "\n\nGet the allowance of one wallet over another wallet's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the specified wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet who owns the funds\nconst owner = \"{{wallet_address}}\";\n// Address of the wallet to check token allowance\nconst spender = \"0x...\";\nconst allowance = await contract.allowanceOf(owner, spender);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.allowanceOf"
+        }
+      },
+      {
+        "name": "balance",
+        "summary": "Get Token Balance for the currently connected wallet\n\n",
+        "remarks": "\n\nGet a wallets token balance.\n\n",
+        "examples": {
+          "javascript": "const balance = await contract.balance();\nconsole.log(balance);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.balance"
+        }
+      },
+      {
+        "name": "balanceOf",
+        "summary": "Get Token Balance\n\n",
+        "remarks": "\n\nGet a wallets token balance.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to check token balance\nconst walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.balanceOf(walletAddress);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.balanceOf"
+        }
+      },
+      {
+        "name": "get",
+        "summary": "Get the token Metadata (name, symbol, etc...)\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const token = await contract.get();"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.get"
+        }
+      },
+      {
+        "name": "setAllowance",
+        "summary": "Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "// Address of the wallet to allow transfers from\nconst spenderAddress = \"0x...\";\n// The number of tokens to give as allowance\nconst amount = 100\nawait contract.setAllowance(spenderAddress, amount);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.setAllowance"
+        }
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer Tokens\n\n",
+        "remarks": "\n\nTransfer tokens from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n// The amount of tokens you want to send\nconst amount = 0.1;\nawait contract.transfer(toAddress, amount);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.transfer"
+        }
+      },
+      {
+        "name": "transferBatch",
+        "summary": "Transfer Tokens To Many Wallets\n\n",
+        "remarks": "\n\nMint tokens from the connected wallet to many wallets\n\n",
+        "examples": {
+          "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    toAddress: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 100, // How many tokens to mint to specified address\n  },\n {\n   toAddress: \"0x...\",\n   amount: 100,\n }\n]\n\nawait contract.transferBatch(data);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.transferBatch"
+        }
+      },
+      {
+        "name": "transferFrom",
+        "summary": "Transfer Tokens From Address\n\n",
+        "remarks": "\n\nTransfer tokens from one wallet to another\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet sending the tokens\nconst fromAddress = \"{{wallet_address}}\";\n// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n// The number of tokens you want to send\nconst amount = 1.2\n// Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nawait contract.transferFrom(fromAddress, toAddress, amount);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20.transferFrom"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20"
+    }
+  },
+  "ERC20BatchMintable": {
+    "name": "Erc20BatchMintable",
+    "summary": "Mint Many ERC20 Tokens at once\n\n",
+    "remarks": "\n\nToken batch minting functionality that handles unit parsing for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.token.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);"
+    },
+    "methods": [
+      {
+        "name": "to",
+        "summary": "Mint Tokens To Many Wallets\n\n",
+        "remarks": "\n\nMint tokens to many wallets in one transaction.\n\n",
+        "examples": {
+          "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    toAddress: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 0.2, // How many tokens to mint to specified address\n  },\n {\n   toAddress: \"0x...\",\n   amount: 1.4,\n }\n]\n\nawait contract.mintBatchTo(data);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20BatchMintable.to"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20BatchMintable"
+    }
+  },
+  "ERC20Mintable": {
+    "name": "Erc20Mintable",
+    "summary": "Mint ERC20 Tokens\n\n",
+    "remarks": "\n\nToken minting functionality that handles unit parsing for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.mint.to(walletAddress, nftMetadata);"
+    },
+    "methods": [
+      {
+        "name": "to",
+        "summary": "Mint Tokens\n\n",
+        "remarks": "\n\nMint tokens to a specified address.\n\n",
+        "examples": {
+          "javascript": "const toAddress = \"{{wallet_address}}\"; // Address of the wallet you want to mint the tokens to\nconst amount = \"1.5\"; // The amount of this token you want to mint\nawait contract.mintTo(toAddress, amount);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20Mintable.to"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20Mintable"
+    }
+  },
+  "ERC721": {
+    "name": "Erc721",
+    "summary": "Standard ERC721 NFT functions\n\n",
+    "remarks": "\n\nBasic functionality for a ERC721 contract that handles IPFS storage for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.transfer(walletAddress, tokenId);"
+    },
+    "methods": [
+      {
+        "name": "balanceOf",
+        "summary": "Get NFT Balance\n\n",
+        "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this contract owned by the wallet).\n\n",
+        "examples": {
+          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.balanceOf(walletAddress);\nconsole.log(balance);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721.balanceOf"
+        }
+      },
+      {
+        "name": "get",
+        "summary": "Get a single NFT Metadata\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const tokenId = 0;\nconst nft = await contract.get(tokenId);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721.get"
+        }
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer a single NFT\n\n",
+        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst tokenId = 0;\nawait contract.transfer(walletAddress, tokenId);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721.transfer"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721"
+    }
+  },
+  "ERC721BatchMintable": {
+    "name": "Erc721BatchMintable",
+    "summary": "Mint Many ERC721 NFTs at once\n\n",
+    "remarks": "\n\nNFT batch minting functionality that handles IPFS storage for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);"
+    },
+    "methods": [
+      {
+        "name": "to",
+        "summary": "Mint Many unique NFTs\n\n",
+        "remarks": "\n\nMint many unique NFTs at once to a specified wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to mint the NFT to\nconst walletAddress = \"{{wallet_address}}\";\n\n// Custom metadata of the NFTs you want to mint.\nconst metadatas = [{\n  name: \"Cool NFT #1\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT #2\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/other/image.png\"),\n}];\n\nconst tx = await contract.mintBatchTo(walletAddress, metadatas);\nconst receipt = tx[0].receipt; // same transaction receipt for all minted NFTs\nconst firstTokenId = tx[0].id; // token id of the first minted NFT\nconst firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721BatchMintable.to"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721BatchMintable"
+    }
+  },
+  "ERC721Enumerable": {
+    "name": "Erc721Enumerable",
+    "summary": "List owned ERC721 NFTs\n\n",
+    "remarks": "\n\nEasily list all the NFTs from a ERC721 contract, owned by a certain wallet.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst walletAddress = \"0x...\";\nconst ownedNFTs = await contract.nft.query.owned.all(walletAddress);"
+    },
+    "methods": [
+      {
+        "name": "all",
+        "summary": "Get Owned NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.query.owned.all(address);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Enumerable.all"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Enumerable"
+    }
+  },
+  "ERC721Mintable": {
+    "name": "Erc721Mintable",
+    "summary": "Mint ERC721 NFTs\n\n",
+    "remarks": "\n\nNFT minting functionality that handles IPFS storage for you.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.mint.to(walletAddress, nftMetadata);"
+    },
+    "methods": [
+      {
+        "name": "to",
+        "summary": "Mint a unique NFT\n\n",
+        "remarks": "\n\nMint a unique NFT to a specified wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to mint the NFT to\nconst walletAddress = \"{{wallet_address}}\";\n\n// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nconst metadata = {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n};\n\nconst tx = await contract.mint.to(walletAddress, metadata);\nconst receipt = tx.receipt; // the transaction receipt\nconst tokenId = tx.id; // the id of the NFT minted\nconst nft = await tx.data(); // (optional) fetch details of minted NFT"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Mintable.to"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Mintable"
+    }
+  },
+  "ERC721Supply": {
+    "name": "Erc721Supply",
+    "summary": "List ERC721 NFTs\n\n",
+    "remarks": "\n\nEasily list all the NFTs in a ERC721 contract.\n\n",
+    "examples": {
+      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst nfts = await contract.nft.query.all();"
+    },
+    "methods": [
+      {
+        "name": "all",
+        "summary": "Get All Minted NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
+        "examples": {
+          "javascript": "const nfts = await contract.query.all();"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Supply.all"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Supply"
+    }
+  }
+}

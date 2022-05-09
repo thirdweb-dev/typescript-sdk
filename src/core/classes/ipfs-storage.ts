@@ -6,6 +6,7 @@ import {
 import {
   DEFAULT_IPFS_GATEWAY,
   PINATA_IPFS_URL,
+  PUBLIC_GATEWAYS,
   TW_IPFS_SERVER_URL,
 } from "../../constants/urls";
 import { IStorage } from "../interfaces/IStorage";
@@ -38,9 +39,21 @@ interface CidWithFileName {
  */
 export class IpfsStorage implements IStorage {
   private gatewayUrl: string;
+  private failedUrls: string[] = [];
 
   constructor(gatewayUrl: string = DEFAULT_IPFS_GATEWAY) {
     this.gatewayUrl = `${gatewayUrl.replace(/\/$/, "")}/`;
+  }
+
+  private getNextPublicGateway() {
+    const urlsToTry = PUBLIC_GATEWAYS.filter(
+      (url) => !this.failedUrls.includes(url),
+    ).filter((url) => url !== this.gatewayUrl);
+    if (urlsToTry.length > 0) {
+      return urlsToTry[0];
+    } else {
+      return undefined;
+    }
   }
 
   /**
@@ -175,7 +188,14 @@ export class IpfsStorage implements IStorage {
     }
     const result = await fetch(uri);
     if (!result.ok) {
-      throw new Error(`Status code (!= 200) =${result.status}`);
+      const nextUrl = this.getNextPublicGateway();
+      if (nextUrl) {
+        this.failedUrls.push(this.gatewayUrl);
+        this.gatewayUrl = nextUrl;
+        return this._get(hash);
+      } else {
+        throw new Error(`Error fetching ${uri} - Status code ${result.status}`);
+      }
     }
     return result;
   }

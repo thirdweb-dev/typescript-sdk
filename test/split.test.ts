@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 import { Split, Token } from "../src";
 
 global.fetch = require("node-fetch");
@@ -18,23 +18,26 @@ describe("Splits Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployer.deployContract(Split.contractType, {
-      name: "Splits Contract",
-      recipients: [
-        {
-          address: samWallet.address,
-          sharesBps: 3333,
-        },
-        {
-          address: bobWallet.address,
-          sharesBps: 3333,
-        },
-        {
-          address: abbyWallet.address,
-          sharesBps: 3334,
-        },
-      ],
-    });
+    const address = await sdk.deployer.deployBuiltInContract(
+      Split.contractType,
+      {
+        name: "Splits Contract",
+        recipients: [
+          {
+            address: samWallet.address,
+            sharesBps: 3333,
+          },
+          {
+            address: bobWallet.address,
+            sharesBps: 3333,
+          },
+          {
+            address: abbyWallet.address,
+            sharesBps: 3334,
+          },
+        ],
+      },
+    );
     splitsContract = sdk.getSplit(address);
   });
 
@@ -67,7 +70,7 @@ describe("Splits Contract", async () => {
   });
 
   it("should return all the recipients along with their token balances", async () => {
-    const addr = await sdk.deployer.deployContract(Token.contractType, {
+    const addr = await sdk.deployer.deployBuiltInContract(Token.contractType, {
       name: "Test Token",
       symbol: "TST",
       primary_sale_recipient: adminWallet.address,

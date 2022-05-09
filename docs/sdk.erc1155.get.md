@@ -29,6 +29,5 @@ The NFT metadata
 
 ```javascript
 const nft = await contract.get("0");
-console.log(nft);
 ```
 

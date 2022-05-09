@@ -4,10 +4,26 @@
 
 ## Erc721Enumerable class
 
+List owned ERC721 NFTs
+
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc721Enumerable<TContract extends ERC721Enumerable & ERC721Metadata & ERC721> 
+export declare class Erc721Enumerable implements DetectableFeature 
+```
+<b>Implements:</b> DetectableFeature
+
+## Remarks
+
+Easily list all the NFTs from a ERC721 contract, owned by a certain wallet.
+
+## Example
+
+
+```javascript
+const contract = sdk.getContract("{{contract_address}}");
+const walletAddress = "0x...";
+const ownedNFTs = await contract.nft.query.owned.all(walletAddress);
 ```
 
 ## Constructors
@@ -16,12 +32,16 @@ export declare class Erc721Enumerable<TContract extends ERC721Enumerable & ERC72
 |  --- | --- | --- |
 |  [(constructor)(erc721, contractWrapper)](./sdk.erc721enumerable._constructor_.md) |  | Constructs a new instance of the <code>Erc721Enumerable</code> class |
 
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [featureName](./sdk.erc721enumerable.featurename.md) |  | "ERC721Enumerable" |  |
+
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [all(queryParams)](./sdk.erc721enumerable.all.md) |  | Get All NFTs |
-|  [owned(\_address)](./sdk.erc721enumerable.owned.md) |  | Get Owned NFTs |
-|  [ownedTokenIds(\_address)](./sdk.erc721enumerable.ownedtokenids.md) |  | Get all token ids of NFTs owned by a specific wallet. |
-|  [totalSupply()](./sdk.erc721enumerable.totalsupply.md) |  | Get the number of NFTs minted |
+|  [all(walletAddress)](./sdk.erc721enumerable.all.md) |  | Get Owned NFTs |
+|  [tokenIds(walletAddress)](./sdk.erc721enumerable.tokenids.md) |  | Get all token ids of NFTs owned by a specific wallet. |
 

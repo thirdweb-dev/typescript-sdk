@@ -1,18 +1,18 @@
 import { TWFactory, TWFactory__factory } from "contracts";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, Contract, ethers, constants } from "ethers";
 import { z } from "zod";
 import {
+  CONTRACTS_MAP,
+  Edition,
   EditionDrop,
   Marketplace,
-  CONTRACTS_MAP,
-  Pack,
-  Split,
-  Edition,
-  Token,
-  Vote,
   NFTCollection,
   NFTDrop,
+  Pack,
   REMOTE_CONTRACT_NAME,
+  Split,
+  Token,
+  Vote,
 } from "../../contracts";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
@@ -25,7 +25,6 @@ import {
   OZ_DEFENDER_FORWARDER_ADDRESS,
   SUPPORTED_CHAIN_IDS,
 } from "../../constants";
-import { AddressZero } from "@ethersproject/constants";
 import { TokenDrop } from "../../contracts/token-drop";
 import { ProxyDeployedEvent } from "contracts/TWFactory";
 
@@ -51,7 +50,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
   ): Promise<string> {
     const contract = CONTRACTS_MAP[contractType];
     const metadata = contract.schema.deploy.parse(contractMetadata);
-    const contractFactory = contract.contractFactory;
 
     // TODO: is there any special pre-processing we need to do before uploading?
     const contractURI = await this.storage.uploadMetadata(
@@ -60,22 +58,19 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       await this.getSigner()?.getAddress(),
     );
 
-    const encodedFunc = contractFactory
-      .getInterface(contractFactory.abi)
-      .encodeFunctionData(
-        "initialize",
-        await this.getDeployArguments(contractType, metadata, contractURI),
-      );
+    const encodedFunc = Contract.getInterface(
+      contract.contractAbi,
+    ).encodeFunctionData(
+      "initialize",
+      await this.getDeployArguments(contractType, metadata, contractURI),
+    );
 
     const contractName = REMOTE_CONTRACT_NAME[contractType];
-    console.log(`Remote contractName : ${contractName}`);
     const encodedType = ethers.utils.formatBytes32String(contractName);
-    console.log(`Deploying ${contractType} proxy`);
     const receipt = await this.sendTransaction("deployProxy", [
       encodedType,
       encodedFunc,
     ]);
-    console.log(`${contractType} proxy deployed successfully`);
     const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",
       receipt.logs,
@@ -195,8 +190,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
     const biconomyForwarder = chainEnum
       ? CONTRACT_ADDRESSES[chainEnum].biconomyForwarder
-      : AddressZero;
-    return biconomyForwarder !== AddressZero
+      : constants.AddressZero;
+    return biconomyForwarder !== constants.AddressZero
       ? [OZ_DEFENDER_FORWARDER_ADDRESS, biconomyForwarder]
       : [OZ_DEFENDER_FORWARDER_ADDRESS];
   }

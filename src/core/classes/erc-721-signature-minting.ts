@@ -1,6 +1,6 @@
 import {
   FilledSignaturePayload721,
-  MintRequest1155,
+  MintRequest721,
   PayloadToSign721,
   PayloadWithUri721,
   Signature721PayloadInput,
@@ -12,12 +12,12 @@ import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ISignatureMint, TokenERC721 } from "contracts";
+import { ITokenERC721, TokenERC721 } from "contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
 import { uploadOrExtractURIs } from "../../common/nft";
-import { TokensMintedWithSignatureEvent } from "contracts/SignatureMint";
+import { TokensMintedWithSignatureEvent } from "contracts/ITokenERC721";
 
 /**
  * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -71,7 +71,7 @@ export class Erc721SignatureMinting {
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
-      BigNumber.from(message.pricePerToken),
+      BigNumber.from(message.price),
       mintRequest.currencyAddress,
       overrides,
     );
@@ -233,7 +233,7 @@ export class Erc721SignatureMinting {
             chainId,
             verifyingContract: this.contractWrapper.readContract.address,
           },
-          { MintRequest: MintRequest1155 },
+          { MintRequest: MintRequest721 },
           await this.mapPayloadToContractStruct(finalPayload),
         );
         return {
@@ -258,7 +258,7 @@ export class Erc721SignatureMinting {
    */
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri721,
-  ): Promise<ISignatureMint.MintRequestStructOutput> {
+  ): Promise<ITokenERC721.MintRequestStructOutput> {
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       mintRequest.price,
@@ -266,7 +266,7 @@ export class Erc721SignatureMinting {
     );
     return {
       to: mintRequest.to,
-      pricePerToken: normalizedPricePerToken,
+      price: normalizedPricePerToken,
       uri: mintRequest.uri,
       currency: mintRequest.currencyAddress,
       validityEndTimestamp: mintRequest.mintEndTime,
@@ -275,8 +275,6 @@ export class Erc721SignatureMinting {
       royaltyRecipient: mintRequest.royaltyRecipient,
       royaltyBps: mintRequest.royaltyBps,
       primarySaleRecipient: mintRequest.primarySaleRecipient,
-      quantity: BigNumber.from(1),
-      tokenId: BigNumber.from(0),
-    } as ISignatureMint.MintRequestStructOutput;
+    } as ITokenERC721.MintRequestStructOutput;
   }
 }

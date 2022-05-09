@@ -29,10 +29,8 @@ Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
 ```javascript
 // Address of the wallet to allow transfers from
 const spenderAddress = "0x...";
-
 // The number of tokens to give as allowance
 const amount = 100
-
 await contract.setAllowance(spenderAddress, amount);
 ```
 

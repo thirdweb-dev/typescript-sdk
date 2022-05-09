@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { Edition, Token } from "../src";
-import { sdk, signers, storage } from "./before.test";
+import { sdk, signers, storage } from "./before-setup";
 import {
   PayloadToSign1155,
   SignedPayload1155,
@@ -28,7 +28,7 @@ describe("Edition sig minting", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     editionContract = sdk.getEdition(
-      await sdk.deployer.deployContract(Edition.contractType, {
+      await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
         primary_sale_recipient: adminWallet.address,
@@ -47,7 +47,7 @@ describe("Edition sig minting", async () => {
     };
 
     customTokenContract = sdk.getToken(
-      await sdk.deployer.deployContract(Token.contractType, {
+      await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
         primary_sale_recipient: adminWallet.address,
@@ -125,8 +125,9 @@ describe("Edition sig minting", async () => {
       ];
       const batch = await editionContract.signature.generateBatch(input);
 
-      for (const [i, v] of batch.entries()) {
-        const tx = await editionContract.signature.mint(v);
+      for (let i = 0; i < batch.length; i++) {
+        const entry = batch[i];
+        const tx = await editionContract.signature.mint(entry);
         const mintedId = (await editionContract.get(tx.id)).metadata.id;
         const nft = await editionContract.get(mintedId);
         assert.equal(input[i].metadata.name, nft.metadata.name);
@@ -240,7 +241,10 @@ describe("Edition sig minting", async () => {
         samWallet.address,
         "0",
       );
-      await editionContract.mint({ metadata: { name: "test" }, supply: 0 });
+      await editionContract.mintToSelf({
+        metadata: { name: "test" },
+        supply: 0,
+      });
       const payload = await editionContract.signature.generate({
         tokenId: "0",
         quantity: "1",
@@ -290,7 +294,6 @@ describe("Edition sig minting", async () => {
       await sdk.updateSignerOrProvider(samWallet);
       await editionContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
-      console.log(ethers.utils.formatEther(newBalance.sub(oldBalance)));
       assert(
         oldBalance.sub(newBalance).gte(BigNumber.from(1)),
         "balance doesn't match",

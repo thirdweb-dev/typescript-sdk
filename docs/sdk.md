@@ -12,25 +12,31 @@
 |  [ContractEncoder](./sdk.contractencoder.md) | Encodes and decodes Contract functions |
 |  [ContractEvents](./sdk.contractevents.md) | Listen to Contract events in real time |
 |  [ContractMetadata](./sdk.contractmetadata.md) | Handles metadata for a Contract |
-|  [ContractPlatformFee](./sdk.contractplatformfee.md) | Handles primary sales recipients for a Contract |
-|  [ContractPrimarySale](./sdk.contractprimarysale.md) | Handles primary sales recipients for a Contract |
-|  [ContractRoles](./sdk.contractroles.md) | Handles Contract roles and permissions |
-|  [ContractRoyalty](./sdk.contractroyalty.md) | Handles Contract royalties |
-|  [CustomContract](./sdk.customcontract.md) | <b><i>(BETA)</i></b> Custom contract dynamic class with feature detection |
+|  [ContractPlatformFee](./sdk.contractplatformfee.md) | Handle platform fees and recipients |
+|  [ContractPrimarySale](./sdk.contractprimarysale.md) | Handle primary sales recipients |
+|  [ContractRoles](./sdk.contractroles.md) | Handle contract permissions |
+|  [ContractRoyalty](./sdk.contractroyalty.md) | Handle contract royalties |
 |  [DelayedReveal](./sdk.delayedreveal.md) | Handles delayed reveal logic |
 |  [DropClaimConditions](./sdk.dropclaimconditions.md) | Manages claim conditions for NFT Drop contracts |
 |  [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Manages claim conditions for Edition Drop contracts |
 |  [DropErc1155History](./sdk.droperc1155history.md) | Manages history for Edition Drop contracts |
 |  [Edition](./sdk.edition.md) | Create a collection of NFTs that lets you mint multiple copies of each NFT. |
 |  [EditionDrop](./sdk.editiondrop.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
-|  [Erc1155](./sdk.erc1155.md) | Standard ERC1155 functions |
+|  [Erc1155](./sdk.erc1155.md) | Standard ERC1155 NFT functions |
+|  [Erc1155BatchMintable](./sdk.erc1155batchmintable.md) | Mint Many ERC1155 NFTs at once |
+|  [Erc1155Enumerable](./sdk.erc1155enumerable.md) | List ERC1155 NFTs |
+|  [Erc1155Mintable](./sdk.erc1155mintable.md) | Mint ERC1155 NFTs |
 |  [Erc1155SignatureMinting](./sdk.erc1155signatureminting.md) | Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely |
-|  [Erc20](./sdk.erc20.md) | Standard ERC20 functions |
+|  [Erc20](./sdk.erc20.md) | Standard ERC20 Token functions |
+|  [Erc20BatchMintable](./sdk.erc20batchmintable.md) | Mint Many ERC20 Tokens at once |
+|  [Erc20Mintable](./sdk.erc20mintable.md) | Mint ERC20 Tokens |
 |  [Erc20SignatureMinting](./sdk.erc20signatureminting.md) | Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely |
-|  [Erc721](./sdk.erc721.md) | Standard ERC721 functions |
-|  [Erc721Enumerable](./sdk.erc721enumerable.md) |  |
-|  [Erc721Mintable](./sdk.erc721mintable.md) |  |
+|  [Erc721](./sdk.erc721.md) | Standard ERC721 NFT functions |
+|  [Erc721BatchMintable](./sdk.erc721batchmintable.md) | Mint Many ERC721 NFTs at once |
+|  [Erc721Enumerable](./sdk.erc721enumerable.md) | List owned ERC721 NFTs |
+|  [Erc721Mintable](./sdk.erc721mintable.md) | Mint ERC721 NFTs |
 |  [Erc721SignatureMinting](./sdk.erc721signatureminting.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
+|  [Erc721Supply](./sdk.erc721supply.md) | List ERC721 NFTs |
 |  [GasCostEstimator](./sdk.gascostestimator.md) | Estimates the gas cost of Contract calls |
 |  [IpfsStorage](./sdk.ipfsstorage.md) | IPFS Storage implementation, accepts custom IPFS gateways |
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
@@ -39,11 +45,13 @@
 |  [NFTCollection](./sdk.nftcollection.md) | Create a collection of one-of-one NFTs. |
 |  [NFTDrop](./sdk.nftdrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [Pack](./sdk.pack.md) | Create lootboxes of NFTs with rarity based open mechanics. |
+|  [SmartContract](./sdk.smartcontract.md) | <b><i>(BETA)</i></b> Custom contract dynamic class with feature detection |
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
 |  [Token](./sdk.token.md) | Create a standard crypto token or cryptocurrency. |
 |  [TokenERC20History](./sdk.tokenerc20history.md) | Manages history for Token contracts |
 |  [TransactionError](./sdk.transactionerror.md) |  |
+|  [UserWallet](./sdk.userwallet.md) | Connect and Interact with a user wallet |
 |  [Vote](./sdk.vote.md) | Create a decentralized organization for token holders to vote on proposals. |
 
 ## Enumerations

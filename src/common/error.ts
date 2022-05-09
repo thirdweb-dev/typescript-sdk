@@ -1,5 +1,4 @@
-import { BigNumberish } from "ethers";
-import { Network } from "@ethersproject/providers";
+import { BigNumberish, providers } from "ethers";
 
 /**
  * Error that may get thrown if IPFS returns nothing for a given uri.
@@ -250,7 +249,7 @@ export class TransactionError extends Error {
   public from: string;
   public to: string;
   public data: string;
-  public chain: Network;
+  public chain: providers.Network;
   public rpcUrl: string;
 
   constructor(
@@ -258,7 +257,7 @@ export class TransactionError extends Error {
     from: string,
     to: string,
     data: string,
-    network: Network,
+    network: providers.Network,
     rpcUrl: string,
     raw: string,
   ) {
@@ -304,7 +303,7 @@ export class TransactionError extends Error {
  */
 export async function convertToTWError(
   error: any,
-  network: Network,
+  network: providers.Network,
   signerAddress: string,
   contractAddress: string,
 ): Promise<TransactionError> {

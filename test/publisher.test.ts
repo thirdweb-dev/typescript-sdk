@@ -1,9 +1,10 @@
-import { sdk, signers, storage } from "./before.test";
+import { sdk, signers, storage } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import { IpfsStorage, ThirdwebSDK } from "../src";
+import { isFeatureEnabled, ThirdwebSDK } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
+import { DropERC721__factory, TokenERC721__factory } from "../lib";
 
 global.fetch = require("node-fetch");
 
@@ -41,14 +42,39 @@ describe("Publishing", async () => {
   });
 
   it("should extract functions", async () => {
-    const functions = await sdk.publisher.extractFunctions(simpleContractUri);
+    const publisher = await sdk.getPublisher();
+    const functions = await publisher.extractFunctions(simpleContractUri);
     expect(functions.length).gt(0);
   });
 
+  it("should extract features", async () => {
+    expect(
+      isFeatureEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
+    ).to.eq(true);
+    expect(isFeatureEnabled(TokenERC721__factory.abi, "ERC721Mintable")).to.eq(
+      true,
+    );
+    expect(
+      isFeatureEnabled(TokenERC721__factory.abi, "ERC721BatchMintable"),
+    ).to.eq(true);
+
+    // Drop
+    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Enumerable")).to.eq(
+      true,
+    );
+    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
+      true,
+    );
+    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
+      false,
+    );
+  });
+
   it("should publish simple greeter contract", async () => {
-    const tx = await sdk.publisher.publish(simpleContractUri);
+    const publisher = await sdk.getPublisher();
+    const tx = await publisher.publish(simpleContractUri);
     const contract = await tx.data();
-    const deployedAddr = await sdk.publisher.deployPublishedContract(
+    const deployedAddr = await publisher.deployPublishedContract(
       adminWallet.address,
       contract.id,
       [],
@@ -56,25 +82,25 @@ describe("Publishing", async () => {
         name: "CustomContract",
       },
     );
-    console.log("deployed", deployedAddr);
     expect(deployedAddr.length).to.be.gt(0);
-    const all = await sdk.publisher.getAll(adminWallet.address);
+    const all = await publisher.getAll(adminWallet.address);
     expect(all.length).to.be.eq(1);
     // fetch metadata back
-    const c = await sdk.getCustomContract(deployedAddr);
+    const c = await sdk.getContract(deployedAddr);
     const meta = await c.metadata.get();
     expect(meta.name).to.eq("CustomContract");
   });
 
   it("should publish multiple versions", async () => {
     sdk.updateSignerOrProvider(samWallet);
+    const publisher = await sdk.getPublisher();
     let id = "";
     for (let i = 0; i < 5; i++) {
-      const tx = await sdk.publisher.publish(simpleContractUri);
+      const tx = await publisher.publish(simpleContractUri);
       id = (await tx.data()).id;
     }
-    const all = await sdk.publisher.getAll(samWallet.address);
-    const versions = await sdk.publisher.getAllVersions(samWallet.address, id);
+    const all = await publisher.getAll(samWallet.address);
+    const versions = await publisher.getAllVersions(samWallet.address, id);
     expect(all.length).to.be.eq(1);
     expect(versions.length).to.be.eq(5);
     expect(all[all.length - 1] === versions[versions.length - 1]);
@@ -82,21 +108,22 @@ describe("Publishing", async () => {
 
   it("should publish constructor params contract", async () => {
     sdk.updateSignerOrProvider(bobWallet);
-    const tx = await sdk.publisher.publish(contructorParamsContractUri);
+    const publisher = await sdk.getPublisher();
+    const tx = await publisher.publish(contructorParamsContractUri);
     const contract = await tx.data();
-    const deployedAddr = await sdk.publisher.deployPublishedContract(
+    const deployedAddr = await publisher.deployPublishedContract(
       bobWallet.address,
       contract.id,
       ["someUri", 12345],
     );
-    console.log("deployed", deployedAddr);
     expect(deployedAddr.length).to.be.gt(0);
-    const all = await sdk.publisher.getAll(bobWallet.address);
+    const all = await publisher.getAll(bobWallet.address);
     expect(all.length).to.be.eq(1);
   });
 
   it("should publish batch contracts", async () => {
-    const tx = await sdk.publisher.publishBatch([
+    const publisher = await sdk.getPublisher();
+    const tx = await publisher.publishBatch([
       simpleContractUri,
       contructorParamsContractUri,
     ]);
@@ -107,90 +134,83 @@ describe("Publishing", async () => {
 
   it("Ethrone real ipfs test", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
-    const ipfsUri = "ipfs://QmQNppFfEg3sxHh6vnYnv7KCBCFWNPFQF6evPWQeV2qHwZ/0";
-    const tx = await realSDK.publisher.publish(ipfsUri);
+    const pub = await realSDK.getPublisher();
+    const ipfsUri = "ipfs://QmQeHhdLVcTPQBAqqqnJUEcsmeqkjERx3GmmuHN5gZtVSn/0";
+    const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
-    console.log("deployed", contract);
-    const deployedAddr = await realSDK.publisher.deployPublishedContract(
+    const deployedAddr = await pub.deployPublishedContract(
       adminWallet.address,
       contract.id,
       [60000, 3, 100000],
     );
-    console.log("deployed", deployedAddr);
+    const ethrone = await realSDK.getContract(deployedAddr);
+    const maxAttempts = await ethrone.functions.maxAttempts();
+    expect(maxAttempts).to.eq(3);
   });
 
-  it("ERC721A real ipfs test", async () => {
+  it("SimpleAzuki enumerable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
-    const ipfsUri = "ipfs://QmRzD8TEYrd4Ux7ZNTBKWbuAERn6rvfUzo1nnW3GMtFL8h/0";
-    const tx = await realSDK.publisher.publish(ipfsUri);
+    const pub = await realSDK.getPublisher();
+    const ipfsUri = "ipfs://QmeiwNZ3AJkDdSwMoodCeYJxbbLWUp7iDoUhntuiYm7C7F/0";
+    const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
-    console.log("deployed", await contract);
-    const deployedAddr = await realSDK.publisher.deployPublishedContract(
+    const deployedAddr = await pub.deployPublishedContract(
       adminWallet.address,
       contract.id,
-      ["foo", "bar"],
+      [],
     );
-    console.log("deployed", deployedAddr);
+    const c = await realSDK.getContract(deployedAddr);
+    invariant(c.nft, "no nft detected");
+    invariant(c.nft.query, "no nft query detected");
+    const all = await c.nft.query.all();
+    expect(all.length).to.eq(0);
   });
 
-  it("JoaquimAzuky3 enumerable", async () => {
-    const realSDK = new ThirdwebSDK(
-      adminWallet,
-      {},
-      new IpfsStorage("https://ipfs.thirdweb.com/ipfs/"),
-    );
-    const ipfsUri = "ipfs://QmchmFMDhn1prDnt4ywhiyzurKbpXhad4w3c2EKu21Fai7/0";
-    const tx = await realSDK.publisher.publish(ipfsUri);
+  it("AzukiWithMinting mintable", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = await realSDK.getPublisher();
+    const ipfsUri = "ipfs://QmeiwNZ3AJkDdSwMoodCeYJxbbLWUp7iDoUhntuiYm7C7F/1";
+    const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
-    console.log("deployed", await contract);
-    const deployedAddr = await realSDK.publisher.deployPublishedContract(
+    const deployedAddr = await pub.deployPublishedContract(
       adminWallet.address,
       contract.id,
-      ["foo", "bar"],
+      [10, "bar"],
     );
-    console.log("deployed", deployedAddr);
-    const c = await realSDK.getCustomContract(deployedAddr);
+    const c = await realSDK.getContract(deployedAddr);
     invariant(c.nft, "no nft detected");
     invariant(c.nft.mint, "no minter detected");
     const tx2 = await c.nft.mint.to(adminWallet.address, {
       name: "cool nft",
     });
-    console.log("minted", tx2.id);
     invariant(c.nft, "no nft detected");
     const nft = await c.nft.get(tx2.id);
-    console.log(nft);
     expect(nft.metadata.name).to.eq("cool nft");
-    invariant(c.nft.query, "no nft detected");
+    invariant(c.nft.query, "no nft query detected");
     const all = await c.nft.query.all();
     expect(all.length).to.eq(1);
   });
 
-  it("JoaquimAzuky2 not enumerable", async () => {
-    const realSDK = new ThirdwebSDK(
-      adminWallet,
-      {},
-      new IpfsStorage("https://ipfs.thirdweb.com/ipfs/"),
-    );
-    const ipfsUri = "ipfs://QmTFkbkNEGcBpKgzwgpKjrnUhYGHY96qk5ouVSFhTQYKc5/0";
-    const tx = await realSDK.publisher.publish(ipfsUri);
-    const contract = await tx.data();
-    console.log("deployed", await contract);
-    const deployedAddr = await realSDK.publisher.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
-      ["foo", "bar"],
-    );
-    console.log("deployed", deployedAddr);
-    const c = await realSDK.getCustomContract(deployedAddr);
-    invariant(c.nft, "no nft detected");
-    invariant(c.nft.mint, "no minter detected");
-    const tx2 = await c.nft.mint.to(adminWallet.address, {
-      name: "cool nft",
-    });
-    console.log("minted", tx2.id);
-    invariant(c.nft, "no nft detected");
-    const nft = await c.nft.get(tx2.id);
-    console.log(nft);
-    expect(nft.metadata.name).to.eq("cool nft");
+  it("Solc raw bytecode", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = await realSDK.getPublisher();
+    const ipfsUri = "ipfs://QmVtCnHePncGSaMqUALd6bHMBhb9Xw3k5FES2fWRoeiHAt/0";
+    const deployedAddr = await pub.deployContract(ipfsUri, []);
+    const c = await realSDK.getContract(deployedAddr);
+    await c.functions.increment();
+    const n = await c.functions.number();
+    expect(n.toNumber()).to.eq(2);
+  });
+
+  it("array contractor param passed as string", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = await realSDK.getPublisher();
+    const ipfsUri = "ipfs://Qmdo7CBVn8TgRbPxtFMCPqZVH8ptv7Wb2Xmcy6kSLboUYA/2";
+    const deployedAddr = await pub.deployContract(ipfsUri, [
+      `["adminWallet.address", "samWallet.address"]`,
+    ]);
+    const c = await realSDK.getContract(deployedAddr);
+    const r = await c.functions.candidateCount();
+    expect(r.toNumber()).to.eq(2);
   });
 });

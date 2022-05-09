@@ -9,20 +9,37 @@ Mint a unique NFT
 <b>Signature:</b>
 
 ```typescript
-mintToSelf(metadata: NFTMetadataInput): Promise<import("../core").TransactionResultWithId<import("../schema").NFTMetadataOwner>>;
+mintToSelf(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadata | [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
+|  metadata | NFTMetadataOrUri |  |
 
 <b>Returns:</b>
 
-Promise&lt;import("../core").[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;import("../schema").[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;&gt;
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;&gt;
 
 ## Remarks
 
 Mint a unique NFT to a specified wallet.
+
+## Example
+
+
+```javascript*
+// Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
+const metadata = {
+  name: "Cool NFT",
+  description: "This is a cool NFT",
+  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+};
+
+const tx = await contract.mintToSelf(metadata);
+const receipt = tx.receipt; // the transaction receipt
+const tokenId = tx.id; // the id of the NFT minted
+const nft = await tx.data(); // (optional) fetch details of minted NFT
+```
 

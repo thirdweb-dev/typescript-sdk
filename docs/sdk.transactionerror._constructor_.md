@@ -9,7 +9,7 @@ Constructs a new instance of the `TransactionError` class
 <b>Signature:</b>
 
 ```typescript
-constructor(reason: string, from: string, to: string, data: string, network: Network, rpcUrl: string, raw: string);
+constructor(reason: string, from: string, to: string, data: string, network: providers.Network, rpcUrl: string, raw: string);
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ constructor(reason: string, from: string, to: string, data: string, network: Net
 |  from | string |  |
 |  to | string |  |
 |  data | string |  |
-|  network | Network |  |
+|  network | providers.Network |  |
 |  rpcUrl | string |  |
 |  raw | string |  |
 

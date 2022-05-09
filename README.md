@@ -1,6 +1,17 @@
-# Thirdweb SDK
+<p align="center">
+<br />
+<a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/typescript-sdk/blob/main/logo.svg?raw=true" width="200" alt=""/></a>
+<br />
+</p>
+<h1 align="center">Thirdweb Typescript SDK</h1>
+<p align="center">
+<a href="https://www.npmjs.com/package/@thirdweb-dev/sdk"><img src="https://img.shields.io/github/package-json/v/thirdweb-dev/typescript-sdk?color=red&label=npm&logo=npm" alt="npm version"/></a>
+<a href="https://github.com/thirdweb-dev/typescript-sdk/actions"><img alt="Build Status" src="https://github.com/thirdweb-dev/typescript-sdk/actions/workflows/tests.yml/badge.svg"/></a>
+<a href="https://discord.gg/thirdweb"><img alt="Join our Discord!" src="https://img.shields.io/discord/834227967404146718.svg?color=7289da&label=discord&logo=discord&style=flat"/></a>
 
-[Looking for version 1 (legacy)? Click here.](https://github.com/thirdweb-dev/typescript-sdk/tree/v1)
+</p>
+<p align="center"><strong>Best in class Web3 SDK for Browser, Node and Mobile apps</strong></p>
+<br />
 
 ## Installation
 
@@ -63,12 +74,11 @@ Here's how to provide your own private key to the SDK to perform transactions wi
 
 ```typescript
 // my_script.ts
-import "dotenv/config";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 // still need an RPC url to determine which blochain to connect to
 const rpcUrl = "https://polygon-rpc.com/";
-// load your private key in a secure way (env variable, not commited to git)
+// load your private key in a secure way (env variable, never commited to git)
 const privateKey = process.env.PRIVATE_KEY as string;
 // instantiate the SDK with your own wallet (or any valid Signer)
 const sdk = new ThirdwebSDK(
@@ -78,26 +88,22 @@ const sdk = new ThirdwebSDK(
     )
 );
 
+// deploy contracts
+const deployedAddress = sdk.deployer.deployNFTCollection({
+    name: "My NFT Collection",
+})
+
 // access your deployed contracts
-const nftCollection = sdk.getNFTCollection("0x...");
+const nftCollection = sdk.getNFTCollection(deployedAddress);
 
 // Execute transactions on your contracts from the connected wallet
-await nftCollection.mint({
+const walletAddress = "0x...";
+await nftCollection.mintTo(walletAddress, {
     name: "Cool NFT",
     description: "Minted NFT from code!",
     image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
 });
 ```
-
-In this example we use [dotenv](https://www.npmjs.com/package/dotenv) to store the PRIVATE_KEY in an `.env` file, like the following:
-
-```
-PRIVATE_KEY=your-private-key-here
-```
-
-You could also store your private key in a shell environment variable, or load it from a secure service.
-
-> ⚠️ Never commit private keys to file tracking history, or share it publicly. If you're using an env file, make sure to add `.env` to your `.gitignore` file.
 
 ### Frontend usage
 
@@ -108,7 +114,7 @@ Easiest way to get started on the frontend is using one of our templates in the 
 ### API Reference & code examples
 
 - [Step by step guides and recipes](https://portal.thirdweb.com)
-- [Api Reference and code examples](https://typescript-docs.thirdweb.com)
+- [Full Api Reference and code examples](https://docs.thirdweb.com/typescript)
 
 ### Get in touch
 

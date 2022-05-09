@@ -1,7 +1,8 @@
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {
+  TokenERC1155__factory,
   TokenERC20__factory,
   TokenERC721__factory,
   VoteERC20__factory,
@@ -10,12 +11,15 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
 import { ethers } from "ethers";
 
+require("./before-setup");
+
 global.fetch = require("node-fetch");
 
 describe("Custom Contracts", async () => {
   let customContractAddress: string;
   let nftContractAddress: string;
   let tokenContractAddress: string;
+  let editionContractAddress: string;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -25,9 +29,10 @@ describe("Custom Contracts", async () => {
     const simpleContractUri = await uploadContractMetadata(
       "test/abis/greeter.json",
     );
-    const tx = await sdk.publisher.publish(simpleContractUri);
+    const publisher = await sdk.getPublisher();
+    const tx = await publisher.publish(simpleContractUri);
     const contract = await tx.data();
-    customContractAddress = await sdk.publisher.deployPublishedContract(
+    customContractAddress = await publisher.deployPublishedContract(
       adminWallet.address,
       contract.id,
       [],
@@ -50,6 +55,17 @@ describe("Custom Contracts", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: adminWallet.address,
     });
+    editionContractAddress = await sdk.deployer.deployEdition({
+      name: `Edition`,
+      description: "Test contract from tests",
+      image:
+        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+      primary_sale_recipient: samWallet.address,
+      seller_fee_basis_points: 500,
+      fee_recipient: bobWallet.address,
+      platform_fee_basis_points: 10,
+      platform_fee_recipient: adminWallet.address,
+    });
     tokenContractAddress = await sdk.deployer.deployToken({
       name: `Token`,
       description: "Test contract from tests",
@@ -62,38 +78,34 @@ describe("Custom Contracts", async () => {
   });
 
   it("should call raw ABI functions", async () => {
-    const c = await sdk.getCustomContract(customContractAddress);
+    const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     expect(await c.functions.decimals()).to.eq(18);
-    await c.functions.mint(ethers.utils.parseUnits("10"));
-    expect((await c.functions.totalSupply()).toString()).to.eq(
-      ethers.utils.parseUnits("10").toString(),
-    );
   });
 
   it("should fetch published metadata", async () => {
-    const c = await sdk.getCustomContract(customContractAddress);
+    const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     const meta = await c.publishedMetadata.get();
     expect(meta.name).to.eq("Greeter");
   });
 
   it("should extract functions", async () => {
-    const c = await sdk.getCustomContract(customContractAddress);
+    const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     const functions = await c.publishedMetadata.extractFunctions();
     expect(functions.length).gt(0);
   });
 
   it("should detect feature: metadata", async () => {
-    const c = await sdk.getCustomContract(customContractAddress);
+    const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     const meta = await c.metadata.get();
     expect(meta.name).to.eq("CustomContract");
   });
 
   it("should detect feature: roles", async () => {
-    const c = await sdk.getCustomContractFromAbi(
+    const c = await sdk.getContractFromAbi(
       nftContractAddress,
       TokenERC721__factory.abi,
     );
@@ -112,7 +124,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: royalties", async () => {
-    const c = await sdk.getCustomContractFromAbi(
+    const c = await sdk.getContractFromAbi(
       nftContractAddress,
       TokenERC721__factory.abi,
     );
@@ -131,7 +143,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: primary sales", async () => {
-    const c = await sdk.getCustomContractFromAbi(
+    const c = await sdk.getContractFromAbi(
       nftContractAddress,
       TokenERC721__factory.abi,
     );
@@ -145,7 +157,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: primary sales", async () => {
-    const c = await sdk.getCustomContractFromAbi(
+    const c = await sdk.getContractFromAbi(
       nftContractAddress,
       TokenERC721__factory.abi,
     );
@@ -164,14 +176,14 @@ describe("Custom Contracts", async () => {
   });
 
   it("should not detect feature if missing from ABI", async () => {
-    const c = await sdk.getCustomContractFromAbi("", VoteERC20__factory.abi);
+    const c = await sdk.getContractFromAbi("", VoteERC20__factory.abi);
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Metadata undefined");
     expect(c.roles).to.eq(undefined);
   });
 
   it("should detect feature: erc20", async () => {
-    const c = await sdk.getCustomContractFromAbi(
+    const c = await sdk.getContractFromAbi(
       tokenContractAddress,
       TokenERC20__factory.abi,
     );
@@ -180,10 +192,8 @@ describe("Custom Contracts", async () => {
     const token = await c.token.get();
     expect(token.name).to.eq("Token");
     expect(token.decimals).to.eq(18);
-    await c.functions.mintTo(
-      adminWallet.address,
-      ethers.utils.parseEther("100"),
-    );
+    invariant(c.token.mint, "ERC20Mintable undefined");
+    await c.token.mint.to(adminWallet.address, 100);
     const balance = await c.token.balance();
     expect(balance.displayValue).to.eq("100.0");
     await c.token.transfer(samWallet.address, 25);
@@ -194,7 +204,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: erc721", async () => {
-    const c = await sdk.getCustomContractFromAbi(
+    const c = await sdk.getContractFromAbi(
       nftContractAddress,
       TokenERC721__factory.abi,
     );
@@ -206,7 +216,26 @@ describe("Custom Contracts", async () => {
       name: "Custom NFT",
     });
     const nfts = await c.nft.query.all();
-    console.log((await c.nft.query.totalSupply()).toNumber());
+    expect(nfts.length).to.eq(1);
+    expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
+
+  it("should detect feature: erc1155", async () => {
+    const c = await sdk.getContractFromAbi(
+      editionContractAddress,
+      TokenERC1155__factory.abi,
+    );
+    invariant(c, "Contract undefined");
+    invariant(c.edition, "ERC1155 undefined");
+    invariant(c.edition.query, "ERC1155 query undefined");
+    invariant(c.edition.mint, "ERC1155 minter undefined");
+    await c.edition.mint.to(adminWallet.address, {
+      metadata: {
+        name: "Custom NFT",
+      },
+      supply: 100,
+    });
+    const nfts = await c.edition.query.all();
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });

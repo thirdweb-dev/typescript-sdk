@@ -1,9 +1,8 @@
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, Contract, providers } from "ethers";
 import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
-import { Provider } from "@ethersproject/providers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { SignerOrProvider } from "../core";
 import {
@@ -14,13 +13,10 @@ import {
 import invariant from "tiny-invariant";
 import { fetchCurrencyValue } from "./currency";
 import { MAX_BPS } from "../schema/shared";
-import {
-  ERC165__factory,
-  IERC1155,
-  IERC1155__factory,
-  IERC721,
-  IERC721__factory,
-} from "contracts";
+import { IERC1155, IERC165, IERC721 } from "contracts";
+import ERC1155Abi from "../../abis/IERC1155.json";
+import ERC721Abi from "../../abis/IERC721.json";
+import ERC165Abi from "../../abis/IERC165.json";
 
 /**
  * This method checks if the given token is approved for the marketplace contract.
@@ -36,18 +32,18 @@ import {
  * @returns - True if the marketplace is approved on the token, false otherwise.
  */
 export async function isTokenApprovedForMarketplace(
-  provider: Provider,
+  provider: providers.Provider,
   marketplaceAddress: string,
   assetContract: string,
   tokenId: BigNumberish,
   from: string,
 ): Promise<boolean> {
   try {
-    const erc165 = ERC165__factory.connect(assetContract, provider);
+    const erc165 = new Contract(assetContract, ERC165Abi, provider) as IERC165;
     const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
     const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
     if (isERC721) {
-      const asset = IERC721__factory.connect(assetContract, provider);
+      const asset = new Contract(assetContract, ERC721Abi, provider) as IERC721;
 
       const approved = await asset.isApprovedForAll(from, marketplaceAddress);
       if (approved) {
@@ -58,7 +54,11 @@ export async function isTokenApprovedForMarketplace(
         marketplaceAddress.toLowerCase()
       );
     } else if (isERC1155) {
-      const asset = IERC1155__factory.connect(assetContract, provider);
+      const asset = new Contract(
+        assetContract,
+        ERC1155Abi,
+        provider,
+      ) as IERC1155;
       return await asset.isApprovedForAll(from, marketplaceAddress);
     } else {
       console.error("Contract does not implement ERC 1155 or ERC 721.");
@@ -86,7 +86,11 @@ export async function handleTokenApproval(
   tokenId: BigNumberish,
   from: string,
 ): Promise<void> {
-  const erc165 = ERC165__factory.connect(assetContract, signerOrProvider);
+  const erc165 = new Contract(
+    assetContract,
+    ERC165Abi,
+    signerOrProvider,
+  ) as IERC165;
   const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
   const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
   // check for token approval
@@ -94,7 +98,7 @@ export async function handleTokenApproval(
     const asset = new ContractWrapper<IERC721>(
       signerOrProvider,
       assetContract,
-      IERC721__factory.abi,
+      ERC721Abi,
       {},
     );
     const approved = await asset.readContract.isApprovedForAll(
@@ -117,7 +121,7 @@ export async function handleTokenApproval(
     const asset = new ContractWrapper<IERC1155>(
       signerOrProvider,
       assetContract,
-      IERC1155__factory.abi,
+      ERC1155Abi,
       {},
     );
 
@@ -191,7 +195,7 @@ export function validateNewListingParam(
  * @returns - An `Offer` object
  */
 export async function mapOffer(
-  provider: Provider,
+  provider: providers.Provider,
   listingId: BigNumber,
   offer: any,
 ): Promise<Offer> {

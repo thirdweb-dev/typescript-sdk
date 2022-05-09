@@ -1,12 +1,8 @@
-import {
-  Marketplace as MarketplaceContract,
-  Marketplace__factory,
-} from "contracts";
+import { Marketplace as MarketplaceContract } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import {
-  ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -17,18 +13,20 @@ import { UpdateableNetwork } from "../core/interfaces/contract";
 import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
 import { AuctionListing, DirectListing } from "../types/marketplace";
 import { ListingType } from "../enums";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, constants } from "ethers";
 import invariant from "tiny-invariant";
 import { ListingNotFoundError } from "../common";
-import { AddressZero } from "@ethersproject/constants";
 import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
 import { getRoleHash } from "../common/role";
 import { MarketplaceDirect } from "../core/classes/marketplace-direct";
 import { MarketplaceAuction } from "../core/classes/marketplace-auction";
-import { GasCostEstimator } from "../core/classes";
 import { DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import {
+  GasCostEstimator,
+  ContractInterceptor,
+  ContractEvents,
+  ContractPlatformFee,
+} from "../core/classes";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -49,7 +47,7 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 export class Marketplace implements UpdateableNetwork {
   static contractType = "marketplace" as const;
   static contractRoles = ["admin", "lister", "asset"] as const;
-  static contractFactory = Marketplace__factory;
+  static contractAbi = require("../../abis/Marketplace.json");
   /**
    * @internal
    */
@@ -85,8 +83,8 @@ export class Marketplace implements UpdateableNetwork {
    *   assetContractAddress: "0x...",
    *   // token ID of the asset you want to list
    *   tokenId: "0",
-   *   // in how many seconds will the listing open up
-   *   startTimeInSeconds: 0,
+   *  // when should the listing open up for offers
+   *   startTimestamp: new Date(),
    *   // how long the listing will be open for
    *   listingDurationInSeconds: 86400,
    *   // how many of the asset you want to list
@@ -119,8 +117,8 @@ export class Marketplace implements UpdateableNetwork {
    *   assetContractAddress: "0x...",
    *   // token ID of the asset you want to list
    *   tokenId: "0",
-   *   // in how many seconds with the listing open up
-   *   startTimeInSeconds: 0,
+   *  // when should the listing open up for offers
+   *   startTimestamp: new Date(),
    *   // how long the listing will be open for
    *   listingDurationInSeconds: 86400,
    *   // how many of the asset you want to list
@@ -153,7 +151,7 @@ export class Marketplace implements UpdateableNetwork {
     contractWrapper = new ContractWrapper<MarketplaceContract>(
       network,
       address,
-      Marketplace.contractFactory.abi,
+      Marketplace.contractAbi,
       options,
     ),
   ) {
@@ -199,7 +197,7 @@ export class Marketplace implements UpdateableNetwork {
     listingId: BigNumberish,
   ): Promise<AuctionListing | DirectListing> {
     const listing = await this.contractWrapper.readContract.listings(listingId);
-    if (listing.assetContract === AddressZero) {
+    if (listing.assetContract === constants.AddressZero) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
     }
     switch (listing.listingType) {
@@ -281,7 +279,7 @@ export class Marketplace implements UpdateableNetwork {
   public async isRestrictedToListerRoleOnly(): Promise<boolean> {
     const anyoneCanList = await this.contractWrapper.readContract.hasRole(
       getRoleHash("lister"),
-      AddressZero,
+      constants.AddressZero,
     );
     return !anyoneCanList;
   }
@@ -407,9 +405,12 @@ export class Marketplace implements UpdateableNetwork {
   public async allowListingFromSpecificAssetOnly(contractAddress: string) {
     const encoded = [];
     const members = await this.roles.get("asset");
-    if (members.includes(AddressZero)) {
+    if (members.includes(constants.AddressZero)) {
       encoded.push(
-        this.encoder.encode("revokeRole", [getRoleHash("asset"), AddressZero]),
+        this.encoder.encode("revokeRole", [
+          getRoleHash("asset"),
+          constants.AddressZero,
+        ]),
       );
     }
     encoded.push(
@@ -431,7 +432,10 @@ export class Marketplace implements UpdateableNetwork {
       );
     }
     encoded.push(
-      this.encoder.encode("grantRole", [getRoleHash("asset"), AddressZero]),
+      this.encoder.encode("grantRole", [
+        getRoleHash("asset"),
+        constants.AddressZero,
+      ]),
     );
     await this.contractWrapper.multiCall(encoded);
   }

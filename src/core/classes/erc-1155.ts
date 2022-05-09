@@ -1,5 +1,10 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC1155, ERC1155, ERC1155Metadata, TokenERC1155 } from "contracts";
+import {
+  DropERC1155,
+  IERC1155Enumerable,
+  IMintableERC1155,
+  TokenERC1155,
+} from "contracts";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
@@ -9,29 +14,38 @@ import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import {
   EditionMetadata,
   EditionMetadataOutputSchema,
-  EditionMetadataOwner,
 } from "../../schema/tokens/edition";
 import { fetchTokenMetadata } from "../../common/nft";
-import { NotFoundError } from "../../common";
-import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
+import { detectContractFeature, NotFoundError } from "../../common";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
-import { ERC1155Enumerable } from "contracts/ERC1155Enumerable";
+import { BaseERC1155 } from "../../types/eips";
+import { Erc1155Enumerable } from "./erc-1155-enumerable";
+import { Erc1155Mintable } from "./erc-1155-mintable";
+import { FEATURE_EDITION } from "../../constants/erc1155-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
- * Standard ERC1155 functions
+ * Standard ERC1155 NFT functions
+ * @remarks Basic functionality for a ERC1155 contract that handles IPFS storage for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("{{contract_address}}");
+ * await contract.edition.transfer(walletAddress, tokenId, quantity);
+ * ```
  * @public
  */
 export class Erc1155<
-  T extends
-    | DropERC1155
-    | TokenERC1155
-    | (ERC1155 & ERC1155Metadata & ERC1155Enumerable),
-> implements UpdateableNetwork
+  T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseERC1155,
+> implements UpdateableNetwork, DetectableFeature
 {
+  featureName = FEATURE_EDITION.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
+
+  public query: Erc1155Enumerable | undefined;
+  public mint: Erc1155Mintable | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -49,6 +63,8 @@ export class Erc1155<
       );
       this.options = SDKOptionsSchema.parse({});
     }
+    this.query = this.detectErc1155Enumerable();
+    this.mint = this.detectErc1155Mintable();
   }
 
   /**
@@ -72,7 +88,6 @@ export class Erc1155<
    * @example
    * ```javascript
    * const nft = await contract.get("0");
-   * console.log(nft);
    * ```
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
@@ -88,93 +103,6 @@ export class Erc1155<
       supply,
       metadata,
     });
-  }
-
-  /**
-   * Get All NFTs
-   *
-   * @remarks Get all the data associated with every NFT in this contract.
-   *
-   * By default, returns the first 100 NFTs, use queryParams to fetch more.
-   *
-   * @example
-   * ```javascript
-   * const nfts = await contract.getAll();
-   * console.log(nfts);
-   * ```
-   * @param queryParams - optional filtering to only fetch a subset of results.
-   * @returns The NFT metadata for all NFTs queried.
-   */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<EditionMetadata[]> {
-    const start = BigNumber.from(queryParams?.start || 0).toNumber();
-    const count = BigNumber.from(
-      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
-    ).toNumber();
-    const maxId = Math.min(
-      (await this.getTotalCount()).toNumber(),
-      start + count,
-    );
-    return await Promise.all(
-      [...Array(maxId - start).keys()].map((i) =>
-        this.get((start + i).toString()),
-      ),
-    );
-  }
-
-  /**
-   * Get the number of NFTs minted
-   * @returns the total number of NFTs minted in this contract
-   * @public
-   */
-  public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToMint();
-  }
-
-  /**
-   * Get Owned NFTs
-   *
-   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet to get the NFTs of
-   * const address = "{{wallet_address}}";
-   * const nfts = await contract.getOwned(address);
-   * console.log(nfts);
-   * ```
-   *
-   * @returns The NFT metadata for all NFTs in the contract.
-   */
-  public async getOwned(_address?: string): Promise<EditionMetadataOwner[]> {
-    const address = _address
-      ? _address
-      : await this.contractWrapper.getSignerAddress();
-    const maxId = await this.contractWrapper.readContract.nextTokenIdToMint();
-    const balances = await this.contractWrapper.readContract.balanceOfBatch(
-      Array(maxId.toNumber()).fill(address),
-      Array.from(Array(maxId.toNumber()).keys()),
-    );
-
-    const ownedBalances = balances
-      .map((b, i) => {
-        return {
-          tokenId: i,
-          balance: b,
-        };
-      })
-      .filter((b) => b.balance.gt(0));
-    return await Promise.all(
-      ownedBalances.map(async (b) => {
-        const editionMetadata = await this.get(b.tokenId.toString());
-        return {
-          ...editionMetadata,
-          owner: address,
-          quantityOwned: b.balance,
-        };
-      }),
-    );
   }
 
   /**
@@ -194,12 +122,9 @@ export class Erc1155<
    * @example
    * ```javascript
    * // Address of the wallet to check NFT balance
-   * const address = "{{wallet_address}}";
-   * // Id of the NFT to check
-   * const tokenId = 0;
-   *
-   * const balance = await contract.balanceOf(address, tokenId);
-   * console.log(balance);
+   * const walletAddress = "{{wallet_address}}";
+   * const tokenId = 0; // Id of the NFT to check
+   * const balance = await contract.balanceOf(walletAddress, tokenId);
    * ```
    */
   public async balanceOf(
@@ -244,12 +169,8 @@ export class Erc1155<
    * ```javascript
    * // Address of the wallet you want to send the NFT to
    * const toAddress = "{{wallet_address}}";
-   *
-   * // The token ID of the NFT you want to send
-   * const tokenId = "0";
-   * // How many copies of the NFTs to transfer
-   * const amount = 3;
-   *
+   * const tokenId = "0"; // The token ID of the NFT you want to send
+   * const amount = 3; // How many copies of the NFTs to transfer
    * await contract.transfer(toAddress, tokenId, amount);
    * ```
    */
@@ -364,13 +285,35 @@ export class Erc1155<
    * @internal
    * @param tokenId - the token Id to fetch
    */
-  protected async getTokenMetadata(
-    tokenId: BigNumberish,
-  ): Promise<NFTMetadata> {
+  public async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.uri(tokenId);
     if (!tokenUri) {
       throw new NotFoundError();
     }
     return fetchTokenMetadata(tokenId, tokenUri, this.storage);
+  }
+
+  private detectErc1155Enumerable(): Erc1155Enumerable | undefined {
+    if (
+      detectContractFeature<BaseERC1155 & IERC1155Enumerable>(
+        this.contractWrapper,
+        "ERC1155Enumerable",
+      )
+    ) {
+      return new Erc1155Enumerable(this, this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc1155Mintable(): Erc1155Mintable | undefined {
+    if (
+      detectContractFeature<IMintableERC1155>(
+        this.contractWrapper,
+        "ERC1155Mintable",
+      )
+    ) {
+      return new Erc1155Mintable(this, this.contractWrapper, this.storage);
+    }
+    return undefined;
   }
 }

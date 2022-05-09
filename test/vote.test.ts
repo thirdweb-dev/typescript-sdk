@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
-import { sdk, signers } from "./before.test";
+import { sdk, signers } from "./before-setup";
 import { Token, Vote } from "../src";
 
 global.fetch = require("node-fetch");
@@ -25,7 +25,7 @@ describe("Vote Contract", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    const tokenContractAddress = await sdk.deployer.deployContract(
+    const tokenContractAddress = await sdk.deployer.deployBuiltInContract(
       Token.contractType,
       {
         name: "DAOToken #1",
@@ -34,7 +34,7 @@ describe("Vote Contract", async () => {
       },
     );
     currencyContract = sdk.getToken(tokenContractAddress);
-    const voteContractAddress = await sdk.deployer.deployContract(
+    const voteContractAddress = await sdk.deployer.deployBuiltInContract(
       Vote.contractType,
       {
         name: "DAO #1",
@@ -101,7 +101,6 @@ describe("Vote Contract", async () => {
   });
   it("should be able to execute proposal even when `executions` is not passed", async () => {
     await sdk.updateSignerOrProvider(samWallet);
-    console.log(samWallet.address);
     await currencyContract.delegateTo(samWallet.address);
     const proposalId = (await voteContract.propose("Mint Tokens")).id;
     await voteContract.vote(proposalId.toString(), 1);
@@ -120,15 +119,11 @@ describe("Vote Contract", async () => {
     for (let i = 0; i <= 10; i++) {
       const current = await provider.getBlock(latest.number - i);
       const previous = await provider.getBlock(latest.number - i - 1);
-      console.log(current.timestamp, previous.timestamp);
-      console.log(current.timestamp - previous.timestamp);
-
       const diff = current.timestamp - previous.timestamp;
       blockTimes.push(diff);
     }
 
     const sum = blockTimes.reduce((result, a) => result + a, 0);
-    console.log(sum / blockTimes.length);
   });
 
   it("should permit a proposal to be passed if it receives the right votes", async () => {

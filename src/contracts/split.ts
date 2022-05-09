@@ -1,9 +1,5 @@
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import {
-  IERC20__factory,
-  Split as SplitContract,
-  Split__factory,
-} from "contracts";
+import { IERC20, Split as SplitContract } from "contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   ContractInterceptor,
@@ -16,11 +12,12 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/currency";
 import { fetchCurrencyValue } from "../common/currency";
-import { BigNumber } from "ethers";
+import { BigNumber, Contract } from "ethers";
 import { SplitRecipient } from "../types/SplitRecipient";
 import { SplitsContractSchema } from "../schema/contracts/splits";
 import { GasCostEstimator } from "../core/classes";
 import { ContractEvents } from "../core/classes/contract-events";
+import ERC20Abi from "../../abis/IERC20.json";
 
 /**
  * Create custom royalty splits to distribute funds.
@@ -40,7 +37,7 @@ import { ContractEvents } from "../core/classes/contract-events";
  */
 export class Split implements UpdateableNetwork {
   static contractType = "split" as const;
-  static contractFactory = Split__factory;
+  static contractAbi = require("../../abis/Split.json");
   /**
    * @internal
    */
@@ -66,7 +63,7 @@ export class Split implements UpdateableNetwork {
     contractWrapper = new ContractWrapper<SplitContract>(
       network,
       address,
-      Split.contractFactory.abi,
+      Split.contractAbi,
       options,
     ),
   ) {
@@ -217,10 +214,11 @@ export class Split implements UpdateableNetwork {
     walletAddress: string,
     tokenAddress: string,
   ): Promise<CurrencyValue> {
-    const erc20 = IERC20__factory.connect(
+    const erc20 = new Contract(
       tokenAddress,
+      ERC20Abi,
       this.contractWrapper.getProvider(),
-    );
+    ) as IERC20;
     const walletBalance = await erc20.balanceOf(this.getAddress());
     const totalReleased = await this.contractWrapper.readContract[
       "totalReleased(address)"

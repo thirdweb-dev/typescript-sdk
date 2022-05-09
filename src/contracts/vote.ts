@@ -1,4 +1,4 @@
-import { IERC20__factory, VoteERC20, VoteERC20__factory } from "contracts";
+import { IERC20, VoteERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import {
   ContractInterceptor,
@@ -17,7 +17,7 @@ import {
   VoteSettings,
 } from "../types/vote";
 import { fetchCurrencyMetadata, fetchCurrencyValue } from "../common/currency";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
 import { VoteType } from "../enums";
 import deepEqual from "deep-equal";
 import { CurrencyValue } from "../types/currency";
@@ -26,6 +26,7 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ProposalCreatedEvent } from "contracts/VoteERC20";
+import ERC20Abi from "../../abis/IERC20.json";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -45,7 +46,7 @@ import { ProposalCreatedEvent } from "contracts/VoteERC20";
  */
 export class Vote implements UpdateableNetwork {
   static contractType = "vote" as const;
-  static contractFactory = VoteERC20__factory;
+  static contractAbi = require("../../abis/VoteERC20.json");
   /**
    * @internal
    */
@@ -71,7 +72,7 @@ export class Vote implements UpdateableNetwork {
     contractWrapper = new ContractWrapper<VoteERC20>(
       network,
       address,
-      Vote.contractFactory.abi,
+      Vote.contractAbi,
       options,
     ),
   ) {
@@ -268,10 +269,11 @@ export class Vote implements UpdateableNetwork {
    * @returns - The balance of the project in the native token of the chain
    */
   public async balanceOfToken(tokenAddress: string): Promise<CurrencyValue> {
-    const erc20 = IERC20__factory.connect(
+    const erc20 = new Contract(
       tokenAddress,
+      ERC20Abi,
       this.contractWrapper.getProvider(),
-    );
+    ) as IERC20;
     return await fetchCurrencyValue(
       this.contractWrapper.getProvider(),
       tokenAddress,

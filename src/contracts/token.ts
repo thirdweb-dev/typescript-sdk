@@ -1,26 +1,30 @@
 import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
-import { TokenERC20, TokenERC20__factory } from "contracts";
+import { TokenERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {
-  ContractInterceptor,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
 } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Erc20 } from "../core/classes/erc-20";
 import { TokenMintInput } from "../schema/tokens/token";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { GasCostEstimator } from "../core/classes";
+import {
+  GasCostEstimator,
+  ContractInterceptor,
+  ContractEncoder,
+  ContractEvents,
+  ContractPlatformFee,
+  Erc20,
+} from "../core/classes";
 import { Amount, CurrencyValue } from "../types";
 import { TokenERC20History } from "../core/classes/erc-20-history";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting";
 import { getRoleHash } from "../common";
-import { AddressZero } from "@ethersproject/constants";
+import { Erc20Mintable } from "../core/classes/erc-20-mintable";
+import { Erc20BatchMintable } from "../core/classes/erc-20-batch-mintable";
+import { constants } from "ethers";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -41,11 +45,14 @@ import { AddressZero } from "@ethersproject/constants";
 export class Token extends Erc20<TokenERC20> {
   static contractType = "token" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractFactory = TokenERC20__factory;
+  static contractAbi = require("../../abis/TokenERC20.json");
   /**
    * @internal
    */
   static schema = TokenErc20ContractSchema;
+
+  private _mint = this.mint as Erc20Mintable;
+  private _batchMint = this._mint.batch as Erc20BatchMintable;
 
   public metadata: ContractMetadata<TokenERC20, typeof Token.schema>;
   public roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
@@ -82,7 +89,7 @@ export class Token extends Erc20<TokenERC20> {
     contractWrapper = new ContractWrapper<TokenERC20>(
       network,
       address,
-      Token.contractFactory.abi,
+      Token.contractAbi,
       options,
     ),
   ) {
@@ -152,7 +159,7 @@ export class Token extends Erc20<TokenERC20> {
   public async isTransferRestricted(): Promise<boolean> {
     const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
       getRoleHash("transfer"),
-      AddressZero,
+      constants.AddressZero,
     );
     return !anyoneCanTransfer;
   }
@@ -166,8 +173,8 @@ export class Token extends Erc20<TokenERC20> {
    *
    * @remarks See {@link Token.mintTo}
    */
-  public async mint(amount: Amount): Promise<TransactionResult> {
-    return this.mintTo(await this.contractWrapper.getSignerAddress(), amount);
+  public async mintToSelf(amount: Amount): Promise<TransactionResult> {
+    return this._mint.to(await this.contractWrapper.getSignerAddress(), amount);
   }
 
   /**
@@ -184,12 +191,7 @@ export class Token extends Erc20<TokenERC20> {
    * ```
    */
   public async mintTo(to: string, amount: Amount): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("mintTo", [
-        to,
-        await this.normalizeAmount(amount),
-      ]),
-    };
+    return this._mint.to(to, amount);
   }
 
   /**
@@ -215,16 +217,7 @@ export class Token extends Erc20<TokenERC20> {
    * ```
    */
   public async mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult> {
-    const encoded = [];
-    for (const arg of args) {
-      encoded.push(
-        this.contractWrapper.readContract.interface.encodeFunctionData(
-          "mintTo",
-          [arg.toAddress, await this.normalizeAmount(arg.amount)],
-        ),
-      );
-    }
-    return { receipt: await this.contractWrapper.multiCall(encoded) };
+    return this._batchMint.to(args);
   }
 
   /**

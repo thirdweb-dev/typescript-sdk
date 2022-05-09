@@ -35,31 +35,31 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [contractFactory](./sdk.nftcollection.contractfactory.md) | <code>static</code> | typeof TokenERC721\_\_factory |  |
+|  [contractAbi](./sdk.nftcollection.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.nftcollection.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.nftcollection.contracttype.md) | <code>static</code> | "nft-collection" |  |
 |  [encoder](./sdk.nftcollection.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;TokenERC721&gt; |  |
 |  [estimator](./sdk.nftcollection.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TokenERC721&gt; |  |
 |  [events](./sdk.nftcollection.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;TokenERC721&gt; |  |
-|  [getAll](./sdk.nftcollection.getall.md) |  | (queryParams?: import("..").[QueryAllParams](./sdk.queryallparams.md) \| undefined) =&gt; Promise&lt;import("../schema").[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt; |  |
-|  [getOwned](./sdk.nftcollection.getowned.md) |  | (\_address?: string \| undefined) =&gt; Promise&lt;import("../schema").[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->\[\]&gt; |  |
-|  [getOwnedTokenIds](./sdk.nftcollection.getownedtokenids.md) |  | (\_address?: string \| undefined) =&gt; Promise&lt;import("ethers").BigNumber\[\]&gt; |  |
 |  [metadata](./sdk.nftcollection.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC721, typeof NFTCollection.schema&gt; |  |
-|  [mintBatch](./sdk.nftcollection.mintbatch.md) |  | (metadatas: (string \| { \[x: string\]: import("../core").[Json](./sdk.json.md)<!-- -->; description?: string \| undefined; image?: any; external\_url?: any; animation\_url?: any; background\_color?: string \| undefined; properties?: Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt; \| Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt;\[\] \| undefined; attributes?: Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt; \| Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt;\[\] \| undefined; name: string; })\[\]) =&gt; Promise&lt;import("../core").[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;import("../schema").[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;\[\]&gt; | Mint Many NFTs to the connected wallet |
-|  [mintBatchTo](./sdk.nftcollection.mintbatchto.md) |  | (to: string, metadatas: (string \| { \[x: string\]: import("../core").[Json](./sdk.json.md)<!-- -->; description?: string \| undefined; image?: any; external\_url?: any; animation\_url?: any; background\_color?: string \| undefined; properties?: Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt; \| Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt;\[\] \| undefined; attributes?: Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt; \| Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt;\[\] \| undefined; name: string; })\[\]) =&gt; Promise&lt;import("../core").[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;import("../schema").[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;\[\]&gt; | Mint Many unique NFTs |
-|  [mintTo](./sdk.nftcollection.mintto.md) |  | (to: string, metadata: string \| { \[x: string\]: import("../core").[Json](./sdk.json.md)<!-- -->; description?: string \| undefined; image?: any; external\_url?: any; animation\_url?: any; background\_color?: string \| undefined; properties?: Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt; \| Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt;\[\] \| undefined; attributes?: Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt; \| Record&lt;string, import("../core").[Json](./sdk.json.md)<!-- -->&gt;\[\] \| undefined; name: string; }) =&gt; Promise&lt;import("../core").[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;import("../schema").[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;&gt; | Mint a unique NFT |
 |  [platformFee](./sdk.nftcollection.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;TokenERC721&gt; |  |
 |  [primarySale](./sdk.nftcollection.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;TokenERC721&gt; |  |
 |  [roles](./sdk.nftcollection.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC721, typeof [NFTCollection.contractRoles](./sdk.nftcollection.contractroles.md)<!-- -->\[number\]&gt; |  |
 |  [royalty](./sdk.nftcollection.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;TokenERC721, typeof NFTCollection.schema&gt; | Configure royalties |
 |  [signature](./sdk.nftcollection.signature.md) |  | [Erc721SignatureMinting](./sdk.erc721signatureminting.md) | Signature Minting |
-|  [totalSupply](./sdk.nftcollection.totalsupply.md) |  | () =&gt; Promise&lt;import("ethers").BigNumber&gt; | Get the number of NFTs minted |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [burn(tokenId)](./sdk.nftcollection.burn.md) |  | Burn a single NFT |
+|  [getAll(queryParams)](./sdk.nftcollection.getall.md) |  | Get All Minted NFTs |
+|  [getOwned(walletAddress)](./sdk.nftcollection.getowned.md) |  | Get Owned NFTs |
+|  [getOwnedTokenIds(walletAddress)](./sdk.nftcollection.getownedtokenids.md) |  |  |
 |  [isTransferRestricted()](./sdk.nftcollection.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
+|  [mintBatch(metadata)](./sdk.nftcollection.mintbatch.md) |  | Mint Many unique NFTs |
+|  [mintBatchTo(walletAddress, metadata)](./sdk.nftcollection.mintbatchto.md) |  | Mint Many unique NFTs |
+|  [mintTo(walletAddress, metadata)](./sdk.nftcollection.mintto.md) |  | Mint a unique NFT |
 |  [mintToSelf(metadata)](./sdk.nftcollection.minttoself.md) |  | Mint a unique NFT |
+|  [totalSupply()](./sdk.nftcollection.totalsupply.md) |  | Get the number of NFTs minted |
 

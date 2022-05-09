@@ -1,14 +1,8 @@
 import { IStorage } from "../interfaces/IStorage";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
-import {
-  DropERC20,
-  DropERC20__factory,
-  DropERC721,
-  IERC20,
-  IERC20__factory,
-} from "contracts";
-import { BigNumber, ethers } from "ethers";
+import { DropERC20, DropERC721, IERC20, IERC20Metadata } from "contracts";
+import { BigNumber, ethers, constants } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import { Amount, ClaimCondition, ClaimConditionInput } from "../../types";
@@ -21,12 +15,13 @@ import {
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
-import { MaxUint256 } from "@ethersproject/constants";
+
 import { isBrowser } from "../../common/utils";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
-import { implementsInterface } from "../../common/feature-detection";
+import { detectContractFeature } from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
+import ERC20Abi from "../../../abis/IERC20.json";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -231,7 +226,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
 
     if (lastClaimedTimestamp.gt(0) && now.lt(timestampForNextClaim)) {
       // contract will return MaxUint256 if user has already claimed and cannot claim again
-      if (timestampForNextClaim.eq(MaxUint256)) {
+      if (timestampForNextClaim.eq(constants.MaxUint256)) {
         reasons.push(ClaimEligibility.AlreadyClaimed);
       } else {
         reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
@@ -252,7 +247,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
         const erc20 = new ContractWrapper<IERC20>(
           provider,
           claimCondition.currencyAddress,
-          IERC20__factory.abi,
+          ERC20Abi,
           {},
         );
         const balance = await erc20.readContract.balanceOf(addressToCheck);
@@ -371,12 +366,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
    *****************************************/
 
   private async getTokenDecimals(): Promise<number> {
-    if (
-      implementsInterface<DropERC20>(
-        this.contractWrapper,
-        DropERC20__factory.createInterface(),
-      )
-    ) {
+    if (detectContractFeature<IERC20Metadata>(this.contractWrapper, "ERC20")) {
       return this.contractWrapper.readContract.decimals();
     } else {
       return Promise.resolve(0);

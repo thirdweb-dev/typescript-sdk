@@ -33,10 +33,8 @@ Transfer tokens from the connected wallet to another wallet.
 ```javascript
 // Address of the wallet you want to send the tokens to
 const toAddress = "0x...";
-
 // The amount of tokens you want to send
 const amount = 0.1;
-
 await contract.transfer(toAddress, amount);
 ```
 

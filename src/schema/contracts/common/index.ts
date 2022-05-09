@@ -4,8 +4,8 @@ import {
   FileBufferOrStringSchema,
   JsonSchema,
 } from "../../shared";
-import { AddressZero } from "@ethersproject/constants";
 import { z } from "zod";
+import { constants } from "ethers";
 
 /**
  * @internal
@@ -45,7 +45,7 @@ export const CommonRoyaltySchema = z.object({
    * to this address.
    * @internalremarks used by OpenSea "fee_recipient"
    */
-  fee_recipient: AddressSchema.default(AddressZero),
+  fee_recipient: AddressSchema.default(constants.AddressZero),
 });
 
 /**
@@ -69,7 +69,7 @@ export const CommonPlatformFeeSchema = z.object({
   /**
    * platform fee recipient address
    */
-  platform_fee_recipient: AddressSchema.default(AddressZero),
+  platform_fee_recipient: AddressSchema.default(constants.AddressZero),
 });
 
 /**

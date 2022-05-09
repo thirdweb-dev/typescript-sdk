@@ -1,42 +1,45 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, constants } from "ethers";
 import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
-import { AddressZero } from "@ethersproject/constants";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { fetchTokenMetadata } from "../../common/nft";
-import { implementsInterface, NotFoundError } from "../../common";
+import { detectContractFeature, NotFoundError } from "../../common";
 import {
   DropERC721,
-  ERC721,
-  ERC721Enumerable,
-  ERC721Enumerable__factory,
-  ERC721Metadata,
+  IERC721Supply,
   IMintableERC721,
-  IMintableERC721__factory,
   TokenERC721,
 } from "contracts";
-import { Erc721Enumerable } from "./erc-721-enumerable";
+import { Erc721Supply } from "./erc-721-supply";
 import { Erc721Mintable } from "./erc-721-mintable";
+import { BaseERC721 } from "../../types/eips";
+import { FEATURE_NFT } from "../../constants/erc721-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
- * Standard ERC721 functions
+ * Standard ERC721 NFT functions
+ * @remarks Basic functionality for a ERC721 contract that handles IPFS storage for you.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("{{contract_address}}");
+ * await contract.nft.transfer(walletAddress, tokenId);
+ * ```
  * @public
  */
 export class Erc721<
-  T extends DropERC721 | TokenERC721 | (ERC721 & ERC721Metadata),
-> implements UpdateableNetwork
+  T extends DropERC721 | TokenERC721 | BaseERC721 = BaseERC721,
+> implements UpdateableNetwork, DetectableFeature
 {
+  featureName = FEATURE_NFT.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
 
-  public query:
-    | Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721>
-    | undefined;
-  public mint: Erc721Mintable<IMintableERC721> | undefined;
+  public query: Erc721Supply | undefined;
+  public mint: Erc721Mintable | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -78,15 +81,15 @@ export class Erc721<
    *
    * @example
    * ```javascript
-   * const nft = await contract.get("0");
-   * console.log(nft);
+   * const tokenId = 0;
+   * const nft = await contract.get(tokenId);
    * ```
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
    */
   public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
     const [owner, metadata] = await Promise.all([
-      this.ownerOf(tokenId).catch(() => AddressZero),
+      this.ownerOf(tokenId).catch(() => constants.AddressZero),
       this.getTokenMetadata(tokenId),
     ]);
     return { owner, metadata };
@@ -109,10 +112,8 @@ export class Erc721<
    *
    * @example
    * ```javascript
-   * // Address of the wallet to check NFT balance
-   * const address = "{{wallet_address}}";
-   *
-   * const balance = await contract.balanceOf(address);
+   * const walletAddress = "{{wallet_address}}";
+   * const balance = await contract.balanceOf(walletAddress);
    * console.log(balance);
    * ```
    */
@@ -150,13 +151,9 @@ export class Erc721<
    *
    * @example
    * ```javascript
-   * // Address of the wallet you want to send the NFT to
-   * const toAddress = "{{wallet_address}}";
-   *
-   * // The token ID of the NFT you want to send
-   * const tokenId = "0";
-   *
-   * await contract.transfer(toAddress, tokenId);
+   * const walletAddress = "{{wallet_address}}";
+   * const tokenId = 0;
+   * await contract.transfer(walletAddress, tokenId);
    * ```
    */
   public async transfer(
@@ -208,25 +205,23 @@ export class Erc721<
     return fetchTokenMetadata(tokenId, tokenUri, this.storage);
   }
 
-  private detectErc721Enumerable():
-    | Erc721Enumerable<ERC721Metadata & ERC721Enumerable & ERC721>
-    | undefined {
+  private detectErc721Enumerable(): Erc721Supply | undefined {
     if (
-      implementsInterface<ERC721Metadata & ERC721Enumerable & ERC721>(
+      detectContractFeature<BaseERC721 & IERC721Supply>(
         this.contractWrapper,
-        ERC721Enumerable__factory.createInterface(),
+        "ERC721Supply",
       )
     ) {
-      return new Erc721Enumerable(this, this.contractWrapper);
+      return new Erc721Supply(this, this.contractWrapper);
     }
     return undefined;
   }
 
-  private detectErc721Mintable(): Erc721Mintable<IMintableERC721> | undefined {
+  private detectErc721Mintable(): Erc721Mintable | undefined {
     if (
-      implementsInterface<IMintableERC721>(
+      detectContractFeature<IMintableERC721>(
         this.contractWrapper,
-        IMintableERC721__factory.createInterface(),
+        "ERC721Mintable",
       )
     ) {
       return new Erc721Mintable(this, this.contractWrapper, this.storage);

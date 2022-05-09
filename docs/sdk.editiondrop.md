@@ -36,7 +36,7 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [claimConditions](./sdk.editiondrop.claimconditions.md) |  | [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Configure claim conditions for each NFT |
-|  [contractFactory](./sdk.editiondrop.contractfactory.md) | <code>static</code> | typeof DropERC1155\_\_factory |  |
+|  [contractAbi](./sdk.editiondrop.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.editiondrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.editiondrop.contracttype.md) | <code>static</code> | "edition-drop" |  |
 |  [encoder](./sdk.editiondrop.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;DropERC1155&gt; |  |
@@ -57,5 +57,8 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 |  [claim(tokenId, quantity, proofs)](./sdk.editiondrop.claim.md) |  | Claim a token to the connected wallet |
 |  [claimTo(destinationAddress, tokenId, quantity, proofs)](./sdk.editiondrop.claimto.md) |  | Claim NFTs to a specific Wallet |
 |  [createBatch(metadatas)](./sdk.editiondrop.createbatch.md) |  | Create a batch of NFTs to be claimed in the future |
+|  [getAll(queryParams)](./sdk.editiondrop.getall.md) |  | Get All NFTs |
+|  [getOwned(walletAddress)](./sdk.editiondrop.getowned.md) |  | Get Owned NFTs |
+|  [getTotalCount()](./sdk.editiondrop.gettotalcount.md) |  | Get the number of NFTs minted |
 |  [isTransferRestricted()](./sdk.editiondrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 

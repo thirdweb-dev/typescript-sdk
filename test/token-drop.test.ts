@@ -3,7 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
-import { expectError, sdk, signers, storage } from "./before.test";
+import { expectError, sdk, signers, storage } from "./before-setup";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
 import { Token } from "../src";
@@ -30,20 +30,22 @@ describe("Token Drop Contract", async () => {
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployer.deployContract(TokenDrop.contractType, {
-      name: `Testing drop from SDK`,
-      description: "Test contract from tests",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      primary_sale_recipient: adminWallet.address,
-      platform_fee_basis_points: 10,
-      platform_fee_recipient: AddressZero,
-    });
+    const address = await sdk.deployer.deployBuiltInContract(
+      TokenDrop.contractType,
+      {
+        name: `Testing drop from SDK`,
+        description: "Test contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: adminWallet.address,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: AddressZero,
+      },
+    );
     dropContract = sdk.getTokenDrop(address);
   });
 
   it("should allow a snapshot to be set", async () => {
-    console.log("Setting claim condition");
     await dropContract.claimConditions.set([
       {
         startTime: new Date(Date.now() / 2),
@@ -55,11 +57,9 @@ describe("Token Drop Contract", async () => {
         snapshot: [bobWallet.address],
       },
     ]);
-    console.log("Claim condition set");
 
     const metadata = await dropContract.metadata.get();
     const merkles = metadata.merkle;
-    console.log(merkles);
 
     expect(merkles).have.property(
       "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
@@ -269,7 +269,6 @@ describe("Token Drop Contract", async () => {
         tree.getHexRoot(),
       );
       expect(verified).to.eq(true);
-      console.log("Leaf verified =", leaf, verified);
     }
   });
 
@@ -335,7 +334,6 @@ describe("Token Drop Contract", async () => {
         },
       ]);
       const active = await dropContract.claimConditions.getActive();
-      console.log(active);
     });
 
     it("should check if its been long enough since the last claim", async () => {
@@ -389,7 +387,7 @@ describe("Token Drop Contract", async () => {
     });
 
     it("should check if an address has enough erc20 currency", async () => {
-      const currencyAddress = await sdk.deployer.deployContract(
+      const currencyAddress = await sdk.deployer.deployBuiltInContract(
         Token.contractType,
         {
           name: "test",
@@ -573,7 +571,6 @@ describe("Token Drop Contract", async () => {
     expect(oldConditions.length).to.be.equal(2);
     await dropContract.claimConditions.update(0, { waitInSeconds: 10 });
     let updatedConditions = await dropContract.claimConditions.getAll();
-    console.log(updatedConditions[0]);
     expect(updatedConditions[0].maxQuantity).to.be.deep.equal("1.2");
     expect(updatedConditions[0].waitInSeconds).to.be.deep.equal(
       BigNumber.from(10),

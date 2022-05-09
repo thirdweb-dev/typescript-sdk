@@ -22,6 +22,5 @@ The token metadata
 
 ```javascript
 const token = await contract.get();
-console.log(token);
 ```
 

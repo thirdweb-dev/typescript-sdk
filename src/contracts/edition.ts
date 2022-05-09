@@ -1,11 +1,11 @@
 import { Erc1155 } from "../core/classes/erc-1155";
-import { TokenERC1155, TokenERC1155__factory } from "contracts";
+import { TokenERC1155 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import {
-  ContractInterceptor,
+  Erc1155Enumerable,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -17,17 +17,21 @@ import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
 import {
   EditionMetadata,
   EditionMetadataOrUri,
+  EditionMetadataOwner,
 } from "../schema/tokens/edition";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import {
+  ContractEncoder,
+  ContractEvents,
+  ContractInterceptor,
+  ContractPlatformFee,
+} from "../core/classes";
+import { BigNumber, BigNumberish, constants } from "ethers";
 import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { uploadOrExtractURI, uploadOrExtractURIs } from "../common/nft";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { TokensMintedEvent } from "contracts/TokenERC1155";
 import { getRoleHash } from "../common";
-import { AddressZero } from "@ethersproject/constants";
+import { QueryAllParams } from "../types";
+import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
+import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -48,7 +52,11 @@ import { AddressZero } from "@ethersproject/constants";
 export class Edition extends Erc1155<TokenERC1155> {
   static contractType = "edition" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractFactory = TokenERC1155__factory;
+  static contractAbi = require("../../abis/TokenERC1155.json");
+
+  private _query = this.query as Erc1155Enumerable;
+  private _mint = this.mint as Erc1155Mintable;
+  private _batchMint = this._mint.batch as Erc1155BatchMintable;
   /**
    * @internal
    */
@@ -110,7 +118,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     contractWrapper = new ContractWrapper<TokenERC1155>(
       network,
       address,
-      Edition.contractFactory.abi,
+      Edition.contractAbi,
       options,
     ),
   ) {
@@ -140,12 +148,59 @@ export class Edition extends Erc1155<TokenERC1155> {
    *******************************/
 
   /**
+   * Get All Minted NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this contract.
+   *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await contract.getAll();
+   * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The NFT metadata for all NFTs queried.
+   */
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<EditionMetadata[]> {
+    return this._query.all(queryParams);
+  }
+
+  /**
+   * Get Owned NFTs
+   *
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await contract.getOwned(address);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the contract.
+   */
+  public async getOwned(
+    walletAddress?: string,
+  ): Promise<EditionMetadataOwner[]> {
+    return this._query.owned(walletAddress);
+  }
+
+  /**
+   * {@inheritDoc Erc1155Enumerable.getTotalCount}
+   */
+  public async getTotalCount(): Promise<BigNumber> {
+    return this._query.getTotalCount();
+  }
+
+  /**
    * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
     const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
       getRoleHash("transfer"),
-      AddressZero,
+      constants.AddressZero,
     );
     return !anyoneCanTransfer;
   }
@@ -159,10 +214,10 @@ export class Edition extends Erc1155<TokenERC1155> {
    *
    * @remarks See {@link Edition.mintTo}
    */
-  public async mint(
+  public async mintToSelf(
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    return this.mintTo(
+    return this._mint.to(
       await this.contractWrapper.getSignerAddress(),
       metadataWithSupply,
     );
@@ -200,29 +255,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     to: string,
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    const uri = await uploadOrExtractURI(
-      metadataWithSupply.metadata,
-      this.storage,
-    );
-    const receipt = await this.contractWrapper.sendTransaction("mintTo", [
-      to,
-      ethers.constants.MaxUint256,
-      uri,
-      metadataWithSupply.supply,
-    ]);
-    const event = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
-      receipt?.logs,
-    );
-    if (event.length === 0) {
-      throw new Error("TokenMinted event not found");
-    }
-    const id = event[0].args.tokenIdMinted;
-    return {
-      id,
-      receipt,
-      data: () => this.get(id.toString()),
-    };
+    return this._mint.to(to, metadataWithSupply);
   }
 
   /**
@@ -235,7 +268,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    return this.mintAdditionalSupplyTo(
+    return this._mint.additionalSupplyTo(
       await this.contractWrapper.getSignerAddress(),
       tokenId,
       additionalSupply,
@@ -254,18 +287,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    const metadata = await this.getTokenMetadata(tokenId);
-    const receipt = await this.contractWrapper.sendTransaction("mintTo", [
-      to,
-      tokenId,
-      metadata.uri,
-      additionalSupply,
-    ]);
-    return {
-      id: BigNumber.from(tokenId),
-      receipt,
-      data: () => this.get(tokenId),
-    };
+    return this._mint.additionalSupplyTo(to, tokenId, additionalSupply);
   }
 
   /**
@@ -276,7 +298,7 @@ export class Edition extends Erc1155<TokenERC1155> {
   public async mintBatch(
     metadatas: EditionMetadataOrUri[],
   ): Promise<TransactionResultWithId<EditionMetadata>[]> {
-    return this.mintBatchTo(
+    return this._batchMint.to(
       await this.contractWrapper.getSignerAddress(),
       metadatas,
     );
@@ -319,33 +341,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     to: string,
     metadataWithSupply: EditionMetadataOrUri[],
   ): Promise<TransactionResultWithId<EditionMetadata>[]> {
-    const metadatas = metadataWithSupply.map((a) => a.metadata);
-    const supplies = metadataWithSupply.map((a) => a.supply);
-    const uris = await uploadOrExtractURIs(metadatas, this.storage);
-    const encoded = uris.map((uri, index) =>
-      this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [
-        to,
-        ethers.constants.MaxUint256,
-        uri,
-        supplies[index],
-      ]),
-    );
-    const receipt = await this.contractWrapper.multiCall(encoded);
-    const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
-      receipt.logs,
-    );
-    if (events.length === 0 || events.length < metadatas.length) {
-      throw new Error("TokenMinted event not found, minting failed");
-    }
-    return events.map((e) => {
-      const id = e.args.tokenIdMinted;
-      return {
-        id,
-        receipt,
-        data: () => this.get(id),
-      };
-    });
+    return this._batchMint.to(to, metadataWithSupply);
   }
 
   /**

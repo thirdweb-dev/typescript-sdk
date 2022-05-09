@@ -16,7 +16,7 @@ import {
   jsonProvider,
   sdk,
   signers,
-} from "./before.test";
+} from "./before-setup";
 import { isWinningBid } from "../src/common/marketplace";
 import { ethers as hardhatEthers } from "hardhat";
 
@@ -52,13 +52,13 @@ describe("Marketplace Contract", async () => {
     await sdk.updateSignerOrProvider(adminWallet);
 
     marketplaceContract = sdk.getMarketplace(
-      await sdk.deployer.deployContract(Marketplace.contractType, {
+      await sdk.deployer.deployBuiltInContract(Marketplace.contractType, {
         name: "Test Marketplace",
         seller_fee_basis_points: 0,
       }),
     );
     dummyNftContract = sdk.getNFTCollection(
-      await sdk.deployer.deployContract(NFTCollection.contractType, {
+      await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
         name: "TEST NFT",
         seller_fee_basis_points: 200,
         fee_recipient: adminWallet.address,
@@ -80,7 +80,7 @@ describe("Marketplace Contract", async () => {
       },
     ]);
     dummyBundleContract = sdk.getEdition(
-      await sdk.deployer.deployContract(Edition.contractType, {
+      await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "TEST BUNDLE",
         seller_fee_basis_points: 100,
         primary_sale_recipient: adminWallet.address,
@@ -102,7 +102,7 @@ describe("Marketplace Contract", async () => {
     ]);
 
     customTokenContract = sdk.getToken(
-      await sdk.deployer.deployContract(Token.contractType, {
+      await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
         primary_sale_recipient: adminWallet.address,
@@ -314,7 +314,6 @@ describe("Marketplace Contract", async () => {
     it("should return only active listings", async () => {
       const before = await marketplaceContract.getActiveListings();
       expect(before.length).to.eq(1);
-      console.log("before", before);
       await sdk.updateSignerOrProvider(samWallet);
       await marketplaceContract.buyoutListing(directListingId, 1);
       const afterDirectBuyout = await marketplaceContract.getActiveListings();
@@ -403,15 +402,11 @@ describe("Marketplace Contract", async () => {
         new Date(Date.now() + 60 * 60 * 24 * 10 * 1000),
       );
 
-      console.log("Offer made");
-
       await sdk.updateSignerOrProvider(adminWallet);
       await marketplaceContract.direct.acceptOffer(
         directListingId,
         bobWallet.address,
       );
-
-      console.log("Offer accepted");
 
       const balance = await dummyNftContract.balanceOf(bobWallet.address);
       assert.equal(

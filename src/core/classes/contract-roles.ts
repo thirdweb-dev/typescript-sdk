@@ -3,16 +3,27 @@ import { getRoleHash, Role } from "../../common/role";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { MissingRoleError } from "../../common/error";
-import { AccessControlEnumerable } from "contracts";
+import { IPermissionsEnumerable } from "contracts";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
 
 /**
- * Handles Contract roles and permissions
+ * Handle contract permissions
+ * @remarks Configure roles and permissions for a contract, to restrict certain actions.
+ * @example
+ * ```javascript
+ * const contract = sdk.getContract("{{contract_address}}");
+ * const rolesAndMembers = await contract.roles.getAll();
+ * await contract.roles.grantRole("admin", "0x...");
+ * ```
  * @public
  */
 export class ContractRoles<
-  TContract extends AccessControlEnumerable,
+  TContract extends IPermissionsEnumerable,
   TRole extends Role,
-> {
+> implements DetectableFeature
+{
+  featureName = FEATURE_PERMISSIONS.name;
   private contractWrapper;
   private readonly roles;
 
