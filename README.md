@@ -125,7 +125,7 @@ yarn install
 yarn build
 ```
 
-After building, to run the tests:
+After building, to run the tests (requires a local hardhat node running):
 
 ```bash
 yarn test:all
