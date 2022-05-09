@@ -94,15 +94,15 @@ export class SmartContract<
   /**
    * Auto-detects ERC20 standard functions.
    */
-  public token: Erc20<BaseERC20> | undefined;
+  public token: Erc20 | undefined;
   /**
    * Auto-detects ERC721 standard functions.
    */
-  public nft: Erc721<BaseERC721> | undefined;
+  public nft: Erc721 | undefined;
   /**
    * Auto-detects ERC1155 standard functions.
    */
-  public edition: Erc1155<BaseERC1155> | undefined;
+  public edition: Erc1155 | undefined;
 
   constructor(
     network: NetworkOrSignerOrProvider,
