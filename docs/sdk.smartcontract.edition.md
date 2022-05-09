@@ -12,5 +12,5 @@ Auto-detects ERC1155 standard functions.
 <b>Signature:</b>
 
 ```typescript
-edition: Erc1155<BaseERC1155> | undefined;
+edition: Erc1155 | undefined;
 ```

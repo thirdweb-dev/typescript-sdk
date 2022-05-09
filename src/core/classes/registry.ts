@@ -49,7 +49,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
   ): Promise<TransactionResult> {
     const deployerAddress = await this.getSignerAddress();
     return {
-      receipt: await this.byocRegistry.sendTransaction("add", [
+      receipt: await this.sendTransaction("add", [
         deployerAddress,
         contractAddress,
       ]),
@@ -61,7 +61,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
   ): Promise<TransactionResult> {
     const deployerAddress = await this.getSignerAddress();
     return {
-      receipt: await this.byocRegistry.sendTransaction("remove", [
+      receipt: await this.sendTransaction("remove", [
         deployerAddress,
         contractAddress,
       ]),
