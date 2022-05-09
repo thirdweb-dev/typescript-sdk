@@ -3,6 +3,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { constants, utils } from "ethers";
+import { TransactionResult } from "..";
 
 /**
  * @internal
@@ -41,5 +42,29 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
         (adr) =>
           utils.isAddress(adr) && adr.toLowerCase() !== constants.AddressZero,
       );
+  }
+
+  public async addContract(
+    contractAddress: string,
+  ): Promise<TransactionResult> {
+    const deployerAddress = await this.getSignerAddress();
+    return {
+      receipt: await this.byocRegistry.sendTransaction("add", [
+        deployerAddress,
+        contractAddress,
+      ]),
+    };
+  }
+
+  public async removeContract(
+    contractAddress: string,
+  ): Promise<TransactionResult> {
+    const deployerAddress = await this.getSignerAddress();
+    return {
+      receipt: await this.byocRegistry.sendTransaction("remove", [
+        deployerAddress,
+        contractAddress,
+      ]),
+    };
   }
 }
