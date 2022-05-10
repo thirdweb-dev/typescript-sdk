@@ -1,4 +1,4 @@
-import { BaseContract, Event } from "ethers";
+import { BaseContract, ethers, Event } from "ethers";
 import { ContractWrapper } from "./contract-wrapper";
 
 export class ContractAnalytics<TContract extends BaseContract> {
@@ -14,25 +14,34 @@ export class ContractAnalytics<TContract extends BaseContract> {
     const event = this.contractWrapper.readContract.interface.getEvent(
       eventName as string,
     );
+    const filter = this.contractWrapper.readContract.filters[event.name];
 
-    let fromBlock = 0;
-    let toBlock = 1000;
-    const lastBlock = await this.contractWrapper.getProvider().getBlockNumber();
-    let logs: Event[] = [];
+    const fromBlock = 0;
+    const toBlock =
+      await this.contractWrapper.readContract.provider.getBlockNumber();
 
-    while (fromBlock < lastBlock) {
-      const events = await this.contractWrapper.readContract.queryFilter(
-        this.contractWrapper.readContract.filters[event.name](),
+    let events: Event[] = [];
+    const oldProvider = this.contractWrapper.getProvider();
+    try {
+      const network =
+        await this.contractWrapper.readContract.provider.getNetwork();
+      if (network.chainId !== 1337 && network.chainId !== 31337) {
+        const alchemyProvider = new ethers.providers.AlchemyProvider(
+          network.name,
+        );
+        this.contractWrapper.updateSignerOrProvider(alchemyProvider);
+      }
+
+      events = await this.contractWrapper.readContract.queryFilter(
+        filter(),
         fromBlock,
-        toBlock > lastBlock ? lastBlock : toBlock,
+        toBlock,
       );
-
-      logs = [...logs, ...events];
-
-      fromBlock += 1000;
-      toBlock += 1000;
+      this.contractWrapper.updateSignerOrProvider(oldProvider);
+    } catch (err) {
+      this.contractWrapper.updateSignerOrProvider(oldProvider);
     }
 
-    return logs;
+    return events;
   }
 }
