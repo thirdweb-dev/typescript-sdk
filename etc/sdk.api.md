@@ -895,7 +895,8 @@ export class DropErc1155ClaimConditions {
 
 // @public
 export class DropErc1155History {
-    constructor(contractWrapper: ContractWrapper<DropERC1155>);
+    // Warning: (ae-forgotten-export) The symbol "ContractAnalytics" needs to be exported by the entry point index.d.ts
+    constructor(analytics: ContractAnalytics<DropERC1155>);
     getAllClaimerAddresses(tokenId: BigNumberish): Promise<string[]>;
 }
 
@@ -918,8 +919,6 @@ export class DuplicateLeafsError extends Error {
 // @public
 export class Edition extends Erc1155<TokenERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
-    // Warning: (ae-forgotten-export) The symbol "ContractAnalytics" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     analytics: ContractAnalytics<TokenERC1155>;
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
@@ -4602,7 +4601,7 @@ export class TokenDrop extends Erc20<DropERC20> {
 
 // @public
 export class TokenERC20History {
-    constructor(contractWrapper: ContractWrapper<TokenERC20>);
+    constructor(contractWrapper: ContractWrapper<TokenERC20>, analytics: ContractAnalytics<TokenERC20>);
     getAllHolderBalances(): Promise<TokenHolderBalance[]>;
 }
 
