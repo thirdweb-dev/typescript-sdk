@@ -18,20 +18,16 @@ export class ContractAnalytics<TContract extends BaseContract> {
     let fromBlock = 0;
     let toBlock = 1000;
     const lastBlock = await this.contractWrapper.getProvider().getBlockNumber();
-    const logs: Event[] = [];
+    let logs: Event[] = [];
 
-    while (toBlock < lastBlock) {
-      try {
-        const events = await this.contractWrapper.readContract.queryFilter(
-          this.contractWrapper.readContract.filters[event.name](),
-          fromBlock,
-          toBlock,
-        );
+    while (fromBlock < lastBlock) {
+      const events = await this.contractWrapper.readContract.queryFilter(
+        this.contractWrapper.readContract.filters[event.name](),
+        fromBlock,
+        toBlock > lastBlock ? lastBlock : toBlock,
+      );
 
-        logs.concat(events);
-      } catch (err) {
-        continue;
-      }
+      logs = [...logs, ...events];
 
       fromBlock += 1000;
       toBlock += 1000;
