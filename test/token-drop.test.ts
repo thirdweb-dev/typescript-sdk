@@ -207,6 +207,17 @@ describe("Token Drop Contract", async () => {
     expect(balance.displayValue).to.eq("142.69");
   });
 
+  it("should allow claiming with a price", async () => {
+    await dropContract.claimConditions.set([
+      {
+        price: 0.1,
+      },
+    ]);
+    await dropContract.claim(100);
+    const balance = await dropContract.balance();
+    expect(balance.displayValue).to.eq("100.0");
+  });
+
   it("should allow setting max claims per wallet", async () => {
     await dropContract.claimConditions.set([
       {
