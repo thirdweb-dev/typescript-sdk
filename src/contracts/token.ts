@@ -25,6 +25,7 @@ import { getRoleHash } from "../common";
 import { Erc20Mintable } from "../core/classes/erc-20-mintable";
 import { Erc20BatchMintable } from "../core/classes/erc-20-batch-mintable";
 import { constants } from "ethers";
+import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -61,6 +62,7 @@ export class Token extends Erc20<TokenERC20> {
   public history: TokenERC20History;
   public events: ContractEvents<TokenERC20>;
   public platformFee: ContractPlatformFee<TokenERC20>;
+  public analytics: ContractAnalytics<TokenERC20>;
   /**
    * Signature Minting
    * @remarks Generate tokens that can be minted only with your own signature, attaching your own set of mint conditions.
@@ -106,6 +108,7 @@ export class Token extends Erc20<TokenERC20> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFee = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.signature = new Erc20SignatureMinting(
       this.contractWrapper,
       this.roles,

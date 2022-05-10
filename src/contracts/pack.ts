@@ -33,6 +33,7 @@ import { ContractEvents } from "../core/classes/contract-events";
 import { PackAddedEvent, PackOpenRequestedEvent } from "contracts/Pack";
 import ERC1155Abi from "../../abis/IERC1155.json";
 import ERC20Abi from "../../abis/IERC20.json";
+import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -67,6 +68,7 @@ export class Pack implements UpdateableNetwork {
   public encoder: ContractEncoder<PackContract>;
   public events: ContractEvents<PackContract>;
   public estimator: GasCostEstimator<PackContract>;
+  public analytics: ContractAnalytics<PackContract>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per pack
@@ -109,6 +111,7 @@ export class Pack implements UpdateableNetwork {
       Pack.schema,
       this.storage,
     );
+    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.roles = new ContractRoles(this.contractWrapper, Pack.contractRoles);
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.encoder = new ContractEncoder(this.contractWrapper);

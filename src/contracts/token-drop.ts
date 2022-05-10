@@ -23,6 +23,7 @@ import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 
 import { prepareClaim } from "../common/claim-conditions";
 import { getRoleHash } from "../common";
+import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -58,6 +59,7 @@ export class TokenDrop extends Erc20<DropERC20> {
   public estimator: GasCostEstimator<DropERC20>;
   public sales: ContractPrimarySale<DropERC20>;
   public platformFee: ContractPlatformFee<DropERC20>;
+  public analytics: ContractAnalytics<DropERC20>;
   /**
    * Configure claim conditions
    * @remarks Define who can claim Tokens, when and how many.
@@ -113,6 +115,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.platformFee = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.claimConditions = new DropClaimConditions<DropERC20>(
       this.contractWrapper,
       this.metadata,
