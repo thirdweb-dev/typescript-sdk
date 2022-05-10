@@ -95,4 +95,30 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
       receipt: await this.multiCall(encoded),
     };
   }
+
+  public async removeCustomContract(
+    contractAddress: string,
+  ): Promise<TransactionResult> {
+    return await this.removeCustomContracts([contractAddress]);
+  }
+
+  public async removeCustomContracts(
+    contractAddresses: string[],
+  ): Promise<TransactionResult> {
+    const deployerAddress = await this.getSignerAddress();
+
+    const encoded: string[] = [];
+    contractAddresses.forEach((address) => {
+      encoded.push(
+        this.byocRegistry.readContract.interface.encodeFunctionData("remove", [
+          deployerAddress,
+          address,
+        ]),
+      );
+    });
+
+    return {
+      receipt: await this.multiCall(encoded),
+    };
+  }
 }
