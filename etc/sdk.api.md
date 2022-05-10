@@ -871,9 +871,7 @@ export interface DirectListing {
 //
 // @public
 export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
-    // Warning: (ae-forgotten-export) The symbol "DropErc721ContractSchema" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "DropErc20ContractSchema" needs to be exported by the entry point index.d.ts
-    constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, typeof DropErc721ContractSchema | typeof DropErc20ContractSchema>, storage: IStorage);
+    constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
     canClaim(quantity: Amount, addressToCheck?: string): Promise<boolean>;
     getActive(): Promise<ClaimCondition>;
     getAll(): Promise<ClaimCondition[]>;
@@ -885,6 +883,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
 // @public
 export class DropErc1155ClaimConditions {
     // Warning: (ae-forgotten-export) The symbol "DropERC1155" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "DropErc721ContractSchema" needs to be exported by the entry point index.d.ts
     constructor(contractWrapper: ContractWrapper<DropERC1155>, metadata: ContractMetadata<DropERC1155, typeof DropErc721ContractSchema>, storage: IStorage);
     canClaim(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
     getActive(tokenId: BigNumberish): Promise<ClaimCondition>;
@@ -4507,15 +4506,12 @@ export class TokenDrop extends Erc20<DropERC20> {
     sales: ContractPrimarySale<DropERC20>;
     // (undocumented)
     static schema: {
-        deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
+        deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
         }, {
-        seller_fee_basis_points: ZodDefault<ZodNumber>;
-        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
-        }>, {
         merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
         }>, {
         symbol: ZodDefault<ZodOptional<ZodString>>;
@@ -4533,8 +4529,6 @@ export class TokenDrop extends Erc20<DropERC20> {
         merkle: Record<string, string>;
         image?: any;
         external_link?: string | undefined;
-        seller_fee_basis_points: number;
-        fee_recipient: string;
         primary_sale_recipient: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
@@ -4546,23 +4540,18 @@ export class TokenDrop extends Erc20<DropERC20> {
         merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
-        seller_fee_basis_points?: number | undefined;
-        fee_recipient?: string | undefined;
         primary_sale_recipient: string;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
         }>;
-        output: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
+        output: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
         }, {
         image: ZodOptional<ZodString>;
-        }>, {
-        seller_fee_basis_points: ZodDefault<ZodNumber>;
-        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
         }>, {
         merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
         }>, {
@@ -4574,8 +4563,6 @@ export class TokenDrop extends Erc20<DropERC20> {
         merkle: Record<string, string>;
         image?: string | undefined;
         external_link?: string | undefined;
-        seller_fee_basis_points: number;
-        fee_recipient: string;
         symbol: string;
         }, {
         [x: string]: Json;
@@ -4584,19 +4571,14 @@ export class TokenDrop extends Erc20<DropERC20> {
         merkle?: Record<string, string> | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
-        seller_fee_basis_points?: number | undefined;
-        fee_recipient?: string | undefined;
         symbol?: string | undefined;
         }>;
-        input: ZodObject<extendShape<extendShape<extendShape<    {
+        input: ZodObject<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
         }, {
-        seller_fee_basis_points: ZodDefault<ZodNumber>;
-        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
-        }>, {
         merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
         }>, {
         symbol: ZodDefault<ZodOptional<ZodString>>;
@@ -4606,8 +4588,6 @@ export class TokenDrop extends Erc20<DropERC20> {
         merkle: Record<string, string>;
         image?: any;
         external_link?: string | undefined;
-        seller_fee_basis_points: number;
-        fee_recipient: string;
         symbol: string;
         }, {
         name: string;
@@ -4615,8 +4595,6 @@ export class TokenDrop extends Erc20<DropERC20> {
         merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
-        seller_fee_basis_points?: number | undefined;
-        fee_recipient?: string | undefined;
         symbol?: string | undefined;
         }>;
     };

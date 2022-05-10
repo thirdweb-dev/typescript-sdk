@@ -6,6 +6,7 @@ import {
   constants,
   providers,
   utils,
+  ethers,
 } from "ethers";
 import {
   getNativeTokenByChainId,
@@ -112,6 +113,7 @@ export async function approveErc20Allowance(
   currencyAddress: string,
   price: BigNumber,
   quantity: BigNumberish,
+  tokenDecimals: number,
 ) {
   const signer = contractToApprove.getSigner();
   const provider = contractToApprove.getProvider();
@@ -124,7 +126,9 @@ export async function approveErc20Allowance(
   const owner = await contractToApprove.getSignerAddress();
   const spender = contractToApprove.readContract.address;
   const allowance = await erc20.readContract.allowance(owner, spender);
-  const totalPrice = BigNumber.from(price).mul(BigNumber.from(quantity));
+  const totalPrice = BigNumber.from(price)
+    .mul(BigNumber.from(quantity))
+    .div(ethers.utils.parseUnits("1", tokenDecimals));
   if (allowance.lt(totalPrice)) {
     await erc20.sendTransaction("approve", [
       spender,

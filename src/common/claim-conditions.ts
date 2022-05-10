@@ -91,13 +91,16 @@ export async function prepareClaim(
   const currencyAddress = activeClaimCondition.currencyAddress;
   if (price.gt(0)) {
     if (isNativeToken(currencyAddress)) {
-      overrides["value"] = BigNumber.from(price).mul(quantity);
+      overrides["value"] = BigNumber.from(price)
+        .mul(quantity)
+        .div(ethers.utils.parseUnits("1", tokenDecimals));
     } else {
       await approveErc20Allowance(
         contractWrapper,
         currencyAddress,
         price,
         quantity,
+        tokenDecimals,
       );
     }
   }

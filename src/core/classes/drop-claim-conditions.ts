@@ -1,8 +1,7 @@
 import { IStorage } from "../interfaces/IStorage";
-import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
 import { DropERC20, DropERC721, IERC20, IERC20Metadata } from "contracts";
-import { BigNumber, ethers, constants } from "ethers";
+import { BigNumber, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import { Amount, ClaimCondition, ClaimConditionInput } from "../../types";
@@ -17,7 +16,6 @@ import {
 } from "../../common/claim-conditions";
 
 import { isBrowser } from "../../common/utils";
-import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { detectContractFeature } from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
@@ -34,10 +32,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,
-    metadata: ContractMetadata<
-      TContract,
-      typeof DropErc721ContractSchema | typeof DropErc20ContractSchema
-    >,
+    metadata: ContractMetadata<TContract, any>,
     storage: IStorage,
   ) {
     this.storage = storage;
