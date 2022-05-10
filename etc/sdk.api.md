@@ -3754,7 +3754,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
     // (undocumented)
     static contractType: "custom";
-    edition: Erc1155<BaseERC1155> | undefined;
+    edition: Erc1155 | undefined;
     // (undocumented)
     estimator: GasCostEstimator<TContract>;
     // (undocumented)
@@ -3768,7 +3768,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     interceptor: ContractInterceptor<TContract>;
     // (undocumented)
     metadata: ContractMetadata<ThirdwebContract, any> | undefined;
-    nft: Erc721<BaseERC721> | undefined;
+    nft: Erc721 | undefined;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -3894,7 +3894,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
         symbol?: string | undefined;
         }>;
     };
-    token: Erc20<BaseERC20> | undefined;
+    token: Erc20 | undefined;
 }
 
 // Warning: (ae-incompatible-release-tags) The symbol "Snapshot" is marked as @public, but its signature references "SnapshotSchema" which is marked as @internal

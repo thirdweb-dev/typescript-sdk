@@ -3,6 +3,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { constants, utils } from "ethers";
+import { TransactionResult } from "..";
 
 /**
  * @internal
@@ -41,5 +42,57 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
         (adr) =>
           utils.isAddress(adr) && adr.toLowerCase() !== constants.AddressZero,
       );
+  }
+
+  public async addContract(
+    contractAddress: string,
+  ): Promise<TransactionResult> {
+    return await this.addContracts([contractAddress]);
+  }
+
+  public async addContracts(
+    contractAddresses: string[],
+  ): Promise<TransactionResult> {
+    const deployerAddress = await this.getSignerAddress();
+
+    const encoded: string[] = [];
+    contractAddresses.forEach((address) => {
+      encoded.push(
+        this.readContract.interface.encodeFunctionData("add", [
+          deployerAddress,
+          address,
+        ]),
+      );
+    });
+
+    return {
+      receipt: await this.multiCall(encoded),
+    };
+  }
+
+  public async removeContract(
+    contractAddress: string,
+  ): Promise<TransactionResult> {
+    return await this.removeContracts([contractAddress]);
+  }
+
+  public async removeContracts(
+    contractAddresses: string[],
+  ): Promise<TransactionResult> {
+    const deployerAddress = await this.getSignerAddress();
+
+    const encoded: string[] = [];
+    contractAddresses.forEach((address) => {
+      encoded.push(
+        this.readContract.interface.encodeFunctionData("remove", [
+          deployerAddress,
+          address,
+        ]),
+      );
+    });
+
+    return {
+      receipt: await this.multiCall(encoded),
+    };
   }
 }
