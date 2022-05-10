@@ -3,16 +3,22 @@ import { BigNumber, constants } from "ethers";
 import { TokenERC20 } from "contracts";
 import { TokenHolderBalance } from "../../types";
 import { fetchCurrencyValue } from "../../common/currency";
+import { ContractAnalytics } from "./contract-analytics";
 
 /**
  * Manages history for Token contracts
  * @public
  */
 export class TokenERC20History {
+  private analytics;
   private contractWrapper;
 
-  constructor(contractWrapper: ContractWrapper<TokenERC20>) {
+  constructor(
+    contractWrapper: ContractWrapper<TokenERC20>,
+    analytics: ContractAnalytics<TokenERC20>,
+  ) {
     this.contractWrapper = contractWrapper;
+    this.analytics = analytics;
   }
 
   /**
@@ -26,17 +32,15 @@ export class TokenERC20History {
    * ```
    */
   public async getAllHolderBalances(): Promise<TokenHolderBalance[]> {
-    const a = await this.contractWrapper.readContract.queryFilter(
-      this.contractWrapper.readContract.filters.Transfer(),
-    );
+    const a = await this.analytics.query("Transfer");
     const txns = a.map((b) => b.args);
     const balances: {
       [key: string]: BigNumber;
     } = {};
     txns.forEach((item) => {
-      const from = item.from;
-      const to = item.to;
-      const amount = item.value;
+      const from = item?.from;
+      const to = item?.to;
+      const amount = item?.value;
 
       if (!(from === constants.AddressZero)) {
         if (!(from in balances)) {

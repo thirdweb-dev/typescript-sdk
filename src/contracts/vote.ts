@@ -27,6 +27,7 @@ import { GasCostEstimator } from "../core/classes";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ProposalCreatedEvent } from "contracts/VoteERC20";
 import ERC20Abi from "../../abis/IERC20.json";
+import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -59,6 +60,7 @@ export class Vote implements UpdateableNetwork {
   public encoder: ContractEncoder<VoteERC20>;
   public estimator: GasCostEstimator<VoteERC20>;
   public events: ContractEvents<VoteERC20>;
+  public analytics: ContractAnalytics<VoteERC20>;
   /**
    * @internal
    */
@@ -83,6 +85,7 @@ export class Vote implements UpdateableNetwork {
       Vote.schema,
       this.storage,
     );
+    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);

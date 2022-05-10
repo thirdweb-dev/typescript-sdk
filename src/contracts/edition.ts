@@ -32,6 +32,7 @@ import { getRoleHash } from "../common";
 import { QueryAllParams } from "../types";
 import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
 import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
+import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -72,6 +73,7 @@ export class Edition extends Erc1155<TokenERC1155> {
   public encoder: ContractEncoder<TokenERC1155>;
   public estimator: GasCostEstimator<TokenERC1155>;
   public events: ContractEvents<TokenERC1155>;
+  public analytics: ContractAnalytics<TokenERC1155>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token
@@ -136,6 +138,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFee = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.signature = new Erc1155SignatureMinting(
       this.contractWrapper,
       this.roles,
