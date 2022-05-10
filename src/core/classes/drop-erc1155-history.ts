@@ -1,6 +1,5 @@
 import { DropERC1155 } from "contracts";
-import { ContractWrapper } from "./contract-wrapper";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumberish } from "ethers";
 import { ContractAnalytics } from "./contract-analytics";
 
 /**
