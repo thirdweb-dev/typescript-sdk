@@ -92,7 +92,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     });
 
     return {
-      receipt: await this.multiCall(encoded),
+      receipt: await this.byocRegistry.multiCall(encoded),
     };
   }
 
@@ -144,7 +144,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     });
 
     return {
-      receipt: await this.multiCall(encoded),
+      receipt: await this.byocRegistry.multiCall(encoded),
     };
   }
 }
