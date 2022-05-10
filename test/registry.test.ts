@@ -36,4 +36,19 @@ describe("Contract Registry", () => {
     contracts = await registry.getContractAddresses(adminWallet.address);
     expect(contracts).to.contain(address);
   });
+
+  it("should allow adding and removing custom contracts", async () => {
+    sdk.updateSignerOrProvider(adminWallet);
+    registry = await sdk.deployer.getRegistry();
+
+    address = "0xa05271523BD00593eb4CC6DCbDcbd045361a9a03";
+
+    await registry.addCustomContract(address);
+    let contracts = await registry.getContractAddresses(adminWallet.address);
+    expect(contracts).to.contain(address);
+
+    await registry.removeCustomContract(address);
+    contracts = await registry.getContractAddresses(adminWallet.address);
+    expect(contracts).to.not.contain(address);
+  });
 });
