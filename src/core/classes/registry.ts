@@ -28,24 +28,52 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
   public async addContract(
     contractAddress: string,
   ): Promise<TransactionResult> {
+    return await this.addContracts([contractAddress]);
+  }
+
+  public async addContracts(
+    contractAddresses: string[],
+  ): Promise<TransactionResult> {
     const deployerAddress = await this.getSignerAddress();
+
+    const encoded: string[] = [];
+    contractAddresses.forEach((address) => {
+      encoded.push(
+        this.readContract.interface.encodeFunctionData("add", [
+          deployerAddress,
+          address,
+        ]),
+      );
+    });
+
     return {
-      receipt: await this.sendTransaction("add", [
-        deployerAddress,
-        contractAddress,
-      ]),
+      receipt: await this.multiCall(encoded),
     };
   }
 
   public async removeContract(
     contractAddress: string,
   ): Promise<TransactionResult> {
+    return await this.removeContracts([contractAddress]);
+  }
+
+  public async removeContracts(
+    contractAddresses: string[],
+  ): Promise<TransactionResult> {
     const deployerAddress = await this.getSignerAddress();
+
+    const encoded: string[] = [];
+    contractAddresses.forEach((address) => {
+      encoded.push(
+        this.readContract.interface.encodeFunctionData("remove", [
+          deployerAddress,
+          address,
+        ]),
+      );
+    });
+
     return {
-      receipt: await this.sendTransaction("remove", [
-        deployerAddress,
-        contractAddress,
-      ]),
+      receipt: await this.multiCall(encoded),
     };
   }
 }
