@@ -5,10 +5,10 @@ import { RPCConnectionHandler } from "./rpc-connection-handler";
 import {
   BigNumber,
   BytesLike,
+  constants,
   Contract,
   ContractInterface,
   ethers,
-  constants,
   utils,
 } from "ethers";
 import invariant from "tiny-invariant";
@@ -32,7 +32,6 @@ import {
   ByocRegistry,
   ByocRegistry__factory,
   IByocRegistry,
-  ThirdwebContract,
   ThirdwebContract as TWContract,
   ThirdwebContract__factory,
 } from "contracts";
@@ -241,18 +240,18 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param contractMetadataUri
+   * @param publishMetadataUri
    * @param constructorParamValues
    * @param contractMetadata
    */
   public async deployContract(
-    contractMetadataUri: string,
+    publishMetadataUri: string,
     constructorParamValues: any[],
     contractMetadata?: CustomContractMetadata,
   ) {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
-    const metadata = await this.fetchFullContractMetadata(contractMetadataUri);
+    const metadata = await this.fetchFullContractMetadata(publishMetadataUri);
     const publisher = await signer.getAddress();
     const bytecode = ethers.utils.isHexString(metadata.bytecode)
       ? metadata.bytecode
@@ -270,21 +269,21 @@ export class ContractPublisher extends RPCConnectionHandler {
       constructorParamTypes,
       paramValues,
     );
-    let contractURI = "";
-    if (contractMetadata) {
-      contractURI = await this.storage.uploadMetadata(contractMetadata);
-    }
+    const deployMetadata = {
+      ...metadata,
+      deployMetadata: contractMetadata || {},
+      deployTimestamp: new Date().toISOString(),
+    };
+    const populatedContractUri = await this.storage.uploadMetadata(
+      deployMetadata,
+    );
     const receipt = await this.factory.sendTransaction("deployInstance", [
       publisher,
       bytecode,
       constructorParamsEncoded,
       salt,
       value,
-      {
-        publishMetadataUri: contractMetadataUri,
-        contractURI,
-        owner: publisher,
-      } as ThirdwebContract.ThirdwebInfoStruct,
+      populatedContractUri,
     ]);
     const events = this.factory.parseLogs<ContractDeployedEvent>(
       "ContractDeployed",

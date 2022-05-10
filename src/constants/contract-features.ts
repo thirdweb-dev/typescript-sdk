@@ -17,6 +17,7 @@ import {
   FEATURE_EDITION_MINTABLE,
 } from "./erc1155-features";
 import {
+  FEATURE_METADATA,
   FEATURE_PERMISSIONS,
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
@@ -42,7 +43,8 @@ export type Feature =
   | typeof FEATURE_ROYALTY
   | typeof FEATURE_PLATFORM_FEE
   | typeof FEATURE_PRIMARY_SALE
-  | typeof FEATURE_PERMISSIONS;
+  | typeof FEATURE_PERMISSIONS
+  | typeof FEATURE_METADATA;
 
 /**
  * @internal

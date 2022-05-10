@@ -3,6 +3,7 @@ import { z } from "zod";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { detectContractFeature } from "../../common";
 
 /**
  * @internal
@@ -52,7 +53,14 @@ export class ContractMetadata<
    * @returns the metadata of the given contract
    */
   public async get() {
-    const uri = await this.contractWrapper.readContract.contractURI();
+    let uri;
+    if (this.supportsContractMetadata(this.contractWrapper)) {
+      uri = await this.contractWrapper.readContract.contractURI();
+    } else if (this.hasPublishedURI(this.contractWrapper)) {
+      uri = await this.contractWrapper.readContract.getPublishMetadataUri();
+    } else {
+      throw new Error("Contract does not support reading contract metadata");
+    }
     const data = await this.storage.get(uri);
     return this.parseOutputMetadata(data);
   }
@@ -65,13 +73,13 @@ export class ContractMetadata<
     const uri = await this._parseAndUploadMetadata(metadata);
 
     const wrapper = this.contractWrapper;
-    if (this.canUpdateContractUri(wrapper)) {
+    if (this.supportsContractMetadata(wrapper)) {
       const receipt = await wrapper.sendTransaction("setContractURI", [uri]);
       return { receipt, data: this.get } as TransactionResult<
         z.output<TSchema["output"]>
       >;
     } else {
-      throw new Error("Contract does not support updating contractURI");
+      throw new Error("Contract does not support updating contract metadata");
     }
   }
 
@@ -93,9 +101,18 @@ export class ContractMetadata<
     return this.storage.uploadMetadata(parsedMetadata);
   }
 
-  private canUpdateContractUri(
+  private supportsContractMetadata(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<IThirdwebContract> {
-    return "setContractURI" in contractWrapper.readContract.functions;
+    return detectContractFeature<IThirdwebContract>(
+      contractWrapper,
+      "ContractMetadata",
+    );
+  }
+
+  private hasPublishedURI(
+    contractWrapper: ContractWrapper<any>,
+  ): contractWrapper is ContractWrapper<ThirdwebContract> {
+    return "getPublishMetadataUri" in contractWrapper.readContract.functions;
   }
 }

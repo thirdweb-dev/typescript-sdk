@@ -2,6 +2,7 @@ import IThirdwebPrimarySaleAbi from "../../abis/IPrimarySale.json";
 import IThirdwebPlatformFeeAbi from "../../abis/IPlatformFee.json";
 import IThirdwebRoyaltyAbi from "../../abis/IRoyalty.json";
 import IPermissionsEnumerableAbi from "../../abis/IPermissionsEnumerable.json";
+import IContractMetadataAbi from "../../abis/IContractMetadata.json";
 
 export const FEATURE_ROYALTY = {
   name: "Royalty",
@@ -44,5 +45,16 @@ export const FEATURE_PERMISSIONS = {
     contracts: "IPermissionsEnumerable",
   },
   abis: [IPermissionsEnumerableAbi],
+  features: {},
+} as const;
+
+export const FEATURE_METADATA = {
+  name: "ContractMetadata",
+  namespace: "metadata",
+  docLinks: {
+    sdk: "sdk.contractmetadata",
+    contracts: "IContractMetadata",
+  },
+  abis: [IContractMetadataAbi],
   features: {},
 } as const;
