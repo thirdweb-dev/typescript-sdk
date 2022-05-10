@@ -103,7 +103,7 @@ export function getContractAddressByChainId(
     } else if (contractName === "twRegistry") {
       return process.env.registryAddress as string;
     } else if (contractName === "twBYOCRegistry") {
-      return process.env.byocTWRegistryAddress as string;
+      return process.env.byocRegistryAddress as string;
     } else if (contractName === "byocFactory") {
       return process.env.byocFactoryAddress as string;
     } else {
