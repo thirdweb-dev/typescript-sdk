@@ -1,16 +1,17 @@
 import { DropERC1155 } from "contracts";
 import { ContractWrapper } from "./contract-wrapper";
 import { BigNumber, BigNumberish } from "ethers";
+import { ContractAnalytics } from "./contract-analytics";
 
 /**
  * Manages history for Edition Drop contracts
  * @public
  */
 export class DropErc1155History {
-  private contractWrapper;
+  private analytics;
 
-  constructor(contractWrapper: ContractWrapper<DropERC1155>) {
-    this.contractWrapper = contractWrapper;
+  constructor(analytics: ContractAnalytics<DropERC1155>) {
+    this.analytics = analytics;
   }
 
   /**
@@ -28,12 +29,10 @@ export class DropErc1155History {
   public async getAllClaimerAddresses(
     tokenId: BigNumberish,
   ): Promise<string[]> {
-    const a = await this.contractWrapper.readContract.queryFilter(
-      this.contractWrapper.readContract.filters.TokensClaimed(
-        null,
-        BigNumber.from(tokenId),
-      ),
+    const a = (await this.analytics.query("TokensClaimed")).filter((e) =>
+      e.args?.tokenId.eq(tokenId),
     );
-    return Array.from(new Set(a.map((b) => b.args.claimer)));
+
+    return Array.from(new Set(a.map((b) => b.args?.claimer)));
   }
 }

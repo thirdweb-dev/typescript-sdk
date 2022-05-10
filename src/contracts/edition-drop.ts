@@ -152,7 +152,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       this.storage,
     );
     this.analytics = new ContractAnalytics(this.contractWrapper);
-    this.history = new DropErc1155History(this.contractWrapper);
+    this.history = new DropErc1155History(this.analytics);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);

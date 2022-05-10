@@ -102,13 +102,13 @@ export class Token extends Erc20<TokenERC20> {
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, Token.contractRoles);
-    this.history = new TokenERC20History(this.contractWrapper);
+    this.analytics = new ContractAnalytics(this.contractWrapper);
+    this.history = new TokenERC20History(this.contractWrapper, this.analytics);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFee = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.signature = new Erc20SignatureMinting(
       this.contractWrapper,
       this.roles,
