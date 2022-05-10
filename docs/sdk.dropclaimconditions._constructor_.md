@@ -9,7 +9,7 @@ Constructs a new instance of the `DropClaimConditions` class
 <b>Signature:</b>
 
 ```typescript
-constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, typeof DropErc721ContractSchema | typeof DropErc20ContractSchema>, storage: IStorage);
+constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
 ```
 
 ## Parameters
@@ -17,6 +17,6 @@ constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetad
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;TContract&gt; |  |
-|  metadata | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TContract, typeof DropErc721ContractSchema \| typeof DropErc20ContractSchema&gt; |  |
+|  metadata | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TContract, any&gt; |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
 
