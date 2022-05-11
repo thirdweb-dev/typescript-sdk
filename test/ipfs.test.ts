@@ -16,7 +16,7 @@ import {
 
 global.fetch = require("node-fetch");
 
-describe.skip("IPFS Uploads", async () => {
+describe("IPFS Uploads", async () => {
   const storage: IpfsStorage = new IpfsStorage(ipfsGatewayUrl);
 
   async function getFile(upload: string): Promise<Response> {
@@ -256,38 +256,6 @@ describe.skip("IPFS Uploads", async () => {
       expect(downloaded.name).to.be.eq(expected.name);
       expect(downloaded.image.endsWith(`${i}`)).to.eq(true);
     }
-  });
-
-  // TODO make passing straight urls passthrough storage or handled at higher level
-  it.skip("should properly parse ipfs urls in uploadMetadataBatch", async () => {
-    // TODO this mismatches urls/objects - can probably restrict to either or
-    const sampleObjects: any[] = [
-      "ipfs://QmTaWb3L89Deg8fxW8snWPULX6iNh5t7vfXa68sVeAfrHJ",
-      { test: "should pass" },
-      "https://ipfs.io",
-      { test: "maybe pass" },
-    ];
-    const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
-      sampleObjects,
-    );
-    assert(metadataUris.length === sampleObjects.length);
-    assert(
-      metadataUris[0] === sampleObjects[0],
-      `Got ${metadataUris[0]}, expected ${sampleObjects[0]}`,
-    );
-    assert(
-      metadataUris[1].startsWith(baseUri) && metadataUris[1].endsWith("/0"),
-    );
-    assert(metadataUris[2] === sampleObjects[2]);
-    assert(
-      metadataUris[3].startsWith(baseUri) && metadataUris[3].endsWith("/1"),
-    );
-    assert(
-      (await (await getFile(`${baseUri}0`)).text()).includes("should pass"),
-    );
-    assert(
-      (await (await getFile(`${baseUri}1`)).text()).includes("maybe pass"),
-    );
   });
 
   it("should upload properly with same file names but one with capitalized letters", async () => {
