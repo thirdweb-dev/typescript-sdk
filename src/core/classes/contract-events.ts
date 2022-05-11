@@ -41,7 +41,9 @@ export class ContractEvents<TContract extends BaseContract> {
 
   /**
    * Subscribe to contract events
-   * @remarks Add a listener for a particular contract event
+   * @remarks You can add a listener for any contract event to run a function when
+   * the event is emitted. For example, if you wanted to listen for a "TokensMinted" event,
+   * you could do the following:
    * @example
    * ```javascript
    * contract.events.addEventListener("TokensMinted", (event) => {
