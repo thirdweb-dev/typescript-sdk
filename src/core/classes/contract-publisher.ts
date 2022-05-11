@@ -22,6 +22,7 @@ import {
   AbiFunction,
   ContractParam,
   CustomContractMetadata,
+  CustomContractMetadataSchema,
   PublishedContract,
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
@@ -251,9 +252,12 @@ export class ContractPublisher extends RPCConnectionHandler {
   ) {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
+    const unwrappedMetadata = CustomContractMetadataSchema.parse(
+      await this.storage.get(publishMetadataUri),
+    );
     const metadata = await this.fetchFullContractMetadata(publishMetadataUri);
     const publisher = await signer.getAddress();
-    const bytecode = ethers.utils.isHexString(metadata.bytecode)
+    const bytecode = metadata.bytecode.startsWith("0x")
       ? metadata.bytecode
       : `0x${metadata.bytecode}`;
     const salt = ethers.utils.formatBytes32String(Math.random().toString()); // TODO expose as optional
@@ -270,7 +274,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       paramValues,
     );
     const deployMetadata = {
-      ...metadata,
+      ...unwrappedMetadata,
       deployMetadata: contractMetadata || {},
       deployTimestamp: new Date().toISOString(),
     };
@@ -304,6 +308,13 @@ export class ContractPublisher extends RPCConnectionHandler {
       throw Error("Passed the wrong number of constructor arguments");
     }
     return constructorParamTypes.map((p, index) => {
+      if (p.endsWith("[]")) {
+        if (typeof constructorParamValues[index] === "string") {
+          return JSON.parse(constructorParamValues[index]);
+        } else {
+          return constructorParamValues[index];
+        }
+      }
       if (p === "bytes32") {
         return ethers.utils.formatBytes32String(
           constructorParamValues[index].toString(),
@@ -316,12 +327,6 @@ export class ContractPublisher extends RPCConnectionHandler {
       }
       if (p.startsWith("uint") || p.startsWith("int")) {
         return BigNumber.from(constructorParamValues[index].toString());
-      }
-      if (
-        p.endsWith("[]") &&
-        typeof constructorParamValues[index] === "string"
-      ) {
-        return JSON.parse(constructorParamValues[index]);
       }
       return constructorParamValues[index];
     });

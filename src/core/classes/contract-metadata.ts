@@ -1,4 +1,8 @@
-import { IThirdwebContract, ThirdwebContract } from "contracts";
+import {
+  IContractMetadata,
+  IThirdwebContract,
+  ThirdwebContract,
+} from "contracts";
 import { z } from "zod";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResult } from "../types";
@@ -54,14 +58,18 @@ export class ContractMetadata<
    */
   public async get() {
     let uri;
+    let data;
     if (this.supportsContractMetadata(this.contractWrapper)) {
       uri = await this.contractWrapper.readContract.contractURI();
+      data = await this.storage.get(uri);
     } else if (this.hasPublishedURI(this.contractWrapper)) {
       uri = await this.contractWrapper.readContract.getPublishMetadataUri();
+      const publishMeta = await this.storage.get(uri);
+      data = publishMeta.deployMetadata;
     } else {
       throw new Error("Contract does not support reading contract metadata");
     }
-    const data = await this.storage.get(uri);
+
     return this.parseOutputMetadata(data);
   }
   /**
@@ -103,8 +111,8 @@ export class ContractMetadata<
 
   private supportsContractMetadata(
     contractWrapper: ContractWrapper<any>,
-  ): contractWrapper is ContractWrapper<IThirdwebContract> {
-    return detectContractFeature<IThirdwebContract>(
+  ): contractWrapper is ContractWrapper<IContractMetadata> {
+    return detectContractFeature<IContractMetadata>(
       contractWrapper,
       "ContractMetadata",
     );

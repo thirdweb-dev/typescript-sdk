@@ -44,7 +44,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @remarks Add a listener for a particular contract event
    * @example
    * ```javascript
-   * contract.events.addListener("TokensMinted", (event) => {
+   * contract.events.addEventListener("TokensMinted", (event) => {
    *   console.log(event);
    * });
    * ```

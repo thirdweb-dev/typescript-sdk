@@ -9,7 +9,6 @@ import {
 } from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
-import { ethers } from "ethers";
 
 require("./before-setup");
 
@@ -30,11 +29,10 @@ describe("Custom Contracts", async () => {
       "test/abis/greeter.json",
     );
     const publisher = await sdk.getPublisher();
-    const tx = await publisher.publish(simpleContractUri);
-    const contract = await tx.data();
-    customContractAddress = await publisher.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
+    // const tx = await publisher.publish(simpleContractUri);
+    // const contract = await tx.data();
+    customContractAddress = await publisher.deployContract(
+      simpleContractUri,
       [],
       {
         name: "CustomContract",
@@ -77,10 +75,12 @@ describe("Custom Contracts", async () => {
     });
   });
 
-  it("should call raw ABI functions", async () => {
+  it("should call raw ABI functions and respect thirdwebMsgSender", async () => {
     const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     expect(await c.functions.decimals()).to.eq(18);
+    const owner = await c.functions.owner();
+    expect(owner).to.eq(adminWallet.address);
   });
 
   it("should fetch published metadata", async () => {
@@ -100,6 +100,7 @@ describe("Custom Contracts", async () => {
   it("should detect feature: metadata", async () => {
     const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
+    invariant(c.metadata, "Contract undefined");
     const meta = await c.metadata.get();
     expect(meta.name).to.eq("CustomContract");
   });
