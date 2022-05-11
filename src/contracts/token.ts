@@ -62,7 +62,10 @@ export class Token extends Erc20<TokenERC20> {
   public history: TokenERC20History;
   public events: ContractEvents<TokenERC20>;
   public platformFee: ContractPlatformFee<TokenERC20>;
-  protected analytics: ContractAnalytics<TokenERC20>;
+  /**
+   * @internal
+   */
+  public analytics: ContractAnalytics<TokenERC20>;
   /**
    * Signature Minting
    * @remarks Generate tokens that can be minted only with your own signature, attaching your own set of mint conditions.

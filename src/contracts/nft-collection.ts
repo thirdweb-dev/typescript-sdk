@@ -66,7 +66,10 @@ export class NFTCollection extends Erc721<TokenERC721> {
   public events: ContractEvents<TokenERC721>;
   public primarySale: ContractPrimarySale<TokenERC721>;
   public platformFee: ContractPlatformFee<TokenERC721>;
-  protected analytics: ContractAnalytics<TokenERC721>;
+  /**
+   * @internal
+   */
+  public analytics: ContractAnalytics<TokenERC721>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token

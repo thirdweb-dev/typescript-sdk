@@ -68,7 +68,10 @@ export class Pack implements UpdateableNetwork {
   public encoder: ContractEncoder<PackContract>;
   public events: ContractEvents<PackContract>;
   public estimator: GasCostEstimator<PackContract>;
-  protected analytics: ContractAnalytics<PackContract>;
+  /**
+   * @internal
+   */
+  public analytics: ContractAnalytics<PackContract>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per pack
