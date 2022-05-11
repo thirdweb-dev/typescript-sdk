@@ -209,7 +209,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         return new ContractRegistry(
           registryAddress,
           byocRegistryAddress,
-          this.getProvider(),
+          this.getSignerOrProvider(),
           this.options,
         );
       }));

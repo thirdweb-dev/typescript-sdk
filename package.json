@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "2.2.5",
+  "version": "2.2.8",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -33,7 +33,7 @@
     "generate-docs": "yarn full-build && yarn generate-md-docs",
     "generate-snippets": "node ./scripts/generate-snippets.mjs && node ./scripts/generate-feature-snippets.mjs",
     "build": "yarn clean && yarn generate-docs && yarn generate-snippets",
-    "test": "echo \"\nUse 'yarn run test:all' to run all tests\nPass a test file pattern from ./test to run\n\n\t$ yarn run test test/pack.test.ts\" && ts-mocha -t 120000 -r esm -p tsconfig.testing.json",
+    "test": "echo \"\nUse 'yarn run test:all' to run all tests\nPass a test file pattern from ./test to run\n\n\t$ yarn run test test/pack.test.ts\" && ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json",
     "test:all": "ts-mocha --parallel --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'"
   },
   "devDependencies": {

@@ -46,6 +46,7 @@ import {
   TokensClaimedEvent,
   TokensLazyMintedEvent,
 } from "contracts/DropERC721";
+import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -79,6 +80,7 @@ export class NFTDrop extends Erc721<DropERC721> {
   public platformFee: ContractPlatformFee<DropERC721>;
   public events: ContractEvents<DropERC721>;
   public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
+  public analytics: ContractAnalytics<DropERC721>;
   /**
    * @internal
    */
@@ -186,6 +188,7 @@ export class NFTDrop extends Erc721<DropERC721> {
       this.metadata,
       this.storage,
     );
+    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);

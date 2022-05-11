@@ -33,6 +33,7 @@ import { TokensLazyMintedEvent } from "contracts/DropERC1155";
 import { getRoleHash } from "../common";
 
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
+import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -67,6 +68,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public estimator: GasCostEstimator<DropERC1155>;
   public events: ContractEvents<DropERC1155>;
   public metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
+  public analytics: ContractAnalytics<DropERC1155>;
   public roles: ContractRoles<
     DropERC1155,
     typeof EditionDrop.contractRoles[number]
@@ -149,7 +151,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       this.metadata,
       this.storage,
     );
-    this.history = new DropErc1155History(this.contractWrapper);
+    this.analytics = new ContractAnalytics(this.contractWrapper);
+    this.history = new DropErc1155History(this.analytics);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
