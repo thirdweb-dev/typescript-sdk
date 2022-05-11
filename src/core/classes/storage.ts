@@ -1,7 +1,13 @@
-import { FetchError } from "../../common/error";
+import {
+  DuplicateFileNameError,
+  FetchError,
+  UploadError,
+} from "../../common/error";
 import {
   DEFAULT_IPFS_GATEWAY,
-  TW_FILEBASE_SERVER_URL,
+  PINATA_IPFS_URL,
+  PUBLIC_GATEWAYS,
+  TW_IPFS_SERVER_URL,
 } from "../../constants/urls";
 import { IStorage } from "../interfaces/IStorage";
 import { FileOrBuffer, JsonObject } from "../types";
@@ -31,11 +37,23 @@ interface CidWithFileName {
  * IPFS Storage implementation, accepts custom IPFS gateways
  * @public
  */
-export class IpfsStorage implements IStorage {
+export class CommonStorage {
   private gatewayUrl: string;
+  private failedUrls: string[] = [];
 
   constructor(gatewayUrl: string = DEFAULT_IPFS_GATEWAY) {
     this.gatewayUrl = `${gatewayUrl.replace(/\/$/, "")}/`;
+  }
+
+  private getNextPublicGateway() {
+    const urlsToTry = PUBLIC_GATEWAYS.filter(
+      (url) => !this.failedUrls.includes(url),
+    ).filter((url) => url !== this.gatewayUrl);
+    if (urlsToTry.length > 0) {
+      return urlsToTry[0];
+    } else {
+      return undefined;
+    }
   }
 
   /**
@@ -72,22 +90,6 @@ export class IpfsStorage implements IStorage {
     );
 
     return `ipfs://${cid}/`;
-  }
-
-  public async getSignedUrl(filename: string): Promise<string> {
-    const res = await fetch(`${TW_FILEBASE_SERVER_URL}/signed-url`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ filename }),
-    });
-
-    if (!res.ok) {
-      throw new FetchError(`Failed to get upload token`);
-    }
-    const url = await res.json();
-    return url;
   }
 
   /**
@@ -165,7 +167,14 @@ export class IpfsStorage implements IStorage {
     }
     const result = await fetch(uri);
     if (!result.ok) {
-      throw new Error(`Status code (!= 200) =${result.status}`);
+      const nextUrl = this.getNextPublicGateway();
+      if (nextUrl) {
+        this.failedUrls.push(this.gatewayUrl);
+        this.gatewayUrl = nextUrl;
+        return this._get(hash);
+      } else {
+        throw new Error(`Error fetching ${uri} - Status code ${result.status}`);
+      }
     }
     return result;
   }
@@ -230,47 +239,5 @@ export class IpfsStorage implements IStorage {
       }
     }
     return files;
-  }
-
-  private async uploadBatchWithCid(
-    files: (string | FileOrBuffer)[],
-    fileStartNumber = 0,
-    contractAddress?: string,
-    signerAddress?: string,
-  ): Promise<CidWithFileName> {
-    const asyncCids = files.map(async (file, i) => {
-      if (typeof file === "string") {
-        return file;
-      }
-
-      let filename = "";
-      if (file instanceof File) {
-        let extensions = "";
-        if (file.name) {
-          const extensionStartIndex = file.name.lastIndexOf(".");
-          if (extensionStartIndex > -1) {
-            extensions = file.name.substring(extensionStartIndex);
-          }
-        }
-        filename = `${i + fileStartNumber}${extensions}`;
-      } else if (file instanceof Buffer) {
-        filename = `${i + fileStartNumber}`;
-      } else if (file && file.name) {
-        filename = `${file.name}`;
-      } else {
-        filename = `${i + fileStartNumber}`;
-      }
-
-      const signedUrl = await this.getSignedUrl(filename);
-
-      const res = await fetch(signedUrl, {
-        method: "PUT",
-        body: file as any,
-      });
-    });
-
-    const cids = await Promise.all(asyncCids);
-
-    throw Error("Not implemented");
   }
 }
