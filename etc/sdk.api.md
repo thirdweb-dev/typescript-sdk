@@ -919,8 +919,8 @@ export class DuplicateLeafsError extends Error {
 // @public
 export class Edition extends Erc1155<TokenERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
-    // (undocumented)
-    protected analytics: ContractAnalytics<TokenERC1155>;
+    // @internal (undocumented)
+    analytics: ContractAnalytics<TokenERC1155>;
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
@@ -1064,8 +1064,8 @@ export class Edition extends Erc1155<TokenERC1155> {
 // @public
 export class EditionDrop extends Erc1155<DropERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
-    // (undocumented)
-    protected analytics: ContractAnalytics<DropERC1155>;
+    // @internal (undocumented)
+    analytics: ContractAnalytics<DropERC1155>;
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
     claimConditions: DropErc1155ClaimConditions;
@@ -2028,8 +2028,8 @@ export class Marketplace implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Marketplace_2>);
     allowListingFromAnyAsset(): Promise<void>;
     allowListingFromSpecificAssetOnly(contractAddress: string): Promise<void>;
-    // (undocumented)
-    protected analytics: ContractAnalytics<Marketplace_2>;
+    // @internal (undocumented)
+    analytics: ContractAnalytics<Marketplace_2>;
     auction: MarketplaceAuction;
     buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish, receiver?: string): Promise<TransactionResult>;
     // (undocumented)
@@ -2292,8 +2292,8 @@ export interface NewDirectListing {
 // @public
 export class NFTCollection extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
-    // (undocumented)
-    protected analytics: ContractAnalytics<TokenERC721>;
+    // @internal (undocumented)
+    analytics: ContractAnalytics<TokenERC721>;
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
@@ -2454,8 +2454,8 @@ export interface NFTContractDeployMetadata {
 // @public
 export class NFTDrop extends Erc721<DropERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
-    // (undocumented)
-    protected analytics: ContractAnalytics<DropERC721>;
+    // @internal (undocumented)
+    analytics: ContractAnalytics<DropERC721>;
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
     claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     claimConditions: DropClaimConditions<DropERC721>;
@@ -2667,8 +2667,8 @@ export const OZ_DEFENDER_FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7
 // @public
 export class Pack implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Pack_2>);
-    // (undocumented)
-    protected analytics: ContractAnalytics<Pack_2>;
+    // @internal (undocumented)
+    analytics: ContractAnalytics<Pack_2>;
     // (undocumented)
     balance(tokenId: string): Promise<BigNumber>;
     balanceOf(address: string, tokenId: string): Promise<BigNumber>;
@@ -3764,8 +3764,8 @@ export type SignerOrProvider = Signer | providers.Provider;
 // @beta
 export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract> implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
-    // (undocumented)
-    protected analytics: ContractAnalytics<TContract>;
+    // @internal (undocumented)
+    analytics: ContractAnalytics<TContract>;
     // (undocumented)
     static contractType: "custom";
     edition: Erc1155 | undefined;
@@ -4056,8 +4056,8 @@ export const SnapshotSchema: z.ZodObject<{
 // @public
 export class Split implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Split_2>);
-    // (undocumented)
-    protected analytics: ContractAnalytics<Split_2>;
+    // @internal (undocumented)
+    analytics: ContractAnalytics<Split_2>;
     balanceOf(address: string): Promise<BigNumber>;
     balanceOfAllRecipients(): Promise<{
         [key: string]: BigNumber;
@@ -4171,7 +4171,9 @@ export class Split implements UpdateableNetwork {
         sharesBps: number;
         }[] | undefined;
         trusted_forwarders?: string[] | undefined;
-        }>;
+        }>; /**
+        * @internal
+        */
         output: ZodObject<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
@@ -4328,8 +4330,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 // @public
 export class Token extends Erc20<TokenERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
-    // (undocumented)
-    protected analytics: ContractAnalytics<TokenERC20>;
+    // @internal (undocumented)
+    analytics: ContractAnalytics<TokenERC20>;
     burn(amount: Amount): Promise<TransactionResult>;
     burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
     // (undocumented)
@@ -4469,7 +4471,7 @@ export interface TokenContractDeployMetadata {
 export class TokenDrop extends Erc20<DropERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
     // (undocumented)
-    protected analytics: ContractAnalytics<DropERC20>;
+    analytics: ContractAnalytics<DropERC20>;
     burn(amount: Amount): Promise<TransactionResult>;
     burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
     claim(amount: Amount, proofs?: BytesLike[]): Promise<TransactionResult>;
@@ -4722,8 +4724,8 @@ export type ValueOf<T> = T[keyof T];
 // @public
 export class Vote implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<VoteERC20>);
-    // (undocumented)
-    protected analytics: ContractAnalytics<VoteERC20>;
+    // @internal (undocumented)
+    analytics: ContractAnalytics<VoteERC20>;
     balance(): Promise<CurrencyValue>;
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     canExecute(proposalId: string): Promise<boolean>;

@@ -35,7 +35,6 @@ const contract = sdk.getVote("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [analytics](./sdk.vote.analytics.md) |  | ContractAnalytics&lt;VoteERC20&gt; |  |
 |  [contractAbi](./sdk.vote.contractabi.md) | <code>static</code> | any |  |
 |  [contractType](./sdk.vote.contracttype.md) | <code>static</code> | "vote" |  |
 |  [encoder](./sdk.vote.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;VoteERC20&gt; |  |
