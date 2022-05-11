@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-analytics: ContractAnalytics<TokenERC1155>;
+protected analytics: ContractAnalytics<TokenERC1155>;
 ```

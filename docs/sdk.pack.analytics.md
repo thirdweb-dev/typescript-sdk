@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-analytics: ContractAnalytics<PackContract>;
+protected analytics: ContractAnalytics<PackContract>;
 ```

@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-analytics: ContractAnalytics<TContract>;
+protected analytics: ContractAnalytics<TContract>;
 ```
