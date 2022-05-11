@@ -68,7 +68,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public estimator: GasCostEstimator<DropERC1155>;
   public events: ContractEvents<DropERC1155>;
   public metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
-  public analytics: ContractAnalytics<DropERC1155>;
+  protected analytics: ContractAnalytics<DropERC1155>;
   public roles: ContractRoles<
     DropERC1155,
     typeof EditionDrop.contractRoles[number]

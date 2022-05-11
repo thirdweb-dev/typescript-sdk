@@ -55,7 +55,7 @@ export class Split implements UpdateableNetwork {
    * @internal
    */
   public interceptor: ContractInterceptor<SplitContract>;
-  public analytics: ContractAnalytics<SplitContract>;
+  protected analytics: ContractAnalytics<SplitContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,

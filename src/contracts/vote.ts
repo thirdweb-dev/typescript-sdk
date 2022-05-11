@@ -60,7 +60,7 @@ export class Vote implements UpdateableNetwork {
   public encoder: ContractEncoder<VoteERC20>;
   public estimator: GasCostEstimator<VoteERC20>;
   public events: ContractEvents<VoteERC20>;
-  public analytics: ContractAnalytics<VoteERC20>;
+  protected analytics: ContractAnalytics<VoteERC20>;
   /**
    * @internal
    */

@@ -83,7 +83,7 @@ export class SmartContract<
   public interceptor: ContractInterceptor<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
-  public analytics: ContractAnalytics<TContract>;
+  protected analytics: ContractAnalytics<TContract>;
 
   // features
   public metadata: ContractMetadata<ThirdwebContract, any> | undefined;
