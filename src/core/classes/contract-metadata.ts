@@ -65,7 +65,7 @@ export class ContractMetadata<
     } else if (this.hasPublishedURI(this.contractWrapper)) {
       uri = await this.contractWrapper.readContract.getPublishMetadataUri();
       const publishMeta = await this.storage.get(uri);
-      data = publishMeta.deployMetadata;
+      data = publishMeta.deployMetadata || publishMeta;
     } else {
       throw new Error("Contract does not support reading contract metadata");
     }

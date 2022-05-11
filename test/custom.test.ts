@@ -29,8 +29,6 @@ describe("Custom Contracts", async () => {
       "test/abis/greeter.json",
     );
     const publisher = await sdk.getPublisher();
-    // const tx = await publisher.publish(simpleContractUri);
-    // const contract = await tx.data();
     customContractAddress = await publisher.deployContract(
       simpleContractUri,
       [],
@@ -75,7 +73,7 @@ describe("Custom Contracts", async () => {
     });
   });
 
-  it("should call raw ABI functions and respect thirdwebMsgSender", async () => {
+  it("should call raw ABI functions and read deployer address", async () => {
     const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     expect(await c.functions.decimals()).to.eq(18);
