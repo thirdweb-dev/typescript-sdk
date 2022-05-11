@@ -62,6 +62,9 @@ export class Token extends Erc20<TokenERC20> {
   public history: TokenERC20History;
   public events: ContractEvents<TokenERC20>;
   public platformFee: ContractPlatformFee<TokenERC20>;
+  /**
+   * @internal
+   */
   public analytics: ContractAnalytics<TokenERC20>;
   /**
    * Signature Minting

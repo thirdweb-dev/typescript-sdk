@@ -35,7 +35,6 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [analytics](./sdk.editiondrop.analytics.md) |  | ContractAnalytics&lt;DropERC1155&gt; |  |
 |  [claimConditions](./sdk.editiondrop.claimconditions.md) |  | [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Configure claim conditions for each NFT |
 |  [contractAbi](./sdk.editiondrop.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.editiondrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |

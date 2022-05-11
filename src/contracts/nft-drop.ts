@@ -80,6 +80,9 @@ export class NFTDrop extends Erc721<DropERC721> {
   public platformFee: ContractPlatformFee<DropERC721>;
   public events: ContractEvents<DropERC721>;
   public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
+  /**
+   * @internal
+   */
   public analytics: ContractAnalytics<DropERC721>;
   /**
    * @internal

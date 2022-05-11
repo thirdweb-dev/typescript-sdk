@@ -73,6 +73,9 @@ export class Edition extends Erc1155<TokenERC1155> {
   public encoder: ContractEncoder<TokenERC1155>;
   public estimator: GasCostEstimator<TokenERC1155>;
   public events: ContractEvents<TokenERC1155>;
+  /**
+   * @internal
+   */
   public analytics: ContractAnalytics<TokenERC1155>;
   /**
    * Configure royalties

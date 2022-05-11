@@ -35,7 +35,6 @@ const contract = sdk.getSplit("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [analytics](./sdk.split.analytics.md) |  | ContractAnalytics&lt;SplitContract&gt; |  |
 |  [contractAbi](./sdk.split.contractabi.md) | <code>static</code> | any |  |
 |  [contractType](./sdk.split.contracttype.md) | <code>static</code> | "split" |  |
 |  [encoder](./sdk.split.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;SplitContract&gt; |  |

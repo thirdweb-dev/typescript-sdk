@@ -35,7 +35,6 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [analytics](./sdk.marketplace.analytics.md) |  | ContractAnalytics&lt;MarketplaceContract&gt; |  |
 |  [auction](./sdk.marketplace.auction.md) |  | [MarketplaceAuction](./sdk.marketplaceauction.md) | Auctions |
 |  [contractAbi](./sdk.marketplace.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.marketplace.contractroles.md) | <code>static</code> | readonly \["admin", "lister", "asset"\] |  |
