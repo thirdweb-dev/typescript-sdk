@@ -127,7 +127,9 @@ export function extractFunctionsFromAbi(
   const parsed = [];
   for (const f of functions) {
     const args =
-      f.inputs?.map((i) => `${i.name}: ${toJSType(i.type)}`)?.join(", ") || "";
+      f.inputs
+        ?.map((i) => `${i.name || "key"}: ${toJSType(i.type)}`)
+        ?.join(", ") || "";
     const out = f.outputs?.map((o) => toJSType(o.type, true))?.join(", ");
     const promise = out ? `: Promise<${out}>` : "";
     const signature = `${f.name}(${args})${promise}`;
