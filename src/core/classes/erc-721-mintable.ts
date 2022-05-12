@@ -57,7 +57,7 @@ export class Erc721Mintable implements DetectableFeature {
    *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
    * };
    *
-   * const tx = await contract.mint.to(walletAddress, metadata);
+   * const tx = await contract.nft.mint.to(walletAddress, metadata);
    * const receipt = tx.receipt; // the transaction receipt
    * const tokenId = tx.id; // the id of the NFT minted
    * const nft = await tx.data(); // (optional) fetch details of minted NFT

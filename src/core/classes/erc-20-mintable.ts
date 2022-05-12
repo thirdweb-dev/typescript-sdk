@@ -43,7 +43,7 @@ export class Erc20Mintable implements DetectableFeature {
    * ```javascript
    * const toAddress = "{{wallet_address}}"; // Address of the wallet you want to mint the tokens to
    * const amount = "1.5"; // The amount of this token you want to mint
-   * await contract.mintTo(toAddress, amount);
+   * await contract.token.mint.to(toAddress, amount);
    * ```
    */
   public async to(to: string, amount: Amount): Promise<TransactionResult> {
