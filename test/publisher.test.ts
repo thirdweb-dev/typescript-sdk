@@ -202,7 +202,7 @@ describe("Publishing", async () => {
     expect(n.toNumber()).to.eq(2);
   });
 
-  it("array contractor param passed as string", async () => {
+  it("array constructor param passed as string", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://Qmdo7CBVn8TgRbPxtFMCPqZVH8ptv7Wb2Xmcy6kSLboUYA/2";
