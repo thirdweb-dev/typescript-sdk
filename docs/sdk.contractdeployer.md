@@ -29,6 +29,7 @@ export declare class ContractDeployer extends RPCConnectionHandler
 |  [deployNFTCollection(metadata)](./sdk.contractdeployer.deploynftcollection.md) |  | Deploys a new NFTCollection contract |
 |  [deployNFTDrop(metadata)](./sdk.contractdeployer.deploynftdrop.md) |  | Deploys a new NFTDrop contract |
 |  [deployPack(metadata)](./sdk.contractdeployer.deploypack.md) |  | Deploys a new Pack contract |
+|  [deploySignatureDrop(metadata)](./sdk.contractdeployer.deploysignaturedrop.md) |  | Deploys a new NFTDrop contract |
 |  [deploySplit(metadata)](./sdk.contractdeployer.deploysplit.md) |  | Deploys a new Split contract |
 |  [deployToken(metadata)](./sdk.contractdeployer.deploytoken.md) |  | Deploys a new Token contract |
 |  [deployTokenDrop(metadata)](./sdk.contractdeployer.deploytokendrop.md) |  | Deploys a new Token Drop contract |

@@ -9,12 +9,14 @@ import { Pack } from "./pack";
 import { NFTDrop } from "./nft-drop";
 import { TokenDrop } from "./token-drop";
 import { SmartContract } from "./smart-contract";
+import { MyNFTDrop } from "./my-nft-drop";
 
 /**
  * @internal
  */
 export const KNOWN_CONTRACTS_MAP = {
   [NFTDrop.contractType]: NFTDrop,
+  [MyNFTDrop.contractType]: MyNFTDrop,
   [NFTCollection.contractType]: NFTCollection,
   [EditionDrop.contractType]: EditionDrop,
   [Edition.contractType]: Edition,
@@ -39,6 +41,7 @@ export const CONTRACTS_MAP = {
  */
 export const REMOTE_CONTRACT_NAME = {
   [NFTDrop.contractType]: "DropERC721",
+  [MyNFTDrop.contractType]: "SignatureDrop",
   [NFTCollection.contractType]: "TokenERC721",
   [EditionDrop.contractType]: "DropERC1155",
   [Edition.contractType]: "TokenERC1155",
@@ -56,6 +59,7 @@ export const REMOTE_CONTRACT_NAME = {
  */
 export const REMOTE_CONTRACT_TO_CONTRACT_TYPE = {
   DropERC721: NFTDrop.contractType,
+  SignatureDrop: MyNFTDrop.contractType,
   TokenERC721: NFTCollection.contractType,
   DropERC1155: EditionDrop.contractType,
   TokenERC1155: Edition.contractType,

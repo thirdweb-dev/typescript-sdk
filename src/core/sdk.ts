@@ -7,6 +7,7 @@ import {
   Marketplace,
   NFTCollection,
   NFTDrop,
+  MyNFTDrop,
   Pack,
   REMOTE_CONTRACT_TO_CONTRACT_TYPE,
   Split,
@@ -154,6 +155,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       contractAddress,
       NFTDrop.contractType,
     ) as NFTDrop;
+  }
+
+  /**
+   * Get an instance of a SignatureDrop contract
+   * @param contractAddress - the address of the deployed contract
+   * @returns the contract
+   */
+  public getSignatureDrop(contractAddress: string): MyNFTDrop {
+    return this.getBuiltInContract(
+        contractAddress,
+        MyNFTDrop.contractType,
+    ) as MyNFTDrop;
   }
 
   /**

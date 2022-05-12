@@ -575,6 +575,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
     deployNFTDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deployPack(metadata: NFTContractDeployMetadata): Promise<string>;
+    deploySignatureDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deploySplit(metadata: SplitContractDeployMetadata): Promise<string>;
     deployToken(metadata: TokenContractDeployMetadata): Promise<string>;
     deployTokenDrop(metadata: TokenContractDeployMetadata): Promise<string>;
@@ -747,6 +748,7 @@ export class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | T
 export const CONTRACTS_MAP: {
     readonly custom: typeof SmartContract;
     readonly "nft-drop": typeof NFTDrop;
+    readonly "my-nft-drop": typeof MyNFTDrop;
     readonly "nft-collection": typeof NFTCollection;
     readonly "edition-drop": typeof EditionDrop;
     readonly edition: typeof Edition;
@@ -1643,11 +1645,12 @@ export class Erc20SignatureMinting {
     verify(signedPayload: SignedPayload20): Promise<boolean>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "SignatureDrop" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "TokenERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721 = BaseERC721> implements UpdateableNetwork, DetectableFeature {
+export class Erc721<T extends SignatureDrop | DropERC721 | TokenERC721 | BaseERC721 = BaseERC721> implements UpdateableNetwork, DetectableFeature {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
     balanceOf(address: string): Promise<BigNumber>;
@@ -1998,6 +2001,7 @@ export type JsonObject = {
 // @internal (undocumented)
 export const KNOWN_CONTRACTS_MAP: {
     readonly "nft-drop": typeof NFTDrop;
+    readonly "my-nft-drop": typeof MyNFTDrop;
     readonly "nft-collection": typeof NFTCollection;
     readonly "edition-drop": typeof EditionDrop;
     readonly edition: typeof Edition;
@@ -2242,6 +2246,165 @@ export class MissingOwnerRoleError extends Error {
 // @internal (undocumented)
 export class MissingRoleError extends Error {
     constructor(address: string, role: string);
+}
+
+// @public
+export class MyNFTDrop extends Erc721<SignatureDrop> {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SignatureDrop>);
+    // (undocumented)
+    analytics: ContractAnalytics<SignatureDrop>;
+    burn(tokenId: BigNumberish): Promise<TransactionResult>;
+    // (undocumented)
+    static contractAbi: any;
+    // (undocumented)
+    static contractRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static contractType: "my-nft-drop";
+    createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // (undocumented)
+    encoder: ContractEncoder<SignatureDrop>;
+    // (undocumented)
+    estimator: GasCostEstimator<SignatureDrop>;
+    // (undocumented)
+    events: ContractEvents<SignatureDrop>;
+    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
+    getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "tokendIds"
+    //
+    // (undocumented)
+    getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
+    // @internal (undocumented)
+    interceptor: ContractInterceptor<SignatureDrop>;
+    isTransferRestricted(): Promise<boolean>;
+    // (undocumented)
+    metadata: ContractMetadata<SignatureDrop, typeof MyNFTDrop.schema>;
+    // (undocumented)
+    platformFee: ContractPlatformFee<SignatureDrop>;
+    // (undocumented)
+    primarySale: ContractPrimarySale<SignatureDrop>;
+    // (undocumented)
+    roles: ContractRoles<SignatureDrop, typeof MyNFTDrop.contractRoles[number]>;
+    royalty: ContractRoyalty<SignatureDrop, typeof MyNFTDrop.schema>;
+    // @internal (undocumented)
+    static schema: {
+        deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, {
+        platform_fee_basis_points: ZodDefault<ZodNumber>;
+        platform_fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        primary_sale_recipient: ZodEffects<ZodString, string, string>;
+        }>, {
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        }>, "strip", ZodTypeAny, {
+        symbol: string;
+        name: string;
+        description?: string | undefined;
+        merkle: Record<string, string>;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        primary_sale_recipient: string;
+        platform_fee_basis_points: number;
+        platform_fee_recipient: string;
+        trusted_forwarders: string[];
+        }, {
+        symbol?: string | undefined;
+        name: string;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        primary_sale_recipient: string;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
+        }>;
+        output: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        image: ZodOptional<ZodString>;
+        }>, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        name: string;
+        description?: string | undefined;
+        merkle: Record<string, string>;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        symbol: string;
+        }, {
+        [x: string]: Json;
+        name: string;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        symbol?: string | undefined;
+        }>;
+        input: ZodObject<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, "strip", ZodTypeAny, {
+        name: string;
+        description?: string | undefined;
+        merkle: Record<string, string>;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        symbol: string;
+        }, {
+        name: string;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        symbol?: string | undefined;
+        }>;
+    };
+    totalClaimedSupply(): Promise<BigNumber>;
+    totalSupply(): Promise<BigNumber>;
+    totalUnclaimedSupply(): Promise<BigNumber>;
 }
 
 // @public (undocumented)
@@ -3024,6 +3187,7 @@ export interface QueryAllParams {
 // @internal (undocumented)
 export const REMOTE_CONTRACT_NAME: {
     readonly "nft-drop": "DropERC721";
+    readonly "my-nft-drop": "SignatureDrop";
     readonly "nft-collection": "TokenERC721";
     readonly "edition-drop": "DropERC1155";
     readonly edition: "TokenERC1155";
@@ -3041,6 +3205,7 @@ export const REMOTE_CONTRACT_NAME: {
 // @internal (undocumented)
 export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly DropERC721: "nft-drop";
+    readonly SignatureDrop: "my-nft-drop";
     readonly TokenERC721: "nft-collection";
     readonly DropERC1155: "edition-drop";
     readonly TokenERC1155: "edition";
@@ -4242,7 +4407,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ThirdwebContract>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "split" | "custom" | "token" | "pack" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "nft-collection";
+        contractType: "split" | "custom" | "token" | "pack" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "my-nft-drop" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
     getEdition(address: string): Edition;
@@ -4255,6 +4420,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     //
     // @internal (undocumented)
     getPublisher(): Promise<ContractPublisher>;
+    getSignatureDrop(contractAddress: string): MyNFTDrop;
     getSplit(address: string): Split;
     getToken(address: string): Token;
     getTokenDrop(address: string): TokenDrop;

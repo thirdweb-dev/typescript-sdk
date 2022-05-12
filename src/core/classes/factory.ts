@@ -8,6 +8,7 @@ import {
   Marketplace,
   NFTCollection,
   NFTDrop,
+  MyNFTDrop,
   Pack,
   REMOTE_CONTRACT_NAME,
   Split,
@@ -106,6 +107,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     }
     switch (contractType) {
       case NFTDrop.contractType:
+      case MyNFTDrop.contractType:
       case NFTCollection.contractType:
         const erc721metadata = NFTDrop.schema.deploy.parse(metadata);
         return [

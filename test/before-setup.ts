@@ -10,6 +10,7 @@ import {
   DropERC721__factory,
   Marketplace__factory,
   Pack__factory,
+  SignatureDrop__factory,
   Split__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
@@ -34,6 +35,7 @@ import {
   Marketplace,
   NFTCollection,
   NFTDrop,
+  MyNFTDrop,
   Pack,
   Split,
   ThirdwebSDK,
@@ -195,6 +197,9 @@ before(async () => {
         break;
       case NFTDrop.contractType:
         factory = DropERC721__factory;
+        break;
+      case MyNFTDrop.contractType:
+        factory = SignatureDrop__factory;
         break;
       case Edition.contractType:
         factory = TokenERC1155__factory;
