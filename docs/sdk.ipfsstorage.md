@@ -17,7 +17,7 @@ export declare class IpfsStorage implements IStorage
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(gatewayUrl)](./sdk.ipfsstorage._constructor_.md) |  | Constructs a new instance of the <code>IpfsStorage</code> class |
+|  [(constructor)(gatewayUrl, uploader)](./sdk.ipfsstorage._constructor_.md) |  | Constructs a new instance of the <code>IpfsStorage</code> class |
 
 ## Methods
 
@@ -25,7 +25,6 @@ export declare class IpfsStorage implements IStorage
 |  --- | --- | --- |
 |  [get(hash)](./sdk.ipfsstorage.get.md) |  | Fetches data from storage. This method expects to fetch JSON formatted data |
 |  [getRaw(hash)](./sdk.ipfsstorage.getraw.md) |  | Fetches data from storage. This method does not make any assumptions on the retrieved data format |
-|  [getUploadToken(contractAddress)](./sdk.ipfsstorage.getuploadtoken.md) |  | Fetches a one-time-use upload token that can used to upload a file to storage. |
 |  [upload(data, contractAddress, signerAddress)](./sdk.ipfsstorage.upload.md) |  | Uploads a file to the storage. |
 |  [uploadBatch(files, fileStartNumber, contractAddress, signerAddress)](./sdk.ipfsstorage.uploadbatch.md) |  | Uploads a folder to storage. |
 |  [uploadMetadata(metadata, contractAddress, signerAddress)](./sdk.ipfsstorage.uploadmetadata.md) |  | Uploads JSON metadata to IPFS |

@@ -13,11 +13,11 @@ SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
         rpcUrl: z.ZodString;
         chainId: z.ZodOptional<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
-        chainId?: number | undefined;
         rpcUrl: string;
+        chainId?: number | undefined;
     }, {
-        chainId?: number | undefined;
         rpcUrl: string;
+        chainId?: number | undefined;
     }>>;
     gasSettings: z.ZodDefault<z.ZodObject<{
         maxPriceInGwei: z.ZodDefault<z.ZodNumber>;
@@ -37,8 +37,8 @@ SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
             relayerUrl: string;
             relayerForwarderAddress: string;
         }, {
-            relayerForwarderAddress?: string | undefined;
             relayerUrl: string;
+            relayerForwarderAddress?: string | undefined;
         }>;
     }, "strip", z.ZodTypeAny, {
         openzeppelin: {
@@ -47,8 +47,8 @@ SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
         };
     }, {
         openzeppelin: {
-            relayerForwarderAddress?: string | undefined;
             relayerUrl: string;
+            relayerForwarderAddress?: string | undefined;
         };
     }>, z.ZodObject<{
         biconomy: z.ZodObject<{
@@ -60,9 +60,9 @@ SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
             apiKey: string;
             deadlineSeconds: number;
         }, {
-            deadlineSeconds?: number | undefined;
             apiId: string;
             apiKey: string;
+            deadlineSeconds?: number | undefined;
         }>;
     }, "strip", z.ZodTypeAny, {
         biconomy: {
@@ -72,16 +72,20 @@ SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
         };
     }, {
         biconomy: {
-            deadlineSeconds?: number | undefined;
             apiId: string;
             apiKey: string;
+            deadlineSeconds?: number | undefined;
         };
     }>]>>;
 }, "strip", z.ZodTypeAny, {
     readonlySettings?: {
-        chainId?: number | undefined;
         rpcUrl: string;
+        chainId?: number | undefined;
     } | undefined;
+    gasSettings: {
+        maxPriceInGwei: number;
+        speed: "standard" | "fast" | "fastest";
+    };
     gasless?: {
         openzeppelin: {
             relayerUrl: string;
@@ -94,14 +98,10 @@ SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
             deadlineSeconds: number;
         };
     } | undefined;
-    gasSettings: {
-        maxPriceInGwei: number;
-        speed: "standard" | "fast" | "fastest";
-    };
 }, {
     readonlySettings?: {
-        chainId?: number | undefined;
         rpcUrl: string;
+        chainId?: number | undefined;
     } | undefined;
     gasSettings?: {
         maxPriceInGwei?: number | undefined;
@@ -109,14 +109,14 @@ SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
     } | undefined;
     gasless?: {
         openzeppelin: {
-            relayerForwarderAddress?: string | undefined;
             relayerUrl: string;
+            relayerForwarderAddress?: string | undefined;
         };
     } | {
         biconomy: {
-            deadlineSeconds?: number | undefined;
             apiId: string;
             apiKey: string;
+            deadlineSeconds?: number | undefined;
         };
     } | undefined;
 }>>
