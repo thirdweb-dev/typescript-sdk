@@ -680,7 +680,7 @@ export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
     // Warning: (ae-forgotten-export) The symbol "AbiFunction" needs to be exported by the entry point index.d.ts
     //
     // @public (undocumented)
-    extractFunctions(): Promise<AbiFunction[]>;
+    extractFunctions(): AbiFunction[];
     // Warning: (ae-forgotten-export) The symbol "PublishedMetadata" needs to be exported by the entry point index.d.ts
     //
     // @public
