@@ -142,19 +142,23 @@ export function extractFunctionsFromAbi(
 }
 
 function toJSType(contractType: string, isReturnType = false): string {
+  let jsType = contractType;
   if (contractType.startsWith("bytes")) {
-    return "BytesLike";
+    jsType = "BytesLike";
   }
   if (contractType.startsWith("uint") || contractType.startsWith("int")) {
-    return isReturnType ? "BigNumber" : "BigNumberish";
+    jsType = isReturnType ? "BigNumber" : "BigNumberish";
   }
   if (contractType === "bool") {
-    return "boolean";
+    jsType = "boolean";
   }
   if (contractType === "address") {
-    return "string";
+    jsType = "string";
   }
-  return contractType;
+  if (contractType.endsWith("[]")) {
+    jsType += "[]";
+  }
+  return jsType;
 }
 
 /**
