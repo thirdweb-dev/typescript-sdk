@@ -8,6 +8,15 @@
     },
     "methods": [
       {
+        "name": "burn",
+        "summary": "Burn a specified amount of a NFT\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const result = await contract.burn(tokenId, amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Edition.burn"
+      },
+      {
         "name": "getAll",
         "summary": "Get All Minted NFTs\n\n",
         "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
@@ -110,6 +119,15 @@
       "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getEditionDrop(\"{{contract_address}}\");"
     },
     "methods": [
+      {
+        "name": "burn",
+        "summary": "Burn a specified amount of a NFT\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const result = await contract.burn(tokenId, amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop.burn"
+      },
       {
         "name": "claimTo",
         "summary": "Claim NFTs to a specific Wallet\n\n",
@@ -272,6 +290,15 @@
     },
     "methods": [
       {
+        "name": "burn",
+        "summary": "Burn a single NFT\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const result = await contract.burn(tokenId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTCollection.burn"
+      },
+      {
         "name": "getAll",
         "summary": "Get All Minted NFTs\n\n",
         "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
@@ -365,6 +392,15 @@
       "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getNFTDrop(\"{{contract_address}}\");"
     },
     "methods": [
+      {
+        "name": "burn",
+        "summary": "Burn a single NFT\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const result = await contract.burn(tokenId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.burn"
+      },
       {
         "name": "claimTo",
         "summary": "Claim unique NFTs to a specific Wallet\n\n",
@@ -781,7 +817,7 @@
         "summary": "Signature Minting\n\n",
         "remarks": "\n\nGenerate tokens that can be minted only with your own signature, attaching your own set of mint conditions.\n\n",
         "examples": {
-          "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
+          "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the tokens\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.erc20signatureminting"
       }

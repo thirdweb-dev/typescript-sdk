@@ -346,6 +346,11 @@ export class NFTCollection extends Erc721<TokenERC721> {
   /**
    * Burn a single NFT
    * @param tokenId - the token Id to burn
+   *
+   * @example
+   * ```javascript
+   * const result = await contract.burn(tokenId);
+   * ```
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return {
