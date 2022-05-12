@@ -23,9 +23,8 @@ Generate tokens that can be minted only with your own signature, attaching your 
 // see how to craft a payload to sign in the `contract.signature.generate()` documentation
 const signedPayload = contract.signature.generate(payload);
 
-// now anyone can mint the NFT
+// now anyone can mint the tokens
 const tx = contract.signature.mint(signedPayload);
 const receipt = tx.receipt; // the mint transaction receipt
-const mintedId = tx.id; // the id of the NFT minted
 ```
 

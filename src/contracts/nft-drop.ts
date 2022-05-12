@@ -521,7 +521,14 @@ export class NFTDrop extends Erc721<DropERC721> {
 
   /**
    * Burn a single NFT
+   *
    * @param tokenId - the token Id to burn
+   *
+   * @example
+   * ```javascript
+   * const result = await contract.burn(tokenId);
+   * ```
+   *
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return {

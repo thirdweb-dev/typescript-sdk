@@ -4,7 +4,7 @@
 
 ## Edition.burn() method
 
-Burn a single NFT
+Burn a specified amount of a NFT
 
 <b>Signature:</b>
 
@@ -22,4 +22,11 @@ burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
 <b>Returns:</b>
 
 Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
+
+## Example
+
+
+```javascript
+const result = await contract.burn(tokenId, amount);
+```
 

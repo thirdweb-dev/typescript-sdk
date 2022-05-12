@@ -337,9 +337,15 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   }
 
   /**
-   * Burn a single NFT
+   * Burn a specified amount of a NFT
+   *
    * @param tokenId - the token Id to burn
    * @param amount - amount to burn
+   *
+   * @example
+   * ```javascript
+   * const result = await contract.burn(tokenId, amount);
+   * ```
    */
   public async burn(
     tokenId: BigNumberish,
