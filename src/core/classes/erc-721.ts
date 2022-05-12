@@ -24,7 +24,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks Basic functionality for a ERC721 contract that handles IPFS storage for you.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.nft.transfer(walletAddress, tokenId);
  * ```
  * @public

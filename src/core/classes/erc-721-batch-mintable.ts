@@ -14,7 +14,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks NFT batch minting functionality that handles IPFS storage for you.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.nft.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);
  * ```
  * @public

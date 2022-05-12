@@ -4,7 +4,7 @@
     "summary": "Handle platform fees and recipients\n\n",
     "remarks": "\n\nConfigure platform fees for a contract, which can be applied on certain paid transactions\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst feeInfo = await contract.platformFee.get();\nawait contract.platformFee.set({\n  platform_fee_basis_points: 100, // 1% fee\n  platform_fee_recipient: \"0x...\" // the fee recipient\n})"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nconst feeInfo = await contract.platformFee.get();\nawait contract.platformFee.set({\n  platform_fee_basis_points: 100, // 1% fee\n  platform_fee_recipient: \"0x...\" // the fee recipient\n})"
     },
     "methods": [],
     "properties": [],
@@ -17,7 +17,7 @@
     "summary": "Handle primary sales recipients\n\n",
     "remarks": "\n\nConfigure primary sale recipients for an entire contract.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst salesRecipient = await contract.sales.getRecipient();\nawait contract.roles.setRecipient(recipientWalletAddress);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nconst salesRecipient = await contract.sales.getRecipient();\nawait contract.roles.setRecipient(recipientWalletAddress);"
     },
     "methods": [],
     "properties": [],
@@ -30,7 +30,7 @@
     "summary": "Handle contract permissions\n\n",
     "remarks": "\n\nConfigure roles and permissions for a contract, to restrict certain actions.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst rolesAndMembers = await contract.roles.getAll();\nawait contract.roles.grantRole(\"admin\", \"0x...\");"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nconst rolesAndMembers = await contract.roles.getAll();\nawait contract.roles.grantRole(\"admin\", \"0x...\");"
     },
     "methods": [
       {
@@ -66,7 +66,7 @@
     "summary": "Handle contract royalties\n\n",
     "remarks": "\n\nConfigure royalties for an entire contract or a particular token.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();\nawait contract.roles.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 100, // 1% royalty fee\n  fee_recipient: \"0x...\", // the fee recipient\n});"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nconst royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();\nawait contract.roles.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 100, // 1% royalty fee\n  fee_recipient: \"0x...\", // the fee recipient\n});"
     },
     "methods": [],
     "properties": [],
@@ -79,7 +79,7 @@
     "summary": "Standard ERC1155 NFT functions\n\n",
     "remarks": "\n\nBasic functionality for a ERC1155 contract that handles IPFS storage for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.edition.transfer(walletAddress, tokenId, quantity);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.edition.transfer(walletAddress, tokenId, quantity);"
     },
     "methods": [
       {
@@ -137,7 +137,7 @@
     "summary": "Mint Many ERC1155 NFTs at once\n\n",
     "remarks": "\n\nNFT batch minting functionality that handles IPFS storage for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.edition.mint.batch.to(walletAddress, [nftMetadataWithSupply1, nftMetadataWithSupply2, ...]);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.edition.mint.batch.to(walletAddress, [nftMetadataWithSupply1, nftMetadataWithSupply2, ...]);"
     },
     "methods": [
       {
@@ -162,7 +162,7 @@
     "summary": "List ERC1155 NFTs\n\n",
     "remarks": "\n\nEasily list all the NFTs in a ERC1155 contract.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst nfts = await contract.edition.query.all();"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nconst nfts = await contract.edition.query.all();"
     },
     "methods": [
       {
@@ -198,7 +198,7 @@
     "summary": "Mint ERC1155 NFTs\n\n",
     "remarks": "\n\nNFT minting functionality that handles IPFS storage for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.edition.mint.to(walletAddress, nftMetadata);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.edition.mint.to(walletAddress, nftMetadata);"
     },
     "methods": [
       {
@@ -223,7 +223,7 @@
     "summary": "Standard ERC20 Token functions\n\n",
     "remarks": "\n\nBasic functionality for a ERC20 contract that handles all unit transformation for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.token.transfer(walletAddress, amount);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.token.transfer(walletAddress, amount);"
     },
     "methods": [
       {
@@ -347,7 +347,7 @@
     "summary": "Mint Many ERC20 Tokens at once\n\n",
     "remarks": "\n\nToken batch minting functionality that handles unit parsing for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.token.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.token.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);"
     },
     "methods": [
       {
@@ -372,7 +372,7 @@
     "summary": "Mint ERC20 Tokens\n\n",
     "remarks": "\n\nToken minting functionality that handles unit parsing for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.mint.to(walletAddress, nftMetadata);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.mint.to(walletAddress, nftMetadata);"
     },
     "methods": [
       {
@@ -397,7 +397,7 @@
     "summary": "Standard ERC721 NFT functions\n\n",
     "remarks": "\n\nBasic functionality for a ERC721 contract that handles IPFS storage for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.transfer(walletAddress, tokenId);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.transfer(walletAddress, tokenId);"
     },
     "methods": [
       {
@@ -444,7 +444,7 @@
     "summary": "Mint Many ERC721 NFTs at once\n\n",
     "remarks": "\n\nNFT batch minting functionality that handles IPFS storage for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);"
     },
     "methods": [
       {
@@ -469,7 +469,7 @@
     "summary": "List owned ERC721 NFTs\n\n",
     "remarks": "\n\nEasily list all the NFTs from a ERC721 contract, owned by a certain wallet.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst walletAddress = \"0x...\";\nconst ownedNFTs = await contract.nft.query.owned.all(walletAddress);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nconst walletAddress = \"0x...\";\nconst ownedNFTs = await contract.nft.query.owned.all(walletAddress);"
     },
     "methods": [
       {
@@ -494,7 +494,7 @@
     "summary": "Mint ERC721 NFTs\n\n",
     "remarks": "\n\nNFT minting functionality that handles IPFS storage for you.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.mint.to(walletAddress, nftMetadata);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.mint.to(walletAddress, nftMetadata);"
     },
     "methods": [
       {
@@ -519,7 +519,7 @@
     "summary": "List ERC721 NFTs\n\n",
     "remarks": "\n\nEasily list all the NFTs in a ERC721 contract.\n\n",
     "examples": {
-      "javascript": "const contract = sdk.getContract(\"{{contract_address}}\");\nconst nfts = await contract.nft.query.all();"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nconst nfts = await contract.nft.query.all();"
     },
     "methods": [
       {
