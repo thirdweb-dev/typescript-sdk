@@ -8,7 +8,7 @@ import { appContract, registryAddress, signers } from "./before-setup";
 import { ethers } from "hardhat";
 import { assert } from "chai";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Bundle Contract (aka Collection Contract)", async () => {
   let bundleDropContract: BundleDropContract;

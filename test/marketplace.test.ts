@@ -20,7 +20,7 @@ import {
 import { isWinningBid } from "../src/common/marketplace";
 import { ethers as hardhatEthers } from "hardhat";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 let tokenAddress = NATIVE_TOKEN_ADDRESS;
 

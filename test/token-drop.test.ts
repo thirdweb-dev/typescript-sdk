@@ -14,7 +14,7 @@ import { TokenDrop } from "../src/contracts/token-drop";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Token Drop Contract", async () => {
   let dropContract: TokenDrop;

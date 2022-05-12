@@ -9,7 +9,7 @@ chai.use(deepEqualInAnyOrder);
 
 const { expect, assert } = chai;
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Snapshots", async () => {
   let snapshot: Snapshot;

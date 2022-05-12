@@ -5,7 +5,7 @@ import { ethers as hardhatEthers } from "hardhat";
 import { sdk, signers } from "./before-setup";
 import { Token, Vote } from "../src";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Vote Contract", async () => {
   let voteContract: Vote;
