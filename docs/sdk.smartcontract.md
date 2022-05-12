@@ -24,7 +24,7 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 // You can switch out this provider with any wallet or provider setup you like.
 const sdk = new ThirdwebSDK(provider);
-const contract = sdk.getContract("{{contract_address}}");
+const contract = await sdk.getContract("{{contract_address}}");
 
 // call any function in your contract
 await contract.functions.myCustomFunction(params);
@@ -49,7 +49,6 @@ const tx = await contract.nft.mint.to("0x...", {
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [analytics](./sdk.smartcontract.analytics.md) |  | ContractAnalytics&lt;TContract&gt; | <b><i>(BETA)</i></b> |
 |  [contractType](./sdk.smartcontract.contracttype.md) | <code>static</code> | "custom" | <b><i>(BETA)</i></b> |
 |  [edition](./sdk.smartcontract.edition.md) |  | [Erc1155](./sdk.erc1155.md) \| undefined | <b><i>(BETA)</i></b> Auto-detects ERC1155 standard functions. |
 |  [estimator](./sdk.smartcontract.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TContract&gt; | <b><i>(BETA)</i></b> |

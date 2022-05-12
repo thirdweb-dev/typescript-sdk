@@ -2,10 +2,14 @@ import { ThirdwebContract } from "contracts";
 import { ContractWrapper } from "./contract-wrapper";
 import { extractFunctionsFromAbi, fetchContractMetadata } from "../../common";
 import { IStorage } from "../interfaces";
-import { AbiFunction, PublishedMetadata } from "../../schema/contracts/custom";
+import {
+  AbiFunction,
+  AbiSchema,
+  PublishedMetadata,
+} from "../../schema/contracts/custom";
 
 /**
- * Handles primary sales recipients for a Contract
+ * Handles publish metadata for a contract
  * @internal
  */
 export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
@@ -35,8 +39,8 @@ export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
   /**
    * @public
    */
-  public async extractFunctions(): Promise<AbiFunction[]> {
-    const abi = (await this.get()).abi;
-    return extractFunctionsFromAbi(abi);
+  public extractFunctions(): AbiFunction[] {
+    // to construct a contract we already **have** to have the abi on the contract wrapper, so there is no reason to look fetch it again (means this function can become synchronous as well!)
+    return extractFunctionsFromAbi(AbiSchema.parse(this.contractWrapper.abi));
   }
 }

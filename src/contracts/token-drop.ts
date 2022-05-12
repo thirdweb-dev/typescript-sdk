@@ -59,6 +59,9 @@ export class TokenDrop extends Erc20<DropERC20> {
   public estimator: GasCostEstimator<DropERC20>;
   public sales: ContractPrimarySale<DropERC20>;
   public platformFee: ContractPlatformFee<DropERC20>;
+  /**
+   * @internal
+   */
   public analytics: ContractAnalytics<DropERC20>;
   /**
    * Configure claim conditions

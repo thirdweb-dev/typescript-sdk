@@ -4,7 +4,7 @@ import { assert, expect } from "chai";
 import { NFTCollection } from "../src/contracts";
 import { sdk, signers, storage } from "./before-setup";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("NFT Contract", async () => {
   type NewType = NFTCollection;

@@ -3,7 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { BigNumber } from "ethers";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Wallet", async () => {
   let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;

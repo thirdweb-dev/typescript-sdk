@@ -6,7 +6,7 @@ import { BigNumber } from "ethers";
 import { EditionMetadataInput, Pack, Edition } from "../src";
 import { PackMetadata } from "../src/types/packs";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 // TODO: Write some actual pack contract tests
 describe("Pack Contract", async () => {

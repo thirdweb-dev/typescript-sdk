@@ -14,7 +14,7 @@ import {
   fetchContractMetadata,
 } from "../src/common/feature-detection";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("IPFS Uploads", async () => {
   const storage: IpfsStorage = new IpfsStorage(ipfsGatewayUrl);

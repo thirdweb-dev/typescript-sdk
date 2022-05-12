@@ -22,3 +22,10 @@ burn(tokenId: BigNumberish): Promise<TransactionResult>;
 
 Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
 
+## Example
+
+
+```javascript
+const result = await contract.burn(tokenId);
+```
+

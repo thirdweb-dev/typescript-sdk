@@ -25,7 +25,6 @@ Get a wallets token balance.
 
 
 ```javascript
-const balance = await contract.balance();
-console.log(balance);
+const balance = await contract.token.balance();
 ```
 

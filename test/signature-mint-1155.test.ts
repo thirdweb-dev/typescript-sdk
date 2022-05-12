@@ -9,7 +9,7 @@ import {
 } from "../src/schema/contracts/common/signature";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Edition sig minting", async () => {
   let editionContract: Edition;

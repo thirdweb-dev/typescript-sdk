@@ -24,7 +24,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks Basic functionality for a ERC721 contract that handles IPFS storage for you.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.nft.transfer(walletAddress, tokenId);
  * ```
  * @public
@@ -82,7 +82,7 @@ export class Erc721<
    * @example
    * ```javascript
    * const tokenId = 0;
-   * const nft = await contract.get(tokenId);
+   * const nft = await contract.nft.get(tokenId);
    * ```
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
@@ -113,7 +113,7 @@ export class Erc721<
    * @example
    * ```javascript
    * const walletAddress = "{{wallet_address}}";
-   * const balance = await contract.balanceOf(walletAddress);
+   * const balance = await contract.nft.balanceOf(walletAddress);
    * console.log(balance);
    * ```
    */
@@ -153,7 +153,7 @@ export class Erc721<
    * ```javascript
    * const walletAddress = "{{wallet_address}}";
    * const tokenId = 0;
-   * await contract.transfer(walletAddress, tokenId);
+   * await contract.nft.transfer(walletAddress, tokenId);
    * ```
    */
   public async transfer(

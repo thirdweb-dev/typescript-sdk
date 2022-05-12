@@ -8,7 +8,7 @@ import { ClaimEligibility } from "../src/enums";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import invariant from "tiny-invariant";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");

@@ -61,6 +61,9 @@ export class Marketplace implements UpdateableNetwork {
   public events: ContractEvents<MarketplaceContract>;
   public estimator: GasCostEstimator<MarketplaceContract>;
   public platformFee: ContractPlatformFee<MarketplaceContract>;
+  /**
+   * @internal
+   */
   public analytics: ContractAnalytics<MarketplaceContract>;
   public metadata: ContractMetadata<
     MarketplaceContract,

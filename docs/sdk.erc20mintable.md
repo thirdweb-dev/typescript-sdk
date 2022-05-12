@@ -21,7 +21,7 @@ Token minting functionality that handles unit parsing for you.
 
 
 ```javascript
-const contract = sdk.getContract("{{contract_address}}");
+const contract = await sdk.getContract("{{contract_address}}");
 await contract.nft.mint.to(walletAddress, nftMetadata);
 ```
 

@@ -73,6 +73,7 @@ export const expectError = (e: unknown, message: string) => {
 
 before(async () => {
   signers = await hardhatEthers.getSigners();
+
   [signer] = signers;
 
   const trustedForwarderAddress = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
@@ -232,7 +233,6 @@ before(async () => {
     storage,
   );
 });
-
 export {
   ipfsGatewayUrl,
   sdk,

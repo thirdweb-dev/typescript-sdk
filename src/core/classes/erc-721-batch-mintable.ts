@@ -14,7 +14,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks NFT batch minting functionality that handles IPFS storage for you.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.nft.mint.batch.to(walletAddress, [nftMetadata1, nftMetadata2, ...]);
  * ```
  * @public
@@ -56,7 +56,7 @@ export class Erc721BatchMintable implements DetectableFeature {
    *   image: fs.readFileSync("path/to/other/image.png"),
    * }];
    *
-   * const tx = await contract.mintBatchTo(walletAddress, metadatas);
+   * const tx = await contract.mint.batch.to(walletAddress, metadatas);
    * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
    * const firstTokenId = tx[0].id; // token id of the first minted NFT
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT

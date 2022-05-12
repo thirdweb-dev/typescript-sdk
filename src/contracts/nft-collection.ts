@@ -66,6 +66,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
   public events: ContractEvents<TokenERC721>;
   public primarySale: ContractPrimarySale<TokenERC721>;
   public platformFee: ContractPlatformFee<TokenERC721>;
+  /**
+   * @internal
+   */
   public analytics: ContractAnalytics<TokenERC721>;
   /**
    * Configure royalties
@@ -343,6 +346,11 @@ export class NFTCollection extends Erc721<TokenERC721> {
   /**
    * Burn a single NFT
    * @param tokenId - the token Id to burn
+   *
+   * @example
+   * ```javascript
+   * const result = await contract.burn(tokenId);
+   * ```
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return {

@@ -13,7 +13,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks Token minting functionality that handles unit parsing for you.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.nft.mint.to(walletAddress, nftMetadata);
  * ```
  * @public
@@ -43,7 +43,7 @@ export class Erc20Mintable implements DetectableFeature {
    * ```javascript
    * const toAddress = "{{wallet_address}}"; // Address of the wallet you want to mint the tokens to
    * const amount = "1.5"; // The amount of this token you want to mint
-   * await contract.mintTo(toAddress, amount);
+   * await contract.token.mint.to(toAddress, amount);
    * ```
    */
   public async to(to: string, amount: Amount): Promise<TransactionResult> {

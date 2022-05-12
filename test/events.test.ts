@@ -5,7 +5,7 @@ import { expect } from "chai";
 import { NFTDrop, ThirdwebSDK } from "../src";
 import { AddressZero } from "@ethersproject/constants";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Events", async () => {
   let dropContract: NFTDrop;

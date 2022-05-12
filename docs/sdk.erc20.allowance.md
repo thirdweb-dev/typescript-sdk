@@ -34,6 +34,6 @@ Get the allowance of a 'spender' wallet over the connected wallet's funds - the 
 ```javascript
 // Address of the wallet to check token allowance
 const spenderAddress = "0x...";
-const allowance = await contract.allowanceOf(otherAddress);
+const allowance = await contract.token.allowance(spenderAddress);
 ```
 
