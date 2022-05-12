@@ -17,7 +17,7 @@ import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
  * @remarks NFT minting functionality that handles IPFS storage for you.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.edition.mint.to(walletAddress, nftMetadata);
  * ```
  * @public
@@ -66,7 +66,7 @@ export class Erc1155Mintable implements DetectableFeature {
    *   supply: 1000, // The number of this NFT you want to mint
    * }
    *
-   * const tx = await contract.mintTo(toAddress, metadataWithSupply);
+   * const tx = await contract.edition.mint.to(toAddress, metadataWithSupply);
    * const receipt = tx.receipt; // the transaction receipt
    * const tokenId = tx.id; // the id of the NFT minted
    * const nft = await tx.data(); // (optional) fetch details of minted NFT

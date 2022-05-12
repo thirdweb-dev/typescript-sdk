@@ -127,7 +127,9 @@ export function extractFunctionsFromAbi(
   const parsed = [];
   for (const f of functions) {
     const args =
-      f.inputs?.map((i) => `${i.name}: ${toJSType(i.type)}`)?.join(", ") || "";
+      f.inputs
+        ?.map((i) => `${i.name || "key"}: ${toJSType(i.type)}`)
+        ?.join(", ") || "";
     const out = f.outputs?.map((o) => toJSType(o.type, true))?.join(", ");
     const promise = out ? `: Promise<${out}>` : "";
     const signature = `${f.name}(${args})${promise}`;
@@ -142,19 +144,23 @@ export function extractFunctionsFromAbi(
 }
 
 function toJSType(contractType: string, isReturnType = false): string {
+  let jsType = contractType;
   if (contractType.startsWith("bytes")) {
-    return "BytesLike";
+    jsType = "BytesLike";
   }
   if (contractType.startsWith("uint") || contractType.startsWith("int")) {
-    return isReturnType ? "BigNumber" : "BigNumberish";
+    jsType = isReturnType ? "BigNumber" : "BigNumberish";
   }
   if (contractType === "bool") {
-    return "boolean";
+    jsType = "boolean";
   }
   if (contractType === "address") {
-    return "string";
+    jsType = "string";
   }
-  return contractType;
+  if (contractType.endsWith("[]")) {
+    jsType += "[]";
+  }
+  return jsType;
 }
 
 /**
