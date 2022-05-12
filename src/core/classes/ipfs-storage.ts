@@ -49,12 +49,14 @@ export class IpfsStorage implements IStorage {
     data: string | FileOrBuffer,
     contractAddress?: string,
     signerAddress?: string,
+    listener?: (event: { progress: number; total: number }) => void,
   ): Promise<string> {
     const { cid, fileNames } = await this.uploader.uploadBatchWithCid(
       [data],
       0,
       contractAddress,
       signerAddress,
+      listener,
     );
 
     const baseUri = `ipfs://${cid}/`;
@@ -69,12 +71,14 @@ export class IpfsStorage implements IStorage {
     fileStartNumber = 0,
     contractAddress?: string,
     signerAddress?: string,
+    listener?: (event: { progress: number; total: number }) => void,
   ): Promise<string> {
     const { cid } = await this.uploader.uploadBatchWithCid(
       files,
       fileStartNumber,
       contractAddress,
       signerAddress,
+      listener,
     );
 
     return `ipfs://${cid}/`;
@@ -104,6 +108,7 @@ export class IpfsStorage implements IStorage {
     metadata: JsonObject,
     contractAddress?: string,
     signerAddress?: string,
+    listener?: (event: { progress: number; total: number }) => void,
   ): Promise<string> {
     // since there's only single object, always use the first index
     const { metadataUris } = await this.uploadMetadataBatch(
@@ -111,6 +116,7 @@ export class IpfsStorage implements IStorage {
       0,
       contractAddress,
       signerAddress,
+      listener,
     );
     return metadataUris[0];
   }
@@ -123,6 +129,7 @@ export class IpfsStorage implements IStorage {
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
+    listener?: (event: { progress: number; total: number }) => void,
   ) {
     const metadataToUpload = (await this.batchUploadProperties(metadatas)).map(
       (m: any) => JSON.stringify(m),
@@ -133,6 +140,7 @@ export class IpfsStorage implements IStorage {
       fileStartNumber,
       contractAddress,
       signerAddress,
+      listener,
     );
 
     const baseUri = `ipfs://${cid}/`;

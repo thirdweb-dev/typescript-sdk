@@ -20,4 +20,12 @@ export enum EventType {
    * signature: signature of the message (only available when status is "completed")
    */
   Signature = "signature",
+
+  /**
+   * The event is triggered when a file is uploaded to IPFS
+   *
+   * progress: number of bytes uploaded
+   * total: total number of bytes to upload
+   */
+  UploadProgress = "upload-progress",
 }

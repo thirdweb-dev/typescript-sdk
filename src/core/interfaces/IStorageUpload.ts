@@ -1,3 +1,4 @@
+import { EventEmitter2 } from "eventemitter2";
 import { FileOrBuffer } from "../types";
 
 /**
@@ -11,11 +12,12 @@ export interface CidWithFileName {
   fileNames: string[];
 }
 
-export interface IStorageUpload {
+export interface IStorageUpload extends EventEmitter2 {
   uploadBatchWithCid(
     files: (string | FileOrBuffer)[],
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
+    listener?: (event: { progress: number; total: number }) => void,
   ): Promise<CidWithFileName>;
 }

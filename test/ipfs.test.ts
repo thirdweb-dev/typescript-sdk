@@ -1,10 +1,11 @@
-import { readFileSync } from "fs";
+import { readFile, readFileSync } from "fs";
 import { ipfsGatewayUrl } from "./before-setup";
 
 import { assert, expect } from "chai";
 import { BufferOrStringWithName } from "../src/types/BufferOrStringWithName";
 import {
   DuplicateFileNameError,
+  EventType,
   FileOrBuffer,
   IpfsStorage,
   NFTMetadataInput,
@@ -50,6 +51,35 @@ describe("IPFS Uploads", async () => {
         storage,
       );
     });
+  });
+
+  it("should upload null metadata", async () => {
+    try {
+      const metadata = JSON.parse(readFileSync("test/metadata.json", "utf8"));
+      const upload = await storage.uploadMetadataBatch([metadata]);
+      assert.isTrue(upload.metadataUris.length > 0);
+    } catch (err) {
+      assert.fail(err as string);
+    }
+  });
+
+  it.skip("should expose upload progress", async () => {
+    let updates = 0;
+    await storage.uploadBatch(
+      [
+        readFileSync("test/images/0.jpg"),
+        readFileSync("test/images/1.jpg"),
+        readFileSync("test/test.mp4"),
+      ],
+      undefined,
+      undefined,
+      undefined,
+      () => {
+        updates += 1;
+      },
+    );
+
+    expect(updates).to.be.greaterThan(0);
   });
 
   it("should upload a file through any property, even when it is in an object nested inside another object", async () => {
