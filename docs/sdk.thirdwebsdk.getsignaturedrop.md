@@ -4,12 +4,12 @@
 
 ## ThirdwebSDK.getSignatureDrop() method
 
-Get an instance of a Drop contract
+Get an instance of a SignatureDrop contract
 
 <b>Signature:</b>
 
 ```typescript
-getSignatureDrop(contractAddress: string): MyNFTDrop;
+getSignatureDrop(contractAddress: string): SignatureDrop;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getSignatureDrop(contractAddress: string): MyNFTDrop;
 
 <b>Returns:</b>
 
-[MyNFTDrop](./sdk.mynftdrop.md)
+[SignatureDrop](./sdk.signaturedrop.md)
 
 the contract
 

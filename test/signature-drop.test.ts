@@ -6,7 +6,7 @@ import { MerkleTree } from "merkletreejs";
 import { expectError, sdk, signers, storage } from "./before-setup";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
-import { MyNFTDrop, Token } from "../src/contracts";
+import { SignatureDrop, Token } from "../src/contracts";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import invariant from "tiny-invariant";
 
@@ -15,8 +15,8 @@ const keccak256 = require("keccak256");
 
 global.fetch = require("node-fetch");
 
-describe("My NFT Drop Contract", async () => {
-  let dropContract: MyNFTDrop;
+describe("SignatureDrop Contract", async () => {
+  let dropContract: SignatureDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,

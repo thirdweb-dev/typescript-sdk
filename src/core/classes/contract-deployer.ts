@@ -12,7 +12,7 @@ import {
   Marketplace,
   NFTCollection,
   NFTDrop,
-  MyNFTDrop,
+  SignatureDrop,
   Pack,
   Split,
   Token,
@@ -86,7 +86,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deploySignatureDrop(
       metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(MyNFTDrop.contractType, metadata);
+    return await this.deployBuiltInContract(SignatureDrop.contractType, metadata);
   }
 
   /**

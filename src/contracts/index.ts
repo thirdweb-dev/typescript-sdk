@@ -8,6 +8,6 @@ export * from "./split";
 export * from "./marketplace";
 export * from "./pack";
 export * from "./nft-drop";
-export * from "./my-nft-drop";
+export * from "./signature-drop";
 export * from "./maps";
 export * from "./smart-contract";

@@ -1,5 +1,5 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import { SignatureDrop } from "contracts";
+import { SignatureDrop as SignatureDropContract } from "contracts";
 import {
   BigNumber,
   BigNumberish,
@@ -64,8 +64,8 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  *
  * @public
  */
-export class MyNFTDrop extends Erc721<SignatureDrop> {
-  static contractType = "my-nft-drop" as const;
+export class SignatureDrop extends Erc721<SignatureDropContract> {
+  static contractType = "signature-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = require("../../abis/SignatureDrop.json");
   /**
@@ -73,18 +73,18 @@ export class MyNFTDrop extends Erc721<SignatureDrop> {
    */
   static schema = DropErc721ContractSchema;
 
-  public encoder: ContractEncoder<SignatureDrop>;
-  public estimator: GasCostEstimator<SignatureDrop>;
-  public metadata: ContractMetadata<SignatureDrop, typeof MyNFTDrop.schema>;
-  public primarySale: ContractPrimarySale<SignatureDrop>;
-  public platformFee: ContractPlatformFee<SignatureDrop>;
-  public events: ContractEvents<SignatureDrop>;
-  public roles: ContractRoles<SignatureDrop, typeof MyNFTDrop.contractRoles[number]>;
-  public analytics: ContractAnalytics<SignatureDrop>;
+  public encoder: ContractEncoder<SignatureDropContract>;
+  public estimator: GasCostEstimator<SignatureDropContract>;
+  public metadata: ContractMetadata<SignatureDropContract, typeof SignatureDrop.schema>;
+  public primarySale: ContractPrimarySale<SignatureDropContract>;
+  public platformFee: ContractPlatformFee<SignatureDropContract>;
+  public events: ContractEvents<SignatureDropContract>;
+  public roles: ContractRoles<SignatureDropContract, typeof SignatureDrop.contractRoles[number]>;
+  public analytics: ContractAnalytics<SignatureDropContract>;
   /**
    * @internal
    */
-  public interceptor: ContractInterceptor<SignatureDrop>;
+  public interceptor: ContractInterceptor<SignatureDropContract>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token
@@ -102,7 +102,7 @@ export class MyNFTDrop extends Erc721<SignatureDrop> {
    * });
    * ```
    */
-  public royalty: ContractRoyalty<SignatureDrop, typeof MyNFTDrop.schema>;
+  public royalty: ContractRoyalty<SignatureDropContract, typeof SignatureDrop.schema>;
   /**
    * Configure claim conditions
    * @remarks Define who can claim NFTs in the collection, when and how many.
@@ -167,20 +167,20 @@ export class MyNFTDrop extends Erc721<SignatureDrop> {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
-    contractWrapper = new ContractWrapper<SignatureDrop>(
+    contractWrapper = new ContractWrapper<SignatureDropContract>(
       network,
       address,
-      MyNFTDrop.contractAbi,
+      SignatureDrop.contractAbi,
       options,
     ),
   ) {
     super(contractWrapper, storage, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      MyNFTDrop.schema,
+      SignatureDrop.schema,
       this.storage,
     );
-    this.roles = new ContractRoles(this.contractWrapper, MyNFTDrop.contractRoles);
+    this.roles = new ContractRoles(this.contractWrapper, SignatureDrop.contractRoles);
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.primarySale = new ContractPrimarySale(this.contractWrapper);
     this.analytics = new ContractAnalytics(this.contractWrapper);
@@ -188,7 +188,7 @@ export class MyNFTDrop extends Erc721<SignatureDrop> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFee = new ContractPlatformFee(this.contractWrapper);
-    // this.revealer = new DelayedReveal<SignatureDrop>(
+    // this.revealer = new DelayedReveal<SignatureDropContract>(
     //   this.contractWrapper,
     //   this.storage,
     // );

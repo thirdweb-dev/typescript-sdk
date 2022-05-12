@@ -42,10 +42,10 @@
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MarketplaceAuction](./sdk.marketplaceauction.md) | Handles auction listings |
 |  [MarketplaceDirect](./sdk.marketplacedirect.md) | Handles direct listings |
-|  [MyNFTDrop](./sdk.mynftdrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [NFTCollection](./sdk.nftcollection.md) | Create a collection of one-of-one NFTs. |
 |  [NFTDrop](./sdk.nftdrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [Pack](./sdk.pack.md) | Create lootboxes of NFTs with rarity based open mechanics. |
+|  [SignatureDrop](./sdk.signaturedrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [SmartContract](./sdk.smartcontract.md) | <b><i>(BETA)</i></b> Custom contract dynamic class with feature detection |
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
