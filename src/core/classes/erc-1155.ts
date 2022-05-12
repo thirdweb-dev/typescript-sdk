@@ -30,7 +30,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks Basic functionality for a ERC1155 contract that handles IPFS storage for you.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.edition.transfer(walletAddress, tokenId, quantity);
  * ```
  * @public
