@@ -3,7 +3,7 @@ import { assert } from "chai";
 import { sdk, signers } from "./before-setup";
 import { Split, Token } from "../src";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Splits Contract", async () => {
   let splitsContract: Split;

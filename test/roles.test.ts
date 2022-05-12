@@ -5,7 +5,7 @@ import { sdk, signers } from "./before-setup";
 import { assert } from "chai";
 import { AddressZero } from "@ethersproject/constants";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Roles Contract", async () => {
   let bundleContract: Edition;

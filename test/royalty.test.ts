@@ -4,7 +4,7 @@ import { sdk, signers } from "./before-setup";
 
 import { assert, expect } from "chai";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Royalties", async () => {
   let bundleContract: Edition;

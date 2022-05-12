@@ -5,7 +5,7 @@ import { PayloadToSign20, SignedPayload20, Token } from "../src";
 import { sdk, signers } from "./before-setup";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Token sig minting", async () => {
   let contract: Token;
