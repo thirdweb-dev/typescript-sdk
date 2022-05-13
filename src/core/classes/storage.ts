@@ -44,7 +44,21 @@ export class Storage {
    * @param data - An array of file data or an array of JSON metadata to upload to IPFS
    * @returns The IPFS hash of the directory that holds all the uploaded data
    */
-  public async upload(data: FileOrBuffer[] | JsonObject[]): Promise<string> {
+  public async upload(
+    data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject,
+  ): Promise<string> {
+    if (!Array.isArray(data)) {
+      if (
+        data instanceof File ||
+        data instanceof Buffer ||
+        (data.name && data.data && data.data instanceof Buffer)
+      ) {
+        return this.storage.upload(data as FileOrBuffer);
+      } else {
+        return this.storage.uploadMetadata(data as JsonObject);
+      }
+    }
+
     const allFiles = (data as any[]).filter(
       (item: any) =>
         item instanceof File ||
