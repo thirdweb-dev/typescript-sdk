@@ -1,5 +1,5 @@
 import { readFile, readFileSync } from "fs";
-import { ipfsGatewayUrl } from "./before-setup";
+import { ipfsGatewayUrl, sdk } from "./before-setup";
 
 import { assert, expect } from "chai";
 import { BufferOrStringWithName } from "../src/types/BufferOrStringWithName";
