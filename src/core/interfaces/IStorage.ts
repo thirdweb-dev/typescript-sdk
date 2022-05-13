@@ -1,3 +1,4 @@
+import { UploadProgressEvent } from "../../types/events";
 import { FileOrBuffer, JsonObject } from "../types";
 
 /**
@@ -44,7 +45,9 @@ export interface IStorage {
     data: string | FileOrBuffer,
     contractAddress?: string,
     signerAddress?: string,
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<string>;
 
   /**
@@ -62,7 +65,9 @@ export interface IStorage {
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<string>;
 
   /**
@@ -78,7 +83,9 @@ export interface IStorage {
     metadata: JsonObject,
     contractAddress?: string,
     signerAddress?: string,
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<string>;
 
   /**
@@ -95,6 +102,8 @@ export interface IStorage {
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<UploadMetadataBatchResult>;
 }

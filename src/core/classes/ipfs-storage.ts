@@ -8,6 +8,7 @@ import {
   resolveGatewayUrl,
 } from "../helpers/storage";
 import { IpfsUploader } from "../storage/ipfs-uploader";
+import { UploadProgressEvent } from "../../types/events";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -49,14 +50,16 @@ export class IpfsStorage implements IStorage {
     data: string | FileOrBuffer,
     contractAddress?: string,
     signerAddress?: string,
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<string> {
     const { cid, fileNames } = await this.uploader.uploadBatchWithCid(
       [data],
       0,
       contractAddress,
       signerAddress,
-      listener,
+      options,
     );
 
     const baseUri = `ipfs://${cid}/`;
@@ -71,14 +74,16 @@ export class IpfsStorage implements IStorage {
     fileStartNumber = 0,
     contractAddress?: string,
     signerAddress?: string,
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<string> {
     const { cid } = await this.uploader.uploadBatchWithCid(
       files,
       fileStartNumber,
       contractAddress,
       signerAddress,
-      listener,
+      options,
     );
 
     return `ipfs://${cid}/`;
@@ -108,7 +113,9 @@ export class IpfsStorage implements IStorage {
     metadata: JsonObject,
     contractAddress?: string,
     signerAddress?: string,
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<string> {
     // since there's only single object, always use the first index
     const { metadataUris } = await this.uploadMetadataBatch(
@@ -116,7 +123,7 @@ export class IpfsStorage implements IStorage {
       0,
       contractAddress,
       signerAddress,
-      listener,
+      options,
     );
     return metadataUris[0];
   }
@@ -129,10 +136,12 @@ export class IpfsStorage implements IStorage {
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ) {
     const metadataToUpload = (
-      await this.batchUploadProperties(metadatas, listener)
+      await this.batchUploadProperties(metadatas, options)
     ).map((m: any) => JSON.stringify(m));
 
     const { cid, fileNames } = await this.uploader.uploadBatchWithCid(
@@ -187,7 +196,9 @@ export class IpfsStorage implements IStorage {
    */
   private async batchUploadProperties(
     metadatas: JsonObject[],
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ) {
     const filesToUpload = metadatas.flatMap((m) =>
       this.buildFilePropertiesMap(m, []),
@@ -200,7 +211,7 @@ export class IpfsStorage implements IStorage {
       undefined,
       undefined,
       undefined,
-      listener,
+      options,
     );
 
     const cids = [];

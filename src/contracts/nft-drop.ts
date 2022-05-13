@@ -47,6 +47,7 @@ import {
   TokensLazyMintedEvent,
 } from "contracts/DropERC721";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { UploadProgressEvent } from "../types/events";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -412,7 +413,9 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   public async createBatch(
     metadatas: NFTMetadataInput[],
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
@@ -421,7 +424,7 @@ export class NFTDrop extends Erc721<DropERC721> {
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
-      listener,
+      options,
     );
     const baseUri = batch.baseUri;
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [

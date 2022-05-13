@@ -6,6 +6,7 @@ import {
 } from "../../common/error";
 import { FileOrBuffer } from "../types";
 import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../constants/urls";
+import { UploadProgressEvent } from "../../types/events";
 
 export class IpfsUploader implements IStorageUpload {
   /**
@@ -34,7 +35,9 @@ export class IpfsUploader implements IStorageUpload {
     fileStartNumber = 0,
     contractAddress?: string,
     signerAddress?: string,
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<CidWithFileName> {
     const token = await this.getUploadToken(contractAddress || "");
     const metadata = {
@@ -125,8 +128,8 @@ export class IpfsUploader implements IStorageUpload {
 
         if (xhr.upload) {
           xhr.upload.onprogress = (event) => {
-            if (listener) {
-              listener({
+            if (options?.onProgress) {
+              options?.onProgress({
                 progress: event.loaded,
                 total: event.total,
               });

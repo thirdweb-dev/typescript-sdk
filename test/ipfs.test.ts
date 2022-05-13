@@ -74,8 +74,10 @@ describe("IPFS Uploads", async () => {
       undefined,
       undefined,
       undefined,
-      () => {
-        updates += 1;
+      {
+        onProgress: () => {
+          updates += 1;
+        },
       },
     );
 

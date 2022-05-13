@@ -1,3 +1,4 @@
+import { UploadProgressEvent } from "../../types/events";
 import { FileOrBuffer } from "../types";
 
 /**
@@ -17,6 +18,8 @@ export interface IStorageUpload {
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
-    listener?: (event: { progress: number; total: number }) => void,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<CidWithFileName>;
 }
