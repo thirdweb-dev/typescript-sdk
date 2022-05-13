@@ -412,6 +412,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   public async createBatch(
     metadatas: NFTMetadataInput[],
+    listener?: (event: { progress: number; total: number }) => void,
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
@@ -420,6 +421,7 @@ export class NFTDrop extends Erc721<DropERC721> {
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
+      listener,
     );
     const baseUri = batch.baseUri;
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [

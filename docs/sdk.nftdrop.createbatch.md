@@ -9,7 +9,10 @@ Create a batch of unique NFTs to be claimed in the future
 <b>Signature:</b>
 
 ```typescript
-createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+createBatch(metadatas: NFTMetadataInput[], listener?: (event: {
+        progress: number;
+        total: number;
+    }) => void): Promise<TransactionResultWithId<NFTMetadata>[]>;
 ```
 
 ## Parameters
@@ -17,6 +20,7 @@ createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTM
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  metadatas | [NFTMetadataInput](./sdk.nftmetadatainput.md)<!-- -->\[\] | The metadata to include in the batch. |
+|  listener | (event: { progress: number; total: number; }) =&gt; void | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

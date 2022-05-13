@@ -6,11 +6,8 @@ import {
 } from "../../common/error";
 import { FileOrBuffer } from "../types";
 import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../constants/urls";
-import { EventEmitter2 } from "eventemitter2";
-import axios from "axios";
-import { EventType } from "../../constants";
 
-export class IpfsUploader extends EventEmitter2 implements IStorageUpload {
+export class IpfsUploader implements IStorageUpload {
   /**
    * Fetches a one-time-use upload token that can used to upload
    * a file to storage.
@@ -91,37 +88,54 @@ export class IpfsUploader extends EventEmitter2 implements IStorageUpload {
 
     data.append("pinataMetadata", JSON.stringify(metadata));
 
-    if (listener) {
-      console.log("Mounting listener...");
-      this.on(EventType.UploadProgress, listener);
+    if (typeof window === "undefined") {
+      const res = await fetch(PINATA_IPFS_URL, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: data as any,
+      });
+
+      const body = await res.json();
+      if (!res.ok) {
+        console.log(body);
+        throw new UploadError("Failed to upload files to IPFS");
+      }
+      return {
+        cid: body.IpfsHash,
+        fileNames,
+      };
+    } else {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", PINATA_IPFS_URL);
+        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+
+        xhr.onloadend = () => {
+          resolve({
+            cid: JSON.parse(xhr.responseText).IpfsHash,
+            fileNames,
+          });
+        };
+
+        xhr.onerror = (err) => {
+          reject(err);
+        };
+
+        if (xhr.upload) {
+          xhr.upload.onprogress = (event) => {
+            if (listener) {
+              listener({
+                progress: event.loaded,
+                total: event.total,
+              });
+            }
+          };
+        }
+
+        xhr.send(data);
+      });
     }
-
-    console.log("Preparing upload...");
-
-    const res = await axios.post(PINATA_IPFS_URL, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      onUploadProgress: (event) => {
-        console.log("UPLOADING...");
-        this.emit(EventType.UploadProgress, {
-          progress: event.loaded,
-          total: event.total,
-        });
-      },
-    });
-
-    if (listener) {
-      this.off(EventType.UploadProgress, listener);
-    }
-
-    if (res.status !== 200) {
-      throw new UploadError("Failed to upload files to IPFS");
-    }
-
-    return {
-      cid: res.data.IpfsHash,
-      fileNames,
-    };
   }
 }

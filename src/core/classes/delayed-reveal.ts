@@ -61,6 +61,7 @@ export class DelayedReveal<T extends DropERC721> {
     placeholder: NFTMetadataInput,
     metadatas: NFTMetadataInput[],
     password: string,
+    listener?: (event: { progress: number; total: number }) => void,
   ): Promise<TransactionResultWithId[]> {
     if (!password) {
       throw new Error("Password is required");
@@ -81,6 +82,7 @@ export class DelayedReveal<T extends DropERC721> {
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
+      listener,
     );
 
     const baseUri = batch.baseUri;

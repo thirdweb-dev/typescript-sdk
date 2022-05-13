@@ -22,7 +22,7 @@ export declare class DelayedReveal<T extends DropERC721>
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [createDelayedRevealBatch(placeholder, metadatas, password)](./sdk.delayedreveal.createdelayedrevealbatch.md) |  | Create a batch of encrypted NFTs that can be revealed at a later time. |
+|  [createDelayedRevealBatch(placeholder, metadatas, password, listener)](./sdk.delayedreveal.createdelayedrevealbatch.md) |  | Create a batch of encrypted NFTs that can be revealed at a later time. |
 |  [getBatchesToReveal()](./sdk.delayedreveal.getbatchestoreveal.md) |  | Gets the list of unrevealed NFT batches. |
 |  [reveal(batchId, password)](./sdk.delayedreveal.reveal.md) |  | Reveal a batch of hidden NFTs |
 

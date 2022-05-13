@@ -131,16 +131,15 @@ export class IpfsStorage implements IStorage {
     signerAddress?: string,
     listener?: (event: { progress: number; total: number }) => void,
   ) {
-    const metadataToUpload = (await this.batchUploadProperties(metadatas)).map(
-      (m: any) => JSON.stringify(m),
-    );
+    const metadataToUpload = (
+      await this.batchUploadProperties(metadatas, listener)
+    ).map((m: any) => JSON.stringify(m));
 
     const { cid, fileNames } = await this.uploader.uploadBatchWithCid(
       metadataToUpload,
       fileStartNumber,
       contractAddress,
       signerAddress,
-      listener,
     );
 
     const baseUri = `ipfs://${cid}/`;
@@ -186,7 +185,10 @@ export class IpfsStorage implements IStorage {
    * @param metadata - The metadata to recursively process
    * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
    */
-  private async batchUploadProperties(metadatas: JsonObject[]) {
+  private async batchUploadProperties(
+    metadatas: JsonObject[],
+    listener?: (event: { progress: number; total: number }) => void,
+  ) {
     const filesToUpload = metadatas.flatMap((m) =>
       this.buildFilePropertiesMap(m, []),
     );
@@ -195,6 +197,10 @@ export class IpfsStorage implements IStorage {
     }
     const { cid, fileNames } = await this.uploader.uploadBatchWithCid(
       filesToUpload,
+      undefined,
+      undefined,
+      undefined,
+      listener,
     );
 
     const cids = [];
