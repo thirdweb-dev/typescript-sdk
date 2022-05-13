@@ -1718,7 +1718,7 @@ export class Erc721Supply implements DetectableFeature {
     featureName: "ERC721Supply";
     // (undocumented)
     owned: Erc721Enumerable | undefined;
-    totalSupply(): Promise<BigNumber>;
+    totalCirculatingSupply(): Promise<BigNumber>;
 }
 
 // @public (undocumented)

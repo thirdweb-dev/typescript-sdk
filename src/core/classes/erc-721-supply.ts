@@ -56,7 +56,7 @@ export class Erc721Supply implements DetectableFeature {
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
 
-    let maxSupply = await this.totalSupply();
+    let maxSupply = await this.totalCirculatingSupply();
     if (this.hasNextIdToMint(this.contractWrapper)) {
       maxSupply = await this.contractWrapper.readContract.nextTokenIdToMint();
     }
@@ -69,11 +69,11 @@ export class Erc721Supply implements DetectableFeature {
   }
 
   /**
-   * Get the number of NFTs minted
-   * @returns the total number of NFTs minted in this contract
+   * Get the number of NFTs of this contract currently owned by end users
+   * @returns the total number of NFTs of this contract in circulation (minted & not burned)
    * @public
    */
-  public async totalSupply(): Promise<BigNumber> {
+  public async totalCirculatingSupply(): Promise<BigNumber> {
     return await this.contractWrapper.readContract.totalSupply();
   }
 

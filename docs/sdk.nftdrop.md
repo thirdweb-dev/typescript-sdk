@@ -64,6 +64,6 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [getOwnedTokenIds(walletAddress)](./sdk.nftdrop.getownedtokenids.md) |  |  |
 |  [isTransferRestricted()](./sdk.nftdrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [totalClaimedSupply()](./sdk.nftdrop.totalclaimedsupply.md) |  | Get the claimed supply |
-|  [totalSupply()](./sdk.nftdrop.totalsupply.md) |  | Get the number of NFTs minted |
+|  [totalSupply()](./sdk.nftdrop.totalsupply.md) |  | Get the total count NFTs in this drop contract, both claimed and unclaimed |
 |  [totalUnclaimedSupply()](./sdk.nftdrop.totalunclaimedsupply.md) |  | Get the unclaimed supply |
 

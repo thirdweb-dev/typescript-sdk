@@ -235,10 +235,10 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set([{}]);
     await dropContract.claim(10);
     const ts = await dropContract.totalSupply();
-    expect(ts.toNumber()).to.eq(10);
+    expect(ts.toNumber()).to.eq(20);
     await dropContract.burn(0);
     const ts2 = await dropContract.totalSupply();
-    expect(ts2.toNumber()).to.eq(9);
+    expect(ts2.toNumber()).to.eq(20);
   });
 
   it("should not allow claiming to someone not in the merkle tree", async () => {
