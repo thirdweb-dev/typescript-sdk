@@ -12,5 +12,5 @@ Auto-detects ERC20 standard functions.
 <b>Signature:</b>
 
 ```typescript
-token: Erc20<BaseERC20> | undefined;
+token: Erc20 | undefined;
 ```

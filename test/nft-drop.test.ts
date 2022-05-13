@@ -13,7 +13,7 @@ import invariant from "tiny-invariant";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("NFT Drop Contract", async () => {
   let dropContract: NFTDrop;
@@ -210,11 +210,9 @@ describe("NFT Drop Contract", async () => {
     }
     await dropContract.createBatch(metadatas);
     const all = await dropContract.getAll();
-    expect(all.length).to.eq(0);
+    expect(all.length).to.eq(100);
     await dropContract.claimConditions.set([{}]);
     await dropContract.claim(1);
-    const allAfterMint = await dropContract.getAll();
-    expect(allAfterMint.length).to.eq(1);
     const claimed = await dropContract.getAllClaimed();
     const unclaimed = await dropContract.getAllUnclaimed({
       start: 0,
@@ -224,6 +222,23 @@ describe("NFT Drop Contract", async () => {
     expect(unclaimed.length).to.eq(30);
     expect(unclaimed[0].name).to.eq("test 1");
     expect(unclaimed[unclaimed.length - 1].name).to.eq("test 30");
+  });
+
+  it("should correctly update total supply after burning", async () => {
+    const metadatas = [];
+    for (let i = 0; i < 20; i++) {
+      metadatas.push({
+        name: `test ${i}`,
+      });
+    }
+    await dropContract.createBatch(metadatas);
+    await dropContract.claimConditions.set([{}]);
+    await dropContract.claim(10);
+    const ts = await dropContract.totalSupply();
+    expect(ts.toNumber()).to.eq(20);
+    await dropContract.burn(0);
+    const ts2 = await dropContract.totalSupply();
+    expect(ts2.toNumber()).to.eq(20);
   });
 
   it("should not allow claiming to someone not in the merkle tree", async () => {

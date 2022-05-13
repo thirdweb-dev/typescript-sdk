@@ -12,5 +12,5 @@ Auto-detects ERC721 standard functions.
 <b>Signature:</b>
 
 ```typescript
-nft: Erc721<BaseERC721> | undefined;
+nft: Erc721 | undefined;
 ```

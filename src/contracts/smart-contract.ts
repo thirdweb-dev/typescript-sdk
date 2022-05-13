@@ -28,6 +28,7 @@ import { ALL_ROLES, detectContractFeature } from "../common";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
+import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -39,7 +40,7 @@ import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
  *
  * // You can switch out this provider with any wallet or provider setup you like.
  * const sdk = new ThirdwebSDK(provider);
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  *
  * // call any function in your contract
  * await contract.functions.myCustomFunction(params);
@@ -82,6 +83,10 @@ export class SmartContract<
   public interceptor: ContractInterceptor<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
+  /**
+   * @internal
+   */
+  public analytics: ContractAnalytics<TContract>;
 
   // features
   public metadata: ContractMetadata<ThirdwebContract, any> | undefined;
@@ -135,6 +140,8 @@ export class SmartContract<
       SmartContract.schema,
       this.storage,
     );
+
+    this.analytics = new ContractAnalytics(this.contractWrapper);
 
     // feature detection
     this.royalties = this.detectRoyalties();

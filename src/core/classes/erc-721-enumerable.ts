@@ -12,7 +12,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks Easily list all the NFTs from a ERC721 contract, owned by a certain wallet.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * const walletAddress = "0x...";
  * const ownedNFTs = await contract.nft.query.owned.all(walletAddress);
  * ```
@@ -40,7 +40,7 @@ export class Erc721Enumerable implements DetectableFeature {
    * ```javascript
    * // Address of the wallet to get the NFTs of
    * const address = "{{wallet_address}}";
-   * const nfts = await contract.query.owned.all(address);
+   * const nfts = await contract.nft.query.owned.all(address);
    * ```
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    * @returns The NFT metadata for all NFTs in the contract.

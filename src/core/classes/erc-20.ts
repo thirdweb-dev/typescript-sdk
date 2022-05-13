@@ -23,7 +23,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks Basic functionality for a ERC20 contract that handles all unit transformation for you.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.token.transfer(walletAddress, amount);
  * ```
  * @public
@@ -80,7 +80,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    *
    * @example
    * ```javascript
-   * const token = await contract.get();
+   * const token = await contract.token.get();
    * ```
    * @returns The token metadata
    */
@@ -98,8 +98,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    *
    * @example
    * ```javascript
-   * const balance = await contract.balance();
-   * console.log(balance);
+   * const balance = await contract.token.balance();
    * ```
    *
    * @returns The balance of a specific wallet.
@@ -117,7 +116,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    * ```javascript
    * // Address of the wallet to check token balance
    * const walletAddress = "{{wallet_address}}";
-   * const balance = await contract.balanceOf(walletAddress);
+   * const balance = await contract.token.balanceOf(walletAddress);
    * ```
    *
    * @returns The balance of a specific wallet.
@@ -130,6 +129,11 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
 
   /**
    * The total supply for this Token
+   * @remarks Get how much supply has been minted
+   * @example
+   * ```javascript
+   * const balance = await contract.token.totalSupply();
+   * ```
    */
   public async totalSupply(): Promise<CurrencyValue> {
     return await this.getValue(
@@ -146,7 +150,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    * ```javascript
    * // Address of the wallet to check token allowance
    * const spenderAddress = "0x...";
-   * const allowance = await contract.allowanceOf(otherAddress);
+   * const allowance = await contract.token.allowance(spenderAddress);
    * ```
    *
    * @returns The allowance of one wallet over anothers funds.
@@ -169,7 +173,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    * const owner = "{{wallet_address}}";
    * // Address of the wallet to check token allowance
    * const spender = "0x...";
-   * const allowance = await contract.allowanceOf(owner, spender);
+   * const allowance = await contract.token.allowanceOf(owner, spender);
    * ```
    *
    * @returns The allowance of one wallet over anothers funds.
@@ -198,7 +202,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    * const toAddress = "0x...";
    * // The amount of tokens you want to send
    * const amount = 0.1;
-   * await contract.transfer(toAddress, amount);
+   * await contract.token.transfer(toAddress, amount);
    * ```
    */
   public async transfer(
@@ -227,7 +231,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    * // The number of tokens you want to send
    * const amount = 1.2
    * // Note that the connected wallet must have approval to transfer the tokens of the fromAddress
-   * await contract.transferFrom(fromAddress, toAddress, amount);
+   * await contract.token.transferFrom(fromAddress, toAddress, amount);
    * ```
    */
   public async transferFrom(
@@ -253,7 +257,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    * const spenderAddress = "0x...";
    * // The number of tokens to give as allowance
    * const amount = 100
-   * await contract.setAllowance(spenderAddress, amount);
+   * await contract.token.setAllowance(spenderAddress, amount);
    * ```
    */
   public async setAllowance(
@@ -287,7 +291,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    *  }
    * ]
    *
-   * await contract.transferBatch(data);
+   * await contract.token.transferBatch(data);
    * ```
    */
   public async transferBatch(args: TokenMintInput[]) {

@@ -3,7 +3,7 @@ import { EditionDrop, ThirdwebSDK } from "../src";
 
 const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Gasless Forwarder", async () => {
   let bundleDropContract: EditionDrop;

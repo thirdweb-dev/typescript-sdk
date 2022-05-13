@@ -25,6 +25,7 @@ import { getRoleHash } from "../common";
 import { Erc20Mintable } from "../core/classes/erc-20-mintable";
 import { Erc20BatchMintable } from "../core/classes/erc-20-batch-mintable";
 import { constants } from "ethers";
+import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -62,6 +63,10 @@ export class Token extends Erc20<TokenERC20> {
   public events: ContractEvents<TokenERC20>;
   public platformFee: ContractPlatformFee<TokenERC20>;
   /**
+   * @internal
+   */
+  public analytics: ContractAnalytics<TokenERC20>;
+  /**
    * Signature Minting
    * @remarks Generate tokens that can be minted only with your own signature, attaching your own set of mint conditions.
    * @example
@@ -69,10 +74,9 @@ export class Token extends Erc20<TokenERC20> {
    * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
    * const signedPayload = contract.signature.generate(payload);
    *
-   * // now anyone can mint the NFT
+   * // now anyone can mint the tokens
    * const tx = contract.signature.mint(signedPayload);
    * const receipt = tx.receipt; // the mint transaction receipt
-   * const mintedId = tx.id; // the id of the NFT minted
    * ```
    */
   public signature: Erc20SignatureMinting;
@@ -100,7 +104,8 @@ export class Token extends Erc20<TokenERC20> {
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, Token.contractRoles);
-    this.history = new TokenERC20History(this.contractWrapper);
+    this.analytics = new ContractAnalytics(this.contractWrapper);
+    this.history = new TokenERC20History(this.contractWrapper, this.analytics);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);

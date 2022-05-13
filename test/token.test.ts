@@ -5,7 +5,7 @@ import { sdk, signers } from "./before-setup";
 import { ethers } from "ethers";
 import { TokenMintInput } from "../src/schema/tokens/token";
 
-// global.fetch = require("node-fetch");
+// global.fetch = require("cross-fetch");
 
 describe("Token Contract", async () => {
   let currencyContract: Token;

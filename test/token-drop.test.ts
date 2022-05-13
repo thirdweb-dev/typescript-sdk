@@ -14,7 +14,7 @@ import { TokenDrop } from "../src/contracts/token-drop";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const keccak256 = require("keccak256");
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Token Drop Contract", async () => {
   let dropContract: TokenDrop;
@@ -205,6 +205,17 @@ describe("Token Drop Contract", async () => {
     await dropContract.claim(142.69);
     const balance = await dropContract.balance();
     expect(balance.displayValue).to.eq("142.69");
+  });
+
+  it("should allow claiming with a price", async () => {
+    await dropContract.claimConditions.set([
+      {
+        price: 0.1,
+      },
+    ]);
+    await dropContract.claim(100);
+    const balance = await dropContract.balance();
+    expect(balance.displayValue).to.eq("100.0");
   });
 
   it("should allow setting max claims per wallet", async () => {

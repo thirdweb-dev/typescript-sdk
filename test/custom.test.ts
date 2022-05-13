@@ -12,7 +12,7 @@ import { uploadContractMetadata } from "./publisher.test";
 
 require("./before-setup");
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Custom Contracts", async () => {
   let customContractAddress: string;

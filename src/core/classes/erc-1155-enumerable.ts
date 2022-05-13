@@ -13,7 +13,7 @@ import { FEATURE_EDITION_ENUMERABLE } from "../../constants/erc1155-features";
  * @remarks Easily list all the NFTs in a ERC1155 contract.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * const nfts = await contract.edition.query.all();
  * ```
  * @public

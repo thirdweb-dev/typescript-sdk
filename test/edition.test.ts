@@ -6,7 +6,7 @@ import { assert, expect } from "chai";
 import { AddressZero } from "@ethersproject/constants";
 import { ethers } from "ethers";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 describe("Bundle Contract (aka Collection Contract)", async () => {
   let bundleContract: Edition;

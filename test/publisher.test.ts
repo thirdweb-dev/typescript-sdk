@@ -6,7 +6,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../lib";
 
-global.fetch = require("node-fetch");
+global.fetch = require("cross-fetch");
 
 export const uploadContractMetadata = async (filename) => {
   const greeterJson = JSON.parse(readFileSync(filename, "utf-8"));

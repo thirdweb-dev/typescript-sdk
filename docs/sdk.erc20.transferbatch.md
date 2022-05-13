@@ -42,6 +42,6 @@ const data = [
  }
 ]
 
-await contract.transferBatch(data);
+await contract.token.transferBatch(data);
 ```
 

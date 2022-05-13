@@ -25,13 +25,13 @@ void
 
 ## Remarks
 
-Add a listener for a particular contract event
+You can add a listener for any contract event to run a function when the event is emitted. For example, if you wanted to listen for a "TokensMinted" event, you could do the following:
 
 ## Example
 
 
 ```javascript
-contract.events.addListener("TokensMinted", (event) => {
+contract.events.addEventListener("TokensMinted", (event) => {
   console.log(event);
 });
 ```

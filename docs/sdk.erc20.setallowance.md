@@ -31,6 +31,6 @@ Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
 const spenderAddress = "0x...";
 // The number of tokens to give as allowance
 const amount = 100
-await contract.setAllowance(spenderAddress, amount);
+await contract.token.setAllowance(spenderAddress, amount);
 ```
 

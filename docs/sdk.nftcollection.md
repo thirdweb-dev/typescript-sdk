@@ -61,5 +61,5 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 |  [mintBatchTo(walletAddress, metadata)](./sdk.nftcollection.mintbatchto.md) |  | Mint Many unique NFTs |
 |  [mintTo(walletAddress, metadata)](./sdk.nftcollection.mintto.md) |  | Mint a unique NFT |
 |  [mintToSelf(metadata)](./sdk.nftcollection.minttoself.md) |  | Mint a unique NFT |
-|  [totalSupply()](./sdk.nftcollection.totalsupply.md) |  | Get the number of NFTs minted |
+|  [totalSupply()](./sdk.nftcollection.totalsupply.md) |  | Get the total count NFTs minted in this contract |
 

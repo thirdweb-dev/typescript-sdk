@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { IERC721Enumerable, IERC721Supply } from "contracts";
+import { IERC721Enumerable, IERC721Supply, TokenERC721 } from "contracts";
 import { BigNumber } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { NFTMetadataOwner } from "../../schema";
@@ -15,7 +15,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @remarks Easily list all the NFTs in a ERC721 contract.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * const nfts = await contract.nft.query.all();
  * ```
  * @public
@@ -45,7 +45,7 @@ export class Erc721Supply implements DetectableFeature {
    *
    * @example
    * ```javascript
-   * const nfts = await contract.query.all();
+   * const nfts = await contract.nft.query.all();
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
@@ -55,10 +55,12 @@ export class Erc721Supply implements DetectableFeature {
     const count = BigNumber.from(
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
-    const maxId = Math.min(
-      (await this.totalSupply()).toNumber(),
-      start + count,
-    );
+
+    let maxSupply = await this.totalCirculatingSupply();
+    if (this.hasNextIdToMint(this.contractWrapper)) {
+      maxSupply = await this.contractWrapper.readContract.nextTokenIdToMint();
+    }
+    const maxId = Math.min(maxSupply.toNumber(), start + count);
     return await Promise.all(
       [...Array(maxId - start).keys()].map((i) =>
         this.erc721.get((start + i).toString()),
@@ -67,12 +69,18 @@ export class Erc721Supply implements DetectableFeature {
   }
 
   /**
-   * Get the number of NFTs minted
-   * @returns the total number of NFTs minted in this contract
+   * Get the number of NFTs of this contract currently owned by end users
+   * @returns the total number of NFTs of this contract in circulation (minted & not burned)
    * @public
    */
-  public async totalSupply(): Promise<BigNumber> {
+  public async totalCirculatingSupply(): Promise<BigNumber> {
     return await this.contractWrapper.readContract.totalSupply();
+  }
+
+  private hasNextIdToMint(
+    contractWrapper: ContractWrapper<any>,
+  ): contractWrapper is ContractWrapper<TokenERC721> {
+    return "nextTokenIdToMint" in contractWrapper.readContract.functions;
   }
 
   private detectErc721Owned(): Erc721Enumerable | undefined {

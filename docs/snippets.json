@@ -8,6 +8,15 @@
     },
     "methods": [
       {
+        "name": "burn",
+        "summary": "Burn a specified amount of a NFT\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const result = await contract.burn(tokenId, amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Edition.burn"
+      },
+      {
         "name": "getAll",
         "summary": "Get All Minted NFTs\n\n",
         "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
@@ -110,6 +119,15 @@
       "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getEditionDrop(\"{{contract_address}}\");"
     },
     "methods": [
+      {
+        "name": "burn",
+        "summary": "Burn a specified amount of a NFT\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const result = await contract.burn(tokenId, amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop.burn"
+      },
       {
         "name": "claimTo",
         "summary": "Claim NFTs to a specific Wallet\n\n",
@@ -272,6 +290,15 @@
     },
     "methods": [
       {
+        "name": "burn",
+        "summary": "Burn a single NFT\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const result = await contract.burn(tokenId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTCollection.burn"
+      },
+      {
         "name": "getAll",
         "summary": "Get All Minted NFTs\n\n",
         "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
@@ -312,7 +339,7 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this contract owned by the wallet).\n\n",
         "examples": {
-          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.balanceOf(walletAddress);\nconsole.log(balance);"
+          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.nft.balanceOf(walletAddress);\nconsole.log(balance);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.balanceOf"
       },
@@ -321,7 +348,7 @@
         "summary": "Get a single NFT Metadata\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const tokenId = 0;\nconst nft = await contract.get(tokenId);"
+          "javascript": "const tokenId = 0;\nconst nft = await contract.nft.get(tokenId);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.get"
       },
@@ -330,7 +357,7 @@
         "summary": "Transfer a single NFT\n\n",
         "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
         "examples": {
-          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst tokenId = 0;\nawait contract.transfer(walletAddress, tokenId);"
+          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst tokenId = 0;\nawait contract.nft.transfer(walletAddress, tokenId);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.transfer"
       }
@@ -365,6 +392,15 @@
       "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getNFTDrop(\"{{contract_address}}\");"
     },
     "methods": [
+      {
+        "name": "burn",
+        "summary": "Burn a single NFT\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const result = await contract.burn(tokenId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.burn"
+      },
       {
         "name": "claimTo",
         "summary": "Claim unique NFTs to a specific Wallet\n\n",
@@ -442,7 +478,7 @@
         "summary": "Get NFT Balance\n\n",
         "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this contract owned by the wallet).\n\n",
         "examples": {
-          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.balanceOf(walletAddress);\nconsole.log(balance);"
+          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.nft.balanceOf(walletAddress);\nconsole.log(balance);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.balanceOf"
       },
@@ -451,7 +487,7 @@
         "summary": "Get a single NFT Metadata\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const tokenId = 0;\nconst nft = await contract.get(tokenId);"
+          "javascript": "const tokenId = 0;\nconst nft = await contract.nft.get(tokenId);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.get"
       },
@@ -460,7 +496,7 @@
         "summary": "Transfer a single NFT\n\n",
         "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
         "examples": {
-          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst tokenId = 0;\nawait contract.transfer(walletAddress, tokenId);"
+          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst tokenId = 0;\nawait contract.nft.transfer(walletAddress, tokenId);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.transfer"
       }
@@ -577,7 +613,7 @@
     "summary": "Custom contract dynamic class with feature detection\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getContract(\"{{contract_address}}\");\n\n// call any function in your contract\nawait contract.functions.myCustomFunction(params);\n\n// if your contract follows the ERC721 standard, contract.nft will be present\nconst allNFTs = await contract.nft.query.all()\n\n// if your contract extends IMintableERC721, contract.nft.mint will be present\nconst tx = await contract.nft.mint.to(\"0x...\", {\n    name: \"Cool NFT\",\n    image: readFileSync(\"some_image.png\"),\n  });"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst sdk = new ThirdwebSDK(provider);\nconst contract = await sdk.getContract(\"{{contract_address}}\");\n\n// call any function in your contract\nawait contract.functions.myCustomFunction(params);\n\n// if your contract follows the ERC721 standard, contract.nft will be present\nconst allNFTs = await contract.nft.query.all()\n\n// if your contract extends IMintableERC721, contract.nft.mint will be present\nconst tx = await contract.nft.mint.to(\"0x...\", {\n    name: \"Cool NFT\",\n    image: readFileSync(\"some_image.png\"),\n  });"
     },
     "methods": [],
     "properties": [],
@@ -698,7 +734,7 @@
         "summary": "Get Token Allowance\n\n",
         "remarks": "\n\nGet the allowance of a 'spender' wallet over the connected wallet's funds - the allowance of a different address for a token is the amount of tokens that the `spender` wallet is allowed to spend on behalf of the connected wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check token allowance\nconst spenderAddress = \"0x...\";\nconst allowance = await contract.allowanceOf(otherAddress);"
+          "javascript": "// Address of the wallet to check token allowance\nconst spenderAddress = \"0x...\";\nconst allowance = await contract.token.allowance(spenderAddress);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.allowance"
       },
@@ -707,7 +743,7 @@
         "summary": "Get Token Allowance\n\n",
         "remarks": "\n\nGet the allowance of one wallet over another wallet's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the specified wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet who owns the funds\nconst owner = \"{{wallet_address}}\";\n// Address of the wallet to check token allowance\nconst spender = \"0x...\";\nconst allowance = await contract.allowanceOf(owner, spender);"
+          "javascript": "// Address of the wallet who owns the funds\nconst owner = \"{{wallet_address}}\";\n// Address of the wallet to check token allowance\nconst spender = \"0x...\";\nconst allowance = await contract.token.allowanceOf(owner, spender);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.allowanceOf"
       },
@@ -716,7 +752,7 @@
         "summary": "Get Token Balance for the currently connected wallet\n\n",
         "remarks": "\n\nGet a wallets token balance.\n\n",
         "examples": {
-          "javascript": "const balance = await contract.balance();\nconsole.log(balance);"
+          "javascript": "const balance = await contract.token.balance();"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.balance"
       },
@@ -725,7 +761,7 @@
         "summary": "Get Token Balance\n\n",
         "remarks": "\n\nGet a wallets token balance.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to check token balance\nconst walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.balanceOf(walletAddress);"
+          "javascript": "// Address of the wallet to check token balance\nconst walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.token.balanceOf(walletAddress);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.balanceOf"
       },
@@ -734,7 +770,7 @@
         "summary": "Get the token Metadata (name, symbol, etc...)\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const token = await contract.get();"
+          "javascript": "const token = await contract.token.get();"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.get"
       },
@@ -743,16 +779,25 @@
         "summary": "Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "// Address of the wallet to allow transfers from\nconst spenderAddress = \"0x...\";\n// The number of tokens to give as allowance\nconst amount = 100\nawait contract.setAllowance(spenderAddress, amount);"
+          "javascript": "// Address of the wallet to allow transfers from\nconst spenderAddress = \"0x...\";\n// The number of tokens to give as allowance\nconst amount = 100\nawait contract.token.setAllowance(spenderAddress, amount);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.setAllowance"
+      },
+      {
+        "name": "totalSupply",
+        "summary": "The total supply for this Token\n\n",
+        "remarks": "\n\nGet how much supply has been minted\n\n",
+        "examples": {
+          "javascript": "const balance = await contract.token.totalSupply();"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.totalSupply"
       },
       {
         "name": "transfer",
         "summary": "Transfer Tokens\n\n",
         "remarks": "\n\nTransfer tokens from the connected wallet to another wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n// The amount of tokens you want to send\nconst amount = 0.1;\nawait contract.transfer(toAddress, amount);"
+          "javascript": "// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n// The amount of tokens you want to send\nconst amount = 0.1;\nawait contract.token.transfer(toAddress, amount);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transfer"
       },
@@ -761,7 +806,7 @@
         "summary": "Transfer Tokens To Many Wallets\n\n",
         "remarks": "\n\nMint tokens from the connected wallet to many wallets\n\n",
         "examples": {
-          "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    toAddress: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 100, // How many tokens to mint to specified address\n  },\n {\n   toAddress: \"0x...\",\n   amount: 100,\n }\n]\n\nawait contract.transferBatch(data);"
+          "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    toAddress: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 100, // How many tokens to mint to specified address\n  },\n {\n   toAddress: \"0x...\",\n   amount: 100,\n }\n]\n\nawait contract.token.transferBatch(data);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transferBatch"
       },
@@ -770,7 +815,7 @@
         "summary": "Transfer Tokens From Address\n\n",
         "remarks": "\n\nTransfer tokens from one wallet to another\n\n",
         "examples": {
-          "javascript": "// Address of the wallet sending the tokens\nconst fromAddress = \"{{wallet_address}}\";\n// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n// The number of tokens you want to send\nconst amount = 1.2\n// Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nawait contract.transferFrom(fromAddress, toAddress, amount);"
+          "javascript": "// Address of the wallet sending the tokens\nconst fromAddress = \"{{wallet_address}}\";\n// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n// The number of tokens you want to send\nconst amount = 1.2\n// Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nawait contract.token.transferFrom(fromAddress, toAddress, amount);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transferFrom"
       }
@@ -781,12 +826,151 @@
         "summary": "Signature Minting\n\n",
         "remarks": "\n\nGenerate tokens that can be minted only with your own signature, attaching your own set of mint conditions.\n\n",
         "examples": {
-          "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
+          "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the tokens\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.erc20signatureminting"
       }
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.Token"
+  },
+  "TokenDrop": {
+    "name": "TokenDrop",
+    "summary": "Create a Drop contract for a standard crypto token or cryptocurrency.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getTokenDrop(\"{{contract_address}}\");"
+    },
+    "methods": [
+      {
+        "name": "burn",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
+        "examples": {
+          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burn(amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.TokenDrop.burn"
+      },
+      {
+        "name": "burnFrom",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the specified wallet\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet sending the tokens\nconst holderAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnFrom(holderAddress, amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.TokenDrop.burnFrom"
+      },
+      {
+        "name": "claimTo",
+        "summary": "Claim a certain amount of tokens to a specific Wallet\n\n",
+        "remarks": "\n\nLet the specified wallet claim Tokens.\n\n",
+        "examples": {
+          "javascript": "const address = \"{{wallet_address}}\"; // address of the wallet you want to claim the NFTs\nconst quantity = 42.69; // how many tokens you want to claim\n\nconst tx = await contract.claimTo(address, quantity);\nconst receipt = tx.receipt; // the transaction receipt"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.TokenDrop.claimTo"
+      },
+      {
+        "name": "allowance",
+        "summary": "Get Token Allowance\n\n",
+        "remarks": "\n\nGet the allowance of a 'spender' wallet over the connected wallet's funds - the allowance of a different address for a token is the amount of tokens that the `spender` wallet is allowed to spend on behalf of the connected wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to check token allowance\nconst spenderAddress = \"0x...\";\nconst allowance = await contract.token.allowance(spenderAddress);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.allowance"
+      },
+      {
+        "name": "allowanceOf",
+        "summary": "Get Token Allowance\n\n",
+        "remarks": "\n\nGet the allowance of one wallet over another wallet's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the specified wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet who owns the funds\nconst owner = \"{{wallet_address}}\";\n// Address of the wallet to check token allowance\nconst spender = \"0x...\";\nconst allowance = await contract.token.allowanceOf(owner, spender);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.allowanceOf"
+      },
+      {
+        "name": "balance",
+        "summary": "Get Token Balance for the currently connected wallet\n\n",
+        "remarks": "\n\nGet a wallets token balance.\n\n",
+        "examples": {
+          "javascript": "const balance = await contract.token.balance();"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.balance"
+      },
+      {
+        "name": "balanceOf",
+        "summary": "Get Token Balance\n\n",
+        "remarks": "\n\nGet a wallets token balance.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to check token balance\nconst walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.token.balanceOf(walletAddress);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.balanceOf"
+      },
+      {
+        "name": "get",
+        "summary": "Get the token Metadata (name, symbol, etc...)\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const token = await contract.token.get();"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.get"
+      },
+      {
+        "name": "setAllowance",
+        "summary": "Allows the specified `spender` wallet to transfer the given `amount` of tokens to another wallet\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "// Address of the wallet to allow transfers from\nconst spenderAddress = \"0x...\";\n// The number of tokens to give as allowance\nconst amount = 100\nawait contract.token.setAllowance(spenderAddress, amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.setAllowance"
+      },
+      {
+        "name": "totalSupply",
+        "summary": "The total supply for this Token\n\n",
+        "remarks": "\n\nGet how much supply has been minted\n\n",
+        "examples": {
+          "javascript": "const balance = await contract.token.totalSupply();"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.totalSupply"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer Tokens\n\n",
+        "remarks": "\n\nTransfer tokens from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n// The amount of tokens you want to send\nconst amount = 0.1;\nawait contract.token.transfer(toAddress, amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transfer"
+      },
+      {
+        "name": "transferBatch",
+        "summary": "Transfer Tokens To Many Wallets\n\n",
+        "remarks": "\n\nMint tokens from the connected wallet to many wallets\n\n",
+        "examples": {
+          "javascript": "// Data of the tokens you want to mint\nconst data = [\n  {\n    toAddress: \"{{wallet_address}}\", // Address to mint tokens to\n    amount: 100, // How many tokens to mint to specified address\n  },\n {\n   toAddress: \"0x...\",\n   amount: 100,\n }\n]\n\nawait contract.token.transferBatch(data);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transferBatch"
+      },
+      {
+        "name": "transferFrom",
+        "summary": "Transfer Tokens From Address\n\n",
+        "remarks": "\n\nTransfer tokens from one wallet to another\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet sending the tokens\nconst fromAddress = \"{{wallet_address}}\";\n// Address of the wallet you want to send the tokens to\nconst toAddress = \"0x...\";\n// The number of tokens you want to send\nconst amount = 1.2\n// Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nawait contract.token.transferFrom(fromAddress, toAddress, amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transferFrom"
+      }
+    ],
+    "properties": [
+      {
+        "name": "claimConditions",
+        "summary": "Configure claim conditions\n\n",
+        "remarks": "\n\nDefine who can claim Tokens, when and how many.\n\n",
+        "examples": {
+          "javascript": "const presaleStartTime = new Date();\nconst publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst claimConditions = [\n  {\n    startTime: presaleStartTime, // start the presale now\n    maxQuantity: 3117.42, // limit how many tokens are released in this presale\n    price: 0.001, // presale price per token\n    snapshot: ['0x...', '0x...'], // limit claiming to only certain addresses\n  },\n  {\n    startTime: publicSaleStartTime, // 24h after presale, start public sale\n    price: 0.008, // public sale price per token\n  }\n]);\nawait contract.claimConditions.set(claimConditions);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.dropclaimconditions"
+      }
+    ],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.TokenDrop"
   },
   "Vote": {
     "name": "Vote",

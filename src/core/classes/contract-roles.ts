@@ -12,7 +12,7 @@ import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
  * @remarks Configure roles and permissions for a contract, to restrict certain actions.
  * @example
  * ```javascript
- * const contract = sdk.getContract("{{contract_address}}");
+ * const contract = await sdk.getContract("{{contract_address}}");
  * const rolesAndMembers = await contract.roles.getAll();
  * await contract.roles.grantRole("admin", "0x...");
  * ```
