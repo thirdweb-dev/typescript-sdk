@@ -788,7 +788,7 @@
         "summary": "The total supply for this Token\n\n",
         "remarks": "\n\nGet how much supply has been minted\n\n",
         "examples": {
-          "javascript": "const balance = await contract.token.balanceOf(walletAddress);"
+          "javascript": "const balance = await contract.token.totalSupply();"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.totalSupply"
       },
@@ -927,7 +927,7 @@
         "summary": "The total supply for this Token\n\n",
         "remarks": "\n\nGet how much supply has been minted\n\n",
         "examples": {
-          "javascript": "const balance = await contract.token.balanceOf(walletAddress);"
+          "javascript": "const balance = await contract.token.totalSupply();"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.totalSupply"
       },
