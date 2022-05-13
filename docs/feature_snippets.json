@@ -477,7 +477,7 @@
         "summary": "Get Owned NFTs\n\n",
         "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
         "examples": {
-          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.query.owned.all(address);"
+          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.nft.query.owned.all(address);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Enumerable.all"
@@ -527,7 +527,7 @@
         "summary": "Get All Minted NFTs\n\n",
         "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
         "examples": {
-          "javascript": "const nfts = await contract.query.all();"
+          "javascript": "const nfts = await contract.nft.query.all();"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Supply.all"
