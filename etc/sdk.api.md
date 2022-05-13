@@ -4261,7 +4261,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getVote(address: string): Vote;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
-    storage: IStorage;
+    // Warning: (ae-forgotten-export) The symbol "Storage" needs to be exported by the entry point index.d.ts
+    storage: Storage_2;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
     wallet: UserWallet;
 }

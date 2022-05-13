@@ -4,10 +4,10 @@
 
 ## ThirdwebSDK.storage property
 
-Upload and download files
+Upload and download files from IPFS
 
 <b>Signature:</b>
 
 ```typescript
-storage: IStorage;
+storage: Storage;
 ```

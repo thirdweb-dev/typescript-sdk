@@ -24,7 +24,7 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [deployer](./sdk.thirdwebsdk.deployer.md) |  | [ContractDeployer](./sdk.contractdeployer.md) | New contract deployer |
-|  [storage](./sdk.thirdwebsdk.storage.md) |  | [IStorage](./sdk.istorage.md) | Upload and download files |
+|  [storage](./sdk.thirdwebsdk.storage.md) |  | Storage | Upload and download files from IPFS |
 |  [wallet](./sdk.thirdwebsdk.wallet.md) |  | [UserWallet](./sdk.userwallet.md) | Interact with the connected wallet |
 
 ## Methods

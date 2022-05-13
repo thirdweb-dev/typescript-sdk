@@ -1,5 +1,6 @@
 import { ContractInterface, ethers } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
+import { Storage } from "./classes/storage";
 import {
   Edition,
   EditionDrop,
@@ -51,9 +52,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   private _publisher: Promise<ContractPublisher> | undefined;
   /**
-   * Upload and download files
+   * Internal handler for uploading and downloading files
    */
-  public storage: IStorage;
+  private storageHandler: IStorage;
   /**
    * New contract deployer
    */
@@ -63,13 +64,19 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public wallet: UserWallet;
 
+  /**
+   * Upload and download files from IPFS
+   */
+  public storage: Storage;
+
   constructor(
     network: NetworkOrSignerOrProvider,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ) {
     super(network, options);
-    this.storage = storage;
+    this.storageHandler = storage;
+    this.storage = new Storage(storage);
     this.deployer = new ContractDeployer(network, options, storage);
     this.wallet = new UserWallet(network, options);
   }
@@ -206,7 +213,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     const newContract = new KNOWN_CONTRACTS_MAP[
       contractType as keyof typeof KNOWN_CONTRACTS_MAP
-    ](this.getSignerOrProvider(), address, this.storage, this.options);
+    ](this.getSignerOrProvider(), address, this.storageHandler, this.options);
 
     this.contractCache.set(address, newContract);
 
@@ -344,7 +351,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       this.getSignerOrProvider(),
       address,
       abi,
-      this.storage,
+      this.storageHandler,
       this.options,
     );
     this.contractCache.set(address, contract);
@@ -375,7 +382,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           factoryAddress,
           this.getSignerOrProvider(),
           this.options,
-          this.storage,
+          this.storageHandler,
         );
       }));
   }
