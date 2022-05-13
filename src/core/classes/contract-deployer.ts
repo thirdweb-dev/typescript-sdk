@@ -22,6 +22,7 @@ import {
   NFTContractDeployMetadata,
   SplitContractDeployMetadata,
   TokenContractDeployMetadata,
+  TokenDropContractDeployMetadata,
   VoteContractDeployMetadata,
 } from "../../types/deploy/deploy-metadata";
 import { TokenDrop } from "../../contracts/token-drop";
@@ -117,7 +118,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deployTokenDrop(
-    metadata: TokenContractDeployMetadata,
+    metadata: TokenDropContractDeployMetadata,
   ): Promise<string> {
     return await this.deployBuiltInContract(TokenDrop.contractType, metadata);
   }

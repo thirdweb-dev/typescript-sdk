@@ -96,6 +96,41 @@ export interface TokenContractDeployMetadata {
 }
 
 /**
+ * Options for deploying a Token contract
+ * @public
+ */
+export interface TokenDropContractDeployMetadata {
+  /**
+   * name of the contract
+   */
+  name: string;
+  /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
+  /**
+   * Symbol for the NFTs
+   */
+  symbol?: string;
+  /**
+   * Custom gasless trusted forwarder addresses
+   */
+  trusted_forwarders?: string[];
+  /**
+   * The address that will receive the proceeds from primary sales
+   */
+  primary_sale_recipient: string;
+}
+
+/**
  * Options for deploying a Marketplace contract
  * @public
  */
