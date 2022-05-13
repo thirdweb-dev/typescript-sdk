@@ -132,7 +132,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    * @remarks Get how much supply has been minted
    * @example
    * ```javascript
-   * const balance = await contract.token.balanceOf(walletAddress);
+   * const balance = await contract.token.totalSupply();
    * ```
    */
   public async totalSupply(): Promise<CurrencyValue> {

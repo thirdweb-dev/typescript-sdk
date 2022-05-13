@@ -49,6 +49,7 @@
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
 |  [Token](./sdk.token.md) | Create a standard crypto token or cryptocurrency. |
+|  [TokenDrop](./sdk.tokendrop.md) | Create a Drop contract for a standard crypto token or cryptocurrency. |
 |  [TokenERC20History](./sdk.tokenerc20history.md) | Manages history for Token contracts |
 |  [TransactionError](./sdk.transactionerror.md) |  |
 |  [UserWallet](./sdk.userwallet.md) | Connect and Interact with a user wallet |
