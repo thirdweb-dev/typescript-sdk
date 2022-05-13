@@ -40,7 +40,7 @@ export class Erc721Enumerable implements DetectableFeature {
    * ```javascript
    * // Address of the wallet to get the NFTs of
    * const address = "{{wallet_address}}";
-   * const nfts = await contract.query.owned.all(address);
+   * const nfts = await contract.nft.query.owned.all(address);
    * ```
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    * @returns The NFT metadata for all NFTs in the contract.

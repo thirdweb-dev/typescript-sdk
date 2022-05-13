@@ -39,7 +39,6 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * const contract = sdk.getTokenDrop("{{contract_address}}");
  * ```
  *
- * @internal
  */
 export class TokenDrop extends Erc20<DropERC20> {
   static contractType = "token-drop" as const;

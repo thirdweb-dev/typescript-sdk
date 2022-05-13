@@ -45,7 +45,7 @@ describe("NFT Contract", async () => {
     });
     await nftContract.burn(token.id);
     const nfts = await nftContract.getAll();
-    expect(nfts).to.be.an("array").length(1);
+    expect(nfts).to.be.an("array").length(2);
   });
 
   it("should return owned token ids", async () => {

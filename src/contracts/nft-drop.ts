@@ -256,10 +256,12 @@ export class NFTDrop extends Erc721<DropERC721> {
   }
 
   /**
-   * {@inheritDoc Erc721Supply.totalSupply}
+   * Get the total count NFTs in this drop contract, both claimed and unclaimed
    */
   public async totalSupply() {
-    return this._query.totalSupply();
+    const claimed = await this.totalClaimedSupply();
+    const unclaimed = await this.totalUnclaimedSupply();
+    return claimed.add(unclaimed);
   }
 
   /**
