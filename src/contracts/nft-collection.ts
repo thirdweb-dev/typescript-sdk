@@ -202,10 +202,10 @@ export class NFTCollection extends Erc721<TokenERC721> {
   }
 
   /**
-   * {@inheritDoc Erc721Supply.totalSupply}
+   * Get the total count NFTs minted in this contract
    */
   public async totalSupply() {
-    return this._query.totalSupply();
+    return this._query.totalCirculatingSupply();
   }
 
   /**
