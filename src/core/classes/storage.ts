@@ -1,5 +1,6 @@
 import { JsonObject } from "..";
 import { FileOrBuffer } from "../..";
+import { UploadProgressEvent } from "../../types/events";
 import { IStorage } from "../interfaces/IStorage";
 import { CidWithFileName } from "../interfaces/IStorageUpload";
 
@@ -57,6 +58,9 @@ export class Storage {
    */
   public async upload(
     data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<StorageUpload> {
     if (!Array.isArray(data)) {
       if (
@@ -64,9 +68,9 @@ export class Storage {
         data instanceof Buffer ||
         (data.name && data.data && data.data instanceof Buffer)
       ) {
-        return this.uploadBatch([data as FileOrBuffer]);
+        return this.uploadBatch([data as FileOrBuffer], options);
       } else {
-        return this.uploadMetadataBatch([data as JsonObject]);
+        return this.uploadMetadataBatch([data as JsonObject], options);
       }
     }
 
@@ -80,9 +84,9 @@ export class Storage {
       (item: any) => !(item instanceof File) && !(item instanceof Buffer),
     );
     if (allFiles.length === data.length) {
-      return this.uploadBatch(data as FileOrBuffer[]);
+      return this.uploadBatch(data as FileOrBuffer[], options);
     } else if (allObjects.length === data.length) {
-      return this.uploadMetadataBatch(data as JsonObject[]);
+      return this.uploadMetadataBatch(data as JsonObject[], options);
     } else {
       throw new Error(
         "Data to upload must be either all files or all JSON objects",
@@ -90,9 +94,18 @@ export class Storage {
     }
   }
 
-  private async uploadBatch(files: FileOrBuffer[]): Promise<StorageUpload> {
+  private async uploadBatch(
+    files: FileOrBuffer[],
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
+  ): Promise<StorageUpload> {
     const { cid, fileNames } = await this.storage.uploader.uploadBatchWithCid(
       files,
+      undefined,
+      undefined,
+      undefined,
+      options,
     );
     const baseUri = `ipfs://${cid}/`;
     const uris = fileNames.map((name) => `${baseUri}${name}`);
@@ -104,9 +117,16 @@ export class Storage {
 
   private async uploadMetadataBatch(
     metadatas: JsonObject[],
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<StorageUpload> {
     const { baseUri, metadataUris } = await this.storage.uploadMetadataBatch(
       metadatas,
+      undefined,
+      undefined,
+      undefined,
+      options,
     );
     return {
       baseUri,
