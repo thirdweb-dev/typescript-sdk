@@ -5,10 +5,6 @@ export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 /**
  * @internal
  */
-export const TW_FILEBASE_SERVER_URL = "http://localhost:3002";
-/**
- * @internal
- */
 export const PUBLIC_GATEWAYS = [
   "https://gateway.ipfscdn.io/ipfs/",
   "https://gateway2.ipfscdn.io/ipfs/",

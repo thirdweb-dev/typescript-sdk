@@ -9,10 +9,9 @@ Uploads JSON metadata to IPFS
 <b>Signature:</b>
 
 ```typescript
-uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<{
+uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<{
         baseUri: string;
         metadataUris: string[];
     }>;
@@ -26,7 +25,7 @@ uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractA
 |  fileStartNumber | number | <i>(Optional)</i> Optional. The first file file name begins with. |
 |  contractAddress | string | <i>(Optional)</i> Optional. The contract address the data belongs to. |
 |  signerAddress | string | <i>(Optional)</i> Optional. The address of the signer. |
-|  listener | (event: { progress: number; total: number; }) =&gt; void | <i>(Optional)</i> |
+|  options | { onProgress: (event: UploadProgressEvent) =&gt; void; } | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

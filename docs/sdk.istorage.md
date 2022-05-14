@@ -17,8 +17,8 @@ export interface IStorage
 |  --- | --- |
 |  [get(hash)](./sdk.istorage.get.md) | Fetches data from storage. This method expects to fetch JSON formatted data |
 |  [getRaw(hash)](./sdk.istorage.getraw.md) | Fetches data from storage. This method does not make any assumptions on the retrieved data format |
-|  [upload(data, contractAddress, signerAddress, listener)](./sdk.istorage.upload.md) | Uploads a file to the storage. |
-|  [uploadBatch(files, fileStartNumber, contractAddress, signerAddress, listener)](./sdk.istorage.uploadbatch.md) | Uploads a folder to storage. |
-|  [uploadMetadata(metadata, contractAddress, signerAddress, listener)](./sdk.istorage.uploadmetadata.md) | Uploads JSON metadata to IPFS |
-|  [uploadMetadataBatch(metadatas, fileStartNumber, contractAddress, signerAddress, listener)](./sdk.istorage.uploadmetadatabatch.md) | Uploads JSON metadata to IPFS |
+|  [upload(data, contractAddress, signerAddress, options)](./sdk.istorage.upload.md) | Uploads a file to the storage. |
+|  [uploadBatch(files, fileStartNumber, contractAddress, signerAddress, options)](./sdk.istorage.uploadbatch.md) | Uploads a folder to storage. |
+|  [uploadMetadata(metadata, contractAddress, signerAddress, options)](./sdk.istorage.uploadmetadata.md) | Uploads JSON metadata to IPFS |
+|  [uploadMetadataBatch(metadatas, fileStartNumber, contractAddress, signerAddress, options)](./sdk.istorage.uploadmetadatabatch.md) | Uploads JSON metadata to IPFS |
 

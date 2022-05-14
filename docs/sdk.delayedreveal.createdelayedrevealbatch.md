@@ -9,10 +9,9 @@ Create a batch of encrypted NFTs that can be revealed at a later time.
 <b>Signature:</b>
 
 ```typescript
-createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<TransactionResultWithId[]>;
+createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId[]>;
 ```
 
 ## Parameters
@@ -22,7 +21,7 @@ createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataIn
 |  placeholder | [NFTMetadataInput](./sdk.nftmetadatainput.md) | the placeholder NFT to show before the reveal |
 |  metadatas | [NFTMetadataInput](./sdk.nftmetadatainput.md)<!-- -->\[\] | the final NFTs that will be hidden |
 |  password | string | the password that will be used to reveal these NFTs |
-|  listener | (event: { progress: number; total: number; }) =&gt; void | <i>(Optional)</i> |
+|  options | { onProgress: (event: UploadProgressEvent) =&gt; void; } | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

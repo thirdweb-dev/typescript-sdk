@@ -25,8 +25,8 @@ export declare class IpfsStorage implements IStorage
 |  --- | --- | --- |
 |  [get(hash)](./sdk.ipfsstorage.get.md) |  | Fetches data from storage. This method expects to fetch JSON formatted data |
 |  [getRaw(hash)](./sdk.ipfsstorage.getraw.md) |  | Fetches data from storage. This method does not make any assumptions on the retrieved data format |
-|  [upload(data, contractAddress, signerAddress, listener)](./sdk.ipfsstorage.upload.md) |  | Uploads a file to the storage. |
-|  [uploadBatch(files, fileStartNumber, contractAddress, signerAddress, listener)](./sdk.ipfsstorage.uploadbatch.md) |  | Uploads a folder to storage. |
-|  [uploadMetadata(metadata, contractAddress, signerAddress, listener)](./sdk.ipfsstorage.uploadmetadata.md) |  | Uploads JSON metadata to IPFS |
-|  [uploadMetadataBatch(metadatas, fileStartNumber, contractAddress, signerAddress, listener)](./sdk.ipfsstorage.uploadmetadatabatch.md) |  | Uploads JSON metadata to IPFS |
+|  [upload(data, contractAddress, signerAddress, options)](./sdk.ipfsstorage.upload.md) |  | Uploads a file to the storage. |
+|  [uploadBatch(files, fileStartNumber, contractAddress, signerAddress, options)](./sdk.ipfsstorage.uploadbatch.md) |  | Uploads a folder to storage. |
+|  [uploadMetadata(metadata, contractAddress, signerAddress, options)](./sdk.ipfsstorage.uploadmetadata.md) |  | Uploads JSON metadata to IPFS |
+|  [uploadMetadataBatch(metadatas, fileStartNumber, contractAddress, signerAddress, options)](./sdk.ipfsstorage.uploadmetadatabatch.md) |  | Uploads JSON metadata to IPFS |
 

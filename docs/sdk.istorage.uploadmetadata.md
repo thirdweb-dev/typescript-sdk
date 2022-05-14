@@ -9,10 +9,9 @@ Uploads JSON metadata to IPFS
 <b>Signature:</b>
 
 ```typescript
-uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<string>;
+uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
 ```
 
 ## Parameters
@@ -22,7 +21,7 @@ uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: s
 |  metadata | [JsonObject](./sdk.jsonobject.md) | The metadata to be uploaded. |
 |  contractAddress | string | <i>(Optional)</i> Optional. The contract address the data belongs to. |
 |  signerAddress | string | <i>(Optional)</i> Optional. The address of the signer. |
-|  listener | (event: { progress: number; total: number; }) =&gt; void | <i>(Optional)</i> |
+|  options | { onProgress: (event: UploadProgressEvent) =&gt; void; } | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

@@ -1,5 +1,6 @@
 import { UploadProgressEvent } from "../../types/events";
 import { FileOrBuffer, JsonObject } from "../types";
+import { IStorageUpload } from "./IStorageUpload";
 
 /**
  * @internal
@@ -16,6 +17,8 @@ export interface UploadMetadataBatchResult {
  * @public
  */
 export interface IStorage {
+  uploader: IStorageUpload;
+
   /**
    * Fetches data from storage. This method expects to fetch JSON formatted data
    *

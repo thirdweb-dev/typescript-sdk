@@ -9,10 +9,9 @@ Uploads a folder to storage.
 <b>Signature:</b>
 
 ```typescript
-uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<string>;
+uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
 ```
 
 ## Parameters
@@ -23,7 +22,7 @@ uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contract
 |  fileStartNumber | number | <i>(Optional)</i> Optional. The first file file name begins with. |
 |  contractAddress | string | <i>(Optional)</i> Optional. The contract address the data belongs to. |
 |  signerAddress | string | <i>(Optional)</i> Optional. The address of the signer. |
-|  listener | (event: { progress: number; total: number; }) =&gt; void | <i>(Optional)</i> |
+|  options | { onProgress: (event: UploadProgressEvent) =&gt; void; } | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

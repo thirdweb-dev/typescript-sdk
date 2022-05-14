@@ -21,8 +21,8 @@ if (!globalThis.FormData) {
  */
 export class IpfsStorage implements IStorage {
   private gatewayUrl: string;
-  private uploader: IStorageUpload;
   private failedUrls: string[] = [];
+  public uploader: IStorageUpload;
 
   constructor(
     gatewayUrl: string = DEFAULT_IPFS_GATEWAY,

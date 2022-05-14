@@ -1,7 +1,18 @@
 import { JsonObject } from "..";
 import { FileOrBuffer } from "../..";
 import { IStorage } from "../interfaces/IStorage";
+import { CidWithFileName } from "../interfaces/IStorageUpload";
 
+interface StorageUpload {
+  /**
+   * Base URI of the directory that all files are uploaded to.
+   */
+  baseUri: string;
+  /**
+   * Individual URI for each file or metadata upload.
+   */
+  uris: string[];
+}
 export class Storage {
   private storage: IStorage;
 
@@ -46,16 +57,16 @@ export class Storage {
    */
   public async upload(
     data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject,
-  ): Promise<string> {
+  ): Promise<StorageUpload> {
     if (!Array.isArray(data)) {
       if (
         data instanceof File ||
         data instanceof Buffer ||
         (data.name && data.data && data.data instanceof Buffer)
       ) {
-        return this.storage.upload(data as FileOrBuffer);
+        return this.uploadBatch([data as FileOrBuffer]);
       } else {
-        return this.storage.uploadMetadata(data as JsonObject);
+        return this.uploadMetadataBatch([data as JsonObject]);
       }
     }
 
@@ -69,16 +80,37 @@ export class Storage {
       (item: any) => !(item instanceof File) && !(item instanceof Buffer),
     );
     if (allFiles.length === data.length) {
-      return this.storage.uploadBatch(data as FileOrBuffer[]);
+      return this.uploadBatch(data as FileOrBuffer[]);
     } else if (allObjects.length === data.length) {
-      const { baseUri } = await this.storage.uploadMetadataBatch(
-        data as JsonObject[],
-      );
-      return baseUri;
+      return this.uploadMetadataBatch(data as JsonObject[]);
     } else {
       throw new Error(
         "Data to upload must be either all files or all JSON objects",
       );
     }
+  }
+
+  private async uploadBatch(files: FileOrBuffer[]): Promise<StorageUpload> {
+    const { cid, fileNames } = await this.storage.uploader.uploadBatchWithCid(
+      files,
+    );
+    const baseUri = `ipfs://${cid}/`;
+    const uris = fileNames.map((name) => `${baseUri}${name}`);
+    return {
+      baseUri,
+      uris,
+    };
+  }
+
+  private async uploadMetadataBatch(
+    metadatas: JsonObject[],
+  ): Promise<StorageUpload> {
+    const { baseUri, metadataUris } = await this.storage.uploadMetadataBatch(
+      metadatas,
+    );
+    return {
+      baseUri,
+      uris: metadataUris,
+    };
   }
 }

@@ -831,10 +831,9 @@ export const DEFAULT_QUERY_ALL_COUNT = 100;
 // @public
 export class DelayedReveal<T extends DropERC721> {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage);
-    createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<TransactionResultWithId[]>;
+    createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId[]>;
     getBatchesToReveal(): Promise<BatchToReveal[]>;
     reveal(batchId: BigNumberish, password: string): Promise<TransactionResult>;
 }
@@ -1939,22 +1938,18 @@ export class IpfsStorage implements IStorage {
     constructor(gatewayUrl?: string, uploader?: IStorageUpload);
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<string>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<string>;
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<{
+    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<{
         baseUri: string;
         metadataUris: string[];
     }>;
@@ -1969,23 +1964,19 @@ export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: Fe
 export interface IStorage {
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<string>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<string>;
+    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
     // Warning: (ae-incompatible-release-tags) The symbol "uploadMetadataBatch" is marked as @public, but its signature references "UploadMetadataBatchResult" which is marked as @internal
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<UploadMetadataBatchResult>;
+    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadMetadataBatchResult>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "JsonLiteralOrFileOrBuffer" needs to be exported by the entry point index.d.ts
@@ -2472,10 +2463,9 @@ export class NFTDrop extends Erc721<DropERC721> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "nft-drop";
-    createBatch(metadatas: NFTMetadataInput[], listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    createBatch(metadatas: NFTMetadataInput[], options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC721>;
     // (undocumented)
@@ -4859,6 +4849,10 @@ export enum VoteType {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/src/core/classes/delayed-reveal.d.ts:50:9 - (ae-forgotten-export) The symbol "UploadProgressEvent" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

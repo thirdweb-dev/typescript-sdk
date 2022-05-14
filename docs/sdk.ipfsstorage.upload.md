@@ -9,10 +9,9 @@ Uploads a file to the storage.
 <b>Signature:</b>
 
 ```typescript
-upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, listener?: (event: {
-        progress: number;
-        total: number;
-    }) => void): Promise<string>;
+upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
 ```
 
 ## Parameters
@@ -22,7 +21,7 @@ upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: st
 |  data | string \| [FileOrBuffer](./sdk.fileorbuffer.md) | The data to be uploaded. Can be a file/buffer (which will be loaded), or a string. |
 |  contractAddress | string | <i>(Optional)</i> Optional. The contract address the data belongs to. |
 |  signerAddress | string | <i>(Optional)</i> Optional. The address of the signer. |
-|  listener | (event: { progress: number; total: number; }) =&gt; void | <i>(Optional)</i> |
+|  options | { onProgress: (event: UploadProgressEvent) =&gt; void; } | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
