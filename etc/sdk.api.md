@@ -1720,7 +1720,7 @@ export class Erc721Supply implements DetectableFeature {
     featureName: "ERC721Supply";
     // (undocumented)
     owned: Erc721Enumerable | undefined;
-    totalSupply(): Promise<BigNumber>;
+    totalCirculatingSupply(): Promise<BigNumber>;
 }
 
 // @public (undocumented)
@@ -4246,7 +4246,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getPublisher(): Promise<ContractPublisher>;
     getSplit(address: string): Split;
     getToken(address: string): Token;
-    // Warning: (ae-incompatible-release-tags) The symbol "getTokenDrop" is marked as @public, but its signature references "TokenDrop" which is marked as @internal
     getTokenDrop(address: string): TokenDrop;
     getVote(address: string): Vote;
     // (undocumented)
@@ -4395,12 +4394,10 @@ export interface TokenContractDeployMetadata {
     trusted_forwarders?: string[];
 }
 
-// Warning: (ae-internal-missing-underscore) The name "TokenDrop" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export class TokenDrop extends Erc20<DropERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
-    // (undocumented)
+    // @internal (undocumented)
     analytics: ContractAnalytics<DropERC20>;
     burn(amount: Amount): Promise<TransactionResult>;
     burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
@@ -4424,7 +4421,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     getVoteBalance(): Promise<CurrencyValue>;
     // (undocumented)
     getVoteBalanceOf(account: string): Promise<CurrencyValue>;
-    // (undocumented)
+    // @internal (undocumented)
     interceptor: ContractInterceptor<DropERC20>;
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
@@ -4435,7 +4432,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     roles: ContractRoles<DropERC20, typeof TokenDrop.contractRoles[number]>;
     // (undocumented)
     sales: ContractPrimarySale<DropERC20>;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<    {
         name: ZodString;
