@@ -40,6 +40,73 @@ export class IpfsUploader implements IStorageUpload {
     },
   ): Promise<CidWithFileName> {
     const token = await this.getUploadToken(contractAddress || "");
+
+    const formData = new FormData();
+    const { data, fileNames } = await this.buildFormData(
+      formData,
+      files,
+      fileStartNumber,
+      contractAddress,
+      signerAddress,
+    );
+
+    if (typeof window === "undefined") {
+      const res = await fetch(PINATA_IPFS_URL, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: data as any,
+      });
+      const body = await res.json();
+      if (!res.ok) {
+        console.log(body);
+        throw new UploadError("Failed to upload files to IPFS");
+      }
+      return {
+        cid: body.IpfsHash,
+        fileNames,
+      };
+    } else {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", PINATA_IPFS_URL);
+        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+
+        xhr.onloadend = () => {
+          resolve({
+            cid: JSON.parse(xhr.responseText).IpfsHash,
+            fileNames,
+          });
+        };
+
+        xhr.onerror = (err) => {
+          reject(err);
+        };
+
+        if (xhr.upload) {
+          xhr.upload.onprogress = (event) => {
+            if (options?.onProgress) {
+              options?.onProgress({
+                progress: event.loaded,
+                total: event.total,
+              });
+            }
+          };
+        }
+
+        xhr.send(data);
+      });
+    }
+  }
+
+  private buildFormData(
+    data: any,
+    files: (string | FileOrBuffer)[],
+    fileStartNumber = 0,
+    contractAddress?: string,
+    signerAddress?: string,
+  ) {
     const metadata = {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
       keyvalues: {
@@ -48,7 +115,7 @@ export class IpfsUploader implements IStorageUpload {
         signerAddress,
       },
     };
-    const data = new FormData();
+
     const fileNames: string[] = [];
     files.forEach((file, i) => {
       let fileName = "";
@@ -91,54 +158,9 @@ export class IpfsUploader implements IStorageUpload {
 
     data.append("pinataMetadata", JSON.stringify(metadata));
 
-    if (typeof window === "undefined") {
-      const res = await fetch(PINATA_IPFS_URL, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: data as any,
-      });
-
-      const body = await res.json();
-      if (!res.ok) {
-        console.log(body);
-        throw new UploadError("Failed to upload files to IPFS");
-      }
-      return {
-        cid: body.IpfsHash,
-        fileNames,
-      };
-    } else {
-      return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", PINATA_IPFS_URL);
-        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-
-        xhr.onloadend = () => {
-          resolve({
-            cid: JSON.parse(xhr.responseText).IpfsHash,
-            fileNames,
-          });
-        };
-
-        xhr.onerror = (err) => {
-          reject(err);
-        };
-
-        if (xhr.upload) {
-          xhr.upload.onprogress = (event) => {
-            if (options?.onProgress) {
-              options?.onProgress({
-                progress: event.loaded,
-                total: event.total,
-              });
-            }
-          };
-        }
-
-        xhr.send(data);
-      });
-    }
+    return {
+      data,
+      fileNames,
+    };
   }
 }
