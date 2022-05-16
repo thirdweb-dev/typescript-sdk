@@ -8,6 +8,10 @@ import { FileOrBuffer } from "../types";
 import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../constants/urls";
 import { UploadProgressEvent } from "../../types/events";
 
+if (!globalThis.FormData) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  globalThis.FormData = require("form-data");
+}
 export class IpfsUploader implements IStorageUpload {
   /**
    * Fetches a one-time-use upload token that can used to upload

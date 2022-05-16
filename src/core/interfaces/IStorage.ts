@@ -1,6 +1,5 @@
 import { UploadProgressEvent } from "../../types/events";
 import { FileOrBuffer, JsonObject } from "../types";
-import { IStorageUpload } from "./IStorageUpload";
 
 /**
  * @internal
@@ -14,11 +13,20 @@ export interface UploadMetadataBatchResult {
 }
 
 /**
+ * @internal
+ */
+export interface UploadBatchResult {
+  // base cid of the directory
+  baseUri: string;
+
+  // path to each of the file within the directory, included full cid path
+  uris: string[];
+}
+
+/**
  * @public
  */
 export interface IStorage {
-  uploader: IStorageUpload;
-
   /**
    * Fetches data from storage. This method expects to fetch JSON formatted data
    *
@@ -71,7 +79,7 @@ export interface IStorage {
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
-  ): Promise<string>;
+  ): Promise<UploadBatchResult>;
 
   /**
    *

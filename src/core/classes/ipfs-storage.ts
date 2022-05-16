@@ -10,11 +10,6 @@ import {
 import { IpfsUploader } from "../storage/ipfs-uploader";
 import { UploadProgressEvent } from "../../types/events";
 
-if (!globalThis.FormData) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  globalThis.FormData = require("form-data");
-}
-
 /**
  * IPFS Storage implementation, accepts custom IPFS gateways
  * @public
@@ -22,7 +17,7 @@ if (!globalThis.FormData) {
 export class IpfsStorage implements IStorage {
   private gatewayUrl: string;
   private failedUrls: string[] = [];
-  public uploader: IStorageUpload;
+  private uploader: IStorageUpload;
 
   constructor(
     gatewayUrl: string = DEFAULT_IPFS_GATEWAY,
@@ -77,8 +72,8 @@ export class IpfsStorage implements IStorage {
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
-  ): Promise<string> {
-    const { cid } = await this.uploader.uploadBatchWithCid(
+  ) {
+    const { cid, fileNames } = await this.uploader.uploadBatchWithCid(
       files,
       fileStartNumber,
       contractAddress,
@@ -86,7 +81,12 @@ export class IpfsStorage implements IStorage {
       options,
     );
 
-    return `ipfs://${cid}/`;
+    const baseUri = `ipfs://${cid}/`;
+    const uris = fileNames.map((filename) => `${baseUri}${filename}`);
+    return {
+      baseUri,
+      uris,
+    };
   }
 
   /**

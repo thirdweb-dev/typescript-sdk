@@ -2,7 +2,6 @@ import { JsonObject } from "..";
 import { FileOrBuffer } from "../..";
 import { UploadProgressEvent } from "../../types/events";
 import { IStorage } from "../interfaces/IStorage";
-import { CidWithFileName } from "../interfaces/IStorageUpload";
 
 interface StorageUpload {
   /**
@@ -100,19 +99,13 @@ export class Storage {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<StorageUpload> {
-    const { cid, fileNames } = await this.storage.uploader.uploadBatchWithCid(
+    return await this.storage.uploadBatch(
       files,
       undefined,
       undefined,
       undefined,
       options,
     );
-    const baseUri = `ipfs://${cid}/`;
-    const uris = fileNames.map((name) => `${baseUri}${name}`);
-    return {
-      baseUri,
-      uris,
-    };
   }
 
   private async uploadMetadataBatch(
