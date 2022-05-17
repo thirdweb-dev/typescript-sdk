@@ -3722,6 +3722,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     platformFee: ContractPlatformFee<SignatureDrop_2>;
     // (undocumented)
     primarySale: ContractPrimarySale<SignatureDrop_2>;
+    revealer: DelayedReveal<SignatureDrop_2>;
     // (undocumented)
     roles: ContractRoles<SignatureDrop_2, typeof SignatureDrop.contractRoles[number]>;
     royalty: ContractRoyalty<SignatureDrop_2, typeof SignatureDrop.schema>;

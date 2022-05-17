@@ -45,6 +45,7 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [metadata](./sdk.signaturedrop.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;SignatureDropContract, typeof SignatureDrop.schema&gt; |  |
 |  [platformFee](./sdk.signaturedrop.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;SignatureDropContract&gt; |  |
 |  [primarySale](./sdk.signaturedrop.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;SignatureDropContract&gt; |  |
+|  [revealer](./sdk.signaturedrop.revealer.md) |  | [DelayedReveal](./sdk.delayedreveal.md)<!-- -->&lt;SignatureDropContract&gt; | Delayed reveal |
 |  [roles](./sdk.signaturedrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;SignatureDropContract, typeof [SignatureDrop.contractRoles](./sdk.signaturedrop.contractroles.md)<!-- -->\[number\]&gt; |  |
 |  [royalty](./sdk.signaturedrop.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;SignatureDropContract, typeof SignatureDrop.schema&gt; | Configure royalties |
 

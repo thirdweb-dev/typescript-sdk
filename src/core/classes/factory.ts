@@ -107,6 +107,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     }
     switch (contractType) {
       case NFTDrop.contractType:
+      case SignatureDrop.contractType:
       case NFTCollection.contractType:
         const erc721metadata = NFTDrop.schema.deploy.parse(metadata);
         return [
