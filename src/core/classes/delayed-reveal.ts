@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721 } from "contracts";
+import { DropERC721, SignatureDrop } from "contracts";
 import {
   CommonNFTInput,
   NFTMetadata,
@@ -15,7 +15,7 @@ import { TokensLazyMintedEvent } from "contracts/DropERC721";
  * Handles delayed reveal logic
  * @public
  */
-export class DelayedReveal<T extends DropERC721> {
+export class DelayedReveal<T extends SignatureDrop | DropERC721> {
   private contractWrapper: ContractWrapper<T>;
   private storage: IStorage;
 
@@ -162,11 +162,21 @@ export class DelayedReveal<T extends DropERC721> {
 
     const countRangeArray = Array.from(Array(count.toNumber()).keys());
 
+    const contractType = await this.contractWrapper.readContract.contractType();
+
+    function fetchMethod(i) {
+      if(contractType == "SignatureDrop"){
+        `this.contractWrapper.readContract.getBatchIdatIndex(${i})`;
+      } else {
+        `this.contractWrapper.readContract.baseURIIndices(${i})`;
+      }
+    }
+
     // map over to get the base uri indices, which should be the end token id of every batch
     const uriIndices = await Promise.all(
       countRangeArray.map((i) =>
-        this.contractWrapper.readContract.baseURIIndices(i),
-      ),
+          eval( fetchMethod(i) )
+        ),
     );
 
     // first batch always start from 0. don't need to fetch the last batch so pop it from the range array
