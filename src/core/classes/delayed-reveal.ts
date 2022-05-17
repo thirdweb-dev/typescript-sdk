@@ -163,20 +163,11 @@ export class DelayedReveal<T extends SignatureDrop | DropERC721> {
     const countRangeArray = Array.from(Array(count.toNumber()).keys());
 
     const contractType = await this.contractWrapper.readContract.contractType();
-
-    function fetchMethod(i) {
-      if(contractType == "SignatureDrop"){
-        `this.contractWrapper.readContract.getBatchIdatIndex(${i})`;
-      } else {
-        `this.contractWrapper.readContract.baseURIIndices(${i})`;
-      }
-    }
-
     // map over to get the base uri indices, which should be the end token id of every batch
     const uriIndices = await Promise.all(
       countRangeArray.map((i) =>
-          eval( fetchMethod(i) )
-        ),
+          this.isSignatureDrop(this.contractWrapper.readContract, contractType) ? this.contractWrapper.readContract.getBatchIdAtIndex(i) : this.contractWrapper.readContract.baseURIIndices(i)
+      ),
     );
 
     // first batch always start from 0. don't need to fetch the last batch so pop it from the range array
@@ -233,5 +224,9 @@ export class DelayedReveal<T extends SignatureDrop | DropERC721> {
   private async getNftMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
     return fetchTokenMetadata(tokenId, tokenUri, this.storage);
+  }
+
+  private isSignatureDrop( _contract: SignatureDrop | DropERC721, contractType: string): _contract is SignatureDrop {
+    return contractType === "SignatureDrop";
   }
 }
