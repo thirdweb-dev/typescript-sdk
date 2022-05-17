@@ -4008,7 +4008,7 @@ export class Split implements UpdateableNetwork {
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // @internal (undocumented)
     static schema: {
-        deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
+        deploy: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
@@ -4030,9 +4030,6 @@ export class Split implements UpdateableNetwork {
         address: string;
         sharesBps: number;
         }[] | undefined>;
-        }>, {
-        platform_fee_basis_points: ZodDefault<ZodNumber>;
-        platform_fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
         }>, extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
@@ -4062,8 +4059,6 @@ export class Split implements UpdateableNetwork {
         image?: any;
         external_link?: string | undefined;
         name: string;
-        platform_fee_basis_points: number;
-        platform_fee_recipient: string;
         trusted_forwarders: string[];
         recipients: {
         address: string;
@@ -4073,17 +4068,13 @@ export class Split implements UpdateableNetwork {
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
-        platform_fee_basis_points?: number | undefined;
-        platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
         recipients?: {
         address: string;
         sharesBps: number;
         }[] | undefined;
         name: string;
-        }>; /**
-        * @internal
-        */
+        }>;
         output: ZodObject<extendShape<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
