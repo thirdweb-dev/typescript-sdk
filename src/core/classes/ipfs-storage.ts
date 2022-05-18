@@ -52,6 +52,7 @@ export class IpfsStorage implements IStorage {
     if (urlsToTry.length > 0) {
       return urlsToTry[0];
     } else {
+      this.failedUrls = [];
       return undefined;
     }
   }
@@ -184,7 +185,7 @@ export class IpfsStorage implements IStorage {
       uri = resolveGatewayUrl(hash, "ipfs://", this.gatewayUrl);
     }
     const result = await fetch(uri);
-    if (!result.ok) {
+    if (!result.ok && result.status !== 404) {
       const nextUrl = this.getNextPublicGateway();
       if (nextUrl) {
         this.failedUrls.push(this.gatewayUrl);
