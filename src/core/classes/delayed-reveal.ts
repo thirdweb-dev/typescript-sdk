@@ -162,7 +162,8 @@ export class DelayedReveal<T extends SignatureDrop | DropERC721> {
 
     const countRangeArray = Array.from(Array(count.toNumber()).keys());
 
-    const contractType = await this.contractWrapper.readContract.contractType();
+    const contractType = ethers.utils.toUtf8String(await this.contractWrapper.readContract.contractType());
+
     // map over to get the base uri indices, which should be the end token id of every batch
     const uriIndices = await Promise.all(
       countRangeArray.map((i) =>
@@ -227,6 +228,6 @@ export class DelayedReveal<T extends SignatureDrop | DropERC721> {
   }
 
   private isSignatureDrop( _contract: SignatureDrop | DropERC721, contractType: string): _contract is SignatureDrop {
-    return contractType === "SignatureDrop";
+    return contractType.includes("SignatureDrop");
   }
 }
