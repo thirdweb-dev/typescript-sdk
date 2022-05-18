@@ -8,12 +8,6 @@ export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 export const PUBLIC_GATEWAYS = [
   "https://gateway.ipfscdn.io/ipfs/",
   "https://gateway2.ipfscdn.io/ipfs/",
-  "https://ipfs.filebase.io/ipfs/",
-  "https://gateway.pinata.cloud/ipfs/",
-  "https://ipfs.infura.io/ipfs/",
-  "https://infura-ipfs.io/ipfs/",
-  "https://nftstorage.link/ipfs/",
-  "https://cloudflare-ipfs.com/ipfs/",
 ];
 
 /**
