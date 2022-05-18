@@ -61,7 +61,7 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [getAllClaimed(queryParams)](./sdk.nftdrop.getallclaimed.md) |  | Get All Claimed NFTs |
 |  [getAllUnclaimed(queryParams)](./sdk.nftdrop.getallunclaimed.md) |  | Get All Unclaimed NFTs |
 |  [getOwned(walletAddress)](./sdk.nftdrop.getowned.md) |  | Get Owned NFTs |
-|  [getOwnedTokenIds(walletAddress)](./sdk.nftdrop.getownedtokenids.md) |  |  |
+|  [getOwnedTokenIds(walletAddress)](./sdk.nftdrop.getownedtokenids.md) |  | Get all token ids of NFTs owned by a specific wallet. |
 |  [isTransferRestricted()](./sdk.nftdrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [totalClaimedSupply()](./sdk.nftdrop.totalclaimedsupply.md) |  | Get the claimed supply |
 |  [totalSupply()](./sdk.nftdrop.totalsupply.md) |  | Get the total count NFTs in this drop contract, both claimed and unclaimed |

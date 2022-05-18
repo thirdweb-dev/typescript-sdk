@@ -147,6 +147,24 @@
         "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop.createBatch"
       },
       {
+        "name": "getAll",
+        "summary": "Get All Minted NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with every NFT in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
+        "examples": {
+          "javascript": "const nfts = await contract.getAll();"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop.getAll"
+      },
+      {
+        "name": "getOwned",
+        "summary": "Get Owned NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet to get the NFTs of\nconst address = \"{{wallet_address}}\";\nconst nfts = await contract.getOwned(address);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop.getOwned"
+      },
+      {
         "name": "airdrop",
         "summary": "Airdrop multiple NFTs\n\n",
         "remarks": "\n\nAirdrop one or multiple NFTs to the provided wallet addresses.\n\n",

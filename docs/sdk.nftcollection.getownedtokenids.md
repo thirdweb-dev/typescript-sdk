@@ -4,6 +4,7 @@
 
 ## NFTCollection.getOwnedTokenIds() method
 
+Get all token ids of NFTs owned by a specific wallet.
 
 <b>Signature:</b>
 
@@ -15,7 +16,7 @@ getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  walletAddress | string | <i>(Optional)</i> |
+|  walletAddress | string | <i>(Optional)</i> the wallet address to query, defaults to the connected wallet |
 
 <b>Returns:</b>
 

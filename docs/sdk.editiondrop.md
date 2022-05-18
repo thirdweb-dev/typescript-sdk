@@ -57,7 +57,7 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 |  [claim(tokenId, quantity, proofs)](./sdk.editiondrop.claim.md) |  | Claim a token to the connected wallet |
 |  [claimTo(destinationAddress, tokenId, quantity, proofs)](./sdk.editiondrop.claimto.md) |  | Claim NFTs to a specific Wallet |
 |  [createBatch(metadatas)](./sdk.editiondrop.createbatch.md) |  | Create a batch of NFTs to be claimed in the future |
-|  [getAll(queryParams)](./sdk.editiondrop.getall.md) |  | Get All NFTs |
+|  [getAll(queryParams)](./sdk.editiondrop.getall.md) |  | Get All Minted NFTs |
 |  [getOwned(walletAddress)](./sdk.editiondrop.getowned.md) |  | Get Owned NFTs |
 |  [getTotalCount()](./sdk.editiondrop.gettotalcount.md) |  | Get the number of NFTs minted |
 |  [isTransferRestricted()](./sdk.editiondrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |

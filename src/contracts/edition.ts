@@ -194,7 +194,9 @@ export class Edition extends Erc1155<TokenERC1155> {
   }
 
   /**
-   * {@inheritDoc Erc1155Enumerable.getTotalCount}
+   * Get the number of NFTs minted
+   * @returns the total number of NFTs minted in this contract
+   * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
     return this._query.getTotalCount();

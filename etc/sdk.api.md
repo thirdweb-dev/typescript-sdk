@@ -2289,9 +2289,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
     events: ContractEvents<TokenERC721>;
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "tokendIds"
-    //
-    // (undocumented)
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<TokenERC721>;
@@ -2457,9 +2454,6 @@ export class NFTDrop extends Erc721<DropERC721> {
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
     getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "tokendIds"
-    //
-    // (undocumented)
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<DropERC721>;

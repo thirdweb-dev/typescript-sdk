@@ -248,7 +248,8 @@ export class NFTDrop extends Erc721<DropERC721> {
   }
 
   /**
-   * {@inheritDoc Erc721Enumerable.tokendIds}
+   * Get all token ids of NFTs owned by a specific wallet.
+   * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
   public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
     return this._owned.tokenIds(walletAddress);
