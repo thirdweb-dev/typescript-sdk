@@ -44,6 +44,7 @@ This will allow you to query data from any contract with no additional setup.
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 // instantiate the SDK in read-only mode (our example is running on `polygon` here)
+// all major chains and testnets are supported (e.g. `mainnet`, `rinkeby`, `goerli`, 'polygon', 'mumbai', etc.)
 const sdk = new ThirdwebSDK("polygon");
 
 // access your deployed contracts
@@ -80,12 +81,13 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 /
 // load your private key in a secure way (env variable, never commited to git)
 const privateKey = process.env.PRIVATE_KEY;
-// instantiate the SDK based on your private key (we're still passing the `polygon` network choice, here too)
+// instantiate the SDK based on your private key, with the desired chain to connect to
 const sdk = ThirdwebSDK.fromPrivateKey(privateKey, "polygon");
 
 // deploy contracts
 const deployedAddress = sdk.deployer.deployNFTCollection({
   name: "My NFT Collection",
+  primary_sale_recipient: "0x...",
 });
 
 // access your deployed contracts
