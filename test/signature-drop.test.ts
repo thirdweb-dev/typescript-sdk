@@ -920,14 +920,14 @@ describe("Signature Drop Contract", async () => {
           (await adminWallet.provider?.getBlockWithTransactions("latest"))
               ?.transactions ?? [];
 
-      const { index, _key } = signatureDropContract.encoder.decode(
+      const { _index, _key } = signatureDropContract.encoder.decode(
           "reveal",
           transactions[0].data,
       );
 
       // re-using broadcasted _key to decode :)
       try {
-        await signatureDropContract.revealer.reveal(index.add(1), _key);
+        await signatureDropContract.revealer.reveal(_index.add(1), _key);
         assert.fail("should not be able to re-used published password");
       } catch (e) {
         expect((e as Error).message).to.be.equal("invalid password");
