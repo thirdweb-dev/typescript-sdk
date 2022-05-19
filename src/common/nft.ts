@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish, Contract, providers } from "ethers";
+import { BigNumber, BigNumberish, Contract, ethers, providers } from "ethers";
 import {
   CommonNFTInput,
   CommonNFTOutput,
@@ -30,7 +30,11 @@ export async function fetchTokenMetadata(
   tokenUri: string,
   storage: IStorage,
 ): Promise<NFTMetadata> {
-  const jsonMetadata = await storage.get(tokenUri);
+  const parsedUri = tokenUri.replace(
+    "{id}",
+    ethers.utils.hexZeroPad(BigNumber.from(tokenId).toHexString(), 32).slice(2),
+  );
+  const jsonMetadata = await storage.get(parsedUri);
   return CommonNFTOutput.parse({
     id: BigNumber.from(tokenId),
     uri: tokenUri,

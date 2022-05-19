@@ -9,14 +9,14 @@ Estimates the cost of gas in native token of the current chain
 <b>Signature:</b>
 
 ```typescript
-gasCostOf(fn: keyof TContract["functions"] | string, args: Parameters<TContract["functions"][typeof fn]> | any[]): Promise<string>;
+gasCostOf(fn: keyof TContract["functions"] | (string & {}), args: Parameters<TContract["functions"][typeof fn]> | any[]): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  fn | keyof TContract\["functions"\] \| string |  |
+|  fn | keyof TContract\["functions"\] \| (string &amp; {}) |  |
 |  args | Parameters&lt;TContract\["functions"\]\[typeof fn\]&gt; \| any\[\] |  |
 
 <b>Returns:</b>

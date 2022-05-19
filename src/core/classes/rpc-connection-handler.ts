@@ -1,5 +1,6 @@
 import { ethers, Signer, providers } from "ethers";
 import { EventEmitter2 } from "eventemitter2";
+import { getReadOnlyProvider } from "../../constants/urls";
 import {
   SDKOptions,
   SDKOptionsOutput,
@@ -92,7 +93,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
     }
 
     if (options?.readonlySettings) {
-      provider = this.getReadOnlyProvider(
+      provider = getReadOnlyProvider(
         options.readonlySettings.rpcUrl,
         options.readonlySettings.chainId,
       );
@@ -103,7 +104,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
         provider = network;
       } else if (!Signer.isSigner(network)) {
         if (typeof network === "string") {
-          provider = this.getReadOnlyProvider(
+          provider = getReadOnlyProvider(
             network,
             options?.readonlySettings?.chainId,
           );
@@ -123,27 +124,5 @@ export class RPCConnectionHandler extends EventEmitter2 {
     }
 
     return [signer, provider];
-  }
-
-  private getReadOnlyProvider(network: string, chainId?: number) {
-    try {
-      const match = network.match(/^(ws|http)s?:/i);
-      // try the JSON batch provider if available
-      if (match) {
-        switch (match[1]) {
-          case "http":
-            return new providers.JsonRpcBatchProvider(network, chainId);
-          case "ws":
-            return new providers.WebSocketProvider(network, chainId);
-          default:
-            return ethers.getDefaultProvider(network);
-        }
-      } else {
-        return ethers.getDefaultProvider(network);
-      }
-    } catch (e) {
-      // fallback to the default provider
-      return ethers.getDefaultProvider(network);
-    }
   }
 }

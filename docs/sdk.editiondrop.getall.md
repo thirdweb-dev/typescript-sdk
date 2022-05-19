@@ -4,7 +4,7 @@
 
 ## EditionDrop.getAll() method
 
-Get All NFTs
+Get All Minted NFTs
 
 <b>Signature:</b>
 
@@ -29,4 +29,11 @@ The NFT metadata for all NFTs queried.
 Get all the data associated with every NFT in this contract.
 
 By default, returns the first 100 NFTs, use queryParams to fetch more.
+
+## Example
+
+
+```javascript
+const nfts = await contract.getAll();
+```
 

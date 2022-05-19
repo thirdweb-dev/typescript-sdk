@@ -19,9 +19,7 @@ export declare class NFTCollection extends Erc721<TokenERC721>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// You can switch out this provider with any wallet or provider setup you like.
-const provider = ethers.Wallet.createRandom();
-const sdk = new ThirdwebSDK(provider);
+const sdk = new ThirdwebSDK("rinkeby");
 const contract = sdk.getNFTCollection("{{contract_address}}");
 ```
 
@@ -55,7 +53,7 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 |  [burn(tokenId)](./sdk.nftcollection.burn.md) |  | Burn a single NFT |
 |  [getAll(queryParams)](./sdk.nftcollection.getall.md) |  | Get All Minted NFTs |
 |  [getOwned(walletAddress)](./sdk.nftcollection.getowned.md) |  | Get Owned NFTs |
-|  [getOwnedTokenIds(walletAddress)](./sdk.nftcollection.getownedtokenids.md) |  |  |
+|  [getOwnedTokenIds(walletAddress)](./sdk.nftcollection.getownedtokenids.md) |  | Get all token ids of NFTs owned by a specific wallet. |
 |  [isTransferRestricted()](./sdk.nftcollection.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |
 |  [mintBatch(metadata)](./sdk.nftcollection.mintbatch.md) |  | Mint Many unique NFTs |
 |  [mintBatchTo(walletAddress, metadata)](./sdk.nftcollection.mintbatchto.md) |  | Mint Many unique NFTs |

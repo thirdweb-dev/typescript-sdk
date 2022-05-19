@@ -43,9 +43,7 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
- * const provider = ethers.Wallet.createRandom();
- * const sdk = new ThirdwebSDK(provider);
+ * const sdk = new ThirdwebSDK("rinkeby");
  * const contract = sdk.getEditionDrop("{{contract_address}}");
  * ```
  *
@@ -170,7 +168,18 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   // TODO getAllClaimerAddresses() - should be done via an indexer
 
   /**
-   * {@inheritDoc Erc1155Enumerable.all}
+   * Get All Minted NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this contract.
+   *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await contract.getAll();
+   * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The NFT metadata for all NFTs queried.
    */
   public async getAll(
     queryParams?: QueryAllParams,
@@ -179,7 +188,18 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   }
 
   /**
-   * {@inheritDoc Erc1155Enumerable.owned}
+   * Get Owned NFTs
+   *
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await contract.getOwned(address);
+   * ```
+   *
+   * @returns The NFT metadata for all NFTs in the contract.
    */
   public async getOwned(
     walletAddress?: string,
@@ -188,7 +208,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   }
 
   /**
-   * {@inheritDoc Erc1155Enumerable.getTotalCount}
+   * Get the number of NFTs minted
+   * @returns the total number of NFTs minted in this contract
+   * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
     return this._query.getTotalCount();

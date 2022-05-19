@@ -18,5 +18,5 @@ export interface MarketplaceFilter extends QueryAllParams
 |  --- | --- | --- |
 |  [seller?](./sdk.marketplacefilter.seller.md) | string | <i>(Optional)</i> |
 |  [tokenContract?](./sdk.marketplacefilter.tokencontract.md) | string | <i>(Optional)</i> |
-|  [tokenId?](./sdk.marketplacefilter.tokenid.md) | number | <i>(Optional)</i> |
+|  [tokenId?](./sdk.marketplacefilter.tokenid.md) | BigNumberish | <i>(Optional)</i> |
 

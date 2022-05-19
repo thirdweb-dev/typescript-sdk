@@ -9,14 +9,14 @@ Subscribe to contract events
 <b>Signature:</b>
 
 ```typescript
-addEventListener(eventName: keyof TContract["filters"] | string, listener: (event: Record<string, any>) => void): void;
+addEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: (event: Record<string, any>) => void): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  eventName | keyof TContract\["filters"\] \| string | the event name as defined in the contract |
+|  eventName | keyof TContract\["filters"\] \| (string &amp; {}) | the event name as defined in the contract |
 |  listener | (event: Record&lt;string, any&gt;) =&gt; void | the receiver that will be called on every new event |
 
 <b>Returns:</b>
