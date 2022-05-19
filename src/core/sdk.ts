@@ -20,6 +20,7 @@ import type {
   ContractForContractType,
   ContractType,
   NetworkOrSignerOrProvider,
+  SignerOrProvider,
   ValidContractInstance,
 } from "./types";
 import { IThirdwebContract__factory } from "contracts";
@@ -29,7 +30,11 @@ import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
-import { getContractAddressByChainId } from "../constants";
+import {
+  ChainOrRpc,
+  getContractAddressByChainId,
+  getProviderForNetwork,
+} from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
 
 /**
@@ -64,14 +69,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public wallet: UserWallet;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: ChainOrRpc | SignerOrProvider,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ) {
-    super(network, options);
+    const rpc = getProviderForNetwork(network);
+    super(rpc, options);
     this.storage = storage;
-    this.deployer = new ContractDeployer(network, options, storage);
-    this.wallet = new UserWallet(network, options);
+    this.deployer = new ContractDeployer(rpc, options, storage);
+    this.wallet = new UserWallet(rpc, options);
   }
 
   /**
