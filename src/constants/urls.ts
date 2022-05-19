@@ -46,9 +46,9 @@ const DEFAULT_API_KEY = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
  */
 export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
   if (typeof network !== "string") {
-    console.warn(
-      "Passing a signer or provider to the ThirdwebSDK is deprecated, use `sdk.wallet.connect()` instead.",
-    );
+    // console.warn(
+    //   "Passing a signer or provider to the ThirdwebSDK is deprecated, use `sdk.wallet.connect()` instead.",
+    // );
     return network;
   }
   switch (network) {
