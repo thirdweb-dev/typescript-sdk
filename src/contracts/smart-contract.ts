@@ -38,7 +38,6 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
  * const sdk = new ThirdwebSDK(provider);
  * const contract = await sdk.getContract("{{contract_address}}");
  *
