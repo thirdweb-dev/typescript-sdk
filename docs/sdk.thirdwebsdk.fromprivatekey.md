@@ -7,7 +7,7 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
-Get an instance of the thirdweb SDk based on a private key.
+Get an instance of the thirdweb SDK based on a private key.
 
 <b>Signature:</b>
 
@@ -32,4 +32,11 @@ an instance of the SDK
 ## Remarks
 
 This should only be used for backend services or scripts, with the private key stored in a secure way. \*\*NEVER\*\* expose your private key to the public in any way.
+
+## Example
+
+
+```javascript
+const sdk = ThirdwebSDK.fromPrivateKey("SecretPrivateKey", "mainnet");
+```
 

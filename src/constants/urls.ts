@@ -32,7 +32,8 @@ export type ChainOrRpc =
   | "mainnet"
   | "fantom"
   | "avalanche"
-  | `https://${string}`;
+  // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
+  | (string & {});
 
 /**
  * @internal

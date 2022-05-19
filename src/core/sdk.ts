@@ -44,7 +44,16 @@ import { UserWallet } from "./wallet/UserWallet";
  */
 export class ThirdwebSDK extends RPCConnectionHandler {
   /**
-   * Get an instance of the thirdweb SDk based on an existing ethers signer
+   * Get an instance of the thirdweb SDK based on an existing ethers signer
+   *
+   * @example
+   * ```javascript
+   * // get a signer from somewhere (createRandom is being used purely for example purposes)
+   * const signer = ethers.Wallet.createRandom();
+   *
+   * // get an instance of the SDK with the signer already setup
+   * const sdk = ThirdwebSDK.fromSigner(signer, "mainnet");
+   * ```
    *
    * @param signer - a ethers Signer to be used for transactions
    * @param network - the network (chain) to connect to (e.g. "mainnet", "ropsten", "rinkeby", "goerli") or a fully formed RPC url
@@ -64,11 +73,16 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   /**
-   * Get an instance of the thirdweb SDk based on a private key.
+   * Get an instance of the thirdweb SDK based on a private key.
    *
    * @remarks
    * This should only be used for backend services or scripts, with the private key stored in a secure way.
    * **NEVER** expose your private key to the public in any way.
+   *
+   * @example
+   * ```javascript
+   * const sdk = ThirdwebSDK.fromPrivateKey("SecretPrivateKey", "mainnet");
+   * ```
    *
    * @param privateKey - the private key - **DO NOT EXPOSE THIS TO THE PUBLIC**
    * @param network - the network (chain) to connect to (e.g. "mainnet", "ropsten", "rinkeby", "goerli") or a fully formed RPC url

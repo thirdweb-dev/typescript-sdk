@@ -7,7 +7,7 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
-Get an instance of the thirdweb SDk based on an existing ethers signer
+Get an instance of the thirdweb SDK based on an existing ethers signer
 
 <b>Signature:</b>
 
@@ -28,4 +28,15 @@ static fromSigner(signer: Signer, network?: ChainOrRpc, options?: SDKOptions): T
 [ThirdwebSDK](./sdk.thirdwebsdk.md)
 
 an instance of the SDK
+
+## Example
+
+
+```javascript
+// get a signer from somewhere (createRandom is being used purely for example purposes)
+const signer = ethers.Wallet.createRandom();
+
+// get an instance of the SDK with the signer already setup
+const sdk = ThirdwebSDK.fromSigner(signer, "mainnet");
+```
 
