@@ -511,7 +511,7 @@ export class Marketplace implements UpdateableNetwork {
         );
       }
 
-      if (filter.tokenId) {
+      if (filter.tokenId !== undefined) {
         rawListings = rawListings.filter(
           (tokenContract) =>
             tokenContract.tokenId.toString() === filter?.tokenId?.toString(),
