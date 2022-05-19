@@ -47,6 +47,7 @@ import {
   TokensLazyMintedEvent,
 } from "contracts/DropERC721";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import {Erc721WithQuantitySignatureMinting} from "../core/classes/erc-721-with-quantity-signature-minting";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -159,6 +160,9 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    */
   public revealer: DelayedReveal<SignatureDropContract>;
 
+
+  public signature: Erc721WithQuantitySignatureMinting;
+
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
 
@@ -193,6 +197,10 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       this.storage,
     );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.signature = new Erc721WithQuantitySignatureMinting(
+        this.contractWrapper,
+        this.storage,
+        this.roles);
   }
 
   /** ******************************

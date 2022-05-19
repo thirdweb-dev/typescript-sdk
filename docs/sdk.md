@@ -115,6 +115,7 @@
 |  [MintRequest1155](./sdk.mintrequest1155.md) |  |
 |  [MintRequest20](./sdk.mintrequest20.md) |  |
 |  [MintRequest721](./sdk.mintrequest721.md) |  |
+|  [MintRequest721withQuantity](./sdk.mintrequest721withquantity.md) |  |
 |  [NATIVE\_TOKEN\_ADDRESS](./sdk.native_token_address.md) |  |
 |  [NATIVE\_TOKENS](./sdk.native_tokens.md) |  |
 |  [SDKOptionsSchema](./sdk.sdkoptionsschema.md) |  |
@@ -156,6 +157,7 @@
 |  [PayloadWithUri1155](./sdk.payloadwithuri1155.md) |  |
 |  [PayloadWithUri20](./sdk.payloadwithuri20.md) |  |
 |  [PayloadWithUri721](./sdk.payloadwithuri721.md) |  |
+|  [PayloadWithUri721withQuantity](./sdk.payloadwithuri721withquantity.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [Price](./sdk.price.md) | Represents a currency price already formatted. ie. "1" for 1 ether. |
 |  [Role](./sdk.role.md) |  |
@@ -163,6 +165,7 @@
 |  [SignedPayload1155](./sdk.signedpayload1155.md) |  |
 |  [SignedPayload20](./sdk.signedpayload20.md) |  |
 |  [SignedPayload721](./sdk.signedpayload721.md) |  |
+|  [SignedPayload721WithQuantitySignature](./sdk.signedpayload721withquantitysignature.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |
