@@ -511,9 +511,9 @@
     tweetnacl-util "^0.15.1"
 
 "@microsoft/api-documenter@^7.13.53":
-  version "7.17.14"
-  resolved "https://registry.yarnpkg.com/@microsoft/api-documenter/-/api-documenter-7.17.14.tgz#fc523dcb8a49e147a192829945c7efce38511349"
-  integrity sha512-4Ux7kWzsNESzDYvhkn3rjJLplY/1/xarp2NYxahUiUpuWS8jTXYJLFDQqui+Q/67JbJ/0p2Hl4L55/MNJ/4Uig==
+  version "7.17.15"
+  resolved "https://registry.yarnpkg.com/@microsoft/api-documenter/-/api-documenter-7.17.15.tgz#07c02a3826db9a8c534ea3cd4dd6022b1d988219"
+  integrity sha512-in3Av3nDEFPOFYxI7Dc4NhT7hUHfjbeyFsTO+Y3y6FUbx3YVTiNv/WRLBTt8EM86hp+p2H2CT9LgMfogTnCowA==
   dependencies:
     "@microsoft/api-extractor-model" "7.17.3"
     "@microsoft/tsdoc" "0.14.1"
@@ -533,9 +533,9 @@
     "@rushstack/node-core-library" "3.45.5"
 
 "@microsoft/api-extractor@^7.18.10":
-  version "7.24.0"
-  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor/-/api-extractor-7.24.0.tgz#be497360b06891ed8b660e7802c4503ceb736693"
-  integrity sha512-cC5Vcu3N2OJh1G5v136JYtE4QQtQYq6mLiL8YXzFgu8aoq8T88kzq3/TxlihJvqGnrD96pf4PjS2Yg8RNYTQYw==
+  version "7.24.1"
+  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor/-/api-extractor-7.24.1.tgz#cbbe32a5f4f32717b60f593cdc172b99e5c76fae"
+  integrity sha512-RjcKRvKRAtTK4z8UdC2qYsvgTYHEYvdsqF4QGoX4mNAVo7s6Jj4zcHtSrMEQMTUHujZbSd5+ihI5ktISp338mQ==
   dependencies:
     "@microsoft/api-extractor-model" "7.17.3"
     "@microsoft/tsdoc" "0.14.1"
@@ -940,9 +940,9 @@
   integrity sha512-Z61JK7DKDtdKTWwLeElSEBcWGRLY8g95ic5FoQqI9CMx0ns/Ghep3B4DfcEimiKMvtamNVULVNKEsiwV3aQmXw==
 
 "@types/node@*", "@types/node@^17.0.0":
-  version "17.0.34"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.34.tgz#3b0b6a50ff797280b8d000c6281d229f9c538cef"
-  integrity sha512-XImEz7XwTvDBtzlTnm8YvMqGW/ErMWBsKZ+hMTvnDIjGCKxwK5Xpc+c/oQjOauwq8M4OS11hEkpjX8rrI/eEgA==
+  version "17.0.35"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.35.tgz#635b7586086d51fb40de0a2ec9d1014a5283ba4a"
+  integrity sha512-vu1SrqBjbbZ3J6vwY17jBs8Sr/BKA+/a/WtjRG+whKg1iuLFOosq872EXS0eXWILdO36DHQQeku/ZcL6hz2fpg==
 
 "@types/node@12.20.24":
   version "12.20.24"
@@ -4193,9 +4193,9 @@ rlp@^2.2.3, rlp@^2.2.4:
     bn.js "^5.2.0"
 
 rollup@^2.60.0:
-  version "2.74.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.74.0.tgz#4f460e7979b8ed1f3aa0489059480a504de28b4a"
-  integrity sha512-RRwXTX5+ObPJhcMV6zP3RdHvy90/lBOUfbzL7IKkFjMJGAqeBGZiv9nZWm/DoTESaTE3GBkkzbU9QVN2AuCkjw==
+  version "2.74.1"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.74.1.tgz#4fba0ff1c312cc4ee82691b154eee69a0d01929f"
+  integrity sha512-K2zW7kV8Voua5eGkbnBtWYfMIhYhT9Pel2uhBk2WO5eMee161nPze/XRfvEQPFYz7KgrCCnmh2Wy0AMFLGGmMA==
   optionalDependencies:
     fsevents "~2.3.2"
 
