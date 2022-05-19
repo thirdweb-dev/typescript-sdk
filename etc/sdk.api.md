@@ -2190,7 +2190,7 @@ export interface MarketplaceFilter extends QueryAllParams {
     // (undocumented)
     tokenContract?: string;
     // (undocumented)
-    tokenId?: number;
+    tokenId?: BigNumberish;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "MerkleSchema" should be prefixed with an underscore because the declaration is marked as @internal
