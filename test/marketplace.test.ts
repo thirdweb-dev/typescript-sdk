@@ -280,10 +280,14 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should filter asset contract with token id properly", async () => {
-      const listings = await marketplaceContract.getAllListings({
+      const listings0 = await marketplaceContract.getAllListings({
+        tokenId: 0,
+      });
+      assert.equal(listings0.length, 4, "filter doesn't work");
+      const listings1 = await marketplaceContract.getAllListings({
         tokenId: 1,
       });
-      assert.equal(listings.length, 2, "filter doesn't work");
+      assert.equal(listings1.length, 2, "filter doesn't work");
     });
 
     it("should filter asset contract with token contract and id properly", async () => {
