@@ -19,9 +19,7 @@ export declare class Vote implements UpdateableNetwork
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// You can switch out this provider with any wallet or provider setup you like.
-const provider = ethers.Wallet.createRandom();
-const sdk = new ThirdwebSDK(provider);
+const sdk = new ThirdwebSDK("rinkeby");
 const contract = sdk.getVote("{{contract_address}}");
 ```
 
