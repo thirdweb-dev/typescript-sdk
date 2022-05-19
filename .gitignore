@@ -1,5 +1,6 @@
 node_modules/
 typechain/
+lib/
 temp/
 bin/
 dist/
