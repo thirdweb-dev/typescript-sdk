@@ -4,7 +4,7 @@
 
 ## ContractDeployer.deploySignatureDrop() method
 
-Deploys a new NFTDrop contract
+Deploys a new SignatureDrop contract
 
 <b>Signature:</b>
 

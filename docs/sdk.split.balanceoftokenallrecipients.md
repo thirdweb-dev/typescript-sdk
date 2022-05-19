@@ -13,8 +13,8 @@ balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
         [key: string]: {
             symbol: string;
             name: string;
-            value: BigNumber;
             decimals: number;
+            value: BigNumber;
             displayValue: string;
         };
     }>;
@@ -28,7 +28,7 @@ balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
 
 <b>Returns:</b>
 
-Promise&lt;{ \[key: string\]: { symbol: string; name: string; value: BigNumber; decimals: number; displayValue: string; }; }&gt;
+Promise&lt;{ \[key: string\]: { symbol: string; name: string; decimals: number; value: BigNumber; displayValue: string; }; }&gt;
 
 A map of recipient addresses to their balances in the specified currency.
 

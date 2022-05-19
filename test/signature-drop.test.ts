@@ -6,7 +6,7 @@ import { MerkleTree } from "merkletreejs";
 import { expectError, sdk, signers, storage } from "./before-setup";
 import { createSnapshot } from "../src/common";
 import { ClaimEligibility } from "../src/enums";
-import { NFTDrop, Token } from "../src";
+import { SignatureDrop, Token } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import invariant from "tiny-invariant";
 
@@ -16,7 +16,7 @@ const keccak256 = require("keccak256");
 global.fetch = require("node-fetch");
 
 describe("Signature Drop Contract", async () => {
-  let signatureDropContract: NFTDrop;
+  let signatureDropContract: SignatureDrop;
   let adminWallet: SignerWithAddress,
       samWallet: SignerWithAddress,
       abbyWallet: SignerWithAddress,
@@ -29,7 +29,7 @@ describe("Signature Drop Contract", async () => {
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployer.deployNFTDrop({
+    const address = await sdk.deployer.deploySignatureDrop({
       name: `Testing drop from SDK`,
       description: "Test contract from tests",
       image:
@@ -40,7 +40,7 @@ describe("Signature Drop Contract", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    signatureDropContract = sdk.getNFTDrop(address);
+    signatureDropContract = sdk.getSignatureDrop(address);
   });
 
   it("should allow a snapshot to be set", async () => {
@@ -210,7 +210,7 @@ describe("Signature Drop Contract", async () => {
     }
     await signatureDropContract.createBatch(metadatas);
     const all = await signatureDropContract.getAll();
-    expect(all.length).to.eq(0);
+    expect(all.length).to.eq(100);
     await signatureDropContract.claimConditions.set([{}]);
     await signatureDropContract.claim(1);
     const allAfterMint = await signatureDropContract.getAll();

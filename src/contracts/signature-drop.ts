@@ -125,7 +125,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * await contract.claimConditions.set(claimConditions);
    * ```
    */
-  // public claimConditions: DropClaimConditions<SignatureDrop>;
+  // public claimConditions: DropClaimConditions<SignatureDropContract>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
@@ -247,10 +247,12 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   }
 
   /**
-   * {@inheritDoc Erc721Supply.totalSupply}
+   * Get the total count NFTs in this drop contract, both claimed and unclaimed
    */
   public async totalSupply() {
-    return this._query.totalSupply();
+    const claimed = await this.totalClaimedSupply();
+    const unclaimed = await this.totalUnclaimedSupply();
+    return claimed.add(unclaimed);
   }
 
   /**
