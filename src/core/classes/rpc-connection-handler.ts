@@ -1,6 +1,6 @@
 import { ethers, Signer, providers } from "ethers";
 import { EventEmitter2 } from "eventemitter2";
-import { getReadOnlyProvider } from "src/constants";
+import { getReadOnlyProvider } from "../../constants/urls";
 import {
   SDKOptions,
   SDKOptionsOutput,
