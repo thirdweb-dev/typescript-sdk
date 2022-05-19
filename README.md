@@ -43,7 +43,7 @@ This will allow you to query data from any contract with no additional setup.
 // my_script.js
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// instantiate the SDK in read-only mode ("our example is running on `polygon` here)
+// instantiate the SDK in read-only mode (our example is running on `polygon` here)
 const sdk = new ThirdwebSDK("polygon");
 
 // access your deployed contracts
