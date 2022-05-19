@@ -35,6 +35,12 @@ export type ChainOrRpc =
 
 /**
  * @internal
+ * This is a community API key that is subject to rate limiting. Please use your own key.
+ */
+const DEFAULT_API_KEY = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
+
+/**
+ * @internal
  * @param network - the chain name or rpc url
  * @returns the rpc url for that chain
  */
@@ -47,15 +53,15 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
   }
   switch (network) {
     case "mumbai":
-      return "https://polygon-mumbai.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
+      return `https://polygon-mumbai.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "rinkeby":
-      return "https://eth-rinkeby.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
+      return `https://eth-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "goerli":
-      return "https://eth-goerli.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
+      return `https://eth-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "polygon":
-      return "https://polygon-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
+      return `https://polygon-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "mainnet":
-      return "https://eth-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
+      return `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "fantom":
       return "https://rpc.ftm.tools";
     case "avalanche":
