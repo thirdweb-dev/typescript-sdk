@@ -1,3 +1,4 @@
+import { ethers, providers } from "ethers";
 import { SignerOrProvider } from "../core/types";
 /**
  * @internal
@@ -72,5 +73,33 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
       } else {
         throw new Error(`Unrecognized chain name or RPC url: ${network}`);
       }
+  }
+}
+
+/**
+ *
+ * @param network - the chain name or rpc url
+ * @param chainId - the optional chain id
+ * @returns the provider
+ */
+export function getReadOnlyProvider(network: string, chainId?: number) {
+  try {
+    const match = network.match(/^(ws|http)s?:/i);
+    // try the JSON batch provider if available
+    if (match) {
+      switch (match[1]) {
+        case "http":
+          return new providers.JsonRpcBatchProvider(network, chainId);
+        case "ws":
+          return new providers.WebSocketProvider(network, chainId);
+        default:
+          return ethers.getDefaultProvider(network);
+      }
+    } else {
+      return ethers.getDefaultProvider(network);
+    }
+  } catch (e) {
+    // fallback to the default provider
+    return ethers.getDefaultProvider(network);
   }
 }

@@ -1,4 +1,4 @@
-import { ContractInterface, ethers } from "ethers";
+import { ContractInterface, ethers, Signer } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
   Edition,
@@ -34,6 +34,7 @@ import {
   ChainOrRpc,
   getContractAddressByChainId,
   getProviderForNetwork,
+  getReadOnlyProvider,
 } from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
 
@@ -42,6 +43,55 @@ import { UserWallet } from "./wallet/UserWallet";
  * @public
  */
 export class ThirdwebSDK extends RPCConnectionHandler {
+  /**
+   * Get an instance of the thirdweb SDk based on an existing ethers signer
+   *
+   * @param signer - a ethers Signer to be used for transactions
+   * @param network - the network (chain) to connect to (e.g. "mainnet", "ropsten", "rinkeby", "goerli") or a fully formed RPC url
+   * @param options - the SDK options to use
+   * @returns an instance of the SDK
+   *
+   * @beta
+   */
+  static fromSigner(
+    signer: Signer,
+    network?: ChainOrRpc,
+    options: SDKOptions = {},
+  ): ThirdwebSDK {
+    const sdk = new ThirdwebSDK(network || signer, options);
+    sdk.updateSignerOrProvider(signer);
+    return sdk;
+  }
+
+  /**
+   * Get an instance of the thirdweb SDk based on a private key.
+   *
+   * @remarks
+   * This should only be used for backend services or scripts, with the private key stored in a secure way.
+   * **NEVER** expose your private key to the public in any way.
+   *
+   * @param privateKey - the private key - **DO NOT EXPOSE THIS TO THE PUBLIC**
+   * @param network - the network (chain) to connect to (e.g. "mainnet", "ropsten", "rinkeby", "goerli") or a fully formed RPC url
+   * @param options - the SDK options to use
+   * @returns an instance of the SDK
+   *
+   * @beta
+   */
+  static fromPrivateKey(
+    privateKey: string,
+    network: ChainOrRpc,
+    options: SDKOptions = {},
+  ): ThirdwebSDK {
+    const rpc = getProviderForNetwork(network);
+    const provider = Signer.isSigner(rpc)
+      ? rpc.provider
+      : typeof rpc === "string"
+      ? getReadOnlyProvider(rpc)
+      : rpc;
+    const signer = new ethers.Wallet(privateKey, provider);
+    return ThirdwebSDK.fromSigner(signer, network, options);
+  }
+
   /**
    * @internal
    * the cache of contracts that we have already seen

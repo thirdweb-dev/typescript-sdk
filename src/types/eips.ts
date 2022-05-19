@@ -6,7 +6,7 @@ import {
   IERC20Metadata,
   IERC721,
   IERC721Metadata,
-} from "contracts";
+} from "../../typechain";
 
 export type BaseERC20 = IERC20 & IERC20Metadata;
 export type BaseERC721 = IERC721 & IERC721Metadata;

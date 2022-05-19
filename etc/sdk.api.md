@@ -26,7 +26,6 @@ import type { Overrides } from 'ethers';
 import type { PayableOverrides } from 'ethers';
 import type { PopulatedTransaction } from 'ethers';
 import type { Provider } from '@ethersproject/providers';
-import { Provider as Provider_2 } from '@ethersproject/abstract-provider';
 import { providers } from 'ethers';
 import type { Result } from '@ethersproject/abi';
 import { Signer } from 'ethers';
@@ -1865,7 +1864,10 @@ export function getNativeTokenByChainId(chainId: ChainId): NativeToken;
 // Warning: (ae-internal-missing-underscore) The name "getProviderForNetwork" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider): `https://${string}` | Signer | Provider_2;
+export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider): string | ethers.Signer | ethers.providers.Provider;
+
+// @public (undocumented)
+export function getReadOnlyProvider(network: string, chainId?: number): ethers.providers.BaseProvider;
 
 // Warning: (ae-internal-missing-underscore) The name "getRoleHash" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -4211,6 +4213,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "ChainOrRpc" which is marked as @internal
     constructor(network: ChainOrRpc | SignerOrProvider, options?: SDKOptions, storage?: IStorage);
     deployer: ContractDeployer;
+    // Warning: (ae-incompatible-release-tags) The symbol "fromPrivateKey" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
+    //
+    // @beta
+    static fromPrivateKey(privateKey: string, network: ChainOrRpc, options?: SDKOptions): ThirdwebSDK;
+    // Warning: (ae-incompatible-release-tags) The symbol "fromSigner" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
+    //
+    // @beta
+    static fromSigner(signer: Signer, network?: ChainOrRpc, options?: SDKOptions): ThirdwebSDK;
     // @internal (undocumented)
     getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // @beta

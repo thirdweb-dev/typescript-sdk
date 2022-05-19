@@ -12,10 +12,10 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "contracts/*": ["./lib/*"],
-      "contracts": ["./lib"]
+      "contracts/*": ["./typechain/*"],
+      "contracts": ["./typechain"]
     },
     "baseUrl": "."
   },
-  "include": ["test/**/*.ts"],
+  "include": ["test/**/*.ts"]
 }
