@@ -13,9 +13,9 @@ import { OptionalPropertiesInput } from "./properties";
 export const CommonTokenInput = z
   .object({
     name: z.string().optional(),
-    description: z.string().optional(),
-    image: FileBufferOrStringSchema.optional(),
-    external_url: FileBufferOrStringSchema.optional(),
+    description: z.string().nullable().optional(),
+    image: FileBufferOrStringSchema.nullable().optional(),
+    external_url: FileBufferOrStringSchema.nullable().optional(),
   })
   .catchall(z.lazy(() => JsonSchema));
 
@@ -25,8 +25,8 @@ export const CommonTokenInput = z
 export const CommonTokenOutput = CommonTokenInput.extend({
   id: BigNumberSchema,
   uri: z.string(),
-  image: z.string().optional(),
-  external_url: z.string().optional(),
+  image: z.string().nullable().optional(),
+  external_url: z.string().nullable().optional(),
 });
 
 /**
@@ -48,7 +48,7 @@ export const NFTInputOrUriSchema = z.union([CommonNFTInput, z.string()]);
  * @internal
  */
 export const CommonNFTOutput = CommonTokenOutput.extend({
-  animation_url: z.string().optional(),
+  animation_url: z.string().nullable().optional(),
 });
 
 /**

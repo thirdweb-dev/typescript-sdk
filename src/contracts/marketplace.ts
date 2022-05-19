@@ -464,6 +464,7 @@ export class Marketplace implements UpdateableNetwork {
         try {
           listing = await this.getListing(i);
         } catch (err) {
+          console.log(`Error fetching listing with id: ${i}`, err);
           return undefined;
         }
 

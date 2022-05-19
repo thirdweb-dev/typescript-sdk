@@ -30,7 +30,11 @@ export async function fetchTokenMetadata(
   tokenUri: string,
   storage: IStorage,
 ): Promise<NFTMetadata> {
-  const jsonMetadata = await storage.get(tokenUri);
+  const parsedUri = tokenUri.replace(
+    "{id}",
+    BigNumber.from(tokenId).toHexString().slice(2),
+  );
+  const jsonMetadata = await storage.get(parsedUri);
   return CommonNFTOutput.parse({
     id: BigNumber.from(tokenId),
     uri: tokenUri,
