@@ -25,6 +25,8 @@ import {
   VoteContractDeployMetadata,
 } from "../../types/deploy/deploy-metadata";
 import { TokenDrop } from "../../contracts/token-drop";
+import { Provider } from "@ethersproject/providers";
+import { Signer } from "ethers";
 
 /**
  * Handles deploying new contracts
@@ -42,13 +44,11 @@ export class ContractDeployer extends RPCConnectionHandler {
    */
   private _registry: Promise<ContractRegistry> | undefined;
   private storage: IStorage;
+  private options: SDKOptions;
 
-  constructor(
-    network: NetworkOrSignerOrProvider,
-    options: SDKOptions,
-    storage: IStorage,
-  ) {
-    super(network, options);
+  constructor(network: Provider, options: SDKOptions, storage: IStorage) {
+    super(network);
+    this.options = options;
     this.storage = storage;
   }
 
@@ -241,19 +241,23 @@ export class ContractDeployer extends RPCConnectionHandler {
       }));
   }
 
-  public override updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
-    super.updateSignerOrProvider(network);
-    this.updateContractSignerOrProvider();
+  public override updateProvider(provider: Provider) {
+    super.updateProvider(provider);
+    this._factory?.then((factory) => {
+      factory.updateProvider(provider);
+    });
+    this._registry?.then((registry) => {
+      registry.updateProvider(provider);
+    });
   }
 
-  private updateContractSignerOrProvider() {
-    // has to be promises now
+  public override updateSigner(signer: Signer | undefined) {
+    super.updateSigner(signer);
     this._factory?.then((factory) => {
-      factory.updateSignerOrProvider(this.getSignerOrProvider());
+      factory.updateSigner(signer);
     });
-    // has to be promises now
     this._registry?.then((registry) => {
-      registry.updateSignerOrProvider(this.getSignerOrProvider());
+      registry.updateSigner(signer);
     });
   }
 }

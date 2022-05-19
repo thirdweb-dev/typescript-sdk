@@ -5,7 +5,7 @@ import {
   IMintableERC1155,
   TokenERC1155,
 } from "contracts";
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, Signer } from "ethers";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
@@ -70,8 +70,8 @@ export class Erc1155<
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {

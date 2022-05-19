@@ -12,7 +12,7 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/currency";
 import { fetchCurrencyValue } from "../common/currency";
-import { BigNumber, Contract } from "ethers";
+import { BigNumber, Contract, Signer } from "ethers";
 import { SplitRecipient } from "../types/SplitRecipient";
 import { SplitsContractSchema } from "../schema/contracts/splits";
 import { GasCostEstimator } from "../core/classes";
@@ -86,8 +86,8 @@ export class Split implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {

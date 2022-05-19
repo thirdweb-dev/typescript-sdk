@@ -13,13 +13,16 @@ import {
   Token,
   Vote,
 } from "../contracts";
-import { SDKOptions } from "../schema/sdk-options";
+import {
+  SDKOptions,
+  SDKOptionsOutput,
+  SDKOptionsSchema,
+} from "../schema/sdk-options";
 import { IpfsStorage } from "./classes/ipfs-storage";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
   ContractForContractType,
   ContractType,
-  NetworkOrSignerOrProvider,
   SignerOrProvider,
   ValidContractInstance,
 } from "./types";
@@ -36,12 +39,14 @@ import {
   getProviderForNetwork,
 } from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
+import { Provider } from "@ethersproject/providers";
 
 /**
  * The main entry point for the thirdweb SDK
  * @public
  */
 export class ThirdwebSDK extends RPCConnectionHandler {
+  private options: SDKOptionsOutput;
   /**
    * @internal
    * the cache of contracts that we have already seen
@@ -74,10 +79,22 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage: IStorage = new IpfsStorage(),
   ) {
     const rpc = getProviderForNetwork(network);
-    super(rpc, options);
+    super(rpc);
     this.storage = storage;
     this.deployer = new ContractDeployer(rpc, options, storage);
     this.wallet = new UserWallet(rpc, options);
+    this.wallet.events.on("connected", (signer) => {
+      this.updateSigner(signer);
+    });
+    try {
+      this.options = SDKOptionsSchema.parse(options);
+    } catch (optionParseError) {
+      console.error(
+        "invalid contract options object passed, falling back to default options",
+        optionParseError,
+      );
+      this.options = SDKOptionsSchema.parse({});
+    }
   }
 
   /**
@@ -212,7 +229,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     const newContract = new KNOWN_CONTRACTS_MAP[
       contractType as keyof typeof KNOWN_CONTRACTS_MAP
-    ](this.getSignerOrProvider(), address, this.storage, this.options);
+    ](
+      this.getProvider(),
+      this.getSigner(),
+      address,
+      this.storage,
+      this.options,
+    );
 
     this.contractCache.set(address, newContract);
 
@@ -298,17 +321,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Update the active signer or provider for all contracts
    * @param network - the new signer or provider
    */
-  public override updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
-    super.updateSignerOrProvider(network);
-    this.updateContractSignerOrProvider();
-  }
-
-  private updateContractSignerOrProvider() {
-    this.wallet.onNetworkUpdated(this.getSignerOrProvider());
-    this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
-    this._publisher?.then((publisher) => {
-      publisher.updateSignerOrProvider(this.getSignerOrProvider());
-    });
+  public switchChain(network: ChainOrRpc | Provider) {
+    const provider = getProviderForNetwork(network);
+    super.updateProvider(provider);
+    // TODO FIXME do these
+    // this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
+    // this._publisher?.then((publisher) => {
+    //   publisher.updateSignerOrProvider(this.getSignerOrProvider());
+    // });
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }

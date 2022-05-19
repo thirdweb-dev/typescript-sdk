@@ -5,7 +5,9 @@ import {
   SDKOptionsOutput,
   SDKOptionsSchema,
 } from "../../schema/sdk-options";
-import { NetworkOrSignerOrProvider } from "../types";
+import { NetworkOrSignerOrProvider, SignerOrProvider } from "../types";
+import { ChainOrRpc } from "../../constants";
+import { Provider } from "@ethersproject/providers";
 
 /**
  * @internal
@@ -13,33 +15,23 @@ import { NetworkOrSignerOrProvider } from "../types";
 export class RPCConnectionHandler extends EventEmitter2 {
   private provider: providers.Provider;
   private signer: Signer | undefined;
-  protected readonly options: SDKOptionsOutput;
 
-  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
+  constructor(provider: Provider, signer?: Signer) {
     super();
-    const [signer, provider] = this.getSignerAndProvider(network, options);
     this.signer = signer;
     this.provider = provider;
-
-    try {
-      this.options = SDKOptionsSchema.parse(options);
-    } catch (optionParseError) {
-      console.error(
-        "invalid sdk options object passed, falling back to default options",
-        optionParseError,
-      );
-      this.options = SDKOptionsSchema.parse({});
-    }
   }
   /**
    * The function to call whenever the network changes, such as when the users connects their wallet, disconnects their wallet, the connected chain changes, etc.
    *
    * @param network - a network, signer or provider that ethers js can interpret
    */
-  public updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
-    const [signer, provider] = this.getSignerAndProvider(network, this.options);
-    this.signer = signer;
+  public updateProvider(provider: Provider) {
     this.provider = provider;
+  }
+
+  public updateSigner(signer: Signer | undefined) {
+    this.signer = signer;
   }
   /**
    *
@@ -71,79 +63,5 @@ export class RPCConnectionHandler extends EventEmitter2 {
    */
   public getSignerOrProvider(): Signer | providers.Provider {
     return this.getSigner() || this.getProvider();
-  }
-
-  /** ********************
-   * PRIVATE FUNCTIONS
-   *********************/
-
-  private getSignerAndProvider(
-    network: NetworkOrSignerOrProvider,
-    options: SDKOptions,
-  ): [Signer | undefined, providers.Provider] {
-    let signer: Signer | undefined;
-    let provider: providers.Provider | undefined;
-
-    if (Signer.isSigner(network)) {
-      signer = network;
-      if (network.provider) {
-        provider = network.provider;
-      }
-    }
-
-    if (options?.readonlySettings) {
-      provider = this.getReadOnlyProvider(
-        options.readonlySettings.rpcUrl,
-        options.readonlySettings.chainId,
-      );
-    }
-
-    if (!provider) {
-      if (providers.Provider.isProvider(network)) {
-        provider = network;
-      } else if (!Signer.isSigner(network)) {
-        if (typeof network === "string") {
-          provider = this.getReadOnlyProvider(
-            network,
-            options?.readonlySettings?.chainId,
-          );
-        } else {
-          // no a signer, not a provider, not a string? try with default provider
-          provider = ethers.getDefaultProvider(network);
-        }
-      }
-    }
-
-    if (!provider) {
-      // we should really never hit this case!
-      provider = ethers.getDefaultProvider();
-      console.error(
-        "No provider found, using default provider on default chain!",
-      );
-    }
-
-    return [signer, provider];
-  }
-
-  private getReadOnlyProvider(network: string, chainId?: number) {
-    try {
-      const match = network.match(/^(ws|http)s?:/i);
-      // try the JSON batch provider if available
-      if (match) {
-        switch (match[1]) {
-          case "http":
-            return new providers.JsonRpcBatchProvider(network, chainId);
-          case "ws":
-            return new providers.WebSocketProvider(network, chainId);
-          default:
-            return ethers.getDefaultProvider(network);
-        }
-      } else {
-        return ethers.getDefaultProvider(network);
-      }
-    } catch (e) {
-      // fallback to the default provider
-      return ethers.getDefaultProvider(network);
-    }
   }
 }

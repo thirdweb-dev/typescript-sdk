@@ -1,4 +1,5 @@
 import { SignerOrProvider } from "../core/types";
+import { ethers, providers, Signer } from "ethers";
 /**
  * @internal
  */
@@ -49,28 +50,66 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
     console.warn(
       "Passing a signer or provider to the ThirdwebSDK is deprecated, use `sdk.wallet.connect()` instead.",
     );
-    return network;
+    return Signer.isSigner(network)
+      ? network.provider || ethers.getDefaultProvider()
+      : network;
   }
+  let rpcUrl: string;
   switch (network) {
     case "mumbai":
-      return `https://polygon-mumbai.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      rpcUrl = `https://polygon-mumbai.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      break;
     case "rinkeby":
-      return `https://eth-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      rpcUrl = `https://eth-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      break;
     case "goerli":
-      return `https://eth-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      rpcUrl = `https://eth-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      break;
     case "polygon":
-      return `https://polygon-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      rpcUrl = `https://polygon-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      break;
     case "mainnet":
-      return `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      rpcUrl = `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      break;
     case "fantom":
-      return "https://rpc.ftm.tools";
+      rpcUrl = "https://rpc.ftm.tools";
+      break;
     case "avalanche":
-      return "https://rpc.ankr.com/avalanche";
+      rpcUrl = "https://rpc.ankr.com/avalanche";
+      break;
     default:
       if (network.startsWith("http")) {
-        return network;
+        rpcUrl = network;
       } else {
         throw new Error(`Unrecognized chain name or RPC url: ${network}`);
       }
+  }
+  return getReadOnlyProvider(rpcUrl);
+}
+
+/**
+ * @internal
+ * @param network
+ * @param chainId
+ */
+function getReadOnlyProvider(network: string, chainId?: number) {
+  try {
+    const match = network.match(/^(ws|http)s?:/i);
+    // try the JSON batch provider if available
+    if (match) {
+      switch (match[1]) {
+        case "http":
+          return new providers.JsonRpcBatchProvider(network, chainId);
+        case "ws":
+          return new providers.WebSocketProvider(network, chainId);
+        default:
+          return ethers.getDefaultProvider(network);
+      }
+    } else {
+      return ethers.getDefaultProvider(network);
+    }
+  } catch (e) {
+    // fallback to the default provider
+    return ethers.getDefaultProvider(network);
   }
 }

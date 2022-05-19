@@ -1,6 +1,6 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { DropERC20, IMintableERC20, TokenERC20 } from "contracts";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, ethers, Signer } from "ethers";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
@@ -48,23 +48,15 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
-    try {
-      this.options = SDKOptionsSchema.parse(options);
-    } catch (optionParseError) {
-      console.error(
-        "invalid contract options object passed, falling back to default options",
-        optionParseError,
-      );
-      this.options = SDKOptionsSchema.parse({});
-    }
+    this.options = options;
     this.mint = this.detectErc20Mintable();
   }
 
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {

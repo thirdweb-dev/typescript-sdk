@@ -1,9 +1,9 @@
-import { NetworkOrSignerOrProvider } from "../types";
+import { Signer } from "ethers";
 
 /**
  * @public
  */
 export interface UpdateableNetwork {
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+  onSignerUpdated(signer: Signer | undefined): void;
   getAddress(): string;
 }

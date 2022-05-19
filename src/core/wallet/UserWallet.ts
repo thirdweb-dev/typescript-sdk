@@ -12,7 +12,15 @@ import { NATIVE_TOKEN_ADDRESS } from "../../constants";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { ContractWrapper } from "../classes/contract-wrapper";
 import { IERC20 } from "contracts";
-import { BigNumber, providers } from "ethers";
+import { BigNumber, providers, Signer } from "ethers";
+import { EventEmitter2 } from "eventemitter2";
+import StrictEventEmitter from "strict-event-emitter-types";
+import { Provider } from "@ethersproject/providers";
+
+interface WalletEvent {
+  connected: Signer;
+  disconnected: void;
+}
 
 /**
  * Connect and Interact with a user wallet
@@ -23,11 +31,15 @@ import { BigNumber, providers } from "ethers";
  * @public
  */
 export class UserWallet {
-  private connection: RPCConnectionHandler;
+  private readOnlyProvider: RPCConnectionHandler;
+  private signer: Signer | undefined;
   private options: SDKOptions;
 
-  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
-    this.connection = new RPCConnectionHandler(network, options);
+  public events: StrictEventEmitter<EventEmitter2, WalletEvent> =
+    new EventEmitter2();
+
+  constructor(network: Provider, options: SDKOptions) {
+    this.readOnlyProvider = new RPCConnectionHandler(network);
     this.options = options;
   }
 
@@ -38,9 +50,14 @@ export class UserWallet {
   // TODO tokens()
   // TODO NFTs()
 
-  // TODO this will become the source of truth of the signer and have every contract read from it
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
-    this.connection.updateSignerOrProvider(network);
+  connect(signer: Signer) {
+    this.signer = signer;
+    this.events.emit("connected", signer);
+  }
+
+  disconnect() {
+    this.signer = undefined;
+    this.events.emit("disconnected");
   }
 
   /**
@@ -63,7 +80,7 @@ export class UserWallet {
   ): Promise<TransactionResult> {
     const signer = await this.connectedWallet();
     const amountInWei = await normalizePriceValue(
-      this.connection.getProvider(),
+      this.readOnlyProvider.getProvider(),
       amount,
       currencyAddress,
     );
@@ -103,18 +120,16 @@ export class UserWallet {
   async balance(
     currencyAddress = NATIVE_TOKEN_ADDRESS,
   ): Promise<CurrencyValue> {
-    const signer = this.connection.getSigner();
-    invariant(signer, "Wallet not connected");
     let balance: BigNumber;
     if (isNativeToken(currencyAddress)) {
-      balance = await signer.getBalance();
+      balance = await this.connectedWallet().getBalance();
     } else {
       balance = await this.createErc20(currencyAddress).readContract.balanceOf(
         await this.address(),
       );
     }
     return await fetchCurrencyValue(
-      this.connection.getProvider(),
+      this.readOnlyProvider.getProvider(),
       currencyAddress,
       balance,
     );
@@ -159,14 +174,14 @@ export class UserWallet {
    * ***********************/
 
   private connectedWallet() {
-    const signer = this.connection.getSigner();
+    const signer = this.signer;
     invariant(signer, "Wallet not connected");
     return signer;
   }
 
   private createErc20(currencyAddress: string) {
     return new ContractWrapper<IERC20>(
-      this.connection.getSignerOrProvider(),
+      this.readOnlyProvider.getProvider(),
       currencyAddress,
       ERC20Abi,
       this.options,

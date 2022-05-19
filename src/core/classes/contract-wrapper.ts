@@ -8,13 +8,17 @@ import {
   ContractTransaction,
   ethers,
   providers,
+  Signer,
 } from "ethers";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { SDKOptions } from "../../schema/sdk-options";
+import {
+  SDKOptions,
+  SDKOptionsOutput,
+  SDKOptionsSchema,
+} from "../../schema/sdk-options";
 import {
   ForwardRequestMessage,
   GaslessTransaction,
-  NetworkOrSignerOrProvider,
   PermitRequestMessage,
 } from "../types";
 import { EventType } from "../../constants/events";
@@ -32,6 +36,7 @@ import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { ChainId } from "../../constants";
 import { convertToTWError } from "../../common";
 import { isBrowser } from "../../common/utils";
+import { Provider } from "@ethersproject/providers";
 
 /**
  * @internal
@@ -41,6 +46,7 @@ export class ContractWrapper<
 > extends RPCConnectionHandler {
   private isValidContract = false;
   private customOverrides: () => CallOverrides = () => ({});
+  protected options: SDKOptionsOutput;
   /**
    * @internal
    */
@@ -49,12 +55,13 @@ export class ContractWrapper<
   public abi;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: Provider,
+    signer: Signer | undefined,
     contractAddress: string,
     contractAbi: ContractInterface,
     options: SDKOptions,
   ) {
-    super(network, options);
+    super(network, signer);
     this.abi = contractAbi;
     // set up the contract
     this.writeContract = new Contract(
@@ -66,20 +73,24 @@ export class ContractWrapper<
     this.readContract = this.writeContract.connect(
       this.getProvider(),
     ) as TContract;
+
+    try {
+      this.options = SDKOptionsSchema.parse(options) || {};
+    } catch (optionParseError) {
+      console.error(
+        "invalid sdk options object passed, falling back to default options",
+        optionParseError,
+      );
+      this.options = SDKOptionsSchema.parse({});
+    }
   }
 
-  public override updateSignerOrProvider(
-    network: NetworkOrSignerOrProvider,
-  ): void {
+  public override updateSigner(signer: Signer | undefined): void {
     // update the underlying base class
-    super.updateSignerOrProvider(network);
+    super.updateSigner(signer);
     // re-connect the contract with the new signer / provider
     this.writeContract = this.writeContract.connect(
       this.getSignerOrProvider(),
-    ) as TContract;
-    // setup the read only contract
-    this.readContract = this.writeContract.connect(
-      this.getProvider(),
     ) as TContract;
   }
 
@@ -273,6 +284,8 @@ export class ContractWrapper<
         );
       }
     }
+
+    // TODO: check if write and read contracts are on the same network
 
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();

@@ -17,7 +17,7 @@ import {
   VoteSettings,
 } from "../types/vote";
 import { fetchCurrencyMetadata, fetchCurrencyValue } from "../common/currency";
-import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
+import { BigNumber, BigNumberish, Contract, ethers, Signer } from "ethers";
 import { VoteType } from "../enums";
 import deepEqual from "deep-equal";
 import { CurrencyValue } from "../types/currency";
@@ -95,8 +95,8 @@ export class Vote implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {

@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { BigNumber, BigNumberish, constants, Signer } from "ethers";
 import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
@@ -64,8 +64,8 @@ export class Erc721<
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {

@@ -23,7 +23,7 @@ import {
 } from "contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { ContractInterface } from "ethers";
+import { ContractInterface, Signer } from "ethers";
 import { ALL_ROLES, detectContractFeature } from "../common";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
@@ -157,8 +157,8 @@ export class SmartContract<
     // this.sigmint = this.detectSigmint();
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {

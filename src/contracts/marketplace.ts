@@ -13,7 +13,7 @@ import { UpdateableNetwork } from "../core/interfaces/contract";
 import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
 import { AuctionListing, DirectListing } from "../types/marketplace";
 import { ListingType } from "../enums";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { BigNumber, BigNumberish, constants, Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { ListingNotFoundError } from "../common";
 import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
@@ -181,8 +181,8 @@ export class Marketplace implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {

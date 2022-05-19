@@ -14,7 +14,14 @@ import { IERC1155, IERC20, Pack as PackContract } from "contracts";
 import { PacksContractSchema } from "../schema/contracts/packs";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { NFTMetadata } from "../schema/tokens/common";
-import { BigNumber, BigNumberish, BytesLike, Contract, ethers } from "ethers";
+import {
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  Contract,
+  ethers,
+  Signer,
+} from "ethers";
 import { fetchTokenMetadataForContract } from "../common/nft";
 import {
   IPackBatchArgs,
@@ -123,8 +130,8 @@ export class Pack implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {

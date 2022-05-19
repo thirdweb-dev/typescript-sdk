@@ -4,6 +4,7 @@ import { NetworkOrSignerOrProvider } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { constants, utils } from "ethers";
 import { TransactionResult } from "..";
+import { Provider } from "@ethersproject/providers";
 
 /**
  * @internal
@@ -14,7 +15,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
   constructor(
     registryAddress: string,
     byocRegistryAddress: string,
-    network: NetworkOrSignerOrProvider,
+    network: Provider,
     options?: SDKOptions,
   ) {
     super(network, registryAddress, TWRegistry__factory.abi, options);
