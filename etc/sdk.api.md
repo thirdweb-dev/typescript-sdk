@@ -205,6 +205,11 @@ export type ChainlinkInfo = {
 // @internal (undocumented)
 export const ChainlinkVrf: Record<number, ChainlinkInfo>;
 
+// Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export type ChainOrRpc = "mumbai" | "polygon" | "rinkeby" | "goerli" | "mainnet" | "fantom" | "avalanche" | (string & {});
+
 // Warning: (ae-incompatible-release-tags) The symbol "ClaimCondition" is marked as @public, but its signature references "ClaimConditionOutputSchema" which is marked as @internal
 //
 // @public
@@ -590,11 +595,11 @@ export class ContractEncoder<TContract extends BaseContract> {
 // @public
 export class ContractEvents<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
-    addEventListener(eventName: keyof TContract["filters"] | string, listener: (event: Record<string, any>) => void): void;
+    addEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: (event: Record<string, any>) => void): void;
     addTransactionListener(listener: ListenerFn): void;
     removeAllListeners(): void;
     // (undocumented)
-    removeEventListener(eventName: keyof TContract["filters"] | string, listener: providers.Listener): void;
+    removeEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: providers.Listener): void;
     removeTransactionListener(listener: ListenerFn): void;
 }
 
@@ -1820,7 +1825,7 @@ export class FunctionDeprecatedError extends Error {
 export class GasCostEstimator<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     currentGasPriceInGwei(): Promise<string>;
-    gasCostOf(fn: keyof TContract["functions"] | string, args: Parameters<TContract["functions"][typeof fn]> | any[]): Promise<string>;
+    gasCostOf(fn: keyof TContract["functions"] | (string & {}), args: Parameters<TContract["functions"][typeof fn]> | any[]): Promise<string>;
 }
 
 // @public
@@ -1855,6 +1860,14 @@ export function getContractAddressByChainId(chainId: SUPPORTED_CHAIN_ID | ChainI
 
 // @public
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken;
+
+// Warning: (ae-internal-missing-underscore) The name "getProviderForNetwork" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider): string | ethers.Signer | ethers.providers.Provider;
+
+// @public (undocumented)
+export function getReadOnlyProvider(network: string, chainId?: number): ethers.providers.BaseProvider;
 
 // Warning: (ae-internal-missing-underscore) The name "getRoleHash" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -2177,7 +2190,7 @@ export interface MarketplaceFilter extends QueryAllParams {
     // (undocumented)
     tokenContract?: string;
     // (undocumented)
-    tokenId?: number;
+    tokenId?: BigNumberish;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "MerkleSchema" should be prefixed with an underscore because the declaration is marked as @internal
@@ -4197,8 +4210,17 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 
 // @public
 export class ThirdwebSDK extends RPCConnectionHandler {
-    constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions, storage?: IStorage);
+    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "ChainOrRpc" which is marked as @internal
+    constructor(network: ChainOrRpc | SignerOrProvider, options?: SDKOptions, storage?: IStorage);
     deployer: ContractDeployer;
+    // Warning: (ae-incompatible-release-tags) The symbol "fromPrivateKey" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
+    //
+    // @beta
+    static fromPrivateKey(privateKey: string, network: ChainOrRpc, options?: SDKOptions): ThirdwebSDK;
+    // Warning: (ae-incompatible-release-tags) The symbol "fromSigner" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
+    //
+    // @beta
+    static fromSigner(signer: Signer, network?: ChainOrRpc, options?: SDKOptions): ThirdwebSDK;
     // @internal (undocumented)
     getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // @beta

@@ -4,7 +4,7 @@ import { expect } from "chai";
 import { isFeatureEnabled, ThirdwebSDK } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
-import { DropERC721__factory, TokenERC721__factory } from "../lib";
+import { DropERC721__factory, TokenERC721__factory } from "../typechain";
 
 global.fetch = require("cross-fetch");
 

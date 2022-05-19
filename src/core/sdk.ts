@@ -1,4 +1,4 @@
-import { ContractInterface, ethers } from "ethers";
+import { ContractInterface, ethers, Signer } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import {
   Edition,
@@ -20,6 +20,7 @@ import type {
   ContractForContractType,
   ContractType,
   NetworkOrSignerOrProvider,
+  SignerOrProvider,
   ValidContractInstance,
 } from "./types";
 import { IThirdwebContract__factory } from "contracts";
@@ -29,7 +30,12 @@ import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
-import { getContractAddressByChainId } from "../constants";
+import {
+  ChainOrRpc,
+  getContractAddressByChainId,
+  getProviderForNetwork,
+  getReadOnlyProvider,
+} from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
 
 /**
@@ -37,6 +43,69 @@ import { UserWallet } from "./wallet/UserWallet";
  * @public
  */
 export class ThirdwebSDK extends RPCConnectionHandler {
+  /**
+   * Get an instance of the thirdweb SDK based on an existing ethers signer
+   *
+   * @example
+   * ```javascript
+   * // get a signer from somewhere (createRandom is being used purely for example purposes)
+   * const signer = ethers.Wallet.createRandom();
+   *
+   * // get an instance of the SDK with the signer already setup
+   * const sdk = ThirdwebSDK.fromSigner(signer, "mainnet");
+   * ```
+   *
+   * @param signer - a ethers Signer to be used for transactions
+   * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
+   * @param options - the SDK options to use
+   * @returns an instance of the SDK
+   *
+   * @beta
+   */
+  static fromSigner(
+    signer: Signer,
+    network?: ChainOrRpc,
+    options: SDKOptions = {},
+  ): ThirdwebSDK {
+    const sdk = new ThirdwebSDK(network || signer, options);
+    sdk.updateSignerOrProvider(signer);
+    return sdk;
+  }
+
+  /**
+   * Get an instance of the thirdweb SDK based on a private key.
+   *
+   * @remarks
+   * This should only be used for backend services or scripts, with the private key stored in a secure way.
+   * **NEVER** expose your private key to the public in any way.
+   *
+   * @example
+   * ```javascript
+   * const sdk = ThirdwebSDK.fromPrivateKey("SecretPrivateKey", "mainnet");
+   * ```
+   *
+   * @param privateKey - the private key - **DO NOT EXPOSE THIS TO THE PUBLIC**
+   * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
+   * @param options - the SDK options to use
+   * @returns an instance of the SDK
+   *
+   * @beta
+   */
+  static fromPrivateKey(
+    privateKey: string,
+    network: ChainOrRpc,
+    options: SDKOptions = {},
+  ): ThirdwebSDK {
+    const rpc = getProviderForNetwork(network);
+    const provider = Signer.isSigner(rpc)
+      ? rpc.provider
+      : typeof rpc === "string"
+      ? getReadOnlyProvider(rpc)
+      : rpc;
+    const signer = new ethers.Wallet(privateKey, provider);
+    return ThirdwebSDK.fromSigner(signer, network, options);
+  }
+
   /**
    * @internal
    * the cache of contracts that we have already seen
@@ -64,14 +133,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public wallet: UserWallet;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: ChainOrRpc | SignerOrProvider,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ) {
-    super(network, options);
+    const rpc = getProviderForNetwork(network);
+    super(rpc, options);
     this.storage = storage;
-    this.deployer = new ContractDeployer(network, options, storage);
-    this.wallet = new UserWallet(network, options);
+    this.deployer = new ContractDeployer(rpc, options, storage);
+    this.wallet = new UserWallet(rpc, options);
   }
 
   /**

@@ -9,14 +9,14 @@ Constructs a new instance of the `ThirdwebSDK` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, options?: SDKOptions, storage?: IStorage);
+constructor(network: ChainOrRpc | SignerOrProvider, options?: SDKOptions, storage?: IStorage);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  network | ChainOrRpc \| [SignerOrProvider](./sdk.signerorprovider.md) |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> |
 |  storage | [IStorage](./sdk.istorage.md) | <i>(Optional)</i> |
 
