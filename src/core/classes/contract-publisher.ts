@@ -6,7 +6,6 @@ import {
   BigNumber,
   BytesLike,
   constants,
-  Contract,
   ContractInterface,
   ethers,
   utils,
@@ -17,6 +16,7 @@ import {
   extractConstructorParamsFromAbi,
   extractFunctions,
   fetchContractMetadata,
+  fetchContractMetadataFromAddress,
 } from "../../common/feature-detection";
 import {
   AbiFunction,
@@ -28,17 +28,15 @@ import {
 } from "../../schema/contracts/custom";
 import { ContractWrapper } from "./contract-wrapper";
 import {
-  ByocFactory,
-  ByocFactory__factory,
-  ByocRegistry,
-  ByocRegistry__factory,
-  IByocRegistry,
-  ThirdwebContract as TWContract,
-  ThirdwebContract__factory,
+  ContractDeployer,
+  ContractPublisher as OnChainContractPublisher,
+  IContractPublisher,
 } from "contracts";
-import { getBYOCRegistryAddress } from "../../constants";
-import { ContractPublishedEvent } from "contracts/ByocRegistry";
-import { ContractDeployedEvent } from "contracts/ByocFactory";
+import { getContractPublisherAddress } from "../../constants";
+import ContractDeployerAbi from "../../../abis/ContractDeployer.json";
+import ContractPublisherAbi from "../../../abis/ContractPublisher.json";
+import { ContractPublishedEvent } from "contracts/ContractPublisher";
+import { ContractDeployedEvent } from "contracts/ContractDeployer";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)
@@ -46,27 +44,27 @@ import { ContractDeployedEvent } from "contracts/ByocFactory";
  */
 export class ContractPublisher extends RPCConnectionHandler {
   private storage: IStorage;
-  private registry: ContractWrapper<ByocRegistry>;
-  private factory: ContractWrapper<ByocFactory>;
+  private publisher: ContractWrapper<OnChainContractPublisher>;
+  private factory: ContractWrapper<ContractDeployer>;
 
   constructor(
-    byocFactoryAddress: string,
+    contractDeployerAddress: string,
     network: NetworkOrSignerOrProvider,
     options: SDKOptions,
     storage: IStorage,
   ) {
     super(network, options);
     this.storage = storage;
-    this.registry = new ContractWrapper<ByocRegistry>(
+    this.publisher = new ContractWrapper<OnChainContractPublisher>(
       network,
-      getBYOCRegistryAddress(),
-      ByocRegistry__factory.abi,
+      getContractPublisherAddress(),
+      ContractPublisherAbi,
       options,
     );
-    this.factory = new ContractWrapper<ByocFactory>(
+    this.factory = new ContractWrapper<ContractDeployer>(
       network,
-      byocFactoryAddress,
-      ByocFactory__factory.abi,
+      contractDeployerAddress,
+      ContractDeployerAbi,
       options,
     );
   }
@@ -75,7 +73,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     network: NetworkOrSignerOrProvider,
   ): void {
     super.updateSignerOrProvider(network);
-    this.registry.updateSignerOrProvider(network);
+    this.publisher.updateSignerOrProvider(network);
     this.factory.updateSignerOrProvider(network);
   }
 
@@ -110,14 +108,11 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @param address
    */
   public async fetchContractMetadataFromAddress(address: string) {
-    const contract = new Contract(
+    return fetchContractMetadataFromAddress(
       address,
-      ThirdwebContract__factory.abi,
-      // this is a *READ ONLY* operation. it *always* has to happen on the readOnly network (provider is fine here for the moment as a substitute)
       this.getProvider(),
-    ) as TWContract;
-    const metadataUri = await contract.getPublishMetadataUri();
-    return await this.fetchFullContractMetadata(metadataUri);
+      this.storage,
+    );
   }
 
   /**
@@ -125,7 +120,7 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @param publisherAddress
    */
   public async getAll(publisherAddress: string): Promise<PublishedContract[]> {
-    const data = await this.registry.readContract.getAllPublishedContracts(
+    const data = await this.publisher.readContract.getAllPublishedContracts(
       publisherAddress,
     );
     return data
@@ -143,7 +138,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     contractId: string,
   ): Promise<PublishedContract[]> {
     const contractStructs =
-      await this.registry.readContract.getPublishedContractVersions(
+      await this.publisher.readContract.getPublishedContractVersions(
         publisherAddress,
         contractId,
       );
@@ -157,7 +152,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     publisherAddress: string,
     contractId: string,
   ): Promise<PublishedContract> {
-    const model = await this.registry.readContract.getPublishedContract(
+    const model = await this.publisher.readContract.getPublishedContract(
       publisherAddress,
       contractId,
     );
@@ -190,13 +185,13 @@ export class ContractPublisher extends RPCConnectionHandler {
         [meta.fullMetadata.bytecode],
       );
       const contractId = meta.fullMetadata.name;
-      return this.registry.readContract.interface.encodeFunctionData(
+      return this.publisher.readContract.interface.encodeFunctionData(
         "publishContract",
         [publisher, meta.uri, bytecodeHash, constants.AddressZero, contractId],
       );
     });
-    const receipt = await this.registry.multiCall(encoded);
-    const events = this.registry.parseLogs<ContractPublishedEvent>(
+    const receipt = await this.publisher.multiCall(encoded);
+    const events = this.publisher.parseLogs<ContractPublishedEvent>(
       "ContractPublished",
       receipt.logs,
     );
@@ -228,7 +223,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     contractMetadata?: CustomContractMetadata,
   ): Promise<string> {
     // TODO this gets the latest version, should we allow deploying a certain version?
-    const contract = await this.registry.readContract.getPublishedContract(
+    const contract = await this.publisher.readContract.getPublishedContract(
       publisherAddress,
       contractId,
     );
@@ -356,7 +351,7 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   private toPublishedContract(
-    contractModel: IByocRegistry.CustomContractInstanceStruct,
+    contractModel: IContractPublisher.CustomContractInstanceStruct,
   ) {
     return PublishedContractSchema.parse({
       id: contractModel.contractId,

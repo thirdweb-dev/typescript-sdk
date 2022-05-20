@@ -439,7 +439,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       .then(async ({ chainId }) => {
         const factoryAddress = getContractAddressByChainId(
           chainId,
-          "byocFactory",
+          "contractDeployer",
         );
         return new ContractPublisher(
           factoryAddress,

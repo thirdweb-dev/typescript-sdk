@@ -556,7 +556,8 @@ export const CONTRACT_ADDRESSES: Record<SUPPORTED_CHAIN_ID, {
     twFactory: string;
     twRegistry: string;
     twBYOCRegistry: string;
-    byocFactory: string;
+    contractDeployer: string;
+    contractMetadataRegistry: string;
 }>;
 
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
@@ -1765,6 +1766,11 @@ export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>): AbiFunc
 // @internal (undocumented)
 export function fetchContractMetadata(metadataUri: string, storage: IStorage): Promise<PublishedMetadata>;
 
+// Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function fetchContractMetadataFromAddress(address: string, provider: ethers.providers.Provider, storage: IStorage): Promise<PublishedMetadata>;
+
 // Warning: (ae-internal-missing-underscore) The name "FetchError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -1848,15 +1854,15 @@ export interface GaslessTransaction {
     to: string;
 }
 
-// Warning: (ae-internal-missing-underscore) The name "getBYOCRegistryAddress" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export function getBYOCRegistryAddress(): string;
-
 // Warning: (ae-internal-missing-underscore) The name "getContractAddressByChainId" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export function getContractAddressByChainId(chainId: SUPPORTED_CHAIN_ID | ChainId.Hardhat, contractName: keyof typeof CONTRACT_ADDRESSES[SUPPORTED_CHAIN_ID]): string;
+
+// Warning: (ae-internal-missing-underscore) The name "getContractPublisherAddress" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getContractPublisherAddress(): string;
 
 // @public
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken;
@@ -3043,6 +3049,11 @@ export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly Marketplace: "marketplace";
     readonly Pack: "pack";
 };
+
+// Warning: (ae-internal-missing-underscore) The name "resolveContractUriFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function resolveContractUriFromAddress(address: string, provider: ethers.providers.Provider): Promise<string>;
 
 // Warning: (ae-internal-missing-underscore) The name "RestrictedTransferError" should be prefixed with an underscore because the declaration is marked as @internal
 //

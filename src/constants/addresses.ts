@@ -21,7 +21,8 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: string;
     twRegistry: string;
     twBYOCRegistry: string;
-    byocFactory: string;
+    contractDeployer: string;
+    contractMetadataRegistry: string;
   }
 > = {
   [ChainId.Mainnet]: {
@@ -29,63 +30,72 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: constants.AddressZero,
-    byocFactory: constants.AddressZero,
+    contractDeployer: constants.AddressZero,
+    contractMetadataRegistry: constants.AddressZero,
   },
   [ChainId.Rinkeby]: {
     biconomyForwarder: "0xFD4973FeB2031D4409fB57afEE5dF2051b171104",
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
-    byocFactory: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
+    contractDeployer: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
+    contractMetadataRegistry: constants.AddressZero,
   },
   [ChainId.Goerli]: {
     biconomyForwarder: constants.AddressZero,
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0xB1Bd9d7942A250BA2Dce27DD601F2ED4211A60C4",
-    byocFactory: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
+    contractDeployer: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
+    contractMetadataRegistry: constants.AddressZero,
   },
   [ChainId.Polygon]: {
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: constants.AddressZero,
-    byocFactory: constants.AddressZero,
+    contractDeployer: constants.AddressZero,
+    contractMetadataRegistry: constants.AddressZero,
   },
   [ChainId.Mumbai]: {
     biconomyForwarder: "0x9399BB24DBB5C4b782C70c2969F58716Ebbd6a3b",
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3F17972CB27506eb4a6a3D59659e0B57a43fd16C",
-    byocFactory: "0x4ca9932786541D142bAe8a39483050D1D7AD664a",
+    contractDeployer: "0x4ca9932786541D142bAe8a39483050D1D7AD664a",
+    contractMetadataRegistry: constants.AddressZero,
   },
   [ChainId.Avalanche]: {
     biconomyForwarder: "0x64CD353384109423a966dCd3Aa30D884C9b2E057",
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: constants.AddressZero,
-    byocFactory: constants.AddressZero,
+    contractDeployer: constants.AddressZero,
+    contractMetadataRegistry: constants.AddressZero,
   },
   [ChainId.AvalancheFujiTestnet]: {
     biconomyForwarder: "0x6271Ca63D30507f2Dcbf99B52787032506D75BBF",
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
-    byocFactory: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
+    contractDeployer: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
+    contractMetadataRegistry: constants.AddressZero,
   },
   [ChainId.Fantom]: {
     biconomyForwarder: constants.AddressZero,
     twFactory: "0x97EA0Fcc552D5A8Fb5e9101316AAd0D62Ea0876B",
     twRegistry: TWRegistry_address,
     twBYOCRegistry: constants.AddressZero,
-    byocFactory: constants.AddressZero,
+    contractDeployer: constants.AddressZero,
+    contractMetadataRegistry: constants.AddressZero,
   },
   [ChainId.FantomTestnet]: {
     biconomyForwarder: constants.AddressZero,
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
-    byocFactory: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
+    contractDeployer: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
+    contractMetadataRegistry: constants.AddressZero,
   },
 };
 
@@ -104,8 +114,10 @@ export function getContractAddressByChainId(
       return process.env.registryAddress as string;
     } else if (contractName === "twBYOCRegistry") {
       return process.env.byocRegistryAddress as string;
-    } else if (contractName === "byocFactory") {
-      return process.env.byocFactoryAddress as string;
+    } else if (contractName === "contractDeployer") {
+      return process.env.contractDeployerAddress as string;
+    } else if (contractName === "contractMetadataRegistry") {
+      return process.env.contractMetadataRegistryAddress as string;
     } else {
       return constants.AddressZero;
     }
@@ -117,9 +129,9 @@ export function getContractAddressByChainId(
 /**
  * @internal
  */
-export function getBYOCRegistryAddress() {
-  if (process.env.byocRegistryAddress) {
-    return process.env.byocRegistryAddress as string;
+export function getContractPublisherAddress() {
+  if (process.env.contractPublisherAddress) {
+    return process.env.contractPublisherAddress as string;
   } else {
     return BYOCRegistry_address;
   }

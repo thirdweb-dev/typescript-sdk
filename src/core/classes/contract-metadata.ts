@@ -7,7 +7,10 @@ import { z } from "zod";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { detectContractFeature } from "../../common";
+import {
+  detectContractFeature,
+  resolveContractUriFromAddress,
+} from "../../common";
 
 /**
  * @internal
@@ -62,8 +65,11 @@ export class ContractMetadata<
     if (this.supportsContractMetadata(this.contractWrapper)) {
       uri = await this.contractWrapper.readContract.contractURI();
       data = await this.storage.get(uri);
-    } else if (this.hasPublishedURI(this.contractWrapper)) {
-      uri = await this.contractWrapper.readContract.getPublishMetadataUri();
+    } else if (this.isThirdWebContract(this.contractWrapper)) {
+      uri = await resolveContractUriFromAddress(
+        this.contractWrapper.readContract.address,
+        this.contractWrapper.getProvider(),
+      );
       const publishMeta = await this.storage.get(uri);
       data = publishMeta.deployMetadata || publishMeta;
     } else {
@@ -118,9 +124,9 @@ export class ContractMetadata<
     );
   }
 
-  private hasPublishedURI(
+  private isThirdWebContract(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<ThirdwebContract> {
-    return "getPublishMetadataUri" in contractWrapper.readContract.functions;
+    return "tw_initializeOwner" in contractWrapper.readContract.functions;
   }
 }

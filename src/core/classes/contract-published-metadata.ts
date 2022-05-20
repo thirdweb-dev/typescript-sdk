@@ -1,6 +1,9 @@
 import { ThirdwebContract } from "contracts";
 import { ContractWrapper } from "./contract-wrapper";
-import { extractFunctionsFromAbi, fetchContractMetadata } from "../../common";
+import {
+  extractFunctionsFromAbi,
+  fetchContractMetadataFromAddress,
+} from "../../common";
 import { IStorage } from "../interfaces";
 import {
   AbiFunction,
@@ -31,8 +34,11 @@ export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
     if (this._cachedMetadata) {
       return this._cachedMetadata;
     }
-    const uri = await this.contractWrapper.readContract.getPublishMetadataUri();
-    this._cachedMetadata = await fetchContractMetadata(uri, this.storage);
+    this._cachedMetadata = await fetchContractMetadataFromAddress(
+      this.contractWrapper.readContract.address,
+      this.contractWrapper.getProvider(),
+      this.storage,
+    );
     return this._cachedMetadata;
   }
 

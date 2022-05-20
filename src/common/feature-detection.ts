@@ -1,4 +1,4 @@
-import { BaseContract, utils } from "ethers";
+import { BaseContract, Contract, ethers, utils } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core";
 import {
@@ -14,6 +14,9 @@ import {
   FeatureWithEnabled,
   SUPPORTED_FEATURES,
 } from "../constants/contract-features";
+import ContractMetadataRegistryAbi from "../../abis/ContractMetadataRegistry.json";
+import { ContractMetadataRegistry } from "contracts";
+import { getContractAddressByChainId } from "../constants";
 
 /**
  * Type guards a contract to a known type if it matches the corresponding interface
@@ -161,6 +164,43 @@ function toJSType(contractType: string, isReturnType = false): string {
     jsType += "[]";
   }
   return jsType;
+}
+
+/**
+ * @internal
+ * @param address
+ * @param provider
+ */
+export async function resolveContractUriFromAddress(
+  address: string,
+  provider: ethers.providers.Provider,
+): Promise<string> {
+  const chainId = (await provider.getNetwork()).chainId;
+  const metadataRegistryAddress = getContractAddressByChainId(
+    chainId,
+    "contractMetadataRegistry",
+  );
+  const contract = new Contract(
+    metadataRegistryAddress,
+    ContractMetadataRegistryAbi,
+    provider,
+  ) as ContractMetadataRegistry;
+  return await contract.getMetadataUri(address);
+}
+
+/**
+ * @internal
+ * @param address
+ * @param provider
+ * @param storage
+ */
+export async function fetchContractMetadataFromAddress(
+  address: string,
+  provider: ethers.providers.Provider,
+  storage: IStorage,
+) {
+  const metadataUri = await resolveContractUriFromAddress(address, provider);
+  return await fetchContractMetadata(metadataUri, storage);
 }
 
 /**
