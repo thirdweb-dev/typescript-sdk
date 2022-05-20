@@ -9,7 +9,7 @@ export const OZ_DEFENDER_FORWARDER_ADDRESS =
 
 const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
 const TWFactory_address = "0x5DBC7B840baa9daBcBe9D2492E45D7244B54A2A0";
-const BYOCRegistry_address = "0x61Bb02795b4fF5248169A54D9f149C4557B0B7de"; // TODO finalize, this is mumbai only
+const ContractPublisher_address = "0x1e474395f58418e9c594a79abb0152D04C229E8e"; // TODO finalize, this is
 
 /**
  * @internal
@@ -38,16 +38,16 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
-    contractDeployer: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
-    contractMetadataRegistry: constants.AddressZero,
+    contractDeployer: "0xBD9fdebD651733e7EEAB8A83536D57023c3d3225",
+    contractMetadataRegistry: "0x1e474395f58418e9c594a79abb0152D04C229E8e",
   },
   [ChainId.Goerli]: {
     biconomyForwarder: constants.AddressZero,
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0xB1Bd9d7942A250BA2Dce27DD601F2ED4211A60C4",
-    contractDeployer: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
-    contractMetadataRegistry: constants.AddressZero,
+    contractDeployer: "0x25F2Ea750BF8bE10e1139C3a19F7B4e46557D04B",
+    contractMetadataRegistry: "0x520B80B85a3B9abfF75F77068116D759a11a455D",
   },
   [ChainId.Polygon]: {
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
@@ -62,8 +62,8 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3F17972CB27506eb4a6a3D59659e0B57a43fd16C",
-    contractDeployer: "0x4ca9932786541D142bAe8a39483050D1D7AD664a",
-    contractMetadataRegistry: constants.AddressZero,
+    contractDeployer: "0x14905281051Cc0Cf1064Ad16c319DBe324C62196",
+    contractMetadataRegistry: "0x25F2Ea750BF8bE10e1139C3a19F7B4e46557D04B",
   },
   [ChainId.Avalanche]: {
     biconomyForwarder: "0x64CD353384109423a966dCd3Aa30D884C9b2E057",
@@ -78,8 +78,8 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
-    contractDeployer: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
-    contractMetadataRegistry: constants.AddressZero,
+    contractDeployer: "0xBD9fdebD651733e7EEAB8A83536D57023c3d3225",
+    contractMetadataRegistry: "0x1e474395f58418e9c594a79abb0152D04C229E8e",
   },
   [ChainId.Fantom]: {
     biconomyForwarder: constants.AddressZero,
@@ -94,8 +94,8 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
-    contractDeployer: "0xd1b313C4fb83d979f0d842Afd97cDc93AFE4ab61",
-    contractMetadataRegistry: constants.AddressZero,
+    contractDeployer: "0xBD9fdebD651733e7EEAB8A83536D57023c3d3225",
+    contractMetadataRegistry: "0x1e474395f58418e9c594a79abb0152D04C229E8e",
   },
 };
 
@@ -133,6 +133,6 @@ export function getContractPublisherAddress() {
   if (process.env.contractPublisherAddress) {
     return process.env.contractPublisherAddress as string;
   } else {
-    return BYOCRegistry_address;
+    return ContractPublisher_address;
   }
 }
