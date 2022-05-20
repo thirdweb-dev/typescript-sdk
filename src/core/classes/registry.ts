@@ -13,14 +13,14 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
 
   constructor(
     registryAddress: string,
-    byocRegistryAddress: string,
+    contractPublisherAddress: string,
     network: NetworkOrSignerOrProvider,
     options?: SDKOptions,
   ) {
     super(network, registryAddress, TWRegistry__factory.abi, options);
     this.byocRegistry = new ContractWrapper<TWRegistry>(
       network,
-      byocRegistryAddress,
+      contractPublisherAddress,
       TWRegistry__factory.abi,
       options,
     );
