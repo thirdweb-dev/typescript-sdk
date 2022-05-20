@@ -5,5 +5,6 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   minify: true,
-  format: ["cjs", "esm"],
+  globalName: "ThirdwebSDK",
+  format: ["cjs", "esm", "iife"],
 });
