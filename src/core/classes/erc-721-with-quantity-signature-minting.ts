@@ -11,7 +11,7 @@ import { TransactionResultWithId } from "../types";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import {ISignatureMintERC721, TokenERC721} from "contracts";
+import { ISignatureMintERC721, SignatureDrop as SignatureDropContract } from "contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { SignatureDrop } from "../../contracts";
@@ -27,14 +27,14 @@ export class Erc721WithQuantitySignatureMinting {
   private contractWrapper: ContractWrapper<ISignatureMintERC721>;
   private storage: IStorage;
   private roles: ContractRoles<
-      TokenERC721,
+      SignatureDropContract,
     typeof SignatureDrop.contractRoles[number]
   >;
 
   constructor(
     contractWrapper: ContractWrapper<ISignatureMintERC721>,
     roles: ContractRoles<
-        TokenERC721,
+        SignatureDropContract,
       typeof SignatureDrop.contractRoles[number]
     >,
     storage: IStorage,

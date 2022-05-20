@@ -1,5 +1,5 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import {SignatureDrop as SignatureDropContract, TokenERC1155} from "contracts";
+import {SignatureDrop as SignatureDropContract} from "contracts";
 import {
   BigNumber,
   BigNumberish,
@@ -198,8 +198,8 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.signature = new Erc721WithQuantitySignatureMinting(
         this.contractWrapper,
-        this.storage, // How does this work with storage
-        this.roles
+        this.roles,
+        this.storage
     );
   }
 
