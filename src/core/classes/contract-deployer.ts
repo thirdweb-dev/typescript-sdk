@@ -202,13 +202,13 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
           "twRegistry",
         );
-        const byocRegistryAddress = getContractAddressByChainId(
+        const contractPublisherAddress = getContractAddressByChainId(
           chainId,
           "twBYOCRegistry",
         );
         return new ContractRegistry(
           registryAddress,
-          byocRegistryAddress,
+          contractPublisherAddress,
           this.getSignerOrProvider(),
           this.options,
         );
