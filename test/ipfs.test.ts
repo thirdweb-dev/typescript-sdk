@@ -156,7 +156,7 @@ describe("IPFS Uploads", async () => {
       },
     ];
     const serialized = sampleObjects.map((o) => Buffer.from(JSON.stringify(o)));
-    const cid = await storage.uploadBatch(serialized);
+    const { baseUri: cid } = await storage.uploadBatch(serialized);
     for (const object of sampleObjects) {
       const parsed = await storage.get(`${cid}${object.id}`);
       assert.equal(parsed.description, object.description);
@@ -184,7 +184,7 @@ describe("IPFS Uploads", async () => {
         name: "test.jpeg",
       },
     ];
-    const cid = await storage.uploadBatch(sampleObjects);
+    const { baseUri: cid } = await storage.uploadBatch(sampleObjects);
     assert(
       (await getFile(`${cid}test.jpeg`)).headers
         ?.get("content-type")
@@ -198,7 +198,7 @@ describe("IPFS Uploads", async () => {
       readFileSync("test/test.mp4"),
       readFileSync("test/3510820011_4f558b6dea_b.jpg"),
     ];
-    const cid = await storage.uploadBatch(sampleObjects, 1);
+    const { baseUri: cid } = await storage.uploadBatch(sampleObjects, 1);
     assert(
       (await getFile(`${cid}2`)).headers?.get("content-type")?.toString() ===
         "image/jpeg",
@@ -210,7 +210,7 @@ describe("IPFS Uploads", async () => {
       readFileSync("test/3510820011_4f558b6dea_b.jpg"),
       readFileSync("test/test.mp4"),
     ];
-    const cid = await storage.uploadBatch(sampleObjects);
+    const { baseUri: cid } = await storage.uploadBatch(sampleObjects);
     assert(
       (await getFile(`${cid}0`)).headers?.get("content-type")?.toString() ===
         "image/jpeg",
@@ -301,7 +301,7 @@ describe("IPFS Uploads", async () => {
         name: "TEST",
       },
     ];
-    const cid = await storage.uploadBatch(sampleObjects);
+    const { baseUri: cid } = await storage.uploadBatch(sampleObjects);
     assert(
       (await getFile(`${cid}TEST`)).headers?.get("content-type")?.toString() ===
         "image/jpeg",
