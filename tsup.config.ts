@@ -11,7 +11,6 @@ export default defineConfig({
   platform: "browser",
   replaceNodeEnv: true,
   shims: true,
-  name: "ThirdwebSDK",
   globalName: "ThirdwebSDK",
   format: ["cjs", "esm", "iife"],
   keepNames: true,

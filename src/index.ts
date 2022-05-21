@@ -1,6 +1,6 @@
 import "cross-fetch/polyfill";
 
-require("buffer/");
+globalThis.Buffer = require("buffer/").Buffer;
 
 export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";
 export type {
