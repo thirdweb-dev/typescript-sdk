@@ -1,4 +1,5 @@
 import "cross-fetch/polyfill";
+
 require("buffer/");
 
 export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";
