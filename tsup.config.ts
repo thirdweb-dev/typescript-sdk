@@ -22,10 +22,6 @@ export default defineConfig({
         __dirname,
         `node_modules/stream-browserify/index.js`,
       ),
-      "magic-sdk": path.resolve(
-        __dirname,
-        "node_modules/magic-sdk/dist/cjs/index.js",
-      ),
       buffer: path.resolve(__dirname, "node_modules/buffer/index.js"),
     }),
   ],
