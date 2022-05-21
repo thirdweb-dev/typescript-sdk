@@ -450,5 +450,3 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       }));
   }
 }
-
-export default ThirdwebSDK;

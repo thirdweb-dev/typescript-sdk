@@ -13,6 +13,13 @@
   "module": "dist/index.mjs",
   "browser": "dist/index.global.js",
   "unpkg": "dist/index.global.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/src/index.d.ts"
+    }
+  },
   "files": [
     "dist/**/*"
   ],
@@ -20,7 +27,7 @@
   "scripts": {
     "clean": "rm -rf dist/",
     "dev": "tsdx watch",
-    "build:lib": "patch-package && tsup && yarn generate-types",
+    "build:lib": "patch-package & rm -rf ./dist && tsup && yarn generate-types",
     "format": "prettier src/ --write",
     "prepublishOnly": "yarn lint && yarn build",
     "lint": "eslint src/",
