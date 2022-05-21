@@ -1,6 +1,9 @@
 import "cross-fetch/polyfill";
 
-globalThis.Buffer = require("buffer/").Buffer;
+if (!globalThis.Buffer) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  globalThis.Buffer = require("buffer/").Buffer;
+}
 
 export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";
 export type {
