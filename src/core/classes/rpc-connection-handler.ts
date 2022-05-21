@@ -1,5 +1,5 @@
 import { ethers, Signer, providers } from "ethers";
-import { EventEmitter2 } from "eventemitter2";
+import EventEmitter from "eventemitter3";
 import { getReadOnlyProvider } from "../../constants/urls";
 import {
   SDKOptions,
@@ -11,7 +11,7 @@ import { NetworkOrSignerOrProvider } from "../types";
 /**
  * @internal
  */
-export class RPCConnectionHandler extends EventEmitter2 {
+export class RPCConnectionHandler extends EventEmitter {
   private provider: providers.Provider;
   private signer: Signer | undefined;
   protected readonly options: SDKOptionsOutput;

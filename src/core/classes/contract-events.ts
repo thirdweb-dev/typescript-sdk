@@ -1,7 +1,7 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { BaseContract, providers } from "ethers";
 import { EventType } from "../../constants";
-import { ListenerFn } from "eventemitter2";
+import { ListenerFn } from "eventemitter3";
 
 /**
  * Listen to Contract events in real time
