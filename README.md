@@ -78,8 +78,7 @@ Here's how to provide your own private key to the SDK to perform transactions wi
 // my_script.js
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-/
-// load your private key in a secure way (env variable, never committed to git)
+// load your private key in a secure way (env variable, never commited to git)
 const privateKey = process.env.PRIVATE_KEY;
 // instantiate the SDK based on your private key, with the desired chain to connect to
 const sdk = ThirdwebSDK.fromPrivateKey(privateKey, "polygon");
