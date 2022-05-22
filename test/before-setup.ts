@@ -27,6 +27,7 @@ import { ethers as hardhatEthers } from "hardhat";
 import {
   CONTRACTS_MAP,
   ContractType,
+  DEFAULT_IPFS_GATEWAY,
   Edition,
   EditionDrop,
   getNativeTokenByChainId,
@@ -52,7 +53,7 @@ const defaultProvider = hardhatEthers.provider;
 
 let registryAddress: string;
 let sdk: ThirdwebSDK;
-const ipfsGatewayUrl = "https://gateway.ipfscdn.io/ipfs/";
+const ipfsGatewayUrl = DEFAULT_IPFS_GATEWAY;
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: IStorage;

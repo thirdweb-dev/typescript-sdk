@@ -1,5 +1,8 @@
-import { DEFAULT_IPFS_GATEWAY, PUBLIC_GATEWAYS } from "../../constants/urls";
-import { IStorageUpload } from "../interfaces/IStorageUpload";
+import { FetchError } from "../../common/error";
+import {
+  DEFAULT_IPFS_GATEWAY,
+  TW_FILEBASE_SERVER_URL,
+} from "../../constants/urls";
 import { IStorage } from "../interfaces/IStorage";
 import { FileOrBuffer, JsonObject } from "../types";
 import {
@@ -7,11 +10,21 @@ import {
   replaceHashWithGatewayUrl,
   resolveGatewayUrl,
 } from "../helpers/storage";
-import { IpfsUploader } from "../storage/ipfs-uploader";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   globalThis.FormData = require("form-data");
+}
+
+/**
+ * @internal
+ */
+interface CidWithFileName {
+  // base cid of the directory
+  cid: string;
+
+  // file name of the file without cid
+  fileNames: string[];
 }
 
 /**
@@ -20,27 +33,9 @@ if (!globalThis.FormData) {
  */
 export class IpfsStorage implements IStorage {
   private gatewayUrl: string;
-  private uploader: IStorageUpload;
-  private failedUrls: string[] = [];
 
-  constructor(
-    gatewayUrl: string = DEFAULT_IPFS_GATEWAY,
-    uploader: IStorageUpload = new IpfsUploader(),
-  ) {
+  constructor(gatewayUrl: string = DEFAULT_IPFS_GATEWAY) {
     this.gatewayUrl = `${gatewayUrl.replace(/\/$/, "")}/`;
-    this.uploader = uploader;
-  }
-
-  private getNextPublicGateway() {
-    const urlsToTry = PUBLIC_GATEWAYS.filter(
-      (url) => !this.failedUrls.includes(url),
-    ).filter((url) => url !== this.gatewayUrl);
-    if (urlsToTry.length > 0) {
-      return urlsToTry[0];
-    } else {
-      this.failedUrls = [];
-      return undefined;
-    }
   }
 
   /**
@@ -69,7 +64,7 @@ export class IpfsStorage implements IStorage {
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<string> {
-    const { cid } = await this.uploader.uploadBatchWithCid(
+    const { cid } = await this.uploadBatchWithCid(
       files,
       fileStartNumber,
       contractAddress,
@@ -77,6 +72,22 @@ export class IpfsStorage implements IStorage {
     );
 
     return `ipfs://${cid}/`;
+  }
+
+  public async getSignedUrl(filename: string): Promise<string> {
+    const res = await fetch(`${TW_FILEBASE_SERVER_URL}/signed-url`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ filename }),
+    });
+
+    if (!res.ok) {
+      throw new FetchError(`Failed to get upload token`);
+    }
+    const url = await res.json();
+    return url;
   }
 
   /**
@@ -127,7 +138,7 @@ export class IpfsStorage implements IStorage {
       (m: any) => JSON.stringify(m),
     );
 
-    const { cid, fileNames } = await this.uploader.uploadBatchWithCid(
+    const { cid, fileNames } = await this.uploadBatchWithCid(
       metadataToUpload,
       fileStartNumber,
       contractAddress,
@@ -153,15 +164,8 @@ export class IpfsStorage implements IStorage {
       uri = resolveGatewayUrl(hash, "ipfs://", this.gatewayUrl);
     }
     const result = await fetch(uri);
-    if (!result.ok && result.status !== 404) {
-      const nextUrl = this.getNextPublicGateway();
-      if (nextUrl) {
-        this.failedUrls.push(this.gatewayUrl);
-        this.gatewayUrl = nextUrl;
-        return this._get(hash);
-      } else {
-        throw new Error(`Error fetching ${uri} - Status code ${result.status}`);
-      }
+    if (!result.ok) {
+      throw new Error(`Status code (!= 200) =${result.status}`);
     }
     return result;
   }
@@ -184,9 +188,7 @@ export class IpfsStorage implements IStorage {
     if (filesToUpload.length === 0) {
       return metadatas;
     }
-    const { cid, fileNames } = await this.uploader.uploadBatchWithCid(
-      filesToUpload,
-    );
+    const { cid, fileNames } = await this.uploadBatchWithCid(filesToUpload);
 
     const cids = [];
     // recurse ordered array
@@ -228,5 +230,47 @@ export class IpfsStorage implements IStorage {
       }
     }
     return files;
+  }
+
+  private async uploadBatchWithCid(
+    files: (string | FileOrBuffer)[],
+    fileStartNumber = 0,
+    contractAddress?: string,
+    signerAddress?: string,
+  ): Promise<CidWithFileName> {
+    const asyncCids = files.map(async (file, i) => {
+      if (typeof file === "string") {
+        return file;
+      }
+
+      let filename = "";
+      if (file instanceof File) {
+        let extensions = "";
+        if (file.name) {
+          const extensionStartIndex = file.name.lastIndexOf(".");
+          if (extensionStartIndex > -1) {
+            extensions = file.name.substring(extensionStartIndex);
+          }
+        }
+        filename = `${i + fileStartNumber}${extensions}`;
+      } else if (file instanceof Buffer) {
+        filename = `${i + fileStartNumber}`;
+      } else if (file && file.name) {
+        filename = `${file.name}`;
+      } else {
+        filename = `${i + fileStartNumber}`;
+      }
+
+      const signedUrl = await this.getSignedUrl(filename);
+
+      const res = await fetch(signedUrl, {
+        method: "PUT",
+        body: file as any,
+      });
+    });
+
+    const cids = await Promise.all(asyncCids);
+
+    throw Error("Not implemented");
   }
 }
