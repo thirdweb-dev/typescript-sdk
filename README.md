@@ -79,7 +79,7 @@ Here's how to provide your own private key to the SDK to perform transactions wi
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 /
-// load your private key in a secure way (env variable, never commited to git)
+// load your private key in a secure way (env variable, never committed to git)
 const privateKey = process.env.PRIVATE_KEY;
 // instantiate the SDK based on your private key, with the desired chain to connect to
 const sdk = ThirdwebSDK.fromPrivateKey(privateKey, "polygon");
@@ -118,20 +118,19 @@ Easiest way to get started on the frontend is using one of our templates in the 
 
 - [Step by step guides and recipes](https://portal.thirdweb.com)
 - [Full Api Reference and code examples](https://docs.thirdweb.com/typescript)
--
 
 ## Build from source
 
 To build the project:
 
-```bash
+```shell
 yarn install
 yarn build
 ```
 
 After building, to run the tests (requires a local hardhat node running):
 
-```bash
+```shell
 yarn test:all
 ```
 
@@ -139,7 +138,7 @@ OR
 
 If you have make and docker installed you can simply run
 
-```bash
+```shell
 make test
 ```
 
