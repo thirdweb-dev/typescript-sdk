@@ -57,9 +57,9 @@ export class Erc721Enumerable implements DetectableFeature {
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
   public async tokenIds(walletAddress?: string): Promise<BigNumber[]> {
-    const address = walletAddress
-      ? walletAddress
-      : await this.contractWrapper.getSignerAddress();
+    const address =
+      walletAddress || (await this.contractWrapper.getSignerAddress());
+
     const balance = await this.contractWrapper.readContract.balanceOf(address);
     const indices = Array.from(Array(balance.toNumber()).keys());
     return await Promise.all(

@@ -112,9 +112,6 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     quantity: Amount,
     addressToCheck?: string,
   ): Promise<boolean> {
-    if (addressToCheck === undefined) {
-      addressToCheck = await this.contractWrapper.getSignerAddress();
-    }
     // TODO switch to use verifyClaim
     return (
       (await this.getClaimIneligibilityReasons(quantity, addressToCheck))
@@ -146,7 +143,16 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     );
 
     if (addressToCheck === undefined) {
-      addressToCheck = await this.contractWrapper.getSignerAddress();
+      try {
+        addressToCheck = await this.contractWrapper.getSignerAddress();
+      } catch (err) {
+        console.warn("failed to get signer address", err);
+      }
+    }
+
+    // if we have been unable to get a signer address, we can't check eligibility, so return a NoWallet error reason
+    if (!addressToCheck) {
+      return [ClaimEligibility.NoWallet];
     }
 
     try {

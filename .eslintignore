@@ -1,4 +1,6 @@
 # folders
-
+dist/
+.swc/
+abis/
 
 # files

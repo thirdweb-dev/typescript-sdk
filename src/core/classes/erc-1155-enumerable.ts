@@ -85,9 +85,8 @@ export class Erc1155Enumerable implements DetectableFeature {
    * @returns The NFT metadata for all NFTs in the contract.
    */
   public async owned(walletAddress?: string): Promise<EditionMetadataOwner[]> {
-    const address = walletAddress
-      ? walletAddress
-      : await this.contractWrapper.getSignerAddress();
+    const address =
+      walletAddress || (await this.contractWrapper.getSignerAddress());
     const maxId = await this.contractWrapper.readContract.nextTokenIdToMint();
     const balances = await this.contractWrapper.readContract.balanceOfBatch(
       Array(maxId.toNumber()).fill(address),
