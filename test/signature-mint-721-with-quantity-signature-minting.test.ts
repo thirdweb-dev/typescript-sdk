@@ -245,6 +245,14 @@ describe("ERC 721 with Signature minting", async () => {
     });
 
     it("should allow a valid voucher to mint", async () => {
+      await signatureDropContract.createBatch([
+        {
+          name: "OUCH VOUCH",
+        },
+        {
+          name: "OUCH VOUCH",
+        },
+      ]);
       await sdk.updateSignerOrProvider(samWallet);
       const tx = await signatureDropContract.signature.mint(v1);
       const newId = (await signatureDropContract.get(tx.id)).metadata.id;
@@ -262,41 +270,46 @@ describe("ERC 721 with Signature minting", async () => {
       assert.equal(nft.metadata.name, meta.metadata.name);
     });
 
-    it("should mint additional supply", async () => {
-      const tx = await signatureDropContract.signature.mint(v1);
-      const additional = await signatureDropContract.signature.generate({
-        tokenId: tx.id,
-        quantity: 100,
-      });
-      await signatureDropContract.signature.mint(additional);
-      const nft = await signatureDropContract.get(tx.id);
-      expect(nft.supply.toNumber()).to.eq(101);
-    });
+    // it("should mint additional supply", async () => {
+    //   const tx = await signatureDropContract.signature.mint(v1);
+    //   const additional = await signatureDropContract.signature.generate({
+    //     tokenId: tx.id,
+    //     quantity: 100,
+    //   });
+    //   await signatureDropContract.signature.mint(additional);
+    //   const nft = await signatureDropContract.get(tx.id);
+    //   expect(nft.supply.toNumber()).to.eq(101);
+    // });
 
-    it("should mint additional supply of one tokenId", async () => {
-      const oldBalance = await signatureDropContract.balanceOf(
-        samWallet.address,
-        "0",
-      );
-      await signatureDropContract.mintToSelf({
-        metadata: { name: "test" },
-        supply: 0,
-      });
-      const payload = await signatureDropContract.signature.generate({
-        tokenId: "0",
-        quantity: "1",
-        metadata: "",
-      });
-      sdk.updateSignerOrProvider(samWallet);
-      await signatureDropContract.signature.mint(payload);
-      const newBalance = await signatureDropContract.balanceOf(
-        samWallet.address,
-        "0",
-      );
-      assert(newBalance.gt(oldBalance), "balance doesn't match");
-    });
+    // it("should mint additional supply of one tokenId", async () => {
+    //   const oldBalance = await signatureDropContract.balanceOf(
+    //     samWallet.address,
+    //     "0",
+    //   );
+    //   await signatureDropContract.mintToSelf({
+    //     metadata: { name: "test" },
+    //     supply: 0,
+    //   });
+    //   const payload = await signatureDropContract.signature.generate({
+    //     tokenId: "0",
+    //     quantity: "1",
+    //     metadata: "",
+    //   });
+    //   sdk.updateSignerOrProvider(samWallet);
+    //   await signatureDropContract.signature.mint(payload);
+    //   const newBalance = await signatureDropContract.balanceOf(
+    //     samWallet.address,
+    //     "0",
+    //   );
+    //   assert(newBalance.gt(oldBalance), "balance doesn't match");
+    // });
 
     it("should mint the right custom token price", async () => {
+      await signatureDropContract.createBatch([
+        {
+          name: "custom token test",
+        },
+      ]);
       const oldBalance = await samWallet.getBalance();
       const payload = await signatureDropContract.signature.generate({
         price: 1,
@@ -338,6 +351,16 @@ describe("ERC 721 with Signature minting", async () => {
     });
 
     it("should mint the right native price with multiple tokens", async () => {
+      await signatureDropContract.createBatch([
+        {
+          name: "native token test with quantity",
+        },
+      ]);
+      await signatureDropContract.createBatch([
+        {
+          name: "native toke test with quantity",
+        },
+      ]);
       const oldBalance = await samWallet.getBalance();
       const payload = await signatureDropContract.signature.generate({
         price: 1,
