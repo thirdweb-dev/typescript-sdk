@@ -41,6 +41,7 @@ import { IDropClaimCondition } from "contracts/DropERC20";
  * @returns - `overrides` and `proofs` as an object.
  */
 export async function prepareClaim(
+  addressToClaim: string,
   quantity: BigNumberish,
   activeClaimCondition: ClaimCondition,
   merkleMetadata: Record<string, string>,
@@ -49,7 +50,6 @@ export async function prepareClaim(
   storage: IStorage,
   proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
 ): Promise<ClaimVerification> {
-  const addressToClaim = await contractWrapper.getSignerAddress();
   let maxClaimable = BigNumber.from(0);
 
   try {

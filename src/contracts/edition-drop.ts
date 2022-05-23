@@ -317,6 +317,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     const claimVerification = await this.prepareClaim(
+      destinationAddress,
       tokenId,
       quantity,
       proofs,
@@ -393,11 +394,13 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * @returns - `overrides` and `proofs` as an object.
    */
   private async prepareClaim(
+    destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
+      destinationAddress,
       quantity,
       await this.claimConditions.getActive(tokenId),
       (await this.metadata.get()).merkle,

@@ -13,5 +13,7 @@ export enum ClaimEligibility {
 
   NoClaimConditionSet = "There is no claim condition set.",
 
+  NoWallet = "No wallet connected.",
+
   Unknown = "No claim conditions found.",
 }
