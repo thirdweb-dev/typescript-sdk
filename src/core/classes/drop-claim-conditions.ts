@@ -1,6 +1,12 @@
 import { IStorage } from "../interfaces/IStorage";
 import { ContractMetadata } from "./contract-metadata";
-import { DropERC20, DropERC721, IERC20, IERC20Metadata } from "contracts";
+import {
+  DropERC20,
+  DropERC721,
+  IERC20,
+  IERC20Metadata,
+  SignatureDrop,
+} from "contracts";
 import { BigNumber, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
@@ -25,7 +31,9 @@ import { isNode } from "../../common/utils";
  * Manages claim conditions for NFT Drop contracts
  * @public
  */
-export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
+export class DropClaimConditions<
+  TContract extends SignatureDrop | DropERC721 | DropERC20,
+> {
   private contractWrapper;
   private metadata;
   private storage: IStorage;
@@ -197,15 +205,32 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
         metadata.merkle,
         this.storage,
       );
+
+      const contractType = ethers.utils.toUtf8String(
+        await this.contractWrapper.readContract.contractType(),
+      );
+
       try {
-        const [validMerkleProof] =
-          await this.contractWrapper.readContract.verifyClaimMerkleProof(
-            activeConditionIndex,
-            addressToCheck,
-            quantity,
-            proofs.proof,
-            proofs.maxClaimable,
-          );
+        const [validMerkleProof] = this.isSignatureDrop(
+          this.contractWrapper.readContract,
+          contractType,
+        )
+          ? await this.contractWrapper.readContract.verifyClaimMerkleProof(
+              activeConditionIndex,
+              addressToCheck,
+              quantity,
+              {
+                proof: proofs.proof,
+                maxQuantityInAllowlist: proofs.maxClaimable,
+              },
+            )
+          : await this.contractWrapper.readContract.verifyClaimMerkleProof(
+              activeConditionIndex,
+              addressToCheck,
+              quantity,
+              proofs.proof,
+              proofs.maxClaimable,
+            );
         if (!validMerkleProof) {
           reasons.push(ClaimEligibility.AddressNotAllowed);
           return reasons;
@@ -330,12 +355,24 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
         ),
       );
     }
+    const contractType = ethers.utils.toUtf8String(
+      await this.contractWrapper.readContract.contractType(),
+    );
 
     encoded.push(
-      this.contractWrapper.readContract.interface.encodeFunctionData(
-        "setClaimConditions",
-        [sortedConditions, resetClaimEligibilityForAll],
-      ),
+      this.isSignatureDrop(this.contractWrapper.readContract, contractType)
+        ? this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setClaimConditions",
+            [
+              sortedConditions,
+              resetClaimEligibilityForAll,
+              ethers.utils.toUtf8Bytes(""),
+            ],
+          )
+        : this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setClaimConditions",
+            [sortedConditions, resetClaimEligibilityForAll],
+          ),
     );
 
     return {
@@ -372,5 +409,12 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     } else {
       return Promise.resolve(0);
     }
+  }
+
+  private isSignatureDrop(
+    _contract: SignatureDrop | any,
+    contractType: string,
+  ): _contract is SignatureDrop {
+    return contractType.includes("SignatureDrop");
   }
 }
