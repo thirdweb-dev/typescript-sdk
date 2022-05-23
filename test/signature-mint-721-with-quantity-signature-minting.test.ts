@@ -1,16 +1,9 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert, expect } from "chai";
+import { assert } from "chai";
 import { BigNumber } from "ethers";
-import {
-  PayloadToSign721withQuantity,
-  SignatureDrop,
-  Token
-} from "../src";
+import { PayloadToSign721withQuantity, SignatureDrop, Token } from "../src";
 import { sdk, signers, storage } from "./before-setup";
-import {
-  SignedPayload1155,
-  SignedPayload721WithQuantitySignature
-} from "../src/schema/contracts/common/signature";
+import { SignedPayload721WithQuantitySignature } from "../src/schema/contracts/common/signature";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
 global.fetch = require("cross-fetch");
@@ -158,11 +151,21 @@ describe("ERC 721 with Signature minting", async () => {
   });
 
   describe("Claiming", async () => {
-    let v1: SignedPayload1155, v2: SignedPayload1155;
+    let v1: SignedPayload721WithQuantitySignature,
+      v2: SignedPayload721WithQuantitySignature;
 
     beforeEach(async () => {
       v1 = await signatureDropContract.signature.generate(meta);
       v2 = await signatureDropContract.signature.generate(meta);
+
+      await signatureDropContract.createBatch([
+        {
+          name: "Test1",
+        },
+        {
+          name: "Test2",
+        },
+      ]);
     });
 
     // it("should allow batch minting", async () => {
@@ -190,11 +193,6 @@ describe("ERC 721 with Signature minting", async () => {
     // });
 
     it("should mint with URI", async () => {
-      await signatureDropContract.createBatch([
-        {
-          name: "Test1",
-        },
-      ]);
       const uri = await storage.uploadMetadata({
         name: "Test1",
       });
@@ -209,14 +207,6 @@ describe("ERC 721 with Signature minting", async () => {
     });
 
     it("should mint batch with URI", async () => {
-      await signatureDropContract.createBatch([
-        {
-          name: "Test1",
-        },
-        {
-          name: "Test2",
-        },
-      ]);
       const uri1 = await storage.uploadMetadata({
         name: "Test1",
       });
@@ -237,22 +227,12 @@ describe("ERC 721 with Signature minting", async () => {
       ]);
       const tx = await signatureDropContract.signature.mintBatch(payloads);
       const nft1 = await signatureDropContract.get(tx[0].id);
-      console.log("nft1: ", nft1.metadata.name);
       assert.equal(nft1.metadata.name, "Test1");
       const nft2 = await signatureDropContract.get(tx[1].id);
-      console.log("nft2: ", nft2.metadata.name);
       assert.equal(nft2.metadata.name, "Test2");
     });
 
     it("should allow a valid voucher to mint", async () => {
-      await signatureDropContract.createBatch([
-        {
-          name: "OUCH VOUCH",
-        },
-        {
-          name: "OUCH VOUCH",
-        },
-      ]);
       await sdk.updateSignerOrProvider(samWallet);
       const tx = await signatureDropContract.signature.mint(v1);
       const newId = (await signatureDropContract.get(tx.id)).metadata.id;
@@ -267,7 +247,11 @@ describe("ERC 721 with Signature minting", async () => {
     it("should mint the right metadata", async () => {
       const tx = await signatureDropContract.signature.mint(v1);
       const nft = await signatureDropContract.get(tx.id);
-      assert.equal(nft.metadata.name, meta.metadata.name);
+      assert.equal(nft.metadata.name, "Test1");
+
+      const tx2 = await signatureDropContract.signature.mint(v2);
+      const nft2 = await signatureDropContract.get(tx2.id);
+      assert.equal(nft2.metadata.name, "Test2");
     });
 
     // it("should mint additional supply", async () => {
@@ -305,11 +289,6 @@ describe("ERC 721 with Signature minting", async () => {
     // });
 
     it("should mint the right custom token price", async () => {
-      await signatureDropContract.createBatch([
-        {
-          name: "custom token test",
-        },
-      ]);
       const oldBalance = await samWallet.getBalance();
       const payload = await signatureDropContract.signature.generate({
         price: 1,
@@ -351,16 +330,6 @@ describe("ERC 721 with Signature minting", async () => {
     });
 
     it("should mint the right native price with multiple tokens", async () => {
-      await signatureDropContract.createBatch([
-        {
-          name: "native token test with quantity",
-        },
-      ]);
-      await signatureDropContract.createBatch([
-        {
-          name: "native toke test with quantity",
-        },
-      ]);
       const oldBalance = await samWallet.getBalance();
       const payload = await signatureDropContract.signature.generate({
         price: 1,
