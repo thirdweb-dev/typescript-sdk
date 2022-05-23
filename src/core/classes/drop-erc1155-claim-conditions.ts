@@ -2,7 +2,7 @@ import { IStorage } from "../interfaces/IStorage";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
 import { DropERC1155, IERC20, IERC20__factory } from "contracts";
-import { BigNumber, BigNumberish, ethers, constants } from "ethers";
+import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import { ClaimCondition, ClaimConditionInput } from "../../types";
@@ -15,8 +15,8 @@ import {
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
-import { isBrowser } from "../../common/utils";
 import { includesErrorMessage } from "../../common";
+import { isNode } from "../../common/utils";
 
 /**
  * Manages claim conditions for Edition Drop contracts
@@ -231,7 +231,7 @@ export class DropErc1155ClaimConditions {
 
     // if not within a browser conetext, check for wallet balance.
     // In browser context, let the wallet do that job
-    if (claimCondition.price.gt(0) && !isBrowser()) {
+    if (claimCondition.price.gt(0) && isNode()) {
       const totalPrice = claimCondition.price.mul(quantity);
       const provider = this.contractWrapper.getProvider();
       if (isNativeToken(claimCondition.currencyAddress)) {

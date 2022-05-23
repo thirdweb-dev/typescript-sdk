@@ -16,7 +16,7 @@ import {
   replaceHashWithGatewayUrl,
   resolveGatewayUrl,
 } from "../helpers/storage";
-import { isBrowser } from "../../common/utils";
+import { isNode } from "../../common/utils";
 
 if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -308,7 +308,7 @@ export class IpfsStorage implements IStorage {
         throw new DuplicateFileNameError(fileName);
       }
       fileNames.push(fileName);
-      if (!isBrowser()) {
+      if (isNode()) {
         data.append("file", fileData as any, { filepath } as any);
       } else {
         // browser does blob things, filepath is parsed differently on browser vs node.
