@@ -13,13 +13,6 @@
   "module": "dist/index.mjs",
   "browser": "dist/index.global.js",
   "unpkg": "dist/index.global.js",
-  "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/src/index.d.ts"
-    }
-  },
   "files": [
     "dist/**/*"
   ],
