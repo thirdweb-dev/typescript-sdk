@@ -20,6 +20,7 @@ export declare enum ClaimEligibility
 |  NoClaimConditionSet | <code>&quot;There is no claim condition set.&quot;</code> |  |
 |  NotEnoughSupply | <code>&quot;There is not enough supply to claim.&quot;</code> |  |
 |  NotEnoughTokens | <code>&quot;There are not enough tokens in the wallet to pay for the claim.&quot;</code> |  |
+|  NoWallet | <code>&quot;No wallet connected.&quot;</code> |  |
 |  Unknown | <code>&quot;No claim conditions found.&quot;</code> |  |
 |  WaitBeforeNextClaimTransaction | <code>&quot;Not enough time since last claim transaction. Please wait.&quot;</code> |  |
 
