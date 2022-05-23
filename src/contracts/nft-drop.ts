@@ -472,11 +472,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     quantity: BigNumberish,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const claimVerification = await this.prepareClaim(
-      destinationAddress,
-      quantity,
-      proofs,
-    );
+    const claimVerification = await this.prepareClaim(quantity, proofs);
     const receipt = await this.contractWrapper.sendTransaction(
       "claim",
       [
@@ -551,12 +547,10 @@ export class NFTDrop extends Erc721<DropERC721> {
    * @returns - `overrides` and `proofs` as an object.
    */
   private async prepareClaim(
-    destinationAddress: string,
     quantity: BigNumberish,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
-      destinationAddress,
       quantity,
       await this.claimConditions.getActive(),
       (await this.metadata.get()).merkle,
