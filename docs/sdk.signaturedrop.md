@@ -48,6 +48,7 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [revealer](./sdk.signaturedrop.revealer.md) |  | [DelayedReveal](./sdk.delayedreveal.md)<!-- -->&lt;SignatureDropContract&gt; | Delayed reveal |
 |  [roles](./sdk.signaturedrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;SignatureDropContract, typeof [SignatureDrop.contractRoles](./sdk.signaturedrop.contractroles.md)<!-- -->\[number\]&gt; |  |
 |  [royalty](./sdk.signaturedrop.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;SignatureDropContract, typeof SignatureDrop.schema&gt; | Configure royalties |
+|  [signature](./sdk.signaturedrop.signature.md) |  | Erc721WithQuantitySignatureMinting |  |
 
 ## Methods
 

@@ -1,10 +1,14 @@
 import {
-  FilledSignaturePayload1155,
-  MintRequest1155,
-  PayloadToSign1155,
+  // FilledSignaturePayload1155,
+  FilledSignature721WithQuantity,
+  // MintRequest1155,
+  MintRequest721withQuantity,
+  PayloadToSign1155, PayloadToSign721withQuantity,
   PayloadWithUri721withQuantity,
-  Signature1155PayloadInput,
-  Signature1155PayloadOutput,
+  // Signature1155PayloadInput,
+  Signature721WithQuantityInput,
+  Signature721WithQuantityOutput,
+  // Signature1155PayloadOutput,
   SignedPayload1155, SignedPayload721WithQuantitySignature,
 } from "../../schema/contracts/common/signature";
 import { TransactionResultWithId } from "../types";
@@ -17,7 +21,7 @@ import { ContractRoles } from "./contract-roles";
 import { SignatureDrop } from "../../contracts";
 import { BigNumber } from "ethers";
 import { uploadOrExtractURIs } from "../../common/nft";
-import { TokensMintedWithSignatureEvent } from "contracts/ITokenERC1155";
+import { TokensMintedEvent } from "contracts/SignatureDrop";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -79,14 +83,14 @@ export class Erc721WithQuantitySignatureMinting {
       [message, signature],
       overrides,
     );
-    const t = this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
-      "TokensMintedWithSignature",
+    const t = this.contractWrapper.parseLogs<TokensMintedEvent>(
+      "TokensMinted",
       receipt.logs,
     );
     if (t.length === 0) {
       throw new Error("No MintWithSignature event found");
     }
-    const id = t[0].args.tokenIdMinted;
+    const id = t[0].args.startTokenId;
     return {
       id,
       receipt,
@@ -125,15 +129,15 @@ export class Erc721WithQuantitySignatureMinting {
     });
     const receipt = await this.contractWrapper.multiCall(encoded);
     const events =
-      this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
-        "TokensMintedWithSignature",
+      this.contractWrapper.parseLogs<TokensMintedEvent>(
+        "TokensMinted",
         receipt.logs,
       );
     if (events.length === 0) {
       throw new Error("No MintWithSignature event found");
     }
     return events.map((log) => ({
-      id: log.args.tokenIdMinted,
+      id: log.args.startTokenId,
       receipt,
     }));
   }
@@ -146,8 +150,11 @@ export class Erc721WithQuantitySignatureMinting {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = await this.mapPayloadToContractStruct(mintRequest);
+    console.log("message: ", message);
+    console.log("signature: ", signature);
     const verification: [boolean, string] =
       await this.contractWrapper.readContract.verify(message, signature);
+      console.log("recovered signer: ", verification[1]);
     return verification[0];
   }
 
@@ -186,8 +193,8 @@ export class Erc721WithQuantitySignatureMinting {
    * @returns the signed payload and the corresponding signature
    */
   public async generate(
-    mintRequest: PayloadToSign1155,
-  ): Promise<SignedPayload1155> {
+    mintRequest: PayloadToSign1155 | PayloadToSign721withQuantity,
+  ): Promise<SignedPayload1155 | SignedPayload721WithQuantitySignature> {
     return (await this.generateBatch([mintRequest]))[0];
   }
 
@@ -200,15 +207,14 @@ export class Erc721WithQuantitySignatureMinting {
    * @returns an array of payloads and signatures
    */
   public async generateBatch(
-    payloadsToSign: PayloadToSign1155[],
-  ): Promise<SignedPayload1155[]> {
+    payloadsToSign: PayloadToSign1155[] | PayloadToSign721withQuantity[],
+  ): Promise<SignedPayload1155[] | SignedPayload721WithQuantitySignature[]> {
     await this.roles.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
-
-    const parsedRequests: FilledSignaturePayload1155[] = payloadsToSign.map(
-      (m) => Signature1155PayloadInput.parse(m),
+    const parsedRequests: FilledSignature721WithQuantity[] = payloadsToSign.map(
+      (m) => Signature721WithQuantityInput.parse(m),
     );
 
     const metadatas = parsedRequests.map((r) => r.metadata);
@@ -221,19 +227,19 @@ export class Erc721WithQuantitySignatureMinting {
     return await Promise.all(
       parsedRequests.map(async (m, i) => {
         const uri = uris[i];
-        const finalPayload = Signature1155PayloadOutput.parse({
+        const finalPayload = Signature721WithQuantityOutput.parse({
           ...m,
           uri,
         });
         const signature = await this.contractWrapper.signTypedData(
           signer,
           {
-            name: "TokenERC1155",
+            name: "SignatureMintERC721",
             version: "1",
             chainId,
             verifyingContract: this.contractWrapper.readContract.address,
           },
-          { MintRequest: MintRequest1155 }, // TYPEHASH
+          { MintRequest: MintRequest721withQuantity }, // TYPEHASH
           await this.mapPayloadToContractStruct(finalPayload),
         );
         return {
@@ -266,6 +272,9 @@ export class Erc721WithQuantitySignatureMinting {
     );
     return {
       to: mintRequest.to,
+      royaltyRecipient: mintRequest.royaltyRecipient,
+      royaltyBps: mintRequest.royaltyBps,
+      primarySaleRecipient: mintRequest.primarySaleRecipient,
       uri: mintRequest.uri,
       quantity: mintRequest.quantity,
       pricePerToken: normalizedPricePerToken,
@@ -273,9 +282,6 @@ export class Erc721WithQuantitySignatureMinting {
       validityStartTimestamp: mintRequest.mintStartTime,
       validityEndTimestamp: mintRequest.mintEndTime,
       uid: mintRequest.uid,
-      royaltyRecipient: mintRequest.royaltyRecipient,
-      royaltyBps: mintRequest.royaltyBps,
-      primarySaleRecipient: mintRequest.primarySaleRecipient,
     } as ISignatureMintERC721.MintRequestStructOutput;
   }
 }

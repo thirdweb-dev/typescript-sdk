@@ -8,5 +8,5 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type PayloadWithUri721withQuantity = z.output<typeof Signature1155PayloadOutput>;
+export declare type PayloadWithUri721withQuantity = z.output<typeof Signature721WithQuantityOutput>;
 ```

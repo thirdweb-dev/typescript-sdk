@@ -9,6 +9,7 @@ import {
 import { sdk, signers, storage } from "./before-setup";
 import {
   SignedPayload1155,
+  SignedPayload721WithQuantitySignature
 } from "../src/schema/contracts/common/signature";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
@@ -39,7 +40,7 @@ describe("ERC 721 with Signature minting", async () => {
       }),
     );
 
-    console.log(signatureDropContract.signature);
+    // console.log(signatureDropContract.signature);
 
     meta = {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
@@ -74,13 +75,16 @@ describe("ERC 721 with Signature minting", async () => {
   describe("Generating Signatures", () => {
     // let voucher: SignaturePayload;
     // let signature: string, badSignature: string;
-    let goodPayload: SignedPayload1155;
-    let badPayload: SignedPayload1155;
+    let goodPayload: SignedPayload721WithQuantitySignature;
+    let badPayload: SignedPayload721WithQuantitySignature;
 
     beforeEach(async () => {
       goodPayload = await signatureDropContract.signature.generate(meta);
       badPayload = await signatureDropContract.signature.generate(meta);
       badPayload.payload.price = "0";
+      console.log("good payload: ", goodPayload);
+      console.log("admin address: ", adminWallet.address);
+      console.log("sam address: ", samWallet.address);
     });
 
     it("should generate a valid signature", async () => {
@@ -128,6 +132,19 @@ describe("ERC 721 with Signature minting", async () => {
           },
         },
       ];
+
+      await signatureDropContract.createBatch([
+        {
+          name: "OUCH VOUCH 0",
+        },
+        {
+          name: "OUCH VOUCH 1",
+        },
+        {
+          name: "OUCH VOUCH 2",
+        },
+      ]);
+
       const batch = await signatureDropContract.signature.generateBatch(input);
 
       for (let i = 0; i < batch.length; i++) {
