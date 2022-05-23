@@ -15,11 +15,11 @@ import {
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
 
-import { isBrowser } from "../../common/utils";
 import { detectContractFeature } from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
+import { isNode } from "../../common/utils";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -236,7 +236,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
 
     // if not within a browser conetext, check for wallet balance.
     // In browser context, let the wallet do that job
-    if (claimCondition.price.gt(0) && !isBrowser()) {
+    if (claimCondition.price.gt(0) && isNode()) {
       const totalPrice = claimCondition.price.mul(BigNumber.from(quantity));
       const provider = this.contractWrapper.getProvider();
       if (isNativeToken(claimCondition.currencyAddress)) {
